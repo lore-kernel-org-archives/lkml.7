@@ -2,415 +2,275 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B40C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C214C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFAC20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555477382;
-	bh=HK8CYibjOive7ROvyZWXJ08oDdfNF8qnw7Md8pX2fc0=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=hc4bovHAS8whVU9rAUKCGNn4f+Jb41d9Nk1BqA3V/hAr6qykj1Aw3aYChfwq8fHkO
-	 Ary+hz7YN1IYEjNZBHatJCBgHscVnvJIeTjboHhMz5P7JBWFD6NjYyqGA4N6vJ+hKh
-	 M2WEzGAtNv5o1X0VQvF7iOC97ZO9uQPDkk6hTzL8=
+	by mail.kernel.org (Postfix) with ESMTP id 6221F2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfDQFDB (ORCPT
+        id S1728417AbfDQFOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:03:01 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:42240 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfDQFDA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:03:00 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 7AEADAF5;
-        Wed, 17 Apr 2019 05:02:58 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 22:02:56 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-Subject:  mmotm 2019-04-16-22-01 uploaded
-Message-ID: <20190417050256.wqgqMDs7m%akpm@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        Wed, 17 Apr 2019 01:14:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51234 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfDQFOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 01:14:30 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1B402A96E2;
+        Wed, 17 Apr 2019 05:14:29 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-44.pek2.redhat.com [10.72.12.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 876B319C67;
+        Wed, 17 Apr 2019 05:14:22 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 13:14:18 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Subject: Re: kexec crash on OVMF i386 + x86_64 kernel (Re: [PATCH v4]
+ x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernel)
+Message-ID: <20190417051418.GC8411@dhcp-128-65.nay.redhat.com>
+References: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic>
+ <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+ <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
+ <4dbbbb4b-7af9-bd98-b567-890407a15cd1@ce.jp.nec.com>
+ <20190416094554.GF27892@zn.tnic>
+ <befd6560-f41a-b142-a839-aaab861dee5a@ce.jp.nec.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <befd6560-f41a-b142-a839-aaab861dee5a@ce.jp.nec.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 17 Apr 2019 05:14:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-04-16-22-01 has been uploaded to
+Added efi people.
 
-   http://www.ozlabs.org/~akpm/mmotm/
+I remember previously Sai did some efi32 tests for kexec, but I'm not
+sure if he tested EFI32 + 64bit kernel.
 
-mmotm-readme.txt says
+Kexec status is not certain because I'm not sure anyone tesed and
+reported issues for that.
 
-README for mm-of-the-moment:
-
-http://www.ozlabs.org/~akpm/mmotm/
-
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
-
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
-
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
-
-
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is available at
-
-	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
-
-and use of this tree is similar to
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
-
-
-This mmotm tree contains the following patches against 5.1-rc5:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
-* mm-add-sys-kernel-slab-cache-cache_dma32.patch
-* coredump-fix-race-condition-between-mmget_not_zero-get_task_mm-and-core-dumping.patch
-* userfaultfd-use-rcu-to-free-the-task-struct-when-fork-fails.patch
-* slab-store-tagged-freelist-for-off-slab-slabmgmt.patch
-* mm-swapoff-shmem_find_swap_entries-filter-out-other-types.patch
-* mm-swapoff-remove-too-limiting-swap_unuse_max_tries.patch
-* mm-swapoff-take-notice-of-completion-sooner.patch
-* mm-swapoff-shmem_unuse-stop-eviction-without-igrab.patch
-* mm-swapoff-shmem_unuse-stop-eviction-without-igrab-fix.patch
-* mm-memory_hotplug-do-not-unlock-when-fails-to-take-the-device_hotplug_lock.patch
-* mm-vmstat-fix-proc-vmstat-format-for-config_debug_tlbflush=y-config_smp=n.patch
-* proc-fix-map_files-test-on-f29.patch
-* proc-fixup-proc-pid-vm-test.patch
-* mm-hotplug-treat-cma-pages-as-unmovable.patch
-* mm-hotplug-treat-cma-pages-as-unmovable-v4.patch
-* mm-fix-inactive-list-balancing-between-numa-nodes-and-cgroups.patch
-* kcov-improve-config_arch_has_kcov-help-text.patch
-* watchdog-hard-lockup-message-should-end-with-a-newline.patch
-* init-initialize-jump-labels-before-command-line-option-parsing.patch
-* kmemleak-fix-unused-function-warning.patch
-* mm-memory_hotplug-drop-memory-device-reference-after-find_memory_block.patch
-* zram-pass-down-the-bvec-we-need-to-read-into-in-the-work-struct.patch
-* lib-kconfigdebug-fix-build-error-without-config_block.patch
-* prctl-fix-false-positive-in-validate_prctl_map.patch
-* scripts-spellingtxt-add-more-typos-to-spellingtxt-and-sort.patch
-* arch-sh-boards-mach-dreamcast-irqc-remove-duplicate-header.patch
-* debugobjects-move-printk-out-of-db-lock-critical-sections.patch
-* ocfs2-use-common-file-type-conversion.patch
-* ocfs2-fix-ocfs2-read-inode-data-panic-in-ocfs2_iget.patch
-* ocfs2-clear-zero-in-unaligned-direct-io.patch
-* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
-* ocfs2-wait-for-recovering-done-after-direct-unlock-request.patch
-* ocfs2-checkpoint-appending-truncate-log-transaction-before-flushing.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* list-add-function-list_rotate_to_front.patch
-* slob-respect-list_head-abstraction-layer.patch
-* slob-use-slab_list-instead-of-lru.patch
-* slub-add-comments-to-endif-pre-processor-macros.patch
-* slub-use-slab_list-instead-of-lru.patch
-* slab-use-slab_list-instead-of-lru.patch
-* mm-remove-stale-comment-from-page-struct.patch
-* slub-remove-useless-kmem_cache_debug-before-remove_full.patch
-* mm-slab-remove-unneed-check-in-cpuup_canceled.patch
-* slub-update-the-comment-about-slab-frozen.patch
-* slab-fix-an-infinite-loop-in-leaks_show.patch
-* slab-fix-an-infinite-loop-in-leaks_show-fix.patch
-* mm-vmscan-drop-zone-id-from-kswapd-tracepoints.patch
-* mm-cma_debugc-fix-the-break-condition-in-cma_maxchunk_get.patch
-* userfaultfd-sysctl-add-vmunprivileged_userfaultfd.patch
-* userfaultfd-sysctl-add-vmunprivileged_userfaultfd-fix.patch
-* page-cache-store-only-head-pages-in-i_pages.patch
-* page-cache-store-only-head-pages-in-i_pages-fix.patch
-* page-cache-store-only-head-pages-in-i_pages-fix-fix.patch
-* mm-page_alloc-disallow-__gfp_comp-in-alloc_pages_exact.patch
-* mm-move-recent_rotated-pages-calculation-to-shrink_inactive_list.patch
-* mm-move-nr_deactivate-accounting-to-shrink_active_list.patch
-* mm-move-nr_deactivate-accounting-to-shrink_active_list-fix.patch
-* mm-remove-pages_to_free-argument-of-move_active_pages_to_lru.patch
-* mm-generalize-putback-scan-functions.patch
-* mm-gup-replace-get_user_pages_longterm-with-foll_longterm.patch
-* mm-gup-replace-get_user_pages_longterm-with-foll_longterm-v3.patch
-* mm-gup-change-write-parameter-to-flags-in-fast-walk.patch
-* mm-gup-change-gup-fast-to-use-flags-rather-than-a-write-bool.patch
-* mm-gup-add-foll_longterm-capability-to-gup-fast.patch
-* mm-gup-add-foll_longterm-capability-to-gup-fast-v3.patch
-* ib-hfi1-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* ib-hfi1-use-the-new-foll_longterm-flag-to-get_user_pages_fast-v3.patch
-* ib-qib-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* ib-mthca-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* mmmemory_hotplug-unlock-1gb-hugetlb-on-x86_64.patch
-* mmmemory_hotplug-drop-redundant-hugepage_migration_supported-check.patch
-* mm-memory_hotplug-fix-the-wrong-usage-of-n_high_memory.patch
-* mm-compaction-fix-an-undefined-behaviour.patch
-* mm-compaction-fix-an-undefined-behaviour-fix.patch
-* mm-cma-fix-the-bitmap-status-to-show-failed-allocation-reason.patch
-* mm-compaction-show-gfp-flag-names-in-try_to_compact_pages-tracepoint.patch
-* mm-compaction-some-tracepoints-should-be-defined-only-when-config_compaction-is-set.patch
-* mm-change-mm_update_next_owner-to-update-mm-owner-with-write_once.patch
-* mm-isolation-remove-redundant-pfn_valid_within-in-__first_valid_page.patch
-* mm-vmscan-add-tracepoints-for-node-reclaim.patch
-* mm-memcontrol-track-lru-counts-in-the-vmstats-array.patch
-* mm-memcontrol-replace-zone-summing-with-lruvec_page_state.patch
-* mm-memcontrol-replace-node-summing-with-memcg_page_state.patch
-* mm-memcontrol-push-down-mem_cgroup_node_nr_lru_pages.patch
-* mm-memcontrol-push-down-mem_cgroup_nr_lru_pages.patch
-* mm-memcontrol-quarantine-the-mem_cgroup_nr_lru_pages-api.patch
-* mm-cma-fix-crash-on-cma-allocation-if-bitmap-allocation-fails.patch
-* initramfs-free-initrd-memory-if-opening-initrdimage-fails.patch
-* initramfs-cleanup-initrd-freeing.patch
-* initramfs-factor-out-a-helper-to-populate-the-initrd-image.patch
-* initramfs-cleanup-populate_rootfs.patch
-* initramfs-cleanup-populate_rootfs-fix.patch
-* initramfs-move-the-legacy-keepinitrd-parameter-to-core-code.patch
-* initramfs-proide-a-generic-free_initrd_mem-implementation.patch
-* initramfs-poison-freed-initrd-memory.patch
-* init-provide-a-generic-free_initmem-implementation.patch
-* hexagon-switch-over-to-generic-free_initmem.patch
-* init-free_initmem-poison-freed-init-memory.patch
-* riscv-switch-over-to-generic-free_initmem.patch
-* sh-advertise-gigantic-page-support.patch
-* sparc-advertise-gigantic-page-support.patch
-* mm-simplify-memory_isolation-compaction-cma-into-contig_alloc.patch
-* hugetlb-allow-to-free-gigantic-pages-regardless-of-the-configuration.patch
-* mm-introduce-put_user_page-placeholder-versions.patch
-* mm-page_mkclean-vs-madv_dontneed-race.patch
-* mm-vmscan-drop-may_writepage-and-classzone_idx-from-direct-reclaim-begin-template.patch
-* mem-hotplug-fix-node-spanned-pages-when-we-have-a-node-with-only-zone_movable.patch
-* hugetlbfs-fix-potential-over-underflow-setting-node-specific-nr_hugepages.patch
-* mm-hugetlb-get-rid-of-nodemask_alloc.patch
-* mm-__pagevec_lru_add_fn-typo-fix.patch
-* mm-balloon-drop-unused-function-stubs.patch
-* mm-sparse-clean-up-the-obsolete-code-comment.patch
-* drivers-base-memoryc-clean-up-relicts-in-function-parameters.patch
-* huegtlbfs-on-restore-reserve-error-path-retain-subpool-reservation.patch
-* hugetlb-use-same-fault-hash-key-for-shared-and-private-mappings.patch
-* mm-change-locked_vms-type-from-unsigned-long-to-atomic64_t.patch
-* vfio-type1-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* vfio-spapr_tce-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* fpga-dlf-afu-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* powerpc-mmu-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* kvm-book3s-drop-mmap_sem-now-that-locked_vm-is-atomic.patch
-* mm-hmm-select-mmu-notifier-when-selecting-hmm-v2.patch
-* mm-hmm-use-reference-counting-for-hmm-struct-v3.patch
-* mm-hmm-do-not-erase-snapshot-when-a-range-is-invalidated.patch
-* mm-hmm-improve-and-rename-hmm_vma_get_pfns-to-hmm_range_snapshot-v2.patch
-* mm-hmm-improve-and-rename-hmm_vma_fault-to-hmm_range_fault-v3.patch
-* mm-hmm-improve-driver-api-to-work-and-wait-over-a-range-v3.patch
-* mm-hmm-add-default-fault-flags-to-avoid-the-need-to-pre-fill-pfns-arrays-v2.patch
-* mm-hmm-mirror-hugetlbfs-snapshoting-faulting-and-dma-mapping-v3.patch
-* mm-hmm-allow-to-mirror-vma-of-a-file-on-a-dax-backed-filesystem-v3.patch
-* mm-hmm-add-helpers-to-test-if-mm-is-still-alive-or-not.patch
-* mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device-v3.patch
-* mm-hmm-add-an-helper-function-that-fault-pages-and-map-them-to-a-device-v3-fix.patch
-* mm-hmm-convert-various-hmm_pfn_-to-device_entry-which-is-a-better-name.patch
-* mm-mmu_notifier-helper-to-test-if-a-range-invalidation-is-blockable.patch
-* mm-mmu_notifier-convert-user-range-blockable-to-helper-function.patch
-* mm-mmu_notifier-convert-mmu_notifier_range-blockable-to-a-flags.patch
-* mm-mmu_notifier-contextual-information-for-event-enums.patch
-* mm-mmu_notifier-contextual-information-for-event-triggering-invalidation-v2.patch
-* mm-mmu_notifier-use-correct-mmu_notifier-events-for-each-invalidation.patch
-* mm-mmu_notifier-pass-down-vma-and-reasons-why-mmu-notifier-is-happening-v2.patch
-* mm-mmu_notifier-mmu_notifier_range_update_to_read_only-helper.patch
-* mm-enable-error-injection-at-add_to_page_cache.patch
-* mm-enable-error-injection-at-add_to_page_cache-fix.patch
-* mm-rmap-use-the-pramapcount-to-do-the-check.patch
-* mm-use-mm_zero_struct_page-from-sparc-on-all-64b-architectures.patch
-* mm-drop-meminit_pfn_in_nid-as-it-is-redundant.patch
-* mm-implement-new-zone-specific-memblock-iterator.patch
-* mm-initialize-max_order_nr_pages-at-a-time-instead-of-doing-larger-sections.patch
-* mm-memory_hotplug-cleanup-memory-offline-path.patch
-* mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug.patch
-* mm-memory_hotplug-provide-a-more-generic-restrictions-for-memory-hotplug-fix.patch
-* mm-filemap-fix-minor-typo.patch
-* mm-memory_hotplug-release-memory-resource-after-arch_remove_memory.patch
-* mm-memory_hotplug-make-unregister_memory_section-never-fail.patch
-* mm-memory_hotplug-make-__remove_section-never-fail.patch
-* mm-memory_hotplug-make-__remove_pages-and-arch_remove_memory-never-fail.patch
-* mm-fix-false-positive-overcommit_guess-failures.patch
-* mm-remove-redundant-default-n-from-kconfig-s.patch
-* mm-hmm-kconfig-split-hmm-address-space-mirroring-from-device-memory.patch
-* mm-introduce-new-vm_map_pages-and-vm_map_pages_zero-api.patch
-* arm-mm-dma-mapping-convert-to-use-vm_map_pages.patch
-* drivers-firewire-core-isoc-convert-to-use-vm_map_pages_zero.patch
-* drm-rockchip-rockchip_drm_gemc-convert-to-use-vm_map_pages.patch
-* drm-xen-xen_drm_front_gemc-convert-to-use-vm_map_pages.patch
-* iommu-dma-iommuc-convert-to-use-vm_map_pages.patch
-* videobuf2-videobuf2-dma-sgc-convert-to-use-vm_map_pages.patch
-* xen-gntdevc-convert-to-use-vm_map_pages.patch
-* xen-privcmd-bufc-convert-to-use-vm_map_pages_zero.patch
-* x86-numa-always-initialize-all-possible-nodes.patch
-* mm-be-more-verbose-about-zonelist-initialization.patch
-* fs-syncc-sync_file_range2-may-use-wb_sync_all-writeback.patch
-* mm-simplify-shrink_inactive_list.patch
-* memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work.patch
-* memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-* psi-introduce-state_mask-to-represent-stalled-psi-states.patch
-* psi-make-psi_enable-static.patch
-* psi-rename-psi-fields-in-preparation-for-psi-trigger-addition.patch
-* psi-rename-psi-fields-in-preparation-for-psi-trigger-addition-v6.patch
-* psi-split-update_stats-into-parts.patch
-* psi-track-changed-states.patch
-* refactor-header-includes-to-allow-kthreadh-inclusion-in-psi_typesh.patch
-* psi-introduce-psi-monitor.patch
-* mm-add-priority-threshold-to-__purge_vmap_area_lazy.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation-v3.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation-v4.patch
-* mm-vmap-add-debug_augment_propagate_check-macro.patch
-* mm-vmap-add-debug_augment_propagate_check-macro-v4.patch
-* mm-vmap-add-debug_augment_lowest_match_check-macro.patch
-* mm-vmap-add-debug_augment_lowest_match_check-macro-v4.patch
-* mm-proportional-memorylowmin-reclaim.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
-* mm-add-probe_user_read.patch
-* mm-add-probe_user_read-fix.patch
-* powerpc-use-probe_user_read.patch
-* mm-vmalloc-convert-vmap_lazy_nr-to-atomic_long_t.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization-fix.patch
-* mm-move-buddy-list-manipulations-into-helpers.patch
-* mm-move-buddy-list-manipulations-into-helpers-fix.patch
-* mm-move-buddy-list-manipulations-into-helpers-fix2.patch
-* mm-maintain-randomization-of-page-free-lists.patch
-* mm-maintain-randomization-of-page-free-lists-checkpatch-fixes.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* mm-mincore-make-mincore-more-conservative.patch
-* mm-mincore-make-mincore-more-conservative-v2.patch
-* mm-dont-expose-page-to-fast-gup-before-its-ready.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* fs-select-avoid-clang-stack-usage-warning.patch
-* kdb-get-rid-of-broken-attempt-to-print-ccversion-in-kdb-summary.patch
-* remove-spdx-with-linux-syscall-note-from-kernel-space-headers.patch
-* notifiers-double-register-detection.patch
-* kernel-latencytopc-remove-unnecessary-checks-for-latencytop_enabled.patch
-* kernel-latencytopc-rename-clear_all_latency_tracing-to-clear_tsk_latency_tracing.patch
-* byteorder-sanity-check-toolchain-vs-kernel-endianess.patch
-* lib-bitmapc-remove-unused-export_symbols.patch
-* lib-bitmapc-guard-exotic-bitmap-functions-by-config_numa.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* lib-plist-rename-debug_pi_list-to-debug_plist.patch
-* lib-sort-make-swap-functions-more-generic.patch
-* lib-sort-use-more-efficient-bottom-up-heapsort-variant.patch
-* lib-sort-avoid-indirect-calls-to-built-in-swap.patch
-* lib-list_sort-simplify-and-remove-max_list_length_bits.patch
-* lib-list_sort-simplify-and-remove-max_list_length_bits-fix.patch
-* lib-list_sort-optimize-number-of-calls-to-comparison-function.patch
-* lib-move-mathematic-helpers-to-separate-folder.patch
-* lib-math-move-int_pow-from-pwm_blc-for-wider-use.patch
-* lib-make-bitmap_parselist_user-a-wrapper-on-bitmap_parselist.patch
-* lib-rework-bitmap_parselist.patch
-* lib-rework-bitmap_parselist-v5.patch
-* lib-test_bitmap-switch-test_bitmap_parselist-to-ktime_get.patch
-* lib-test_bitmap-add-testcases-for-bitmap_parselist.patch
-* lib-test_bitmap-add-testcases-for-bitmap_parselist-v5.patch
-* lib-test_bitmap-add-tests-for-bitmap_parselist_user.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* bitopsh-sanitize-rotate-primitives.patch
-* checkpatch-fix-something.patch
-* fs-binfmt_elfc-remove-unneeded-initialization-of-mm-start_stack.patch
-* elf-make-scope-of-pos-variable-smaller.patch
-* elf-free-pt_interp-filename-asap.patch
-* elf-free-pt_interp-filename-asap-fix.patch
-* elf-delete-trailing-return-in-functions-returning-void.patch
-* elf-save-1-indent-level.patch
-* elf-move-variables-initialization-closer-to-their-usage.patch
-* binfmt_elf-move-brk-out-of-mmap-when-doing-direct-loader-exec.patch
-* autofs-fix-some-word-usage-odities-in-autofstxt.patch
-* autofs-update-autofstxt-for-strictexpire-mount-option.patch
-* autofs-update-autofs_exp_leaves-description.patch
-* autofs-update-mount-control-expire-desription-with-autofs_exp_forced.patch
-* autofs-add-description-of-ignore-pseudo-mount-option.patch
-* fat-issue-flush-after-the-writeback-of-fat.patch
-* signal-annotate-implicit-fall-through.patch
-* cpumask-fix-double-string-traverse-in-cpumask_parse.patch
-* cpumask-fix-double-string-traverse-in-cpumask_parse-fix.patch
-* rapidio-fix-a-null-pointer-derefenrece-when-create_workqueue-fails.patch
-* kernel-sysctlc-switch-to-bitmap_zalloc.patch
-* sysctl-return-einval-if-val-violates-minmax.patch
-* convert-struct-pid-count-to-refcount_t.patch
-* convert-struct-pid-count-to-refcount_t-fix.patch
-* eventfd-prepare-id-to-userspace-via-fdinfo.patch
-* gcov-clang-move-common-gcc-code-into-gcc_basec.patch
-* gcov-docs-add-a-note-on-gcc-vs-clang-differences.patch
-* panic-avoid-the-extra-noise-dmesg.patch
-* panic-reboot-allow-specifying-reboot_mode-for-panic-only.patch
-* pps-descriptor-based-gpio.patch
-* dt-bindings-pps-pps-gpio-pps-echo-implementation.patch
-* pps-pps-gpio-pps-echo-implementation.patch
-* scripts-gdb-find-vmlinux-where-it-was-before.patch
-* scripts-gdb-add-kernel-config-dumping-command.patch
-* scripts-gdb-add-kernel-config-dumping-command-v2.patch
-* scripts-gdb-add-rb-tree-iterating-utilities.patch
-* scripts-gdb-add-rb-tree-iterating-utilities-v2.patch
-* scripts-gdb-add-a-timer-list-command.patch
-* scripts-gdb-add-a-timer-list-command-v2.patch
-* scripts-gdb-silence-pep8-checks.patch
-* ipc-prevent-lockup-on-alloc_msg-and-free_msg.patch
-* ipc-mqueue-remove-redundant-wq-task-assignment.patch
-* ipc-mqueue-optimize-msg_get.patch
-* ipc-allow-boot-time-extension-of-ipcmni-from-32k-to-16m.patch
-* ipc-conserve-sequence-numbers-in-ipcmni_extend-mode.patch
-* ipc-do-cyclic-id-allocation-for-the-ipc-object.patch
-* ipc-do-cyclic-id-allocation-for-the-ipc-object-fix.patch
-  linux-next.patch
-  linux-next-rejects.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* scripts-atomic-check-atomicssh-dont-assume-that-scripts-are-executable.patch
-* fs-coda-psdevc-remove-duplicate-header.patch
-* include-replace-tsk-to-task-in-linux-sched-signalh.patch
-* fs-cachefiles-nameic-remove-duplicate-header.patch
-* fs-block_devc-remove-duplicate-header.patch
-* kernel-resource-use-resource_overlaps-to-simplify-region_intersects.patch
-* treewide-replace-include-asm-sizesh-with-include-linux-sizesh.patch
-* arch-remove-asm-sizesh-amd-asm-generic-sizesh.patch
-* mm-rename-ambiguously-named-memorystat-counters-and-functions.patch
-* mm-rename-ambiguously-named-memorystat-counters-and-functions-fix.patch
-* mm-consider-subtrees-in-memoryevents.patch
-* fsl_hypervisor-dereferencing-error-pointers-in-ioctl.patch
-* fsl_hypervisor-prevent-integer-overflow-in-ioctl.patch
-* mm-memcontrol-make-cgroup-stats-and-events-query-api-explicitly-local.patch
-* mm-memcontrol-move-stat-event-counting-functions-out-of-line.patch
-* mm-memcontrol-fix-recursive-statistics-correctness-scalabilty.patch
-* mm-memcontrol-fix-numa-round-robin-reclaim-at-intermediate-level.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  slab-leaks3-default-y.patch
-  workaround-for-a-pci-restoring-bug.patch
+On 04/16/19 at 11:09pm, Junichi Nomura wrote:
+> On 4/16/19 6:45 PM, Borislav Petkov wrote:
+> > On Mon, Apr 15, 2019 at 11:14:34PM +0000, Junichi Nomura wrote:
+> >> I see kexec is only supported on 64bit kernel. But are we sure
+> >> we don't need to support kexec on EFI32 + 64bit kernel?
+> >>
+> >> I don't have such an environment and as far as I tried with OVMF i386
+> >> and KVM guest, that combination doesn't work reliably even with v5.0.
+> > 
+> > What does that mean exactly?
+> > 
+> > If it can be fixed, we can try to.
+> 
+> When I do kexec on OVMF i386 + x86_64 kernel, 1st kexec seems to work.
+> But 2nd kexec (i.e. kexec from kexec-booted system) causes kernel
+> crash during boot like this:
+> 
+> [   69.907176] kexec_core: Starting new kernel
+> early console in extract_kernel
+> input_data: 0x000000003e7a73b1
+> input_len: 0x00000000004464c8
+> output: 0x000000003d600000
+> output_len: 0x00000000015c7248
+> kernel_total_size: 0x000000000142c000
+> trampoline_32bit: 0x000000000009d000
+> booted via startup_64()
+> Physical KASLR using RDRAND RDTSC...
+> Virtual KASLR using RDRAND RDTSC...
+> 
+> Decompressing Linux... Parsing ELF... Performing relocations... done.
+> Booting the kernel.
+> [    0.000000] Linux version 5.0.0-dirty (root@vm76) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-28) (GCC)) #2 SMP Mon Apr 8 04:42:45 EDT 2019
+> [    0.000000] Command line: root=UUID=6bea2b7b-e6cc-4dba-ac79-be6530d348f5 ro console=tty0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto LANG=en_US.UTF-8 earlyprintk=serial,ttyS0,115200 kexec kexec
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+> [    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+> [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+> [    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+> [    0.000000] BIOS-provided physical RAM map:
+> [    0.000000] BIOS-e820: [mem 0x0000000000000100-0x000000000009ffff] usable
+> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000003ed74fff] usable
+> [    0.000000] BIOS-e820: [mem 0x000000003ed75000-0x000000003ee86fff] reserved
+> [    0.000000] BIOS-e820: [mem 0x000000003ee87000-0x000000003ff06fff] usable
+> [    0.000000] BIOS-e820: [mem 0x000000003ff07000-0x000000003ff5efff] reserved
+> [    0.000000] BIOS-e820: [mem 0x000000003ff5f000-0x000000003ff66fff] ACPI data
+> [    0.000000] BIOS-e820: [mem 0x000000003ff67000-0x000000003ff6afff] ACPI NVS
+> [    0.000000] BIOS-e820: [mem 0x000000003ff6b000-0x000000003ffcffff] usable
+> [    0.000000] BIOS-e820: [mem 0x000000003ffd0000-0x000000003ffeffff] reserved
+> [    0.000000] BIOS-e820: [mem 0x000000003fff0000-0x000000003fffffff] usable
+> [    0.000000] BIOS-e820: [mem 0x00000000ffe00000-0x00000000ffffffff] reserved
+> [    0.000000] printk: bootconsole [earlyser0] enabled
+> [    0.000000] NX (Execute Disable) protection: active
+> [    0.000000] DMI not present or invalid.
+> [    0.000000] Hypervisor detected: KVM
+> [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+> [    0.000000] kvm-clock: cpu 0, msr 2238e001, primary cpu clock
+> [    0.000001] kvm-clock: using sched offset of 100318497884 cycles
+> [    0.001055] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+> [    0.004086] tsc: Detected 2399.998 MHz processor
+> [    0.005147] last_pfn = 0x40000 max_arch_pfn = 0x400000000
+> [    0.006234] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+> Memory KASLR using RDRAND RDTSC...
+> [    0.008079] x2apic: enabled by BIOS, switching to x2apic ops
+> [    0.020284] RAMDISK: [mem 0x3b8da000-0x3d5fffff]
+> [    0.021169] ACPI: Early table checksum verification disabled
+> [    0.022280] ACPI BIOS Error (bug): A valid RSDP was not found (20181213/tbxfroot-210)
+> [    0.023755] No NUMA configuration found
+> [    0.024461] Faking a node at [mem 0x0000000000000000-0x000000003fffffff]
+> [    0.025746] NODE_DATA(0) allocated [mem 0x3ffa6000-0x3ffcffff]
+> [    0.027098] crashkernel: memory value expected
+> [    0.027918] Zone ranges:
+> [    0.028384]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+> [    0.029553]   DMA32    [mem 0x0000000001000000-0x000000003fffffff]
+> [    0.030688]   Normal   empty
+> [    0.031217]   Device   empty
+> [    0.031741] Movable zone start for each node
+> [    0.032525] Early memory node ranges
+> [    0.033212]   node   0: [mem 0x0000000000001000-0x000000000009ffff]
+> [    0.034377]   node   0: [mem 0x0000000000100000-0x000000003ed74fff]
+> [    0.035520]   node   0: [mem 0x000000003ee87000-0x000000003ff06fff]
+> [    0.036663]   node   0: [mem 0x000000003ff6b000-0x000000003ffcffff]
+> [    0.037840]   node   0: [mem 0x000000003fff0000-0x000000003fffffff]
+> [    0.039012] Zeroed struct page in unavailable ranges: 503 pages
+> [    0.039013] Initmem setup node 0 [mem 0x0000000000001000-0x000000003fffffff]
+> [    0.044319] BUG: unable to handle kernel paging request at ffffffffff5fd020
+> [    0.045637] #PF error: [normal kernel read fault]
+> [    0.046501] PGD 2200e067 P4D 2200e067 PUD 22010067 PMD 22011067 PTE 0
+> [    0.047682] Oops: 0000 [#1] SMP
+> [    0.048258] CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-dirty #2
+> [    0.049419] RIP: 0010:native_apic_mem_read+0x3/0x10
+> [    0.050328] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
+> [    0.053749] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
+> [    0.054703] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
+> [    0.056009] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
+> [    0.057346] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
+> [    0.058667] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
+> [    0.059969] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
+> [    0.061313] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
+> [    0.062812] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.063865] CR2: ffffffffff5fd020 CR3: 000000002200d000 CR4: 00000000000406b0
+> [    0.065222] Call Trace:
+> [    0.065670]  ? read_apic_id+0x19/0x30
+> [    0.066347]  init_apic_mappings+0x7a/0x129
+> [    0.067096]  setup_arch+0xb67/0xc19
+> [    0.067729]  start_kernel+0x6b/0x4e3
+> [    0.068386]  x86_64_start_reservations+0x24/0x26
+> [    0.069230]  x86_64_start_kernel+0x6f/0x72
+> [    0.069974]  secondary_startup_64+0xa4/0xb0
+> [    0.070739] Modules linked in:
+> [    0.071297] CR2: ffffffffff5fd020
+> [    0.071901] random: get_random_bytes called from print_oops_end_marker+0x3f/0x60 with crng_init=0
+> [    0.073567] ---[ end trace 2cc66932e568af60 ]---
+> [    0.074427] RIP: 0010:native_apic_mem_read+0x3/0x10
+> [    0.075320] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
+> [    0.078755] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
+> [    0.079741] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
+> [    0.081050] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
+> [    0.082355] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
+> [    0.083687] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
+> [    0.084996] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
+> [    0.086296] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
+> [    0.087805] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.088855] CR2: ffffffffff5fd020 CR3: 000000002200d000 CR4: 00000000000406b0
+> [    0.090167] Kernel panic - not syncing: Fatal exception
+> [    0.091160] BUG: unable to handle kernel paging request at ffffffffff5fd030
+> [    0.092438] #PF error: [normal kernel read fault]
+> [    0.093301] PGD 2200e067 P4D 2200e067 PUD 22010067 PMD 22011067 PTE 0
+> [    0.094480] Oops: 0000 [#2] SMP
+> [    0.095094] CPU: 0 PID: 0 Comm: swapper Tainted: G      D           5.0.0-dirty #2
+> [    0.096478] RIP: 0010:native_apic_mem_read+0x3/0x10
+> [    0.097367] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
+> [    0.100833] RSP: 0000:ffffffff88003aa8 EFLAGS: 00010002
+> [    0.101792] RAX: ffffffff87248840 RBX: 0000000000000046 RCX: 0000000000000000
+> [    0.103130] RDX: 0000000000000080 RSI: 0000000000002000 RDI: 0000000000000030
+> [    0.104433] RBP: ffffffff88003ac0 R08: 0000000000000001 R09: 0000000000000080
+> [    0.105733] R10: ffffffff88160ca0 R11: ffffffff8818a428 R12: 0000000000000000
+> [    0.107070] R13: 0000000000000046 R14: ffffffff88013740 R15: 000000000000000b
+> [    0.108382] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
+> [    0.109872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.110926] CR2: ffffffffff5fd030 CR3: 000000002200d000 CR4: 00000000000406b0
+> [    0.112265] Call Trace:
+> [    0.112712]  ? clear_local_APIC+0x37/0x2f0
+> [    0.113463]  disable_local_APIC+0x22/0x60
+> [    0.114200]  native_stop_other_cpus+0xc8/0x160
+> [    0.115048]  panic+0x11a/0x2a8
+> [    0.115606]  oops_end+0xc1/0xd0
+> [    0.116188]  no_context+0x1eb/0x550
+> [    0.116826]  __bad_area_nosemaphore.constprop.30+0x50/0x1d0
+> [    0.117852]  bad_area_nosemaphore+0x13/0x20
+> [    0.118618]  do_kern_addr_fault+0x5c/0x90
+> [    0.119387]  __do_page_fault+0x382/0x440
+> [    0.120109]  ? memmap_init_zone+0x8f/0x22d
+> [    0.120851]  do_page_fault+0x32/0x120
+> [    0.121521]  page_fault+0x1e/0x30
+> [    0.122128] RIP: 0010:native_apic_mem_read+0x3/0x10
+> [    0.123045] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
+> [    0.126481] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
+> [    0.127502] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
+> [    0.128807] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
+> [    0.130161] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
+> [    0.131464] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
+> [    0.132771] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
+> [    0.134081]  ? native_apic_mem_write+0x10/0x10
+> [    0.134892]  ? read_apic_id+0x19/0x30
+> [    0.135564]  init_apic_mappings+0x7a/0x129
+> [    0.136316]  setup_arch+0xb67/0xc19
+> [    0.136954]  start_kernel+0x6b/0x4e3
+> [    0.137656]  x86_64_start_reservations+0x24/0x26
+> [    0.138576]  x86_64_start_kernel+0x6f/0x72
+> [    0.139329]  secondary_startup_64+0xa4/0xb0
+> [    0.140096] Modules linked in:
+> [    0.140653] CR2: ffffffffff5fd030
+> [    0.141259] ---[ end trace 2cc66932e568af61 ]---
+> [    0.142102] RIP: 0010:native_apic_mem_read+0x3/0x10
+> [    0.142992] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
+> [    0.146520] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
+> [    0.147533] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
+> [    0.148845] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
+> [    0.150191] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
+> [    0.151492] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
+> [    0.152796] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
+> [    0.154103] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
+> [    0.155579] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.156625] CR2: ffffffffff5fd030 CR3: 000000002200d000 CR4: 00000000000406b0
+> [    0.157967] Kernel panic - not syncing: Fatal exception
+> <repeating panic>
+> 
+> 
+> Libvirt configuration of the VM looks like this:
+> 
+>   <os>
+>     <type arch='x86_64' machine='pc'>hvm</type>
+>     <loader readonly='yes' type='pflash'>/usr/share/edk2.git/ovmf-ia32/OVMF_CODE-pure-efi.fd</loader>
+>     <nvram template='/usr/share/edk2.git/ovmf-ia32/OVMF_VARS-pure-efi.fd'>/var/lib/libvirt/qemu/nvram/vm76_VARS-32.fd</nvram>
+>     <kernel>/var/lib/libvirt/boot/vmlinuz-5.0.0-dirty</kernel>
+>     <initrd>/var/lib/libvirt/boot/initramfs-5.0.0-dirty.img</initrd>
+>     <cmdline>root=UUID=6bea2b7b-e6cc-4dba-ac79-be6530d348f5 ro console=tty0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto LANG=en_US.UTF-8 earlyprintk=serial,ttyS0,115200</cmdline>
+>     <boot dev='hd'/>
+>   </os>
+> 
+> -- 
+> Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
