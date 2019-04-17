@@ -2,138 +2,156 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FED0C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30902C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAD4206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C46B206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfDQRpN convert rfc822-to-8bit (ORCPT
+        id S1732463AbfDQRpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:45:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42852 "EHLO mx1.redhat.com"
+        Wed, 17 Apr 2019 13:45:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16227 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1726365AbfDQRpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Apr 2019 13:45:13 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7B303285C7;
-        Wed, 17 Apr 2019 17:45:12 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70D2E5D707;
-        Wed, 17 Apr 2019 17:45:10 +0000 (UTC)
-Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-12-longman@redhat.com>
- <20190417135841.GI4038@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <8683197e-4eec-b89b-df44-3b61088944af@redhat.com>
-Date:   Wed, 17 Apr 2019 13:45:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 10:45:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
+   d="scan'208";a="292386957"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 17 Apr 2019 10:45:13 -0700
+Received: from [10.252.12.89] (unknown [10.252.12.89])
+        by linux.intel.com (Postfix) with ESMTP id 826EF5803C1;
+        Wed, 17 Apr 2019 10:45:10 -0700 (PDT)
+Subject: Re: [PATCH v1] perf record: collect user registers set jointly with
+ dwarf stacks
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
+ <20190417073952.GF17024@krava> <20190417143542.GA5246@kernel.org>
+ <20190417144002.GB2705@krava>
+ <60FB78F1-BC48-4172-9669-DD3846F1F0E0@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <d68cd29b-16fe-7117-b2f4-720c72d6c146@linux.intel.com>
+Date:   Wed, 17 Apr 2019 20:45:08 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190417135841.GI4038@hirez.programming.kicks-ass.net>
+In-Reply-To: <60FB78F1-BC48-4172-9669-DD3846F1F0E0@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 17 Apr 2019 17:45:12 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17/2019 09:58 AM, Peter Zijlstra wrote:
-> On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
->> +/*
->> + * Try to acquire read lock before the reader is put on wait queue.
->> + * Lock acquisition isn't allowed if the rwsem is locked or a writer handoff
->> + * is ongoing.
->> + */
->> +static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
->> +{
->> +	long count = atomic_long_read(&sem->count);
->> +
->> +	if (RWSEM_COUNT_WLOCKED_OR_HANDOFF(count))
->> +		return false;
->> +
->> +	count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS, &sem->count);
->> +	if (!RWSEM_COUNT_WLOCKED_OR_HANDOFF(count)) {
->> +		rwsem_set_reader_owned(sem);
->> +		lockevent_inc(rwsem_opt_rlock);
->> +		return true;
->> +	}
->> +
->> +	/* Back out the change */
->> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
->> +	return false;
->> +}
-> Doesn't a cmpxchg 'loop' make more sense here?
+Hi Arnaldo,
 
-Not really. A cmpxchg loop will have one more correctible failure mode -
-a new reader acquire the lock or a reader owner does an unlock. Failures
-caused by the setting of the handoff bit or writer acquiring the lock
-are the same for both cases. I don't see any advantage in using cmpxchg
-loop.
+On 17.04.2019 18:48, Arnaldo Carvalho de Melo wrote:
+> On April 17, 2019 11:40:02 AM GMT-03:00, Jiri Olsa <jolsa@redhat.com> wrote:
+>> On Wed, Apr 17, 2019 at 11:35:42AM -0300, Arnaldo Carvalho de Melo
+>> wrote:
+>>> Em Wed, Apr 17, 2019 at 09:39:52AM +0200, Jiri Olsa escreveu:
+>>>> On Mon, Apr 15, 2019 at 06:36:13PM +0300, Alexey Budankov wrote:
+>>>>>
+>>>>> When dwarf stacks are collected jointly with user specified
+>> register
+>>>>> set using --user-regs option like below the full register context
+>> is
+>>>>> still captured on a sample:
+>>>>>
+>>>>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP
+>> -- matrix.gcc.g.O3
+>>>>>
+>>>>>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002):
+>> 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+>>>>>   ... FP chain: nr:0
+>>>>>   ... user regs: mask 0xff0fff ABI 64-bit
+>>>>>   .... AX    0x53b
+>>>>>   .... BX    0x7ffedbdd3cc0
+>>>>>   .... CX    0xffffffff
+>>>>>   .... DX    0x33d3a
+>>>>>   .... SI    0x7f09b74c38d0
+>>>>>   .... DI    0x0
+>>>>>   .... BP    0x401260
+>>>>>   .... SP    0x7ffedbdd3cc0
+>>>>>   .... IP    0x401236
+>>>>>   .... FLAGS 0x20a
+>>>>>   .... CS    0x33
+>>>>>   .... SS    0x2b
+>>>>>   .... R8    0x7f09b74c3800
+>>>>>   .... R9    0x7f09b74c2da0
+>>>>>   .... R10   0xfffffffffffff3ce
+>>>>>   .... R11   0x246
+>>>>>   .... R12   0x401070
+>>>>>   .... R13   0x7ffedbdd5db0
+>>>>>   .... R14   0x0
+>>>>>   .... R15   0x0
+>>>>>   ... ustack: size 1024, offset 0xe0
+>>>>>    . data_src: 0x5080021
+>>>>>    ... thread: stack_test2.g.O:23828
+>>>>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+>>>>>
+>>>>> After applying the change suggested in the patch the sample data
+>> contain
+>>>>> only user specified register values:
+>>>>>
+>>>>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP
+>> -- matrix.gcc.g.03
+>>>>>
+>>>>>   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002):
+>> 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
+>>>>>   ... FP chain: nr:0
+>>>>>   ... user regs: mask 0x1c0 ABI 64-bit
+>>>>>   .... BP    0x401260
+>>>>>   .... SP    0x7ffd3d85cc20
+>>>>>   .... IP    0x401236
+>>>>>   ... ustack: size 1024, offset 0x58
+>>>>>    . data_src: 0x5080021
+>>>>>    ... thread: stack_test2.g.O:23839
+>>>>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+>>>>>
+>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>>
+>>>> Acked-by: Jiri Olsa <jolsa@kernel.org>
+>>>
+>>> So, there are registers that are needed to do the DWARF unwinding,
+>>> right? But at the same time, if the user says only some are needed,
+>> he
+>>> better know what they're doing and ask for at least the registers
+>> needed
+>>> for the unwinding process to be successfull, right?
+>>
+>> yep, that's how understand that
+> 
+> So we need to document that, stating that specifying a set of registers together with requesting DWARF callchains may break things.
 
-Cheers,
-Longman
+Do you mean break callchains if omitting IP,SP,BP? 
+For example like this: 
+$ perf record -g --call-graph dwarf,1024 --user-regs=AX,BX,CX -- matrix.gcc.g.O3
 
+~Alexey
 
+> 
+> - Arnaldo
+> 
+> 
+> 
+> 
+> 
