@@ -2,99 +2,98 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C595C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49436C282DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C50A20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555523868;
-	bh=V5GMeGWCLa5Im7kftNfSBFuWwQ+bYlU1N9X07k5ylqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lyRasKM21xp6YqDJ7PwAZVm9+x8FyJCCUiLOMOW0syZiaMjAqDUc4NiAD9KqA471b
-	 D4i6nAuQXwDQL1HgLZUab3LfmixgUcPZn+lfXBku0r+EHyJsepIsVgYqN7xLf34hEG
-	 ADrkMssHHOllkyAtTZFyOSzVmVeinqO7BNGA+378=
+	by mail.kernel.org (Postfix) with ESMTP id 1B7E220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="t92AtvlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbfDQR5r (ORCPT
+        id S1733143AbfDQR5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:57:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39878 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732587AbfDQR5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:57:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 60BC9AC63;
-        Wed, 17 Apr 2019 17:57:45 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 19:57:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mgorman@techsingularity.net,
-        riel@surriel.com, hannes@cmpxchg.org, akpm@linux-foundation.org,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190417175743.GC9523@dhcp22.suse.cz>
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190412084702.GD13373@dhcp22.suse.cz>
- <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
- <20190416074714.GD11561@dhcp22.suse.cz>
- <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
- <a0bf6b61-1ec2-6209-5760-80c5f205d52e@intel.com>
- <20190417092318.GG655@dhcp22.suse.cz>
- <5c2d37e1-c7f6-5b7b-4f8e-a34e981b841e@intel.com>
+        Wed, 17 Apr 2019 13:57:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40293 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733114AbfDQR5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:57:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id d201so21337352iof.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 10:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R55o9kUXAJBh2tF+7lJ4JvdI2/7fbKVS3keHkBQuoNQ=;
+        b=t92AtvlR/3rv6myOl2qEMMrFqmL5j0URxSzPtqJ0hsuP5M2S1ZLU/myTKYV7zN6XRD
+         xl+SkL88CQctt26c/njZ9YlZ+w3p7jDh7xvxhSjj1mg+CGRnezVZcQFgX80j5Yrq24U9
+         qA9x83s5IJF/fAIfDW+7XOHyvihqjZgyzYoKbJBb90BzW4Sgm6xrOV4Jz0dC626BbJ96
+         hxU5+5EBmK2xI/y7MzhKSNqHQa/0psZSH5OkICMYwN4x4kuFrggbl1NzMjO7ohbmtBWk
+         E/2jU9aT1HwkQwRzrFXI+Vhj1FvTfT04H0Qkmxs5HQjU7tN133c/95tvJtjHERHb4YAH
+         Wlbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R55o9kUXAJBh2tF+7lJ4JvdI2/7fbKVS3keHkBQuoNQ=;
+        b=DH6bQyuzCDfAm04JBiJ/gS0UeaWhpSFhRN717FQqSOV9OST83KnxJBGbLkz3eRqAYg
+         PhF1roqHL5SF+XDu0sW86JehdYf4dBUyO3sdc63WJ1kCFtEH7LWs4h9SU8ISjrJ3K4Md
+         LVSaDQLNNE8fCNH9vgeMjmWTjRaavP9c1ioRI5sfHodRFJCl7i/Qk9lxpFPraODXlZRC
+         ip9MB6+nwvOtNEQ4dtfpwvt2+Uunwu76Of1ySMEHhOtpX0YWDfZZSACohRj2uc1ntKSM
+         rlphovvThDAsyYeaV47+FscZpAORoxPmZ0v7FftqBb9ZN0ZEts45NzimKbPqgoGSCOJV
+         vNGg==
+X-Gm-Message-State: APjAAAXADwsbbrjmVeGH7mJ3YQ0NX5pHGsCh0C1tI+nuqzFaHNCV9CGS
+        1AtoJgZRsOMaTk9eAfex9B7BxA==
+X-Google-Smtp-Source: APXvYqz9pczPxcJFDyzjPQrXKMuKkhGOqdKZhdX6tuSwnLL+/90o9NSkJ++zKmx0wuhuYOWclDBHnw==
+X-Received: by 2002:a6b:7417:: with SMTP id s23mr2709245iog.2.1555523873316;
+        Wed, 17 Apr 2019 10:57:53 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id e11sm19033013iob.48.2019.04.17.10.57.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 10:57:51 -0700 (PDT)
+Subject: Re: [PATCH v4 4/7] block: introduce write-hint to stream-id
+ conversion
+To:     Kanchan Joshi <joshi.k@samsung.com>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
+Cc:     prakash.v@samsung.com
+References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
+ <CGME20190417175358epcas1p41a0a4e349dfe0a70bdcc244161c71604@epcas1p4.samsung.com>
+ <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6850a3ad-805f-4232-1bc7-f3249e1fba96@kernel.dk>
+Date:   Wed, 17 Apr 2019 11:57:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c2d37e1-c7f6-5b7b-4f8e-a34e981b841e@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-04-19 10:13:44, Dave Hansen wrote:
-> On 4/17/19 2:23 AM, Michal Hocko wrote:
-> >> 3. The demotion path can not have cycles
-> > yes. This could be achieved by GFP_NOWAIT opportunistic allocation for
-> > the migration target. That should prevent from loops or artificial nodes
-> > exhausting quite naturaly AFAICS. Maybe we will need some tricks to
-> > raise the watermark but I am not convinced something like that is really
-> > necessary.
-> 
-> I don't think GFP_NOWAIT alone is good enough.
-> 
-> Let's say we have a system full of clean page cache and only two nodes:
-> 0 and 1.  GFP_NOWAIT will eventually kick off kswapd on both nodes.
-> Each kswapd will be migrating pages to the *other* node since each is in
-> the other's fallback path.
+On 4/17/19 11:50 AM, Kanchan Joshi wrote:
+> This patch moves write-hint-to-stream-id conversion in block-layer.
+> Earlier this was done by driver (nvme). Current conversion is of the
+> form "streamid = write-hint - 1", for both user and kernel streams.
+> Conversion takes stream limit (maintained in request queue) into
+> account. Write-hints beyond the exposed limit turn to 0.
+> A new field 'streamid' has been added in request. While 'write-hint'
+> field continues to exist. It keeps original value passed from upper
+> layer, and used during merging checks.
 
-I was thinking along node reclaim like based migration. You are right
-that a parallel kswapd might reclaim enough to cause the ping pong and
-we might need to play some watermaks tricks but as you say below this is
-to be seen and a playground to explore. All I am saying is to try the
-most simplistic approach first without all the bells and whistles to see
-how this plays out with real workloads and build on top of that.
-
-We already do have model - node_reclaim - which turned out to suck a lot
-because the reclaim was just too aggressive wrt. refault. Maybe
-migration will turn out much more feasible. And maybe I am completely
-wrong and we need a much more complex solution.
-
-> I think what you're saying is that, eventually, the kswapds will see
-> allocation failures and stop migrating, providing hysteresis.  This is
-> probably true.
-> 
-> But, I'm more concerned about that window where the kswapds are throwing
-> pages at each other because they're effectively just wasting resources
-> in this window.  I guess we should figure our how large this window is
-> and how fast (or if) the dampening occurs in practice.
+Why not just use the bio write hint? We already disallow merging of
+dissimilar write hints, so req->bio->bi_write_hint is known to be
+identical with the rest of the bio's in that chain.
 
 -- 
-Michal Hocko
-SUSE Labs
+Jens Axboe
+
