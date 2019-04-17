@@ -2,79 +2,108 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5540C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBDEC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C13E21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555501585;
-	bh=RwkFnXr/uoD3P62yfD/tFAkp7I2IJV+HMntTkDiwEqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b/5YWqJXw+5isoAtB+mKlgBLTCf0JRQOnqlPV6Tc1QxHT8efFWjB4/P/H9f5Z5sDx
-	 tJukRNbjroT16/WF2TE2fmmpksCzzmRFag6/f/WJIh7CQ5XevI41XZLNhtPrOJfjs1
-	 vZagkn5h05UD80RJ0A7TxitVK2DHdDEDvhEHs0Yo=
+	by mail.kernel.org (Postfix) with ESMTP id F0F7720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhnWIa34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731929AbfDQLqY (ORCPT
+        id S1731994AbfDQLuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:46:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42630 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729522AbfDQLqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:46:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A8FE3AFBD;
-        Wed, 17 Apr 2019 11:46:22 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 13:46:21 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via
- timestamp
-Message-ID: <20190417114621.GF5878@dhcp22.suse.cz>
-References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
- <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
- <CAGWkznEzRB2RPQEK5+4EYB73UYGMRbNNmMH-FyQqT2_en_q1+g@mail.gmail.com>
- <20190417110615.GC5878@dhcp22.suse.cz>
- <CAGWkznH6MjCkKeAO_1jJ07Ze2E3KHem0aNZ_Vwf080Yg-4Ujbw@mail.gmail.com>
+        Wed, 17 Apr 2019 07:50:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33711 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729522AbfDQLuN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:50:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q1so31586701wrp.0;
+        Wed, 17 Apr 2019 04:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mPc+rLGtFeShrb0NQ1VnJOvf7hMU5u7hz3TLKvs7VSA=;
+        b=JhnWIa34ZX+ewwDaPDuBxOLxF/KlF12lkxwqMaYTTdKXSjkIWeJxkJXTgKemuQNuTw
+         t4QyB0iRsIkbu+Jzkch48mJd1UEG4jOK0bXKppoBAE25hzyziTJQZK0glllS1WBeD8MA
+         mPyomeojLypP1+TcoKWLNJ9rESBhC2Vfne3zJBhOHme6+Iq7ouxbnlNPzblWkQoVZE28
+         n6qe6Qfr1eME48D7bTxLVRYl6fYh4PlhAZK5BuPcTWifed0G9888YH3CSsyzNTdtVLRv
+         p4ZTSoMzIDVAef4jXE83YychJjE769ZxaQQtQvJooXY7qD316uGlzyWGMCieLfUe33aM
+         MSgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=mPc+rLGtFeShrb0NQ1VnJOvf7hMU5u7hz3TLKvs7VSA=;
+        b=QGyN6vyTUOqUVfHoZ4nrnzlO+59KSMFgQ+v3wX5FeYalAvbUe7ZrSDU764jfVwO5Xp
+         2eASqLdxojYBWImj3QPqPESpA9COw9D28rSHyEjUw8khPfRGW9tigL/3nHYuoOGak4Js
+         bikN9XCtgmPJtASvyBvQG9AveOhYHISuaWgJ6iEu8qJ8h9zA3RMR36UzYWiqOENxnYyG
+         +8BEMFN0t5up58wBMVGoHkuyoLPg9ooIdCcpYEF26iBEoAMjkUZ+5PiIDt/A4luEq8F7
+         FKDZIQKkW8abjC6/qGFYaCt/csv/AEafDLZbQokCuOuVlNut4Dc6QcTH71DKsO3QaZ1D
+         np0w==
+X-Gm-Message-State: APjAAAUpP5VavPBMDtxwFsZ5J9+8eT9IKrPXUCN+MwJOGXRcAwyOMTXs
+        ZuuGnkAoNRNzg9QBJmLxes8djtPL
+X-Google-Smtp-Source: APXvYqzdLg1sDcxaHwiixmBll9VvGdN4B20V6G3PjTbzpUQdDL3qQszSiElv0SZfkmkNQcPvartT+A==
+X-Received: by 2002:adf:ed86:: with SMTP id c6mr56341931wro.146.1555501810758;
+        Wed, 17 Apr 2019 04:50:10 -0700 (PDT)
+Received: from donizetti.redhat.com ([2001:b07:6468:f312:ac27:aac4:c65c:6eb])
+        by smtp.gmail.com with ESMTPSA id z14sm78431101wrv.78.2019.04.17.04.50.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 04:50:10 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stefanha@redhat.com, stable@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER)
+Subject: [PATCH] block: bio_map_user_iov should not be limited to BIO_MAX_PAGES
+Date:   Wed, 17 Apr 2019 13:50:08 +0200
+Message-Id: <20190417115008.27516-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznH6MjCkKeAO_1jJ07Ze2E3KHem0aNZ_Vwf080Yg-4Ujbw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-04-19 19:36:21, Zhaoyang Huang wrote:
-> sorry for the confusion. What I mean is the basic idea doesn't change
-> as replacing the refault criteria from refault_distance to timestamp.
-> But the detailed implementation changed a lot, including fix bugs,
-> update the way of packing the timestamp, 32bit/64bit differentiation
-> etc. So it makes sense for starting a new context.
+Because bio_kmalloc uses inline iovecs, the limit on the number of entries
+is not BIO_MAX_PAGES but rather UIO_MAX_IOV, which indeed is already checked
+in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
+to report a DMA overrun.
 
-Not really. My take away from the previous discussion is that Johannes
-has questioned the timestamping approach itself. I wasn't following very
-closely so I might be wrong here but if that is really the case then it
-doesn't make much sense to improve the implementation if there is no
-consensus on the approach itself.
+Note that if the argument to iov_iter_npages were changed to UIO_MAX_IOV,
+we would still truncate SG_IO requests beyond UIO_MAX_IOV pages.  Changing
+it to UIO_MAX_IOV + 1 instead ensures that bio_kmalloc notices that the
+request is too big and blocks it.
 
+Cc: stable@vger.kernel.org
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: b282cc766958 ("bio_map_user_iov(): get rid of the iov_for_each()", 2017-10-11)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ block/bio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/block/bio.c b/block/bio.c
+index 4db1008309ed..cc1195f5af7a 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1299,7 +1299,7 @@ struct bio *bio_map_user_iov(struct request_queue *q,
+ 	if (!iov_iter_count(iter))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	bio = bio_kmalloc(gfp_mask, iov_iter_npages(iter, BIO_MAX_PAGES));
++	bio = bio_kmalloc(gfp_mask, iov_iter_npages(iter, UIO_MAX_IOV + 1));
+ 	if (!bio)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
