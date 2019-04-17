@@ -2,139 +2,112 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB98C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9390C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8EA2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7D220652
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555523515;
+	bh=alhjzsBTJNyGGje0+kchr4wq2cZcp6GrZacLG8zYlwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P657AeI763TUzeUh0fjdKennU2HU5pEenXeXL24JG0cOA6GumQthkAabg1waKHY/Y
+	 93BKOj5lV1D92NfPn38LSPcj/MEu0lo2maSrJCpyYfuTIQthdW3rAR6iH5g6cimTyu
+	 acP9X9k5wyZxHPcYZVNSlYVS5ZdcQRG5gQZyTEPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbfDQRv1 (ORCPT
+        id S1733224AbfDQRvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:51:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39952 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbfDQRv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:51:26 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E6D0A3001C76;
-        Wed, 17 Apr 2019 17:51:25 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1C5A608C2;
-        Wed, 17 Apr 2019 17:51:24 +0000 (UTC)
-Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-12-longman@redhat.com>
- <20190417140527.GJ4038@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <d18aa365-cedc-cd45-36a5-48d78af2fcce@redhat.com>
-Date:   Wed, 17 Apr 2019 13:51:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 17 Apr 2019 13:51:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38802 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731977AbfDQRvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:51:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF352AD3B;
+        Wed, 17 Apr 2019 17:51:52 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 19:51:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
+        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+Message-ID: <20190417175151.GB9523@dhcp22.suse.cz>
+References: <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
+ <a0bf6b61-1ec2-6209-5760-80c5f205d52e@intel.com>
+ <20190417092318.GG655@dhcp22.suse.cz>
+ <20190417152345.GB4786@localhost.localdomain>
+ <20190417153923.GO5878@dhcp22.suse.cz>
+ <20190417153739.GD4786@localhost.localdomain>
+ <20190417163911.GA9523@dhcp22.suse.cz>
+ <fcb30853-8039-8154-7ae0-706930642576@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417140527.GJ4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 17 Apr 2019 17:51:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcb30853-8039-8154-7ae0-706930642576@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17/2019 10:05 AM, Peter Zijlstra wrote:
-> On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
->> @@ -650,6 +686,33 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
->>  	struct rwsem_waiter waiter;
->>  	DEFINE_WAKE_Q(wake_q);
->>  
->> +	if (!rwsem_can_spin_on_owner(sem))
->> +		goto queue;
->> +
->> +	/*
->> +	 * Undo read bias from down_read() and do optimistic spinning.
->> +	 */
->> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
->> +	adjustment = 0;
->> +	if (rwsem_optimistic_spin(sem, false)) {
->> +		unsigned long flags;
->> +
->> +		/*
->> +		 * Opportunistically wake up other readers in the wait queue.
->> +		 * It has another chance of wakeup at unlock time.
->> +		 */
->> +		if ((atomic_long_read(&sem->count) & RWSEM_FLAG_WAITERS) &&
->> +		    raw_spin_trylock_irqsave(&sem->wait_lock, flags)) {
-> why trylock? Also the rest of this function uses _irq(). Having had to
-> define @flags should've been a clue.
->
-> You simply cnanot do down_*() with IRQs disabled.
+On Wed 17-04-19 10:26:05, Yang Shi wrote:
+> 
+> 
+> On 4/17/19 9:39 AM, Michal Hocko wrote:
+> > On Wed 17-04-19 09:37:39, Keith Busch wrote:
+> > > On Wed, Apr 17, 2019 at 05:39:23PM +0200, Michal Hocko wrote:
+> > > > On Wed 17-04-19 09:23:46, Keith Busch wrote:
+> > > > > On Wed, Apr 17, 2019 at 11:23:18AM +0200, Michal Hocko wrote:
+> > > > > > On Tue 16-04-19 14:22:33, Dave Hansen wrote:
+> > > > > > > Keith Busch had a set of patches to let you specify the demotion order
+> > > > > > > via sysfs for fun.  The rules we came up with were:
+> > > > > > I am not a fan of any sysfs "fun"
+> > > > > I'm hung up on the user facing interface, but there should be some way a
+> > > > > user decides if a memory node is or is not a migrate target, right?
+> > > > Why? Or to put it differently, why do we have to start with a user
+> > > > interface at this stage when we actually barely have any real usecases
+> > > > out there?
+> > > The use case is an alternative to swap, right? The user has to decide
+> > > which storage is the swap target, so operating in the same spirit.
+> > I do not follow. If you use rebalancing you can still deplete the memory
+> > and end up in a swap storage. If you want to reclaim/swap rather than
+> > rebalance then you do not enable rebalancing (by node_reclaim or similar
+> > mechanism).
+> 
+> I'm a little bit confused. Do you mean just do *not* do reclaim/swap in
+> rebalancing mode? If rebalancing is on, then node_reclaim just move the
+> pages around nodes, then kswapd or direct reclaim would take care of swap?
 
-I used trylock to avoid getting stuck in the spinlock while holding a
-read lock on the rwsem.
+Yes, that was the idea I wanted to get through. Sorry if that was not
+really clear.
 
-You are right. I don't to use _irqsave version. Just the _irq version is
-enough.
+> If so the node reclaim on PMEM node may rebalance the pages to DRAM node?
+> Should this be allowed?
 
-Thanks,
-Longman
+Why it shouldn't? If there are other vacant Nodes to absorb that memory
+then why not use it?
 
+> I think both I and Keith was supposed to treat PMEM as a tier in the reclaim
+> hierarchy. The reclaim should push inactive pages down to PMEM, then swap.
+> So, PMEM is kind of a "terminal" node. So, he introduced sysfs defined
+> target node, I introduced N_CPU_MEM.
 
+I understand that. And I am trying to figure out whether we really have
+to tream PMEM specially here. Why is it any better than a generic NUMA
+rebalancing code that could be used for many other usecases which are
+not PMEM specific. If you present PMEM as a regular memory then also use
+it as a normal memory.
+-- 
+Michal Hocko
+SUSE Labs
