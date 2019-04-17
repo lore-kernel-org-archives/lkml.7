@@ -2,106 +2,111 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4193BC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B0BC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B4521773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5281217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zahEpWuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732989AbfDQUsW (ORCPT
+        id S1733126AbfDQUwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:48:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47984 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbfDQUsW (ORCPT
+        Wed, 17 Apr 2019 16:52:19 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33394 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729939AbfDQUwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:48:22 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1hGrTg-0000OP-BW
-        for linux-kernel@vger.kernel.org; Wed, 17 Apr 2019 20:48:20 +0000
-Received: by mail-it1-f197.google.com with SMTP id o197so73941ito.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:48:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FKs6b6RLzOW6Pz03ZnepEKUCxUG5lBr2ZKHFqCP8uyY=;
-        b=ewuInX+FOw1AIuaS50Wc1sYSNkK/+EsWmTtMoS7PmzNtgK+0u4gtuVgRBziAvyTYMi
-         TSFQYOm/be8CuKwdI2JtAYZPP6AE9jbgYSwDn3SVkdK0Q4k5lzJ3tSF1IoKZCFtZ+OiM
-         APOVypppoRjSb7Tu+4TpeJ7puyq2DYsLCrpb9prWShPqvew1Ri7GCHa5Kw8/zAFrTtaR
-         EdtdrDKIFSb+RNl6bPQEn1TPdYDVPPHaL6wrDPDDPCoye7w+OmfNyt/8q/SdqOc+KQH7
-         5mybXg2EIbiw2c0o0Az5DjI+U5ZaNWJY7EtQBEOmu/KAyW5TiaCrAlsaC3TD7hD6XuWy
-         4wDA==
-X-Gm-Message-State: APjAAAX5m9eUAlznqsGAXtwZxLQTK3Ftkc9ITBnLXsph/qDHmCHHnI8d
-        DJIs218l80rWHUHH56NpNRBFjiSDFdVLQI5g06foC0AS6jcsupEb8kdaY25d12JjkxVALF9p5B4
-        nn/v8dCiWvG8oRv/ecGmrH+0OPxw2WmEwPVrqMul5ww==
-X-Received: by 2002:a05:6638:60e:: with SMTP id g14mr35030884jar.62.1555534099336;
-        Wed, 17 Apr 2019 13:48:19 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxhLv8FzWKOUKRcFaZQ9Q3wrgT5tWJRdwXvjRnIIBQ9dn0sCLbXg/33/O5gcbPcDwLcpplrVg==
-X-Received: by 2002:a05:6638:60e:: with SMTP id g14mr35030865jar.62.1555534099071;
-        Wed, 17 Apr 2019 13:48:19 -0700 (PDT)
-Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
-        by smtp.gmail.com with ESMTPSA id c99sm47406itd.4.2019.04.17.13.48.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 13:48:18 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 14:48:17 -0600
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: [RFC] arm64: swiotlb: cma_alloc error spew
-Message-ID: <20190417204817.GA28897@xps13.dannf>
+        Wed, 17 Apr 2019 16:52:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8sw3pOWFIJ818F8LV05sd4h5C904YE036pXDbfHpd9k=; b=zahEpWuNgo88BtZ19/gkemgQhH
+        lPk0DnYs75w2CJ1hounAlfx3e8jG6cvCXX6cQQKOcKZwdW30yBK0nA3kFJ1RcsV/wEgiQFR7DnaWW
+        gR3AYGvnaUMYdeCOBcbzn3vdktSuF/loG4SB7/IUUe8U0+HJclkeuz/4MF3C2QU+W3T8Gy3NgeX3w
+        dsHcWTWKuFD1nebRY+AGczX5RU87ETGyYie15gWRGx2zY0sIl43nX1pxUjEih1M7iEQYVCXAuPIRF
+        O3tp4x5FO8HbOOVAQtnetAHZIyqwxwu35ZJEv1Icur1OPI6CLGf8ooBMleXqEniVfmGy83HKM04sh
+        Nf1YisJQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGrXR-0001GC-OD; Wed, 17 Apr 2019 20:52:14 +0000
+Subject: Re: [PATCH] ktest: Add support for meta characters in GRUB_MENU
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+References: <20190417201114.14839-1-msys.mizuma@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3af6075b-60e2-5ed2-5cd2-7d6850dbafbc@infradead.org>
+Date:   Wed, 17 Apr 2019 13:52:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190417201114.14839-1-msys.mizuma@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hey,
-  I'm seeing an issue on a couple of arm64 systems[*] where they spew
-~10K "cma: cma_alloc: alloc failed" messages at boot. The errors are
-non-fatal, and bumping up cma to a large enough size (~128M) gets rid
-of them - but that seems suboptimal. Bisection shows that this started
-after commit fafadcd16595 ("swiotlb: don't dip into swiotlb pool for
-coherent allocations"). It looks like __dma_direct_alloc_pages()
-is opportunistically using CMA memory but falls back to non-CMA if CMA
-disabled or unavailable. I've demonstrated that this fallback is
-indeed returning a valid pointer. So perhaps the issue is really just
-the warning emission.
+On 4/17/19 1:11 PM, Masayoshi Mizuma wrote:
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> 
+> ktest fails if meta characters are in GRUB_MENU, for example
+> GRUB_MENU = 'Fedora (test)'
+> 
+> The failure happens because the meta characters are not escaped,
+> so the menu doesn't match in any entries in GRUB_FILE.
+> 
+> Use quotameta() to escape the meta characters.
 
-The following naive patch solves the problem for me - just silence the
-cma errors, since it looks like a soft error. But is there a better
-approach?
+  Use quotemeta()
 
-[*] APM X-Gene & HiSilicon Hi1620 w/ SMMU disabled
+> 
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> ---
+>  tools/testing/ktest/ktest.pl | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+> index 87af8a68ab25..ea07d43856b8 100755
+> --- a/tools/testing/ktest/ktest.pl
+> +++ b/tools/testing/ktest/ktest.pl
+> @@ -1866,9 +1866,10 @@ sub get_grub2_index {
+>  	or dodie "unable to get $grub_file";
+>  
+>      my $found = 0;
+> +    my $_grub_menu = quotemeta($grub_menu);
+>  
+>      while (<IN>) {
+> -	if (/^menuentry.*$grub_menu/) {
+> +	if (/^menuentry.*$_grub_menu/) {
+>  	    $grub_number++;
+>  	    $found = 1;
+>  	    last;
+> @@ -1909,9 +1910,10 @@ sub get_grub_index {
+>  	or dodie "unable to get menu.lst";
+>  
+>      my $found = 0;
+> +    my $_grub_menu = quotemeta($grub_menu);
+>  
+>      while (<IN>) {
+> -	if (/^\s*title\s+$grub_menu\s*$/) {
+> +	if (/^\s*title\s+$_grub_menu\s*$/) {
+>  	    $grub_number++;
+>  	    $found = 1;
+>  	    last;
+> 
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 6310ad01f915b..0324aa606c173 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -112,7 +112,7 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
-        /* CMA can be used only in the context which permits sleeping */
-        if (gfpflags_allow_blocking(gfp)) {
-                page = dma_alloc_from_contiguous(dev, count, page_order,
--                                                gfp & __GFP_NOWARN);
-+                                                true);
-                if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
-                        dma_release_from_contiguous(dev, page, count);
-                        page = NULL;
 
-
-
-
+-- 
+~Randy
