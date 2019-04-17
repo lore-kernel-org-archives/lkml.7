@@ -2,149 +2,140 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32658C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591CAC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053522173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555520967;
-	bh=2cOCdzG0SDy+DeXwUTlQ+NowWIIegqUtx60BFoyA8ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yClY2cMdYUJBoLyaYi3/IuEOXvo7K8Hiu7RxMQgBpIaQ95Qv7prwH4ZFAO+Z3Pe/D
-	 DUeG2tSmot1RlVgNxpj4mrWJd99HXm+oZDAz8vx3MPLFZE3jh0Q7PooFgl3RU0hXWn
-	 /yEjTFYtfRJpx1aRDJrfM7Q4Hp/MiALGlXoy4NRk=
+	by mail.kernel.org (Postfix) with ESMTP id 24F22204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:09:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Df51FEzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732936AbfDQRJZ (ORCPT
+        id S1732970AbfDQRJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:09:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34585 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729395AbfDQRJY (ORCPT
+        Wed, 17 Apr 2019 13:09:30 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43747 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbfDQRJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:09:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w16so2975554wrl.1;
-        Wed, 17 Apr 2019 10:09:23 -0700 (PDT)
+        Wed, 17 Apr 2019 13:09:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id x3so21157747iol.10;
+        Wed, 17 Apr 2019 10:09:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uI0ONQRkWQ/et5lZr2E50Xppi+adE17aj2er9uc38Ro=;
-        b=vQKDMpKZs+jpCV0AtFjtb+IzANhqz3dew5Sd4gG7ITDXSrt8OYeyxzo5885noBmd/k
-         M7Y511AnmRuFNpPrRUcL0fx4VCDHC5HbpoQL157ReLzEY+ATmvDFca5O27ddKmW8+E5U
-         SWwgB4fqBVviw9oEx6R3qe3lIZgRJYJXc6M3U+vQZTc8SCcbn5I1BqHYSYodcHy/K7y2
-         owHfWC5l9Z1dd3sc9ZHcDGWk/J7z+eM+/y7DQCfdM2D1aY4WwXTWnRz28CERITWBN3RI
-         OdgGC3tyQYESSIRNzNO6ctsaUz9bT+jioxPBGx1xhp3GL49llo+vdJv4lTzb9yvWN35X
-         0F5A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bl1k/2Ow+1MIZ3va3HH95vWhThaYGxFJLCOy/YeDWqc=;
+        b=Df51FEzg2+mn8RTe6BeDUB0wjqLKHuzwJR5s33RHfgM9i+T8uRyKO9TKQijB6+M2gW
+         JUsR9OdvG1dRhbUFnLMJQHDPkyjkjcHSZZM381gI4jEKSNGimHl1KRPF+2xgVEokEwba
+         e/PHC5C0xeGYZKTkML77BBEvttzKYMUzBoDQM37CWsBBGVfQGTjVIWGZ/Ixf/5aYlDP7
+         R5mXEKH+Z8dbsO7YU3yrm595FaJbUFhEhBWjCd8DjdRqEKi/c5WOBzfj9mnfO43wvFcM
+         9Pnq2nEa4rU2GAvoDujMiN5aZ2n/uLf4jAbbqfwA3MtbsTX7oZkgKvtKmA6kT//uBLgi
+         HqUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uI0ONQRkWQ/et5lZr2E50Xppi+adE17aj2er9uc38Ro=;
-        b=NHQ/p5kSoYO4qoGi9jmIHZ6XtLTr8SMtEAkZEkvCTvCY/pJTNGN0ek9uQiwaNaXmiP
-         +bSk8fqiAuZVhR/L9XZ/CfIfRXgHb2tKDmXMOlqECtmew1BTq4m2wLmG8sDTKYEwQ8su
-         PJkwgbfsf1BV0dDoSwP/TwBhcruS3QWqrEscoCi3Kgd4L0ZALHBUZ7jk9XIG4LH0NOfc
-         /HGY3ckI6ATaw+6oxDQhNrIuh89bRjJwZ4YmQXm9kRk79TPll++URksCFZRSCYckohxW
-         69sLlwhPYxvs/6EZ/5kXPfNrHD3ULDE9NwOT3IsIR5Y+ddUNhsK2fRQG4NfFkCZ2PRN7
-         hJuw==
-X-Gm-Message-State: APjAAAU6ueq/1QC1nAXHIg6eaRMx5f977q5CRX2bbiX2jgKTtyVGWZn6
-        yVoCUIwD7EDsu3YLCMFNrZA=
-X-Google-Smtp-Source: APXvYqwzLRhrBX+v0nCWIiRZo+Ww+BhgVCQVN/Z3qzTyGEskFIzDNjOb+l7u4co7KExCIwSw9l38CA==
-X-Received: by 2002:adf:f8d0:: with SMTP id f16mr2701431wrq.198.1555520962630;
-        Wed, 17 Apr 2019 10:09:22 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 67sm2676425wmz.41.2019.04.17.10.09.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 10:09:21 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 19:09:18 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     juergh@gmail.com, tycho@tycho.ws, jsteckli@amazon.de,
-        keescook@google.com, konrad.wilk@oracle.com,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
-        tyhicks@canonical.com, dwmw@amazon.co.uk,
-        andrew.cooper3@citrix.com, jcm@redhat.com,
-        boris.ostrovsky@oracle.com, iommu@lists.linux-foundation.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-Message-ID: <20190417170918.GA68678@gmail.com>
-References: <cover.1554248001.git.khalid.aziz@oracle.com>
- <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
- <20190417161042.GA43453@gmail.com>
- <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bl1k/2Ow+1MIZ3va3HH95vWhThaYGxFJLCOy/YeDWqc=;
+        b=m9iU6gWrf0wc8vA5oJZlNWTi3FQO8msud3OOpD9c8whl4sCrCqE1TAQN8z2yRnLGYz
+         3D+fPfP+ayzlrUIBfaCBe9h5YYlet+3jqsxeFnmGuZcjbOBkTmS1lkh5QvqK2vGQyz5X
+         PGzSgquM0QxGkaMIjkOfMmSfXeUWCuFqc5+TLKaCMYXFBRcjZa9XJ2Eg3HV39p71wb2P
+         niCZjUDOr7V/N+j8X18Bg6I+m2OUCEgoi3F/Rhi8q545Pv2+dXK1jZP3X6QWPPJwk6Ob
+         GAj/7C+5HQsQjgIixOj6LLVgUxTsPcR0OgtFfF0M68WstwV+yXavmyeYWI/Kx370XqjD
+         RhYw==
+X-Gm-Message-State: APjAAAVt1Q5mC/u/3wu+M5459bM7VHXcJGQitztPNekm0OYY463T6LNr
+        +xEzBNIohMntpeEqW7tA3zIrVhNkVHptHjlABX8=
+X-Google-Smtp-Source: APXvYqz6kmxieLVsAlWppp7WYkws+rqBkJQDPOx19ZiJJZxedDAXJA5I1kvT8tkdtm6L069tTf0Ia725klgqSJrM0uU=
+X-Received: by 2002:a5e:8e03:: with SMTP id a3mr5234885ion.126.1555520968370;
+ Wed, 17 Apr 2019 10:09:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190417152701.23391-1-brgl@bgdev.pl> <20190417152701.23391-5-brgl@bgdev.pl>
+In-Reply-To: <20190417152701.23391-5-brgl@bgdev.pl>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 17 Apr 2019 12:09:17 -0500
+Message-ID: <CAHCN7xKVaYqd5LLvRx7i8ik+JnTFdpexZf2WXt0R2N1W1skOJA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] ARM: dts: da850-evm: enable cpufreq
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 17, 2019 at 10:27 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
+> tps65070 pmic with configurable output voltage. By default da850-evm
+> boards support frequencies up to 375MHz so enable this operating
+> point.
 
-* Khalid Aziz <khalid.aziz@oracle.com> wrote:
+Have you done any testing with the LCD on any of the devices you have?
 
-> > I.e. the original motivation of the XPFO patches was to prevent execution 
-> > of direct kernel mappings. Is this motivation still present if those 
-> > mappings are non-executable?
-> > 
-> > (Sorry if this has been asked and answered in previous discussions.)
-> 
-> Hi Ingo,
-> 
-> That is a good question. Because of the cost of XPFO, we have to be very
-> sure we need this protection. The paper from Vasileios, Michalis and
-> Angelos - <http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf>,
-> does go into how ret2dir attacks can bypass SMAP/SMEP in sections 6.1
-> and 6.2.
+I enabled the ondemand governor, and I got a bunch of splat from the
+LCD controller:
 
-So it would be nice if you could generally summarize external arguments 
-when defending a patchset, instead of me having to dig through a PDF 
-which not only causes me to spend time that you probably already spent 
-reading that PDF, but I might also interpret it incorrectly. ;-)
+tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
+differs from the calculated rate (54000000Hz)
+tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
+tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
+... [ snip]
+tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
+differs from the calculated rate (54000000Hz)
+tilcdc 1e13000.display: effective pixel clock rate (50000000Hz)
+differs from the calculated rate (54000000Hz)
+tilcdc 1e13000.display: tilcdc_crtc_irq(0x00000161): FIFO underflow
 
-The PDF you cited says this:
+It appears to go on forever.  I don't necessarily want to hold it up,
+but I don't know the clocking system well enough to know where to go
+investigate it.  I can certainly live without ondemand.  Using
+userspace as the default governor is fine for me for now.
 
-  "Unfortunately, as shown in Table 1, the W^X prop-erty is not enforced 
-   in many platforms, including x86-64.  In our example, the content of 
-   user address 0xBEEF000 is also accessible through kernel address 
-   0xFFFF87FF9F080000 as plain, executable code."
-
-Is this actually true of modern x86-64 kernels? We've locked down W^X 
-protections in general.
-
-I.e. this conclusion:
-
-  "Therefore, by simply overwriting kfptr with 0xFFFF87FF9F080000 and 
-   triggering the kernel to dereference it, an attacker can directly 
-   execute shell code with kernel privileges."
-
-... appears to be predicated on imperfect W^X protections on the x86-64 
-kernel.
-
-Do such holes exist on the latest x86-64 kernel? If yes, is there a 
-reason to believe that these W^X holes cannot be fixed, or that any fix 
-would be more expensive than XPFO?
-
-Thanks,
-
-	Ingo
+adam
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Adam Ford <aford173@gmail.com>
+> ---
+>  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index f04bc3e15332..f94bb38fdad9 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -191,6 +191,19 @@
+>         };
+>  };
+>
+> +&cpu {
+> +       cpu-supply = <&vdcdc3_reg>;
+> +};
+> +
+> +/*
+> + * The standard da850-evm kits and SOM's are 375MHz so enable this operating
+> + * point by default. Higher frequencies must be enabled for custom boards with
+> + * other variants of the SoC.
+> + */
+> +&opp_375 {
+> +       status = "okay";
+> +};
+> +
+>  &sata {
+>         status = "okay";
+>  };
+> --
+> 2.21.0
+>
