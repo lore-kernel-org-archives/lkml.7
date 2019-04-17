@@ -2,234 +2,138 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319C0C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D839C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA3A20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB64C20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="hfSPhcab"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="XU6pZ8xl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbfDQQJi (ORCPT
+        id S1732686AbfDQQMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:09:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42622 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732634AbfDQQJh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:09:37 -0400
-Received: by mail-qt1-f193.google.com with SMTP id p20so27938190qtc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=hNTvJdps/sfN1uZ0URpc5eMGab3L7auzqAmVyACQEqM=;
-        b=hfSPhcabZ0kBXAsMVEymune6/lbX5SkLQtAg7aN1sCltOjwbav+isi48wEFtpYEatx
-         UlIZ+vSwJh6dpBTa8TKSjN5I/D9XQbfx48bPJvwaxMAPORerDvpAg3SDQRuOmoSIiZzt
-         TXJmvrCAhNctObEEI2uAXR84qpQm47PcYlXASBTEwFhwYiF2gT1F5gVDdyPVlPxHqbjd
-         k/eEpDLDbWMDM8ydUEahu5ubj9+K+UxOj0CQ6dsGhzV0EOPATh+xo14sVAFJ/NRVmzD/
-         6j4H6vEp/sYwS+GR7N3TAgf+EAmBX6O+u9XMJfe8l9L14IGyk1iy22cl+1vO3XPn9rMf
-         6htQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=hNTvJdps/sfN1uZ0URpc5eMGab3L7auzqAmVyACQEqM=;
-        b=ojBqVC893AS/OX01g1RnWI66u+Dag4hiBJflCkKy814GaJmBxAyCrCof2D+99HYR9m
-         2eHpKRU+gttVUhLEdkt5KcB9JNgYPTsCJXCYMWWs37EH3tNp6koSly5EAxqfSy5wC32J
-         5+6By3rwJCNT5Kt1MV1onswIYeq7f5SBdTXmkZ7FbAIpQyIiIGbaURN+aR+TbYQeDZ8t
-         UsOlsWpiPSYFqeyHZ6Sc5/2738G00udGFlGIQe/1oULPOCtbtF2Y1ONsx02IQbVZ4BFT
-         5gZ9PRvgXQcZ02xdUBJF4zd1AHzLTfHP9CqUZrJUpIY5peU/pbXL7AC45X4bS/ImTHYX
-         f8oQ==
-X-Gm-Message-State: APjAAAW2SyJDp/IGj3nMlwxpN5VfxzIi0SPHF++XoNf3nI6avNMWz/Or
-        kLReh3YTZw92dR/lN+trkwI21jO3OeI=
-X-Google-Smtp-Source: APXvYqz4TkEs65RaQJfjugldAeNsWgoBIZjwf/dhuuALa+k9cqkWnVJ3w4BNoMyO5TzY7WDL8qdyrg==
-X-Received: by 2002:ac8:f86:: with SMTP id b6mr71427678qtk.330.1555517375203;
-        Wed, 17 Apr 2019 09:09:35 -0700 (PDT)
-Received: from tpx230-nicolas.collaboramtl (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id j5sm33424972qtb.30.2019.04.17.09.09.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 09:09:33 -0700 (PDT)
-Message-ID: <02888af8ff23d0325c35d7b9d5c993b8dbe5c1c5.camel@ndufresne.ca>
-Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video
- decoder interface
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Dafna Hirschfeld <dafna3@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 17 Apr 2019 12:09:32 -0400
-In-Reply-To: <CAPBb6MU4yJVJq_AasQ0p9PPxtUyt73yB-10=ATCudUTsiwKOSg@mail.gmail.com>
-References: <20190306080019.159676-1-acourbot@chromium.org>
-         <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
-         <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
-         <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
-         <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
-         <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
-         <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
-         <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
-         <CAPBb6MVG+3jQcw3AuhYDYCZ0YJ0aX=TmEuM5izh12GLw9V6B8Q@mail.gmail.com>
-         <0f4775b1bb04e136e3a425df0ba6a201594acdbd.camel@bootlin.com>
-         <CAPBb6MU4yJVJq_AasQ0p9PPxtUyt73yB-10=ATCudUTsiwKOSg@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-lIOBNaPN4GZo1Y3+jXcR"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 17 Apr 2019 12:12:34 -0400
+Received: from mail-eopbgr40120.outbound.protection.outlook.com ([40.107.4.120]:30542
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729512AbfDQQMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 12:12:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cXA6i/VvEUcf/XD5fpJYxZWmtLgT+XDApuJchH8ddxA=;
+ b=XU6pZ8xlbeZTJTiOAjNzlpNYLkeqZSXiFpVcmMZHAjxKUZEIclRQXrd2m64iw4Zj5UIqE/UP5QOghRKYbYocfCoS7PEZdS45XMQCqGDbX6WPO8m1v7UgcERCJR3XG5gKE8peKUqc/hCxcyteBfM6QgI1/4wLBKtqlsp/Sy9pv5U=
+Received: from AM0PR08MB5105.eurprd08.prod.outlook.com (10.255.30.86) by
+ AM0PR08MB4260.eurprd08.prod.outlook.com (20.179.32.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Wed, 17 Apr 2019 16:12:29 +0000
+Received: from AM0PR08MB5105.eurprd08.prod.outlook.com
+ ([fe80::7de4:87d1:9c4b:b25e]) by AM0PR08MB5105.eurprd08.prod.outlook.com
+ ([fe80::7de4:87d1:9c4b:b25e%3]) with mapi id 15.20.1813.011; Wed, 17 Apr 2019
+ 16:12:29 +0000
+From:   Konstantin Khorenko <khorenko@virtuozzo.com>
+To:     Tejun Heo <tj@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 1/1] kernfs: keep kernfs node alive for
+ __kernfs_remove()
+Thread-Topic: [PATCH RFC 1/1] kernfs: keep kernfs node alive for
+ __kernfs_remove()
+Thread-Index: AQHU9GyPWQ+YPVfbiESxIBDX1jg2naY/KTWAgAFevIA=
+Date:   Wed, 17 Apr 2019 16:12:29 +0000
+Message-ID: <0469256f-7af9-c9cb-1c64-5d4bebfad095@virtuozzo.com>
+References: <20190416155335.14627-1-khorenko@virtuozzo.com>
+ <20190416155335.14627-2-khorenko@virtuozzo.com>
+ <20190416191727.GD374014@devbig004.ftw2.facebook.com>
+In-Reply-To: <20190416191727.GD374014@devbig004.ftw2.facebook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0701CA0058.eurprd07.prod.outlook.com
+ (2603:10a6:3:9e::26) To AM0PR08MB5105.eurprd08.prod.outlook.com
+ (2603:10a6:208:160::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=khorenko@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [185.231.240.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2f8c3b5f-a737-4813-4d86-08d6c34f7d5d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(2017052603328)(7193020);SRVR:AM0PR08MB4260;
+x-ms-traffictypediagnostic: AM0PR08MB4260:
+x-microsoft-antispam-prvs: <AM0PR08MB42601A4BF9A44876BF9FF68FC8250@AM0PR08MB4260.eurprd08.prod.outlook.com>
+x-forefront-prvs: 0010D93EFE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(136003)(39850400004)(366004)(189003)(199004)(186003)(106356001)(6246003)(102836004)(68736007)(2906002)(8676002)(81166006)(53936002)(386003)(81156014)(6506007)(97736004)(53546011)(7736002)(31696002)(4326008)(8936002)(316002)(6436002)(6486002)(6116002)(446003)(3846002)(54906003)(305945005)(86362001)(71200400001)(71190400001)(229853002)(11346002)(2616005)(52116002)(105586002)(5660300002)(478600001)(66066001)(14454004)(76176011)(25786009)(486006)(99286004)(256004)(14444005)(6916009)(476003)(31686004)(6512007)(26005)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR08MB4260;H:AM0PR08MB5105.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: aGJfL3BfdSWGiYFeO4xIBA6cpBf3prqL35XkSIHUkespCCUgZZ18mw2BNwjh31A01Pn+N6iUi73iXnnJpD1V3ymQUvxcch85/XLWpyh1ZOu6xnpMguHcP8+gz0xMwSQSapJpqISQxi2Wl5raPeNlEWFa9YpjZIifEO5SFL1Ahhwtzg3ddiBNrNib+2Z2Yk1YP/WZNUIbXvc4u58wyfSgyCcP7AsXG0fEo2b9EjOf3HoPJ7rjmuysbgpnyyQpZ33X7CplcSdoN3rRg99StDrKuPMKhgRQKQcsF4jFRVAfpiNA+yT4TpJxlky1K4GVFrMGyeiB4m7hE8OvklgJeeQ6SvgWfOdWc2WBofP742BWNOGsqj+YTh41+oTZptwy9KSuby63320lxYGTJg1uBZLv1v1x+T+JyEfbOtoZEqTI5b4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6F41F548708D1148B1EBAD5B9C1EBE95@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f8c3b5f-a737-4813-4d86-08d6c34f7d5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 16:12:29.5485
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4260
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-lIOBNaPN4GZo1Y3+jXcR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mercredi 17 avril 2019 =C3=A0 14:39 +0900, Alexandre Courbot a =C3=A9cri=
-t :
-> Hi Paul,
->=20
-> On Tue, Apr 16, 2019 at 4:55 PM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> > Hi,
-> >=20
-> > Le mardi 16 avril 2019 =C3=A0 16:22 +0900, Alexandre Courbot a =C3=A9cr=
-it :
-> >=20
-> > [...]
-> >=20
-> > > Thanks for this great discussion. Let me try to summarize the status
-> > > of this thread + the IRC discussion and add my own thoughts:
-> > >=20
-> > > Proper support for multiple decoding units (e.g. H.264 slices) per
-> > > frame should not be an afterthought ; compliance to encoded formats
-> > > depend on it, and the benefit of lower latency is a significant
-> > > consideration for vendors.
-> > >=20
-> > > m2m, which we use for all stateless codecs, has a strong assumption
-> > > that one OUTPUT buffer consumed results in one CAPTURE buffer being
-> > > produced. This assumption can however be overruled: at least the venu=
-s
-> > > driver does it to implement the stateful specification.
-> > >=20
-> > > So we need a way to specify frame boundaries when submitting encoded
-> > > content to the driver. One request should contain a single OUTPUT
-> > > buffer, containing a single decoding unit, but we need a way to
-> > > specify whether the driver should directly produce a CAPTURE buffer
-> > > from this request, or keep using the same CAPTURE buffer with
-> > > subsequent requests.
-> > >=20
-> > > I can think of 2 ways this can be expressed:
-> > > 1) We keep the current m2m behavior as the default (a CAPTURE buffer
-> > > is produced), and add a flag to ask the driver to change that behavio=
-r
-> > > and hold on the CAPTURE buffer and reuse it with the next request(s) =
-;
-> >=20
-> > That would kind of break the stateless idea. I think we need requests
-> > to be fully independent of eachother and have some entity that
-> > coordinates requests for this kind of things.
->=20
-> Side note: the idea that stateless decoders are entirely stateless is
-> not completely accurate anyway. When we specify a resolution on the
-> OUTPUT queue, we already store some state. What matters IIUC is that
-> the *hardware* behaves in a stateless manner. I don't think we should
-> refrain from storing some internal driver state if it makes sense.
->=20
-> Back to the topic: the effect of this flag would just be that the
-> first buffer is the CAPTURE queue is not removed, i.e. the next
-> request will work on the same buffer. It doesn't really preserve any
-> state - if the next request is the beginning of a different frame,
-> then the previous work will be discarded and the driver will behave as
-> it should, not considering any previous state.
->=20
-> > > 2) We specify that no CAPTURE buffer is produced by default, unless a
-> > > flag asking so is specified.
-> > >=20
-> > > The flag could be specified in one of two ways:
-> > > a) As a new v4l2_buffer.flag for the OUTPUT buffer ;
-> > > b) As a dedicated control, either format-specific or more common to a=
-ll codecs.
-> >=20
-> > I think we must aim for a generic solution that would be at least
-> > common to all codecs, and if possible common to requests regardless of
-> > whether they concern video decoding or not.
-> >=20
-> > I really like the idea of introducing a requests batch/group/queue,
-> > which groups requests together and allows marking them done when the
-> > whole group is done being decoded. For that, we explicitly mark one of
-> > the requests as the final one, so that we can continue adding requests
-> > to the batch even when it's already being processed. When all the
-> > requests are done being decoded, we can mark them done.
->=20
-> I'd need to see this idea more developed (with maybe an example of the
-> sequence of IOCTLs) to form an opinion about it. Also would need to be
-> given a few examples of where this could be used outside of stateless
-> codecs. Then we will have to address what this means for requests:
-> your argument against using a "release CAPTURE buffer" flag was that
-> requests won't be fully independent from each other anymore, but I
-> don't see that situation changing with batches. Then, does the end of
-> a batch only means that a CAPTURE buffer should be released, or are
-> other actions required for non-codec use-cases? There are lots and
-> lots of questions like this one lurking.
->=20
-> > With that, we also need some tweaking in the core to look for an
-> > available capture buffer that matches the output buffer's timestamp
-> > before trying to dequeue the next available capture buffer
->=20
-> I don't think that would be strictly necessary, unless we want to be
-> able to decode slices from different frames before the first one is
-> completed?
->=20
-> > This way,
-> > the first request of the batch will get any queued capture buffer, but
-> > subsequent requests will find the matchung capture buffer by timestamp.
-> >=20
-> > I think that's basically all we need to handle that and the two aspects
-> > (picking by timestamp and requests groups) are rather independent and
-> > the latter could probably be used in other situations than video
-> > decoding.
-> >=20
-> > What do you think?
->=20
-> At the current point I'd like to avoid over-engineering things.
-> Introducing a request batch mechanism would mean more months spent
-> before we can set the stateless codec API in stone, and at some point
-> we need to settle and release something that people can use. We don't
-> even have clear idea of what batches would look like and in which
-> cases they would be used. The idea of an extra flag is simple and
-> AFAICT would do the job nicely, so why not proceed with this for the
-> time being?
-
-I also share this feeling that this might be a bit over-engineered for
-what we want to solve. But I also don't fully understand Paul's
-proposal.
-
->=20
-> Cheers,
-> Alex.
-
---=-lIOBNaPN4GZo1Y3+jXcR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXLdPvAAKCRBxUwItrAao
-HOe3AKCnxAwpm2y+c1oUtNuhjcBKR9dffQCbBsiMrLZ8KWixiVveAXmeivbplvE=
-=/TTp
------END PGP SIGNATURE-----
-
---=-lIOBNaPN4GZo1Y3+jXcR--
-
+T24gMDQvMTYvMjAxOSAxMDoxNyBQTSwgVGVqdW4gSGVvIHdyb3RlOg0KPiBPbiBUdWUsIEFwciAx
+NiwgMjAxOSBhdCAwNjo1MzozNVBNICswMzAwLCBLb25zdGFudGluIEtob3JlbmtvIHdyb3RlOg0K
+Pj4gX19rZXJuZnNfcmVtb3ZlKCkgd2hpY2ggaXMgY2FsbGVkIHVuZGVyIGtlcm5mc19tdXRleCwN
+Cj4+IGFzc3VtZXMgbm9ib2R5IGtpbGxzIGtlcm5mcyBub2RlIHdoaWUgaXQncyB3b3JraW5nIG9u
+IGl0DQo+PiBhbmQgImdldCJzIGN1cnJlbnQga2VybmZzIG5vZGUgZm9yIHRoYXQuDQo+Pg0KPj4g
+QnV0IHdlIGhpdCBhIHdhcm5pbmcgaW4ga2VybmZzX2dldCgpOiBrbi0+Y291bnRlciA9PSAwIGFs
+cmVhZHk6DQo+PiAgIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQ0KPj4gICBX
+QVJOSU5HOiBDUFU6IDIgUElEOiA2MzkyMyBhdCBmcy9rZXJuZnMvZGlyLmM6Mzc3IGtlcm5mc19n
+ZXQrMHgyZi8weDQwDQo+PiAgIC4uLg0KPj4gICBDYWxsIFRyYWNlOg0KPj4gICAgWzxmZmZmZmZm
+ZmE3ZjkyZTY3Pl0gZHVtcF9zdGFjaysweDE5LzB4MWINCj4+ICAgIFs8ZmZmZmZmZmZhNzg5ODdi
+OD5dIF9fd2FybisweGQ4LzB4MTAwDQo+PiAgICBbPGZmZmZmZmZmYTc4OTg4ZmQ+XSB3YXJuX3Ns
+b3dwYXRoX251bGwrMHgxZC8weDIwDQo+PiAgICBbPGZmZmZmZmZmYTdhZWNhZmY+XSBrZXJuZnNf
+Z2V0KzB4MmYvMHg0MA0KPj4gICAgWzxmZmZmZmZmZmE3YWVkMjMzPl0gX19rZXJuZnNfcmVtb3Zl
+KzB4MTEzLzB4MjYwDQo+PiAgICBbPGZmZmZmZmZmYTdhZWUyMDE+XSBrZXJuZnNfcmVtb3ZlKzB4
+MjEvMHgzMA0KPj4gICAgWzxmZmZmZmZmZmE3YWYxMDEwPl0gc3lzZnNfcmVtb3ZlX2RpcisweDUw
+LzB4ODANCj4+ICAgIFs8ZmZmZmZmZmZhN2I5ZmIzOD5dIGtvYmplY3RfZGVsKzB4MTgvMHg1MA0K
+Pj4gICAgWzxmZmZmZmZmZmE3YTM4YTRkPl0gc3lzZnNfc2xhYl9yZW1vdmUrMHgzZC8weDUwDQo+
+PiAgICBbPGZmZmZmZmZmYTc5ZjFlNmI+XSBkb19rbWVtX2NhY2hlX3JlbGVhc2UrMHgzYi8weDcw
+DQo+PiAgICBbPGZmZmZmZmZmYTc5ZjJhYTE+XSBtZW1jZ19kZXN0cm95X2ttZW1fY2FjaGVzKzB4
+YjEvMHhmMA0KPj4gICAgWzxmZmZmZmZmZmE3YTRlZDVjPl0gbWVtX2Nncm91cF9jc3NfZnJlZSsw
+eDRjLzB4MjgwDQo+PiAgICBbPGZmZmZmZmZmYTc5Mzc3ZmM+XSBjZ3JvdXBfZnJlZV9mbisweDRj
+LzB4MTIwDQo+PiAgICBbPGZmZmZmZmZmYTc4YmMyMjI+XSBwcm9jZXNzX29uZV93b3JrKzB4MTgy
+LzB4NDQwDQo+PiAgICBbPGZmZmZmZmZmYTc4YmQzZDY+XSB3b3JrZXJfdGhyZWFkKzB4MTI2LzB4
+M2MwDQo+PiAgICBbPGZmZmZmZmZmYTc4YzQ0NDE+XSBrdGhyZWFkKzB4ZDEvMHhlMA0KPj4NCj4+
+IFRoaXMgY291bGQgYmUgZm9yIGV4YW1wbGUgYmVjYXVzZSBvZiBrZXJuZnNfbm90aWZ5X3dvcmtm
+bigpIHdoaWNoDQo+PiBkb2VzIGtlcm5mc19wdXQoa24pIG91dCBvZiBrZXJuZnNfbXV0ZXggaGVs
+ZCBzZWN0aW9uLA0KPj4gc28gbW92ZSBrZXJuZnNfcHV0KGtuKSB1bmRlciB0aGUgbXV0ZXguDQo+
+DQo+IFRoaXMgcGF0Y2ggZG9lc24ndCByZWFsbHkgbWFrZSBzZW5zZSB0byBtZS4gIENhbiB5b3Ug
+Z2l2ZSBhIG1vcmUNCj4gY29uY3JldGUgc2NlbmFyaW8gd2hlcmUgdGhpcyB3b3VsZCBoZWxwPw0K
+DQppIGRvbid0IGtub3cgdGhlIGZ1bGwgc2NlbmFyaW8gdW5mb3J0dW5hdGVseSwgYnV0IHRoZSBp
+ZGVhIGlzIHRoZSBmb2xsb3dpbmc6DQoNCl9fa2VybmZzX3JlbW92ZSgpIGlzIGNhbGxlZCB1bmRl
+ciBrZXJuZnNfbXV0ZXggYW5kIGlmDQogICAhKCFrbiB8fCAoa24tPnBhcmVudCAmJiBSQl9FTVBU
+WV9OT0RFKCZrbi0+cmIpKSkNCg0KaXQgYXNzdW1lcyB0aGF0IG5vdGhpbmcgY2FuIGNoYW5nZSB3
+aGlsZSB3ZSBob2xkIHRoZSBtdXRleCBhbmQNCmZvciBlYWNoIGtlcm5mcyBkZXNjZW5kYW50IHNo
+b3VsZCBoYXZlIGtuLT5jb3VudCA+IDAuDQoNCj09PT09DQogICAgICAgICAvKiBkZWFjdGl2YXRl
+IGFuZCB1bmxpbmsgdGhlIHN1YnRyZWUgbm9kZS1ieS1ub2RlICovDQogICAgICAgICBkbyB7DQog
+ICAgICAgICAgICAgICAgIHBvcyA9IGtlcm5mc19sZWZ0bW9zdF9kZXNjZW5kYW50KGtuKTsNCg0K
+ICAgICAgICAgICAgICAgICAvKg0KICAgICAgICAgICAgICAgICAgKiBrZXJuZnNfZHJhaW4oKSBk
+cm9wcyBrZXJuZnNfbXV0ZXggdGVtcG9yYXJpbHkgYW5kIEBwb3Mncw0KICAgICAgICAgICAgICAg
+ICAgKiBiYXNlIHJlZiBjb3VsZCBoYXZlIGJlZW4gcHV0IGJ5IHNvbWVvbmUgZWxzZSBieSB0aGUg
+dGltZQ0KICAgICAgICAgICAgICAgICAgKiB0aGUgZnVuY3Rpb24gcmV0dXJucy4gIE1ha2Ugc3Vy
+ZSBpdCBkb2Vzbid0IGdvIGF3YXkNCiAgICAgICAgICAgICAgICAgICogdW5kZXJuZWF0aCB1cy4N
+CiAgICAgICAgICAgICAgICAgICovDQogICAgICAgICAgICAgICAgIGtlcm5mc19nZXQocG9zKTsN
+Cj09PT09DQoNCkF0IHRoZSBzYW1lIHRpbWUga2VybmZzX25vdGlmeV93b3JrZm4oKSBjYW4gZG8g
+YSBrZXJuZnNfcHV0KCkgb3V0IG9mIGtlcm5mc19tdXRleA0Kd2hpY2ggcHJvYmFibHkgY2FuIGJl
+IHRoZSBsYXN0IHB1dCBhbmQgZGVjIGtuLT5jb3VudCB0byAwIGFueSBtb21lbnQuDQoNCg0KVGhh
+bmsgeW91Lg0KDQotLQ0KQmVzdCByZWdhcmRzLA0KDQpLb25zdGFudGluIEtob3JlbmtvLA0KVmly
+dHVvenpvIExpbnV4IEtlcm5lbCBUZWFtDQo=
