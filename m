@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5A2C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC40C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD11421850
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567652184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbfDQVnW (ORCPT
+        id S2387623AbfDQVm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:43:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20176 "EHLO mga12.intel.com"
+        Wed, 17 Apr 2019 17:42:29 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20150 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387633AbfDQVma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:42:30 -0400
+        id S2387475AbfDQVmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:42:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:30 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:21 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,363,1549958400"; 
-   d="scan'208";a="224441217"
+   d="scan'208";a="224441163"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:29 -0700
+  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:20 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v7 18/21] x86/clearcpuid: Support feature flag string in kernel option clearcpuid
-Date:   Wed, 17 Apr 2019 14:34:08 -0700
-Message-Id: <1555536851-17462-19-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v7 09/21] x86/split_lock: Define MSR TEST_CTL register
+Date:   Wed, 17 Apr 2019 14:33:59 -0700
+Message-Id: <1555536851-17462-10-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
 References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
@@ -56,80 +56,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel option clearcpuid currently only takes feature bit which
-can be changed from kernel to kernel.
+Setting bit 29 in MSR TEST_CTL (0x33) enables split lock detection and
+clearing the bit disables split lock detection.
 
-Extend clearcpuid to use cap flag string, which is defined in
-x86_cap_flags[] and won't be changed from kernel to kernel.
-And user can easily get the cap flag string from /proc/cpuinfo.
+Define the MSR and the bit. The definitions will be used in enabling or
+disabling split lock detection.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- arch/x86/include/asm/cpufeature.h |  1 +
- arch/x86/kernel/cpu/cpuid-deps.c  | 26 ++++++++++++++++++++++++++
- arch/x86/kernel/fpu/init.c        |  3 ++-
- 3 files changed, 29 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/msr-index.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 0e56ff7e4848..823c4ab82e12 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -133,6 +133,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index f65ef6f783d2..296eeb761ab6 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -39,6 +39,10 @@
  
- extern void setup_clear_cpu_cap(unsigned int bit);
- extern void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int bit);
-+bool find_cpu_cap(char *cap_flag, unsigned int *pfeature);
+ /* Intel MSRs. Some also available on other CPUs */
  
- #define setup_force_cpu_cap(bit) do { \
- 	set_cpu_cap(&boot_cpu_data, bit);	\
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 3d633f67fbd7..1a71434f7b46 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -120,3 +120,29 @@ void setup_clear_cpu_cap(unsigned int feature)
- {
- 	do_clear_cpu_cap(NULL, feature);
- }
++#define MSR_TEST_CTL				0x00000033
++#define TEST_CTL_SPLIT_LOCK_DETECT_SHIFT	29
++#define TEST_CTL_SPLIT_LOCK_DETECT		BIT(29)
 +
-+/**
-+ * find_cpu_cap - Given a cap flag string, find its corresponding feature bit.
-+ * @cap_flag:	cap flag string as defined in x86_cap_flags[]
-+ * @pfeature:	feature bit
-+ *
-+ * Return: true if the feature is found. false if not found
-+ */
-+bool find_cpu_cap(char *cap_flag, unsigned int *pfeature)
-+{
-+#ifdef CONFIG_X86_FEATURE_NAMES
-+	unsigned int feature;
-+
-+	for (feature = 0; feature < NCAPINTS * 32; feature++) {
-+		if (!x86_cap_flags[feature])
-+			continue;
-+
-+		if (strcmp(cap_flag, x86_cap_flags[feature]) == 0) {
-+			*pfeature = feature;
-+
-+			return true;
-+		}
-+	}
-+#endif
-+	return false;
-+}
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 88bbba7ee96a..99b895eea166 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -256,7 +256,8 @@ static void __init clear_cpuid(void)
- 		/* Chang command line range for next search. */
- 		cmdline_size = option_pos - boot_command_line + 1;
- 		argptr = arg;
--		if (get_option(&argptr, &bit) &&
-+		/* cpu cap can be specified by either feature bit or string */
-+		if ((get_option(&argptr, &bit) || find_cpu_cap(arg, &bit)) &&
- 		    bit >= 0 && bit < NCAPINTS * 32)
- 			setup_clear_cpu_cap(bit);
- 	}
+ #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
+ #define SPEC_CTRL_IBRS			(1 << 0)   /* Indirect Branch Restricted Speculation */
+ #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
 -- 
 2.19.1
 
