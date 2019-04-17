@@ -2,113 +2,148 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E444C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08136C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4F820872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aJOptLGW"
+	by mail.kernel.org (Postfix) with ESMTP id C6AB120872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555509167;
+	bh=c81O+E3myIO1NgOQ+BsMdbW6HuqKzVdcT17mM0IGBFs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wt+keJC4Crq81HxVj26YwnPTbmDNRe9wpWA4Tnw1dcGMnu8YqCjUxiX6SalHOy3tr
+	 fm/9XCVzJy+MDT7mHcfb9RAKME/NCxbVIIVmMcTjl/R0NN/D+uN460L12hRtkMqnUp
+	 TJNK7fg6Lp3ejQnNCaaCDNdXvMF+Rm9AZ/SftmUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732341AbfDQNwK (ORCPT
+        id S1732347AbfDQNwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:52:10 -0400
-Received: from mail-eopbgr800077.outbound.protection.outlook.com ([40.107.80.77]:17312
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729453AbfDQNwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:52:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=phI+wERMurnwcuWZdE9qWw9h4J0FfSc/XrmxonXaHxc=;
- b=aJOptLGW0rguSxhfwh/8cBM+7SvlqLdx3To+KgoMserNGACrYI9CV8XFVbeqcW3rkR+nBHQb8nM2MhR4bqqxeAiq6gRRO7N9PcjPIl7A7bo8UoaWcTEslBd6L7jGaj2onMsBP/X/J6Rp+ONmkAK+kimK7HK7oxMzDnK1yhIfNEY=
-Received: from MN2PR12MB2910.namprd12.prod.outlook.com (20.179.81.219) by
- MN2PR12MB3470.namprd12.prod.outlook.com (20.178.244.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Wed, 17 Apr 2019 13:52:06 +0000
-Received: from MN2PR12MB2910.namprd12.prod.outlook.com
- ([fe80::71f5:c696:c706:9b7c]) by MN2PR12MB2910.namprd12.prod.outlook.com
- ([fe80::71f5:c696:c706:9b7c%2]) with mapi id 15.20.1792.018; Wed, 17 Apr 2019
- 13:52:06 +0000
-From:   Chunming Zhou <zhoucm1@amd.com>
-To:     =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= 
-        <ckoenig.leichtzumerken@gmail.com>,
-        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: Re: dynamic DMA-buf sharing between devices
-Thread-Topic: dynamic DMA-buf sharing between devices
-Thread-Index: AQHU9IOjpDvhBG68rU+RgcYdVAcWSKZAYFyA
-Date:   Wed, 17 Apr 2019 13:52:06 +0000
-Message-ID: <b19612a3-0143-f8b5-7758-7e80c46d33d4@amd.com>
-References: <20190416183841.1577-1-christian.koenig@amd.com>
-In-Reply-To: <20190416183841.1577-1-christian.koenig@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK0PR04CA0024.apcprd04.prod.outlook.com
- (2603:1096:203:36::36) To MN2PR12MB2910.namprd12.prod.outlook.com
- (2603:10b6:208:af::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=David1.Zhou@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [101.86.234.22]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f45b61d7-a50f-490b-5550-08d6c33be0bc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR12MB3470;
-x-ms-traffictypediagnostic: MN2PR12MB3470:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MN2PR12MB3470927E132E0E1D2EBD81EBB4250@MN2PR12MB3470.namprd12.prod.outlook.com>
-x-forefront-prvs: 0010D93EFE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(366004)(396003)(39860400002)(199004)(53754006)(189003)(486006)(476003)(256004)(11346002)(3846002)(66066001)(105586002)(2201001)(31696002)(97736004)(446003)(186003)(14454004)(478600001)(5024004)(25786009)(36756003)(966005)(6116002)(102836004)(68736007)(26005)(66574012)(72206003)(305945005)(5660300002)(229853002)(316002)(76176011)(53936002)(8676002)(2616005)(7736002)(99286004)(31686004)(52116002)(6436002)(6486002)(81166006)(6512007)(6506007)(2501003)(386003)(6306002)(110136005)(6246003)(81156014)(8936002)(106356001)(14444005)(71200400001)(71190400001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3470;H:MN2PR12MB2910.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2c4qHS6GwJ3Kyf/bXhfuYzpP/BkECVkL/R/HzZc31YaRSsOMAw1sMkiNRHOAEq9KscWWRq6fgIQ/hloC/Huo9xpKKE5/PyYaRNwvcdI066KcYbhj/wpki6RdfLQbOQ8USex3D6EuDXoTgkFs57wPIakBiWYCRXIpkkA7ROoDjPJsgOevHcmYTVbqNotkwzn7vNENO6BCNwxfbyLpLp4y6pdnW+E5z/Y2c3BTWbKVT/a36iN66bhkte2btfO9SXX7Q3clPw+KKx3tKcK66RH0rsVCQsfq5eyxmdOKIzq0BSPCAcGimph4NgIPNFZMLFbHFfUcRs3kz1MdE6Yh0PigfBRczCNWykcZRAKSMQQ/0uQZGmWUmZzmTj2p7iowPASBKLArNkceLDbdWR5DYNuKlQy1h6J54qJ9XWAYV149y9c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A300D655748B3F4387A3AC013957A106@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 17 Apr 2019 09:52:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729453AbfDQNwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 09:52:46 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7FFD217F9;
+        Wed, 17 Apr 2019 13:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555509165;
+        bh=c81O+E3myIO1NgOQ+BsMdbW6HuqKzVdcT17mM0IGBFs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A5gt7jGZdUAQqiXwXNyEEiYLx/A2XdQGgGBqBQGbb7qB/Sj8d3ehKNdi9219Q1ikz
+         D87Hy8s09jUV8GwTDWKFdRTRu2wQ1te+iGBBMiQRQZ7tClEvvPXk3APMABSPGEGfZ9
+         rF+MQSYeDdDTOiUgcZ97NRok98BFuR/4Ws22x/qI=
+Received: by mail-qt1-f172.google.com with SMTP id s15so27418295qtn.3;
+        Wed, 17 Apr 2019 06:52:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAVDHjgdXd356LF0pyDoXb0eKhwbBXidxWfRh1ZY7sS6p7uhu+sU
+        IKBpfpGv5Z5ABYMrCsQJ6NrFdFQgfiOnlw3NKw==
+X-Google-Smtp-Source: APXvYqwumFTWwSeA72fHJ323fwLaOa8p4miqyYCp8CZcIOvp9Fwv4vHZMgh17VJ3gQRq+JkFFxWbFJrkdx5yt7GG0Po=
+X-Received: by 2002:ac8:33cf:: with SMTP id d15mr73457790qtb.149.1555509164068;
+ Wed, 17 Apr 2019 06:52:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f45b61d7-a50f-490b-5550-08d6c33be0bc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 13:52:06.6253
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3470
+References: <20190414200824.28348-1-paul@crapouillou.net> <20190414200824.28348-2-paul@crapouillou.net>
+ <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+In-Reply-To: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 17 Apr 2019 08:52:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ8OOJdqDpVMyS4brdVCEWyysYwrJNrfK3fPn5przAHjA@mail.gmail.com>
+Message-ID: <CAL_JsqJ8OOJdqDpVMyS4brdVCEWyysYwrJNrfK3fPn5przAHjA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver bindings
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, od@zcrc.me,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIENocmlzdGlhbiwgZ3JlYXQgam9iLiBJIHdpbGwgdmVyaWZ5IGl0IHRoaXMgd2VlayB3
-aGVuIEkgZmluaXNoIG15IA0KY3VycmVudCB3b3JrIG9uIGhhbmQuDQoNCi1EYXZpZA0KDQrlnKgg
-MjAxOS80LzE3IDI6MzgsIENocmlzdGlhbiBLw7ZuaWcgd3JvdGU6DQo+IEhpIGV2ZXJ5Ym9keSwN
-Cj4NCj4gY29yZSBpZGVhIGluIHRoaXMgcGF0Y2ggc2V0IGlzIHRoYXQgRE1BLWJ1ZiBpbXBvcnRl
-cnMgY2FuIG5vdyBwcm92aWRlIGFuIG9wdGlvbmFsIGludmFsaWRhdGUgY2FsbGJhY2suIFVzaW5n
-IHRoaXMgY2FsbGJhY2sgYW5kIHRoZSByZXNlcnZhdGlvbiBvYmplY3QgZXhwb3J0ZXJzIGNhbiBu
-b3cgYXZvaWQgcGlubmluZyBETUEtYnVmIG1lbW9yeSBmb3IgYSBsb25nIHRpbWUgd2hpbGUgc2hh
-cmluZyBpdCBiZXR3ZWVuIGRldmljZXMuDQo+DQo+IEkndmUgYWxyZWFkeSBzZW5kIG91dCBhbiBv
-bGRlciB2ZXJzaW9uIHJvdWdobHkgYSB5ZWFyIGFnbywgYnV0IGRpZG4ndCBoYWQgdGltZSB0byBm
-dXJ0aGVyIGxvb2sgaW50byBjbGVhbmluZyB0aGlzIHVwLg0KPg0KPiBUaGUgbGFzdCB0aW1lIGEg
-bWFqb3IgcHJvYmxlbSB3YXMgdGhhdCB3ZSB3b3VsZCBoYWQgdG8gZml4IHVwIGFsbCBkcml2ZXJz
-IGltcGxlbWVudGluZyBETUEtYnVmIGF0IG9uY2UuDQo+DQo+IE5vdyBJIGF2b2lkIHRoaXMgYnkg
-YWxsb3dpbmcgbWFwcGluZ3MgdG8gYmUgY2FjaGVkIGluIHRoZSBETUEtYnVmIGF0dGFjaG1lbnQg
-YW5kIHNvIGRyaXZlciBjYW4gb3B0aW9uYWxseSBtb3ZlIG92ZXIgdG8gdGhlIG5ldyBpbnRlcmZh
-Y2Ugb25lIGJ5IG9uZS4NCj4NCj4gVGhpcyBpcyBhbHNvIGEgcHJlcmVxdWlzaXRlIHRvIG15IHBh
-dGNoc2V0IGVuYWJsaW5nIHNoYXJpbmcgb2YgZGV2aWNlIG1lbW9yeSB3aXRoIERNQS1idWYuDQo+
-DQo+IFBsZWFzZSByZXZpZXcgYW5kL29yIGNvbW1lbnQsDQo+IENocmlzdGlhbi4NCj4NCj4NCj4g
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdA0KPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+IGh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsDQo=
+Paul, This mail bounced for me, but the other one on patch 1 didn't.
+
+On Wed, Apr 17, 2019 at 8:47 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil <paul@crapouillou.net> wrote:
+> >
+> > Add macros that can be used with the ingenic,lcd-mode property in the
+> > devicetree node that corresponds to the ingenic-drm driver.
+>
+> DRM is a Linuxism.
+>
+> >
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> > ---
+> >
+> > Notes:
+> >     v2: No change
+> >
+> >     v3: s/_DRM//
+> >
+> >  include/dt-bindings/display/ingenic,drm.h | 28 ++++++++++++++++++++++++++++
+>
+> DRM is a Linuxism...
+>
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644 include/dt-bindings/display/ingenic,drm.h
+> >
+> > diff --git a/include/dt-bindings/display/ingenic,drm.h b/include/dt-bindings/display/ingenic,drm.h
+> > new file mode 100644
+> > index 000000000000..c749b8c346fc
+> > --- /dev/null
+> > +++ b/include/dt-bindings/display/ingenic,drm.h
+> > @@ -0,0 +1,28 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + *  Ingenic JZ47xx KMS driver
+>
+> Pretty sure this file is not a KMS driver.
+>
+> > + *
+> > + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
+> > + */
+> > +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> > +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> > +
+> > +#define JZ_LCD_GENERIC_16BIT                   0
+> > +#define JZ_LCD_GENERIC_18BIT                   16
+>
+> We have some generic properties for defining the bus width already.
+> Plus, in many cases this can be implied by the panel compatible. The
+> exceptions are cases such as when both the ctrlr and panel support
+> multiple modes.
+>
+> > +
+> > +#define JZ_LCD_SPECIAL_TFT_1                   1
+> > +#define JZ_LCD_SPECIAL_TFT_2                   2
+> > +#define JZ_LCD_SPECIAL_TFT_3                   3
+> > +
+> > +#define JZ_LCD_NON_INTERLACED_TV_OUT           4
+> > +#define JZ_LCD_INTERLACED_TV_OUT               6
+>
+> Wouldn't this be determined by the type of connector (composite vs.
+> s-video/component)
+>
+> > +
+> > +#define JZ_LCD_SINGLE_COLOR_STN                        8
+> > +#define JZ_LCD_SINGLE_MONOCHROME_STN           9
+> > +#define JZ_LCD_DUAL_COLOR_STN                  10
+> > +#define JZ_LCD_DUAL_MONOCHROME_STN             11
+> > +
+> > +#define JZ_LCD_8BIT_SERIAL                     12
+> > +#define JZ_LCD_LCM                             13
+> > +
+> > +#endif /* __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__ */
+> > --
+> > 2.11.0
+> >
