@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD18C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02D2C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3753B21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09FA217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMWkuCWP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0+T6SRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387510AbfDQWjx (ORCPT
+        id S2387548AbfDQWkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:39:53 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32844 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQWjw (ORCPT
+        Wed, 17 Apr 2019 18:40:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37135 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQWkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:39:52 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k19so220234pgh.0;
-        Wed, 17 Apr 2019 15:39:52 -0700 (PDT)
+        Wed, 17 Apr 2019 18:40:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 8so141012pfr.4;
+        Wed, 17 Apr 2019 15:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hT2F8IjKIQoszn6Buk6j3BScSUALq9H2lCvIgZ7MA44=;
-        b=nMWkuCWPEy6xYKGNLnQQZ2wVDGHklhg6yR+3Z9AOiIxqZwzSE/SJ7ugOYVcpODMCo1
-         CoffGqPHSX6M40W37VklMFwsmrDvnSr11u8i3JJncfIAq02G3hkrW1MIDNCBEeymzdSO
-         rc8cpqLIDDN6wqu01N0JGG6p6VpVx5TFVmxPolw+51jTVMzXGXtVfLddGjGUHOoJogRI
-         1dvNd+Izp9Q8tgNYAZwIlXrzj5K7qo3TRKNr8HoSR1S2H074rWzOEZ391KkeoFEp2BHe
-         94oeOAHb+tt0/wsPNej06r99G7qw7yoMn3OMrlm8uxCdoy1eCExoicq4Pz67oDDnfnCB
-         ZOzQ==
+        bh=gUeEb4L2PznAGGX6A12fvqFt4+0O7XpXxOJtNihy39E=;
+        b=V0+T6SRj/yCzAmOAxViE12CwL/16gs7B8ptaNnnsR/geJPMLtoYHlTLSfEAnHxUeeU
+         ECn0QYbWn3FBD1GdTHkW85fwuu5b2MiMmt7MiMytOvdGJCCKpLtthiVDArdcaBNCyh9R
+         LevxLX+amq38n3kewC1dtRM21QcF6TEikMQI7fM0umyJRIjidPWYHUTaqLFpVZ3gkgSY
+         uwF6tfXfCfk0mnpxZHDlOqI4YyZ8zj2qjR3O6xWmUf/KzAdElnzrDpDgYtGDWk2HCI31
+         iFYrLczEX6Ybj3hPewKjRGa3KCrblEii4FrXJ6XF4v0YVefXe6SoTpwlN+cWsjR/8avX
+         OhNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hT2F8IjKIQoszn6Buk6j3BScSUALq9H2lCvIgZ7MA44=;
-        b=XkkX/oKQXibHCCYecAgZD8gybHaDM8Rbj3Asb3V0gt/1lp2M49E4bGzFUXeULNV0Hz
-         +4K40iLH9kzpEqhSjsZCm+lRj/yylps3tlfseq0jUdi4dm763wBbBpSqp0LBM9s5HA4o
-         BRGVyFss6AYE7FIx31mKs9F78ydCMVDSg9osOx2tMmhnQTXhrHWlIusMErzLpPs5U/eg
-         5h/1Yf21H5hJ6rM37mcRe9AcrFSC8sV9c9nTLbzSF4lUMrADQbc4GjOOS/oH/qjN7IvI
-         NttZQ78v92pAjy9qzXlzsh0gIYP/HODLK2q4tDTnjq+ZB6Fgx4700PisS+AFi5Rx4cPX
-         GSYA==
-X-Gm-Message-State: APjAAAUIZp7I3G5wG6VcesEBhKg4/ddINkT+JbdsJsAKubnhi0NQeXXh
-        2ou3/K160qHABFcXUaZjtfQ=
-X-Google-Smtp-Source: APXvYqw/qkTcwNganclPa7L+waXlLyeek6AotB65mpl+0/MFZQZpqItmhFqEAnYG8x6gJc8zWzDb5A==
-X-Received: by 2002:a65:6655:: with SMTP id z21mr49205781pgv.33.1555540470935;
-        Wed, 17 Apr 2019 15:34:30 -0700 (PDT)
+        bh=gUeEb4L2PznAGGX6A12fvqFt4+0O7XpXxOJtNihy39E=;
+        b=fhUDTqbrcuLtM8yOYyoWbPmxv4NIPejFRP9T5nPsm4YZgA/ypGxzPR4jcFY4tcaBDD
+         XSDdh8Pgw1aEvXYzHCUtLkGLofz8zRQdclirYV9gU0tAbeSIRLOneiwqP6ouh4VekN/F
+         ObjPLB2mqSTsXpsPZmGH/5eVowZYLID5P1ZJXifpVf1VYAb6pyMLao9dItg5KSx1D2kr
+         qy46zTKdZHhsJLwsCeGXVCmlXrpJuHIcH/TmIyBYCvOp17ajupHXUnIa4FpHnudZOnJq
+         Oz+AcLREOqz7KtgfDasoAskoTEqfP+qNnCkjLqjtryfASKs7ObrEqG2FQA31UDUygRl2
+         vHlQ==
+X-Gm-Message-State: APjAAAXeoArvb8q89+KnBW+qMBxbOuEM2nSs9Hqhr7xFRcIt2A4YnXUY
+        Vkc8B1Ir+RmM9/2M2CSKvL4=
+X-Google-Smtp-Source: APXvYqw+fS97NbUebTghjOHpeoA2FJoUCKFmtWv421Bmr9husj2TTWqPojpS/1lS6tRd2xX4Kb6c6w==
+X-Received: by 2002:a62:cfc4:: with SMTP id b187mr91170819pfg.130.1555540497790;
+        Wed, 17 Apr 2019 15:34:57 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.34.24
+        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.34.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:34:30 -0700 (PDT)
+        Wed, 17 Apr 2019 15:34:57 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [PATCH v3 05/16] PM / devfreq: tegra: Don't set EMC clock rate to maximum on probe
-Date:   Thu, 18 Apr 2019 01:29:14 +0300
-Message-Id: <20190417222925.5815-6-digetx@gmail.com>
+Subject: [PATCH v3 09/16] PM / devfreq: tegra: Avoid inconsistency of current frequency value
+Date:   Thu, 18 Apr 2019 01:29:18 +0300
+Message-Id: <20190417222925.5815-10-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190417222925.5815-1-digetx@gmail.com>
 References: <20190417222925.5815-1-digetx@gmail.com>
@@ -79,28 +79,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no real benefit from doing so, hence let's drop that rate setting
-for consistency.
+The frequency value potentially could change in-between. It doesn't
+cause any real problem at all right now, but that could change in the
+future. Hence let's avoid the inconsistency.
 
 Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra-devfreq.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/devfreq/tegra-devfreq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index c7428c5eee23..24ec65556c39 100644
+index 70946e432d3c..d72c16752012 100644
 --- a/drivers/devfreq/tegra-devfreq.c
 +++ b/drivers/devfreq/tegra-devfreq.c
-@@ -653,8 +653,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return PTR_ERR(tegra->emc_clock);
- 	}
+@@ -509,13 +509,15 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+ {
+ 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
+ 	struct tegra_devfreq_device *actmon_dev;
++	unsigned long cur_freq;
  
--	clk_set_rate(tegra->emc_clock, ULONG_MAX);
--
- 	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
- 	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
- 	if (err) {
+-	stat->current_frequency = tegra->cur_freq * KHZ;
++	cur_freq = READ_ONCE(tegra->cur_freq);
+ 
+ 	/* To be used by the tegra governor */
+ 	stat->private_data = tegra;
+ 
+ 	/* The below are to be used by the other governors */
++	stat->current_frequency = cur_freq * KHZ;
+ 
+ 	actmon_dev = &tegra->devices[MCALL];
+ 
+@@ -526,7 +528,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+ 	stat->busy_time *= 100 / BUS_SATURATION_RATIO;
+ 
+ 	/* Number of cycles in a sampling period */
+-	stat->total_time = ACTMON_SAMPLING_PERIOD * tegra->cur_freq;
++	stat->total_time = ACTMON_SAMPLING_PERIOD * cur_freq;
+ 
+ 	stat->busy_time = min(stat->busy_time, stat->total_time);
+ 
 -- 
 2.21.0
 
