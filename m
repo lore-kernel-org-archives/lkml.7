@@ -2,158 +2,165 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE05C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1434C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9692C2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD092173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555525779;
+	bh=D3wLtJO4BReF9RI7gJO/1Q+VPisxYCVIWO4OWEkFdlE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=THuswgtggWPKD77SMVSu7o2PRdY9RiIDkp0PGIRiLW7bmI2usGkhs+e25GoPes6NA
+	 FZDcnXrM4jLHirSv7XABeXxc2171ptVuZxMzXGHqJ8QOft/eSW6mJICl2W7yCCeS6/
+	 H+MuHviF2/WmR/GFRqspW0w5nL92tkRBZ8gdrPN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732300AbfDQS3E (ORCPT
+        id S1732423AbfDQS3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:29:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47524 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbfDQS3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:29:04 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 720A1C058CAF;
-        Wed, 17 Apr 2019 18:29:03 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68A885D6A6;
-        Wed, 17 Apr 2019 18:29:02 +0000 (UTC)
-Subject: Re: [PATCH v4 08/16] locking/rwsem: Make rwsem_spin_on_owner() return
- owner state
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-9-longman@redhat.com>
- <20190417124101.GE4038@hirez.programming.kicks-ass.net>
- <20190417124759.GT14281@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <e9e3c08c-a153-ad38-059e-98b1b212e11f@redhat.com>
-Date:   Wed, 17 Apr 2019 14:29:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 17 Apr 2019 14:29:38 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44678 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732321AbfDQS3i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:29:38 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w18so3105632wrv.11
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bwVBL4kWuFln1ORwazUUMUmKQZg4gxsY+OMTK6S6/ig=;
+        b=iBIyPB0PimRV7hc9ZuvpCiTman37YmffyWA7FxV10EjPEGmM4livSxPsCzw1w6LUhL
+         20TrRKvWCI0P6nONQX3nC/G2sWnOC8c9LE8G8rLBlCqp3xnpC0GVtPvRbLV80Mwm9vOS
+         O0i7tV7DD/HEJ47O0ra0Tq/YgBAk++RFtqga9aHi9ElweQsXRH0jOP8+erfL3P7BAfmH
+         55SpxpgqVvtWhPBswdCEVfO13LX/rQxQSKdj3xQf9LNoFWk2kMjcfYIudcszy2FQDgiI
+         IIHN+Fa7kmPcIM6Jb+3N837qPG0IkxTGAr9cUMBmSCtggHlHE0ZPWqgcu6N5Nb6YpU65
+         AFKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bwVBL4kWuFln1ORwazUUMUmKQZg4gxsY+OMTK6S6/ig=;
+        b=Co9ZTBy/zXhD5YRN3hEHyBny8IOqDL+MFltwG/AWEvf9IHAWB6DVcbPTQTfTLBFc1X
+         YzP7aNPznngo3E2UeaH5uy4VbEWklnpjQ/aeGi1gMHH8oQcXN6G1Kn3HQ+FpFGl7y54a
+         o8BguIYZD9+OYhuuNDpdPOCRqX638/NDuGZtWbA1vEsOOSrueOifPqQY3ZDf2Tj3P6d9
+         UTEc5QRG7iEf6eK3YwqOFjnxqnhfOMci2KROInkrb3ESDBTxPJfYdHaPcIjBnQQc4AgO
+         KDhPGD+yYz8aki2LVrUXTMJmxGVjVDQEqT12qaHgfm8t/n5aG9qQWpSm7mmp4dUL1OiL
+         /xKw==
+X-Gm-Message-State: APjAAAUHDwP5rGjQHXVbX7pmOmy/Nv1S6s7A7ZbLMmKIbAwmht0/ZIGK
+        1rmuyFB6aV9sNcVicafpUrSvAqBU
+X-Google-Smtp-Source: APXvYqyGQCfuKhiHlrrcJ+CCkS1JMcF4jna5843rMSkTTeuvm5KCL7XXWYsgYBcjDiVcHGDwjhEVXw==
+X-Received: by 2002:adf:e3c2:: with SMTP id k2mr857857wrm.325.1555525776250;
+        Wed, 17 Apr 2019 11:29:36 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id w10sm39466529wrv.8.2019.04.17.11.29.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 11:29:35 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 20:29:32 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
+Message-ID: <20190417182932.GB5140@gmail.com>
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <20190417053626.GA47282@gmail.com>
+ <5CB75FD9.3070207@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190417124759.GT14281@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 17 Apr 2019 18:29:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5CB75FD9.3070207@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17/2019 08:47 AM, Peter Zijlstra wrote:
-> On Wed, Apr 17, 2019 at 02:41:01PM +0200, Peter Zijlstra wrote:
->> On Sat, Apr 13, 2019 at 01:22:51PM -0400, Waiman Long wrote:
->>> In the special case that there is no active lock and the handoff bit
->>> is set, optimistic spinning has to be stopped.
->>> @@ -500,9 +521,19 @@ static noinline bool rwsem_spin_on_owner(struct rw_semaphore *sem)
->>>  
->>>  	/*
->>>  	 * If there is a new owner or the owner is not set, we continue
->>> -	 * spinning.
->>> +	 * spinning except when here is no active locks and the handoff bit
->>> +	 * is set. In this case, we have to stop spinning.
->>>  	 */
->>> -	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
->>> +	owner = READ_ONCE(sem->owner);
->>> +	if (!is_rwsem_owner_spinnable(owner))
->>> +		return OWNER_NONSPINNABLE;
->>> +	if (owner && !is_rwsem_owner_reader(owner))
->>> +		return OWNER_WRITER;
->>> +
->>> +	count = atomic_long_read(&sem->count);
->>> +	if (RWSEM_COUNT_HANDOFF(count) && !RWSEM_COUNT_LOCKED(count))
->>> +		return OWNER_NONSPINNABLE;
->>> +	return !owner ? OWNER_NULL : OWNER_READER;
->>>  }
->> So this fixes a straight up bug in the last patch (and thus should be
->> done before so the bug never exists), and creates unreadable code while
->> at it.
->>
->> Also, I think only checking HANDOFF after the loop is wrong; the moment
->> HANDOFF happens you have to terminate the loop, irrespective of what
->> @owner does.
->>
->> Does something like so work?
->>
->> ---
->>
->> enum owner_state {
->> 	OWNER_NULL		= 1 << 0,
->> 	OWNER_WRITER		= 1 << 1,
->> 	OWNER_READER		= 1 << 2,
->> 	OWNER_NONSPINNABLE	= 1 << 3,
->> };
->> #define OWNER_SPINNABLE		(OWNER_NULL | OWNER_WRITER)
-> Hmm, we should not spin on OWNER_NULL. Or at least not mixed in with the
-> patch that changes the shape of all this. That should go in the RT
-> thingy patch, which comes after this.
 
-We do spin on OWNER_NULL right now, not in rwsem_spin_on_owner() but in
-the main rwsem_optimistic_spin() function.
+* Thara Gopinath <thara.gopinath@linaro.org> wrote:
 
-RT task will quit if owner is NULL.
+> 
+> On 04/17/2019 01:36 AM, Ingo Molnar wrote:
+> > 
+> > * Thara Gopinath <thara.gopinath@linaro.org> wrote:
+> > 
+> >> The test results below shows 3-5% improvement in performance when
+> >> using the third solution compared to the default system today where
+> >> scheduler is unware of cpu capacity limitations due to thermal events.
+> > 
+> > The numbers look very promising!
+> 
+> Hello Ingo,
+> Thank you for the review.
+> > 
+> > I've rearranged the results to make the performance properties of the 
+> > various approaches and parameters easier to see:
+> > 
+> >                                          (seconds, lower is better)
+> > 
+> > 			                 Hackbench   Aobench   Dhrystone
+> >                                          =========   =======   =========
+> > Vanilla kernel (No Thermal Pressure)         10.21    141.58        1.14
+> > Instantaneous thermal pressure               10.16    141.63        1.15
+> > Thermal Pressure Averaging:
+> >       - PELT fmwk                             9.88    134.48        1.19
+> >       - non-PELT Algo. Decay : 500 ms         9.94    133.62        1.09
+> >       - non-PELT Algo. Decay : 250 ms         7.52    137.22        1.012
+> >       - non-PELT Algo. Decay : 125 ms         9.87    137.55        1.12
+> > 
+> > 
+> > Firstly, a couple of questions about the numbers:
+> > 
+> >    1)
+> > 
+> >       Is the 1.012 result for "non-PELT 250 msecs Dhrystone" really 1.012?
+> >       You reported it as:
+> > 
+> >              non-PELT Algo. Decay : 250 ms   1.012                   7.02%
+> 
+> It is indeed 1.012. So, I ran the "non-PELT Algo 250 ms" benchmarks
+> multiple time because of the anomalies noticed.  1.012 is a formatting
+> error on my part when I copy pasted the results into a google sheet I am
+> maintaining to capture the test results. Sorry about the confusion.
 
-Cheers,
-Longman
+That's actually pretty good, because it suggests a 35% and 15% 
+improvement over the vanilla kernel - which is very good for such 
+CPU-bound workloads.
+
+Not that 5% is bad in itself - but 15% is better ;-)
+
+> Regarding the decay period, I agree that more testing can be done. I 
+> like your suggestions below and I am going to try implementing them 
+> sometime next week. Once I have some solid results, I will send them 
+> out.
+
+Thanks!
+
+> My concern regarding getting hung up too much on decay period is that I 
+> think it could vary from SoC to SoC depending on the type and number of 
+> cores and thermal characteristics. So I was thinking eventually the 
+> decay period should be configurable via a config option or by any other 
+> means. Testing on different systems will definitely help and maybe I am 
+> wrong and there is no much variation between systems.
+
+Absolutely, so I'd not be against keeping it a SCHED_DEBUG tunable or so, 
+until there's a better understanding of how the physical properties of 
+the SoC map to an ideal decay period.
+
+Assuming PeterZ & Rafael & Quentin doesn't hate the whole thermal load 
+tracking approach. I suppose there's some connection of this to Energy 
+Aware Scheduling? Or not ...
+
+Thanks,
+
+	Ingo
