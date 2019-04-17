@@ -2,172 +2,379 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23390C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D71CC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB63217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HyAO54M7"
+	by mail.kernel.org (Postfix) with ESMTP id 536D820872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbfDQB7k (ORCPT
+        id S1729877AbfDQCD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:59:40 -0400
-Received: from mail-eopbgr30085.outbound.protection.outlook.com ([40.107.3.85]:26155
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728032AbfDQB7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:59:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dor289mWnJBgnR7CjoOhvm6MkCbW7lBLeKal0S3i5DE=;
- b=HyAO54M7riILKQHKjROI41CmxB23zzDnYVqzPggBLSJwPH/GrIWKL71rEJFMgTltIbhQHEjCyw5dXDSa33yl8NX7INYk0qYnV6sf54Xw+Vm7PBt3xEyyQk9zTnSzzSXoNO/alPwonzo1WrnSimoqucMjHk+qNxoSCX+tM8tJMo0=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3739.eurprd04.prod.outlook.com (52.134.67.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.15; Wed, 17 Apr 2019 01:59:34 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1813.011; Wed, 17 Apr 2019
- 01:59:34 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "eha@deif.com" <eha@deif.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "mojha@codeaurora.org" <mojha@codeaurora.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] i2c: imx: correct the method of getting private data in
- notifier_call
-Thread-Topic: [PATCH] i2c: imx: correct the method of getting private data in
- notifier_call
-Thread-Index: AQHU9ME0meJbs59NTkCxa+Er7M94Gw==
-Date:   Wed, 17 Apr 2019 01:59:34 +0000
-Message-ID: <1555466064-27984-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR02CA0180.apcprd02.prod.outlook.com
- (2603:1096:201:21::16) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3d905a1-e681-4f26-aeba-08d6c2d85698
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3739;
-x-ms-traffictypediagnostic: DB3PR0402MB3739:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <DB3PR0402MB3739B8F1C18BEEE320540117F5250@DB3PR0402MB3739.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0010D93EFE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(366004)(396003)(39860400002)(376002)(51234002)(189003)(199004)(81156014)(256004)(486006)(6512007)(4326008)(6486002)(5660300002)(8936002)(8676002)(7416002)(99286004)(2616005)(6436002)(110136005)(316002)(14454004)(102836004)(476003)(186003)(386003)(26005)(6506007)(50226002)(7736002)(81166006)(305945005)(68736007)(6116002)(36756003)(478600001)(2201001)(106356001)(53936002)(66066001)(105586002)(3846002)(71200400001)(86362001)(71190400001)(2501003)(25786009)(2906002)(97736004)(52116002)(14444005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3739;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: J4+sCAjqjluQR1ToRQxkCcmX+jQKnsq39+ltthxjtTZuOSQmQcqvEo/zcQ7ZC4Y4y/bUW9trAzkjjhwK/qKamS5uJIjU8k7FYZevh2TnZgMldR/vb7ogTy/sdGaIhqIeDECv/1H5ImD7S70t/nqASm8s8yQiOkZRK82xz9MEm1pIClOdCXn18tAbam2Hlm/lOMNA4Rqyn5CIqyhZ8/Xtz+RWEGGZJ/MSEE7W4iqGWsI8B17w2vLaIZyTnJjQtQzt8uyx+wtxQA6pxcmLqiaqHSX6v1kpnPw1gUehE15NlyDY2vOFp096BCKpCfNsehxgo65bS6I1RB6l/egkj+zmfPViWJVxsKS42tHcnhHba/1uV4SmnMsziv5DqeRO5S7RqF3Wv4L5YrS0Qd2cL6Z7Dvfe7HdO8wMeZmzgn4NlPLM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 16 Apr 2019 22:03:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34494 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727063AbfDQCD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 22:03:59 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6B92C3DE10;
+        Wed, 17 Apr 2019 02:03:58 +0000 (UTC)
+Received: from redhat.com (ovpn-120-132.rdu2.redhat.com [10.10.120.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AC405C205;
+        Wed, 17 Apr 2019 02:03:48 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 22:03:46 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Boaz Harrosh <boaz@plexistor.com>
+Cc:     Boaz Harrosh <openosd@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        Yan Zheng <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+Message-ID: <20190417020345.GB3330@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel>
+ <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <ccac6c5a-7120-0455-88de-ca321b01e825@plexistor.com>
+ <20190416195735.GE21526@redhat.com>
+ <41e2d7e1-104b-a006-2824-015ca8c76cc8@gmail.com>
+ <20190416231655.GB22465@redhat.com>
+ <fa00a2ff-3664-3165-7af8-9d9c53238245@plexistor.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3d905a1-e681-4f26-aeba-08d6c2d85698
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 01:59:34.3476
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3739
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fa00a2ff-3664-3165-7af8-9d9c53238245@plexistor.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 17 Apr 2019 02:03:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHdheSBvZiBnZXR0aW5nIHByaXZhdGUgaW14X2kyY19zdHJ1Y3QgaW4gaTJjX2lteF9jbGtf
-bm90aWZpZXJfY2FsbCgpDQppcyBpbmNvcnJlY3QsIHNob3VsZCB1c2UgY2xrX2NoYW5nZV9uYiBl
-bGVtZW50IHRvIGdldCBjb3JyZWN0IGFkZHJlc3MNCmFuZCBhdm9pZCBiZWxvdyBrZXJuZWwgZHVt
-cCBkdXJpbmcgUE9TVF9SQVRFX0NIQU5HRSBub3RpZnkgYnkgY2xrDQpmcmFtZXdvcms6DQoNClVu
-YWJsZSB0byBoYW5kbGUga2VybmVsIHBhZ2luZyByZXF1ZXN0IGF0IHZpcnR1YWwgYWRkcmVzcyAw
-M2VmMTQ4OA0KcGdkID0gKHB0cnZhbCkNClswM2VmMTQ4OF0gKnBnZD0wMDAwMDAwMA0KSW50ZXJu
-YWwgZXJyb3I6IE9vcHM6IDUgWyMxXSBQUkVFTVBUIFNNUCBBUk0NCkhhcmR3YXJlIG5hbWU6IEZy
-ZWVzY2FsZSBpLk1YNiBRdWFkL0R1YWxMaXRlIChEZXZpY2UgVHJlZSkNCldvcmtxdWV1ZTogZXZl
-bnRzIHJlZHVjZV9idXNfZnJlcV9oYW5kbGVyDQpQQyBpcyBhdCBpMmNfaW14X3NldF9jbGsrMHgx
-MC8weGI4DQpMUiBpcyBhdCBpMmNfaW14X2Nsa19ub3RpZmllcl9jYWxsKzB4MjAvMHgyOA0KcGMg
-OiBbPDgwNmE4OTNjPl0gICAgbHIgOiBbPDgwNmE4YTA0Pl0gICAgcHNyOiBhMDA4MDAxMw0Kc3Ag
-OiBiZjM5OWRkOCAgaXAgOiBiZjM0MzJhYyAgZnAgOiBiZjdjMWRjMA0KcjEwOiAwMDAwMDAwMiAg
-cjkgOiAwMDAwMDAwMCAgcjggOiAwMDAwMDAwMA0KcjcgOiAwM2VmMTQ4MCAgcjYgOiBiZjM5OWU1
-MCAgcjUgOiBmZmZmZmZmZiAgcjQgOiAwMDAwMDAwMA0KcjMgOiBiZjAyNTMwMCAgcjIgOiBiZjM5
-OWU1MCAgcjEgOiAwMGI3MWIwMCAgcjAgOiBiZjM5OWJlOA0KRmxhZ3M6IE56Q3YgIElSUXMgb24g
-IEZJUXMgb24gIE1vZGUgU1ZDXzMyICBJU0EgQVJNICBTZWdtZW50IG5vbmUNCkNvbnRyb2w6IDEw
-YzUzODdkICBUYWJsZTogNGUwMzAwNGEgIERBQzogMDAwMDAwNTENClByb2Nlc3Mga3dvcmtlci8y
-OjEgKHBpZDogMzgsIHN0YWNrIGxpbWl0ID0gMHgocHRydmFsKSkNClN0YWNrOiAoMHhiZjM5OWRk
-OCB0byAweGJmMzlhMDAwKQ0KOWRjMDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgODA2YTg5ZTQgMDAwMDAwMDANCjlkZTA6IGZmZmZmZmZmIGJm
-Mzk5ZTUwIDAwMDAwMDAyIDgwNmE4YTA0IDgwNmE4OWU0IDgwMTQyOTAwIGZmZmZmZmZmIDAwMDAw
-MDAwDQo5ZTAwOiBiZjM0ZWYxOCBiZjM0ZWYwNCAwMDAwMDAwMCBmZmZmZmZmZiBiZjM5OWU1MCA4
-MDE0MmQ4NCAwMDAwMDAwMCBiZjM5OWU2Yw0KOWUyMDogYmYzNGVmMDAgODBmMjE0YzQgYmYwMjUz
-MDAgMDAwMDAwMDIgODBmMDhkMDggYmYwMTc0ODAgMDAwMDAwMDAgODAxNDJkZjANCjllNDA6IDAw
-MDAwMDAwIDgwMTY2ZWQ4IDgwYzI3NjM4IDgwNDVkZTU4IGJmMzUyMzQwIDAzZWYxNDgwIDAwYjcx
-YjAwIDBmODJlMjQyDQo5ZTYwOiBiZjAyNTMwMCAwMDAwMDAwMiAwM2VmMTQ4MCA4MGY2MGU1YyAw
-MDAwMDAwMSA4MDQ1ZWRmMCAwMDAwMDAwMiA4MDQ1ZWIwOA0KOWU4MDogYmYwMjUzMDAgMDAwMDAw
-MDIgMDNlZjE0ODAgODA0NWVlMTAgMDNlZjE0ODAgODA0NWViMDggYmYwMWJlNDAgMDAwMDAwMDIN
-CjllYTA6IDAzZWYxNDgwIDgwNDVlZTEwIDA3ZGUyOTAwIDgwNDVlYjA4IGJmMDFiNzgwIDAwMDAw
-MDAyIDA3ZGUyOTAwIDgwNDVlZTEwDQo5ZWMwOiA4MGMyNzg5OCBiZjM5OWVlNCBiZjAyMGE4MCAw
-MDAwMDAwMiAxZjc4YTQwMCA4MDQ1ZWUxMCA4MGY2MGU1YyA4MDQ2MDUxNA0KOWVlMDogODBmNjBl
-NWMgYmYwMWI2MDAgYmYwMWI0ODAgODA0NjA0NjAgMGY4MmUyNDIgYmYzODNhODAgYmYzODNhMDAg
-ODBmNjBlNWMNCjlmMDA6IDAwMDAwMDAwIGJmN2MxZGMwIDgwZjYwZTcwIDgwNDYwNTY0IDgwZjYw
-ZGYwIDgwZjYwZDI0IDgwZjYwZGYwIDgwMTFlNzJjDQo5ZjIwOiAwMDAwMDAwMCA4MGY2MGRmMCA4
-MGY2MGU2YyBiZjdjNGYwMCAwMDAwMDAwMCA4MDExZTdhYyBiZjI3NDAwMCA4MDEzYmQ4NA0KOWY0
-MDogYmY3YzFkZDggODBmMDNkMDAgYmYyNzQwMDAgYmY3YzFkYzAgYmYyNzQwMTQgYmY3YzFkZDgg
-ODBmMDNkMDAgYmYzOTgwMDANCjlmNjA6IDAwMDAwMDA4IDgwMTNiZmI0IDAwMDAwMDAwIGJmMjVk
-MTAwIGJmMjVkMGMwIDAwMDAwMDAwIGJmMjc0MDAwIDgwMTNiZjg4DQo5ZjgwOiBiZjI1ZDExYyBi
-ZjBjZmViYyAwMDAwMDAwMCA4MDE0MTQwYyBiZjI1ZDBjMCA4MDE0MTJlYyAwMDAwMDAwMCAwMDAw
-MDAwMA0KOWZhMDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgODAxMDEwZTggMDAwMDAwMDAg
-MDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDANCjlmYzA6IDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAw
-MDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwDQo5ZmUwOiAw
-MDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAxMyAwMDAwMDAwMCAwMDAw
-MDAwMCAwMDAwMDAwMA0KWzw4MDZhODkzYz5dIChpMmNfaW14X3NldF9jbGspIGZyb20gWzw4MDZh
-OGEwND5dIChpMmNfaW14X2Nsa19ub3RpZmllcl9jYWxsKzB4MjAvMHgyOCkNCls8ODA2YThhMDQ+
-XSAoaTJjX2lteF9jbGtfbm90aWZpZXJfY2FsbCkgZnJvbSBbPDgwMTQyOTAwPl0gKG5vdGlmaWVy
-X2NhbGxfY2hhaW4rMHg0NC8weDg0KQ0KWzw4MDE0MjkwMD5dIChub3RpZmllcl9jYWxsX2NoYWlu
-KSBmcm9tIFs8ODAxNDJkODQ+XSAoX19zcmN1X25vdGlmaWVyX2NhbGxfY2hhaW4rMHg0NC8weDk4
-KQ0KWzw4MDE0MmQ4ND5dIChfX3NyY3Vfbm90aWZpZXJfY2FsbF9jaGFpbikgZnJvbSBbPDgwMTQy
-ZGYwPl0gKHNyY3Vfbm90aWZpZXJfY2FsbF9jaGFpbisweDE4LzB4MjApDQpbPDgwMTQyZGYwPl0g
-KHNyY3Vfbm90aWZpZXJfY2FsbF9jaGFpbikgZnJvbSBbPDgwNDVkZTU4Pl0gKF9fY2xrX25vdGlm
-eSsweDc4LzB4YTQpDQpbPDgwNDVkZTU4Pl0gKF9fY2xrX25vdGlmeSkgZnJvbSBbPDgwNDVlZGYw
-Pl0gKF9fY2xrX3JlY2FsY19yYXRlcysweDYwLzB4YjQpDQpbPDgwNDVlZGYwPl0gKF9fY2xrX3Jl
-Y2FsY19yYXRlcykgZnJvbSBbPDgwNDVlZTEwPl0gKF9fY2xrX3JlY2FsY19yYXRlcysweDgwLzB4
-YjQpDQpDb2RlOiBlOTJkNDBmOCBlNTkwMzI5OCBlNTkwNzJhMCBlMTUzMDAwMSAoZTU5NzUwMDgp
-DQotLS1bIGVuZCB0cmFjZSBmYzdmNTUxNGI5N2I2Y2JiIF0tLS0NCg0KRml4ZXM6IDkwYWQyY2Jl
-ODhjMigiaTJjOiBpbXg6IHVzZSBjbGsgbm90aWZpZXIgZm9yIHJhdGUgY2hhbmdlcyIpDQpTaWdu
-ZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCi0tLQ0KIGRyaXZl
-cnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVz
-c2VzL2kyYy1pbXguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMNCmluZGV4IGMwYzMw
-NDMuLmZkNzBiMTEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQor
-KysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQpAQCAtNTE1LDkgKzUxNSw5IEBAIHN0
-YXRpYyBpbnQgaTJjX2lteF9jbGtfbm90aWZpZXJfY2FsbChzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sg
-Km5iLA0KIAkJCQkgICAgIHVuc2lnbmVkIGxvbmcgYWN0aW9uLCB2b2lkICpkYXRhKQ0KIHsNCiAJ
-c3RydWN0IGNsa19ub3RpZmllcl9kYXRhICpuZGF0YSA9IGRhdGE7DQotCXN0cnVjdCBpbXhfaTJj
-X3N0cnVjdCAqaTJjX2lteCA9IGNvbnRhaW5lcl9vZigmbmRhdGEtPmNsaywNCisJc3RydWN0IGlt
-eF9pMmNfc3RydWN0ICppMmNfaW14ID0gY29udGFpbmVyX29mKG5iLA0KIAkJCQkJCSAgICAgIHN0
-cnVjdCBpbXhfaTJjX3N0cnVjdCwNCi0JCQkJCQkgICAgICBjbGspOw0KKwkJCQkJCSAgICAgIGNs
-a19jaGFuZ2VfbmIpOw0KIA0KIAlpZiAoYWN0aW9uICYgUE9TVF9SQVRFX0NIQU5HRSkNCiAJCWky
-Y19pbXhfc2V0X2NsayhpMmNfaW14LCBuZGF0YS0+bmV3X3JhdGUpOw0KLS0gDQoyLjcuNA0KDQo=
+On Wed, Apr 17, 2019 at 04:11:03AM +0300, Boaz Harrosh wrote:
+> On 17/04/19 02:16, Jerome Glisse wrote:
+> > On Wed, Apr 17, 2019 at 01:09:22AM +0300, Boaz Harrosh wrote:
+> >> On 16/04/19 22:57, Jerome Glisse wrote:
+> >> <>
+> >>>
+> >>> A very long thread on this:
+> >>>
+> >>> https://lkml.org/lkml/2018/12/3/1128
+> >>>
+> >>> especialy all the reply to this first one
+> >>>
+> >>> There is also:
+> >>>
+> >>> https://lkml.org/lkml/2019/3/26/1395
+> >>> https://lwn.net/Articles/753027/
+> >>>
+> >>
+> >> OK I have re-read this patchset and a little bit of the threads above (not all)
+> >>
+> >> As I understand the long term plan is to keep two separate ref-counts one
+> >> for GUP-ref and one for the regular page-state/ownership ref.
+> >> Currently looking at page-ref we do not know if we have a GUP currently held.
+> >> With the new plan we can (Still not sure what's the full plan with this new info)
+> >>
+> >> But if you make it such as the first GUP-ref also takes a page_ref and the
+> >> last GUp-dec also does put_page. Then the all of these becomes a matter of
+> >> matching every call to get_user_pages or iov_iter_get_pages() with a new
+> >> put_user_pages or iov_iter_put_pages().
+> >>
+> >> Then if much below us an LLD takes a get_page() say an skb below the iscsi
+> >> driver, and so on. We do not care and we keep doing a put_page because we know
+> >> the GUP-ref holds the page for us.
+> >>
+> >> The current block layer is transparent to any page-ref it does not take any
+> >> nor put_page any. It is only the higher users that have done GUP that take care of that.
+> >>
+> >> The patterns I see are:
+> >>
+> >>   iov_iter_get_pages()
+> >>
+> >> 	IO(sync)
+> >>
+> >>   for(numpages)
+> >> 	put_page()
+> >>
+> >> Or
+> >>
+> >>   iov_iter_get_pages()
+> >>
+> >> 	IO (async)
+> >> 		->	foo_end_io()
+> >> 				put_page
+> >>
+> >> (Same with get_user_pages)
+> >> (IO need not be block layer. It can be networking and so on like in NFS or CIFS
+> >>  and so on)
+> > 
+> > They are also other code that pass around bio_vec and the code that
+> > fill it is disconnected from the code that release the page and they
+> > can mix and match GUP and non GUP AFAICT.
+> > 
+> > On fs side they are also code that fill either bio or bio_vec and
+> > use some extra mechanism other than bio_end to submit io through
+> > workqueue and then release pages (cifs for instance). Again i believe
+> > they can mix and match GUP and non GUP (i have not spotted something
+> > obvious indicating otherwise).
+> > 
+> 
+> But what I meant is why do we care at all? block layer does not inc page nor put
+> page in any of bio or bio_vec. It is agnostic to the page-refs.
+> 
+> Users register an end_io and know if pages are getted or not.
+> So the balanced put is up to the user.
+> 
+> >>
+> >> The first pattern is easy just add the proper new api for
+> >> it, so for every iov_iter_get_pages() you have an iov_iter_put_pages() and remove
+> >> lots of cooked up for loops. Also the all iov_iter_get_pages_use_gup() just drops.
+> >> (Same at get_user_pages sites use put_user_pages)
+> > 
+> > Yes this patchset already convert some of this first pattern.
+> > 
+> 
+> Right!
+> 
+> >> The second pattern is a bit harder because it is possible that the foo_end_io()
+> >> is currently used for GUP as well as none-GUP cases. this is easy to fix. But the
+> >> even harder case is if the same foo_end_io() call has some pages GUPed and some not
+> >> in the same call.
+> >>
+> >> staring at this patchset and the call sites I did not see any such places. Do you know
+> >> of any?
+> >> (We can always force such mixed-case users to always GUP-ref the pages and code
+> >>  foo_end_io() to GUP-dec)
+> > 
+> > I believe direct-io.c is such example thought in that case i believe it
+> > can only be the ZERO_PAGE so this might easily detectable. They are also
+> > lot of fs functions taking an iterator and then using iov_iter_get_pages*()
+> > to fill a bio. AFAICT those functions can be call with pipe iterator or
+> > iovec iterator and probably also with other iterator type. But it is all
+> > common code afterward (the bi_end_io function is the same no matter the
+> > iterator).
+> > 
+> > Thought that can probably be solve that way:
+> > 
+> > From:
+> >     foo_bi_end_io(struct bio *bio) {
+> >         ...
+> >         for (i = 0; i < npages; ++i) {
+> >             put_page(pages[i]);
+> >         }
+> >     }
+> > 
+> > To:
+> >     foo_bi_end_io_common(struct bio *bio) {
+> >         ...
+> >     }
+> > 
+> >     foo_bi_end_io_normal(struct bio *bio)
+> >         foo_bi_end_io_common(bio);
+> >         for (i = 0; i < npages; ++i) {
+> >             put_page(pages[i]);
+> >         }
+> >     }
+> > 
+> >     foo_bi_end_io_gup(struct bio *bio)
+> >         foo_bi_end_io_common(bio);
+> >         for (i = 0; i < npages; ++i) {
+> >             put_user_page(pages[i]);
+> >         }
+> >     }
+> > 
+> 
+> Yes or when foo_bi_end_io_common is more complicated, then just make it
+> 
+>      foo_bi_end_io_common(struct bio *bio, bool gup) {
+>          ...
+>      }
+> 
+>      foo_bi_end_io_normal(struct bio *bio)
+> 	foo_bi_end_io_common(bio, false);
+>      }
+>  
+>      foo_bi_end_io_gup(struct bio *bio)
+> 	foo_bi_end_io_common(bio, true);
+>      }
+> 
+> Less risky coding of code we do not know?
+
+Yes whatever is more appropriate for eahc end_io func.
+
+> 
+> > Then when filling in the bio i either pick foo_bi_end_io_normal() or
+> > foo_bi_end_io_gup(). I am assuming that bio with different bi_end_io
+> > function never get merge.
+> > 
+> 
+> Exactly
+> 
+> > The issue is that some bio_add_page*() call site are disconnected
+> > from where the bio is allocated and initialized (and also where the
+> > bi_end_io function is set). This make it quite hard to ascertain
+> > that GUPed page and non GUP page can not co-exist in same bio.
+> > 
+> 
+> Two questions if they always do a put_page at end IO. Who takes a page_ref
+> in the not GUP case? page-cache? VFS? a mechanical get_page?
+
+It depends, some get page to page-cache (find_get_page), other just
+get_page on a page that is coming from unknown origin (ie it is not
+clear from within the function where the page is coming from), other
+allocate a page and transfer the page reference to the bio ie the
+page will get free once the bio end function is call through as it
+call call put_page on page within the bio.
+
+So there is not one simple story here. Hence why it looks harder to
+me (still likely do-able).
+
+> > Also in some cases it is not clear that the same iter is use to
+> > fill the same bio ie it might be possible that some code path fill
+> > the same bio from different iterator (and thus some pages might
+> > be coming from GUP and other not).
+> > 
+> 
+> This one is hard to believe for me. 
+> one iter may produce multiple iter_get_pages() and many more bios.
+> But the opposite?
+> 
+> I know, never say never. Do you know of a specific example?
+> I would like to stare at it.
+
+No i do not know of any such example but reading through a lot of code
+i could not convince myself of that fact. I agree with your feeling on
+the matter i just don't have proof. I can spend more time digging all
+code path and ascertaining thing but this will inevitably be a snapshot
+in time and something that people might break in the future.
+
+> 
+> > It would certainly seems to require more careful review from the
+> > maintainers of such fs. I tend to believe that putting the burden
+> > on the reviewer is a harder sell :)
+> > 
+> 
+> I think a couple carefully put WARN_ONs in the PUT path can
+> detect any leakage of refs. And help debug these cases.
+
+Yes we do plan on catching things like underflow (easy one to catch)
+or put_page that bring the refcount just below the bias value ... and
+in anycase the only harm that can come of this should be memory leak.
+
+So i believe that even if we miss some weird corner case we should be
+able to catch it eventualy and nothing harmful should ever happen,
+famous last word i will regret when i get burnt at the stake for missing
+that one case ;)
+
+> 
+> > From quick glance:
+> >    - nilfs segment thing
+> >    - direct-io same bio accumulate pages over multiple call but
+> >      it should always be from same iterator and thus either always
+> >      be from GUP or non GUP. Also the ZERO_PAGE case should be easy
+> >      to catch.
+> 
+> Yes. Or we can always take a GUP-ref on the ZERO_PAGE as well
+> 
+> >    - fs/nfs/blocklayout/blocklayout.c
+> 
+> This one is an example of "please do not touch" if you look at the code
+> it currently does not do any put page at all. Though yes it does bio_add_page.
+> 
+> The pages are GETed and PUTed in nfs/direct.c and reference are balanced there.
+> 
+> this is the trivial case of for every iov_iter_get_pages[_alloc]() there is
+> a new defined iov_iter_put_pages[_alloc]()
+> 
+> So this is an example of extra not needed code changes in your approach
+> 
+> >    - gfs2 log buffer, that should never be page from GUP but i could
+> >      not ascertain that easily from quick review
+> 
+> 	Same as NFS maybe? didn't look.
+> 
+> > 
+> > This is not extensive, i was just grepping for bio_add_page() and
+> > they are 2 other variant to check and i tended to discard places
+> > where bio is allocated in same function as bio_add_page() but this
+> > might not be a valid assumption either. Some bio might be allocated
+> > and only if there is no default bio already and then set as default
+> > bio which might be use latter on with different iterator.
+> > 
+> 
+> I think we do not care at all about any of the bio_add_page() or bio_alloc
+> places. All we care about is the call to iov_iter_get_pages* and where in the
+> code these puts are balanced.
+> 
+> If we need to split the endio case at those sights then we can do as above.
+> Or in the worse case when pages are really mixed. Always take a GUP  ref also
+> on the not GUP case. 
+> (I would like to see where this happens)
+> 
+> >>
+> >> So with a very careful coding I think you need not touch the block / scatter-list layers
+> >> nor any LLD drivers. The only code affected is the code around the get_user_pages and friends.
+> >> Changing the API will surface all those.
+> >> (IE. introduce a new API, convert one by one, Remove old API)
+> >>
+> >> Am I smoking?
+> > 
+> > No, i thought about it seemed more dangerous and harder to get right
+> > because some code add page in one place and setup bio in another. I
+> > can dig some more on that front but this still leave the non-bio user
+> > of bio_vec and those IIRC also suffer from same disconnect issue.
+> > 
+> 
+> Again I should not care about bio_vec. I only need to trace the balancing of the
+> ref taken in GUP call sight. Let me help you in those places it is not obvious to
+> you.
+> 
+> >>
+> >> BTW: Are you aware of the users of iov_iter_get_pages_alloc() Do they need fixing too?
+> > 
+> > Yeah and that patchset should address those already, i do not think
+> > i missed any.
+> > 
+> 
+> I could not find a patch for nfs/direct.c where a put_page is called
+> to balance the iov_iter_get_pages_alloc(). Which takes care of for example of
+> the blocklayout.c pages state
+> 
+> So I think the deep Audit needs to be for iov_iter_get_pages and get_user_pages
+> and the balancing of that. And the all of bio_alloc and bio_add_page should stay
+> agnostic to any pege-refs taking/putting
+
+Will try to get started on that and see if i hit any roadblock. I will
+report once i get my feet wet, or at least before i drown ;)
+
+Cheers,
+Jérôme
