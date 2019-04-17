@@ -2,96 +2,214 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B7C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF04C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AF02183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20DD2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mNXBi6fQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733250AbfDQVxg (ORCPT
+        id S2387490AbfDQVxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:53:36 -0400
-Received: from anholt.net ([50.246.234.109]:33044 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfDQVxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:53:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 8B6C710A339A;
-        Wed, 17 Apr 2019 14:53:35 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id omenQMg-A1-a; Wed, 17 Apr 2019 14:53:34 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 4A9FA10A32F5;
-        Wed, 17 Apr 2019 14:53:34 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id CBAFC2FE3AA4; Wed, 17 Apr 2019 14:53:33 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        david.emett@broadcom.com, thomas.spurden@broadcom.com
-Subject: Re: [PATCH v2 3/5] drm/v3d: Add support for compute shader dispatch.
-In-Reply-To: <20190416225856.20264-4-eric@anholt.net>
-References: <20190416225856.20264-1-eric@anholt.net> <20190416225856.20264-4-eric@anholt.net>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Wed, 17 Apr 2019 14:53:33 -0700
-Message-ID: <87v9zc1eoy.fsf@anholt.net>
+        Wed, 17 Apr 2019 17:53:45 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41523 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387442AbfDQVxl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:53:41 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v7so10200oie.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 14:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bmWs4cfcbPpVqJOif+pRxG1XcZMU7gy3yov8rwtSMcA=;
+        b=mNXBi6fQESbyNgWoPJY7N13rwrd4xj6HYS5Lh3w1uIDtpX1jEKuq/1CY0sXLMgffyd
+         8fZ6OewqjPjD5p1dwCTsSN1W1JI3+mAdGAgxxXw75SBC6d+ViIpSkPHWX5e5RJagZjvQ
+         yjyjDElcbDvHNl9O5W+P579YMN+Hj4U+LrEN+x8Tx6zusmLLB4Z4jJcmnJV1+UsdIb3F
+         1jz7zS/16yvMO624WsnVUtKXz4hREDASy23Mdu0AVjgHo/MQiqVzCTWgdALrvHGuAXsn
+         Ga4vq1ZdMjyFyMjjBa4qxfrflIh+TF3ZFVeRDTP9cYV0z9LNe75WG0zQVSvJDsu+rJAK
+         ZpTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bmWs4cfcbPpVqJOif+pRxG1XcZMU7gy3yov8rwtSMcA=;
+        b=pZA+5aXroS1hetjH9j7Z1gx3ukOiLaSSIK/RYYdeCXmHl6QEZXaUKHoQ4ttrj/8pt2
+         9I7g64z5SFOcUl3fwKS2uZASLzDH1eKdLXNPrN4J5f8R8Lgjz/OZuyD9eQP5DEkrVZsm
+         pSGPnt7soiP4jZMrSu0m+SUcWPqMyeOYZ/iqW+Q9vOk9QntnX2v8j1p82UGVa9RN1bxy
+         FzoT/qpesDbCtPoZ0wZ+I/QCbjadRQgzxwUtpciu0N/U5I0nNkmYtK2qLojUp7ZrsrtI
+         GHHapFPWzG6O7CswXzPIWMkvCFRoVFmGdQHqv4yOd4FGlUcsFwaPpnw0akMR8ZmHorAQ
+         MmYw==
+X-Gm-Message-State: APjAAAWL+uhE2LQ0/2/sgIDdJaEBciiVQvwxcs9Y5QBYWR9Km1T4jzK3
+        +uKsVhWGa/vawS21x8Z6SaknJgKckLH0rWrWY9lduw==
+X-Google-Smtp-Source: APXvYqyIfM8qxAG0J70YozmGmBKyUMmNKkQ53mBEzGEECW5CLl3/GymyVafAOCfvYgHDugLDiei1oDZqZT6jsakABBE=
+X-Received: by 2002:aca:e64f:: with SMTP id d76mr587154oih.105.1555538019809;
+ Wed, 17 Apr 2019 14:53:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+References: <20190411210834.4105-1-jglisse@redhat.com> <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel> <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <20190416194936.GD21526@redhat.com>
+In-Reply-To: <20190416194936.GD21526@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 17 Apr 2019 14:53:28 -0700
+Message-ID: <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        =?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Eric Anholt <eric@anholt.net> writes:
-
-> The compute shader dispatch interface is pretty simple -- just pass in
-> the regs that userspace has passed us, with no CLs to run.  However,
-> with no CL to run it means that we need to do manual cache flushing of
-> the L2 after the HW execution completes (for SSBO, atomic, and
-> image_load_store writes that are the output of compute shaders).
+On Tue, Apr 16, 2019 at 12:50 PM Jerome Glisse <jglisse@redhat.com> wrote:
 >
-> This doesn't yet expose the L2 cache's ability to have a region of the
-> address space not write back to memory (which could be used for
-> shared_var storage).
+> On Tue, Apr 16, 2019 at 12:12:27PM -0700, Dan Williams wrote:
+> > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
+> > <kent.overstreet@gmail.com> wrote:
+> > >
+> > > On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
+> > > > On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
+> > > > > From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > > > >
+> > > > > This patchset depends on various small fixes [1] and also on patc=
+hset
+> > > > > which introduce put_user_page*() [2] and thus is 5.3 material as =
+those
+> > > > > pre-requisite will get in 5.2 at best. Nonetheless i am posting i=
+t now
+> > > > > so that it can get review and comments on how and what should be =
+done
+> > > > > to test things.
+> > > > >
+> > > > > For various reasons [2] [3] we want to track page reference throu=
+gh GUP
+> > > > > differently than "regular" page reference. Thus we need to keep t=
+rack
+> > > > > of how we got a page within the block and fs layer. To do so this=
+ patch-
+> > > > > set change the bio_bvec struct to store a pfn and flags instead o=
+f a
+> > > > > direct pointer to a page. This way we can flag page that are comi=
+ng from
+> > > > > GUP.
+> > > > >
+> > > > > This patchset is divided as follow:
+> > > > >     - First part of the patchset is just small cleanup i believe =
+they
+> > > > >       can go in as his assuming people are ok with them.
+> > > >
+> > > >
+> > > > >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn thi=
+s is
+> > > > >       done in multi-step, first we replace all direct dereference=
+ of
+> > > > >       the field by call to inline helper, then we introduce macro=
+ for
+> > > > >       bio_bvec that are initialized on the stack. Finaly we chang=
+e the
+> > > > >       bv_page field to bv_pfn.
+> > > >
+> > > > Why do we need a bv_pfn. Why not just use the lowest bit of the pag=
+e-ptr
+> > > > as a flag (pointer always aligned to 64 bytes in our case).
+> > > >
+> > > > So yes we need an inline helper for reference of the page but is it=
+ not clearer
+> > > > that we assume a page* and not any kind of pfn ?
+> > > > It will not be the first place using low bits of a pointer for flag=
+s.
+> > > >
+> > > > That said. Why we need it at all? I mean why not have it as a bio f=
+lag. If it exist
+> > > > at all that a user has a GUP and none-GUP pages to IO at the same r=
+equest he/she
+> > > > can just submit them as two separate BIOs (chained at the block lay=
+er).
+> > > >
+> > > > Many users just submit one page bios and let elevator merge them an=
+y way.
+> > >
+> > > Let's please not add additional flags and weirdness to struct bio - "=
+if this
+> > > flag is set interpret one way, if not interpret another" - or eventua=
+lly bios
+> > > will be as bad as skbuffs. I would much prefer just changing bv_page =
+to bv_pfn.
+> >
+> > This all reminds of the failed attempt to teach the block layer to
+> > operate without pages:
+> >
+> > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-=
+desk3.amr.corp.intel.com/
+> >
+> > >
+> > > Question though - why do we need a flag for whether a page is a GUP p=
+age or not?
+> > > Couldn't the needed information just be determined by what range the =
+pfn is not
+> > > (i.e. whether or not it has a struct page associated with it)?
+> >
+> > That amounts to a pfn_valid() check which is a bit heavier than if we
+> > can store a flag in the bv_pfn entry directly.
+> >
+> > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
+> > an 'unsigned long'.
+> >
+> > That said, I'm still in favor of Jan's proposal to just make the
+> > bv_page semantics uniform. Otherwise we're complicating this core
+> > infrastructure for some yet to be implemented GPU memory management
+> > capabilities with yet to be determined value. Circle back when that
+> > value is clear, but in the meantime fix the GUP bug.
 >
-> So far, the Mesa side has been tested on V3D v4.2 simpenrose (passing
-> the ES31 tests), and on the kernel side on 7278 (failing atomic
-> compswap tests in a way that doesn't reproduce on simpenrose).
+> This has nothing to do with GPU, what make you think so ? Here i am
+> trying to solve GUP and to keep the value of knowing wether a page
+> has been GUP or not. I argue that if we bias every page in every bio
+> then we loose that information and thus the value.
+>
+> I gave the page protection mechanisms as an example that would be
+> impacted but it is not the only one. Knowing if a page has been GUP
+> can be useful for memory reclaimation, compaction, NUMA balancing,
 
-Fixed the compswap issue in Mesa.  Looks like cmpxchg needed the TYPE
-field set to vec2 instead of 32-bit, since there are two values written
-to TMUD.  The spec says the field is ignored, but that doesn't seem to
-be the case.
+Right, this is what I was reacting to in your pushback to Jan's
+proposal. You're claiming value for not doing the simple thing for
+some future "may be useful in these contexts". To my knowledge those
+things are not broken today. You're asking for the complexity to be
+carried today for some future benefit, and I'm asking for the
+simplicity to be maintained as much as possible today and let the
+value of future changes stand on their own to push for more complexity
+later.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAly3oF0ACgkQtdYpNtH8
-nuhmkw//W73RUmscXiZ3tiorQBErHuvZ+x0nAm8ZmNctGr0Z4+JqG/AvFTjFH7UM
-IQqjpXlBJTI3PRSWM130ezsLVfznbSQiJXUVwEsi+vBkW+ZzsaHArY+BwqDu/b2r
-0WwrPYkyESZ0rm3J664vAuug0R7pnaC1/ePTxF3QZlDjmsqQQxV191MXRCj0YazI
-rd/3ALrqs6ZC3/7NQJRXgxUG0D0lABOsre7nkzjsjl7vlGaQlXMac1ttpfCiFe7k
-ebkzgwHsCuLFPq9Ll9rJ35LsqQTr7wWGKucveU8Q99VvWA2taYvog2Ei1IrFeWKQ
-ROTwvnqbTkugnQx2tzdbDvMcVLvsFaJw/u1rj6r/HOcnhc/ElGTpR4NeAztBtwu5
-TvyTaDFJXhvZxygJB4oQiES6cw3Z7jBTkWTFZKKZifeVwmAdweO8iw6YSjoaEtW6
-1ELfDvL98sGDxDFSFu2Gepk+ooa5fs8EiNE7wyNHwRD+icjwvVLOlOHwcX6OTjyd
-Hme05kpS/yuVTohaTekawmKxi7bQN8hxXX1nc8bRBaP4VkjmMA17Fxx/9On7JB2+
-4OMPpNWeJ++wiarDuSzkRnsD9xizT38MwuUhLAxdTL+bvsI4t0/jRLbkuad/i57h
-oFZrt3duCwZyrpqcuEfEDQgeNMvVsCJyrAp49s9VF6QSaEPU3Sw=
-=N+zs
------END PGP SIGNATURE-----
---=-=-=--
+Effectively don't use this bug fix to push complexity for a future
+agenda where the value has yet to be quantified.
