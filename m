@@ -2,144 +2,96 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB53C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E051DC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0052177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:17:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f4IblylY"
+	by mail.kernel.org (Postfix) with ESMTP id BCA7D21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732616AbfDQORq (ORCPT
+        id S1732440AbfDQOSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:17:46 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58991 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfDQORp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:17:45 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEHJQ43935111
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:17:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEHJQ43935111
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555510640;
-        bh=FEcaeuwX1Xdz+Gj6TlnPpZ7hGM0EWtZNkBw11zdPMKY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=f4IblylYwJTcdV01Lduc+WVtqh0ynYWahixMECqSfrfvBzVSMC2/RfC4raziAFkFC
-         A8ipF8Lx4l3HssmBghPlS9x5NEYsADpFfV1ktCD/BiKROB/3Hxb+NtOyvlg8tBE60h
-         a32hK1b7dcvOq3pexdwxe+ilGd4POsVT9MaRTZXmE934KewAwFT4PGXTmDJy3zYPHe
-         Lx2Mpi36ucDufnKgQ+mkUJ+hu8ITFqX4Bm0LmYogxB6NE56fDKG5lC1/8BZmR5Mv86
-         flBZdZu/GbqWLjoh6rwfgDFf1VC7Ge+0loufiEKxiyu06zTl0zRseUxMN+8a516bZQ
-         ldZ0z0aw3VG2w==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEHJdV3935108;
-        Wed, 17 Apr 2019 07:17:19 -0700
-Date:   Wed, 17 Apr 2019 07:17:19 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-aa641c287b2f7676f6f0064a8351daf08eca6b0a@git.kernel.org>
-Cc:     mingo@redhat.com, akpm@linux-foundation.org, bp@suse.de,
-        tglx@linutronix.de, mingo@kernel.org, mhocko@suse.com,
-        jpoimboe@redhat.com, vbabka@suse.cz, luto@kernel.org,
-        sean.j.christopherson@intel.com, dave.hansen@intel.com,
-        x86@kernel.org, hpa@zytor.com, jkosina@suse.cz,
-        linux-kernel@vger.kernel.org, suravee.suthikulpanit@amd.com,
-        ndesaulniers@google.com, jgross@suse.com
-Reply-To: luto@kernel.org, sean.j.christopherson@intel.com, vbabka@suse.cz,
-          jgross@suse.com, ndesaulniers@google.com,
-          linux-kernel@vger.kernel.org, suravee.suthikulpanit@amd.com,
-          dave.hansen@intel.com, x86@kernel.org, jkosina@suse.cz,
-          hpa@zytor.com, bp@suse.de, tglx@linutronix.de, mingo@redhat.com,
-          akpm@linux-foundation.org, jpoimboe@redhat.com, mingo@kernel.org,
-          mhocko@suse.com
-In-Reply-To: <20190414160145.632513987@linutronix.de>
-References: <20190414160145.632513987@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/irq/32: Define IRQ_STACK_SIZE
-Git-Commit-ID: aa641c287b2f7676f6f0064a8351daf08eca6b0a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Apr 2019 10:18:11 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:57562 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728335AbfDQOSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:18:11 -0400
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 6CE2B4406EA;
+        Wed, 17 Apr 2019 17:18:08 +0300 (IDT)
+References: <20190417125153.2510262-1-arnd@arndb.de>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     arm@kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: debug-ll: add default address for digicolor
+In-reply-to: <20190417125153.2510262-1-arnd@arndb.de>
+Date:   Wed, 17 Apr 2019 17:18:08 +0300
+Message-ID: <87zhoohg0v.fsf@tarshish>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  aa641c287b2f7676f6f0064a8351daf08eca6b0a
-Gitweb:     https://git.kernel.org/tip/aa641c287b2f7676f6f0064a8351daf08eca6b0a
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:59 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 15:18:36 +0200
+Hi Arnd,
 
-x86/irq/32: Define IRQ_STACK_SIZE
+On Wed, Apr 17 2019, Arnd Bergmann wrote:
+> The digicolor platform has three UARTs, but the Kconfig.debug
+> file explicitly lists port zero as the one to be used for the
+> console, while not providing any default values.
+>
+> This can get an automated randconfig build stuck in a loop
+> waiting for the user to input the number. As we already know
+> the physical address, this patch provides that number as
+> default, along with a reasonable default value for the virtual
+> address.
+>
+> Cc: Baruch Siach <baruch@tkos.co.il>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: fix physical address
+>
+>  arch/arm/Kconfig.debug | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 6d6e0330930b..12c0d29b75e3 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -1677,6 +1677,7 @@ config DEBUG_UART_PHYS
+>  	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
+>  	default 0xe8008000 if DEBUG_R7S72100_SCIF2
+>  	default 0xf0000be0 if ARCH_EBSA110
+> +	default 0xf0100000 if DEBUG_DIGICOLOR_UA0
 
-On 32-bit IRQ_STACK_SIZE is the same as THREAD_SIZE.
+Should be 0xf0000000 for the physical address.
 
-To allow sharing struct irq_stack with 32-bit, define IRQ_STACK_SIZE for
-32-bit and use it for struct irq_stack.
+>  	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
+>  	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
+>  	default 0xf7fc9000 if DEBUG_BERLIN_UART
+> @@ -1784,6 +1785,7 @@ config DEBUG_UART_VIRT
+>  	default 0xfd012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_MV78XX0
+>  	default 0xfd883000 if DEBUG_ALPINE_UART0
+>  	default 0xfde12000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_DOVE
+> +	default 0xfe000000 if DEBUG_DIGICOLOR_UA0
 
-No functional change.
+Maybe you intended to change the virtual address to 0xf0100000?
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160145.632513987@linutronix.de
----
- arch/x86/include/asm/page_32_types.h | 2 ++
- arch/x86/include/asm/processor.h     | 4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+>  	DEFAULT 0xfe012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_ORION5X
+>  	default 0xfe017000 if DEBUG_MMP_UART2
+>  	default 0xfe018000 if DEBUG_MMP_UART3
 
-diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
-index 57b5dc15ca7e..565ad755c785 100644
---- a/arch/x86/include/asm/page_32_types.h
-+++ b/arch/x86/include/asm/page_32_types.h
-@@ -22,6 +22,8 @@
- #define THREAD_SIZE_ORDER	1
- #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
- 
-+#define IRQ_STACK_SIZE		THREAD_SIZE
-+
- #define N_EXCEPTION_STACKS	1
- 
- #ifdef CONFIG_X86_PAE
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 8fcfcd1a8375..8b4bf732e1b5 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -422,8 +422,8 @@ DECLARE_PER_CPU_ALIGNED(struct stack_canary, stack_canary);
-  * per-CPU IRQ handling stacks
-  */
- struct irq_stack {
--	u32                     stack[THREAD_SIZE/sizeof(u32)];
--} __aligned(THREAD_SIZE);
-+	u32			stack[IRQ_STACK_SIZE / sizeof(u32)];
-+} __aligned(IRQ_STACK_SIZE);
- 
- DECLARE_PER_CPU(struct irq_stack *, hardirq_stack);
- DECLARE_PER_CPU(struct irq_stack *, softirq_stack);
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
