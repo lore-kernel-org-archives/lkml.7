@@ -7,56 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4027C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F48C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FE6217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBD020835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555519352;
-	bh=HeVVHpUszD56VIWjN2R7vu1E2MDYY1dW+pC9mjvMeSs=;
+	s=default; t=1555519355;
+	bh=V5vyzX2cYRdBJizwwmGAk5c7DodRl2AZKtpM+rnyM4E=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=wH3H2KOQHLLvjhx5L0OzWwDsqGFUBD5K09lG1MjUW/DNuHe4Lxga8Hw/MTzKHb0Sz
-	 2ZaGiCDl+StPYYc/8nzXRqVjulS5QO48bPcTYvL/zboABTiTuARJMaTxvEYeUXGCdD
-	 /qcansz8piiJOKP8weJ9mTneDky67KLBXX1fLN+o=
+	b=W8F8NDashhIXggku4a5xDon7DYud8wfxwZ/BeuKEd990yvQqTxA35nlNzDDL6oU3B
+	 2qNGAd+zNfYmg1vDZ63W3R2ds5RSQS7Aq6emhXp18sWa9PGkSuqfmrH//dTcyJM7go
+	 FEnMxBeEK4zCw3M8ADOuupr2qkePHL55+Eet93Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732968AbfDQQmb (ORCPT
+        id S1732991AbfDQQme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:42:31 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37322 "EHLO
+        Wed, 17 Apr 2019 12:42:34 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37400 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732793AbfDQQm1 (ORCPT
+        with ESMTP id S1732937AbfDQQm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:42:27 -0400
+        Wed, 17 Apr 2019 12:42:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=eVKUx54Igy3r5M5d3rxJIA1r0PzkBCgyDt//z0UAYmc=; b=aNJ6CEmEU9OR
-        OFEZNLT6lgTKMty8ho7nOLKgFhMYXWawuZwDMoGJTkXD/oMnGza/B7kJdAPv3yZmBz0J4vn5XoB7W
-        u+mQxsFke6hZgiygEwZXg1sX0bj39hZuwDUaYiit9MSL1yPIXpR4uTs1VxNRfFeLUo2iIT1Cj4W7c
-        vj2o0=;
+        List-Archive; bh=DBSFXeLls8eTpQqRwQJMGZjH5wSmKV3qPWzXKRb0KYY=; b=TFtBtrCXMTYA
+        7/I4HlFNocagZG+FACf3bCer4/w+tNzCmXfWfzNv4YgV0q7X1J6BmCinov0a8o5v0c9VYA+GCyY9I
+        rqtT2I9QArmzEInhN/AUSAIx1FZv31Dsy2ajPaKlAS8Cj+ma+fF/wrufIrbKlCc+RN6l53ftB3HaS
+        AD7Hw=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGndY-000154-Un; Wed, 17 Apr 2019 16:42:16 +0000
+        id 1hGndc-000158-6Q; Wed, 17 Apr 2019 16:42:20 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id ABE661128FCC; Wed, 17 Apr 2019 17:42:16 +0100 (BST)
+        id BE6F71128FCA; Wed, 17 Apr 2019 17:42:14 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     devicetree@vger.kernel.org, fparent@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Applied "dt-bindings: spi: spi-mt65xx: add support for MT8516" to the spi tree
-In-Reply-To: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com
+Subject: Applied "regulator: wm8400: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190417141633.4730-4-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190417164216.ABE661128FCC@debutante.sirena.org.uk>
-Date:   Wed, 17 Apr 2019 17:42:16 +0100 (BST)
+Message-Id: <20190417164214.BE6F71128FCA@debutante.sirena.org.uk>
+Date:   Wed, 17 Apr 2019 17:42:14 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: spi: spi-mt65xx: add support for MT8516
+   regulator: wm8400: Switch to SPDX identifier
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,32 +85,45 @@ to this mail.
 Thanks,
 Mark
 
-From bee5c20b7323a7af027d1b4ba538137b518ad232 Mon Sep 17 00:00:00 2001
-From: Leilk Liu <leilk.liu@mediatek.com>
-Date: Wed, 17 Apr 2019 16:47:16 +0800
-Subject: [PATCH] dt-bindings: spi: spi-mt65xx: add support for MT8516
+From 362af736508134dddcc4cccd575fbb7c22c29712 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 17 Apr 2019 22:16:32 +0800
+Subject: [PATCH] regulator: wm8400: Switch to SPDX identifier
 
-Add binding documentation of spi-mt65xx for MT8516 SOC.
-
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/wm8400-regulator.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-index 69c356767cf8..c0f6c8ecfa2e 100644
---- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-@@ -10,6 +10,7 @@ Required properties:
-     - mediatek,mt8135-spi: for mt8135 platforms
-     - mediatek,mt8173-spi: for mt8173 platforms
-     - mediatek,mt8183-spi: for mt8183 platforms
-+    - "mediatek,mt8516-spi", "mediatek,mt2712-spi": for mt8516 platforms
+diff --git a/drivers/regulator/wm8400-regulator.c b/drivers/regulator/wm8400-regulator.c
+index 5ce86b92851b..6f331b51e479 100644
+--- a/drivers/regulator/wm8400-regulator.c
++++ b/drivers/regulator/wm8400-regulator.c
+@@ -1,16 +1,10 @@
+-/*
+- * Regulator support for WM8400
+- *
+- * Copyright 2008 Wolfson Microelectronics PLC.
+- *
+- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of the
+- * License, or (at your option) any later version.
+- *
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Regulator support for WM8400
++//
++// Copyright 2008 Wolfson Microelectronics PLC.
++//
++// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
  
- - #address-cells: should be 1.
- 
+ #include <linux/bug.h>
+ #include <linux/err.h>
 -- 
 2.20.1
 
