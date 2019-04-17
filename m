@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9210DC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD36AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFD72184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6962184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5cphJCa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8t6Hiou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbfDQWkd (ORCPT
+        id S2387600AbfDQWlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:40:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33748 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387506AbfDQWkc (ORCPT
+        Wed, 17 Apr 2019 18:41:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43395 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbfDQWlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:40:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h5so150586pfo.0;
-        Wed, 17 Apr 2019 15:40:32 -0700 (PDT)
+        Wed, 17 Apr 2019 18:41:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id n8so163609plp.10;
+        Wed, 17 Apr 2019 15:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lQt5SyxbZBQA5PhlPjU2yH3iv3jJNAlRNNELR/55A5Y=;
-        b=q5cphJCaaTLcNknoPQphcV0nu8xswtz8zVzOAHIQZFvyaeadsYryNGKxoViGHMB8vG
-         tELPG1co8EOqaiCr8gk05Lfvd+EMw5Bh7fhPq+OzFLVqNGsODE72I9LcYBKzqnrwEtOF
-         B/ZGt59L2bJgqFuuIRNMVwJvpX5HgcdpA1daX79qRT0ujWw5GtpuuCUe2ejY+oUe/DI/
-         +D2sL6HncDHsbshy31lwxfv7hS1gj8ykCx86H5YhQBsEFNuciqgSxLnrzF8BsxRZ8aQY
-         Nx1o/M/zntiC7r+phTTtbxo/YhereEWlB7B/Hv6WLIs5hnda9CxoNVHs5J9t7BFHMVqE
-         Q/ZA==
+        bh=wI1Y30GzShQIq71Qmpx4lrEpWFmLVF7D2Tq0E543U/s=;
+        b=b8t6HiouiwCTPb8TzfzulDQl83HhdDbCn6A7eTvNss7MmEBUTk1CRakMqZzq01eam8
+         5q/ZOiwlGY7UYXhPT/j8pEV+rPf7N9zqR4JK3+h7dcDE+FWiBsBLOGbkUxG7sFE2e9aG
+         7xCqqrN/D5s4Q6zl02LtKFCwTiVzFuHhnNOL56A3V1nvFXC4oYmxjU7/Na7RX2W5u9Ob
+         HW/lg12A0aFe5DNym1EIMVPzsLlY/dvn3DpgzNJN37OWwz6bWy0yCdUvOex4mU8fHqu8
+         vAGK4Gnj5Ri40RYLX2qbgf11Pf4FtCIxIpuBjRKjUswmWrtJCaJqFAO1bMlOrvvNKof/
+         NsBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lQt5SyxbZBQA5PhlPjU2yH3iv3jJNAlRNNELR/55A5Y=;
-        b=CjQIWyXP2u48+yp/b26qpCeOZLs1u/+iyS149fP4/gVMI37YcZjDtp7he1fuN/fWXD
-         FI5CBIxS9D9nh7ZH7Jzi15e0j+ov30zGQNVb3vodSJ39Fdyto6Y5J2voN5b7MRtl86Dr
-         Kifxd6hlKPQh74SX564qJEbni/1rScAZB89OwNj85Da08PrrkTGRvMOVEqW9oNrZm4wv
-         5Y1EPACtabEw8vrkJOvaa8b1uZ5THrETs5tADsiiREKeZ0ifD5ZksM76Mg78lvMer9aI
-         3M3I5uUcmeR6MwAcifit2qnGubK5NkfLZRFQyLoVm21GpcylgfKcSQdXFlayxfRzZzFw
-         U0HA==
-X-Gm-Message-State: APjAAAXC+VIbih2H7I5ntUxW8ghJ1QGJGSEIyOf0jX+8WoE3BM8pT853
-        fqW+hu+OEXmVlAAWICIXSko=
-X-Google-Smtp-Source: APXvYqzPy+1pd3AnQMWyzEo7Vtv0dunMOHGYZbQgTrXS/VLJW+GIvWF76kBQq3DM8gRCkJy3Kp1ZKQ==
-X-Received: by 2002:a05:6a00:11:: with SMTP id h17mr44286279pfk.232.1555540464015;
-        Wed, 17 Apr 2019 15:34:24 -0700 (PDT)
+        bh=wI1Y30GzShQIq71Qmpx4lrEpWFmLVF7D2Tq0E543U/s=;
+        b=Bf9nAx5+j91kIyCpWjKhfam5FY1jZWPHXhpH2CCzSOII/HWt+x0KVhDSAWzYoiyz8k
+         3KRg4yka0acAVcV8VCNzQcdTRCxAQfueWjLMZrj8VJg2ZkVtI9P69IrvprKO2L/V/pxC
+         j8NCUvuh71h7zRy/qPH7+eNeovGMrrodZHek2Ve7UV1Ud3z8ZniyQdOaIiqM/S939LuP
+         Cns3mOHFMCxsPbUKi+Zz93IMi1YuhccxvFjOfqK0hj4ZiAGEE+JgB0DVpvmU0RRhE5kE
+         M3dH3BPS++t2WR3nP1KrBy5NsUzwaU+GBLejsU6kvBvAmouEJ8cOVrfxGql8jY8VcR9q
+         7n3w==
+X-Gm-Message-State: APjAAAXcD7HjKQIGewv0JT1ttF3uIL4GEkWM0VxvhGTbFUiDKaYcHpFd
+        ndQeWpgAzJf6EJLqF2VmSn4=
+X-Google-Smtp-Source: APXvYqyNvTpK/tL3ZSyPN7NxYDJWkUAKYB4uSXmmvnQr6oPf+JnU6CPycgxFPboLVmL0g7o8A4NcQg==
+X-Received: by 2002:a17:902:9043:: with SMTP id w3mr92257864plz.101.1555540531587;
+        Wed, 17 Apr 2019 15:35:31 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.34.17
+        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.35.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:34:23 -0700 (PDT)
+        Wed, 17 Apr 2019 15:35:31 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [PATCH v3 04/16] PM / devfreq: tegra: Don't ignore clk errors
-Date:   Thu, 18 Apr 2019 01:29:13 +0300
-Message-Id: <20190417222925.5815-5-digetx@gmail.com>
+Subject: [PATCH v3 14/16] PM / devfreq: tegra: Enable COMPILE_TEST for the driver
+Date:   Thu, 18 Apr 2019 01:29:23 +0300
+Message-Id: <20190417222925.5815-15-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190417222925.5815-1-digetx@gmail.com>
 References: <20190417222925.5815-1-digetx@gmail.com>
@@ -78,53 +78,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clk_set_min_rate() could fail and in this case clk_set_rate() sets
-rate to 0, which may drop EMC rate to minimum and make machine very
-difficult to use.
+The driver's compilation doesn't have any specific dependencies, hence
+the COMPILE_TEST option can be supported in Kconfig.
 
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra-devfreq.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/devfreq/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index 7d7b9a5895b2..c7428c5eee23 100644
---- a/drivers/devfreq/tegra-devfreq.c
-+++ b/drivers/devfreq/tegra-devfreq.c
-@@ -484,8 +484,10 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 				u32 flags)
- {
- 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
-+	struct devfreq *devfreq = tegra->devfreq;
- 	struct dev_pm_opp *opp;
- 	unsigned long rate;
-+	int err;
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index 56db9dc05edb..a6bba6e1e7d9 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -93,7 +93,7 @@ config ARM_EXYNOS_BUS_DEVFREQ
  
- 	opp = devfreq_recommended_opp(dev, freq, flags);
- 	if (IS_ERR(opp)) {
-@@ -495,10 +497,20 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 	rate = dev_pm_opp_get_freq(opp);
- 	dev_pm_opp_put(opp);
- 
--	clk_set_min_rate(tegra->emc_clock, rate);
--	clk_set_rate(tegra->emc_clock, 0);
-+	err = clk_set_min_rate(tegra->emc_clock, rate);
-+	if (err)
-+		return err;
-+
-+	err = clk_set_rate(tegra->emc_clock, 0);
-+	if (err)
-+		goto restore_min_rate;
- 
- 	return 0;
-+
-+restore_min_rate:
-+	clk_set_min_rate(tegra->emc_clock, devfreq->previous_freq);
-+
-+	return err;
- }
- 
- static int tegra_devfreq_get_dev_status(struct device *dev,
+ config ARM_TEGRA_DEVFREQ
+ 	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+-	depends on ARCH_TEGRA
++	depends on ARCH_TEGRA || COMPILE_TEST
+ 	select PM_OPP
+ 	help
+ 	  This adds the DEVFREQ driver for the Tegra family of SoCs.
 -- 
 2.21.0
 
