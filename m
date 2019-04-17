@@ -2,80 +2,133 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD61C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214D2C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A0521773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD1120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732032AbfDQLyF (ORCPT
+        id S1732058AbfDQLyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:54:05 -0400
-Received: from foss.arm.com ([217.140.101.70]:43606 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfDQLyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:54:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAE0A374;
-        Wed, 17 Apr 2019 04:54:04 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53A6F3F68F;
-        Wed, 17 Apr 2019 04:54:03 -0700 (PDT)
-Subject: Re: [PATCH 12/21] dma-iommu: factor atomic pool allocations into
- helpers
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190327080448.5500-1-hch@lst.de>
- <20190327080448.5500-13-hch@lst.de>
- <b3f80a11-1504-e8f9-4438-92bcd5f3df7f@arm.com> <20190410061157.GA5278@lst.de>
- <20190417063358.GA24139@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ab00aedc-085d-a4a3-e580-e13d00645d60@arm.com>
-Date:   Wed, 17 Apr 2019 12:54:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190417063358.GA24139@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Apr 2019 07:54:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43610 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729898AbfDQLyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:54:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 370BCABE9;
+        Wed, 17 Apr 2019 11:54:11 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v7 00/10] vsprintf: Prevent silent crashes and consolidate error handling
+Date:   Wed, 17 Apr 2019 13:53:40 +0200
+Message-Id: <20190417115350.20479-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2019 07:33, Christoph Hellwig wrote:
-> On Wed, Apr 10, 2019 at 08:11:57AM +0200, Christoph Hellwig wrote:
->> On Tue, Apr 09, 2019 at 06:59:32PM +0100, Robin Murphy wrote:
->>> On 27/03/2019 08:04, Christoph Hellwig wrote:
->>>> This keeps the code together and will simplify compiling the code
->>>> out on architectures that are always dma coherent.
->>>
->>> And this is where things take a turn in the direction I just can't get on
->>> with - I'm looking at the final result and the twisty maze of little
->>> disjoint helpers all overlapping each other in functionality is really
->>> difficult to follow. And I would *much* rather have things rely on
->>> compile-time constant optimisation than spend the future having to fix the
->>> #ifdefed parts for arm64 whenever x86-centric changes fail to test them.
->>
->> Can you draft up a patch on top of my series to show me what you
->> want?  I can take care of finishing it up and moving the changes
->> into the right patches in the series.
-> 
-> Any chance to make some progress on this?  Or at least a better
-> description of what you want?
+Crash in vsprintf() might be silent when it happens under logbuf_lock
+in vprintk_emit(). This patch set prevents most of the crashes by probing
+the address. The check is done only by %s and some %p* specifiers that need
+to dereference the address.
 
-Heh, I did actually start writing a reply last night to apologise for 
-the delay - I've been clearing the decks a bit so that I can sit down 
-and actually concentrate on this (plus the PCI DT mask fix). That's now 
-my plan for the rest of today :)
+Only the first byte of the address is checked to keep it simple. It should
+be enough to catch most problems.
 
-Robin.
+The check is explicitly done in each function that does the dereference.
+It helps to avoid the questionable strchr() of affected specifiers. This
+change motivated me to do some preparation patches that consolidated
+the error handling and cleaned the code a bit.
+
+
+Changes against v6:
+
+	+ Removed refactoring of the test_printf code [Andy]
+	+ Added missing check_pointer() in device_node_string()
+	+ Hard limit on the length of the inlined error msg [Sergey]
+
+Changes against v5:
+
+	+ Rebased on top of current Linus' tree
+	+ Removed already included patch adding const qualifier
+	  to ptr_to_id()
+	+ Removed controversial patch adding WARN() on invalid pointers
+	  [Rasmus, Sergey, Andy]
+	+ Reshuffled changes to do all refactoring first.
+	+ Added handling also for the new %pt* modifiers
+	+ Use better descriptive function names [Andy]:
+		+ valid_string() -> string_nocheck()
+		+ valid_pointer_access() -> check_pointer()
+		+ check_pointer_access() -> check_pointer_msg()
+	+ Fixed typo and formatting [Andy]
+
+Changes against v4:
+
+	+ rebased on top of
+git://git.kernel.org/pub/scm/linux/kernel/git/pmladek/printk.git for-4.18
+	+ Added missing conts into ptr_to_ind() in a separate patch
+	+ Renamed __string to valid_string()
+	+ Avoid WARN() for invalid poimter specifiers
+	+ Removed noinline_for_stack where it was not really useful
+	+ WARN() when accessing invalid non-NULL address
+
+Changes against v3:
+
+	+ Add valid_pointer_access() to do the check and store the error
+	  message in one call.
+	+ Remove strchr(). Instead, validate the address in functions
+	  that dereference the address.
+	+ Use probe_kernel_address() instead of probe_kernel_real().
+	+ Do the check only for unknown address.
+	+ Consolidate handling of unsupported pointer modifiers.
+
+Changes against v2:
+
+	+ Fix handling with strchr(string, '\0'). Happens with
+	  %p at the very end of the string.
+	+ Even more clear commit message
+	+ Documentation/core-api/printk-formats.rst update.
+	+ Add check into lib/test_printf.c.
+
+Changes against v1:
+
+	+ Do not check access for plain %p.
+	+ More clear commit message.
+
+
+Petr Mladek (10):
+  vsprintf: Shuffle restricted_pointer()
+  vsprintf: Consistent %pK handling for kptr_restrict == 0
+  vsprintf: Do not check address of well-known strings
+  vsprintf: Factor out %p[iI] handler as ip_addr_string()
+  vsprintf: Factor out %pV handler as va_format()
+  vsprintf: Factor out %pO handler as kobject_string()
+  vsprintf: Consolidate handling of unknown pointer specifiers
+  vsprintf: Prevent crash when dereferencing invalid pointers
+  vsprintf: Avoid confusion between invalid address and value
+  vsprintf: Limit the length of inlined error messages
+
+ Documentation/core-api/printk-formats.rst |   8 +
+ lib/test_printf.c                         |  25 +-
+ lib/vsprintf.c                            | 426 +++++++++++++++++++-----------
+ 3 files changed, 298 insertions(+), 161 deletions(-)
+
+-- 
+2.16.4
+
