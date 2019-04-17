@@ -2,74 +2,99 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F3EC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83A6C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EB620693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555482538;
-	bh=dbDJijC8bPLoYTnNYEMLhWc1DiibE+jV3Yh6IlpDZRk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Czj9dQUSWhB9uAJb+krrl4wiE2VJPzWeZ2e698MEGc5H5l8lQ5aqosCbGrvTX4Hll
-	 22ZJjZ9M8ukl8oUivok0uMDWmwOyduozHrFdgtKkTK7GTA/z8qQkh4jqq/C2AbGDZs
-	 SBXZHi9ltJyrI9pJuL8izY6h0067TSdO8wwD3ORY=
+	by mail.kernel.org (Postfix) with ESMTP id 8548320693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M2APMcox";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BN2PP0Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfDQG25 (ORCPT
+        id S1729901AbfDQGb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 02:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfDQG25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 02:28:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 17 Apr 2019 02:31:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52926 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfDQGbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 02:31:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 290BF60907; Wed, 17 Apr 2019 06:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555482685;
+        bh=HQXq3NgF3tyRYydYhPRkw5TJvBmleRQ9ra25bsKrqIs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M2APMcoxsT6ejRZJQ8YMfdEj7tNX+pjSDdy6dGV8Aj26j5jDxwUVIxEkLmc9XuQd6
+         FlVkbRFPIBWOeL80MyQfqUh63LFGIXT0G4QEyI+O2jlN8K/+GG5Wa+gAS2IRdx6dH4
+         H0MxvWxJc73G3J67QV6nFHVNxEWs1LMosO/fOxFA=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4E720693;
-        Wed, 17 Apr 2019 06:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555482536;
-        bh=dbDJijC8bPLoYTnNYEMLhWc1DiibE+jV3Yh6IlpDZRk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ltPqZ8VpMsqFfFwndhnnycogq5ss1AvWZJRz0H5LrVdA0B6IzXuziUmEiCRkhjjM4
-         CixD/Bcvtu23hBylvbDJhqNIJg3t8zzWXGTToyCscCcSZyMMgC+FIEhKrlb7KC5LAY
-         luptiGPo7L1Aj/Fzew4u4wn1FBEMyGwtIg8m8B60=
-Date:   Wed, 17 Apr 2019 08:28:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Hyper-V commits for 5.1
-Message-ID: <20190417062854.GA24045@kroah.com>
-References: <20190417013452.438FA20821@mail.kernel.org>
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A172860770;
+        Wed, 17 Apr 2019 06:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555482684;
+        bh=HQXq3NgF3tyRYydYhPRkw5TJvBmleRQ9ra25bsKrqIs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BN2PP0Z91g9bG2uAeS8yBsAKGke6JJbUv3xiOxIH8e0lbFf3vZpkdC2jQl9fIL6N8
+         SZpiuXghd8xKJ/FBDmqP8yxbnHkiC0ihtS52gEvjVfU0sQQcd5aG+Q3nbTUcUdR4VT
+         ZnD/tqkhShP7SFlT2X5dlyH3Q+WNWidCY1gLQHOs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A172860770
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] watchdog: intel_scu_watchdog: fix spelling mistake:
+ "set_hearbeat" -> "set_heartbeat"
+To:     Colin King <colin.king@canonical.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190416133318.21045-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <8149cea7-d7dd-2907-3f85-caba792b7cf0@codeaurora.org>
+Date:   Wed, 17 Apr 2019 12:01:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417013452.438FA20821@mail.kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190416133318.21045-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 09:34:51PM -0400, Sasha Levin wrote:
->  2. Fix to show monitor data only when monitor pages are actually
-> allocated, also by Kimberly Brown.
 
-That's not really a "fix", more like a "new feature", right?
+On 4/16/2019 7:03 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There is a spelling mistake in a pr_debug message. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
->  drivers/hv/vmbus_drv.c                   | 166 +++++++++++++++++++++++++------
-
-A patch this big so late in the release cycle is not good.
-
-Can you drop this one and resend the others?  If you sent this as a
-patch series, I could have done it that way on my own :)
-
-thanks,
-
-greg k-h
+Cheers,
+-Mukesh
+> ---
+>   drivers/watchdog/intel_scu_watchdog.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/watchdog/intel_scu_watchdog.c b/drivers/watchdog/intel_scu_watchdog.c
+> index 0caab6241eb7..718f7db35bec 100644
+> --- a/drivers/watchdog/intel_scu_watchdog.c
+> +++ b/drivers/watchdog/intel_scu_watchdog.c
+> @@ -224,7 +224,7 @@ static int intel_scu_set_heartbeat(u32 t)
+>   		 watchdog_device.timer_tbl_ptr->freq_hz);
+>   	pr_debug("set_heartbeat: timer_set is %x (hex)\n",
+>   		 watchdog_device.timer_set);
+> -	pr_debug("set_hearbeat: timer_margin is %x (hex)\n", timer_margin);
+> +	pr_debug("set_heartbeat: timer_margin is %x (hex)\n", timer_margin);
+>   	pr_debug("set_heartbeat: threshold is %x (hex)\n",
+>   		 watchdog_device.threshold);
+>   	pr_debug("set_heartbeat: soft_threshold is %x (hex)\n",
