@@ -2,106 +2,113 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E457C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23442C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F30620693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FBF20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WE7BvyaJ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LIJpJmN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbfDQSb7 (ORCPT
+        id S1732476AbfDQSdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:31:59 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:39661 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDQSb6 (ORCPT
+        Wed, 17 Apr 2019 14:33:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39472 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDQSdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:31:58 -0400
-Received: by mail-it1-f195.google.com with SMTP id 139so6010132ita.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:31:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QE+zGVHcn4rBOczPAxq5RUTI7rRUphfsm3Pb8osPQq8=;
-        b=Q0lWj+8KIR1CGIK3iRV49IvWdLk2dfYNyzSMmFWdXgpfVyxeOQoWh82qPerdYbF5M4
-         xXch0ZSVQ9UStDwa3TzwSq5xFft+esvoX9x3uAcGh0bP1VKU2E3ZojP9/OoAWvR431Er
-         8WdF/9VktjpTCDdTmbylDv5Z6fwcV6QhL7gzhK+9VCH2YXV+jdDYhYpG2B1LvfOOFgMp
-         WamPdUE2cenErVA2hMu++yiP4YpXxxQbOPjWq4f2e+oinX1TPll6PHEcLKEwf2cJICB6
-         r2jCfxTr1EAXPBeJthN/yRt3DuLer/bykQb9+vJCWAjLNGXiQ02W0tRgfsBeTWL/5csH
-         ZFmw==
-X-Gm-Message-State: APjAAAWTmWsS5kbrKIe4C26ovgSSLbOUc1MIuyjeGzQc0i57IpYthaTn
-        LBE52KeGdtElQTbCKSIqLZaOtg==
-X-Google-Smtp-Source: APXvYqwxix+g5cmcRkKRStucRzDA4g1mUK1NrnV8ZH7ST/w4wToB4nt0cMQ7X52DuKYvA6LIH7Izug==
-X-Received: by 2002:a24:42ce:: with SMTP id i197mr4592itb.27.1555525917906;
-        Wed, 17 Apr 2019 11:31:57 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id x10sm2711397ita.4.2019.04.17.11.31.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Apr 2019 11:31:56 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 12:31:52 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, groeck@chromium.org, oneukum@suse.com,
-        djkurtz@chromium.org, zwisler@chromium.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Johan Hovold <johan@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Raul Rangel <rrangel@chromium.org>
-Subject: Re: [PATCH v2] usb/hcd: Send a uevent signaling that the host
- controller has died
-Message-ID: <20190417183152.GA118957@google.com>
-References: <20190417175300.GA74282@google.com>
- <Pine.LNX.4.44L0.1904171419260.1400-100000@iolanthe.rowland.org>
+        Wed, 17 Apr 2019 14:33:53 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E90B0608FC; Wed, 17 Apr 2019 18:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555526032;
+        bh=zhMGLUx0DNNgmXYqX+Nqe4klTe6conWTlRmG/VaAB1Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WE7BvyaJdtHPAxOtWqB+lKaw4qIwZGR3f0SpAv33sobyaejFDccGYHawbWt5Khy39
+         AhAzptOtxBORSUyHV50UbwEsglw3ChkrEAsrGIKpo5u+AUi5QQKH3hIgHFw99TmxBk
+         mXAC0mcj28+ScMeA53MG8khMnA8WPWGZpQUHaLEI=
+Received: from [10.79.163.35] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36C7C60712;
+        Wed, 17 Apr 2019 18:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555526029;
+        bh=zhMGLUx0DNNgmXYqX+Nqe4klTe6conWTlRmG/VaAB1Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LIJpJmN2DRF4aYEHkvCviMY/JhGvgpn+ZzY3BN2qtf9U0hCdb9nuzmIA9lFaKpoEl
+         D2LVEXJs8Shmq/MlCuAUCc5xN4bjfbCUOGnzepMKMvTPI77OnPExa9qMOoh8Brh5rP
+         9OyiwpkrXrkDwRESOs7MzhlHcznVzfAuTXoF6RkE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36C7C60712
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] nfp: abm: fix spelling mistake "offseting" ->
+ "offsetting"
+To:     Colin King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Hurley <john.hurley@netronome.com>,
+        oss-drivers@netronome.com, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190417131500.4793-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <3cb2a61c-8455-a484-ed98-f17ff1dbcf3c@codeaurora.org>
+Date:   Thu, 18 Apr 2019 00:03:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1904171419260.1400-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190417131500.4793-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 02:24:06PM -0400, Alan Stern wrote:
-> On Wed, 17 Apr 2019, Raul Rangel wrote:
-> 
-> > > > Also where would be a good place to document this?
-> > > 
-> > > Documentation/ABI/ is a good start.
-> > I'll add something to Documentation/ABI/testing/xhci-uevent
-> 
-> Your patch will apply to all host controllers, not just xhci.  The
-> documentation filename should reflect this.  Perhaps "usb-uevent"?
-I realized that after I had sent the email :) I'll do usb-uevent.
-> 
-> > > Why do you need to lock something that is "dead"?  And why is the idr
-> > > lock the correct one here?
-> > We need to ensure that root_hub is not null. Though I'm not sure the
-> > lock is entirely necessary in this case. usb_remove_hcd stops the work
-> > item before it sets the rhdev to null. The reason I picked
-> > usb_bus_idr_lock was because it's the same lock that usb_remove_hcd uses
-> > when setting rhdev = NULL.
-> > 
-> > Alan, what do you think? Should I remove the lock?
-> 
-> You're both right; the lock isn't needed because the work is stopped
-> before the root hub gets removed.  Acquiring the lock doesn't do any
-> harm, but it isn't needed so you probably should remove it.  In fact, 
-> you don't even need to test for whether hcd->self.root_hub is 
-> non-NULL.
-Sounds good, I'll clean it up.
-> 
-> Alan Stern
-> 
-> 
+
+On 4/17/2019 6:45 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There are a couple of spelling mistakes in NL_SET_ERR_MSG_MOD error
+> messages. Fix these.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
+
+> ---
+>   drivers/net/ethernet/netronome/nfp/abm/cls.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> index 9852080cf454..ff3913085665 100644
+> --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> @@ -39,7 +39,7 @@ nfp_abm_u32_check_knode(struct nfp_abm *abm, struct tc_cls_u32_knode *knode,
+>   	}
+>   	if (knode->sel->off || knode->sel->offshift || knode->sel->offmask ||
+>   	    knode->sel->offoff || knode->fshift) {
+> -		NL_SET_ERR_MSG_MOD(extack, "variable offseting not supported");
+> +		NL_SET_ERR_MSG_MOD(extack, "variable offsetting not supported");
+>   		return false;
+>   	}
+>   	if (knode->sel->hoff || knode->sel->hmask) {
+> @@ -78,7 +78,7 @@ nfp_abm_u32_check_knode(struct nfp_abm *abm, struct tc_cls_u32_knode *knode,
+>   
+>   	k = &knode->sel->keys[0];
+>   	if (k->offmask) {
+> -		NL_SET_ERR_MSG_MOD(extack, "offset mask - variable offseting not supported");
+> +		NL_SET_ERR_MSG_MOD(extack, "offset mask - variable offsetting not supported");
+>   		return false;
+>   	}
+>   	if (k->off) {
