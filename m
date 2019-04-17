@@ -3,67 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902F9C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397DDC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69427206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071BE20821
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbfDQRVR (ORCPT
+        id S1733066AbfDQRVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:21:17 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56718 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732746AbfDQRVQ (ORCPT
+        Wed, 17 Apr 2019 13:21:25 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35789 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732746AbfDQRVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:21:16 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D564D133E9778;
-        Wed, 17 Apr 2019 10:21:12 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 10:21:12 -0700 (PDT)
-Message-Id: <20190417.102112.382636552216165456.davem@davemloft.net>
-To:     nhorman@tuxdriver.com
-Cc:     arnd@arndb.de, ralf@linux-mips.org, marcel@holtmann.org,
-        johan.hedberg@gmail.com, socketcan@hartkopp.net,
-        mkl@pengutronix.de, gerrit@erg.abdn.ac.uk, alex.aring@gmail.com,
-        stefan@datenfreihafen.org, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, vyasevich@gmail.com,
-        marcelo.leitner@gmail.com, andrew.hendry@gmail.com,
-        edumazet@google.com, willemb@google.com, deepa.kernel@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-x25@vger.kernel.org
-Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190417093523.GA15487@hmswarspite.think-freely.org>
-References: <20190416203620.539628-1-arnd@arndb.de>
-        <20190417093523.GA15487@hmswarspite.think-freely.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 17 Apr 2019 10:21:15 -0700 (PDT)
+        Wed, 17 Apr 2019 13:21:23 -0400
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 1D15A20000D;
+        Wed, 17 Apr 2019 17:21:19 +0000 (UTC)
+Message-ID: <943166ee9799daf50615b1148f3f855aa90e9c84.camel@bootlin.com>
+Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video
+ decoder interface
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 17 Apr 2019 19:21:19 +0200
+In-Reply-To: <ec607c4917cd205f69de9a19c13a2109ff602477.camel@ndufresne.ca>
+References: <20190306080019.159676-1-acourbot@chromium.org>
+         <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
+         <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
+         <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
+         <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
+         <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
+         <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
+         <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
+         <f4561d1b89464341b66b87af90f0d47a5b093b57.camel@bootlin.com>
+         <ec607c4917cd205f69de9a19c13a2109ff602477.camel@ndufresne.ca>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
-Date: Wed, 17 Apr 2019 05:35:23 -0400
+Hi,
 
-> Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Le mercredi 17 avril 2019 à 12:17 -0400, Nicolas Dufresne a écrit :
+> In general, we say stateless from a HW point of view. It simply means
+> that the HW (the accelerator) can be multiplexed to process several
+> independent streams. While with stateful firmware, you generally can't
+> save the state, and ends up with a specific number of concurrent stream
+> (scheduling happens in the firmware). There is exception to that of
+> course, the newest Amlogic/Meson video decoder allow for saving the
+> decoder state. The registers are undocumented, since they are filled by
+> the HW parser, but it's separated in a way that we could multiplex.
 
-Neil, please quote appropriately in the future.
+That's a nice summary! I think it constitutes a good definition of what
+we should call a stateless decoder. Perhaps we could write it down in
+the spec somewhere?
 
-I have to scroll through all of those pages of quoted patch just to
-see this one line.
+> Of course we do have a state in our drivers. Each time you open an m2m
+> device, you create an new instance which will keep track of done jobs,
+> pending jobs, active format, allocated memory, etc.
 
-Thank you.
+Yes, definitely.
+
+Cheers,
+
+Paul
+
