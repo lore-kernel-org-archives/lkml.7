@@ -2,216 +2,135 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C388FC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC79AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2BA206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A912020821
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n4nsODDN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbfDQLPi (ORCPT
+        id S1731918AbfDQLQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:15:38 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43422 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729578AbfDQLPi (ORCPT
+        Wed, 17 Apr 2019 07:16:41 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37361 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731337AbfDQLQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:15:38 -0400
-Received: by mail-ed1-f68.google.com with SMTP id j20so10408659edq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:15:36 -0700 (PDT)
+        Wed, 17 Apr 2019 07:16:41 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so11868968pgc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:16:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DAhaUckrpoxHtyYXB6W9rqZ88dFeqr0QxEv6Qcjpc7E=;
+        b=n4nsODDNdeTbJBwTDUwqHsjg7tTq1wDovUzp/3Ps5JJOHsmgB8vvaD3CJGB8FXP5oS
+         ekWMPIBa4yITCfzNikroyOxKK8HO1837Q/RfZpkgbDdOA1efgGEREisUJlFdZs3gnQtT
+         5IJFZ/Zh/23n/wj1TqS/PjaDOpmHhR3HqF+I9SiLBWoFiK4xb9MgPzU8Mwt7IKQ/AyS0
+         o8mDLtHbNPGBVBLjW5zbdpp+qfz0bP1qK6c5J/816zmc8R1jf98SRLWlvZkHlPi1sXPA
+         9GlYTJvpLmkt2vv/2WSjQgyb3CjmbwqX2v2j4F+yqoDyW82UTBPwePjYupe+aXXFfTOV
+         Mq6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6K5NKfItYk8CDgP3+DIGgzU/HnaXA4PccSHLlaRaT6c=;
-        b=kR5LuGpRNMspeuKtSdULNkmqAY0tuo/e4bfE6jYjfB1Iq49I6wgjVupEMmthdBRDKP
-         jrc5aq0v3kv9sCD2Lx/mVUNh/U5RxrAFLZZ6lUJRLGo4I3sX9munZuzaCK2RmcApYA8y
-         XBlz/GyDIWxBLIAQZLR8DRHitsWse8kg3LJ7civt7VzmebkJWV9yWVGTR9tH3LMjGDZ2
-         zeNrPwMOmGD/jiMjY+daxSM6SPsDWTdJmkpApEILkGc7EdihJakrqYrq5F2eGu9ekC1I
-         rfjS7rnstQZU4Aty30hQxBepaeY6LEJjWZ12ADzUni8nGJOoitrCjEe+yrvFtjyFan/7
-         pxWQ==
-X-Gm-Message-State: APjAAAWzX/vho/yPBqUsMKDExjkG16G7JEC8m0YhyPrjcYjoHg2QRlAu
-        5ovcITCI01oGUtrzWXWSXqVnPw==
-X-Google-Smtp-Source: APXvYqyTQ/yN3UbqS1lkXsR0TWutOGx4k1JTQzFvzdATxW4GKfwrVpqGzaSXxn2plreLgd2c0J1KYA==
-X-Received: by 2002:a17:906:938d:: with SMTP id l13mr46950849ejx.250.1555499736051;
-        Wed, 17 Apr 2019 04:15:36 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id l18sm16411220edc.17.2019.04.17.04.15.34
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 04:15:35 -0700 (PDT)
-Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
- old connections with references
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
- <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
- <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
- <20190417063918.GI1747@kuha.fi.intel.com>
- <76d9ab79-a1d0-f3cd-ba5d-2325740c72ff@redhat.com>
- <20190417093252.GO1747@kuha.fi.intel.com>
- <9304d771-df1f-aea4-43d2-7db540953cdd@redhat.com>
- <20190417110413.GR1747@kuha.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <733600c0-c216-5159-5f7c-b1114593f5de@redhat.com>
-Date:   Wed, 17 Apr 2019 13:15:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DAhaUckrpoxHtyYXB6W9rqZ88dFeqr0QxEv6Qcjpc7E=;
+        b=XAZCc+t9i9u5E+nzn6f0LfaFYCkb2PHF1f9bqXtuCg/70HC80ghkthC9FaOCoFCQNT
+         xjxXsJt59SCkHXGysnUyGVg0tow79AJ4WmLoNT6g4m0Leoo2hsai8nwkYERpMLpUDDHA
+         YZij2ReWSk8HrqBRwDSqCjqkLiEkwOcf7VRD7NlXRf2w5ckBoLMAtPhwRSluDL7wiASf
+         e4nP+CvsVBrVQZVb0/btLhT8jNLy0rupcERS8P7r/eCjq0BbLl7CzNgxGtgqrJNVAGBH
+         IpHkd1URtqiXlSsVJsP2GjOYWVs+/4x34V0Jg77HbIGCw8U2qslkyZQDHmVbXho+cCmb
+         4hPQ==
+X-Gm-Message-State: APjAAAX+jofL/f4Tkki7i6upY9osRlledYu32c3qku8z6VtXuxrAUWug
+        fTenOPUW7qNDh5dgwwp2alriVxySCnAMsTPajoiFxg==
+X-Google-Smtp-Source: APXvYqxHVLwGqIgZv7++lctI75Hz2Q/rX2w9jOZ9PftD0dp1WgmNTvAVnzqB+4CoubtY/ipYVX2jNcH+2I5thet27Vo=
+X-Received: by 2002:a63:cf0d:: with SMTP id j13mr82112417pgg.34.1555499799534;
+ Wed, 17 Apr 2019 04:16:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190417110413.GR1747@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000007380f90586a82005@google.com> <Pine.LNX.4.44L0.1904161421530.1605-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1904161421530.1605-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 17 Apr 2019 13:16:27 +0200
+Message-ID: <CAAeHK+zCwXpAb02vaPuanStYCp_x8g92HDEvm_LTN_F+Y_wOfQ@mail.gmail.com>
+Subject: Re: INFO: task hung in usb_kill_urb
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 16, 2019 at 8:25 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 16 Apr 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot has tested the proposed patch but the reproducer still triggered
+> > crash:
+> > INFO: task hung in usb_kill_urb
+>
+> Okay, I think I found the problem.  dummy-hcd doesn't check for
+> unsupported speeds until it is too late.  Andrey, what values does your
+> usb-fuzzer gadget driver set for its max_speed field?
 
-On 17-04-19 13:04, Heikki Krogerus wrote:
-> On Wed, Apr 17, 2019 at 11:52:15AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 17-04-19 11:32, Heikki Krogerus wrote:
->>> On Wed, Apr 17, 2019 at 11:19:28AM +0200, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 17-04-19 08:39, Heikki Krogerus wrote:
->>>>> On Tue, Apr 16, 2019 at 11:35:36PM +0200, Hans de Goede wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 12-04-19 15:41, Heikki Krogerus wrote:
->>>>>>> Now that the software nodes support references, and the
->>>>>>> device connection API support parsing fwnode references,
->>>>>>> replacing the old connection descriptions with software node
->>>>>>> references. Relying on device names when matching the
->>>>>>> connection would not have been possible to link the USB
->>>>>>> Type-C connector and the DisplayPort connector together, but
->>>>>>> with real references it's not problem.
->>>>>>>
->>>>>>> The DisplayPort ACPI node is dag up, and the drivers own
->>>>>>> software node for the DisplayPort is set as the secondary
->>>>>>> node for it. The USB Type-C connector refers the software
->>>>>>> node, but it is now tied to the ACPI node, and therefore any
->>>>>>> device entry (struct drm_connector in practice) that the
->>>>>>> node combo is assigned to.
->>>>>>>
->>>>>>> The USB role switch device does not have ACPI node, so we
->>>>>>> have to wait for the device to appear. Then we can simply
->>>>>>> assign our software node for the to the device.
->>>>>>>
->>>>>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>>>>>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>>>>>
->>>>>> So as promised I've been testing this series and this commit
->>>>>> breaks type-c functionality on devices using this driver.
->>>>>>
->>>>>> The problem is that typec_switch_get() and  typec_mux_get()
->>>>>> after this both return the same pointer, which is pointing
->>>>>> to the switch, so typec_mux_get() is returning the wrong
->>>>>> pointer.
->>>>>>
->>>>>> This is not surprising since the references for both are
->>>>>> both pointing to the fwnode attached to the piusb30532 devices:
->>>>>>
->>>>>> 	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
->>>>>>
->>>>>> So the class_find_device here:
->>>>>>
->>>>>> static void *typec_switch_match(struct device_connection *con, int ep,
->>>>>>                                    void *data)
->>>>>> {
->>>>>>            struct device *dev;
->>>>>>
->>>>>>            if (con->fwnode) {
->>>>>>                    if (con->id && !fwnode_property_present(con->fwnode, con->id))
->>>>>>                            return NULL;
->>>>>>
->>>>>>                    dev = class_find_device(&typec_mux_class, NULL, con->fwnode,
->>>>>>                                            fwnode_match);
->>>>>>            } else {
->>>>>>                    dev = class_find_device(&typec_mux_class, NULL,
->>>>>>                                            con->endpoint[ep], name_match);
->>>>>>            }
->>>>>>
->>>>>>            return dev ? to_typec_switch(dev) : ERR_PTR(-EPROBE_DEFER);
->>>>>> }
->>>>>>
->>>>>> Simply returns the first typec_mux_class device registered.
->>>>>>
->>>>>> I see 2 possible solutions to this problem:
->>>>>>
->>>>>> 1) Use separate typec_mux_class and typec_orientation_switch_class-es
->>>>>>
->>>>>> 2) Merge struct typec_switch and struct typec_mux into a single struct,
->>>>>> so that all typec_mux_class devices have the same memory layout, add
->>>>>> a subclass enum to this new merged struct and use that to identify
->>>>>> which of the typec_mux_class devices with the same fwnode pointer we
->>>>>> want.
->>>>>>
->>>>>> Any other suggestions?
->>>>>
->>>>> I think the correct fix is that we supply separate nodes for both
->>>>> device entries.
->>>>
->>>> That is not going to work since the (virtual) mux / orientation-switch
->>>> devices are only registered once the driver binds to the piusb30532 i2c
->>>> device, so when creating the nodes we only have the piusb30532 i2c device.
->>>
->>> It's not a problem, that's why we have the software nodes. The nodes
->>> can be created before the device entires. The node for pi3usb30532
->>> will just be the parent node for the new nodes we add for the mux and
->>> switch.
->>>
->>>> I've been thinking some more about this and an easy fix is to have separate
->>>> fwnode_match functions for typec_switch_match and typec_mux_match and have
->>>> them check that the dev_name ends in "-mux" resp. "-switch" that requires
->>>> only a very minimal change to "usb: typec: Registering real device entries for the muxes"
->>>> and then everything should be fine.
->>>
->>> I don't want to do anymore device name matching unless we have to, and
->>> here we don't have to. We can name the nodes for those virtual mux and
->>> switch, and then just do fwnode_find_named_child_node() in
->>> pi3usb30532.c for both of them.
->>
->> Ok.
->>
->>>> Note that another problem with this series which I noticed while testing
->>>> is that the usb-role-switch is not being found at all anymore after
->>>> this ("Replacing the old connections with references") patch. I still need
->>>> start debugging that.
->>>
->>> OK, I'll wait for you results on that.
->>
->> I understand that you want to wait with doing a v4 until this is resolved,
->> but can you (privately) send me a v3.5 fixing the mux/switch issue so that
->> I can test that (and get the problem out of the way for debugging the other
->> stuff) ?
->>
->> I've also just replied to the following patch with a review remark:
->> [PATCH v3 11/13] platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
->>
->> Since you need to respin the series anyways, it would be good if you can
->> address that too.
-> 
-> Sure thing. I don't have time today to prepare the patches for you to
-> test today, nor tomorrow depending I'm a travelling or not, so this may
-> have wait for next week (Friday's off) :-(
+It's passed from userspace without any validation :( I'll fix this!
+Thanks for looking into it!
 
-Note I'm on vacation myself next week, Monday I'm still reading email and
-I can run some tests, next week Tuesday - Friday I'm off.
+I wonder why other people saw this hang as well, they didn't use the
+dummy hcd module for sure. I guess there are might be other reasons.
 
-Regards,
-
-Hans
-
+>
+> Anyway, if I'm right then this patch should fix the bug.
+>
+> Alan Stern
+>
+> #syz test: https://github.com/google/kasan.git usb-fuzzer
+>
+> --- a/drivers/usb/gadget/udc/dummy_hcd.c
+> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
+> @@ -979,8 +979,18 @@ static int dummy_udc_start(struct usb_ga
+>         struct dummy_hcd        *dum_hcd = gadget_to_dummy_hcd(g);
+>         struct dummy            *dum = dum_hcd->dum;
+>
+> -       if (driver->max_speed == USB_SPEED_UNKNOWN)
+> +       switch (driver->max_speed) {
+> +       /* All the speeds we support */
+> +       case USB_SPEED_LOW:
+> +       case USB_SPEED_FULL:
+> +       case USB_SPEED_HIGH:
+> +       case USB_SPEED_SUPER:
+> +               break;
+> +       default:
+> +               dev_err(dummy_dev(dum_hcd), "bogus driver max_speed %d\n",
+> +                               driver->max_speed);
+>                 return -EINVAL;
+> +       }
+>
+>         /*
+>          * SLAVE side init ... the layer above hardware, which
+> @@ -1785,7 +1795,8 @@ static void dummy_timer(struct timer_lis
+>                 total = 490000;
+>                 break;
+>         default:
+> -               dev_err(dummy_dev(dum_hcd), "bogus device speed\n");
+> +               dev_err(dummy_dev(dum_hcd), "bogus device speed %d\n",
+> +                               dum->gadget.speed);
+>                 return;
+>         }
+>
+>
+>
