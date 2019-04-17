@@ -2,121 +2,141 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DEDC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04E0C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2192173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905292173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:26:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KK6QowY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbfDQMZB (ORCPT
+        id S1732102AbfDQM0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:25:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49170 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729522AbfDQMZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:25:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4EE4DAF8D;
-        Wed, 17 Apr 2019 12:25:00 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 14:24:58 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, ying.huang@intel.com
-Subject: Re: [PATCH v2] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
-References: <20190410153718.22905-1-feng.tang@intel.com>
- <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
- <20190417064844.ppyqxcx2mgek5455@shbuild888>
- <20190417091832.z252cvcf4ktxeamv@pathway.suse.cz>
- <20190417094614.GB4260@jagdpanzerIV>
- <20190417105010.GA8492@jagdpanzerIV>
+        Wed, 17 Apr 2019 08:26:35 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38950 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729522AbfDQM0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 08:26:35 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k45so20792323edb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 05:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3b2uZe+gBUttgntQPw/pLBUTjB9i8teUhwUDcx5nvkU=;
+        b=KK6QowY/D/XJnf34A9ek6IxXn6rQC/5Kq9psSCHLgXaFoDYONhAxg7uNNIS3wIeseQ
+         dernRPR92l9iqju3XdqqdFaOvjahmacxMyrtT8stUEqcJOIBMNOcxO80y2Ze2hqITnqT
+         ZD+Q7LnT5ovRNk24Cuaq0BKEaMrx8qnTqwPYm0ejr6FzX2bHTsoS+qMldVJ3n/wKugVX
+         H/aXvxrJF90ZD1xcFEeaI9rSano/K/P7kbB6LIicMTQf7D1UnMyFYQHKT0LSOyo/rnDz
+         P/v2yxpVYnFjQQJSwspEOytvbCU5af/7wEV4SY5QA/w+6h/7Hir7GSaWdrlmPh0AEX8k
+         idvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3b2uZe+gBUttgntQPw/pLBUTjB9i8teUhwUDcx5nvkU=;
+        b=KpFxwZ5Y1o1vLOG4jcHXacYVcdZGeRZJFaGLhxb+UaJlrAeUyYQGbPWrMSEs7fCSCy
+         A0YNKQ7ABjgRSf8gYV1qG7RZqAidL113jtTeDpSwyMO7wMUx3OOS1D5jATV7vg2+oeBa
+         p9hmaD9bBa4jtqhAuBkGLxZzICfoTC73riGSkJJ6blGJ1WP2bGFAG4hi/z4o9dJSdpFO
+         0ToWX52hmIlBvPhf3KReDP+CENAgy5Z1Ai4NsYLCHvjjtVJlAh6bDXd24GNKXIIlodNe
+         JQk3YohzUhI7hS6BOcOZhtfAnqHv0aQBf1BnU+5In5zaqD1UdmtKyXmqVB9NQIvstVOh
+         8V3Q==
+X-Gm-Message-State: APjAAAUbZlMjq8Tr3S80FZLPuSV9+w4doM5gQiNbyCTSxg2l1K7zPeb7
+        1jv5v5+t1GaMPC84B8XdjAgrCcJK3+bZwhOzDFs=
+X-Google-Smtp-Source: APXvYqx0Wip+oc7EhgVnQowF25cIy00yB1LazPefnMEy3YkhKtVYai8VkPbsXXR6VZH7ei3AgU3Uvmxd+7WGlxnPcCg=
+X-Received: by 2002:a17:906:1119:: with SMTP id h25mr26182051eja.233.1555503993060;
+ Wed, 17 Apr 2019 05:26:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417105010.GA8492@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
+ <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
+ <CAGWkznEzRB2RPQEK5+4EYB73UYGMRbNNmMH-FyQqT2_en_q1+g@mail.gmail.com>
+ <20190417110615.GC5878@dhcp22.suse.cz> <CAGWkznH6MjCkKeAO_1jJ07Ze2E3KHem0aNZ_Vwf080Yg-4Ujbw@mail.gmail.com>
+ <20190417114621.GF5878@dhcp22.suse.cz>
+In-Reply-To: <20190417114621.GF5878@dhcp22.suse.cz>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Wed, 17 Apr 2019 20:26:22 +0800
+Message-ID: <CAGWkznHgc68AHOs2WNPARmwMMKazuKXL1R4VsPD_jwtzQeVK_Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via timestamp
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-04-17 19:50:10, Sergey Senozhatsky wrote:
-> On (04/17/19 18:46), Sergey Senozhatsky wrote:
-> > 
-> > Does not look too complex/ugly.
-> 
-> Looks simpler than adding one more global state to the
-> console_unlock() printing loop.
-> 
-> // Not tested at all //
-> 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index cd73af35ec66..50eacfc9bc7e 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -51,6 +51,7 @@ EXPORT_SYMBOL_GPL(panic_timeout);
->  #define PANIC_PRINT_TIMER_INFO		0x00000004
->  #define PANIC_PRINT_LOCK_INFO		0x00000008
->  #define PANIC_PRINT_FTRACE_INFO		0x00000010
-> +#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
->  unsigned long panic_print;
->  
->  ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-> @@ -148,6 +149,9 @@ static void panic_print_sys_info(void)
->  
->  	if (panic_print & PANIC_PRINT_FTRACE_INFO)
->  		ftrace_dump(DUMP_ALL);
-> +
-> +	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-> +		console_flush_on_panic(CONSOLE_FLUSH_ALL);
+repost the feedback by under Johannes's comment
+When something like a higher-order allocation drops a large number of
+file pages, it's *intentional* that the pages that were evicted before
+them become less valuable and less likely to be activated on refault.
+There is a finite amount of in-memory LRU space and the pages that
+have been evicted the most recently have precedence because they have
+the highest proven access frequency.
+[HZY]: Yes. I do agree with you about the original thought of
+sacrificing long distance access pages when huge memory demands arise.
+The problem is what is the criteria of selecting the page, which you
+can find from what I comment in the patch, that is, some pages have
+long refault_distance while having a very short access time in
+between.
 
-The console must be replayed as the first thing in
-panic_print_sys_info(). Otherwise, the original messages
-are replaced by the other dumps. Especially ftrace_dump()
-might be pretty long.
+Of course, when a large amount of the cache that was pushed out in
+between is not re-used again, and don't claim their space in memory,
+it would be great if we could then activate the older pages that *are*
+re-used again in their stead.But that would require us being able to
+look into the future. When an old page refaults, we don't know if a
+younger page is still going to refault with a shorter refault distance
+or not. If it won't, then we were right to activate it. If it will
+refault, then we put something on the active list whose reuse
+frequency is too low to be able to fit into memory, and we thrash the
+hottest pages in the system.
+[HZY]: We do NOT use the absolute timestamp when page refaulting to
+indicate young or old of the page and thus to decide the position of
+LRU. The criteria which i use is to comparing the "time duration of
+the page's out of cache" and "the active files shrinking time by
+dividing average refault ratio". I inherite the concept of deeming
+ACTIVE file as deficit of INACTIVE files, but use time to avoid the
+scenario as suggested in patch's [1].
 
-Also the names of the function and the parameter are misleading.
-All messages are already flushed when this is called.
+As Matthew says, you are fairly randomly making refault activations
+more aggressive (especially with that timestamp unpacking bug), and
+while that expectedly boosts workload transition / startup, it comes
+at the cost of disrupting stable states because you can flood a very
+active in-ram workingset with completely cold cache pages simply
+because they refault uniformly wrt each other.
+[HZY]: I analysis the log got from trace_printk, what we activate have
+proven record of long refault distance but very short refault time.
 
->  }
->  
->  /**
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 17102fd4c136..da60a185dbbb 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2549,6 +2549,14 @@ void console_flush_on_panic(void)
->  	 */
->  	console_trylock();
->  	console_may_schedule = 0;
-> +	if (flush_mode == CONSOLE_FLUSH_ALL) {
-> +		/*
-> +		 * Can be done under logbuf lock, but it's unlikely that
-> +		 * we will have any race conditions here.
-> +		 */
-> +		console_seq = log_first_seq;
-> +		console_idx = log_first_idx;
-
-I agree that it is easier. The cost is that the same messages are
-printed again without any explanation.
-
-I still think that it would be convenient to write a header line.
-It would help to understand the log for any, even 3rd-party, reader.
-Also it would help to find the beginning in a very long log.
-
-If the complexity of console_unlock() is the concern, we could
-refactor the code, e.g. put this "reset log" code into a separate
-function.
-
-Best Regards,
-Petr
+On Wed, Apr 17, 2019 at 7:46 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 17-04-19 19:36:21, Zhaoyang Huang wrote:
+> > sorry for the confusion. What I mean is the basic idea doesn't change
+> > as replacing the refault criteria from refault_distance to timestamp.
+> > But the detailed implementation changed a lot, including fix bugs,
+> > update the way of packing the timestamp, 32bit/64bit differentiation
+> > etc. So it makes sense for starting a new context.
+>
+> Not really. My take away from the previous discussion is that Johannes
+> has questioned the timestamping approach itself. I wasn't following very
+> closely so I might be wrong here but if that is really the case then it
+> doesn't make much sense to improve the implementation if there is no
+> consensus on the approach itself.
+>
+> --
+> Michal Hocko
+> SUSE Labs
