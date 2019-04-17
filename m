@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F64C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D4DC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D05217FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DC8217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1mPpeghD"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0CMRmUqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbfDQUog (ORCPT
+        id S2387447AbfDQUom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:44:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41612 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733103AbfDQUoN (ORCPT
+        Wed, 17 Apr 2019 16:44:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41601 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbfDQUoJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:44:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r4so75341wrq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:44:11 -0700 (PDT)
+        Wed, 17 Apr 2019 16:44:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r4so75149wrq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:44:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Lh/dg7Ph5gI3fwf6VslQBt0/ChaA/QQP0d5LUMjUu4Y=;
-        b=1mPpeghD3+pEqAmcuNDF7gqDFMo758uoBAud5UHWZIUDtRk8EjnSryUQy3VJHxY4MU
-         FKz6W+RMZjKwMLDJgxlVOUSNX54BW4Ce1y6FcXZqfgiXH99tLHDoEfH5iK4lAAUXlao4
-         2JDLy83rqkypIHa8CnAINKxYgU8w6FWfZIRRg8acw8dwGpYrRAtlFpDe9JwOUGm2OyJA
-         qP0caZxUs0ivVIhNXdfXM50LKf9gan5hMB3RIYiowUH10Ubv94nQa7SQxG3AAAEvEVqw
-         1x9jk61VkNsP+DKjek9Mds2fAVoyxjeOAIiObHA67mtw7wNfE2lLGJyJjS5YN1MwMegy
-         PZ7g==
+        bh=85XK5dFLbNA8+J3uTS62n225ZxyTN5YNEbzJYjOQJYI=;
+        b=0CMRmUqUZL8eSuaFv8AWE1G/Dp+AJmyE7FjzasQPPO9lvMFXPShi0mRIG1wXHdypkM
+         2PHmFlVq9WLs4XzMlfrDM85jmBZN/ZcbQHpa0mVMeB288npUX7nVLUgOep3v84uu66r7
+         l8gVwuFIrhHSszYeWTKEYpmJL7UiFALMeLRCJSsoNt3JCG7amlTJ2V5qlyfaOkh4KtZP
+         hA2F48yKHTxOCLrQ1g6TJpMXV9QyYPSnHc82vsby+KO+MY8gNv3PjWAgwKNtRF9s+l3A
+         udy9ymOe1se5x2gt5aG5gTK4D4oFUIlZ12a8im8LC/o7Jw2J/mKa2AVsgmnJlFyWicx6
+         VP1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Lh/dg7Ph5gI3fwf6VslQBt0/ChaA/QQP0d5LUMjUu4Y=;
-        b=dJ9Lt2irwrITBk9m8XFeFlA2QP12iuHvtXn4exVmZPGjcymQj5dwJJjTVBPTcRGaXW
-         vHFP6HHerXWLiRObOt3EXCBHinVNutSbQRXHYl9A8ztPQcMQ0C/ujC5vNk/Q0f6YRYFw
-         2zxId+LQJGhtU6K//Zf2q7HN3Fx9MkTXlyuMI0D668rnvkp8I9plcKNKf1CfFGoYaRs8
-         5CegviwzKDfcP4C5oGQ26WvvhzfOjb5ZDULOlE6j36abNIVQmyM8Gl7p7eLGrlz+Zz5m
-         JZrlZLf3NzFX662lQiTuehpgtjbmwVcw3AL14m9D+R9fCJSnCJZseDVeLBFYWA/L224K
-         jNGg==
-X-Gm-Message-State: APjAAAUjgjPXc80+MjjmQDInKbEU9qnPeCfpb4luSKu5QkwQHLLlYBnS
-        W/+8jEK819uhEVoF7/DWUylP9w==
-X-Google-Smtp-Source: APXvYqxgXovl5BnoNoOEp4CmKK0ycCjwYYaDHc2FEDPp9FNNZMreUD7JhN81Sbr1WvTV9K7buaRB7Q==
-X-Received: by 2002:a5d:6889:: with SMTP id h9mr34623582wru.12.1555533851257;
-        Wed, 17 Apr 2019 13:44:11 -0700 (PDT)
+        bh=85XK5dFLbNA8+J3uTS62n225ZxyTN5YNEbzJYjOQJYI=;
+        b=jIfpiSJOxji/+ZERaek5kwifVEH8B7beYkrt/5AOP84mU1VTpMo3KmsZxEDh4HXUEl
+         sv2JK8jWBOHc59vVTnSzxnIF+Ld7cXcayFS0wHB/2+1aFeiV5lGGvvBGTNyQcU26BAAw
+         UBycfdaOnMGD+MCZEDq3M0TRAasdFm3513uC9yoXWLCqmCGdclMksbNoLNIjCtvI+TVz
+         QrwWurIJYnHAMX7yXENAhsOC86axGZr2l7iZ2akEpin8qJ2zLEyODkbSCtRxofZH8BFE
+         TNBP2JSy6VmBEVMhESW7usQsKMqC56N8uTvEsjlO74dCnvUhSM3YRoe32Vp2cPjyRptB
+         tWzA==
+X-Gm-Message-State: APjAAAVoiNJsOph49yvsWdByB9zzUtXh4B+fb5WNCcBr6J7VuknKqEDY
+        oQtM8awaU6hzfuiwECgDCJgZoP5xoac=
+X-Google-Smtp-Source: APXvYqxcJ09qdX7h+qjEtcqrrRChogD9+j4GpR2dyrrqyeNgu1adXMaIhDaHeetTkTmJHa9deYTH8w==
+X-Received: by 2002:adf:f102:: with SMTP id r2mr42879784wro.136.1555533847319;
+        Wed, 17 Apr 2019 13:44:07 -0700 (PDT)
 Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id c20sm98716866wre.28.2019.04.17.13.44.10
+        by smtp.googlemail.com with ESMTPSA id c20sm98716866wre.28.2019.04.17.13.44.06
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 13:44:10 -0700 (PDT)
+        Wed, 17 Apr 2019 13:44:06 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Kevin Hilman <khilman@baylibre.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-mmc@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] mmc: meson-gx: disable HS400
-Date:   Wed, 17 Apr 2019 22:43:52 +0200
-Message-Id: <20190417204355.469-5-jbrunet@baylibre.com>
+Subject: [PATCH 1/7] mmc: meson-gx: remove open coded read with timeout
+Date:   Wed, 17 Apr 2019 22:43:49 +0200
+Message-Id: <20190417204355.469-2-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190417204355.469-1-jbrunet@baylibre.com>
 References: <20190417204355.469-1-jbrunet@baylibre.com>
@@ -74,44 +74,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment, all our attempts to enable HS400 on Amlogic chipsets have
-been unsuccessful or unreliable. Until we can figure out how to enable this
-mode safely and reliably, let's force it off.
+There is already a function available to poll a register until a
+condition is met. Let's use it instead of open coding it.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/mmc/host/meson-gx-mmc.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/mmc/host/meson-gx-mmc.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-index 3df50b53f834..118f09da8dfb 100644
+index 2eba507790e4..2deeacc051b1 100644
 --- a/drivers/mmc/host/meson-gx-mmc.c
 +++ b/drivers/mmc/host/meson-gx-mmc.c
-@@ -823,10 +823,6 @@ static void meson_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	if (meson_mmc_timing_is_ddr(ios))
- 		val |= CFG_DDR;
+@@ -23,6 +23,7 @@
+ #include <linux/init.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/iopoll.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/ioport.h>
+@@ -1100,7 +1101,6 @@ static irqreturn_t meson_mmc_irq(int irq, void *dev_id)
  
--	val &= ~CFG_CHK_DS;
--	if (ios->timing == MMC_TIMING_MMC_HS400)
--		val |= CFG_CHK_DS;
+ static int meson_mmc_wait_desc_stop(struct meson_host *host)
+ {
+-	int loop;
+ 	u32 status;
+ 
+ 	/*
+@@ -1110,20 +1110,10 @@ static int meson_mmc_wait_desc_stop(struct meson_host *host)
+ 	 * If we don't confirm the descriptor is stopped, it might raise new
+ 	 * IRQs after we have called mmc_request_done() which is bad.
+ 	 */
+-	for (loop = 50; loop; loop--) {
+-		status = readl(host->regs + SD_EMMC_STATUS);
+-		if (status & (STATUS_BUSY | STATUS_DESC_BUSY))
+-			udelay(100);
+-		else
+-			break;
+-	}
+ 
+-	if (status & (STATUS_BUSY | STATUS_DESC_BUSY)) {
+-		dev_err(host->dev, "Timed out waiting for host to stop\n");
+-		return -ETIMEDOUT;
+-	}
 -
- 	err = meson_mmc_clk_set(host, ios);
- 	if (err)
- 		dev_err(host->dev, "Failed to set clock: %d\n,", err);
-@@ -1339,6 +1335,13 @@ static int meson_mmc_probe(struct platform_device *pdev)
- 	mmc->max_segs = SD_EMMC_DESC_BUF_LEN / sizeof(struct sd_emmc_desc);
- 	mmc->max_seg_size = mmc->max_req_size;
+-	return 0;
++	return readl_poll_timeout(host->regs + SD_EMMC_STATUS, status,
++				  !(status & (STATUS_BUSY | STATUS_DESC_BUSY)),
++				  100, 5000);
+ }
  
-+	/*
-+	 * At the moment, we don't know how to reliably enable HS400.
-+	 * From the different datasheets, it is not even clear if this mode
-+	 * is officially supported by any of the SoCs
-+	 */
-+	mmc->caps2 &= ~MMC_CAP2_HS400;
-+
- 	/* data bounce buffer */
- 	host->bounce_buf_size = mmc->max_req_size;
- 	host->bounce_buf =
+ static irqreturn_t meson_mmc_irq_thread(int irq, void *dev_id)
 -- 
 2.20.1
 
