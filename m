@@ -8,63 +8,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00EEC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00ABC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C68220872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF88620872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DBC/2iZZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMkgw5VO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387701AbfDQUzp (ORCPT
+        id S2387715AbfDQUzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:55:45 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46897 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387602AbfDQUzk (ORCPT
+        Wed, 17 Apr 2019 16:55:51 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36469 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387675AbfDQUzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:55:40 -0400
-Received: by mail-lf1-f66.google.com with SMTP id k18so10989110lfj.13;
-        Wed, 17 Apr 2019 13:55:39 -0700 (PDT)
+        Wed, 17 Apr 2019 16:55:44 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u17so19949586lfi.3;
+        Wed, 17 Apr 2019 13:55:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Rm88COlT2cnoF6os49j3Jvd4pKwvofIMU8fozSRdyLI=;
-        b=DBC/2iZZptXHXV2KZ8RZ63/tKN/1ChMp+uJUaDriq4psEjW+jlI/ZBPRYYO7u3wTOR
-         Huh0x/F782FoT4a5B6A2/tIEknTXupQ8ugC5+hFNhexKjIPj3P1jxqhiFJKc5Old02lN
-         NePtlPBZbzRWiY8GnmEp5H0MrM9l6t7EfwoIl5VhnotZ6XnaJ8ZByNMwh8NKouE2qe3K
-         j05lhR2thTv5MuH7rUv7rXWhJKdCSfmqLJTaW61n0Jss4bSxr0vxIiVqQ7BmmNnEShgA
-         NSd2xpimoulguIh2I2Yf/mfwE0jHAR/vZTd8YL1yZGB9kA3tODCVacnvJxBWZp0zeGbj
-         K8iA==
+        bh=ttSs43mFUqoRscY9CogQ2WjLkWsV97kHMypR4eJ/Mf8=;
+        b=rMkgw5VOVHeRP5oeuEJs3IpFsef182BKNGGufccKJiMxUY3gWd+Qgl1SPJEHQ0C0X/
+         bdPHNFy+s5ccLAT7tzT3g8toyPCQOLYQR7mYEUK6hgljnSvEf6tBl8BoLQG724CNthNY
+         495Kh1MSVYCvDSUrqCv4Q4H0MuLInWJ4mhRwyWKj3BPRTtnlTyKQ9atY6MUgNMR4/2BQ
+         Kl1j/Ba7xs/9a9dFTn4iyEfr/6OWytjg8wpi3rVhFvapNqZDf1kvUY6LHQrtuiPiDT4y
+         VblC43Iy/JnoMiFSXxoksINuRLLfEM9ethI8fnjQKhlijDrf29IrwCR8gQG/Cz03fopV
+         LdKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Rm88COlT2cnoF6os49j3Jvd4pKwvofIMU8fozSRdyLI=;
-        b=JWGBMGM0hPgCvX62qUjIZig/cEJaGk+DELYOANMe+i/dsPQjtFijm7s/EoV9WM7OkB
-         iPOUQ2Nh63MsLT2hHmydpVIHBeZPry9ClVbHRAa+LfRk2W3sB1EmkTlYyOuqtsJp7e3K
-         +Jlc8D1CFGxsSu4lFvUqzwhgfW76DhVbAvjudWq+4Q9hUqCFAkRp6lUUXb7d97YCSZzw
-         0psxXG2UdPylzOj+DvMbL8DNrUH1eRedW4H2d90fBaK2psMvhXfb5/CT+JgR2ZF2xNFm
-         okBXoiEKx5g6qnMPtdHXEnlyGbKFhpa2snghYKW7MdNiSEMCtNKBHlck2H4FoYd+pPL3
-         3p7g==
-X-Gm-Message-State: APjAAAWFX4eyybdG1/hj4mjitBp7u+enNfwm6m+jmR3ax8OzrpaIEM9F
-        YFtFsza9jZiE6Cb5C/FLinrwj6TThkk=
-X-Google-Smtp-Source: APXvYqwtARdgq4jc5lvYu/ca9zQWazr97bskUtzTnjmXHFE/3alFdnlhE17WaJuAa4g1XESm+kAu1Q==
-X-Received: by 2002:a19:f60f:: with SMTP id x15mr14235993lfe.95.1555534538350;
-        Wed, 17 Apr 2019 13:55:38 -0700 (PDT)
+        bh=ttSs43mFUqoRscY9CogQ2WjLkWsV97kHMypR4eJ/Mf8=;
+        b=EoAH5Ii6mkF0xoywA+W1vUxXFObd3goZPgnVLrXI6vu+52kfAz1044BepUQ02susrH
+         A94fXxJ6/pXZbApH7JKL49FR9tnfuogxXVP9V7VdiuTFqLgEgkMH1/BnHuNrXukdhqvr
+         63RX5N/OBo3qp5uEHggIhHaJcu6Gm3L0Yp2sinltI8D5JdkFUBU7K/66xzvX8enGX0YQ
+         3wkr5U3V8h+DYqoC+Am4jfRVzkBN/lGPyxJdQaT8GjxQV/TNh+YMLmB2PMeAYgY9SPS/
+         5JbWb8JCQE4QtYvQz/cJj71fEwVyoNvjZx0idrVpoDn8JMyMWsPD9EqOR9lsYSZtmnAv
+         bhZg==
+X-Gm-Message-State: APjAAAV4masq5zma59dVXvx/o4WBndODD1OEgKLuzp0LqoNz2Rre7pOI
+        KsZ46ZlVZnlmJ8gE83BvsseLlJfsstU=
+X-Google-Smtp-Source: APXvYqySBAMuNTFoqcLwXVyw7Xi57zTe+aBUgza5M+EjOY0bMBNMnbAmSB0AyuWlIdkJ7hJ0RLmwuw==
+X-Received: by 2002:a19:7014:: with SMTP id h20mr1069223lfc.158.1555534542019;
+        Wed, 17 Apr 2019 13:55:42 -0700 (PDT)
 Received: from myhost.home (bfw35.neoplus.adsl.tpnet.pl. [83.28.60.35])
-        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.36
+        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 13:55:37 -0700 (PDT)
+        Wed, 17 Apr 2019 13:55:41 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
-        jacek.anaszewski@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v4 24/26] leds: gpio: Use generic support for composing LED names
-Date:   Wed, 17 Apr 2019 22:54:37 +0200
-Message-Id: <20190417205439.17685-25-jacek.anaszewski@gmail.com>
+        jacek.anaszewski@gmail.com, Simon Shields <simon@lineageos.org>
+Subject: [PATCH v4 26/26] leds: an30259a: Use generic support for composing LED names
+Date:   Wed, 17 Apr 2019 22:54:39 +0200
+Message-Id: <20190417205439.17685-27-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
 References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
@@ -77,69 +76,84 @@ Switch to using generic LED support for composing LED class
 device name.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Simon Shields <simon@lineageos.org>
 ---
- drivers/leds/leds-gpio.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ drivers/leds/leds-an30259a.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index b26cf78993d1..60fb3c85cf05 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -77,11 +77,11 @@ static int gpio_blink_set(struct led_classdev *led_cdev,
+diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
+index 1c1f0c8c56f4..c626efa5403c 100644
+--- a/drivers/leds/leds-an30259a.c
++++ b/drivers/leds/leds-an30259a.c
+@@ -13,7 +13,6 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/regmap.h>
+-#include <uapi/linux/uleds.h>
  
- static int create_gpio_led(const struct gpio_led *template,
- 	struct gpio_led_data *led_dat, struct device *parent,
--	struct device_node *np, gpio_blink_set_t blink_set)
-+	struct fwnode_handle *fwnode, gpio_blink_set_t blink_set)
- {
-+	struct led_init_data init_data = {};
- 	int ret, state;
+ #define AN30259A_MAX_LEDS 3
  
--	led_dat->cdev.name = template->name;
- 	led_dat->cdev.default_trigger = template->default_trigger;
- 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
- 	if (!led_dat->can_sleep)
-@@ -112,7 +112,13 @@ static int create_gpio_led(const struct gpio_led *template,
- 	if (ret < 0)
- 		return ret;
+@@ -54,6 +53,8 @@
+ #define AN30259A_BLINK_MAX_TIME 7500 /* ms */
+ #define AN30259A_SLOPE_RESOLUTION 500 /* ms */
  
--	return devm_led_classdev_register(parent, &led_dat->cdev);
-+	if (template->name)
-+		led_dat->cdev.name = template->name;
-+	else
-+		init_data.fwnode = fwnode;
++#define AN30259A_NAME "an30259a"
 +
-+	return devm_led_classdev_register_ext(parent, &led_dat->cdev,
-+					      &init_data);
- }
+ #define STATE_OFF 0
+ #define STATE_KEEP 1
+ #define STATE_ON 2
+@@ -62,11 +63,11 @@ struct an30259a;
  
- struct gpio_leds_priv {
-@@ -145,15 +151,6 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 		struct gpio_led_data *led_dat = &priv->leds[priv->num_leds];
- 		struct gpio_led led = {};
- 		const char *state = NULL;
--		struct device_node *np = to_of_node(child);
+ struct an30259a_led {
+ 	struct an30259a *chip;
++	struct fwnode_handle *fwnode;
+ 	struct led_classdev cdev;
+ 	u32 num;
+ 	u32 default_state;
+ 	bool sloping;
+-	char label[LED_MAX_NAME_SIZE];
+ };
+ 
+ struct an30259a {
+@@ -226,14 +227,7 @@ static int an30259a_dt_init(struct i2c_client *client,
+ 
+ 		led->num = source;
+ 		led->chip = chip;
 -
--		ret = fwnode_property_read_string(child, "label", &led.name);
--		if (ret && IS_ENABLED(CONFIG_OF) && np)
--			led.name = np->name;
--		if (!led.name) {
--			fwnode_handle_put(child);
--			return ERR_PTR(-EINVAL);
--		}
+-		if (of_property_read_string(child, "label", &str))
+-			snprintf(led->label, sizeof(led->label), "an30259a::");
+-		else
+-			snprintf(led->label, sizeof(led->label), "an30259a:%s",
+-				 str);
+-
+-		led->cdev.name = led->label;
++		led->fwnode = of_fwnode_handle(child);
  
- 		led.gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
- 							     GPIOD_ASIS,
-@@ -185,7 +182,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 		if (fwnode_property_present(child, "panic-indicator"))
- 			led.panic_indicator = 1;
+ 		if (!of_property_read_string(child, "default-state", &str)) {
+ 			if (!strcmp(str, "on"))
+@@ -312,13 +306,20 @@ static int an30259a_probe(struct i2c_client *client)
+ 	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
  
--		ret = create_gpio_led(&led, led_dat, dev, np, NULL);
-+		ret = create_gpio_led(&led, led_dat, dev, child, NULL);
- 		if (ret < 0) {
- 			fwnode_handle_put(child);
- 			return ERR_PTR(ret);
+ 	for (i = 0; i < chip->num_leds; i++) {
++		struct led_init_data init_data;
++
+ 		an30259a_init_default_state(&chip->leds[i]);
+ 		chip->leds[i].cdev.brightness_set_blocking =
+ 			an30259a_brightness_set;
+ 		chip->leds[i].cdev.blink_set = an30259a_blink_set;
+ 
+-		err = devm_led_classdev_register(&client->dev,
+-						 &chip->leds[i].cdev);
++		init_data.fwnode = chip->leds[i].fwnode;
++		init_data.devicename = AN30259A_NAME;
++		init_data.default_label = ":";
++
++		err = devm_led_classdev_register_ext(&client->dev,
++						 &chip->leds[i].cdev,
++						 &init_data);
+ 		if (err < 0)
+ 			goto exit;
+ 	}
 -- 
 2.11.0
 
