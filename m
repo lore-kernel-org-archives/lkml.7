@@ -2,193 +2,121 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D216BC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A653EC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E1F21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0C42173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjZsvhO3"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="WRQzIrUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbfDQNA6 (ORCPT
+        id S1732154AbfDQNDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:00:58 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45828 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729318AbfDQNA5 (ORCPT
+        Wed, 17 Apr 2019 09:03:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35794 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729940AbfDQNDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:00:57 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t11so14315225lfl.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 06:00:55 -0700 (PDT)
+        Wed, 17 Apr 2019 09:03:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y197so3548491wmd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 06:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nD5N/gZK0Hc9/leGn/iw1G+jz11LpAQc97DIEWLBEH0=;
-        b=BjZsvhO3f2TtZdypKM0jxF9FMvsBQgKsjOjoxn88+v7JSDK6dBNSiffPm+ktPRILcE
-         HmWGSWZxWZHKnDwj5FtEyQyi0yj7N3sx12LtX22qusLXABFr0uNQaTgY4ME5c+GsOW5/
-         cdEURgaDBigSxdcG2kpRozIdV+yh2dtTvlQyqrQdcX1l+FHwwNxp3WKEhssRK+Dtj5ML
-         bol8BNRZ/nTq/h9U2713ozFZCt/zN6G1HMOANjAJqqVeRne08HkFoDLPlb2H/asmksvu
-         e57LwlEC/XyHZJILatdvhwGcZTcgiOGrP3JA0IsDCg6RlFrY0cwU1y9ZqEANl9d65w8L
-         IoVA==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cejhRTfWhhlFH6fanfQsVN7dbGnTDgRUCk8MGU3ZSYo=;
+        b=WRQzIrUYwNw1/iNH34bfBmOBn+jf/W9if2TBGaCc7qQSnyomzEajvUd/pVjJe4ARJk
+         sGKdwRKkSyayNANAxn30nQ1nh5+8ZR3VF6gvFgE9PfMFyiH48DE8RI8DRimXnG7RWy1J
+         31e9o//JhD+/nr719dX13Ybu3Od0QmVj0CoK6SMHuD3dHr0Q4dzoQL63fKvcirXGINcO
+         fq+MOXI/E8b7fZNP/tVuUwV8DdAhGWSZoLuzKu1LHu5v4gTh1Fx8lUXh2Ub/m16DlL7d
+         zN1u7ALNgP2REw8oXu29iDeTVJFGHQlvBTHkfDKGMJ123KIECVNuRRQ5H8fUwFyqZxH6
+         RoFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nD5N/gZK0Hc9/leGn/iw1G+jz11LpAQc97DIEWLBEH0=;
-        b=W4rLrWCXX+R0xchzbOgVF9V7yWo+8FYdWM1K2tvHbPr6EHXt8OqjtGnB8zb85BaLuj
-         Gq3pZxWJFQTLYgXXfSuQiq6lp4eYtAG2fmDF/0Lp6WO+LyXoAi73BrTz3nLWSc4uYriq
-         O4x75VXgeozLDYS55a2mjD3exr4ehiOtx/2YB/ufKBNTiwBGeDYCZAcOI5gGlhEwi4k8
-         hqpQAFPBsJswqy8D+AKgsEivCUiy2599JEj/g1aE8Hd+ta0gSuFv/INwzQQZwUZ2Zg64
-         CIwjJ22AhI88wiuqMxd5U/V2BasHAPlhbcK5zDUYlAK/nZw94fe9axmCbks1gjzrP+0b
-         JqNg==
-X-Gm-Message-State: APjAAAWIImzd3AvJzx8Ce/0zwB1Z2Mfp/6Hxq2cU0zWUPhlhxXIUdAjX
-        2m5IHgNGYwDJBn5IFcVm4aypm2sczgWw0k4S2RA=
-X-Google-Smtp-Source: APXvYqzYJsHEPZUdZi7dgUmK7iczzP/OpZWI0kCGkirNZhXZR65KeukbkI/1y7q+0vV1rRiXwgEe0vywbPgmOrs7Vcs=
-X-Received: by 2002:a19:3f09:: with SMTP id m9mr14983716lfa.36.1555506054907;
- Wed, 17 Apr 2019 06:00:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cejhRTfWhhlFH6fanfQsVN7dbGnTDgRUCk8MGU3ZSYo=;
+        b=EkFEKhkl/Q5WqsLKVWzdiF72Vetff4ZYxt+Di9PyKBDNqFMYe0C/2wmjurBaSy7OY7
+         kxI2uGWWnEDtpbkxw9i5ltr2raftx5BFogotKVmLKSBmC25cCFRExqWdAoR4w0GE9cPF
+         mftzGjF3nXWTDzHMVESSWULzt5MQejr4rvD/QosVJ5ux0K5N7DS+gC9SDL8Wce56M8fH
+         8p0x7v7TuGwk8T47cis586M7Ulw6+TtJpIwOBB9N5OqfGa15aHtywHbKMOPPuDR0RPTJ
+         QQmm1yicimBnr750XYj7sPZBCQ2YS2T0mupt6rAj8j7m6E4zdQ+dfALpZFQpaQG4mgzU
+         W6oA==
+X-Gm-Message-State: APjAAAVqrCRC38enFGQ8dH0YgC4zKNEx4C1fXbHMMpswZY8n77cWK2N4
+        eUP+fFbqbMpGdTP0OjO7zInUnw==
+X-Google-Smtp-Source: APXvYqzupwLA/R31cjqq1W3HOP0r1EP8Dbe6PetLMdsurtKWlEIEfUDQaIyq9nTqCXHKq6xhFWvaKg==
+X-Received: by 2002:a1c:9991:: with SMTP id b139mr29680031wme.53.1555506219137;
+        Wed, 17 Apr 2019 06:03:39 -0700 (PDT)
+Received: from brauner.io ([185.197.132.10])
+        by smtp.gmail.com with ESMTPSA id w16sm79760431wrt.84.2019.04.17.06.03.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Apr 2019 06:03:38 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 15:03:37 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] signal: don't silently convert SI_USER signals to
+ non-current pidfd
+Message-ID: <20190417130336.i55vmf3x6cby2mvi@brauner.io>
+References: <20190330021232.191205-1-jannh@google.com>
+ <20190408131315.GA24111@redhat.com>
 MIME-Version: 1.0
-References: <20190412160338.64994-1-thellstrom@vmware.com> <20190412160338.64994-2-thellstrom@vmware.com>
- <CAFqt6zb4qBdrWev1KEruDzPJt5wP4ax_7hUyz+JMV9zLxd_iiw@mail.gmail.com> <e9211a5c28de521bbaabf1c2576c640f3195b0c2.camel@vmware.com>
-In-Reply-To: <e9211a5c28de521bbaabf1c2576c640f3195b0c2.camel@vmware.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Wed, 17 Apr 2019 18:30:43 +0530
-Message-ID: <CAFqt6zYw=Fj8R-18TJ-Xwdjs+AD7nW1pVO57vT8wuUK0Tv+FCQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] mm: Allow the [page|pfn]_mkwrite callbacks to drop
- the mmap_sem
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "ying.huang@intel.com" <ying.huang@intel.com>,
-        "riel@surriel.com" <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190408131315.GA24111@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 4:28 PM Thomas Hellstrom <thellstrom@vmware.com> wr=
-ote:
->
-> Hi, Souptick,
->
-> On Sat, 2019-04-13 at 20:41 +0530, Souptick Joarder wrote:
-> > On Fri, Apr 12, 2019 at 9:34 PM Thomas Hellstrom <
-> > thellstrom@vmware.com> wrote:
-> > > Driver fault callbacks are allowed to drop the mmap_sem when
-> > > expecting
-> > > long hardware waits to avoid blocking other mm users. Allow the
-> > > mkwrite
-> > > callbacks to do the same by returning early on VM_FAULT_RETRY.
-> > >
-> > > In particular we want to be able to drop the mmap_sem when waiting
-> > > for
-> > > a reservation object lock on a GPU buffer object. These locks may
-> > > be
-> > > held while waiting for the GPU.
-> > >
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > Cc: Will Deacon <will.deacon@arm.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Rik van Riel <riel@surriel.com>
-> > > Cc: Minchan Kim <minchan@kernel.org>
-> > > Cc: Michal Hocko <mhocko@suse.com>
-> > > Cc: Huang Ying <ying.huang@intel.com>
-> > > Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> > > Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-> > > Cc: linux-mm@kvack.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > >
-> > > Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> > > ---
-> > >  mm/memory.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/mm/memory.c b/mm/memory.c
-> > > index e11ca9dd823f..a95b4a3b1ae2 100644
-> > > --- a/mm/memory.c
-> > > +++ b/mm/memory.c
-> > > @@ -2144,7 +2144,7 @@ static vm_fault_t do_page_mkwrite(struct
-> > > vm_fault *vmf)
-> > >         ret =3D vmf->vma->vm_ops->page_mkwrite(vmf);
-> > >         /* Restore original flags so that caller is not surprised
-> > > */
-> > >         vmf->flags =3D old_flags;
-> > > -       if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))
-> > > +       if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_RETRY |
-> > > VM_FAULT_NOPAGE)))
+On Mon, Apr 08, 2019 at 03:13:16PM +0200, Oleg Nesterov wrote:
+> On 03/30, Jann Horn wrote:
 > >
-> > With this patch there will multiple instances of (VM_FAULT_ERROR |
-> > VM_FAULT_RETRY | VM_FAULT_NOPAGE)
-> > in mm/memory.c. Does it make sense to wrap it in a macro and use it ?
->
-> Even though the code will look neater, it might be trickier to follow a
-> particular error path. Could we perhaps postpone to a follow-up patch?
-
-Sure. follow-up-patch is fine.
-
->
-> Thomas
->
->
->
+> > --- a/kernel/signal.c
+> > +++ b/kernel/signal.c
+> > @@ -3605,16 +3605,11 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+> >  		if (unlikely(sig != kinfo.si_signo))
+> >  			goto err;
 > >
-> > >                 return ret;
-> > >         if (unlikely(!(ret & VM_FAULT_LOCKED))) {
-> > >                 lock_page(page);
-> > > @@ -2419,7 +2419,7 @@ static vm_fault_t wp_pfn_shared(struct
-> > > vm_fault *vmf)
-> > >                 pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > >                 vmf->flags |=3D FAULT_FLAG_MKWRITE;
-> > >                 ret =3D vma->vm_ops->pfn_mkwrite(vmf);
-> > > -               if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE))
-> > > +               if (ret & (VM_FAULT_ERROR | VM_FAULT_RETRY |
-> > > VM_FAULT_NOPAGE))
-> > >                         return ret;
-> > >                 return finish_mkwrite_fault(vmf);
-> > >         }
-> > > @@ -2440,7 +2440,8 @@ static vm_fault_t wp_page_shared(struct
-> > > vm_fault *vmf)
-> > >                 pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > >                 tmp =3D do_page_mkwrite(vmf);
-> > >                 if (unlikely(!tmp || (tmp &
-> > > -                                     (VM_FAULT_ERROR |
-> > > VM_FAULT_NOPAGE)))) {
-> > > +                                     (VM_FAULT_ERROR |
-> > > VM_FAULT_RETRY |
-> > > +                                      VM_FAULT_NOPAGE)))) {
-> > >                         put_page(vmf->page);
-> > >                         return tmp;
-> > >                 }
-> > > @@ -3494,7 +3495,8 @@ static vm_fault_t do_shared_fault(struct
-> > > vm_fault *vmf)
-> > >                 unlock_page(vmf->page);
-> > >                 tmp =3D do_page_mkwrite(vmf);
-> > >                 if (unlikely(!tmp ||
-> > > -                               (tmp & (VM_FAULT_ERROR |
-> > > VM_FAULT_NOPAGE)))) {
-> > > +                               (tmp & (VM_FAULT_ERROR |
-> > > VM_FAULT_RETRY |
-> > > +                                       VM_FAULT_NOPAGE)))) {
-> > >                         put_page(vmf->page);
-> > >                         return tmp;
-> > >                 }
-> > > --
-> > > 2.20.1
-> > >
+> > +		/* Only allow sending arbitrary signals to yourself. */
+> > +		ret = -EPERM;
+> >  		if ((task_pid(current) != pid) &&
+> > -		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
+> > -			/* Only allow sending arbitrary signals to yourself. */
+> > -			ret = -EPERM;
+> > -			if (kinfo.si_code != SI_USER)
+> > -				goto err;
+> > -
+> > -			/* Turn this into a regular kill signal. */
+> > -			prepare_kill_siginfo(sig, &kinfo);
+> > -		}
+> > +		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
+> > +			goto err;
+> 
+> ACK.
+> 
+
+Sorry Oleg. I missed that message somehow.
+> 
+> but perhaps it should always fail, even if task_pid(current) == pid.
+> 
+> sys_rt_sigqueueinfo() allows to send any siginfo to yourself, but this is only needed
+> for checkpoint/restart.
+
+Yes, that's why this was added. I would leave it in exactly because of
+checkpoint/restart. I have sympathies for "this [...] project by various
+mad Russians" [1] and it doesn't really hurt us. :)
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=099469502f62fbe0d7e4f0b83a2f22538367f734
+
+Christian
