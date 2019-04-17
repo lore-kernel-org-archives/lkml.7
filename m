@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67683C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96866C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3457B217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B2420693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cb4LHu6w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nrf6evJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfDQUzP (ORCPT
+        id S2387555AbfDQU5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:55:15 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37430 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387455AbfDQUzL (ORCPT
+        Wed, 17 Apr 2019 16:57:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37506 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387442AbfDQUzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:55:11 -0400
-Received: by mail-lf1-f66.google.com with SMTP id o19so15581936lfl.4;
-        Wed, 17 Apr 2019 13:55:09 -0700 (PDT)
+        Wed, 17 Apr 2019 16:55:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v13so23776411ljk.4;
+        Wed, 17 Apr 2019 13:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sOTCaOMw3ZQQM4Lv7n5akHnpyhFcupQsTLjHOraZDPg=;
-        b=Cb4LHu6w0XaUET6GBLQiAhMlBRvOyuEw9izpJKngJf5MT+DhxNW0jU/9QDZofbfnuD
-         xKofmHbubSBp6xtEgtV8F8p7jIQymsSoZl/AbRdMFw9J3K4TqNWIEUAA8n7RSwISJnI+
-         xidcaHMguH/evHxNNjtwjlcYIuPjA1dhijpEnVt83VY7UTUhNIR6BrC2+29ZwlbWXSlv
-         BPL9BDZQuw2oM9O+U/GAG06TzQSgbY3w7j/aOHGPXmdCEE5HFKPvdwpmd3RdQSrS/RCe
-         pfYvQy/D1G8PpO65soIL/C5Ql7R45bz87A3YZ+5JLVz93cXbJ07/UgwPI6qYLqbHHbvr
-         gbRQ==
+        bh=iEhJTflmg7KQbde2xxTokDIVhFAkE+Q29EtuKzQtszg=;
+        b=Nrf6evJozIej00rRseWAnoj/NTaSSpUCybr63EuD1uhk6WeHTmrUxVH/QmNhSz7TiM
+         IEEjqqv0Q+aYyfThhAqevoZefKrXKZB6r63IWmOCka37NeLuZ3QGs5PsS4uYRxCHuU+v
+         6tjbczoJMgwrXmsIwQdQdEyRWr7PQMOOlbiPfoehFyeHTXpStrGoOa1Czy3UyDFdWkg+
+         T3wNxR5jNN2q/TdWFDQvtJIEm/rCCUQ6lbFbwopM0VXE2MSek7YbuEqNgLHWXyCP0AVh
+         bFA/BvtnXVJjCu9kK+BT7DTjoAXWEl/qUgbDLUR1Qmq287lyMXpg95yMfgBYb47azV0E
+         y69A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=sOTCaOMw3ZQQM4Lv7n5akHnpyhFcupQsTLjHOraZDPg=;
-        b=tt6BKwtaOPrNb4hAgtjVVGBMIGcbpM8r+FgapFk7lGE9J+Hfes8eWWmFrv5csLaxqq
-         XIklPMiwyLxN/vROmOOOl+8d7xZYPjDwZ1NnyMg9i5C8psoUSNhX2brHM6u20W682JyG
-         qYiq+kRkIlWN0OFk2083GVT/RS+PmYOygE4r5qRV88ns9icVsbpArHOV4DtKANM4c0hh
-         yhC/zC/sF5FNB3mu/nVQzYFJZejUtjBB2X+oVDyoTkUgO14SWiE00iN2Z048Fmg3i6t/
-         9vFvwLgjWi3P3HjCxzksxPNUI2vMA4gudHP8+RAOuym0wximpvK4L1wasFkn61m3aRnJ
-         j6rQ==
-X-Gm-Message-State: APjAAAU2GifuXonODzIQziXykEU4KXS5B63k2uO3P7VRcKKyvHMzB+HD
-        ODobx5Gg1aoYh6o/hiyAAMSn+/m6Sq4=
-X-Google-Smtp-Source: APXvYqzaarPQEvn3arJg6TTFo8wshtXwjpTFE3OJ6kYi8GDHEQCtLjrkXBMEN4UcB+Sr/rureUMnHg==
-X-Received: by 2002:ac2:5381:: with SMTP id g1mr1351634lfh.130.1555534508785;
-        Wed, 17 Apr 2019 13:55:08 -0700 (PDT)
+        bh=iEhJTflmg7KQbde2xxTokDIVhFAkE+Q29EtuKzQtszg=;
+        b=rzWTBD/2FnQNx6KiMYLj/jwFBK0RVfqjYSCimQJZuF/SVyt5I/vYgBmHHBYew2Jirz
+         FO3Ybaw3Xi1HdEswIv8CSjwx3GxWvX+QlrAENPeV/zdNRWiUXlNoIY1fgOgA3lG/sfj4
+         I4glZom6k98LwD+JqYhjQ6iyhaBqWHD02lZOZYDvtVVPsoI44YsJvoNfXCrbAApxaZPj
+         HQkln5dhvPb0+cg8+7EfmH5jk1ooCg1NVAOtP2M9+4ANBwR0HxvBYGUye/kN+XGIfP0W
+         wgXcpp48u4zagk7L2xkwZ3faU928PnS2nclg7EH5lvm1Ra2aO3JLy5iw9m4aX8EKMCFM
+         xrAg==
+X-Gm-Message-State: APjAAAVC7Oov3wRd3sZM6WK/TVCVLJ9jABXgc5TVLgZaj4ssDDm6cDnr
+        NZ8PbiKp9tF17Q33b457s9g4YfWqBRs=
+X-Google-Smtp-Source: APXvYqyvI4X4RdHlOT14HdA+iSoZj7ezjqv1xh0o0DTiziOKK+7hBkHxe9zk9jqiK1USSP99iMctKQ==
+X-Received: by 2002:a2e:731a:: with SMTP id o26mr48619313ljc.69.1555534506946;
+        Wed, 17 Apr 2019 13:55:06 -0700 (PDT)
 Received: from myhost.home (bfw35.neoplus.adsl.tpnet.pl. [83.28.60.35])
-        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.07
+        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 13:55:08 -0700 (PDT)
+        Wed, 17 Apr 2019 13:55:06 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
         jacek.anaszewski@gmail.com, Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v4 08/26] leds: sc27xx-blt: Use generic support for composing LED names
-Date:   Wed, 17 Apr 2019 22:54:21 +0200
-Message-Id: <20190417205439.17685-9-jacek.anaszewski@gmail.com>
+Subject: [PATCH v4 07/26] dt-bindings: sc27xx-blt: Add function and color properties
+Date:   Wed, 17 Apr 2019 22:54:20 +0200
+Message-Id: <20190417205439.17685-8-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
 References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
@@ -72,88 +72,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to using generic LED support for composing LED class
-device name.
+Refer to new "function" and "color" properties and mark "label"
+as deprecated.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/leds/leds-sc27xx-bltc.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/leds-sc27xx-bltc.c b/drivers/leds/leds-sc27xx-bltc.c
-index fecf27fb1cdc..1c542380d080 100644
---- a/drivers/leds/leds-sc27xx-bltc.c
-+++ b/drivers/leds/leds-sc27xx-bltc.c
-@@ -6,7 +6,6 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
--#include <uapi/linux/uleds.h>
+diff --git a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+index dddf84f9c7ea..df2b4e1c492b 100644
+--- a/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
++++ b/Documentation/devicetree/bindings/leds/leds-sc27xx-bltc.txt
+@@ -14,7 +14,9 @@ Required child properties:
+ - reg: Port this LED is connected to.
  
- /* PMIC global control register definition */
- #define SC27XX_MODULE_EN0	0xc08
-@@ -46,7 +45,7 @@
- #define SC27XX_DELTA_T_MAX	(SC27XX_LEDS_STEP * 255)
+ Optional child properties:
+-- label: See Documentation/devicetree/bindings/leds/common.txt.
++- function: See Documentation/devicetree/bindings/leds/common.txt.
++- color: See Documentation/devicetree/bindings/leds/common.txt.
++- label: See Documentation/devicetree/bindings/leds/common.txt (deprecated).
  
- struct sc27xx_led {
--	char name[LED_MAX_NAME_SIZE];
-+	struct fwnode_handle *fwnode;
- 	struct led_classdev ldev;
- 	struct sc27xx_led_priv *priv;
- 	u8 line;
-@@ -249,19 +248,24 @@ static int sc27xx_led_register(struct device *dev, struct sc27xx_led_priv *priv)
+ Examples:
  
- 	for (i = 0; i < SC27XX_LEDS_MAX; i++) {
- 		struct sc27xx_led *led = &priv->leds[i];
-+		struct led_init_data init_data;
+@@ -25,17 +27,17 @@ led-controller@200 {
+ 	reg = <0x200>;
  
- 		if (!led->active)
- 			continue;
+ 	led@0 {
+-		label = "red";
++		color = <LED_COLOR_ID_RED>;
+ 		reg = <0x0>;
+ 	};
  
- 		led->line = i;
- 		led->priv = priv;
--		led->ldev.name = led->name;
- 		led->ldev.brightness_set_blocking = sc27xx_led_set;
- 		led->ldev.pattern_set = sc27xx_led_pattern_set;
- 		led->ldev.pattern_clear = sc27xx_led_pattern_clear;
- 		led->ldev.default_trigger = "pattern";
+ 	led@1 {
+-		label = "green";
++		color = <LED_COLOR_ID_GREEN>;
+ 		reg = <0x1>;
+ 	};
  
--		err = devm_led_classdev_register(dev, &led->ldev);
-+		init_data.fwnode = led->fwnode;
-+		init_data.devicename = "sc27xx";
-+		init_data.default_label = ":";
-+
-+		err = devm_led_classdev_register_ext(dev, &led->ldev,
-+						     &init_data);
- 		if (err)
- 			return err;
- 	}
-@@ -274,7 +278,6 @@ static int sc27xx_led_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node, *child;
- 	struct sc27xx_led_priv *priv;
--	const char *str;
- 	u32 base, count, reg;
- 	int err;
- 
-@@ -316,15 +319,8 @@ static int sc27xx_led_probe(struct platform_device *pdev)
- 			return -EINVAL;
- 		}
- 
-+		priv->leds[reg].fwnode = of_fwnode_handle(child);
- 		priv->leds[reg].active = true;
--
--		err = of_property_read_string(child, "label", &str);
--		if (err)
--			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
--				 "sc27xx::");
--		else
--			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
--				 "sc27xx:%s", str);
- 	}
- 
- 	err = sc27xx_led_register(dev, priv);
+ 	led@2 {
+-		label = "blue";
++		color = <LED_COLOR_ID_BLUE>;
+ 		reg = <0x2>;
+ 	};
+ };
 -- 
 2.11.0
 
