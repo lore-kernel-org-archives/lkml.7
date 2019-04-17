@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCC2C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A1FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0E621871
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41140206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fn8sg71B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sc3SoDER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387695AbfDQXj1 (ORCPT
+        id S2387761AbfDQXjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 19:39:27 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55928 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfDQXj0 (ORCPT
+        Wed, 17 Apr 2019 19:39:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37172 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbfDQXjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 19:39:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so561072wmf.5;
-        Wed, 17 Apr 2019 16:39:25 -0700 (PDT)
+        Wed, 17 Apr 2019 19:39:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so519346wrm.4;
+        Wed, 17 Apr 2019 16:39:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=U3OUFZkvLR+sfhgq/9Kpt0ROY6Ygc8Gu7DEm6hUTRqE=;
-        b=Fn8sg71BLadIIr37bWFmQes6AuSD4Jcqop1c3MM+b7riJmh/PmwTVj9Eqo2NOJJSPK
-         TQ6ks5NtYhMUBNz2ijJi/4X7Semxm80Cb7jF83pFqPLloswF/nyma1kS8a4t8BB4KI9W
-         OSx6rjyMOsMbNYUrIA1b+c3dQ5qocUjsT2Kh8lm2WW49U97Cm2m6N1gph0YxKgvpbCtf
-         kklLF9lcV+CvjrTzEBVUevpJ3m9AWDTUVfcQTdYgNUCSGNc/5f/1r8msEHiBKsAM4xoS
-         vp+FRN9rZ428xH38Adm5Y9zij6e3zdeurtK7jqgscolv/40Mlb6r+dbbTxpNk/lIASY1
-         Eaeg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=iG88dsLdU6IZnlQ4L3FwNOgnptWrNyC1YsTsGsePccc=;
+        b=Sc3SoDERFueILE7RZvQGGWk/lDE+YVu3OIFNICSWzVbemWHBQVsKEBOLAIrH+iQvRk
+         ZR9nJcezBAUdCUalzeBDR4Ou7QkenxmR2bIjO46XStRuuiK+Jp5ghX0ZfMTey3LJSaR5
+         pqAHK6AzHxdf1UD1WOcQ8vq5XIkxwsZZlXMZ0thXu7Hu6TQnkO8sOJ6/fN1wY3VDDIAe
+         zdjf5v01jPg5XXnFGuKBv+pVM9prAG35K1ClbpJ8os6rOAoWwOyXcllCEtZJXNmWTHP4
+         m9y4aLyl+R/OLOJdu83s8oW5E72yCSr40tNi7FtmSPf4z4YUDfyeQEkpJWgCQxzV2Btb
+         ShSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=U3OUFZkvLR+sfhgq/9Kpt0ROY6Ygc8Gu7DEm6hUTRqE=;
-        b=XL8jTecplGOQqEtYX8ROW5X3w7U2AF9Q5Vx45jTJNCPQ8pZKzc4yCC72xGQQKMXG1H
-         7BAagAp/tpffuUEqGvXklT1ZjMxSsVDmHMj2J5BfNe//FhkoAQ+OO6Jy94DF2Ce6QfsR
-         PVngqCmxcq6FVxJId+iGzphxrpt3WnnhYmuWdWrUZi52bq8EmGSd2IvydfFv/veVnJtD
-         IwLzHm2TkDh9K10+WXP6tscozwMCIqcnDi5OM2N3RbsJHUptWkMAgUabQd0hawlkCFeM
-         2aaZ0a46LMYs1qTPvXxSOfE+OIfe33t2mQwNwfOzf/Nlhdh1djxlno+px4idWXNAPcFZ
-         1zBQ==
-X-Gm-Message-State: APjAAAXxpbXtMMsELiZzzBeLZBG7C/giFyqBnbyNrQ+9KHp+gfRU2srX
-        da3EFgXwoNK1nbpothvTjlc=
-X-Google-Smtp-Source: APXvYqwTW3AZDtk9isqrvoULgoO/MceqJdVgEDBklPc0RsX4JiGcNtjVNkuPCnZv6P5btMSyVHXMyQ==
-X-Received: by 2002:a1c:730c:: with SMTP id d12mr781803wmb.10.1555544364969;
-        Wed, 17 Apr 2019 16:39:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=iG88dsLdU6IZnlQ4L3FwNOgnptWrNyC1YsTsGsePccc=;
+        b=UNKXJFoWARR9CYskF47sSNWMgSIErCYjA8evhOEUJYoWEbBBf0fk2AAOVt2PqTfgGY
+         WBdfVxM/jxfK9ruPGHVUjHaUpk6e8NO6Kb4aEQgagG3XKnUnclHDZPmPFO1oC/iK1Mdg
+         YFNUhbqrBEvF+LLRwanbDgNN9h/630PoqZJEKyu/nUP5+Ei8s1lB79cniYPFVyyKoCSJ
+         gvoAidDTAyRq2f4fXEPaq5hN+rhM3pNTOTe7e7RFLjH1FL6m2nf9tGre9guHCMNELgu0
+         0SZZxoFlQ6M9zrYZWMp0AAzxXNfILCe50XDkyF8lqUgOOVdWZwbtgqfnGtYA4iB3mKNU
+         7q/Q==
+X-Gm-Message-State: APjAAAW2uEonN8Rzf9KU2dReP0hDum4wVgCCFqguChXl5po4JGPjV8Kv
+        b4dboU2CFb8IlsFpTlYDHZNBXLv4mX8=
+X-Google-Smtp-Source: APXvYqwEGmXxhWGUQZQmz1ys1md/7EbrC0jhir3FE+TifbH283+rlbxSi8m0xgD9aRMzgFO2p0TLCg==
+X-Received: by 2002:a5d:62cc:: with SMTP id o12mr4735832wrv.142.1555544369509;
+        Wed, 17 Apr 2019 16:39:29 -0700 (PDT)
 Received: from flb-GL552VW.home ([2a00:23c5:d2a0:d300:5d68:d3ac:d79d:ec90])
-        by smtp.googlemail.com with ESMTPSA id k2sm241259wrx.21.2019.04.17.16.39.23
+        by smtp.googlemail.com with ESMTPSA id k2sm241259wrx.21.2019.04.17.16.39.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 16:39:24 -0700 (PDT)
+        Wed, 17 Apr 2019 16:39:28 -0700 (PDT)
 From:   Florent TOMASIN <tomasin.florent@gmail.com>
 Cc:     tomasin.florent@gmail.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -63,42 +64,71 @@ Cc:     tomasin.florent@gmail.com,
         Mark Rutland <mark.rutland@arm.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: Add CDTech S050WV43-CT5 panel bindings
-Date:   Thu, 18 Apr 2019 00:38:44 +0100
-Message-Id: <20190417233846.11880-1-tomasin.florent@gmail.com>
+Subject: [PATCH 2/2] drm/panel: add panel CDTech S050WV43-CT5 to panel-simple
+Date:   Thu, 18 Apr 2019 00:38:45 +0100
+Message-Id: <20190417233846.11880-2-tomasin.florent@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190417233846.11880-1-tomasin.florent@gmail.com>
+References: <20190417233846.11880-1-tomasin.florent@gmail.com>
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for S050WV43-CT5 panel
+This patch adds support for CDTech S050WV43-CT5 800x480 5" panel to DRM
+simple panel driver.
 
 Signed-off-by: Florent TOMASIN <tomasin.florent@gmail.com>
 ---
- .../bindings/display/panel/cdtech,s050wv43-ct5.txt   | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/cdtech,s050wv43-ct5.txt
+ drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/cdtech,s050wv43-ct5.txt b/Documentation/devicetree/bindings/display/panel/cdtech,s050wv43-ct5.txt
-new file mode 100644
-index 000000000000..0e3313b68d9e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/cdtech,s050wv43-ct5.txt
-@@ -0,0 +1,12 @@
-+CDTech(H.K.) Electronics Limited 5" 800x480 color TFT-LCD panel
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 9e8218f6a3f2..486f61d324fb 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -917,6 +917,30 @@ static const struct panel_desc cdtech_s043wq26h_ct7 = {
+ 	.bus_flags = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+ };
+ 
++static const struct drm_display_mode cdtech_s050wv43_ct5_mode = {
++	.clock = 30000,
++	.hdisplay = 800,
++	.hsync_start = 800 + 40,
++	.hsync_end = 800 + 40 + 48,
++	.htotal = 800 + 40 + 48 + 88,
++	.vdisplay = 480,
++	.vsync_start = 480 + 13,
++	.vsync_end = 480 + 13 + 3,
++	.vtotal = 480 + 13 + 3 + 32,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++};
 +
-+Required properties:
-+- compatible: should be "cdtech,s050wv43-ct5"
-+- power-supply: as specified in the base binding
++static const struct panel_desc cdtech_s050wv43_ct5 = {
++	.modes = &cdtech_s050wv43_ct5_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 108,
++		.height = 64,
++	},
++};
 +
-+Optional properties:
-+- backlight: as specified in the base binding
-+- enable-gpios: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
+ static const struct drm_display_mode cdtech_s070wv95_ct16_mode = {
+ 	.clock = 35000,
+ 	.hdisplay = 800,
+@@ -2598,6 +2622,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "cdtech,s043wq26h-ct7",
+ 		.data = &cdtech_s043wq26h_ct7,
++	}, {
++		.compatible = "cdtech,s050wv43-ct5",
++		.data = &cdtech_s050wv43_ct5,
+ 	}, {
+ 		.compatible = "cdtech,s070wv95-ct16",
+ 		.data = &cdtech_s070wv95_ct16,
 -- 
 2.17.1
 
