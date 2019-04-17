@@ -2,104 +2,97 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2868FC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ACAC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1D220674
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555520243;
-	bh=IiiSQ0uwBOM/gPOfTLVTC9s9Pow/Mp2zFXO0aN6M04Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2RlfoLxjxm40dEXfXVfGfVW3h4XoqFZua9T0D0kFy7KgifMa30NNyMJ4MsWu7qF0Z
-	 mo7ZolR96jaLqcTuCrsrg8UAXOq0+n7K9oMCp5+LUF11vDKqKN/aJPy1aFGP/5q0jt
-	 he81ehzFSeaibJ0Fs2ySjlBE0KHHxh5BokaCfp/o=
+	by mail.kernel.org (Postfix) with ESMTP id 33ABB20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FrIDlC46";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n9jhW7Nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbfDQQ5V (ORCPT
+        id S1732882AbfDQQ6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:57:21 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45469 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729512AbfDQQ5V (ORCPT
+        Wed, 17 Apr 2019 12:58:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38598 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbfDQQ6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:57:21 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y6so23090175ljd.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e9lZbMtDKygZ2DfMvT54TFa3e24d9xoZ0epEXOcQrX0=;
-        b=N1H+13ULwDC+M3GXrj0q6BqQVsZgIPGQQAt1qzjWjlIE2T3boxhwovLMZhBRInW+IS
-         wGCznU07ozdKWbn2wFvSHWvS+yOaeLs4ZmJ0A9AX+Ug2O610w4Na6yKcpLJzcVB8F4aS
-         GdDoIQNJE32V1sSKg5NVPyl80P4+PPTryGbw4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e9lZbMtDKygZ2DfMvT54TFa3e24d9xoZ0epEXOcQrX0=;
-        b=Izx9TxIG3BI1W9Jo2Jb6D4koMNNKD0xYYgfwkZkm4BkIamnOkh7h+lydD3v7W8WWNq
-         WOqJvuvKRQUevhHk4aoJo1pnDFNMut0ZFDUm82+ir+14t05li3AtCWYeeIvr6Zzi7bf7
-         69LnqElkd07Pa7y+R74cLCqMrFlYfPQNWTnqARwt8+NBLDTZh59wJbtdYRSOFnRnsAgo
-         E8KXJAfYGTqdXRm5zJSrLp7LKRc96PqCrycMKSmKy0ov5VMUEgHln+Snq7D0fdZF3oYo
-         +yJcStNzPBChaVb+b0Z0/0/2t3xoc3WUXqVWON5DnBJZOGdOfMesPBUFncICC458ttl1
-         /Luw==
-X-Gm-Message-State: APjAAAVk4M3rKXXFZe66vttWQVE8lY5OjHY4bC/VWYfHchKDhwyRCBDi
-        pQ8eIfDX+8G5QEh1PzYTJjpjNURoGqo=
-X-Google-Smtp-Source: APXvYqz8oVuqAgIN6bBJbggxNlVzn+4GRWGkbyOrO94dDF0n3MOz7CFHPG36ICLgF+HUuyvRXYkpsw==
-X-Received: by 2002:a2e:204e:: with SMTP id g75mr14098181ljg.92.1555520238841;
-        Wed, 17 Apr 2019 09:57:18 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id s24sm10986690ljs.30.2019.04.17.09.57.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 09:57:17 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id u17so19444949lfi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:57:17 -0700 (PDT)
-X-Received: by 2002:a19:48c9:: with SMTP id v192mr29389550lfa.136.1555520237474;
- Wed, 17 Apr 2019 09:57:17 -0700 (PDT)
+        Wed, 17 Apr 2019 12:58:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 768E360779; Wed, 17 Apr 2019 16:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555520290;
+        bh=PEWeQz2FscZAVdhG0YIbtiOsZnfi+COBFLh4acycfPQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FrIDlC46NNLx+Lwwkq8y5L3df9oC3fqaY8yoVnFFCJ8fStLq6Bt01g1FDWF6sHukq
+         KQM28qaI8lsScOohc14706wqU+GZsnTUP19mM9e4hh0Ae+4eIUdA+hfdVH5QVW4bbV
+         YTRnyL2HokXW65Cb+/xRtFnOD+kGUjsZjHuY8QMw=
+Received: from [192.168.1.9] (unknown [171.49.248.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: shajit@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1844060392;
+        Wed, 17 Apr 2019 16:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555520289;
+        bh=PEWeQz2FscZAVdhG0YIbtiOsZnfi+COBFLh4acycfPQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=n9jhW7Nu2dLHUg5248XWjYYZv4RNCzwult4Ac3i29tcVsaUZc7NoitsUiCW+xThj2
+         ditM6CpCbM/qkNhLVTIATkMN4tajcuLaw2kvY/kRmD4WrWIihUo8RAQQuzuft7OlPR
+         F/QGTgy+j9GhQfersMMns4jk3QOG5UXsADLgN6Qw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1844060392
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=shajit@codeaurora.org
+Subject: Re: fs/proc: Crash observed in next_tgid (fs/proc/base.c)
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <b5b9df7b-324c-8286-3a7c-e7812511772d@codeaurora.org>
+ <4cb1d095-54a1-a7aa-762f-df77dddc4621@free.fr>
+From:   Jitendra Sharma <shajit@codeaurora.org>
+Message-ID: <e347f9fa-824d-bfe6-055c-1582c42d76e8@codeaurora.org>
+Date:   Wed, 17 Apr 2019 22:28:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
- <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
- <20190416110906.6c773aff@mschwideX1> <20190416140658.2cb73a3f@mschwideX1>
- <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
- <CAHk-=wj2SW0Zno0Yn=S9wrsmHOKV0FiFPiPS4TM=Gn8yjfYXAg@mail.gmail.com>
- <20190417094637.51ad4c67@mschwideX1> <20190417100244.42e29736@mschwideX1>
-In-Reply-To: <20190417100244.42e29736@mschwideX1>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 17 Apr 2019 09:57:01 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj5j-zMo7hVNxiw3+5L2d1WQVm3x4fbpg=OXLzDh8FhYg@mail.gmail.com>
-Message-ID: <CAHk-=wj5j-zMo7hVNxiw3+5L2d1WQVm3x4fbpg=OXLzDh8FhYg@mail.gmail.com>
-Subject: Re: Linux 5.1-rc5
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4cb1d095-54a1-a7aa-762f-df77dddc4621@free.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 1:02 AM Martin Schwidefsky
-<schwidefsky@de.ibm.com> wrote:
->
-> Grumpf, that does *not* work. For gup the table entries may be read only
-> once. Now I remember why I open-coded p4d_offset, pud_offset and pmd_offset
-> in arch/s390/mm/gup.c, to avoid to read the table entries twice.
-> It will be hard to use the common gup code after all.
+Thanks Marc and Kees for replying.
+Answer to your queries:
+Kernel version: 4.14.83
+Test case: Not some specific test case. Issue reproduced while doing 
+monkey testing for very long hours.
 
-Hmm. The common gup code generally should do the "read only once"
-thing too (since by definition the gup-fast case is done without
-locking), although it's probably the case that most architectures
-simply don't care.
+Thanks,
+Jitendra
 
-What would it require for the generic code to work for s390?
+On 4/17/2019 5:41 PM, Marc Gonzalez wrote:
+> On 15/04/2019 14:58, Jitendra Sharma wrote:
+> 
+>> We are observing one kernel crash in next_tgid function through
+>> getdents64 path. Call stack is as shown below:
+> 
+> It might help if you specify the exact kernel version you are discussing,
+> as in which tag or commit hash you are running.
+> 
+> Also, what are you doing to trigger the issue?
+> 
+> Regards.
+> 
 
-                    Linus
+-- 
+
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
