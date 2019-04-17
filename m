@@ -2,109 +2,116 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB041C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B4DC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814272183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510E52183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGnVSxMD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1KYIOL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfDQVEU (ORCPT
+        id S1733038AbfDQVKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:04:20 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37153 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfDQVET (ORCPT
+        Wed, 17 Apr 2019 17:10:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39004 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbfDQVKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:04:19 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z16so29072919qtn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 14:04:19 -0700 (PDT)
+        Wed, 17 Apr 2019 17:10:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i17so43538pfo.6;
+        Wed, 17 Apr 2019 14:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pMvCLLPuHIJPFph8nAmRu4Afmjf/cYzOLw7OI1YqNl8=;
-        b=fGnVSxMDz02OLNjluENax9RtpNEjDeiUw3we+ejR8xudyRjAc6LYO4hvx0fvvvHgDT
-         3bBFR7r9b4Rtn8K07gj7PAAO12xVCF/tOt0mnguv9B0M8gvEESWCRmuKMoSZesslR1P+
-         UFaGgsClMQZMAiwvwIni0g3/SmWpF5N5T+/FKYF3ysrdtSWLDzxw6PteL8z7FGAS/qra
-         ZbtgB1SjRxeVH3FDDv9pV9rGkMCqbMkIOmmUBYshVC0CaqduBUQNGtoqAP42M9t7/Gux
-         mpSycJsqJoo3aB3MjP6iF41nRUYOfnk4tWoDy16CF8Cq4VEpOOg3TzXvga+X7k8Zv/6U
-         Cr3g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tn+37+XDAd+/JBY7zfs8apH2ixBIPVzCz+3j8mVbjhw=;
+        b=s1KYIOL2gqie+9wCjvjUMEwNdgoG19Lekg1qhwvc9NA5o/NsI1AI+IjX1yYjAjNBTC
+         Z4BzKeqtOVVzr7rfwnfUJAH57Bt39t4gw2cjMEPHffuY4wSlWeNrpCG7WNtvThIQhtYa
+         f7BcWfSH43ZufZHZnDqK0Nl+J4uF6OYdrdOsVwRXYeF9LcneOLtgiV+5Yoha4eZj6vv8
+         YEqiagJZxHSRaqjm5s27o81689z8uQ0NcKMNNjPvAKZgyQefUqTZmFIsIMalP+kP91x9
+         foGUWOFl8BX27yAsptVNDHORZy8B4xvUJZYiP+maks8VMXzzbIj8WeQB9ZzKPvKYESOA
+         6FaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pMvCLLPuHIJPFph8nAmRu4Afmjf/cYzOLw7OI1YqNl8=;
-        b=Jprqmo03H5XCY8StJtWvTCVJMLBhOeBsBAlMga7RUuz2VpS8sJJvIwMfTvUm74A+qb
-         c5CJHPpexdK48FC60rR8UBZ8QU2nI2W6he6vDBUWJ0wOynT14R8MSmRBoRlVGpHRZOwq
-         kqtffKQMZ2WY9jtv+ULW4n7jLVHXcLUth498fxn9Kz2j0WfGmcEADzkk4tsWNpiXeuT1
-         Dvevaa3hET8S6sJm86bPg2E3G+vhFnsmJMY9KsLy1q2Hhy+KJducrn2Gt1eCyDGRm/uC
-         eOJ3PFRXHi8jwiRlXoWbqdec8MiMLLV+nQjrdXhqWX1yMvrKQO2BmiMZkmfg1VdSxhyq
-         po4Q==
-X-Gm-Message-State: APjAAAUJJWSqHd0HPlo8X1w5qyZE2SRhzpCU0MKPNFXIuyhJ0NVTEjqn
-        hVNQNEzu2p07aNixmnxYSYAwL+0n/znWtr70j9+9/Q==
-X-Google-Smtp-Source: APXvYqw2RfjdEhmqmmLtUr4eDaogduzccU/0AS8RecOlzKJBJDwbJRc2tuumRkmv+oH+XjL5L1BFvfplT3hDFKUTBv0=
-X-Received: by 2002:aed:2b87:: with SMTP id e7mr54876157qtd.190.1555535058596;
- Wed, 17 Apr 2019 14:04:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tn+37+XDAd+/JBY7zfs8apH2ixBIPVzCz+3j8mVbjhw=;
+        b=M/xKjAkbrEwBxmwraS7ungajTvwKCOr8DccYbUkFY3RCQEyGBPAEinzeQkKWVCOQcl
+         HD82ZAI0eZFrEglQPXNztTamzdXgqAJinW2a0yvpvhetAdZ6QSS10b3TaETF8cM5me/F
+         TIz1VzcwPDCVU0JWtKAGEWLIZaAPJRxGcMrjuh+fjeSXqI0sNYzmkn+gWeMtWEBZ++tK
+         Z1Rx5PcTOVrb8KkVaIwe5m7pKkx3OpPFRvC6RO+x/bVFMOWQNuWweTC6tv4WcJi7mTOn
+         32GtSs+5hS1EdNsiM4J3ULcv8RjOmfH0i22x0zbFNR72cxTEC8GOFyixHR2gG2Ktc6t+
+         zshw==
+X-Gm-Message-State: APjAAAUMGWzceEZkLfSWg/8HZoNnkhkcEPLIm5ZNcYCCgb/GrjUJwwlA
+        xbu+CM/Gj9usnEOPFjLmkiuZOfMcQPc=
+X-Google-Smtp-Source: APXvYqx0UHZFlzaNDC5nPiMns51PY3X3adBvT+lymhcZzc7iUX+rh+KaqWS69uwm6W5O5D57jVXCiw==
+X-Received: by 2002:a63:d250:: with SMTP id t16mr83195813pgi.288.1555535431423;
+        Wed, 17 Apr 2019 14:10:31 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id j19sm107828pfr.155.2019.04.17.14.10.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 14:10:31 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 14:10:26 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (ina3221) Add voltage conversion time settings
+Message-ID: <20190417211026.GA9565@Asurada-Nvidia.nvidia.com>
+References: <20190416235548.22733-1-nicoleotsuka@gmail.com>
+ <1ad27385-e62a-d4f0-2590-c50458119f12@roeck-us.net>
+ <2a193494-a33e-dac0-456a-241d7b3e59ad@roeck-us.net>
+ <20190417183949.GB5073@Asurada-Nvidia.nvidia.com>
+ <20190417194817.GA22652@Asurada-Nvidia.nvidia.com>
+ <20190417201234.GA6223@roeck-us.net>
 MIME-Version: 1.0
-References: <20181124200628.24393-1-masneyb@onstation.org> <CACRpkdYqxUJKZGHGX0qPVaSVW4vzHYBMp-FARA2uP85W9AX5wA@mail.gmail.com>
- <20190320091727.GA13882@basecamp>
-In-Reply-To: <20190320091727.GA13882@basecamp>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 17 Apr 2019 23:04:05 +0200
-Message-ID: <CACRpkdbc97ypN0D=HH=J6m=wUQq2mGJO16Eit_nUTFH2FUrQEg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: drm/panel: simple: add lg,acx467akm-7 panel
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan Marek <jonathan@marek.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417201234.GA6223@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 10:17 AM Brian Masney <masneyb@onstation.org> wrote=
-:
-> On Tue, Mar 05, 2019 at 11:42:15PM +0100, Linus Walleij wrote:
-> > On Sat, Nov 24, 2018 at 9:06 PM Brian Masney <masneyb@onstation.org> wr=
-ote:
-> >
-> > > Add binding for the LG ACX467AKM-7 4.95" 1080=C3=971920 LCD panel tha=
-t is
-> > > found on the LG Nexus 5 (hammerhead) phone. This appears to be a JDI
-> > > panel based on some Internet searches, however a specific model numbe=
-r
-> > > could not be found. I disassembled an old Nexus 5 with a broken
-> > > screen and the LG part number is the only model number present on the
-> > > back of the panel, so I think that is probably the best ID to use.
-> > >
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Tell me if you need me to merge this to the DRM misc tree.
->
-> It would be great if you could take this patch, plus the corresponding
-> change to panel-simple.c [1]
->
-> [1] https://lore.kernel.org/lkml/20181124200628.24393-2-masneyb@onstation=
-.org/
+On Wed, Apr 17, 2019 at 01:12:34PM -0700, Guenter Roeck wrote:
+> On Wed, Apr 17, 2019 at 12:48:18PM -0700, Nicolin Chen wrote:
+> > On Wed, Apr 17, 2019 at 11:39:49AM -0700, Nicolin Chen wrote:
+> > 
+> > > > Thinking about it ... does it even make sense to cache reg_config twice,
+> > > > or would it be better to just update the local copy and use regmap_write()
+> > > > to send it to the chip ?
+> > > 
+> > > I remember the reason of adding the read-back was to prevent race
+> > > condition. But now we have mutex protections for all sysfs nodes,
+> > > maybe it's not necessary anymore. I will read the code carefully
+> > > and see if it's safe to remove it -- will do in a separate patch.
+> > 
+> > I just recalled a second thought for the reason why I left them
+> > there as it'd logically require a copy to restore upon failure
+> > of regmap_write, that might not look so neat as the read-back:
+> > 
+> > 	old_config = reg_config;
+> > 	reg_config &= mask;
+> > 	reg_config |= val;
+> > 	ret = regmap_write(reg_config);
+> > 	if (ret) {
+> > 		reg_config = old_config;
+> > 		return ret;
+> > 	}
+> 
+> 	reg = (reg_config & mask) | val;
+> 	ret = regmap_write(reg);
+> 	if (ret) 
+> 		return ret;
+> 	reg_config = reg;
+> 
+> doesn't look that bad to me, and is much less costly.
 
-Both patches applied to drm-misc-next (will be in v5.2). Sorry for taking s=
-o
-long, I had some urgent other priorities.
-
-Yours,
-Linus Walleij
+Okay. Will submit a change. Thanks
