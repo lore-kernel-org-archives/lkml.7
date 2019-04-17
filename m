@@ -2,161 +2,250 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14503C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B959CC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85BA20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2F620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ud8t+g48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387775AbfDQWmR (ORCPT
+        id S2387778AbfDQWmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:42:17 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59701 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQWmP (ORCPT
+        Wed, 17 Apr 2019 18:42:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41671 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQWmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:42:15 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hGtFZ-0007Zs-6t; Thu, 18 Apr 2019 00:41:53 +0200
-Date:   Thu, 18 Apr 2019 00:41:52 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v7 14/21] x86/split_lock: Enable split lock detection by
- default
-In-Reply-To: <1555536851-17462-15-git-send-email-fenghua.yu@intel.com>
-Message-ID: <alpine.DEB.2.21.1904180019390.3174@nanos.tec.linutronix.de>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com> <1555536851-17462-15-git-send-email-fenghua.yu@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 17 Apr 2019 18:42:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d1so168239plj.8;
+        Wed, 17 Apr 2019 15:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UGhwmqxYys+b5h8DSBtXrBhmaqFi5uiahazIWk9yJ4o=;
+        b=Ud8t+g48EJkehj64M7LPHWSvRVF+mFT8SaCxQaKt49aXSrFWR0qq1RAvP7XRyDq19U
+         96K0RiP3pwMpSwcfisKWOkPb+ByVzX4ltq8/F5wccUThuHwSUrB5XSu+eDfiHBTF61fz
+         W7CWwbz+L0N6UnNY0tflWnNcbOBVhWLBcz+imMMt3KwAGlekaWmLiHdiYQf0dIvmserQ
+         z3QqDTiRvPBEI36yc8CXm0NDv/fgo6pw965DeQd7Y9v39ocZE3s7Vv7iZM71TNd+6wGF
+         UbFVNoZA5fkITG+cocQiC6fvaRchOLXa9+h+Hl4z8ueHNayyG3NW4IK0/JnhI79KChU0
+         4KfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UGhwmqxYys+b5h8DSBtXrBhmaqFi5uiahazIWk9yJ4o=;
+        b=X6vpZSfNyWYTqbWpuzDd76M/F1FhWS97bq/k+iNP4f1WSbb8CCGTWokFo+4HCEV4h+
+         tCLgiZLkeSJbUBQ6FtvX80HhvduRhAWmOrj7sXP9XovUyzARy+aUKVZbMpG6V8F+5xk7
+         Qhc7YeM578Vm7h7dYvNrVc/XjfzZyZRKnRRFB0/HDhhS3KeiD2D3F3Tp0cJN3EBjjx8h
+         C1UmXvGiT7+HLDHZLljN50iYwF0cw4f6VSvoOUd5TsiI9JmqeMD58SkETIdnZSJqp8wd
+         /9JSRxX2+hnd2tf589IhWR1zLXrGmJ3pFeabdItau2XOAtLZBIWBc+L3dLuX39ul8klZ
+         HeNg==
+X-Gm-Message-State: APjAAAWGVEYbsdRjQkDE5+s+B3TgJl8Teyrak+8wO3GxyCFf1WItR0cp
+        YNxgx8Eq+xZIw/FWFFXE4d4=
+X-Google-Smtp-Source: APXvYqyZvSgsANYMTvaaumL4t7Ffe8MKILHQoXvLsg0WySxH92STATA/nh+Q+XUx2qMjTFFLxOQsog==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr44488019plv.90.1555540518043;
+        Wed, 17 Apr 2019 15:35:18 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.35.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 15:35:17 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v3 12/16] PM / devfreq: tegra: Reconfigure hardware on governor's restart
+Date:   Thu, 18 Apr 2019 01:29:21 +0300
+Message-Id: <20190417222925.5815-13-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190417222925.5815-1-digetx@gmail.com>
+References: <20190417222925.5815-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Fenghua Yu wrote:
+Move hardware configuration to governor's start/resume methods.
+This allows to re-initialize hardware counters and reconfigure
+cleanly if governor was stopped/paused. That is needed because we
+are not aware of all hardware changes that happened while governor
+was stopped and the paused state may get out of sync with reality,
+hence it's better to start with a clean slate after the pause. In
+a result there is no memory bandwidth starvation after resume from
+suspend-to-ram that results in display controller underflowing that
+happens on resume because of improper decision made by devfreq about
+the required memory frequency. This change also cleans up code a tad
+by moving hardware-configuration code into a single location.
 
-> A split locked access locks bus and degrades overall memory access
-> performance. When split lock detection feature is enumerated, enable
-> the feature by default to find any split lock issue.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  arch/x86/kernel/cpu/intel.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 997d683d3c27..6a692d215bef 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -34,6 +34,8 @@
->  DEFINE_PER_CPU(u64, msr_test_ctl_cache);
->  EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
->  
-> +static bool split_lock_detect_enable;
-> +
->  /*
->   * Just in case our CPU detection goes bad, or you have a weird system,
->   * allow a way to override the automatic disabling of MPX.
-> @@ -164,6 +166,23 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
->  	return false;
->  }
->  
-> +static void split_lock_update_msr(void *__unused)
-> +{
-> +	if (split_lock_detect_enable) {
-> +		msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-> +		this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
-> +	} else {
-> +		msr_clear_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-> +		this_cpu_and(msr_test_ctl_cache, ~TEST_CTL_SPLIT_LOCK_DETECT);
-> +	}
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra-devfreq.c | 98 ++++++++++++++-------------------
+ 1 file changed, 40 insertions(+), 58 deletions(-)
 
-Nothing in this file initializes msr_test_ctl_cache explicitely. Register
-caching always requires to read the register and store it in the cache
-before doing anything with it. Nothing guarantees that all bits in that MSR
-are 0 by default forever.
+diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
+index 62f35e818122..e9ab49394d35 100644
+--- a/drivers/devfreq/tegra-devfreq.c
++++ b/drivers/devfreq/tegra-devfreq.c
+@@ -392,55 +392,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+ 
+-static void tegra_actmon_enable_interrupts(struct tegra_devfreq *tegra)
+-{
+-	struct tegra_devfreq_device *dev;
+-	u32 val;
+-	unsigned int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+-		dev = &tegra->devices[i];
+-
+-		val = device_readl(dev, ACTMON_DEV_CTRL);
+-		val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
+-		val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
+-		val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+-		val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+-
+-		device_writel(dev, val, ACTMON_DEV_CTRL);
+-	}
+-
+-	actmon_write_barrier(tegra);
+-}
+-
+-static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
+-{
+-	struct tegra_devfreq_device *dev;
+-	u32 val;
+-	unsigned int i;
+-
+-	disable_irq(tegra->irq);
+-
+-	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+-		dev = &tegra->devices[i];
+-
+-		val = device_readl(dev, ACTMON_DEV_CTRL);
+-		val &= ~ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
+-		val &= ~ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
+-		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+-		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+-
+-		device_writel(dev, val, ACTMON_DEV_CTRL);
+-
+-		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
+-			      ACTMON_DEV_INTR_STATUS);
+-	}
+-
+-	actmon_write_barrier(tegra);
+-
+-	enable_irq(tegra->irq);
+-}
+-
+ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+ 					  struct tegra_devfreq_device *dev)
+ {
+@@ -464,11 +415,47 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+ 		<< ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_NUM_SHIFT;
+ 	val |= (ACTMON_ABOVE_WMARK_WINDOW - 1)
+ 		<< ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
++	val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
++	val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
++	val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
++	val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_ENB;
+ 
+ 	device_writel(dev, val, ACTMON_DEV_CTRL);
++}
++
++static void tegra_actmon_start(struct tegra_devfreq *tegra)
++{
++	unsigned int i;
++
++	disable_irq(tegra->irq);
++
++	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
++		      ACTMON_GLB_PERIOD_CTRL);
++
++	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
++		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
++
++	actmon_write_barrier(tegra);
++
++	enable_irq(tegra->irq);
++}
++
++static void tegra_actmon_stop(struct tegra_devfreq *tegra)
++{
++	unsigned int i;
++
++	disable_irq(tegra->irq);
++
++	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
++		device_writel(&tegra->devices[i], 0x00000000, ACTMON_DEV_CTRL);
++		device_writel(&tegra->devices[i], ACTMON_INTR_STATUS_CLEAR,
++			      ACTMON_DEV_INTR_STATUS);
++	}
+ 
+ 	actmon_write_barrier(tegra);
++
++	enable_irq(tegra->irq);
+ }
+ 
+ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+@@ -580,22 +567,22 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
+ 	switch (event) {
+ 	case DEVFREQ_GOV_START:
+ 		devfreq_monitor_start(devfreq);
+-		tegra_actmon_enable_interrupts(tegra);
++		tegra_actmon_start(tegra);
+ 		break;
+ 
+ 	case DEVFREQ_GOV_STOP:
+-		tegra_actmon_disable_interrupts(tegra);
++		tegra_actmon_stop(tegra);
+ 		devfreq_monitor_stop(devfreq);
+ 		break;
+ 
+ 	case DEVFREQ_GOV_SUSPEND:
+-		tegra_actmon_disable_interrupts(tegra);
++		tegra_actmon_stop(tegra);
+ 		devfreq_monitor_suspend(devfreq);
+ 		break;
+ 
+ 	case DEVFREQ_GOV_RESUME:
+ 		devfreq_monitor_resume(devfreq);
+-		tegra_actmon_enable_interrupts(tegra);
++		tegra_actmon_start(tegra);
+ 		break;
+ 	}
+ 
+@@ -664,15 +651,10 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
+ 	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
+ 
+-	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
+-		      ACTMON_GLB_PERIOD_CTRL);
+-
+ 	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+ 		dev = tegra->devices + i;
+ 		dev->config = actmon_device_configs + i;
+ 		dev->regs = tegra->regs + dev->config->offset;
+-
+-		tegra_actmon_configure_device(tegra, dev);
+ 	}
+ 
+ 	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+-- 
+2.21.0
 
-And once you do that _before_ calling split_lock_update_msr() then you can
-spare the RMW in that function.
-
-> +static void init_split_lock_detect(struct cpuinfo_x86 *c)
-> +{
-> +	if (cpu_has(c, X86_FEATURE_SPLIT_LOCK_DETECT))
-> +		split_lock_update_msr(NULL);
-> +}
-> +
->  static void early_init_intel(struct cpuinfo_x86 *c)
->  {
->  	u64 misc_enable;
-> @@ -661,6 +680,8 @@ static void init_intel(struct cpuinfo_x86 *c)
->  {
->  	early_init_intel(c);
->  
-> +	init_split_lock_detect(c);
-
-Sigh. Why needs this to be squeezed in the middle of the whole enumeration
-stuff? Just because....
-
-init_intel_misc_features() is called at the end and it does also MSR
-caching etc. So down there is the right place.
-
-> +
->  	intel_workarounds(c);
->  
->  	/*
-> @@ -1032,9 +1053,22 @@ static const struct cpu_dev intel_cpu_dev = {
->  
->  cpu_dev_register(intel_cpu_dev);
->  
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "x86/split lock detection: " fmt
-> +
-> +static void show_split_lock_detection_info(void)
-> +{
-> +	if (split_lock_detect_enable)
-> +		pr_info("enabled\n");
-> +	else
-> +		pr_info("disabled\n");
-
-This function is truly useful. The else path is never invoked. See the call
-site below.
-
-> +}
-> +
->  static void __init set_split_lock_detect(void)
->  {
->  	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-> +	split_lock_detect_enable = true;
-> +	show_split_lock_detection_info();
->  }
-
-Oh well.
-
-Thanks,
-
-	tglx
