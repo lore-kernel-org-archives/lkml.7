@@ -2,85 +2,115 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F712C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFB5C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F57C2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07822073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6OCI8g8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbfDQIcS (ORCPT
+        id S1730691AbfDQIfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:32:18 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39277 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729039AbfDQIcR (ORCPT
+        Wed, 17 Apr 2019 04:35:15 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35010 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfDQIfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:32:17 -0400
-X-Originating-IP: 90.88.160.238
-Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id A7C2AE000E;
-        Wed, 17 Apr 2019 08:32:12 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 10:32:12 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
-Message-ID: <20190417083212.mng5p276kyot3nvw@flea>
-References: <20190416155209.24216-1-tiny.windzz@gmail.com>
- <20190416155209.24216-2-tiny.windzz@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="psruohnblxprxqcd"
-Content-Disposition: inline
-In-Reply-To: <20190416155209.24216-2-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+        Wed, 17 Apr 2019 04:35:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t4so13137021ljc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 01:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HE9AdSyj6Xu+M4CDNxaUyXeYyEky8JqgeK1vrcackXY=;
+        b=K6OCI8g8E1m2UF7ZmFB5XQHjq7lCGpCRt5EP3S/RYWBTjDZKQy+vkRJ1YLzJxdAMO2
+         gFgiZwLZDo0nGfIFeLDqho1yCZok4AnOwB8xj5U+jQqzyCYIwSvCgblhUytiX7r+qzlm
+         9NUw4uBpzm/BQKaupHy+yN3dPC8wcMyAu5l3UlFcKhQH306tKiICIHF+AkKmwnou09F4
+         eCx2zUPWQQx0/K76ybi2GlZA7tAvQ4fEyj19duwnU7fw/WV4fDGMnskt6ttdZ9gL2n7y
+         jNszH93UPC20ttfkS/w8OnUVC285KZeEef5ITr26Nu97XAyZOnkT8ifH9+FFf8mbAl4h
+         Z0mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HE9AdSyj6Xu+M4CDNxaUyXeYyEky8JqgeK1vrcackXY=;
+        b=ipdrUunnvPL4zkLV4mHY1hJ7hpMHj6vMlJt6D+buEcxO9hLURUcud7Hg1O5W7PP6gn
+         6mUk5pKtXq1F/xobybouFe3WkgK7mZC+93c6WYXekI545Whf5hC52ceL+KASGaVs8aJ3
+         Z12ri+qt+MJhsdrRRg/YpQCdqSJ/BVcsuFRThhPgc/EcpIoQIxriywql3Owr2s5tR3e2
+         1YWhqoU9ru5sWaCjqFNKlvobYSVkkMqWbWX/4HjoEpuSAVU9XIJhKuT4SYts+BGmkXNN
+         mIc35YsVP68xlqJF5OJPBSFe9MJpkodwErWgr2l7yXV2Sw0W5j/W1QxeLqn9bOGQhwMo
+         GrvA==
+X-Gm-Message-State: APjAAAXyK9LyFJ4O8q0Ngg6OBPAxEOfIiS7L25Do2XNB7GXrX9MlTLRa
+        Jz5sABQEoYt44uRvpZycKdY=
+X-Google-Smtp-Source: APXvYqx/1W7r5BcBsBGdz4XhIoiPlTwQRfInV4VnPM6C+id0DSBq01qwWcbQQtDXgXTEOKmRO/N7Cg==
+X-Received: by 2002:a2e:9811:: with SMTP id a17mr35692132ljj.96.1555490112620;
+        Wed, 17 Apr 2019 01:35:12 -0700 (PDT)
+Received: from seldlx21914.corpusers.net ([37.139.156.40])
+        by smtp.gmail.com with ESMTPSA id s24sm10762311ljs.30.2019.04.17.01.35.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 01:35:11 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 10:35:10 +0200
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     Dan Streetman <ddstreet@ieee.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleksiy.Avramchenko@sony.com,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCHv2 0/4] z3fold: support page migration
+Message-Id: <20190417103510.36b055f3314e0e32b916b30a@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.30; x86_64-unknown-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset implements page migration support and slightly better
+buddy search. To implement page migration support, z3fold has to move
+away from the current scheme of handle encoding. i. e. stop encoding
+page address in handles. Instead, a small per-page structure is created
+which will contain actual addresses for z3fold objects, while pointers
+to fields of that structure will be used as handles.
 
---psruohnblxprxqcd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thus, it will be possible to change the underlying addresses to reflect
+page migration.
 
-On Tue, Apr 16, 2019 at 11:52:08AM -0400, Yangtao Li wrote:
-> For some SoCs, the CPU frequency subset and voltage value of each OPP
-> varies based on the silicon variant in use. The sun50i-cpufreq-nvmem
-> driver reads the efuse value from the SoC to provide the OPP framework
-> with required information.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+To support migration itself, 3 callbacks will be implemented:
+    1: isolation callback: z3fold_page_isolate(): try to isolate
+the page by removing it from all lists. Pages scheduled for some
+activity and mapped pages will not be isolated. Return true if
+isolation was successful or false otherwise
+    2: migration callback: z3fold_page_migrate(): re-check critical
+conditions and migrate page contents to the new page provided by the
+system. Returns 0 on success or negative error code otherwise
+    3: putback callback: z3fold_page_putback(): put back the page
+if z3fold_page_migrate() for it failed permanently (i. e. not with
+-EAGAIN code).
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+To make sure an isolated page doesn't get freed, its kref is incremented
+in z3fold_page_isolate() and decremented during post-migration
+compaction, if migration was successful, or by z3fold_page_putback() in
+the other case.
 
-Thanks!
-Maxime
+Since the new handle encoding scheme implies slight memory consumption
+increase, better buddy search (which decreases memory consumption) is
+included in this patchset.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Vitaly Wool (4):
+  z3fold: introduce helper functions
+  z3fold: improve compression by extending search
+  z3fold: add structure for buddy handles
+  z3fold: support page migration
 
---psruohnblxprxqcd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLbkjAAKCRDj7w1vZxhR
-xbzdAQDVXEZNf6LbdNqHjBzS2ujcjdlY6nI4E2lZas2cnk9DJwEA3E3en227I2pT
-ZdgykUAdmZ0iSc8o2PioP61AY2DvqA0=
-=+DVI
------END PGP SIGNATURE-----
-
---psruohnblxprxqcd--
+ mm/z3fold.c |  638 ++++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 508 insertions(+), 130 deletions(-)
