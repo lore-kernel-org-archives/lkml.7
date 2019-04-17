@@ -2,229 +2,109 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DA9C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915EEC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F173E21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6816721773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbfDQKBH (ORCPT
+        id S1731708AbfDQKBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:01:07 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42841 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfDQKBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:01:06 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1hGhML-0005iM-T5; Wed, 17 Apr 2019 12:00:05 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5] (unknown [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 393283FDEB4;
-        Wed, 17 Apr 2019 10:00:00 +0000 (UTC)
-Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Gerrit Renker <gerrit@erg.abdn.ac.uk>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-x25@vger.kernel.org
-References: <20190416203620.539628-1-arnd@arndb.de>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4eabda4b-d08e-ae29-b3df-0971e909fe9c@pengutronix.de>
-Date:   Wed, 17 Apr 2019 11:59:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 06:01:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57332 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfDQKBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:01:10 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BF07530ADBCD;
+        Wed, 17 Apr 2019 10:01:09 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-219.str.redhat.com [10.33.192.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FE8D5D6A6;
+        Wed, 17 Apr 2019 10:01:04 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
+References: <20181212081712.32347-1-mic@digikod.net> <3452959.b6JmBh7Lnt@x2>
+        <87wojuxj8s.fsf@oldenburg2.str.redhat.com> <2361288.r9sZr2NHLB@x2>
+Date:   Wed, 17 Apr 2019 12:01:03 +0200
+In-Reply-To: <2361288.r9sZr2NHLB@x2> (Steve Grubb's message of "Tue, 16 Apr
+        2019 11:34:07 -0400")
+Message-ID: <875zrd7xy8.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190416203620.539628-1-arnd@arndb.de>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 17 Apr 2019 10:01:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A
-Content-Type: multipart/mixed; boundary="bhFxmOk9TZicUAH3UPosBJuXCCeMCMkUw";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
- Ralf Baechle <ralf@linux-mips.org>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Oliver Hartkopp <socketcan@hartkopp.net>,
- Gerrit Renker <gerrit@erg.abdn.ac.uk>, Alexander Aring
- <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>,
- Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
- Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
- Vlad Yasevich <vyasevich@gmail.com>, Neil Horman <nhorman@tuxdriver.com>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Andrew Hendry <andrew.hendry@gmail.com>, Eric Dumazet <edumazet@google.com>,
- Willem de Bruijn <willemb@google.com>,
- Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-sctp@vger.kernel.org, linux-x25@vger.kernel.org
-Message-ID: <4eabda4b-d08e-ae29-b3df-0971e909fe9c@pengutronix.de>
-Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
-References: <20190416203620.539628-1-arnd@arndb.de>
-In-Reply-To: <20190416203620.539628-1-arnd@arndb.de>
+* Steve Grubb:
 
---bhFxmOk9TZicUAH3UPosBJuXCCeMCMkUw
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+> On Tuesday, April 16, 2019 7:49:39 AM EDT Florian Weimer wrote:
+>> * Steve Grubb:
+>> > This flag that is being proposed means that you would have to patch all
+>> > interpreters to use it. If you are sure that upstreams will accept that,
+>> > why not just change the policy to interpreters shouldn't execute
+>> > anything unless the execute bit is set? That is simpler and doesn't need
+>> > a kernel change. And setting the execute bit is an auditable event.
+>> 
+>> I think we need something like O_MAYEXEC so that security policies can
+>> be enforced and noexec mounts can be detected.
+>
+> Application whitelisting can already today stop unknown software without 
+> needing O_MAYEXEC.
 
-On 4/16/19 10:32 PM, Arnd Bergmann wrote:
-> The SIOCGSTAMP/SIOCGSTAMPNS ioctl commands are implemented by many
-> socket protocol handlers, and all of those end up calling the same
-> sock_get_timestamp()/sock_get_timestampns() helper functions, which
-> results in a lot of duplicate code.
->=20
-> With the introduction of 64-bit time_t on 32-bit architectures, this
-> gets worse, as we then need four different ioctl commands in each
-> socket protocol implementation.
->=20
-> To simplify that, let's add a new .gettstamp() operation in
-> struct proto_ops, and move ioctl implementation into the common
-> sock_ioctl()/compat_sock_ioctl_trans() functions that these all go
-> through.
->=20
-> We can reuse the sock_get_timestamp() implementation, but generalize
-> it so it can deal with both native and compat mode, as well as
-> timeval and timespec structures.
->=20
-> Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-> Link: https://lore.kernel.org/lkml/CAK8P3a038aDQQotzua_QtKGhq8O9n+rdiz2=
-=3DWDCp82ys8eUT+A@mail.gmail.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+I'm somewhat interested in using this to add a proper check for
+executability to explicit dynamic loader invocations.  In other words,
+this
 
-For the CAN part:
+  /lib64/ld-linux-x86-64.so.2 /path/to/noexec/fs/program
 
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+should refuse to run the program if the program is located on a file
+system mounted with the noexec attribute.
 
-regards,
-Marc
+> The problem is that passing O_MAYEXEC is opt-in. You can use ptrace/seccomp/
+> bpf/LD_PRELOAD/LD_AUDIT to remove that bit from an otherwise normal program. 
+> This does not require privs to do so.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+That doesn't really help with the above.
 
+> But let's consider that this comes to pass and every interpreter is
+> updated and IMA can see the O_MAYEXEC flag. Attackers now simply pivot
+> to running programs via stdin. It never touches disk and therefore
+> nothing enforces security policy. This already is among the most
+> common ways that malware runs today to evade detection.
 
---bhFxmOk9TZicUAH3UPosBJuXCCeMCMkUw--
+Are you referring to Windows malware using Powershell?
 
---oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+I'm not sure this is applicable to Linux.  We do not have much
+behavioral monitoring anyway.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAly2+RsACgkQWsYho5Hk
-nSA+5Qf/TdRQd9Jb+CrEOmRTXkDOy+oG5Q4lOH8kTGLGuVcufVKYrWxNazF2WNAU
-uiohTFCKRBHADN7QSPuJcj5bKF/zAva4tIOEI+P/E/kJKklBF0JwPc676SmkUaop
-mMat6DD+JbjBkUVVGum0QxcuvTX870gX//xOhwjjEZDwx9nphQ0LJHas6t675WJY
-/gM4YTaSzuGCMsh65dduYl3d2UG0a1X4S8JtOgoBniszfkJYDxd2TAhZdur/tCq6
-C3WtdnLh3NvCFu6Q4HDaBrXqgtv0/n1pX0zko+TNiNv0ETTx8bbHztafQBR/xWIt
-W2DtCx2TmAr9FxU5oK3tnc5OO9QiFg==
-=MQJ6
------END PGP SIGNATURE-----
-
---oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A--
+Thanks,
+Florian
