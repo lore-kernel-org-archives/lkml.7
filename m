@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D896CC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E54C282DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3A621871
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA1321850
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdI5EkLP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTl4XRWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387577AbfDQVy5 (ORCPT
+        id S2387601AbfDQVzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:54:57 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43394 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387545AbfDQVyz (ORCPT
+        Wed, 17 Apr 2019 17:55:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42132 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387578AbfDQVy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:54:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c8so80645pfd.10;
-        Wed, 17 Apr 2019 14:54:54 -0700 (PDT)
+        Wed, 17 Apr 2019 17:54:58 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w25so82283pfi.9;
+        Wed, 17 Apr 2019 14:54:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=76gfXMG+0uRElSBO/APtur6FtcIZXTee5d1iEwxVGMw=;
-        b=gdI5EkLPUs5z6EaRfXGw41UkfBRR+UKMoxX+s1rEhoXw64sOhR8jwzVaL3cG3TWfx5
-         o5aPe4KIU6ePKtPU2Uu5fTifU2uklWuSHVSrCpusHW4Ri0HIF5z2uMg1J/cR7CmROP0w
-         lb6tUoAsX4j4BS6wtsZ5Qz7ICnhWgHnVqC++hCMJVymGGwketGMErK95ltTSPfj0xEE7
-         hHE3k6GXHf4IHciGhiSWFeogsipTbMCm3FzroabyrNDzl1aQG1rN+lh5lO0Onwy5spfT
-         R/PejDH+aBhLKbhGoS8FqSORqec0RybvC2TFq3PCOPBGsC6MESABES8Q0QdksuPQbHyT
-         h3UA==
+        bh=cRmr36eXTaKgScK2fa3yPK15EeGvQLf0Lc+faeDoG3Q=;
+        b=NTl4XRWoAOp1/x1XLk1hvjEAxMAeJ6AzgfrCpOEahhVu5/jEYVGYy9d8pQy0Q15Q5U
+         Af+lGn62qofRvBvBdvBMEbsEt60SVxN4kbLUVNa3p4G04O0b3J0+eI/IK/fQuiBqxiS6
+         WiuryM9qYvtgVaF+gjTGm1N4hsHjkIoMrNg+aPLTfQz5+EXgGtkXNKvE9FYVv7RBNw+3
+         //6RWegxUI3mqwV1pBVcvVWJrvdru3y0dvGNdNFFl8qK0pwHGJLQr9whaDrPGVDFzW8S
+         2zjbStnsuX0AEOR3NxF66n1IsvnQg5X6M9nueJXmXqIsgr7PkbG+bqIfS8Q3nPtlQuZA
+         XMrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=76gfXMG+0uRElSBO/APtur6FtcIZXTee5d1iEwxVGMw=;
-        b=hSezVBoAfVT2p5k3kT0Glx7fVtIeJp2Z7CQrev5HFRTBPHnQfhyO4oztXL7yghU1CE
-         ySi02//5p9q8OL3iNMMz/TnJ6lkFEw/74nDj2QcqEkxaAIfOg+5BCtFdbigcLJnxWvGB
-         wDLt3s/DcyZIjwKpKoe9ko9uVBIQC7dAV1b5IqyOHsDiPe18lwWLTZQdgJU9u3Hg/Ilx
-         bwdXA+nJ+s5BzrsGZqvtXSEkgjKAOeyfkWhkSYGhlc9kCV0OWnNCR8bE3HutDvPis9FN
-         h0lGL2pzSqLXRabevP8TZ9KuGmBXfysqk0/j7NC6aOIXI3V5fX06HktWECQDBJLWMR7v
-         w/SA==
-X-Gm-Message-State: APjAAAWuUsfXPRZ4YZnMLukQbuG2g4JpB21NgPDmWHvuxjqERXwHFAro
-        Esz7+md8SzyrabdJ9rXV8mA=
-X-Google-Smtp-Source: APXvYqx8eaGaLpTxyhmCU99DvbZgOOvhza9jKdm621uZ7OVdDTLFJcxMXop75gq1ZtJxXug7JlIq/A==
-X-Received: by 2002:a62:1f92:: with SMTP id l18mr93491326pfj.180.1555538094660;
-        Wed, 17 Apr 2019 14:54:54 -0700 (PDT)
+        bh=cRmr36eXTaKgScK2fa3yPK15EeGvQLf0Lc+faeDoG3Q=;
+        b=EBGHnFl2/pCVdVI++j67KLqMqlPj5q4plo54TYqU73LxdLY5sZwxG20jyMH2Kojq02
+         lPwbTD766qXeB3uVce28+0TezB4wsNL+rCpgRml7PgOUVquG4Bu0kPFj/8/taR0hrHDB
+         dWrhzSOChlIGexghvI3N8V+pGj7K286pCWGNe3TZBh5noxB7lpr9vLjvkRjfZjvHqTDp
+         6R444xq30GkrLMmYCHh1WSeioSSG0lf/1ULOJ94wDrmb950yMi0tGsEyBWYk0ZPAGdly
+         qKASis1NJhezaLKOi7ISgxHcpMI2Etc3Y2IdFrbzjkgtF4rvgpxL4VhId51JL0IL5jvW
+         vbzg==
+X-Gm-Message-State: APjAAAXZgQQF1uX/KEgLD7VUl7nOWoZJAxKmlRT9V9D7jh0vxRDCem9M
+        aVv8z0vyRP04ENVhUDlh6xg=
+X-Google-Smtp-Source: APXvYqxdPynQgSY+DGmrN9sj9aTAAj9DpThBayF5QAZBIIpe/kk5KnHKGpzPxv/HTkfDwV1hWwrARA==
+X-Received: by 2002:a63:d713:: with SMTP id d19mr28640839pgg.145.1555538097772;
+        Wed, 17 Apr 2019 14:54:57 -0700 (PDT)
 Received: from tower.thefacebook.com ([2620:10d:c090:200::5597])
-        by smtp.gmail.com with ESMTPSA id x6sm209024pfb.171.2019.04.17.14.54.53
+        by smtp.gmail.com with ESMTPSA id x6sm209024pfb.171.2019.04.17.14.54.56
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 14:54:53 -0700 (PDT)
+        Wed, 17 Apr 2019 14:54:57 -0700 (PDT)
 From:   Roman Gushchin <guroan@gmail.com>
 X-Google-Original-From: Roman Gushchin <guro@fb.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -68,9 +68,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Pekka Enberg <penberg@kernel.org>,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
         cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>
-Subject: [PATCH 1/5] mm: postpone kmem_cache memcg pointer initialization to memcg_link_cache()
-Date:   Wed, 17 Apr 2019 14:54:30 -0700
-Message-Id: <20190417215434.25897-2-guro@fb.com>
+Subject: [PATCH 3/5] mm: introduce __memcg_kmem_uncharge_memcg()
+Date:   Wed, 17 Apr 2019 14:54:32 -0700
+Message-Id: <20190417215434.25897-4-guro@fb.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190417215434.25897-1-guro@fb.com>
 References: <20190417215434.25897-1-guro@fb.com>
@@ -81,141 +81,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initialize kmem_cache->memcg_params.memcg pointer in
-memcg_link_cache() rather than in init_memcg_params().
+Let's separate the page counter modification code out of
+__memcg_kmem_uncharge() in a way similar to what
+__memcg_kmem_charge() and __memcg_kmem_charge_memcg() work.
 
-Once kmem_cache will hold a reference to the memory cgroup,
-it will simplify the refcounting.
-
-For non-root kmem_caches memcg_link_cache() is always called
-before the kmem_cache becomes visible to a user, so it's safe.
+This will allow to reuse this code later using a new
+memcg_kmem_uncharge_memcg() wrapper, which calls
+__memcg_kmem_unchare_memcg() if memcg_kmem_enabled()
+check is passed.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- mm/slab.c        |  2 +-
- mm/slab.h        |  5 +++--
- mm/slab_common.c | 14 +++++++-------
- mm/slub.c        |  2 +-
- 4 files changed, 12 insertions(+), 11 deletions(-)
+ include/linux/memcontrol.h | 10 ++++++++++
+ mm/memcontrol.c            | 25 +++++++++++++++++--------
+ 2 files changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index b1eefe751d2a..57a332f524cf 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1268,7 +1268,7 @@ void __init kmem_cache_init(void)
- 				  nr_node_ids * sizeof(struct kmem_cache_node *),
- 				  SLAB_HWCACHE_ALIGN, 0, 0);
- 	list_add(&kmem_cache->list, &slab_caches);
--	memcg_link_cache(kmem_cache);
-+	memcg_link_cache(kmem_cache, NULL);
- 	slab_state = PARTIAL;
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 36bdfe8e5965..deb209510902 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1298,6 +1298,8 @@ int __memcg_kmem_charge(struct page *page, gfp_t gfp, int order);
+ void __memcg_kmem_uncharge(struct page *page, int order);
+ int __memcg_kmem_charge_memcg(struct page *page, gfp_t gfp, int order,
+ 			      struct mem_cgroup *memcg);
++void __memcg_kmem_uncharge_memcg(struct mem_cgroup *memcg,
++				 unsigned int nr_pages);
  
- 	/*
-diff --git a/mm/slab.h b/mm/slab.h
-index 43ac818b8592..6a562ca72bca 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -289,7 +289,7 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
- }
- 
- extern void slab_init_memcg_params(struct kmem_cache *);
--extern void memcg_link_cache(struct kmem_cache *s);
-+extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg);
- extern void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
- 				void (*deact_fn)(struct kmem_cache *));
- 
-@@ -344,7 +344,8 @@ static inline void slab_init_memcg_params(struct kmem_cache *s)
- {
- }
- 
--static inline void memcg_link_cache(struct kmem_cache *s)
-+static inline void memcg_link_cache(struct kmem_cache *s,
-+				    struct mem_cgroup *memcg)
- {
- }
- 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 58251ba63e4a..6e00bdf8618d 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -140,13 +140,12 @@ void slab_init_memcg_params(struct kmem_cache *s)
- }
- 
- static int init_memcg_params(struct kmem_cache *s,
--		struct mem_cgroup *memcg, struct kmem_cache *root_cache)
-+			     struct kmem_cache *root_cache)
- {
- 	struct memcg_cache_array *arr;
- 
- 	if (root_cache) {
- 		s->memcg_params.root_cache = root_cache;
--		s->memcg_params.memcg = memcg;
- 		INIT_LIST_HEAD(&s->memcg_params.children_node);
- 		INIT_LIST_HEAD(&s->memcg_params.kmem_caches_node);
- 		return 0;
-@@ -221,11 +220,12 @@ int memcg_update_all_caches(int num_memcgs)
- 	return ret;
- }
- 
--void memcg_link_cache(struct kmem_cache *s)
-+void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg)
- {
- 	if (is_root_cache(s)) {
- 		list_add(&s->root_caches_node, &slab_root_caches);
- 	} else {
-+		s->memcg_params.memcg = memcg;
- 		list_add(&s->memcg_params.children_node,
- 			 &s->memcg_params.root_cache->memcg_params.children);
- 		list_add(&s->memcg_params.kmem_caches_node,
-@@ -244,7 +244,7 @@ static void memcg_unlink_cache(struct kmem_cache *s)
- }
- #else
- static inline int init_memcg_params(struct kmem_cache *s,
--		struct mem_cgroup *memcg, struct kmem_cache *root_cache)
-+				    struct kmem_cache *root_cache)
- {
+ extern struct static_key_false memcg_kmem_enabled_key;
+ extern struct workqueue_struct *memcg_kmem_cache_wq;
+@@ -1339,6 +1341,14 @@ static inline int memcg_kmem_charge_memcg(struct page *page, gfp_t gfp,
+ 		return __memcg_kmem_charge_memcg(page, gfp, order, memcg);
  	return 0;
  }
-@@ -384,7 +384,7 @@ static struct kmem_cache *create_cache(const char *name,
- 	s->useroffset = useroffset;
- 	s->usersize = usersize;
- 
--	err = init_memcg_params(s, memcg, root_cache);
-+	err = init_memcg_params(s, root_cache);
- 	if (err)
- 		goto out_free_cache;
- 
-@@ -394,7 +394,7 @@ static struct kmem_cache *create_cache(const char *name,
- 
- 	s->refcount = 1;
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
-+	memcg_link_cache(s, memcg);
- out:
- 	if (err)
- 		return ERR_PTR(err);
-@@ -997,7 +997,7 @@ struct kmem_cache *__init create_kmalloc_cache(const char *name,
- 
- 	create_boot_cache(s, name, size, flags, useroffset, usersize);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
-+	memcg_link_cache(s, NULL);
- 	s->refcount = 1;
- 	return s;
++
++static inline void memcg_kmem_uncharge_memcg(struct page *page, int order,
++					     struct mem_cgroup *memcg)
++{
++	if (memcg_kmem_enabled())
++		__memcg_kmem_uncharge_memcg(memcg, 1 << order);
++}
++
+ /*
+  * helper for accessing a memcg's index. It will be used as an index in the
+  * child cache array in kmem_cache, and also to derive its name. This function
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 48a8f1c35176..b2c39f187cbb 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2750,6 +2750,22 @@ int __memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
+ 	css_put(&memcg->css);
+ 	return ret;
  }
-diff --git a/mm/slub.c b/mm/slub.c
-index a34fbe1f6ede..2b9244529d76 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4224,7 +4224,7 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
- 	}
- 	slab_init_memcg_params(s);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
-+	memcg_link_cache(s, NULL);
- 	return s;
- }
++
++/**
++ * __memcg_kmem_uncharge_memcg: uncharge a kmem page
++ * @memcg: memcg to uncharge
++ * @nr_pages: number of pages to uncharge
++ */
++void __memcg_kmem_uncharge_memcg(struct mem_cgroup *memcg,
++				 unsigned int nr_pages)
++{
++	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
++		page_counter_uncharge(&memcg->kmem, nr_pages);
++
++	page_counter_uncharge(&memcg->memory, nr_pages);
++	if (do_memsw_account())
++		page_counter_uncharge(&memcg->memsw, nr_pages);
++}
+ /**
+  * __memcg_kmem_uncharge: uncharge a kmem page
+  * @page: page to uncharge
+@@ -2764,14 +2780,7 @@ void __memcg_kmem_uncharge(struct page *page, int order)
+ 		return;
  
+ 	VM_BUG_ON_PAGE(mem_cgroup_is_root(memcg), page);
+-
+-	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+-		page_counter_uncharge(&memcg->kmem, nr_pages);
+-
+-	page_counter_uncharge(&memcg->memory, nr_pages);
+-	if (do_memsw_account())
+-		page_counter_uncharge(&memcg->memsw, nr_pages);
+-
++	__memcg_kmem_uncharge_memcg(memcg, nr_pages);
+ 	page->mem_cgroup = NULL;
+ 
+ 	/* slab pages do not have PageKmemcg flag set */
 -- 
 2.20.1
 
