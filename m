@@ -2,124 +2,123 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E046C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FCFC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10723204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E6A20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+ZbGN3h"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="YPVYTGQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732299AbfDQPZZ (ORCPT
+        id S1732585AbfDQP1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:25:25 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33589 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbfDQPZZ (ORCPT
+        Wed, 17 Apr 2019 11:27:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44307 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731454AbfDQP1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:25:25 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d55so20557607ede.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 08:25:24 -0700 (PDT)
+        Wed, 17 Apr 2019 11:27:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w18so2388550wrv.11
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 08:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gnFTNL0HyeJ5SkvPWRP8h9D5WPZZsEJ+mWryvvEXxhU=;
-        b=Z+ZbGN3hV+dwBoWFiVvAJmNPPqsgSmmmllSVTAdsQXc6hKjHEfWwuc9KwYAqkq6xmM
-         6DX42pTZdMWIaJviY/f36f7ABimQoVUIco9Py1WOp5izN8D5Zg14NrE+tY3mdMHHEnYZ
-         VIiy9XxaP15xQhjmSKGT/fyxWwmFhVyQVhMI3aV/Zo69TV/WeHfnCAIGodrKJ3eQl6w/
-         NMy7bozutA972RyLT6zZCGdGHu8jC9NDsSFvLHxAxhw2YEOzGPEJr3yY4fcHP0vw3lWC
-         MDAni6Yik2xB4Gr+NuFJwylHVevbfZ10IErb95bLv3SQ+KkECBs4GEaRhZqSl/AtZC+U
-         6xXQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wEn8fXBSZBss5iObsx4KhIm5KoFGCLWDDVJTT2BFY40=;
+        b=YPVYTGQqKiWk7pFCY3aT3qPYKYfQSysm7VkcNNdtBLpmLj7PCecNUDa0AnX+ch/tgL
+         GT2xYP4NCvjp4tgq0V1ZycHvWC+hQlqj5FDgBxJjptLgNc6mtp4CAAoYTS5oq2OwzIek
+         vNzg7oTFbidTdcQa4SpDWOjP/NlzQuDFBzh8lErfQ+ajcHiX6coZakWQ/bE7pXtPGKH0
+         /cWDm9X8cndJ0+3UE+Vg/xPQ4N2Iz5hw9M6OMjaAUgyFbIfFz2mo10rjNOBB4MwPphMt
+         b4cVezdoeeTkIieyqHUqIl6+rnMQ/rORQSb9GKi5eKdoJG9OiGBuc4tcp2cRpdz0QsKA
+         lQHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gnFTNL0HyeJ5SkvPWRP8h9D5WPZZsEJ+mWryvvEXxhU=;
-        b=KRLDaGpoL9A48NEhvH2nkVcNdkSSW3K7M2Egz0MuS448GTYEsb/N+KW4ly+SvAt592
-         62wZ8xXErz6S10jvzwLqg3jnYxeLDDJCIQi9eowUAHTXtTt7mxNnbBGExkanWv0GPk94
-         E/KQfzrFCg0ocBE/pax7Zv+9gUVULzeU5nLZdswNZK4hTanMaPOSG68jkWIuyuOEVP7Y
-         AnQLUmaOcIGm8LBdQhuKEKPyvPnpLo0iCbxhrMemfpP6VwwEdJId4eey/t5CrfyeDEcy
-         eZcpSfVvhpMXpKH/w/EFRmrNxE5pjE56y43m+MV+j+1W6nZ4THF6Q1z/3Hi5ZZhLuz/i
-         H+gA==
-X-Gm-Message-State: APjAAAXhhc4ttRsUw7WynJMmYO2udM9BhViQLMoRSwwq7afhq3fjrHR4
-        7Sj6jsNcbM16/2tHD0rcobnrCUpStOgvAE+7juo=
-X-Google-Smtp-Source: APXvYqyaUk9/lJvT0nVCL4AvEuY9o+lX5hktcqzxYfNXH5x3PqB1vFxf6j6H6vByhv3gacmnpmAwMGZufgIZ0wiLVdY=
-X-Received: by 2002:a17:906:4e88:: with SMTP id v8mr23225174eju.160.1555514723678;
- Wed, 17 Apr 2019 08:25:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wEn8fXBSZBss5iObsx4KhIm5KoFGCLWDDVJTT2BFY40=;
+        b=fz9OQ7gyBnlM1SoJjm/UHSg1qU+1x552ONxTOPXUz0DltdKshLPhPP7zujP6qb4BKc
+         N1aR/2RelEq6j9r2w7/IhFjqoa2YPUD2FinHIISkFYF82bBrnB1pQhbUp98p7gZX5/3w
+         XzMKqJRxuDvA49AFThtOoIr39V1pnMxcnUjlXs4mKVidRNFaSllPZhqrcb7xFdziBMkV
+         6Sf5Eq/smMyqXIWt0cIOypF5s45LfA+CDO10/gNTqD+ZUlCHYcypbmb5tAGuZWjrAmOu
+         vPqoxZcInu12zcuHxzQLNk4N8IQU8cTLKN/XkTRTDI9OkkZsO0k96mqcazXPzZhY/edr
+         KJeg==
+X-Gm-Message-State: APjAAAVtMY6b1Xb8J3nw6KOSt+5yw/kXrnHCI7xwjvPxr2NQcghIIFre
+        DRpc+PlS50OUXqrOilV+NStp5w==
+X-Google-Smtp-Source: APXvYqwzggXdYzQr2ospevb13Q7iGkkZ6Rfy1VSl0qvgFavdBwmvf5afW5ABSbxz25Pw3mzSXcRvtg==
+X-Received: by 2002:adf:f506:: with SMTP id q6mr2823093wro.95.1555514825796;
+        Wed, 17 Apr 2019 08:27:05 -0700 (PDT)
+Received: from localhost.localdomain (aputeaux-684-1-15-216.w90-86.abo.wanadoo.fr. [90.86.218.216])
+        by smtp.gmail.com with ESMTPSA id v16sm75478817wru.76.2019.04.17.08.27.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 08:27:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>,
+        Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/5] ARM: da850: enable cpufreq in DT mode
+Date:   Wed, 17 Apr 2019 17:26:56 +0200
+Message-Id: <20190417152701.23391-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190417150915.37968-1-yuehaibing@huawei.com>
-In-Reply-To: <20190417150915.37968-1-yuehaibing@huawei.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 17 Apr 2019 18:25:11 +0300
-Message-ID: <CAEnQRZAug2kQoFTN6W47URBKwHcU5Zmmy=04smOtMomuzz6_TA@mail.gmail.com>
-Subject: Re: [PATCH -next] ASoC: fsl_micfil: Remove set but not used variable 'osr'
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Cosmin-Gabriel Samoila <gabrielcsmo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yue,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Looks good to me. Just one question for Cosmin:
+This series adds cpufreq-dt operating points for da850 boards supported
+with device tree (da850-lcdk, da850-lego-ev3, da850-evm).
 
-On Wed, Apr 17, 2019 at 6:10 PM Yue Haibing <yuehaibing@huawei.com> wrote:
->
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> sound/soc/fsl/fsl_micfil.c: In function 'get_clk_div':
-> sound/soc/fsl/fsl_micfil.c:154:6: warning: variable 'osr' set but not used [-Wunused-but-set-variable]
->
-> It is never used since introduction in
-> commit 47a70e6fc9a8 ("ASoC: Add MICFIL SoC Digital Audio Interface driver.")
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  sound/soc/fsl/fsl_micfil.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-> index 40c07e7..f7f2d29 100644
-> --- a/sound/soc/fsl/fsl_micfil.c
-> +++ b/sound/soc/fsl/fsl_micfil.c
-> @@ -151,12 +151,9 @@ static inline int get_clk_div(struct fsl_micfil *micfil,
->  {
->         u32 ctrl2_reg;
->         long mclk_rate;
-> -       int osr;
->         int clk_div;
->
->         regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+Last patch enables CPUFREQ_DT in davinci_all_defconfig.
 
-I noticed now that we also read ctrl2_reg without using it. Is this as intended?
+v1 -> v2:
+- use the VDCDC3_1.2V regulator as cpu-supply on da850-evm
 
-> -       osr = 16 - ((ctrl2_reg & MICFIL_CTRL2_CICOSR_MASK)
-> -                   >> MICFIL_CTRL2_CICOSR_SHIFT);
->
->         mclk_rate = clk_get_rate(micfil->mclk);
->
-> --
-> 2.7.4
->
->
+v2 -> v3:
+- drop patch 1, as the revision tag is in fact correctly passed to the kernel
+  by u-boot
+- only enable the 375 operating point for da850-evm as this is the standard
+  frequency for this board
+
+v3 -> v4:
+- split the first patch into three separate changesets: one adding the
+  operating points to the main dtsi and two enabling cpufreq on da850-lego-ev3
+  and da850-lcdk
+- remove the operating point not mentioned in the datasheet (415 MHz)
+- fix commit message in patch 4/5
+
+v4 -> v5:
+- only enable a single OPP for da850-lcdk due to the problem with the OHCI
+  controller becoming unresponsive after cpufreq transitions
+- fix the name of the pmic on da850-evm
+
+Bartosz Golaszewski (1):
+  ARM: dts: da850-evm: enable cpufreq
+
+David Lechner (4):
+  ARM: dts: da850: add cpu node and operating points to DT
+  ARM: dts: da850-lego-ev3: enable cpufreq
+  ARM: dts: da850-lcdk: enable cpufreq
+  ARM: davinci_all_defconfig: Enable CPUFREQ_DT
+
+ arch/arm/boot/dts/da850-evm.dts        | 13 +++++++
+ arch/arm/boot/dts/da850-lcdk.dts       | 36 +++++++++++++++++++
+ arch/arm/boot/dts/da850-lego-ev3.dts   | 30 ++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi           | 50 ++++++++++++++++++++++++++
+ arch/arm/configs/davinci_all_defconfig |  1 +
+ 5 files changed, 130 insertions(+)
+
+-- 
+2.21.0
+
