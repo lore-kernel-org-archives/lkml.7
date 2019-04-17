@@ -2,257 +2,88 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAEAC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32706C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33A2206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="D1sTj+g+"
+	by mail.kernel.org (Postfix) with ESMTP id 0A759206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbfDQOd1 (ORCPT
+        id S1732593AbfDQOdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:33:27 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38765 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732557AbfDQOd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:33:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d13so21186925edr.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9vp0xDRk0PcZdoGi3TTAy6TNoMlOylfEgoLEBq8+ymc=;
-        b=D1sTj+g+FUumn2pYXFejKpK+hEg40IvZMjaVEP+pSJt9QvypykYwJb7NVEpaHk8qo6
-         XR33tLC/ZnE1S7SikfJABHcrVnx8h+GBep6bbtCuPMV9VU6NVVFcUGn1yArjQIcg+jWl
-         PpmggEwofaelWcvhw2h06NNQOs9lBwGlBlVJo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=9vp0xDRk0PcZdoGi3TTAy6TNoMlOylfEgoLEBq8+ymc=;
-        b=osBojX2rbtCsd0i4tkZSVS9De/OPpNmZhAVa+vci5qL72M5fq7XBj4THLSe2XL7Ca1
-         oDXeeEg3MviSRC/9T3aEyHKj0GxuvvYX8KkjQsnnqiY3VLy8CaLSDOoFdNYw2c7rp5R4
-         aBRgW0RwVxit0hPf9VyJoS6m7LYga55vI3n4WL9q7eWEN/c594qlCB7FPDCGsRTawbGy
-         zYQkXTKHlgWvvyHsaRKeDtB7qq2Z4GzYjwKfwmFwXh8Pbt6DxzwiyYU17S592uBRjXbE
-         RHnquVuKlbBoOaczwiLfpbv2Xoc9kL4nyzyGFRV12ogs8PblPXNBOfPNdON1XqxLI4Np
-         J7xg==
-X-Gm-Message-State: APjAAAVeu+uOfpbySyIRC68hkuS71pWKQg5yvev3zhYLW2+rtnXqB6T7
-        hxajdWZm3C+zolq2gTNwSWtvTw==
-X-Google-Smtp-Source: APXvYqyHJXMY+hQcFl2Ka4NUSc8AB0uGMBucNnW736dovVFKvjixNuqWHATwKbkFuN6nWEm4K1+17A==
-X-Received: by 2002:a50:ee9a:: with SMTP id f26mr16022724edr.118.1555511603343;
-        Wed, 17 Apr 2019 07:33:23 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id p1sm8282108ejf.40.2019.04.17.07.33.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 07:33:22 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 16:33:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= 
-        <ckoenig.leichtzumerken@gmail.com>, sumit.semwal@linaro.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 04/12] dma-buf: add optional invalidate_mappings callback
- v5
-Message-ID: <20190417143320.GH13337@phenom.ffwll.local>
-Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
-References: <20190416183841.1577-1-christian.koenig@amd.com>
- <20190416183841.1577-5-christian.koenig@amd.com>
- <20190417140116.GC13337@phenom.ffwll.local>
+        Wed, 17 Apr 2019 10:33:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45810 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732557AbfDQOd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:33:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96F8BA78;
+        Wed, 17 Apr 2019 07:33:28 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33E03F557;
+        Wed, 17 Apr 2019 07:33:24 -0700 (PDT)
+Subject: Re: [PATCH v8 00/20] Convert x86 & arm64 to use generic page walk
+To:     Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190403141627.11664-1-steven.price@arm.com>
+ <4e804c87-1788-8903-ccc9-55953aa6da36@arm.com>
+ <3b9561d0-3bde-ef7a-0313-c2cc6216f94d@intel.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <3acbf061-8c97-55eb-f4b6-163a33ea4d73@arm.com>
+Date:   Wed, 17 Apr 2019 15:28:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190417140116.GC13337@phenom.ffwll.local>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3b9561d0-3bde-ef7a-0313-c2cc6216f94d@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 04:01:16PM +0200, Daniel Vetter wrote:
-> On Tue, Apr 16, 2019 at 08:38:33PM +0200, Christian König wrote:
-> > Each importer can now provide an invalidate_mappings callback.
-> > 
-> > This allows the exporter to provide the mappings without the need to pin
-> > the backing store.
-> > 
-> > v2: don't try to invalidate mappings when the callback is NULL,
-> >     lock the reservation obj while using the attachments,
-> >     add helper to set the callback
-> > v3: move flag for invalidation support into the DMA-buf,
-> >     use new attach_info structure to set the callback
-> > v4: use importer_priv field instead of mangling exporter priv.
-> > v5: drop invalidation_supported flag
-> > 
-> > Signed-off-by: Christian König <christian.koenig@amd.com>
-> > ---
-> >  drivers/dma-buf/dma-buf.c | 37 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/dma-buf.h   | 33 +++++++++++++++++++++++++++++++--
-> >  2 files changed, 68 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > index 83c92bfd964c..a3738fab3927 100644
-> > --- a/drivers/dma-buf/dma-buf.c
-> > +++ b/drivers/dma-buf/dma-buf.c
-> > @@ -563,6 +563,8 @@ struct dma_buf_attachment *dma_buf_attach(const struct dma_buf_attach_info *info
-> >  
-> >  	attach->dev = info->dev;
-> >  	attach->dmabuf = dmabuf;
-> > +	attach->importer_priv = info->importer_priv;
-> > +	attach->invalidate = info->invalidate;
-> >  
-> >  	mutex_lock(&dmabuf->lock);
-> >  
-> > @@ -571,7 +573,9 @@ struct dma_buf_attachment *dma_buf_attach(const struct dma_buf_attach_info *info
-> >  		if (ret)
-> >  			goto err_attach;
-> >  	}
-> > +	reservation_object_lock(dmabuf->resv, NULL);
-> >  	list_add(&attach->node, &dmabuf->attachments);
-> > +	reservation_object_unlock(dmabuf->resv);
-> >  
-> >  	mutex_unlock(&dmabuf->lock);
-> >  
-> > @@ -615,7 +619,9 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
-> >  					   DMA_BIDIRECTIONAL);
-> >  
-> >  	mutex_lock(&dmabuf->lock);
-> > +	reservation_object_lock(dmabuf->resv, NULL);
-> >  	list_del(&attach->node);
-> > +	reservation_object_unlock(dmabuf->resv);
-> >  	if (dmabuf->ops->detach)
-> >  		dmabuf->ops->detach(dmabuf, attach);
-> >  
-> > @@ -653,7 +659,16 @@ dma_buf_map_attachment_locked(struct dma_buf_attachment *attach,
-> >  	if (attach->sgt)
-> >  		return attach->sgt;
-> >  
-> > +	/*
-> > +	 * Mapping a DMA-buf can trigger its invalidation, prevent sending this
-> > +	 * event to the caller by temporary removing this attachment from the
-> > +	 * list.
-> > +	 */
-> > +	if (attach->invalidate)
-> > +		list_del(&attach->node);
-> >  	sg_table = attach->dmabuf->ops->map_dma_buf(attach, direction);
-> > +	if (attach->invalidate)
-> > +		list_add(&attach->node, &attach->dmabuf->attachments);
-> >  	if (!sg_table)
-> >  		sg_table = ERR_PTR(-ENOMEM);
-> >  
-> > @@ -751,6 +766,26 @@ void dma_buf_unmap_attachment(struct dma_buf_attachment *attach,
-> >  }
-> >  EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment);
-> >  
-> > +/**
-> > + * dma_buf_invalidate_mappings - invalidate all mappings of this dma_buf
-> > + *
-> > + * @dmabuf:	[in]	buffer which mappings should be invalidated
-> > + *
-> > + * Informs all attachmenst that they need to destroy and recreated all their
-> > + * mappings.
-> > + */
-> > +void dma_buf_invalidate_mappings(struct dma_buf *dmabuf)
-> > +{
-> > +	struct dma_buf_attachment *attach;
-> > +
-> > +	reservation_object_assert_held(dmabuf->resv);
-> > +
-> > +	list_for_each_entry(attach, &dmabuf->attachments, node)
-> > +		if (attach->invalidate)
-> > +			attach->invalidate(attach);
-> > +}
-> > +EXPORT_SYMBOL_GPL(dma_buf_invalidate_mappings);
-> > +
-> >  /**
-> >   * DOC: cpu access
-> >   *
-> > @@ -1163,10 +1198,12 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
-> >  		seq_puts(s, "\tAttached Devices:\n");
-> >  		attach_count = 0;
-> >  
-> > +		reservation_object_lock(buf_obj->resv, NULL);
-> >  		list_for_each_entry(attach_obj, &buf_obj->attachments, node) {
-> >  			seq_printf(s, "\t%s\n", dev_name(attach_obj->dev));
-> >  			attach_count++;
-> >  		}
-> > +		reservation_object_unlock(buf_obj->resv);
-> >  
-> >  		seq_printf(s, "Total %d devices attached\n\n",
-> >  				attach_count);
-> > diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-> > index 7e23758db3a4..ece4638359a8 100644
-> > --- a/include/linux/dma-buf.h
-> > +++ b/include/linux/dma-buf.h
-> > @@ -324,6 +324,7 @@ struct dma_buf {
-> >   * @dev: device attached to the buffer.
-> >   * @node: list of dma_buf_attachment.
-> >   * @priv: exporter specific attachment data.
-> > + * @importer_priv: importer specific attachment data.
-> >   *
-> >   * This structure holds the attachment information between the dma_buf buffer
-> >   * and its user device(s). The list contains one attachment struct per device
-> > @@ -340,6 +341,29 @@ struct dma_buf_attachment {
-> >  	struct list_head node;
-> >  	void *priv;
-> >  	struct sg_table *sgt;
-> > +	void *importer_priv;
-> > +
-> > +	/**
-> > +	 * @invalidate:
-> > +	 *
-> > +	 * Optional callback provided by the importer of the dma-buf.
-> > +	 *
-> > +	 * If provided the exporter can avoid pinning the backing store while
-> > +	 * mappings exists.
-> > +	 *
-> > +	 * The function is called with the lock of the reservation object
-> > +	 * associated with the dma_buf held and the mapping function must be
-> > +	 * called with this lock held as well. This makes sure that no mapping
-> > +	 * is created concurrently with an ongoing invalidation.
-> > +	 *
-> > +	 * After the callback all existing mappings are still valid until all
-> > +	 * fences in the dma_bufs reservation object are signaled, but should be
-> > +	 * destroyed by the importer as soon as possible.
-> > +	 *
-> > +	 * New mappings can be created immediately, but can't be used before the
-> > +	 * exclusive fence in the dma_bufs reservation object is signaled.
-> > +	 */
-> > +	void (*invalidate)(struct dma_buf_attachment *attach);
+On 12/04/2019 15:44, Dave Hansen wrote:
+> On 4/10/19 7:56 AM, Steven Price wrote:
+>> Gentle ping: who can take this? Is there anything blocking this series?
 > 
-> I would put the long kerneldoc into dma_buf_attach_info (as an inline
-> comment, you can mix the styles). And reference it from here with
-> something like
-> 
-> "Set from &dma_buf_attach_info.invalidate in dma_buf_attach(), see there
-> for more information."
-> 
-> This here feels a bit too much hidden.
+> First of all, I really appreciate that you tried this.  Every open-coded
+> page walk has a set of common pitfalls, but is pretty unbounded in what
+> kinds of bugs it can contain.  I think this at least gets us to the
+> point where some of those pitfalls won't happen.  That's cool, but I'm a
+> worried that it hasn't gotten easier in the end.
 
-Question on semantics: Is invalidate allowed to add new fences? I think we
-need that for pipelined buffer moves and stuff perhaps (or pipeline
-pagetable invalidates or whatever you feel like pipelining). And it should
-be possible (we already hold the reservation lock), and I think ttm copes
-(but no idea really).
+My plan was to implement the generic infrastructure and then work to
+remove the per-arch code for ptdump debugfs where possible. This patch
+series doesn't actually get that far because I wanted to get some
+confidence that the general approach would be accepted.
 
-Either way, docs need to be clear on this.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> Linus also had some strong opinions in the past on how page walks should
+> be written.  He needs to have a look before we go much further.
+
+Fair enough. I'll post the initial work I've done on unifying the
+x86/arm64 ptdump code - the diffstat is a bit nicer on that - but
+there's still work to be done so I'm posting just as an RFC.
+
+Thanks,
+
+Steve
