@@ -2,78 +2,78 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85311C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D596C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552A020656
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6022E20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S/CqysnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732797AbfDQPrW (ORCPT
+        id S1732799AbfDQPtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:47:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:61296 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732476AbfDQPrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:47:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 08:43:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
-   d="scan'208";a="162731832"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Apr 2019 08:43:54 -0700
-Date:   Wed, 17 Apr 2019 09:37:39 -0600
-From:   Keith Busch <keith.busch@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190417153739.GD4786@localhost.localdomain>
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190412084702.GD13373@dhcp22.suse.cz>
- <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
- <20190416074714.GD11561@dhcp22.suse.cz>
- <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
- <a0bf6b61-1ec2-6209-5760-80c5f205d52e@intel.com>
- <20190417092318.GG655@dhcp22.suse.cz>
- <20190417152345.GB4786@localhost.localdomain>
- <20190417153923.GO5878@dhcp22.suse.cz>
+        Wed, 17 Apr 2019 11:49:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40004 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729940AbfDQPtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 11:49:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FCODExTNsFUPdjtSIpGHQlu+n8l5qEJjh02LTVeFR6Y=; b=S/CqysnTSDonZSFmBBkBl4pR7
+        vX85t6bdF5Hf7Vx8JSbbn8GKJU6rfSg3Z37TB+dHQvIbkZQkp+nOobXOd9PNvrGo/H2js2ngl2O8Q
+        ppGLMT3sau6BKPhYATyIlL1rVt3k5nohtN5iNePmE8indh1/3aJpY6QALj0YaQpCbRkSFtO+kTmgT
+        uL6Y6Qrf+FLt8X/pbL6I6Uz65+vpWWZJB2bTXjVugwomNQIX0Pk0ypx4GW6fW/Rs9Bhi2Bn2wD2Y5
+        hd1WYO+9q8LAyBTwiHBTmjYDrDHDWNOILr5duBXQ/og3Z3eJcb2P1g5pixoDfJnb+u0Ao+DJEGgeS
+        Qz2bCJDsQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGmo0-0001uo-Kb; Wed, 17 Apr 2019 15:49:00 +0000
+Date:   Wed, 17 Apr 2019 08:49:00 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] proc/sysctl: add shared variables for range check
+Message-ID: <20190417154900.GD7751@bombadil.infradead.org>
+References: <20190417131531.9525-1-mcroce@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190417153923.GO5878@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190417131531.9525-1-mcroce@redhat.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 05:39:23PM +0200, Michal Hocko wrote:
-> On Wed 17-04-19 09:23:46, Keith Busch wrote:
-> > On Wed, Apr 17, 2019 at 11:23:18AM +0200, Michal Hocko wrote:
-> > > On Tue 16-04-19 14:22:33, Dave Hansen wrote:
-> > > > Keith Busch had a set of patches to let you specify the demotion order
-> > > > via sysfs for fun.  The rules we came up with were:
-> > > 
-> > > I am not a fan of any sysfs "fun"
-> > 
-> > I'm hung up on the user facing interface, but there should be some way a
-> > user decides if a memory node is or is not a migrate target, right?
+On Wed, Apr 17, 2019 at 03:15:31PM +0200, Matteo Croce wrote:
+> In the sysctl code the proc_dointvec_minmax() function is often used to
+> validate the user supplied value between an allowed range. This function
+> uses the extra1 and extra2 members from struct ctl_table as minimum and
+> maximum allowed value.
 > 
-> Why? Or to put it differently, why do we have to start with a user
-> interface at this stage when we actually barely have any real usecases
-> out there?
+> On sysctl handler declaration, in every source file there are some readonly
+> variables containing just an integer which address is assigned to the
+> extra1 and extra2 members, so the sysctl range is enforced.
+> 
+> The special values 0, 1 and INT_MAX are very often used as range boundary,
+> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
+> different source files:
+> 
+>     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
+>     245
+> 
+> This patch adds three const variables for the most commonly used values,
+> and use them instead of creating a local one for every object file.
 
-The use case is an alternative to swap, right? The user has to decide
-which storage is the swap target, so operating in the same spirit.
+Does this actually cause the kernel size to shrink?  EXPORT_SYMBOL isn't
+free, you know.
