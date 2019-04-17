@@ -2,79 +2,88 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CE7C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8840C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E809206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8668B20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbfDQSYI (ORCPT
+        id S1731782AbfDQS0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:24:08 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:59064 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728373AbfDQSYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:24:07 -0400
-Received: (qmail 3228 invoked by uid 2102); 17 Apr 2019 14:24:06 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Apr 2019 14:24:06 -0400
-Date:   Wed, 17 Apr 2019 14:24:06 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Raul Rangel <rrangel@chromium.org>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <groeck@chromium.org>,
-        <oneukum@suse.com>, <djkurtz@chromium.org>, <zwisler@chromium.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Johan Hovold <johan@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH v2] usb/hcd: Send a uevent signaling that the host
- controller has died
-In-Reply-To: <20190417175300.GA74282@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904171419260.1400-100000@iolanthe.rowland.org>
+        Wed, 17 Apr 2019 14:26:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53316 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbfDQS0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:26:22 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BCA6C3078AAE;
+        Wed, 17 Apr 2019 18:26:21 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C068A1001E8A;
+        Wed, 17 Apr 2019 18:26:20 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 14:26:18 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH] mm/hmm: kconfig split HMM address space mirroring from
+ device memory
+Message-ID: <20190417182618.GA11499@redhat.com>
+References: <20190411180326.18958-1-jglisse@redhat.com>
+ <20190417182118.GA1477@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190417182118.GA1477@roeck-us.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 17 Apr 2019 18:26:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Raul Rangel wrote:
-
-> > > Also where would be a good place to document this?
+On Wed, Apr 17, 2019 at 11:21:18AM -0700, Guenter Roeck wrote:
+> On Thu, Apr 11, 2019 at 02:03:26PM -0400, jglisse@redhat.com wrote:
+> > From: Jérôme Glisse <jglisse@redhat.com>
 > > 
-> > Documentation/ABI/ is a good start.
-> I'll add something to Documentation/ABI/testing/xhci-uevent
-
-Your patch will apply to all host controllers, not just xhci.  The
-documentation filename should reflect this.  Perhaps "usb-uevent"?
-
-> > Why do you need to lock something that is "dead"?  And why is the idr
-> > lock the correct one here?
-> We need to ensure that root_hub is not null. Though I'm not sure the
-> lock is entirely necessary in this case. usb_remove_hcd stops the work
-> item before it sets the rhdev to null. The reason I picked
-> usb_bus_idr_lock was because it's the same lock that usb_remove_hcd uses
-> when setting rhdev = NULL.
+> > To allow building device driver that only care about address space
+> > mirroring (like RDMA ODP) on platform that do not have all the pre-
+> > requisite for HMM device memory (like ZONE_DEVICE on ARM) split the
+> > HMM_MIRROR option dependency from the HMM_DEVICE dependency.
+> > 
+> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: Leon Romanovsky <leonro@mellanox.com>
+> > Cc: Jason Gunthorpe <jgg@mellanox.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Ralph Campbell <rcampbell@nvidia.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Tested-by: Leon Romanovsky <leonro@mellanox.com>
 > 
-> Alan, what do you think? Should I remove the lock?
+> In case it hasn't been reported already:
+> 
+> mm/hmm.c: In function 'hmm_vma_handle_pmd':
+> mm/hmm.c:537:8: error: implicit declaration of function 'pmd_pfn'; did you mean 'pte_pfn'?
 
-You're both right; the lock isn't needed because the work is stopped
-before the root hub gets removed.  Acquiring the lock doesn't do any
-harm, but it isn't needed so you probably should remove it.  In fact, 
-you don't even need to test for whether hcd->self.root_hub is 
-non-NULL.
+No it is pmd_pfn
 
-Alan Stern
+> 
+> and similar errors when building alpha:allmodconfig (and maybe others).
 
+Does HMM_MIRROR get enabled in your config ? It should not
+does adding depends on (X86_64 || PPC64) to ARCH_HAS_HMM
+fix it ? I should just add that there for arch i do build.
 
+Cheers,
+Jérôme
