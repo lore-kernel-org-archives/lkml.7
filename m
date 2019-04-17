@@ -2,128 +2,114 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CF4C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50742C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A12F721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F1620835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbfDQIj5 (ORCPT
+        id S1731400AbfDQIkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:39:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36846 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbfDQIj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:39:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E58DE59464;
-        Wed, 17 Apr 2019 08:39:55 +0000 (UTC)
-Received: from localhost (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E71C5D9D5;
-        Wed, 17 Apr 2019 08:39:54 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 16:39:52 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     kirill@shutemov.name, linux-kernel@vger.kernel.org, x86@kernel.org,
-        tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com,
-        keescook@chromium.org, peterz@infradead.org, thgarnie@google.com,
-        herbert@gondor.apana.org.au, mike.travis@hpe.com,
-        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
-Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
- section
-Message-ID: <20190417083952.GA23459@localhost>
-References: <20190414072804.12560-1-bhe@redhat.com>
- <20190414072804.12560-3-bhe@redhat.com>
- <20190415194755.GJ29317@zn.tnic>
+        Wed, 17 Apr 2019 04:40:25 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:43749 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbfDQIkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:40:25 -0400
+Received: from [192.168.1.110] ([95.117.89.119]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M2NqA-1hHEKA0bIU-003slx; Wed, 17 Apr 2019 10:39:08 +0200
+Subject: Re: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190416155618.1369-1-TheSven73@gmail.com>
+ <20190416155618.1369-4-TheSven73@gmail.com>
+ <2caf5f92-164a-3723-e2ef-42e4045d2ec3@metux.net>
+ <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
+ <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net>
+ <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <3103f45a-facf-89a3-8a36-84507c570909@metux.net>
+Date:   Wed, 17 Apr 2019 10:39:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415194755.GJ29317@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 17 Apr 2019 08:39:56 +0000 (UTC)
+In-Reply-To: <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:J1VGXw/sIMk06lVpe/qj508MUrpovhkBenvF/IWqgpKrFMDJCCi
+ JAuod9W+gm9PMJtnIzQ+jOb/NxQm964O909uNBm5QwN8OpPaiEPrmEMTTHp/lL2L5kHRPIe
+ l0mkTSRW7r2CTkKF03oY8os+hmsZcWby8FcvUDOakABsGroH4+NRDNn65UaOaz9COzfGGVK
+ 2HGAlryCah2Ga0R3L+GIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ucpNO5lO9Gk=:o2KacvIlBEHT6L27wjw/6p
+ wHeHWCjS/7KCalOgi11nYrN2oMNQacveFCn02kp5AXE3G3wFpANUe/dvAhy/RLUESh01Pkwf6
+ ZEB+DkDX3+e/2bPAccz1fNRsAAqEGbFl4VYw4Xf8/VJ21IwpySgCklX66HXpBnjBFlUr4IBM7
+ 2rxPuxq+pysrcU5IJjGHEAn1lb5CIjYoTHb3VOGYTvoS2EiOvalGZeKbWYr0mL+x1W2GsHAkx
+ VcOmF3Q2u/fdqFl02kMiYUp7aiw9pSf1UxIokzq6NKUbIqNA9rHZ7srXNXCwNTlpS74ASkpVd
+ UANpAxf/XAtf0z1f6RcjVQxT3SS0fGNpKEszDaBQp2OYFVdDTv4EXl/VAxazvy6M34UHVXU4J
+ w3OFTJnYeu7Tn867EQYRrIvXyUdrNm1lRzqFWBKXfp8Lxlz/NayWI9dd4hDdLv+o6YISG+Bcu
+ I0Cc1/E+R4bbpZ7KreHw8e4mEB0ErAslEDMq6HgKLD88pRijcC5Z4cngxiXdSNaQJsfi5HxOz
+ GHgXMCOkvwSE0s13QanNpujNrCCVJYxOEYockr/wkzfr5k5M68+3Wvx7mUZyLuKCAr9aIGlhv
+ PwwQzxgFQiXl9XL5w7k1aw76Hr2eCDRFOxSgPssg3SWdxeG4LzevjnQ1Zx2eYc+FWNl/tHJEs
+ uzLsF+Mk5gIsco0NY3FQPfXVCYUUJ3+ELQsk73ZrJsYt634VuH3TDb0H1Ivu/F4NYbzZPWP2f
+ jCWWY3QvL5Lb1FEIHWlHmG0dTpT7mXTwKFlt8lup51egOaOGP4beVvX/BhU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/19 at 09:47pm, Borislav Petkov wrote:
-> On Sun, Apr 14, 2019 at 03:28:04PM +0800, Baoquan He wrote:
-> > kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
-> > to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
-> > 
-> > However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
-> > the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
-> > 64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
-> > stamping into the following cpu_entry_area section, if KASLR puts vmemmap
-> > very close to cpu_entry_area, and the actual area of vmemmap is much bigger
-> > than 1 TB.
-> > 
-> > So here calculate the actual size of vmemmap region, then align up to 1 TB
-> > boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
-> > The current code reserves 0.5 PB for vmemmap in 5-level. In this new methor,
-> 								       ^^^^^^^
-> 
-> Please introduce a spellchecker into your patch creation workflow.
+On 16.04.19 23:23, Sven Van Asbroeck wrote:
 
-Sorry, forgot running checkpatch this time. Will update.
+Hi,
 
+> Well yes, we could treat it as an mfd device, with a common register accessor,> which registers anybus-s host and adc drivers, all selectable via>
+Kconfig / defconfig... But that's a lot of extra code just to handle one
+single> bit in a register, which is a boolean input.> > Can be done but
+is it worth it?
+hmm, I think the main question here is clean separation between
+subsystems - devices that span multiple subsystems, IMHO, fall
+into the category "mfd".
+
+separate drivers probably don't make much sense here, but maybe
+a CONFIG_ flag for disabling this functionality ?
+
+>> Does this power read-out involve some CAN traffic, or is it just
+>> fetching from some card that just happens to be some CAN interface ?
+>> (IOW: is cansocket needed for that ?)
 > 
-> > the left space can be saved to join randomization to increase the entropy.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  arch/x86/mm/kaslr.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-> > index 387d4ed25d7c..4679a0075048 100644
-> > --- a/arch/x86/mm/kaslr.c
-> > +++ b/arch/x86/mm/kaslr.c
-> > @@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
-> >  } kaslr_regions[] = {
-> >  	{ &page_offset_base, 0 },
-> >  	{ &vmalloc_base, 0 },
-> > -	{ &vmemmap_base, 1 },
-> > +	{ &vmemmap_base, 0 },
-> >  };
-> >  
-> >  /* Get size in bytes used by the memory region */
-> > @@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
-> >  	unsigned long rand, memory_tb;
-> >  	struct rnd_state rand_state;
-> >  	unsigned long remain_entropy;
-> > +	unsigned long vmemmap_size;
-> >  
-> >  	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
-> >  	vaddr = vaddr_start;
-> > @@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
-> >  	if (memory_tb < kaslr_regions[0].size_tb)
-> >  		kaslr_regions[0].size_tb = memory_tb;
-> >  
-> > +	/**
-> > +	 * Calculate how many TB vmemmap region needs, and aligned to
-> > +	 * 1TB boundary.
-> > +	 */
-> > +	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
-> > +		sizeof(struct page);
-> > +	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
-> > +
-> >  	/* Calculate entropy available between regions */
-> >  	remain_entropy = vaddr_end - vaddr_start;
-> >  	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
-> > -- 
-> 
-> Kirill, ack?
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+> It is purely a boolean input. The boolean output of a voltage monitor chip.
+> When our hardware is assembled, the voltage monitor input is connected
+> to a signal which indicates the CAN status. In theory, it could be connected
+> to the factory's light switch. It would then read out the status of the factory
+> floor lights. It has no CAN functionality whatsoever.
+
+hmm, wouldn't the input subsystem be more appropriate for that ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
