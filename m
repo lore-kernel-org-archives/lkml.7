@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDE7C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9463C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8E420835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793F920835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555519370;
-	bh=eT2BeqDwjwcbTIAeRFJW2PL+VMX9Usc1fwI1EKkgGgY=;
+	s=default; t=1555519374;
+	bh=TtQPMuFzHWZHjFJzPI1JasT+S3an643Rfhu7gKVeN1Y=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=BZJ2DyHJ0LoOulgxz+hQjRAG7E+xv7SED5eDNjLDmk4QLptcWC4nX7ln4AK/MzxV2
-	 Wcsa/wNBz4BcT72fTgg3WyOLZA0I7oHaqzF2OFB66y96yL7nj1PT8L58dR+QECYmeU
-	 5nkGty3OObKbDvaXehl6MndI2Tk59vtmHdQmk0uI=
+	b=aFRCk+dh+qKJ2fdCZvhzQz+zrZmedmy3xbuZwBjMX+WQJyJIbD+WOZ/ItZeGnghJc
+	 D1FApuRjvIihKHmJtavI/lPknC3JoUBzIPv32uZkNhjImJDTWRkn3hUvxt8euBIC8Y
+	 FDL7vaNeDzRMenBZtEIZsICxZYGq6yWRGtvG4ZpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733007AbfDQQmt (ORCPT
+        id S1733019AbfDQQmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:42:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37436 "EHLO
+        Wed, 17 Apr 2019 12:42:53 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37964 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbfDQQmb (ORCPT
+        with ESMTP id S1732937AbfDQQms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:42:31 -0400
+        Wed, 17 Apr 2019 12:42:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=wc/2XhNh7xc0R3hPguRGY1tJ3GtPknUk344MjaY+PMA=; b=DEVqby/FfECd
-        hvgw1pXg9kjZcbgTGAnGIFPdf7muZEsKeNRtHtEdoxlpeoMTv3RSnNgLzSh3Egf3yEC/KbjVI+16m
-        cB/VGSxXequx7rvzmV5VOevLU7hnkoCghXPGHRTd6qyfKXUptNS4SRLoOjedGpBiu8GIKgiv2Kbw3
-        WEhv0=;
+        List-Archive; bh=MVrjg2evUnmyIrwt6li5RbJiZFhgNK/q+6Yif/6uJ1Q=; b=cXR6huEFODoX
+        WAvhlAzCc2sVO/zfopwo3TyD3GWZ+Lgwj80Nlu55U5lKlOzwrUolda2/k1mLrfsXYEG2wAtiFbL0z
+        xaMlDTmy2qw3+uzMM/r0w7AyRb9qUCdZBQLaYnvhB/GNzod+7SvSi3101z2ILZzGeW6Y1jhYoayYC
+        azx+M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGndW-00014u-7v; Wed, 17 Apr 2019 16:42:14 +0000
+        id 1hGndW-00014s-5N; Wed, 17 Apr 2019 16:42:14 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id C3B0C1128FC8; Wed, 17 Apr 2019 17:42:13 +0100 (BST)
+        id 952B91128FC7; Wed, 17 Apr 2019 17:42:13 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, kaichieh.chuang@mediatek.com,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        matthias.bgg@gmail.com, perex@perex.cz, shunli.wang@mediatek.com,
-        tiwai@suse.com
-Subject: Applied "ASoC: Mediatek: MT8183: Fix build err while CONFIG_I2C set to module" to the asoc tree
-In-Reply-To: <20190417152932.36436-1-yuehaibing@huawei.com>
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: hdmi-codec: fix spelling mistake "plalform" -> "platform"" to the asoc tree
+In-Reply-To: <20190417162628.10976-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190417164213.C3B0C1128FC8@debutante.sirena.org.uk>
+Message-Id: <20190417164213.952B91128FC7@debutante.sirena.org.uk>
 Date:   Wed, 17 Apr 2019 17:42:13 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: Mediatek: MT8183: Fix build err while CONFIG_I2C set to module
+   ASoC: hdmi-codec: fix spelling mistake "plalform" -> "platform"
 
 has been applied to the asoc tree at
 
@@ -89,48 +88,33 @@ to this mail.
 Thanks,
 Mark
 
-From 04e7a02937527fd7edb1e493f04613f2340085dc Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Wed, 17 Apr 2019 23:29:32 +0800
-Subject: [PATCH] ASoC: Mediatek: MT8183: Fix build err while CONFIG_I2C set to
- module
+From 7d8cdb818571ca019cf909bd737e549895b9a0d9 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Wed, 17 Apr 2019 17:26:28 +0100
+Subject: [PATCH] ASoC: hdmi-codec: fix spelling mistake "plalform" ->
+ "platform"
 
-During randconfig builds, I occasionally run into an invalid configuration
+There is a spelling mistake in a dev_err message. Fix it.
 
-WARNING: unmet direct dependencies detected for SND_SOC_TS3A227E
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && I2C [=m]
-  Selected by [y]:
-  - SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_MT8183 [=y]
-
-sound/soc/codecs/ts3a227e.o: In function `ts3a227e_i2c_probe':
-ts3a227e.c:(.text+0x684): undefined reference to `__devm_regmap_init_i2c'
-sound/soc/codecs/ts3a227e.o: In function `ts3a227e_driver_init':
-ts3a227e.c:(.init.text+0x18): undefined reference to `i2c_register_driver'
-sound/soc/codecs/ts3a227e.o: In function `ts3a227e_driver_exit':
-ts3a227e.c:(.exit.text+0x14): undefined reference to `i2c_del_driver'
-
-This patch add I2C dependency to fix this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ebbddc75bbe8 ("ASoC: Mediatek: MT8183: Add machine driver with DA7219")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/mediatek/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/hdmi-codec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
-index 874404bcccfd..f70b7109f2b6 100644
---- a/sound/soc/mediatek/Kconfig
-+++ b/sound/soc/mediatek/Kconfig
-@@ -118,6 +118,7 @@ config SND_SOC_MT8183
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 35df73e42cbc..b9d9dde9fbaf 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -757,7 +757,7 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 	dev_dbg(dev, "%s()\n", __func__);
  
- config SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A
- 	tristate "ASoC Audio driver for MT8183 with MT6358 TS3A227E MAX98357A codec"
-+	depends on I2C
- 	depends on SND_SOC_MT8183
- 	select SND_SOC_MT6358
- 	select SND_SOC_MAX98357A
+ 	if (!hcd) {
+-		dev_err(dev, "%s: No plalform data\n", __func__);
++		dev_err(dev, "%s: No platform data\n", __func__);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.20.1
 
