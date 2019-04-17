@@ -2,312 +2,117 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4A3C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25601C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B683217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FA7217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I8p1T7Pr"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="dhwxYMe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732854AbfDQQlc (ORCPT
+        id S1732890AbfDQQmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:41:32 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40614 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730463AbfDQQlb (ORCPT
+        Wed, 17 Apr 2019 12:42:17 -0400
+Received: from sonic313-21.consmr.mail.bf2.yahoo.com ([74.6.133.195]:38290
+        "EHLO sonic313-21.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732476AbfDQQmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:41:31 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3HGfDpa020246;
-        Wed, 17 Apr 2019 11:41:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555519273;
-        bh=SbKLBgonrgbeQRScPLBMMyYLobaxtZC1iGAqRwElC8g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=I8p1T7PrLFv5UcxWbIYLz68Ouqv/aBwHjdTb0hNxb8MOqbFRsPWMWnv3/Tij386Nd
-         lfKduQ6dQXP+Ppq12iNpJ6rAB+ASIvXFrd3Wh+LZJq5lAOdAcHr6/WcIjquhfR83ER
-         +eDmvMWl0LnGPu32kFtfw8FKIHYjCVa7mhjGLAJw=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3HGfDKA019494
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Apr 2019 11:41:13 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Apr 2019 11:41:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Apr 2019 11:41:13 -0500
-Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3HGfCj7097055;
-        Wed, 17 Apr 2019 11:41:13 -0500
-Subject: Re: [PATCH v4 3/3] backlight: lm3630a: add firmware node support
-To:     Brian Masney <masneyb@onstation.org>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
-        <robh+dt@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <jonathan@marek.ca>
-References: <20190416235350.13742-1-masneyb@onstation.org>
- <20190416235350.13742-4-masneyb@onstation.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4dcd4b39-e7f8-f1c7-92df-6f09e98cf1be@ti.com>
-Date:   Wed, 17 Apr 2019 11:41:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Wed, 17 Apr 2019 12:42:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1555519334; bh=3MM2CWsG+1KZRItt9dOySsdZCX9P8oSLNsyZBeCppkY=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=dhwxYMe/fWjUCSTCdw2AIWWaJWlbA6Flo+q1btTqFPC+OcthqRw+dGgYRtdAtxX9I9xDdpcaArGzhAacD9s1cOXDRbE0xREUUCZHdebSkbbDeiq3GOUULngJJ60n6307gtVEy67W9VEZhdFBKEi1QXPBXd1AU76sFyl+VStdTH9i0oyKM+ers/ayZOG1Ju8/7jhTqZwUDljGOs7HTWfH6aO+4d+ffYuclowIx+j4RTCZJQwb2A2kRCbricB83RHH65EG6+1IUWlH/yewJgEJXsGXJ4VkqfclQ9v+pdWTTzJytWJNk7z3rPPgBNO/5PJrsoqb4uW5X8yXDZ94EEMp0Q==
+X-YMail-OSG: K.6GFc0VM1neswhz_haptv_iiR9K5VoKZAPX0yN8uXKjWPnOLTONSKvQ0Mn_YsP
+ HoA3Zg8hzAXK18DPM_zyPUMZOj7S6Pzn75nABZeQM6N7f.bjZfn.2sjWQD_ES83bwW7XQoK9Lnk5
+ 36jOXpiYteMVbMQJgvTYo2CLYuTUXf1Jv_4zTmatAOkE_dfolIR1yhXBaLl0jD1d3f5KECE0iC3n
+ beYuxI3n.q474NSfnLrAR8UNSOalHtfnAYTNZ9haWRMzi4s_2hCcUU3msHiTBRgouPUvQ8_NHvvd
+ W1Ejv.9UMZYb2PXlOb6FCmExvCzsmEiBAQmpafsTsrEPY8LyP3N0JyCCGuqMf06TV.D8aWEGA.wH
+ O8GFI1c5BoL_CzAOT0qplVVC.hALu3a3Uw4kdfKdpOKnMug1I3hQ5IUNgjGgjz_w9ZwfY.prBBZV
+ P4e34u0hm7Q6A6efeTiolGh3k2yQCOyCekS0b0dPVvRqNqtxueAAQQfEDzCrI3c_5bheZBT8c4hz
+ 1T07NCuhf3PXhqDdG4td8bI.NmhNM9rLVpY.q.JUB5hoTuOrXf2E_n4C4XBvJZu9rZFsJJSg8GTZ
+ ZzcT75hiVElgWHZFgXq9aHXk29gf.QTvBfvuXMUbHWxJifuZjW2jvPBBFDfmDqNm.w2o5Fozqgk2
+ PmMGzIQuOkvjVBzI82zQP3SAqpFVpU0gHw_2G.vKe99t.xnw0ljRNp70ixlCbY2MOa4L8bAUJYYF
+ ujTasSnMHJ9wJMiaKT3Mk0kZnT01.5IaYdJ9udw4L8rjYpZgqtczI7Gf_sAVJMz0dGFB_Y6cIWog
+ a7BdFz6EPTJxe3_r7oPhV_9KWeJdLtXPna3bDrdQK2LcuIL7Ly_ixoYdZAiSZ45U7ecoAdYFDf2Q
+ 520zsc3tOBEi3wD.cNEYsLDVZRgAjUxZZQ0cgJY2_sWCqmRADpZT8N8VvAW4PmB9Gb3HFX1uLirG
+ XS.Kay4SeDHb46ykVWLrPDEkkwDeFsGFGC6zGAP0jbOHWng5ST1egesDhUK4OA2WcrfZYh_jEg6V
+ _PErPOO_QR8bLw5mYUYyTuL1AEvUGO4DqSZQTr3ag_TCYvBZ0maPg5CWaHijgNJjy6j.vfgqM0_k
+ 2h93U16lBlR7XaqxGpfBxQmNu4A--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.bf2.yahoo.com with HTTP; Wed, 17 Apr 2019 16:42:14 +0000
+Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
+          by smtp412.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1f1ffef23e024c3542d30848c732eedf;
+          Wed, 17 Apr 2019 16:42:13 +0000 (UTC)
+Subject: Re: kernel BUG at kernel/cred.c:434!
+To:     Oleg Nesterov <oleg@redhat.com>, Paul Moore <paul@paul-moore.com>
+Cc:     "chengjian (D)" <cj.chengjian@huawei.com>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SELinux <selinux@vger.kernel.org>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        casey@schaufler-ca.com
+References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
+ <20190415134331.GC22204@redhat.com>
+ <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
+ <20190415150520.GA13257@redhat.com>
+ <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
+ <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
+ <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
+ <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
+ <20190417145711.GI32622@redhat.com>
+ <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
+ <20190417162723.GK32622@redhat.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <939a45a6-fc1b-0ac3-759b-0e7c3ce3d670@schaufler-ca.com>
+Date:   Wed, 17 Apr 2019 09:42:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190416235350.13742-4-masneyb@onstation.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20190417162723.GK32622@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian
+On 4/17/2019 9:27 AM, Oleg Nesterov wrote:
+> On 04/17, Paul Moore wrote:
+>> On Wed, Apr 17, 2019 at 10:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>>> On 04/17, Paul Moore wrote:
+>>>> I'm tempted to simply return an error in selinux_setprocattr() if
+>>>> the task's credentials are not the same as its real_cred;
+>>> What about other modules? I have no idea what smack_setprocattr() is,
+>>> but it too does prepare_creds/commit creds.
+>>>
+>>> it seems that the simplest workaround should simply add the additional
+>>> cred == real_cred into proc_pid_attr_write().
+>> Yes, that is simple, but I worry about what other LSMs might want to
+>> do.  While I believe failing if the effective creds are not the same
+>> as the real_creds is okay for SELinux (possibly Smack too), I worry
+>> about what other LSMs may want to do.  After all,
+>> proc_pid_attr_write() doesn't change the the creds itself, that is
+>> something the specific LSMs do.
+> Yes, but if proc_pid_attr_write() is called with cred != real_cred then
+> something is already wrong?
+>
+> In fact, I think that something is already wrong if it is not called by
+> user-space directly. Too late to ask, but why is this /proc/self/attr/
+> magic not implemented via syscall(s) ?
 
-On 4/16/19 6:53 PM, Brian Masney wrote:
-> Add fwnode support to the lm3630a driver and optionally allow
-> configuring the label, default brightness level, and maximum brightness
-> level. The two outputs can be controlled by bank A and B independently
-> or bank A can control both outputs.
-> 
-> If the platform data was not configured, then the driver defaults to
-> enabling both banks. This patch changes the default value to disable
-> both banks before parsing the firmware node so that just a single bank
-> can be enabled if desired. There are no in-tree users of this driver.
-> 
-> Driver was tested on a LG Nexus 5 (hammerhead) phone.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Changes since v3
-> - Add support for label
-> - Changed lm3630a_parse_node() to return -ENODEV if no nodes were found
-> - Remove LM3630A_LED{A,B}_DISABLE
-> - Add two additional newlines for code readability
-> - Remove extra newline
-> 
-> Changes since v2
-> - Separated out control banks and outputs via the reg and led-sources
->   properties.
-> - Use fwnode instead of of API
-> - Disable both banks by default before calling lm3630a_parse_node()
-> - Add lots of error handling
-> - Check for duplicate source / bank definitions
-> - Remove extra ;
-> - Make probe() method fail if fwnode parsing fails.
-> 
->  drivers/video/backlight/lm3630a_bl.c     | 147 ++++++++++++++++++++++-
->  include/linux/platform_data/lm3630a_bl.h |   4 +
->  2 files changed, 146 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index ef2553f452ca..6d3c54bfbb10 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -329,15 +329,17 @@ static const struct backlight_ops lm3630a_bank_b_ops = {
->  
->  static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
->  {
-> -	struct backlight_properties props;
->  	struct lm3630a_platform_data *pdata = pchip->pdata;
-> +	struct backlight_properties props;
-> +	const char *label;
->  
->  	props.type = BACKLIGHT_RAW;
->  	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
->  		props.brightness = pdata->leda_init_brt;
->  		props.max_brightness = pdata->leda_max_brt;
-> +		label = pdata->leda_label ? pdata->leda_label : "lm3630a_leda";
->  		pchip->bleda =
-> -		    devm_backlight_device_register(pchip->dev, "lm3630a_leda",
-> +		    devm_backlight_device_register(pchip->dev, label,
->  						   pchip->dev, pchip,
->  						   &lm3630a_bank_a_ops, &props);
->  		if (IS_ERR(pchip->bleda))
-> @@ -348,8 +350,9 @@ static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
->  	    (pdata->ledb_ctrl != LM3630A_LEDB_ON_A)) {
->  		props.brightness = pdata->ledb_init_brt;
->  		props.max_brightness = pdata->ledb_max_brt;
-> +		label = pdata->ledb_label ? pdata->ledb_label : "lm3630a_ledb";
->  		pchip->bledb =
-> -		    devm_backlight_device_register(pchip->dev, "lm3630a_ledb",
-> +		    devm_backlight_device_register(pchip->dev, label,
->  						   pchip->dev, pchip,
->  						   &lm3630a_bank_b_ops, &props);
->  		if (IS_ERR(pchip->bledb))
-> @@ -364,6 +367,129 @@ static const struct regmap_config lm3630a_regmap = {
->  	.max_register = REG_MAX,
->  };
->  
-> +/**
-> + * lm3630a_parse_led_sources - Parse the optional led-sources fwnode property.
-> + * @node: firmware node
-> + * @default_bitmask: bitmask to return if the led-sources property was not
-> + *                   specified
-> + *
-> + * Parses the optional led-sources firmware node and returns a bitmask that
-> + * contains the outputs that are associated with the control bank. If the
-> + * property is missing, then the value of of @default_bitmask will be returned.
-> + */
+Shell scripts, for one thing. It's a straightforward and appropriate
+use of the /proc interface. System calls would require additional change
+to existing programs, whereas using the /proc interface allows a good
+deal to be done in the containing scripts.
+  
 
-Not sure if this was intentional but you documented this interface you added but the others
-you did not.  If you need to explain what this is doing then the code may not be clear or the DT
-doc is not explicit enough.
-
-> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
-> +				     int default_bitmask)
-> +{
-> +	int ret, num_sources, i;
-> +	u32 sources[2];
-> +
-> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
-> +						     0);
-> +	if (num_sources < 0)
-> +		return default_bitmask;
-> +	else if (num_sources > ARRAY_SIZE(sources))
-> +		return -EINVAL;
-> +
-> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
-> +					     num_sources);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = 0;
-
-This is unneeded since fwnode should return 0 on success if it gets here
-
-> +	for (i = 0; i < num_sources; i++) {
-> +		if (sources[i] < 0 || sources[i] > 1)
-> +			return -EINVAL;
-> +
-> +		ret |= BIT(sources[i]);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int lm3630a_parse_node(struct lm3630a_chip *pchip,
-> +			      struct lm3630a_platform_data *pdata)
-> +{
-> +	int led_sources, ret = -ENODEV, seen = 0;
-> +	struct fwnode_handle *node;
-> +	const char *label;
-> +	u32 bank, val;
-> +	bool linear;
-> +
-> +	device_for_each_child_node(pchip->dev, node) {
-> +		ret = fwnode_property_read_u32(node, "reg", &bank);
-> +		if (ret < 0)
-
-if (ret) should be fine here.
-
-> +			return ret;
-> +
-> +		if (bank < 0 || bank > 1)
-
-maybe define the banks 
-
-#define LM3630A_BANK_0	0
-#define LM3630A_BANK_1	1
-
-So it is clear in the code what are the limits to the condition.
-
-if (bank < LM3630A_BANK_0 || bank > LM3630A_BANK_1)
-
-> +			return -EINVAL;
-> +
-> +		if (seen & BIT(bank))
-> +			return -EINVAL;
-> +
-> +		seen |= BIT(bank);
-> +
-> +		led_sources = lm3630a_parse_led_sources(node, BIT(bank));
-> +		if (led_sources < 0)
-> +			return led_sources;
-> +
-> +		linear = fwnode_property_read_bool(node,
-> +						   "ti,linear-mapping-mode");
-> +		if (bank == 0) {
-
-This may be nitpicky but what if you flip the if..else and do
-You have already validated bank to be within range.
-
-if(bank)
-	ledb work
-else
-	leda work
-
-> +			if (!(led_sources & BIT(0)))
-> +				return -EINVAL;
-> +
-> +			pdata->leda_ctrl = linear ?
-> +				LM3630A_LEDA_ENABLE_LINEAR :
-> +				LM3630A_LEDA_ENABLE;
-> +
-> +			if (led_sources & BIT(1)) {
-> +				if (seen & BIT(1))
-> +					return -EINVAL;
-> +
-> +				seen |= BIT(1);
-> +
-> +				pdata->ledb_ctrl = LM3630A_LEDB_ON_A;
-> +			}
-> +		} else {
-> +			if (led_sources & BIT(0) || !(led_sources & BIT(1)))
-> +				return -EINVAL;
-> +
-> +			pdata->ledb_ctrl = linear ?
-> +				LM3630A_LEDB_ENABLE_LINEAR :
-> +				LM3630A_LEDB_ENABLE;
-> +		}
-> +
-> +		ret = fwnode_property_read_string(node, "label", &label);
-> +		if (!ret) {
-> +			if (bank == 0)
-> +				pdata->leda_label = label;
-> +			else
-> +				pdata->ledb_label = label;
-> +		}
-> +
-> +		ret = fwnode_property_read_u32(node, "default-brightness",
-> +					       &val);
-> +		if (!ret) {
-> +			if (bank == 0)
-> +				pdata->leda_init_brt = val;
-> +			else
-> +				pdata->ledb_init_brt = val;
-> +		}
-> +
-> +		ret = fwnode_property_read_u32(node, "max-brightness", &val);
-> +		if (!ret) {
-> +			if (bank == 0)
-> +				pdata->leda_max_brt = val;
-> +			else
-> +				pdata->ledb_max_brt = val;
-> +		}
-> +
-> +		ret = 0;
-
-Maybe this could be
-
-if (ret)
-	ret = 0;
-else
-	do bank work.
-
-Dan
-
-<snip>
