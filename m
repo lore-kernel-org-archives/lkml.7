@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852ADC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83832C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A2C20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C6920835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfDQH4F (ORCPT
+        id S1731515AbfDQH4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:56:05 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47989 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729328AbfDQH4D (ORCPT
+        Wed, 17 Apr 2019 03:56:10 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46893 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729328AbfDQH4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:56:03 -0400
+        Wed, 17 Apr 2019 03:56:08 -0400
 X-Originating-IP: 90.88.160.238
 Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 62634C000F;
-        Wed, 17 Apr 2019 07:56:00 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id AFBB7FF802;
+        Wed, 17 Apr 2019 07:56:02 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Daniel Vetter <daniel.vetter@intel.com>,
         David Airlie <airlied@linux.ie>,
@@ -39,9 +39,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
-Subject: [PATCH 13/20] drm/msm: Convert to generic image format library
-Date:   Wed, 17 Apr 2019 09:54:39 +0200
-Message-Id: <4956babf82a2ed9508b96d188d285287c088b251.1555487650.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 15/20] drm/rockchip: Convert to generic image format library
+Date:   Wed, 17 Apr 2019 09:54:41 +0200
+Message-Id: <6f47fce6f111d0d915dc155152e92060c7ea26f9.1555487650.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
 References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
@@ -57,172 +57,29 @@ use it so that we can deprecate the old DRM one.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c |  6 ++++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c   |  3 ++-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c   |  5 +++--
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c  |  9 +++++----
- drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c    |  5 +++--
- 5 files changed, 17 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-index c3d491e8d44b..94fc4330b6de 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-@@ -12,6 +12,8 @@
- 
- #define pr_fmt(fmt)	"[drm:%s:%d] " fmt, __func__, __LINE__
- 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index 345d5cb5e956..bbd82c986b57 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -29,6 +29,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
 +#include <linux/image-formats.h>
-+
- #include <uapi/drm/drm_fourcc.h>
- 
- #include "msm_media_info.h"
-@@ -1040,7 +1042,7 @@ int dpu_format_check_modified_format(
- 		const struct drm_mode_fb_cmd2 *cmd,
- 		struct drm_gem_object **bos)
- {
--	const struct drm_format_info *info;
-+	const struct image_format_info *info;
- 	const struct dpu_format *fmt;
- 	struct dpu_hw_fmt_layout layout;
- 	uint32_t bos_total_size = 0;
-@@ -1052,7 +1054,7 @@ int dpu_format_check_modified_format(
- 	}
- 
- 	fmt = to_dpu_format(msm_fmt);
--	info = drm_format_info(fmt->base.pixel_format);
-+	info = image_format_drm_lookup(fmt->base.pixel_format);
- 	if (!info)
- 		return -EINVAL;
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 7994de952353..b22d350c7537 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -20,6 +20,7 @@
- 
- #include <linux/debugfs.h>
- #include <linux/dma-buf.h>
-+#include <linux/image-formats.h>
- 
- #include <drm/drm_atomic_uapi.h>
- 
-@@ -557,7 +558,7 @@ static void _dpu_plane_setup_scaler(struct dpu_plane *pdpu,
- 		struct dpu_plane_state *pstate,
- 		const struct dpu_format *fmt, bool color_fill)
- {
--	const struct drm_format_info *info = drm_format_info(fmt->base.pixel_format);
-+	const struct image_format_info *info = image_format_drm_lookup(fmt->base.pixel_format);
- 
- 	/* don't chroma subsample if decimating */
- 	/* update scaler. calculate default config for QSEED3 */
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-index a565dccaba3a..ef71dde2a3b6 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-@@ -16,6 +16,7 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/image-formats.h>
- #include <linux/sort.h>
- #include <drm/drm_mode.h>
- #include <drm/drm_crtc.h>
-@@ -782,7 +783,7 @@ static void get_roi(struct drm_crtc *crtc, uint32_t *roi_w, uint32_t *roi_h)
- 
- static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
- {
--	const struct drm_format_info *info = drm_format_info(DRM_FORMAT_ARGB8888);
-+	const struct image_format_info *info = image_format_drm_lookup(DRM_FORMAT_ARGB8888);
- 	struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
- 	struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
- 	struct mdp5_kms *mdp5_kms = get_kms(crtc);
-@@ -801,7 +802,7 @@ static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
- 	width = mdp5_crtc->cursor.width;
- 	height = mdp5_crtc->cursor.height;
- 
--	stride = width * drm_format_info_plane_cpp(info, 0);
-+	stride = width * image_format_info_plane_cpp(info, 0);
- 
- 	get_roi(crtc, &roi_w, &roi_h);
- 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-index 9d9fb6c5fd68..00091637a00c 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-@@ -17,6 +17,7 @@
-  */
- 
- #include <drm/drm_print.h>
-+#include <linux/image-formats.h>
- #include "mdp5_kms.h"
- 
- struct mdp5_plane {
-@@ -650,7 +651,7 @@ static int calc_scalex_steps(struct drm_plane *plane,
- 		uint32_t pixel_format, uint32_t src, uint32_t dest,
- 		uint32_t phasex_steps[COMP_MAX])
+ #include <linux/iopoll.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -317,7 +318,7 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+ 			     uint32_t src_w, uint32_t src_h, uint32_t dst_w,
+ 			     uint32_t dst_h, uint32_t pixel_format)
  {
 -	const struct drm_format_info *info = drm_format_info(pixel_format);
 +	const struct image_format_info *info = image_format_drm_lookup(pixel_format);
- 	struct mdp5_kms *mdp5_kms = get_kms(plane);
- 	struct device *dev = mdp5_kms->dev->dev;
- 	uint32_t phasex_step;
-@@ -673,7 +674,7 @@ static int calc_scaley_steps(struct drm_plane *plane,
- 		uint32_t pixel_format, uint32_t src, uint32_t dest,
- 		uint32_t phasey_steps[COMP_MAX])
- {
--	const struct drm_format_info *info = drm_format_info(pixel_format);
-+	const struct image_format_info *info = image_format_drm_lookup(pixel_format);
- 	struct mdp5_kms *mdp5_kms = get_kms(plane);
- 	struct device *dev = mdp5_kms->dev->dev;
- 	uint32_t phasey_step;
-@@ -695,7 +696,7 @@ static int calc_scaley_steps(struct drm_plane *plane,
- static uint32_t get_scale_config(const struct mdp_format *format,
- 		uint32_t src, uint32_t dst, bool horz)
- {
--	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
-+	const struct image_format_info *info = image_format_drm_lookup(format->base.pixel_format);
- 	bool scaling = format->is_yuv ? true : (src != dst);
- 	uint32_t sub;
- 	uint32_t ya_filter, uv_filter;
-@@ -750,7 +751,7 @@ static void mdp5_write_pixel_ext(struct mdp5_kms *mdp5_kms, enum mdp5_pipe pipe,
- 	uint32_t src_w, int pe_left[COMP_MAX], int pe_right[COMP_MAX],
- 	uint32_t src_h, int pe_top[COMP_MAX], int pe_bottom[COMP_MAX])
- {
--	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
-+	const struct image_format_info *info = image_format_drm_lookup(format->base.pixel_format);
- 	uint32_t lr, tb, req;
- 	int i;
- 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-index 1ca294694597..05fbf1028c78 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-@@ -16,6 +16,7 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/image-formats.h>
- #include <drm/drm_util.h>
- 
- #include "mdp5_kms.h"
-@@ -127,7 +128,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
- 		const struct mdp_format *format,
- 		u32 width, bool hdecim)
- {
--	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
-+	const struct image_format_info *info = image_format_drm_lookup(format->base.pixel_format);
- 	struct mdp5_kms *mdp5_kms = get_kms(smp);
- 	int rev = mdp5_cfg_get_hw_rev(mdp5_kms->cfg);
- 	int i, hsub, nplanes, nlines;
-@@ -158,7 +159,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
- 	for (i = 0; i < nplanes; i++) {
- 		int n, fetch_stride, cpp;
- 
--		cpp = drm_format_info_plane_cpp(info, i);
-+		cpp = image_format_info_plane_cpp(info, i);
- 		fetch_stride = width * cpp / (i ? hsub : 1);
- 
- 		n = DIV_ROUND_UP(fetch_stride * nlines, smp->blk_size);
+ 	uint16_t yrgb_hor_scl_mode, yrgb_ver_scl_mode;
+ 	uint16_t cbcr_hor_scl_mode = SCALE_NONE;
+ 	uint16_t cbcr_ver_scl_mode = SCALE_NONE;
 -- 
 git-series 0.9.1
