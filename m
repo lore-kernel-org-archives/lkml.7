@@ -2,130 +2,165 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34499C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C12C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D33B20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F4C20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EbwD63oY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732206AbfDQMjl (ORCPT
+        id S1732080AbfDQMlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:39:41 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:55957 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732049AbfDQMjk (ORCPT
+        Wed, 17 Apr 2019 08:41:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56960 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731116AbfDQMlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:39:40 -0400
-Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1DA81240010;
-        Wed, 17 Apr 2019 12:39:36 +0000 (UTC)
-Message-ID: <9747977af63d2cb66a51e18ce5e545ed99803718.camel@bootlin.com>
-Subject: Re: [PATCH 19/20] lib: image-formats: Add more functions
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Date:   Wed, 17 Apr 2019 14:39:36 +0200
-In-Reply-To: <382f72c5938f538c8489cb2032050f4be252ad59.1555487650.git-series.maxime.ripard@bootlin.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
-         <382f72c5938f538c8489cb2032050f4be252ad59.1555487650.git-series.maxime.ripard@bootlin.com>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Wed, 17 Apr 2019 08:41:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Scf1hgxEroll7UaToVD0vun2XTKpeoNuRd68nAKetg0=; b=EbwD63oYaJpeM/Ji2bEKEq43j
+        jpQCqgGx4qjhgDWHwG1Msf0DyYPHLqOeuYWQjOrKd2JdzjHaan6kaqjXxW14vrMdLdXg7rPX7LwRg
+        aTqI7w5x7kM4yFs+jc9VfqQoMJyRd99/cki85FQnZFNgej5CO0WA5xe5p29m0XTiUPc3UEuFho/Vt
+        aEBFwZOq6ougeaAQh5NKQPCoHOprv0TDKeuM67ETY5ZYrvGErpzEmZ1Bq6XyOHt37o+79+PyKc+bD
+        b3mT5pn/J77vI4sgt7D6p0F9BmzTEftXGj09tQ/V8T+sAYJynWeKYUw7Vc7JkPDBQL85mwXTl0+mj
+        WgvrNjOPw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGjs8-0002IG-34; Wed, 17 Apr 2019 12:41:04 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2E64029B87EBC; Wed, 17 Apr 2019 14:41:01 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 14:41:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 08/16] locking/rwsem: Make rwsem_spin_on_owner()
+ return owner state
+Message-ID: <20190417124101.GE4038@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-9-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413172259.2740-9-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Apr 13, 2019 at 01:22:51PM -0400, Waiman Long wrote:
+> In the special case that there is no active lock and the handoff bit
+> is set, optimistic spinning has to be stopped.
 
-On Wed, 2019-04-17 at 09:54 +0200, Maxime Ripard wrote:
-> V4L2 drivers typically need a few more helpers compared to DRM drivers, so
-> let's add them.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  include/linux/image-formats.h | 42 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
-> index b78b8e861fc9..a2cf3528bd31 100644
-> --- a/include/linux/image-formats.h
-> +++ b/include/linux/image-formats.h
-> @@ -388,6 +388,48 @@ uint64_t image_format_info_min_pitch(const struct image_format_info *info,
->  			    image_format_info_block_height(info, plane));
->  }
+> @@ -500,9 +521,19 @@ static noinline bool rwsem_spin_on_owner(struct rw_semaphore *sem)
 >  
-> +/**
-> + * image_format_info_plane_stride - determine the stride value
-> + * @format: pointer to the image_format_info
-> + * @width: plane width
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The bytes per pixel value for the specified plane.
-
-Looks like this needs to be updated to "bytes per line" ;)
-
-Cheers,
-
-Paul
-
-> + */
-> +static inline
-> +unsigned int image_format_info_plane_stride(const struct image_format_info *format,
-> +					    unsigned int width, int plane)
-> +{
-> +	if (!format || plane >= format->num_planes)
-> +		return 0;
+>  	/*
+>  	 * If there is a new owner or the owner is not set, we continue
+> -	 * spinning.
+> +	 * spinning except when here is no active locks and the handoff bit
+> +	 * is set. In this case, we have to stop spinning.
+>  	 */
+> -	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
+> +	owner = READ_ONCE(sem->owner);
+> +	if (!is_rwsem_owner_spinnable(owner))
+> +		return OWNER_NONSPINNABLE;
+> +	if (owner && !is_rwsem_owner_reader(owner))
+> +		return OWNER_WRITER;
 > +
-> +	return image_format_info_plane_width(format, width, plane) *
-> +		image_format_info_plane_cpp(format, plane);
-> +}
-> +
-> +/**
-> + * image_format_info_plane_size - determine the size value
-> + * @format: pointer to the image_format_info
-> + * @width: plane width
-> + * @height: plane width
-> + * @plane: plane index
-> + *
-> + * Returns:
-> + * The size of the plane buffer.
-> + */
-> +static inline
-> +unsigned int image_format_info_plane_size(const struct image_format_info *format,
-> +					  unsigned int width, unsigned int height,
-> +					  int plane)
-> +{
-> +	if (!format || plane >= format->num_planes)
-> +		return 0;
-> +
-> +	return image_format_info_plane_stride(format, width, plane) *
-> +		image_format_info_plane_height(format, height, plane);
-> +}
-> +
->  const struct image_format_info *__image_format_drm_lookup(u32 drm);
->  const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
->  const struct image_format_info *image_format_drm_lookup(u32 drm);
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> +	count = atomic_long_read(&sem->count);
+> +	if (RWSEM_COUNT_HANDOFF(count) && !RWSEM_COUNT_LOCKED(count))
+> +		return OWNER_NONSPINNABLE;
+> +	return !owner ? OWNER_NULL : OWNER_READER;
+>  }
 
+So this fixes a straight up bug in the last patch (and thus should be
+done before so the bug never exists), and creates unreadable code while
+at it.
+
+Also, I think only checking HANDOFF after the loop is wrong; the moment
+HANDOFF happens you have to terminate the loop, irrespective of what
+@owner does.
+
+Does something like so work?
+
+---
+
+enum owner_state {
+	OWNER_NULL		= 1 << 0,
+	OWNER_WRITER		= 1 << 1,
+	OWNER_READER		= 1 << 2,
+	OWNER_NONSPINNABLE	= 1 << 3,
+};
+#define OWNER_SPINNABLE		(OWNER_NULL | OWNER_WRITER)
+
+static inline enum owner_state rwsem_owner_state(unsigned long owner)
+{
+	if (!owner)
+		return OWNER_NULL;
+
+	if (owner & RWSEM_ANONYMOUSLY_OWNED)
+		return OWNER_NONSPINNABLE;
+
+	if (owner & RWSEM_READER_OWNER)
+		return OWNER_READER;
+
+	return OWNER_WRITER;
+}
+
+static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+{
+	struct task_struct *tmp, *owner = READ_ONCE(sem->owner);
+	enum owner_state state;
+
+	rcu_read_lock();
+	for (;;) {
+		state = rwsem_owner_state((unsigned long)owner);
+		if (!(state & OWNER_SPINNABLE))
+			break;
+
+		if (atomic_long_read(&sem->count) & RWSEM_FLAG_HANDOFF) {
+			state = OWNER_NONSPINNABLE;
+			break;
+		}
+
+		tmp = READ_ONCE(sem->owner);
+		if (tmp != owner) {
+			state = rwsem_owner_state((unsigned long)tmp);
+			break;
+		}
+
+		/*
+		 * Ensure we emit the owner->on_cpu, dereference _after_
+		 * checking sem->owner still matches owner, if that fails,
+		 * owner might point to free()d memory, if it still matches,
+		 * the rcu_read_lock() ensures the memory stays valid.
+		 */
+		barrier();
+
+		if (need_resched() || !owner_on_cpu(owner)) {
+			state = OWNER_NONSPINNABLE;
+			break;
+		}
+
+		cpu_relax();
+	}
+	rcu_read_unlock();
+
+	return state;
+}
