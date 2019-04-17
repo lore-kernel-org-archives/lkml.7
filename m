@@ -2,109 +2,73 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915EEC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADB7C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6816721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2844B20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731708AbfDQKBM (ORCPT
+        id S1730023AbfDQKDh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:01:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57332 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726237AbfDQKBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:01:10 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BF07530ADBCD;
-        Wed, 17 Apr 2019 10:01:09 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-219.str.redhat.com [10.33.192.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FE8D5D6A6;
-        Wed, 17 Apr 2019 10:01:04 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
-References: <20181212081712.32347-1-mic@digikod.net> <3452959.b6JmBh7Lnt@x2>
-        <87wojuxj8s.fsf@oldenburg2.str.redhat.com> <2361288.r9sZr2NHLB@x2>
-Date:   Wed, 17 Apr 2019 12:01:03 +0200
-In-Reply-To: <2361288.r9sZr2NHLB@x2> (Steve Grubb's message of "Tue, 16 Apr
-        2019 11:34:07 -0400")
-Message-ID: <875zrd7xy8.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 17 Apr 2019 06:03:37 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37727 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfDQKDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:03:37 -0400
+X-Originating-IP: 90.88.160.238
+Received: from xps13 (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 521AEE000E;
+        Wed, 17 Apr 2019 10:03:34 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 12:03:33 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "richard@nod.at" <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/7] mtd: rawnand: Always store info about bad block
+ markers in chip struct
+Message-ID: <20190417120333.3dc535e3@xps13>
+In-Reply-To: <20190218104122.18788-2-frieder.schrempf@kontron.de>
+References: <20190218104122.18788-1-frieder.schrempf@kontron.de>
+        <20190218104122.18788-2-frieder.schrempf@kontron.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 17 Apr 2019 10:01:10 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Steve Grubb:
+Hi Frieder,
 
-> On Tuesday, April 16, 2019 7:49:39 AM EDT Florian Weimer wrote:
->> * Steve Grubb:
->> > This flag that is being proposed means that you would have to patch all
->> > interpreters to use it. If you are sure that upstreams will accept that,
->> > why not just change the policy to interpreters shouldn't execute
->> > anything unless the execute bit is set? That is simpler and doesn't need
->> > a kernel change. And setting the execute bit is an auditable event.
->> 
->> I think we need something like O_MAYEXEC so that security policies can
->> be enforced and noexec mounts can be detected.
->
-> Application whitelisting can already today stop unknown software without 
-> needing O_MAYEXEC.
+Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Mon, 18 Feb
+2019 10:42:39 +0000:
 
-I'm somewhat interested in using this to add a proper check for
-executability to explicit dynamic loader invocations.  In other words,
-this
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The information about where the manufacturer puts the bad block
+> markers inside the bad block and in the OOB data is stored in
+> different places. Let's move this information to nand_chip.options
+> and nand_chip.badblockpos.
+> 
+> As this chip-specific information is not directly related to the
+> bad block table (BBT), we also rename the flags to NAND_BBM_*.
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-  /lib64/ld-linux-x86-64.so.2 /path/to/noexec/fs/program
-
-should refuse to run the program if the program is located on a file
-system mounted with the noexec attribute.
-
-> The problem is that passing O_MAYEXEC is opt-in. You can use ptrace/seccomp/
-> bpf/LD_PRELOAD/LD_AUDIT to remove that bit from an otherwise normal program. 
-> This does not require privs to do so.
-
-That doesn't really help with the above.
-
-> But let's consider that this comes to pass and every interpreter is
-> updated and IMA can see the O_MAYEXEC flag. Attackers now simply pivot
-> to running programs via stdin. It never touches disk and therefore
-> nothing enforces security policy. This already is among the most
-> common ways that malware runs today to evade detection.
-
-Are you referring to Windows malware using Powershell?
-
-I'm not sure this is applicable to Linux.  We do not have much
-behavioral monitoring anyway.
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Thanks,
-Florian
+Miquèl
