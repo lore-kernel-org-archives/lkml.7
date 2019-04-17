@@ -2,159 +2,82 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DFDC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F18C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4401920674
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A19620674
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/LQaQ3X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GMU/Fv+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731878AbfDQSRJ (ORCPT
+        id S1731345AbfDQSTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:17:09 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43545 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731553AbfDQSRI (ORCPT
+        Wed, 17 Apr 2019 14:19:50 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60554 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfDQSTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:17:08 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j20so11593951edq.10;
-        Wed, 17 Apr 2019 11:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AJeTHwTwb8vGBxNBrIwAiVdkarwJcmD/pjQiHsFA/Pg=;
-        b=g/LQaQ3XnSfnvEkYz3R3Bk4l1neiwGVlUXXoCOYH7KvHki2CTiX3ClcQFGMvJihAyk
-         O+jqyp/iq6OGms/gOIhLyAeKxLv2hSAALia2LJGHSfCWYGvBkY+U7qBycTn0B8cO1rm8
-         03qFMvdqpPO3D9C1PlQHw6OmC3fIZjB2dpWusn5TAuQZ/SrUHAeXG9Bjg9WaRKUnjoI0
-         udeLcbgXaA+dMod3HS9orKM2qeoZkKNEYjcSAFqz7jmPB9sX2r9H6ruFHJHRkwOrEF4J
-         QVbIicOk8pa0Ey2nJuK+mzzS6aouBJ3P1Cq4RT5v1sZWx1/FYv7jymomFXQ1GG0wGEHT
-         IFYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AJeTHwTwb8vGBxNBrIwAiVdkarwJcmD/pjQiHsFA/Pg=;
-        b=kQPFqM5Xk2EyH8LyTydw6TtJ0DXolqFLD0dE25X+mW17Qf2zPmseKNYnt/188HGmS4
-         i3eN+iO0TsbcPJ3SCngWLzbfF/18n1VLI4sng3url6UE34Xw2vrt2VqkOTdU3kl8L9Iy
-         lOWMKEQowUu3/p/W5QmQe+AsKUCVfBdl+/Y+KnnP6vKEDzO5fl/vZd8NRldc8z92sRWj
-         ZAgjeiVamIVeFUwwp1Vpo1gg/+P560YXyKKfoKq+PLSgxoWhjGO7jXMpqeVwLAe5tcFf
-         xPo+jCdCjPmftZ99YCFMdLhnfsDt2ZKqqNJuYx8KOMFPAS+ZH1LfcSHOrUXzYF1pLBlj
-         Nzww==
-X-Gm-Message-State: APjAAAVk6EnR1/KwSQexlC7hcoLS1r+lbjCyUUIGp98Lom0NtNoWrnW0
-        LygfVJRFrN4JwMFFBnw9QBN8r6QmEV318ypx6YA5I290
-X-Google-Smtp-Source: APXvYqwJiDXdOD9fDVAYsZiRQUC1Sj7f9Q3QoXOg17bEaAkbsktjWj0BJyElUjYy9qJlMb1C7cYnHj/788fAGR7Ffgg=
-X-Received: by 2002:a17:906:828b:: with SMTP id h11mr47646366ejx.1.1555525025455;
- Wed, 17 Apr 2019 11:17:05 -0700 (PDT)
+        Wed, 17 Apr 2019 14:19:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3qFLY8cDeOYehuBn5cRrDUkDX75dEgaFFdO5IYDJgUY=; b=GMU/Fv+kSMV4z0zGIpaoI09/rI
+        lSrTPyF6uNB6dwNzOiOJWlp9lUlqh+v2MrGu7UmVFFy9SDX8SdIsFhHTS9BgJiXpEVqkM7rBWDzq5
+        nKrhcD3XQanYDFntb/uoK7HsRxsql1bQd7Ak1Ijujg+3WZ9f+5salVpZTwubjEnvtnDL2pCTs5jjy
+        cdsaEfSJ+HiYRdwBGq4gZvBVflTHtrtAVFKoGnkbpjungATbKOpkpc2wuE18fXxu9y9HLTgfb7tpu
+        9qoCm+mr2oC2PPqDczB15GGsvGgRFtcUtke7N7me+QfkjrMMlJrLAj863AatHUqxhaWjGVn+EnJtP
+        D1mtLy3g==;
+Received: from [199.233.58.37] (helo=[10.83.93.157])
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGp9g-0007mL-E5; Wed, 17 Apr 2019 18:19:32 +0000
+Subject: Re: [PATCH -next] ALSA: ps3: Remove set but not used variables
+ 'start_vaddr' and 'pcm_index'
+To:     Yue Haibing <yuehaibing@huawei.com>, perex@perex.cz,
+        tiwai@suse.com, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        alsa-devel@alsa-project.org
+References: <20190417145722.20448-1-yuehaibing@huawei.com>
+From:   Geoff Levand <geoff@infradead.org>
+Message-ID: <1078ccec-2cc9-f16d-caca-32ac9c3cce4d@infradead.org>
+Date:   Wed, 17 Apr 2019 11:19:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190416203620.539628-1-arnd@arndb.de> <CAF=yD-K89Z2ea_iakjfP98GnfU-yXts8LU4GW3Rr_etJ+r92pw@mail.gmail.com>
- <CAK8P3a2z5QT7VooQPytx-C+Z_+kxzqmWmB8x-ow9PaApPuFY8g@mail.gmail.com>
-In-Reply-To: <CAK8P3a2z5QT7VooQPytx-C+Z_+kxzqmWmB8x-ow9PaApPuFY8g@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Wed, 17 Apr 2019 14:16:29 -0400
-Message-ID: <CAF=yD-KCE46P4BniBXM_OgXL8hHwr4U-3hFxXRy70hBkbwY6Kg@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Gerrit Renker <gerrit@erg.abdn.ac.uk>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hams@vger.kernel.org,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-x25@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190417145722.20448-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 12:19 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Apr 17, 2019 at 4:46 PM Willem de Bruijn
-> <willemdebruijn.kernel@gmail.com> wrote:
-> > On Tue, Apr 16, 2019 at 4:38 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > The SIOCGSTAMP/SIOCGSTAMPNS ioctl commands are implemented by many
-> > > socket protocol handlers, and all of those end up calling the same
-> > > sock_get_timestamp()/sock_get_timestampns() helper functions, which
-> > > results in a lot of duplicate code.
-> > >
-> > > With the introduction of 64-bit time_t on 32-bit architectures, this
-> > > gets worse, as we then need four different ioctl commands in each
-> > > socket protocol implementation.
-> > >
-> > > To simplify that, let's add a new .gettstamp() operation in
-> > > struct proto_ops, and move ioctl implementation into the common
-> > > sock_ioctl()/compat_sock_ioctl_trans() functions that these all go
-> > > through.
-> > >
-> > > We can reuse the sock_get_timestamp() implementation, but generalize
-> > > it so it can deal with both native and compat mode, as well as
-> > > timeval and timespec structures.
-> > >
-> > > Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-> > > Link: https://lore.kernel.org/lkml/CAK8P3a038aDQQotzua_QtKGhq8O9n+rdiz2=WDCp82ys8eUT+A@mail.gmail.com/
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > > v2: reworked to not break sparc64 support
-> >
-> > From the discussion of v1 I thought you planned to unconditionally
-> > call sock_gettstamp() for all protocols, avoiding the need to plumb in
-> > all these new callbacks?
-> >
-> > That is more concise, though this closer to the existing behavior. So,
-> > fine either way.
->
-> Thanks for the reminder. I have definitely waited too long before revisiting
-> this series, and only had a vague recollection of that discussion but could
-> not find it in the logs (found it now, and the Link I quoted...).
->
-> I would prefer to get this series into the coming merge window, and
-> probably don't have time to rework it completely by then, so I hope
-> the current version is ok.
+On 4/17/19 7:57 AM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Fixes gcc '-Wunused-but-set-variable' warnings:
+> 
+> sound/ppc/snd_ps3.c: In function 'snd_ps3_program_dma':
+> sound/ppc/snd_ps3.c:236:8: warning: variable 'start_vaddr' set but not used [-Wunused-but-set-variable]
+> sound/ppc/snd_ps3.c: In function 'snd_ps3_pcm_open':
+> sound/ppc/snd_ps3.c:529:6: warning: variable 'pcm_index' set but not used [-Wunused-but-set-variable]
+> 
+> They are never used and can be removed.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  sound/ppc/snd_ps3.c | 4 ----
+>  1 file changed, 4 deletions(-)
 
-Absolutely. This is a great simplification either way.
+Seems OK.  Thanks for submitting.
 
-> I also found your comment on lock_sock(), which could be easily
-> added inside of sock_gettstamp() if you think we should have that.
-
-To remind, the issue is that sock_enable_timestamp should update both
-sk_flags and net_enable_timestamp as one atomic operation, by holding
-the socket lock. The lock is held when called from a setsockopt path.
-And from some ioctl() implementations. The syzkaller reproducer
-triggered through inet_release, so the most widely used paths are
-buggy today.
-
-Since the current state is inconsistent already, we can defer the fix.
-I expect that it is now safe to add a lock around this logic without
-triggering lockdep issues in any of the numerous paths. But just in
-case, it still seems safer to do that in a separate patch that we can
-revert or rework independent from this, if that would prove necessary.
-
-> There is one more issue I just noticed (I dropped the necessary
-> sock_read_timestamp()), so I have to repost the series anyway
-> to fix that.
-
-Instead of reading sk->sk_stamp directly? Yes, makes sense.
+Acked-by: Geoff Levand <geoff@infradead.org>
