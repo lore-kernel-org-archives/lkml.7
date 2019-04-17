@@ -2,241 +2,248 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E315C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFAAC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01735204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2922173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djaC53Ns"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mEuO7uEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbfDQGl7 (ORCPT
+        id S1730832AbfDQGmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 02:41:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:32912 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfDQGl7 (ORCPT
+        Wed, 17 Apr 2019 02:42:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45358 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfDQGmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 02:41:59 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d55so19185400ede.0;
-        Tue, 16 Apr 2019 23:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0AQgQfmPU9nu5iMXDY4QAAQM22/ta3tiiqMeA67DHQQ=;
-        b=djaC53Nsk9F6Xrk2uCNen1+Fv6py1BvtkjOTMBZ0ZiI1HTBzUZZ+jf56O3M+NifqBo
-         20uuvQWELnz2M6u9iw5+N3U57C7tZtG4zn+OlnqSDP8MZXftsVfxpftVSxBFs8EDIUk+
-         Xp1Eo9HFPOs8LzzReK9AfjorQCZIdbhpYyFTuW6RujZAIroLJVLtkuZvxnXnKvdRVJ9V
-         ROaMxpmonCPbUc7pKYrJ26ab/otJPZqSeHLZjNy3Bo54CbhQjjFBwfRJ3227TfFOMdpQ
-         JaqFqUgdT7oc86HSSKLGdlCm0PgXL06B3XoaRzWyO9LrwpyuW18QTLjmUhluodcOPo3v
-         gfxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0AQgQfmPU9nu5iMXDY4QAAQM22/ta3tiiqMeA67DHQQ=;
-        b=KV8AgLqn7/rnM0OePrTH6+f9QcQiL0k6wrzGV7zx9YCc1nppZSFDYYaMPLt3Q9rg8d
-         bpXSeTeq+kkvTsDwiq5TuXVj+Sejgts0SDEe329RBMpdkBKKosB9BBMAy7BQAR0dCk6z
-         DQE01vEZAzhaPChtBfB4JHPOTyIJGuP6E+yGS5otP7xuAd+tKWsiJioFu7bLPxUsuT7T
-         09qgzqtqjyxFC3uKs2k07V4e/n/jRx9qLJr5/UOlZrlQm+TxN6cm4dhWoGXKOA3wJxoD
-         kDoFkrrqOHlvo3AFzbUB+5Y/Zm+EK+31RZeAJyjFb6J94TUKEKGylR3YJJrm/UO0jnqK
-         +nLA==
-X-Gm-Message-State: APjAAAWC0ypfr75AxqOPi9iue0jdFy044nYUsOWQy42a7aK6ErMOPHT4
-        JXqLKs/e5kX/XwK3nAjPPW4=
-X-Google-Smtp-Source: APXvYqz04Nts5+9iZLG49W+anIQjkK2tVefioULMM6bFOnRYnVDzc6jv5tyWTPIVxOh6QFO5mmJ3UQ==
-X-Received: by 2002:aa7:d7d2:: with SMTP id e18mr2127065eds.142.1555483316146;
-        Tue, 16 Apr 2019 23:41:56 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id v24sm6853103ejx.34.2019.04.16.23.41.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Apr 2019 23:41:55 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 23:41:53 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        stable@kernel.org, Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 4.9 72/76] arm64: futex: Fix FUTEX_WAKE_OP atomic ops
- with non-zero result value
-Message-ID: <20190417064153.GA14656@archlinux-i9>
-References: <20190415183707.712011689@linuxfoundation.org>
- <20190415183729.170980546@linuxfoundation.org>
- <20190415220151.GA23056@archlinux-i9>
- <20190416090052.GD4209@kroah.com>
- <20190416164751.GA25801@archlinux-i9>
- <20190417061508.GB18320@kroah.com>
+        Wed, 17 Apr 2019 02:42:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3H6fmWr129340;
+        Wed, 17 Apr 2019 01:41:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555483308;
+        bh=CX9Mf15Q/kbm2U2c86PfEHE3UxyfDhg/x1yJYZHq8IE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mEuO7uElMsrcedYvrbIoLcsrVX3dxJLNsG5L00nZt3KlFG++VD7IW/kXwJhJDM47M
+         ulUnSp6oiE6TLtloSKFfLq6U/GI/Q6Y1U4OtadzdQuCZhl0X3TQRsvvYJpQWkVpr8k
+         W/Z99KaBx5qSxevNz//aSrExAjAPqc49acOgGPjw=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3H6fm87010190
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Apr 2019 01:41:48 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
+ Apr 2019 01:41:47 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 17 Apr 2019 01:41:47 -0500
+Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3H6fg96060951;
+        Wed, 17 Apr 2019 01:41:43 -0500
+Subject: Re: [PATCH v3 3/5] mtd: Add support for HyperBus memory devices
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-mtd@lists.infradead.org>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        <devicetree@vger.kernel.org>, Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20190412092923.24919-1-vigneshr@ti.com>
+ <20190412092923.24919-4-vigneshr@ti.com>
+ <53a92396-2535-ace7-3a31-1daf719ff323@cogentembedded.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <f4ca7582-bfec-06fc-0b1c-e1eaad6ecebf@ti.com>
+Date:   Wed, 17 Apr 2019 12:12:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417061508.GB18320@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <53a92396-2535-ace7-3a31-1daf719ff323@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 08:15:08AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 16, 2019 at 09:47:51AM -0700, Nathan Chancellor wrote:
-> > On Tue, Apr 16, 2019 at 11:00:52AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, Apr 15, 2019 at 03:01:51PM -0700, Nathan Chancellor wrote:
-> > > > On Mon, Apr 15, 2019 at 08:44:36PM +0200, Greg Kroah-Hartman wrote:
-> > > > > From: Will Deacon <will.deacon@arm.com>
-> > > > > 
-> > > > > commit 045afc24124d80c6998d9c770844c67912083506 upstream.
-> > > > > 
-> > > > > Rather embarrassingly, our futex() FUTEX_WAKE_OP implementation doesn't
-> > > > > explicitly set the return value on the non-faulting path and instead
-> > > > > leaves it holding the result of the underlying atomic operation. This
-> > > > > means that any FUTEX_WAKE_OP atomic operation which computes a non-zero
-> > > > > value will be reported as having failed. Regrettably, I wrote the buggy
-> > > > > code back in 2011 and it was upstreamed as part of the initial arm64
-> > > > > support in 2012.
-> > > > > 
-> > > > > The reasons we appear to get away with this are:
-> > > > > 
-> > > > >   1. FUTEX_WAKE_OP is rarely used and therefore doesn't appear to get
-> > > > >      exercised by futex() test applications
-> > > > > 
-> > > > >   2. If the result of the atomic operation is zero, the system call
-> > > > >      behaves correctly
-> > > > > 
-> > > > >   3. Prior to version 2.25, the only operation used by GLIBC set the
-> > > > >      futex to zero, and therefore worked as expected. From 2.25 onwards,
-> > > > >      FUTEX_WAKE_OP is not used by GLIBC at all.
-> > > > > 
-> > > > > Fix the implementation by ensuring that the return value is either 0
-> > > > > to indicate that the atomic operation completed successfully, or -EFAULT
-> > > > > if we encountered a fault when accessing the user mapping.
-> > > > > 
-> > > > > Cc: <stable@kernel.org>
-> > > > > Fixes: 6170a97460db ("arm64: Atomic operations")
-> > > > > Signed-off-by: Will Deacon <will.deacon@arm.com>
-> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > 
-> > > > > ---
-> > > > >  arch/arm64/include/asm/futex.h |   16 ++++++++--------
-> > > > >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > > > > 
-> > > > > --- a/arch/arm64/include/asm/futex.h
-> > > > > +++ b/arch/arm64/include/asm/futex.h
-> > > > > @@ -33,8 +33,8 @@
-> > > > >  "	prfm	pstl1strm, %2\n"					\
-> > > > >  "1:	ldxr	%w1, %2\n"						\
-> > > > >  	insn "\n"							\
-> > > > > -"2:	stlxr	%w3, %w0, %2\n"						\
-> > > > > -"	cbnz	%w3, 1b\n"						\
-> > > > > +"2:	stlxr	%w0, %w3, %2\n"						\
-> > > > > +"	cbnz	%w0, 1b\n"						\
-> > > > >  "	dmb	ish\n"							\
-> > > > >  "3:\n"									\
-> > > > >  "	.pushsection .fixup,\"ax\"\n"					\
-> > > > > @@ -53,29 +53,29 @@
-> > > > >  static inline int
-> > > > >  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
-> > > > >  {
-> > > > > -	int oldval = 0, ret, tmp;
-> > > > > +	int oldval, ret, tmp;
-> > > > >  
-> > > > >  	pagefault_disable();
-> > > > >  
-> > > > >  	switch (op) {
-> > > > >  	case FUTEX_OP_SET:
-> > > > > -		__futex_atomic_op("mov	%w0, %w4",
-> > > > > +		__futex_atomic_op("mov	%w3, %w4",
-> > > > >  				  ret, oldval, uaddr, tmp, oparg);
-> > > > >  		break;
-> > > > >  	case FUTEX_OP_ADD:
-> > > > > -		__futex_atomic_op("add	%w0, %w1, %w4",
-> > > > > +		__futex_atomic_op("add	%w3, %w1, %w4",
-> > > > >  				  ret, oldval, uaddr, tmp, oparg);
-> > > > >  		break;
-> > > > >  	case FUTEX_OP_OR:
-> > > > > -		__futex_atomic_op("orr	%w0, %w1, %w4",
-> > > > > +		__futex_atomic_op("orr	%w3, %w1, %w4",
-> > > > >  				  ret, oldval, uaddr, tmp, oparg);
-> > > > >  		break;
-> > > > >  	case FUTEX_OP_ANDN:
-> > > > > -		__futex_atomic_op("and	%w0, %w1, %w4",
-> > > > > +		__futex_atomic_op("and	%w3, %w1, %w4",
-> > > > >  				  ret, oldval, uaddr, tmp, ~oparg);
-> > > > >  		break;
-> > > > >  	case FUTEX_OP_XOR:
-> > > > > -		__futex_atomic_op("eor	%w0, %w1, %w4",
-> > > > > +		__futex_atomic_op("eor	%w3, %w1, %w4",
-> > > > >  				  ret, oldval, uaddr, tmp, oparg);
-> > > > >  		break;
-> > > > >  	default:
-> > > > > 
-> > > > >
-> > > > 
-> > > > This causes a (false) build warning with AOSP's GCC 4.9.4 (which is
-> > > > used to build nearly all arm64 Android kernels before 4.14):
-> > > > 
-> > > >   CC      kernel/futex.o
-> > > > ../kernel/futex.c: In function 'do_futex':
-> > > > ../kernel/futex.c:1492:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > > >    return oldval == cmparg;
-> > > >                  ^
-> > > > In file included from ../kernel/futex.c:69:0:
-> > > > ../arch/arm64/include/asm/futex.h:56:6: note: 'oldval' was declared here
-> > > >   int oldval, ret, tmp;
-> > > >       ^
-> > > > 
-> > > > The only reason I bring this up is Qualcomm based kernels have a Python
-> > > > script that emulates -Werror, meaning this will be fatal for a large
-> > > > number of kernels, when this eventually gets merged into them.
-> > > 
-> > > Argh, really?  That's a buggy compiler that you have there, as oldval
-> > > will be set correctly if all is good, and if not, ret will be and the
-> > > code will error out.
-> > > 
-> > 
-> > Correct.
-> > 
-> > > Working around broken compilers is not something I really like doing :(
-> > > 
-> > 
-> > Indeed, I wouldn't have brought it up if it wasn't the compiler for all
-> > Android 4.9 kernels aside from the Pixel 3 (XL).
-> > 
-> > > That being said, does this also show up in the 4.19.y and 5.0.y tree
-> > > right now?  If not, why not?
-> > > 
-> > 
-> > It does.
-> > 
-> > $ make ARCH=arm64 CROSS_COMPILE=<path>/bin/aarch64-linux-gnu- defconfig kernel/futex.o
+Hi,
+
+On 14/04/19 11:21 PM, Sergei Shtylyov wrote:
+> Hello!
 > 
-> Great, so it seems this needs to be fixed in Linus's tree first, before
-> I can backport it everywhere.
+> On 04/12/2019 12:29 PM, Vignesh Raghavendra wrote:
+> 
+>> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+>> Bus interface between a host system master and one or more slave
+>> interfaces. HyperBus is used to connect microprocessor, microcontroller,
+>> or ASIC devices with random access NOR flash memory (called HyperFlash)
+>> or self refresh DRAM (called HyperRAM).
+>>
+>> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+>> signal and either Single-ended clock(3.0V parts) or Differential clock
+>> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+>> At bus level, it follows a separate protocol described in HyperBus
+>> specification[1].
+>>
+>> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+>> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+>> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+>> HyperBus operates at >166MHz frequencies.
+>> HyperRAM provides direct random read/write access to flash memory
+>> array.
+>>
+>> But, HyperBus memory controllers seem to abstract implementation details
+>> and expose a simple MMIO interface to access connected flash.
+>>
+>> Add support for registering HyperFlash devices with MTD framework. MTD
+>> maps framework along with CFI chip support framework are used to support
+>> communicating with flash.
+>>
+>> Framework is modelled along the lines of spi-nor framework. HyperBus
+>> memory controller (HBMC) drivers calls hyperbus_register_device() to
+>> register a single HyperFlash device. HyperFlash core parses MMIO access
+>> information from DT, sets up the map_info struct, probes CFI flash and
+>> registers it with MTD framework.
+>>
+>> Some HBMC masters need calibration/training sequence[3] to be carried
+>> out, in order for DLL inside the controller to lock, by reading a known
+>> string/pattern. This is done by repeatedly reading CFI Query
+>> Identification String. Calibration needs to be done before trying to detect
+>> flash as part of CFI flash probe.
+>>
+>> HyperRAM is not supported at the moment.
+>>
+>> HyperBus specification can be found at[1]
+>> HyperFlash datasheet can be found at[2]
+>>
+>> [1] https://www.cypress.com/file/213356/download
+>> [2] https://www.cypress.com/file/213346/download
+>> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+>>     Table 12-5741. HyperFlash Access Sequence
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+>> diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
+>> new file mode 100644
+>> index 000000000000..98147e28caa0
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/Kconfig
+>> @@ -0,0 +1,11 @@
+>> +menuconfig MTD_HYPERBUS
+>> +	tristate "HyperBus support"
+>> +	select MTD_CFI
+>> +	select MTD_MAP_BANK_WIDTH_2
+>> +	select MTD_CFI_AMDSTD
+>> +	select MTD_COMPLEX_MAPPINGS
+>> +	help
+>> +	  This is the framework for the HyperBus which can be used by
+>> +	  the HyperBus Controller driver to communicate with
+>> +	  HyperFlash. See Cypress HyperBus specification for more
+>> +	  details
+>> diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
+>> new file mode 100644
+>> index 000000000000..ca61dedd730d
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/Makefile
+>> @@ -0,0 +1,3 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
+>> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+>> new file mode 100644
+>> index 000000000000..49aeb59742c6
+>> --- /dev/null
+>> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
+>> @@ -0,0 +1,192 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +//
+>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
+> [...]
+>> +/* Default calibration routine for use by HyperBus controller.
+>> + * Controller is calibrated by repeatedly reading known pattern ("QRY"
+>> + * string from CFI space)
+>> + * Lets ensure "QRY" string is read correctly at least 5 times to ensure
+>> + * stability of the DLL lock.
+>> + */
+>> +int hyperbus_calibrate(struct hyperbus_device *hbdev)
+>> +{
+>> +	struct map_info *map = &hbdev->map;
+>> +	struct cfi_private cfi;
+>> +	int count = HYPERBUS_CALIB_COUNT;
+>> +	int pass_count = 0;
+>> +	int ret;
+>> +
+>> +	cfi.interleave = 1;
+>> +	cfi.device_type = CFI_DEVICETYPE_X16;
+>> +	cfi_send_gen_cmd(0xF0, 0, 0, map, &cfi, cfi.device_type, NULL);
+>> +	cfi_send_gen_cmd(0x98, 0x55, 0, map, &cfi, cfi.device_type, NULL);
+>> +
+>> +	while (count--) {
+>> +		cfi_qry_present(map, 0, &cfi);
+>> +		ret = cfi_qry_present(map, 0, &cfi);
+> 
+>    Why call it twice in a row?
 > 
 
-Well, is it worth working around this in Linus's tree? I know you hate
-taking patches just for stable but this compiler won't be used on 4.14+
-according to [1] and support for it is planned to be discontinued in
-less than a year [2]. This warning doesn't happen with Clang or newer
-versions of GCC (I tested 6.3 in a Debian Docker image, which seems to
-be the oldest I can find). I suppose there could be other buggy/ancient
-compilers to work around...
+Oops, will fix in v2
 
-> Want me to send a patch for this or can you?
+>> +		if (ret)
+>> +			pass_count++;
+>> +		else
+>> +			pass_count = 0;
+>> +		if (pass_count == 5)
+>> +			break;
+>> +	}
+>> +
+>> +	cfi_qry_mode_off(0, map, &cfi);
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(hyperbus_calibrate);
+> [...]
+>> diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+>> new file mode 100644
+>> index 000000000000..19340cc56aa4
+>> --- /dev/null
+>> +++ b/include/linux/mtd/hyperbus.h
+>> @@ -0,0 +1,91 @@
+> [...]
+>> +/**
+>> + * hb_unregister_device - deregister HyperBus slave memory device
+> 
+>    You forgot to update the function name in the kernel-doc. :-)
 > 
 
-I am happy to send a patch regardless of where it goes, just want to be
-sure we are all on the same page.
+Indeed, thanks for catching this!
 
-[1]: https://android.googlesource.com/platform/test/vts-testcase/kernel/+/e1622ae19e0419ceac363d31f7fd53b514b8c218
-[2]: https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/a28e116f380a7e7c19e4639b6a35fecf5dddd4e8
-
-Thanks,
-Nathan
-
-> thanks,
+>> + * @hbdev: hyperbus_device to be unregistered
+>> + *
+>> + * Return: 0 for success, others for failure.
+>> + */
+>> +int hyperbus_unregister_device(struct hyperbus_device *hbdev);
+>> +
+>> +#endif /* __LINUX_MTD_HYPERBUS_H__ */
 > 
-> greg k-h
+> MBR, Sergei
+> 
+
+-- 
+Regards
+Vignesh
