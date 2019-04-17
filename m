@@ -2,109 +2,134 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8085C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CFEC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8509217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081A22073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfDQHiD (ORCPT
+        id S1728781AbfDQHjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:38:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34696 "EHLO mx1.redhat.com"
+        Wed, 17 Apr 2019 03:39:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33544 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbfDQHiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:38:02 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726773AbfDQHjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 03:39:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8AC00C049D7C;
-        Wed, 17 Apr 2019 07:38:02 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id C1B0E3082A27;
+        Wed, 17 Apr 2019 07:39:54 +0000 (UTC)
 Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DDE37608C1;
-        Wed, 17 Apr 2019 07:38:00 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 09:38:00 +0200
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2A00F5C220;
+        Wed, 17 Apr 2019 07:39:53 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 09:39:52 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] perf tools: Fix perf_env__find_bpf_prog_info rb tree
- lookup
-Message-ID: <20190417073800.GE17024@krava>
-References: <20190416134151.15282-1-jolsa@kernel.org>
- <20190416142028.GH11294@kernel.org>
- <20190416143452.GB10125@krava>
- <20190416143554.GB2459@kernel.org>
- <20190416143748.GC2459@kernel.org>
- <48CA4238-740E-4B42-BDB1-C2DD85A558C3@fb.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] perf record: collect user registers set jointly with
+ dwarf stacks
+Message-ID: <20190417073952.GF17024@krava>
+References: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48CA4238-740E-4B42-BDB1-C2DD85A558C3@fb.com>
+In-Reply-To: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 17 Apr 2019 07:38:02 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 17 Apr 2019 07:39:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 08:25:17PM +0000, Song Liu wrote:
+On Mon, Apr 15, 2019 at 06:36:13PM +0300, Alexey Budankov wrote:
 > 
+> When dwarf stacks are collected jointly with user specified register
+> set using --user-regs option like below the full register context is
+> still captured on a sample:
 > 
-> > On Apr 16, 2019, at 7:37 AM, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > 
-> > Em Tue, Apr 16, 2019 at 11:35:54AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Tue, Apr 16, 2019 at 04:34:52PM +0200, Jiri Olsa escreveu:
-> >>> On Tue, Apr 16, 2019 at 11:20:28AM -0300, Arnaldo Carvalho de Melo wrote:
-> >>>> Em Tue, Apr 16, 2019 at 03:41:51PM +0200, Jiri Olsa escreveu:
-> >>>>> We currently don't return NULL in case we don't find
-> >>>>> the bpf_prog_info_node, fixing that.
-> >>>> 
-> >>>> Can you please try to figure out what was the changeset that introduced
-> >>>> this problem so that we can have a Fixes: tag that helps me determine if
-> >>>> this should go to perf/urgent (likely) or (perf/core) and to help the
-> >>>> stable guys as well?
-> >>> 
-> >>> sry, I keep forgetting this..
-> >>> 
-> >>> Fixes: e4378f0cb90b ("perf bpf: Save bpf_prog_info in a rbtree in perf_env")
-> >> 
-> >> I had just added:
-> >> 
-> >> Fixes: e4378f0cb90b ("perf bpf: Save bpf_prog_info in a rbtree in perf_env")
-> >> 
-> >> matches, good :-)
-> >> 
-> >> At firts I thought hey the look checks for NULL, then, hey, different
-> >> variable... good catch!
-> > 
-> > Ah, I also changed the summary from:
-> > 
-> >   "perf tools: Fix perf_env__find_bpf_prog_info rb tree"
-> > 
-> > to:
-> > 
-> >  perf bpf: Return NULL when RB tree lookup fails in perf_env__find_bpf_prog_info()
-> > 
-> > Thanks,
-> > 
-> > - Arnaldo
+>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.O3
 > 
-> Thanks Jiri and Arnaldo!
+>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+>   ... FP chain: nr:0
+>   ... user regs: mask 0xff0fff ABI 64-bit
+>   .... AX    0x53b
+>   .... BX    0x7ffedbdd3cc0
+>   .... CX    0xffffffff
+>   .... DX    0x33d3a
+>   .... SI    0x7f09b74c38d0
+>   .... DI    0x0
+>   .... BP    0x401260
+>   .... SP    0x7ffedbdd3cc0
+>   .... IP    0x401236
+>   .... FLAGS 0x20a
+>   .... CS    0x33
+>   .... SS    0x2b
+>   .... R8    0x7f09b74c3800
+>   .... R9    0x7f09b74c2da0
+>   .... R10   0xfffffffffffff3ce
+>   .... R11   0x246
+>   .... R12   0x401070
+>   .... R13   0x7ffedbdd5db0
+>   .... R14   0x0
+>   .... R15   0x0
+>   ... ustack: size 1024, offset 0xe0
+>    . data_src: 0x5080021
+>    ... thread: stack_test2.g.O:23828
+>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
 > 
-> I think we will need similar fix for perf_env__find_btf(). 
+> After applying the change suggested in the patch the sample data contain
+> only user specified register values:
+> 
+>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.03
+> 
+>   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
+>   ... FP chain: nr:0
+>   ... user regs: mask 0x1c0 ABI 64-bit
+>   .... BP    0x401260
+>   .... SP    0x7ffd3d85cc20
+>   .... IP    0x401236
+>   ... ustack: size 1024, offset 0x58
+>    . data_src: 0x5080021
+>    ... thread: stack_test2.g.O:23839
+>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-right, I'll post it
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 thanks,
 jirka
+
+> ---
+>  tools/perf/util/evsel.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 84cfb9fe2fc6..29a223b4c699 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -702,7 +702,8 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+>  		if (!function) {
+>  			perf_evsel__set_sample_bit(evsel, REGS_USER);
+>  			perf_evsel__set_sample_bit(evsel, STACK_USER);
+> -			attr->sample_regs_user |= PERF_REGS_MASK;
+> +			if (!opts->sample_user_regs)
+> +				attr->sample_regs_user |= PERF_REGS_MASK;
+>  			attr->sample_stack_user = param->dump_size;
+>  			attr->exclude_callchain_user = 1;
+>  		} else {
+> -- 
+> 2.20.1
+> 
