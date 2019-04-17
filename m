@@ -2,60 +2,60 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D818EC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38086C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A882521850
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0232320693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZn5atac"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoD831QF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387742AbfDQWll (ORCPT
+        id S2387750AbfDQWmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:41:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35803 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQWlk (ORCPT
+        Wed, 17 Apr 2019 18:42:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37756 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfDQWmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:41:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t21so147229pfh.2;
-        Wed, 17 Apr 2019 15:41:40 -0700 (PDT)
+        Wed, 17 Apr 2019 18:42:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so213495pgc.4;
+        Wed, 17 Apr 2019 15:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3XEK6Pvi3zB6H8VfU96ClgLVU6pHyUCojM/czvj15Lo=;
-        b=RZn5atacQWnTfP+DZ829vuRvEG0BlvCymGCZM1SyV3GB+OCHkkuzq/VENl3awp7phK
-         lv93zs8Rvu05pV/MqgAhhnT5gmQqHut5u2tTP+BbBv7q/UnuP4TknyRB8le6ypD0gtmW
-         xddOyqcp/bfeYOSZMgKta4+PFxLx8oD0uOsDmqb5u7qy6+8fws6tpNHo6Eall2i/GXAv
-         cxxmIH5ZErS6hFuQsuFrcZzwhIttCHPzgovkgefPVP1Hk4x9nleCcr/0ut8kCzuXtiMV
-         SgyGCgGowgpGdvll/JQ2O90mnlSmiCcvQan/aehhhbdw7wgAFI/4UYaJoFLA2x+6MgPL
-         bFBw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i1R99iL8zt7pYA8QWKvwvqndRoGPVaYvfjEKGwYpQl8=;
+        b=HoD831QFjDx4BlpQhDI/TD3XXHvVVHsgOBIGfwMfKF7qnRPAgecLhMeFdTu8ine4PT
+         pS/K5fvyguJfbjW8xANbSOvNYyW3q0wsCPCzfPqsId/p7AON+5U0NVLFwMKfwR5vYLL1
+         yxzAwnPRoZFX7VdS3mZK+DFy06kNksUxXADdKePPW/iQcY4Mri71ZYeZcADrr/ffOWpB
+         V+XtePo1RZYdLEkhiaKau3fPSD4ge3w9rxVS/VkRJR7hfRwnXvjwpscWPulUie9sNOX8
+         /xKEJI1D5Fpzlf79qU3DiaSr4bHnyUuabem/rp3lCpaI5r5FyAfeMv/w34fUBaT7wCK1
+         0JNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3XEK6Pvi3zB6H8VfU96ClgLVU6pHyUCojM/czvj15Lo=;
-        b=BTQw32KF3Xah2pp9EpSAkRw+8L6RERaPyVhu0LuwC5axdcrA0JSTXJQega/QJnu5gX
-         0ZeSf3h66bz76azR+k6DX+GRbeUHd4V292T1P01cnz0zsCIuTET5m/Yoi86L7UfEFOp7
-         YB+rEqJqI+jqVdrkwJ9azlRiPQWi6MEGx4fuqP/MSvumbFwdqmasZ9qHMQbGTaIar24O
-         4mnuqZ01MRzNjgM/knGBMJlj1UcOS189tZUcic6f/Olurry47y75xbz532HNfyZ362RS
-         l2lKTOrUFZ7qF6wIna9spz7SfzgLAkNuI+OKJJWALyMR1j8CPn531GFzm/ImAUEdBmqM
-         VgUA==
-X-Gm-Message-State: APjAAAVGD50Cb/OHX3zMG2cN6aQq3uMuPSh2PqQ/JN574akO2c3PwXGi
-        sgsZrSWc8L4zUUj5I6ub4oE=
-X-Google-Smtp-Source: APXvYqw6SZVmZDHQnbEW8jS+B9in9NK6LXGkGvMkr2K8pqGnrEanq+es0SX8zXXzIL8XSatPVohwXQ==
-X-Received: by 2002:a63:cc0b:: with SMTP id x11mr68565422pgf.35.1555540538443;
-        Wed, 17 Apr 2019 15:35:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i1R99iL8zt7pYA8QWKvwvqndRoGPVaYvfjEKGwYpQl8=;
+        b=la9mvPji93TREBWlY7Wrvj92tiDsMaaDdMlhk5ALIYTHJlqdGOvNacqeUxpGxRF2au
+         424IA0Q6SAYGfF+Z2mE0CnXXJds0/SN6y41UAslJ8WdGl7Yl/2aRjG0+xvi/7z0nCM0C
+         Onx7o03vEuk7INmYu5ioddao5Nznbj5QiiCloVQCWYntwn6bwpOTJ4soS1xRzhEK7ywY
+         0wnYoY+8FnxCTorfbFO5U37esTe+nXccJ2c/ofVEKNJwdaWuNkR3N2gtjPifGB5cEryf
+         6wTIQtLQQCA0bsdMUGVxxEaTRCWmSvucnRofS6F5FXyBVIV54lMmIwZS9YdfIMoGKuwH
+         ueiQ==
+X-Gm-Message-State: APjAAAWHUTzFA2nTyRj27eJ8fIyY3sWv/glMQ8JU8zObTEUwlpRLyYh8
+        giPnU9e0b9Y/AWNptD2sQGg=
+X-Google-Smtp-Source: APXvYqzfsqxb6oCf19KQ69nee6vwb/j4LlN53CNGTZed7Ee/lThOPjR/LlupIPNI1J3gQWbhe9CSgg==
+X-Received: by 2002:a63:cc0c:: with SMTP id x12mr85176635pgf.336.1555540436865;
+        Wed, 17 Apr 2019 15:33:56 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.35.32
+        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.33.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:35:37 -0700 (PDT)
+        Wed, 17 Apr 2019 15:33:56 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,12 +65,10 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [PATCH v3 15/16] PM / devfreq: tegra: Rename tegra-devfreq.c to tegra30-devfreq.c
-Date:   Thu, 18 Apr 2019 01:29:24 +0300
-Message-Id: <20190417222925.5815-16-digetx@gmail.com>
+Subject: [PATCH v3 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30 support
+Date:   Thu, 18 Apr 2019 01:29:09 +0300
+Message-Id: <20190417222925.5815-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190417222925.5815-1-digetx@gmail.com>
-References: <20190417222925.5815-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,35 +76,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to reflect that driver serves NVIDIA Tegra30 and later SoC
-generations, let's rename the driver's source file to "tegra30-devfreq.c".
-This will make driver files to look more consistent after addition of a
-driver for Tegra20.
+Changelog:
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/Makefile                               | 2 +-
- drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} (100%)
+v3: Addressed all review comments that were made by Chanwoo Choi to v2.
 
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index 32b8d4d3f12c..47e5aeeebfd1 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
- # DEVFREQ Drivers
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
--obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
-+obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
- 
- # DEVFREQ Event Drivers
- obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
-diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-similarity index 100%
-rename from drivers/devfreq/tegra-devfreq.c
-rename to drivers/devfreq/tegra30-devfreq.c
+    Patch "Synchronize IRQ after masking it in hardware" morphed into
+    "Properly disable interrupts", which disables interrupts more solidly.
+
+    Added new minor patch: "Rename tegra-devfreq.c to tegra30-devfreq.c".
+
+    Added missed error handlings for dev_pm_opp_add().
+
+v2: The patchset was quite heavily reworked since v1, few patches we
+    dropped or squashed into the new ones and more patches we added.
+    In a result more bugs and potential problems are fixed now, driver's
+    code got more clean up.
+
+    The Tegra20 driver-addition patch is now a part of this series, it has
+    no changes since v1.
+
+    https://patchwork.ozlabs.org/project/linux-tegra/list/?series=102823
+
+Dmitry Osipenko (16):
+  PM / devfreq: tegra: Fix kHz to Hz conversion
+  PM / devfreq: tegra: Replace readl-writel with relaxed versions
+  PM / devfreq: tegra: Replace write memory barrier with the read
+    barrier
+  PM / devfreq: tegra: Don't ignore clk errors
+  PM / devfreq: tegra: Don't set EMC clock rate to maximum on probe
+  PM / devfreq: tegra: Drop primary interrupt handler
+  PM / devfreq: tegra: Properly disable interrupts
+  PM / devfreq: tegra: Clean up driver's probe / remove
+  PM / devfreq: tegra: Avoid inconsistency of current frequency value
+  PM / devfreq: tegra: Mark ACTMON's governor as immutable
+  PM / devfreq: tegra: Move governor registration to driver's probe
+  PM / devfreq: tegra: Reconfigure hardware on governor's restart
+  PM / devfreq: tegra: Support Tegra30
+  PM / devfreq: tegra: Enable COMPILE_TEST for the driver
+  PM / devfreq: tegra: Rename tegra-devfreq.c to tegra30-devfreq.c
+  PM / devfreq: Introduce driver for NVIDIA Tegra20
+
+ MAINTAINERS                                   |   8 +
+ drivers/devfreq/Kconfig                       |  15 +-
+ drivers/devfreq/Makefile                      |   3 +-
+ drivers/devfreq/tegra20-devfreq.c             | 202 +++++++++++
+ .../{tegra-devfreq.c => tegra30-devfreq.c}    | 315 ++++++++----------
+ 5 files changed, 369 insertions(+), 174 deletions(-)
+ create mode 100644 drivers/devfreq/tegra20-devfreq.c
+ rename drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} (81%)
+
 -- 
 2.21.0
 
