@@ -2,473 +2,319 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB75CC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B660EC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917AA20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A182176F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmpcECcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731174AbfDQHrh (ORCPT
+        id S1731182AbfDQHsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:47:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:32728 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfDQHrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:47:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 00:47:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,361,1549958400"; 
-   d="scan'208";a="135042564"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga008.jf.intel.com with ESMTP; 17 Apr 2019 00:47:32 -0700
-Date:   Wed, 17 Apr 2019 15:31:41 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc:     Alan Tull <atull@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 15/17] fpga: dfl: fme: add power management support
-Message-ID: <20190417073141.GA23258@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-16-git-send-email-hao.wu@intel.com>
- <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
- <CAJYdmeOMm0xTRbKTS68M4uiHJLfphPXNo+eFYguda+SuwnkqmQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJYdmeOMm0xTRbKTS68M4uiHJLfphPXNo+eFYguda+SuwnkqmQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 17 Apr 2019 03:48:06 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46585 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQHsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 03:48:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 9so11678125pfj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=LfsYQs+r2tnN2nPN5NZItQW9ZKUgXqJ0T9e/uFdLPiY=;
+        b=VmpcECcu4C5T2Rnde10C8wLlIAYxhtSqmj2T2hV0ePtGGpv82fdb1wTE2ol530YYzA
+         WjGl2LfoXI5a2jh+XaXGwAFTdJS9RENa59RQIU5lb1llPsCyXH3FFbmgdg2dIobiRR3T
+         nFQOljo0HfWK7pymJb5KyK7ULIGnS02hNjeta0GcS3rYr+Ry9199HFVk+qZv3Bcqpa6R
+         HNzOLcJuphRFu+ARQvclXmTk5uN7mlEAgiEXJL4ag2NKsAhvD1lGsXJAMEPtAVj0JsDG
+         vkYGb/hWtc8hJFfNA90gcR98eMEt9/NKbB3iC9R24uTMRAupuRdwPS7evcmsV6wk4iEr
+         0qYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=LfsYQs+r2tnN2nPN5NZItQW9ZKUgXqJ0T9e/uFdLPiY=;
+        b=RDfSrh/oCZ4JnnPVVrXgq0sE5rTQvxfQKxdEhQdJiHCwA9nib1sCCxppAVHmal/mXA
+         FpgKh5wa0rqvLxnxMnun/zyPQdby/Fb5cy0gCQ4Hmz8xRnJxWhKVMIw6iqXm0QESgwsC
+         qrJmCBN05uZsaqo/FxUq3LAq4bzylYHtO1ic+ya5AZfOJTwXLdF+gN0mIMDFLl2UGRZQ
+         cVzcGuUyqZF4MjYTBfjrVHVVDV/8w2de8fjO45OrHHnv3z82AiKVwgNzTe0GBnGSRhtU
+         6umnCznUNUjZT4Z0SDltdW+SQ7vuV978+FEO4QEs3RhglSfhYqPW6i/ojn/z1esSibsu
+         /LXQ==
+X-Gm-Message-State: APjAAAXMUL12j+r/uBckiSP0X8f9TwGswg+2LAVa0Ro6fLI29HfAVnuL
+        frA07T+2OfwsjGyGBEPCPnA=
+X-Google-Smtp-Source: APXvYqz8y7B5nZnJ9khyT03/ezgoBpuG7zDcrpzde5cNla5TubiA+8UgyaCXRAsEkAyQyU47l62xuw==
+X-Received: by 2002:a63:4847:: with SMTP id x7mr82038251pgk.233.1555487285046;
+        Wed, 17 Apr 2019 00:48:05 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id m8sm62714444pgn.59.2019.04.17.00.47.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Apr 2019 00:48:04 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] mm/workingset : judge file page activity via timestamp
+Date:   Wed, 17 Apr 2019 15:47:26 +0800
+Message-Id: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 02:05:21PM -0700, Moritz Fischer wrote:
-> Hi Hao,
-> 
-> this looks suspiciously like a hwmon driver ;-)
-> 
-> https://www.kernel.org/doc/Documentation/hwmon/hwmon-kernel-api.txt
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Hi Moritz,
+This patch introduce timestamp into workingset's entry and judge if the page
+is active or inactive via active_file/refault_ratio instead of refault distance.
 
-Thanks a lot for the suggestion, yes, agree, and patch for thermal
-management should be the similar case too. Let me see if i can make
-thermal / power management code to hwmon in the next version. : )
+The original thought is coming from the logs we got from trace_printk in this
+patch, we can find about 1/5 of the file pages' refault are under the
+scenario[1],which will be counted as inactive as they have a long refault distance
+in between access. However, we can also know from the time information that the
+page refault quickly as comparing to the average refault time which is calculated
+by the number of active file and refault ratio. We want to save these kinds of
+pages from evicted earlier as it used to be. The refault ratio is the value
+which can reflect lru's average file access frequency and also can be deemed as a
+prediction of future.
 
-Hao
+The patch is tested on an android system and reduce 30% of page faults, while
+60% of the pages remain the original status as (refault_distance < active_file)
+indicates. Pages status got from ftrace during the test can refer to [2].
 
-> 
-> Cheers,
-> Moritz
-> 
-> 
-> On Thu, Apr 11, 2019 at 1:08 PM Alan Tull <atull@kernel.org> wrote:
-> >
-> > On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
-> >
-> > Hi Hao,
-> >
-> > >
-> > > This patch adds support for power management private feature under
-> > > FPGA Management Engine (FME), sysfs interfaces are introduced for
-> > > different power management functions, users could use these sysfs
-> > > interface to get current number of consumed power, throttling
-> >
-> > How about
-> > s/number/measurement/
-> > ?
-> >
-> > > thresholds, threshold status and other information, and configure
-> > > different value for throttling thresholds too.
-> > >
-> > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++
-> > >  drivers/fpga/dfl-fme-main.c                      | 257 +++++++++++++++++++++++
-> > >  2 files changed, 313 insertions(+)
-> > >
-> > > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > index d3aeb88..4b6448f 100644
-> > > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > @@ -100,3 +100,59 @@ Description:       Read-only. Read this file to get the policy of temperature
-> > >                 threshold1. It only supports two value (policy):
-> > >                     0 - AP2 state (90% throttling)
-> > >                     1 - AP1 state (50% throttling)
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/consumed
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. It returns current power consumed by FPGA.
-> >
-> > What are the units?
-> >
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Write. Read/Write this file to get/set current power
-> > > +               threshold1 in Watts.
-> >
-> > Perhaps document error codes here and for threshold2 below.
-> >
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-Write. Read/Write this file to get/set current power
-> > > +               threshold2 in Watts.
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1_status
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. It returns 1 if power consumption reaches the
-> > > +               threshold1, otherwise 0.
-> >
-> > I'm used to things like this requiring user to reset the status, so it
-> > may be worth making it explicit that it will return to zero if
-> > consumption drops below threshold if that's what's happening here.
-> > If it's correct, perhaps could just say something like 'returns 1 if
-> > power consumption is currently at or above threshold1, otherwise 0'
-> >
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2_status
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. It returns 1 if power consumption reaches the
-> > > +               threshold2, otherwise 0.
-> >
-> > Same here.
-> >
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/ltr
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. Read this file to get current Latency Tolerance
-> > > +               Reporting (ltr) value, it's only valid for integrated
-> > > +               solution as it blocks CPU on low power state.
-> >
-> > If we're not on the integrated solution, it returns a value but it is
-> > not really real?
-> >
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/xeon_limit
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. Read this file to get power limit for xeon, it
-> > > +               is only valid for integrated solution.
-> > > +
-> > > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/fpga_limit
-> > > +Date:          March 2019
-> > > +KernelVersion:  5.2
-> > > +Contact:       Wu Hao <hao.wu@intel.com>
-> > > +Description:   Read-only. Read this file to get power limit for fpga, it
-> > > +               is only valid for integrated solution.
-> > > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > > index 449a17d..dafa6580 100644
-> > > --- a/drivers/fpga/dfl-fme-main.c
-> > > +++ b/drivers/fpga/dfl-fme-main.c
-> > > @@ -415,6 +415,259 @@ static const struct dfl_feature_ops fme_thermal_mgmt_ops = {
-> > >         .uinit = fme_thermal_mgmt_uinit,
-> > >  };
-> > >
-> > > +#define FME_PWR_STATUS         0x8
-> > > +#define FME_LATENCY_TOLERANCE  BIT_ULL(18)
-> > > +#define PWR_CONSUMED           GENMASK_ULL(17, 0)
-> > > +
-> > > +#define FME_PWR_THRESHOLD      0x10
-> > > +#define PWR_THRESHOLD1         GENMASK_ULL(6, 0)       /* in Watts */
-> > > +#define PWR_THRESHOLD2         GENMASK_ULL(14, 8)      /* in Watts */
-> > > +#define PWR_THRESHOLD_MAX      0x7f
-> > > +#define PWR_THRESHOLD1_STATUS  BIT_ULL(16)
-> > > +#define PWR_THRESHOLD2_STATUS  BIT_ULL(17)
-> > > +
-> > > +#define FME_PWR_XEON_LIMIT     0x18
-> > > +#define XEON_PWR_LIMIT         GENMASK_ULL(14, 0)
-> > > +#define XEON_PWR_EN            BIT_ULL(15)
-> > > +#define FME_PWR_FPGA_LIMIT     0x20
-> > > +#define FPGA_PWR_LIMIT         GENMASK_ULL(14, 0)
-> > > +#define FPGA_PWR_EN            BIT_ULL(15)
-> > > +
-> > > +#define POWER_ATTR(_name, _mode, _show, _store)        \
-> > > +struct device_attribute power_attr_##_name =           \
-> > > +       __ATTR(_name, _mode, _show, _store)
-> > > +
-> > > +#define POWER_ATTR_RO(_name, _show)                    \
-> > > +       POWER_ATTR(_name, 0444, _show, NULL)
-> > > +
-> > > +#define POWER_ATTR_RW(_name, _show, _store)            \
-> > > +       POWER_ATTR(_name, 0644, _show, _store)
-> >
-> > Are these #defines necessary?  Seems like you could just use DEVICE_ATTR*
-> >
-> > > +
-> > > +static ssize_t pwr_consumed_show(struct device *dev,
-> > > +                                struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_STATUS);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(PWR_CONSUMED, v));
-> > > +}
-> > > +static POWER_ATTR_RO(consumed, pwr_consumed_show);
-> > > +
-> > > +static ssize_t pwr_threshold1_show(struct device *dev,
-> > > +                                  struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1, v));
-> > > +}
-> > > +
-> > > +static ssize_t pwr_threshold1_store(struct device *dev,
-> > > +                                   struct device_attribute *attr,
-> > > +                                   const char *buf, size_t count)
-> > > +{
-> > > +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > > +       void __iomem *base;
-> > > +       u8 threshold;
-> > > +       int ret;
-> > > +       u64 v;
-> > > +
-> > > +       ret = kstrtou8(buf, 0, &threshold);
-> > > +       if (ret)
-> > > +               return ret;
-> > > +
-> > > +       if (threshold > PWR_THRESHOLD_MAX)
-> > > +               return -EINVAL;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       mutex_lock(&pdata->lock);
-> > > +       v = readq(base + FME_PWR_THRESHOLD);
-> > > +       v &= ~PWR_THRESHOLD1;
-> > > +       v |= FIELD_PREP(PWR_THRESHOLD1, threshold);
-> > > +       writeq(v, base + FME_PWR_THRESHOLD);
-> > > +       mutex_unlock(&pdata->lock);
-> > > +
-> > > +       return count;
-> > > +}
-> > > +static POWER_ATTR_RW(threshold1, pwr_threshold1_show, pwr_threshold1_store);
-> > > +
-> > > +static ssize_t pwr_threshold2_show(struct device *dev,
-> > > +                                  struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2, v));
-> > > +}
-> > > +
-> > > +static ssize_t pwr_threshold2_store(struct device *dev,
-> > > +                                   struct device_attribute *attr,
-> > > +                                   const char *buf, size_t count)
-> > > +{
-> > > +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > > +       void __iomem *base;
-> > > +       u8 threshold;
-> > > +       int ret;
-> > > +       u64 v;
-> > > +
-> > > +       ret = kstrtou8(buf, 0, &threshold);
-> > > +       if (ret)
-> > > +               return ret;
-> > > +
-> > > +       if (threshold > PWR_THRESHOLD_MAX)
-> > > +               return -EINVAL;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       mutex_lock(&pdata->lock);
-> > > +       v = readq(base + FME_PWR_THRESHOLD);
-> > > +       v &= ~PWR_THRESHOLD2;
-> > > +       v |= FIELD_PREP(PWR_THRESHOLD2, threshold);
-> > > +       writeq(v, base + FME_PWR_THRESHOLD);
-> > > +       mutex_unlock(&pdata->lock);
-> > > +
-> > > +       return count;
-> > > +}
-> > > +static POWER_ATTR_RW(threshold2, pwr_threshold2_show, pwr_threshold2_store);
-> > > +
-> > > +static ssize_t pwr_threshold1_status_show(struct device *dev,
-> > > +                                         struct device_attribute *attr,
-> > > +                                         char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1_STATUS, v));
-> > > +}
-> > > +static POWER_ATTR_RO(threshold1_status, pwr_threshold1_status_show);
-> > > +
-> > > +static ssize_t pwr_threshold2_status_show(struct device *dev,
-> > > +                                         struct device_attribute *attr,
-> > > +                                         char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_THRESHOLD);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2_STATUS, v));
-> > > +}
-> > > +static POWER_ATTR_RO(threshold2_status, pwr_threshold2_status_show);
-> > > +
-> > > +static ssize_t ltr_show(struct device *dev,
-> > > +                       struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_STATUS);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > > +                        (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
-> > > +}
-> > > +static POWER_ATTR_RO(ltr, ltr_show);
-> > > +
-> > > +static ssize_t xeon_limit_show(struct device *dev,
-> > > +                              struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u16 xeon_limit = 0;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_XEON_LIMIT);
-> > > +
-> > > +       if (FIELD_GET(XEON_PWR_EN, v))
-> > > +               xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n", xeon_limit);
-> > > +}
-> > > +static POWER_ATTR_RO(xeon_limit, xeon_limit_show);
-> > > +
-> > > +static ssize_t fpga_limit_show(struct device *dev,
-> > > +                              struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       void __iomem *base;
-> > > +       u16 fpga_limit = 0;
-> > > +       u64 v;
-> > > +
-> > > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > > +
-> > > +       v = readq(base + FME_PWR_FPGA_LIMIT);
-> > > +
-> > > +       if (FIELD_GET(FPGA_PWR_EN, v))
-> > > +               fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
-> > > +
-> > > +       return scnprintf(buf, PAGE_SIZE, "%u\n", fpga_limit);
-> > > +}
-> > > +static POWER_ATTR_RO(fpga_limit, fpga_limit_show);
-> > > +
-> > > +static struct attribute *power_mgmt_attrs[] = {
-> > > +       &power_attr_consumed.attr,
-> > > +       &power_attr_threshold1.attr,
-> > > +       &power_attr_threshold2.attr,
-> > > +       &power_attr_threshold1_status.attr,
-> > > +       &power_attr_threshold2_status.attr,
-> > > +       &power_attr_xeon_limit.attr,
-> > > +       &power_attr_fpga_limit.attr,
-> > > +       &power_attr_ltr.attr,
-> >
-> > This is a nit, but I would expect to see these listed in the same
-> > order as their show/store functions above.  So ltr_attr would come
-> > between threshold2_status_attr and xeon_limit_attr.
-> >
-> > > +       NULL,
-> > > +};
-> > > +
-> > > +static struct attribute_group power_mgmt_attr_group = {
-> > > +       .attrs  = power_mgmt_attrs,
-> > > +       .name   = "power_mgmt",
-> > > +};
-> > > +
-> > > +static int fme_power_mgmt_init(struct platform_device *pdev,
-> > > +                              struct dfl_feature *feature)
-> > > +{
-> > > +       return sysfs_create_group(&pdev->dev.kobj, &power_mgmt_attr_group);
-> > > +}
-> > > +
-> > > +static void fme_power_mgmt_uinit(struct platform_device *pdev,
-> > > +                                struct dfl_feature *feature)
-> > > +{
-> > > +       sysfs_remove_group(&pdev->dev.kobj, &power_mgmt_attr_group);
-> > > +}
-> > > +
-> > > +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
-> > > +       {.id = FME_FEATURE_ID_POWER_MGMT,},
-> > > +       {0,}
-> > > +};
-> > > +
-> > > +static const struct dfl_feature_ops fme_power_mgmt_ops = {
-> > > +       .init = fme_power_mgmt_init,
-> > > +       .uinit = fme_power_mgmt_uinit,
-> > > +};
-> > > +
-> > >  static struct dfl_feature_driver fme_feature_drvs[] = {
-> > >         {
-> > >                 .id_table = fme_hdr_id_table,
-> > > @@ -429,6 +682,10 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
-> > >                 .ops = &fme_thermal_mgmt_ops,
-> > >         },
-> > >         {
-> > > +               .id_table = fme_power_mgmt_id_table,
-> > > +               .ops = &fme_power_mgmt_ops,
-> > > +       },
-> > > +       {
-> > >                 .ops = NULL,
-> > >         },
-> > >  };
-> > > --
-> > > 2.7.4
-> > >
-> >
-> > Thanks,
-> > Alan
+[1]
+system_server workingset_refault: WKST_ACT[0]:rft_dis 265976, act_file 34268 rft_ratio 3047 rft_time 0 avg_rft_time 11 refault 295592 eviction 29616 secs 97 pre_secs 97
+HwBinder:922  workingset_refault: WKST_ACT[0]:rft_dis 264478, act_file 35037 rft_ratio 3070 rft_time 2 avg_rft_time 11 refault 310078 eviction 45600 secs 101 pre_secs 99
+
+[2]
+WKST_ACT[0]:   original--INACTIVE  commit--ACTIVE
+WKST_ACT[1]:   original--ACTIVE    commit--ACTIVE
+WKST_INACT[0]: original--INACTIVE  commit--INACTIVE
+WKST_INACT[1]: original--ACTIVE    commit--INACTIVE
+
+Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
+---
+ include/linux/mmzone.h |   1 +
+ mm/workingset.c        | 120 +++++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 112 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 32699b2..6f30673 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -240,6 +240,7 @@ struct lruvec {
+ 	atomic_long_t			inactive_age;
+ 	/* Refaults at the time of last reclaim cycle */
+ 	unsigned long			refaults;
++	atomic_long_t			refaults_ratio;
+ #ifdef CONFIG_MEMCG
+ 	struct pglist_data *pgdat;
+ #endif
+diff --git a/mm/workingset.c b/mm/workingset.c
+index 40ee02c..66c177b 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -160,6 +160,21 @@
+ 			 MEM_CGROUP_ID_SHIFT)
+ #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
+ 
++#ifdef CONFIG_64BIT
++#define EVICTION_SECS_POS_SHIFT 20
++#define EVICTION_SECS_SHRINK_SHIFT 4
++#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
++#else
++#ifndef CONFIG_MEMCG
++#define EVICTION_SECS_POS_SHIFT 12
++#define EVICTION_SECS_SHRINK_SHIFT 4
++#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
++#else
++#define EVICTION_SECS_POS_SHIFT 0
++#define EVICTION_SECS_SHRINK_SHIFT 0
++#define NO_SECS_IN_WORKINGSET
++#endif
++#endif
+ /*
+  * Eviction timestamps need to be able to cover the full range of
+  * actionable refaults. However, bits are tight in the radix tree
+@@ -169,10 +184,54 @@
+  * evictions into coarser buckets by shaving off lower timestamp bits.
+  */
+ static unsigned int bucket_order __read_mostly;
+-
++#ifdef NO_SECS_IN_WORKINGSET
++static void pack_secs(unsigned long *peviction) { }
++static unsigned int unpack_secs(unsigned long entry) {return 0; }
++#else
++/*
++ * Shrink the timestamp according to its value and store it together
++ * with the shrink size in the entry.
++ */
++static void pack_secs(unsigned long *peviction)
++{
++	unsigned int secs;
++	unsigned long eviction;
++	int order;
++	int secs_shrink_size;
++	struct timespec ts;
++
++	get_monotonic_boottime(&ts);
++	secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
++	order = get_count_order(secs);
++	secs_shrink_size = (order <= EVICTION_SECS_POS_SHIFT)
++			? 0 : (order - EVICTION_SECS_POS_SHIFT);
++
++	eviction = *peviction;
++	eviction = (eviction << EVICTION_SECS_POS_SHIFT)
++			| ((secs >> secs_shrink_size) & EVICTION_SECS_POS_MASK);
++	eviction = (eviction << EVICTION_SECS_SHRINK_SHIFT) | (secs_shrink_size & 0xf);
++	*peviction = eviction;
++}
++/*
++ * Unpack the second from the entry and restore the value according to the
++ * shrink size.
++ */
++static unsigned int unpack_secs(unsigned long entry)
++{
++	unsigned int secs;
++	int secs_shrink_size;
++
++	secs_shrink_size = entry & ((1 << EVICTION_SECS_SHRINK_SHIFT) - 1);
++	entry >>= EVICTION_SECS_SHRINK_SHIFT;
++	secs = entry & EVICTION_SECS_POS_MASK;
++	secs = secs << secs_shrink_size;
++	return secs;
++}
++#endif
+ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+ {
+ 	eviction >>= bucket_order;
++	pack_secs(&eviction);
+ 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+ 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
+ 	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
+@@ -181,20 +240,24 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+ }
+ 
+ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+-			  unsigned long *evictionp)
++			  unsigned long *evictionp, unsigned int *prev_secs)
+ {
+ 	unsigned long entry = (unsigned long)shadow;
+ 	int memcgid, nid;
++	unsigned int secs;
+ 
+ 	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
+ 	nid = entry & ((1UL << NODES_SHIFT) - 1);
+ 	entry >>= NODES_SHIFT;
+ 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
+ 	entry >>= MEM_CGROUP_ID_SHIFT;
++	secs = unpack_secs(entry);
++	entry >>= (EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT);
+ 
+ 	*memcgidp = memcgid;
+ 	*pgdat = NODE_DATA(nid);
+ 	*evictionp = entry << bucket_order;
++	*prev_secs = secs;
+ }
+ 
+ /**
+@@ -242,9 +305,22 @@ bool workingset_refault(void *shadow)
+ 	unsigned long refault;
+ 	struct pglist_data *pgdat;
+ 	int memcgid;
++#ifndef NO_SECS_IN_WORKINGSET
++	unsigned long avg_refault_time;
++	unsigned long refault_time;
++	int tradition;
++	unsigned int prev_secs;
++	unsigned int secs;
++	unsigned long refaults_ratio;
++#endif
++	struct timespec ts;
++	/*
++	convert jiffies to second
++	*/
++	get_monotonic_boottime(&ts);
++	secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
+ 
+-	unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
+-
++	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_secs);
+ 	rcu_read_lock();
+ 	/*
+ 	 * Look up the memcg associated with the stored ID. It might
+@@ -288,14 +364,37 @@ bool workingset_refault(void *shadow)
+ 	 * list is not a problem.
+ 	 */
+ 	refault_distance = (refault - eviction) & EVICTION_MASK;
+-
+ 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+-
+-	if (refault_distance <= active_file) {
++#ifndef NO_SECS_IN_WORKINGSET
++	refaults_ratio = (atomic_long_read(&lruvec->inactive_age) + 1) / secs;
++	atomic_long_set(&lruvec->refaults_ratio, refaults_ratio);
++	refault_time = secs - prev_secs;
++	avg_refault_time = active_file / refaults_ratio;
++	tradition = !!(refault_distance < active_file);
++	if (refault_time <= avg_refault_time) {
++#else
++	if (refault_distance < active_file) {
++#endif
+ 		inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
++#ifndef NO_SECS_IN_WORKINGSET
++		trace_printk("WKST_ACT[%d]:rft_dis %ld, act_file %ld \
++				rft_ratio %ld rft_time %ld avg_rft_time %ld \
++				refault %ld eviction %ld secs %d pre_secs %d\n",
++				tradition, refault_distance, active_file,
++				refaults_ratio, refault_time, avg_refault_time,
++				refault, eviction, secs, prev_secs);
++#endif
+ 		rcu_read_unlock();
+ 		return true;
+ 	}
++#ifndef NO_SECS_IN_WORKINGSET
++	trace_printk("WKST_INACT[%d]:rft_dis %ld, act_file %ld \
++			rft_ratio %ld rft_time %ld avg_rft_time %ld \
++			refault %ld eviction %ld secs %d pre_secs %d\n",
++			tradition, refault_distance, active_file,
++			refaults_ratio, refault_time, avg_refault_time,
++			refault, eviction, secs, prev_secs);
++#endif
+ 	rcu_read_unlock();
+ 	return false;
+ }
+@@ -513,7 +612,9 @@ static int __init workingset_init(void)
+ 	unsigned int max_order;
+ 	int ret;
+ 
+-	BUILD_BUG_ON(BITS_PER_LONG < EVICTION_SHIFT);
++	BUILD_BUG_ON(BITS_PER_LONG < (EVICTION_SHIFT
++				+ EVICTION_SECS_POS_SHIFT
++				+ EVICTION_SECS_SHRINK_SHIFT));
+ 	/*
+ 	 * Calculate the eviction bucket size to cover the longest
+ 	 * actionable refault distance, which is currently half of
+@@ -521,7 +622,8 @@ static int __init workingset_init(void)
+ 	 * some more pages at runtime, so keep working with up to
+ 	 * double the initial memory by using totalram_pages as-is.
+ 	 */
+-	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
++	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT
++			- EVICTION_SECS_POS_SHIFT - EVICTION_SECS_SHRINK_SHIFT;
+ 	max_order = fls_long(totalram_pages - 1);
+ 	if (max_order > timestamp_bits)
+ 		bucket_order = max_order - timestamp_bits;
+-- 
+1.9.1
+
