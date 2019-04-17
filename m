@@ -2,118 +2,166 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EF7C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5BDC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CD020645
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B59206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfDQLKk (ORCPT
+        id S1731807AbfDQLNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:10:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10951 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfDQLKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:10:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 04:10:39 -0700
-X-IronPort-AV: E=Sophos;i="5.60,361,1549958400"; 
-   d="scan'208";a="135085063"
-Received: from rauchh-mobl.ger.corp.intel.com (HELO [10.249.32.153]) ([10.249.32.153])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 17 Apr 2019 04:10:35 -0700
-Subject: Re: [PATCH 04/20] drm/fourcc: Pass the format_info pointer to
- drm_format_plane_width/height
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        Emil Velikov <emil.velikov@collabora.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
- <194fd02a37172de6f2a799fee5c98ced5e7e9d76.1555487650.git-series.maxime.ripard@bootlin.com>
- <776131c6-b8be-4302-ea9a-f7d84203f28c@linux.intel.com>
- <20190417110119.ygp6h7kpzzo5a27l@flea>
-From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Message-ID: <8d909dcf-16de-7462-1cc6-2713778ed8b1@linux.intel.com>
-Date:   Wed, 17 Apr 2019 13:10:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 07:13:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46872 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729522AbfDQLNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:13:20 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C26418AC2282557F7E6C;
+        Wed, 17 Apr 2019 19:13:16 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
+ 19:13:07 +0800
+To:     <mcgrof@kernel.org>, <keescook@chromium.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+CC:     <mingfangsen@huawei.com>, <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit the
+ min/max write value
+Message-ID: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
+Date:   Wed, 17 Apr 2019 19:12:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190417110119.ygp6h7kpzzo5a27l@flea>
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Op 17-04-2019 om 13:01 schreef Maxime Ripard:
-> On Wed, Apr 17, 2019 at 12:47:48PM +0200, Maarten Lankhorst wrote:
->>> +/**
->>> + * drm_format_info_plane_width - width of the plane given the first plane
->>> + * @format: pixel format info
->>> + * @width: width of the first plane
->>> + * @plane: plane index
->>> + *
->>> + * Returns:
->>> + * The width of @plane, given that the width of the first plane is @width.
->>> + */
->>> +static inline
->>> +int drm_format_info_plane_width(const struct drm_format_info *info, int width,
->>> +				int plane)
->>> +{
->>> +	if (!info || plane >= info->num_planes)
->>> +		return 0;
->>> +
->>> +	if (plane == 0)
->>> +		return width;
->>> +
->>> +	return width / info->hsub;
->>> +}
->>> +
->>> +/**
->>> + * drm_format_info_plane_height - height of the plane given the first plane
->>> + * @format: pixel format info
->>> + * @height: height of the first plane
->>> + * @plane: plane index
->>> + *
->>> + * Returns:
->>> + * The height of @plane, given that the height of the first plane is @height.
->>> + */
->>> +static inline
->>> +int drm_format_info_plane_height(const struct drm_format_info *info, int height,
->>> +				 int plane)
->>> +{
->>> +	if (!info || plane >= info->num_planes)
->>> +		return 0;
->>> +
->>> +	if (plane == 0)
->>> +		return height;
->>> +
->>> +	return height / info->vsub;
->>> +}
->> Why the null checks? None of the other inlines for drm_format_info
->> perform them.
-> Unless I'm mistaken, the subsampling only applies to the planes with
-> the chrominance, which are always >= 1. Therefore the plane 0 is
-> always the luminance, to which the subsampling doesn't apply.
->
-> Or are you talking about something else?
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
+In proc_dointvec_jiffies func, the write value is only checked
+whether it is larger than INT_MAX. If the write value is less
+than zero, it can also be successfully writen in the data.
 
-The info == NULL check. :)
+However, in some scenarios, users would adopt the data to
+set timers or check whether time is expired. Generally, the data
+will be cast to an unsigned type variable, then the negative data
+becomes a very large unsigned value, which leads to long waits
+or other unpredictable problems.
+
+Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
+min/max write value, which is similar to the proc_dointvec_minmax func.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reported-by: Qiang Ning <ningqiang1@huawei.com>
+Reviewed-by: Jie Liu <liujie165@huawei.com>
+---
+ include/linux/sysctl.h |  2 ++
+ kernel/sysctl.c        | 44 +++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 45 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index b769ecf..8bde8a0 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -53,6 +53,8 @@ extern int proc_douintvec_minmax(struct ctl_table *table, int write,
+ 				 loff_t *ppos);
+ extern int proc_dointvec_jiffies(struct ctl_table *, int,
+ 				 void __user *, size_t *, loff_t *);
++extern int proc_dointvec_jiffies_minmax(struct ctl_table *, int,
++				 void __user *, size_t *, loff_t *);
+ extern int proc_dointvec_userhz_jiffies(struct ctl_table *, int,
+ 					void __user *, size_t *, loff_t *);
+ extern int proc_dointvec_ms_jiffies(struct ctl_table *, int,
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c9ec050..8e1eb59 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2967,10 +2967,15 @@ static int do_proc_dointvec_jiffies_conv(bool *negp, unsigned long *lvalp,
+ 					 int *valp,
+ 					 int write, void *data)
+ {
++	struct do_proc_dointvec_minmax_conv_param *param = data;
++
+ 	if (write) {
+ 		if (*lvalp > INT_MAX / HZ)
+ 			return 1;
+ 		*valp = *negp ? -(*lvalp*HZ) : (*lvalp*HZ);
++		if ((param->min && (*param->min)*HZ > *valp) ||
++		    (param->max && (*param->max)*HZ < *valp))
++			return -EINVAL;
+ 	} else {
+ 		int val = *valp;
+ 		unsigned long lval;
+@@ -3053,7 +3058,37 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
+ 			  void __user *buffer, size_t *lenp, loff_t *ppos)
+ {
+     return do_proc_dointvec(table,write,buffer,lenp,ppos,
+-		    	    do_proc_dointvec_jiffies_conv,NULL);
++			    do_proc_dointvec_jiffies_conv, NULL);
++}
++
++/**
++ * proc_dointvec_jiffies_minmax - read a vector of integers as seconds with min/max values
++ * @table: the sysctl table
++ * @write: %TRUE if this is a write to the sysctl file
++ * @buffer: the user buffer
++ * @lenp: the size of the user buffer
++ * @ppos: file position
++ *
++ * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
++ * values from/to the user buffer, treated as an ASCII string.
++ * The values read are assumed to be in seconds, and are converted into
++ * jiffies.
++ *
++ * This routine will ensure the values are within the range specified by
++ * table->extra1 (min) and table->extra2 (max).
++ *
++ * Returns 0 on success or -EINVAL on write when the range check fails.
++ */
++int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
++			  void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct do_proc_dointvec_minmax_conv_param param = {
++		.min = (int *) table->extra1,
++		.max = (int *) table->extra2,
++	};
++
++	return do_proc_dointvec(table, write, buffer, lenp, ppos,
++				do_proc_dointvec_jiffies_conv, &param);
+ }
+
+ /**
+@@ -3301,6 +3336,12 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
+ 	return -ENOSYS;
+ }
+
++int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
++		    void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	return -ENOSYS;
++}
++
+ int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
+ 		    void __user *buffer, size_t *lenp, loff_t *ppos)
+ {
+@@ -3359,6 +3400,7 @@ static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+ EXPORT_SYMBOL(proc_dointvec);
+ EXPORT_SYMBOL(proc_douintvec);
+ EXPORT_SYMBOL(proc_dointvec_jiffies);
++EXPORT_SYMBOL(proc_dointvec_jiffies_minmax);
+ EXPORT_SYMBOL(proc_dointvec_minmax);
+ EXPORT_SYMBOL_GPL(proc_douintvec_minmax);
+ EXPORT_SYMBOL(proc_dointvec_userhz_jiffies);
+-- 
+1.8.3.1
 
