@@ -2,556 +2,133 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EF5C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB1C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76501217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27EE206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbfDQOen (ORCPT
+        id S1732447AbfDQOfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:34:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:45938 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732267AbfDQOem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:34:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ECD3A78;
-        Wed, 17 Apr 2019 07:34:41 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A10363F557;
-        Wed, 17 Apr 2019 07:34:37 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [RFC PATCH 3/3] x86: mm: Switch to using generic pt_dump
-Date:   Wed, 17 Apr 2019 15:34:23 +0100
-Message-Id: <20190417143423.26665-3-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190417143423.26665-1-steven.price@arm.com>
-References: <3acbf061-8c97-55eb-f4b6-163a33ea4d73@arm.com>
- <20190417143423.26665-1-steven.price@arm.com>
+        Wed, 17 Apr 2019 10:35:38 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:54556 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730463AbfDQOfi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:35:38 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3HEYWib022327;
+        Wed, 17 Apr 2019 09:35:32 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=rf@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2ruc6ndwjg-1;
+        Wed, 17 Apr 2019 09:35:32 -0500
+Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
+        by mail1.cirrus.com (Postfix) with ESMTP id B4299611C8A7;
+        Wed, 17 Apr 2019 09:35:31 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 17 Apr
+ 2019 15:35:31 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Wed, 17 Apr 2019 15:35:31 +0100
+Received: from [198.90.251.142] (edi-sw-dsktp006.ad.cirrus.com [198.90.251.142])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id EB5E32DB;
+        Wed, 17 Apr 2019 15:35:30 +0100 (BST)
+Subject: Re: [PATCH 1/5] regulator: arizona: Switch to SPDX identifier
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+CC:     <patches@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20190417141633.4730-1-axel.lin@ingics.com>
+From:   Richard Fitzgerald <rf@opensource.cirrus.com>
+Message-ID: <c01e0254-6276-90a2-4dea-f0281162c6ab@opensource.cirrus.com>
+Date:   Wed, 17 Apr 2019 15:35:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190417141633.4730-1-axel.lin@ingics.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=960 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904170100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of providing our own callbacks for walking the page tables,
-switch to using the generic version instead.
+On 17/04/19 15:16, Axel Lin wrote:
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+>   drivers/regulator/arizona-ldo1.c    | 19 +++++++------------
+>   drivers/regulator/arizona-micsupp.c | 19 +++++++------------
+>   2 files changed, 14 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
+> index bf3ab405eed1..e4bc7b1e5ccd 100644
+> --- a/drivers/regulator/arizona-ldo1.c
+> +++ b/drivers/regulator/arizona-ldo1.c
+> @@ -1,15 +1,10 @@
+> -/*
+> - * arizona-ldo1.c  --  LDO1 supply for Arizona devices
+> - *
+> - * Copyright 2012 Wolfson Microelectronics PLC.
+> - *
+> - * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> - *
+> - *  This program is free software; you can redistribute  it and/or modify it
+> - *  under  the terms of  the GNU General  Public License as published by the
+> - *  Free Software Foundation;  either version 2 of the  License, or (at your
+> - *  option) any later version.
+> - */
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// arizona-ldo1.c  --  LDO1 supply for Arizona devices
+> +//
+> +// Copyright 2012 Wolfson Microelectronics PLC.
+> +//
+> +// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+>   
+>   #include <linux/module.h>
+>   #include <linux/moduleparam.h>
+> diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
+> index 120de94caf02..be0d46da51a1 100644
+> --- a/drivers/regulator/arizona-micsupp.c
+> +++ b/drivers/regulator/arizona-micsupp.c
+> @@ -1,15 +1,10 @@
+> -/*
+> - * arizona-micsupp.c  --  Microphone supply for Arizona devices
+> - *
+> - * Copyright 2012 Wolfson Microelectronics PLC.
+> - *
+> - * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> - *
+> - *  This program is free software; you can redistribute  it and/or modify it
+> - *  under  the terms of  the GNU General  Public License as published by the
+> - *  Free Software Foundation;  either version 2 of the  License, or (at your
+> - *  option) any later version.
+> - */
+> +// SPDX-License-Identifier: GPL-2.0+
+> +//
+> +// arizona-micsupp.c  --  Microphone supply for Arizona devices
+> +//
+> +// Copyright 2012 Wolfson Microelectronics PLC.
+> +//
+> +// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+>   
+>   #include <linux/module.h>
+>   #include <linux/moduleparam.h>
+> 
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/x86/Kconfig              |   1 +
- arch/x86/Kconfig.debug        |  20 +--
- arch/x86/mm/Makefile          |   4 +-
- arch/x86/mm/dump_pagetables.c | 297 +++++++---------------------------
- 4 files changed, 62 insertions(+), 260 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index c1f9b3cf437c..122c24055f02 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -106,6 +106,7 @@ config X86
- 	select GENERIC_IRQ_RESERVATION_MODE
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_PENDING_IRQ		if SMP
-+	select GENERIC_PTDUMP
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_STRNCPY_FROM_USER
- 	select GENERIC_STRNLEN_USER
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 15d0fbe27872..dc1dfe213657 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -62,26 +62,10 @@ config EARLY_PRINTK_USB_XDBC
- config MCSAFE_TEST
- 	def_bool n
- 
--config X86_PTDUMP_CORE
--	def_bool n
--
--config X86_PTDUMP
--	tristate "Export kernel pagetable layout to userspace via debugfs"
--	depends on DEBUG_KERNEL
--	select DEBUG_FS
--	select X86_PTDUMP_CORE
--	---help---
--	  Say Y here if you want to show the kernel pagetable layout in a
--	  debugfs file. This information is only useful for kernel developers
--	  who are working in architecture specific areas of the kernel.
--	  It is probably not a good idea to enable this feature in a production
--	  kernel.
--	  If in doubt, say "N"
--
- config EFI_PGT_DUMP
- 	bool "Dump the EFI pagetable"
- 	depends on EFI
--	select X86_PTDUMP_CORE
-+	select PTDUMP_CORE
- 	---help---
- 	  Enable this if you want to dump the EFI page table before
- 	  enabling virtual mode. This can be used to debug miscellaneous
-@@ -90,7 +74,7 @@ config EFI_PGT_DUMP
- 
- config DEBUG_WX
- 	bool "Warn on W+X mappings at boot"
--	select X86_PTDUMP_CORE
-+	select PTDUMP_CORE
- 	---help---
- 	  Generate a warning if any W+X mappings are found at boot.
- 
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 4b101dd6e52f..5233190fc6bf 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -28,8 +28,8 @@ obj-$(CONFIG_X86_PAT)		+= pat_rbtree.o
- obj-$(CONFIG_X86_32)		+= pgtable_32.o iomap_32.o
- 
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
--obj-$(CONFIG_X86_PTDUMP_CORE)	+= dump_pagetables.o
--obj-$(CONFIG_X86_PTDUMP)	+= debug_pagetables.o
-+obj-$(CONFIG_PTDUMP_CORE)	+= dump_pagetables.o
-+obj-$(CONFIG_PTDUMP_DEBUGFS)	+= debug_pagetables.o
- 
- obj-$(CONFIG_HIGHMEM)		+= highmem_32.o
- 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index f6b814aaddf7..955824c7cddb 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -20,6 +20,7 @@
- #include <linux/seq_file.h>
- #include <linux/highmem.h>
- #include <linux/pci.h>
-+#include <linux/ptdump.h>
- 
- #include <asm/e820/types.h>
- #include <asm/pgtable.h>
-@@ -30,15 +31,12 @@
-  * when a "break" in the continuity is found.
-  */
- struct pg_state {
-+	struct ptdump_state ptdump;
- 	int level;
--	pgprot_t current_prot;
-+	pgprotval_t current_prot;
- 	pgprotval_t effective_prot;
--	pgprotval_t effective_prot_pgd;
--	pgprotval_t effective_prot_p4d;
--	pgprotval_t effective_prot_pud;
--	pgprotval_t effective_prot_pmd;
-+	pgprotval_t prot_levels[5];
- 	unsigned long start_address;
--	unsigned long current_address;
- 	const struct addr_marker *marker;
- 	unsigned long lines;
- 	bool to_dmesg;
-@@ -179,9 +177,8 @@ static struct addr_marker address_markers[] = {
- /*
-  * Print a readable form of a pgprot_t to the seq_file
-  */
--static void printk_prot(struct seq_file *m, pgprot_t prot, int level, bool dmsg)
-+static void printk_prot(struct seq_file *m, pgprotval_t pr, int level, bool dmsg)
- {
--	pgprotval_t pr = pgprot_val(prot);
- 	static const char * const level_name[] =
- 		{ "cr3", "pgd", "p4d", "pud", "pmd", "pte" };
- 
-@@ -228,24 +225,11 @@ static void printk_prot(struct seq_file *m, pgprot_t prot, int level, bool dmsg)
- 	pt_dump_cont_printf(m, dmsg, "%s\n", level_name[level]);
- }
- 
--/*
-- * On 64 bits, sign-extend the 48 bit address to 64 bit
-- */
--static unsigned long normalize_addr(unsigned long u)
--{
--	int shift;
--	if (!IS_ENABLED(CONFIG_X86_64))
--		return u;
--
--	shift = 64 - (__VIRTUAL_MASK_SHIFT + 1);
--	return (signed long)(u << shift) >> shift;
--}
--
--static void note_wx(struct pg_state *st)
-+static void note_wx(struct pg_state *st, unsigned long addr)
- {
- 	unsigned long npages;
- 
--	npages = (st->current_address - st->start_address) / PAGE_SIZE;
-+	npages = (addr - st->start_address) / PAGE_SIZE;
- 
- #ifdef CONFIG_PCI_BIOS
- 	/*
-@@ -253,7 +237,7 @@ static void note_wx(struct pg_state *st)
- 	 * Inform about it, but avoid the warning.
- 	 */
- 	if (pcibios_enabled && st->start_address >= PAGE_OFFSET + BIOS_BEGIN &&
--	    st->current_address <= PAGE_OFFSET + BIOS_END) {
-+	    addr <= PAGE_OFFSET + BIOS_END) {
- 		pr_warn_once("x86/mm: PCI BIOS W+X mapping %lu pages\n", npages);
- 		return;
- 	}
-@@ -264,25 +248,44 @@ static void note_wx(struct pg_state *st)
- 		  (void *)st->start_address);
- }
- 
-+static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
-+{
-+	return (prot1 & prot2 & (_PAGE_USER | _PAGE_RW)) |
-+	       ((prot1 | prot2) & _PAGE_NX);
-+}
-+
- /*
-  * This function gets called on a break in a continuous series
-  * of PTE entries; the next one is different so we need to
-  * print what we collected so far.
-  */
--static void note_page(struct pg_state *st, pgprot_t new_prot,
--		      pgprotval_t new_eff, int level)
-+static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
-+		      unsigned long val)
- {
--	pgprotval_t prot, cur, eff;
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	pgprotval_t new_prot, new_eff;
-+	pgprotval_t cur, eff;
- 	static const char units[] = "BKMGTPE";
- 	struct seq_file *m = st->seq;
- 
-+	new_prot = val & PTE_FLAGS_MASK;
-+
-+	if (level > 1) {
-+		new_eff = effective_prot(st->prot_levels[level - 2],
-+					 new_prot);
-+	} else {
-+		new_eff = new_prot;
-+	}
-+
-+	if (level > 0)
-+		st->prot_levels[level-1] = new_eff;
-+
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
- 	 * we have now. "break" is either changing perms, levels or
- 	 * address space marker.
- 	 */
--	prot = pgprot_val(new_prot);
--	cur = pgprot_val(st->current_prot);
-+	cur = st->current_prot;
- 	eff = st->effective_prot;
- 
- 	if (!st->level) {
-@@ -294,14 +297,14 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 		st->lines = 0;
- 		pt_dump_seq_printf(m, st->to_dmesg, "---[ %s ]---\n",
- 				   st->marker->name);
--	} else if (prot != cur || new_eff != eff || level != st->level ||
--		   st->current_address >= st->marker[1].start_address) {
-+	} else if (new_prot != cur || new_eff != eff || level != st->level ||
-+		   addr >= st->marker[1].start_address) {
- 		const char *unit = units;
- 		unsigned long delta;
- 		int width = sizeof(unsigned long) * 2;
- 
- 		if (st->check_wx && (eff & _PAGE_RW) && !(eff & _PAGE_NX))
--			note_wx(st);
-+			note_wx(st, addr);
- 
- 		/*
- 		 * Now print the actual finished series
-@@ -311,9 +314,9 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 			pt_dump_seq_printf(m, st->to_dmesg,
- 					   "0x%0*lx-0x%0*lx   ",
- 					   width, st->start_address,
--					   width, st->current_address);
-+					   width, addr);
- 
--			delta = st->current_address - st->start_address;
-+			delta = addr - st->start_address;
- 			while (!(delta & 1023) && unit[1]) {
- 				delta >>= 10;
- 				unit++;
-@@ -331,7 +334,7 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 		 * such as the start of vmalloc space etc.
- 		 * This helps in the interpretation.
- 		 */
--		if (st->current_address >= st->marker[1].start_address) {
-+		if (addr >= st->marker[1].start_address) {
- 			if (st->marker->max_lines &&
- 			    st->lines > st->marker->max_lines) {
- 				unsigned long nskip =
-@@ -347,228 +350,42 @@ static void note_page(struct pg_state *st, pgprot_t new_prot,
- 					   st->marker->name);
- 		}
- 
--		st->start_address = st->current_address;
-+		st->start_address = addr;
- 		st->current_prot = new_prot;
- 		st->effective_prot = new_eff;
- 		st->level = level;
- 	}
- }
- 
--static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
--{
--	return (prot1 & prot2 & (_PAGE_USER | _PAGE_RW)) |
--	       ((prot1 | prot2) & _PAGE_NX);
--}
--
--static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
--			    unsigned long next, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--	pgprotval_t eff, prot;
--
--	st->current_address = normalize_addr(addr);
--
--	prot = pte_flags(*pte);
--	eff = effective_prot(st->effective_prot_pmd, prot);
--	note_page(st, __pgprot(prot), eff, 5);
--
--	return 0;
--}
--
--#ifdef CONFIG_KASAN
--
--/*
-- * This is an optimization for KASAN=y case. Since all kasan page tables
-- * eventually point to the kasan_early_shadow_page we could call note_page()
-- * right away without walking through lower level page tables. This saves
-- * us dozens of seconds (minutes for 5-level config) while checking for
-- * W+X mapping or reading kernel_page_tables debugfs file.
-- */
--static inline bool kasan_page_table(struct pg_state *st, void *pt)
--{
--	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
--	    (pgtable_l5_enabled() &&
--			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
--	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
--		pgprotval_t prot = pte_flags(kasan_early_shadow_pte[0]);
--		note_page(st, __pgprot(prot), 0, 5);
--		return true;
--	}
--	return false;
--}
--#else
--static inline bool kasan_page_table(struct pg_state *st, void *pt)
--{
--	return false;
--}
--#endif
--
--static int ptdump_test_pmd(unsigned long addr, unsigned long next,
--			   pmd_t *pmd, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--
--	st->current_address = normalize_addr(addr);
--
--	if (kasan_page_table(st, pmd))
--		return 1;
--	return 0;
--}
--
--static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
--			    unsigned long next, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--	pgprotval_t eff, prot;
--
--	prot = pmd_flags(*pmd);
--	eff = effective_prot(st->effective_prot_pud, prot);
--
--	st->current_address = normalize_addr(addr);
--
--	if (pmd_large(*pmd))
--		note_page(st, __pgprot(prot), eff, 4);
--
--	st->effective_prot_pmd = eff;
--
--	return 0;
--}
--
--static int ptdump_test_pud(unsigned long addr, unsigned long next,
--			   pud_t *pud, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--
--	st->current_address = normalize_addr(addr);
--
--	if (kasan_page_table(st, pud))
--		return 1;
--	return 0;
--}
--
--static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
--			    unsigned long next, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--	pgprotval_t eff, prot;
--
--	prot = pud_flags(*pud);
--	eff = effective_prot(st->effective_prot_p4d, prot);
--
--	st->current_address = normalize_addr(addr);
--
--	if (pud_large(*pud))
--		note_page(st, __pgprot(prot), eff, 3);
--
--	st->effective_prot_pud = eff;
--
--	return 0;
--}
--
--static int ptdump_test_p4d(unsigned long addr, unsigned long next,
--			   p4d_t *p4d, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--
--	st->current_address = normalize_addr(addr);
--
--	if (kasan_page_table(st, p4d))
--		return 1;
--	return 0;
--}
--
--static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
--			    unsigned long next, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--	pgprotval_t eff, prot;
--
--	prot = p4d_flags(*p4d);
--	eff = effective_prot(st->effective_prot_pgd, prot);
--
--	st->current_address = normalize_addr(addr);
--
--	if (p4d_large(*p4d))
--		note_page(st, __pgprot(prot), eff, 2);
--
--	st->effective_prot_p4d = eff;
--
--	return 0;
--}
--
--static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
--			    unsigned long next, struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--	pgprotval_t eff, prot;
-+static const struct ptdump_range ptdump_ranges[] = {
-+#ifdef CONFIG_X86_64
- 
--	prot = pgd_flags(*pgd);
-+#define normalize_addr_shift (64 - (__VIRTUAL_MASK_SHIFT + 1))
-+#define normalize_addr(u) ((signed long)(u << normalize_addr_shift) >> normalize_addr_shift)
- 
--#ifdef CONFIG_X86_PAE
--	eff = _PAGE_USER | _PAGE_RW;
-+	{0, PTRS_PER_PGD * PGD_LEVEL_MULT / 2},
-+	{normalize_addr(PTRS_PER_PGD * PGD_LEVEL_MULT / 2), ~0UL},
- #else
--	eff = prot;
-+	{0, ~0UL},
- #endif
--
--	st->current_address = normalize_addr(addr);
--
--	if (pgd_large(*pgd))
--		note_page(st, __pgprot(prot), eff, 1);
--
--	st->effective_prot_pgd = eff;
--
--	return 0;
--}
--
--static int ptdump_hole(unsigned long addr, unsigned long next,
--		       struct mm_walk *walk)
--{
--	struct pg_state *st = walk->private;
--
--	st->current_address = normalize_addr(addr);
--
--	note_page(st, __pgprot(0), 0, -1);
--
--	return 0;
--}
-+	{0, 0}
-+};
- 
- static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
- 				       bool checkwx, bool dmesg)
- {
--	struct pg_state st = {};
--	struct mm_walk walk = {
--		.mm		= mm,
--		.pgd_entry	= ptdump_pgd_entry,
--		.p4d_entry	= ptdump_p4d_entry,
--		.pud_entry	= ptdump_pud_entry,
--		.pmd_entry	= ptdump_pmd_entry,
--		.pte_entry	= ptdump_pte_entry,
--		.test_p4d	= ptdump_test_p4d,
--		.test_pud	= ptdump_test_pud,
--		.test_pmd	= ptdump_test_pmd,
--		.pte_hole	= ptdump_hole,
--		.private	= &st
-+	struct pg_state st = {
-+		.ptdump = {
-+			.note_page	= note_page,
-+			.range		= ptdump_ranges
-+		},
-+		.to_dmesg	= dmesg,
-+		.check_wx	= checkwx,
-+		.seq		= m
- 	};
- 
--	st.to_dmesg = dmesg;
--	st.check_wx = checkwx;
--	st.seq = m;
--	if (checkwx)
--		st.wx_pages = 0;
--
--	down_read(&mm->mmap_sem);
--#ifdef CONFIG_X86_64
--	walk_page_range(0, PTRS_PER_PGD*PGD_LEVEL_MULT/2, &walk);
--	walk_page_range(normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT/2), ~0,
--			&walk);
--#else
--	walk_page_range(0, ~0, &walk);
--#endif
--	up_read(&mm->mmap_sem);
-+	ptdump_walk_pgd(&st.ptdump, mm);
- 
--	/* Flush out the last page */
--	st.current_address = normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT);
--	note_page(&st, __pgprot(0), 0, 0);
- 	if (!checkwx)
- 		return;
- 	if (st.wx_pages)
--- 
-2.20.1
+Acked-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
