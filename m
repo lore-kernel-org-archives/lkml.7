@@ -2,104 +2,130 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AB5C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBD8C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0322173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOAWLP+o"
+	by mail.kernel.org (Postfix) with ESMTP id 170D521773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbfDQOwm (ORCPT
+        id S1732504AbfDQOxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:52:42 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41704 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730463AbfDQOwm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:52:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t30so19095751lfd.8;
-        Wed, 17 Apr 2019 07:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=9nw/YK2zJ58Ci60J7XUCFlBEGHNW1WY/eWuxgJxN48E=;
-        b=MOAWLP+oVF13oVbQKCqJNZCj0rPLe6oVjHHqNl/hcUt+7843hetUTORZslrCY2PHfa
-         35T3UnVsRfB3dOZV4MqbSrnXanbh9q2dRaQvtk4eAruZ0s3fp/8a3punwYrhzXjuI2kR
-         jvb0kVfaGKj9AZg9+UTX7aa8oYt+bp5TnKFmS2vFHicsBDWn36H1URJ/LpBn6ROAL73N
-         j4Qd3v1oJ3NhpxsQ8K0YqeRqpPYbluR6eaJIKjPbBqyqSeEK1RkWDSzGtpS/W4hGwQK+
-         6WpptlslivEjbvGX3yrees2EVY5mP0VDEzX66ayhekw/3ExgNi+9EEn6kJYrFRSBCHC2
-         AnQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9nw/YK2zJ58Ci60J7XUCFlBEGHNW1WY/eWuxgJxN48E=;
-        b=ZRSxqHN42qvlFBSKd3wYt2Bu9dV8PE3PrJkgIu2HrW6ROQrx/KKX1gvaFpChqLpc3z
-         svfiekHFNI4PAnWEi5ByZekkQ6HZPAGyIxGXDd2EIymVJYtRbUh7xJK797Kk1jpAPO0b
-         +Xq9gwJrR/wddcZixjVicmyG9GfuHsp73fiCGnimQtERouwWco35eaeIY6WcKJsFV3F5
-         VmbmzHCSCq3j7f5Knvr/90UoT2RJnU25vk6pnP1+NsTkOsigjOltTNj7lFptHvs5s91v
-         CMiaS0EsZuafQdIm+HN12ghBdz7IUlJfw51GACfjS/sM7CzbgvhAKZXH85CeYaDH3h4J
-         dtnw==
-X-Gm-Message-State: APjAAAUu5ovbtNmQ2moy4QeVc9n4jmVcuLPcPJUkEdI/yuPkYgD5MQO3
-        IxaQhBGsLZ0YxTW+K4RGkgg=
-X-Google-Smtp-Source: APXvYqxp9farvHtIdCO6ULBc84FlV+QVJbJ0w8usdf1jsQV2DkmHlzQ3AwOGsE/KHFT7WiuXO5J2xA==
-X-Received: by 2002:ac2:41d8:: with SMTP id d24mr32478657lfi.56.1555512760453;
-        Wed, 17 Apr 2019 07:52:40 -0700 (PDT)
-Received: from localhost.localdomain (62-167-31.netrun.cytanet.com.cy. [62.228.167.31])
-        by smtp.gmail.com with ESMTPSA id d16sm5490407lfi.75.2019.04.17.07.52.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Apr 2019 07:52:39 -0700 (PDT)
-From:   Mohan Kumar <mohankumar718@gmail.com>
-To:     rjw@rjwysocki.net
-Cc:     daniel.lezcano@linaro.org, benh@kernel.crashing.org,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Wed, 17 Apr 2019 10:53:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46278 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730463AbfDQOxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:53:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8DC3A78;
+        Wed, 17 Apr 2019 07:53:00 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 395D63F557;
+        Wed, 17 Apr 2019 07:52:59 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 15:52:56 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: cpuidle: This patch fix the following checkpatch warning.
-Date:   Wed, 17 Apr 2019 17:52:34 +0300
-Message-Id: <1555512754-6450-1-git-send-email-mohankumar718@gmail.com>
-X-Mailer: git-send-email 2.7.4
+Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth
+ for guest
+Message-ID: <20190417145255.GB3567@e103592.cambridge.arm.com>
+References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
+ <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
+ <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
+ <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
+ <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use pr_debug instead of printk
+On Wed, Apr 17, 2019 at 03:19:11PM +0100, Marc Zyngier wrote:
+> On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
+> > Hi,
+> > 
+> > On 4/17/19 2:05 PM, Marc Zyngier wrote:
+> >> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
+> >>> A per vcpu flag is added to check if pointer authentication is
+> >>> enabled for the vcpu or not. This flag may be enabled according to
+> >>> the necessary user policies and host capabilities.
+> >>>
+> >>> This patch also adds a helper to check the flag.
+> >>>
+> >>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> >>> Cc: Mark Rutland <mark.rutland@arm.com>
+> >>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> >>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> >>> Cc: kvmarm@lists.cs.columbia.edu
+> >>> ---
+> >>>
+> >>> Changes since v8:
+> >>> * Added a new per vcpu flag which will store Pointer Authentication enable
+> >>>    status instead of checking them again. [Dave Martin]
+> >>>
+> >>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
+> >>>   1 file changed, 4 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> >>> index 9d57cf8..31dbc7c 100644
+> >>> --- a/arch/arm64/include/asm/kvm_host.h
+> >>> +++ b/arch/arm64/include/asm/kvm_host.h
+> >>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
+> >>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
+> >>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
+> >>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
+> >>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
+> >>>   
+> >>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
+> >>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
+> >>>   
+> >>> +#define vcpu_has_ptrauth(vcpu)	\
+> >>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
+> >>> +
+> >>
+> >> Just as for SVE, please first check that the system has PTRAUTH.
+> >> Something like:
+> >>
+> >> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
+> >> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
+> > 
+> > In the subsequent patches, vcpu->arch.flags is only set to 
+> > KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
+> > matches such as system_supports_address_auth(), 
+> > system_supports_generic_auth() so doing them again is repetitive in my view.
+> 
+> It isn't the setting of the flag I care about, but the check of that
+> flag. Checking a flag for a feature that cannot be used on the running
+> system should have a zero cost, which isn't the case here.
+> 
+> Granted, the impact should be minimal and it looks like it mostly happen
+> on the slow path, but at the very least it would be consistent. So even
+> if you don't buy my argument about efficiency, please change it in the
+> name of consistency.
 
-WARNING: Prefer [subsystem eg: netdev]_dbg([subsystem]dev, ... then
-dev_dbg(dev, ... then pr_debug(...  to printk(KERN_DEBUG ...
+One of the annoyances here is there is no single static key for ptrauth.
 
-Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
----
- drivers/cpuidle/cpuidle-powernv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm assuming we don't want to check both static keys (for address and
+generic auth) on hot paths.
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index 84b1ebe..7cf9835 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -401,7 +401,7 @@ static int __init powernv_processor_idle_init(void)
- 	powernv_cpuidle_driver_init();
- 	retval = cpuidle_register(&powernv_idle_driver, NULL);
- 	if (retval) {
--		printk(KERN_DEBUG "Registration of powernv driver failed.\n");
-+		pr_debug("Registration of powernv driver failed.\n");
- 		return retval;
- 	}
- 
-@@ -413,7 +413,7 @@ static int __init powernv_processor_idle_init(void)
- 					   "cpuidle/powernv:dead", NULL,
- 					   powernv_cpuidle_cpu_dead);
- 	WARN_ON(retval < 0);
--	printk(KERN_DEBUG "powernv_idle_driver registered\n");
-+	pr_debug("powernv_idle_driver registered\n");
- 	return 0;
- }
- 
--- 
-2.7.4
+Checking just one of the two possibilities is OK for now, but we need
+to comment clearly somewhere that that will break if KVM is changed
+later to expose ptrauth to guests when the host doesn't support both
+types.
 
+Cheers
+---Dave
