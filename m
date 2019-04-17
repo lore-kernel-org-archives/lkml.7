@@ -2,161 +2,86 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD3C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91338C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E7C206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7CE206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPeN0FFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfDQSxw (ORCPT
+        id S1733289AbfDQSx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:53:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:64660 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731358AbfDQSxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:53:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 11:53:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
-   d="scan'208";a="338528135"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Apr 2019 11:53:38 -0700
-Subject: [PATCH v6 11/12] libnvdimm/pfn: Fix fsdax-mode namespace info-block
- zero-fields
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     akpm@linux-foundation.org
-Cc:     stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, david@redhat.com
-Date:   Wed, 17 Apr 2019 11:39:52 -0700
-Message-ID: <155552639290.2015392.17304211251966796338.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Apr 2019 14:53:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44390 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733258AbfDQSxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:53:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y13so12499668pfm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=eP1rGFUQ98ZaT6S3HWtFbgX9hsCc2QUVRpYbQREl3dI=;
+        b=VPeN0FFVgq5c2dHmQMyLNDeQXl6ogjEf5aYsUjSBNOhm46k7IxQ274LLIFrylDxp0M
+         nY8MJtWwoVsI068/17AvV3Q4/xRr0e/W9znRA7HujBbHoKN8okNWc+qtuYtJ7iGnLdq+
+         Ddue5hsZdHLOF56hYGnrT3CsfeAWuUsNEeHIoX/t4+3Bc/caxcsaHBm4wsZrXGuJEqM4
+         hQHLg4OAEBj1MHmPvPF7fnOgA6XYJV0MVnMuow9QCx9tKuvP6JGtjMfnbjQFwobgMeXV
+         OU+0aPmWXgNu90cEqWClGPv+TiXXR+6weuNfUOmEEsMaff/uRlfIbowtMMbjCOsc/xAw
+         SZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=eP1rGFUQ98ZaT6S3HWtFbgX9hsCc2QUVRpYbQREl3dI=;
+        b=pZRyCBphKO2OysvFODZyKt/HhwrbD3L/IzLjLDCbpole4pyzASe23iuKAeZp0xcV9K
+         hbZDJ0THidjBnel5fFAH8MT6CCqtWNPEdYtGA7QNoBZ3MGWeKHRRtP6KhTfmAX3MxaOT
+         GuLmmoItZa9/TdUBpdSUKSesuh6nhJQu5yj1tcPft5jYlDG+uCfiXt37+v8hPSlyC8lK
+         w9R0GLFYfF0zvgqwCLZ/BkA6rGc38wayco9Hiak2u8sdXi4AkEqfJMEjdSicINf8mnKo
+         QyD3KwvQk/piXKkD3e+ooxnNJ7B/OzdXJpMehHO6Ifan9VLnKufaiyhfmhwsu4vcvnve
+         ntiA==
+X-Gm-Message-State: APjAAAXaZXhxMuzwcddklc+vWZuK4DSz7bZU01zJM0XQiTHJs5INZTmb
+        e+Di+jPFcNjj+KIZfh7dzZw=
+X-Google-Smtp-Source: APXvYqw5ojFX+sq6xQRQN7ukkKCbD3PNNSYLKx5NEmsAU7U7OUKEcKcu7DhHeM5QNilkxDslOA0BfQ==
+X-Received: by 2002:a63:1a1b:: with SMTP id a27mr83218728pga.59.1555527231012;
+        Wed, 17 Apr 2019 11:53:51 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id h16sm42451154pgj.85.2019.04.17.11.53.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 11:53:50 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Markus Mayer <code@mmayer.net>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] memory: brcmstb: dpfe: remove unused code and fix formatting
+Date:   Wed, 17 Apr 2019 11:53:43 -0700
+Message-Id: <20190417185343.910-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190402230103.25491-2-code@mmayer.net>
+References: <20190402230103.25491-1-code@mmayer.net> <20190402230103.25491-2-code@mmayer.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At namespace creation time there is the potential for the "expected to
-be zero" fields of a 'pfn' info-block to be filled with indeterminate
-data. While the kernel buffer is zeroed on allocation it is immediately
-overwritten by nd_pfn_validate() filling it with the current contents of
-the on-media info-block location. For fields like, 'flags' and the
-'padding' it potentially means that future implementations can not rely
-on those fields being zero.
+On Tue,  2 Apr 2019 16:00:58 -0700, Markus Mayer <code@mmayer.net> wrote:
+> From: Markus Mayer <mmayer@broadcom.com>
+> 
+> Remove an unused struct and fix source code formatting in a few areas.
+> 
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+> ---
 
-In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-section alignment, arrange for fields that are not explicitly
-initialized to be guaranteed zero. Bump the minor version to indicate it
-is safe to assume the 'padding' and 'flags' are zero. Otherwise, this
-corruption is expected to benign since all other critical fields are
-explicitly initialized.
-
-Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvdimm/dax_devs.c |    2 +-
- drivers/nvdimm/pfn.h      |    1 +
- drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
- 3 files changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/nvdimm/dax_devs.c b/drivers/nvdimm/dax_devs.c
-index 0453f49dc708..326f02ffca81 100644
---- a/drivers/nvdimm/dax_devs.c
-+++ b/drivers/nvdimm/dax_devs.c
-@@ -126,7 +126,7 @@ int nd_dax_probe(struct device *dev, struct nd_namespace_common *ndns)
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!dax_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
- 	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
-diff --git a/drivers/nvdimm/pfn.h b/drivers/nvdimm/pfn.h
-index dde9853453d3..e901e3a3b04c 100644
---- a/drivers/nvdimm/pfn.h
-+++ b/drivers/nvdimm/pfn.h
-@@ -36,6 +36,7 @@ struct nd_pfn_sb {
- 	__le32 end_trunc;
- 	/* minor-version-2 record the base alignment of the mapping */
- 	__le32 align;
-+	/* minor-version-3 guarantee the padding and flags are zero */
- 	u8 padding[4000];
- 	__le64 checksum;
- };
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index 01f40672507f..a2406253eb70 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -420,6 +420,15 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 	return 0;
- }
- 
-+/**
-+ * nd_pfn_validate - read and validate info-block
-+ * @nd_pfn: fsdax namespace runtime state / properties
-+ * @sig: 'devdax' or 'fsdax' signature
-+ *
-+ * Upon return the info-block buffer contents (->pfn_sb) are
-+ * indeterminate when validation fails, and a coherent info-block
-+ * otherwise.
-+ */
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- {
- 	u64 checksum, offset;
-@@ -565,7 +574,7 @@ int nd_pfn_probe(struct device *dev, struct nd_namespace_common *ndns)
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!pfn_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn = to_nd_pfn(pfn_dev);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-@@ -702,7 +711,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	u64 checksum;
- 	int rc;
- 
--	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	if (!pfn_sb)
- 		return -ENOMEM;
- 
-@@ -711,11 +720,14 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 		sig = DAX_SIG;
- 	else
- 		sig = PFN_SIG;
-+
- 	rc = nd_pfn_validate(nd_pfn, sig);
- 	if (rc != -ENODEV)
- 		return rc;
- 
- 	/* no info block, do init */;
-+	memset(pfn_sb, 0, sizeof(*pfn_sb));
-+
- 	nd_region = to_nd_region(nd_pfn->dev.parent);
- 	if (nd_region->ro) {
- 		dev_info(&nd_pfn->dev,
-@@ -768,7 +780,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
- 	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
- 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
- 	pfn_sb->version_major = cpu_to_le16(1);
--	pfn_sb->version_minor = cpu_to_le16(2);
-+	pfn_sb->version_minor = cpu_to_le16(3);
- 	pfn_sb->start_pad = cpu_to_le32(start_pad);
- 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
- 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
-
+Applied to drivers/next, thanks!
+--
+Florian
