@@ -3,92 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16A3C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739A0C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E7120835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE2E20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbfDQKFe (ORCPT
+        id S1731593AbfDQKHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:05:34 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:45662 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729039AbfDQKFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:05:33 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 4A6F8C364437082983B6;
-        Wed, 17 Apr 2019 18:05:31 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 17 Apr 2019 18:05:30 +0800
-Received: from [10.134.22.195] (10.134.22.195) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 17 Apr 2019 18:05:30 +0800
-Subject: Re: linux-next: build warning after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jens Axboe <axboe@kernel.dk>, Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190417123125.3de22f73@canb.auug.org.au>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0879e11b-c84c-65b8-581f-bf7adcb5e231@huawei.com>
-Date:   Wed, 17 Apr 2019 18:05:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 17 Apr 2019 06:07:21 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16363 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727312AbfDQKHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:07:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 03:07:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,361,1549958400"; 
+   d="scan'208";a="141385871"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Apr 2019 03:07:19 -0700
+Subject: Re: [PATCH v15 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
+        hpa@zytor.com, ak@linux.intel.com, tim.c.chen@linux.intel.com,
+        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
+        aubrey.li@intel.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190416063250.7514-1-aubrey.li@linux.intel.com>
+ <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <a3c19a36-9b0b-e48b-6d1f-9f4b654df615@linux.intel.com>
+Date:   Wed, 17 Apr 2019 18:07:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-In-Reply-To: <20190417123125.3de22f73@canb.auug.org.au>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
-
-On 2019/4/17 10:31, Stephen Rothwell wrote:
-> Hi all,
+On 2019/4/17 7:01, Andrew Morton wrote:
+> On Tue, 16 Apr 2019 14:32:48 +0800 Aubrey Li <aubrey.li@linux.intel.com> wrote:
 > 
-> After merging the block tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
+>> The architecture specific information of the running processes could
+>> be useful to the userland. Add support to examine process architecture
+>> specific information externally.
 > 
-> fs/f2fs/node.c: In function 'f2fs_remove_inode_page':
-> fs/f2fs/node.c:1193:47: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'blkcnt_t' {aka 'long long unsigned int'} [-Wformat=]
->     "Inconsistent i_blocks, ino:%lu, iblocks:%zu",
->                                              ~~^
->                                              %llu
->     inode->i_ino, inode->i_blocks);
->                   ~~~~~~~~~~~~~~~       
-
-Could you please help to fix that as below in your dev branch directly?
-
-"Inconsistent i_blocks, ino:%lu, iblocks:%llu",
-inode->i_ino, (unsigned long long)inode->i_blocks)
-
-
-It looks that we need to fix below commits as well:
-
-f2fs: fix to avoid panic in dec_valid_block_count()
-f2fs: fix to avoid panic in dec_valid_node_count()
-
-Thanks,
-
+> The implementation looks just fine to me.  Have you had any feedback on
+> the overall desirability of adding this feature?
 > 
-> Introduced by commit
+This is orientated by the customer's complain. When the customer colocated
+their latency critical tasks with AVX512 tasks, the latency critical tasks
+were affected due to core frequency slowing down by AVX512 use. So we propose
+this interface for the user space tools to identify AVX512 using task and
+apply user space dispatching policy. We may have subsequent effort based on
+this proposal.
+
+>> --- a/fs/proc/array.c
+>> +++ b/fs/proc/array.c
+>> @@ -96,6 +96,11 @@
+>>  #include <asm/processor.h>
+>>  #include "internal.h"
+>>  
+>> +/* Add support for architecture specific output in /proc/pid/status */
+>> +#ifndef	arch_proc_pid_status
+>> +#define	arch_proc_pid_status(m, task)
+>> +#endif
 > 
->   90ae238d9dac ("f2fs: fix to avoid panic in f2fs_remove_inode_page()")
+> To this I suggest adding
 > 
-> from the f2fs tree interacting with commit
+> /* arch_proc_pid_status() must be defined in asm/processor.h */
 > 
->   72deb455b5ec ("block: remove CONFIG_LBDAF")
-> 
+> Because we've regularly had different architectures defining such things
+> in different headers, resulting in a mess.
+
+Thanks, I'll add it in the next version.
+-Aubrey
