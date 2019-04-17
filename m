@@ -2,76 +2,58 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CA5C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B623FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612D5206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D27D206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732020AbfDQMIY (ORCPT
+        id S1731979AbfDQMLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:08:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35872 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731116AbfDQMIY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:08:24 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hGjMU-00033X-Ha; Wed, 17 Apr 2019 12:08:22 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtlwifi: fix spelling mistake "notity" -> "notify"
-Date:   Wed, 17 Apr 2019 13:08:22 +0100
-Message-Id: <20190417120822.21771-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 17 Apr 2019 08:11:47 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:56836 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729522AbfDQMLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 08:11:47 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 5D2C420103;
+        Wed, 17 Apr 2019 14:11:45 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 48D3F200CA;
+        Wed, 17 Apr 2019 14:11:45 +0200 (CEST)
+Subject: Re: fs/proc: Crash observed in next_tgid (fs/proc/base.c)
+To:     Jitendra Sharma <shajit@codeaurora.org>
+References: <b5b9df7b-324c-8286-3a7c-e7812511772d@codeaurora.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <4cb1d095-54a1-a7aa-762f-df77dddc4621@free.fr>
+Date:   Wed, 17 Apr 2019 14:11:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b5b9df7b-324c-8286-3a7c-e7812511772d@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Apr 17 14:11:45 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 15/04/2019 14:58, Jitendra Sharma wrote:
 
-There are two spelling mistake in RT_TRACE messages. Fix them.
+> We are observing one kernel crash in next_tgid function through 
+> getdents64 path. Call stack is as shown below:
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/rtlwifi/btcoexist/halbtc8822b1ant.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It might help if you specify the exact kernel version you are discussing,
+as in which tag or commit hash you are running.
 
-diff --git a/drivers/staging/rtlwifi/btcoexist/halbtc8822b1ant.c b/drivers/staging/rtlwifi/btcoexist/halbtc8822b1ant.c
-index ade271cb4aab..32c797430512 100644
---- a/drivers/staging/rtlwifi/btcoexist/halbtc8822b1ant.c
-+++ b/drivers/staging/rtlwifi/btcoexist/halbtc8822b1ant.c
-@@ -4730,7 +4730,7 @@ void ex_btc8822b1ant_media_status_notify(struct btc_coexist *btcoexist, u8 type)
- 		if (wifi_under_b_mode) {
- 			RT_TRACE(
- 				rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
--				"[BTCoex], ********** (media status notity under b mode) **********\n");
-+				"[BTCoex], ********** (media status notify under b mode) **********\n");
- 			btcoexist->btc_write_1byte(btcoexist, 0x6cd,
- 						   0x00); /* CCK Tx */
- 			btcoexist->btc_write_1byte(btcoexist, 0x6cf,
-@@ -4738,7 +4738,7 @@ void ex_btc8822b1ant_media_status_notify(struct btc_coexist *btcoexist, u8 type)
- 		} else {
- 			RT_TRACE(
- 				rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
--				"[BTCoex], ********** (media status notity not under b mode) **********\n");
-+				"[BTCoex], ********** (media status notify not under b mode) **********\n");
- 			btcoexist->btc_write_1byte(btcoexist, 0x6cd,
- 						   0x00); /* CCK Tx */
- 			btcoexist->btc_write_1byte(btcoexist, 0x6cf,
--- 
-2.20.1
+Also, what are you doing to trigger the issue?
 
+Regards.
