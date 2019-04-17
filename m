@@ -2,141 +2,68 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AA9C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902F9C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C3020821
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69427206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733036AbfDQRUQ (ORCPT
+        id S1733053AbfDQRVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:20:16 -0400
-Received: from foss.arm.com ([217.140.101.70]:48468 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbfDQRUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:20:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D6D715AB;
-        Wed, 17 Apr 2019 10:20:15 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21743F59C;
-        Wed, 17 Apr 2019 10:20:13 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 18:20:11 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth
- for guest
-Message-ID: <20190417172010.GE3567@e103592.cambridge.arm.com>
-References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
- <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
- <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
- <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
- <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
- <20190417145255.GB3567@e103592.cambridge.arm.com>
- <a04c6bfd-fd6a-8ff9-a66a-3391af53afb5@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a04c6bfd-fd6a-8ff9-a66a-3391af53afb5@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 17 Apr 2019 13:21:17 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56718 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732746AbfDQRVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:21:16 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D564D133E9778;
+        Wed, 17 Apr 2019 10:21:12 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 10:21:12 -0700 (PDT)
+Message-Id: <20190417.102112.382636552216165456.davem@davemloft.net>
+To:     nhorman@tuxdriver.com
+Cc:     arnd@arndb.de, ralf@linux-mips.org, marcel@holtmann.org,
+        johan.hedberg@gmail.com, socketcan@hartkopp.net,
+        mkl@pengutronix.de, gerrit@erg.abdn.ac.uk, alex.aring@gmail.com,
+        stefan@datenfreihafen.org, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, vyasevich@gmail.com,
+        marcelo.leitner@gmail.com, andrew.hendry@gmail.com,
+        edumazet@google.com, willemb@google.com, deepa.kernel@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-x25@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190417093523.GA15487@hmswarspite.think-freely.org>
+References: <20190416203620.539628-1-arnd@arndb.de>
+        <20190417093523.GA15487@hmswarspite.think-freely.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 17 Apr 2019 10:21:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 04:54:32PM +0100, Marc Zyngier wrote:
-> On 17/04/2019 15:52, Dave Martin wrote:
-> > On Wed, Apr 17, 2019 at 03:19:11PM +0100, Marc Zyngier wrote:
-> >> On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
-> >>> Hi,
-> >>>
-> >>> On 4/17/19 2:05 PM, Marc Zyngier wrote:
-> >>>> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
-> >>>>> A per vcpu flag is added to check if pointer authentication is
-> >>>>> enabled for the vcpu or not. This flag may be enabled according to
-> >>>>> the necessary user policies and host capabilities.
-> >>>>>
-> >>>>> This patch also adds a helper to check the flag.
-> >>>>>
-> >>>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-> >>>>> Cc: Mark Rutland <mark.rutland@arm.com>
-> >>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> >>>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
-> >>>>> Cc: kvmarm@lists.cs.columbia.edu
-> >>>>> ---
-> >>>>>
-> >>>>> Changes since v8:
-> >>>>> * Added a new per vcpu flag which will store Pointer Authentication enable
-> >>>>>    status instead of checking them again. [Dave Martin]
-> >>>>>
-> >>>>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
-> >>>>>   1 file changed, 4 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> >>>>> index 9d57cf8..31dbc7c 100644
-> >>>>> --- a/arch/arm64/include/asm/kvm_host.h
-> >>>>> +++ b/arch/arm64/include/asm/kvm_host.h
-> >>>>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
-> >>>>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
-> >>>>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
-> >>>>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
-> >>>>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
-> >>>>>   
-> >>>>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
-> >>>>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
-> >>>>>   
-> >>>>> +#define vcpu_has_ptrauth(vcpu)	\
-> >>>>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
-> >>>>> +
-> >>>>
-> >>>> Just as for SVE, please first check that the system has PTRAUTH.
-> >>>> Something like:
-> >>>>
-> >>>> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
-> >>>> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
-> >>>
-> >>> In the subsequent patches, vcpu->arch.flags is only set to 
-> >>> KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
-> >>> matches such as system_supports_address_auth(), 
-> >>> system_supports_generic_auth() so doing them again is repetitive in my view.
-> >>
-> >> It isn't the setting of the flag I care about, but the check of that
-> >> flag. Checking a flag for a feature that cannot be used on the running
-> >> system should have a zero cost, which isn't the case here.
-> >>
-> >> Granted, the impact should be minimal and it looks like it mostly happen
-> >> on the slow path, but at the very least it would be consistent. So even
-> >> if you don't buy my argument about efficiency, please change it in the
-> >> name of consistency.
-> > 
-> > One of the annoyances here is there is no single static key for ptrauth.
-> > 
-> > I'm assuming we don't want to check both static keys (for address and
-> > generic auth) on hot paths.
-> 
-> They both just branches, so I don't see why not. Of course, for people
-> using a lesser compiler (gcc 4.8 or clang), things will suck. But they
-> got it coming anyway.
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 17 Apr 2019 05:35:23 -0400
 
-I seem to recall Christoffer expressing concerns about this at some
-point: even unconditional branches branches to a fixed address are not
-free (or even correctly predicted).
+> Acked-by: Neil Horman <nhorman@tuxdriver.com>
 
-I don't think any compiler can elide static key checks of merge them
-together.
+Neil, please quote appropriately in the future.
 
-Maybe I am misremembering.
+I have to scroll through all of those pages of quoted patch just to
+see this one line.
 
-Cheers
----Dave
+Thank you.
