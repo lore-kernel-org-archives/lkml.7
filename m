@@ -2,164 +2,151 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A27C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE7521841
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFD820872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PP6fUeug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387594AbfDQUz3 (ORCPT
+        id S2387606AbfDQUzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:55:29 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:45925 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387548AbfDQUz1 (ORCPT
+        Wed, 17 Apr 2019 16:55:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38005 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387553AbfDQUz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:55:27 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M3lkT-1hG2Mg2SF1-000wd2; Wed, 17 Apr 2019 22:54:45 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     netdev@vger.kernel.org
-Cc:     y2038@lists.linaro.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: [PATCH v3 2/3] asm-generic: generalize asm/sockios.h
-Date:   Wed, 17 Apr 2019 22:51:49 +0200
-Message-Id: <20190417205404.1877560-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190417205404.1877560-1-arnd@arndb.de>
-References: <20190417205404.1877560-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:FOfgVjHtBZ0OW8C3V0LXa7wLWJZ1CEMCBFodtLv5+jGoOIvtmOO
- 7Zk231Di7aj03uQiKQq0hrnXKaNTIQSryIk2qwUaugxCw/8DWEUiSN0b5l262JHeax7PWEl
- 2Y6w7jKYvUoTJtSBvV44dWezbbKht+hT9J89mml5w7iV3BjhQ73rMaFWWWrvxUMEX/ZUkb8
- N9AA90zeyjE1PbHqG5rtw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k063E2GsEco=:4hVEv7dmqHHw0nvomJ3WWl
- IM28bbcnMcYNqTyRRBbGidTTZC3+84JbwDV8vlrlz07ri4hDVZI3QqcPBYbz+8Id/Gu6mZGQc
- S861YuZpM95FOi1DXN7OngEd4KP9ZuTIQEiExZFUsY1w0+jaDqho7EmDyPIMwlfmh9Fh06JPq
- uCCoWcaompQtiTBlHzuhx8Wj7ULlQKlJwWi+eshk8nuoRoAM8jY9ABgf+ERuV05vxJO8sdalg
- oQp+eAyq+WmdiWKpuVkzMWTs7YeyPCzyv5NEgT/9W6qrwdVJWEEQxHy4Qshr7xPiu20iG58bW
- DSUpkbV0LYaGvJaj1pjL8PfeVgBvnrGvV6LBpeBirZ6oLNwS2cSxUowx+qJzU4NLLD7NTYSSS
- x/caJnvJDNNq2wnslZVYVWNTp6H+9p86/B9125Ivyi3Vss8RUnY2xkexYS6oRuGU/6lcbR8fY
- fnJpvHchjG8rh/eRoE0Cu9ifkfcxjbuR7CnVggjkKx9N73BYvyGeAdsDrSESKFqa04b4jBf/G
- Arn/JgIUN+LJfjCcLOF3eNokirNrHAiKPTRyR9H5/t9ZiiqCfpuTrr7lCbVzGy8s6Dcj699jx
- Imm89Y0VPgUNkGyrU3QAXFvJJ8qOZyGUxhhqRIGiRBYdmri5OpNteR+mE6QQ+60S+M3AsiGjA
- WlqudfgzixxtHY9T4y+2zD5U4zf9Lul86qFFiJ2tUSfEZyvn+bSfhvuI4vpGwYM/mWhoUIM6U
- zopSyg2gGU7ywt06aWFeQ41NrrzckovfRLQx0A==
+        Wed, 17 Apr 2019 16:55:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so23765408ljg.5;
+        Wed, 17 Apr 2019 13:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fibtK0q4WmazgyxF7PT5NVfWwpUs3Ml0gq9+e9gVMLA=;
+        b=PP6fUeugqTylgwKMqje/9nA/aLNITd7EaHT28u8W/hhGifSEeU+wtnCSWTDKN/jBOG
+         KvG2aPbSExPr0wkKjaPVshAO5r9QwYOGHRL0o+px02H2Ze+ODO31/vVcGgtAY8qNWNxo
+         CbByay66dKwwfKoPr9oDhcbHmmzAYfajQgPEgFTmksvMIJqUo5cFGH3zQANMiNpcCaN/
+         cM4lndQ/YFhlrqrGsMWeZN47Q6l0FRYog8TeEkCdgVbDp+LtiYscq3ojp2/bSLGsJeoU
+         EeCE/5eXS4mal/Fo/+F6esRh6ntAO/DfIaMYwXwKX8mrfr6ms97/LTWFezes0MDc6opO
+         HIIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fibtK0q4WmazgyxF7PT5NVfWwpUs3Ml0gq9+e9gVMLA=;
+        b=oBcLKg1aqPBCzooo3c02pyE5oJpoAL4PoSHylmefdlBex87uB6LqQPXEyw9HtTOWSz
+         62AwTVyW4hqxBWu6QZJfQ9riD8RStbuItuzuaMrh+5ZRC1NyQSIXFVjBFUKArXEqjJl2
+         75/G6zgvwadCNcdd79NlR9r0psWN1qNRHi8AalauxdSI+PyVteifZpv0uqNIE8HgvNpV
+         3dMJwMr9iK8JuQS7MtKLaVrAcW1/A05/ZVyuaJ/GNSQrNkQpDkxWGh60VCceIdj/0wVC
+         nv4C5lOmqXTql8iXFmEgIGbXF2mGULEqWphK1uMJTeSm4dx+HROn8ohbmpOm5KddqA1g
+         ogDg==
+X-Gm-Message-State: APjAAAV9fMK9Vm0mzPgHPI/ePQPRR5ALqmWA6sl2AqOD9Z6lSR9bN2IB
+        nZTPXMFzpVa/hXo1vPiJuUTIt7NIbgE=
+X-Google-Smtp-Source: APXvYqxQDdPFn6JAFlgfUBzBWWibrOfd1o/DVG6jdDI8/8woVuu/nVbEzlzw7Ptu+kT+3rkq/B1b7Q==
+X-Received: by 2002:a2e:2b16:: with SMTP id q22mr52101445lje.20.1555534525640;
+        Wed, 17 Apr 2019 13:55:25 -0700 (PDT)
+Received: from myhost.home (bfw35.neoplus.adsl.tpnet.pl. [83.28.60.35])
+        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 13:55:25 -0700 (PDT)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
+        jacek.anaszewski@gmail.com, Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: [PATCH v4 17/26] dt-bindings: cr0014114: Add function and color properties
+Date:   Wed, 17 Apr 2019 22:54:30 +0200
+Message-Id: <20190417205439.17685-18-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ia64, parisc and sparc just use a copy of the generic version
-of asm/sockios.h, and x86 is a redirect to the same file, so we
-can just let the header file be generated.
+Refer to new "function" and "color" properties and mark "label"
+as deprecated.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Oleh Kravchenko <oleg@kaa.org.ua>
 ---
-v3: no changes since v1
----
- arch/ia64/include/uapi/asm/sockios.h   | 21 ---------------------
- arch/parisc/include/uapi/asm/sockios.h | 14 --------------
- arch/sparc/include/uapi/asm/sockios.h  | 15 ---------------
- arch/x86/include/uapi/asm/sockios.h    |  1 -
- 4 files changed, 51 deletions(-)
- delete mode 100644 arch/ia64/include/uapi/asm/sockios.h
- delete mode 100644 arch/parisc/include/uapi/asm/sockios.h
- delete mode 100644 arch/sparc/include/uapi/asm/sockios.h
- delete mode 100644 arch/x86/include/uapi/asm/sockios.h
+ .../devicetree/bindings/leds/leds-cr0014114.txt    | 26 ++++++++++++++++------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/arch/ia64/include/uapi/asm/sockios.h b/arch/ia64/include/uapi/asm/sockios.h
-deleted file mode 100644
-index f27a12f95d20..000000000000
---- a/arch/ia64/include/uapi/asm/sockios.h
-+++ /dev/null
-@@ -1,21 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef _ASM_IA64_SOCKIOS_H
--#define _ASM_IA64_SOCKIOS_H
--
--/*
-- * Socket-level I/O control calls.
-- *
-- * Based on <asm-i386/sockios.h>.
-- *
-- * Modified 1998, 1999
-- *	David Mosberger-Tang <davidm@hpl.hp.com>, Hewlett-Packard Co
-- */
--#define FIOSETOWN 	0x8901
--#define SIOCSPGRP	0x8902
--#define FIOGETOWN	0x8903
--#define SIOCGPGRP	0x8904
--#define SIOCATMARK	0x8905
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
--
--#endif /* _ASM_IA64_SOCKIOS_H */
-diff --git a/arch/parisc/include/uapi/asm/sockios.h b/arch/parisc/include/uapi/asm/sockios.h
-deleted file mode 100644
-index 66a3ba64d53f..000000000000
---- a/arch/parisc/include/uapi/asm/sockios.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef __ARCH_PARISC_SOCKIOS__
--#define __ARCH_PARISC_SOCKIOS__
--
--/* Socket-level I/O control calls. */
--#define FIOSETOWN 	0x8901
--#define SIOCSPGRP	0x8902
--#define FIOGETOWN	0x8903
--#define SIOCGPGRP	0x8904
--#define SIOCATMARK	0x8905
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
--
--#endif
-diff --git a/arch/sparc/include/uapi/asm/sockios.h b/arch/sparc/include/uapi/asm/sockios.h
-deleted file mode 100644
-index 18a3ec14a847..000000000000
---- a/arch/sparc/include/uapi/asm/sockios.h
-+++ /dev/null
-@@ -1,15 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef _ASM_SPARC_SOCKIOS_H
--#define _ASM_SPARC_SOCKIOS_H
--
--/* Socket-level I/O control calls. */
--#define FIOSETOWN 	0x8901
--#define SIOCSPGRP	0x8902
--#define FIOGETOWN	0x8903
--#define SIOCGPGRP	0x8904
--#define SIOCATMARK	0x8905
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
--
--#endif /* !(_ASM_SPARC_SOCKIOS_H) */
--
-diff --git a/arch/x86/include/uapi/asm/sockios.h b/arch/x86/include/uapi/asm/sockios.h
-deleted file mode 100644
-index def6d4746ee7..000000000000
---- a/arch/x86/include/uapi/asm/sockios.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/sockios.h>
+diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+index 4255b19ad25c..f8de7516a39b 100644
+--- a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
++++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
+@@ -11,14 +11,20 @@ Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+ apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+ 
+ LED sub-node properties:
+-- label :
++- function :
++	see Documentation/devicetree/bindings/leds/common.txt
++- color :
+ 	see Documentation/devicetree/bindings/leds/common.txt
++- label :
++	see Documentation/devicetree/bindings/leds/common.txt (deprecated)
+ - linux,default-trigger : (optional)
+ 	see Documentation/devicetree/bindings/leds/common.txt
+ 
+ Example
+ -------
+ 
++#include <dt-bindings/leds/common.h>
++
+ led-controller@0 {
+ 	compatible = "crane,cr0014114";
+ 	reg = <0>;
+@@ -28,27 +34,33 @@ led-controller@0 {
+ 
+ 	led@0 {
+ 		reg = <0>;
+-		label = "red:coin";
++		function = "coin";
++		color = <LED_COLOR_ID_RED>;
+ 	};
+ 	led@1 {
+ 		reg = <1>;
+-		label = "green:coin";
++		function = "coin";
++		color = <LED_COLOR_ID_GREEN>;
+ 	};
+ 	led@2 {
+ 		reg = <2>;
+-		label = "blue:coin";
++		function = "coin";
++		color = <LED_COLOR_ID_BLUE>;
+ 	};
+ 	led@3 {
+ 		reg = <3>;
+-		label = "red:bill";
++		function = "bill";
++		color = <LED_COLOR_ID_RED>;
+ 	};
+ 	led@4 {
+ 		reg = <4>;
+-		label = "green:bill";
++		function = "bill";
++		color = <LED_COLOR_ID_GREEN>;
+ 	};
+ 	led@5 {
+ 		reg = <5>;
+-		label = "blue:bill";
++		function = "bill";
++		color = <LED_COLOR_ID_BLUE>;
+ 	};
+ 	...
+ };
 -- 
-2.20.0
+2.11.0
 
