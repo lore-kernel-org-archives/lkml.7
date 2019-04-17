@@ -2,200 +2,208 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E564C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D0C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0140217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ACE217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="XqD4anXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbfDQO2k (ORCPT
+        id S1732408AbfDQOaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:28:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43388 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732007AbfDQO2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:28:40 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BD6130842AC;
-        Wed, 17 Apr 2019 14:28:39 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 878585DA38;
-        Wed, 17 Apr 2019 14:28:37 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 10:28:35 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "jrdr.linux@gmail.com" <jrdr.linux@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "ying.huang@intel.com" <ying.huang@intel.com>,
-        "riel@surriel.com" <riel@surriel.com>
-Subject: Re: [PATCH 2/9] mm: Add an apply_to_pfn_range interface
-Message-ID: <20190417142835.GB3229@redhat.com>
-References: <20190412160338.64994-1-thellstrom@vmware.com>
- <20190412160338.64994-3-thellstrom@vmware.com>
- <20190412210743.GA19252@redhat.com>
- <ba1f1f97259e09cd3cc6377cad89b036285c0272.camel@vmware.com>
- <20190416144657.GA3254@redhat.com>
- <2dd9b36444dc92f409b44c74667b6d63dc1713a8.camel@vmware.com>
+        Wed, 17 Apr 2019 10:30:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40334 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731959AbfDQOaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:30:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q66so1244268ljq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RuyB+W2pZ+QYBWd1eUaaacF+UuRg4xdSTEXA3oHZsgI=;
+        b=XqD4anXLFYevMs1lRTyx2zcvCQubqkTY0PZtzr3CqPikpdNRZHVYUdC2GGYDSv5VPg
+         WP7AOjjquBqxlihIVYE8Ypqmhww8GkwTIOFvHBaV1gZbcaUvBqkQgs6CUKIThv7mT9nM
+         O9SiJhcvum1RY7z4u/fPT2Rx+OnWtc6EiEgWzmqnHEHvA+fJ/vJ4UtkcdUfdH01sFnx2
+         2h5S1k5yplv9wpvVPXuwYWGr/lv6AE6PUhWlmvDk/RYEdzwF7uJ34XrUdoIuJKSoM2IP
+         uKqyh/uuIjalzz3U+m+JazO2dcqKqch99mbK9AEfN143+E4lJE/yu5lmPpEbVWaFuQyw
+         x3/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RuyB+W2pZ+QYBWd1eUaaacF+UuRg4xdSTEXA3oHZsgI=;
+        b=Y9SDs711lCaAnCjxjLQB3J8kCNoF8zT2haYlAugh7NCvvbVJe1A0uMSLy+2L4NiMKo
+         s7llncHIZqM8nJ2fJ6pfNUthOZW/stB+kBUk3I/7efwdrB/SXVNZURHod78JtbhdwdmD
+         e5f5uVbq8I9AW3fFLuvMIPha3TSxA/AIqsmTYJfHDqW0VPlHy3x+0czMtOeaBmqtcvfg
+         41JahaRyhq68SzwV5Avl+oEeQ1SrUiznK0FCsLrBJ6zgKpS2dD7gs0qoVvV2e9QTLOwM
+         ZNtiNwkYhwsiSGLLSX7O099T/d79oe4HrmGoydUQlDpz4/8sJsQdGqVknbsm++A8mjZa
+         Qe8Q==
+X-Gm-Message-State: APjAAAX0eDeQ+ockK5jZyxfLrOMhiqh6odONsqeV9eNtDHVBZlMecceS
+        zbtjHDxXVmG57dU9FOvBz5i7dMeYVBDZsjwMqi4C
+X-Google-Smtp-Source: APXvYqxRX2PGOIrx7dxH9uSGpkYFbI6pJPfeVsyp3u9ILZZQnkg2xJwcGRdaU/hpbceypTXYTq6mSPH0Nbc8CBFjxXQ=
+X-Received: by 2002:a2e:42cf:: with SMTP id h76mr46177693ljf.95.1555511420086;
+ Wed, 17 Apr 2019 07:30:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2dd9b36444dc92f409b44c74667b6d63dc1713a8.camel@vmware.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 17 Apr 2019 14:28:39 +0000 (UTC)
+References: <6e4428ca-3da1-a033-08f7-a51e57503989@huawei.com>
+ <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com> <20190415134331.GC22204@redhat.com>
+ <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
+ <20190415150520.GA13257@redhat.com> <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
+ <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com> <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
+In-Reply-To: <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 17 Apr 2019 10:30:08 -0400
+Message-ID: <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
+Subject: Re: kernel BUG at kernel/cred.c:434!
+To:     "chengjian (D)" <cj.chengjian@huawei.com>
+Cc:     Kees Cook <keescook@chromium.org>, Oleg Nesterov <oleg@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        NeilBrown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SELinux <selinux@vger.kernel.org>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 09:15:52AM +0000, Thomas Hellstrom wrote:
-> On Tue, 2019-04-16 at 10:46 -0400, Jerome Glisse wrote:
-> > On Sat, Apr 13, 2019 at 08:34:02AM +0000, Thomas Hellstrom wrote:
-> > > Hi, Jérôme
-> > > 
-> > > On Fri, 2019-04-12 at 17:07 -0400, Jerome Glisse wrote:
-> > > > On Fri, Apr 12, 2019 at 04:04:18PM +0000, Thomas Hellstrom wrote:
+On Tue, Apr 16, 2019 at 10:46 AM chengjian (D) <cj.chengjian@huawei.com> wrote:
+> On 2019/4/16 11:40, Kees Cook wrote:
+> > On Mon, Apr 15, 2019 at 11:20 AM Paul Moore <paul@paul-moore.com> wrote:
+> >> On Mon, Apr 15, 2019 at 11:05 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >>> On 04/15, Paul Moore wrote:
+> >>>> On Mon, Apr 15, 2019 at 9:43 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >>>>> Well, acct("/proc/self/attr/current") doesn't look like a good idea, but I do
+> >>>>> not know where should we put the additional check... And probably
+> >>>>> "echo /proc/self/attr/current > /proc/sys/kernel/core_pattern" can hit the
+> >>>>> same problem, do_coredump() does override_creds() too.
+> >>>>>
+> >>>>> May be just add
+> >>>>>
+> >>>>>          if (current->cred != current->real_cred)
+> >>>>>                  return -EACCES;
+> >>>>>
+> >>>>> into proc_pid_attr_write(), I dunno.
+> >>>> Is the problem that do_acct_process() is calling override_creds() and
+> >>>> the returned/old credentials are being freed before do_acct_process()
+> >>>> can reinstall the creds via revert_creds()?  Presumably because the
+> >>>> process accounting is causing the credentials to be replaced?
+> >>> Afaics, the problem is that do_acct_process() does override_creds() and
+> >>> then __kernel_write(). Which calls proc_pid_attr_write(), which in turn calls
+> >>> selinux_setprocattr(), which does another prepare_creds() + commit_creds();
+> >>> and commit_creds() hits
+> >>>
+> >>>          BUG_ON(task->cred != old);
+> >> Gotcha.  In the process of looking at the backtrace I forgot about the
+> >> BUG_ON() at the top of the oops message.
+> >>
+> >> I wonder what terrible things would happen if we changed the BUG_ON()
+> >> in commit_creds to simple returning an error an error code to the
+> >> caller.  There is a warning/requirement in commit_creds() function
+> >> header comment that it should always return 0.
+> > Would callers be expected to call abort_creds() on failure? There are
+> > a number of places where it'd need fixing up. And would likely be best
+> > with a __must_check marking.
+> >
+> > It seems like avoiding the pathological case might be simpler?
+>
+> Yeah, Avoiding this pathological case is a better solution.
 
-[...]
+No arguments that this is particularly messed up scenario, I'm just
+trying to arrive at a solution that isn't too ugly.
 
-> > > > > -/*
-> > > > > - * Scan a region of virtual memory, filling in page tables as
-> > > > > necessary
-> > > > > - * and calling a provided function on each leaf page table.
-> > > > > +/**
-> > > > > + * apply_to_pfn_range - Scan a region of virtual memory,
-> > > > > calling a
-> > > > > provided
-> > > > > + * function on each leaf page table entry
-> > > > > + * @closure: Details about how to scan and what function to
-> > > > > apply
-> > > > > + * @addr: Start virtual address
-> > > > > + * @size: Size of the region
-> > > > > + *
-> > > > > + * If @closure->alloc is set to 1, the function will fill in
-> > > > > the
-> > > > > page table
-> > > > > + * as necessary. Otherwise it will skip non-present parts.
-> > > > > + * Note: The caller must ensure that the range does not
-> > > > > contain
-> > > > > huge pages.
-> > > > > + * The caller must also assure that the proper mmu_notifier
-> > > > > functions are
-> > > > > + * called. Either in the pte leaf function or before and after
-> > > > > the
-> > > > > call to
-> > > > > + * apply_to_pfn_range.
-> > > > 
-> > > > This is wrong there should be a big FAT warning that this can
-> > > > only be
-> > > > use
-> > > > against mmap of device file. The page table walking above is
-> > > > broken
-> > > > for
-> > > > various thing you might find in any other vma like THP, device
-> > > > pte,
-> > > > hugetlbfs,
-> > > 
-> > > I was figuring since we didn't export the function anymore, the
-> > > warning
-> > > and checks could be left to its users, assuming that any other
-> > > future
-> > > usage of this function would require mm people audit anyway. But I
-> > > can
-> > > of course add that warning also to this function if you still want
-> > > that?
-> > 
-> > Yeah more warning are better, people might start using this, i know
-> > some poeple use unexported symbol and then report bugs while they
-> > just were doing something illegal.
-> > 
-> > > > ...
-> > > > 
-> > > > Also the mmu notifier can not be call from the pfn callback as
-> > > > that
-> > > > callback
-> > > > happens under page table lock (the change_pte notifier callback
-> > > > is
-> > > > useless
-> > > > and not enough). So it _must_ happen around the call to
-> > > > apply_to_pfn_range
-> > > 
-> > > In the comments I was having in mind usage of, for example
-> > > ptep_clear_flush_notify(). But you're the mmu_notifier expert here.
-> > > Are
-> > > you saying that function by itself would not be sufficient?
-> > > In that case, should I just scratch the text mentioning the pte
-> > > leaf
-> > > function?
-> > 
-> > ptep_clear_flush_notify() is useless ... i have posted patches to
-> > either
-> > restore it or remove it. In any case you must call mmu notifier range
-> > and
-> > they can not happen under lock. You usage looked fine (in the next
-> > patch)
-> > but i would rather have a bit of comment here to make sure people are
-> > also
-> > aware of that.
-> > 
-> > While we can hope that people would cc mm when using mm function, it
-> > is
-> > not always the case. So i rather be cautious and warn in comment as
-> > much
-> > as possible.
-> > 
-> 
-> OK. Understood. All this actually makes me tend to want to try a bit
-> harder using a slight modification to the pagewalk code instead. Don't
-> really want to encourage two parallel code paths doing essentially the
-> same thing; one good and one bad.
-> 
-> One thing that confuses me a bit with the pagewalk code is that callers
-> (for example softdirty) typically call
-> mmu_notifier_invalidate_range_start() around the pagewalk, but then if
-> it ends up splitting a pmd, mmu_notifier_invalidate_range is called
-> again, within the first range. Docs aren't really clear whether that's
-> permitted or not. Is it?
+> From: Yang Yingliang <yangyingliang@huawei.com>
+> Date: Sat, 13 Apr 2019 21:56:01 +0800
+> Subject: [PATCH] fix cred bug_on
+>
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>   kernel/acct.c            | 3 ++-
+>   kernel/cred.c            | 6 ++++++
+>   security/selinux/hooks.c | 2 ++
+>   3 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/acct.c b/kernel/acct.c
+> index addf7732fb56..f2065f899eee 100644
+> --- a/kernel/acct.c
+> +++ b/kernel/acct.c
+> @@ -522,7 +522,8 @@ static void do_acct_process(struct bsd_acct_struct
+> *acct)
+>       }
+>   out:
+>       current->signal->rlim[RLIMIT_FSIZE].rlim_cur = flim;
+> -    revert_creds(orig_cred);
+> +    if (orig_cred == current->real_cred)    // [2]
+> +        revert_creds(orig_cred);
+>   }
+>
+>   /**
+> diff --git a/kernel/cred.c b/kernel/cred.c
+> index ecf03657e71c..c4d5ba92fb9b 100644
+> --- a/kernel/cred.c
+> +++ b/kernel/cred.c
+> @@ -522,6 +522,9 @@ const struct cred *override_creds(const struct cred
+> *new)
+>   {
+>       const struct cred *old = current->cred;
+>
+> +    if (old == new)    //  [3]
+> +        return old;
+> +
+>       kdebug("override_creds(%p{%d,%d})", new,
+>              atomic_read(&new->usage),
+>              read_cred_subscribers(new));
+> @@ -551,6 +554,9 @@ void revert_creds(const struct cred *old)
+>   {
+>       const struct cred *override = current->cred;
+>
+> +    if (override == old)    // [3]
+> +        return;
+> +
+>       kdebug("revert_creds(%p{%d,%d})", old,
+>              atomic_read(&old->usage),
+>              read_cred_subscribers(old));
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index b5017beb4ef7..bc8108e4e90f 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -6590,6 +6590,8 @@ static int selinux_setprocattr(const char *name,
+> void *value, size_t size)
+>           goto abort_change;
+>       }
+>
+> +    if (current->cred != current->real_cred)    // [1]
+> +        revert_creds(current->real_cred);
+>       commit_creds(new);
+>       return size;
 
-It is mandatory ie you have to call mmu_notifier_invalidate_range()
-in some cases. This is all documented in mmu_notifier.h see struct
-mmu_notifier_ops comments and also Documentation/vm/mmu_notifier.rst
+Doing the revert only to then commit the creds seems really ugly to
+me.  I'm tempted to simply return an error in selinux_setprocattr() if
+the task's credentials are not the same as its real_cred; if we do
+that I believe we should resolve this problem.  The accounting write
+to the SELinux file in /proc would fail of course, but I think we can
+all consider that as a positive side-effect.
 
-Roughly anytime you go from one valid pte (pmd/pud/p4d) to another
-valid pte (pmd/pud/p4d) with a different page then you have to call
-after clearing pte (pmd/pud/p4d) and before replacing it with its
-new value. Changing permission on same page ie going from read and
-write to read only, or read only to read and write, does not require
-any extra call to mmu_notifier_invalidate_range()
+While I don't think this should have a negative impact on anything
+else, I haven't convinced myself of that just yet.
 
-The mmu_notifier_invalidate_range() is important for IOMMU with ATS/
-PASID as it is when the flush the TLB and remote device TLB. So you
-must flush those secondary TLB after clearing entry so that it can
-not race to repopulate the TLB and before setting the new entry so
-that at no point in time any hardware can wrongly access old page
-while a new page is just now active.
-
-Hopes that clarify it, between if you see any improvement to mmu-
-notifier doc it would be more than welcome. I try to put comments
-in enough places that people should see at least one of them but
-maybe i miss a place where i should have put a comments to point
-to the doc :)
-
-Cheers,
-Jérôme
+-- 
+paul moore
+www.paul-moore.com
