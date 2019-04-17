@@ -2,88 +2,301 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6629C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DE1C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA773217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F7B205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="RzWPzk4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732675AbfDQPCM (ORCPT
+        id S1732640AbfDQPDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:02:12 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:32934 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732660AbfDQPCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:02:11 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BEBCA16B4127C335266A;
-        Wed, 17 Apr 2019 23:02:07 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
- 23:01:58 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <nh6z@nh6z.net>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: tlv320aic32x4: Remove set but not used variable 'mclk_rate'
-Date:   Wed, 17 Apr 2019 23:01:57 +0800
-Message-ID: <20190417150157.24044-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 17 Apr 2019 11:03:36 -0400
+Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:52954 "EHLO
+        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729940AbfDQPDg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 11:03:36 -0400
+X-Greylist: delayed 488 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Apr 2019 11:03:35 EDT
+Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
+        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id 62F61D00070;
+        Wed, 17 Apr 2019 16:55:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
+        s=20160407; t=1555512933;
+        bh=uxjxZs6u+OwhN0aN3it9qhbwninzmheDD/wW/7ncIL0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
+        b=RzWPzk4/p+ERW6Kmm2jUlSvngbthsaqSJ4QY7LsqW++O+4g4CX7luGBn3v0meGRwd
+         fG0o+rRxiDJ2qgnRK7WBP94uWSphuOylgqEbXqLuhzX0zeCh4LOV9XH0NhZTw/dVQb
+         tfv3uJ0Jgo8g9L2lYeIW0srKLrec5StaW4Mwh4ObN+LR7Z3AeSeuSRttThR1MC8tj5
+         Zsw3SVWQmq9cCWceOyebPRTZ1frleNWLYJAyD5bBGOBPMcwcBUOQiMUPcDGeXtgTGR
+         ygm48mcbYcbutj2K8wqSAyzZD58ATnEnt4nPuvQdGYLbUwVoQpHN8qwRi4uVffvlSb
+         ZmzHwhjevmLhw==
+Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on
+ sys_open()
+To:     Steve Grubb <sgrubb@redhat.com>, Jan Kara <jack@suse.cz>
+CC:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
+        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Florian Weimer <fweimer@redhat.com>
+References: <20181212081712.32347-1-mic@digikod.net>
+ <20181212081712.32347-2-mic@digikod.net>
+ <20181212144306.GA19945@quack2.suse.cz> <3452959.b6JmBh7Lnt@x2>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
+Message-ID: <55d06e21-9a38-1297-615c-bc1e6e9f33ef@ssi.gouv.fr>
+Date:   Wed, 17 Apr 2019 16:55:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <3452959.b6JmBh7Lnt@x2>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On 15/04/2019 20:47, Steve Grubb wrote:
+> Hello,
+>
+> On Wednesday, December 12, 2018 9:43:06 AM EDT Jan Kara wrote:
+>> On Wed 12-12-18 09:17:08, Micka=C3=ABl Sala=C3=BCn wrote:
+>>> When the O_MAYEXEC flag is passed, sys_open() may be subject to
+>>> additional restrictions depending on a security policy implemented by a=
+n
+>>> LSM through the inode_permission hook.
+>>>
+>>> The underlying idea is to be able to restrict scripts interpretation
+>>> according to a policy defined by the system administrator.  For this to
+>>> be possible, script interpreters must use the O_MAYEXEC flag
+>>> appropriately.  To be fully effective, these interpreters also need to
+>>> handle the other ways to execute code (for which the kernel can't help)=
+:
+>>> command line parameters (e.g., option -e for Perl), module loading
+>>> (e.g., option -m for Python), stdin, file sourcing, environment
+>>> variables, configuration files...  According to the threat model, it ma=
+y
+>>> be acceptable to allow some script interpreters (e.g. Bash) to interpre=
+t
+>>> commands from stdin, may it be a TTY or a pipe, because it may not be
+>>> enough to (directly) perform syscalls.
+>>>
+>>> A simple security policy implementation is available in a following
+>>> patch for Yama.
+>>>
+>>> This is an updated subset of the patch initially written by Vincent
+>>> Strubel for CLIP OS:
+>>> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb33=
+0d
+>>> 6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch This patch has
+>>> been used for more than 10 years with customized script interpreters.
+>>> Some examples can be found here:
+>>> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=3DO_=
+MAYE
+>>> XEC
+>>>
+>>> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+>>> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>>> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+>>> Reviewed-by: Philippe Tr=C3=A9buchet <philippe.trebuchet@ssi.gouv.fr>
+>>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>>> Cc: Kees Cook <keescook@chromium.org>
+>>> Cc: Micka=C3=ABl Sala=C3=BCn <mickael.salaun@ssi.gouv.fr>
+>>
+>> ...
+>>
+>>> diff --git a/fs/open.c b/fs/open.c
+>>> index 0285ce7dbd51..75479b79a58f 100644
+>>> --- a/fs/open.c
+>>> +++ b/fs/open.c
+>>> @@ -974,6 +974,10 @@ static inline int build_open_flags(int flags,
+>>> umode_t mode, struct open_flags *o>
+>>>     if (flags & O_APPEND)
+>>>
+>>>             acc_mode |=3D MAY_APPEND;
+>>>
+>>> +   /* Check execution permissions on open. */
+>>> +   if (flags & O_MAYEXEC)
+>>> +           acc_mode |=3D MAY_OPENEXEC;
+>>> +
+>>>
+>>>     op->acc_mode =3D acc_mode;
+>>>
+>>>     op->intent =3D flags & O_PATH ? 0 : LOOKUP_OPEN;
+>>
+>> I don't feel experienced enough in security to tell whether we want this
+>> functionality or not. But if we do this, shouldn't we also set FMODE_EXE=
+C
+>> on the resulting struct file? That way also security_file_open() can be
+>> used to arbitrate such executable opens and in particular
+>> fanotify permission event FAN_OPEN_EXEC will get properly generated whic=
+h I
+>> guess is desirable (support for it is sitting in my tree waiting for the
+>> merge window) - adding some audit people involved in FAN_OPEN_EXEC to CC=
+.
+>> Just an idea...
+>
+> Late in replying. But I think it's important to have a deep look into the
+> issue.
+>
+> TL;DR - This is a gentle man's handshake. It won't _really_ solve the
+> problem.
 
-sound/soc/codecs/tlv320aic32x4.c: In function 'aic32x4_setup_clocks':
-sound/soc/codecs/tlv320aic32x4.c:669:16: warning: variable 'mclk_rate' set but not used [-Wunused-but-set-variable]
+Thanks for your comments. You should find most answers in this thread:
+https://lore.kernel.org/lkml/20181212081712.32347-4-mic@digikod.net/
 
-It is not used since introduction in
-commit 96c3bb00239d ("ASoC: tlv320aic32x4: Dynamically Determine Clocking")
+The threat model targets persistent attacks. This O_MAYEXEC flag is not
+a silver bullet but it's a needed block to enforce a security policy on
+a trusted system. This means that every component executable on the
+system must be controlled, which means they may need some bit of
+customization. Today no userspace application use this flag (except in
+CLIP OS), but we need to first create a feature before it can be used.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/tlv320aic32x4.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+It is very important to have in mind that a system security policy need
+to have a (central) security manager, in this case the kernel thanks to
+Yama's policy (but it could be SELinux, IMA or any other LSM). The goal
+is not to give to the developer the job of defining a security policy
+for the *system*; this job is for the system administrator (or the distro).
 
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index 6edee05..83608f3 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -684,9 +684,8 @@ static int aic32x4_setup_clocks(struct snd_soc_component *component,
- 	u8 madc, nadc, mdac, ndac, max_nadc, min_mdac, max_ndac;
- 	u8 dosr_increment;
- 	u16 max_dosr, min_dosr;
--	unsigned long mclk_rate, adc_clock_rate, dac_clock_rate;
-+	unsigned long adc_clock_rate, dac_clock_rate;
- 	int ret;
--	struct clk *mclk;
- 
- 	struct clk_bulk_data clocks[] = {
- 		{ .id = "pll" },
-@@ -700,9 +699,6 @@ static int aic32x4_setup_clocks(struct snd_soc_component *component,
- 	if (ret)
- 		return ret;
- 
--	mclk = clk_get_parent(clocks[1].clk);
--	mclk_rate = clk_get_rate(mclk);
--
- 	if (sample_rate <= 48000) {
- 		aosr = 128;
- 		adc_resource_class = 6;
--- 
-2.7.4
+>
+> This flag that is being proposed means that you would have to patch all
+> interpreters to use it. If you are sure that upstreams will accept that, =
+why
+> not just change the policy to interpreters shouldn't execute anything unl=
+ess
+> the execute bit is set? That is simpler and doesn't need a kernel change.=
+ And
+> setting the execute bit is an auditable event.
 
+As said above, the definition of a the security policy is the job of the
+system administrator. Moreover, the security policy may be defined by
+the mount point restrictions (i.e. noexec) but it should be definable
+with something else (e.g. a SELinux or IMA policy which may be agnostic
+to the mount points).
 
+>
+> The bottom line is that any interpreter has to become a security policy
+> enforcement point whether by indicating it wants to execute by setting a =
+flag
+> or by refusing to use a file without execute bit set. But this just moves=
+ the
+> problem to one that is harder to fix. Why in the world does any programmi=
+ng
+> language allow programs to be loaded via stdin?
+>
+> It is possible to wget a program and pipe it into python which subsequent=
+ly
+> pulls down an ELF shared object and runs it all without touching disk via
+> memfd_create (e.g. SnakeEater). This is all direct to memory execution. A=
+nd
+> direct to memory bypasses anti-virus, selinux, IMA, application whitelist=
+ing,
+> and other integrity schemes.
+>
+> So, to fix this problem, you really need to not allow any programs to loa=
+d via
+> stdin so that everything that executes has to touch disk. This way you ca=
+n
+> get a fanotify event and see the application and vote yes/no on allowing =
+it.
+> And this will be particularly harder with the memfd_create fix for the ru=
+nc
+> container breakout. Prior to that, there were very few uses of that syste=
+m
+> call. Now it may be very common which means finding malicious use just go=
+t
+> harder to spot.
+
+As said above, stdin must be restricted in some way. You may want to
+take a look at the CLIP OS patches (which doesn't only add the O_MAYEXEC
+flag but restrict other way to interpret code). It may be foolish to
+block or restrict stdin for interpreters on a developer workstation, but
+it may make sense for an embedded custom system.
+
+The same apply for memfd_create. If you want to enforce a security
+policy on this kind of *file descriptor*, you should ask to the proper
+LSM to do so. The current Yama patch deal with this kind of FD if they
+are accessed through /proc/*/fd because the procfs is mounted with
+noexec. Anyway, the interpreter must *inform* the LSM that it wants to
+execute/interpret something from this FD, which is done thanks to the
+O_MAYEXEC flag.
+
+>
+> But assuming these problems got fixed, then we have yet another place to =
+look.
+> Many interpreters allow you to specify a command to run via arguments. So=
+me
+> have a small buffer and some allow lengthy programs to be entered as an
+> argument. One strategy might be that an attacker can bootstrap a lengthie=
+r
+> program across the network. Python for example allows loading modules acr=
+oss
+> a network. All you need to put in the commandline is the override for the
+> module loader and a couple modules to import. It then loads the modules
+> remotely. Getting rid of this hole will likely lead to some unhappy peopl=
+e -
+> meaning it can't be fixed.
+
+Again, this depend on the threat model and the corresponding product. If
+you want to handle everything on your system, then you may need some
+adjustments.
+
+>
+> And even if we get that fixed, we have one last hole to plug. Shells. One=
+ can
+> simply start a shell and paste their program into the shell and then exec=
+ute
+> it. You can easily do this with bash or python or any language that has a
+> REPL (read=E2=80=93eval=E2=80=93print loop). To fix this means divorcing =
+the notion of a
+> language from a REPL. Production systems really do not need a Python shel=
+l,
+> they need the interpreter. I doubt that this would be popular. But fixing=
+ each
+> of these issues is what it would take to prevent unknown software from
+> running. Not going this far leaves holes.
+
+This is also covered by the threat model defined in the patch 3/5 (i.e.
+protect the kernel by restricting arbitrary syscalls).
+
+Regards,
+
+--
+Micka=C3=ABl Sala=C3=BCn
+ANSSI/SDE/ST/LAM
+
+Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
+es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
+=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
+nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
+=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
+tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
+acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
+eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
+t de d=C3=A9truire le message. The personal data collected and processed du=
+ring this exchange aims solely at completing a business relationship and is=
+ limited to the necessary duration of that relationship. If you wish to use=
+ your rights of consultation, rectification and deletion of your data, plea=
+se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
+n error, we thank you for informing the sender and destroying the message.
