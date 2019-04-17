@@ -2,61 +2,93 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A0AC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A429DC282DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BEB20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A412173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555518999;
-	bh=bW6xSBvDB/mBGgIPoG8GbmafCV4/BBW01qP4pUZg0uA=;
+	s=default; t=1555519057;
+	bh=Y99Ss9SBDWgmsbIcPdwHnvdkMrJ2zrSwVyk+WaOzDzk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e5U1RYFFOyiAPtpxgaer92XpNFVlc8aYV+txHfrULhn1G1/Q5eInmDE998xValvTU
-	 p8oBvy760NtwrLbZ28aQMx1EyAshyyHF2QW9K09rqu65hnWeqDXNA8hY2dwLcgEP6h
-	 2EZWcJWigIfAX2pUlfy/X0mFJ2GQhqwsIzO7Rmzs=
+	b=VT2U6K5t5z9YhN2+52kASOCtaowawLQqIeVXUnPmtMZhujqKEdEEeoWQDnmoPT/x/
+	 rndaD6INOpz0U84UD2JnK3eGssKSughZERiMniKht6NTm3VtEoQ4eZ/NHKQZhKoMOZ
+	 pf/oVlklb8Xg5ZBSnTlHmLc2UjcVGK0V5I8zZRB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732708AbfDQQgi (ORCPT
+        id S1732783AbfDQQhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:36:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55634 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731472AbfDQQgh (ORCPT
+        Wed, 17 Apr 2019 12:37:36 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:39931 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729641AbfDQQhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bW6xSBvDB/mBGgIPoG8GbmafCV4/BBW01qP4pUZg0uA=; b=b23qw49RF4mdV1JEYxeEUH0Av
-        3lkHNIvyj+Is77edUqO/CfolTJ+XvscvicqL5UpmbRSr0jLkyyBPQ+qaFPYC9RZsrCFO9nu6z/9ur
-        YZ2zU9oooXJvpouSIwyiEeEg/c2APZF79+Za7Mw3BRp7ZmBKAKpqJcbjrtblijBwTOCUs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hGnY0-000128-UK; Wed, 17 Apr 2019 16:36:32 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 2CAD01128FC7; Wed, 17 Apr 2019 17:36:32 +0100 (BST)
-Date:   Wed, 17 Apr 2019 17:36:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Pascal Paillet <p.paillet@st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: stm32-pwr: Fix error checking for of_iomap
-Message-ID: <20190417163632.GA23145@sirena.org.uk>
-References: <20190417084335.15483-1-axel.lin@ingics.com>
+        Wed, 17 Apr 2019 12:37:36 -0400
+Received: by mail-wm1-f54.google.com with SMTP id n25so4375258wmk.4;
+        Wed, 17 Apr 2019 09:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SpiYuiEe/yu3VU9+DNKpLkeipOLQ5fUIio3TTan/W50=;
+        b=OaqJjwFUy2JI1zPzZVksop3bSldyW3FX1lK/WNaEYgktryWrE+Mh68/AazYJIS7z2Y
+         hvIPF8OOTt9a3BUjU1ZgniDFDeW7Z/AeqpKSPWQnC9F/cQeU3p6KvHYObvHYbVS4Nq8a
+         YFSs5283QNgCWw1FY7rt4jTkQTISPmVZTnPMmXC1uvwJti9p2p0QdwXE5ghlhBL/DHBy
+         ttQXDaFGL+lNRc/fCsALl48k68qAXona6h8m3DjsW+tQcws2M/3KHFgI9gmPP7hv15P/
+         RipZhwy2OGtpuh+Uljd4aRveX7t5nMSrHbnfEFdlvHAKp0ki7feRj9Uu+HcEnHKtOuRX
+         LllQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SpiYuiEe/yu3VU9+DNKpLkeipOLQ5fUIio3TTan/W50=;
+        b=gsZrjd9Pyf1evbPATJI5dfjvf1nW5Xx856UGm2abbH6v2dRYTPryOSZsVTWKneJiqG
+         c64R2X7A/PE9GdGpydXf5TVGSNROMwrpqJ7IWe4caSg3HIXmtIXZCOjqqr45TacwGW4I
+         AjfpdOrPJAIiuyO1Ar8CX06/mfjch5x+ZiuteC7FlPH2IUiAbxZb2m8+XB29gabJe+VS
+         JFARyBxgjCjwDsEyZQFbxi97MBmA4QcxhIa+lvFKs0jELV0/UFG3NW1G//jfoVrzLlqs
+         7h5yg2r7xS/coFW2zZ/Sw0SVbCoeMwCLZyfmmUxQNSYA8N67smB4u8w7HHDjBn3vDDYf
+         PDeA==
+X-Gm-Message-State: APjAAAWuoFDSHhuB3AOikkW2J5IRwk1zacEeZZLvxDSXiTsa6sRU+LE3
+        QfhxIIGgWizcWxjXeJQWQCU=
+X-Google-Smtp-Source: APXvYqwtV90fDE40jfdMVFsMo6wU4nwmSpnC54eHsVYwZxju0jd5hqhxTgC55zMBjdpeEZG5AxsIJQ==
+X-Received: by 2002:a1c:f50a:: with SMTP id t10mr426705wmh.86.1555519053774;
+        Wed, 17 Apr 2019 09:37:33 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id j11sm73752445wrw.85.2019.04.17.09.37.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 09:37:32 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 18:37:29 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     hpa@zytor.com
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        matt@codeblueprint.co.uk,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        linux-tip-commits@vger.kernel.org,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent]
+ x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T)
+Message-ID: <20190417163729.GA53511@gmail.com>
+References: <20190412080152.3718-1-jian-hong@endlessm.com>
+ <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
+ <20190416082042.GA69717@gmail.com>
+ <CAD8Lp44pQRYdw4cbfMt3uOSO23dzy_mWTt5T-Zjft08WWu_yUA@mail.gmail.com>
+ <20190417061650.GA31060@gmail.com>
+ <CAD8Lp45BLaoXF=RNcncqcTtNvaGHP72+a1CxcjoeBXDiw9TKbA@mail.gmail.com>
+ <17516564-37AC-4F77-9C0D-0DD71F8045EA@zytor.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190417084335.15483-1-axel.lin@ingics.com>
-X-Cookie: Colorless green ideas sleep furiously.
+In-Reply-To: <17516564-37AC-4F77-9C0D-0DD71F8045EA@zytor.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,28 +96,59 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+* hpa@zytor.com <hpa@zytor.com> wrote:
 
-On Wed, Apr 17, 2019 at 04:43:35PM +0800, Axel Lin wrote:
-> of_iomap returns NULL on error.
+> > Just to check, you mean: EFI reboot (and shutdown) become the default
+> > methods when the machine is booted in EFI mode, and EFI stuff has not
+> > been disabled with a kernel parameter?
+> > Even when running in full hardware ACPI mode.
 
-Someone already sent a patch for this.
+No, I still think "early" EFI is historically better with ACPI reboot.
 
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
+But can we find a firmware flag perhaps that will *not* result in EFI 
+reboot being turned off?
 
------BEGIN PGP SIGNATURE-----
+> This, I believe, is known to not work.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly3Vg8ACgkQJNaLcl1U
-h9BLtAf8DMa6gODEtdtmKMaYolmFVhVyPZBvFlA3c1pDCRQvw4RNd+og/2ev4fl1
-kNTkMQMc+2WTabyzOHX9mVfciqhMQV0HF5AWGqmuBuABfw3iUIiF0D1poyqUXVoo
-udsbIEJJQWKwvmBYW35EID9ZOEM0z6G8YN+iQ7fQINOuWqQeLf26w6VZnZTDZR4n
-LxWGBruh6ACFCDH84yTdhYxZnjAeiuMlvXaFik/eJgsDyM2qws6PkmTDkX9fonDU
-DOgSsezDoi44CKOs69Qtvcv5Hsx6wGBPtDgCC6bo1IH+WLWDtTVdY1eq0SHlb+LI
-GOceKLE54/t3Uw30xjIbm/bQfNnivw==
-=rXXn
------END PGP SIGNATURE-----
+Yeah, I bet so.
 
---ibTvN161/egqYuK8--
+My problem is that the code appears to have the wrong assumptions:
+
+ /*
+  * For most modern platforms the preferred method of powering off is via
+  * ACPI. However, there are some that are known to require the use of
+  * EFI runtime services and for which ACPI does not work at all.
+  *
+  * Using EFI is a last resort, to be used only if no other option
+  * exists.
+  */
+ bool efi_reboot_required(void)
+ {
+         if (!acpi_gbl_reduced_hardware)
+                 return false;
+
+         efi_reboot_quirk_mode = EFI_RESET_WARM;
+         return true;
+ }
+
+
+At minimum the comment is stale: "modern" platforms, *especially* when 
+the only bootup method is EFI, as in the ACER laptop case, I think the 
+preferred reboot method is absolutely an EFI reboot - and it's probably 
+what Windows uses too.
+
+The question is, is acpi_gbl_reduced_hardware false on the Acer 
+TravelMate X514-51T? I think it has to be, for the quirk to make sense - 
+if it's true then efi_reboot_required() would set the reboot method to 
+EFI.
+
+I.e. we seem to have a new category of systems that are advertising 
+themselves as 'full ACPI compliant', which are NOT old EFI systems, but 
+modern EFI systems.
+
+Is there some good way to detect these - such as ACPI version or 
+something?
+
+Thanks,
+
+	Ingo
