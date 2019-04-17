@@ -2,95 +2,140 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B334C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2EAC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110DC217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757E920645
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732647AbfDQPOF (ORCPT
+        id S1732652AbfDQPOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:14:05 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:44591 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731472AbfDQPOF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:14:05 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MYe6H-1hKKlV1Dsp-00Vdk2; Wed, 17 Apr 2019 17:13:54 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     arm@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Baruch Siach <baruch@tkos.co.il>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ARM: debug-ll: add default address for digicolor
-Date:   Wed, 17 Apr 2019 17:13:27 +0200
-Message-Id: <20190417151348.100050-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 17 Apr 2019 11:14:47 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55141 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731959AbfDQPOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 11:14:47 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 08:14:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
+   d="scan'208";a="143707034"
+Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
+  by fmsmga007.fm.intel.com with ESMTP; 17 Apr 2019 08:14:39 -0700
+Date:   Wed, 17 Apr 2019 23:18:17 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>, ying.huang@intel.com
+Subject: Re: [PATCH v2] panic: add an option to replay all the printk message
+ in buffer
+Message-ID: <20190417151817.xsun2k7cxff5rknn@shbuild888>
+References: <20190410153718.22905-1-feng.tang@intel.com>
+ <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
+ <20190417064844.ppyqxcx2mgek5455@shbuild888>
+ <20190417091832.z252cvcf4ktxeamv@pathway.suse.cz>
+ <20190417094614.GB4260@jagdpanzerIV>
+ <20190417105010.GA8492@jagdpanzerIV>
+ <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lN9u0ql+aUnL4uj8ptZUgD/NVAUFWrEyugq5Kx0iHAGwOZIiaSs
- ID5XQkqiuBABPpzZMf8lxPnmEEwBoOIaOtzJhZYJX9fFNyrvDcSkW6mT6ODDqqqHYeeMccO
- aUQnVuj65lXcYZsYAcDPe+6cCc3GPCg8kMP0bqdZIOiHjm6WSzw9FNsC3q8ECaEehSKH3g/
- pWKgnlmYnr0fy3/9tbCyQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yJCA4eDQoNA=:KeK/+ZZOEsE54Prwol3Ss7
- QFY5/N9lF7T0YyRQHyyO+PokI4ngaQMKqnYfAeyiR3BBM5VrFzQnyxdaIf6bkktaGxZSrqPdg
- FiPIi3jlqU2o5+PcGoBTWXjD/f5rMpc8uBUK3+Kqh7mS0XAIWIRzKFRdT5Dr2o7NhuwBwG1az
- Ed0PUGRPoceDeBv17x5+rlBwglY12ysizuWcKWk7a2P5aZwaDq9e4/xCs/PwyiImKjrrDX97e
- 6xu7bpEdjSsyRQlYymBY4Xr7BlzXo9ddcxU4jKRNLlm/JvYdIiJ9pMmuoNqkoffFAX/+7tmT1
- EJvFvGbEbA3q0zm+PP8vXUwYRSZeF9x357NLdZZQQjcDuNUdg2oky43yWGJ8Ktnf2prqgblrC
- 35ssIEUO10Ns8qC81gWUPYeISa1CjVoE00do35ClmudDIdlQlKHiDEoTpg50xRSX3u40zdweq
- JgaoOEuJ0uslM9zHFAowoEe5Xa8Uly7rD0/gRVd9rAQhyvcnea8yPxOUqkFHWIegF8dxubTRE
- u39YCwat8e9HTAgY5fbZzLTzIs2380aroXcxGk8yVJaSkuTSbgweddn/HPyN0BUs7xwRBfr1/
- K0Tc5C/zUQHnGIUd6AlKbIh+OMjYiJjhkBKS/ThHDHH4NDmD3pnYIoGpsTi0HJCwFww5pBkwV
- LsIlB9R4uvEV/q9XUO77OojQkWx2/XOqK6irLONnduGOwR9r0SpMyR6yjeW0rPqIRKOwYKRH2
- kVtuDvJu4MNveGQ0KznWluJ4rhXBjQv0UgKJSw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The digicolor platform has three UARTs, but the Kconfig.debug
-file explicitly lists port zero as the one to be used for the
-console, while not providing any default values.
+On Wed, Apr 17, 2019 at 02:24:58PM +0200, Petr Mladek wrote:
+> On Wed 2019-04-17 19:50:10, Sergey Senozhatsky wrote:
+> > On (04/17/19 18:46), Sergey Senozhatsky wrote:
+> > > 
+> > > Does not look too complex/ugly.
+> > 
+> > Looks simpler than adding one more global state to the
+> > console_unlock() printing loop.
+> > 
+> > // Not tested at all //
+> > 
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index cd73af35ec66..50eacfc9bc7e 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -51,6 +51,7 @@ EXPORT_SYMBOL_GPL(panic_timeout);
+> >  #define PANIC_PRINT_TIMER_INFO		0x00000004
+> >  #define PANIC_PRINT_LOCK_INFO		0x00000008
+> >  #define PANIC_PRINT_FTRACE_INFO		0x00000010
+> > +#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
+> >  unsigned long panic_print;
+> >  
+> >  ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+> > @@ -148,6 +149,9 @@ static void panic_print_sys_info(void)
+> >  
+> >  	if (panic_print & PANIC_PRINT_FTRACE_INFO)
+> >  		ftrace_dump(DUMP_ALL);
+> > +
+> > +	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> > +		console_flush_on_panic(CONSOLE_FLUSH_ALL);
+> 
+> The console must be replayed as the first thing in
+> panic_print_sys_info(). Otherwise, the original messages
+> are replaced by the other dumps. Especially ftrace_dump()
+> might be pretty long.
+> 
+> Also the names of the function and the parameter are misleading.
+> All messages are already flushed when this is called.
+> 
+> >  }
+> >  
+> >  /**
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > index 17102fd4c136..da60a185dbbb 100644
+> > --- a/kernel/printk/printk.c
+> > +++ b/kernel/printk/printk.c
+> > @@ -2549,6 +2549,14 @@ void console_flush_on_panic(void)
+> >  	 */
+> >  	console_trylock();
+> >  	console_may_schedule = 0;
+> > +	if (flush_mode == CONSOLE_FLUSH_ALL) {
+> > +		/*
+> > +		 * Can be done under logbuf lock, but it's unlikely that
+> > +		 * we will have any race conditions here.
+> > +		 */
+> > +		console_seq = log_first_seq;
+> > +		console_idx = log_first_idx;
 
-This can get an automated randconfig build stuck in a loop
-waiting for the user to input the number. As we already know
-the physical address, this patch provides that number as
-default, along with a reasonable default value for the virtual
-address.
+This is very similar to my V1 patch :), excepted I used a bool
+as the parameter.
 
-Cc: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/Kconfig.debug | 2 ++
- 1 file changed, 2 insertions(+)
+> 
+> I agree that it is easier. The cost is that the same messages are
+> printed again without any explanation.
+> 
+> I still think that it would be convenient to write a header line.
+> It would help to understand the log for any, even 3rd-party, reader.
+> Also it would help to find the beginning in a very long log.
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index a8a1e14f20ab..3e33753bd60c 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1676,6 +1676,7 @@ config DEBUG_UART_PHYS
- 	default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
- 	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
- 	default 0xe8008000 if DEBUG_R7S72100_SCIF2
-+	default 0xf0000000 if DEBUG_DIGICOLOR_UA0
- 	default 0xf0000be0 if ARCH_EBSA110
- 	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
- 	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
-@@ -1728,6 +1729,7 @@ config DEBUG_UART_VIRT
- 	default 0xe0010fe0 if ARCH_RPC
- 	default 0xf0000be0 if ARCH_EBSA110
- 	default 0xf0010000 if DEBUG_ASM9260_UART
-+	default 0xf0100000 if DEBUG_DIGICOLOR_UA0
- 	default 0xf01fb000 if DEBUG_NOMADIK_UART
- 	default 0xf0201000 if DEBUG_BCM2835 || DEBUG_BCM2836
- 	default 0xf1000300 if DEBUG_BCM_5301X
--- 
-2.20.0
+My thought is, the replay is only a debug option and disabled by default,
+so when user specifically enable the bit of PANIC_PRINT_ALL_PRINTK_MSG,
+the whole replay of printk msg should be expected.
 
+Thanks,
+Feng
+
+> 
+> If the complexity of console_unlock() is the concern, we could
+> refactor the code, e.g. put this "reset log" code into a separate
+> function.
+> 
+> Best Regards,
+> Petr
