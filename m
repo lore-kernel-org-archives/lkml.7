@@ -2,73 +2,128 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCA2C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A112C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D965217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555505918;
-	bh=l16BPqmw28pc3cvWD3bRZb4lds6Q5bH10b3iesRcVkg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V5iRp5sCu6HQ7JD2qWZK/YPp1hxc+SSmTXRXkpuJZ6BwGJeIJCJETK0ZzY6KB8KUb
-	 EP3jcIZO9AnK10sHVoOtpyEst3p2Ig0bSqZJsqVmPNJlR/bgFacsbIO+8qEjj9sjIl
-	 ILtx3FfX63vMNhn0mPfrMR+3fWPkMX6WrYBxzT70=
+	by mail.kernel.org (Postfix) with ESMTP id 4297F21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HMJSfK4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbfDQM6h (ORCPT
+        id S1732171AbfDQM7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:58:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55478 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730165AbfDQM6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:58:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE562B163;
-        Wed, 17 Apr 2019 12:58:35 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 14:58:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via
- timestamp
-Message-ID: <20190417125833.GH5878@dhcp22.suse.cz>
-References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
- <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
- <CAGWkznEzRB2RPQEK5+4EYB73UYGMRbNNmMH-FyQqT2_en_q1+g@mail.gmail.com>
- <20190417110615.GC5878@dhcp22.suse.cz>
- <CAGWkznH6MjCkKeAO_1jJ07Ze2E3KHem0aNZ_Vwf080Yg-4Ujbw@mail.gmail.com>
- <20190417114621.GF5878@dhcp22.suse.cz>
- <CAGWkznHgc68AHOs2WNPARmwMMKazuKXL1R4VsPD_jwtzQeVK_Q@mail.gmail.com>
+        Wed, 17 Apr 2019 08:59:08 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57966 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfDQM7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 08:59:08 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3HCx6f8097955;
+        Wed, 17 Apr 2019 07:59:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555505946;
+        bh=ghrb1BFjNPTO4slONC0Jaq5JNWNbvk+eUBdYBG6EjtE=;
+        h=From:To:CC:Subject:Date;
+        b=HMJSfK4B37lNaDLcs5z5KguPd9lu6oJDQvO2SdS1UkyvoeQsAYn7l8w2kRJhko+NX
+         INCPPEvp7Jm6FRMhAh8lmSu/WePIYCHLRny8OW3CZMZoSgQ+r3FMv5chaaeXp1yTIj
+         kD374KZDyS28+GT4y+O3SCo4m4iqQ/TYA2lHmySo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3HCx6hG009532
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Apr 2019 07:59:06 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
+ Apr 2019 07:59:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 17 Apr 2019 07:59:06 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3HCx46t032834;
+        Wed, 17 Apr 2019 07:59:05 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <kishon@ti.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL v2] PHY: For 5.1 -rc
+Date:   Wed, 17 Apr 2019 18:27:58 +0530
+Message-ID: <20190417125758.5742-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznHgc68AHOs2WNPARmwMMKazuKXL1R4VsPD_jwtzQeVK_Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-04-19 20:26:22, Zhaoyang Huang wrote:
-> repost the feedback by under Johannes's comment
+Hi Greg,
 
-Please follow up in the original email thread. Fragmenting the
-discussion is exactly what I wanted...
--- 
-Michal Hocko
-SUSE Labs
+Please find the updated pull request for 5.1 -rc.
+
+I've removed the lengthy ti-pipe3 PHY driver changes to follow the TRM
+sequence. This will be included in 5.2 -rc1 pull request.
+
+I've also added an additional patch to fix gadget mode working in
+Allwinner's sun4i-usb PHY driver.
+
+Let me know if I have to make any modifications.
+
+Thanks
+Kishon
+
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.1-rc-v2
+
+for you to fetch changes up to e6f32efb1b128344a2c7df9875bc1a1abaa1d395:
+
+  phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode (2019-04-17 12:06:02 +0530)
+
+----------------------------------------------------------------
+phy: for 5.1-rc
+
+  *) Fix sun4i-usb PHY driver to get USB gadget working on H3/R40/V3/V3s
+  *) Fix cable state handling in phy-twl4030-usb driver to get rid of
+     regulator_put() warning
+  *) Fix linker errors and compilation warnings got with randconfig
+  *) Fix sparse warnings and .cocci warnings
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+----------------------------------------------------------------
+Arnd Bergmann (3):
+      phy: allwinner: allow compile testing
+      phy: ti: usb2: fix OMAP_CONTROL_PHY dependency
+      phy: mapphone-mdm6600: add gpiolib dependency
+
+Paul Kocialkowski (1):
+      phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
+
+Tony Lindgren (1):
+      phy: phy-twl4030-usb: Fix cable state handling
+
+YueHaibing (3):
+      phy: rockchip-typec: Make usb3_pll_cfg and dp_pll_cfg static
+      phy: qcom-ufs: Make ufs_qcom_phy_disable_iface_clk static
+      phy: fix platform_no_drv_owner.cocci warnings
+
+ drivers/phy/allwinner/Kconfig              |  9 ++++++---
+ drivers/phy/allwinner/phy-sun4i-usb.c      |  4 ++++
+ drivers/phy/marvell/phy-mvebu-a3700-utmi.c |  1 -
+ drivers/phy/motorola/Kconfig               |  2 +-
+ drivers/phy/qualcomm/phy-qcom-ufs.c        |  2 +-
+ drivers/phy/rockchip/phy-rockchip-typec.c  |  4 ++--
+ drivers/phy/ti/Kconfig                     |  2 +-
+ drivers/phy/ti/phy-twl4030-usb.c           | 35 +++++++++++++----------------------
+ 8 files changed, 28 insertions(+), 31 deletions(-)
