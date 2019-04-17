@@ -2,122 +2,95 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C6C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3411C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA7C20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C446D20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbfDQHz2 (ORCPT
+        id S1731242AbfDQH4m convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:55:28 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:53383 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731328AbfDQHzZ (ORCPT
+        Wed, 17 Apr 2019 03:56:42 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:58906 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731041AbfDQH4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:55:25 -0400
-Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 147FA240016;
-        Wed, 17 Apr 2019 07:55:21 +0000 (UTC)
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: [PATCH 08/20] drm/malidp: Convert to generic image format library
-Date:   Wed, 17 Apr 2019 09:54:34 +0200
-Message-Id: <acf493e5663f6ea7848331ccd73387d913a66459.1555487650.git-series.maxime.ripard@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Apr 2019 03:56:41 -0400
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x3H7uf2M007492
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 03:56:41 -0400
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x3H7uZal006486
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 03:56:41 -0400
+Received: by mail-qk1-f197.google.com with SMTP id a188so20194161qkf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:56:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=XRal/KDUMxotBEJcVsOP5tkbeKLtAGY+Cmt6EWYQpMM=;
+        b=jbz731YqMsZjunrs3nxcXYyIPuWij+QN7J6OLvurUwJQ/PmmWzxTRS6hbLfTmBo0/w
+         3TugCpdNpjyDO31oan4n5I1e8iUjuN9HahpWI4jVAR6G0GszNgeIzVy5qz6Lyz+ATkX6
+         GxcdedRdCP4F/ss/X/XdOHclPdoCgW8xJranTY9vdGPyj3ZcyvTiKh2HFR8XyaJQhaJB
+         79O0rPnF1xUAfJ+9EeRNeBJWz+QWtLewHdcgy9+vh9KOu7vaDyEw5H3xQoQuiHd6UYYt
+         TlqYGN6TsVwjcI43BHjNwTvpiEPCXzDIiQdo/mwbzOI6p2uOBsK+WetZjuNzmmn+o9Vq
+         5vdg==
+X-Gm-Message-State: APjAAAVt6UJAlJvyn00PSg2ulX1LxuWMc1z52n2M+oeYIZQIIEP4ga3I
+        Yv72fp2icvZJPTJO8ziAypLaIAVvl4ViTtnkX1VcBDEItLRvtEDaWgHGHeWt1sh8hq8kacSAhM3
+        3WmLKMkMaLnSm73+vXaapY/MUUPBHePufjVQ=
+X-Received: by 2002:a0c:897b:: with SMTP id 56mr69182567qvq.55.1555487795564;
+        Wed, 17 Apr 2019 00:56:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx3ecN7jlhMZcM6t9DP1Pb6KVPvEg1Z5z9gv4RNYB7Cf+vCWGvu0HZ0lbB759a1mHlUIjeVrA==
+X-Received: by 2002:a0c:897b:: with SMTP id 56mr69182550qvq.55.1555487795257;
+        Wed, 17 Apr 2019 00:56:35 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::1a7])
+        by smtp.gmail.com with ESMTPSA id y34sm35037616qta.96.2019.04.17.00.56.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 00:56:34 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     =?utf-8?Q?=421=430=448=430?=
+         =?utf-8?Q?_=41A=43E=432=442=443=43D=435=43D=43A=43E?= 
+        <alexander198961@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+cc:     kernelnewbies@kernelnewbies.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Need advice about do we need this if condition
+In-reply-to: <CANtEx+B4_-7Kfq6Gur1xHcXnTYRq8ZN=Qqs2X=h-ZJuFFF7LbQ@mail.gmail.com>
+References: <CANtEx+B4_-7Kfq6Gur1xHcXnTYRq8ZN=Qqs2X=h-ZJuFFF7LbQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 17 Apr 2019 03:56:33 -0400
+Message-ID: <19402.1555487793@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have a generic image format libary, let's convert drivers to
-use it so that we can deprecate the old DRM one.
+On Wed, 17 Apr 2019 08:25:22 +0300
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/gpu/drm/arm/malidp_drv.c    | 1 +
- drivers/gpu/drm/arm/malidp_hw.c     | 4 ++--
- drivers/gpu/drm/arm/malidp_planes.c | 6 +++---
- 3 files changed, 6 insertions(+), 5 deletions(-)
+(Adding Al Viro and the linux-fsdevel lists, as at the very least, the manpage
+for the syscall needs some clarification...)
 
-diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-index 9e5240c2d5c7..6fddb70894cb 100644
---- a/drivers/gpu/drm/arm/malidp_drv.c
-+++ b/drivers/gpu/drm/arm/malidp_drv.c
-@@ -10,6 +10,7 @@
-  * ARM Mali DP500/DP550/DP650 KMS/DRM driver
-  */
- 
-+#include <linux/image-formats.h>
- #include <linux/module.h>
- #include <linux/clk.h>
- #include <linux/component.h>
-diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-index 1c9e869f4c52..24c01ff458d5 100644
---- a/drivers/gpu/drm/arm/malidp_hw.c
-+++ b/drivers/gpu/drm/arm/malidp_hw.c
-@@ -382,8 +382,8 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
- 
- int malidp_format_get_bpp(u32 fmt)
- {
--	const struct drm_format_info *info = drm_format_info(fmt);
--	int bpp = drm_format_info_plane_cpp(info, 0) * 8;
-+	const struct image_format_info *info = image_format_drm_lookup(fmt);
-+	int bpp = image_format_info_plane_cpp(info, 0) * 8;
- 
- 	if (bpp == 0) {
- 		switch (fmt) {
-diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
-index 9874f98f2aa5..b9d4d7d9a960 100644
---- a/drivers/gpu/drm/arm/malidp_planes.c
-+++ b/drivers/gpu/drm/arm/malidp_planes.c
-@@ -150,7 +150,7 @@ static void malidp_plane_atomic_print_state(struct drm_printer *p,
- bool malidp_format_mod_supported(struct drm_device *drm,
- 				 u32 format, u64 modifier)
- {
--	const struct drm_format_info *info;
-+	const struct image_format_info *info;
- 	const u64 *modifiers;
- 	struct malidp_drm *malidp = drm->dev_private;
- 	const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
-@@ -201,7 +201,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
- 		return false;
- 	}
- 
--	info = drm_format_info(format);
-+	info = image_format_drm_lookup(format);
- 
- 	if (info->num_planes != 1) {
- 		DRM_DEBUG_KMS("AFBC buffers expect one plane\n");
-@@ -227,7 +227,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
- 
- 	if (modifier & AFBC_SPLIT) {
- 		if (!info->is_yuv) {
--			if (drm_format_info_plane_cpp(info, 0) <= 2) {
-+			if (image_format_info_plane_cpp(info, 0) <= 2) {
- 				DRM_DEBUG_KMS("RGB formats <= 16bpp are not supported with SPLIT\n");
- 				return false;
- 			}
--- 
-git-series 0.9.1
+> hello I am trying to fix https://bugzilla.kernel.org/show_bug.cgi?id=202935
+
+So - convince us that it's in fact a "bug" and not a restriction.
+
+> I found cause
+> https://github.com/torvalds/linux/blob/master/fs/cifs/cifsfs.c#L1076 not
+> sure is it correct to remove such condition ?
+
+Does the CIFS protocol support copying from a file to another location in the
+same file? Was it intended to work on *any* filesystem?
+
+(For that matter, the manpage for the syscall is unclear on whether having both
+file descriptors open on the same file is OK or not - for bonus ambiguity
+points, there's exactly zero discussion of what happens if source and
+destination overlap destructively).
+
