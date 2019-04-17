@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7849C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7711C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637E421850
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E1A2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbfDQVm1 (ORCPT
+        id S2387716AbfDQVmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:42:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20157 "EHLO mga12.intel.com"
+        Wed, 17 Apr 2019 17:42:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20176 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387496AbfDQVmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:42:18 -0400
+        id S2387647AbfDQVmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:42:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:17 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,363,1549958400"; 
-   d="scan'208";a="224441145"
+   d="scan'208";a="224441220"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:16 -0700
+  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:30 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v7 05/21] x86/msr-index: Define MSR_IA32_CORE_CAPABILITY and split lock detection bit
-Date:   Wed, 17 Apr 2019 14:33:55 -0700
-Message-Id: <1555536851-17462-6-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v7 19/21] x86/clearcpuid: Apply cleared feature bits that are forced set before
+Date:   Wed, 17 Apr 2019 14:34:09 -0700
+Message-Id: <1555536851-17462-20-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
 References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
@@ -56,34 +56,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new MSR_IA32_CORE_CAPABILITY (0xcf) is defined. Each bit in the MSR
-enumerates a model specific feature. Currently bit 5 enumerates split
-lock detection. When bit 5 is 1, split lock detection is supported.
-When the bit is 0, split lock detection is not supported.
+Some CPU feature bits are forced set and stored in cpuinfo_x86 before
+handling clearcpuid options. To clear those bits from cpuinfo_x86,
+apply_forced_cap() is called after handling the options.
 
-Please check the latest Intel 64 and IA-32 Architectures Software
-Developer's Manual for more detailed information on the MSR and the
-split lock detection bit.
+Please note, apply_forced_cap() is called twice on boot CPU. But this code
+is simple and there is no functionality issue.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- arch/x86/include/asm/msr-index.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/include/asm/cpu.h   | 2 ++
+ arch/x86/kernel/cpu/common.c | 5 +++--
+ arch/x86/kernel/fpu/init.c   | 2 ++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ca5bc0eacb95..f65ef6f783d2 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -59,6 +59,9 @@
- #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
- #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index cd7493f20234..261e8ff3e2fb 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -26,6 +26,8 @@ struct x86_cpu {
+ 	struct cpu cpu;
+ };
  
-+#define MSR_IA32_CORE_CAPABILITY	0x000000cf
-+#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
++void apply_forced_caps(struct cpuinfo_x86 *c);
 +
- #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
- #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
- #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
+ #ifdef CONFIG_HOTPLUG_CPU
+ extern int arch_register_cpu(int num);
+ extern void arch_unregister_cpu(int);
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index bbdd69dd4f5f..e1d41405c27b 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -758,13 +758,14 @@ void cpu_detect(struct cpuinfo_x86 *c)
+ 	}
+ }
+ 
+-static void apply_forced_caps(struct cpuinfo_x86 *c)
++void apply_forced_caps(struct cpuinfo_x86 *c)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < NCAPINTS + NBUGINTS; i++) {
+-		c->x86_capability[i] &= ~cpu_caps_cleared[i];
++		/* Bits may be cleared after they are set. */
+ 		c->x86_capability[i] |= cpu_caps_set[i];
++		c->x86_capability[i] &= ~cpu_caps_cleared[i];
+ 	}
+ }
+ 
+diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
+index 99b895eea166..9c2801b605e3 100644
+--- a/arch/x86/kernel/fpu/init.c
++++ b/arch/x86/kernel/fpu/init.c
+@@ -5,6 +5,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/setup.h>
+ #include <asm/cmdline.h>
++#include <asm/cpu.h>
+ 
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
+@@ -261,6 +262,7 @@ static void __init clear_cpuid(void)
+ 		    bit >= 0 && bit < NCAPINTS * 32)
+ 			setup_clear_cpu_cap(bit);
+ 	}
++	apply_forced_caps(&boot_cpu_data);
+ }
+ 
+ /*
 -- 
 2.19.1
 
