@@ -5,66 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D3EC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD7EC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66304217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A126217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVH32cdp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNZl8wHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733149AbfDQRa5 (ORCPT
+        id S1733161AbfDQRbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:30:57 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37671 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729641AbfDQRa1 (ORCPT
+        Wed, 17 Apr 2019 13:31:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36901 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733034AbfDQRaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:30:27 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so33060502wrm.4;
-        Wed, 17 Apr 2019 10:30:25 -0700 (PDT)
+        Wed, 17 Apr 2019 13:30:23 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v14so4566831wmf.2;
+        Wed, 17 Apr 2019 10:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Btaw5CgxhYac28zaC8EYgFvIIeyjC0ToJx7hPAKP9QY=;
-        b=LVH32cdp2sDip8uzvIAO2wUQy1tP3Nq1rATlI61WXbGp2/rYljFC2DU+xbmv3WdTxA
-         +UgwLuMPzOLok1Ro0yA2qcIfbhoPdqOflpPScLIwn13wToy5pvVEan/Ydx8IgSWO8CvK
-         vpWhAKKatVVrex82N8qbCpq2pIpaKKS5nI1d7oZ20FBlou2jaPbK03JF4zPWv8+PlGMr
-         PCVz+m+K3mUcNNjDGkJKa6yc6ts/wrL1teZ04pszmYY7ezR34r4ZUEYA90sJIoyc7rpB
-         m9humJC5tEjHNgYw3i8wkS3Q26L+JtDKhRhoE+axSTXMziWhvPgalw86kCNxSLrGmOlE
-         UA6g==
+        bh=b+YiUM75De4BFeN5CqwNUI+YVTIngpiY3A0fybpC1XI=;
+        b=PNZl8wHyxbSAmvbzf4KiobddapYSMCxVKmxwk9lrMRnkVoGOtP+PKtfakTyBvpxJok
+         AS8kfvF4EL7oM/w6sjWrEnSr+isSbCJjCB1UnUhrRTY2hnUtUehSaWSuofVL6gmL1Kba
+         wYdufqWdWg1vts73uwTNWzymieHs1p7bpbti0Rt/2wbqBIc0bMkQIORYO1Nwygz7HlPw
+         w3ujKcBqjrtn0m62RGKJacL/8Jd8VsIoKSUezoowq9zhS95+Cu22iwWv77G1YlNpHj1i
+         GLHu0ySt8AEBSfOGmiUwMh9iraL9Ap13YHA1UPP7DO2G7m7sN5ZtTPzlvg5R5cjJWmBr
+         nc2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Btaw5CgxhYac28zaC8EYgFvIIeyjC0ToJx7hPAKP9QY=;
-        b=Xb0XNDPNwpjcW4xPgsI0yBrt5mASzEzs8ULauIF91QRAFMzt+b7abGVZhtwvBLf9nd
-         +WUsxbPo7uVNwXSL4B3CRRD57ep4TdvJPMcfpbLD/GakH7NV4e/z/a6CDetqkExWkqAX
-         isUcUnP2bmXmEU0GLGBznjfRI4cN2eprpw3JIJv+59hcRSOUFf8ARiZW2Qh7qzmV19DL
-         8o6C30GasPZiBrofbQkUQlhCLNZD88AivkC+L1z70flYLzfEKVeWbl0ll9V7fIB0Fuul
-         IgHO+r+daI3Qy05Hj7V4xC0y9Xt438a3Qn7TwE0AlV5IXNR8bvkhLzxuYDTSWafJusRx
-         TBig==
-X-Gm-Message-State: APjAAAUtq3OQBTk2sA2+ULYM+q/VqSA95vAC5v3YOWg/2oCY4ZF41lEe
-        I1r142nX5s6+DpAjmfkT2izCvrsonyQ=
-X-Google-Smtp-Source: APXvYqyO1A01G9zoTN7MOlGOQ/NoSKZA3ysH220/nNVPMMVjDrjAQI2kXGd7MHy/k0W7uIb/Z9ENqQ==
-X-Received: by 2002:adf:ffc2:: with SMTP id x2mr32063041wrs.86.1555522224744;
-        Wed, 17 Apr 2019 10:30:24 -0700 (PDT)
+        bh=b+YiUM75De4BFeN5CqwNUI+YVTIngpiY3A0fybpC1XI=;
+        b=EL2V2Qn7w9cZ6q770Ta6qQt/bem1wvWYVWGcwyIigF2wag9JT7pTgAhu4va25apFPY
+         zCpx5M0/WF8RvxLzzwsZ694fXOE1vcpvWx8yUIcpIno9bXHPsLWc93metNljUSmfBZ6k
+         bEyYSn7vsXRMm/rPZD60hvJOiUPsUbVT4Pc8RPMEfVEpDpNn441u5AWi1I2kGuax6hZ/
+         q7VHxcY2hL+MHWYFZR1CD7nh7Xgk1zxikcHM017q2OKTQr/i5nD02unAYV6NBBNxBGEn
+         4indloUSOQwHlVKJsqsbhCSDI6idaYcRuTTt6AY7XVoJi9V7qWvGq0hY+6a9cofqZo5R
+         ivJA==
+X-Gm-Message-State: APjAAAXrnShSq+Gx8GMyQ/4rnwginhjyJUdqEtiBVKa2x0tCDnNSZEdL
+        QTsxyw4/fx4MOC+Epla037E=
+X-Google-Smtp-Source: APXvYqyCy70GDJ7gaJUnHBS5DgBh6IpUzbzie+xsxjtCGtR2KujMDcMaVi0NFQi7i/It4O55Ud+8KA==
+X-Received: by 2002:a1c:ca06:: with SMTP id a6mr33040526wmg.14.1555522221471;
+        Wed, 17 Apr 2019 10:30:21 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id c6sm2669306wmb.21.2019.04.17.10.30.23
+        by smtp.gmail.com with ESMTPSA id c6sm2669306wmb.21.2019.04.17.10.30.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 10:30:23 -0700 (PDT)
+        Wed, 17 Apr 2019 10:30:20 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
+        Icenowy Zheng <icenowy@aosc.io>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
-Date:   Wed, 17 Apr 2019 19:30:27 +0200
-Message-Id: <20190417173031.9920-5-peron.clem@gmail.com>
+Subject: [PATCH v3 2/8] dt-bindings: gpu: mali-midgard: Add bus clock bindings
+Date:   Wed, 17 Apr 2019 19:30:25 +0200
+Message-Id: <20190417173031.9920-3-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190417173031.9920-1-peron.clem@gmail.com>
 References: <20190417173031.9920-1-peron.clem@gmail.com>
@@ -76,38 +78,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the mali gpu node to the H6 device-tree.
+From: Icenowy Zheng <icenowy@aosc.io>
 
+Some SoCs adds a bus clock gate to the Mali Midgard GPU.
+
+Add the binding for the bus clock.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 16c5c3d0fd81..6aad06095c40 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -157,6 +157,20 @@
- 			allwinner,sram = <&ve_sram 1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 1b1a74129141..2e8bbce35695 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -31,6 +31,12 @@ Optional properties:
  
-+		gpu: gpu@1800000 {
-+			compatible = "allwinner,sun50i-h6-mali",
-+				     "arm,mali-t720";
-+			reg = <0x01800000 0x4000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "job", "mmu", "gpu";
-+			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-+			clock-names = "core", "bus";
-+			resets = <&ccu RST_BUS_GPU>;
-+			status = "disabled";
-+		};
+ - clocks : Phandle to clock for the Mali Midgard device.
+ 
++- clock-names : Specify the names of the clocks specified in clocks
++  when multiple clocks are present.
++    * core: clock driving the GPU itself (When only one clock is present,
++      assume it's this clock.)
++    * bus: bus clock for the GPU
 +
- 		syscon: syscon@3000000 {
- 			compatible = "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+ - mali-supply : Phandle to regulator for the Mali device. Refer to
+   Documentation/devicetree/bindings/regulator/regulator.txt for details.
+ 
 -- 
 2.17.1
 
