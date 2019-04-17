@@ -2,115 +2,79 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15C9C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CE7C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCBF20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555525428;
-	bh=pXTvCfPBdoIeE8zuaKezd4hDBUYum4AWnKkD8VDICGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aI+IZTJBt+L/lPE2O8SJppB7FYZKr0ew+Knb0GDuvqlM87bca5mRcrvbrDApiMRnM
-	 KdcUy80QFlO4qcDdhPIAH4TktHw9D+Zjjbqw9VAfJytF7DvUDVlsdwuXGE/dWI3D3t
-	 u6C78TJtfSvKKdgegGYa5XDQA3hEXUH+oiKWjQkQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5E809206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbfDQSXr (ORCPT
+        id S1731823AbfDQSYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:23:47 -0400
-Received: from mail-wr1-f53.google.com ([209.85.221.53]:34100 "EHLO
-        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDQSXr (ORCPT
+        Wed, 17 Apr 2019 14:24:08 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:59064 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728373AbfDQSYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:23:47 -0400
-Received: by mail-wr1-f53.google.com with SMTP id w16so3249672wrl.1;
-        Wed, 17 Apr 2019 11:23:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1POMudkOg7ZMnCSs+YnvPunwdXlUfWUqcoeFnoOiFR4=;
-        b=P8L+gqS1jjv6UZdPpAUWU48A+vC9wN8UGx25cMYdiio1+TRuRdwC+M8Vl/jEZnYKY3
-         emi6v/y7+tOCEOUc13PhoipVcyR5MgTus4xhCd1x06m/khdKHPXwpD2KzlgDuIq7mgqb
-         6MrgLAqpoYwxaJMpWhykh8ZMlK4ir3F7c3QRIDyfL0ddXtWKwuTg0bbxvUTf2LmPE/Wg
-         OATd8B57YgymaWiwLaezOYwhZIPrLG1ZmRWlV77QFwphT6KR0RH9uRG62udVP/4zTHw3
-         9Xdz5Lt25g5DY6O74wrAoiUXnRT1aSbgXp7U9Ruw0yn0s3UvfmG3kj6RXeoNRUS8gt4r
-         kojg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1POMudkOg7ZMnCSs+YnvPunwdXlUfWUqcoeFnoOiFR4=;
-        b=uoGOnJD3/2dOTWlt35vIOvg3F0U9/P4afb4JaMPN47eAFoiPD73hcnH8xISlegX0E4
-         CkvyF0OqMRnUKRwccXzw9HkvWtky98hiIxV/6/nkU319m8tTlGJbnsVIG9Dwe+CETdxV
-         oAJ+P8eUpDOen0kg/ymBI0G1bS5++/kTaWlxN2mgjhGwnmbOMLhStiAH5sTd8vjRW1Yw
-         u7YvYsP+aq6i0RnDks2zaaacwsGWFJYF8Fnhni+5mIJf2dveS5u661DzlQ+RYDuHpErg
-         KheHUHjjF1mqEIHn5uDR0c7JbSPrW/SCCZxKJIly7wUe2pf4JrW/I0QKF0g+mgGD1Fgt
-         +zlQ==
-X-Gm-Message-State: APjAAAUEMJ4uwDMsrtU8CxuZLKT4ggnefNVFV61U2ccaZ0kb5d7PrJAp
-        O4hX5OmQ1sOiZV2QHz0tYHQ=
-X-Google-Smtp-Source: APXvYqwxbqNW/plFqmrGhB2G5xMzZ+dlX6W7BKgxwDFj050DWrNZFKxiqjk0N4Ko/qCBcyzwXJe0ig==
-X-Received: by 2002:adf:ef0c:: with SMTP id e12mr56645812wro.170.1555525425169;
-        Wed, 17 Apr 2019 11:23:45 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id o10sm88391387wru.54.2019.04.17.11.23.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 11:23:44 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 20:23:41 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "Brown, Len" <len.brown@intel.com>,
-        "linux-tip-commits@vger.kernel.org" 
-        <linux-tip-commits@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent]
- x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T)
-Message-ID: <20190417182341.GA5140@gmail.com>
-References: <20190412080152.3718-1-jian-hong@endlessm.com>
- <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
- <20190416082042.GA69717@gmail.com>
- <CAD8Lp44pQRYdw4cbfMt3uOSO23dzy_mWTt5T-Zjft08WWu_yUA@mail.gmail.com>
- <20190417061650.GA31060@gmail.com>
- <CAD8Lp45BLaoXF=RNcncqcTtNvaGHP72+a1CxcjoeBXDiw9TKbA@mail.gmail.com>
- <17516564-37AC-4F77-9C0D-0DD71F8045EA@zytor.com>
- <CAKv+Gu_jqoKiqq4ozcPwSxLmpuaWsFKy_xyYGhECLz+KLHOjOw@mail.gmail.com>
- <FFF73D592F13FD46B8700F0A279B802F48AFEFF2@ORSMSX114.amr.corp.intel.com>
+        Wed, 17 Apr 2019 14:24:07 -0400
+Received: (qmail 3228 invoked by uid 2102); 17 Apr 2019 14:24:06 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Apr 2019 14:24:06 -0400
+Date:   Wed, 17 Apr 2019 14:24:06 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Raul Rangel <rrangel@chromium.org>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <groeck@chromium.org>,
+        <oneukum@suse.com>, <djkurtz@chromium.org>, <zwisler@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Johan Hovold <johan@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v2] usb/hcd: Send a uevent signaling that the host
+ controller has died
+In-Reply-To: <20190417175300.GA74282@google.com>
+Message-ID: <Pine.LNX.4.44L0.1904171419260.1400-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <FFF73D592F13FD46B8700F0A279B802F48AFEFF2@ORSMSX114.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 17 Apr 2019, Raul Rangel wrote:
 
-* Prakhya, Sai Praneeth <sai.praneeth.prakhya@intel.com> wrote:
+> > > Also where would be a good place to document this?
+> > 
+> > Documentation/ABI/ is a good start.
+> I'll add something to Documentation/ABI/testing/xhci-uevent
 
-> I will ask around internally to check if it is a good idea to make EFI 
-> reboot the default method when the machine is booted in EFI mode.
+Your patch will apply to all host controllers, not just xhci.  The
+documentation filename should reflect this.  Perhaps "usb-uevent"?
 
-Or whether there's some robust signature that indicates "modern EFI 
-system where EFI reboot is the primary method"?
+> > Why do you need to lock something that is "dead"?  And why is the idr
+> > lock the correct one here?
+> We need to ensure that root_hub is not null. Though I'm not sure the
+> lock is entirely necessary in this case. usb_remove_hcd stops the work
+> item before it sets the rhdev to null. The reason I picked
+> usb_bus_idr_lock was because it's the same lock that usb_remove_hcd uses
+> when setting rhdev = NULL.
+> 
+> Alan, what do you think? Should I remove the lock?
 
-Major EFI version or ACPI version or such?
+You're both right; the lock isn't needed because the work is stopped
+before the root hub gets removed.  Acquiring the lock doesn't do any
+harm, but it isn't needed so you probably should remove it.  In fact, 
+you don't even need to test for whether hcd->self.root_hub is 
+non-NULL.
 
-Thanks,
+Alan Stern
 
-	Ingo
+
