@@ -2,111 +2,174 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7642C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0420FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8950820835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:52:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/HX4jmJ"
+	by mail.kernel.org (Postfix) with ESMTP id CAA2420835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfDQLwN (ORCPT
+        id S1732046AbfDQLxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:52:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35691 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731996AbfDQLwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:52:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y197so3267074wmd.0;
-        Wed, 17 Apr 2019 04:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wNrUcFXZtZVOpOyjGHVxelfd7oqF6M4NUvr3N76BLC4=;
-        b=N/HX4jmJ6mNx9A/ZtPcvByfjkkCNexHqkNgZWEcbC3vhY9IINFczfICav80NpdO7KO
-         eYoKZzGwmUs5MpzzcreVc9QaxErQFBSmjklzteyZhjh71weKPpSo9dfBIHEWbQ3wppBu
-         A6ollH9X8rsIDrrYD7lA5MK43zKag7v1sZ4t6SUibHqsPRSJBmadeP575kIssnFa6tox
-         i31QP2hKKg0qVGFN561OupXywjADrKnGe4X/6EOBjm3gSw7CE/tOGyRd2mF1RJK2d0r6
-         nQD/mN7hsp7MKzlSvbaMf/W7cmsIN1k16K+8iBB+psdPp1PG0TXPRYWS9wINDNCdJgBT
-         iPaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=wNrUcFXZtZVOpOyjGHVxelfd7oqF6M4NUvr3N76BLC4=;
-        b=slo8g1teIqCvWxKyfMX6DsZtQ2RCojG/RiyTBNfx+m1kiK0Uf7VQg7JV+EYLTLK7qI
-         3nzOqckG648y5iyTYLiVEBltzi/GBu7OegxdkX0uoNCIj3T91fPGl6NEphZ9qQBZiZL7
-         q8xO6fE7RgLnogKTrIaZ4YYI2njWhK8TZjNoIbkVLEavIXT97jMdCv3d8fh9LE3WmeOV
-         4YuaU/O8KePemxkePxrOSoeOU/fJx/DRA8NLyPpbApJIyHeCAenAjsUOlkFizeggDz1Z
-         Q6Dq0SEwseWopr2wlW20FmAv4GX8zcykWEqyaJgOb02PudpENuZljJgtH5eSLQ54MJ7f
-         Vuyw==
-X-Gm-Message-State: APjAAAW1hw2ne1Btld2u9lUbQ5SvCawvyiH6vwPPHJNVZr2frO3eOw90
-        jbt2gr050w3OB9yRQSf1VqYcWPtP
-X-Google-Smtp-Source: APXvYqzEK0bXLo8zt4+Vm2BuGbzWGQ0BGCgPHPI0eeLvJ+scl218SPAMItrdv8c8H1K0YmZJUCMnug==
-X-Received: by 2002:a1c:a7c5:: with SMTP id q188mr30657080wme.126.1555501930041;
-        Wed, 17 Apr 2019 04:52:10 -0700 (PDT)
-Received: from donizetti.redhat.com ([2001:b07:6468:f312:ac27:aac4:c65c:6eb])
-        by smtp.gmail.com with ESMTPSA id y1sm153840247wrd.34.2019.04.17.04.52.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 04:52:09 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     stefanha@redhat.com, stable@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER)
-Subject: [PATCH v2] block: bio_map_user_iov should not be limited to BIO_MAX_PAGES
-Date:   Wed, 17 Apr 2019 13:52:07 +0200
-Message-Id: <20190417115207.30202-1-pbonzini@redhat.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Apr 2019 07:53:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43280 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729898AbfDQLxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:53:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 478D8AFFB;
+        Wed, 17 Apr 2019 11:53:00 +0000 (UTC)
+Message-ID: <1555501962.3139.10.camel@suse.de>
+Subject: Re: [PATCH v1 1/4] mm/memory_hotplug: Release memory resource after
+ arch_remove_memory()
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Date:   Wed, 17 Apr 2019 13:52:42 +0200
+In-Reply-To: <20190409100148.24703-2-david@redhat.com>
+References: <20190409100148.24703-1-david@redhat.com>
+         <20190409100148.24703-2-david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because bio_kmalloc uses inline iovecs, the limit on the number of entries
-is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
-in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
-to report a DMA overrun.
+On Tue, 2019-04-09 at 12:01 +0200, David Hildenbrand wrote:
+> __add_pages() doesn't add the memory resource, so __remove_pages()
+> shouldn't remove it. Let's factor it out. Especially as it is a
+> special
+> case for memory used as system memory, added via add_memory() and
+> friends.
 
-Note that if the argument to iov_iter_npages were changed to UIO_MAXIOV,
-we would still truncate SG_IO requests beyond UIO_MAXIOV pages.  Changing
-it to UIO_MAXIOV + 1 instead ensures that bio_kmalloc notices that the
-request is too big and blocks it.
+I would call the special case the other way, aka: zone_device hooking
+into hotplug path.
 
-Cc: stable@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: b282cc766958 ("bio_map_user_iov(): get rid of the iov_for_each()", 2017-10-11)
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> 
+> We now remove the resource after removing the sections instead of
+> doing
+> it the other way around. I don't think this change is problematic.
+> 
+> add_memory()
+> 	register memory resource
+> 	arch_add_memory()
+> 
+> remove_memory
+> 	arch_remove_memory()
+> 	release memory resource
+> 
+> While at it, explain why we ignore errors and that it only happeny if
+> we remove memory in a different granularity as we added it.
 
----
-	v1->v2: now with "git commit"
----
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In the future we may want to allow drivers to hook directly into
+arch_add_memory()/arch_remove_memory(), and this will lead to different
+granularity in hot_add/hot_remove operations. 
 
-diff --git a/block/bio.c b/block/bio.c
-index 4db1008309ed..0914ae4adae9 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1299,7 +1299,7 @@ struct bio *bio_map_user_iov(struct request_queue *q,
- 	if (!iov_iter_count(iter))
- 		return ERR_PTR(-EINVAL);
- 
--	bio = bio_kmalloc(gfp_mask, iov_iter_npages(iter, BIO_MAX_PAGES));
-+	bio = bio_kmalloc(gfp_mask, iov_iter_npages(iter, UIO_MAXIOV + 1));
- 	if (!bio)
- 		return ERR_PTR(-ENOMEM);
- 
+At least that was one of the conclusions I drew from the last vmemmap-
+patchset.
+So, we will have to see how we can handle those kind of errors.
+
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Besides what Andrew pointed out about the types of start,size, I do not
+see anything wrong:
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+> ---
+>  mm/memory_hotplug.c | 34 ++++++++++++++++++++--------------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 4970ff658055..696ed7ee5e28 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -562,20 +562,6 @@ int __remove_pages(struct zone *zone, unsigned
+> long phys_start_pfn,
+>  	if (is_dev_zone(zone)) {
+>  		if (altmap)
+>  			map_offset = vmem_altmap_offset(altmap);
+> -	} else {
+> -		resource_size_t start, size;
+> -
+> -		start = phys_start_pfn << PAGE_SHIFT;
+> -		size = nr_pages * PAGE_SIZE;
+> -
+> -		ret = release_mem_region_adjustable(&iomem_resource,
+> start,
+> -					size);
+> -		if (ret) {
+> -			resource_size_t endres = start + size - 1;
+> -
+> -			pr_warn("Unable to release resource <%pa-
+> %pa> (%d)\n",
+> -					&start, &endres, ret);
+> -		}
+>  	}
+>  
+>  	clear_zone_contiguous(zone);
+> @@ -1820,6 +1806,25 @@ void try_offline_node(int nid)
+>  }
+>  EXPORT_SYMBOL(try_offline_node);
+>  
+> +static void __release_memory_resource(u64 start, u64 size)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * When removing memory in the same granularity as it was
+> added,
+> +	 * this function never fails. It might only fail if
+> resources
+> +	 * have to be adjusted or split. We'll ignore the error, as
+> +	 * removing of memory cannot fail.
+> +	 */
+> +	ret = release_mem_region_adjustable(&iomem_resource, start,
+> size);
+> +	if (ret) {
+> +		resource_size_t endres = start + size - 1;
+> +
+> +		pr_warn("Unable to release resource <%pa-%pa>
+> (%d)\n",
+> +			&start, &endres, ret);
+> +	}
+> +}
+> +
+>  /**
+>   * remove_memory
+>   * @nid: the node ID
+> @@ -1854,6 +1859,7 @@ void __ref __remove_memory(int nid, u64 start,
+> u64 size)
+>  	memblock_remove(start, size);
+>  
+>  	arch_remove_memory(nid, start, size, NULL);
+> +	__release_memory_resource(start, size);
+>  
+>  	try_offline_node(nid);
+>  
 -- 
-2.21.0
-
+Oscar Salvador
+SUSE L3
