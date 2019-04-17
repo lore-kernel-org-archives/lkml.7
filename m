@@ -2,116 +2,113 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDE1C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE594C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E4120651
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B93120651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZCgFKcn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uplvGO2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbfDQUMt (ORCPT
+        id S1731976AbfDQUMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:12:49 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33604 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQUMt (ORCPT
+        Wed, 17 Apr 2019 16:12:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43389 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQUMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:12:49 -0400
-Received: by mail-qk1-f194.google.com with SMTP id k189so15180608qkc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:12:48 -0700 (PDT)
+        Wed, 17 Apr 2019 16:12:51 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c8so12593283pfd.10;
+        Wed, 17 Apr 2019 13:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=78vEBc9reM9YM8/f3/8CuxrOvyd7mTbu1OAcBFD8s4U=;
-        b=FZCgFKcn8BCht+46g4iy7p6p8v2LOtTndu5g8Lvd6F2eQsBWHcYOM1d5DVVCItbps0
-         uJzaHxrOOy0pQeLnobtt/0/Nno1sKsMaLfXEIyuYwH3zbaad9Tp2xc91m/FR+alxhbA7
-         uQC4OXOHVatTx2d9lpqYWa61pNY3zKVsYSMpc/K42MKjPLKcREDg4gw7mHMobLKJCT3G
-         nZxnmwAULwrvIsEVvdfpkWwWzVwnYqoaBDs111blw/Iq6KyQFcYR1E07BJiFl29UGOu8
-         NElX0XQ5nkParhm5uNdgaCU66VtBqkpsstP3SdyNg99BF9ySsZFysxQ3dlTKvzrGf/Ck
-         Bm9w==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MzUMqQcBMnSNRUdBAvs212fcMrCTPBwD6uuZdMJuSIA=;
+        b=uplvGO2sskszwut77LnGWgqVrsJ/RHCTdWCVqa7cLxTThQWQn4ijN49yBNXrutykCF
+         nJI9pLvvWyFMqYus/lWPEsYrueLMt8KTom3VUQi2p7aKvF+IaslpDYZqNlYJkqwC5k00
+         JHpawghOP4BHP9Dwn1XZctJCg/EiRQUaNNB2J/l17T0DA+F4wzORW1UQ7zr1Va5p6RsB
+         TTFGxAFvPV/f6qZYiwEF+r+gCUxZc5kKlGhdfLsqYNPHz7WxtZbdnB3SA0QPufOcXpqC
+         E4/kvXYjH2nArcFbfZTWVLfINgLDue+jis02OtPfZx0C5PiABNFdxoTxctAOEEusiX+U
+         IkVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=78vEBc9reM9YM8/f3/8CuxrOvyd7mTbu1OAcBFD8s4U=;
-        b=Atw5SiO4ujEUgH1MO1WB6lGAyzfjsDV6C0dx7I5Vplr/fw1e2JA4zfmIAAiJsMo0AV
-         UKalPdnUgQcfIC1sWfiI4N2RZBno2dCC11VjvDuUZBOUiwhfAGx3YNHayCskaiE2nolA
-         S8wrhd1avJrpNOwwC5D0QdN8sZ0iA5yiHMQOuc8uVe7ltu9MONcqSmden3Co8mQrcI+a
-         YTQhEnmgKiPNKfg5g+6d9VOqymKyxciPQtAY4kGOkQC9P1SMW6JLxjvUki4HNVwYZcCG
-         7xxh9EFK+Hy3cyOwVJXGZCg4bBs5qwrAEgRZSSpI67s9x2SlrJ8cX/jOLNPaDGJDfVdE
-         I+IQ==
-X-Gm-Message-State: APjAAAVOxWx0S2Cg+JUZvPXvu32qLSDj33E+bL9RwNmEfUfrpaZvoZ0j
-        /tL63AfWgeG8nhGOiSKYpg==
-X-Google-Smtp-Source: APXvYqzD5SElTsT+hf9qF8Amia8hAMGdY50KmV4YsMcsIQpmBJ302U9V5J4xsx7DPhmsPkhMaNGIPw==
-X-Received: by 2002:a37:c15:: with SMTP id 21mr67837665qkm.50.1555531968203;
-        Wed, 17 Apr 2019 13:12:48 -0700 (PDT)
-Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id v8sm35659259qtc.69.2019.04.17.13.12.47
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MzUMqQcBMnSNRUdBAvs212fcMrCTPBwD6uuZdMJuSIA=;
+        b=VCnSbfg/BdZ50CG5fG4zHZey/Tk152r94qLu2NezeWC1UV3U3l54yEAjX1r8i7QUcY
+         fDf1c6kMUSmw7MTxXxAfIvLcHHRLxIKJDVhBooXr/aPsNxcS/Y3ZZPbom8ab33JhkGJ/
+         2FXGkcvxsFpN2/N5/8B+ggccS2tRoDoABHrrKOuOATFQntN926ruuFqhFzOnrUh/ZRIL
+         cUCAoDLpJXqeGvNidvMaKy2FUPNufOpdDx64bRlWzfUsRf+DnvkvWbWYQeD+lY3DjF5i
+         hoJ0TJFBhHh4wlSiHZlVnbzuA6AXN3qGX69xvB3QPXI+tCiPuXCAv4GwG3/ubamQiVcJ
+         yVMg==
+X-Gm-Message-State: APjAAAUVcZGlr1tT4/qE6XhckJ3IdiPO6/ebywM/WegysqCnuqOSgqN4
+        S9LLKJFX5ZYgUVIHdDj6G+M=
+X-Google-Smtp-Source: APXvYqz5KgvlnXzN0ECBsM6/szbinsGUjwyl6ZJFNzN1Z5H5uBVEHFRu2UEgA3PaDM/GXJJX3rWJhA==
+X-Received: by 2002:a62:ed10:: with SMTP id u16mr92659770pfh.187.1555531969937;
+        Wed, 17 Apr 2019 13:12:49 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w3sm6553pfn.179.2019.04.17.13.12.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 13:12:47 -0700 (PDT)
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ktest: Add support for meta characters in GRUB_MENU
-Date:   Wed, 17 Apr 2019 16:11:14 -0400
-Message-Id: <20190417201114.14839-1-msys.mizuma@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Apr 2019 13:12:36 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 13:12:34 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (ina3221) Add voltage conversion time settings
+Message-ID: <20190417201234.GA6223@roeck-us.net>
+References: <20190416235548.22733-1-nicoleotsuka@gmail.com>
+ <1ad27385-e62a-d4f0-2590-c50458119f12@roeck-us.net>
+ <2a193494-a33e-dac0-456a-241d7b3e59ad@roeck-us.net>
+ <20190417183949.GB5073@Asurada-Nvidia.nvidia.com>
+ <20190417194817.GA22652@Asurada-Nvidia.nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417194817.GA22652@Asurada-Nvidia.nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+On Wed, Apr 17, 2019 at 12:48:18PM -0700, Nicolin Chen wrote:
+> On Wed, Apr 17, 2019 at 11:39:49AM -0700, Nicolin Chen wrote:
+> 
+> > > Thinking about it ... does it even make sense to cache reg_config twice,
+> > > or would it be better to just update the local copy and use regmap_write()
+> > > to send it to the chip ?
+> > 
+> > I remember the reason of adding the read-back was to prevent race
+> > condition. But now we have mutex protections for all sysfs nodes,
+> > maybe it's not necessary anymore. I will read the code carefully
+> > and see if it's safe to remove it -- will do in a separate patch.
+> 
+> I just recalled a second thought for the reason why I left them
+> there as it'd logically require a copy to restore upon failure
+> of regmap_write, that might not look so neat as the read-back:
+> 
+> 	old_config = reg_config;
+> 	reg_config &= mask;
+> 	reg_config |= val;
+> 	ret = regmap_write(reg_config);
+> 	if (ret) {
+> 		reg_config = old_config;
+> 		return ret;
+> 	}
 
-ktest fails if meta characters are in GRUB_MENU, for example
-GRUB_MENU = 'Fedora (test)'
+	reg = (reg_config & mask) | val;
+	ret = regmap_write(reg);
+	if (ret) 
+		return ret;
+	reg_config = reg;
 
-The failure happens because the meta characters are not escaped,
-so the menu doesn't match in any entries in GRUB_FILE.
+doesn't look that bad to me, and is much less costly.
 
-Use quotameta() to escape the meta characters.
-
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
----
- tools/testing/ktest/ktest.pl | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 87af8a68ab25..ea07d43856b8 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -1866,9 +1866,10 @@ sub get_grub2_index {
- 	or dodie "unable to get $grub_file";
- 
-     my $found = 0;
-+    my $_grub_menu = quotemeta($grub_menu);
- 
-     while (<IN>) {
--	if (/^menuentry.*$grub_menu/) {
-+	if (/^menuentry.*$_grub_menu/) {
- 	    $grub_number++;
- 	    $found = 1;
- 	    last;
-@@ -1909,9 +1910,10 @@ sub get_grub_index {
- 	or dodie "unable to get menu.lst";
- 
-     my $found = 0;
-+    my $_grub_menu = quotemeta($grub_menu);
- 
-     while (<IN>) {
--	if (/^\s*title\s+$grub_menu\s*$/) {
-+	if (/^\s*title\s+$_grub_menu\s*$/) {
- 	    $grub_number++;
- 	    $found = 1;
- 	    last;
--- 
-2.20.1
-
+Guenter
