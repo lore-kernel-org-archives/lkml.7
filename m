@@ -2,140 +2,139 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4B3C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFAAC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55A320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0EhN8HCv"
+	by mail.kernel.org (Postfix) with ESMTP id 56F17206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbfDQGix (ORCPT
+        id S1730705AbfDQGjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 02:38:53 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:21395 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfDQGix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 02:38:53 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x3H6cPp5007675
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 15:38:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x3H6cPp5007675
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555483106;
-        bh=/zDvBu2C+eN3YpdLu2UPwlBoiQJ7Y/GgxolsDBc871c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0EhN8HCv7rvAKCxlwmxj+jr0Rw/4u50Qwpyzqe3xfC1CLzca6F4ponHHeP/3ZmU0z
-         7zLGHXEzIGjVgfjZYdV9WUkjK6XlpRa9OMJRpM+Tb5xnNWkskpzw9+r6DoQnT96NxG
-         L2JWjSuvR9bJR0E0alfKq7CuOaaVK5diFTeQuiP6/Jeynfdsm7yINXwjMqoVvOt8Dj
-         8Kw6EfKTBFHCCCN9r7HxClO6PvumhuSRL2yRnf0af6jqhQl6SiS4dyylQ7kazHqHY6
-         Hyrr8wS3d3w3DJTA2JQk5f6ZqCXT8C2n3DvjlfNHR/MQ2qLOAtWy1IMw1IGz+BXVtl
-         rY0J9fXDBa29w==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id t78so12986703vsc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 23:38:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAWVRbrKtSCT9h2WCXC4Gt7SNWrc/UAraARdvlo1+stjwVCotNPH
-        mxcbiUq1AEq0tdygnD6KdF/pJN+vNpR1yxZTn0M=
-X-Google-Smtp-Source: APXvYqwshJL6bnXf8aDFeHApPE3Tn7kpkwLPZPVl4AYZop3sWXfgKy1cM+8w2z4QzVwf+a/SnVn6B8wD4FgRqF3KRLA=
-X-Received: by 2002:a67:fbcc:: with SMTP id o12mr7506602vsr.60.1555483104881;
- Tue, 16 Apr 2019 23:38:24 -0700 (PDT)
+        Wed, 17 Apr 2019 02:39:23 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28759 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfDQGjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 02:39:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 23:39:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,360,1549958400"; 
+   d="scan'208";a="165434551"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 16 Apr 2019 23:39:20 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 17 Apr 2019 09:39:18 +0300
+Date:   Wed, 17 Apr 2019 09:39:18 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
+ old connections with references
+Message-ID: <20190417063918.GI1747@kuha.fi.intel.com>
+References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
+ <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
+ <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
 MIME-Version: 1.0
-References: <20190323015227.245455-1-dianders@chromium.org>
- <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com> <20190416163034.3e642818ebf27ed6891c1981@linux-foundation.org>
-In-Reply-To: <20190416163034.3e642818ebf27ed6891c1981@linux-foundation.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 17 Apr 2019 15:37:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR4Ty8835sfo4HSvBsMCsV65mY2HOajFSY2TOYurmkFdw@mail.gmail.com>
-Message-ID: <CAK7LNAR4Ty8835sfo4HSvBsMCsV65mY2HOajFSY2TOYurmkFdw@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in kdb summary
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Tue, Apr 16, 2019 at 11:35:36PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 12-04-19 15:41, Heikki Krogerus wrote:
+> > Now that the software nodes support references, and the
+> > device connection API support parsing fwnode references,
+> > replacing the old connection descriptions with software node
+> > references. Relying on device names when matching the
+> > connection would not have been possible to link the USB
+> > Type-C connector and the DisplayPort connector together, but
+> > with real references it's not problem.
+> > 
+> > The DisplayPort ACPI node is dag up, and the drivers own
+> > software node for the DisplayPort is set as the secondary
+> > node for it. The USB Type-C connector refers the software
+> > node, but it is now tied to the ACPI node, and therefore any
+> > device entry (struct drm_connector in practice) that the
+> > node combo is assigned to.
+> > 
+> > The USB role switch device does not have ACPI node, so we
+> > have to wait for the device to appear. Then we can simply
+> > assign our software node for the to the device.
+> > 
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> So as promised I've been testing this series and this commit
+> breaks type-c functionality on devices using this driver.
+> 
+> The problem is that typec_switch_get() and  typec_mux_get()
+> after this both return the same pointer, which is pointing
+> to the switch, so typec_mux_get() is returning the wrong
+> pointer.
+> 
+> This is not surprising since the references for both are
+> both pointing to the fwnode attached to the piusb30532 devices:
+> 
+> 	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
+> 
+> So the class_find_device here:
+> 
+> static void *typec_switch_match(struct device_connection *con, int ep,
+>                                 void *data)
+> {
+>         struct device *dev;
+> 
+>         if (con->fwnode) {
+>                 if (con->id && !fwnode_property_present(con->fwnode, con->id))
+>                         return NULL;
+> 
+>                 dev = class_find_device(&typec_mux_class, NULL, con->fwnode,
+>                                         fwnode_match);
+>         } else {
+>                 dev = class_find_device(&typec_mux_class, NULL,
+>                                         con->endpoint[ep], name_match);
+>         }
+> 
+>         return dev ? to_typec_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+> }
+> 
+> Simply returns the first typec_mux_class device registered.
+> 
+> I see 2 possible solutions to this problem:
+> 
+> 1) Use separate typec_mux_class and typec_orientation_switch_class-es
+> 
+> 2) Merge struct typec_switch and struct typec_mux into a single struct,
+> so that all typec_mux_class devices have the same memory layout, add
+> a subclass enum to this new merged struct and use that to identify
+> which of the typec_mux_class devices with the same fwnode pointer we
+> want.
+> 
+> Any other suggestions?
 
-On Wed, Apr 17, 2019 at 8:31 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Thu, 11 Apr 2019 18:06:23 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
-> > On Sat, Mar 23, 2019 at 10:55 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > If you drop into kdb and type "summary", it prints out a line that
-> > > says this:
-> > >
-> > >   ccversion  CCVERSION
-> > >
-> > > ...and I don't mean that it actually prints out the version of the C
-> > > compiler.  It literally prints out the string "CCVERSION".
-> > >
-> > > The version of the C Compiler is already printed at boot up and it
-> > > doesn't seem useful to replicate this in kdb.  Let's just delete it.
-> > > We can also delete the bit of the Makefile that called the C compiler
-> > > in an attempt to pass this into kdb.  This will remove one extra call
-> > > to the C compiler at Makefile parse time and (very slightly) speed up
-> > > builds.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >
-> >
-> > I know you add lots of Cc: lines
-> > when you pick up patches, but I think
-> > your script can be improved.
-> >
-> > You added "Cc: Douglas Anderson <dianders@chromium.org>",
-> > but Douglas is the author.
-> > I think the author should be excluded from Cc.
->
-> Whoops.
->
-> It's pretty benign: Doug will still only get a single email.
->
->
-> checkpatch checks for duplicates cc's but I think it assumes that
-> things like
->
-> Reported-by: fred
-> Tested-by: fred
->
-> were intentional.
->
-> It would perhaps be better for checkpatch to special-case the "Cc:
-> fred" tag and report a duplicated Cc: if fred was also mentioned in any
-> other tag.
-
-Sorry, I do not understand what you mean.
+I think the correct fix is that we supply separate nodes for both
+device entries.
 
 
-Douglas did not add any Cc: tag at all
-in his original patch:
-https://lore.kernel.org/patchwork/patch/1053953/
-
-
-It's you who added the Cc: tags
-(and I am guessing you did it by scripting.)
-
-Why is this topic related to checkpatch?
+thanks,
 
 -- 
-Best Regards
-Masahiro Yamada
+heikki
