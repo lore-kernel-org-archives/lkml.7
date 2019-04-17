@@ -4,62 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7300C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DA6C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B780C217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3ED20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fs0OZdHs"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Gg5u+qbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbfDQOIV (ORCPT
+        id S1732391AbfDQOJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:08:21 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39329 "EHLO
+        Wed, 17 Apr 2019 10:09:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47329 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730449AbfDQOIU (ORCPT
+        with ESMTP id S1728335AbfDQOJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:08:20 -0400
+        Wed, 17 Apr 2019 10:09:16 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE86Ng3933424
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE8mic3933513
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:08:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE86Ng3933424
+        Wed, 17 Apr 2019 07:08:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE8mic3933513
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555510086;
-        bh=5l5PWGYmVDMIRsdgHjIT3d955sYZBjK0smycVSsAYZU=;
+        s=2019041743; t=1555510129;
+        bh=0ijtZvpm6+49PpbGXXquCEZKl436SSkVSVP3r17C+lg=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=fs0OZdHshc1hsX/kNhEwEx8FSvdE3j0F6rKdYur+hXdQpXNbkI9nQOFyhx8KQ0qv4
-         JSsNppmCxwkW3MyBXwg65VCU5Ta0+9dL64o1TQ9ORL2BXZOAl9hIq4vyBsXpRh7K+4
-         LrBpOSrC8W/8wxqDQELL0JbdFF0xbA/w2sDyVCGb+Eq4gkJWURdtYnNdV6UEut4rud
-         5fFpLKIWdmBEQBBt8YstuKXHzZAZq1+mqjSfs/kX2+ZsW4rU1ysiCAisUwrHtiwCjL
-         6Y3V5xk9v0qxSN/RQlUj0bE+7udcrpEEPMmS3iGYYyysTlOjKWatvXYBwf8jRccyHs
-         Gv+7eHNBZzWNA==
+        b=Gg5u+qbY7M6kQxIzDthMd41xL7woCGoPlZLlOhDn74+xwjenm6Q4G5vmK4oHda7L5
+         bfbJve2AnasgWqVgjVCLFBURP57gqCC1/E9sfZVeYpm/YZFFepnA8ZqWT3M80/VGEn
+         eW90K+k2NsTaonfiC9eDptUIKdWxfUYZh0u8hGQmJtGjqTAUVFy/iov5h54OOR0Z87
+         IU4USsnU9x5sV3EgoVCLJGDiQWO1ngT0flv0MvU1OwlzWtPRV9KutePsu3iB2omjV8
+         /Atnf9z6PAIN/9v0eyKeHFdVhMVib9K0RhEfufdzodc26G+u9uFEdPFD7nTPkvTCUV
+         ZgH+ULcW1krUg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE858g3933421;
-        Wed, 17 Apr 2019 07:08:05 -0700
-Date:   Wed, 17 Apr 2019 07:08:05 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE8mNH3933510;
+        Wed, 17 Apr 2019 07:08:48 -0700
+Date:   Wed, 17 Apr 2019 07:08:48 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-881a463cf21dbf83aab2cf6c9a359f34f88c2491@git.kernel.org>
-Cc:     sean.j.christopherson@intel.com, mingo@redhat.com, hpa@zytor.com,
-        mingo@kernel.org, bp@suse.de, x86@kernel.org, luto@kernel.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        dave.hansen@linux.intel.com, tglx@linutronix.de,
-        jpoimboe@redhat.com
-Reply-To: peterz@infradead.org, linux-kernel@vger.kernel.org,
-          x86@kernel.org, bp@suse.de, mingo@redhat.com,
-          sean.j.christopherson@intel.com, jpoimboe@redhat.com,
-          tglx@linutronix.de, dave.hansen@linux.intel.com, luto@kernel.org,
-          mingo@kernel.org, hpa@zytor.com
-In-Reply-To: <20190414160144.419653165@linutronix.de>
-References: <20190414160144.419653165@linutronix.de>
+Message-ID: <tip-019b17b3ffe48100e52f609ca1c6ed6e5a40cba1@git.kernel.org>
+Cc:     sean.j.christopherson@intel.com, peterz@infradead.org,
+        tglx@linutronix.de, luto@kernel.org, mingo@redhat.com,
+        dave.hansen@linux.intel.com, chang.seok.bae@intel.com,
+        x86@kernel.org, bp@suse.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        linux@dominikbrodowski.net, mingo@kernel.org,
+        konrad.wilk@oracle.com
+Reply-To: jpoimboe@redhat.com, linux@dominikbrodowski.net,
+          mingo@kernel.org, konrad.wilk@oracle.com, x86@kernel.org,
+          bp@suse.de, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          mingo@redhat.com, dave.hansen@linux.intel.com,
+          chang.seok.bae@intel.com, sean.j.christopherson@intel.com,
+          peterz@infradead.org, tglx@linutronix.de, luto@kernel.org
+In-Reply-To: <20190414160144.506807893@linutronix.de>
+References: <20190414160144.506807893@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/cpu_entry_area: Cleanup setup functions
-Git-Commit-ID: 881a463cf21dbf83aab2cf6c9a359f34f88c2491
+Subject: [tip:x86/irq] x86/exceptions: Add structs for exception stacks
+Git-Commit-ID: 019b17b3ffe48100e52f609ca1c6ed6e5a40cba1
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,94 +76,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  881a463cf21dbf83aab2cf6c9a359f34f88c2491
-Gitweb:     https://git.kernel.org/tip/881a463cf21dbf83aab2cf6c9a359f34f88c2491
+Commit-ID:  019b17b3ffe48100e52f609ca1c6ed6e5a40cba1
+Gitweb:     https://git.kernel.org/tip/019b17b3ffe48100e52f609ca1c6ed6e5a40cba1
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:46 +0200
+AuthorDate: Sun, 14 Apr 2019 17:59:47 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 12:50:46 +0200
+CommitDate: Wed, 17 Apr 2019 12:55:18 +0200
 
-x86/cpu_entry_area: Cleanup setup functions
+x86/exceptions: Add structs for exception stacks
 
-No point in retrieving the entry area pointer over and over. Do it once
-and use unsigned int for 'cpu' everywhere.
+At the moment everything assumes a full linear mapping of the various
+exception stacks. Adding guard pages to the cpu entry area mapping of the
+exception stacks will break that assumption.
+
+As a preparatory step convert both the real storage and the effective
+mapping in the cpu entry area from character arrays to structures.
+
+To ensure that both arrays have the same ordering and the same size of the
+individual stacks fill the members with a macro. The guard size is the only
+difference between the two resulting structures. For now both have guard
+size 0 until the preparation of all usage sites is done.
+
+Provide a couple of helper macros which are used in the following
+conversions.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "Chang S. Bae" <chang.seok.bae@intel.com>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160144.419653165@linutronix.de
+Link: https://lkml.kernel.org/r/20190414160144.506807893@linutronix.de
 ---
- arch/x86/mm/cpu_entry_area.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/cpu_entry_area.h | 52 +++++++++++++++++++++++++++++++----
+ arch/x86/kernel/cpu/common.c          |  2 +-
+ arch/x86/mm/cpu_entry_area.c          |  8 ++----
+ 3 files changed, 51 insertions(+), 11 deletions(-)
 
+diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
+index 29c706415443..af8c312673de 100644
+--- a/arch/x86/include/asm/cpu_entry_area.h
++++ b/arch/x86/include/asm/cpu_entry_area.h
+@@ -7,6 +7,51 @@
+ #include <asm/processor.h>
+ #include <asm/intel_ds.h>
+ 
++#ifdef CONFIG_X86_64
++
++/* Macro to enforce the same ordering and stack sizes */
++#define ESTACKS_MEMBERS(guardsize)		\
++	char	DF_stack_guard[guardsize];	\
++	char	DF_stack[EXCEPTION_STKSZ];	\
++	char	NMI_stack_guard[guardsize];	\
++	char	NMI_stack[EXCEPTION_STKSZ];	\
++	char	DB_stack_guard[guardsize];	\
++	char	DB_stack[DEBUG_STKSZ];		\
++	char	MCE_stack_guard[guardsize];	\
++	char	MCE_stack[EXCEPTION_STKSZ];	\
++	char	IST_top_guard[guardsize];	\
++
++/* The exception stacks' physical storage. No guard pages required */
++struct exception_stacks {
++	ESTACKS_MEMBERS(0)
++};
++
++/*
++ * The effective cpu entry area mapping with guard pages. Guard size is
++ * zero until the code which makes assumptions about linear mappings is
++ * cleaned up.
++ */
++struct cea_exception_stacks {
++	ESTACKS_MEMBERS(0)
++};
++
++#define CEA_ESTACK_SIZE(st)					\
++	sizeof(((struct cea_exception_stacks *)0)->st## _stack)
++
++#define CEA_ESTACK_BOT(ceastp, st)				\
++	((unsigned long)&(ceastp)->st## _stack)
++
++#define CEA_ESTACK_TOP(ceastp, st)				\
++	(CEA_ESTACK_BOT(ceastp, st) + CEA_ESTACK_SIZE(st))
++
++#define CEA_ESTACK_OFFS(st)					\
++	offsetof(struct cea_exception_stacks, st## _stack)
++
++#define CEA_ESTACK_PAGES					\
++	(sizeof(struct cea_exception_stacks) / PAGE_SIZE)
++
++#endif
++
+ /*
+  * cpu_entry_area is a percpu region that contains things needed by the CPU
+  * and early entry/exit code.  Real types aren't used for all fields here
+@@ -32,12 +77,9 @@ struct cpu_entry_area {
+ 
+ #ifdef CONFIG_X86_64
+ 	/*
+-	 * Exception stacks used for IST entries.
+-	 *
+-	 * In the future, this should have a separate slot for each stack
+-	 * with guard pages between them.
++	 * Exception stacks used for IST entries with guard pages.
+ 	 */
+-	char exception_stacks[(N_EXCEPTION_STACKS - 1) * EXCEPTION_STKSZ + DEBUG_STKSZ];
++	struct cea_exception_stacks estacks;
+ #endif
+ #ifdef CONFIG_CPU_SUP_INTEL
+ 	/*
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 0e4cb718fc4a..24b801ea7522 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1754,7 +1754,7 @@ void cpu_init(void)
+ 	 * set up and load the per-CPU TSS
+ 	 */
+ 	if (!oist->ist[0]) {
+-		char *estacks = get_cpu_entry_area(cpu)->exception_stacks;
++		char *estacks = (char *)&get_cpu_entry_area(cpu)->estacks;
+ 
+ 		for (v = 0; v < N_EXCEPTION_STACKS; v++) {
+ 			estacks += exception_stack_sizes[v];
 diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
-index 19c6abf9ea31..c2a54f75d335 100644
+index c2a54f75d335..6a09b84c13fe 100644
 --- a/arch/x86/mm/cpu_entry_area.c
 +++ b/arch/x86/mm/cpu_entry_area.c
-@@ -52,10 +52,10 @@ cea_map_percpu_pages(void *cea_vaddr, void *ptr, int pages, pgprot_t prot)
- 		cea_set_pte(cea_vaddr, per_cpu_ptr_to_phys(ptr), prot);
- }
+@@ -13,8 +13,7 @@
+ static DEFINE_PER_CPU_PAGE_ALIGNED(struct entry_stack_page, entry_stack_storage);
  
--static void __init percpu_setup_debug_store(int cpu)
-+static void __init percpu_setup_debug_store(unsigned int cpu)
- {
- #ifdef CONFIG_CPU_SUP_INTEL
--	int npages;
-+	unsigned int npages;
- 	void *cea;
- 
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-@@ -79,8 +79,9 @@ static void __init percpu_setup_debug_store(int cpu)
- }
- 
- /* Setup the fixmap mappings only once per-processor */
--static void __init setup_cpu_entry_area(int cpu)
-+static void __init setup_cpu_entry_area(unsigned int cpu)
- {
-+	struct cpu_entry_area *cea = get_cpu_entry_area(cpu);
  #ifdef CONFIG_X86_64
- 	/* On 64-bit systems, we use a read-only fixmap GDT and TSS. */
- 	pgprot_t gdt_prot = PAGE_KERNEL_RO;
-@@ -101,10 +102,9 @@ static void __init setup_cpu_entry_area(int cpu)
- 	pgprot_t tss_prot = PAGE_KERNEL;
+-static DEFINE_PER_CPU_PAGE_ALIGNED(char, exception_stacks
+-	[(N_EXCEPTION_STACKS - 1) * EXCEPTION_STKSZ + DEBUG_STKSZ]);
++static DEFINE_PER_CPU_PAGE_ALIGNED(struct exception_stacks, exception_stacks);
  #endif
  
--	cea_set_pte(&get_cpu_entry_area(cpu)->gdt, get_cpu_gdt_paddr(cpu),
--		    gdt_prot);
-+	cea_set_pte(&cea->gdt, get_cpu_gdt_paddr(cpu), gdt_prot);
- 
--	cea_map_percpu_pages(&get_cpu_entry_area(cpu)->entry_stack_page,
-+	cea_map_percpu_pages(&cea->entry_stack_page,
- 			     per_cpu_ptr(&entry_stack_storage, cpu), 1,
- 			     PAGE_KERNEL);
- 
-@@ -128,19 +128,18 @@ static void __init setup_cpu_entry_area(int cpu)
- 	BUILD_BUG_ON((offsetof(struct tss_struct, x86_tss) ^
- 		      offsetofend(struct tss_struct, x86_tss)) & PAGE_MASK);
- 	BUILD_BUG_ON(sizeof(struct tss_struct) % PAGE_SIZE != 0);
--	cea_map_percpu_pages(&get_cpu_entry_area(cpu)->tss,
--			     &per_cpu(cpu_tss_rw, cpu),
-+	cea_map_percpu_pages(&cea->tss, &per_cpu(cpu_tss_rw, cpu),
- 			     sizeof(struct tss_struct) / PAGE_SIZE, tss_prot);
- 
- #ifdef CONFIG_X86_32
--	per_cpu(cpu_entry_area, cpu) = get_cpu_entry_area(cpu);
-+	per_cpu(cpu_entry_area, cpu) = cea;
- #endif
- 
+ struct cpu_entry_area *get_cpu_entry_area(int cpu)
+@@ -138,9 +137,8 @@ static void __init setup_cpu_entry_area(unsigned int cpu)
  #ifdef CONFIG_X86_64
  	BUILD_BUG_ON(sizeof(exception_stacks) % PAGE_SIZE != 0);
  	BUILD_BUG_ON(sizeof(exception_stacks) !=
- 		     sizeof(((struct cpu_entry_area *)0)->exception_stacks));
--	cea_map_percpu_pages(&get_cpu_entry_area(cpu)->exception_stacks,
-+	cea_map_percpu_pages(&cea->exception_stacks,
- 			     &per_cpu(exception_stacks, cpu),
+-		     sizeof(((struct cpu_entry_area *)0)->exception_stacks));
+-	cea_map_percpu_pages(&cea->exception_stacks,
+-			     &per_cpu(exception_stacks, cpu),
++		     sizeof(((struct cpu_entry_area *)0)->estacks));
++	cea_map_percpu_pages(&cea->estacks, &per_cpu(exception_stacks, cpu),
  			     sizeof(exception_stacks) / PAGE_SIZE, PAGE_KERNEL);
  #endif
+ 	percpu_setup_debug_store(cpu);
