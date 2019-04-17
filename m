@@ -2,178 +2,260 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D98C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F63BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE417206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB839206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkyT7KHP"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="cvm843qX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732562AbfDQOfr (ORCPT
+        id S1732521AbfDQOge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:35:47 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40938 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730463AbfDQOfr (ORCPT
+        Wed, 17 Apr 2019 10:36:34 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46921 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbfDQOgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:35:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x12so27563888qts.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:35:46 -0700 (PDT)
+        Wed, 17 Apr 2019 10:36:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h21so22637592ljk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C+dXDxKP2DfUadMk0J/h5v57BizP6fDRP8FUg+wPT8w=;
-        b=rkyT7KHPlS3K67drfHukAWHQAfv2X4zlW1yk92lTbiGS/P4u9/L1hR+VyDJC1Mjtmc
-         wt975s9Ee04lfkImktYw90laUlEhI4u3ROUqEbfrEimJjtnt+LJAjDB9IUIP+gWlGwoO
-         YtTvo0vny+EFD1LK9myLn6PHxWL9egeTW8BgYRSHu1dVTumCzmcZTPVpSCaFvetQWdsk
-         zLdcXn4jWTmWwTwOL2P2olzdjFeoPBbjfULUfUC2sd3m4Chv/XSqiJZNjrAZO64i23k3
-         Xuwj27O4HM9SsOcrnbvwzYm1Gu59NzGTcHun1v66grnZnKBimKHEx8E3MWygUU7ua0s2
-         dgwA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aYpvTFf0qZElPLw/muGHvS8dE/2mug1cDst2X31iqmw=;
+        b=cvm843qXLqUQ0ltX6klK7YVQl9QU/F4aGuAvL7ZAzJSlveFKDSdJ/lNsrZY0hxF94f
+         qP1hPE3n1Ot8gaYMp8wC/hvN2Z7/SQnGr59BCvOm0yP6kJaUN52w4VBhRgv7IUZR5T3m
+         VeQzZwHgtMGQyLOkgjkmjORqQEi/+geEFtMWV7pgSP8zGZjHkNi37mNKrzZhEYah/QS+
+         dXsqOCRU/pl2Nyu4WzlULuW+MuIcWsYm+4+riUl89XEnuwCf7X6XKFVMAHBGAhpHQV+2
+         Oe4wLKr+lnkNMEtxvzkcs7zbP72J1xsSeFtJGKyoXZb3b4j47HZy6rHsjFC7u9zUh1lg
+         FG3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C+dXDxKP2DfUadMk0J/h5v57BizP6fDRP8FUg+wPT8w=;
-        b=Mdj5Tkzd8SGqsbgXjJEwCHfWJlXuU7Rzv8js2Yfn+K5HZs0LSZTL0/aOcj0RW8+GT8
-         a3FcY1GL9H86QOEl3c5BG9W0G9x/rqqlr110vAkgs52/Sl3TXBeC0i6SC0RrGkKXWnUa
-         yKsqNHfLkbEUjR3cD5DOBVQAHN8TtuFlrqWFYlavgsazK2YdxVSLOVYbwpnMbmzWrrSy
-         57smMheiIeyRM+lr0iEKzKbfTx6QEzYq94Mbd270wSLutrzh0hCyM6Qpm3U/5CyWV3DH
-         NNNTk41NeWJLRv6qzviOzyJQdZpwGDUUKoRrAM0FjJp5QHSxAQbpev+aKrse1JtHx+Tl
-         71gw==
-X-Gm-Message-State: APjAAAXpS2PLbTrYe9RrceQeUYNG33cg1K5WGWKh+1eJI4FhlCcKkghK
-        9Mi0FpRtbmBui7LvvA801MI=
-X-Google-Smtp-Source: APXvYqwXXPZx1I/Fbl92EOa8nLcMy8dR1zL2v/5IAPchcN+RLhsIrZuXOAl1i9V97kPpvmWxhHjnzg==
-X-Received: by 2002:a0c:a362:: with SMTP id u89mr167692qvu.148.1555511745859;
-        Wed, 17 Apr 2019 07:35:45 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([2804:14d:1283:9770::1002])
-        by smtp.gmail.com with ESMTPSA id f14sm797036qkk.32.2019.04.17.07.35.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 07:35:44 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4905C40521; Wed, 17 Apr 2019 11:35:42 -0300 (-03)
-Date:   Wed, 17 Apr 2019 11:35:42 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf record: collect user registers set jointly with
- dwarf stacks
-Message-ID: <20190417143542.GA5246@kernel.org>
-References: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
- <20190417073952.GF17024@krava>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aYpvTFf0qZElPLw/muGHvS8dE/2mug1cDst2X31iqmw=;
+        b=n+F7sHiuB7T7TyBx2xtrAhegemqzKoVY1wr1W7u1+TkqOx2q4NhHn5MEeSYjOPzU2o
+         UPlmiwsGzkV5QE9+V+DZk0EkaVtfici7/lSGMEzaTXRcWz73lg9IrVEMtLPmth4W3wAM
+         wL1WE3fBotpHowAxOgW4+ZTLgHuProKrRjMWp0USVGDAcd2AxbuVsbc/ZXmLHjOjtyi9
+         12y5sLctQtU64+BLwGtHWzXsqp5D8yDCIIJiUX+fpMdYB6rjV0H1gV2no0LtBmg/oVVR
+         YlpPBEWgzdnYIlInReN9sndNvUKxnnuu14+Wp82lANlrvtGhsNEMrMbpmmC7yKUtyQ6p
+         3lSg==
+X-Gm-Message-State: APjAAAXxTzbuy54u0KGfVmhtqP7Vzgxf1L2rps3hQY0uputZdQfQNkHJ
+        7q9qtNmflY2S+pQIWR7sc8JztGBqx5clEGxYhF8AEDE=
+X-Google-Smtp-Source: APXvYqzIRq1TtmAHQvMfI9/2v3ZwCpClKzw6wpPHGPILEdVRcVNVPodTxE9XbtFfz2uqj5/VBWvEfh8wJJLmfxPNes8=
+X-Received: by 2002:a2e:8108:: with SMTP id d8mr21571767ljg.57.1555511787821;
+ Wed, 17 Apr 2019 07:36:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417073952.GF17024@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <cover.1555382110.git.mchehab+samsung@kernel.org> <104211eb0db14790ad328fff7ad7f712d8d647f9.1555382110.git.mchehab+samsung@kernel.org>
+In-Reply-To: <104211eb0db14790ad328fff7ad7f712d8d647f9.1555382110.git.mchehab+samsung@kernel.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 17 Apr 2019 10:36:16 -0400
+Message-ID: <CAHC9VhTcTifp1v9JfGLNw+4HPvqMjYsX0gM2tXZDOhmxUHt+oA@mail.gmail.com>
+Subject: Re: [PATCH 23/57] docs: netlabel: convert it to ReST
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        netdev@vger.kernel.org, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 17, 2019 at 09:39:52AM +0200, Jiri Olsa escreveu:
-> On Mon, Apr 15, 2019 at 06:36:13PM +0300, Alexey Budankov wrote:
-> > 
-> > When dwarf stacks are collected jointly with user specified register
-> > set using --user-regs option like below the full register context is
-> > still captured on a sample:
-> > 
-> >   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.O3
-> > 
-> >   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
-> >   ... FP chain: nr:0
-> >   ... user regs: mask 0xff0fff ABI 64-bit
-> >   .... AX    0x53b
-> >   .... BX    0x7ffedbdd3cc0
-> >   .... CX    0xffffffff
-> >   .... DX    0x33d3a
-> >   .... SI    0x7f09b74c38d0
-> >   .... DI    0x0
-> >   .... BP    0x401260
-> >   .... SP    0x7ffedbdd3cc0
-> >   .... IP    0x401236
-> >   .... FLAGS 0x20a
-> >   .... CS    0x33
-> >   .... SS    0x2b
-> >   .... R8    0x7f09b74c3800
-> >   .... R9    0x7f09b74c2da0
-> >   .... R10   0xfffffffffffff3ce
-> >   .... R11   0x246
-> >   .... R12   0x401070
-> >   .... R13   0x7ffedbdd5db0
-> >   .... R14   0x0
-> >   .... R15   0x0
-> >   ... ustack: size 1024, offset 0xe0
-> >    . data_src: 0x5080021
-> >    ... thread: stack_test2.g.O:23828
-> >    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-> > 
-> > After applying the change suggested in the patch the sample data contain
-> > only user specified register values:
-> > 
-> >   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.03
-> > 
-> >   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
-> >   ... FP chain: nr:0
-> >   ... user regs: mask 0x1c0 ABI 64-bit
-> >   .... BP    0x401260
-> >   .... SP    0x7ffd3d85cc20
-> >   .... IP    0x401236
-> >   ... ustack: size 1024, offset 0x58
-> >    . data_src: 0x5080021
-> >    ... thread: stack_test2.g.O:23839
-> >    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-> > 
-> > Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+On Mon, Apr 15, 2019 at 10:56 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Convert netlabel documentation to ReST.
+>
+> This was trivial: just add proper title markups.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/netlabel/cipso_ipv4.txt    | 19 +++++++++++++------
+>  Documentation/netlabel/introduction.txt  | 16 +++++++++++-----
+>  Documentation/netlabel/lsm_interface.txt | 16 +++++++++++-----
+>  3 files changed, 35 insertions(+), 16 deletions(-)
 
-So, there are registers that are needed to do the DWARF unwinding,
-right? But at the same time, if the user says only some are needed, he
-better know what they're doing and ask for at least the registers needed
-for the unwinding process to be successfull, right?
+Thanks for doing this.  I should probably revisit these docs to make
+sure they are still valid/correct; if nothing else that email address
+is from two employers ago (my apologies to the current email address
+holder).
 
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
-> > ---
-> >  tools/perf/util/evsel.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 84cfb9fe2fc6..29a223b4c699 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -702,7 +702,8 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
-> >  		if (!function) {
-> >  			perf_evsel__set_sample_bit(evsel, REGS_USER);
-> >  			perf_evsel__set_sample_bit(evsel, STACK_USER);
-> > -			attr->sample_regs_user |= PERF_REGS_MASK;
-> > +			if (!opts->sample_user_regs)
-> > +				attr->sample_regs_user |= PERF_REGS_MASK;
-> >  			attr->sample_stack_user = param->dump_size;
-> >  			attr->exclude_callchain_user = 1;
-> >  		} else {
-> > -- 
-> > 2.20.1
-> > 
+Acked-by: Paul Moore <paul@paul-moore.com>
+
+> diff --git a/Documentation/netlabel/cipso_ipv4.txt b/Documentation/netlabel/cipso_ipv4.txt
+> index a6075481fd60..cbd3f3231221 100644
+> --- a/Documentation/netlabel/cipso_ipv4.txt
+> +++ b/Documentation/netlabel/cipso_ipv4.txt
+> @@ -1,10 +1,13 @@
+> +===================================
+>  NetLabel CIPSO/IPv4 Protocol Engine
+> -==============================================================================
+> +===================================
+> +
+>  Paul Moore, paul.moore@hp.com
+>
+>  May 17, 2006
+>
+> - * Overview
+> +Overview
+> +========
+>
+>  The NetLabel CIPSO/IPv4 protocol engine is based on the IETF Commercial
+>  IP Security Option (CIPSO) draft from July 16, 1992.  A copy of this
+> @@ -13,7 +16,8 @@ draft can be found in this directory
+>  it to an RFC standard it has become a de-facto standard for labeled
+>  networking and is used in many trusted operating systems.
+>
+> - * Outbound Packet Processing
+> +Outbound Packet Processing
+> +==========================
+>
+>  The CIPSO/IPv4 protocol engine applies the CIPSO IP option to packets by
+>  adding the CIPSO label to the socket.  This causes all packets leaving the
+> @@ -24,7 +28,8 @@ label by using the NetLabel security module API; if the NetLabel "domain" is
+>  configured to use CIPSO for packet labeling then a CIPSO IP option will be
+>  generated and attached to the socket.
+>
+> - * Inbound Packet Processing
+> +Inbound Packet Processing
+> +=========================
+>
+>  The CIPSO/IPv4 protocol engine validates every CIPSO IP option it finds at the
+>  IP layer without any special handling required by the LSM.  However, in order
+> @@ -33,7 +38,8 @@ NetLabel security module API to extract the security attributes of the packet.
+>  This is typically done at the socket layer using the 'socket_sock_rcv_skb()'
+>  LSM hook.
+>
+> - * Label Translation
+> +Label Translation
+> +=================
+>
+>  The CIPSO/IPv4 protocol engine contains a mechanism to translate CIPSO security
+>  attributes such as sensitivity level and category to values which are
+> @@ -42,7 +48,8 @@ Domain Of Interpretation (DOI) definition and are configured through the
+>  NetLabel user space communication layer.  Each DOI definition can have a
+>  different security attribute mapping table.
+>
+> - * Label Translation Cache
+> +Label Translation Cache
+> +=======================
+>
+>  The NetLabel system provides a framework for caching security attribute
+>  mappings from the network labels to the corresponding LSM identifiers.  The
+> diff --git a/Documentation/netlabel/introduction.txt b/Documentation/netlabel/introduction.txt
+> index 3caf77bcff0f..9333bbb0adc1 100644
+> --- a/Documentation/netlabel/introduction.txt
+> +++ b/Documentation/netlabel/introduction.txt
+> @@ -1,10 +1,13 @@
+> +=====================
+>  NetLabel Introduction
+> -==============================================================================
+> +=====================
+> +
+>  Paul Moore, paul.moore@hp.com
+>
+>  August 2, 2006
+>
+> - * Overview
+> +Overview
+> +========
+>
+>  NetLabel is a mechanism which can be used by kernel security modules to attach
+>  security attributes to outgoing network packets generated from user space
+> @@ -12,7 +15,8 @@ applications and read security attributes from incoming network packets.  It
+>  is composed of three main components, the protocol engines, the communication
+>  layer, and the kernel security module API.
+>
+> - * Protocol Engines
+> +Protocol Engines
+> +================
+>
+>  The protocol engines are responsible for both applying and retrieving the
+>  network packet's security attributes.  If any translation between the network
+> @@ -24,7 +28,8 @@ the NetLabel kernel security module API described below.
+>  Detailed information about each NetLabel protocol engine can be found in this
+>  directory.
+>
+> - * Communication Layer
+> +Communication Layer
+> +===================
+>
+>  The communication layer exists to allow NetLabel configuration and monitoring
+>  from user space.  The NetLabel communication layer uses a message based
+> @@ -33,7 +38,8 @@ formatting of these NetLabel messages as well as the Generic NETLINK family
+>  names can be found in the 'net/netlabel/' directory as comments in the
+>  header files as well as in 'include/net/netlabel.h'.
+>
+> - * Security Module API
+> +Security Module API
+> +===================
+>
+>  The purpose of the NetLabel security module API is to provide a protocol
+>  independent interface to the underlying NetLabel protocol engines.  In addition
+> diff --git a/Documentation/netlabel/lsm_interface.txt b/Documentation/netlabel/lsm_interface.txt
+> index 638c74f7de7f..026fc267f798 100644
+> --- a/Documentation/netlabel/lsm_interface.txt
+> +++ b/Documentation/netlabel/lsm_interface.txt
+> @@ -1,10 +1,13 @@
+> +========================================
+>  NetLabel Linux Security Module Interface
+> -==============================================================================
+> +========================================
+> +
+>  Paul Moore, paul.moore@hp.com
+>
+>  May 17, 2006
+>
+> - * Overview
+> +Overview
+> +========
+>
+>  NetLabel is a mechanism which can set and retrieve security attributes from
+>  network packets.  It is intended to be used by LSM developers who want to make
+> @@ -12,7 +15,8 @@ use of a common code base for several different packet labeling protocols.
+>  The NetLabel security module API is defined in 'include/net/netlabel.h' but a
+>  brief overview is given below.
+>
+> - * NetLabel Security Attributes
+> +NetLabel Security Attributes
+> +============================
+>
+>  Since NetLabel supports multiple different packet labeling protocols and LSMs
+>  it uses the concept of security attributes to refer to the packet's security
+> @@ -24,7 +28,8 @@ configuration.  It is up to the LSM developer to translate the NetLabel
+>  security attributes into whatever security identifiers are in use for their
+>  particular LSM.
+>
+> - * NetLabel LSM Protocol Operations
+> +NetLabel LSM Protocol Operations
+> +================================
+>
+>  These are the functions which allow the LSM developer to manipulate the labels
+>  on outgoing packets as well as read the labels on incoming packets.  Functions
+> @@ -32,7 +37,8 @@ exist to operate both on sockets as well as the sk_buffs directly.  These high
+>  level functions are translated into low level protocol operations based on how
+>  the administrator has configured the NetLabel subsystem.
+>
+> - * NetLabel Label Mapping Cache Operations
+> +NetLabel Label Mapping Cache Operations
+> +=======================================
+>
+>  Depending on the exact configuration, translation between the network packet
+>  label and the internal LSM security identifier can be time consuming.  The
+> --
+> 2.20.1
+>
+
 
 -- 
-
-- Arnaldo
+paul moore
+www.paul-moore.com
