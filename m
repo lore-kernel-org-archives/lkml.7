@@ -2,172 +2,91 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78764C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BC4C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9542173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE67F2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbfDQOoq (ORCPT
+        id S1732453AbfDQOo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:44:46 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:34087 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfDQOop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:44:45 -0400
-Received: by mail-it1-f195.google.com with SMTP id z17so5549426itc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:44:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=swy+eGKD6+hgCXXwFpR0lwbY+OP6aRVcMU67rirpl1s=;
-        b=N7EtPMaqp2RA2F5KytQkUs9IqmSrJb/79bryxWhHgHSz3tyqze/pzgyYx3bRok5m+S
-         5CIRdWn8dBEr5q4EJPAtWmC08lXWpaAKme1QlEHrNPalnKdD1iEHDMEjIkO3HZsHkSVn
-         QfnWn5EwxYXJjDfy6uoPt3e9rW6b2pobdaCHX2C6L2gOAIzVXoISnwrWAT+qeSXf5EkL
-         nH36j3DwKmiFEMuUUnVOIArHOHpU+nJKbh+NLuZbzjPGTGOp6vA8E7EB4qqrpaEMSRkW
-         F6OsAMpdmMZmue2HRrSP0EJWV4smNWRAX/zqTknNASxpdXkt7kOrnD2QsSIcdx8l9xCw
-         lhhw==
-X-Gm-Message-State: APjAAAUIA4n97QrJ2Gp+whWwofMYinMQYTBt6THlfedzWCWqMHs/9EzU
-        Fq5Y+rJF65jg3kkZO+oN6iu4MEIB8RtP5S917dY3Pg==
-X-Google-Smtp-Source: APXvYqytpTGhrZi38ve9hbxEPSXtbtFkV31D0vNL5snzjWLq27rS9Gafx8F48tMRK5tGAjRk4WISNR8u3HoVIxlLtw8=
-X-Received: by 2002:a24:3d94:: with SMTP id n142mr32260859itn.147.1555512284495;
- Wed, 17 Apr 2019 07:44:44 -0700 (PDT)
+        Wed, 17 Apr 2019 10:44:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56062 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727087AbfDQOo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:44:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BE7A4AC8D;
+        Wed, 17 Apr 2019 14:44:56 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 16:44:54 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+Cc:     kbuild-all@01.org, Michael Kerrisk <mtk.manpages@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linuxfoundation.org>,
+        Andrey Vagin <avagin@openvz.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Pavel Emelyanov <xemul@virtuozzo.com>
+Subject: Re: [PATCH] prctl: Don't compile some of prctl functions when CRUI
+Message-ID: <20190417144454.GG8962@blackbody.suse.cz>
+References: <20180420140044.478b4c88d3cf238bd440f2a7@linux-foundation.org>
+ <20190417122349.GA15498@blackbody.suse.cz>
+ <20190417123841.GA3040@uranus.lan>
 MIME-Version: 1.0
-References: <20190408165942.23640-1-kasong@redhat.com> <20190415153622.GG12232@hirez.programming.kicks-ass.net>
- <20190415165859.ul7i2w3lai3umgik@treble> <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
- <CACPcB9f0D4SdJLAtUs4vYwduBiPYDpa-y8r7jracYy=sAJmo5g@mail.gmail.com> <20190416201559.d267liiwpjvo3wet@treble>
-In-Reply-To: <20190416201559.d267liiwpjvo3wet@treble>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Wed, 17 Apr 2019 22:44:33 +0800
-Message-ID: <CACPcB9cuvNt-+gw8_LzqDLZ-nZ+G_zLcSv6nftNONrYxVRx=wg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="I3tAPq1Rm2pUxvsp"
+Content-Disposition: inline
+In-Reply-To: <20190417123841.GA3040@uranus.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 4:16 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Wed, Apr 17, 2019 at 01:39:19AM +0800, Kairui Song wrote:
-> > On Tue, Apr 16, 2019 at 7:30 PM Kairui Song <kasong@redhat.com> wrote:
-> > >
-> > > On Tue, Apr 16, 2019 at 12:59 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > >
-> > > > On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
-> > > > >
-> > > > > I'll mostly defer to Josh on unwinding, but a few comments below.
-> > > > >
-> > > > > On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
-> > > > > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > > > > > index e2b1447192a8..6075a4f94376 100644
-> > > > > > --- a/arch/x86/events/core.c
-> > > > > > +++ b/arch/x86/events/core.c
-> > > > > > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
-> > > > > >     cyc2ns_read_end();
-> > > > > >  }
-> > > > > >
-> > > > > > +static inline int
-> > > > > > +valid_perf_registers(struct pt_regs *regs)
-> > > > > > +{
-> > > > > > +   return (regs->ip && regs->bp && regs->sp);
-> > > > > > +}
-> > > > >
-> > > > > I'm unconvinced by this, with both guess and orc having !bp is perfectly
-> > > > > valid.
-> > > > >
-> > > > > >  void
-> > > > > >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> > > > > >  {
-> > > > > > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
-> > > > > >             return;
-> > > > > >     }
-> > > > > >
-> > > > > > -   if (perf_callchain_store(entry, regs->ip))
-> > > > > > +   if (valid_perf_registers(regs)) {
-> > > > > > +           if (perf_callchain_store(entry, regs->ip))
-> > > > > > +                   return;
-> > > > > > +           unwind_start(&state, current, regs, NULL);
-> > > > > > +   } else if (regs->sp) {
-> > > > > > +           unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-> > > > > > +   } else {
-> > > > > >             return;
-> > > > > > +   }
-> > > > >
-> > > > > AFAICT if we, by pure accident, end up with !bp for ORC, then we
-> > > > > initialize the unwind wrong.
-> > > > >
-> > > > > Note that @regs is mostly trivially correct, except for that tracepoint
-> > > > > case. So I don't think we should magic here.
-> > > >
-> > > > Ah, I didn't quite understand this code before, and I still don't
-> > > > really, but I guess the issue is that @regs can be either real or fake.
-> > > >
-> > > > In the real @regs case, we just want to always unwind starting from
-> > > > regs->sp.
-> > > >
-> > > > But in the fake @regs case, we should instead unwind from the current
-> > > > frame, skipping all frames until we hit the fake regs->sp.  Because
-> > > > starting from fake/incomplete regs is most likely going to cause
-> > > > problems with ORC (or DWARF for other arches).
-> > > >
-> > > > The idea of a fake regs is fragile and confusing.  Is it possible to
-> > > > just pass in the "skip" stack pointer directly instead?  That should
-> > > > work for both FP and non-FP.  And I _think_ there's no need to ever
-> > > > capture regs->bp anyway -- the stack pointer should be sufficient.
-> > >
-> > > Hi, that will break some other usage, if perf_callchain_kernel is
-> > > called but it won't unwind to the callsite (could be produced by
-> > > attach an ebpf call to kprobe), things will also go wrong. It should
-> > > start with given registers when the register is valid.
-> > > And it's true with omit frame pointer BP value could be anything, so 0
-> > > is also valid, I think I need to find a better way to tell if we could
-> > > start with the registers value or direct start unwinding and skip
-> > > until got the stack.
-> > >
-> >
-> > Hi, sorry I might have some misunderstanding. Adding an extra argument
-> > (eg. skip_sp) to indicate if it should just unwind from the current
-> > frame, and use SP as the "skip mark", should work well.
-> >
-> > And I also think the "fake"/"real" reg is fragile, could we abuse
-> > another eflag (just like PERF_EFLAGS_EXACT) to indicate the regs are
-> > partially dumped fake registers? So perf_callchain_kernel just check
-> > if it's a "partial registers", and in such case it can start unwinding
-> > and skip until it get to SP. This make it easier to tell if the
-> > registers are "fake".
->
-> If you do the regs->eflags thing to mark the regs as fake in
-> (perf_arch_fetch_caller_regs()), then I don't think skip_sp would be
-> needed, because regs->sp could probably mark the skip point.
->
-> Instead I was actually hoping we could get rid of fake regs and
-> perf_arch_fetch_caller_regs() altogether, because it's a nasty hack.
-> But I don't know what else those fake regs are used for.
->
 
-Despite it's hacky, it seems not necessary to dump every register. And
-is there a straight way to get caller's regs in the trace point? It
-seems more trouble some. Or if we just use the regs inside the
-tracepoint, but it would need even more workaround (eg. unwind one
-frame before do anything).
+--I3tAPq1Rm2pUxvsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Best Regards,
-Kairui Song
+On Wed, Apr 17, 2019 at 03:38:41PM +0300, Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> I've a bit vague memory what we've ended up with, but iirc there was
+> a problem with brk() syscall or similar. Then I think we left everything
+> as is.
+Was this related to the removal of non PR_SET_MM_MAP operations too?
+Do you have any pointers to the topic?
+
+Thanks,
+Michal
+
+--I3tAPq1Rm2pUxvsp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAly3O98ACgkQK2l36XSZ
+9y7esA//WwmLG83LYCd7UEnuhi8+S8kWjuiCuHatRKNARkvCkRH7bJglwfiqMm12
+N0dFp1jMqVmB2Hjj7n6o+Md64ssWNZIRFVR7VOY4b039IhaBrT+HXjjRn6ZzqRR+
+gazA5YSYjRNgolW/ecD5bLkKiIGFYtXHDwW2iS7sqQbnXDidVa+kUM85Qo+b7T+T
+v5QhVVWav63gQI17o9zn3n0k5P+ZZSUwzQgBo+t6JHAmepLXARZPiDL6OFPDYGb8
+IqApKCMjTY8+8QumsjjsxDgsKzr8tRZ2C2R/ZDfzRESpSy8zfd/p58hVnp3zu3v9
+vqb4juSEZjCZkwGbKt13BCgQhvfGxPKa8WfjeJJwTXsSBBDIPtuIqaJdpFqJE4qm
+h1cBCRyxLBpPQWc1yhhvWHptiZO08+pMi8/MSHCyunp6DgMKYdq8G2JTmMuDHTit
+nYeifRH12O7F8uF4wIR1vx8w+iX+kySnB26edPhD0QDF5rmwFqAiWfoufVhv8jkS
+EYeE5EO0M08eUPC/jZ3BVnZeyE7HnSaPs2LtO6BfjOt8hnoD+jUxwcNVSXxHxOzU
+8BZOIEaRU2Sv98Drlgj5h7+Y7rhQDpfnfwIbtfCmuQv679UIpPh5X3LE4f7kZ06I
+cYoTF1Nnb1OIvg/W45K+dMceADvMjszmIBy2tFIton2pAdJU12w=
+=Daol
+-----END PGP SIGNATURE-----
+
+--I3tAPq1Rm2pUxvsp--
