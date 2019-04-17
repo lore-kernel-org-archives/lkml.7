@@ -2,214 +2,135 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF04C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F93BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20DD2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mNXBi6fQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5C2C92184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555538065;
+	bh=72Y5yaN0OBfC9mUcvHjlGNLJip4pGYju/K0LqKwOLwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=otbIxPZo+P0AP4vOuHm7ge7Fgn7Bzy0bcmteAztc3vfj60sATWI6LWnIrPTLVr9Wy
+	 hQrA6YhUuHuLAciwkPCm9ncmL1asODOBEYC6CPRoVHS5NmmZLlS9z7JHIHh+gs5l60
+	 hW9+eLqu6/QmYkbXmvB5MrD2NiAZ1E2ASR1iZ1H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbfDQVxp (ORCPT
+        id S2387493AbfDQVyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:53:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41523 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387442AbfDQVxl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:53:41 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v7so10200oie.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 14:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bmWs4cfcbPpVqJOif+pRxG1XcZMU7gy3yov8rwtSMcA=;
-        b=mNXBi6fQESbyNgWoPJY7N13rwrd4xj6HYS5Lh3w1uIDtpX1jEKuq/1CY0sXLMgffyd
-         8fZ6OewqjPjD5p1dwCTsSN1W1JI3+mAdGAgxxXw75SBC6d+ViIpSkPHWX5e5RJagZjvQ
-         yjyjDElcbDvHNl9O5W+P579YMN+Hj4U+LrEN+x8Tx6zusmLLB4Z4jJcmnJV1+UsdIb3F
-         1jz7zS/16yvMO624WsnVUtKXz4hREDASy23Mdu0AVjgHo/MQiqVzCTWgdALrvHGuAXsn
-         Ga4vq1ZdMjyFyMjjBa4qxfrflIh+TF3ZFVeRDTP9cYV0z9LNe75WG0zQVSvJDsu+rJAK
-         ZpTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bmWs4cfcbPpVqJOif+pRxG1XcZMU7gy3yov8rwtSMcA=;
-        b=pZA+5aXroS1hetjH9j7Z1gx3ukOiLaSSIK/RYYdeCXmHl6QEZXaUKHoQ4ttrj/8pt2
-         9I7g64z5SFOcUl3fwKS2uZASLzDH1eKdLXNPrN4J5f8R8Lgjz/OZuyD9eQP5DEkrVZsm
-         pSGPnt7soiP4jZMrSu0m+SUcWPqMyeOYZ/iqW+Q9vOk9QntnX2v8j1p82UGVa9RN1bxy
-         FzoT/qpesDbCtPoZ0wZ+I/QCbjadRQgzxwUtpciu0N/U5I0nNkmYtK2qLojUp7ZrsrtI
-         GHHapFPWzG6O7CswXzPIWMkvCFRoVFmGdQHqv4yOd4FGlUcsFwaPpnw0akMR8ZmHorAQ
-         MmYw==
-X-Gm-Message-State: APjAAAWL+uhE2LQ0/2/sgIDdJaEBciiVQvwxcs9Y5QBYWR9Km1T4jzK3
-        +uKsVhWGa/vawS21x8Z6SaknJgKckLH0rWrWY9lduw==
-X-Google-Smtp-Source: APXvYqyIfM8qxAG0J70YozmGmBKyUMmNKkQ53mBEzGEECW5CLl3/GymyVafAOCfvYgHDugLDiei1oDZqZT6jsakABBE=
-X-Received: by 2002:aca:e64f:: with SMTP id d76mr587154oih.105.1555538019809;
- Wed, 17 Apr 2019 14:53:39 -0700 (PDT)
+        Wed, 17 Apr 2019 17:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDQVyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:54:23 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02D132183E;
+        Wed, 17 Apr 2019 21:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555538062;
+        bh=72Y5yaN0OBfC9mUcvHjlGNLJip4pGYju/K0LqKwOLwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DYyFEOoGarNIlIT1PXcglispXnZEI28ZJKPVL8PDwblSBxon5P0mdc8YFX8tDVIeE
+         ao3gUQRABJs/t6Px3rca2tptluOmgl2aizC1AX7DxR79MlaIzFdSNmrrsPl8YBp4QC
+         zRssT3BQEez1cOz0oqeFOWgKY3xNb+UyDDuaduWw=
+Date:   Wed, 17 Apr 2019 16:54:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kbuild-all@01.org, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Message-ID: <20190417215420.GV126710@google.com>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien>
 MIME-Version: 1.0
-References: <20190411210834.4105-1-jglisse@redhat.com> <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
- <20190416185922.GA12818@kmo-pixel> <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
- <20190416194936.GD21526@redhat.com>
-In-Reply-To: <20190416194936.GD21526@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 17 Apr 2019 14:53:28 -0700
-Message-ID: <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
-Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
-        linux-bcache@vger.kernel.org,
-        =?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904131849350.2536@hadrien>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:50 PM Jerome Glisse <jglisse@redhat.com> wrote:
->
-> On Tue, Apr 16, 2019 at 12:12:27PM -0700, Dan Williams wrote:
-> > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
-> > <kent.overstreet@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
-> > > > On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
-> > > > > From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > > > >
-> > > > > This patchset depends on various small fixes [1] and also on patc=
-hset
-> > > > > which introduce put_user_page*() [2] and thus is 5.3 material as =
-those
-> > > > > pre-requisite will get in 5.2 at best. Nonetheless i am posting i=
-t now
-> > > > > so that it can get review and comments on how and what should be =
-done
-> > > > > to test things.
-> > > > >
-> > > > > For various reasons [2] [3] we want to track page reference throu=
-gh GUP
-> > > > > differently than "regular" page reference. Thus we need to keep t=
-rack
-> > > > > of how we got a page within the block and fs layer. To do so this=
- patch-
-> > > > > set change the bio_bvec struct to store a pfn and flags instead o=
-f a
-> > > > > direct pointer to a page. This way we can flag page that are comi=
-ng from
-> > > > > GUP.
-> > > > >
-> > > > > This patchset is divided as follow:
-> > > > >     - First part of the patchset is just small cleanup i believe =
-they
-> > > > >       can go in as his assuming people are ok with them.
-> > > >
-> > > >
-> > > > >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn thi=
-s is
-> > > > >       done in multi-step, first we replace all direct dereference=
- of
-> > > > >       the field by call to inline helper, then we introduce macro=
- for
-> > > > >       bio_bvec that are initialized on the stack. Finaly we chang=
-e the
-> > > > >       bv_page field to bv_pfn.
-> > > >
-> > > > Why do we need a bv_pfn. Why not just use the lowest bit of the pag=
-e-ptr
-> > > > as a flag (pointer always aligned to 64 bytes in our case).
-> > > >
-> > > > So yes we need an inline helper for reference of the page but is it=
- not clearer
-> > > > that we assume a page* and not any kind of pfn ?
-> > > > It will not be the first place using low bits of a pointer for flag=
-s.
-> > > >
-> > > > That said. Why we need it at all? I mean why not have it as a bio f=
-lag. If it exist
-> > > > at all that a user has a GUP and none-GUP pages to IO at the same r=
-equest he/she
-> > > > can just submit them as two separate BIOs (chained at the block lay=
-er).
-> > > >
-> > > > Many users just submit one page bios and let elevator merge them an=
-y way.
-> > >
-> > > Let's please not add additional flags and weirdness to struct bio - "=
-if this
-> > > flag is set interpret one way, if not interpret another" - or eventua=
-lly bios
-> > > will be as bad as skbuffs. I would much prefer just changing bv_page =
-to bv_pfn.
-> >
-> > This all reminds of the failed attempt to teach the block layer to
-> > operate without pages:
-> >
-> > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-=
-desk3.amr.corp.intel.com/
-> >
-> > >
-> > > Question though - why do we need a flag for whether a page is a GUP p=
-age or not?
-> > > Couldn't the needed information just be determined by what range the =
-pfn is not
-> > > (i.e. whether or not it has a struct page associated with it)?
-> >
-> > That amounts to a pfn_valid() check which is a bit heavier than if we
-> > can store a flag in the bv_pfn entry directly.
-> >
-> > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
-> > an 'unsigned long'.
-> >
-> > That said, I'm still in favor of Jan's proposal to just make the
-> > bv_page semantics uniform. Otherwise we're complicating this core
-> > infrastructure for some yet to be implemented GPU memory management
-> > capabilities with yet to be determined value. Circle back when that
-> > value is clear, but in the meantime fix the GUP bug.
->
-> This has nothing to do with GPU, what make you think so ? Here i am
-> trying to solve GUP and to keep the value of knowing wether a page
-> has been GUP or not. I argue that if we bias every page in every bio
-> then we loose that information and thus the value.
->
-> I gave the page protection mechanisms as an example that would be
-> impacted but it is not the only one. Knowing if a page has been GUP
-> can be useful for memory reclaimation, compaction, NUMA balancing,
+On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
+> Hello,
+> 
+> Kirill will explain about this issue.
+> 
+> julia
+> 
+> ---------- Forwarded message ----------
+> Date: Sat, 13 Apr 2019 11:22:51 +0800
+> From: kbuild test robot <lkp@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> 
+> CC: kbuild-all@01.org
+> TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> CC: Logan Gunthorpe <logang@deltatee.com>
+> CC: Bjorn Helgaas <helgaas@kernel.org>
+> CC: linux-pci@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> 
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> 
+> Generated by: scripts/coccinelle/api/stream_open.cocci
+> 
+> Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 
-Right, this is what I was reacting to in your pushback to Jan's
-proposal. You're claiming value for not doing the simple thing for
-some future "may be useful in these contexts". To my knowledge those
-things are not broken today. You're asking for the complexity to be
-carried today for some future benefit, and I'm asking for the
-simplicity to be maintained as much as possible today and let the
-value of future changes stand on their own to push for more complexity
-later.
+Based on Kirill's subsequent email saying this is already queued to
+the merge window, I assume I need to do nothing here.
 
-Effectively don't use this bug fix to push complexity for a future
-agenda where the value has yet to be quantified.
+I think a signed-off-by from a robot, i.e., not from a real person, is
+meaningless, and I don't think I would personally accept it.  It's
+certainly OK to indicate that a patch was auto-generated, but I think
+a real person still needs to take responsibility for it.
+
+Documentation/process/submitting-patches.rst says it must contain a
+real name (no pseudonyms or anonymous contributions), and I don't
+think a robot fits in the spirit of that.
+
+I see that
+https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?id=8a29a3bae2a2
+(mentioned below) does have a good signed-off-by from Sebastian, but
+that's not *this* patch, so I don't know what's what.
+
+Bjorn
+
+> ---
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> head:   794c294ae4483c240429c25a0d18e272e92c94de
+> commit: 8a29a3bae2a2dfb0116cd8791d9700515d6e765e [154/311] pci/switchtec: Don't use completion's wait queue
+> :::::: branch date: 7 hours ago
+> :::::: commit date: 7 hours ago
+> 
+> Please take the patch only if it's a positive warning. Thanks!
+> 
+>  switchtec.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+>  		return PTR_ERR(stuser);
+> 
+>  	filp->private_data = stuser;
+> -	nonseekable_open(inode, filp);
+> +	stream_open(inode, filp);
+> 
+>  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+> 
