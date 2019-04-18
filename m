@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F2DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E449EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C2E20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B883020643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612180;
-	bh=vaHdLYsIgzmR2z/eJl8FaDyukq+rorcealy9iB4ZIAU=;
+	s=default; t=1555612184;
+	bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hsg7PH9M4oXoy/zpfpD2W/UQX+cmGejtg19QRxOIWp6n+sBf1BThzUpwBr3RNf68M
-	 1Q72hCfhWI4lHYVZfa6Au/lHsUHqniwYQqrwHgHtCdxQ5HuaFZD7aKl1dzWtafGnlS
-	 mc9FUdikMV0wxGYnRUURCZ5bMWeeM1DZKn2pP7cQ=
+	b=UUn/wfYVxqGuCQygTVIKSKglqgjtsxkTwM6alGxZlWuQPpJknmos3qqtNzbatp/sO
+	 nXmpb6Pimbw/3Hd1dUuNcPQf0piF/nnYzHud+5iql8eX0OEHMDL6YCWjZhHkIYuFGf
+	 e8FcM9Pyeb4X32fxOFL7gWj3EsUHuLSdmYSkG8og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391483AbfDRS3j (ORCPT
+        id S2390739AbfDRSCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390110AbfDRSC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:28 -0400
+        id S2390286AbfDRSCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2B8217FA;
-        Thu, 18 Apr 2019 18:02:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12DCD2186A;
+        Thu, 18 Apr 2019 18:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610546;
-        bh=vaHdLYsIgzmR2z/eJl8FaDyukq+rorcealy9iB4ZIAU=;
+        s=default; t=1555610536;
+        bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HmrB2s/l+0ydWOB/ZpssaPRi8gzb7NAwqMb/S/X85cMGFn2UBT5C3YNPG95kABMz
-         2RQKYij53OedhuAtY9sCEfqan+Mwwsag2p4MMH4pNL1EMiMN3luxnYvVbnShSqDQkN
-         Y6cHNC52kFpjZjEeCznvMOZf4MJMnEOSbMPXJkPs=
+        b=bcG42IQmSnn/gautM8wBNQ4fjme15I/ScGu4Sg/tRTvkhYLRQfvzyDRcshV7KdqkY
+         7RaVpQFZ2gjTZtngq7FsExWUBRH9IzxHWlCbUywykXD9/oqkFeSwW3x7OJgeONWbZj
+         FjbuXLlBssQc0eCcVIGUY/7hm+wdGEvQdkwpQY14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
+        Oak Zeng <Oak.Zeng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/110] rxrpc: Fix client call connect/disconnect race
-Date:   Thu, 18 Apr 2019 19:57:32 +0200
-Message-Id: <20190418160447.368256784@linuxfoundation.org>
+Subject: [PATCH 4.19 100/110] drm/amdkfd: use init_mqd function to allocate object for hid_mqd (CI)
+Date:   Thu, 18 Apr 2019 19:57:29 +0200
+Message-Id: <20190418160447.152540902@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,147 +61,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 930c9f9125c85b5134b3e711bc252ecc094708e3 ]
+[ Upstream commit cac734c2dbd2514f14c8c6a17caba1990d83bf1d ]
 
-rxrpc_disconnect_client_call() reads the call's connection ID protocol
-value (call->cid) as part of that function's variable declarations.  This
-is bad because it's not inside the locked section and so may race with
-someone granting use of the channel to the call.
+if use the legacy method to allocate object, when mqd_hiq need to run
+uninit code, it will be cause WARNING call trace.
 
-This manifests as an assertion failure (see below) where the call in the
-presumed channel (0 because call->cid wasn't set when we read it) doesn't
-match the call attached to the channel we were actually granted (if 1, 2 or
-3).
+eg: (s3 suspend test)
+[   34.918944] Call Trace:
+[   34.918948]  [<ffffffff92961dc1>] dump_stack+0x19/0x1b
+[   34.918950]  [<ffffffff92297648>] __warn+0xd8/0x100
+[   34.918951]  [<ffffffff9229778d>] warn_slowpath_null+0x1d/0x20
+[   34.918991]  [<ffffffffc03ce1fe>] uninit_mqd_hiq_sdma+0x4e/0x50 [amdgpu]
+[   34.919028]  [<ffffffffc03d0ef7>] uninitialize+0x37/0xe0 [amdgpu]
+[   34.919064]  [<ffffffffc03d15a6>] kernel_queue_uninit+0x16/0x30 [amdgpu]
+[   34.919086]  [<ffffffffc03d26c2>] pm_uninit+0x12/0x20 [amdgpu]
+[   34.919107]  [<ffffffffc03d4915>] stop_nocpsch+0x15/0x20 [amdgpu]
+[   34.919129]  [<ffffffffc03c1dce>] kgd2kfd_suspend.part.4+0x2e/0x50 [amdgpu]
+[   34.919150]  [<ffffffffc03c2667>] kgd2kfd_suspend+0x17/0x20 [amdgpu]
+[   34.919171]  [<ffffffffc03c103a>] amdgpu_amdkfd_suspend+0x1a/0x20 [amdgpu]
+[   34.919187]  [<ffffffffc02ec428>] amdgpu_device_suspend+0x88/0x3a0 [amdgpu]
+[   34.919189]  [<ffffffff922e22cf>] ? enqueue_entity+0x2ef/0xbe0
+[   34.919205]  [<ffffffffc02e8220>] amdgpu_pmops_suspend+0x20/0x30 [amdgpu]
+[   34.919207]  [<ffffffff925c56ff>] pci_pm_suspend+0x6f/0x150
+[   34.919208]  [<ffffffff925c5690>] ? pci_pm_freeze+0xf0/0xf0
+[   34.919210]  [<ffffffff926b45c6>] dpm_run_callback+0x46/0x90
+[   34.919212]  [<ffffffff926b49db>] __device_suspend+0xfb/0x2a0
+[   34.919213]  [<ffffffff926b4b9f>] async_suspend+0x1f/0xa0
+[   34.919214]  [<ffffffff922c918f>] async_run_entry_fn+0x3f/0x130
+[   34.919216]  [<ffffffff922b9d4f>] process_one_work+0x17f/0x440
+[   34.919217]  [<ffffffff922bade6>] worker_thread+0x126/0x3c0
+[   34.919218]  [<ffffffff922bacc0>] ? manage_workers.isra.25+0x2a0/0x2a0
+[   34.919220]  [<ffffffff922c1c31>] kthread+0xd1/0xe0
+[   34.919221]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
+[   34.919222]  [<ffffffff92974c1d>] ret_from_fork_nospec_begin+0x7/0x21
+[   34.919224]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
+[   34.919224] ---[ end trace 38cd9f65c963adad ]---
 
-Fix this by moving the read and dependent calculations inside of the
-channel_lock section.  Also, only set the channel number and pointer
-variables if cid is not zero (ie. unset).
-
-This problem can be induced by injecting an occasional error in
-rxrpc_wait_for_channel() before the call to schedule().
-
-Make two further changes also:
-
- (1) Add a trace for wait failure in rxrpc_connect_call().
-
- (2) Drop channel_lock before BUG'ing in the case of the assertion failure.
-
-The failure causes a trace akin to the following:
-
-rxrpc: Assertion failed - 18446612685268945920(0xffff8880beab8c00) == 18446612685268621312(0xffff8880bea69800) is false
-------------[ cut here ]------------
-kernel BUG at net/rxrpc/conn_client.c:824!
-...
-RIP: 0010:rxrpc_disconnect_client_call+0x2bf/0x99d
-...
-Call Trace:
- rxrpc_connect_call+0x902/0x9b3
- ? wake_up_q+0x54/0x54
- rxrpc_new_client_call+0x3a0/0x751
- ? rxrpc_kernel_begin_call+0x141/0x1bc
- ? afs_alloc_call+0x1b5/0x1b5
- rxrpc_kernel_begin_call+0x141/0x1bc
- afs_make_call+0x20c/0x525
- ? afs_alloc_call+0x1b5/0x1b5
- ? __lock_is_held+0x40/0x71
- ? lockdep_init_map+0xaf/0x193
- ? lockdep_init_map+0xaf/0x193
- ? __lock_is_held+0x40/0x71
- ? yfs_fs_fetch_data+0x33b/0x34a
- yfs_fs_fetch_data+0x33b/0x34a
- afs_fetch_data+0xdc/0x3b7
- afs_read_dir+0x52d/0x97f
- afs_dir_iterate+0xa0/0x661
- ? iterate_dir+0x63/0x141
- iterate_dir+0xa2/0x141
- ksys_getdents64+0x9f/0x11b
- ? filldir+0x111/0x111
- ? do_syscall_64+0x3e/0x1a0
- __x64_sys_getdents64+0x16/0x19
- do_syscall_64+0x7d/0x1a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kevin Wang <kevin1.wang@amd.com>
+Reviewed-by: Oak Zeng <Oak.Zeng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  2 ++
- net/rxrpc/conn_client.c      | 20 +++++++++++++++-----
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ .../gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c  | 52 +------------------
+ 1 file changed, 1 insertion(+), 51 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 573d5b901fb1..6d182746afab 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -76,6 +76,7 @@ enum rxrpc_client_trace {
- 	rxrpc_client_chan_disconnect,
- 	rxrpc_client_chan_pass,
- 	rxrpc_client_chan_unstarted,
-+	rxrpc_client_chan_wait_failed,
- 	rxrpc_client_cleanup,
- 	rxrpc_client_count,
- 	rxrpc_client_discard,
-@@ -275,6 +276,7 @@ enum rxrpc_tx_point {
- 	EM(rxrpc_client_chan_disconnect,	"ChDisc") \
- 	EM(rxrpc_client_chan_pass,		"ChPass") \
- 	EM(rxrpc_client_chan_unstarted,		"ChUnst") \
-+	EM(rxrpc_client_chan_wait_failed,	"ChWtFl") \
- 	EM(rxrpc_client_cleanup,		"Clean ") \
- 	EM(rxrpc_client_count,			"Count ") \
- 	EM(rxrpc_client_discard,		"Discar") \
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index 6e419b15a9f8..c979a56faaef 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -707,6 +707,7 @@ int rxrpc_connect_call(struct rxrpc_sock *rx,
- 
- 	ret = rxrpc_wait_for_channel(call, gfp);
- 	if (ret < 0) {
-+		trace_rxrpc_client(call->conn, ret, rxrpc_client_chan_wait_failed);
- 		rxrpc_disconnect_client_call(call);
- 		goto out;
- 	}
-@@ -777,16 +778,22 @@ static void rxrpc_set_client_reap_timer(struct rxrpc_net *rxnet)
-  */
- void rxrpc_disconnect_client_call(struct rxrpc_call *call)
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
+index 47243165a082..ae90a99909ef 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
+@@ -323,57 +323,7 @@ static int init_mqd_hiq(struct mqd_manager *mm, void **mqd,
+ 		struct kfd_mem_obj **mqd_mem_obj, uint64_t *gart_addr,
+ 		struct queue_properties *q)
  {
--	unsigned int channel = call->cid & RXRPC_CHANNELMASK;
- 	struct rxrpc_connection *conn = call->conn;
--	struct rxrpc_channel *chan = &conn->channels[channel];
-+	struct rxrpc_channel *chan = NULL;
- 	struct rxrpc_net *rxnet = conn->params.local->rxnet;
-+	unsigned int channel = -1;
-+	u32 cid;
- 
-+	spin_lock(&conn->channel_lock);
-+
-+	cid = call->cid;
-+	if (cid) {
-+		channel = cid & RXRPC_CHANNELMASK;
-+		chan = &conn->channels[channel];
-+	}
- 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
- 	call->conn = NULL;
- 
--	spin_lock(&conn->channel_lock);
+-	uint64_t addr;
+-	struct cik_mqd *m;
+-	int retval;
 -
- 	/* Calls that have never actually been assigned a channel can simply be
- 	 * discarded.  If the conn didn't get used either, it will follow
- 	 * immediately unless someone else grabs it in the meantime.
-@@ -810,7 +817,10 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
- 		goto out;
- 	}
+-	retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct cik_mqd),
+-					mqd_mem_obj);
+-
+-	if (retval != 0)
+-		return -ENOMEM;
+-
+-	m = (struct cik_mqd *) (*mqd_mem_obj)->cpu_ptr;
+-	addr = (*mqd_mem_obj)->gpu_addr;
+-
+-	memset(m, 0, ALIGN(sizeof(struct cik_mqd), 256));
+-
+-	m->header = 0xC0310800;
+-	m->compute_pipelinestat_enable = 1;
+-	m->compute_static_thread_mgmt_se0 = 0xFFFFFFFF;
+-	m->compute_static_thread_mgmt_se1 = 0xFFFFFFFF;
+-	m->compute_static_thread_mgmt_se2 = 0xFFFFFFFF;
+-	m->compute_static_thread_mgmt_se3 = 0xFFFFFFFF;
+-
+-	m->cp_hqd_persistent_state = DEFAULT_CP_HQD_PERSISTENT_STATE |
+-					PRELOAD_REQ;
+-	m->cp_hqd_quantum = QUANTUM_EN | QUANTUM_SCALE_1MS |
+-				QUANTUM_DURATION(10);
+-
+-	m->cp_mqd_control             = MQD_CONTROL_PRIV_STATE_EN;
+-	m->cp_mqd_base_addr_lo        = lower_32_bits(addr);
+-	m->cp_mqd_base_addr_hi        = upper_32_bits(addr);
+-
+-	m->cp_hqd_ib_control = DEFAULT_MIN_IB_AVAIL_SIZE;
+-
+-	/*
+-	 * Pipe Priority
+-	 * Identifies the pipe relative priority when this queue is connected
+-	 * to the pipeline. The pipe priority is against the GFX pipe and HP3D.
+-	 * In KFD we are using a fixed pipe priority set to CS_MEDIUM.
+-	 * 0 = CS_LOW (typically below GFX)
+-	 * 1 = CS_MEDIUM (typically between HP3D and GFX
+-	 * 2 = CS_HIGH (typically above HP3D)
+-	 */
+-	m->cp_hqd_pipe_priority = 1;
+-	m->cp_hqd_queue_priority = 15;
+-
+-	*mqd = m;
+-	if (gart_addr)
+-		*gart_addr = addr;
+-	retval = mm->update_mqd(mm, m, q);
+-
+-	return retval;
++	return init_mqd(mm, mqd, mqd_mem_obj, gart_addr, q);
+ }
  
--	ASSERTCMP(rcu_access_pointer(chan->call), ==, call);
-+	if (rcu_access_pointer(chan->call) != call) {
-+		spin_unlock(&conn->channel_lock);
-+		BUG();
-+	}
- 
- 	/* If a client call was exposed to the world, we save the result for
- 	 * retransmission.
+ static int update_mqd_hiq(struct mqd_manager *mm, void *mqd,
 -- 
 2.19.1
 
