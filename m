@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F86C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98403C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD9220652
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C7F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611154;
-	bh=SEKwVuizM7PcgHmpksIIZh0HPBrRpSX10k3pwBU4kYo=;
+	s=default; t=1555611158;
+	bh=dOiG9SUgp61Nxz9UIb3sYhrk1D+i7qhpKTp+VGXCK7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tro7uyrzlp+75dH/IW6PQ9Wq/LH4GXhym8Ogi93sly+JiT8X+yQHaRCOwrBwrOKRC
-	 QUBzixs4cWyrINieNv712Jl7M6WkUF7TkEDjaNI7RYI00pWg5RZyk+5VZ8B75PLpOI
-	 RcfJJOq7Y6KIo+O1MEdmkWCujeOWm4kw+/cTjUYs=
+	b=kB1tDZWVa+v1pxxW/H6B/k3AIp3a6kvNX6fuIwLB9L+ui9nGtIMm7u9X4DnYhjL3R
+	 yXL5d7qPmc7YvhxhenNJJOJYV3fqkara1cx68XRLycVdrQPj8qBaJAB3nNMeZKxnry
+	 Y6JiJtp7BsmDLPezGtyjLshKBJBrrHeYQM+eiuzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404306AbfDRSMd (ORCPT
+        id S2404316AbfDRSMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45006 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404281AbfDRSM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:29 -0400
+        id S2404300AbfDRSMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACA6920675;
-        Thu, 18 Apr 2019 18:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F35020652;
+        Thu, 18 Apr 2019 18:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611149;
-        bh=SEKwVuizM7PcgHmpksIIZh0HPBrRpSX10k3pwBU4kYo=;
+        s=default; t=1555611151;
+        bh=dOiG9SUgp61Nxz9UIb3sYhrk1D+i7qhpKTp+VGXCK7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMr4RXT0oWpe7v7+9sIe/PXlf9rfjkRGTY8LnidAyCPnZjealTYJ+/RfxzHk13vKb
-         xZN6vx5TgDWEsUp/EG3CflxmVS2+i+LGTvnnWgL7BpsgSJ1/tzAOHxESbxAtMBdiiJ
-         83kJ94i8gPMabGIRXk/QdVqcPBZY85Rq/CUe4HoY=
+        b=RGVV0H/M5hQNQ9P72LxD28aIrWxyIhTBgB5gBLAnCeF+GtShXcRFCR6xsVyKPklCO
+         hTUh/fn62BCt5iRQOotckOWPN5USowS2KRU3RofOH3RvDG07Y/Jb93MidReMjCTLLQ
+         XVKyL3ODSlvc/QLzxlZUEtTo/GBCvxfGEh30UgO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 78/93] PCI/ASPM: Save LTR Capability for suspend/resume
-Date:   Thu, 18 Apr 2019 19:57:56 +0200
-Message-Id: <20190418160444.948574125@linuxfoundation.org>
+Subject: [PATCH 5.0 79/93] f2fs: sync filesystem after roll-forward recovery
+Date:   Thu, 18 Apr 2019 19:57:57 +0200
+Message-Id: <20190418160445.019871077@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -59,127 +60,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dbbfadf2319005cf528b0f15f12a05d4e4644303 ]
+[ Upstream commit 812a95977fd2f0d1f220c716a98a7f22e22f488d ]
 
-Latency Tolerance Reporting (LTR) allows Endpoints and Switch Upstream
-Ports to report their latency requirements to upstream components.  If ASPM
-L1 PM substates are enabled, the LTR information helps determine when a
-Link enters L1.2 [1].
+Some works after roll-forward recovery can get an error which will release
+all the data structures. Let's flush them in order to make it clean.
 
-Software must set the maximum latency values in the LTR Capability based on
-characteristics of the platform, then set LTR Mechanism Enable in the
-Device Control 2 register in the PCIe Capability.  The device can then use
-LTR to report its latency tolerance.
+One possible corruption came from:
 
-If the device reports a maximum latency value of zero, that means the
-device requires the highest possible performance and the ASPM L1.2 substate
-is effectively disabled.
+[   90.400500] list_del corruption. prev->next should be ffffffed1f566208, but was (null)
+[   90.675349] Call trace:
+[   90.677869]  __list_del_entry_valid+0x94/0xb4
+[   90.682351]  remove_dirty_inode+0xac/0x114
+[   90.686563]  __f2fs_write_data_pages+0x6a8/0x6c8
+[   90.691302]  f2fs_write_data_pages+0x40/0x4c
+[   90.695695]  do_writepages+0x80/0xf0
+[   90.699372]  __writeback_single_inode+0xdc/0x4ac
+[   90.704113]  writeback_sb_inodes+0x280/0x440
+[   90.708501]  wb_writeback+0x1b8/0x3d0
+[   90.712267]  wb_workfn+0x1a8/0x4d4
+[   90.715765]  process_one_work+0x1c0/0x3d4
+[   90.719883]  worker_thread+0x224/0x344
+[   90.723739]  kthread+0x120/0x130
+[   90.727055]  ret_from_fork+0x10/0x18
 
-We put devices in D3 for suspend, and we assume their internal state is
-lost.  On resume, previously we did not restore the LTR Capability, but we
-did restore the LTR Mechanism Enable bit, so devices would request the
-highest possible performance and ASPM L1.2 wouldn't be used.
-
-[1] PCIe r4.0, sec 5.5.1
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201469
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reported-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 53 +++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 2 deletions(-)
+ fs/f2fs/checkpoint.c |  5 +++--
+ fs/f2fs/node.c       |  4 +++-
+ fs/f2fs/super.c      | 44 +++++++++++++++++++++++++++++++++-----------
+ 3 files changed, 39 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 5a94a3cf61cd..e91005d0f20c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1233,7 +1233,6 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- 	pcie_capability_write_word(dev, PCI_EXP_SLTCTL2, cap[i++]);
- }
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index f955cd3e0677..ccccf0ce2f06 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -306,8 +306,9 @@ static int f2fs_write_meta_pages(struct address_space *mapping,
+ 		goto skip_write;
  
--
- static int pci_save_pcix_state(struct pci_dev *dev)
+ 	/* collect a number of dirty meta pages and write together */
+-	if (wbc->for_kupdate ||
+-		get_pages(sbi, F2FS_DIRTY_META) < nr_pages_to_skip(sbi, META))
++	if (wbc->sync_mode != WB_SYNC_ALL &&
++			get_pages(sbi, F2FS_DIRTY_META) <
++					nr_pages_to_skip(sbi, META))
+ 		goto skip_write;
+ 
+ 	/* if locked failed, cp will flush dirty pages instead */
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 4f450e573312..f6ff84e29749 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1920,7 +1920,9 @@ static int f2fs_write_node_pages(struct address_space *mapping,
+ 	f2fs_balance_fs_bg(sbi);
+ 
+ 	/* collect a number of dirty node pages and write together */
+-	if (get_pages(sbi, F2FS_DIRTY_NODES) < nr_pages_to_skip(sbi, NODE))
++	if (wbc->sync_mode != WB_SYNC_ALL &&
++			get_pages(sbi, F2FS_DIRTY_NODES) <
++					nr_pages_to_skip(sbi, NODE))
+ 		goto skip_write;
+ 
+ 	if (wbc->sync_mode == WB_SYNC_ALL)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 5892fa3c885f..144ffba3ec5a 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1460,9 +1460,16 @@ static int f2fs_enable_quotas(struct super_block *sb);
+ 
+ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
  {
- 	int pos;
-@@ -1270,6 +1269,45 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
- 	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
- }
++	unsigned int s_flags = sbi->sb->s_flags;
+ 	struct cp_control cpc;
+-	int err;
++	int err = 0;
++	int ret;
  
-+static void pci_save_ltr_state(struct pci_dev *dev)
-+{
-+	int ltr;
-+	struct pci_cap_saved_state *save_state;
-+	u16 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!ltr)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!save_state) {
-+		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
-+		return;
++	if (s_flags & SB_RDONLY) {
++		f2fs_msg(sbi->sb, KERN_ERR,
++				"checkpoint=disable on readonly fs");
++		return -EINVAL;
 +	}
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	pci_read_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap++);
-+	pci_read_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, cap++);
-+}
-+
-+static void pci_restore_ltr_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	int ltr;
-+	u16 *cap;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!save_state || !ltr)
-+		return;
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++);
-+	pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
-+}
+ 	sbi->sb->s_flags |= SB_ACTIVE;
  
- /**
-  * pci_save_state - save the PCI configuration space of a device before suspending
-@@ -1291,6 +1329,7 @@ int pci_save_state(struct pci_dev *dev)
- 	if (i != 0)
- 		return i;
+ 	f2fs_update_time(sbi, DISABLE_TIME);
+@@ -1470,18 +1477,24 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
+ 	while (!f2fs_time_over(sbi, DISABLE_TIME)) {
+ 		mutex_lock(&sbi->gc_mutex);
+ 		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
+-		if (err == -ENODATA)
++		if (err == -ENODATA) {
++			err = 0;
+ 			break;
++		}
+ 		if (err && err != -EAGAIN)
+-			return err;
++			break;
+ 	}
  
-+	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
- 	return pci_save_vc_state(dev);
- }
-@@ -1390,7 +1429,12 @@ void pci_restore_state(struct pci_dev *dev)
- 	if (!dev->state_saved)
- 		return;
+-	err = sync_filesystem(sbi->sb);
+-	if (err)
+-		return err;
++	ret = sync_filesystem(sbi->sb);
++	if (ret || err) {
++		err = ret ? ret: err;
++		goto restore_flag;
++	}
  
--	/* PCI Express register must be restored first */
-+	/*
-+	 * Restore max latencies (in the LTR capability) before enabling
-+	 * LTR itself (in the PCIe capability).
-+	 */
-+	pci_restore_ltr_state(dev);
-+
- 	pci_restore_pcie_state(dev);
- 	pci_restore_pasid_state(dev);
- 	pci_restore_pri_state(dev);
-@@ -3020,6 +3064,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to preallocate PCI-X save buffer\n");
+-	if (f2fs_disable_cp_again(sbi))
+-		return -EAGAIN;
++	if (f2fs_disable_cp_again(sbi)) {
++		err = -EAGAIN;
++		goto restore_flag;
++	}
  
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_LTR,
-+					    2 * sizeof(u16));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
+ 	mutex_lock(&sbi->gc_mutex);
+ 	cpc.reason = CP_PAUSE;
+@@ -1490,7 +1503,9 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
+ 
+ 	sbi->unusable_block_count = 0;
+ 	mutex_unlock(&sbi->gc_mutex);
+-	return 0;
++restore_flag:
++	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
++	return err;
  }
  
+ static void f2fs_enable_checkpoint(struct f2fs_sb_info *sbi)
+@@ -3359,7 +3374,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	if (test_opt(sbi, DISABLE_CHECKPOINT)) {
+ 		err = f2fs_disable_checkpoint(sbi);
+ 		if (err)
+-			goto free_meta;
++			goto sync_free_meta;
+ 	} else if (is_set_ckpt_flags(sbi, CP_DISABLED_FLAG)) {
+ 		f2fs_enable_checkpoint(sbi);
+ 	}
+@@ -3372,7 +3387,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		/* After POR, we can run background GC thread.*/
+ 		err = f2fs_start_gc_thread(sbi);
+ 		if (err)
+-			goto free_meta;
++			goto sync_free_meta;
+ 	}
+ 	kvfree(options);
+ 
+@@ -3394,6 +3409,11 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	f2fs_update_time(sbi, REQ_TIME);
+ 	return 0;
+ 
++sync_free_meta:
++	/* safe to flush all the data */
++	sync_filesystem(sbi->sb);
++	retry = false;
++
+ free_meta:
+ #ifdef CONFIG_QUOTA
+ 	f2fs_truncate_quota_inode_pages(sb);
+@@ -3407,6 +3427,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	 * falls into an infinite loop in f2fs_sync_meta_pages().
+ 	 */
+ 	truncate_inode_pages_final(META_MAPPING(sbi));
++	/* evict some inodes being cached by GC */
++	evict_inodes(sb);
+ 	f2fs_unregister_sysfs(sbi);
+ free_root_inode:
+ 	dput(sb->s_root);
 -- 
 2.19.1
 
