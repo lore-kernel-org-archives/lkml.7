@@ -2,79 +2,95 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEC3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A4920656
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E124B217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555592595;
+	bh=7i74W/THEjL44nv5V7mQ6Eet4OX/8R29qm/rFnkagNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gW9DMnsgn+3fOuiTLaMeLDz7Yyob8fXk0gssLqQsF5nDlarGUpyBUeIL3T1DYiNYI
+	 u0clmWYm40ccuJJMmTRIACK/wQ0MWBL50Xj5RZdo97NYj/MJSbYWqY6bfqpY/zYGN8
+	 g5MmTKRZ/DlGRgTteLC3j3NKJoJuBmZCetiPidU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388454AbfDRNBC (ORCPT
+        id S2388509AbfDRNDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:01:02 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:36055 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfDRNBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:01:02 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH6ef-0007T9-Q1; Thu, 18 Apr 2019 15:00:41 +0200
-Date:   Thu, 18 Apr 2019 15:00:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v15 1/3] /proc/pid/status: Add support for architecture
- specific output
-In-Reply-To: <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1904181500100.3174@nanos.tec.linutronix.de>
-References: <20190416063250.7514-1-aubrey.li@linux.intel.com> <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org> <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Apr 2019 09:03:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35612 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729497AbfDRNDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:03:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 25228B64C;
+        Thu, 18 Apr 2019 13:03:12 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 15:03:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Michal Koutny <mkoutny@suse.com>
+Subject: Re: [PATCH] mm: use mm.arg_lock in get_cmdline()
+Message-ID: <20190418130310.GJ6567@dhcp22.suse.cz>
+References: <20190418125827.57479-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418125827.57479-1-ldufour@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Andy Lutomirski wrote:
+Michal has posted the same patch few days ago http://lkml.kernel.org/r/20190417120347.15397-1-mkoutny@suse.com
 
-> On Tue, Apr 16, 2019 at 4:01 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Tue, 16 Apr 2019 14:32:48 +0800 Aubrey Li <aubrey.li@linux.intel.com> wrote:
-> >
-> > > The architecture specific information of the running processes could
-> > > be useful to the userland. Add support to examine process architecture
-> > > specific information externally.
-> >
-> > The implementation looks just fine to me.  Have you had any feedback on
-> > the overall desirability of adding this feature?
+On Thu 18-04-19 14:58:27, Laurent Dufour wrote:
+> The commit 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end
+> and env_start|end in mm_struct") introduce the spinlock arg_lock to protect
+> the arg_* and env_* field of the mm_struct structure.
 > 
-> I think I've been the most outspoken, and my not-all-that-strong
-> opinion is that I don't really like it.  /proc/PID/status is already a
-> bit of a mess, and I don't think we really want it to be a mess that
-> is different on different architectures.  Hence my suggestion of
-> /proc/PID/x86_status instead.  Or we could do /proc/PID/arch_status, I
+> While reading the code, I found that this new spinlock was not used in
+> get_cmdline() to protect access to these fields.
+> 
+> Fixing this even if there is no issue reported yet for this.
+> 
+> Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
+> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> ---
+>  mm/util.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/util.c b/mm/util.c
+> index 05a464929b3e..789760c3028b 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -758,12 +758,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+>  	if (!mm->arg_end)
+>  		goto out_mm;	/* Shh! No looking before we're done */
+>  
+> -	down_read(&mm->mmap_sem);
+> +	spin_lock(&mm->arg_lock);
+>  	arg_start = mm->arg_start;
+>  	arg_end = mm->arg_end;
+>  	env_start = mm->env_start;
+>  	env_end = mm->env_end;
+> -	up_read(&mm->mmap_sem);
+> +	spin_unlock(&mm->arg_lock);
+>  
+>  	len = arg_end - arg_start;
+>  
+> -- 
+> 2.21.0
 
-arch_status looks like the right thing to do.
-
-Thanks,
-
-	tglx
+-- 
+Michal Hocko
+SUSE Labs
