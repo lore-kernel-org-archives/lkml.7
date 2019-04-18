@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AA1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34498C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0594F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F1E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611355;
-	bh=OrOOjScVrV2EZ5DMzz0YXacNjiJ61Z/kqdC6W7AIuWI=;
+	s=default; t=1555611363;
+	bh=C5OwFAdraY+7TfWGCJvCDGEsvQrMSQ9BhZpt1IQhFvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4h997gh0dg7jBmbxj2nA+mf5NNUXq9+vG0ftDm0e6zzQF1N7zW0gEPifaLNowxs1
-	 2YRj1bi0IxoonUYNwQQarSBVj7VhLtAJ5SH9slqIBTOWJRyWOojgCwEHwkpK1jLi1M
-	 kMeEHmMJKskZ/1mPZ/eN6xr/SmoJ/XaYFxxEzvJ4=
+	b=WjJnITtOiyNj0Tc8jkDanj2qpU06ZevPEF+l0iHKJni+efhPeQA4OoiRqD1JB/4Cq
+	 qjpHAGwID1HDEhAoOAsu9wewKKWYjldOgkqw1iPkgGH0gc9XJ90CaGYphxrWTHZPw4
+	 CaIm64W27YCjDy8ma75ouNQwNXM3RbTdWkCEbPNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404267AbfDRSM0 (ORCPT
+        id S2404012AbfDRSQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44874 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404083AbfDRSMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:22 -0400
+        id S2403939AbfDRSMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8DDD20675;
-        Thu, 18 Apr 2019 18:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8733F20652;
+        Thu, 18 Apr 2019 18:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611141;
-        bh=OrOOjScVrV2EZ5DMzz0YXacNjiJ61Z/kqdC6W7AIuWI=;
+        s=default; t=1555611138;
+        bh=C5OwFAdraY+7TfWGCJvCDGEsvQrMSQ9BhZpt1IQhFvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H2Pz73MGuzl/txgUBQkw3z/m5Iy6D2/3VvfnWBey9A5MLYB2GQdiYTWjy/UQfSqmf
-         Ww4mI7uhgVpv00wA0aFnUx/sq7q62R+UpgnN0QD3hRof4OALaXyKwM1pkevIJdCS3k
-         KMODBC8+g5IsY898VAitbRffXejH8k3hK7nHQj6w=
+        b=P9lZseYrE5KVOP5yvP5ltIDnXIsMPW3W1nRUk6yvhtDPWny7Yx74jdn6dKyD2Tvmo
+         R0GCxd+ITe+0weIWOo6pd+AacqKEXHzW/iK/iMIN3YSOBrCJ2w7/C6aJ7zOR1CDRWY
+         a7CJaEd3eq/2tIS8y7g8jHU7SPhm4rK8lhUlM/Qc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Wei Hu (Xavier)" <xavier.huwei@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        =?UTF-8?q?Ortwin=20Gl=C3=BCck?= <odi@odi.ch>,
+        Francisco Cribari <cribari@gmail.com>,
+        Balazs Varga <balazs4web@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 75/93] RDMA/hns: Fix the Oops during rmmod or insmod ko when reset occurs
-Date:   Thu, 18 Apr 2019 19:57:53 +0200
-Message-Id: <20190418160444.699351184@linuxfoundation.org>
+Subject: [PATCH 5.0 74/93] Revert "ACPI / EC: Remove old CLEAR_ON_RESUME quirk"
+Date:   Thu, 18 Apr 2019 19:57:52 +0200
+Message-Id: <20190418160444.631734487@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -61,314 +64,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d061effc36f7bd38a12912977a37a50ac9140d11 ]
+[ Upstream commit b6a3e1475b0220378ad32bdf4d8692f058b1fc03 ]
 
-In the reset process, the hns3 NIC driver notifies the RoCE driver to
-perform reset related processing by calling the .reset_notify() interface
-registered by the RoCE driver in hip08 SoC.
+On some Samsung hardware, it is necessary to clear events accumulated by
+the EC during sleep. These ECs stop reporting GPEs until they are manually
+polled, if too many events are accumulated.
+Thus the CLEAR_ON_RESUME quirk is introduced to send EC query commands
+unconditionally after resume to clear all the EC query events on those
+platforms.
 
-In the current version, if a reset occurs simultaneously during the
-execution of rmmod or insmod ko, there may be Oops error as below:
+Later, commit 4c237371f290 ("ACPI / EC: Remove old CLEAR_ON_RESUME quirk")
+removes the CLEAR_ON_RESUME quirk because we thought the new EC IRQ
+polling logic should handle this case.
 
- Internal error: Oops: 86000007 [#1] PREEMPT SMP
- Modules linked in: hns_roce(O) hns3(O) hclge(O) hnae3(O) [last unloaded: hns_roce_hw_v2]
- CPU: 0 PID: 14 Comm: kworker/0:1 Tainted: G           O      4.19.0-ge00d540 #1
- Hardware name: Huawei Technologies Co., Ltd.
- Workqueue: events hclge_reset_service_task [hclge]
- pstate: 60c00009 (nZCv daif +PAN +UAO)
- pc : 0xffff00000100b0b8
- lr : 0xffff00000100aea0
- sp : ffff000009afbab0
- x29: ffff000009afbab0 x28: 0000000000000800
- x27: 0000000000007ff0 x26: ffff80002f90c004
- x25: 00000000000007ff x24: ffff000008f97000
- x23: ffff80003efee0a8 x22: 0000000000001000
- x21: ffff80002f917ff0 x20: ffff8000286ea070
- x19: 0000000000000800 x18: 0000000000000400
- x17: 00000000c4d3225d x16: 00000000000021b8
- x15: 0000000000000400 x14: 0000000000000400
- x13: 0000000000000000 x12: ffff80003fac6e30
- x11: 0000800036303000 x10: 0000000000000001
- x9 : 0000000000000000 x8 : ffff80003016d000
- x7 : 0000000000000000 x6 : 000000000000003f
- x5 : 0000000000000040 x4 : 0000000000000000
- x3 : 0000000000000004 x2 : 00000000000007ff
- x1 : 0000000000000000 x0 : 0000000000000000
- Process kworker/0:1 (pid: 14, stack limit = 0x00000000af8f0ad9)
- Call trace:
-  0xffff00000100b0b8
-  0xffff00000100b3a0
-  hns_roce_init+0x624/0xc88 [hns_roce]
-  0xffff000001002df8
-  0xffff000001006960
-  hclge_notify_roce_client+0x74/0xe0 [hclge]
-  hclge_reset_service_task+0xa58/0xbc0 [hclge]
-  process_one_work+0x1e4/0x458
-  worker_thread+0x40/0x450
-  kthread+0x12c/0x130
-  ret_from_fork+0x10/0x18
- Code: bad PC value
+Now it has been proved that the EC IRQ Polling logic does not fix the
+issue actually because we got regression report on these Samsung
+platforms after removing the quirk.
 
-In the reset process, we will release the resources firstly, and after the
-hardware reset is completed, we will reapply resources and reconfigure the
-hardware.
+Thus revert commit 4c237371f290 ("ACPI / EC: Remove old CLEAR_ON_RESUME
+quirk") to introduce back the Samsung quirk in this patch.
 
-We can solve this problem by modifying both the NIC and the RoCE
-driver. We can modify the concurrent processing in the NIC driver to avoid
-calling the .reset_notify and .uninit_instance ops at the same time. And
-we need to modify the RoCE driver to record the reset stage and the
-driver's init/uninit state, and check the state in the .reset_notify,
-.init_instance. and uninit_instance functions to avoid NULL pointer
-operation.
-
-Fixes: cb7a94c9c808 ("RDMA/hns: Add reset process for RoCE in hip08")
-Signed-off-by: Wei Hu (Xavier) <xavier.huwei@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=44161
+Tested-by: Ortwin Glück <odi@odi.ch>
+Tested-by: Francisco Cribari <cribari@gmail.com>
+Tested-by: Balazs Varga <balazs4web@gmail.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_device.h |  21 ++++
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 103 +++++++++++++++++---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |   1 +
- 3 files changed, 112 insertions(+), 13 deletions(-)
+ drivers/acpi/ec.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 509e467843f6..f4cac63194d9 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -216,6 +216,26 @@ enum {
- 	HNS_ROCE_DB_PER_PAGE = PAGE_SIZE / 4
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index 9d66a47d32fb..49e16f009095 100644
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -194,6 +194,7 @@ static struct workqueue_struct *ec_query_wq;
+ static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
+ static int EC_FLAGS_CORRECT_ECDT; /* Needs ECDT port address correction */
+ static int EC_FLAGS_IGNORE_DSDT_GPE; /* Needs ECDT GPE as correction setting */
++static int EC_FLAGS_CLEAR_ON_RESUME; /* Needs acpi_ec_clear() on boot/resume */
+ 
+ /* --------------------------------------------------------------------------
+  *                           Logging/Debugging
+@@ -499,6 +500,26 @@ static inline void __acpi_ec_disable_event(struct acpi_ec *ec)
+ 		ec_log_drv("event blocked");
+ }
+ 
++/*
++ * Process _Q events that might have accumulated in the EC.
++ * Run with locked ec mutex.
++ */
++static void acpi_ec_clear(struct acpi_ec *ec)
++{
++	int i, status;
++	u8 value = 0;
++
++	for (i = 0; i < ACPI_EC_CLEAR_MAX; i++) {
++		status = acpi_ec_query(ec, &value);
++		if (status || !value)
++			break;
++	}
++	if (unlikely(i == ACPI_EC_CLEAR_MAX))
++		pr_warn("Warning: Maximum of %d stale EC events cleared\n", i);
++	else
++		pr_info("%d stale EC events cleared\n", i);
++}
++
+ static void acpi_ec_enable_event(struct acpi_ec *ec)
+ {
+ 	unsigned long flags;
+@@ -507,6 +528,10 @@ static void acpi_ec_enable_event(struct acpi_ec *ec)
+ 	if (acpi_ec_started(ec))
+ 		__acpi_ec_enable_event(ec);
+ 	spin_unlock_irqrestore(&ec->lock, flags);
++
++	/* Drain additional events if hardware requires that */
++	if (EC_FLAGS_CLEAR_ON_RESUME)
++		acpi_ec_clear(ec);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -1820,6 +1845,31 @@ static int ec_flag_query_handshake(const struct dmi_system_id *id)
+ }
+ #endif
+ 
++/*
++ * On some hardware it is necessary to clear events accumulated by the EC during
++ * sleep. These ECs stop reporting GPEs until they are manually polled, if too
++ * many events are accumulated. (e.g. Samsung Series 5/9 notebooks)
++ *
++ * https://bugzilla.kernel.org/show_bug.cgi?id=44161
++ *
++ * Ideally, the EC should also be instructed NOT to accumulate events during
++ * sleep (which Windows seems to do somehow), but the interface to control this
++ * behaviour is not known at this time.
++ *
++ * Models known to be affected are Samsung 530Uxx/535Uxx/540Uxx/550Pxx/900Xxx,
++ * however it is very likely that other Samsung models are affected.
++ *
++ * On systems which don't accumulate _Q events during sleep, this extra check
++ * should be harmless.
++ */
++static int ec_clear_on_resume(const struct dmi_system_id *id)
++{
++	pr_debug("Detected system needing EC poll on resume.\n");
++	EC_FLAGS_CLEAR_ON_RESUME = 1;
++	ec_event_clearing = ACPI_EC_EVT_TIMING_STATUS;
++	return 0;
++}
++
+ /*
+  * Some ECDTs contain wrong register addresses.
+  * MSI MS-171F
+@@ -1869,6 +1919,9 @@ static const struct dmi_system_id ec_dmi_table[] __initconst = {
+ 	ec_honor_ecdt_gpe, "ASUS X580VD", {
+ 	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 	DMI_MATCH(DMI_PRODUCT_NAME, "X580VD"),}, NULL},
++	{
++	ec_clear_on_resume, "Samsung hardware", {
++	DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD.")}, NULL},
+ 	{},
  };
  
-+enum hns_roce_reset_stage {
-+	HNS_ROCE_STATE_NON_RST,
-+	HNS_ROCE_STATE_RST_BEF_DOWN,
-+	HNS_ROCE_STATE_RST_DOWN,
-+	HNS_ROCE_STATE_RST_UNINIT,
-+	HNS_ROCE_STATE_RST_INIT,
-+	HNS_ROCE_STATE_RST_INITED,
-+};
-+
-+enum hns_roce_instance_state {
-+	HNS_ROCE_STATE_NON_INIT,
-+	HNS_ROCE_STATE_INIT,
-+	HNS_ROCE_STATE_INITED,
-+	HNS_ROCE_STATE_UNINIT,
-+};
-+
-+enum {
-+	HNS_ROCE_RST_DIRECT_RETURN		= 0,
-+};
-+
- #define HNS_ROCE_CMD_SUCCESS			1
- 
- #define HNS_ROCE_PORT_DOWN			0
-@@ -898,6 +918,7 @@ struct hns_roce_dev {
- 	spinlock_t		bt_cmd_lock;
- 	bool			active;
- 	bool			is_reset;
-+	unsigned long		reset_cnt;
- 	struct hns_roce_ib_iboe iboe;
- 
- 	struct list_head        pgdir_list;
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 543fa1504cd3..7ac06576d791 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -5800,6 +5800,7 @@ MODULE_DEVICE_TABLE(pci, hns_roce_hw_v2_pci_tbl);
- static int hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
- 				  struct hnae3_handle *handle)
- {
-+	struct hns_roce_v2_priv *priv = hr_dev->priv;
- 	const struct pci_device_id *id;
- 	int i;
- 
-@@ -5830,10 +5831,13 @@ static int hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
- 	hr_dev->cmd_mod = 1;
- 	hr_dev->loop_idc = 0;
- 
-+	hr_dev->reset_cnt = handle->ae_algo->ops->ae_dev_reset_cnt(handle);
-+	priv->handle = handle;
-+
- 	return 0;
- }
- 
--static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
-+static int __hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
- {
- 	struct hns_roce_dev *hr_dev;
- 	int ret;
-@@ -5850,7 +5854,6 @@ static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
- 
- 	hr_dev->pci_dev = handle->pdev;
- 	hr_dev->dev = &handle->pdev->dev;
--	handle->priv = hr_dev;
- 
- 	ret = hns_roce_hw_v2_get_cfg(hr_dev, handle);
- 	if (ret) {
-@@ -5864,6 +5867,8 @@ static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
- 		goto error_failed_get_cfg;
- 	}
- 
-+	handle->priv = hr_dev;
-+
- 	return 0;
- 
- error_failed_get_cfg:
-@@ -5875,7 +5880,7 @@ static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
- 	return ret;
- }
- 
--static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
-+static void __hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
- 					   bool reset)
- {
- 	struct hns_roce_dev *hr_dev = (struct hns_roce_dev *)handle->priv;
-@@ -5883,24 +5888,78 @@ static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
- 	if (!hr_dev)
- 		return;
- 
-+	handle->priv = NULL;
- 	hns_roce_exit(hr_dev);
- 	kfree(hr_dev->priv);
- 	ib_dealloc_device(&hr_dev->ib_dev);
- }
- 
-+static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
-+{
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+	struct device *dev = &handle->pdev->dev;
-+	int ret;
-+
-+	handle->rinfo.instance_state = HNS_ROCE_STATE_INIT;
-+
-+	if (ops->ae_dev_resetting(handle) || ops->get_hw_reset_stat(handle)) {
-+		handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
-+		goto reset_chk_err;
-+	}
-+
-+	ret = __hns_roce_hw_v2_init_instance(handle);
-+	if (ret) {
-+		handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
-+		dev_err(dev, "RoCE instance init failed! ret = %d\n", ret);
-+		if (ops->ae_dev_resetting(handle) ||
-+		    ops->get_hw_reset_stat(handle))
-+			goto reset_chk_err;
-+		else
-+			return ret;
-+	}
-+
-+	handle->rinfo.instance_state = HNS_ROCE_STATE_INITED;
-+
-+
-+	return 0;
-+
-+reset_chk_err:
-+	dev_err(dev, "Device is busy in resetting state.\n"
-+		     "please retry later.\n");
-+
-+	return -EBUSY;
-+}
-+
-+static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
-+					   bool reset)
-+{
-+	if (handle->rinfo.instance_state != HNS_ROCE_STATE_INITED)
-+		return;
-+
-+	handle->rinfo.instance_state = HNS_ROCE_STATE_UNINIT;
-+
-+	__hns_roce_hw_v2_uninit_instance(handle, reset);
-+
-+	handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
-+}
- static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
- {
--	struct hns_roce_dev *hr_dev = (struct hns_roce_dev *)handle->priv;
-+	struct hns_roce_dev *hr_dev;
- 	struct ib_event event;
- 
--	if (!hr_dev) {
--		dev_err(&handle->pdev->dev,
--			"Input parameter handle->priv is NULL!\n");
--		return -EINVAL;
-+	if (handle->rinfo.instance_state != HNS_ROCE_STATE_INITED) {
-+		set_bit(HNS_ROCE_RST_DIRECT_RETURN, &handle->rinfo.state);
-+		return 0;
- 	}
- 
-+	handle->rinfo.reset_state = HNS_ROCE_STATE_RST_DOWN;
-+	clear_bit(HNS_ROCE_RST_DIRECT_RETURN, &handle->rinfo.state);
-+
-+	hr_dev = (struct hns_roce_dev *)handle->priv;
-+	if (!hr_dev)
-+		return 0;
-+
- 	hr_dev->active = false;
--	hr_dev->is_reset = true;
- 
- 	event.event = IB_EVENT_DEVICE_FATAL;
- 	event.device = &hr_dev->ib_dev;
-@@ -5912,17 +5971,29 @@ static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
- 
- static int hns_roce_hw_v2_reset_notify_init(struct hnae3_handle *handle)
- {
-+	struct device *dev = &handle->pdev->dev;
- 	int ret;
- 
--	ret = hns_roce_hw_v2_init_instance(handle);
-+	if (test_and_clear_bit(HNS_ROCE_RST_DIRECT_RETURN,
-+			       &handle->rinfo.state)) {
-+		handle->rinfo.reset_state = HNS_ROCE_STATE_RST_INITED;
-+		return 0;
-+	}
-+
-+	handle->rinfo.reset_state = HNS_ROCE_STATE_RST_INIT;
-+
-+	dev_info(&handle->pdev->dev, "In reset process RoCE client reinit.\n");
-+	ret = __hns_roce_hw_v2_init_instance(handle);
- 	if (ret) {
- 		/* when reset notify type is HNAE3_INIT_CLIENT In reset notify
- 		 * callback function, RoCE Engine reinitialize. If RoCE reinit
- 		 * failed, we should inform NIC driver.
- 		 */
- 		handle->priv = NULL;
--		dev_err(&handle->pdev->dev,
--			"In reset process RoCE reinit failed %d.\n", ret);
-+		dev_err(dev, "In reset process RoCE reinit failed %d.\n", ret);
-+	} else {
-+		handle->rinfo.reset_state = HNS_ROCE_STATE_RST_INITED;
-+		dev_info(dev, "Reset done, RoCE client reinit finished.\n");
- 	}
- 
- 	return ret;
-@@ -5930,8 +6001,14 @@ static int hns_roce_hw_v2_reset_notify_init(struct hnae3_handle *handle)
- 
- static int hns_roce_hw_v2_reset_notify_uninit(struct hnae3_handle *handle)
- {
-+	if (test_bit(HNS_ROCE_RST_DIRECT_RETURN, &handle->rinfo.state))
-+		return 0;
-+
-+	handle->rinfo.reset_state = HNS_ROCE_STATE_RST_UNINIT;
-+	dev_info(&handle->pdev->dev, "In reset process RoCE client uninit.\n");
- 	msleep(100);
--	hns_roce_hw_v2_uninit_instance(handle, false);
-+	__hns_roce_hw_v2_uninit_instance(handle, false);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-index b72d0443c835..5398aa718cfc 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-@@ -1546,6 +1546,7 @@ struct hns_roce_link_table_entry {
- #define HNS_ROCE_LINK_TABLE_NXT_PTR_M GENMASK(31, 20)
- 
- struct hns_roce_v2_priv {
-+	struct hnae3_handle *handle;
- 	struct hns_roce_v2_cmq cmq;
- 	struct hns_roce_link_table tsq;
- 	struct hns_roce_link_table tpq;
 -- 
 2.19.1
 
