@@ -5,90 +5,112 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFD5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E16A3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16AC120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FEB217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389237AbfDROVV (ORCPT
+        id S2389332AbfDROVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:21:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39990 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733205AbfDROVV (ORCPT
+        Thu, 18 Apr 2019 10:21:34 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:50270 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2389183AbfDROVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:21:21 -0400
-Received: from [123.118.215.169] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1hH7ua-0008SV-Do; Thu, 18 Apr 2019 14:21:13 +0000
-Subject: Re: [PATCH] nvme: determine the number of IO queues
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, keith.busch@intel.com, axboe@fb.com
-References: <1555510379-20199-1-git-send-email-aaron.ma@canonical.com>
- <a2f0a97e14b884dc1183db9cbdd6f4b520000ce3.camel@redhat.com>
- <096935354b16662eb481aeda1f48001ba489463c.camel@redhat.com>
- <e79703d5-3502-6519-a497-71b2b2a8768f@canonical.com>
- <20190418134820.GA7589@localhost.localdomain>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <ddabda2a-b30d-77cc-7b2e-05a6b599cae7@canonical.com>
-Date:   Thu, 18 Apr 2019 22:21:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 10:21:33 -0400
+Received: (qmail 2927 invoked by uid 2102); 18 Apr 2019 10:21:32 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 18 Apr 2019 10:21:32 -0400
+Date:   Thu, 18 Apr 2019 10:21:32 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc:     Guenter Roeck <groeck@google.com>,
+        Raul Rangel <rrangel@chromium.org>,
+        <linux-usb@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Daniel Kurtz <djkurtz@chromium.org>, <zwisler@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Johan Hovold <johan@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v3] usb/hcd: Send a uevent signaling that the host
+ controller had died
+In-Reply-To: <20190418065141.GB12503@kroah.com>
+Message-ID: <Pine.LNX.4.44L0.1904181011020.1513-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20190418134820.GA7589@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 18 Apr 2019, Greg Kroah-Hartman wrote:
 
-
-On 4/18/19 9:48 PM, Keith Busch wrote:
-> It does change the default behavior. If I have a degraded controller that
-> can't do IO in a machine with 1000's of CPUs, I have to iterate this
-> non-standard behavior 1000's of times before the drive is servicable
-> again. We currenlty figure that out in just a single try.
+> On Wed, Apr 17, 2019 at 04:20:09PM -0700, Guenter Roeck wrote:
+> > On Wed, Apr 17, 2019 at 3:41 PM Raul Rangel <rrangel@chromium.org> wrote:
+> > >
+> > > On Wed, Apr 17, 2019 at 03:23:52PM -0700, Guenter Roeck wrote:
+> > > > On Wed, Apr 17, 2019 at 3:11 PM Raul Rangel <rrangel@chromium.org> wrote:
+> > > > >
+> > > > > On Wed, Apr 17, 2019 at 04:39:23PM -0400, Alan Stern wrote:
+> > > > > >
+> > > > > > This sounds like a golden opportunity!  Submit a separate patch making
+> > > > > > the parameter to kobject_uevent_env be const (actually const char *
+> > > > > > const []), then submit this patch on top of that one.
+> > > > > So there are other parts of the code base that dynamically create their
+> > > > > array values. So by making the function take const, it breaks :(
+> > > >
+> > > > Confused. The calling code can still be non-const. I don't see the
+> > > > parameter modified in kobject_uevent_env(), so declaring it const
+> > > > should be possible. Can you give an example of code that no longer
+> > > > works ?
+> > > static int notify_user_space(struct thermal_zone_device *tz, int trip)
+> > > {
+> > >         char *thermal_prop[5];
+> > >         int i;
+> > >
+> > >         mutex_lock(&tz->lock);
+> > >         thermal_prop[0] = kasprintf(GFP_KERNEL, "NAME=%s", tz->type);
+> > >         thermal_prop[1] = kasprintf(GFP_KERNEL, "TEMP=%d", tz->temperature);
+> > >         thermal_prop[2] = kasprintf(GFP_KERNEL, "TRIP=%d", trip);
+> > >         thermal_prop[3] = kasprintf(GFP_KERNEL, "EVENT=%d", tz->notify_event);
+> > >         thermal_prop[4] = NULL;
+> > >         kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
+> > >         for (i = 0; i < 4; ++i)
+> > >                 kfree(thermal_prop[i]);
+> > >         mutex_unlock(&tz->lock);
+> > >         return 0;
+> > > }
+> > >
+> > > drivers/thermal/user_space.c:48:52: error: passing 'char *[5]' to parameter of type 'const char *const *' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+> > >         kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
+> > >                                                           ^~~~~~~~~~~~
+> > > include/linux/kobject.h:238:22: note: passing argument to parameter 'envp' here
+> > >                         const char *const envp[]);
+> > >                                           ^
+> > >
+> > > http://c-faq.com/ansi/constmismatch.html explains why it fails.
+> > >
+> > Interesting. One never stops learning. So the best you could do would
+> > be char * const envp[], but I guess that doesn't help much.
 > 
-> At least the quirks document *why* the driver is doing non-standard
-> behavior. We do the IO queue quirks for Macbooks, for example.
-> 
-> But why don't you file a bug report with the device vendor instead? Surely
-> a firmware fix provides the best possible outcome, and would make this
-> device work not only in all versions of Linux, but also every standard
-> compliant driver for any OS.
+> Yeah, I went down this path a year or so ago and had to give it up as
+> well :(
 
-I will do it, no v2 for now.
+Well, the signature could still be changed as Guenter suggests.
 
-Thanks,
-Aaron
+And the array being added in the new code could still be static.  
+After all, there isn't really any danger that the contents of those
+strings will be modified, right?  It's just that the const modifiers
+weren't put in until it was too late and there were too many existing
+callers.  Perhaps a comment about this could be included in the 
+kerneldoc for kobject_uevent_env.
+
+Alan Stern
+
