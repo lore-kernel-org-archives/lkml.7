@@ -2,96 +2,163 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BEEC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C158AC282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C92217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C35217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:55:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfTkhjmi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfDRBqT (ORCPT
+        id S2387826AbfDRBzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 21:46:19 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6639 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733067AbfDRBqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 21:46:18 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ACA47F1AEAD17067CAD0;
-        Thu, 18 Apr 2019 09:46:14 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Thu, 18 Apr 2019
- 09:46:05 +0800
-Subject: Re: [PATCH] ipvs:set sock send/receive buffer correctly
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <wensong@linux-vs.org>,
-        <horms@verge.net.au>, <ja@ssi.bg>, <pablo@netfilter.org>,
-        <kadlec@blackhole.kfki.hu>, <fw@strlen.de>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <lvs-devel@vger.kernel.org>,
-        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>, <liujie165@huawei.com>
-References: <501e5522-1d69-7c67-a1bc-fd8502d3b5d1@huawei.com>
- <60c11e72-99eb-fcde-e130-a35ecdc1d2d1@gmail.com>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <bbfcccf4-626b-1029-62a6-a82b79edacbb@huawei.com>
-Date:   Thu, 18 Apr 2019 09:45:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 17 Apr 2019 21:55:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38348 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfDRBzN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 21:55:13 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 10so337803pfo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 18:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=hRag2r+cRQClvnbXFRGifKjpch/VB6yXiPd+MKpC/OI=;
+        b=HfTkhjmiPibg78nX7rz+t//QBE0dtUWyFpG2qsbR+7T6k1NxDW7Wcww4EkaWRCwWuI
+         4t6n/XR7YKhU6Ip7uJcS4Jdp4v4O8QR5IUOTsz+r/qXNIEDlQwFbRg8VjOrBAvrbMowj
+         vNF3b94lIHyNeJlcYW5YZfYNzTEbtLl6feJXmZaGePfGHM/2HTnSu/YQIgENM99PENOn
+         55rH17hWB9tNbF3xJYl9HZfeXhTZIT72G09/zQMsggdmQdruuSaEwxvhrZ5NXoe85lWQ
+         bWjIUCHNNMSgsjXAB2ssI31LELp8oh6A9v83Jmuj9cOTzkkY4FubJvXYsobUdFCvcWd+
+         Dm2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=hRag2r+cRQClvnbXFRGifKjpch/VB6yXiPd+MKpC/OI=;
+        b=tFLHp82AN4/kcgmVnz0uCEIr0cqf72Pk0hiWKhSQYf4H6+ZyPwQhApFwe7h1PAQsQ+
+         zrUI0yir/QPZVGarVehUaLtU/jGhBKke3j1gSdBCNvZjy9jnsz7bajdeUiIHfFqw18vG
+         /3lrlE6k8W5mtM1oUB7+7IDi5TFsvVA4P44WGb9qPivZ8iOQhDujUHWpy7dh0qeh0pOA
+         8fFxse30HqjdLVjneCMzpHImPyj1V/eGS7N7YLrYAV9FiN1lJmIuTSGFbD0Cc/qufQ3d
+         OzEa1yiB83mMtybJtlPnPirTRQlouhfn7xBT6F0VpPEatZBZ+KD3J+/EAbSsB21Ekx/H
+         FT2w==
+X-Gm-Message-State: APjAAAWEFnvpB04fyxtnWCU6Avbn1Pa/4ZK4ppEvpt/GtSanrEwLulFk
+        MHzVO+ADMNt5kbClhrBHLQO6G4l3
+X-Google-Smtp-Source: APXvYqyHjfF93x3cbVWeXKbtshSYY17+rtsxNfJ8sSQorfiydS6oA2SxUH+sZLHd4xB5kswQ1rmvdQ==
+X-Received: by 2002:a63:195e:: with SMTP id 30mr85422621pgz.312.1555552512900;
+        Wed, 17 Apr 2019 18:55:12 -0700 (PDT)
+Received: from localhost (14-202-58-58.tpgi.com.au. [14.202.58.58])
+        by smtp.gmail.com with ESMTPSA id k79sm791108pfj.28.2019.04.17.18.55.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 18:55:11 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 11:55:06 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3] powerpc/pseries: Only wait for dying CPU after call to
+ rtas_stop_self()
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+References: <20190311193517.23756-1-bauerman@linux.ibm.com>
+        <87bm1dfog4.fsf@morokweng.localdomain>
+        <1555389147.okxbj1prw2.astroid@bobo.none>
+        <87r2a0jffq.fsf@morokweng.localdomain>
+In-Reply-To: <87r2a0jffq.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <60c11e72-99eb-fcde-e130-a35ecdc1d2d1@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1555552271.zy2w4ddjqe.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/4/17 21:18, Eric Dumazet wrote:
-> 
-> 
-> On 04/17/2019 02:18 AM, linmiaohe wrote:
->> From: Jie Liu <liujie165@huawei.com>
+Thiago Jung Bauermann's on April 18, 2019 11:00 am:
+>=20
+> Hello Nick,
+>=20
+> Thank you very much for reviewing this patch!
+>=20
+> Nicholas Piggin <npiggin@gmail.com> writes:
+>=20
+>> Thiago Jung Bauermann's on April 11, 2019 9:08 am:
+>>>
+>>> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+>>>
+>>>> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/power=
+pc/platforms/pseries/hotplug-cpu.c
+>>>> index 97feb6e79f1a..ac6dc35ab829 100644
+>>>> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
+>>>> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+>>>> @@ -214,13 +214,22 @@ static void pseries_cpu_die(unsigned int cpu)
+>>>>  			msleep(1);
+>>>>  		}
+>>>>  	} else if (get_preferred_offline_state(cpu) =3D=3D CPU_STATE_OFFLINE=
+) {
+>>>> +		/*
+>>>> +		 * If the current state is not offline yet, it means that the
+>>>> +		 * dying CPU (which is either in pseries_mach_cpu_die() or in
+>>>> +		 * the process of getting there) didn't have a chance yet to
+>>>> +		 * call rtas_stop_self() and therefore it's too early to query
+>>>> +		 * if the CPU is stopped.
+>>>> +		 */
+>>>> +		spin_event_timeout(get_cpu_current_state(cpu) =3D=3D CPU_STATE_OFFL=
+INE,
+>>>> +				   100000, 100);
 >>
->> If we set sysctl_wmem_max or sysctl_rmem_max larger than INT_MAX,
->> the send/receive buffer of sock will be an negative value. Same as
->> when the val is larger than INT_MAX/2.
->>
->> Fixes: 1c003b1580e2 ("ipvs: wakeup master thread")
->> Reported-by: Qiang Ning <ningqiang1@huawei.com>
->> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
->> Signed-off-by: Jie Liu <liujie165@huawei.com>
->> ---
->>  net/netfilter/ipvs/ip_vs_sync.c | 10 ++++------
->>  1 file changed, 4 insertions(+), 6 deletions(-)
->>
->> diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
->> index 2526be6b3d90..c0e4cbed6e74 100644
->> --- a/net/netfilter/ipvs/ip_vs_sync.c
->> +++ b/net/netfilter/ipvs/ip_vs_sync.c
->> @@ -1278,14 +1278,12 @@ static void set_sock_size(struct sock *sk, int mode, int val)
->>  	/* setsockopt(sock, SOL_SOCKET, SO_RCVBUF, &val, sizeof(val)); */
->>  	lock_sock(sk);
->>  	if (mode) {
->> -		val = clamp_t(int, val, (SOCK_MIN_SNDBUF + 1) / 2,
->> -			      sysctl_wmem_max);
->> -		sk->sk_sndbuf = val * 2;
->> +		val = min_t(u32, val, sysctl_wmem_max);
->> +		sk->sk_sndbuf = max_t(int, val * 2, SOCK_MIN_SNDBUF);
-> 
-> What prevents val * 2 to overflow ? 
-> 
-> Code in sock_setsockopt() looks quite different.
-> .
-> 
-In fact, I just implemented this function with reference to
-sock_setsockopt(). When val * 2 overflow, we will set the
-buffer as SOCK_MIN_SNDBUF, just as sock_setsockopt() do.
+>> If the CPU state does not go to offline here, you should give up and
+>> return online, right? Otherwise I think query-cpu-stopped-state can
+>> get confused by CPUs in idle and you get a false positive.
+>=20
+> Can it get confused? My impression from reading the definition for
+> query-cpu-stopped-state in the PAPR is that it will simply return a
+> CPU_status value of 2 in that case, meaning that "the processor thread
+> is not in the RTAS stopped state", but I don't know much about this.
 
+In QEMU (non-KVM) mode, qcss I think may get confused between H_CEDE
+and rtas-stop-self. KVM mode may be okay because H_CEDE is handled in
+the kernel.
+
+>> That race can still happen, we would really need a sequence count check
+>> over current CPU state to ensure we got a race-free qcss value, but at
+>> least a check here should make the race implausible to hit.
+>=20
+> Actually, since rtas_stop_self() panics if the processor fails to stop
+> and also since callers of pseries_cpu_die()=C2=B9 already assume that it =
+is
+> going to succeed in stopping the CPU (given that the function returns
+> void and can't signal an error), a more straightforward way of
+> eliminating the race is to simply do this:
+>=20
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/=
+platforms/pseries/hotplug-cpu.c
+> index 97feb6e79f1a..2331a609f48f 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> @@ -215,7 +215,7 @@ static void pseries_cpu_die(unsigned int cpu)
+>                 }
+>         } else if (get_preferred_offline_state(cpu) =3D=3D CPU_STATE_OFFL=
+INE) {
+>=20
+> -               for (tries =3D 0; tries < 25; tries++) {
+> +               while (true) {
+>                         cpu_status =3D smp_query_cpu_stopped(pcpu);
+>                         if (cpu_status =3D=3D QCSS_STOPPED ||
+>                             cpu_status =3D=3D QCSS_HARDWARE_ERROR)
+>=20
+>=20
+> What do you think?
+
+Yeah I think that may be a good idea, just makes things much simpler.
+
+Thanks,
+Nick
+
+=
