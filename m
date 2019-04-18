@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079F2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AA1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FDF20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0594F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611340;
-	bh=oBle02nZ+3A9wVaQv1b18BQq4ywb0WDA1m9LxKLH30g=;
+	s=default; t=1555611355;
+	bh=OrOOjScVrV2EZ5DMzz0YXacNjiJ61Z/kqdC6W7AIuWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n+UB56vcdc+AhWQK+lqokmBOpXQrKNVQ2s1eYiJOOwd3bmdCGcjSpeAbJudRoRQLy
-	 hlCb9JmkCMYRW5NFL/AyQcnkK5ltug45w4b1RItHJow5HtmbwaYwVQEaCcJgPck8B9
-	 V0iOliiJZsRdzhpC3gjI82Sm403lXhSxQ/wVeX1s=
+	b=W4h997gh0dg7jBmbxj2nA+mf5NNUXq9+vG0ftDm0e6zzQF1N7zW0gEPifaLNowxs1
+	 2YRj1bi0IxoonUYNwQQarSBVj7VhLtAJ5SH9slqIBTOWJRyWOojgCwEHwkpK1jLi1M
+	 kMeEHmMJKskZ/1mPZ/eN6xr/SmoJ/XaYFxxEzvJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392165AbfDRSPj (ORCPT
+        id S2404267AbfDRSM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45108 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404281AbfDRSMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:35 -0400
+        id S2404083AbfDRSMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D601620675;
-        Thu, 18 Apr 2019 18:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8DDD20675;
+        Thu, 18 Apr 2019 18:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611154;
-        bh=oBle02nZ+3A9wVaQv1b18BQq4ywb0WDA1m9LxKLH30g=;
+        s=default; t=1555611141;
+        bh=OrOOjScVrV2EZ5DMzz0YXacNjiJ61Z/kqdC6W7AIuWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QS06O5Omg4yBKcj9uve5dWhTVU+mWbqaApIcYPZ1mO1MWDp7zHfidgE6U0Xig5dVc
-         e2RA8BSeqxqlHTNj+vHD/yrc+ze4cIrLsYjeiW0tlSVpQ4rXDoL9+QXumS4izHxkQf
-         JKwQv1pbiM6Vn5haUi3tRQZs2UmWGfzhNeAJ0bHc=
+        b=H2Pz73MGuzl/txgUBQkw3z/m5Iy6D2/3VvfnWBey9A5MLYB2GQdiYTWjy/UQfSqmf
+         Ww4mI7uhgVpv00wA0aFnUx/sq7q62R+UpgnN0QD3hRof4OALaXyKwM1pkevIJdCS3k
+         KMODBC8+g5IsY898VAitbRffXejH8k3hK7nHQj6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org,
+        "Wei Hu (Xavier)" <xavier.huwei@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 80/93] drm/nouveau/volt/gf117: fix speedo readout register
-Date:   Thu, 18 Apr 2019 19:57:58 +0200
-Message-Id: <20190418160445.105440887@linuxfoundation.org>
+Subject: [PATCH 5.0 75/93] RDMA/hns: Fix the Oops during rmmod or insmod ko when reset occurs
+Date:   Thu, 18 Apr 2019 19:57:53 +0200
+Message-Id: <20190418160444.699351184@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -60,126 +61,314 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fc782242749fa4235592854fafe1a1297583c1fb ]
+[ Upstream commit d061effc36f7bd38a12912977a37a50ac9140d11 ]
 
-GF117 appears to use the same register as GK104 (but still with the
-general Fermi readout mechanism).
+In the reset process, the hns3 NIC driver notifies the RoCE driver to
+perform reset related processing by calling the .reset_notify() interface
+registered by the RoCE driver in hip08 SoC.
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108980
-Signed-off-by: Ilia Mirkin <imirkin@alum.mit.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+In the current version, if a reset occurs simultaneously during the
+execution of rmmod or insmod ko, there may be Oops error as below:
+
+ Internal error: Oops: 86000007 [#1] PREEMPT SMP
+ Modules linked in: hns_roce(O) hns3(O) hclge(O) hnae3(O) [last unloaded: hns_roce_hw_v2]
+ CPU: 0 PID: 14 Comm: kworker/0:1 Tainted: G           O      4.19.0-ge00d540 #1
+ Hardware name: Huawei Technologies Co., Ltd.
+ Workqueue: events hclge_reset_service_task [hclge]
+ pstate: 60c00009 (nZCv daif +PAN +UAO)
+ pc : 0xffff00000100b0b8
+ lr : 0xffff00000100aea0
+ sp : ffff000009afbab0
+ x29: ffff000009afbab0 x28: 0000000000000800
+ x27: 0000000000007ff0 x26: ffff80002f90c004
+ x25: 00000000000007ff x24: ffff000008f97000
+ x23: ffff80003efee0a8 x22: 0000000000001000
+ x21: ffff80002f917ff0 x20: ffff8000286ea070
+ x19: 0000000000000800 x18: 0000000000000400
+ x17: 00000000c4d3225d x16: 00000000000021b8
+ x15: 0000000000000400 x14: 0000000000000400
+ x13: 0000000000000000 x12: ffff80003fac6e30
+ x11: 0000800036303000 x10: 0000000000000001
+ x9 : 0000000000000000 x8 : ffff80003016d000
+ x7 : 0000000000000000 x6 : 000000000000003f
+ x5 : 0000000000000040 x4 : 0000000000000000
+ x3 : 0000000000000004 x2 : 00000000000007ff
+ x1 : 0000000000000000 x0 : 0000000000000000
+ Process kworker/0:1 (pid: 14, stack limit = 0x00000000af8f0ad9)
+ Call trace:
+  0xffff00000100b0b8
+  0xffff00000100b3a0
+  hns_roce_init+0x624/0xc88 [hns_roce]
+  0xffff000001002df8
+  0xffff000001006960
+  hclge_notify_roce_client+0x74/0xe0 [hclge]
+  hclge_reset_service_task+0xa58/0xbc0 [hclge]
+  process_one_work+0x1e4/0x458
+  worker_thread+0x40/0x450
+  kthread+0x12c/0x130
+  ret_from_fork+0x10/0x18
+ Code: bad PC value
+
+In the reset process, we will release the resources firstly, and after the
+hardware reset is completed, we will reapply resources and reconfigure the
+hardware.
+
+We can solve this problem by modifying both the NIC and the RoCE
+driver. We can modify the concurrent processing in the NIC driver to avoid
+calling the .reset_notify and .uninit_instance ops at the same time. And
+we need to modify the RoCE driver to record the reset stage and the
+driver's init/uninit state, and check the state in the .reset_notify,
+.init_instance. and uninit_instance functions to avoid NULL pointer
+operation.
+
+Fixes: cb7a94c9c808 ("RDMA/hns: Add reset process for RoCE in hip08")
+Signed-off-by: Wei Hu (Xavier) <xavier.huwei@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/nouveau/include/nvkm/subdev/volt.h    |  1 +
- .../gpu/drm/nouveau/nvkm/engine/device/base.c |  2 +-
- .../gpu/drm/nouveau/nvkm/subdev/volt/Kbuild   |  1 +
- .../gpu/drm/nouveau/nvkm/subdev/volt/gf117.c  | 60 +++++++++++++++++++
- 4 files changed, 63 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c
+ drivers/infiniband/hw/hns/hns_roce_device.h |  21 ++++
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 103 +++++++++++++++++---
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |   1 +
+ 3 files changed, 112 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h
-index 8a0f85f5fc1a..6a765682fbfa 100644
---- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h
-+++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h
-@@ -38,6 +38,7 @@ int nvkm_volt_set_id(struct nvkm_volt *, u8 id, u8 min_id, u8 temp,
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 509e467843f6..f4cac63194d9 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -216,6 +216,26 @@ enum {
+ 	HNS_ROCE_DB_PER_PAGE = PAGE_SIZE / 4
+ };
  
- int nv40_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
- int gf100_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
-+int gf117_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
- int gk104_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
- int gk20a_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
- int gm20b_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c b/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
-index d9edb5785813..d75fa7678483 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
-@@ -1613,7 +1613,7 @@ nvd7_chipset = {
- 	.pci = gf106_pci_new,
- 	.therm = gf119_therm_new,
- 	.timer = nv41_timer_new,
--	.volt = gf100_volt_new,
-+	.volt = gf117_volt_new,
- 	.ce[0] = gf100_ce_new,
- 	.disp = gf119_disp_new,
- 	.dma = gf119_dma_new,
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild
-index bcd179ba11d0..146adcdd316a 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild
-@@ -2,6 +2,7 @@ nvkm-y += nvkm/subdev/volt/base.o
- nvkm-y += nvkm/subdev/volt/gpio.o
- nvkm-y += nvkm/subdev/volt/nv40.o
- nvkm-y += nvkm/subdev/volt/gf100.o
-+nvkm-y += nvkm/subdev/volt/gf117.o
- nvkm-y += nvkm/subdev/volt/gk104.o
- nvkm-y += nvkm/subdev/volt/gk20a.o
- nvkm-y += nvkm/subdev/volt/gm20b.o
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c
-new file mode 100644
-index 000000000000..547a58f0aeac
---- /dev/null
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c
-@@ -0,0 +1,60 @@
-+/*
-+ * Copyright 2019 Ilia Mirkin
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining a
-+ * copy of this software and associated documentation files (the "Software"),
-+ * to deal in the Software without restriction, including without limitation
-+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-+ * and/or sell copies of the Software, and to permit persons to whom the
-+ * Software is furnished to do so, subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be included in
-+ * all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-+ * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
-+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ * OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ * Authors: Ilia Mirkin
-+ */
-+#include "priv.h"
-+
-+#include <subdev/fuse.h>
-+
-+static int
-+gf117_volt_speedo_read(struct nvkm_volt *volt)
-+{
-+	struct nvkm_device *device = volt->subdev.device;
-+	struct nvkm_fuse *fuse = device->fuse;
-+
-+	if (!fuse)
-+		return -EINVAL;
-+
-+	return nvkm_fuse_read(fuse, 0x3a8);
-+}
-+
-+static const struct nvkm_volt_func
-+gf117_volt = {
-+	.oneinit = gf100_volt_oneinit,
-+	.vid_get = nvkm_voltgpio_get,
-+	.vid_set = nvkm_voltgpio_set,
-+	.speedo_read = gf117_volt_speedo_read,
++enum hns_roce_reset_stage {
++	HNS_ROCE_STATE_NON_RST,
++	HNS_ROCE_STATE_RST_BEF_DOWN,
++	HNS_ROCE_STATE_RST_DOWN,
++	HNS_ROCE_STATE_RST_UNINIT,
++	HNS_ROCE_STATE_RST_INIT,
++	HNS_ROCE_STATE_RST_INITED,
 +};
 +
-+int
-+gf117_volt_new(struct nvkm_device *device, int index, struct nvkm_volt **pvolt)
++enum hns_roce_instance_state {
++	HNS_ROCE_STATE_NON_INIT,
++	HNS_ROCE_STATE_INIT,
++	HNS_ROCE_STATE_INITED,
++	HNS_ROCE_STATE_UNINIT,
++};
++
++enum {
++	HNS_ROCE_RST_DIRECT_RETURN		= 0,
++};
++
+ #define HNS_ROCE_CMD_SUCCESS			1
+ 
+ #define HNS_ROCE_PORT_DOWN			0
+@@ -898,6 +918,7 @@ struct hns_roce_dev {
+ 	spinlock_t		bt_cmd_lock;
+ 	bool			active;
+ 	bool			is_reset;
++	unsigned long		reset_cnt;
+ 	struct hns_roce_ib_iboe iboe;
+ 
+ 	struct list_head        pgdir_list;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 543fa1504cd3..7ac06576d791 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -5800,6 +5800,7 @@ MODULE_DEVICE_TABLE(pci, hns_roce_hw_v2_pci_tbl);
+ static int hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
+ 				  struct hnae3_handle *handle)
+ {
++	struct hns_roce_v2_priv *priv = hr_dev->priv;
+ 	const struct pci_device_id *id;
+ 	int i;
+ 
+@@ -5830,10 +5831,13 @@ static int hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
+ 	hr_dev->cmd_mod = 1;
+ 	hr_dev->loop_idc = 0;
+ 
++	hr_dev->reset_cnt = handle->ae_algo->ops->ae_dev_reset_cnt(handle);
++	priv->handle = handle;
++
+ 	return 0;
+ }
+ 
+-static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
++static int __hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+ {
+ 	struct hns_roce_dev *hr_dev;
+ 	int ret;
+@@ -5850,7 +5854,6 @@ static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+ 
+ 	hr_dev->pci_dev = handle->pdev;
+ 	hr_dev->dev = &handle->pdev->dev;
+-	handle->priv = hr_dev;
+ 
+ 	ret = hns_roce_hw_v2_get_cfg(hr_dev, handle);
+ 	if (ret) {
+@@ -5864,6 +5867,8 @@ static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+ 		goto error_failed_get_cfg;
+ 	}
+ 
++	handle->priv = hr_dev;
++
+ 	return 0;
+ 
+ error_failed_get_cfg:
+@@ -5875,7 +5880,7 @@ static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+ 	return ret;
+ }
+ 
+-static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
++static void __hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
+ 					   bool reset)
+ {
+ 	struct hns_roce_dev *hr_dev = (struct hns_roce_dev *)handle->priv;
+@@ -5883,24 +5888,78 @@ static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
+ 	if (!hr_dev)
+ 		return;
+ 
++	handle->priv = NULL;
+ 	hns_roce_exit(hr_dev);
+ 	kfree(hr_dev->priv);
+ 	ib_dealloc_device(&hr_dev->ib_dev);
+ }
+ 
++static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
 +{
-+	struct nvkm_volt *volt;
++	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
++	struct device *dev = &handle->pdev->dev;
 +	int ret;
 +
-+	ret = nvkm_volt_new_(&gf117_volt, device, index, &volt);
-+	*pvolt = volt;
-+	if (ret)
-+		return ret;
++	handle->rinfo.instance_state = HNS_ROCE_STATE_INIT;
 +
-+	return nvkm_voltgpio_init(volt);
++	if (ops->ae_dev_resetting(handle) || ops->get_hw_reset_stat(handle)) {
++		handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
++		goto reset_chk_err;
++	}
++
++	ret = __hns_roce_hw_v2_init_instance(handle);
++	if (ret) {
++		handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
++		dev_err(dev, "RoCE instance init failed! ret = %d\n", ret);
++		if (ops->ae_dev_resetting(handle) ||
++		    ops->get_hw_reset_stat(handle))
++			goto reset_chk_err;
++		else
++			return ret;
++	}
++
++	handle->rinfo.instance_state = HNS_ROCE_STATE_INITED;
++
++
++	return 0;
++
++reset_chk_err:
++	dev_err(dev, "Device is busy in resetting state.\n"
++		     "please retry later.\n");
++
++	return -EBUSY;
 +}
++
++static void hns_roce_hw_v2_uninit_instance(struct hnae3_handle *handle,
++					   bool reset)
++{
++	if (handle->rinfo.instance_state != HNS_ROCE_STATE_INITED)
++		return;
++
++	handle->rinfo.instance_state = HNS_ROCE_STATE_UNINIT;
++
++	__hns_roce_hw_v2_uninit_instance(handle, reset);
++
++	handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
++}
+ static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
+ {
+-	struct hns_roce_dev *hr_dev = (struct hns_roce_dev *)handle->priv;
++	struct hns_roce_dev *hr_dev;
+ 	struct ib_event event;
+ 
+-	if (!hr_dev) {
+-		dev_err(&handle->pdev->dev,
+-			"Input parameter handle->priv is NULL!\n");
+-		return -EINVAL;
++	if (handle->rinfo.instance_state != HNS_ROCE_STATE_INITED) {
++		set_bit(HNS_ROCE_RST_DIRECT_RETURN, &handle->rinfo.state);
++		return 0;
+ 	}
+ 
++	handle->rinfo.reset_state = HNS_ROCE_STATE_RST_DOWN;
++	clear_bit(HNS_ROCE_RST_DIRECT_RETURN, &handle->rinfo.state);
++
++	hr_dev = (struct hns_roce_dev *)handle->priv;
++	if (!hr_dev)
++		return 0;
++
+ 	hr_dev->active = false;
+-	hr_dev->is_reset = true;
+ 
+ 	event.event = IB_EVENT_DEVICE_FATAL;
+ 	event.device = &hr_dev->ib_dev;
+@@ -5912,17 +5971,29 @@ static int hns_roce_hw_v2_reset_notify_down(struct hnae3_handle *handle)
+ 
+ static int hns_roce_hw_v2_reset_notify_init(struct hnae3_handle *handle)
+ {
++	struct device *dev = &handle->pdev->dev;
+ 	int ret;
+ 
+-	ret = hns_roce_hw_v2_init_instance(handle);
++	if (test_and_clear_bit(HNS_ROCE_RST_DIRECT_RETURN,
++			       &handle->rinfo.state)) {
++		handle->rinfo.reset_state = HNS_ROCE_STATE_RST_INITED;
++		return 0;
++	}
++
++	handle->rinfo.reset_state = HNS_ROCE_STATE_RST_INIT;
++
++	dev_info(&handle->pdev->dev, "In reset process RoCE client reinit.\n");
++	ret = __hns_roce_hw_v2_init_instance(handle);
+ 	if (ret) {
+ 		/* when reset notify type is HNAE3_INIT_CLIENT In reset notify
+ 		 * callback function, RoCE Engine reinitialize. If RoCE reinit
+ 		 * failed, we should inform NIC driver.
+ 		 */
+ 		handle->priv = NULL;
+-		dev_err(&handle->pdev->dev,
+-			"In reset process RoCE reinit failed %d.\n", ret);
++		dev_err(dev, "In reset process RoCE reinit failed %d.\n", ret);
++	} else {
++		handle->rinfo.reset_state = HNS_ROCE_STATE_RST_INITED;
++		dev_info(dev, "Reset done, RoCE client reinit finished.\n");
+ 	}
+ 
+ 	return ret;
+@@ -5930,8 +6001,14 @@ static int hns_roce_hw_v2_reset_notify_init(struct hnae3_handle *handle)
+ 
+ static int hns_roce_hw_v2_reset_notify_uninit(struct hnae3_handle *handle)
+ {
++	if (test_bit(HNS_ROCE_RST_DIRECT_RETURN, &handle->rinfo.state))
++		return 0;
++
++	handle->rinfo.reset_state = HNS_ROCE_STATE_RST_UNINIT;
++	dev_info(&handle->pdev->dev, "In reset process RoCE client uninit.\n");
+ 	msleep(100);
+-	hns_roce_hw_v2_uninit_instance(handle, false);
++	__hns_roce_hw_v2_uninit_instance(handle, false);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+index b72d0443c835..5398aa718cfc 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+@@ -1546,6 +1546,7 @@ struct hns_roce_link_table_entry {
+ #define HNS_ROCE_LINK_TABLE_NXT_PTR_M GENMASK(31, 20)
+ 
+ struct hns_roce_v2_priv {
++	struct hnae3_handle *handle;
+ 	struct hns_roce_v2_cmq cmq;
+ 	struct hns_roce_link_table tsq;
+ 	struct hns_roce_link_table tpq;
 -- 
 2.19.1
 
