@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE6CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223B6C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3052064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E160C20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612397;
-	bh=dbBJMBPyUcLTUgwech/cEH49z1YSP856x8tpZmDgDkU=;
+	s=default; t=1555612411;
+	bh=mxAQzm1jcGjNZhRBYLNA2ZrH0pakSkliB3g4qnZrpOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WcPHd+6x0Fcs/4pi8TuUekkWZiyn64A8vKcMdRFhPigu0hmWToCmQWiip0oZewgFg
-	 qkWBZXbX5X/ZSC1PYeqJXGk5MFi4Ma2w62m6ztlAPbvR8WbOeHg1nn9BHRmyV3JtTt
-	 ittBv1phbhKyS93uYlKdY72mboOMOqHBRfbdYuJU=
+	b=i5XxAbKos2RyvInnEgU4xD7YDmSl12ju5GRGJiP9uC2EzMfHK3h99kl8qjOEGaoHz
+	 28XlHajJyNN/gaxtWW3HOhF/P8lIhXGnS1a29z6pBS8WX+haCIWbN4t391iat4ZI4Q
+	 IjiO85E7V20wRrmgvtLF5/i4eNuHRysHu8lDxeow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390561AbfDRSdQ (ORCPT
+        id S2390047AbfDRSda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:33:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390173AbfDRR7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:42 -0400
+        id S2390112AbfDRR73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDFE217FA;
-        Thu, 18 Apr 2019 17:59:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 877B1218FC;
+        Thu, 18 Apr 2019 17:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610381;
-        bh=dbBJMBPyUcLTUgwech/cEH49z1YSP856x8tpZmDgDkU=;
+        s=default; t=1555610369;
+        bh=mxAQzm1jcGjNZhRBYLNA2ZrH0pakSkliB3g4qnZrpOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vv1khjdLvPjJ+B4uJ4PLc5WsUSvWegE1dUX4aItHfIFV9dKrQzAQ+PFOqm89lAiIj
-         /2FzjEngwmfQF5yyqzsMNrdLZrJimsikJhUJUOOwsIBs3tCdNvyRyy6aTFVhJyasYz
-         ZkEjLY0Mss2YW83VgyKmhTjCUisUJIGVwritqC90=
+        b=NNYXkQVxRlL0MPHlhRWImktVwBxA3+rUx3rvB+Yi46OeJR7d3DcRkz4ZFPJWaSGEd
+         kn32xvcHSzcHflFMJ950PhHlZcbcY1cefIumoV9I0/sFGRcukQClh/5pb1I41qMZ+i
+         NpCjzCGRYZQgL2UPLDRYtS0ATDZNiV22ZBHcsrjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 039/110] PM / Domains: Avoid a potential deadlock
-Date:   Thu, 18 Apr 2019 19:56:28 +0200
-Message-Id: <20190418160442.527589559@linuxfoundation.org>
+Subject: [PATCH 4.19 035/110] perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
+Date:   Thu, 18 Apr 2019 19:56:24 +0200
+Message-Id: <20190418160441.866051620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -62,102 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2071ac985d37efe496782c34318dbead93beb02f ]
+[ Upstream commit 93faa52e8371f0291ee1ff4994edae2b336b6233 ]
 
-Lockdep warns that prepare_lock and genpd->mlock can cause a deadlock
-the deadlock scenario is like following:
-First thread is probing cs2000
-cs2000_probe()
-  clk_register()
-    __clk_core_init()
-      clk_prepare_lock()                            ----> acquires prepare_lock
-        cs2000_recalc_rate()
-          i2c_smbus_read_byte_data()
-            rcar_i2c_master_xfer()
-              dma_request_chan()
-                rcar_dmac_of_xlate()
-                  rcar_dmac_alloc_chan_resources()
-                    pm_runtime_get_sync()
-                      __pm_runtime_resume()
-                        rpm_resume()
-                          rpm_callback()
-                            genpd_runtime_resume()   ----> acquires genpd->mlock
+  =================================================================
+  ==7497==ERROR: LeakSanitizer: detected memory leaks
 
-Second thread is attaching any device to the same PM domain
-genpd_add_device()
-  genpd_lock()                                       ----> acquires genpd->mlock
-    cpg_mssr_attach_dev()
-      of_clk_get_from_provider()
-        __of_clk_get_from_provider()
-          __clk_create_clk()
-            clk_prepare_lock()                       ----> acquires prepare_lock
+  Direct leak of 40 byte(s) in 1 object(s) allocated from:
+      #0 0x7f0333a88f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x5625e5326213 in cpu_map__trim_new util/cpumap.c:45
+      #2 0x5625e5326703 in cpu_map__read util/cpumap.c:103
+      #3 0x5625e53267ef in cpu_map__read_all_cpu_map util/cpumap.c:120
+      #4 0x5625e5326915 in cpu_map__new util/cpumap.c:135
+      #5 0x5625e517b355 in test__openat_syscall_event_on_all_cpus tests/openat-syscall-all-cpus.c:36
+      #6 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #7 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #8 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #9 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #10 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #11 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #12 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #13 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #14 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-Since currently no PM provider access genpd's critical section
-in .attach_dev, and .detach_dev callbacks, so there is no need to protect
-these two callbacks with genpd->mlock.
-This patch avoids a potential deadlock by moving out .attach_dev and .detach_dev
-from genpd->mlock, so that genpd->mlock won't be held when prepare_lock is acquired
-in .attach_dev and .detach_dev
-
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: f30a79b012e5 ("perf tools: Add reference counting for cpu_map object")
+Link: http://lkml.kernel.org/r/20190316080556.3075-15-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/domain.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ tools/perf/tests/openat-syscall-all-cpus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 4b5714199490..bf5be0bfaf77 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1388,12 +1388,12 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
- 	if (IS_ERR(gpd_data))
- 		return PTR_ERR(gpd_data);
+diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
+index c531e6deb104..493ecb611540 100644
+--- a/tools/perf/tests/openat-syscall-all-cpus.c
++++ b/tools/perf/tests/openat-syscall-all-cpus.c
+@@ -45,7 +45,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
+ 	if (IS_ERR(evsel)) {
+ 		tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "syscalls", "sys_enter_openat");
+ 		pr_debug("%s\n", errbuf);
+-		goto out_thread_map_delete;
++		goto out_cpu_map_delete;
+ 	}
  
--	genpd_lock(genpd);
--
- 	ret = genpd->attach_dev ? genpd->attach_dev(genpd, dev) : 0;
- 	if (ret)
- 		goto out;
- 
-+	genpd_lock(genpd);
-+
- 	dev_pm_domain_set(dev, &genpd->domain);
- 
- 	genpd->device_count++;
-@@ -1401,9 +1401,8 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
- 
- 	list_add_tail(&gpd_data->base.list_node, &genpd->dev_list);
- 
-- out:
- 	genpd_unlock(genpd);
--
-+ out:
- 	if (ret)
- 		genpd_free_dev_data(dev, gpd_data);
- 	else
-@@ -1452,15 +1451,15 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
- 	genpd->device_count--;
- 	genpd->max_off_time_changed = true;
- 
--	if (genpd->detach_dev)
--		genpd->detach_dev(genpd, dev);
--
- 	dev_pm_domain_set(dev, NULL);
- 
- 	list_del_init(&pdd->list_node);
- 
- 	genpd_unlock(genpd);
- 
-+	if (genpd->detach_dev)
-+		genpd->detach_dev(genpd, dev);
-+
- 	genpd_free_dev_data(dev, gpd_data);
- 
- 	return 0;
+ 	if (perf_evsel__open(evsel, cpus, threads) < 0) {
+@@ -119,6 +119,8 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
+ 	perf_evsel__close_fd(evsel);
+ out_evsel_delete:
+ 	perf_evsel__delete(evsel);
++out_cpu_map_delete:
++	cpu_map__put(cpus);
+ out_thread_map_delete:
+ 	thread_map__put(threads);
+ 	return err;
 -- 
 2.19.1
 
