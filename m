@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69D1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3136720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98A92186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611115;
-	bh=6XNOU3Y9X5FNw5JRFbkYBWvR/i0mEH+JkI4WxxHBV74=;
+	s=default; t=1555611120;
+	bh=Ncp2/h1kQzdBhWbJQxxcy4It+rI93OTMLtf1GZTw62A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Crte5EOIujLTo64dkZpC0HiZp90t2RgJkjaeIV+a6MFmzrC2jl9x7jnpeNeznf4XA
-	 Zbz0T8jlKQT44FZDU4xTZdqit8DBYEQdwdwIRabB0wv8uwWDrEv2EG/KAVrPFWX/zc
-	 4pdjLTcECSzvlW1vHDNxRGq6I5peFnCMOa+XVlUU=
+	b=kr2OcLp8vZ5gzyOihhH1FYN7t0jTsvZauSdMmZXPc46vMy7oRi0oDii1QMvaYK+kh
+	 KiHDK/64vAhVazpvGXKgISf5ToewjAzUS7tQYZ56mYO4jhSne2tlWYO8wVyQz5IeJB
+	 RInEQGZV8zpiiPNQZF7jgoBcb2dsCnY236/r9ePM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403953AbfDRSLx (ORCPT
+        id S2403855AbfDRSL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44150 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391963AbfDRSLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:11:51 -0400
+        id S2403960AbfDRSL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:11:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF83220675;
-        Thu, 18 Apr 2019 18:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1F5206B6;
+        Thu, 18 Apr 2019 18:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611110;
-        bh=6XNOU3Y9X5FNw5JRFbkYBWvR/i0mEH+JkI4WxxHBV74=;
+        s=default; t=1555611115;
+        bh=Ncp2/h1kQzdBhWbJQxxcy4It+rI93OTMLtf1GZTw62A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E5Svwfw8MI9QItrnMengMouNIS2AEI1YZb5g9VAzNiez4Wut5Ijp1Vdk9Ao+ssVv4
-         4cO7Kt2juwxUJddRSbMZsidSS0NTE8nbbspCil2xJSPDkPW9qoXjx1HvhchsLkQj38
-         Q2oNOgN5iY1zaPbYQqwR+DlPsJ7BjB0ZBnlGEha0=
+        b=bSgMTnVjz0Y9DCSv61MJEDurnqIDv+GBdyladsngnKwcAwrnut3vUivCTffuCL9SE
+         DyykpKKWuOifIGuJ967mkY4jsliRAE1E6azRZjD1rOUlJZD1s5rJfHhjDp65DghK7z
+         SNhhwhUITHBqJFtIMqNHNmHPHYETfhOPue1uFUtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 61/93] iommu/vt-d: Save the right domain ID used by hardware
-Date:   Thu, 18 Apr 2019 19:57:39 +0200
-Message-Id: <20190418160443.647899370@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 31/93] scsi: core: Also call destroy_rcu_head() for passthrough requests
+Date:   Thu, 18 Apr 2019 19:57:09 +0200
+Message-Id: <20190418160440.135727816@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -62,38 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 84c11e4df5aa4955acaa441f0cf1cb2e50daf64b ]
+[ Upstream commit db983f6eef57a9d78af79bc32389b7e60eb3c47d ]
 
-The driver sets a default domain id (FLPT_DEFAULT_DID) in the
-first level only pasid entry, but saves a different domain id
-in @sdev->did. The value saved in @sdev->did will be used to
-invalidate the translation caches. Hence, the driver might
-result in invalidating the caches with a wrong domain id.
+cmd->rcu is initialized by scsi_initialize_rq(). For passthrough
+requests, blk_get_request() calls scsi_initialize_rq(). For filesystem
+requests, scsi_init_command() calls scsi_initialize_rq(). Make sure
+that destroy_rcu_head() is called for passthrough requests.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Fixes: 1c4f88b7f1f92 ("iommu/vt-d: Shared virtual address in scalable mode")
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ewan D. Milne <emilne@redhat.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Reported-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 68a21c49c562..53b1fbadc496 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5331,7 +5331,7 @@ int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct intel_svm_dev *sd
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 5a6e8e12701a..655ad26106e4 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -598,9 +598,16 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
+ 	if (!blk_rq_is_scsi(req)) {
+ 		WARN_ON_ONCE(!(cmd->flags & SCMD_INITIALIZED));
+ 		cmd->flags &= ~SCMD_INITIALIZED;
+-		destroy_rcu_head(&cmd->rcu);
+ 	}
  
- 	ctx_lo = context[0].lo;
- 
--	sdev->did = domain->iommu_did[iommu->seq_id];
-+	sdev->did = FLPT_DEFAULT_DID;
- 	sdev->sid = PCI_DEVID(info->bus, info->devfn);
- 
- 	if (!(ctx_lo & CONTEXT_PASIDE)) {
++	/*
++	 * Calling rcu_barrier() is not necessary here because the
++	 * SCSI error handler guarantees that the function called by
++	 * call_rcu() has been called before scsi_end_request() is
++	 * called.
++	 */
++	destroy_rcu_head(&cmd->rcu);
++
+ 	/*
+ 	 * In the MQ case the command gets freed by __blk_mq_end_request,
+ 	 * so we have to do all cleanup that depends on it earlier.
 -- 
 2.19.1
 
