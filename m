@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06270C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE94BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB713206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80435214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611300;
-	bh=w2ar1zzQGS+MbihlOwPDJJzFGQOf4tudb6KXMChNcrY=;
+	s=default; t=1555611305;
+	bh=zg/5/lO66W3xzA8ml9qEl+pZ7U+qu6LZA3n0mlouVzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PzxDGKstrIVeJdZ9fm66DxB9tryc+3xk4/306BJ5K2vEkvq9Y4GT2vzV8YyJlhQBH
-	 5tkRKAtvNP6OFP679Tco95sRXDoCbLBUgfHD5fSWN3p44258mfckNuuCLrhXzxbJ6X
-	 OH0Xc6XlLC2ubfBO8nHt59X3PCndmWJYmlfn9VXE=
+	b=mg67pjPdEKwIYElU2MErlf0Xmtc/5EgeCcnXKw8lUU2SaaSekv2wIcpvFm4OfsZfa
+	 zbl093NeQI8OWlk7jod6jMnDtSJM5P3C0ObJSQxuwv3FFpAB8cwpXBWawe20XK3lGy
+	 NA2E63Lfm4WtvJ17WxZP645NN6hPTqh9mJnF8/9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392131AbfDRSO7 (ORCPT
+        id S2392136AbfDRSPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392076AbfDRSOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:14:55 -0400
+        id S2391146AbfDRSO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:14:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D6D206B6;
-        Thu, 18 Apr 2019 18:14:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB6A2186A;
+        Thu, 18 Apr 2019 18:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611295;
-        bh=w2ar1zzQGS+MbihlOwPDJJzFGQOf4tudb6KXMChNcrY=;
+        s=default; t=1555611297;
+        bh=zg/5/lO66W3xzA8ml9qEl+pZ7U+qu6LZA3n0mlouVzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXgXAvFUBb3r+fMgw+GEMYyU2cVKpzRzA2TGmS1+jxDDB4UwZ8hSY1JI/5SkkKE/x
-         vHmIo5Ap3rSrgbK/1Wdpv8wmMy82jvI5+28EWCz16d9ICBpFB1A4kdbRug6AIhqZr2
-         UQNi88WgtePfs+gUkNGLqyvDz9AxQf80pJ0OJdJs=
+        b=FIqpGpikSfkNIuMG5TW501dKnkX84rjQXCq2Qbhrk5rfTeHUaiot1K+35VhToy0yA
+         LgsS/PIEi4vogfI4h4MLXXlEaIVYLktGk4a0lC+3SQSozKgwGR92nBHxRifcPKbE9O
+         3stIzwZns1PDIpwUWsyNtm66vZ0mPhmYPb3gGjAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "Hsin-Yi, Wang" <hsinyi@chromium.org>,
         Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 61/92] drm/panel: panel-innolux: set display off in innolux_panel_unprepare
-Date:   Thu, 18 Apr 2019 19:57:19 +0200
-Message-Id: <20190418160435.471416028@linuxfoundation.org>
+Subject: [PATCH 5.0 71/93] drm/panel: panel-innolux: set display off in innolux_panel_unprepare
+Date:   Thu, 18 Apr 2019 19:57:49 +0200
+Message-Id: <20190418160444.390220891@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
-References: <20190418160430.325165109@linuxfoundation.org>
+In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
+References: <20190418160436.781762249@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -87,10 +87,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-index 6ba93449fcfb..58b67e0cc385 100644
+index ca4ae45dd307..8e5724b63f1f 100644
 --- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
 +++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
-@@ -40,7 +40,6 @@ static inline struct innolux_panel *to_innolux_panel(struct drm_panel *panel)
+@@ -70,18 +70,12 @@ static inline struct innolux_panel *to_innolux_panel(struct drm_panel *panel)
  static int innolux_panel_disable(struct drm_panel *panel)
  {
  	struct innolux_panel *innolux = to_innolux_panel(panel);
@@ -98,9 +98,8 @@ index 6ba93449fcfb..58b67e0cc385 100644
  
  	if (!innolux->enabled)
  		return 0;
-@@ -48,11 +47,6 @@ static int innolux_panel_disable(struct drm_panel *panel)
- 	innolux->backlight->props.power = FB_BLANK_POWERDOWN;
- 	backlight_update_status(innolux->backlight);
+ 
+ 	backlight_disable(innolux->backlight);
  
 -	err = mipi_dsi_dcs_set_display_off(innolux->link);
 -	if (err < 0)
@@ -110,7 +109,7 @@ index 6ba93449fcfb..58b67e0cc385 100644
  	innolux->enabled = false;
  
  	return 0;
-@@ -66,6 +60,11 @@ static int innolux_panel_unprepare(struct drm_panel *panel)
+@@ -95,6 +89,11 @@ static int innolux_panel_unprepare(struct drm_panel *panel)
  	if (!innolux->prepared)
  		return 0;
  
