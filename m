@@ -2,95 +2,85 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5716C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC5AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E22C217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D516620869
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDQF0/6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390172AbfDRUNs (ORCPT
+        id S2390191AbfDRUOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 16:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732589AbfDRUNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 16:13:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103CF206B6;
-        Thu, 18 Apr 2019 20:13:43 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 16:13:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <tom.zanussi@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [patch V2 20/29] tracing: Simplify stacktrace retrieval in
- histograms
-Message-ID: <20190418161342.34f4abca@gandalf.local.home>
-In-Reply-To: <014a7564d606b249a5e50bef0fedf266977a935b.camel@linux.intel.com>
-References: <20190418084119.056416939@linutronix.de>
-        <20190418084254.910579307@linutronix.de>
-        <20190418094014.7d457f29@gandalf.local.home>
-        <014a7564d606b249a5e50bef0fedf266977a935b.camel@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 18 Apr 2019 16:14:46 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41611 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732589AbfDRUOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 16:14:46 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 64so2743862otb.8;
+        Thu, 18 Apr 2019 13:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bkOWSxCvCXN86Kl+6Ht/zzIVBNleGn8HFGz0E6FnAOk=;
+        b=sDQF0/6uFVhsKOec1aDEx03vO47rjmRPpEDC6EyrVBPN4iu+M9lpGdy0KmK/44B6mz
+         GvFWsx6eLvIdCDNRbN/KFrXiduKOkU247ud6OUTvY+gH+n6YJNrHt6OK8WxPokweJjBg
+         pt/fqQAcDrtyKpW05DXrBPQdthoMsvneW4P9Ykp4VUBdsL+UFm5rUHVhDG5eHTjYSRwY
+         ifpyG0cJ31EdbsyzXhs2uC5bU5NzC7rlfF9dGFNP8csSCCjCGb4AJyYlVr9LjNlC07NE
+         kOaxmoMqsa0outYJ8dpTOHwnAY2L9lmLrxXxgwuvVpGxOIHHsVKOoq5/qcPP1yXARil9
+         Kt/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bkOWSxCvCXN86Kl+6Ht/zzIVBNleGn8HFGz0E6FnAOk=;
+        b=LmOI4jLUQbXjXCEwgHVWNeJRq744wJwwajQbhQ1rqumdEM9P6l6qig87pbLvfaRixB
+         czE/IvQ2asXrXi27MT5Xp15x+WTl+4W+bjsoUjf356HgOCRihy9+Z7s/51dABcRZeW3f
+         fpUut6N8jeqm5JKOtOg6S5xCZWwEOM0xpF6MBTjkdtA2dQqmj0eH+RjUkXDLLsb+/NY2
+         qwgcpVX5/s/yiABk7LGBHHcRRBVz1kTymtM8jgS4CCh7beatHfLnUYxKM7iqLYOTdXin
+         Eg2dwDxt1AXUyd/wZAiEM/TfsPP6W3VEfN4BnDxSabURRiVpw9/4VQUmTPg3594EZDFG
+         W7ag==
+X-Gm-Message-State: APjAAAXYvEwnWxQnC3qUnFQ9HKpwyO4Dp+jnNCgzPfgsEJ9E+8U/lqlw
+        WFrnt09O3Fvq62bLVvlhA9XPYSIiF3Ph9xmNY5U=
+X-Google-Smtp-Source: APXvYqxUT8MHt5wHF1cUkEfXT0YGG5Ud4Pz6WEJ20lcYFjzU/sDNcaCQ1z4g3ANOzQHIupSxPIzVp/cNMXwF+QG5/G4=
+X-Received: by 2002:a9d:77d5:: with SMTP id w21mr53591499otl.227.1555618485555;
+ Thu, 18 Apr 2019 13:14:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190418160430.325165109@linuxfoundation.org> <20190418160436.162514132@linuxfoundation.org>
+In-Reply-To: <20190418160436.162514132@linuxfoundation.org>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Thu, 18 Apr 2019 21:14:09 +0100
+Message-ID: <CADVatmMYbPR2c2937DXHwJDy+Ve4ny47QVJDdbXJR5ftghyS6w@mail.gmail.com>
+Subject: Re: [PATCH 4.14 68/92] appletalk: Fix use-after-free in atalk_proc_exit
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 14:58:55 -0500
-Tom Zanussi <tom.zanussi@linux.intel.com> wrote:
+Hi Greg,
 
-> > Tom,
-> > 
-> > Can you review this too?  
-> 
-> Looks good to me too!
-> 
-> Acked-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-> 
+On Thu, Apr 18, 2019 at 7:25 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> [ Upstream commit 6377f787aeb945cae7abbb6474798de129e1f3ac ]
 
-Would you be OK to upgrade this to a Reviewed-by tag?
+This has been fixed by 27da0d2ef998 ("appletalk: Fix compile regression").
 
-Thanks!
 
--- Steve
+-- 
+Regards
+Sudip
