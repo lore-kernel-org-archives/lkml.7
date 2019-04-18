@@ -2,161 +2,158 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99B4C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EEEC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8039E214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B821F214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2TYWoAH"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="y691J5tm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387997AbfDRGMU (ORCPT
+        id S2388005AbfDRGNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:12:20 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33604 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfDRGMU (ORCPT
+        Thu, 18 Apr 2019 02:13:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39945 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfDRGNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:12:20 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k14so1044828qtb.0;
-        Wed, 17 Apr 2019 23:12:19 -0700 (PDT)
+        Thu, 18 Apr 2019 02:13:40 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z24so1367247wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 23:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Lz7yWPtSXVpxhOY8cfs/80Rx7F34AkV4n5jke7TRbt8=;
-        b=h2TYWoAHxO616ZQ2BdKSBzs4X9muR3zWIeuDAJIC0MPaax17S08JB5oCMcgXUmbhTe
-         g1v6chhH7UT7iunt51gl6SkQFP+sQgQjrv8Yo7uQZuIktAzsYg7KX6wpofjkQFVQTPzv
-         m45zix5UjD7h4lr8v5MPTXWJHr09uY40BaNMxP0PMW7eLce0QKFDwFc8wvBfB+evOMqa
-         chSyNXildOXmpH3bdzpodAsxNs9aRY779vjfPiCP4dQm1YLnSCYinf735a6wlq9OQ/Hc
-         HfM6SNePAp1xzdBFBS+CQ8brt1zLoBpR5WbtWLxbCRjF4icTJozy+KK7rpO+ucu6d98c
-         aSLw==
+         :cc;
+        bh=f5gAVwPf4LXwi3q6cSJA3lDZFQJ3pBlHI2tkW6FRt4k=;
+        b=y691J5tmvg28X5D2wpDYc0Ew89GB+xnBAqxtwmHhLhh0QF4SDBBcPOHGJdpMqPDB6j
+         dxQxQs2gf6/ZRObZK3+qKtPTxOWPbvfWaJQ8SOLuFNHfI8NtrZ2RPZqU7fSf+/fMdfxM
+         51IhXflHFE8fJDzFFZYTJ29sqBunJSG+Xj4Hd4dENht2fHXgvG0NkGPL6Pa1QLy73S2p
+         BkYOTIbkKyfLnhshuVXnz0ea8nb5A+aY0MGGykEFauQW7Cw51yPJELe0VjZM8mV+SyiO
+         1GchVq70CVrUjGKg/TqMu5FYNt7lz0Hle1i8u9S6QQOQFHv/qAopYjS4ybSYhFyAXf/u
+         eGxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Lz7yWPtSXVpxhOY8cfs/80Rx7F34AkV4n5jke7TRbt8=;
-        b=twQqYEHaA36Ryk/iBBWkpvhymAtZZCmfDWMuqVmAdo6Iqb8ZJeg7HTkrzXnBzWMB2G
-         trgCN3IkCkqCnjIVqjLhdnz27SzHp7Cjd/lL3otralJgC9GMjZcUIXI0S0dj7ADio3/h
-         wOh+kNROKeb5xE+4a4PbJyABvpugC1VbeeBblAeRNCDmItnGNVF2yt3cIDKi1KlmrN8w
-         kVtiBVX4gRiVSWPdHKkJC+62YwpraTjma3s/MqKv6YRYgqD30ZaFBf/i1hSEU221LYS6
-         qbVIqDSG33ReJ5ZN6li37yCwWyo/famELEa4OGD8ziZ7908P/mzQRzURo+3/i4cOcXpw
-         BRGg==
-X-Gm-Message-State: APjAAAXR2vYfZBEw9RmW4fX0KfUewH4KGG0ksSiyaFr8/5zQe1T/tM6f
-        oXsRfbBegEol8JiIzZUys0yYm9RTql95mWfsNOU=
-X-Google-Smtp-Source: APXvYqzzhBRyaTN3npQGwC0YGc594OByx917OgZEEew4cdP/gscj2LzzZROc3TCINR/EtnPSR5Hz1LzI6o/wMjP/EF0=
-X-Received: by 2002:ac8:950:: with SMTP id z16mr73716350qth.16.1555567938960;
- Wed, 17 Apr 2019 23:12:18 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=f5gAVwPf4LXwi3q6cSJA3lDZFQJ3pBlHI2tkW6FRt4k=;
+        b=txqveRJ5Ais3MZBDevfgFvhoICCGeCcIYAX6Bl4OQxBeJESMw0+NtAvfukAORSxv/H
+         YLYNlI26clH+v+16dcOo/q9qJvfNPncf/HlAwr5AB9CMFg0MMP2BAwcof2d0hV7ovSAS
+         l+YYFobPhEJWVYRxQajx0684n0IIL0ehHWBz8o9SdiEzWmmz5MRBndiQ84HVjz3fBplw
+         GJcPZYqTtQrEWCnjEQyMSswewXRhpuYNUyZ6HUR5KU0FKqBm/Q4AiSfrSfuz9AyZoxdx
+         NzSGEk1P7Tc+ClAU1hlSqdF1uRQpg4WpWir1BwzcN3yHR9mTYIkTXHS0u2NTCQyO7boO
+         uDEg==
+X-Gm-Message-State: APjAAAUwHl1De/SMeAnOjwG4ZlB9ir1qTRy01Fdq+VRf0bbLSXej7QAg
+        QmZBXmR8NCKJhWHcnMfT5bo8Qr9388qNlC0qgH+dQg==
+X-Google-Smtp-Source: APXvYqwAvyA1bcQzgSrkX12V9qt+Chzj+JKaZJECqLPoel5VVl5MhfA6uwQwlxmhcdySHtVEKdsTAgzdC6VBcJJaaiA=
+X-Received: by 2002:a7b:cf18:: with SMTP id l24mr1550265wmg.132.1555568018924;
+ Wed, 17 Apr 2019 23:13:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Thu, 18 Apr 2019 08:12:06 +0200
-Message-ID: <CAJ+HfNhzBMgQwan-x1KV48V_z0jVQgWnAD+HDxvYLyCmTxAJbw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] net: ethernet: ti: cpsw: Add XDP support
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        hawk@kernel.org, Xdp <xdp-newbies@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>, aniel@iogearbox.net,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>
+References: <1555548975-7011-1-git-send-email-liush.damon@gmail.com>
+In-Reply-To: <1555548975-7011-1-git-send-email-liush.damon@gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 18 Apr 2019 11:43:27 +0530
+Message-ID: <CAAhSdy1ra-khBQU2s14StbiojFMk4tokGqAbp-u3j51bksbjQA@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: redefine PTRS_PER_PGD/PTRS_PER_PMD/PTRS_PER_PTE
+To:     damon <liush.damon@gmail.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup.patel@wdc.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, sorear2@gmail.com,
+        linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 at 19:51, Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
+On Thu, Apr 18, 2019 at 6:26 AM damon <liush.damon@gmail.com> wrote:
 >
-> This patchset is RFC adding XDP support for TI cpsw driver that is
-> based on page_pool allocator. It was verified with af_xdp sockets
-> and on xdp drop. For XDP redirect to another interface it's under
-> verification, still not sure about all cases that should be verified.
-> Also regular tests with iperf2 were done in order to verify impact on
-> regular netstack performance, compared with base commit from
-> net-next/master: 432bc230700f86801cffa5e159e05dea6229f722
+> Use the number of addresses to define the relevant macros.
 >
-> It was verified with following configs enabled:
-> CONFIG_JIT=3Dy
-> CONFIG_BPFILTER=3Dy
-> CONFIG_BPF_SYSCALL=3Dy
-> CONFIG_XDP_SOCKETS=3Dy
-> CONFIG_BPF_EVENTS=3Dy
-> CONFIG_HAVE_EBPF_JIT=3Dy
-> CONFIG_BPF_JIT=3Dy
-> CONFIG_CGROUP_BPF=3Dy
+> Signed-off-by: damon <liush.damon@gmail.com>
+> ---
+>  arch/riscv/include/asm/pgtable-32.h | 2 ++
+>  arch/riscv/include/asm/pgtable-64.h | 3 ++-
+>  arch/riscv/include/asm/pgtable.h    | 4 ++--
+>  3 files changed, 6 insertions(+), 3 deletions(-)
 >
-> iperf2 UDP RX summary (packet size / Mbps):
-> +--------------------------------------------------------------+
-> | pkt_size/rate | 1024 | 1500 | 1470 |  64  | 128  | 512 | 256 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | base commit   | 561  | 470  | 796  |  35  | 70.1 | 281 | 140 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | XDP patched   | 563  | 455  | 808  |  35  | 70.2 | 282 | 141 |
-> +--------------------------------------------------------------+
+> diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
+> index d61974b7..93607f6 100644
+> --- a/arch/riscv/include/asm/pgtable-32.h
+> +++ b/arch/riscv/include/asm/pgtable-32.h
+> @@ -17,8 +17,10 @@
+>  #include <asm-generic/pgtable-nopmd.h>
+>  #include <linux/const.h>
 >
-> iperf2 UDP TX summary (packet size / Mbps):
-> +--------------------------------------------------------------+
-> | pkt_size/rate | 1024 | 1500 | 1470 |  64  | 128  | 512 | 256 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | base commit   | 555  | 666  | 736  | 34.5 | 70.3 | 281 | 140 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | XDP patched   | 558  | 696  | 759  | 35.2 | 69.2 | 279 | 140 |
-> +--------------------------------------------------------------+
->
-> iperf2 TCP summary (window size / Mbps):
-> +------------------------------------------------------------+
-> | window size/rate |  16  |  32  |  64  |  128 |  8   | 256  |
-> |------------------+------+------+------+------+------+------|
-> | base commit      | 753  | 887  | 931  | 932  | 676  | 932  |
-> |------------------+------+------+------+------+------+------|
-> | XDP patched      | 823  | 888  | 932  | 933  | 669  | 933  |
-> +------------------------------------------------------------+
->
-> For af_xdp socket type verification several generic changes should be add=
-ed
-> that can be seen here (rough fixes, for samples related seems like last v=
-ersion
-> of samples is more integrated with libbpf api, so should be rebased,
-> witch I will send as RFC separately):
-> https://github.com/ikhorn/af_xdp_stuff/tree/af_xdp_armv7
->
+> +#define MAX_USER_VA_BITS       32
+>  /* Size of region mapped by a page global directory */
+>  #define PGDIR_SHIFT     22
+> +#define PMD_SHIFT       PGDIR_SHIFT
 
-More XDP support, yay!
+We don't have PMD in RV32. We have only two level page table
+for RV32 so defining PMD_SHIFT is misleading and in-correct.
 
-As for mmap/AF_XDP on 32-bit systems; Instead of hacking the if_xdp.h,
-mmap2 should be used. Have a look at the libbpf code here [1]
+I suggest you drop PMD_SHIFT here instead look at below
+suggestion for defining PTRS_PER_PTE  in asm/pgtable.h
 
-
-Bj=C3=B6rn
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/t=
-ools/lib/bpf/xsk.c#n81
-
-
-> Ivan Khoronzhuk (3):
->   net: ethernet: ti: davinci_cpdma: add dma mapped submit
->   net: ethernet: ti: davinci_cpdma: return handler status
->   net: ethernet: ti: cpsw: add XDP support
+>  #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+>  #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
 >
->  drivers/net/ethernet/ti/Kconfig         |   1 +
->  drivers/net/ethernet/ti/cpsw.c          | 552 +++++++++++++++++++++---
->  drivers/net/ethernet/ti/davinci_cpdma.c | 117 +++--
->  drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
->  drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
->  5 files changed, 591 insertions(+), 103 deletions(-)
+> diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+> index 7aa0ea9..a56d4d0 100644
+> --- a/arch/riscv/include/asm/pgtable-64.h
+> +++ b/arch/riscv/include/asm/pgtable-64.h
+> @@ -16,6 +16,7 @@
 >
+>  #include <linux/const.h>
+>
+> +#define MAX_USER_VA_BITS       39
+>  #define PGDIR_SHIFT     30
+>  /* Size of region mapped by a page global directory */
+>  #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+> @@ -34,7 +35,7 @@
+>  #define pmd_val(x)      ((x).pmd)
+>  #define __pmd(x)        ((pmd_t) { (x) })
+>
+> -#define PTRS_PER_PMD    (PAGE_SIZE / sizeof(pmd_t))
+> +#define PTRS_PER_PMD    (1 << (PGDIR_SHIFT - PMD_SHIFT))
+>
+>  static inline int pud_present(pud_t pud)
+>  {
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 1141364..d9cb3c8 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -33,9 +33,9 @@
+>  #endif /* CONFIG_64BIT */
+>
+>  /* Number of entries in the page global directory */
+> -#define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
+> +#define PTRS_PER_PGD (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
+>  /* Number of entries in the page table */
+> -#define PTRS_PER_PTE    (PAGE_SIZE / sizeof(pte_t))
+> +#define PTRS_PER_PTE   (1 << (PMD_SHIFT - PAGE_SHIFT))
+
+Instead of defining PTRS_PER_PTD using PMD_SHIFT for both RV32
+and RV64, do the following:
+
+#ifdef __PAGETABLE_PMD_FOLDED
+#define PTRS_PER_PTE   (1 << (PGDIR_SHIFT - PAGE_SHIFT))
+#else
+#define PTRS_PER_PTE   (1 << (PMD_SHIFT - PAGE_SHIFT))
+#endif
+
+>
+>  /* Number of PGD entries that a user-mode program can use */
+>  #define USER_PTRS_PER_PGD   (TASK_SIZE / PGDIR_SIZE)
 > --
-> 2.17.1
+> 1.9.1
 >
+
+Regards,
+Anup
