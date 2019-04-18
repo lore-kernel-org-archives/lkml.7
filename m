@@ -2,71 +2,65 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F41C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4C920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322E920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ckqGcq/1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehfKR8su"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389976AbfDRUCh (ORCPT
+        id S2390039AbfDRUDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 16:02:37 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:36293 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRUCh (ORCPT
+        Thu, 18 Apr 2019 16:03:18 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:40781 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRUDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 16:02:37 -0400
-Received: by mail-it1-f194.google.com with SMTP id y10so5238334itc.1;
-        Thu, 18 Apr 2019 13:02:36 -0700 (PDT)
+        Thu, 18 Apr 2019 16:03:17 -0400
+Received: by mail-it1-f195.google.com with SMTP id k64so5203389itb.5;
+        Thu, 18 Apr 2019 13:03:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=md+2yuBcexkdcmroYWb/DHRRpVH85yQGDbGWlj/lPa8=;
-        b=ckqGcq/1XjPiXpaSKzOlV/yqbaByjSirKCR3S5YfNi/+IDHj7/mJy/OQ2gsxd+X9zI
-         ajyOIo0jrc20MbBZfMJ3vwgDj9eM47iX7zAHtp7lLyq69AkbkWWOPWWyqgFNeDxqVF7H
-         34a1bvoETZMVZKBxNIADqGvKlfKY7F+1Y5sbxYl1oIU7K42I0pBCD0kbgq1s5KstqP1t
-         rDHTZSdp+qhzH+wIA/EnZHEcllOqDvV5ncdIqVgpv9suOK+t+br4kAFFGcMvpdW6/cTs
-         4r6JwI7/MGzm3a8W8rlZGTGlV330bTwJxXZtlJ+FoYwOWk2nYg0yuRAxqtqJ1zZjpCKx
-         uhlw==
+        bh=NZYv0D/Lv/S4Y4YZ8eIubZ2MXBI/HA3x1HiaAk8MnBM=;
+        b=ehfKR8suZEuFpo/3C3nrgotliOuk+x/F3gWWjkja0Ebp1p5MIb9430CiRfFEKT26/z
+         k+c778HqEjZnV0Y3vLUj79wdR/9jpHO5TNubLPeqvxz2MRaXlwI+CCQNdIah+frVGWzV
+         jvbmScf1ycmUduoQ9SI9eWCTt12ca5aBI0a8HbxHB1ix0FFve8NvCSETD0FZWfYKI7j5
+         7rANMLl43P4lqWLTmJqirfdxnyU+g+CTKTBUr3zeqfUvv6j0YgGEU35K0Fs9BIPPcvsu
+         5SWaG+E+M0pxm4xKF1NhUUv1hWVuWVOAdoKy9nfA5iLEilB3gFhvlXlh59O5ZwUoYYVU
+         +9Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=md+2yuBcexkdcmroYWb/DHRRpVH85yQGDbGWlj/lPa8=;
-        b=DaHN7iYXPoFwFZ71o36zQIZZSf6G+KaIuylaTzO7+yMu4VegPsNwbom+BkY7mRPpxE
-         CJxv5N5VT8ClfajI8PlvrfiodxfAh+mKdCpFjs4BR/r0OEKNL80vW+Yrb2hCmGFzilkd
-         HGXeMIDVWMu0LOuN3cXkvKrBa5eQocy3/E4t7u3IHwDsGOYM9jzh1n3LlWKOS82HXFtP
-         YxamQ2wpvs7zD7/NNCsfAScD5T3bGjM4pJSvms05fhaODAwWGywJJII7RzhUp6BCiZcM
-         i7O6gx7I46dFf2oeryyOmR8D2/XgsUYV0+n3dxOhZfVyXurPkC44mKaLeJmtI03+0kui
-         nBcQ==
-X-Gm-Message-State: APjAAAV9dYdIolw3Vg/8LHiwLYuvc4qyLGpixXVTHbFCkLwfxS0FI4gp
-        kBLIZqEmaAcUPMEm8RTYs7W9CJMVdRxR9qyJ0wDTOQjjKGY=
-X-Google-Smtp-Source: APXvYqzu21GsYKKMcpfm9o+XkLf9kLx/wa5ht0dEBcqDNprmH/KAMvsZZwig+k8G4jhGFfcIvC2pj0tbBKMU8gLzYZA=
-X-Received: by 2002:a24:45e4:: with SMTP id c97mr4886303itd.114.1555617755916;
- Thu, 18 Apr 2019 13:02:35 -0700 (PDT)
+        bh=NZYv0D/Lv/S4Y4YZ8eIubZ2MXBI/HA3x1HiaAk8MnBM=;
+        b=SSAbvPsQ/l1BWIHSKd2i6pxlSYR3CVl+nMVOPkA2JAQRTp2f5ZHRY3rnRwOQWvxHEq
+         ZcV+c7WAQAMdL3XozPl/j+vKwXdJd94MEjHDgVOlcptPuchdRD5HTddys7+GFmeWSmtR
+         uEXZ3i1GdCLPD8S+yTAvuAssP2IjfpDO+FV9uBjy0AfL8BpNm8RZu/7Bjx5c1Mn+fitb
+         ZVxdHYITP2UEJhsNABOwxTtB+rSiOrgaqYczV/UiVj0OesEQ30F5s+Gytn8DrTNJMLl1
+         5mP88KNZfHoNcmHIC5jSxcW1+JSYI8hLAoSvAyjw1SRlymlraa14nwesIv2N5evaF1Az
+         +FPA==
+X-Gm-Message-State: APjAAAUaIrlqFzL3y13FpCghblmbq1sc/P13xCohQEUU5QsyaVdqejGr
+        AGbKKgJXA9EIQRlvbMD0Bz8ARggwN1LWGXMXMvw=
+X-Google-Smtp-Source: APXvYqxNaubvWSOjsrtrr4GirXHe1UInOYW/HaqPhxSXx9GG2VlrGH+CkyzUdvijE0/GsQd4JTTPgjnuK7QgY2BJlEw=
+X-Received: by 2002:a24:2244:: with SMTP id o65mr4754255ito.126.1555617796594;
+ Thu, 18 Apr 2019 13:03:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190413082748.29990-1-andrew.smirnov@gmail.com>
- <20190413082748.29990-10-andrew.smirnov@gmail.com> <8233019b-988b-05d5-6b7c-55652da8b3cd@linaro.org>
-In-Reply-To: <8233019b-988b-05d5-6b7c-55652da8b3cd@linaro.org>
+References: <20190405073020.10361-1-andrew.smirnov@gmail.com> <20190417223708.4irrwrm4q7vig3vh@earth.universe>
+In-Reply-To: <20190417223708.4irrwrm4q7vig3vh@earth.universe>
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 18 Apr 2019 13:02:24 -0700
-Message-ID: <CAHQ1cqFW0XVe4e695pgs6mDvOvJ28VXwkzAwsFtZbc3E+PUVzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 09/12] thermal: qoriq: Enable all sensors before
- registering them
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        dl-linux-imx <linux-imx@nxp.com>,
+Date:   Thu, 18 Apr 2019 13:03:05 -0700
+Message-ID: <CAHQ1cqGNKr0M4KZmX3gG+Wk4N39VezGO15VxEC6rzbLdzHQ-7w@mail.gmail.com>
+Subject: Re: [PATCH] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
         linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,83 +68,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 10:09 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On Wed, Apr 17, 2019 at 7:35 PM Sebastian Reichel <sre@kernel.org> wrote:
 >
-> On 13/04/2019 10:27, Andrey Smirnov wrote:
-> > Tmu_get_temp will get called as a part of sensor registration via
-> > devm_thermal_zone_of_sensor_register(). To prevent it from retruning
-> > bogus data we need to enable sensor monitoring before that. Looking at
-> > the datasheet (i.MX8MQ RM) there doesn't seem to be any harm in
-> > enabling them all, so, for the sake of simplicity, change the code to
-> > do just that.
+> Hi,
+>
+> On Fri, Apr 05, 2019 at 12:30:20AM -0700, Andrey Smirnov wrote:
+> > Fix a similar endless event loop as was done in commit 8dcf32175b4e
+> > ("i2c: prevent endless uevent loop with CONFIG_I2C_DEBUG_CORE"):
+> >
+> >   The culprit is the dev_dbg printk in the i2c uevent handler. If
+> >   this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
+> >   in an endless loop with systemd-journald.
+> >
+> >   This happens if user-space scans the system log and reads the uevent
+> >   file to get information about a newly created device, which seems
+> >   fair use to me. Unfortunately reading the "uevent" file uses the
+> >   same function that runs for creating the uevent for a new device,
+> >   generating the next syslog entry
+> >
+> > Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
+> > in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
+> > seems to have been fixed. Change debug prints to use pr_debug insted
+> > to resolve the issue.
 > >
 > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> > Cc: linux-imx@nxp.com
+> > Cc: Sebastian Reichel <sre@kernel.org>
 > > Cc: linux-pm@vger.kernel.org
 > > Cc: linux-kernel@vger.kernel.org
 > > ---
-> >  drivers/thermal/qoriq_thermal.c | 27 ++++++++++++++-------------
-> >  1 file changed, 14 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> > index 9774323a17bf..abbbfe88422e 100644
-> > --- a/drivers/thermal/qoriq_thermal.c
-> > +++ b/drivers/thermal/qoriq_thermal.c
-> > @@ -23,6 +23,7 @@
-> >  #define TMR_DISABLE  0x0
-> >  #define TMR_ME               0x80000000
-> >  #define TMR_ALPF     0x0c000000
-> > +#define TMR_MSITE_ALL        GENMASK(15, 0)
-> >
-> >  #define REGS_TMTMIR  0x008   /* Temperature measurement interval Register */
-> >  #define TMTMIR_DEFAULT       0x0000000f
-> > @@ -61,28 +62,28 @@ static const struct thermal_zone_of_device_ops tmu_tz_ops = {
-> >  static int qoriq_tmu_register_tmu_zone(struct device *dev,
-> >                                      struct qoriq_tmu_data *qdata)
-> >  {
-> > -     int id, sites = 0;
-> > +     int id, ret;
-> > +
-> > +     regmap_write(qdata->regmap, REGS_TMR,
-> > +                  TMR_MSITE_ALL | TMR_ME | TMR_ALPF);
-> >
-> >       for (id = 0; id < SITES_MAX; id++) {
-> >               struct thermal_zone_device *tzd;
-> >
-> >               tzd = devm_thermal_zone_of_sensor_register(dev, id,
-> >                                                          qdata, &tmu_tz_ops);
-> > -             if (IS_ERR(tzd)) {
-> > -                     if (PTR_ERR(tzd) == -ENODEV)
-> > -                             continue;
-> > -                     else
-> > -                             return PTR_ERR(tzd);
-> > +             ret = PTR_ERR_OR_ZERO(tzd);
-> > +             switch (ret) {
-> > +             case -ENODEV:
-> > +                     continue;
-> > +             case 0:
 >
-> Why not simply:
->
->         if (!IS_ERR(tzd) || PTR_ERR(tzd) == -ENODEV)
->                 continue;
->
->         regmap_write(qdata->regmap, REGS_TMR, TMR_DISABLE);
->
->         return PTR_ERR(tzd);
->
-> ?
+> I think we should just drop these debug messages, just like I2C did.
+> They don't offer any useful information considering the info is already
+> exposed to userspace via the uevent.
 
-Seemed like less typing and smaller diff for following patch that adds
-hwmon sensor registration. I can probable make "if" work kind of the
-same, so I'll change that. I do dislike that you had to use *_ERR
-macro three times though, so I'll stick with PTR_ERR_OR_ZERO.
+OK, sounds good, will do in v2.
 
 Thanks,
 Andrey Smirnov
