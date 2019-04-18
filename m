@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A642C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E943C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6AE218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF2D218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610869;
-	bh=XoltjV7X4EO+haISBgFLyTJpFXnvJr5YFJ/pONe+H3Q=;
+	s=default; t=1555610873;
+	bh=0XS73U07dqcyfCv6Z5YJW9wqBA+jox0cjvNKJqfOPQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwhkC+eZNa4GTuPl7fMJRVwSh+5aNfXLwwNz3szZrAOCmn2YCt8bMZ1DA4xuRJKsI
-	 nTJX1CYkr1NFT3FM8ob4Rl8zJYU/gkDiwsZrdjjYN1h5qQnvn20XSykue8i05I3i2q
-	 A0EsXmoABiqS2chkrobnLlZbad5ko5sG6+aSwDuU=
+	b=dPXKkiaP191xNeIiMKK1Wllm1uW3+L7lWMQsSF8gmtB6x9AGpetX1KMbDxyQXyRQF
+	 0D/Rqic1pVbyIvqyc3Hngkyg26LUvAITnIEVa8wO8cppiL05o6BJ4eguGo/X2orOS2
+	 Keue0g5HVlM1gNOIEvzGeh5D/UgEwMCVUI5oHyco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391663AbfDRSHs (ORCPT
+        id S2391681AbfDRSHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391638AbfDRSHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:07:40 -0400
+        id S2391661AbfDRSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:07:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D75E21871;
-        Thu, 18 Apr 2019 18:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBBF9218AF;
+        Thu, 18 Apr 2019 18:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610859;
-        bh=XoltjV7X4EO+haISBgFLyTJpFXnvJr5YFJ/pONe+H3Q=;
+        s=default; t=1555610868;
+        bh=0XS73U07dqcyfCv6Z5YJW9wqBA+jox0cjvNKJqfOPQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLiKu7yD0CMQv9LXN/75z2YuZc0uZtkbtT0xBLRYX2PDatAQkhNpaC63i5na6Rin8
-         wAZpZoZ9iQLXhFB+OoaNXxxRdZ2ZGeGG7S9SruWxLm7+sio+utGOKo6dXY1rWBkoUK
-         Rr/I/Ryviqm8vJpvRltVWmUwyWQnCaVqw+e2J0FM=
+        b=YNjN0krL6aGTHwKAtBmrvuUa8LOobvX4iuxT8QjBB7NDDFiIUw4iLwS+qTZuXOFqB
+         Xccbr6ev52KggUksrtO/mBwOcmSZv31fPJVhYhprn656ThnPrIzT0vEufxRtE01jma
+         chWm5vlljbIIXN3U7nmwqAtg+senHSOzQ/JELliw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jianguo Chen <chenjianguo3@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 19/50] perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
-Date:   Thu, 18 Apr 2019 19:57:30 +0200
-Message-Id: <20190418160425.074832673@linuxfoundation.org>
+Subject: [PATCH 4.9 21/50] irqchip/mbigen: Dont clear eventid when freeing an MSI
+Date:   Thu, 18 Apr 2019 19:57:32 +0200
+Message-Id: <20190418160425.314668490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -66,65 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 93faa52e8371f0291ee1ff4994edae2b336b6233 ]
+[ Upstream commit fca269f201a8d9985c0a31fb60b15d4eb57cef80 ]
 
-  =================================================================
-  ==7497==ERROR: LeakSanitizer: detected memory leaks
+mbigen_write_msg clears eventid bits of a mbigen register
+when free a interrupt, because msi_domain_deactivate memset
+struct msg to zero. Then multiple mbigen pins with zero eventid
+will report the same interrupt number.
 
-  Direct leak of 40 byte(s) in 1 object(s) allocated from:
-      #0 0x7f0333a88f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
-      #1 0x5625e5326213 in cpu_map__trim_new util/cpumap.c:45
-      #2 0x5625e5326703 in cpu_map__read util/cpumap.c:103
-      #3 0x5625e53267ef in cpu_map__read_all_cpu_map util/cpumap.c:120
-      #4 0x5625e5326915 in cpu_map__new util/cpumap.c:135
-      #5 0x5625e517b355 in test__openat_syscall_event_on_all_cpus tests/openat-syscall-all-cpus.c:36
-      #6 0x5625e51528e6 in run_test tests/builtin-test.c:358
-      #7 0x5625e5152baf in test_and_print tests/builtin-test.c:388
-      #8 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
-      #9 0x5625e515572f in cmd_test tests/builtin-test.c:722
-      #10 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #11 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #12 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #13 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #14 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+The eventid clear call trace:
+                free_irq
+                __free_irq
+                irq_shutdown
+                irq_domain_deactivate_irq
+                __irq_domain_deactivate_irq
+                __irq_domain_deactivate_irq
+                msi_domain_deactivate
+                platform_msi_write_msg
+                mbigen_write_msg
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: f30a79b012e5 ("perf tools: Add reference counting for cpu_map object")
-Link: http://lkml.kernel.org/r/20190316080556.3075-15-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jianguo Chen <chenjianguo3@huawei.com>
+[maz: massaged subject]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/openat-syscall-all-cpus.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-mbigen.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index c8d9592eb142..75d504e9eeaf 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -38,7 +38,7 @@ int test__openat_syscall_event_on_all_cpus(int subtest __maybe_unused)
- 	if (IS_ERR(evsel)) {
- 		tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "syscalls", "sys_enter_openat");
- 		pr_debug("%s\n", errbuf);
--		goto out_thread_map_delete;
-+		goto out_cpu_map_delete;
- 	}
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 05d87f60d929..406bfe618448 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -160,6 +160,9 @@ static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
+ 	void __iomem *base = d->chip_data;
+ 	u32 val;
  
- 	if (perf_evsel__open(evsel, cpus, threads) < 0) {
-@@ -112,6 +112,8 @@ int test__openat_syscall_event_on_all_cpus(int subtest __maybe_unused)
- 	perf_evsel__close_fd(evsel, 1, threads->nr);
- out_evsel_delete:
- 	perf_evsel__delete(evsel);
-+out_cpu_map_delete:
-+	cpu_map__put(cpus);
- out_thread_map_delete:
- 	thread_map__put(threads);
- 	return err;
++	if (!msg->address_lo && !msg->address_hi)
++		return;
++ 
+ 	base += get_mbigen_vec_reg(d->hwirq);
+ 	val = readl_relaxed(base);
+ 
 -- 
 2.19.1
 
