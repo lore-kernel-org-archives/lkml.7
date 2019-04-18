@@ -2,185 +2,135 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C126C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFBBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0605A21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610688;
-	bh=HlRaTcPeFObhLcTeQ3Jag5aIvT5Hhkt1LOKhCulbJA0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZ1Kx2AlL7rYDZ0rml2KK2l4BQ+hG/BEm3wFuxthbu5mUy8ABHCBLEzgsFpeAs6Ji
-	 Qcv/2br4sDMvKV+PseW0ZVzb+uoK3fibbPy+0m/J/iCFjECnH/jIw75MSiLQOlxzJH
-	 Azne10buaIhUnXdojGLU9c6szzS5zfffyHt+ink0=
+	by mail.kernel.org (Postfix) with ESMTP id E63AF2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Sa0qcggn";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UbZ7bYAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390405AbfDRSEq (ORCPT
+        id S2391208AbfDRSEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391176AbfDRSEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:04:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77846218CD;
-        Thu, 18 Apr 2019 18:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610683;
-        bh=HlRaTcPeFObhLcTeQ3Jag5aIvT5Hhkt1LOKhCulbJA0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMA6XdykWuG/yH3Ozv03Rr0BmWek8iZQ3AOiXuyg3LszXnf3cMmisCA1gq/+gnOPL
-         W8R0z+2qPE85almVRd+ob4Ieo5S3QHbha/Wwev5H5DJRXwn4zrT7wEOb0yT6QHIojX
-         B79WR6BBmbtrPKknDZVhGQd/CIvLMNiAR9+t66y8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Allen <jallen@linux.ibm.com>,
-        Haren Myneni <haren@us.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/92] powerpc/pseries: Remove prrn_work workqueue
-Date:   Thu, 18 Apr 2019 19:57:03 +0200
-Message-Id: <20190418160434.089464257@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
-References: <20190418160430.325165109@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 18 Apr 2019 14:04:53 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56184 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391176AbfDRSEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:04:48 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3IHjbVE017692;
+        Thu, 18 Apr 2019 11:04:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=nyD1XsBQY82CeJGECiRnHzq5/mZwh+IClLs8oH+5N10=;
+ b=Sa0qcggn9/W1DCYcoKMn1EqwHPtOe/VOZdPTKrWFStfkochgbfuOjSksgVWUnFKSOJ8P
+ 2PEiX50mr1rcRzp2wVI0QWRbgIUrraRVXGG8lgSp9IbzCMLE8I1w7sTp43mcyqS9kFJ0
+ 9mUpo1JlCQwOu9IPkqX7FYJd9GINxpvTUpE= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rxj0bteap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 18 Apr 2019 11:04:31 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 18 Apr 2019 11:04:29 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 18 Apr 2019 11:04:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nyD1XsBQY82CeJGECiRnHzq5/mZwh+IClLs8oH+5N10=;
+ b=UbZ7bYAjhMOyu6cogHZN0iRwgYu0i3VJMqeSfFKKlrFml9HMrZDIWK0P43o2Kd8gyts66OszOXw0tn83ilevBIiQBm4legnczn4aBwIH2S1wjXj8RwY3IjpQgyhFMT+uBydsZzGQKH8dwVgghShISsbAlGkPL3hda8o9DvXygYo=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2598.namprd15.prod.outlook.com (20.179.155.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Thu, 18 Apr 2019 18:04:27 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.021; Thu, 18 Apr 2019
+ 18:04:27 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Christopher Lameter <cl@linux.com>
+CC:     Roman Gushchin <guroan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 4/5] mm: rework non-root kmem_cache lifecycle management
+Thread-Topic: [PATCH 4/5] mm: rework non-root kmem_cache lifecycle management
+Thread-Index: AQHU9WhFLwAo90XwHUSqs2s91sh5hqZB7DAAgABLTYA=
+Date:   Thu, 18 Apr 2019 18:04:27 +0000
+Message-ID: <20190418180421.GA11008@tower.DHCP.thefacebook.com>
+References: <20190417215434.25897-1-guro@fb.com>
+ <20190417215434.25897-5-guro@fb.com>
+ <0100016a30a83bcf-7f99039c-77ec-4c48-a1c4-92e398f8f185-000000@email.amazonses.com>
+In-Reply-To: <0100016a30a83bcf-7f99039c-77ec-4c48-a1c4-92e398f8f185-000000@email.amazonses.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0061.namprd10.prod.outlook.com
+ (2603:10b6:300:2c::23) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:497d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e06f99aa-5c21-4301-a429-08d6c4284c0b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2598;
+x-ms-traffictypediagnostic: BYAPR15MB2598:
+x-microsoft-antispam-prvs: <BYAPR15MB259845626DAE16DE2A62A5C9BE260@BYAPR15MB2598.namprd15.prod.outlook.com>
+x-forefront-prvs: 0011612A55
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(396003)(376002)(39860400002)(189003)(199004)(81156014)(7416002)(14454004)(316002)(54906003)(46003)(86362001)(186003)(11346002)(476003)(52116002)(446003)(99286004)(76176011)(6506007)(386003)(486006)(6512007)(9686003)(97736004)(53936002)(6246003)(5660300002)(102836004)(25786009)(1076003)(305945005)(6436002)(7736002)(4326008)(68736007)(256004)(6916009)(229853002)(6486002)(478600001)(4744005)(6116002)(81166006)(2906002)(33656002)(8936002)(71190400001)(8676002)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2598;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JbZp0dA45yXhLdF+2x9L89yc3AUHz2IG9N6hffaKyL1t/FDi6LQjfyJ8Zict3qaZPYhJbfDa2Fi7I/lakWcpNosX80BQ9+DfDJHB1SL+FmVn8i91MlZ3Ts1Px+N09014IsaI8LjB8ZVjT5jv6meBE5cJ0J3tmAaeoUN4uRiW0x6RoJoAWID6ubpHE3Eh54mZICKwMWG1st5wiPLEYEE9SbbeFXNTTo7c5ofYUq41ABLo/GMyLmO/5qLwvp2fBbyn+7ElFwDES9hgyXH+MSV3L3r7SWg0fQCSU0E2HKyvMMRr0yxMZheEiKFrtHzuCmubcE46WbFMchfcL75R98jFuumue0VQS+ByNhNmyrdaZxw1WSZl6g5CALuVfriWGms4mC54x1kzsyRpFY0RLCyXrd9bfyW29PdEb5ci84XPXQk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C681190BAEEB0F48889A8944DCADA4D8@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: e06f99aa-5c21-4301-a429-08d6c4284c0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 18:04:27.5813
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2598
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd24e457fd8b2d087d9236700c8d2957054598bf ]
+On Thu, Apr 18, 2019 at 01:34:52PM +0000, Christopher Lameter wrote:
+> On Wed, 17 Apr 2019, Roman Gushchin wrote:
+>=20
+> > Let's make every page to hold a reference to the kmem_cache (we
+> > already have a stable pointer), and make kmem_caches to hold a single
+> > reference to the memory cgroup.
+>=20
+> Ok you are freeing one word in the page struct that can be used for other
+> purposes now?
+>=20
 
-When a PRRN event is received we are already running in a worker
-thread. Instead of spawning off another worker thread on the prrn_work
-workqueue to handle the PRRN event we can just call the PRRN handler
-routine directly.
-
-With this update we can also pass the scope variable for the PRRN
-event directly to the handler instead of it being a global variable.
-
-This patch fixes the following oops mnessage we are seeing in PRRN testing:
-
-  Oops: Bad kernel stack pointer, sig: 6 [#1]
-  SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in: nfsv3 nfs_acl rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace sunrpc fscache binfmt_misc reiserfs vfat fat rpadlpar_io(X) rpaphp(X) tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag af_packet xfs libcrc32c dm_service_time ibmveth(X) ses enclosure scsi_transport_sas rtc_generic btrfs xor raid6_pq sd_mod ibmvscsi(X) scsi_transport_srp ipr(X) libata sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
-  Supported: Yes, External                                                     54
-  CPU: 7 PID: 18967 Comm: kworker/u96:0 Tainted: G                 X 4.4.126-94.22-default #1
-  Workqueue: pseries hotplug workque pseries_hp_work_fn
-  task: c000000775367790 ti: c00000001ebd4000 task.ti: c00000070d140000
-  NIP: 0000000000000000 LR: 000000001fb3d050 CTR: 0000000000000000
-  REGS: c00000001ebd7d40 TRAP: 0700   Tainted: G                 X  (4.4.126-94.22-default)
-  MSR: 8000000102081000 <41,VEC,ME5  CR: 28000002  XER: 20040018   4
-  CFAR: 000000001fb3d084 40 419   1                                3
-  GPR00: 000000000000000040000000000010007 000000001ffff400 000000041fffe200
-  GPR04: 000000000000008050000000000000000 000000001fb15fa8 0000000500000500
-  GPR08: 000000000001f40040000000000000001 0000000000000000 000005:5200040002
-  GPR12: 00000000000000005c000000007a05400 c0000000000e89f8 000000001ed9f668
-  GPR16: 000000001fbeff944000000001fbeff94 000000001fb545e4 0000006000000060
-  GPR20: ffffffffffffffff4ffffffffffffffff 0000000000000000 0000000000000000
-  GPR24: 00000000000000005400000001fb3c000 0000000000000000 000000001fb1b040
-  GPR28: 000000001fb240004000000001fb440d8 0000000000000008 0000000000000000
-  NIP [0000000000000000] 5         (null)
-  LR [000000001fb3d050] 031fb3d050
-  Call Trace:            4
-  Instruction dump:      4                                       5:47 12    2
-  XXXXXXXX XXXXXXXX XXXXX4XX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-  XXXXXXXX XXXXXXXX XXXXX5XX XXXXXXXX 60000000 60000000 60000000 60000000
-  ---[ end trace aa5627b04a7d9d6b ]---                                       3NMI watchdog: BUG: soft lockup - CPU#27 stuck for 23s! [kworker/27:0:13903]
-  Modules linked in: nfsv3 nfs_acl rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace sunrpc fscache binfmt_misc reiserfs vfat fat rpadlpar_io(X) rpaphp(X) tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag af_packet xfs libcrc32c dm_service_time ibmveth(X) ses enclosure scsi_transport_sas rtc_generic btrfs xor raid6_pq sd_mod ibmvscsi(X) scsi_transport_srp ipr(X) libata sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
-  Supported: Yes, External
-  CPU: 27 PID: 13903 Comm: kworker/27:0 Tainted: G      D          X 4.4.126-94.22-default #1
-  Workqueue: events prrn_work_fn
-  task: c000000747cfa390 ti: c00000074712c000 task.ti: c00000074712c000
-  NIP: c0000000008002a8 LR: c000000000090770 CTR: 000000000032e088
-  REGS: c00000074712f7b0 TRAP: 0901   Tainted: G      D          X  (4.4.126-94.22-default)
-  MSR: 8000000100009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 22482044  XER: 20040000
-  CFAR: c0000000008002c4 SOFTE: 1
-  GPR00: c000000000090770 c00000074712fa30 c000000000f09800 c000000000fa1928 6:02
-  GPR04: c000000775f5e000 fffffffffffffffe 0000000000000001 c000000000f42db8
-  GPR08: 0000000000000001 0000000080000007 0000000000000000 0000000000000000
-  GPR12: 8006210083180000 c000000007a14400
-  NIP [c0000000008002a8] _raw_spin_lock+0x68/0xd0
-  LR [c000000000090770] mobility_rtas_call+0x50/0x100
-  Call Trace:            59                                        5
-  [c00000074712fa60] [c000000000090770] mobility_rtas_call+0x50/0x100
-  [c00000074712faf0] [c000000000090b08] pseries_devicetree_update+0xf8/0x530
-  [c00000074712fc20] [c000000000031ba4] prrn_work_fn+0x34/0x50
-  [c00000074712fc40] [c0000000000e0390] process_one_work+0x1a0/0x4e0
-  [c00000074712fcd0] [c0000000000e0870] worker_thread+0x1a0/0x6105:57       2
-  [c00000074712fd80] [c0000000000e8b18] kthread+0x128/0x150
-  [c00000074712fe30] [c0000000000096f8] ret_from_kernel_thread+0x5c/0x64
-  Instruction dump:
-  2c090000 40c20010 7d40192d 40c2fff0 7c2004ac 2fa90000 40de0018 5:540030   3
-  e8010010 ebe1fff8 7c0803a6 4e800020 <7c210b78> e92d0000 89290009 792affe3
-
-Signed-off-by: John Allen <jallen@linux.ibm.com>
-Signed-off-by: Haren Myneni <haren@us.ibm.com>
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/kernel/rtasd.c | 17 +++--------------
- 1 file changed, 3 insertions(+), 14 deletions(-)
-
-diff --git a/arch/powerpc/kernel/rtasd.c b/arch/powerpc/kernel/rtasd.c
-index 0f0b1b2f3b60..7caeae73348d 100644
---- a/arch/powerpc/kernel/rtasd.c
-+++ b/arch/powerpc/kernel/rtasd.c
-@@ -274,27 +274,16 @@ void pSeries_log_error(char *buf, unsigned int err_type, int fatal)
- }
- 
- #ifdef CONFIG_PPC_PSERIES
--static s32 prrn_update_scope;
--
--static void prrn_work_fn(struct work_struct *work)
-+static void handle_prrn_event(s32 scope)
- {
- 	/*
- 	 * For PRRN, we must pass the negative of the scope value in
- 	 * the RTAS event.
- 	 */
--	pseries_devicetree_update(-prrn_update_scope);
-+	pseries_devicetree_update(-scope);
- 	numa_update_cpu_topology(false);
- }
- 
--static DECLARE_WORK(prrn_work, prrn_work_fn);
--
--static void prrn_schedule_update(u32 scope)
--{
--	flush_work(&prrn_work);
--	prrn_update_scope = scope;
--	schedule_work(&prrn_work);
--}
--
- static void handle_rtas_event(const struct rtas_error_log *log)
- {
- 	if (rtas_error_type(log) != RTAS_TYPE_PRRN || !prrn_is_enabled())
-@@ -303,7 +292,7 @@ static void handle_rtas_event(const struct rtas_error_log *log)
- 	/* For PRRN Events the extended log length is used to denote
- 	 * the scope for calling rtas update-nodes.
- 	 */
--	prrn_schedule_update(rtas_error_extended_log_length(log));
-+	handle_prrn_event(rtas_error_extended_log_length(log));
- }
- 
- #else
--- 
-2.19.1
-
-
-
+Looks so!
