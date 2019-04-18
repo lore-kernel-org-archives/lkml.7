@@ -2,113 +2,79 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A65CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEC3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6506721479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A4920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388800AbfDRM6g (ORCPT
+        id S2388454AbfDRNBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:58:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41282 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726162AbfDRM6f (ORCPT
+        Thu, 18 Apr 2019 09:01:02 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:36055 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfDRNBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:58:35 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ICrqZw039681
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:58:34 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rxrg83ex9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:58:33 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Thu, 18 Apr 2019 13:58:31 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Apr 2019 13:58:29 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3ICwSBE5636218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Apr 2019 12:58:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CD154C04A;
-        Thu, 18 Apr 2019 12:58:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2E7E4C046;
-        Thu, 18 Apr 2019 12:58:27 +0000 (GMT)
-Received: from pomme.aus.stglabs.ibm.com (unknown [9.145.32.15])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Apr 2019 12:58:27 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     mhocko@kernel.org, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: [PATCH] mm: use mm.arg_lock in get_cmdline()
-Date:   Thu, 18 Apr 2019 14:58:27 +0200
-X-Mailer: git-send-email 2.21.0
+        Thu, 18 Apr 2019 09:01:02 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hH6ef-0007T9-Q1; Thu, 18 Apr 2019 15:00:41 +0200
+Date:   Thu, 18 Apr 2019 15:00:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v15 1/3] /proc/pid/status: Add support for architecture
+ specific output
+In-Reply-To: <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904181500100.3174@nanos.tec.linutronix.de>
+References: <20190416063250.7514-1-aubrey.li@linux.intel.com> <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org> <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041812-0008-0000-0000-000002DB3862
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041812-0009-0000-0000-0000224779C7
-Message-Id: <20190418125827.57479-1-ldufour@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-18_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=566 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904180092
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end
-and env_start|end in mm_struct") introduce the spinlock arg_lock to protect
-the arg_* and env_* field of the mm_struct structure.
+On Wed, 17 Apr 2019, Andy Lutomirski wrote:
 
-While reading the code, I found that this new spinlock was not used in
-get_cmdline() to protect access to these fields.
+> On Tue, Apr 16, 2019 at 4:01 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Tue, 16 Apr 2019 14:32:48 +0800 Aubrey Li <aubrey.li@linux.intel.com> wrote:
+> >
+> > > The architecture specific information of the running processes could
+> > > be useful to the userland. Add support to examine process architecture
+> > > specific information externally.
+> >
+> > The implementation looks just fine to me.  Have you had any feedback on
+> > the overall desirability of adding this feature?
+> 
+> I think I've been the most outspoken, and my not-all-that-strong
+> opinion is that I don't really like it.  /proc/PID/status is already a
+> bit of a mess, and I don't think we really want it to be a mess that
+> is different on different architectures.  Hence my suggestion of
+> /proc/PID/x86_status instead.  Or we could do /proc/PID/arch_status, I
 
-Fixing this even if there is no issue reported yet for this.
+arch_status looks like the right thing to do.
 
-Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
----
- mm/util.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks,
 
-diff --git a/mm/util.c b/mm/util.c
-index 05a464929b3e..789760c3028b 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -758,12 +758,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
- 	if (!mm->arg_end)
- 		goto out_mm;	/* Shh! No looking before we're done */
- 
--	down_read(&mm->mmap_sem);
-+	spin_lock(&mm->arg_lock);
- 	arg_start = mm->arg_start;
- 	arg_end = mm->arg_end;
- 	env_start = mm->env_start;
- 	env_end = mm->env_end;
--	up_read(&mm->mmap_sem);
-+	spin_unlock(&mm->arg_lock);
- 
- 	len = arg_end - arg_start;
- 
--- 
-2.21.0
-
+	tglx
