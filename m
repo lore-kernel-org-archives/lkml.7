@@ -2,242 +2,112 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208A4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D96C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6F32087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0312087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1Ek5vNg"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="AMPNdNyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfDRVwG (ORCPT
+        id S1726354AbfDRVwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 17:52:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:32844 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfDRVwG (ORCPT
+        Thu, 18 Apr 2019 17:52:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34874 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfDRVwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 17:52:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id k14so3863873qtb.0;
-        Thu, 18 Apr 2019 14:52:05 -0700 (PDT)
+        Thu, 18 Apr 2019 17:52:20 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j20so2711193lfh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 14:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dW0WRTAYadTssVCzOwPUMJM5MEJOUGulk1lMLmYV03Y=;
-        b=d1Ek5vNgYKMKxEA4sVYAXycexZTD/THM3ZyADODYOcAqMUfeOkBMfPTUMeQw2M3A0a
-         hAWfq7bFopVgyWqS82MKbL2ghs2NuW9+fxCJr+Knx13u5eN8vnJCuZZ+YdTpeRDz7m2S
-         mHK8Ie1pmav8FrPvY+dYT2gK6TqWLDc6ynTwQwLoAGG2dKs8CbmdIrPiWN5ByM18/qXI
-         fV+lEBEba1YhKochKJI0TFfRWtFQTA4RBtby9KfAPNGGrbw3R920G1YVkwXuoJpYybH3
-         ZFRw/2dQdq5fvBeTZQuKdHjUk7BN1hTopi7VDh1wEMo9rGmelLBiWm+F4rcJWYtDuUHx
-         NNlQ==
+        bh=UnclNOyKgaVdgRUC7bKMlUdq3Z/8THTWqN3fdo44i+I=;
+        b=AMPNdNyzg0dcm4+VZaGNqKgWO1HB1nyOCsfpDKD81IUY9sxJJuoGUUYryM1PvH7pHc
+         oDJrRv9pimFZR2H9RxXV4+gdKmNwao1L4GvKpATL9Paa6Ocap+a5zndCKsBoc64yvmSp
+         DEBDDQKri44DqHqKV1iLj3IxBCbnN8x37UtZf3T6jx+CljBUjUjIBsxPY0TFyngKipL6
+         eWQ0OhiF2C98QAt/YSzRK5oggGrqIVRJXBLcEDshaWeh+yZXJm7IBBtzvLJG/B7ovjeY
+         oCfS6LLdzPWRBpyVXZtDOqL7Z/OmOWEh97kzR0JWcPrwlK007QI6+dVIAzNNt++aSdhU
+         GZ6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dW0WRTAYadTssVCzOwPUMJM5MEJOUGulk1lMLmYV03Y=;
-        b=T7oOcMMGJJbTVjkN68aTMg+VtD/bASg9GVR+d3XiK7m15t7+5GiBtRcao7jE26Exr2
-         5+6HOWuw+W93r7ZwW6+0wLK7Uud3PIvJMz2YuN6Mg8vyxjHi4zSt8ixoDS1mhv8piEL6
-         sgI/w86UPz1+Yb/YMijW4npdLub11mXhjmud1eTKiLhPBTFOfriyo1OmnCnlSk7F/cmp
-         mdXD2yUfAVxBoZzC44QR6lNZpcqb6No6HVO9Eucq5HoIFNg0Q1ldeiOGGr/hxvIIXrES
-         jRcUlXQgZwN/UL2UrLjHk4mX72m5xvg40I2gWk81IdqcVbYewBkZ/IWimEcSAy6ji4iL
-         ehfQ==
-X-Gm-Message-State: APjAAAW4CuVF9yqgexiy66ep+tVyqXIMzvU43+y92CCAXM2m0Kgx67BA
-        HR9NW66OEd3skkjOnKLF1gNH1h05hgfU+8rAujpUaA==
-X-Google-Smtp-Source: APXvYqzPv4CFpchme7EPI8pDX2b/YbOWgeVN8iWhgX8ZwxOaE2ufVEtU/NKtWXJZloYxSq5p7D56dWr3cunEY8PdkWE=
-X-Received: by 2002:a0c:d1f7:: with SMTP id k52mr442511qvh.5.1555624324601;
- Thu, 18 Apr 2019 14:52:04 -0700 (PDT)
+        bh=UnclNOyKgaVdgRUC7bKMlUdq3Z/8THTWqN3fdo44i+I=;
+        b=hZlfUeyq+1DYrhNYeDseZZ3mCUUpRk9BqS8OKVYyXQInOsFvd/Iw6nAIjvwHPp00vS
+         u457VAVwr52yi+T2msdyeDUrAHyhjhGVTyZzauSgRu0SWSOxw5ePyr5gjmnv4YGn9xmz
+         xYJtSxsa1d2E5svUMsIsNSqiopgZOxpiaeQhV99X1winY/8TEwTM68bDWyuOhXtCJBS9
+         JyExmpeqTmyyEAGUkfEDBQTmNTjmPpdJ84ZUjoyn79UAkgCW4Xi01DX3C3XmdQaPMeKN
+         G3fu9GWlP4B++xku3q7FyLp0ctB5/HbGNfsXvOn7gUBLj/sWdPTtaMQu5NvIWI5ZBDYb
+         W3pw==
+X-Gm-Message-State: APjAAAUESuzOEGDTzrmIxtM2oMBUWKPNkW/JOfNdtjo33mCC1RIQgmEk
+        ABsZUmAUL0xk640KSekVcwFK15sVZF/tIBkOprxC
+X-Google-Smtp-Source: APXvYqwv9Z637CTwkv6+3n7+VeJigEj0HVWhPsplZAl/38v1CEEQVL3j9dNZENGJZPDBRSFxiNbTU5tUvVVdvSqYs0Q=
+X-Received: by 2002:a19:760f:: with SMTP id c15mr205457lff.105.1555624337550;
+ Thu, 18 Apr 2019 14:52:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190418155652.22181-1-alban@kinvolk.io> <CAPhsuW7mhxaEyez4XX+ncUnfg-2wkF4Li+migjYdqON3-2f5_A@mail.gmail.com>
-In-Reply-To: <CAPhsuW7mhxaEyez4XX+ncUnfg-2wkF4Li+migjYdqON3-2f5_A@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 18 Apr 2019 14:51:52 -0700
-Message-ID: <CAPhsuW4JrOp59K=jzM-QY1sS2xsj6UP6663Y1Uv3iH-iOtfXSQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/3] bpf: sock ops: add netns ino and dev in
- bpf context
-To:     Alban Crequy <alban.crequy@gmail.com>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Alban Crequy (Kinvolk)" <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
+References: <1555609155-11934-1-git-send-email-wang6495@umn.edu>
+In-Reply-To: <1555609155-11934-1-git-send-email-wang6495@umn.edu>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 18 Apr 2019 17:52:06 -0400
+Message-ID: <CAHC9VhT-9JDNVVQfh-uYcck=eRX3aRRG4CaMkidgLQ3Z1MHrRg@mail.gmail.com>
+Subject: Re: [PATCH] audit: fix a memory leak bug
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     Eric Paris <eparis@redhat.com>,
+        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 2:41 PM Song Liu <liu.song.a23@gmail.com> wrote:
+On Thu, Apr 18, 2019 at 1:39 PM Wenwen Wang <wang6495@umn.edu> wrote:
+> In audit_rule_change(), audit_data_to_entry() is firstly invoked to
+> translate the payload data to the kernel's rule representation. In
+> audit_data_to_entry(), depending on the audit field type, an audit tree may
+> be created in audit_make_tree(), which eventually invokes kmalloc() to
+> allocate the tree.  Since this tree is a temporary tree, it will be then
+> freed in the following execution, e.g., audit_add_rule() if the message
+> type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
+> AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
+> AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
+> temporary tree is not freed.
 >
-> On Thu, Apr 18, 2019 at 8:59 AM Alban Crequy <alban.crequy@gmail.com> wrote:
-> >
-> > From: Alban Crequy <alban@kinvolk.io>
-> >
-> > sockops programs can now access the network namespace inode and device
-> > via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be useful
-> > to apply different policies on different network namespaces.
-> >
-> > In the unlikely case where network namespaces are not compiled in
-> > (CONFIG_NET_NS=n), the verifier will not allow access to ->netns_*.
-> >
-> > The generated BPF bytecode for netns_ino is loading the correct inode
-> > number at the time of execution.
-> >
-> > However, the generated BPF bytecode for netns_dev is loading an
-> > immediate value determined at BPF-load-time by looking at the initial
-> > network namespace. In practice, this works because all netns currently
-> > use the same virtual device. If this was to change, this code would need
-> > to be updated too.
-> >
-> > Signed-off-by: Alban Crequy <alban@kinvolk.io>
+> To fix this issue, free the allocated tree in the default case.
 >
-> Acked-by: Song Liu <songliubraving@fb.com>
-
-Sorry! I didn't see Yonghong's comments. Please resolve those.
-
-Sorry for the confusion.
-Song
-
+> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+> ---
+>  kernel/auditfilter.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> >
-> > ---
-> >
-> > Changes since v1:
-> > - add netns_dev (review from Alexei)
-> > ---
-> >  include/uapi/linux/bpf.h |  2 ++
-> >  net/core/filter.c        | 70 ++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 72 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index eaf2d3284248..f4f841dde42c 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -3213,6 +3213,8 @@ struct bpf_sock_ops {
-> >         __u32 sk_txhash;
-> >         __u64 bytes_received;
-> >         __u64 bytes_acked;
-> > +       __u64 netns_dev;
-> > +       __u64 netns_ino;
-> >  };
-> >
-> >  /* Definitions for bpf_sock_ops_cb_flags */
-> > diff --git a/net/core/filter.c b/net/core/filter.c
-> > index 1833926a63fc..93e3429603d7 100644
-> > --- a/net/core/filter.c
-> > +++ b/net/core/filter.c
-> > @@ -75,6 +75,8 @@
-> >  #include <net/seg6_local.h>
-> >  #include <net/lwtunnel.h>
-> >  #include <net/ipv6_stubs.h>
-> > +#include <linux/kdev_t.h>
-> > +#include <linux/proc_ns.h>
-> >
-> >  /**
-> >   *     sk_filter_trim_cap - run a packet through a socket filter
-> > @@ -6774,6 +6776,15 @@ static bool sock_ops_is_valid_access(int off, int size,
-> >                 }
-> >         } else {
-> >                 switch (off) {
-> > +               case offsetof(struct bpf_sock_ops, netns_dev):
-> > +               case offsetof(struct bpf_sock_ops, netns_ino):
-> > +#ifdef CONFIG_NET_NS
-> > +                       if (size != sizeof(__u64))
-> > +                               return false;
-> > +#else
-> > +                       return false;
-> > +#endif
-> > +                       break;
-> >                 case bpf_ctx_range_till(struct bpf_sock_ops, bytes_received,
-> >                                         bytes_acked):
-> >                         if (size != sizeof(__u64))
-> > @@ -7660,6 +7671,11 @@ static u32 sock_addr_convert_ctx_access(enum bpf_access_type type,
-> >         return insn - insn_buf;
-> >  }
-> >
-> > +static struct ns_common *sockops_netns_cb(void *private_data)
-> > +{
-> > +       return &init_net.ns;
-> > +}
-> > +
-> >  static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >                                        const struct bpf_insn *si,
-> >                                        struct bpf_insn *insn_buf,
-> > @@ -7668,6 +7684,10 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >  {
-> >         struct bpf_insn *insn = insn_buf;
-> >         int off;
-> > +       struct inode *ns_inode;
-> > +       struct path ns_path;
-> > +       __u64 netns_dev;
-> > +       void *res;
-> >
-> >  /* Helper macro for adding read access to tcp_sock or sock fields. */
-> >  #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)                        \
-> > @@ -7914,6 +7934,56 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
-> >                 SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
-> >                                           struct sock, type);
-> >                 break;
-> > +
-> > +       case offsetof(struct bpf_sock_ops, netns_dev):
-> > +#ifdef CONFIG_NET_NS
-> > +               /* We get the netns_dev at BPF-load-time and not at
-> > +                * BPF-exec-time. We assume that netns_dev is a constant.
-> > +                */
-> > +               res = ns_get_path_cb(&ns_path, sockops_netns_cb, NULL);
-> > +               if (IS_ERR(res)) {
-> > +                       netns_dev = 0;
-> > +               } else {
-> > +                       ns_inode = ns_path.dentry->d_inode;
-> > +                       netns_dev = new_encode_dev(ns_inode->i_sb->s_dev);
-> > +               }
-> > +#else
-> > +               netns_dev = 0;
-> > +#endif
-> > +               *insn++ = BPF_MOV64_IMM(si->dst_reg, netns_dev);
-> > +               break;
-> > +
-> > +       case offsetof(struct bpf_sock_ops, netns_ino):
-> > +#ifdef CONFIG_NET_NS
-> > +               /* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inum
-> > +                * Type: (struct bpf_sock_ops_kern *)
-> > +                *       ->(struct sock *)
-> > +                *       ->(struct sock_common)
-> > +                *       .possible_net_t
-> > +                *       .(struct net *)
-> > +                *       ->(struct ns_common)
-> > +                *       .(unsigned int)
-> > +                */
-> > +               BUILD_BUG_ON(offsetof(struct sock, __sk_common) != 0);
-> > +               BUILD_BUG_ON(offsetof(possible_net_t, net) != 0);
-> > +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               struct bpf_sock_ops_kern, sk),
-> > +                                     si->dst_reg, si->src_reg,
-> > +                                     offsetof(struct bpf_sock_ops_kern, sk));
-> > +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               possible_net_t, net),
-> > +                                     si->dst_reg, si->dst_reg,
-> > +                                     offsetof(struct sock_common, skc_net));
-> > +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
-> > +                                               struct ns_common, inum),
-> > +                                     si->dst_reg, si->dst_reg,
-> > +                                     offsetof(struct net, ns) +
-> > +                                     offsetof(struct ns_common, inum));
-> > +#else
-> > +               *insn++ = BPF_MOV64_IMM(si->dst_reg, 0);
-> > +#endif
-> > +               break;
-> > +
-> >         }
-> >         return insn - insn_buf;
-> >  }
-> > --
-> > 2.20.1
-> >
+> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> index 63f8b3f..70a34db 100644
+> --- a/kernel/auditfilter.c
+> +++ b/kernel/auditfilter.c
+> @@ -1128,6 +1128,8 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+>                 audit_log_rule_change("remove_rule", &entry->rule, !err);
+>                 break;
+>         default:
+> +               if (entry->rule.tree)
+> +                       audit_put_tree(entry->rule.tree);
+>                 err = -EINVAL;
+>                 WARN_ON(1);
+>         }
+
+Since there are only two "types" (_ADD_RULE and _DEL_RULE) and the
+allocation is only three lines (audit_data_to_entry() + two lines for
+error handling), maybe it makes more sense to duplicate the
+audit_data_to_entry() call into the individual case statements so we
+are only doing the allocations when we have a valid "type"?
+
+-- 
+paul moore
+www.paul-moore.com
