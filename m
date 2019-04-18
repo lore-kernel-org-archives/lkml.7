@@ -2,157 +2,271 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F4AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78D320674
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:06:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BmTzNWq0"
+	by mail.kernel.org (Postfix) with ESMTP id 4CD21217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555592995;
+	bh=HXoUA18AINaiUplZZ1qFXpFCyd1ni8gkSQLf8c/CoOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sftVnPodQduP/Ax6juVg79pp6yc6qDZSEVnXsW9Siv+QAkCD9nReQpkK2cEQHekXm
+	 BpBbjHksPoBZsQj11K6IzowoLWbMXcNBROsFJhGoyyAnJZSgNBJSvogV++1DFqPLQq
+	 HOBGEXsjgzRDh5Cox/cSfHGH3+FXx1bUY5immiJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388995AbfDRNGY (ORCPT
+        id S2388923AbfDRNJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:06:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52330 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfDRNGY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5Ys9ORuyuzEuq7FWhaeRxs5dE4tcTtfyYwM/xjXQKxU=; b=BmTzNWq0a0NM0S3wJOIVV1r3S
-        Tsiq2nN0U0azjMi/4oXq3NUZ/o9kGiM16phsVvEHllb0/Xh/EM2lEr+E7idBw4i+16aXB4FM4Qxwz
-        dEw3pov3jn9buIQuDE3aN3aU57wym5f3P3pA5S4NLIg+M++ZBbwvzYn4ZQBSiCQXbvaIs1hYwORq/
-        fo6zYWjVvjX/Twmtyefe9XeNTmAdeAjPSB/US2JrKPOIiuj3kyR8oJmJIPsSSD9Z/N3yfgS+rZeZX
-        iY4UzvRZNWmp4VYqhS6mMM8OoowNpjBtN3yil9pmXGx4wdDEFUwBPWaAHwQ7BSwYpG4pOM5oK2w5D
-        rsyQV2pwQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hH6k2-0003Ts-2x; Thu, 18 Apr 2019 13:06:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DD7E729B9B7B8; Thu, 18 Apr 2019 15:06:11 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 15:06:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 12/16] locking/rwsem: Enable time-based spinning on
- reader-owned rwsem
-Message-ID: <20190418130611.GK4038@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-13-longman@redhat.com>
+        Thu, 18 Apr 2019 09:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727807AbfDRNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:09:54 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF8320674;
+        Thu, 18 Apr 2019 13:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555592992;
+        bh=HXoUA18AINaiUplZZ1qFXpFCyd1ni8gkSQLf8c/CoOY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u2i/y8RxoQKSeahqgBwP3TaMjfAMwfhfXIcwMym8AySTANwAwNZerTj9gGXxWFtBi
+         78BzW2b1L2OvaY94DnIVFdtS1wwqBQwA/ry/i5qSiAO6myA2HyvIUXpzttRvpoEMrc
+         EPTGIIWeA6ntXfvLVkhb12FBSWLCFo0IfTqBDVT0=
+Date:   Thu, 18 Apr 2019 08:09:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     wesleywesley <wesleyshenggit@sina.com>
+Cc:     kurt.schwemmer@microsemi.com, logang@deltatee.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wesley Sheng - A31233 <Wesley.Sheng@microchip.com>,
+        Kelvin Cao - A31060 <Kelvin.Cao@microchip.com>
+Subject: Re: [PATCH v2 1/2] switchtec: Fix false maximum supported PCIe
+ function number issue
+Message-ID: <20190418130950.GY126710@google.com>
+References: <1555339302-31829-1-git-send-email-wesley.sheng@microchip.com>
+ <1555339302-31829-2-git-send-email-wesley.sheng@microchip.com>
+ <20190417224858.GW126710@google.com>
+ <20190418165621.GA5272@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190413172259.2740-13-longman@redhat.com>
+In-Reply-To: <20190418165621.GA5272@sina.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 19, 2019 at 12:56:21AM +0800, wesleywesley wrote:
+> On Wed, Apr 17, 2019 at 05:48:58PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Apr 15, 2019 at 10:41:41PM +0800, Wesley Sheng wrote:
+> > > The hardware supports up to 255 PFFs and the driver only supports 48, so
+> > > this patch updates the driver to support them all. To be backward
+> > > compatible, a new ioctl and corresponding data structure are created,
+> > > while keep the deprecated one.
+> > 
+> > The commit log needs to include some kind of detail about what "PFF"
+> > is.  Logan provided the following, which looks like a good starting
+> > point:
+> > 
+> >   PFF is really a concept internal to the Switchtec device. It stands
+> >   for PCIe Function Framework. Essentially, there is a bank of
+> >   registers for every PCIe Function (aka endpoint) in the switch. When
+> >   I originally wrote the driver, I assumed incorrectly there would
+> >   only ever be one PFF per port and the maximum number of ports for
+> >   Switchtec parts is 48. In fact, the hardware supports up to 255 and
+> >   there are typically two PFFs per upstream port (one for the port
+> >   itself and one for the management endpoint).
+> > 
+> > I had a couple minor questions below that aren't exactly related to
+> > this patch.  If you did decide to address them (in a separate patch,
+> > of course), you could expand the commit log for this patch with the
+> > PFF info.  If the questions below don't need anything, I can
+> > incorporate something about PFF myself.
+> 
+> Hi, Bjorn,
+> 
+> See my comments below your questions.
+> They are good catches, but I think it is not a bug we should fix it urgently.
+> What about take it as an improvement of code, and we will submit it in the
+> next upstream session. Before that, we would like to test with this change.
 
-So I really dislike time based spinning, and we've always rejected it
-before.
+Totally agreed, I'll merge the current stuff today and we can get on with
+this.
 
-On Sat, Apr 13, 2019 at 01:22:55PM -0400, Waiman Long wrote:
-
-> +static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
-> +{
-> +	long count = atomic_long_read(&sem->count);
-> +	int reader_cnt = atomic_long_read(&sem->count) >> RWSEM_READER_SHIFT;
-> +
-> +	if (reader_cnt > 30)
-> +		reader_cnt = 30;
-> +	return sched_clock() + ((count & RWSEM_FLAG_WAITERS)
-> +		? 10 * NSEC_PER_USEC + reader_cnt * NSEC_PER_USEC/2
-> +		: 25 * NSEC_PER_USEC);
-> +}
-
-Urgh, why do you _have_ to write unreadable code :-(
-
-static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
-{
-	long count = atomic_long_read(&sem->count);
-	u64 delta = 25 * NSEC_PER_USEC;
-
-	if (count & RWSEM_FLAG_WAITERS) {
-		int readers = count >> RWSEM_READER_SHIFT;
-
-		if (readers > 30)
-			readers = 30;
-
-		delta = (20 + readers) * NSEC_PER_USEC / 2;
-	}
-
-	return sched_clock() + delta;
-}
-
-I don't get it though; the number of current read-owners is independent
-of WAITERS, while the hold time does correspond to it.
-
-So why do we have that WAITERS check in there?
-
-> @@ -616,6 +678,35 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
->  		if (taken)
->  			break;
->  
-> +		/*
-> +		 * Time-based reader-owned rwsem optimistic spinning
-> +		 */
-
-This relies on rwsem_spin_on_owner() not actually spinning for
-read-owned.
-
-> +		if (wlock && (owner_state == OWNER_READER)) {
-> +			/*
-> +			 * Initialize rspin_threshold when the owner
-> +			 * state changes from non-reader to reader.
-> +			 */
-> +			if (prev_owner_state != OWNER_READER) {
-> +				if (!is_rwsem_spinnable(sem))
-> +					break;
-> +				rspin_threshold = rwsem_rspin_threshold(sem);
-> +				loop = 0;
-> +			}
-
-This seems fragile, why not to the rspin_threshold thing _once_ at the
-start of this function?
-
-This way it can be reset.
-
-> +			/*
-> +			 * Check time threshold every 16 iterations to
-> +			 * avoid calling sched_clock() too frequently.
-> +			 * This will make the actual spinning time a
-> +			 * bit more than that specified in the threshold.
-> +			 */
-> +			else if (!(++loop & 0xf) &&
-> +				 (sched_clock() > rspin_threshold)) {
-
-Why is calling sched_clock() lots a problem?
-
-> +				rwsem_set_nonspinnable(sem);
-> +				lockevent_inc(rwsem_opt_nospin);
-> +				break;
-> +			}
-> +		}
-> +
->  		/*
->  		 * An RT task cannot do optimistic spinning if it cannot
->  		 * be sure the lock holder is running or live-lock may
-
-
+> > > ---
+> > >  drivers/pci/switch/switchtec.c       | 39 +++++++++++++++++++++++++-----------
+> > >  include/linux/switchtec.h            |  2 +-
+> > >  include/uapi/linux/switchtec_ioctl.h | 13 +++++++++++-
+> > >  3 files changed, 40 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> > > index e22766c..7df9a69 100644
+> > > --- a/drivers/pci/switch/switchtec.c
+> > > +++ b/drivers/pci/switch/switchtec.c
+> > > @@ -658,19 +658,25 @@ static int ioctl_flash_part_info(struct switchtec_dev *stdev,
+> > >  
+> > >  static int ioctl_event_summary(struct switchtec_dev *stdev,
+> > >  	struct switchtec_user *stuser,
+> > > -	struct switchtec_ioctl_event_summary __user *usum)
+> > > +	struct switchtec_ioctl_event_summary __user *usum,
+> > > +	size_t size)
+> > >  {
+> > > -	struct switchtec_ioctl_event_summary s = {0};
+> > > +	struct switchtec_ioctl_event_summary *s;
+> > >  	int i;
+> > >  	u32 reg;
+> > > +	int ret = 0;
+> > >  
+> > > -	s.global = ioread32(&stdev->mmio_sw_event->global_summary);
+> > > -	s.part_bitmap = ioread32(&stdev->mmio_sw_event->part_event_bitmap);
+> > > -	s.local_part = ioread32(&stdev->mmio_part_cfg->part_event_summary);
+> > > +	s = kzalloc(sizeof(*s), GFP_KERNEL);
+> > > +	if (!s)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	s->global = ioread32(&stdev->mmio_sw_event->global_summary);
+> > > +	s->part_bitmap = ioread32(&stdev->mmio_sw_event->part_event_bitmap);
+> > > +	s->local_part = ioread32(&stdev->mmio_part_cfg->part_event_summary);
+> > >  
+> > >  	for (i = 0; i < stdev->partition_count; i++) {
+> > >  		reg = ioread32(&stdev->mmio_part_cfg_all[i].part_event_summary);
+> > > -		s.part[i] = reg;
+> > > +		s->part[i] = reg;
+> > >  	}
+> > >  
+> > >  	for (i = 0; i < SWITCHTEC_MAX_PFF_CSR; i++) {
+> > 
+> > Should this be "i < stdev->pff_csr_count", as in
+> > check_link_state_events(), enable_link_state_events() and
+> > mask_all_events()?  If so, I assume the read and check of vendor_id
+> > would be unnecessary?
+> 
+> Yes, I think it is a good catch.
+> Once the configuration file of Switchtec is choosed, the logical ports bound to 
+> USPs/DSPs physical port, unbound logical ports, and vEPs (NT/Management/NT only),
+> their corresponding PFF's index are fixed and the total number are invariable.
+> > 
+> > The last loop in init_pff() currently checks against
+> > SWITCHTEC_MAX_PFF_CSR:
+> > 
+> >         for (i = 0; i < ARRAY_SIZE(pcfg->dsp_pff_inst_id); i++) {
+> >                 reg = ioread32(&pcfg->dsp_pff_inst_id[i]);
+> >                 if (reg < SWITCHTEC_MAX_PFF_CSR)
+> >                         stdev->pff_local[reg] = 1;
+> >         }
+> > 
+> > Should it check "reg < stdev->pff_csr_count" instead?  It looks like
+> > mask_all_events(), the only reader of pff_local[], only looks up to
+> > pff_csr_count anyway.
+> > 
+> Yes, I agree.
+> Actually, all the SWITCHTEC_MAX_PFF_CSR in init_pff() could be replaced by it.
+> > > @@ -679,15 +685,19 @@ static int ioctl_event_summary(struct switchtec_dev *stdev,
+> > >  			break;
+> > >  
+> > >  		reg = ioread32(&stdev->mmio_pff_csr[i].pff_event_summary);
+> > > -		s.pff[i] = reg;
+> > > +		s->pff[i] = reg;
+> > >  	}
+> > >  
+> > > -	if (copy_to_user(usum, &s, sizeof(s)))
+> > > -		return -EFAULT;
+> > > +	if (copy_to_user(usum, s, size)) {
+> > > +		ret = -EFAULT;
+> > > +		goto error_case;
+> > > +	}
+> > >  
+> > >  	stuser->event_cnt = atomic_read(&stdev->event_cnt);
+> > >  
+> > > -	return 0;
+> > > +error_case:
+> > > +	kfree(s);
+> > > +	return ret;
+> > >  }
+> > >  
+> > >  static u32 __iomem *global_ev_reg(struct switchtec_dev *stdev,
+> > > @@ -977,8 +987,9 @@ static long switchtec_dev_ioctl(struct file *filp, unsigned int cmd,
+> > >  	case SWITCHTEC_IOCTL_FLASH_PART_INFO:
+> > >  		rc = ioctl_flash_part_info(stdev, argp);
+> > >  		break;
+> > > -	case SWITCHTEC_IOCTL_EVENT_SUMMARY:
+> > > -		rc = ioctl_event_summary(stdev, stuser, argp);
+> > > +	case SWITCHTEC_IOCTL_EVENT_SUMMARY_LEGACY:
+> > > +		rc = ioctl_event_summary(stdev, stuser, argp,
+> > > +					 sizeof(struct switchtec_ioctl_event_summary_legacy));
+> > >  		break;
+> > >  	case SWITCHTEC_IOCTL_EVENT_CTL:
+> > >  		rc = ioctl_event_ctl(stdev, argp);
+> > > @@ -989,6 +1000,10 @@ static long switchtec_dev_ioctl(struct file *filp, unsigned int cmd,
+> > >  	case SWITCHTEC_IOCTL_PORT_TO_PFF:
+> > >  		rc = ioctl_port_to_pff(stdev, argp);
+> > >  		break;
+> > > +	case SWITCHTEC_IOCTL_EVENT_SUMMARY:
+> > > +		rc = ioctl_event_summary(stdev, stuser, argp,
+> > > +					 sizeof(struct switchtec_ioctl_event_summary));
+> > > +		break;
+> > >  	default:
+> > >  		rc = -ENOTTY;
+> > >  		break;
+> > > diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+> > > index 52a079b..0cfc34a 100644
+> > > --- a/include/linux/switchtec.h
+> > > +++ b/include/linux/switchtec.h
+> > > @@ -20,7 +20,7 @@
+> > >  #include <linux/cdev.h>
+> > >  
+> > >  #define SWITCHTEC_MRPC_PAYLOAD_SIZE 1024
+> > > -#define SWITCHTEC_MAX_PFF_CSR 48
+> > > +#define SWITCHTEC_MAX_PFF_CSR 255
+> > >  
+> > >  #define SWITCHTEC_EVENT_OCCURRED BIT(0)
+> > >  #define SWITCHTEC_EVENT_CLEAR    BIT(0)
+> > > diff --git a/include/uapi/linux/switchtec_ioctl.h b/include/uapi/linux/switchtec_ioctl.h
+> > > index 4f4daf8..c912b5a 100644
+> > > --- a/include/uapi/linux/switchtec_ioctl.h
+> > > +++ b/include/uapi/linux/switchtec_ioctl.h
+> > > @@ -50,7 +50,7 @@ struct switchtec_ioctl_flash_part_info {
+> > >  	__u32 active;
+> > >  };
+> > >  
+> > > -struct switchtec_ioctl_event_summary {
+> > > +struct switchtec_ioctl_event_summary_legacy {
+> > >  	__u64 global;
+> > >  	__u64 part_bitmap;
+> > >  	__u32 local_part;
+> > > @@ -59,6 +59,15 @@ struct switchtec_ioctl_event_summary {
+> > >  	__u32 pff[48];
+> > >  };
+> > >  
+> > > +struct switchtec_ioctl_event_summary {
+> > > +	__u64 global;
+> > > +	__u64 part_bitmap;
+> > > +	__u32 local_part;
+> > > +	__u32 padding;
+> > > +	__u32 part[48];
+> > > +	__u32 pff[255];
+> > > +};
+> > > +
+> > >  #define SWITCHTEC_IOCTL_EVENT_STACK_ERROR		0
+> > >  #define SWITCHTEC_IOCTL_EVENT_PPU_ERROR			1
+> > >  #define SWITCHTEC_IOCTL_EVENT_ISP_ERROR			2
+> > > @@ -127,6 +136,8 @@ struct switchtec_ioctl_pff_port {
+> > >  	_IOWR('W', 0x41, struct switchtec_ioctl_flash_part_info)
+> > >  #define SWITCHTEC_IOCTL_EVENT_SUMMARY \
+> > >  	_IOR('W', 0x42, struct switchtec_ioctl_event_summary)
+> > > +#define SWITCHTEC_IOCTL_EVENT_SUMMARY_LEGACY \
+> > > +	_IOR('W', 0x42, struct switchtec_ioctl_event_summary_legacy)
+> > >  #define SWITCHTEC_IOCTL_EVENT_CTL \
+> > >  	_IOWR('W', 0x43, struct switchtec_ioctl_event_ctl)
+> > >  #define SWITCHTEC_IOCTL_PFF_TO_PORT \
+> > > -- 
+> > > 2.7.4
+> > > 
+> > 
+> 
