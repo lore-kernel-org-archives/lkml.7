@@ -2,202 +2,166 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDDEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB23C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659EB20835
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E8120835
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389363AbfDRO1m (ORCPT
+        id S2389377AbfDRO2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:27:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52088 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733192AbfDRO1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:27:41 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D1F1DDBD73;
-        Thu, 18 Apr 2019 14:27:40 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39EAC600C1;
-        Thu, 18 Apr 2019 14:27:31 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 10:27:29 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
-        linux-bcache@vger.kernel.org,
-        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>
-Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
-Message-ID: <20190418142729.GB3288@redhat.com>
-References: <20190411210834.4105-1-jglisse@redhat.com>
- <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
- <20190416185922.GA12818@kmo-pixel>
- <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
- <20190416194936.GD21526@redhat.com>
- <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
- <20190417222858.GA4146@redhat.com>
- <20190418104205.GA28541@quack2.suse.cz>
+        Thu, 18 Apr 2019 10:28:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35188 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389146AbfDRO2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:28:04 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3IEJ2rS040587
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:28:03 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rxqjs1ye1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:28:02 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Thu, 18 Apr 2019 15:28:00 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Apr 2019 15:27:56 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3IERteW53149868
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Apr 2019 14:27:55 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91AC611C06E;
+        Thu, 18 Apr 2019 14:27:55 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C83311C058;
+        Thu, 18 Apr 2019 14:27:54 +0000 (GMT)
+Received: from [9.145.32.15] (unknown [9.145.32.15])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Apr 2019 14:27:54 +0000 (GMT)
+Subject: Re: [PATCH] prctl_set_mm: downgrade mmap_sem to read lock
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>
+Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
+        arunks@codeaurora.org, brgl@bgdev.pl, geert+renesas@glider.be,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mguzik@redhat.com, rppt@linux.ibm.com, vbabka@suse.cz
+References: <20190417145548.GN5878@dhcp22.suse.cz>
+ <20190418135039.19987-1-mkoutny@suse.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Thu, 18 Apr 2019 16:27:53 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190418135039.19987-1-mkoutny@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190418104205.GA28541@quack2.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 18 Apr 2019 14:27:41 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19041814-4275-0000-0000-000003294817
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041814-4276-0000-0000-0000383881C8
+Message-Id: <27defd37-7e4e-f919-fe0c-64e1efdafdcf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-18_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904180098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 12:42:05PM +0200, Jan Kara wrote:
-> On Wed 17-04-19 18:28:58, Jerome Glisse wrote:
-> > On Wed, Apr 17, 2019 at 02:53:28PM -0700, Dan Williams wrote:
-> > > On Tue, Apr 16, 2019 at 12:50 PM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > >
-> > > > On Tue, Apr 16, 2019 at 12:12:27PM -0700, Dan Williams wrote:
-> > > > > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
-> > > > > <kent.overstreet@gmail.com> wrote:
-> > > > > >
-> > > > > > On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
-> > > > > > > On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
-> > > > > > > > From: Jérôme Glisse <jglisse@redhat.com>
-> > > > > > > >
-> > > > > > > > This patchset depends on various small fixes [1] and also on patchset
-> > > > > > > > which introduce put_user_page*() [2] and thus is 5.3 material as those
-> > > > > > > > pre-requisite will get in 5.2 at best. Nonetheless i am posting it now
-> > > > > > > > so that it can get review and comments on how and what should be done
-> > > > > > > > to test things.
-> > > > > > > >
-> > > > > > > > For various reasons [2] [3] we want to track page reference through GUP
-> > > > > > > > differently than "regular" page reference. Thus we need to keep track
-> > > > > > > > of how we got a page within the block and fs layer. To do so this patch-
-> > > > > > > > set change the bio_bvec struct to store a pfn and flags instead of a
-> > > > > > > > direct pointer to a page. This way we can flag page that are coming from
-> > > > > > > > GUP.
-> > > > > > > >
-> > > > > > > > This patchset is divided as follow:
-> > > > > > > >     - First part of the patchset is just small cleanup i believe they
-> > > > > > > >       can go in as his assuming people are ok with them.
-> > > > > > >
-> > > > > > >
-> > > > > > > >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn this is
-> > > > > > > >       done in multi-step, first we replace all direct dereference of
-> > > > > > > >       the field by call to inline helper, then we introduce macro for
-> > > > > > > >       bio_bvec that are initialized on the stack. Finaly we change the
-> > > > > > > >       bv_page field to bv_pfn.
-> > > > > > >
-> > > > > > > Why do we need a bv_pfn. Why not just use the lowest bit of the page-ptr
-> > > > > > > as a flag (pointer always aligned to 64 bytes in our case).
-> > > > > > >
-> > > > > > > So yes we need an inline helper for reference of the page but is it not clearer
-> > > > > > > that we assume a page* and not any kind of pfn ?
-> > > > > > > It will not be the first place using low bits of a pointer for flags.
-> > > > > > >
-> > > > > > > That said. Why we need it at all? I mean why not have it as a bio flag. If it exist
-> > > > > > > at all that a user has a GUP and none-GUP pages to IO at the same request he/she
-> > > > > > > can just submit them as two separate BIOs (chained at the block layer).
-> > > > > > >
-> > > > > > > Many users just submit one page bios and let elevator merge them any way.
-> > > > > >
-> > > > > > Let's please not add additional flags and weirdness to struct bio - "if this
-> > > > > > flag is set interpret one way, if not interpret another" - or eventually bios
-> > > > > > will be as bad as skbuffs. I would much prefer just changing bv_page to bv_pfn.
-> > > > >
-> > > > > This all reminds of the failed attempt to teach the block layer to
-> > > > > operate without pages:
-> > > > >
-> > > > > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-desk3.amr.corp.intel.com/
-> > > > >
-> > > > > >
-> > > > > > Question though - why do we need a flag for whether a page is a GUP page or not?
-> > > > > > Couldn't the needed information just be determined by what range the pfn is not
-> > > > > > (i.e. whether or not it has a struct page associated with it)?
-> > > > >
-> > > > > That amounts to a pfn_valid() check which is a bit heavier than if we
-> > > > > can store a flag in the bv_pfn entry directly.
-> > > > >
-> > > > > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
-> > > > > an 'unsigned long'.
-> > > > >
-> > > > > That said, I'm still in favor of Jan's proposal to just make the
-> > > > > bv_page semantics uniform. Otherwise we're complicating this core
-> > > > > infrastructure for some yet to be implemented GPU memory management
-> > > > > capabilities with yet to be determined value. Circle back when that
-> > > > > value is clear, but in the meantime fix the GUP bug.
-> > > >
-> > > > This has nothing to do with GPU, what make you think so ? Here i am
-> > > > trying to solve GUP and to keep the value of knowing wether a page
-> > > > has been GUP or not. I argue that if we bias every page in every bio
-> > > > then we loose that information and thus the value.
-> > > >
-> > > > I gave the page protection mechanisms as an example that would be
-> > > > impacted but it is not the only one. Knowing if a page has been GUP
-> > > > can be useful for memory reclaimation, compaction, NUMA balancing,
-> > > 
-> > > Right, this is what I was reacting to in your pushback to Jan's
-> > > proposal. You're claiming value for not doing the simple thing for
-> > > some future "may be useful in these contexts". To my knowledge those
-> > > things are not broken today. You're asking for the complexity to be
-> > > carried today for some future benefit, and I'm asking for the
-> > > simplicity to be maintained as much as possible today and let the
-> > > value of future changes stand on their own to push for more complexity
-> > > later.
-> > > 
-> > > Effectively don't use this bug fix to push complexity for a future
-> > > agenda where the value has yet to be quantified.
-> > 
-> > Except that this solution (biasing everyone in bio) would _more complex_
-> > it is only conceptualy appealing. The changes are on the other hand much
-> > deeper and much riskier but you decided to ignore that and focus on some-
-> > thing i was just giving as an example.
+Le 18/04/2019 Ã  15:50, Michal KoutnÃ½ a Ã©critÂ :
+> I learnt, it's, alas, too late to drop the non PRCTL_SET_MM_MAP calls
+> [1], so at least downgrade the write acquisition of mmap_sem as in the
+> patch below (that should be stacked on the previous one or squashed).
 > 
-> Yeah, after going and reading several places like fs/iomap.c, fs/mpage.c,
-> drivers/md/dm-io.c I agree with you. The places that are not doing direct
-> IO usually just don't hold any page reference that could be directly
-> attributed to the bio (and they don't drop it when bio finishes). They
-> rather use other means (like PageLocked, PageWriteback) to make sure the
-> page stays alive so mandating gup-pin reference for all pages attached to a
-> bio would require a lot of reworking of places that are not related to our
-> problem and currently work just fine. So I withdraw my suggestion. Nice in
-> theory, too much work in practice ;).
+> Cyrill, you mentioned lock changes in [1] but the link seems empty. Is
+> it supposed to be [2]? That could be an alternative to this patch after
+> some refreshments and clarifications.
+> 
+> 
+> [1] https://lore.kernel.org/lkml/20190417165632.GC3040@uranus.lan/
+> [2] https://lore.kernel.org/lkml/20180507075606.870903028@gmail.com/
+> 
+> ========
+> 
+> Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect
+> arg_start|end and env_start|end in mm_struct") we use arg_lock for
+> boundaries modifications. Synchronize prctl_set_mm with this lock and
+> keep mmap_sem for reading only (analogous to what we already do in
+> prctl_set_mm_map).
+> 
+> Also, save few cycles by looking up VMA only after performing basic
+> arguments validation.
+> 
+> Signed-off-by: Michal KoutnÃ½ <mkoutny@suse.com>
+> ---
+>   kernel/sys.c | 12 +++++++++---
+>   1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 12df0e5434b8..bbce0f26d707 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2125,8 +2125,12 @@ static int prctl_set_mm(int opt, unsigned long addr,
+>   
+>   	error = -EINVAL;
+>   
+> -	down_write(&mm->mmap_sem);
+> -	vma = find_vma(mm, addr);
+> +	/*
+> +	 * arg_lock protects concurent updates of arg boundaries, we need mmap_sem for
+> +	 * a) concurrent sys_brk, b) finding VMA for addr validation.
+> +	 */
+> +	down_read(&mm->mmap_sem);
+> +	spin_lock(&mm->arg_lock);
+>   
+>   	prctl_map.start_code	= mm->start_code;
+>   	prctl_map.end_code	= mm->end_code;
+> @@ -2185,6 +2189,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
+>   	if (error)
+>   		goto out;
+>   
+> +	vma = find_vma(mm, addr);
 
-Have you seem Boaz proposal ? I have started it and it does not look to
-bad (but you knwo taste and color :)) You can take a peek:
+Why is find_vma() called while holding the arg_lock ?
 
-https://cgit.freedesktop.org/~glisse/linux/log/?h=gup-bio-v2
+To limit the time the spinlock is held, would it be better to
+    	read_lock(mmap_sem)
+    	find_vma()
+    	spin_lock(arg_lock)
+    	..
+out:
+	spin_unlock()
+	up_read(mmap_sem)
 
-I need to finish that and run fstests on bunch of different fs before
-posting. Dunno if i will have enough time to do that before LSF/MM.
+Not sure this would change a lot the performance anyway.
 
-Cheers,
-Jérôme
+>   	switch (opt) {
+>   	/*
+>   	 * If command line arguments and environment
+> @@ -2218,7 +2223,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
+>   
+>   	error = 0;
+>   out:
+> -	up_write(&mm->mmap_sem);
+> +	spin_unlock(&mm->arg_lock);
+> +	up_read(&mm->mmap_sem);
+>   	return error;
+>   }
+>   
+> 
+
