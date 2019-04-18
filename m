@@ -2,107 +2,86 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46B2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD23DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F80C2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3A2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388706AbfDRJII (ORCPT
+        id S2388729AbfDRJIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:08:08 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:34155 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388665AbfDRJIE (ORCPT
+        Thu, 18 Apr 2019 05:08:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60465 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388303AbfDRJIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:08:04 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH2ze-0001mB-SZ; Thu, 18 Apr 2019 11:06:07 +0200
-Message-Id: <20190418084253.431851214@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:23 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [patch V2 04/29] backtrace-test: Simplify stack trace handling
-References: <20190418084119.056416939@linutronix.de>
+        Thu, 18 Apr 2019 05:08:14 -0400
+X-UUID: 0d444f95a246432192204ce05d600cbd-20190418
+X-UUID: 0d444f95a246432192204ce05d600cbd-20190418
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 478835297; Thu, 18 Apr 2019 17:08:05 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 18 Apr 2019 17:08:04 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 18 Apr 2019 17:08:04 +0800
+From:   <sean.wang@mediatek.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <ulf.hansson@linaro.org>, <linux-bluetooth@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v1 3/4] Bluetooth: btmtksdio: Fix hdev->stat.byte_rx accumulation
+Date:   Thu, 18 Apr 2019 17:08:01 +0800
+Message-ID: <ea8d491b7e737a51a6cfbc6d9078ba98012b0e66.1555577565.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1555577565.git.sean.wang@mediatek.com>
+References: <cover.1555577565.git.sean.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Accumulate hdev->stat.byte_rx only for valid packets as btmtkuart doing.
+
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- kernel/backtracetest.c |   11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/bluetooth/btmtksdio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/backtracetest.c
-+++ b/kernel/backtracetest.c
-@@ -48,19 +48,14 @@ static void backtrace_test_irq(void)
- #ifdef CONFIG_STACKTRACE
- static void backtrace_test_saved(void)
- {
--	struct stack_trace trace;
- 	unsigned long entries[8];
-+	unsigned int nr_entries;
+diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
+index 9c123a9de673..877c0a831775 100644
+--- a/drivers/bluetooth/btmtksdio.c
++++ b/drivers/bluetooth/btmtksdio.c
+@@ -391,8 +391,6 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
+ 	if (err < 0)
+ 		goto err_kfree_skb;
  
- 	pr_info("Testing a saved backtrace.\n");
- 	pr_info("The following trace is a kernel self test and not a bug!\n");
- 
--	trace.nr_entries = 0;
--	trace.max_entries = ARRAY_SIZE(entries);
--	trace.entries = entries;
--	trace.skip = 0;
+-	bdev->hdev->stat.byte_rx += rx_size;
 -
--	save_stack_trace(&trace);
--	print_stack_trace(&trace, 0);
-+	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-+	stack_trace_print(entries, nr_entries, 0);
- }
- #else
- static void backtrace_test_saved(void)
-
+ 	sdio_hdr = (void *)skb->data;
+ 
+ 	/* We assume the default error as -EILSEQ simply to make the error path
+@@ -457,6 +455,8 @@ static int btmtksdio_rx_packet(struct btmtksdio_dev *bdev, u16 rx_size)
+ 	/* Complete frame */
+ 	(&pkts[i])->recv(bdev->hdev, skb);
+ 
++	bdev->hdev->stat.byte_rx += rx_size;
++
+ 	return 0;
+ 
+ err_kfree_skb:
+-- 
+2.18.0
 
