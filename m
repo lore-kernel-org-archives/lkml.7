@@ -2,148 +2,169 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE19C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C578BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E377D21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949D321479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mG0tYTmW"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="rmjI44H+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389272AbfDROLc (ORCPT
+        id S2389307AbfDROLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:11:32 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:34046 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388495AbfDROLc (ORCPT
+        Thu, 18 Apr 2019 10:11:39 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46663 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388495AbfDROLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:11:32 -0400
-Received: by mail-ua1-f66.google.com with SMTP id c6so810498uan.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:11:31 -0700 (PDT)
+        Thu, 18 Apr 2019 10:11:38 -0400
+Received: by mail-yb1-f194.google.com with SMTP id m5so868452ybk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:11:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YmPgqTO/Ej1YV//EeHsX93xlvTquoKBPoI/41sJ9W2s=;
-        b=mG0tYTmWwlCehrvbHFJO44406SoJzEWxnY7l/5J8jhSuzBDjJEiJVa4sNaA7OndfSj
-         qJZ/Q6KJVcV8kfX9Sh2glwX5FGzLAGZ4fq3EeFIUdBwML2+hNyP2KiEU/r9DkimTl/F5
-         ZEynTUoXtfL/BT69F+A2K2gDWMdWNZ7pmprJI=
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ivHTYRRvRvR9h36WLmLrROVM+pXttcNnu0C3T6m7Duo=;
+        b=rmjI44H+Jtn0BF75bCHm88/cu/ymKqriTzZG30AzAmFwmajUYV/7CuXumfut4L3I4E
+         B/l6AtmxEGT4dr8sauDGDn8ljy3xfbN49BFhr438DsIclZheqtH18RXRU4j0yh6u7/4Y
+         IhEHoq2yii9F7apwliF8QZhsNCvcYx3cUY1KrSxCYSnPkvxGL0jU+Q87pxCnDKogxWJ5
+         Gx/JKJ0UXnfFu1Ra3Pg2hkC+Nyj4avaMVu0HMrcVkVzzqJweOxW6CMTX5T3cfufwVHn0
+         OkJcRfMVtVUw5lDnz7E6OKxrEe0cb9kRRtpxVa7EWQ6LbKtt4GPvnyrRu54GER/ZiJ+9
+         pOdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YmPgqTO/Ej1YV//EeHsX93xlvTquoKBPoI/41sJ9W2s=;
-        b=ss7+pEPBQmVSfA1Jklv2tnU04EgaarKdOOqecP2iDkkFU9tjfRITw5WHQqQ3HFAgVU
-         lZjhsm38NXXgTPV3+sZOSZUuNyy9r+ik1EFxq7qtnla5L98SxSstessGCIpRwuPOztVr
-         g33tj3/gq5JXKbSLvLUD1306Df5i/yV/7WW4H/tySY+3srzTdBj4oSPAOZ9FpsrQghrp
-         hd5v3J4nrWAaQLvGl/GCdDGG/hgvjsDbYwxXveIcq00cZFdewCXlLAOOIeE3imDyDw41
-         zJgqH4zN5YgyT73QAe3QaV6gWKNlMfZuwFlZjLXGr+WpHPjPaatlWPakRtSPP60h6mJM
-         XbeA==
-X-Gm-Message-State: APjAAAWTOTyfM43UtGSwWHIsIUn2nUmUjy2TlaG9aOt0KWMfcjbG2OWV
-        zO87L+XaMh2hc4zQ4NIcajcc/NwN998=
-X-Google-Smtp-Source: APXvYqxAF7QWPOoOobx8wmCDXXsEcMYRTBvLTPUZtsDD6RzT4iPwjjZ1vQ8gTHOq2Cr/jJEHlz5agQ==
-X-Received: by 2002:ab0:2653:: with SMTP id q19mr7054738uao.76.1555596690166;
-        Thu, 18 Apr 2019 07:11:30 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id e198sm483990vsc.3.2019.04.18.07.11.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 07:11:28 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id d5so797757uan.6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:11:27 -0700 (PDT)
-X-Received: by 2002:a9f:3fce:: with SMTP id m14mr50781446uaj.96.1555596686834;
- Thu, 18 Apr 2019 07:11:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ivHTYRRvRvR9h36WLmLrROVM+pXttcNnu0C3T6m7Duo=;
+        b=snrcgmaxzQkekfUQDtHCBvlnnGvy0yExV3HhmIkTE5cLrfLui2uCi6HD8LzWEBGvbr
+         JUQT6cgSA2vUCE4elwYjl4QcOmK+1vfohITWeafGwIsJQSNo/H6/yWGeYFg4FDKG0y1e
+         wzp/dGlo6GAnr4knDwTLaDjVR07vAOpt0YDA8j5NwviWyTeNBs4ex1xgxbBjW2tx6En7
+         s98qUK/CAT2HOLx8CIL8uLL4TIufec8V6ORWipexj+xTl+ZMixudNqDR4dIqR2uT0WME
+         EYKmNYtgH6P6bgSisOw8AYRqr86M4QwIsDbmZ/IGGULrQQRh5qak01nod6jCNPoPpeyF
+         Ahkg==
+X-Gm-Message-State: APjAAAUGH+CZR3bQPV6AmLyv1kaZrnS8zSXXL3BGSspg3lOMCwK7XK2t
+        z++L+IVdeJbuRH4XkrXLBLb212qnkrXWvQ==
+X-Google-Smtp-Source: APXvYqzTMkqnZBq1BaA4F2E8052CAt9hJPkCjTn7/QlWTgUG68180YDRCaduNWuzUAX7yRhjNy27fQ==
+X-Received: by 2002:a25:2c93:: with SMTP id s141mr77529921ybs.440.1555596697793;
+        Thu, 18 Apr 2019 07:11:37 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:180::e445])
+        by smtp.gmail.com with ESMTPSA id d196sm1123359ywh.105.2019.04.18.07.11.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 07:11:37 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 10:11:35 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Pan Bian <bianpan2016@163.com>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [V2] btrfs: drop inode reference count on error path
+Message-ID: <20190418141132.poh7iatvok5fxfwr@macbook-pro-91.dhcp.thefacebook.com>
+References: <1555585576-31045-1-git-send-email-bianpan2016@163.com>
+ <ac36d111-547e-a76a-149e-a7ad603d7dfd@suse.com>
+ <20190418140749.h57y5kqz4s47sbuo@macbook-pro-91.dhcp.thefacebook.com>
+ <bf1a23fa-d9e3-3fd4-8cf5-2ed53225fe11@suse.com>
 MIME-Version: 1.0
-References: <1462963502-11636-1-git-send-email-hecmargi@upv.es>
- <CAGXu5jLZ-DgTfokLTqUHOUphO4C1FwHgYDLTA1oB9HBHnH-a1Q@mail.gmail.com> <alpine.DEB.2.21.1904181015270.3174@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904181015270.3174@nanos.tec.linutronix.de>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 18 Apr 2019 09:11:15 -0500
-X-Gmail-Original-Message-ID: <CAGXu5jK+-eVzhxTB418b1BCqFw5oVpdDhmCqE2Gn2_rFTf2E1A@mail.gmail.com>
-Message-ID: <CAGXu5jK+-eVzhxTB418b1BCqFw5oVpdDhmCqE2Gn2_rFTf2E1A@mail.gmail.com>
-Subject: Re: [PATCH] x86_64: Disabling read-implies-exec when the stack is executable
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Hector Marco-Gisbert <hecmargi@upv.es>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Huaitong Han <huaitong.han@intel.com>,
-        Ismael Ripoll Ripoll <iripoll@upv.es>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bf1a23fa-d9e3-3fd4-8cf5-2ed53225fe11@suse.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 3:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, 18 Apr 2019, Kees Cook wrote:
-> > On Wed, May 11, 2016 at 5:45 AM Hector Marco-Gisbert <hecmargi@upv.es> wrote:
-> > *thread necromancy*
-> >
-> > I'd still like to see this get landed. READ_IMPLIES_EXEC is way too
-> > powerful (it impacts, for example, mmap() regions of device driver
-> > memory, forcing drivers to not be able to disallow VM_EXEC[1]).
-> >
-> > The only case it could break is on an AMD K8 (Athlon only, I assume?),
-> > which seems unlikely to have a modern kernel run on it. If there is
-> > still concern, then we could just test against the NX CPU feature:
-> >
-> > diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> > index 69c0f892e310..367cd36259a4 100644
-> > --- a/arch/x86/include/asm/elf.h
-> > +++ b/arch/x86/include/asm/elf.h
-> > @@ -280,10 +280,12 @@ extern u32 elf_hwcap2;
-> >
-> >  /*
-> >   * An executable for which elf_read_implies_exec() returns TRUE will
-> > - * have the READ_IMPLIES_EXEC personality flag set automatically.
-> > + * have the READ_IMPLIES_EXEC personality flag set automatically when
-> > + * a CPU did not support NX or is using a 32-bit memory layout.
-> >   */
-> > -#define elf_read_implies_exec(ex, executable_stack)    \
-> > -       (executable_stack != EXSTACK_DISABLE_X)
-> > +#define elf_read_implies_exec(ex, executable_stack)            \
-> > +       (mmap_is_ia32() || !(__supported_pte_mask & _PAGE_NX) ? \
->
-> What's special about ia32? All what matters is whether PAGE_NX is supported
-> or not. That has nothing to do with 32/64bit unless I'm missing something
-> (as usual).
+On Thu, Apr 18, 2019 at 05:09:44PM +0300, Nikolay Borisov wrote:
+> 
+> 
+> On 18.04.19 г. 17:07 ч., Josef Bacik wrote:
+> > On Thu, Apr 18, 2019 at 03:50:00PM +0300, Nikolay Borisov wrote:
+> >>
+> >>
+> >> On 18.04.19 г. 14:06 ч., Pan Bian wrote:
+> >>> The reference count of inode is incremented by ihold. It should be
+> >>> dropped if not used. However, the reference count is not dropped if
+> >>> error occurs during updating the inode or deleting orphan items. This
+> >>> patch fixes the bug.
+> >>>
+> >>> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> >>> ---
+> >>> V2: move ihold just before device_initialize to make code clearer
+> >>> ---
+> >>>  fs/btrfs/inode.c | 54 +++++++++++++++++++++++++-----------------------------
+> >>>  1 file changed, 25 insertions(+), 29 deletions(-)
+> >>>
+> >>> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> >>> index 82fdda8..d6630df 100644
+> >>> --- a/fs/btrfs/inode.c
+> >>> +++ b/fs/btrfs/inode.c
+> >>> @@ -6579,7 +6579,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+> >>>  	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+> >>>  	u64 index;
+> >>>  	int err;
+> >>> -	int drop_inode = 0;
+> >>> +	int log_mode;
+> >>>  
+> >>>  	/* do not allow sys_link's with other subvols of the same device */
+> >>>  	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
+> >>> @@ -6616,41 +6616,37 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+> >>>  	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
+> >>>  			1, index);
+> >>>  
+> >>> -	if (err) {
+> >>> -		drop_inode = 1;
+> >>> -	} else {
+> >>> -		struct dentry *parent = dentry->d_parent;
+> >>> -		int ret;
+> >>> +	if (err)
+> >>> +		goto err_link;
+> >>>  
+> >>> -		err = btrfs_update_inode(trans, root, inode);
+> >>> +	err = btrfs_update_inode(trans, root, inode);
+> >>> +	if (err)
+> >>> +		goto err_link;
+> >>> +	if (inode->i_nlink == 1) {
+> >>> +		/*
+> >>> +		 * If new hard link count is 1, it's a file created
+> >>> +		 * with open(2) O_TMPFILE flag.
+> >>> +		 */
+> >>> +		err = btrfs_orphan_del(trans, BTRFS_I(inode));
+> >>>  		if (err)
+> >>> -			goto fail;
+> >>> -		if (inode->i_nlink == 1) {
+> >>> -			/*
+> >>> -			 * If new hard link count is 1, it's a file created
+> >>> -			 * with open(2) O_TMPFILE flag.
+> >>> -			 */
+> >>> -			err = btrfs_orphan_del(trans, BTRFS_I(inode));
+> >>> -			if (err)
+> >>> -				goto fail;
+> >>> -		}
+> >>> -		BTRFS_I(inode)->last_link_trans = trans->transid;
+> >>> -		d_instantiate(dentry, inode);
+> >>> -		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
+> >>> -					 true, NULL);
+> >>> -		if (ret == BTRFS_NEED_TRANS_COMMIT) {
+> >>> -			err = btrfs_commit_transaction(trans);
+> >>> -			trans = NULL;
+> >>> -		}
+> >>> +			goto err_link;
+> >>> +	}
+> >>> +	BTRFS_I(inode)->last_link_trans = trans->transid;
+> >>> +	ihold(inode);
+> > 
+> > Where is the iput for this ihold?
+> 
+> This ihold is sort of "given" to the d_instantiate. I.e the iput happens
+> when the respective dentry is unhashed/removed.
 
-I think the reasoning was that older toolchains from ia32 wouldn't
-provide any permissions marking at all, and this was a signal that it
-might need executable heaps as well as stack. So, since ia32 gained NX
-along the way, lacking the gnu-stack marking was a reasonable
-indicator that the ELF needed this crazy setting to effectively
-disable NX for the ELF.
+Ah that's what I was missing, thanks,
 
-But yes, just looking at the NX feature should cover this.
-
-One thing I'd also like to adjust is the logic about the gnu-stack
-existing and requesting an executable stack should apply only to the
-stack, and not trigger READ_IMPLIES_EXEC. i.e. if the ELF has
-gnu-stack marking of any kind, it should never flag READ_IMPLIES_EXEC.
-It would, of course, continue to control the stack perms.
-
-And if this is wrong ... well, we'll find out how and we can more
-correctly document this. So how about:
-
-#define elf_read_implies_exec(ex, executable_stack)            \
-       (!(__supported_pte_mask & _PAGE_NX) &&  \
-        (executable_stack == EXSTACK_DEFAULT))
-
-
--- 
-Kees Cook
+Josef
