@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B59C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59178C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA89217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2409320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389450AbfDRNlp (ORCPT
+        id S2389455AbfDRNlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:41:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:33710 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389216AbfDRNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:41:43 -0400
+        Thu, 18 Apr 2019 09:41:52 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33718 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388375AbfDRNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:41:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B58680D;
-        Thu, 18 Apr 2019 06:41:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15CD880D;
+        Thu, 18 Apr 2019 06:41:49 -0700 (PDT)
 Received: from e110176-lin.kfn.arm.com (e110176-lin.kfn.arm.com [10.50.4.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF1ED3F5AF;
-        Thu, 18 Apr 2019 06:41:41 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D42C3F5AF;
+        Thu, 18 Apr 2019 06:41:47 -0700 (PDT)
 From:   Gilad Ben-Yossef <gilad@benyossef.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
-Cc:     Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 25/35] crypto: ccree: make AEAD sgl iterator well behaved
-Date:   Thu, 18 Apr 2019 16:39:00 +0300
-Message-Id: <20190418133913.9122-26-gilad@benyossef.com>
+Cc:     Ofir Drang <ofir.drang@arm.com>, stable@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 26/35] crypto: ccree: zap entire sg on aead request unmap
+Date:   Thu, 18 Apr 2019 16:39:01 +0300
+Message-Id: <20190418133913.9122-27-gilad@benyossef.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418133913.9122-1-gilad@benyossef.com>
 References: <20190418133913.9122-1-gilad@benyossef.com>
@@ -43,113 +43,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some scatter list interation code was not handling scatter lists
-being shorter than expected in a graceful manner.
+We were trying to be clever zapping out of the cache only the required
+length out of scatter list on AEAD request completion and getting it
+wrong.
+
+As Knuth said: "when in douby, use brute force". Zap the whole length of
+the scatter list.
 
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
 ---
- drivers/crypto/ccree/cc_buffer_mgr.c | 55 +++++++++-------------------
- 1 file changed, 17 insertions(+), 38 deletions(-)
+ drivers/crypto/ccree/cc_buffer_mgr.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/crypto/ccree/cc_buffer_mgr.c b/drivers/crypto/ccree/cc_buffer_mgr.c
-index 86e498bee0bb..fa625bdde3f9 100644
+index fa625bdde3f9..09dceec7d828 100644
 --- a/drivers/crypto/ccree/cc_buffer_mgr.c
 +++ b/drivers/crypto/ccree/cc_buffer_mgr.c
-@@ -659,11 +659,9 @@ static int cc_aead_chain_assoc(struct cc_drvdata *drvdata,
+@@ -517,9 +517,7 @@ void cc_unmap_aead_request(struct device *dev, struct aead_request *req)
  {
  	struct aead_req_ctx *areq_ctx = aead_request_ctx(req);
- 	int rc = 0;
--	u32 mapped_nents = 0;
--	struct scatterlist *current_sg = req->src;
-+	int mapped_nents = 0;
- 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
--	unsigned int sg_index = 0;
--	u32 size_of_assoc = areq_ctx->assoclen;
-+	unsigned int size_of_assoc = areq_ctx->assoclen;
- 	struct device *dev = drvdata_to_dev(drvdata);
+ 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
+-	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+-	u32 size_to_unmap = 0;
  
- 	if (areq_ctx->is_gcm4543)
-@@ -684,26 +682,10 @@ static int cc_aead_chain_assoc(struct cc_drvdata *drvdata,
- 		goto chain_assoc_exit;
+ 	if (areq_ctx->mac_buf_dma_addr) {
+ 		dma_unmap_single(dev, areq_ctx->mac_buf_dma_addr,
+@@ -576,19 +574,12 @@ void cc_unmap_aead_request(struct device *dev, struct aead_request *req)
+ 	dev_dbg(dev, "Unmapping src sgl: req->src=%pK areq_ctx->src.nents=%u areq_ctx->assoc.nents=%u assoclen:%u cryptlen=%u\n",
+ 		sg_virt(req->src), areq_ctx->src.nents, areq_ctx->assoc.nents,
+ 		areq_ctx->assoclen, req->cryptlen);
+-	size_to_unmap = areq_ctx->assoclen + req->cryptlen;
+-	if (areq_ctx->gen_ctx.op_type == DRV_CRYPTO_DIRECTION_ENCRYPT)
+-		size_to_unmap += areq_ctx->req_authsize;
+-	if (areq_ctx->is_gcm4543)
+-		size_to_unmap += crypto_aead_ivsize(tfm);
+ 
+-	dma_unmap_sg(dev, req->src, sg_nents_for_len(req->src, size_to_unmap),
+-		     DMA_BIDIRECTIONAL);
++	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_BIDIRECTIONAL);
+ 	if (req->src != req->dst) {
+ 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
+ 			sg_virt(req->dst));
+-		dma_unmap_sg(dev, req->dst,
+-			     sg_nents_for_len(req->dst, size_to_unmap),
++		dma_unmap_sg(dev, req->dst, sg_nents(req->dst),
+ 			     DMA_BIDIRECTIONAL);
  	}
- 
--	//iterate over the sgl to see how many entries are for associated data
--	//it is assumed that if we reach here , the sgl is already mapped
--	sg_index = current_sg->length;
--	//the first entry in the scatter list contains all the associated data
--	if (sg_index > size_of_assoc) {
--		mapped_nents++;
--	} else {
--		while (sg_index <= size_of_assoc) {
--			current_sg = sg_next(current_sg);
--			/* if have reached the end of the sgl, then this is
--			 * unexpected
--			 */
--			if (!current_sg) {
--				dev_err(dev, "reached end of sg list. unexpected\n");
--				return -EINVAL;
--			}
--			sg_index += current_sg->length;
--			mapped_nents++;
--		}
--	}
-+	mapped_nents = sg_nents_for_len(req->src, size_of_assoc);
-+	if (mapped_nents < 0)
-+		return mapped_nents;
-+
- 	if (mapped_nents > LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES) {
- 		dev_err(dev, "Too many fragments. current %d max %d\n",
- 			mapped_nents, LLI_MAX_NUM_OF_ASSOC_DATA_ENTRIES);
-@@ -898,6 +880,7 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
- 	u32 sg_index = 0;
- 	bool is_gcm4543 = areq_ctx->is_gcm4543;
- 	u32 size_to_skip = areq_ctx->assoclen;
-+	struct scatterlist *sgl;
- 
- 	if (is_gcm4543)
- 		size_to_skip += crypto_aead_ivsize(tfm);
-@@ -920,15 +903,13 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
- 	sg_index = areq_ctx->src_sgl->length;
- 	//check where the data starts
- 	while (sg_index <= size_to_skip) {
-+		src_mapped_nents--;
- 		offset -= areq_ctx->src_sgl->length;
--		areq_ctx->src_sgl = sg_next(areq_ctx->src_sgl);
--		//if have reached the end of the sgl, then this is unexpected
--		if (!areq_ctx->src_sgl) {
--			dev_err(dev, "reached end of sg list. unexpected\n");
--			return -EINVAL;
--		}
-+		sgl = sg_next(areq_ctx->src_sgl);
-+		if (!sgl)
-+			break;
-+		areq_ctx->src_sgl = sgl;
- 		sg_index += areq_ctx->src_sgl->length;
--		src_mapped_nents--;
- 	}
- 	if (src_mapped_nents > LLI_MAX_NUM_OF_DATA_ENTRIES) {
- 		dev_err(dev, "Too many fragments. current %d max %d\n",
-@@ -962,15 +943,13 @@ static int cc_aead_chain_data(struct cc_drvdata *drvdata,
- 
- 	//check where the data starts
- 	while (sg_index <= size_to_skip) {
-+		dst_mapped_nents--;
- 		offset -= areq_ctx->dst_sgl->length;
--		areq_ctx->dst_sgl = sg_next(areq_ctx->dst_sgl);
--		//if have reached the end of the sgl, then this is unexpected
--		if (!areq_ctx->dst_sgl) {
--			dev_err(dev, "reached end of sg list. unexpected\n");
--			return -EINVAL;
--		}
-+		sgl = sg_next(areq_ctx->dst_sgl);
-+		if (!sgl)
-+			break;
-+		areq_ctx->dst_sgl = sgl;
- 		sg_index += areq_ctx->dst_sgl->length;
--		dst_mapped_nents--;
- 	}
- 	if (dst_mapped_nents > LLI_MAX_NUM_OF_DATA_ENTRIES) {
- 		dev_err(dev, "Too many fragments. current %d max %d\n",
+ 	if (drvdata->coherent &&
 -- 
 2.21.0
 
