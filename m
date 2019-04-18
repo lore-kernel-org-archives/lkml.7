@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D9DC10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D122C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 377682183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6387214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScQFT3IF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9S7ERqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388307AbfDRIR7 (ORCPT
+        id S2388329AbfDRISC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:17:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51744 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388279AbfDRIRy (ORCPT
+        Thu, 18 Apr 2019 04:18:02 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39498 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733205AbfDRIRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:17:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 4so1728852wmf.1;
-        Thu, 18 Apr 2019 01:17:52 -0700 (PDT)
+        Thu, 18 Apr 2019 04:17:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j9so1817520wrn.6;
+        Thu, 18 Apr 2019 01:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=z5FqXHUkkOxiPqY9isBq9yK5Qx1B2t+uIrpEWzqHhn4=;
-        b=ScQFT3IFvQa3euQsJP1/Jz+BGtaJxiOW7DbwNa0GEW0uzJdXZjsVsr1ixuuH+SDaof
-         C3Nlzbc13LL7Z6bDjxnnceYseWsGmSGaKuVBmfTnCTsp5tm1TrPtTSruQIRKFPJFFpCL
-         yCJEGWXHfNbvUEOzMnnTYF7box5TzYUHuZL2itCwVP7NWbVUUBab1aNxQK9uwLBJpKxF
-         pyNbKowIkgsmzRaYpMP3J8XRL3+QvYX74O+trtA//jC81NVb6i2TqC7Jtqe9xtDij4lt
-         YpfxXiwQ1ieUgyC30tX5zTCFsbTkfxqjrVcnRCvkyZdfjXKbV5u5Fj1T+e/pF7l5jgYV
-         zkfg==
+        bh=2Oa4Mo8b8dqWphkeFQAL0N8F8rFHV+7qiodUTdHFrPA=;
+        b=A9S7ERqPxCdpYEOO92/iiqJT0FDISgCqfUojAtdwbZVNI3kDYFplGyNoamMhpzotXd
+         +KB6YmhtdMoB9V+HrBw8kozqvClVqD2zD1nvx1zoNJ3p/7nWdA/M86IACynN2APSX3d1
+         84t3EYpYiwqCBUxxvku+zmuBnhoz/8Hfpi0c2LDRQ6pddGY58ot5mT4ud/yLtHh+acdz
+         ozW+P11h5X9NFwtUrw1GGrd7fGH1uzoAhk5ELgqgIMJ3MOf33/3FHpdM5XyPuVrPV46i
+         9JNXdvvTWpJTHLOgCJfW8RLwhzqluP+Ofy3uI/PyU9L/w8jRDTWc741lFzqYxqyUmvik
+         ABdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=z5FqXHUkkOxiPqY9isBq9yK5Qx1B2t+uIrpEWzqHhn4=;
-        b=atiwMCFbjjHFPJjkvrvyrO7b5vNHp4j2cUJkm2w12ZrmzNBk5dzqxtR3SEBljmbbVN
-         0MsjV0+TRQIuuPzcmRqUaCxxCC0/USKBpyBcvLDpUc7jT3FQrpS9wCV81dkun7MEs1XZ
-         m0TWv+VSYUx0KccNGd5zJTjFnJPRo3/YnEP2CXjg3pvOJ2vyN8XPxWwJtOYLupJLx63E
-         b0WTjoSuM5KM5ljANiBpC7JLbmCvuU6aGYBOySJGJn01b4lZ9Ydf6D9pLeEGknHdTYXo
-         TKRJ3D57MA+N3irwm8zDIKE9zNJhJpNLOyEA/mybuKH4HhZtyaL8KttXofaMixN/eEHK
-         cRFw==
-X-Gm-Message-State: APjAAAXx5evgNzYs+YtqeINWAsz8VWMXUHzcVcvM/pYf++j4tJiDIGSg
-        P8cEU7+JU04l1rrODcnR8Xw=
-X-Google-Smtp-Source: APXvYqxOJJGqvqm8GMhlQeF9XODmg5oHOxr6NI3SDMdQJl+Z8fVYcMK2cP6yM7YiAKz9TiRU4RLGxw==
-X-Received: by 2002:a1c:4602:: with SMTP id t2mr1991850wma.120.1555575472351;
-        Thu, 18 Apr 2019 01:17:52 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id w11sm2350619wre.15.2019.04.18.01.17.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=2Oa4Mo8b8dqWphkeFQAL0N8F8rFHV+7qiodUTdHFrPA=;
+        b=eQxJc/5lw0wFhNGZVa53yqJFCYwGwVNg7WlEEfBkZ55GkRzYi3U5bEpS16S7ppi/EG
+         Qe4kfXOMwnkQxRsH3N9ZBsMOa1uw9EnOi7muVlJ1L03hvGQvFoFRUCRoS+L1pnvLyQF5
+         G14O3JrlFFcC/4EZydMxWlmGLqfMC/g5ma1CS6PcjSkbVGbEwAOgs2DYPMSD2YH2Uv5+
+         GBPy7V2+yBxMByVEMXIFaoosGhE3jTRQTO7e/83LAVZSYVjHEoO0t1FZEb/t1F63YsF1
+         IB15jKUm4T2na247J2CnhJ+1Nd42oILYNZ5/+9Kn8jBerEHsRhRhZWBbkerYLHxUKsMO
+         5b9w==
+X-Gm-Message-State: APjAAAUWL7Vkcmu9NaIqNRhxMOePN3LAS6HKa2Uf9pkiHszeRmEppuxY
+        XIQVDoEPwbISo/LotjQlDvM=
+X-Google-Smtp-Source: APXvYqxqwn40/5+L9A3+eP89pCq6/pHgjFgjoZcWIcs6d3AsCTW0oN9srLawfCgS3eEVWRAahhCjFA==
+X-Received: by 2002:adf:f90c:: with SMTP id b12mr36495886wrr.63.1555575471082;
         Thu, 18 Apr 2019 01:17:51 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id w11sm2350619wre.15.2019.04.18.01.17.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 01:17:50 -0700 (PDT)
 From:   Corentin Labbe <clabbe.montjoie@gmail.com>
 To:     davem@davemloft.net, herbert@gondor.apana.org.au,
         maxime.ripard@bootlin.com, wens@csie.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         ebiggers@kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 3/4] crypto: sun4i-ss: Fix invalid calculation of hash end
-Date:   Thu, 18 Apr 2019 10:17:34 +0200
-Message-Id: <20190418081735.19002-4-clabbe.montjoie@gmail.com>
+Subject: [PATCH 2/4] crypto: sun4i-ss: remove ivsize from ECB
+Date:   Thu, 18 Apr 2019 10:17:33 +0200
+Message-Id: <20190418081735.19002-3-clabbe.montjoie@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418081735.19002-1-clabbe.montjoie@gmail.com>
 References: <20190418081735.19002-1-clabbe.montjoie@gmail.com>
@@ -75,34 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When nbytes < 4, end is wronlgy set to a negative value which, due to
-uint, is then interpreted to a large value leading to a deadlock in the
-following code.
-
-This patch fix this problem.
+ECB algos does not need IV.
 
 Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-index a4b5ff2b72f8..f6936bb3b7be 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-@@ -240,7 +240,10 @@ static int sun4i_hash(struct ahash_request *areq)
- 		}
- 	} else {
- 		/* Since we have the flag final, we can go up to modulo 4 */
--		end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
-+		if (areq->nbytes < 4)
-+			end = 0;
-+		else
-+			end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
- 	}
- 
- 	/* TODO if SGlen % 4 and !op->len then DMA */
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-core.c b/drivers/crypto/sunxi-ss/sun4i-ss-core.c
+index 6b2e186dfa8b..3d9c5ad6cbb8 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-core.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-core.c
+@@ -107,7 +107,6 @@ static struct sun4i_ss_alg_template ss_algs[] = {
+ 		.decrypt        = sun4i_ss_ecb_aes_decrypt,
+ 		.min_keysize	= AES_MIN_KEY_SIZE,
+ 		.max_keysize	= AES_MAX_KEY_SIZE,
+-		.ivsize		= AES_BLOCK_SIZE,
+ 		.base = {
+ 			.cra_name = "ecb(aes)",
+ 			.cra_driver_name = "ecb-aes-sun4i-ss",
+@@ -190,7 +189,6 @@ static struct sun4i_ss_alg_template ss_algs[] = {
+ 		.decrypt        = sun4i_ss_ecb_des3_decrypt,
+ 		.min_keysize    = DES3_EDE_KEY_SIZE,
+ 		.max_keysize    = DES3_EDE_KEY_SIZE,
+-		.ivsize         = DES3_EDE_BLOCK_SIZE,
+ 		.base = {
+ 			.cra_name = "ecb(des3_ede)",
+ 			.cra_driver_name = "ecb-des3-sun4i-ss",
 -- 
 2.21.0
 
