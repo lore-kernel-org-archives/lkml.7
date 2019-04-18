@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE1CC282DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282EAC282DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3AA2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3292183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P3yGxppl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IVSeUaSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387781AbfDRAPA (ORCPT
+        id S2387809AbfDRAPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 20:15:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33952 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387619AbfDRAO6 (ORCPT
+        Wed, 17 Apr 2019 20:15:02 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34750 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387783AbfDRAPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 20:14:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b3so243535pfd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:14:58 -0700 (PDT)
+        Wed, 17 Apr 2019 20:15:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v12so313958pgq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kqTM4X13zllIwVukxHiG4L+ohv7hFQSZFxL4FXnl0KE=;
-        b=P3yGxpplISbbAjyh5feqp9pmKDDhUZ6n4aB2skbFqXMwReC1ufBQbAsj4sCAj4J8er
-         IR5cdMUZp8M57uV4tT32Slvzzrm3r3dMK4PTHr0+U7lqtR2mCKQ3YBtQAb1PcJMOTjtx
-         ecFK9YRgTFNqcrrg/UnicukR/zopR1waAk/54=
+        bh=8a+BZEe7v/lxE++Jk26DJvDIeRtcgS+edmxjVgSar6E=;
+        b=IVSeUaSONgbK9dI1ta/UwuOc1HRfMQvPSCtcNOmVBdiHzUEh6REoeZBCONmL+PZwSV
+         gdii0s7Vx/s52jH8A1PQYwkkHw9YqXyjHxrrr/jGLWyyR7H1KXSZpkgeusUpVeqsGy6D
+         hURXqfMjL0W5jtLLmOK6G1hVPp3iOLlOrIF3A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kqTM4X13zllIwVukxHiG4L+ohv7hFQSZFxL4FXnl0KE=;
-        b=ZYhOi1wkW8ZtGr8wHaciGIKT9mK03NGPOy6hZK7PZVPlF4+0YionztuzMemr5biKdf
-         8QqAClTmVpk2Ue7qCSGiI+TYOkP2jUotasBNmps+sGM/cVMA8jV1e13MjuLmQexecQ3S
-         xgYoeTrW4ZMJAwgaCfKIlU3GYx+1vturAX1kDtuSr4bTOFspb8EdTdWBR+yg6XLJti0L
-         2wgYEINbN/prdn+JfdqQi1uDXQGaGyZsiteaRnl7TK5/L8PLcavI0qlNfjNqoJvGuDmC
-         FYaopzX4am9jvgbd0eAvuQdmTjpeHux1tPh20XGTifwqt6W2kQb6F4cc0VvdmqVIjN36
-         HwfQ==
-X-Gm-Message-State: APjAAAWjmjcEsEPfS7rHRMXm3ax2LbJU01DK53ZKdU0Qm9FMqTdgYuRC
-        Gph4FZUPfTl+08Hq2VPVyPitlg==
-X-Google-Smtp-Source: APXvYqyivasih9sth0BaBOc1OCWFOlMcvZv0okIVjyRZVEgbD74taE1L9rgCQIevhcQzSJ8LltJoPA==
-X-Received: by 2002:aa7:884b:: with SMTP id k11mr92680149pfo.49.1555546497634;
-        Wed, 17 Apr 2019 17:14:57 -0700 (PDT)
+        bh=8a+BZEe7v/lxE++Jk26DJvDIeRtcgS+edmxjVgSar6E=;
+        b=C9g8O8TvK2b3t9iQ31ldssvkq90UYPhzSjNKzIbfhaCJHblthyYwA6bzaMtOGA9PA0
+         Ay2U8gOV9ZiVIr//9TE39xN76r115bji4dbVMCEq4IcFYIhPqsa5LZeT/g1at337jtvI
+         BPyhliDBv7ZGZCZkhwABvQFzpcpWCH20BYKpkf0dOp8Lb91TnSpLBxrOZjjC8JhUaDEk
+         voviNHcwtZvfPf1zFWOcsucFxwUUXGba4B5pAjQEa7e2K04sez3OvjqfWcEguSTSP2Ys
+         4hlb3rcuTVJ02ZvK0tMrcLBpa4ClAAhawhOrT4Xf+Z+FSh3xdQfkfbZtl5ePiy4ELlC3
+         uqmA==
+X-Gm-Message-State: APjAAAWV3GeMkbUrNmLxSocW4Q2ogCkEYQGyDGO4oG/+Jf//DcvNLJWm
+        GS5G03DfSwx3XKHcuRWHRfaocQ==
+X-Google-Smtp-Source: APXvYqxYqSg78iVNlYmCW86sspNg6ANcr7iduniZLCDqL6dcz9Jy0fjB/9qbeZkfU6namPKEZg5IPQ==
+X-Received: by 2002:a62:6fc6:: with SMTP id k189mr74302179pfc.154.1555546500578;
+        Wed, 17 Apr 2019 17:15:00 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id q5sm447668pff.97.2019.04.17.17.14.56
+        by smtp.gmail.com with ESMTPSA id q5sm447668pff.97.2019.04.17.17.14.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 17:14:57 -0700 (PDT)
+        Wed, 17 Apr 2019 17:15:00 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Minas Harutyunyan <hminas@synopsys.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de
@@ -67,11 +67,13 @@ Cc:     Alan Stern <stern@rowland.harvard.edu>,
         dinguyen@opensource.altera.com,
         Elaine Zhang <zhangqing@rock-chips.com>,
         Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] usb: dwc2: bus suspend/resume for hosts with DWC2_POWER_DOWN_PARAM_NONE
-Date:   Wed, 17 Apr 2019 17:13:52 -0700
-Message-Id: <20190418001356.124334-2-dianders@chromium.org>
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 3/5] Documentation: dt-bindings: Add snps,need-phy-for-wake for dwc2 USB
+Date:   Wed, 17 Apr 2019 17:13:54 -0700
+Message-Id: <20190418001356.124334-4-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 In-Reply-To: <20190418001356.124334-1-dianders@chromium.org>
 References: <20190418001356.124334-1-dianders@chromium.org>
@@ -82,193 +84,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an attempt to rehash commit 0cf884e819e0 ("usb: dwc2: add bus
-suspend/resume for dwc2") on ToT.  That commit was reverted in commit
-b0bb9bb6ce01 ("Revert "usb: dwc2: add bus suspend/resume for dwc2"")
-because apparently it broke the Altera SOCFPGA.
-
-With all the changes that have happened to dwc2 in the meantime, it's
-possible that the Altera SOCFPGA will just magically work with this
-change now.  ...and it would be good to get bus suspend/resume
-implemented.
-
-This change is a forward port of one that's been living in the Chrome
-OS 3.14 kernel tree.
+Some SoCs with a dwc2 USB controller may need to keep the PHY on to
+support remote wakeup.  Allow specifying this as a device tree
+property.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-This patch was last posted at:
+For relevant prior discussion on this patch, see:
 
-https://lkml.kernel.org/r/1446237173-15263-1-git-send-email-dianders@chromium.org
+https://lkml.kernel.org/r/1435017144-2971-3-git-send-email-dianders@chromium.org
 
-...and appears to have died the death of silence.  Maybe it could get
-some bake time in linuxnext if we can't find any proactive testing?
+I didn't make any changes from the prior version since I never found
+out what Rob thought of my previous arguments.  If folks want a
+change, perhaps they could choose from these options:
 
-I will also freely admit that I don't know tons about the theory
-behind this patch.  I'm mostly just re-hashing the original commit
-from Kever that was reverted since:
-* Turning on partial power down on rk3288 doesn't "just work".  I
-  don't get hotplug events.  This is despite dwc2 auto-detecting that
-  we are power optimized.
-* If we don't do something like this commit we don't get into as low
-  of a power mode.
+1. Assume that all dwc2 hosts would like to keep their PHY on for
+   suspend if there's a USB wakeup enabled, thus we totally drop this
+   binding.  This doesn't seem super great to me since I'd bet that
+   many devices that use dwc2 weren't designed for USB wakeup (they
+   may not keep enough clocks or rails on) so we might be wasting
+   power for nothing.
+2. Rename this property to "snps,wakeup-from-suspend-with-phy" to make
+   it more obvious that this property is intended both to document
+   that wakeup from suspend is possible and that we need the PHY for
+   said wakeup.
+3. Rename this property to "snps,can-wakeup-from-suspend" and assume
+   it's implicit that if we can wakeup from suspend that we need to
+   keep the PHY on.  If/when someone shows that a device exists using
+   dwc2 where we can wakeup from suspend without the PHY they can add
+   a new property.
 
 Changes in v2: None
 
- drivers/usb/dwc2/hcd.c | 84 ++++++++++++++++++++++++++----------------
- 1 file changed, 53 insertions(+), 31 deletions(-)
+ Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index e272d020012e..978232a9e4a8 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -4482,6 +4482,7 @@ static int _dwc2_hcd_suspend(struct usb_hcd *hcd)
- 	unsigned long flags;
- 	int ret = 0;
- 	u32 hprt0;
-+	u32 pcgctl;
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index f70f3aee4bfc..1c5e29d23c51 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -37,6 +37,8 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - g-rx-fifo-size: size of rx fifo size in gadget mode.
+ - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+ - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++- snps,need-phy-for-wake: If present indicates that the phy needs to be left
++                          on for remote wakeup during suspend.
+ - snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
+                           we detect a wakeup.  This is due to a hardware errata.
  
- 	spin_lock_irqsave(&hsotg->lock, flags);
- 
-@@ -4497,7 +4498,7 @@ static int _dwc2_hcd_suspend(struct usb_hcd *hcd)
- 	if (hsotg->op_state == OTG_STATE_B_PERIPHERAL)
- 		goto unlock;
- 
--	if (hsotg->params.power_down != DWC2_POWER_DOWN_PARAM_PARTIAL)
-+	if (hsotg->params.power_down > DWC2_POWER_DOWN_PARAM_PARTIAL)
- 		goto skip_power_saving;
- 
- 	/*
-@@ -4506,21 +4507,35 @@ static int _dwc2_hcd_suspend(struct usb_hcd *hcd)
- 	 */
- 	if (!hsotg->bus_suspended) {
- 		hprt0 = dwc2_read_hprt0(hsotg);
--		hprt0 |= HPRT0_SUSP;
--		hprt0 &= ~HPRT0_PWR;
--		dwc2_writel(hsotg, hprt0, HPRT0);
--		spin_unlock_irqrestore(&hsotg->lock, flags);
--		dwc2_vbus_supply_exit(hsotg);
--		spin_lock_irqsave(&hsotg->lock, flags);
-+		if (hprt0 & HPRT0_CONNSTS) {
-+			hprt0 |= HPRT0_SUSP;
-+			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_PARTIAL)
-+				hprt0 &= ~HPRT0_PWR;
-+			dwc2_writel(hsotg, hprt0, HPRT0);
-+		}
-+		if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_PARTIAL) {
-+			spin_unlock_irqrestore(&hsotg->lock, flags);
-+			dwc2_vbus_supply_exit(hsotg);
-+			spin_lock_irqsave(&hsotg->lock, flags);
-+		} else {
-+			pcgctl = readl(hsotg->regs + PCGCTL);
-+			pcgctl |= PCGCTL_STOPPCLK;
-+			writel(pcgctl, hsotg->regs + PCGCTL);
-+		}
- 	}
- 
--	/* Enter partial_power_down */
--	ret = dwc2_enter_partial_power_down(hsotg);
--	if (ret) {
--		if (ret != -ENOTSUPP)
--			dev_err(hsotg->dev,
--				"enter partial_power_down failed\n");
--		goto skip_power_saving;
-+	if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_PARTIAL) {
-+		/* Enter partial_power_down */
-+		ret = dwc2_enter_partial_power_down(hsotg);
-+		if (ret) {
-+			if (ret != -ENOTSUPP)
-+				dev_err(hsotg->dev,
-+					"enter partial_power_down failed\n");
-+			goto skip_power_saving;
-+		}
-+
-+		/* After entering partial_power_down, hardware is no more accessible */
-+		clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
- 	}
- 
- 	/* Ask phy to be suspended */
-@@ -4530,9 +4545,6 @@ static int _dwc2_hcd_suspend(struct usb_hcd *hcd)
- 		spin_lock_irqsave(&hsotg->lock, flags);
- 	}
- 
--	/* After entering partial_power_down, hardware is no more accessible */
--	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
--
- skip_power_saving:
- 	hsotg->lx_state = DWC2_L2;
- unlock:
-@@ -4545,6 +4557,7 @@ static int _dwc2_hcd_resume(struct usb_hcd *hcd)
- {
- 	struct dwc2_hsotg *hsotg = dwc2_hcd_to_hsotg(hcd);
- 	unsigned long flags;
-+	u32 pcgctl;
- 	int ret = 0;
- 
- 	spin_lock_irqsave(&hsotg->lock, flags);
-@@ -4555,17 +4568,11 @@ static int _dwc2_hcd_resume(struct usb_hcd *hcd)
- 	if (hsotg->lx_state != DWC2_L2)
- 		goto unlock;
- 
--	if (hsotg->params.power_down != DWC2_POWER_DOWN_PARAM_PARTIAL) {
-+	if (hsotg->params.power_down > DWC2_POWER_DOWN_PARAM_PARTIAL) {
- 		hsotg->lx_state = DWC2_L0;
- 		goto unlock;
- 	}
- 
--	/*
--	 * Set HW accessible bit before powering on the controller
--	 * since an interrupt may rise.
--	 */
--	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
--
- 	/*
- 	 * Enable power if not already done.
- 	 * This must not be spinlocked since duration
-@@ -4577,10 +4584,23 @@ static int _dwc2_hcd_resume(struct usb_hcd *hcd)
- 		spin_lock_irqsave(&hsotg->lock, flags);
- 	}
- 
--	/* Exit partial_power_down */
--	ret = dwc2_exit_partial_power_down(hsotg, true);
--	if (ret && (ret != -ENOTSUPP))
--		dev_err(hsotg->dev, "exit partial_power_down failed\n");
-+	if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_PARTIAL) {
-+		/*
-+		 * Set HW accessible bit before powering on the controller
-+		 * since an interrupt may rise.
-+		 */
-+		set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
-+
-+
-+		/* Exit partial_power_down */
-+		ret = dwc2_exit_partial_power_down(hsotg, true);
-+		if (ret && (ret != -ENOTSUPP))
-+			dev_err(hsotg->dev, "exit partial_power_down failed\n");
-+	} else {
-+		pcgctl = readl(hsotg->regs + PCGCTL);
-+		pcgctl &= ~PCGCTL_STOPPCLK;
-+		writel(pcgctl, hsotg->regs + PCGCTL);
-+	}
- 
- 	hsotg->lx_state = DWC2_L0;
- 
-@@ -4592,10 +4612,12 @@ static int _dwc2_hcd_resume(struct usb_hcd *hcd)
- 		spin_unlock_irqrestore(&hsotg->lock, flags);
- 		dwc2_port_resume(hsotg);
- 	} else {
--		dwc2_vbus_supply_init(hsotg);
-+		if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_PARTIAL) {
-+			dwc2_vbus_supply_init(hsotg);
- 
--		/* Wait for controller to correctly update D+/D- level */
--		usleep_range(3000, 5000);
-+			/* Wait for controller to correctly update D+/D- level */
-+			usleep_range(3000, 5000);
-+		}
- 
- 		/*
- 		 * Clear Port Enable and Port Status changes.
+@@ -53,4 +55,5 @@ Example:
+ 		clock-names = "otg";
+ 		phys = <&usbphy>;
+ 		phy-names = "usb2-phy";
++		snps,need-phy-for-wake;
+         };
 -- 
 2.21.0.593.g511ec345e18-goog
 
