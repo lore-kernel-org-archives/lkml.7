@@ -2,197 +2,110 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2FEC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5090BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A372183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A832183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JyKOyNdK"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="WhXE1oQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389043AbfDRM2z (ORCPT
+        id S2388700AbfDRMaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:28:55 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44130 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388175AbfDRM2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:28:54 -0400
-Received: from zn.tnic (p200300EC2F112E003868EF36058F9C84.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:3868:ef36:58f:9c84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D96BB1EC0380;
-        Thu, 18 Apr 2019 14:28:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555590533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/pkbUN/H8ZRnM+HXO1jSXBdqdH3IhPIyO8z6vAoQ/gk=;
-        b=JyKOyNdKufYb8HpgSNYLonZW/9RwxakCxOswGEpk6uPZiJA/0gpj1rX3x0CgHlG3DwBJWF
-        deli0eNI2ziJSpBYD7yQz0OC+0KF4lkqbKiNSA84RJY5oBTbVcNduHAPBL3MMoX91VlpY2
-        Ub1iIkAewxwLEwWn9xBgKnOZZMeYm9E=
-Date:   Thu, 18 Apr 2019 14:28:50 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     KVM <kvm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>
-Subject: [PATCH -v5.1] x86/kvm: Implement HWCR support
-Message-ID: <20190418122842.GF27160@zn.tnic>
-References: <20190408090946.GA2315@zn.tnic>
- <20190408144115.GA25880@linux.intel.com>
- <20190408145716.GG15689@zn.tnic>
+        Thu, 18 Apr 2019 08:30:39 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:53192 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730682AbfDRMaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 08:30:39 -0400
+Received: by mail-it1-f193.google.com with SMTP id x132so3003037itf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 05:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o+fIGS9wz6NOXPBAIJc986U9/USK2WuNFF0ivuzohWc=;
+        b=WhXE1oQlGKA+r/jf7iL9CyTGsYpjvwAKMl8GTcScMs/zf2py/uxbNFvH34IFUwPDVl
+         lyedz+bTe8wIfqUnT1eO9fgAh81aiE9DeC/AnbMb8LFgazmTmxo7C6R5iiTZu+BLk7R5
+         tAN6pCv9wfd4QYTxGWM7aPpcyfmEI+lPcuHcA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o+fIGS9wz6NOXPBAIJc986U9/USK2WuNFF0ivuzohWc=;
+        b=FY2nnyDacXYM6aO0ouYOQbokQ79WIkeLaFS6k2d/EhzHQ9GbGZApqiNYJQkVHo3+8Z
+         wYadBWKb+aJZoWBNCTXwD2ArpJILwH2eRFqKvptgmWWuSb7k+IUrsqr8rTDWiNw7g5ZI
+         ymRC1ulgPsbJ47+WyXpok0fnYL3UiTv0JtCRO3vZn3LZZRqUueuPmH+zaO6AdhtaaA3s
+         v2RKvnnyZdaSg2K7YlAUR5jRCSMQ4+03qCpWKJD+gNhiyL9oR16BvusfDC6WelxjGuxl
+         4eR+UDZ1on/2hm1fe8SBuUz7d4GW5xJN0x+YaXkQejqhiF1kwIR8LmGChnpt/+NqBwHt
+         PTsQ==
+X-Gm-Message-State: APjAAAXWt/bNndg9INqAn5hJN4m0NFkovr353Ex4g1hjzGupAXKJBH3c
+        42ydkZ/gW39Q/tMjwcgRFfLbY3up+cPVrJ1b5LWlaw==
+X-Google-Smtp-Source: APXvYqy5hEk1YcnrjJYBsszJ+JpNfbke8/Mekx9YcsVJP8KsmWkSxAGuWIqNs6BKU+nfWWtfAnvuTfDg2LHXY+a/VOU=
+X-Received: by 2002:a02:a399:: with SMTP id y25mr8322640jak.58.1555590638603;
+ Thu, 18 Apr 2019 05:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190408145716.GG15689@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190418083543.11695-1-jagan@amarulasolutions.com> <20190418112357.qic227rdwordmzyh@flea>
+In-Reply-To: <20190418112357.qic227rdwordmzyh@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 18 Apr 2019 18:00:27 +0530
+Message-ID: <CAMty3ZDwhB+63i_Cy90n0Y_Ra6XdTXbsX+z5q6swnj=FLH976g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: allwinner: a64-amarula-relic: Add
+ GT5663 CTP node
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Thu, Apr 18, 2019 at 4:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Apr 18, 2019 at 02:05:42PM +0530, Jagan Teki wrote:
+> > Add Goodix GT5663 capacitive touch controller node on
+> > Amarula A64-Relic board.
+> >
+> > The CTP connected to board with,
+> > - SDA, SCK from i2c1
+> > - GPIO-LD0 as AVDD28 supply
+> > - PH4 gpio as interrupt pin
+> > - PH8 gpio as reset pin
+> > - X axis is inverted
+> > - Y axis is inverted
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v2:
+> > - drop i2c1, bias-pull-up
+> >
+> >  .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > index 3575db216016..3819ce396073 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > @@ -49,6 +49,24 @@
+> >       bias-pull-up;
+> >  };
+> >
+> > +&i2c1 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&i2c1_pins>;
+>
+> That's the default already
 
-ok here's v5.1 with most of Sean's feedback addressed. The function
-checking whether HWCR[18] is set, I've renamed to can_set_mci_status()
-and left it to return bool because it really is used in boolean context,
-answering the question "Can I set MCi_STATUS MSRs?"
-
-And now it all looks simple and clean, just how I like it! :-)
-
-Thx.
-
----
-From: Borislav Petkov <bp@suse.de>
-
-The hardware configuration register has some useful bits which can be
-used by guests. Implement McStatusWrEn which can be used by guests when
-injecting MCEs with the in-kernel mce-inject module.
-
-For that, we need to set bit 18 - McStatusWrEn - first, before writing
-the MCi_STATUS registers (otherwise we #GP).
-
-Add the required machinery to do so.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: KVM <kvm@vger.kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
----
- arch/x86/include/asm/kvm_host.h |  3 +++
- arch/x86/kvm/x86.c              | 33 +++++++++++++++++++++++++++------
- 2 files changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 159b5988292f..541c431df806 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -780,6 +780,9 @@ struct kvm_vcpu_arch {
- 
- 	/* Flush the L1 Data cache for L1TF mitigation on VMENTER */
- 	bool l1tf_flush_l1d;
-+
-+	/* AMD MSRC001_0015 Hardware Configuration */
-+	u64 msr_hwcr;
- };
- 
- struct kvm_lpage_info {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 099b851dabaf..10f6acc6494c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2273,6 +2273,18 @@ static void kvmclock_sync_fn(struct work_struct *work)
- 					KVMCLOCK_SYNC_PERIOD);
- }
- 
-+/*
-+ * On AMD, HWCR[McStatusWrEn] controls whether setting MCi_STATUS results in #GP.
-+ */
-+static bool can_set_mci_status(struct kvm_vcpu *vcpu)
-+{
-+	/* McStatusWrEn enabled? */
-+	if (guest_cpuid_is_amd(vcpu))
-+		return !!(vcpu->arch.msr_hwcr & BIT_ULL(18));
-+
-+	return false;
-+}
-+
- static int set_msr_mce(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	u64 mcg_cap = vcpu->arch.mcg_cap;
-@@ -2304,9 +2316,13 @@ static int set_msr_mce(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			if ((offset & 0x3) == 0 &&
- 			    data != 0 && (data | (1 << 10)) != ~(u64)0)
- 				return -1;
--			if (!msr_info->host_initiated &&
--				(offset & 0x3) == 1 && data != 0)
--				return -1;
-+
-+			/* MCi_STATUS */
-+			if ((offset & 0x3) == 1 && !msr_info->host_initiated) {
-+				if (!can_set_mci_status(vcpu))
-+					return -1;
-+			}
-+
- 			vcpu->arch.mce_banks[offset] = data;
- 			break;
- 		}
-@@ -2455,8 +2471,11 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		data &= ~(u64)0x40;	/* ignore flush filter disable */
- 		data &= ~(u64)0x100;	/* ignore ignne emulation enable */
- 		data &= ~(u64)0x8;	/* ignore TLB cache disable */
--		data &= ~(u64)0x40000;  /* ignore Mc status write enable */
--		if (data != 0) {
-+
-+		/* Handle McStatusWrEn */
-+		if (data == BIT_ULL(18)) {
-+			vcpu->arch.msr_hwcr = data;
-+		} else if (data != 0) {
- 			vcpu_unimpl(vcpu, "unimplemented HWCR wrmsr: 0x%llx\n",
- 				    data);
- 			return 1;
-@@ -2730,7 +2749,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_K8_SYSCFG:
- 	case MSR_K8_TSEG_ADDR:
- 	case MSR_K8_TSEG_MASK:
--	case MSR_K7_HWCR:
- 	case MSR_VM_HSAVE_PA:
- 	case MSR_K8_INT_PENDING_MSG:
- 	case MSR_AMD64_NB_CFG:
-@@ -2894,6 +2912,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_MISC_FEATURES_ENABLES:
- 		msr_info->data = vcpu->arch.msr_misc_features_enables;
- 		break;
-+	case MSR_K7_HWCR:
-+		msr_info->data = vcpu->arch.msr_hwcr;
-+		break;
- 	default:
- 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
- 			return kvm_pmu_get_msr(vcpu, msr_info->index, &msr_info->data);
--- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Yes, and i2c1 node in sun50i-a64.dtsi is not attaching pinctrl. So I
+attached here.
