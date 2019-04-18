@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FADC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED1421871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937D421871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611202;
-	bh=IbIMLIt8EWXfxaBCSu0qpOobTRXXbF3egkL9a8DrpME=;
+	s=default; t=1555611207;
+	bh=xF0TOWc7e2J8vc50T1ggSAbby129Zq08vr5bk8ecc7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0AurnopVafVP07B6b9vlIYxURrL8I6v6Bsp8Y/sabMHp+Ng/GsvLuVj2GLMplDoX
-	 V7Rocp5Ch2RXCHHkem0CFLed+bKvIjlIZA7pxzvWmM3hLZc1SqOyy1hsFaXs8pPs/M
-	 wSEMtCHSXWZUdZOTf1AAw3hLwO93pk2DOexsEXJ4=
+	b=afzrCN7crLuFK9/gXzUw81RqDZ3bakb3z8cDIoGJRyIRJCbdl3yeGmZI8syhoGvWG
+	 n/iFC0Vhk55sW+gcN2WEQZZilevL9Pi1QbSS3ErvxOiXdPCQPSuuH/a1Fn/GyPEGm9
+	 R3yQuL4/4o7ShZIjvjOB42Wu1NHAIac8bXTt/21E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404423AbfDRSNV (ORCPT
+        id S2404440AbfDRSNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390416AbfDRSNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:13:07 -0400
+        id S2404420AbfDRSNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:13:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39E2B214DA;
-        Thu, 18 Apr 2019 18:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7FB121872;
+        Thu, 18 Apr 2019 18:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611186;
-        bh=IbIMLIt8EWXfxaBCSu0qpOobTRXXbF3egkL9a8DrpME=;
+        s=default; t=1555611200;
+        bh=xF0TOWc7e2J8vc50T1ggSAbby129Zq08vr5bk8ecc7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q8WXo2gwhNMX3ah6sskUYiybOZPmTnB5Nn652VYlsTWZUljmjfR7tHZy4BX3jtTFw
-         9jWE5w3ntXm9R+kW7+xbNfRntNDaWmVCqGhxNMIcA5ZIBlTj0o4nwJ57zty9frwTA0
-         DFbrTs3n8QYL9TjhsiO5Rx5mVKbi58i2B+IU1w/k=
+        b=PPQzCyrnLwUKrllm94L23Mgq9bVMJ72z5POoEqASfSGC474MwjiakU7SVvn8ceFN6
+         NnqDnnKeVeyWlyDeTn/lsbHN8y/DvyEgvOJOhShEH9GDWhZ3iFh2TvHQPy6BOn2jj2
+         L7mZzrGrQVzEoXidq+BA6XpcOu5XueAGoyBQAR0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 91/93] include/linux/swap.h: use offsetof() instead of custom __swapoffset macro
-Date:   Thu, 18 Apr 2019 19:58:09 +0200
-Message-Id: <20190418160445.922230235@linuxfoundation.org>
+Subject: [PATCH 5.0 68/93] lkdtm: Print real addresses
+Date:   Thu, 18 Apr 2019 19:57:46 +0200
+Message-Id: <20190418160444.145327991@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -62,56 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a4046c06be50a4f01d435aa7fe57514818e6cc82 ]
+[ Upstream commit 4c411157a42f122051ae3469bee0b5cabe89e139 ]
 
-Use offsetof() to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+Today, when doing a lkdtm test before the readiness of the
+random generator, (ptrval) is printed instead of the address
+at which it perform the fault:
 
-  UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
-  member access within null pointer of type 'union swap_header'
-  CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
-  Call trace:
-   dump_backtrace+0x0/0x194
-   show_stack+0x20/0x2c
-   __dump_stack+0x20/0x28
-   dump_stack+0x70/0x94
-   ubsan_epilogue+0x14/0x44
-   ubsan_type_mismatch_common+0xf4/0xfc
-   __ubsan_handle_type_mismatch_v1+0x34/0x54
-   __se_sys_swapon+0x654/0x1084
-   __arm64_sys_swapon+0x1c/0x24
-   el0_svc_common+0xa8/0x150
-   el0_svc_compat_handler+0x2c/0x38
-   el0_svc_compat+0x8/0x18
+[ 1597.337030] lkdtm: Performing direct entry EXEC_USERSPACE
+[ 1597.337142] lkdtm: attempting ok execution at (ptrval)
+[ 1597.337398] lkdtm: attempting bad execution at (ptrval)
+[ 1597.337460] kernel tried to execute user page (77858000) -exploit attempt? (uid: 0)
+[ 1597.344769] Unable to handle kernel paging request for instruction fetch
+[ 1597.351392] Faulting instruction address: 0x77858000
+[ 1597.356312] Oops: Kernel access of bad area, sig: 11 [#1]
 
-Link: http://lkml.kernel.org/r/20190312081902.223764-1-pihsun@chromium.org
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+If the lkdtm test is done later on, it prints an hashed address.
+
+In both cases this is pointless. The purpose of the test is to
+ensure the kernel generates an Oops at the expected address,
+so real addresses needs to be printed. This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/lkdtm/perms.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 622025ac1461..f1146ed21062 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -157,9 +157,9 @@ struct swap_extent {
- /*
-  * Max bad pages in the new format..
-  */
--#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
- #define MAX_SWAP_BADPAGES \
--	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
-+	((offsetof(union swap_header, magic.magic) - \
-+	  offsetof(union swap_header, info.badpages)) / sizeof(int))
+diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
+index 53b85c9d16b8..fa54add6375a 100644
+--- a/drivers/misc/lkdtm/perms.c
++++ b/drivers/misc/lkdtm/perms.c
+@@ -47,7 +47,7 @@ static noinline void execute_location(void *dst, bool write)
+ {
+ 	void (*func)(void) = dst;
  
- enum {
- 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
+-	pr_info("attempting ok execution at %p\n", do_nothing);
++	pr_info("attempting ok execution at %px\n", do_nothing);
+ 	do_nothing();
+ 
+ 	if (write == CODE_WRITE) {
+@@ -55,7 +55,7 @@ static noinline void execute_location(void *dst, bool write)
+ 		flush_icache_range((unsigned long)dst,
+ 				   (unsigned long)dst + EXEC_SIZE);
+ 	}
+-	pr_info("attempting bad execution at %p\n", func);
++	pr_info("attempting bad execution at %px\n", func);
+ 	func();
+ }
+ 
+@@ -66,14 +66,14 @@ static void execute_user_location(void *dst)
+ 	/* Intentionally crossing kernel/user memory boundary. */
+ 	void (*func)(void) = dst;
+ 
+-	pr_info("attempting ok execution at %p\n", do_nothing);
++	pr_info("attempting ok execution at %px\n", do_nothing);
+ 	do_nothing();
+ 
+ 	copied = access_process_vm(current, (unsigned long)dst, do_nothing,
+ 				   EXEC_SIZE, FOLL_WRITE);
+ 	if (copied < EXEC_SIZE)
+ 		return;
+-	pr_info("attempting bad execution at %p\n", func);
++	pr_info("attempting bad execution at %px\n", func);
+ 	func();
+ }
+ 
+@@ -82,7 +82,7 @@ void lkdtm_WRITE_RO(void)
+ 	/* Explicitly cast away "const" for the test. */
+ 	unsigned long *ptr = (unsigned long *)&rodata;
+ 
+-	pr_info("attempting bad rodata write at %p\n", ptr);
++	pr_info("attempting bad rodata write at %px\n", ptr);
+ 	*ptr ^= 0xabcd1234;
+ }
+ 
+@@ -100,7 +100,7 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
+ 		return;
+ 	}
+ 
+-	pr_info("attempting bad ro_after_init write at %p\n", ptr);
++	pr_info("attempting bad ro_after_init write at %px\n", ptr);
+ 	*ptr ^= 0xabcd1234;
+ }
+ 
+@@ -112,7 +112,7 @@ void lkdtm_WRITE_KERN(void)
+ 	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
+ 	ptr = (unsigned char *)do_overwritten;
+ 
+-	pr_info("attempting bad %zu byte write at %p\n", size, ptr);
++	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
+ 	memcpy(ptr, (unsigned char *)do_nothing, size);
+ 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
+ 
+@@ -185,11 +185,11 @@ void lkdtm_ACCESS_USERSPACE(void)
+ 
+ 	ptr = (unsigned long *)user_addr;
+ 
+-	pr_info("attempting bad read at %p\n", ptr);
++	pr_info("attempting bad read at %px\n", ptr);
+ 	tmp = *ptr;
+ 	tmp += 0xc0dec0de;
+ 
+-	pr_info("attempting bad write at %p\n", ptr);
++	pr_info("attempting bad write at %px\n", ptr);
+ 	*ptr = tmp;
+ 
+ 	vm_munmap(user_addr, PAGE_SIZE);
 -- 
 2.19.1
 
