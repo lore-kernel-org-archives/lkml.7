@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B8DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B00C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2675B21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52782218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610969;
-	bh=RZA4zKN0DEgTHGJnZuFocAeEiEyRGVTzKeDohS9PQHg=;
+	s=default; t=1555610970;
+	bh=gZChVrJ+cGg/SxkavZOKHqYOzON8o9lR5F24UDVr41g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O9uqO7ic7uDLihKrUBxLvrtelhRVJSVZZktOkd+NsQuvys8/X4FakN1ZjKpaQUnv6
-	 AAnkbuQBKy6sCMon8LYnE7zxvRfmD8YpmLqD3WJGKhAMs0F0adW8WpQ07hwE1O5DoO
-	 CC56zFldP1Fb0UmjtWD5gMIO8zhvI2zIVmtfgzx4=
+	b=Xbllg3iOa8eGNmgTS08y3VsAXh8Z3sBcmlsQFeGbUdkbyWwEq26ewzrGY0gN0vviZ
+	 WxLeyYCqARqwNdiRWWh8ytxabeaW3Uuu+bM+ABElkq/Rszk8UvM62qa4BznwcRtKi5
+	 WNovXgdpQeXYGALG9yDiN2t0n3+ntiC1eMf/4RAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403919AbfDRSJ2 (ORCPT
+        id S2403930AbfDRSJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 18 Apr 2019 14:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:41052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403812AbfDRSJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:22 -0400
+        id S2403910AbfDRSJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:09:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B78421871;
-        Thu, 18 Apr 2019 18:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43C2F2186A;
+        Thu, 18 Apr 2019 18:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610961;
-        bh=RZA4zKN0DEgTHGJnZuFocAeEiEyRGVTzKeDohS9PQHg=;
+        s=default; t=1555610966;
+        bh=gZChVrJ+cGg/SxkavZOKHqYOzON8o9lR5F24UDVr41g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDxanGvpe36f+YPZTltAwBFnkNEauYnIj1iNoqeixMLfYi3gY9/pL8Kp05mlGDSPE
-         BfKlvkAFSe63jT+fhxvQEOg2mmdf5RZhiAHxfwRUyXz5MEvrLNw0fnSONGSOG37XJu
-         NAbMc5ViUrIsbmqR86XIArTyBcK3uYpiDWdI/RAY=
+        b=ORx0xFSm3PzP1SyY4QZBcpqGbdmCgdZ4ddnvirr33Mbg3MV/mdBeik3LJqlKrKMRR
+         S+0NYDyY7UCzOdJbeyPTBQ6g7MUqdoisFHYjIVr7tP2pLiUoWEtBSOMypmIBLwbpJe
+         GHp1Kwpq6VnODsKYjXusvZTJX2hDL2+F1AHzpoQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gertjan Halkes <gertjan@google.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Roland Dreier <roland@purestorage.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 30/50] 9p: do not trust pdu content for stat item size
-Date:   Thu, 18 Apr 2019 19:57:41 +0200
-Message-Id: <20190418160426.455222420@linuxfoundation.org>
+Subject: [PATCH 4.9 22/50] x86/hpet: Prevent potential NULL pointer dereference
+Date:   Thu, 18 Apr 2019 19:57:33 +0200
+Message-Id: <20190418160425.382369567@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -60,73 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2803cf4379ed252894f046cb8812a48db35294e3 ]
+[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
 
-v9fs_dir_readdir() could deadloop if a struct was sent with a size set
-to -2
+hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
+a check.
 
-Link: http://lkml.kernel.org/r/1536134432-11997-1-git-send-email-asmadeus@codewreck.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88021
-Signed-off-by: Gertjan Halkes <gertjan@google.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Add a check to prevent NULL pointer dereference.
+
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: kjlu@umn.edu
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Roland Dreier <roland@purestorage.com>
+Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_dir.c   | 8 +++-----
- net/9p/protocol.c | 3 ++-
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ arch/x86/kernel/hpet.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/9p/vfs_dir.c b/fs/9p/vfs_dir.c
-index 48db9a9f13f9..cb6c4031af55 100644
---- a/fs/9p/vfs_dir.c
-+++ b/fs/9p/vfs_dir.c
-@@ -105,7 +105,6 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 	int err = 0;
- 	struct p9_fid *fid;
- 	int buflen;
--	int reclen = 0;
- 	struct p9_rdir *rdir;
- 	struct kvec kvec;
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index 756634f14df6..775c23d4021a 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -914,6 +914,8 @@ int __init hpet_enable(void)
+ 		return 0;
  
-@@ -138,11 +137,10 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 		while (rdir->head < rdir->tail) {
- 			err = p9stat_read(fid->clnt, rdir->buf + rdir->head,
- 					  rdir->tail - rdir->head, &st);
--			if (err) {
-+			if (err <= 0) {
- 				p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
- 				return -EIO;
- 			}
--			reclen = st.size+2;
+ 	hpet_set_mapping();
++	if (!hpet_virt_address)
++		return 0;
  
- 			over = !dir_emit(ctx, st.name, strlen(st.name),
- 					 v9fs_qid2ino(&st.qid), dt_type(&st));
-@@ -150,8 +148,8 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
- 			if (over)
- 				return 0;
- 
--			rdir->head += reclen;
--			ctx->pos += reclen;
-+			rdir->head += err;
-+			ctx->pos += err;
- 		}
- 	}
- }
-diff --git a/net/9p/protocol.c b/net/9p/protocol.c
-index 145f80518064..7f1b45c082c9 100644
---- a/net/9p/protocol.c
-+++ b/net/9p/protocol.c
-@@ -570,9 +570,10 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
- 	if (ret) {
- 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
- 		trace_9p_protocol_dump(clnt, &fake_pdu);
-+		return ret;
- 	}
- 
--	return ret;
-+	return fake_pdu.offset;
- }
- EXPORT_SYMBOL(p9stat_read);
- 
+ 	/*
+ 	 * Read the period and check for a sane value:
 -- 
 2.19.1
 
