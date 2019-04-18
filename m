@@ -2,63 +2,71 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3017C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B72E2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DEE217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389692AbfDRRBB (ORCPT
+        id S2389761AbfDRRBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:01:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:49684 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388299AbfDRRBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:01:00 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 10:00:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,366,1549958400"; 
-   d="scan'208";a="165889735"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Apr 2019 10:00:54 -0700
-Date:   Thu, 18 Apr 2019 10:00:52 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: kvm: hyper-v: deal with buggy TLB flush requests
- from WS2012
-Message-ID: <20190418170052.GE17218@linux.intel.com>
-References: <20190320174320.9459-1-vkuznets@redhat.com>
- <20190418141752.GB17218@linux.intel.com>
- <f858f28f-6d22-b53b-9572-5220b9ecf81c@redhat.com>
- <20190418165611.GD17218@linux.intel.com>
- <ea77b990-2799-cad4-580e-a55b895cb412@redhat.com>
+        Thu, 18 Apr 2019 13:01:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44686 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388299AbfDRRBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:01:03 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hHAPA-0004Wa-I8; Thu, 18 Apr 2019 17:00:56 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] netfilter: connlabels: fix spelling mistake "trackling" -> "tracking"
+Date:   Thu, 18 Apr 2019 18:00:56 +0100
+Message-Id: <20190418170056.22486-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea77b990-2799-cad4-580e-a55b895cb412@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 06:58:01PM +0200, Paolo Bonzini wrote:
-> On 18/04/19 18:56, Sean Christopherson wrote:
-> >   For simplicity, flush all CPUs if the guest neglected to set processor_mask.
-> 
-> We don't know if it neglected to set processor_mask or the flag...
+From: Colin Ian King <colin.king@canonical.com>
 
-Were you a lawyer before becoming a maintainer? :-)
+There is a spelling mistake in the module description. Fix this.
 
-Yeah, go with your version, I'll get out of the way...
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/netfilter/xt_connlabel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/netfilter/xt_connlabel.c b/net/netfilter/xt_connlabel.c
+index 4fa4efd24353..893374ac3758 100644
+--- a/net/netfilter/xt_connlabel.c
++++ b/net/netfilter/xt_connlabel.c
+@@ -15,7 +15,7 @@
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Florian Westphal <fw@strlen.de>");
+-MODULE_DESCRIPTION("Xtables: add/match connection trackling labels");
++MODULE_DESCRIPTION("Xtables: add/match connection tracking labels");
+ MODULE_ALIAS("ipt_connlabel");
+ MODULE_ALIAS("ip6t_connlabel");
+ 
+-- 
+2.20.1
+
