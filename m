@@ -3,28 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_RHS_DOB,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	URIBL_RHS_DOB,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEFDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38BBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53ED2214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7787521850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388760AbfDRLUM (ORCPT
+        id S2388794AbfDRLUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:20:12 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:33555 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfDRLUL (ORCPT
+        Thu, 18 Apr 2019 07:20:54 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:55607 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfDRLUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:20:11 -0400
+        Thu, 18 Apr 2019 07:20:54 -0400
 Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 864FB20000A;
-        Thu, 18 Apr 2019 11:20:05 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 13:20:05 +0200
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E04A9240005;
+        Thu, 18 Apr 2019 11:20:49 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 13:20:49 +0200
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Jagan Teki <jagan@amarulasolutions.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
@@ -32,16 +33,15 @@ Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Michael Trimarchi <michael@amarulasolutions.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: a64-amarula-relic: Add OV5640
- camera node
-Message-ID: <20190418112005.fxo6mpso3ibuqzvu@flea>
+Subject: Re: [PATCH 1/2] arm64: dts: allwinner: a64: Add pinmux setting for
+ CSI MCLK on PE1
+Message-ID: <20190418112049.mgvvvcwzf3ezg4pw@flea>
 References: <20190418083813.11776-1-jagan@amarulasolutions.com>
- <20190418083813.11776-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lcsblazyrtnlskic"
+        protocol="application/pgp-signature"; boundary="awtgps4p5ffdljja"
 Content-Disposition: inline
-In-Reply-To: <20190418083813.11776-2-jagan@amarulasolutions.com>
+In-Reply-To: <20190418083813.11776-1-jagan@amarulasolutions.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,97 +49,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---lcsblazyrtnlskic
+--awtgps4p5ffdljja
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
-
-On Thu, Apr 18, 2019 at 02:08:13PM +0530, Jagan Teki wrote:
-> Amarula A64-Relic board by default bound with OV5640 camera,
-> so add support for it with below pin information.
+On Thu, Apr 18, 2019 at 02:08:12PM +0530, Jagan Teki wrote:
+> Some camera modules have the SoC feeding a master clock to the sensor
+> instead of having a standalone crystal. This clock signal is generated
+> from the clock control unit and output from the CSI MCLK function of
+> pin PE1.
 >
-> - PE13, PE12 via i2c-gpio bitbanging
-> - CLK_CSI_MCLK as external clock
-> - PE1 as external clock pin muxing
-> - ALDO1 as AVDD supply
-> - DLDO3 as DOVDD supply
-> - ELDO3 as DVDD supply
-> - PE14 gpio for reset pin
-> - PE15 gpio for powerdown pin
+> Add a pinmux setting for it for camera sensors to reference.
 >
 > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
->  .../allwinner/sun50i-a64-amarula-relic.dts    | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 6f27eb082429..6f4e00ec9c68 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -597,6 +597,11 @@
+>  				function = "csi";
+>  			};
 >
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> index 3819ce396073..56c76b712e3b 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> @@ -22,6 +22,41 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->
-> +	i2c-csi {
+> +			csi_mclk_pin: csi-mclk {
 
-That node should be named i2c
+The name of the pin should be ending with -pin, and please add
+/omit-if-no-ref/
 
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&pio 4 13 GPIO_ACTIVE_HIGH>; /* CSI-SDA: PE13 */
-> +		scl-gpios = <&pio 4 12 GPIO_ACTIVE_HIGH>; /* CSI-SCK: PE12 */
-
-There's no need to document what those pins are here for, it's already
-in the property name.
-
-> +		i2c-gpio,delay-us = <5>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ov5640: camera@3c {
-> +			compatible = "ovti,ov5640";
-> +			reg = <0x3c>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&csi_mclk_pin>;
-> +			clocks = <&ccu CLK_CSI_MCLK>;
-> +			clock-names = "xclk";
-> +
-> +			AVDD-supply = <&reg_aldo1>;
-> +			DOVDD-supply = <&reg_dldo3>;
-> +			DVDD-supply = <&reg_eldo3>;
-> +			reset-gpios = <&pio 4 14 GPIO_ACTIVE_LOW>; /* CSI-RST-R: PE14 */
-> +			powerdown-gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* CSI-STBY-R: PE15 */
-> +
-> +			port {
-> +				ov5640_ep: endpoint {
-> +					remote-endpoint = <&csi_ep>;
-> +					bus-width = <8>;
-> +					hsync-active = <1>; /* Active high */
-> +					vsync-active = <0>; /* Active low */
-> +					data-active = <1>;  /* Active high */
-> +					pclk-sample = <1>;  /* Rising */
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	wifi_pwrseq: wifi-pwrseq {
->  		compatible = "mmc-pwrseq-simple";
->  		clocks = <&rtc 1>;
-> @@ -30,6 +65,24 @@
->  	};
->  };
->
-> +&csi {
-> +	status = "okay";
-> +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-
-This isn't needed, you don't have a reg property in your child node.
-
+Thanks!
 Maxime
 
 --
@@ -147,15 +87,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---lcsblazyrtnlskic
+--awtgps4p5ffdljja
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLhdZQAKCRDj7w1vZxhR
-xYZNAP97st5WinIiU7yjctC3Q8tY/jIYEM24XiCuypHbxxEttwD+NHg9E7SK6NIs
-GWQkA71y5BG/Xs+7Gde323eUhKNLZQQ=
-=pUZc
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLhdkQAKCRDj7w1vZxhR
+xX0SAP91Z9NPv6I8QWcHV4ella9gF/FwxKlQf6i3TvT72y91GQEAvpMhVn1S6zhZ
+2Z1ZlvmSuZLeJ9UuOwCmu7ndJU/rQwA=
+=YFn5
 -----END PGP SIGNATURE-----
 
---lcsblazyrtnlskic--
+--awtgps4p5ffdljja--
