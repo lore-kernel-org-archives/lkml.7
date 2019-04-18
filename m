@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF836C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F86C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04BE206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD9220652
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611152;
-	bh=VlRwvFeVS27XkufMQVWUTqzFXe6sBA7YAlDf+xHlN9A=;
+	s=default; t=1555611154;
+	bh=SEKwVuizM7PcgHmpksIIZh0HPBrRpSX10k3pwBU4kYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPe2AkPyrxWbb5/fDHBYnrbznAaX6BvJulrFvLWit0KGYyfI1gYc1OWA/FLYbQWUC
-	 /UB+1hmx9AwdLFjqAiIhDIV9GtpuJ7/YlHkoYq4bJDscMVv4IpeZ99Zu8Efk5jw0Ez
-	 GbOm2hubNorXw4oKStqCNWfWGckrY5zOQ8NOaz3I=
+	b=Tro7uyrzlp+75dH/IW6PQ9Wq/LH4GXhym8Ogi93sly+JiT8X+yQHaRCOwrBwrOKRC
+	 QUBzixs4cWyrINieNv712Jl7M6WkUF7TkEDjaNI7RYI00pWg5RZyk+5VZ8B75PLpOI
+	 RcfJJOq7Y6KIo+O1MEdmkWCujeOWm4kw+/cTjUYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404115AbfDRSMb (ORCPT
+        id S2404306AbfDRSMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404120AbfDRSM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:27 -0400
+        id S2404281AbfDRSM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 124FB20652;
-        Thu, 18 Apr 2019 18:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACA6920675;
+        Thu, 18 Apr 2019 18:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611146;
-        bh=VlRwvFeVS27XkufMQVWUTqzFXe6sBA7YAlDf+xHlN9A=;
+        s=default; t=1555611149;
+        bh=SEKwVuizM7PcgHmpksIIZh0HPBrRpSX10k3pwBU4kYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNAKjJRvokfxHDcCEuHYOKBVAU7drCFaLYotQLxITrFADXgt3eC+WHj5CMgnQq4z9
-         lTMCKIhefMFwlGO2SpSYtexTeisnG7fQcHTiZM+vb59hslSh7TzunE1NWlE/vzUML8
-         u8XrGveQ4T/z7v7Anz62hsYHvqShYn0kyfIeId94=
+        b=AMr4RXT0oWpe7v7+9sIe/PXlf9rfjkRGTY8LnidAyCPnZjealTYJ+/RfxzHk13vKb
+         xZN6vx5TgDWEsUp/EG3CflxmVS2+i+LGTvnnWgL7BpsgSJ1/tzAOHxESbxAtMBdiiJ
+         83kJ94i8gPMabGIRXk/QdVqcPBZY85Rq/CUe4HoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kedar A Dongre <kedar.a.dongre@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 77/93] PCI: Blacklist power management of Gigabyte X299 DESIGNARE EX PCIe ports
-Date:   Thu, 18 Apr 2019 19:57:55 +0200
-Message-Id: <20190418160444.876514268@linuxfoundation.org>
+Subject: [PATCH 5.0 78/93] PCI/ASPM: Save LTR Capability for suspend/resume
+Date:   Thu, 18 Apr 2019 19:57:56 +0200
+Message-Id: <20190418160444.948574125@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -62,90 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 85b0cae89d5266e6a7abb2e83c6f716326fc494c ]
+[ Upstream commit dbbfadf2319005cf528b0f15f12a05d4e4644303 ]
 
-Gigabyte X299 DESIGNARE EX motherboard has one PCIe root port that is
-connected to an Alpine Ridge Thunderbolt controller.  This port has slot
-implemented bit set in the config space but other than that it is not
-hotplug capable in the sense we are expecting in Linux (it has
-dev->is_hotplug_bridge set to 0):
+Latency Tolerance Reporting (LTR) allows Endpoints and Switch Upstream
+Ports to report their latency requirements to upstream components.  If ASPM
+L1 PM substates are enabled, the LTR information helps determine when a
+Link enters L1.2 [1].
 
-  00:1c.4 PCI bridge: Intel Corporation 200 Series PCH PCI Express Root Port #5
-    Bus: primary=00, secondary=05, subordinate=46, sec-latency=0
-    Memory behind bridge: 78000000-8fffffff [size=384M]
-    Prefetchable memory behind bridge: 00003800f8000000-00003800ffffffff [size=128M]
-    ...
-    Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
-    ...
-      SltCap: AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
-	      Slot #8, PowerLimit 25.000W; Interlock- NoCompl+
-      SltCtl: Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
-	      Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-      SltSta: Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet- Interlock-
-	      Changed: MRL- PresDet+ LinkState+
+Software must set the maximum latency values in the LTR Capability based on
+characteristics of the platform, then set LTR Mechanism Enable in the
+Device Control 2 register in the PCIe Capability.  The device can then use
+LTR to report its latency tolerance.
 
-This system is using ACPI based hotplug to notify the OS that it needs to
-rescan the PCI bus (ACPI hotplug).
+If the device reports a maximum latency value of zero, that means the
+device requires the highest possible performance and the ASPM L1.2 substate
+is effectively disabled.
 
-If there is nothing connected in any of the Thunderbolt ports the root port
-will not have any runtime PM active children and is thus automatically
-runtime suspended pretty soon after boot by PCI PM core.  Now, when a
-device is connected the BIOS SMI handler responsible for enumerating newly
-added devices is not able to find anything because the port is in D3.
+We put devices in D3 for suspend, and we assume their internal state is
+lost.  On resume, previously we did not restore the LTR Capability, but we
+did restore the LTR Mechanism Enable bit, so devices would request the
+highest possible performance and ASPM L1.2 wouldn't be used.
 
-Prevent this from happening by blacklisting PCI power management of this
-particular Gigabyte system.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202031
-Reported-by: Kedar A Dongre <kedar.a.dongre@intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[1] PCIe r4.0, sec 5.5.1
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201469
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/pci/pci.c | 53 +++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index c25acace7d91..5a94a3cf61cd 100644
+index 5a94a3cf61cd..e91005d0f20c 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -2501,6 +2501,25 @@ void pci_config_pm_runtime_put(struct pci_dev *pdev)
- 		pm_runtime_put_sync(parent);
+@@ -1233,7 +1233,6 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+ 	pcie_capability_write_word(dev, PCI_EXP_SLTCTL2, cap[i++]);
  }
  
-+static const struct dmi_system_id bridge_d3_blacklist[] = {
-+#ifdef CONFIG_X86
-+	{
-+		/*
-+		 * Gigabyte X299 root port is not marked as hotplug capable
-+		 * which allows Linux to power manage it.  However, this
-+		 * confuses the BIOS SMI handler so don't power manage root
-+		 * ports on that system.
-+		 */
-+		.ident = "X299 DESIGNARE EX-CF",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
-+			DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
-+		},
-+	},
-+#endif
-+	{ }
-+};
-+
- /**
-  * pci_bridge_d3_possible - Is it possible to put the bridge into D3
-  * @bridge: Bridge to check
-@@ -2546,6 +2565,9 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
- 		if (bridge->is_hotplug_bridge)
- 			return false;
+-
+ static int pci_save_pcix_state(struct pci_dev *dev)
+ {
+ 	int pos;
+@@ -1270,6 +1269,45 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
+ 	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
+ }
  
-+		if (dmi_check_system(bridge_d3_blacklist))
-+			return false;
++static void pci_save_ltr_state(struct pci_dev *dev)
++{
++	int ltr;
++	struct pci_cap_saved_state *save_state;
++	u16 *cap;
 +
- 		/*
- 		 * It should be safe to put PCIe ports from 2015 or newer
- 		 * to D3.
++	if (!pci_is_pcie(dev))
++		return;
++
++	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
++	if (!ltr)
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
++	if (!save_state) {
++		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
++		return;
++	}
++
++	cap = (u16 *)&save_state->cap.data[0];
++	pci_read_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap++);
++	pci_read_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, cap++);
++}
++
++static void pci_restore_ltr_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	int ltr;
++	u16 *cap;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
++	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
++	if (!save_state || !ltr)
++		return;
++
++	cap = (u16 *)&save_state->cap.data[0];
++	pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++);
++	pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
++}
+ 
+ /**
+  * pci_save_state - save the PCI configuration space of a device before suspending
+@@ -1291,6 +1329,7 @@ int pci_save_state(struct pci_dev *dev)
+ 	if (i != 0)
+ 		return i;
+ 
++	pci_save_ltr_state(dev);
+ 	pci_save_dpc_state(dev);
+ 	return pci_save_vc_state(dev);
+ }
+@@ -1390,7 +1429,12 @@ void pci_restore_state(struct pci_dev *dev)
+ 	if (!dev->state_saved)
+ 		return;
+ 
+-	/* PCI Express register must be restored first */
++	/*
++	 * Restore max latencies (in the LTR capability) before enabling
++	 * LTR itself (in the PCIe capability).
++	 */
++	pci_restore_ltr_state(dev);
++
+ 	pci_restore_pcie_state(dev);
+ 	pci_restore_pasid_state(dev);
+ 	pci_restore_pri_state(dev);
+@@ -3020,6 +3064,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+ 	if (error)
+ 		pci_err(dev, "unable to preallocate PCI-X save buffer\n");
+ 
++	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_LTR,
++					    2 * sizeof(u16));
++	if (error)
++		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
++
+ 	pci_allocate_vc_save_buffers(dev);
+ }
+ 
 -- 
 2.19.1
 
