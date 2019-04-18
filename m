@@ -2,387 +2,72 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2121C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74473C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620F8218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610704;
-	bh=NeE+ymPqxQUQkkUMQoE3ldDwbES6CnlWcpDXyKTMxgI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eto5kLQOxtCfiFPe4T3BFVTf+JF0fwoy1v+qZG6npIi7mneYq+ext8XLba4IUNtHn
-	 BBlQZPDaASKCkI8Q0zzYsqrDROKqvG68byHBeVTFtykhowb6ptHZXhug2LpJ1kSj9J
-	 Qb0jKXadR4WvaUH8KIu7K27pzgFGXhd/K3TYbWuk=
+	by mail.kernel.org (Postfix) with ESMTP id 499152186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391217AbfDRSFD (ORCPT
+        id S2391260AbfDRSFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:05:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34156 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:05:09 -0400
+Received: from relay.sw.ru ([185.231.240.75]:41804 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390411AbfDRSFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:05:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642A5206B6;
-        Thu, 18 Apr 2019 18:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610698;
-        bh=NeE+ymPqxQUQkkUMQoE3ldDwbES6CnlWcpDXyKTMxgI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g0IR5zSPrbX6HhC28A0jus1N9N7ZDkNqpHZ3lA354ZpIW32sZ6rt+lHPBWQ8VSk2V
-         qHHwJq0UTuQ5nZppvthSJBG7M3V5POQViTtRsTcmmoTkqfaJe9jnbgMRbozbqwzwZK
-         bVtP6P93skAzUe7EusPDUSDDqDUiz24gX2K20Vys=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C3=84m=C3=83=C2=A1=C3=85=E2=84=A2?= 
-        <rkrcmar@redhat.com>, Wanpeng Li <wanpeng.li@hotmail.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 51/92] KVM: nVMX: restore host state in nested_vmx_vmexit for VMFail
-Date:   Thu, 18 Apr 2019 19:57:09 +0200
-Message-Id: <20190418160434.537466544@linuxfoundation.org>
+        id S2390575AbfDRSFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:05:06 -0400
+Received: from [172.16.25.12] (helo=i7.sw.ru)
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hHBP9-0005BU-2v; Thu, 18 Apr 2019 21:04:59 +0300
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Willem de Bruijn <willemb@google.com>,
+        Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: [PATCH 4/4] net/skbuff: kmalloc_reserve(): remove unused argument
+Date:   Thu, 18 Apr 2019 21:05:24 +0300
+Message-Id: <20190418180524.23489-4-aryabinin@virtuozzo.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
-References: <20190418160430.325165109@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20190418180524.23489-1-aryabinin@virtuozzo.com>
+References: <20190418180524.23489-1-aryabinin@virtuozzo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bd18bffca35397214ae68d85cf7203aca25c3c1d ]
+Argument 'ip' always has been unused. Remove it.
 
-A VMEnter that VMFails (as opposed to VMExits) does not touch host
-state beyond registers that are explicitly noted in the VMFail path,
-e.g. EFLAGS.  Host state does not need to be loaded because VMFail
-is only signaled for consistency checks that occur before the CPU
-starts to load guest state, i.e. there is no need to restore any
-state as nothing has been modified.  But in the case where a VMFail
-is detected by hardware and not by KVM (due to deferring consistency
-checks to hardware), KVM has already loaded some amount of guest
-state.  Luckily, "loaded" only means loaded to KVM's software model,
-i.e. vmcs01 has not been modified.  So, unwind our software model to
-the pre-VMEntry host state.
-
-Not restoring host state in this VMFail path leads to a variety of
-failures because we end up with stale data in vcpu->arch, e.g. CR0,
-CR4, EFER, etc... will all be out of sync relative to vmcs01.  Any
-significant delta in the stale data is all but guaranteed to crash
-L1, e.g. emulation of SMEP, SMAP, UMIP, WP, etc... will be wrong.
-
-An alternative to this "soft" reload would be to load host state from
-vmcs12 as if we triggered a VMExit (as opposed to VMFail), but that is
-wildly inconsistent with respect to the VMX architecture, e.g. an L1
-VMM with separate VMExit and VMFail paths would explode.
-
-Note that this approach does not mean KVM is 100% accurate with
-respect to VMX hardware behavior, even at an architectural level
-(the exact order of consistency checks is microarchitecture specific).
-But 100% emulation accuracy isn't the goal (with this patch), rather
-the goal is to be consistent in the information delivered to L1, e.g.
-a VMExit should not fall-through VMENTER, and a VMFail should not jump
-to HOST_RIP.
-
-This technically reverts commit "5af4157388ad (KVM: nVMX: Fix mmu
-context after VMLAUNCH/VMRESUME failure)", but retains the core
-aspects of that patch, just in an open coded form due to the need to
-pull state from vmcs01 instead of vmcs12.  Restoring host state
-resolves a variety of issues introduced by commit "4f350c6dbcb9
-(kvm: nVMX: Handle deferred early VMLAUNCH/VMRESUME failure properly)",
-which remedied the incorrect behavior of treating VMFail like VMExit
-but in doing so neglected to restore arch state that had been modified
-prior to attempting nested VMEnter.
-
-A sample failure that occurs due to stale vcpu.arch state is a fault
-of some form while emulating an LGDT (due to emulated UMIP) from L1
-after a failed VMEntry to L3, in this case when running the KVM unit
-test test_tpr_threshold_values in L1.  L0 also hits a WARN in this
-case due to a stale arch.cr4.UMIP.
-
-L1:
-  BUG: unable to handle kernel paging request at ffffc90000663b9e
-  PGD 276512067 P4D 276512067 PUD 276513067 PMD 274efa067 PTE 8000000271de2163
-  Oops: 0009 [#1] SMP
-  CPU: 5 PID: 12495 Comm: qemu-system-x86 Tainted: G        W         4.18.0-rc2+ #2
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:native_load_gdt+0x0/0x10
-
-  ...
-
-  Call Trace:
-   load_fixmap_gdt+0x22/0x30
-   __vmx_load_host_state+0x10e/0x1c0 [kvm_intel]
-   vmx_switch_vmcs+0x2d/0x50 [kvm_intel]
-   nested_vmx_vmexit+0x222/0x9c0 [kvm_intel]
-   vmx_handle_exit+0x246/0x15a0 [kvm_intel]
-   kvm_arch_vcpu_ioctl_run+0x850/0x1830 [kvm]
-   kvm_vcpu_ioctl+0x3a1/0x5c0 [kvm]
-   do_vfs_ioctl+0x9f/0x600
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4f/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-L0:
-  WARNING: CPU: 2 PID: 3529 at arch/x86/kvm/vmx.c:6618 handle_desc+0x28/0x30 [kvm_intel]
-  ...
-  CPU: 2 PID: 3529 Comm: qemu-system-x86 Not tainted 4.17.2-coffee+ #76
-  Hardware name: Intel Corporation Kabylake Client platform/KBL S
-  RIP: 0010:handle_desc+0x28/0x30 [kvm_intel]
-
-  ...
-
-  Call Trace:
-   kvm_arch_vcpu_ioctl_run+0x863/0x1840 [kvm]
-   kvm_vcpu_ioctl+0x3a1/0x5c0 [kvm]
-   do_vfs_ioctl+0x9f/0x5e0
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x49/0xf0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 5af4157388ad (KVM: nVMX: Fix mmu context after VMLAUNCH/VMRESUME failure)
-Fixes: 4f350c6dbcb9 (kvm: nVMX: Handle deferred early VMLAUNCH/VMRESUME failure properly)
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim KrÄmÃ¡Å™ <rkrcmar@redhat.com>
-Cc: Wanpeng Li <wanpeng.li@hotmail.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
 ---
- arch/x86/kvm/vmx.c | 173 +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 153 insertions(+), 20 deletions(-)
+ net/core/skbuff.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 4bd878c9f7d2..90b7eee6d0f9 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -11846,24 +11846,6 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 	kvm_clear_interrupt_queue(vcpu);
- }
- 
--static void load_vmcs12_mmu_host_state(struct kvm_vcpu *vcpu,
--			struct vmcs12 *vmcs12)
--{
--	u32 entry_failure_code;
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 97557554e90e..5cd067b44371 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -126,11 +126,8 @@ static void skb_under_panic(struct sk_buff *skb, unsigned int sz, void *addr)
+  * may be used. Otherwise, the packet data may be discarded until enough
+  * memory is free
+  */
+-#define kmalloc_reserve(size, gfp, node, pfmemalloc) \
+-	 __kmalloc_reserve(size, gfp, node, _RET_IP_, pfmemalloc)
 -
--	nested_ept_uninit_mmu_context(vcpu);
--
--	/*
--	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
--	 * couldn't have changed.
--	 */
--	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
--		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
--
--	if (!enable_ept)
--		vcpu->arch.walk_mmu->inject_page_fault = kvm_inject_page_fault;
--}
--
- /*
-  * A part of what we need to when the nested L2 guest exits and we want to
-  * run its L1 parent, is to reset L1's guest state to the host state specified
-@@ -11877,6 +11859,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 				   struct vmcs12 *vmcs12)
+-static void *__kmalloc_reserve(size_t size, gfp_t flags, int node,
+-			       unsigned long ip, bool *pfmemalloc)
++static void *kmalloc_reserve(size_t size, gfp_t flags, int node,
++			     bool *pfmemalloc)
  {
- 	struct kvm_segment seg;
-+	u32 entry_failure_code;
- 
- 	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_EFER)
- 		vcpu->arch.efer = vmcs12->host_ia32_efer;
-@@ -11903,7 +11886,17 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
- 	vmx_set_cr4(vcpu, vmcs12->host_cr4);
- 
--	load_vmcs12_mmu_host_state(vcpu, vmcs12);
-+	nested_ept_uninit_mmu_context(vcpu);
-+
-+	/*
-+	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
-+	 * couldn't have changed.
-+	 */
-+	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
-+		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
-+
-+	if (!enable_ept)
-+		vcpu->arch.walk_mmu->inject_page_fault = kvm_inject_page_fault;
- 
- 	if (enable_vpid) {
- 		/*
-@@ -11994,6 +11987,140 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_MSR_FAIL);
- }
- 
-+static inline u64 nested_vmx_get_vmcs01_guest_efer(struct vcpu_vmx *vmx)
-+{
-+	struct shared_msr_entry *efer_msr;
-+	unsigned int i;
-+
-+	if (vm_entry_controls_get(vmx) & VM_ENTRY_LOAD_IA32_EFER)
-+		return vmcs_read64(GUEST_IA32_EFER);
-+
-+	if (cpu_has_load_ia32_efer)
-+		return host_efer;
-+
-+	for (i = 0; i < vmx->msr_autoload.guest.nr; ++i) {
-+		if (vmx->msr_autoload.guest.val[i].index == MSR_EFER)
-+			return vmx->msr_autoload.guest.val[i].value;
-+	}
-+
-+	efer_msr = find_msr_entry(vmx, MSR_EFER);
-+	if (efer_msr)
-+		return efer_msr->data;
-+
-+	return host_efer;
-+}
-+
-+static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	struct vmx_msr_entry g, h;
-+	struct msr_data msr;
-+	gpa_t gpa;
-+	u32 i, j;
-+
-+	vcpu->arch.pat = vmcs_read64(GUEST_IA32_PAT);
-+
-+	if (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) {
-+		/*
-+		 * L1's host DR7 is lost if KVM_GUESTDBG_USE_HW_BP is set
-+		 * as vmcs01.GUEST_DR7 contains a userspace defined value
-+		 * and vcpu->arch.dr7 is not squirreled away before the
-+		 * nested VMENTER (not worth adding a variable in nested_vmx).
-+		 */
-+		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
-+			kvm_set_dr(vcpu, 7, DR7_FIXED_1);
-+		else
-+			WARN_ON(kvm_set_dr(vcpu, 7, vmcs_readl(GUEST_DR7)));
-+	}
-+
-+	/*
-+	 * Note that calling vmx_set_{efer,cr0,cr4} is important as they
-+	 * handle a variety of side effects to KVM's software model.
-+	 */
-+	vmx_set_efer(vcpu, nested_vmx_get_vmcs01_guest_efer(vmx));
-+
-+	vcpu->arch.cr0_guest_owned_bits = X86_CR0_TS;
-+	vmx_set_cr0(vcpu, vmcs_readl(CR0_READ_SHADOW));
-+
-+	vcpu->arch.cr4_guest_owned_bits = ~vmcs_readl(CR4_GUEST_HOST_MASK);
-+	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
-+
-+	nested_ept_uninit_mmu_context(vcpu);
-+	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
-+	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+
-+	/*
-+	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
-+	 * from vmcs01 (if necessary).  The PDPTRs are not loaded on
-+	 * VMFail, like everything else we just need to ensure our
-+	 * software model is up-to-date.
-+	 */
-+	ept_save_pdptrs(vcpu);
-+
-+	kvm_mmu_reset_context(vcpu);
-+
-+	if (cpu_has_vmx_msr_bitmap())
-+		vmx_update_msr_bitmap(vcpu);
-+
-+	/*
-+	 * This nasty bit of open coding is a compromise between blindly
-+	 * loading L1's MSRs using the exit load lists (incorrect emulation
-+	 * of VMFail), leaving the nested VM's MSRs in the software model
-+	 * (incorrect behavior) and snapshotting the modified MSRs (too
-+	 * expensive since the lists are unbound by hardware).  For each
-+	 * MSR that was (prematurely) loaded from the nested VMEntry load
-+	 * list, reload it from the exit load list if it exists and differs
-+	 * from the guest value.  The intent is to stuff host state as
-+	 * silently as possible, not to fully process the exit load list.
-+	 */
-+	msr.host_initiated = false;
-+	for (i = 0; i < vmcs12->vm_entry_msr_load_count; i++) {
-+		gpa = vmcs12->vm_entry_msr_load_addr + (i * sizeof(g));
-+		if (kvm_vcpu_read_guest(vcpu, gpa, &g, sizeof(g))) {
-+			pr_debug_ratelimited(
-+				"%s read MSR index failed (%u, 0x%08llx)\n",
-+				__func__, i, gpa);
-+			goto vmabort;
-+		}
-+
-+		for (j = 0; j < vmcs12->vm_exit_msr_load_count; j++) {
-+			gpa = vmcs12->vm_exit_msr_load_addr + (j * sizeof(h));
-+			if (kvm_vcpu_read_guest(vcpu, gpa, &h, sizeof(h))) {
-+				pr_debug_ratelimited(
-+					"%s read MSR failed (%u, 0x%08llx)\n",
-+					__func__, j, gpa);
-+				goto vmabort;
-+			}
-+			if (h.index != g.index)
-+				continue;
-+			if (h.value == g.value)
-+				break;
-+
-+			if (nested_vmx_load_msr_check(vcpu, &h)) {
-+				pr_debug_ratelimited(
-+					"%s check failed (%u, 0x%x, 0x%x)\n",
-+					__func__, j, h.index, h.reserved);
-+				goto vmabort;
-+			}
-+
-+			msr.index = h.index;
-+			msr.data = h.value;
-+			if (kvm_set_msr(vcpu, &msr)) {
-+				pr_debug_ratelimited(
-+					"%s WRMSR failed (%u, 0x%x, 0x%llx)\n",
-+					__func__, j, h.index, h.value);
-+				goto vmabort;
-+			}
-+		}
-+	}
-+
-+	return;
-+
-+vmabort:
-+	nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_MSR_FAIL);
-+}
-+
- /*
-  * Emulate an exit from nested guest (L2) to L1, i.e., prepare to run L1
-  * and modify vmcs12 to make it see what it would expect to see there if
-@@ -12126,7 +12253,13 @@ static void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 	 */
- 	nested_vmx_failValid(vcpu, VMXERR_ENTRY_INVALID_CONTROL_FIELD);
- 
--	load_vmcs12_mmu_host_state(vcpu, vmcs12);
-+	/*
-+	 * Restore L1's host state to KVM's software model.  We're here
-+	 * because a consistency check was caught by hardware, which
-+	 * means some amount of guest state has been propagated to KVM's
-+	 * model and needs to be unwound to the host's state.
-+	 */
-+	nested_vmx_restore_host_state(vcpu);
- 
- 	/*
- 	 * The emulated instruction was already skipped in
+ 	void *obj;
+ 	gfp_t gfp_mask = flags;
 -- 
-2.19.1
-
-
+2.21.0
 
