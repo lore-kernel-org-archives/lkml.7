@@ -2,128 +2,117 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279EAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF00EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA45220643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612242;
-	bh=bb1sBWizYbJYWoK5Z7Kp5Fvp4u/c4XszG7NtqMTlqq0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwtEYs+HRVGMubOtOOJGt0EV5G/B1GQoq45C30yBHn5TGBHM1X7cZw7byu3p1NJRI
-	 lWa20POLLKiE91RYhmB+JcD1Rs3TaO7vMPtpzwcidJikgoIG8zD6vMxHd3tRnbmeMe
-	 AGq1wih7wTO9zUGN2k1ZTdGF+0chzL8cFLz0+FYg=
+	by mail.kernel.org (Postfix) with ESMTP id 9A1A720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I91MKNLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390783AbfDRSal (ORCPT
+        id S2390757AbfDRSav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390536AbfDRSBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE0D206B6;
-        Thu, 18 Apr 2019 18:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610490;
-        bh=bb1sBWizYbJYWoK5Z7Kp5Fvp4u/c4XszG7NtqMTlqq0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NU/mOANJm4C5KDqXjGDjZ/CKzfnxS3j+26k7rmmA3wLt+FHP9cJFomYkMdA6udDOn
-         OWoC5CBLbocvEvRCtHyPXQKt8RyycNaXPMPfTZkQ1ACPgy7crhVrtzrf55K/XG3yIr
-         5HF2tiRnDyCYNBfLKzLWcrcWMFsfWBqHWQZ4Nu0c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 081/110] ALSA: hda: fix front speakers on Huawei MBXP
-Date:   Thu, 18 Apr 2019 19:57:10 +0200
-Message-Id: <20190418160445.778718604@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
-References: <20190418160437.484158340@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 18 Apr 2019 14:30:51 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36508 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390149AbfDRSat (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:30:49 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u17so2360714lfi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BDrH2xghiWsDzu64JGgq5KXMa51VeOg5C+1Bge4S8qU=;
+        b=I91MKNLLyTOdb9kCQ6nrk/7QWGjWrF/5oH3P8fLqYdS4dRUjU17U5ZhPv6yrlinCeE
+         up4eQrrfAgh/gXlQaKcgLFhMjbnAJ8SNJ+tfCQ4pQwwF3vd1MmNKVizotb/GUtVGuZ89
+         yUFErUEIBKFwWRqhG+9U0rK+GYtzkyBJY0FHrayTeHmdXgX+PcMHZOD/xKNKzjpB/kwQ
+         XZSNIuuAL7XM5w7LVjfGHevB3YrZoHkzYCK0WYX0TSqsoGHSTi0G1NHMnpps9lUvGto9
+         6ZlGzRjsu80nPeCrdqVFxiKdGlsM2N/XAAtSrev4tvifctc47cC3z8vwT615isud8PNj
+         hGew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=BDrH2xghiWsDzu64JGgq5KXMa51VeOg5C+1Bge4S8qU=;
+        b=BO4oWdE/0KfL/QSejQEd1fqkMfH1tAIEIRyNEFedluJl6vZJ+p/+EEErDBUr7Yf/N7
+         tfRZerO+47uG0VN/96t5wvsCDY15a2b2DpXhFYw70DEgS73lmqyohI3Fr+riPaWWzKOO
+         wUaiudvK7cgHiH6V/+LpQPk4WD+xhG4WyMcxe0BZGrElvqx8NRFjGIXfwAdZEClSQdub
+         zSK3Fbw1BV4moJj7qV4PG76r3lqUTL2dIyUOhbHzLsaRjR9KhQVIK8oEaoxMf8C3srPc
+         wlNHEpwct6p6KjKTciWFA3qNMuY4DE7vX872fKrI6dsEEP+opHllo96KlC+Igazj2uXD
+         Lz9g==
+X-Gm-Message-State: APjAAAWOjpgySXWgCgJ+co5+m8Vq/h7V3vFqyXJ8G3du0TW3o3D77gRF
+        UEll1VhFWcJn8aaoO7yZV+SX5Q==
+X-Google-Smtp-Source: APXvYqwIcovas9Ysm1mVpyjhfx8EgOQTC1rEopmvlMcL+8QtpMl1zkxq2zScpsO8sYHGpdUeejC5rA==
+X-Received: by 2002:a19:3845:: with SMTP id d5mr18719428lfj.77.1555612247557;
+        Thu, 18 Apr 2019 11:30:47 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id n23sm603574lfh.86.2019.04.18.11.30.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 11:30:46 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 21:30:44 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        ilias.apalodimas@linaro.org, hawk@kernel.org,
+        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        aniel@iogearbox.net, John Fastabend <john.fastabend@gmail.com>
+Subject: Re: [RFC PATCH 3/3] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190418183043.GD27879@khorivan>
+Mail-Followup-To: Jakub Kicinski <jakub.kicinski@netronome.com>,
+        grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        ilias.apalodimas@linaro.org, hawk@kernel.org,
+        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        aniel@iogearbox.net, John Fastabend <john.fastabend@gmail.com>
+References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
+ <20190417174942.11811-4-ivan.khoronzhuk@linaro.org>
+ <CAJpBn1y0odvL97-kP5yzKC+tN=fx178nxigfBfDwXhRhPRvDuQ@mail.gmail.com>
+ <20190418094008.GB27879@khorivan>
+ <20190418104111.559a0e74@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190418104111.559a0e74@cakuba.netronome.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ac51bbc4cfec4ef08b03bef24b31e2d50ef8b37 ]
+On Thu, Apr 18, 2019 at 10:41:11AM -0700, Jakub Kicinski wrote:
+>On Thu, 18 Apr 2019 12:40:10 +0300, Ivan Khoronzhuk wrote:
+>> >work?  The stack's TX ring has a lock, and can be used from any CPU,
+>> >while XDP TX rings are per-PCU, no?
+>> Yes and no.
+>> am572 has more queues then CPU num, How I can choose tx queue not based on CPU
+>> num? It's always shared and has to have lock, and cpdma is done in this way.
+>
+>Oh, I see, you already have another lock.
+>
+>> Here another thing bothering me, I send it to queue 0 always, instead of
+>> taking cpu num. Not sure about this, but I expect to have some tx queue
+>> not bind to cpu and didn't find a way it can be changed dynamically in
+>> redirect.
+>
+>Not sure I understand :)
 
-This patch solves bug 200501 'Only 2 of 4 speakers playing sound.'
-It enables the front speakers on Huawei Matebook X Pro laptops.
-These laptops come with Dolby Atmos sound system and these pins
-configuration enables the front speakers.
+I mean, is there a capability to choose tx queue while XDP_REDIRECT or XDP_TX.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=200501
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/patch_realtek.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+From what I've seen it's taken by:
+qidx = smp_processor_id();
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b9d832bde23e..bd60eb7168fa 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5604,6 +5604,7 @@ enum {
- 	ALC298_FIXUP_TPT470_DOCK,
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
-+	ALC256_FIXUP_HUAWEI_MBXP_PINS,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -5892,6 +5893,22 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
-+	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{0x12, 0x90a60130},
-+			{0x13, 0x40000000},
-+			{0x14, 0x90170110},
-+			{0x18, 0x411111f0},
-+			{0x19, 0x04a11040},
-+			{0x1a, 0x411111f0},
-+			{0x1b, 0x90170112},
-+			{0x1d, 0x40759a05},
-+			{0x1e, 0x411111f0},
-+			{0x21, 0x04211020},
-+			{ }
-+		},
-+	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc269_fixup_x101_headset_mic,
-@@ -6885,6 +6902,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
-+	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
- 
- #if 0
+What if I need to send classified traffic to hw queue 4 for instance...
+
 -- 
-2.19.1
-
-
-
+Regards,
+Ivan Khoronzhuk
