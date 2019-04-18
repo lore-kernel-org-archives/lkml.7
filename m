@@ -2,207 +2,178 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB3BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7310C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74F5217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E43F2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388746AbfDRLhY (ORCPT
+        id S2388790AbfDRLmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:37:24 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:41344 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfDRLhX (ORCPT
+        Thu, 18 Apr 2019 07:42:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37097 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388535AbfDRLmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:37:23 -0400
-Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hH5Lf-00048N-39 from Jiada_Wang@mentor.com ; Thu, 18 Apr 2019 04:36:59 -0700
-Received: from [172.30.112.46] (147.34.91.1) by svr-orw-mbx-03.mgc.mentorg.com
- (147.34.90.203) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Thu, 18 Apr
- 2019 04:36:55 -0700
-Subject: Re: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after
- device initialization
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
-        <edubezval@gmail.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>,
-        "Frkuska, Joshua" <Joshua_Frkuska@mentor.com>
-References: <20190411100352.15977-1-jiada_wang@mentor.com>
- <92504666-9e17-4c6d-fc74-6cf68b9f017b@linaro.org>
- <9a4de8ca-fa49-2050-e40b-b54d03484213@mentor.com>
- <5e685e1d-dca7-7292-1342-dbe609c517d2@linaro.org>
-From:   Jiada Wang <jiada_wang@mentor.com>
-Message-ID: <804954a6-9f5b-28ca-ead1-891be93735ee@mentor.com>
-Date:   Thu, 18 Apr 2019 20:36:54 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+        Thu, 18 Apr 2019 07:42:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so2597589wrm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 04:42:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PPNVvj2myBt2QeHAMt5EoRNrApWzBDH4PJTi3ss/nPA=;
+        b=lC6Mkx7hgJli8Wmg+b4G02c+WA318DucznKA37vm5O7v6gSyFQy5OuSCYYPPtOQdXa
+         xfUD39jHZQRQA9/wzvoY9nuB6oCzyiY0HRH6+ngHKRyrQq4Xgoes2Lx7eYE6Z/XXWCik
+         ue00YfVbTZRQFIHUAMW1kzYquuUVdX/xagcbT177Vj5W8WNM4EfVcXkxfWKDeE1WY44j
+         z2A7PP9GAvrNXAAO2pvQVEBjvOaQcmUh8hEVjmvRnVbPVxzlrZZoahLjbYCkvU12hzzJ
+         GNu7NA7EBeaogaJf95SeflHcE7MlhAqKGEF6Fl7Ndyl9jCRasu93QE+fFWUemc0QdA6O
+         8wIA==
+X-Gm-Message-State: APjAAAUfgRkWTHEsZHj+0iRXHhZ1pnnjtk5GZPkE4FBM2Gpzc6mJjvOe
+        KVIQhwqQQldvjJwWt9R0ceVKR9KSI8k=
+X-Google-Smtp-Source: APXvYqy8Lo66Fou0Ee8rujqq8FgI1HCN8U0t8icBvhwcy4YUrdi4pho7M6s+6rglq26Edo97X8dURQ==
+X-Received: by 2002:adf:db05:: with SMTP id s5mr63275734wri.247.1555587723693;
+        Thu, 18 Apr 2019 04:42:03 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id e12sm1481740wrt.94.2019.04.18.04.42.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 04:42:03 -0700 (PDT)
+Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
+ on BYT/CHT
+To:     "Robert R. Howell" <RHowell@uwyo.edu>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+Cc:     "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
+ <eb1462c9-ebef-7bd6-c263-3f4f2e8ba63d@redhat.com>
+ <b6cd67d7-a4de-0fab-4512-25d732190d17@uwyo.edu>
+ <feb1808d-542c-83c2-5c70-9228473bb8d0@redhat.com>
+ <0a770539-dfe9-2eb6-a90a-82f065a23a3f@uwyo.edu>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <f6db39bc-b8d1-fda8-ad37-a8b050ef0027@redhat.com>
+Date:   Thu, 18 Apr 2019 13:42:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <5e685e1d-dca7-7292-1342-dbe609c517d2@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <0a770539-dfe9-2eb6-a90a-82f065a23a3f@uwyo.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel
+Hello Robert,
 
-Thanks for your comments
-
-On 2019/04/17 17:05, Daniel Lezcano wrote:
-> On 17/04/2019 05:01, Jiada Wang wrote:
->> Hi Daniel
+On 11-04-19 21:50, Robert R. Howell wrote:
+> On 4/8/19 2:16 AM, Hans de Goede wrote:>
 >>
->> On 2019/04/17 4:22, Daniel Lezcano wrote:
->>> On 11/04/2019 12:03, Jiada Wang wrote:
->>>> Currently IRQ is remain enabled after .remove, later if device is
->>>> probed,
->>>> IRQ is requested before .thermal_init, this may cause IRQ function be
->>>> triggered but not able to clear IRQ status, thus cause system to hang.
->>>>
->>>> this patch by moving request of IRQ after device initialization to
->>>> avoid this issue.
->>>
->>> Why not disable the interrupt and clear the irq status in the .remove
->>> callback, so the place is clean when probing again?
->>>
->>>
->>>           struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
->>>
->>>           rcar_thermal_irq_set(priv, false);
->>>
->>> should do the trick no ?
->>>
->> yes, this issue also can be addressed by disable the interrupt in .remove.
+>> Hmm, interesting so you have hibernation working on a T100TA
+>> (with 5.0 + 02e45646d53b reverted), right ?
 >>
->> But there is race condition between .remove and irq thread function,
->> (which enables IRQ)
->> so driver need to ensure threaded irq has been disabled before call
->> rcar_thermal_irq_set(priv, false) in .remove.
->> this adds additional complexity.
->>
->> I am fine with both solutions,
->> what is your opinion?
+> Hi Hans and Kai-Heng
 > 
-> My opinion is it is the tree hiding the forest.
+> First, apologies for how long it took me to reply to both your inquiries.
+> In trying to answer them I discovered some inconsistencies in how the T100TA was
+> behaving on different hibernation attempts and I've been trying to sort those out.
+> I haven't been completely successful in that, but here's a brief summary.
 > 
-> After a quick look at the irq setup and handling, it appears the
-> implementation is cumbersome. This part should be fixed before the rest:
+> Yes I do have hibernation working (at least most of the time) on a T100TA,
+> with 5.0 + 02e45646d53b reverted (more about that below), and with a systemd
+> hibernate script also described below.
 > 
->   - check IRQF_ONESHOT flag
->   - remove the lock in the interrupt handlers
->   - remove rcar_gen3_thermal_irq() which is pointless
->   - check the IRQF_SHARED flag is correct (I doubt)
+> Trying to be more quantitative about "most of the time" is in part want I've been
+> testing the last few days.  I just finished a cycle of 20 hibernates/resumes
+> which were all successful at least in the sense that after resume internal
+> sound was working, along with all the other critical functions I care about
+> (WiFi, Bluetooth, etc.).  However I have occasionally (perhaps 1 in 10 times)
+> seen something go wrong with sound on resume and the only way to get it
+> working again was to a full reboot.  During the successful cycles I also
+> sometimes see i2c_designware or intel_sst_acpi error messages but they
+> don't seem to indicate an unrecoverable failure.  I was hoping to sort out
+> what errors I was seen on the occasions where sound was lost till a reboot,
+> but those are rare enough I haven't been able to sort out the difference
+> between those and the "recoverable" errors.
 > 
+> Regarding the revert of 02e45646d53b, there were some code changes in
+> adjacent lines so a simple revert wouldn't apply cleanly to 5.0.0
+> but the changes were small enough that I was able to manually "merge"
+> the revert and the 5.0.0 changes.  I have posted a patch file under
+> Bugzilla: <https://bugzilla.kernel.org/show_bug.cgi?id=202139>
+> showing what I actually did to revert 02e45646d53b for 5.0.0.  As I mentioned
+> in an earlier message, I have NOT been able to produce a working revert of
+> 02e45646d53b for the 5.1-rc3 kernel.
+> 
+> To make hibernation work on the T100 I also had to create a script
+> /usr/lib/systemd/system-sleep/t100_hibernate.sh which unloads various drivers
+> (including sound) before hibernate, then restarts them afterwords.  I've inserted
+> it below.  I'm not certain all the steps in it are still necessary, but the
+> intermittent failures make it very difficult to determine what is absolutely essential.
+> 
+> -----t100_hibernate.sh  systemd script-------
+> #!/bin/bash
+> echo "Hibernate script $1 $2"
+> [ $2 != 'hibernate' ] && exit 0
+> 
+> case $1 in
+>          pre)
+>      echo "Going to $2..."
+>      /sbin/modprobe -r brcmfmac
+>      /sbin/modprobe -r hci_uart
+>      /sbin/modprobe -r battery
+>      /sbin/modprobe -r hid_multitouch
+>      /usr/bin/killall pulseaudio
+>      /sbin/modprobe -r snd_soc_sst_bytcr_rt5640
+>      /sbin/modprobe -r snd_soc_rt5640
+>      /sbin/modprobe -r snd_soc_sst_acpi
+>          ;;
+>          post)
+>      echo "Waking from $2..."
+>      /sbin/modprobe brcmfmac
+>      /sbin/modprobe hci_uart
+>      /sbin/modprobe battery
+>      /sbin/modprobe hid_multitouch
+>      # Just load the following and it will pull in other snd modules
+>      /sbin/modprobe snd_soc_sst_acpi
+>      /usr/sbin/service NetworkManager restart
+>      /usr/sbin/service wpa_supplicant restart
+>      # The above is usually enough but occasionally sound doesn't come up properly
+>      # and doing the following seems to restore it in those cases.
+>      /usr/bin/killall pulseaudio
+>      /usr/sbin/rmmod snd_soc_sst_bytcr_rt5640
+>      /usr/sbin/rmmod snd_soc_rt5640
+>      /usr/sbin modprobe snd_soc_rt5640
+>      /usr/sbin modprobe snd_soc_sst_bytcr_rt5640
+>          ;;
+> esac
+> -----end of script-------------------------------
+> 
+> I'll send a second message with the system logs which Kai-Heng requested,
+> with his patch applied to 5.1-rc3.
 
-yes, I think rather than IRQF_SHARED, IRQF_ONESHOT flag need to be used.
-these suggestions make sense, I will add these changes in v2 patch-set
+Ok, so you have hibernation sort of working, with a bunch of hacks.
 
-> As the function devm_request_threaded_irq() is called 3 times, you
-> should add the priv->tscs[i]->zone in the private data and the irq
-> thread handler should look like:
-> 
-> static irqreturn_t rcar_gen3_thermal_irq_thread(int irq, void *data)
-> {
-> 	struct thermal_zone_device *tz = data;
-> 
-> 	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
-> 
-> 	[ ... ]
-> 
->          return IRQ_HANDLED;
-> }
-> 
-hmmm, IRQ is requested 2 times to monitor low and high temperature of 
-all tzs.
+This is exactly why I usually do not spend any time on trying to get
+hibernation to work.
 
-Thanks,
-Jiada
+Still since my patch is regressing things for you I will try to
+take a look at this and see if I can reproduce and come up with
+a fix. But this is not going to be a high priority thing for me to
+work on.
 
-> When the implementation is fixed, then we can take care of the .remove
-> 
->>>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->>>> ---
->>>>    drivers/thermal/rcar_gen3_thermal.c | 48 ++++++++++++++++-------------
->>>>    1 file changed, 26 insertions(+), 22 deletions(-)
->>>>
->>>> diff --git a/drivers/thermal/rcar_gen3_thermal.c
->>>> b/drivers/thermal/rcar_gen3_thermal.c
->>>> index 88fa41cf16e8..4d095d7f9763 100644
->>>> --- a/drivers/thermal/rcar_gen3_thermal.c
->>>> +++ b/drivers/thermal/rcar_gen3_thermal.c
->>>> @@ -375,28 +375,6 @@ static int rcar_gen3_thermal_probe(struct
->>>> platform_device *pdev)
->>>>          platform_set_drvdata(pdev, priv);
->>>>    -    /*
->>>> -     * Request 2 (of the 3 possible) IRQs, the driver only needs to
->>>> -     * to trigger on the low and high trip points of the current
->>>> -     * temp window at this point.
->>>> -     */
->>>> -    for (i = 0; i < 2; i++) {
->>>> -        irq = platform_get_irq(pdev, i);
->>>> -        if (irq < 0)
->>>> -            return irq;
->>>> -
->>>> -        irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
->>>> -                     dev_name(dev), i);
->>>> -        if (!irqname)
->>>> -            return -ENOMEM;
->>>> -
->>>> -        ret = devm_request_threaded_irq(dev, irq,
->>>> rcar_gen3_thermal_irq,
->>>> -                        rcar_gen3_thermal_irq_thread,
->>>> -                        IRQF_SHARED, irqname, priv);
->>>> -        if (ret)
->>>> -            return ret;
->>>> -    }
->>>> -
->>>>        pm_runtime_enable(dev);
->>>>        pm_runtime_get_sync(dev);
->>>>    @@ -458,6 +436,32 @@ static int rcar_gen3_thermal_probe(struct
->>>> platform_device *pdev)
->>>>            goto error_unregister;
->>>>        }
->>>>    +    /*
->>>> +     * Request 2 (of the 3 possible) IRQs, the driver only needs to
->>>> +     * to trigger on the low and high trip points of the current
->>>> +     * temp window at this point.
->>>> +     */
->>>> +    for (i = 0; i < 2; i++) {
->>>> +        irq = platform_get_irq(pdev, i);
->>>> +        if (irq < 0) {
->>>> +            ret = irq;
->>>> +            goto error_unregister;
->>>> +        }
->>>> +
->>>> +        irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
->>>> +                     dev_name(dev), i);
->>>> +        if (!irqname) {
->>>> +            ret = -ENOMEM;
->>>> +            goto error_unregister;
->>>> +        }
->>>> +
->>>> +        ret = devm_request_threaded_irq(dev, irq,
->>>> rcar_gen3_thermal_irq,
->>>> +                        rcar_gen3_thermal_irq_thread,
->>>> +                        IRQF_SHARED, irqname, priv);
->>>> +        if (ret)
->>>> +            goto error_unregister;
->>>> +    }
->>>> +
->>>>        rcar_thermal_irq_set(priv, true);
->>>>          return 0;
->>>>
->>>
->>>
-> 
-> 
+In the mean time I've gone ahead and submitted my version of the
+fix for the problem Kai-Heng was seeing, since that does not seem
+to make your problem worse; and it will be good to get that problem
+fixed.
+
+Regards,
+
+Hans
+
