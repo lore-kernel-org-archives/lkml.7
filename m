@@ -2,44 +2,48 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B75C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08552183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79E42083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388885AbfDRLyG (ORCPT
+        id S2388891AbfDRLzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:54:06 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35705 "EHLO
+        Thu, 18 Apr 2019 07:55:12 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:35732 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfDRLyG (ORCPT
+        with ESMTP id S2388535AbfDRLzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:54:06 -0400
+        Thu, 18 Apr 2019 07:55:12 -0400
 Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH5bc-000615-N4; Thu, 18 Apr 2019 13:53:28 +0200
-Date:   Thu, 18 Apr 2019 13:53:26 +0200 (CEST)
+        id 1hH5ck-00063t-VR; Thu, 18 Apr 2019 13:54:39 +0200
+Date:   Thu, 18 Apr 2019 13:54:37 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+To:     Alexander Potapenko <glider@google.com>
 cc:     LKML <linux-kernel@vger.kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Pekka Enberg <penberg@kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         David Rientjes <rientjes@google.com>,
         Christoph Lameter <cl@linux.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
         Mike Rapoport <rppt@linux.vnet.ibm.com>,
         Akinobu Mita <akinobu.mita@gmail.com>,
         iommu@lists.linux-foundation.org,
@@ -49,10 +53,7 @@ cc:     LKML <linux-kernel@vger.kernel.org>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
         Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
+        linux-btrfs@vger.kernel.org, intel-gfx@lists.freedesktop.org,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
@@ -60,10 +61,10 @@ cc:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         linux-arch@vger.kernel.org
-Subject: Re: [patch V2 09/29] mm/kasan: Simplify stacktrace handling
-In-Reply-To: <5b77992a-52b6-807e-f77d-9cf3e648c71f@virtuozzo.com>
-Message-ID: <alpine.DEB.2.21.1904181350080.3174@nanos.tec.linutronix.de>
-References: <20190418084119.056416939@linutronix.de> <20190418084253.903603121@linutronix.de> <5b77992a-52b6-807e-f77d-9cf3e648c71f@virtuozzo.com>
+Subject: Re: [patch V2 14/29] dm bufio: Simplify stack trace retrieval
+In-Reply-To: <CAG_fn=WP9+bVv9hedoaTzWK+xBzedxaGJGVOPnF0o115s-oWvg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904181353420.3174@nanos.tec.linutronix.de>
+References: <20190418084119.056416939@linutronix.de> <20190418084254.361284697@linutronix.de> <CAG_fn=WP9+bVv9hedoaTzWK+xBzedxaGJGVOPnF0o115s-oWvg@mail.gmail.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -75,63 +76,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019, Andrey Ryabinin wrote:
-> On 4/18/19 11:41 AM, Thomas Gleixner wrote:
-> > Replace the indirection through struct stack_trace by using the storage
-> > array based interfaces.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Acked-by: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> > Cc: Alexander Potapenko <glider@google.com>
-> > Cc: kasan-dev@googlegroups.com
-> > Cc: linux-mm@kvack.org
-> 
-> Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> 
-> >  
-> >  static inline depot_stack_handle_t save_stack(gfp_t flags)
-> >  {
-> >  	unsigned long entries[KASAN_STACK_DEPTH];
-> > -	struct stack_trace trace = {
-> > -		.nr_entries = 0,
-> > -		.entries = entries,
-> > -		.max_entries = KASAN_STACK_DEPTH,
-> > -		.skip = 0
-> > -	};
-> > +	unsigned int nr_entries;
-> >  
-> > -	save_stack_trace(&trace);
-> > -	filter_irq_stacks(&trace);
-> > -
-> > -	return depot_save_stack(&trace, flags);
-> > +	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-> > +	nr_entries = filter_irq_stacks(entries, nr_entries);
-> > +	return stack_depot_save(entries, nr_entries, flags);
-> 
-> Suggestion for further improvement:
-> 
-> stack_trace_save() shouldn't unwind beyond irq entry point so we wouldn't
-> need filter_irq_stacks().  Probably all call sites doesn't care about
-> random stack above irq entry point, so it doesn't make sense to spend
-> resources on unwinding non-irq stack from interrupt first an filtering
-> out it later.
+On Thu, 18 Apr 2019, Alexander Potapenko wrote:
+> On Thu, Apr 18, 2019 at 11:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > -       save_stack_trace(&b->stack_trace);
+> > +       b->stack_len = stack_trace_save(b->stack_entries, MAX_STACK, 2);
+> As noted in one of similar patches before, can we have an inline
+> comment to indicate what does this "2" stand for?
 
-There are users which care about the full trace.
-
-Once we have cleaned up the whole architeture side, we can add core side
-filtering which allows to
-
-   1) replace the 'skip number of entries at the beginning
-
-   2) stop the trace when it reaches a certain point
-
-Right now, I don't want to change any of this until the whole mess is
-consolidated.
+Come on. We have gazillion of functions which take numerical constant
+arguments. Should we add comments to all of them?
 
 Thanks,
 
 	tglx
-
-
-
