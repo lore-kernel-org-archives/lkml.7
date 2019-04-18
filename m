@@ -2,111 +2,104 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E764BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB68C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FD4206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC89B206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d45XVkiB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TE15QQH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388327AbfDRJAV (ORCPT
+        id S2388342AbfDRJA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:00:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38427 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfDRJAV (ORCPT
+        Thu, 18 Apr 2019 05:00:58 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37518 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388195AbfDRJA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:00:21 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j26so892578pgl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 02:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AR1RP7f6kZifZ7FeB0P9Q2kh0p04YoT/2fg9i6FFRjE=;
-        b=d45XVkiBIHj4d50vGS6UL25afAP+GwNkW1AT4uquixx64Bkbkxtg+qchQxRY0yfcib
-         WnEQAf+YRh2PP/StgKkC++L2w3Dn8uzkN6tpKKlE44ZQk6gDmg22ebPBEWl47M/wkVMd
-         R926WMDAUrwrJTGVNGcevasOORF6WfPbThgZ0SmKYVqIiY5eW78q718X7woBxj+Xc/J0
-         rdDEvFYgsKdymHxppa9sncmUU3lvXXP2XqfM+FuYr1IQS0RiR5LGUE+kHA+lRB5QGV1b
-         BGwqPU2TGLcr8QSdWBl1562TJkl+sxaD77CZXH/Uqwu29q/+/6cZ43e2zb7v0p8Zka9w
-         rvFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AR1RP7f6kZifZ7FeB0P9Q2kh0p04YoT/2fg9i6FFRjE=;
-        b=m0c8y9dPf5iB/bjhamMOaUPpsXD9JdhwRtCWCZrhKE4xBzMD+eky5E19xMMbH6PNlX
-         OS6XYIbDLZ2xbNCZOLqCYTeQJebE6+UlzzK/NKBnq8VLqjGJf5mVizFSdt+F5YyWuhbc
-         umZ1GxPTX0ziQn5xB3OaTGEtk2lsDh5D36blU2dOzhjwdvLTk1sCTLpa4SnAu1Eff9Ps
-         D2P6ZC1GkMVIJhgglwY45NOAQWX2lWThsZVaY0XrCh2LTMIyxDDG4yJSNy7cB6xgpodI
-         NfYyxdc4VgOjEMsZu9yNI1G/UuUx11LMP59xvGX9AbTQP0G8CFZlVBAz1vMC+VmuM3Jn
-         F3Ng==
-X-Gm-Message-State: APjAAAWmLuGWuLwdfPOLdAQuBCg8aRbrXcX4SlE9x5poUF8MvQAmuMPE
-        HMBP+rDBgeCKI2dfDCsNYfY=
-X-Google-Smtp-Source: APXvYqzNMmtMyDebuNNZgKECpUn3goSspWHCCs8OulR0f1awwQxvw5m0sIpcxmT/6vQQhlyE43um0Q==
-X-Received: by 2002:a63:c104:: with SMTP id w4mr88228953pgf.409.1555578020180;
-        Thu, 18 Apr 2019 02:00:20 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id y8sm2377070pgk.20.2019.04.18.02.00.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 02:00:19 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 02:00:12 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_esai: Add pm runtime function
-Message-ID: <20190418090011.GA4028@Asurada>
-References: <1555558152-32196-1-git-send-email-shengjiu.wang@nxp.com>
+        Thu, 18 Apr 2019 05:00:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yvS0k5aM27hlPF/X/NetOX/zP2CDvscIx40HsGn0V+g=; b=TE15QQH+J0bGEX9gYX0sejNVR
+        C0dXnrNLV38tAzN+2yfZMAGyjEJhVl7PZPp6qzSGJOq+Hi8CE7UKty8nnYx4gM2xe25WwbYmnHG6I
+        WYYbxfEpbw76RIgE0DjTXwqA10Tf4qNM0MF7HjwXq1vTiIHatLhO/+cHoyWpa4QXQAvFXcaxuyBkW
+        XVu+CXbaCQv4af7lx+fMBJgF9cEewa8eptdeVhy98Extp8Nuyveo/vpi0YAWlIqAzfdXu702VHW8c
+        I7tqOBWc/hZcVpTapNvp6dEqQTnTeFLlGup5QYrB50G3IdUxJGZmpOez8/cRKoT0Y46YGkABqSFNP
+        bNd1TJj0g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hH2uX-0000kz-1R; Thu, 18 Apr 2019 09:00:49 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C509029B98541; Thu, 18 Apr 2019 11:00:47 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 11:00:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+Message-ID: <20190418090047.GX12232@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-12-longman@redhat.com>
+ <20190417135841.GI4038@hirez.programming.kicks-ass.net>
+ <8683197e-4eec-b89b-df44-3b61088944af@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555558152-32196-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <8683197e-4eec-b89b-df44-3b61088944af@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 03:29:09AM +0000, S.j. Wang wrote:
-> In imx8 when systerm enter suspend state, the power of subsystem will
-> be off, the clock enable state will be lost and register configuration
-
-Just for curiosity, we had similar situation on imx6sx, so we
-added suspend/resume with regcache. Why will the clock enable
-state be lost too? Does CCM on imx8 (might not be called CCM
-though) have any difference? What about clock rate settings?
-
-> will be lost. So the driver need to enter runtime suspend state in
-> suspend.
-
-> With this implementation the suspend function almost same as runtime
-> suspend function, so remove the suspend function, just use
-> pm_runtime_force_suspend instead, and same for the resume function.
+On Wed, Apr 17, 2019 at 01:45:10PM -0400, Waiman Long wrote:
+> On 04/17/2019 09:58 AM, Peter Zijlstra wrote:
+> > On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
+> >> +/*
+> >> + * Try to acquire read lock before the reader is put on wait queue.
+> >> + * Lock acquisition isn't allowed if the rwsem is locked or a writer handoff
+> >> + * is ongoing.
+> >> + */
+> >> +static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
+> >> +{
+> >> +	long count = atomic_long_read(&sem->count);
+> >> +
+> >> +	if (RWSEM_COUNT_WLOCKED_OR_HANDOFF(count))
+> >> +		return false;
+> >> +
+> >> +	count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS, &sem->count);
+> >> +	if (!RWSEM_COUNT_WLOCKED_OR_HANDOFF(count)) {
+> >> +		rwsem_set_reader_owned(sem);
+> >> +		lockevent_inc(rwsem_opt_rlock);
+> >> +		return true;
+> >> +	}
+> >> +
+> >> +	/* Back out the change */
+> >> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+> >> +	return false;
+> >> +}
+> > Doesn't a cmpxchg 'loop' make more sense here?
 > 
-> And also need to move clock enablement to runtime resume and clock
-> disablement to runtime suspend.
+> Not really. A cmpxchg loop will have one more correctible failure mode -
+> a new reader acquire the lock or a reader owner does an unlock. Failures
+> caused by the setting of the handoff bit or writer acquiring the lock
+> are the same for both cases. I don't see any advantage in using cmpxchg
+> loop.
+
+It depends on how many failures vs successes you have. I was expecting
+failure to be the most common case, and then you go from 2 atomics to 1.
 
 
-> -static int fsl_esai_suspend(struct device *dev)
-> -	regcache_cache_only(esai->regmap, true);
-> -	regcache_mark_dirty(esai->regmap);
-
-> +static int fsl_esai_runtime_resume(struct device *dev)
->  	regcache_cache_only(esai->regmap, false);
-> +	regcache_mark_dirty(esai->regmap);
-
-Why move the regcache_mark_dirty from suspend to resume?
-(I am not saying it's wrong but wondering if this is the
- preferable way.)
