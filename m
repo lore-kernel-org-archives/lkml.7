@@ -2,51 +2,52 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A83C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5773EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9708920643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB1C20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611828;
-	bh=Pxzvkw2x6G81FdU2nkh3g/UYR8UlNTL3U0Y92xeVoII=;
+	s=default; t=1555611846;
+	bh=GJi2JNKo/h+hbFSyFs6tMdNJopHV2QNqFz8bhKeIfQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhQ1mXaQ5GabdwghX5kGmM1wJyb+eSgjJzQkJn6CKTBsrKSYIzmU6TZd2EhnChjw6
-	 ouDXSRD8dKHekoMMdPBfgvOuIvD0oYiMfGB8wZ7nZxtda+SNd+a+5XRTsJyllBcnTP
-	 k1JXdIhH1VGJBLkUq8M9ikISBMChX/njRq3s1TFw=
+	b=E8iIGxOa+uYG58ULvPYftrIEz5SAQ3sNTx3umUvw4+b2X8NnjZcJHPWGYXCVaWJC1
+	 aIxFWm0G8t9lwgUUdcAhQwm53jH31/CRvqLEo+IjwEgbW1y5XGknpeZ0nZHkOgZYGH
+	 tlO9eJpt3XWCSnSmoW6JaBH7glehd6zDPEMd9K3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404113AbfDRSXr (ORCPT
+        id S2391457AbfDRSYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36150 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391458AbfDRSGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:06:22 -0400
+        id S2390029AbfDRSGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:06:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40BE4218AF;
-        Thu, 18 Apr 2019 18:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DB4E218A6;
+        Thu, 18 Apr 2019 18:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610781;
-        bh=Pxzvkw2x6G81FdU2nkh3g/UYR8UlNTL3U0Y92xeVoII=;
+        s=default; t=1555610766;
+        bh=GJi2JNKo/h+hbFSyFs6tMdNJopHV2QNqFz8bhKeIfQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6ZrisV+s2+EiXwPUp9ok9TL9Uclq11D3r2ayNgOE3nM2PiCfnP5wiFnKSFdhkzz4
-         nUnI6fOd0ZUiCNgci2udv8lyd3JTT6YhKrPjPVrwp2pBpI7UKz2fRaN2FxGqzKiB2B
-         MXfWRw9xNdBHXjsSppTeCP7oN/ux2pl13vtlM1iQ=
+        b=C9SxBNirl5Q0Dwo9jSboqI/cHoe/acxn0HzH2Z5R4bPUJ5MOCKOTlHdZWFDw9MH+Q
+         TH+Ic1WYrhKN3sKxuKuiO8cda7BxWZhSCltXWuWUc8xExnzuYDL1SYyToBx60tlLuZ
+         G+QepixsSYRtSm+z/MoLch4mswA+hO8dqk5IlftM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Balbir Singh <sblbir@amzn.com>
-Subject: [PATCH 4.14 82/92] bpf: restrict unknown scalars of mixed signed bounds for unprivileged
-Date:   Thu, 18 Apr 2019 19:57:40 +0200
-Message-Id: <20190418160437.708923790@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 43/92] netfilter: xt_cgroup: shrink size of v2 path
+Date:   Thu, 18 Apr 2019 19:57:01 +0200
+Message-Id: <20190418160433.958865210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -59,53 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+[ Upstream commit 0d704967f4a49cc2212350b3e4a8231f8b4283ed ]
 
-commit 9d7eceede769f90b66cfa06ad5b357140d5141ed upstream.
+cgroup v2 path field is PATH_MAX which is too large, this is placing too
+much pressure on memory allocation for people with many rules doing
+cgroup v1 classid matching, side effects of this are bug reports like:
 
-For unknown scalars of mixed signed bounds, meaning their smin_value is
-negative and their smax_value is positive, we need to reject arithmetic
-with pointer to map value. For unprivileged the goal is to mask every
-map pointer arithmetic and this cannot reliably be done when it is
-unknown at verification time whether the scalar value is negative or
-positive. Given this is a corner case, the likelihood of breaking should
-be very small.
+https://bugzilla.kernel.org/show_bug.cgi?id=200639
 
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-[backported to 4.14 sblbir]
-Signed-off-by: Balbir Singh <sblbir@amzn.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch registers a new revision that shrinks the cgroup path to 512
+bytes, which is the same approach we follow in similar extensions that
+have a path field.
+
+Cc: Tejun Heo <tj@kernel.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ include/uapi/linux/netfilter/xt_cgroup.h | 16 ++++++
+ net/netfilter/xt_cgroup.c                | 72 ++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2014,8 +2014,8 @@ static int adjust_ptr_min_max_vals(struc
- 	    smin_ptr = ptr_reg->smin_value, smax_ptr = ptr_reg->smax_value;
- 	u64 umin_val = off_reg->umin_value, umax_val = off_reg->umax_value,
- 	    umin_ptr = ptr_reg->umin_value, umax_ptr = ptr_reg->umax_value;
-+	u32 dst = insn->dst_reg, src = insn->src_reg;
- 	u8 opcode = BPF_OP(insn->code);
--	u32 dst = insn->dst_reg;
+diff --git a/include/uapi/linux/netfilter/xt_cgroup.h b/include/uapi/linux/netfilter/xt_cgroup.h
+index e96dfa1b34f7..b74e370d6133 100644
+--- a/include/uapi/linux/netfilter/xt_cgroup.h
++++ b/include/uapi/linux/netfilter/xt_cgroup.h
+@@ -22,4 +22,20 @@ struct xt_cgroup_info_v1 {
+ 	void		*priv __attribute__((aligned(8)));
+ };
  
- 	dst_reg = &regs[dst];
++#define XT_CGROUP_PATH_MAX	512
++
++struct xt_cgroup_info_v2 {
++	__u8		has_path;
++	__u8		has_classid;
++	__u8		invert_path;
++	__u8		invert_classid;
++	union {
++		char	path[XT_CGROUP_PATH_MAX];
++		__u32	classid;
++	};
++
++	/* kernel internal data */
++	void		*priv __attribute__((aligned(8)));
++};
++
+ #endif /* _UAPI_XT_CGROUP_H */
+diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
+index 891f4e7e8ea7..db18c0177b0f 100644
+--- a/net/netfilter/xt_cgroup.c
++++ b/net/netfilter/xt_cgroup.c
+@@ -66,6 +66,38 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
+ 	return 0;
+ }
  
-@@ -2189,6 +2189,13 @@ static int adjust_ptr_min_max_vals(struc
- 			verbose("R%d bitwise operator %s on pointer prohibited\n",
- 				dst, bpf_alu_string[opcode >> 4]);
- 		return -EACCES;
-+	case PTR_TO_MAP_VALUE:
-+		if (!env->allow_ptr_leaks && !known && (smin_val < 0) != (smax_val < 0)) {
-+			verbose("R%d has unknown scalar with mixed signed bounds, pointer arithmetic with it prohibited for !root\n",
-+				off_reg == dst_reg ? dst : src);
-+			return -EACCES;
++static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
++{
++	struct xt_cgroup_info_v2 *info = par->matchinfo;
++	struct cgroup *cgrp;
++
++	if ((info->invert_path & ~1) || (info->invert_classid & ~1))
++		return -EINVAL;
++
++	if (!info->has_path && !info->has_classid) {
++		pr_info("xt_cgroup: no path or classid specified\n");
++		return -EINVAL;
++	}
++
++	if (info->has_path && info->has_classid) {
++		pr_info_ratelimited("path and classid specified\n");
++		return -EINVAL;
++	}
++
++	info->priv = NULL;
++	if (info->has_path) {
++		cgrp = cgroup_get_from_path(info->path);
++		if (IS_ERR(cgrp)) {
++			pr_info_ratelimited("invalid path, errno=%ld\n",
++					    PTR_ERR(cgrp));
++			return -EINVAL;
 +		}
-+		/* fall-through */
- 	default:
- 		/* other operators (e.g. MUL,LSH) produce non-pointer results */
- 		if (!env->allow_ptr_leaks)
++		info->priv = cgrp;
++	}
++
++	return 0;
++}
++
+ static bool
+ cgroup_mt_v0(const struct sk_buff *skb, struct xt_action_param *par)
+ {
+@@ -95,6 +127,24 @@ static bool cgroup_mt_v1(const struct sk_buff *skb, struct xt_action_param *par)
+ 			info->invert_classid;
+ }
+ 
++static bool cgroup_mt_v2(const struct sk_buff *skb, struct xt_action_param *par)
++{
++	const struct xt_cgroup_info_v2 *info = par->matchinfo;
++	struct sock_cgroup_data *skcd = &skb->sk->sk_cgrp_data;
++	struct cgroup *ancestor = info->priv;
++	struct sock *sk = skb->sk;
++
++	if (!sk || !sk_fullsock(sk) || !net_eq(xt_net(par), sock_net(sk)))
++		return false;
++
++	if (ancestor)
++		return cgroup_is_descendant(sock_cgroup_ptr(skcd), ancestor) ^
++			info->invert_path;
++	else
++		return (info->classid == sock_cgroup_classid(skcd)) ^
++			info->invert_classid;
++}
++
+ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+ {
+ 	struct xt_cgroup_info_v1 *info = par->matchinfo;
+@@ -103,6 +153,14 @@ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+ 		cgroup_put(info->priv);
+ }
+ 
++static void cgroup_mt_destroy_v2(const struct xt_mtdtor_param *par)
++{
++	struct xt_cgroup_info_v2 *info = par->matchinfo;
++
++	if (info->priv)
++		cgroup_put(info->priv);
++}
++
+ static struct xt_match cgroup_mt_reg[] __read_mostly = {
+ 	{
+ 		.name		= "cgroup",
+@@ -130,6 +188,20 @@ static struct xt_match cgroup_mt_reg[] __read_mostly = {
+ 				  (1 << NF_INET_POST_ROUTING) |
+ 				  (1 << NF_INET_LOCAL_IN),
+ 	},
++	{
++		.name		= "cgroup",
++		.revision	= 2,
++		.family		= NFPROTO_UNSPEC,
++		.checkentry	= cgroup_mt_check_v2,
++		.match		= cgroup_mt_v2,
++		.matchsize	= sizeof(struct xt_cgroup_info_v2),
++		.usersize	= offsetof(struct xt_cgroup_info_v2, priv),
++		.destroy	= cgroup_mt_destroy_v2,
++		.me		= THIS_MODULE,
++		.hooks		= (1 << NF_INET_LOCAL_OUT) |
++				  (1 << NF_INET_POST_ROUTING) |
++				  (1 << NF_INET_LOCAL_IN),
++	},
+ };
+ 
+ static int __init cgroup_mt_init(void)
+-- 
+2.19.1
+
 
 
