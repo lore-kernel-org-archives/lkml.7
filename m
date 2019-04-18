@@ -2,119 +2,96 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E6DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5056AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887EE20651
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208D1217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:41:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="A+lf3Hyb"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="MqahV2l7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389830AbfDRRj3 (ORCPT
+        id S2389812AbfDRRlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:39:29 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:51464 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRRj2 (ORCPT
+        Thu, 18 Apr 2019 13:41:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41486 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388579AbfDRRlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:39:28 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id B68236C0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 17:39:26 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id clIX48uwafPu for <linux-kernel@vger.kernel.org>;
-        Thu, 18 Apr 2019 12:39:26 -0500 (CDT)
-Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 91F08255
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:39:26 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id m192so2916773ita.8
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:39:26 -0700 (PDT)
+        Thu, 18 Apr 2019 13:41:18 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x10so2506954qto.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:41:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=oeFHUzAqKBcM7sdG/P3+juEhpgnMteWOUhmnJ8I+jVs=;
-        b=A+lf3Hyb97cVq+JCb2Z0wGeJi4R/VlpBgSY+z4mCZUm8YG+Qfo2RAewVcbSgFENhdc
-         E4zwEbT/oa/3LjJP37vTWvk+HelYA4Kytli/pmc4T6/kU/F2bVn+Nqf3MX3wSbucycei
-         BrC53xnsGyhs0Lo1y9IlaSyrHohx4H4jJI/z3D6LUjOaHqmbAQl03jJcXexAotik168b
-         sy42JeZj4mKENYinedCBtxxSetwqAZUXGSPmCXUdJzXOupBTc8Vq0xsp3mEj7sKe3rX0
-         gt3b+ffao6yxhtnJ7ilFnMV8nJttFxg3FzEIp9rJ02wf78LAUuk4jw19SQHaO2zqF0SJ
-         DDAw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=+u8xx0kfwjOANYusi1JuAEu1J7GummvUrW8wAjhnujs=;
+        b=MqahV2l7ci7bo46SESx4QtqLji3f5DTGg0MNPOWCixmmoZmrJMG05tpCmsxG/kNQbJ
+         RYrYcdbAIVPnzpfTYhYBvWEAa54IC2QoYH6vzoTD9B/4WgldcGe/1mz5pCkjbnG75cS3
+         l3DDome+PC0KGqhP2BXLZYXTmMP1BkJqIn2LwxR3PCrHHNE8CQ2BObpBC4IaDr8jlBhT
+         PPk3k9h4usd0NSnZNAuyhgb0N0kQ/pZZo229ahgHboLN8+SFFwUK2ge4siYGnxYDXDyz
+         /YZ6F7S7Qvd3/A/D5QL0D4nBhqF52es+eGo7PuAgofWt37RDSQAXCys3OWg7T4Z0EoaM
+         jiAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oeFHUzAqKBcM7sdG/P3+juEhpgnMteWOUhmnJ8I+jVs=;
-        b=mGEmZ6Ywj63csjBTOuimmaTryAGSGoWgaS0xNvrWOjXCaTpIkrSZIV4yYJ1BB0eio7
-         BKIO1dXPDYUINXyRArc38n1OdTUJ4ictpTgthystIus/3Hi7Ktqpn4bYpimLqUTnT98T
-         +BnIkxNhuBjoCeHr+oQklKAEQHVTSWR3pFmCCAfwk4e1+jh9r4ydFBhRjvROZ2GxPSq/
-         guE9+EinJjzjuS/b2chmgR4TSGbzI3QmuDnm/mne6h7oR/iqytefdIl5E+hsHAqBCkks
-         vNvFdHNKZ4B3QbGYAKGWDpTtM6hpLopi6/xE4tPQd+YOet8mLzI6fa/3g5v+4uSPztnX
-         3mqg==
-X-Gm-Message-State: APjAAAU6B/sNppgaudVoMAHn9KzW8hA3geFJ3zvC571ChXVrKYNwZ2aQ
-        dDb2bfSBeQH8m7YIQna2eUZpSDFuj2PYzeIyKCUD/qlVePothTdxDrGG799QHvWble51aqeBJRu
-        4yRjGdnixHZfreDaorJHneexZ0SSR
-X-Received: by 2002:a5d:848d:: with SMTP id t13mr39211554iom.16.1555609166264;
-        Thu, 18 Apr 2019 10:39:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyttkRDz67yMunIxgGZkP74Rkt36TkN61jR0f5rrXgVFtdRA5esSVVsQJ5RR3TvQmKS87Pyiw==
-X-Received: by 2002:a5d:848d:: with SMTP id t13mr39211537iom.16.1555609166094;
-        Thu, 18 Apr 2019 10:39:26 -0700 (PDT)
-Received: from cs-u-cslp16.dtc.umn.edu (cs-u-cslp16.cs.umn.edu. [128.101.106.40])
-        by smtp.gmail.com with ESMTPSA id y203sm1231138itb.22.2019.04.18.10.39.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 18 Apr 2019 10:39:25 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-        linux-audit@redhat.com (moderated list:AUDIT SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] audit: fix a memory leak bug
-Date:   Thu, 18 Apr 2019 12:39:15 -0500
-Message-Id: <1555609155-11934-1-git-send-email-wang6495@umn.edu>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=+u8xx0kfwjOANYusi1JuAEu1J7GummvUrW8wAjhnujs=;
+        b=biMDXhfRQDtzCU2JgdF9uaX4vixPmOnNp1UFb4Ry8cS5Kx0nB5LLg4cK4lNsZ3eAJG
+         s1EB6fo5HM0NO1Qt2pSW9TgEK0n9uw3UBRlVmcYBc/lIvAWXtkWoMwcMjj3vVQVQhluI
+         PyeF+zUHBuef9s9axVRr4xsFYIMz7RTByq3EgZZTEphrz/RS8yW2an29m+WrwQLi/xyC
+         dXVWAFmejslmpvZE2E1oYtv2n6MKOnPVijrX4l63xnN9BKnMOLbawt2O3ebRZ/uPlAqK
+         9ytlPCLC9CQOSi2f51le7wrZJoel+YcohXj3wEWFi4PuzXH1Pob2js1YYOYqKGVm5iVZ
+         jNeg==
+X-Gm-Message-State: APjAAAWzmI9pOH/fruGtJicCifdWkF50krWnsqwK9xKqSMIf/XfjNidP
+        5+PD2/2xwFS4jCEq0bjuaIDX7fuYWUk=
+X-Google-Smtp-Source: APXvYqxPQnlrt2Krb2GlPvvw3pcbr1EU1/XdbztNCpijoFdp435Aw+mbRgqJ/YKlKF4Tbg4F8whnIg==
+X-Received: by 2002:a0c:9599:: with SMTP id s25mr76423623qvs.119.1555609277722;
+        Thu, 18 Apr 2019 10:41:17 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id z38sm1323439qtz.13.2019.04.18.10.41.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 10:41:17 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 10:41:11 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        ilias.apalodimas@linaro.org, hawk@kernel.org,
+        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        aniel@iogearbox.net, John Fastabend <john.fastabend@gmail.com>
+Subject: Re: [RFC PATCH 3/3] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190418104111.559a0e74@cakuba.netronome.com>
+In-Reply-To: <20190418094008.GB27879@khorivan>
+References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
+        <20190417174942.11811-4-ivan.khoronzhuk@linaro.org>
+        <CAJpBn1y0odvL97-kP5yzKC+tN=fx178nxigfBfDwXhRhPRvDuQ@mail.gmail.com>
+        <20190418094008.GB27879@khorivan>
+Organization: Netronome Systems, Ltd.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In audit_rule_change(), audit_data_to_entry() is firstly invoked to
-translate the payload data to the kernel's rule representation. In
-audit_data_to_entry(), depending on the audit field type, an audit tree may
-be created in audit_make_tree(), which eventually invokes kmalloc() to
-allocate the tree.  Since this tree is a temporary tree, it will be then
-freed in the following execution, e.g., audit_add_rule() if the message
-type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
-AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
-AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
-temporary tree is not freed.
+On Thu, 18 Apr 2019 12:40:10 +0300, Ivan Khoronzhuk wrote:
+> >work?  The stack's TX ring has a lock, and can be used from any CPU,
+> >while XDP TX rings are per-PCU, no?  
+> Yes and no.
+> am572 has more queues then CPU num, How I can choose tx queue not based on CPU
+> num? It's always shared and has to have lock, and cpdma is done in this way.
 
-To fix this issue, free the allocated tree in the default case.
+Oh, I see, you already have another lock.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
----
- kernel/auditfilter.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Here another thing bothering me, I send it to queue 0 always, instead of
+> taking cpu num. Not sure about this, but I expect to have some tx queue
+> not bind to cpu and didn't find a way it can be changed dynamically in
+> redirect.
 
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index 63f8b3f..70a34db 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -1128,6 +1128,8 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
- 		audit_log_rule_change("remove_rule", &entry->rule, !err);
- 		break;
- 	default:
-+		if (entry->rule.tree)
-+			audit_put_tree(entry->rule.tree);
- 		err = -EINVAL;
- 		WARN_ON(1);
- 	}
--- 
-2.7.4
-
+Not sure I understand :)
