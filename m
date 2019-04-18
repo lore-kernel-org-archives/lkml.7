@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA9EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E88DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3399D2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204352183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="xKItfGUF"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gSMhv6z5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388963AbfDRMnE (ORCPT
+        id S2388990AbfDRMnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:43:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60619 "EHLO
+        Thu, 18 Apr 2019 08:43:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51041 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733205AbfDRMnD (ORCPT
+        with ESMTP id S1726162AbfDRMnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:43:03 -0400
+        Thu, 18 Apr 2019 08:43:16 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3ICfpZC190605
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3ICh4Gk191369
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Apr 2019 05:41:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3ICfpZC190605
+        Thu, 18 Apr 2019 05:43:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3ICh4Gk191369
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555591312;
-        bh=0gqh45OpLPYRii+vaV5aqwCAR6X0dR5lLUWfGPLIH7Q=;
+        s=2019041745; t=1555591385;
+        bh=qBcaZFLo33lmZ14WBDPwGBcgn1BQvKWtk+e3kN6xh1c=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=xKItfGUFftXv0SOhVfnx/Cb/IEVCYjsMbu2DzTLZrXAUJQPXN726RuRiFBoSK+z9g
-         ASznoUkawu0Pfi1U5U53kNt96NrSlQCYEIO2iH6AArtDgeR8zmQiwLfAZtV6v8tE4Q
-         0ysy9A/LtleFrVGlzFGzPH4oC6Ap7DNlIBKUtXFbcl6hzTUv6P+hf3iEOUWrZRBZ8a
-         LFcTJX/HbhPcXBUVaMXsjT93nDReolbliWT/bjHq6h2vrFXmyd+6K9JCtd0wI5UsVy
-         TQDyZkEHfJEgdW5oz50wFI4ZfJOOR9cMVVJsSjSaJ8lwtQV8pACb7zJdO6DufEAHue
-         LL842zE8AYCmA==
+        b=gSMhv6z5bTrjWexQT84qAPe7MXn4IKmbqw9cMKriJfHqnu6uPiIIF6VJ3n4CvMOQZ
+         9LpNWol28qGHsiHhX2alhVpOrIVKKiEBzUGwH5zmBqbMR33j9EKTvXtlN7Fgp0GxKK
+         N8i/pXYOj0EJ/hFKgeEdipspmJr0GdM3AgQmfaegYBQ13ijLTWZXYZrGLfq0Zw6GPI
+         jrI1PLw4nPwV+sAAiR5ckRoV/z3LLF9VVl4pXt9L8O4Xc3upLe24VORw2RR9Y+CcFS
+         0a0u5p/SD+m8BEQDP/amf698fYIXtWmgS6gIT5u6gwZ64XAmQuK34o/rtKrtdsa3Fr
+         XhmaSELbH10NQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3ICfoD1190602;
-        Thu, 18 Apr 2019 05:41:50 -0700
-Date:   Thu, 18 Apr 2019 05:41:50 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3ICh31m191362;
+        Thu, 18 Apr 2019 05:43:03 -0700
+Date:   Thu, 18 Apr 2019 05:43:03 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Dave Hansen <tipbot@zytor.com>
-Message-ID: <tip-9d812ad8fce2c556538f6efe8ab1ae78ab59ae8f@git.kernel.org>
-Cc:     akpm@linux-foundation.org, luto@amacapital.net,
-        dave.hansen@linux.intel.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, rguenther@suse.de, mhocko@suse.com,
-        hpa@zytor.com, mingo@kernel.org, vbabka@suse.cz
-Reply-To: luto@amacapital.net, akpm@linux-foundation.org, mingo@kernel.org,
-          vbabka@suse.cz, hpa@zytor.com, mhocko@suse.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          rguenther@suse.de, dave.hansen@linux.intel.com
+Message-ID: <tip-508b8482ea2227ba8695d1cf8311166a455c2ae0@git.kernel.org>
+Cc:     dave.hansen@linux.intel.com, tglx@linutronix.de, mhocko@suse.com,
+        luto@amacapital.net, akpm@linux-foundation.org, rguenther@suse.de,
+        mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        vbabka@suse.cz
+Reply-To: luto@amacapital.net, mhocko@suse.com, akpm@linux-foundation.org,
+          tglx@linutronix.de, dave.hansen@linux.intel.com, vbabka@suse.cz,
+          hpa@zytor.com, mingo@kernel.org, rguenther@suse.de,
+          linux-kernel@vger.kernel.org
 In-Reply-To: <20190401141549.3F4721FE@viggo.jf.intel.com>
 References: <20190401141549.3F4721FE@viggo.jf.intel.com>
 To:     linux-tip-commits@vger.kernel.org
 Subject: [tip:x86/urgent] x86/mpx: Fix recursive munmap() corruption
-Git-Commit-ID: 9d812ad8fce2c556538f6efe8ab1ae78ab59ae8f
+Git-Commit-ID: 508b8482ea2227ba8695d1cf8311166a455c2ae0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,12 +71,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9d812ad8fce2c556538f6efe8ab1ae78ab59ae8f
-Gitweb:     https://git.kernel.org/tip/9d812ad8fce2c556538f6efe8ab1ae78ab59ae8f
+Commit-ID:  508b8482ea2227ba8695d1cf8311166a455c2ae0
+Gitweb:     https://git.kernel.org/tip/508b8482ea2227ba8695d1cf8311166a455c2ae0
 Author:     Dave Hansen <dave.hansen@linux.intel.com>
 AuthorDate: Mon, 1 Apr 2019 07:15:49 -0700
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Apr 2019 14:37:04 +0200
+CommitDate: Thu, 18 Apr 2019 14:39:08 +0200
 
 x86/mpx: Fix recursive munmap() corruption
 
@@ -158,6 +158,7 @@ eat some bounds tables is the simplest viable fix.
 Fixes: 1de4fa14e ("x86, mpx: Cleanup unused bound tables")
 Reported-by: Richard Biener <rguenther@suse.de>
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Michal Hocko <mhocko@suse.com>
 Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Andy Lutomirski <luto@amacapital.net>
@@ -165,7 +166,6 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org
 Cc: stable@vger.kernel.org
 Link: https://lkml.kernel.org/r/20190401141549.3F4721FE@viggo.jf.intel.com
-
 ---
  arch/x86/include/asm/mmu_context.h |  6 +++---
  arch/x86/include/asm/mpx.h         |  5 ++---
