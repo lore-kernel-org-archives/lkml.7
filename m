@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A394C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324D5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1274421872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0396A206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610998;
-	bh=dvRYEgICU7B9lvD98/PMOD4n2rvOT2dfBGAP+bmKAY4=;
+	s=default; t=1555611002;
+	bh=HxNiS0QVnACuyE+F6kOxO2zBW7BOtZS4lkTy8/CtQa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e1wAaA5q3kjMfPG2mYA8BI5FXv/ablydS9j8Ol1V94of56Pn4++SltBznUemXK+P8
-	 iM+H4uCFHpFHO3wxNU80yZWFC0h54xtLSCXKz3HACAjMARWCt0VAUl4qWdG8SHQuXN
-	 7Iktu+uZeVyVSK7EEKVlQ8e8mWiylFHZZgIjSiTk=
+	b=F6LzYDjpyuqlPtVsgyEHtlp29od9ApCYbp3VLvKbbtu2ASs5REYcEg+sAnZ/Tq6Ul
+	 3H6THIU2hQislcSqI0At4K0kKQ//gGFpvU6FfA+o7xRa1NoEox+Gk4saFG7EsvPCoW
+	 GhjPZkdb0dgtVcGwo4wMaF69bxmnp249TPW5CtYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404042AbfDRSJ5 (ORCPT
+        id S2404056AbfDRSKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41598 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403986AbfDRSJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:53 -0400
+        id S2403986AbfDRSJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:09:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40923206B6;
-        Thu, 18 Apr 2019 18:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2742186A;
+        Thu, 18 Apr 2019 18:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610992;
-        bh=dvRYEgICU7B9lvD98/PMOD4n2rvOT2dfBGAP+bmKAY4=;
+        s=default; t=1555610997;
+        bh=HxNiS0QVnACuyE+F6kOxO2zBW7BOtZS4lkTy8/CtQa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sK5zBVXArCQIojSDG6uzRfcQMt+Nbjr3ffqOhNkgusddMaIP4z5jZV951uQHMmyEX
-         bS028yyXSxrICqpQTzLI1uLTCCsgDBJu1JynGlXeYfW+wOjsqnsEjfdV59vXAWAoYs
-         6gTX685UDwdY5NGaDeDndXR6lKLeg269KWtrO1u8=
+        b=gtDGw7DVDmWHlTNcAwXeA1XdunK/t2J/OIAEGoHPhJwvo0GvR0z59UJHknAtT7C5R
+         ggddDN931d+mUJW/md1HwkzQwJfyxF/svSm0qWDMtAZxWdyyJKuPcxZWvRre569/f5
+         +xIO7VAX8VgD6vSB+TdB9g0zag10o4LCpXl4S8aI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 18/93] paride/pf: cleanup queues when detection fails
-Date:   Thu, 18 Apr 2019 19:56:56 +0200
-Message-Id: <20190418160438.663257972@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 02/93] arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
+Date:   Thu, 18 Apr 2019 19:56:40 +0200
+Message-Id: <20190418160437.002226769@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -59,62 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ce59025f1182125e75c8d121daf44056b65dd1f ]
+[ Upstream commit 0728aeb7ead99a9b0dac2f3c92b3752b4e02ff97 ]
 
-The driver allocates queues for all the units it potentially
-supports. But if we fail to detect any drives, then we fail
-loading the module without cleaning up those queues. This is
-now evident with the switch to blk-mq, though the bug has
-been there forever as far as I can tell.
+We have now a HSDK device in our kernelci lab, but kernel builded via
+the hsdk_defconfig lacks ramfs supports, so it cannot boot kernelci jobs
+yet.
 
-Also fix cleanup through regular module exit.
+So this patch enable CONFIG_BLK_DEV_RAM in hsdk_defconfig.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/paride/pf.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
-index e92e7a8eeeb2..103b617cdc31 100644
---- a/drivers/block/paride/pf.c
-+++ b/drivers/block/paride/pf.c
-@@ -761,8 +761,12 @@ static int pf_detect(void)
- 		return 0;
- 
- 	printk("%s: No ATAPI disk detected\n", name);
--	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
-+	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-+		blk_cleanup_queue(pf->disk->queue);
-+		pf->disk->queue = NULL;
-+		blk_mq_free_tag_set(&pf->tag_set);
- 		put_disk(pf->disk);
-+	}
- 	pi_unregister_driver(par_drv);
- 	return -1;
- }
-@@ -1047,13 +1051,15 @@ static void __exit pf_exit(void)
- 	int unit;
- 	unregister_blkdev(major, name);
- 	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
--		if (!pf->present)
--			continue;
--		del_gendisk(pf->disk);
-+		if (pf->present)
-+			del_gendisk(pf->disk);
-+
- 		blk_cleanup_queue(pf->disk->queue);
- 		blk_mq_free_tag_set(&pf->tag_set);
- 		put_disk(pf->disk);
--		pi_release(pf->pi);
-+
-+		if (pf->present)
-+			pi_release(pf->pi);
- 	}
- }
- 
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 87b23b7fb781..aefcf7a4e17a 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -8,6 +8,7 @@ CONFIG_NAMESPACES=y
+ # CONFIG_UTS_NS is not set
+ # CONFIG_PID_NS is not set
+ CONFIG_BLK_DEV_INITRD=y
++CONFIG_BLK_DEV_RAM=y
+ CONFIG_EMBEDDED=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
 -- 
 2.19.1
 
