@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C500C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B786C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6AF720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91A620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611411;
-	bh=kwDrbQ7Pdr5H1ZaQorcBxzavuMiV3zDRLEMzrrWthx4=;
+	s=default; t=1555611417;
+	bh=NQeab/xvkeUm+yVhaStHGrDCE7YbfOViHB4vZa3C8Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biJ+mMu43WHvjiiIpDPIUC37pugUdv6ZnuAvpCCiJr8/AMGMGJ6tmyzUxFzFRP9Mq
-	 rJl0s6ID0pkv6klJVUg5u0CI0c+Y1Y83hNIEJT6TPsyJr56ZEWnMWaMh4Af9WlZr8v
-	 MA4UdAdPs6A5SJGKGl40wqj585SMxe8Ps7OvScF4=
+	b=LEmoq3ghkvR4yfVmS/XA7yYPl+21OTHGC/Hof/SQAkAGXKMFNTb0QMvAvyjDNNGr9
+	 P1E50nlyK17Sj62iSRzizgTI7FvcE5cGLxGFhGNhs8NCBlTJ3HWbd40Wno03Yzhvl0
+	 sqsUWtyqFyHQnwP+w0mflr8OfRQvX4DOBK7ePK04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404250AbfDRSLe (ORCPT
+        id S2404033AbfDRSQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41140 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403910AbfDRSJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:30 -0400
+        id S2404244AbfDRSLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD9E421871;
-        Thu, 18 Apr 2019 18:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85BB420652;
+        Thu, 18 Apr 2019 18:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610969;
-        bh=kwDrbQ7Pdr5H1ZaQorcBxzavuMiV3zDRLEMzrrWthx4=;
+        s=default; t=1555611093;
+        bh=NQeab/xvkeUm+yVhaStHGrDCE7YbfOViHB4vZa3C8Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UckUm16PniVxhqOqK6Eb5KLZ30+GhaX4GnwtLQkPt/Tt1CiRPhEph/dryCR6c04RH
-         Bnk4my2UOG/+4PfLvwLs/DKgk4iytqcT9FqlpNj/urm3+2qpaQCCvVZCSzQczTApbF
-         MC/hMDiJM5KCR4FI8RsFOy6n5jW9T9OOTQwJvIYs=
+        b=JFLSOpcV8JPGrTTwRlJ58LKtgR6HGRVyTP8FAwlZMFOnx3RbeOhpXjRklNm8eBglY
+         mRL6I1+3JBKZjxMxrxOzWBPFPeSfiJpvMJrXyOZIh+rYZyIRT1rfbdqFGJJBIIbTBy
+         S7pIXyUxIIEYsI+GQpneTQu+HhkyIr/sf+9JsMiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 01/93] ARC: u-boot args: check that magic number is correct
-Date:   Thu, 18 Apr 2019 19:56:39 +0200
-Message-Id: <20190418160436.924268700@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 29/93] x86/mm: Dont leak kernel addresses
+Date:   Thu, 18 Apr 2019 19:57:07 +0200
+Message-Id: <20190418160439.857522547@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,76 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
+[ Upstream commit a3151724437f54076cc10bc02b1c4f0003ae36cd ]
 
-In case of devboards we really often disable bootloader and load
-Linux image in memory via JTAG. Even if kernel tries to verify
-uboot_tag and uboot_arg there is sill a chance that we treat some
-garbage in registers as valid u-boot arguments in JTAG case.
-E.g. it is enough to have '1' in r0 to treat any value in r2 as
-a boot command line.
+Since commit:
 
-So check that magic number passed from u-boot is correct and drop
-u-boot arguments otherwise. That helps to reduce the possibility
-of using garbage as u-boot arguments in JTAG case.
+  ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
 
-We can safely check U-boot magic value (0x0) in linux passed via
-r1 register as U-boot pass it from the beginning. So there is no
-backward-compatibility issues.
+at boot "____ptrval____" is printed instead of actual addresses:
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+    found SMP MP-table at [mem 0x000f5cc0-0x000f5ccf] mapped at [(____ptrval____)]
+
+Instead of changing the print to "%px", and leaking a kernel addresses,
+just remove the print completely, like in:
+
+  071929dbdd865f77 ("arm64: Stop printing the virtual memory layout").
+
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/head.S  | 1 +
- arch/arc/kernel/setup.c | 8 ++++++++
- 2 files changed, 9 insertions(+)
+ arch/x86/kernel/mpparse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
-index 30e090625916..a72bbda2f7aa 100644
---- a/arch/arc/kernel/head.S
-+++ b/arch/arc/kernel/head.S
-@@ -106,6 +106,7 @@ ENTRY(stext)
- 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
- 	; These are handled later in handle_uboot_args()
- 	st	r0, [@uboot_tag]
-+	st      r1, [@uboot_magic]
- 	st	r2, [@uboot_arg]
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index 3482460d984d..1bfe5c6e6cfe 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -598,8 +598,8 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
+ 			mpf_base = base;
+ 			mpf_found = true;
  
- 	; setup "current" tsk and optionally cache it in dedicated r25
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 7b2340996cf8..7b3a7b3b380c 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -36,6 +36,7 @@ unsigned int intr_to_DE_cnt;
+-			pr_info("found SMP MP-table at [mem %#010lx-%#010lx] mapped at [%p]\n",
+-				base, base + sizeof(*mpf) - 1, mpf);
++			pr_info("found SMP MP-table at [mem %#010lx-%#010lx]\n",
++				base, base + sizeof(*mpf) - 1);
  
- /* Part of U-boot ABI: see head.S */
- int __initdata uboot_tag;
-+int __initdata uboot_magic;
- char __initdata *uboot_arg;
- 
- const struct machine_desc *machine_desc;
-@@ -497,6 +498,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
- #define UBOOT_TAG_NONE		0
- #define UBOOT_TAG_CMDLINE	1
- #define UBOOT_TAG_DTB		2
-+/* We always pass 0 as magic from U-boot */
-+#define UBOOT_MAGIC_VALUE	0
- 
- void __init handle_uboot_args(void)
- {
-@@ -511,6 +514,11 @@ void __init handle_uboot_args(void)
- 		goto ignore_uboot_args;
- 	}
- 
-+	if (uboot_magic != UBOOT_MAGIC_VALUE) {
-+		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
-+		goto ignore_uboot_args;
-+	}
-+
- 	if (uboot_tag != UBOOT_TAG_NONE &&
-             uboot_arg_invalid((unsigned long)uboot_arg)) {
- 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
+ 			memblock_reserve(base, sizeof(*mpf));
+ 			if (mpf->physptr)
 -- 
 2.19.1
 
