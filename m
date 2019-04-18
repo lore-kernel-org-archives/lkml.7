@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D101DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF807C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96460217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BCC21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610406;
-	bh=PmwoMh9RUbpSe9xHYs0oNfhiAZANcCE6qudcSyMuG2s=;
+	s=default; t=1555610411;
+	bh=QSKLCHx7e4tc5DBpoDOAM1eENBvIy8ZeEp5LRECzd8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2oYMS6qcLmpi6a5ZF7jIWQ+syirQO58jePdzljhNt8Ji0BezM2Td2D5eSNPbo7/9C
-	 A+gp7dZSJwKRR4dkXfm7/6V+9XVcjISsiNe8aC7XZOT3JjI4RgbzL6wY3miAahLSMc
-	 wU9IO9JF8o5DV06mLJ5BsqylS29eqYPNDxlIQ6sA=
+	b=I1l7N6tThJzUymlE4+muUsZiWZ6utHbY7KMgBoBmAi9qW0BydEY5DhFpvnaYYIpU5
+	 teVaJYpXM6eK7RJWgdVGH5hF+PDAnaA8IfE+rCIkh+ByCNE5kiZ7vUCn+B89NBafDg
+	 aQQR56GvWe4ZoSSJwMjBIr4UQzc7T/SKNg5XWBzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390284AbfDRSAF (ORCPT
+        id S2390307AbfDRSAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:00:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55120 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390262AbfDRSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:00:02 -0400
+        id S2390287AbfDRSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:00:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972CC218AE;
-        Thu, 18 Apr 2019 18:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC397218A6;
+        Thu, 18 Apr 2019 18:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610402;
-        bh=PmwoMh9RUbpSe9xHYs0oNfhiAZANcCE6qudcSyMuG2s=;
+        s=default; t=1555610407;
+        bh=QSKLCHx7e4tc5DBpoDOAM1eENBvIy8ZeEp5LRECzd8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rq1vTcgBTNft56v8QmU8dYZPMfzF1hEOlP5dB+2r2tiKuBen+Fh0UmU+Ew/fQ0QJX
-         bs/FjkOOWsmfLVveQp3Kq0rtbGJN+Vaok6WcIdprywDBIgsn3eprKlH2Upi3M/yHJM
-         cIZd9QdOBbyqV7p76d0Ig+84gH7TBO2ejBOmYZcc=
+        b=PYB9QLFByaSl7W/9x0I/F3ZdhkilDY6+ddahEisuWDzZ6bpFTv2FGwYkFRV8yQdGm
+         /uHrpbcHjCqrLCrb1bXIy9RBXslZrtm0lSJcZFLuJsRpWzsNX1wrE044xSsXUTlkW/
+         +JFQT6HHB78btPBt0FzM//nosEUVz2lPLIzL+7zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Nisha Aram <nisha.aram@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/110] thermal/int340x_thermal: Add additional UUIDs
-Date:   Thu, 18 Apr 2019 19:56:09 +0200
-Message-Id: <20190418160439.570024059@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        mark gross <mgross@intel.com>, Ashok Raj <ashok.raj@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 048/110] iommu/vt-d: Check capability before disabling protected memory
+Date:   Thu, 18 Apr 2019 19:56:37 +0200
+Message-Id: <20190418160443.335324857@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,50 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
+[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
 
-Add more supported DPTF policies than the driver currently exposes.
+The spec states in 10.4.16 that the Protected Memory Enable
+Register should be treated as read-only for implementations
+not supporting protected memory regions (PLMR and PHMR fields
+reported as Clear in the Capability register).
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Nisha Aram <nisha.aram@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: mark gross <mgross@intel.com>
+Suggested-by: Ashok Raj <ashok.raj@intel.com>
+Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/iommu/intel-iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index e26b01c05e82..51c9097eaf7a 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -22,6 +22,13 @@ enum int3400_thermal_uuid {
- 	INT3400_THERMAL_PASSIVE_1,
- 	INT3400_THERMAL_ACTIVE,
- 	INT3400_THERMAL_CRITICAL,
-+	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
-+	INT3400_THERMAL_EMERGENCY_CALL_MODE,
-+	INT3400_THERMAL_PASSIVE_2,
-+	INT3400_THERMAL_POWER_BOSS,
-+	INT3400_THERMAL_VIRTUAL_SENSOR,
-+	INT3400_THERMAL_COOLING_MODE,
-+	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
- 	INT3400_THERMAL_MAXIMUM_UUID,
- };
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 2b8f5ebae821..603bf5233a99 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -1624,6 +1624,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
+ 	u32 pmen;
+ 	unsigned long flags;
  
-@@ -29,6 +36,13 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
- 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
- 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
- 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
-+	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
-+	"5349962F-71E6-431D-9AE8-0A635B710AEE",
-+	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
-+	"F5A35014-C209-46A4-993A-EB56DE7530A1",
-+	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
-+	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
-+	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
- };
- 
- struct int3400_thermal_priv {
++	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
++		return;
++
+ 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+ 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
+ 	pmen &= ~DMA_PMEN_EPM;
 -- 
 2.19.1
 
