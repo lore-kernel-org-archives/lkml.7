@@ -2,261 +2,138 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A6DC282DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC5FC282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23EE021850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555554948;
-	bh=XqSk/7BfSAchHuuE6uVRSRZheHtuXmINnGo2ccyeK2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mdZtvu8WlYJlLldcMWrQRuAGlbaer3tpYJLjtewunD9Y7+J6fZMUPl3HKgtgwzzVY
-	 +QsIKoZ8Ce072HxpV0mo6ImKLG5ePOCnT1It0nOzrxplwZ2H3FKYoBrAap/IuopHd0
-	 Od+Y7ylYoia8c6sRC3xuBds/tR7HzlsTibTZJTCw=
+	by mail.kernel.org (Postfix) with ESMTP id AB0802186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="COSZw5im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388025AbfDRCfr (ORCPT
+        id S2387954AbfDRChI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 22:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387534AbfDRCfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 22:35:16 -0400
-Received: from earth.universe (dyndsl-037-138-087-229.ewe-ip-backbone.de [37.138.87.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA90A21850;
-        Thu, 18 Apr 2019 02:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555554915;
-        bh=XqSk/7BfSAchHuuE6uVRSRZheHtuXmINnGo2ccyeK2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hE4HcFzB9L5abJv34b6+VNl5eJUO4GWzv7hC+x4HFWFaf11qoNZgKufUNo+dZd7Xp
-         B7F1aEcMr+qyNXeaZ9HzMwJ4bUDYwdh15ycJmbrgRV0GQjFYV16CcIAw8sVb3+u68E
-         QNyqvbZSs1wRme0+cZDZLxMW1XJAvkqEk99TYveY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id A51233C0984; Wed, 17 Apr 2019 23:40:22 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 23:40:22 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     enric.balletbo@collabora.com, bleung@chromium.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dlaurie@chromium.org, lamzin@google.com, bartfab@google.com,
-        derat@google.com, dtor@google.com, sjg@chromium.org,
-        jchwong@chromium.org
-Subject: Re: [PATCH v4 1/2] power_supply: Add more charge types and
- CHARGE_CONTROL_* properties
-Message-ID: <20190417214022.7jk3usygcpnls3pr@earth.universe>
-References: <20190417004320.232200-1-ncrews@chromium.org>
+        Wed, 17 Apr 2019 22:37:08 -0400
+Received: from mail-eopbgr140078.outbound.protection.outlook.com ([40.107.14.78]:63475
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387481AbfDRChI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 22:37:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DHxfu+2lLbwHeIlygkUdc+reAiscBK3q8wKz6XkrjdU=;
+ b=COSZw5im5xuMU3nlyDRChCALWTT9v2niMcU+O7YIpXGr5kfhxP/CbJQCYLHTNzCyeRUzgUpmS862MTbc/o2ejE9TQoGWdvpNc4oZMZoLoSC32LPV3shgVes4/7QGQpfKMz21W3TwWjxfy6zWNTmS8bmYdlBkY2i1mw61y264ODQ=
+Received: from AM6PR04MB6470.eurprd04.prod.outlook.com (20.179.245.79) by
+ AM6PR04MB6037.eurprd04.prod.outlook.com (20.179.4.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Thu, 18 Apr 2019 02:37:03 +0000
+Received: from AM6PR04MB6470.eurprd04.prod.outlook.com
+ ([fe80::bc8d:21be:2cd6:f549]) by AM6PR04MB6470.eurprd04.prod.outlook.com
+ ([fe80::bc8d:21be:2cd6:f549%3]) with mapi id 15.20.1813.011; Thu, 18 Apr 2019
+ 02:37:03 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Topic: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Index: AdT1jzb7LgzlzFMpSj6UhpjGM3i6rQ==
+Date:   Thu, 18 Apr 2019 02:37:03 +0000
+Message-ID: <AM6PR04MB647093DB49BB13E09B0F181DE3260@AM6PR04MB6470.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0d8b31d-f7de-4b9c-fa44-08d6c3a6bdd8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB6037;
+x-ms-traffictypediagnostic: AM6PR04MB6037:
+x-microsoft-antispam-prvs: <AM6PR04MB60371E6C29F6A7CEC7B279B3E3260@AM6PR04MB6037.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0011612A55
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(39850400004)(366004)(376002)(136003)(189003)(199004)(81166006)(81156014)(6246003)(66066001)(8936002)(8676002)(4326008)(6436002)(71200400001)(71190400001)(1411001)(229853002)(2906002)(6916009)(486006)(97736004)(53936002)(316002)(55016002)(476003)(86362001)(9686003)(25786009)(14454004)(6116002)(3846002)(54906003)(7736002)(478600001)(33656002)(305945005)(99286004)(74316002)(68736007)(7696005)(52536014)(256004)(186003)(26005)(6506007)(102836004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6037;H:AM6PR04MB6470.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oeo3SeJDYz4NMUUIGW9ZTeSgJRgqeTFk4Izbbgw0RHH1YkGvsFpG+nO31uXf0NzAPeui5jfHh3lZsUmswoodwW/TsDFwlXCXpNm2V7lIKNkmIerpnGBOTf4aoYhH/3ZvsNGXrCcUWWbBg8XATLJuF2wmv0Jy7K37NcsPhO+jJoOjafF+Uj8OaVVWyikxiNOItNKt06bdqhoczw4cIMiZeyQID/hzKy+rY4Y3zi+KAxPtqW1fYqWyM/YMATJ/RnSYy+sI/2TUq2zFsovPTf7bm8TFnNXd28wwE8zX9WcRDDDVNV6VG4yyG2NweYI4npXbTn2q71y5DViC7uZTMEJj4mP06bxk0vodEHK/R3X/NZi6A3uicj1qF3EwOwP5Jadin7uZy6aIu8BwUGzelOoU2kvkCYoDJ6+vN20z86TDodI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ioz2ovoo2ntuswrd"
-Content-Disposition: inline
-In-Reply-To: <20190417004320.232200-1-ncrews@chromium.org>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0d8b31d-f7de-4b9c-fa44-08d6c3a6bdd8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 02:37:03.5274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
---ioz2ovoo2ntuswrd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-The changes itself look all good to me, but this does multiple
-things in a single patch, so please split it into multiple commits.
-
--- Sebastian
-
-On Tue, Apr 16, 2019 at 06:43:19PM -0600, Nick Crews wrote:
-> Add "Standard", "Adaptive", and "Custom" modes to the charge_type
-> property, to expand the existing "Trickle" and "Fast" modes.
-> In addition, add POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD
-> and POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD properties, to expand
-> the existing CHARGE_CONTROL_* properties. I am adding them in order
-> to support a new Chrome OS device, but these properties should be
-> general enough that they can be used on other devices.
 >=20
-> The meaning of "Standard" is obvious, but "Adaptive" and "Custom" are
-> more tricky: "Adaptive" means that the charge controller uses some
-> custom algorithm to change the charge type automatically, with no
-> configuration needed. "Custom" means that the charge controller uses the
-> POWER_SUPPLY_PROP_CHARGE_CONTROL_* properties as configuration for some
-> other algorithm. For example, in the use case that I am supporting,
-> this means the battery begins charging when the percentage
-> level drops below POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD and
-> charging ceases when the percentage level goes above
-> POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD.
+> Hi Shengjiu,
 >=20
-> v4 changes:
-> - Add documentation for the new properties, and add documentation for
->   the the previously missing charge_control_limit and
->   charge_control_limit_max properties.
+> This looks better. Just a couple of more small comments inline.
 >=20
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
-> ---
->  Documentation/ABI/testing/sysfs-class-power | 51 +++++++++++++++++++--
->  drivers/power/supply/power_supply_sysfs.c   |  4 +-
->  include/linux/power_supply.h                | 10 +++-
->  3 files changed, 59 insertions(+), 6 deletions(-)
+> On Wed, Apr 17, 2019 at 09:06:18AM +0000, S.j. Wang wrote:
 >=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/=
-ABI/testing/sysfs-class-power
-> index 5e23e22dce1b..b77e30b9014e 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -114,15 +114,60 @@ Description:
->  		Access: Read
->  		Valid values: Represented in microamps
-> =20
-> +What:		/sys/class/power_supply/<supply_name>/charge_control_limit
-> +Date:		Oct 2012
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		Maximum allowable charging current. Used for charge rate
-> +		throttling for thermal cooling or improving battery health.
-> +
-> +		Access: Read, Write
-> +		Valid values: Represented in microamps
-> +
-> +What:		/sys/class/power_supply/<supply_name>/charge_control_limit_max
-> +Date:		Oct 2012
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		Maximum legal value for the charge_control_limit property.
-> +
-> +		Access: Read
-> +		Valid values: Represented in microamps
-> +
-> +What:		/sys/class/power_supply/<supply_name>/charge_control_start_thresh=
-old
-> +Date:		April 2019
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		Represents a battery percentage level, below which charging will
-> +		begin.
-> +
-> +		Access: Read, Write
-> +		Valid values: 0 - 100 (percent)
-> +
-> +What:		/sys/class/power_supply/<supply_name>/charge_control_end_threshold
-> +Date:		April 2019
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		Represents a battery percentage level, above which charging will
-> +		stop.
-> +
-> +		Access: Read, Write
-> +		Valid values: 0 - 100 (percent)
-> +
->  What:		/sys/class/power_supply/<supply_name>/charge_type
->  Date:		July 2009
->  Contact:	linux-pm@vger.kernel.org
->  Description:
->  		Represents the type of charging currently being applied to the
-> -		battery.
-> +		battery. "Trickle", "Fast", and "Standard" all mean different
-> +		charging speeds. "Adaptive" means that the charger uses some
-> +		algorithm to adjust the charge rate dynamically, without
-> +		any user configuration required. "Custom" means that the charger
-> +		uses the charge_control_* properties as configuration for some
-> +		different algorithm.
-> =20
-> -		Access: Read
-> -		Valid values: "Unknown", "N/A", "Trickle", "Fast"
-> +		Access: Read, Write
-> +		Valid values: "Unknown", "N/A", "Trickle", "Fast", "Standard",
-> +			      "Adaptive", "Custom"
-> =20
->  What:		/sys/class/power_supply/<supply_name>/charge_term_current
->  Date:		July 2014
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index dce24f596160..6104a3f03d46 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -56,7 +56,7 @@ static const char * const power_supply_status_text[] =
-=3D {
->  };
-> =20
->  static const char * const power_supply_charge_type_text[] =3D {
-> -	"Unknown", "N/A", "Trickle", "Fast"
-> +	"Unknown", "N/A", "Trickle", "Fast", "Standard", "Adaptive", "Custom"
->  };
-> =20
->  static const char * const power_supply_health_text[] =3D {
-> @@ -274,6 +274,8 @@ static struct device_attribute power_supply_attrs[] =
-=3D {
->  	POWER_SUPPLY_ATTR(constant_charge_voltage_max),
->  	POWER_SUPPLY_ATTR(charge_control_limit),
->  	POWER_SUPPLY_ATTR(charge_control_limit_max),
-> +	POWER_SUPPLY_ATTR(charge_control_start_threshold),
-> +	POWER_SUPPLY_ATTR(charge_control_end_threshold),
->  	POWER_SUPPLY_ATTR(input_current_limit),
->  	POWER_SUPPLY_ATTR(energy_full_design),
->  	POWER_SUPPLY_ATTR(energy_empty_design),
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 2f9c201a54d1..d59205170232 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -40,11 +40,15 @@ enum {
->  	POWER_SUPPLY_STATUS_FULL,
->  };
-> =20
-> +/* What algorithm is the charger using? */
->  enum {
->  	POWER_SUPPLY_CHARGE_TYPE_UNKNOWN =3D 0,
->  	POWER_SUPPLY_CHARGE_TYPE_NONE,
-> -	POWER_SUPPLY_CHARGE_TYPE_TRICKLE,
-> -	POWER_SUPPLY_CHARGE_TYPE_FAST,
-> +	POWER_SUPPLY_CHARGE_TYPE_TRICKLE,	/* slow speed */
-> +	POWER_SUPPLY_CHARGE_TYPE_FAST,		/* fast speed */
-> +	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
-> +	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically adjusted speed */
-> +	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use CHARGE_CONTROL_* props */
->  };
-> =20
->  enum {
-> @@ -121,6 +125,8 @@ enum power_supply_property {
->  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
-> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
-> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
->  	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
->  	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
->  	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
-> --=20
-> 2.20.1
+> > +static int fsl_asrc_sel_proc(int inrate, int outrate, int *pre_proc,
+> > +                          int *post_proc)
 >=20
+> Just a nit: it looks better by grouping them two-two.
+>=20
+> static int fsl_asrc_sel_proc(int inrate, int outrate,
+>                              int *pre_proc, int *post_proc)
+>=20
+> > +     /* Condition for selection of post-processing */
+> > +     post_proc_cond2 =3D (inrate * 15 > outrate * 16 && outrate < 5600=
+0) ||
+> > +             (inrate > 56000 && outrate < 56000);
+>=20
+> Could align the indentation:
+>         post_proc_cond2 =3D (inrate * 15 > outrate * 16 && outrate < 5600=
+0) ||
+>                           (inrate > 56000 && outrate < 56000);
+>=20
+> Here:
+> > +     /* Does not support cases: Tsout > 8.125 * Tsin */
+> > +     if (inrate * 8 > 65 * outrate)
+> > +             return -EINVAL;
+> And here:
+> > +     ret =3D fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc)=
+;
+> > +     if (ret) {
+> > +             pair_err("No supported pre-processing options\n");
+> > +             return ret;
+> > +     }
+>=20
+> Instead of a general message, I was thinking of a more specific one by
+> telling users that the ratio between the two rates isn't supported --
+> something similar to what I suggested previously:
+>=20
+>         pair_err("Does not support %d (input) > 8.125 * %d (output)\n",
+>                  outrate, inrate);
+>=20
+In fsl_asrc_sel_proc,  we can't call the pair_err for there is no
+struct fsl_asrc_pair *pair in the argument. Do you think we need to
+add this argument?
 
---ioz2ovoo2ntuswrd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly3nUYACgkQ2O7X88g7
-+ppslg//a/eyNS7uC8rs0eFylYaA2eKa2i6MZAaEyUhFOraXzRqz7Pi6kC2hoytr
-pExxFBUSTrtYzRSAL6OMALMiummqPdiAwLEnfWkT9wVomzO+5RhGnhVzxWWuiPtI
-QryvIYA53xwwa2nKvzfZ/oOk88AouUh8e6DerQ+KtmI5E1v24zyBlrDe7H6Lh+d/
-sUq+StIpCutoPB/xYKJY7NwEjHs82ChnsPfTyjo55vLi11+V8iebZdS8wVSNGGnU
-W6jMcPdFaX9ab+Jl3F8taReHFoqhEccbDj6AUiP0Nm3P4HCi3dnx/g6JA9cNGoZG
-+uNIsWQzBSaZVMDv9f/gEHrp0eLEkKzdYig0QWm/xO70rRIOUlRk6UTMsy+oa5KY
-8hm9GKaMoj/5ELwAq8opZ0TWfJEoc16iDwkzPulCS/VajcblRStLVV8b/217GJKp
-9BT24P3/eZJR/a0KzyoH3VJRo9TvSO9tQQZs+nNW2bDkX18u0eGj2lkqvsBPdQDY
-wAb3zpzZxVUAnxjz0Cbw3/kx5paV+YTPKWsx2Zi6TwC6QKuif5zVGhDPTISgkHRC
-GGWhGM0SBdjyfl6YsnEoOwr4VT2lnpc1pLeohFwz17lycsOoRCtleejoSttYW1y5
-g2cL7wiDB9QldPWVW49DtMeK/juD/A0y+cV3CQakioMfqD+GSM8=
-=OL+G
------END PGP SIGNATURE-----
-
---ioz2ovoo2ntuswrd--
+> Thanks
+> Nicolin
