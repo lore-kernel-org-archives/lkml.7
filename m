@@ -4,142 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF72C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C86C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D732171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B184C217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389705AbfDRRGH (ORCPT
+        id S2389719AbfDRRHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:06:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:42022 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbfDRRGH (ORCPT
+        Thu, 18 Apr 2019 13:07:08 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:42080 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733192AbfDRRHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:06:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id i1so2478181ioq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:06:06 -0700 (PDT)
+        Thu, 18 Apr 2019 13:07:07 -0400
+Received: by mail-it1-f197.google.com with SMTP id t196so529779ita.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:07:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=RfQlSRhPbvxU6HDnCxwNXok1nlQXWVy6VvmeuP6HTjs=;
-        b=Ngo0ho+9RmqNGwqgwf1VmKEpgA+yseCEKbTnRREccxGOaBDUEMuNFJudwPJkZBGQWM
-         i1sp2MJfzyCU5zQCfq0fM6qp5rBhpsqIh2gS9rhGSKsTgoJ5/eelZIlLDtbV0OVavaDO
-         KPPF4+zHBWo9X8AqWfzJZMTKP++ZH602BDe5GXJK1OnInUyBlIOY+3HRdefSsdkR0uUl
-         ze5p/uXy4tMLtbeVssPNXxtMeMIuRU8tp7oLlBQaJIlDt2GL6j2BUQ9fm7RcLdqEEZif
-         5ubVtgvQeEwCCXdbLXABLa2liBtNuSfhX1qVdBU6kFRRHJploXSKXhhL0Ybh2eVgxC1b
-         Fmdw==
-X-Gm-Message-State: APjAAAVQ+2XAvnm9UXjZhK+8ORvEIM9DiDEwz1hZD9Vrym4SfvGyaWOc
-        DYWtmEU7jE93WYpFH9zcY48YJgh9YLxZq0HPCdc8FilPv0RN
-X-Google-Smtp-Source: APXvYqy62SLLidhq2XJ6k0Q/b27gmpEzGCNMMTd3hNjjcmdkkKvIom3ZBB/6ktVDslia4BsGSxxnFn/fM59vggBkGP59FG9srpBO
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=elZ0CuNd87Fgxl68cPLOE/hKxhs+pPd6TQtRUVUsyyQ=;
+        b=Ao8e9Ue+7TaUysKiRVnH0OZTscBCMTGG8SkG9VlrT3smki/4AhvpA+YJERLJQ1v+aW
+         NrmvYrwjcPXrNdFfSYlfmFnaYYb24lcAxle/byOz0Lnb4FnmLyd8N33daVTxlRhJZeDk
+         t2s4NyPxfp5GQa/V0RlUDwsNgx/fKPgAYE8DXdluN6GdNC+5Xje1sUDf3xsZZ0ZSXnJ2
+         F0MWgJM0NwgBhsu3Vyvi1xNVEfenSZ/r/DUhERyFlinV5XOZpDv6O9iUg99si77I7X5R
+         ZqYvNvDiAbIlPFYFEloQnY04gUpmYC8nkBAbRO24+q1RGtc9XFblh5oFlT/ojrjxYOS1
+         neog==
+X-Gm-Message-State: APjAAAUvkiD+c7cGuHGqVcuLNiOySDcu1Rn9PXaXIcZ/ltcDl37R4B6s
+        BT8Mnd9Us4NAe6txUHrVkcEnnRX1QXBg0ao2xKJPpfDoUNJE
+X-Google-Smtp-Source: APXvYqxLeUDRqFjsF1nSbDJBr0kqv5ZFRHhsGRhikB2vAmrudNBpQTCfh/ffF6QC5dJ5Q4SfDy9bYXqQoeP1B+QPwfuYKOgvu17I
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9c0b:: with SMTP id 11mr1583857ioe.230.1555607166499;
- Thu, 18 Apr 2019 10:06:06 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 10:06:06 -0700
+X-Received: by 2002:a24:e208:: with SMTP id q8mr3426260ith.145.1555607226760;
+ Thu, 18 Apr 2019 10:07:06 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 10:07:06 -0700
+In-Reply-To: <000000000000bdc2e30586b826ce@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000091becf0586d104c6@google.com>
-Subject: general protection fault in fanotify_handle_event
-From:   syzbot <syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com>
-To:     amir73il@gmail.com, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000029431d0586d10813@google.com>
+Subject: Re: general protection fault in __dev_printk
+From:   syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+syzbot has found a reproducer for the following crash on:
 
-syzbot found the following crash on:
-
-HEAD commit:    e53f31bf Merge tag '5.1-rc5-smb3-fixes' of git://git.samba..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=174ea35b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
-dashboard link: https://syzkaller.appspot.com/bug?extid=15927486a4f1bfcbaf91
+HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=10adfe6b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+dashboard link: https://syzkaller.appspot.com/bug?extid=2eb9121678bdb36e6d57
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166cf35b200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145cb7e3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f8bd2d200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com
+Reported-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
 
+yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
+usb 1-1: USB disconnect, device number 112
+yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
 kasan: CONFIG_KASAN_INLINE enabled
 kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 12999 Comm: syz-executor.0 Not tainted 5.1.0-rc5+ #73
+general protection fault: 0000 [#1] SMP KASAN PTI
+CPU: 1 PID: 5402 Comm: udevd Not tainted 5.1.0-rc5-319617-gd34f951 #4
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:fanotify_get_fsid fs/notify/fanotify/fanotify.c:352 [inline]
-RIP: 0010:fanotify_handle_event+0x7d0/0xc40  
-fs/notify/fanotify/fanotify.c:412
-Code: ff ff 48 8b 18 48 8d 7b 68 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85  
-47 04 00 00 48 8b 5b 68 48 8d 7b 3c 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 3a  
-48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
-RSP: 0018:ffff8880a8947b78 EFLAGS: 00010203
-RAX: 1ffff110127b460d RBX: 0000000000000000 RCX: ffffffff81c41e9e
-RDX: 0000000000000007 RSI: ffffffff81c41eab RDI: 000000000000003c
-RBP: ffff8880a8947cc0 R08: ffff888087904240 R09: 0000000000000000
-R10: ffff888087904b10 R11: ffff888087904240 R12: 0000000000000002
-R13: 0000000000000000 R14: 0000000000000001 R15: dffffc0000000000
-FS:  00007f9f15bf7700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+RIP: 0010:dev_name include/linux/device.h:1087 [inline]
+RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
+Code: 89 f5 53 e8 1e 24 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 10 24 1c fc 48  
+8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
+05 e8 31 39 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 e3
+RSP: 0018:ffff8880ad107930 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: ffffed1015a20f2d RCX: 00000000ffffffed
+RDX: 0000000000000010 RSI: ffffffff85559bf0 RDI: 0000000000000080
+RBP: 0000000000000030 R08: ffff888091578000 R09: ffffed1015a24fc9
+R10: ffffed1015a24fc8 R11: ffff8880ad127e47 R12: ffffffff8f031a00
+R13: ffff8880ad107988 R14: 0000000000000000 R15: ffff88809b9b1600
+FS:  00007fcff04907a0(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9f15bb4db8 CR3: 000000008d545000 CR4: 00000000001406e0
+CR2: 00007fcff0496000 CR3: 0000000097678000 CR4: 00000000001406e0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  send_to_group fs/notify/fsnotify.c:243 [inline]
-  fsnotify+0x725/0xbc0 fs/notify/fsnotify.c:381
-  fsnotify_path include/linux/fsnotify.h:54 [inline]
-  fsnotify_path include/linux/fsnotify.h:47 [inline]
-  fsnotify_modify include/linux/fsnotify.h:263 [inline]
-  vfs_write+0x4dc/0x580 fs/read_write.c:551
-  ksys_write+0x14f/0x2d0 fs/read_write.c:599
-  __do_sys_write fs/read_write.c:611 [inline]
-  __se_sys_write fs/read_write.c:608 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:608
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  <IRQ>
+  _dev_err+0xdc/0x10e drivers/base/core.c:3251
+  yurex_interrupt.cold+0x12e/0x13d drivers/usb/misc/yurex.c:183
+  __usb_hcd_giveback_urb+0x1f4/0x470 drivers/usb/core/hcd.c:1758
+  usb_hcd_giveback_urb+0x346/0x400 drivers/usb/core/hcd.c:1823
+  dummy_timer+0x100b/0x32c0 drivers/usb/gadget/udc/dummy_hcd.c:1968
+  call_timer_fn+0x161/0x5f0 kernel/time/timer.c:1325
+  expire_timers kernel/time/timer.c:1362 [inline]
+  __run_timers kernel/time/timer.c:1681 [inline]
+  __run_timers kernel/time/timer.c:1649 [inline]
+  run_timer_softirq+0x58b/0x1400 kernel/time/timer.c:1694
+  __do_softirq+0x22a/0x8cd kernel/softirq.c:293
+  invoke_softirq kernel/softirq.c:374 [inline]
+  irq_exit+0x187/0x1b0 kernel/softirq.c:414
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0xfe/0x4a0 arch/x86/kernel/apic/apic.c:1062
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+  </IRQ>
+RIP: 0010:__read_once_size include/linux/compiler.h:193 [inline]
+RIP: 0010:syscall_return_slowpath arch/x86/entry/common.c:250 [inline]
+RIP: 0010:do_syscall_64+0x115/0x4f0 arch/x86/entry/common.c:293
+Code: 03 00 00 48 89 45 50 e8 99 2c 71 00 48 b8 00 00 00 00 00 fc ff df 65  
+48 8b 1c 25 00 ee 01 00 48 89 da 48 c1 ea 03 80 3c 02 00 <0f> 85 6f 03 00  
+00 4c 8b 23 9c 58 0f 1f 44 00 00 25 00 02 00 00 31
+RSP: 0018:ffff88809fceff28 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: dffffc0000000000 RBX: ffff888091578000 RCX: 1ffff11013f9dff5
+RDX: 1ffff110122af000 RSI: ffffffff81009367 RDI: ffff88809fceffa8
+RBP: ffff88809fceff58 R08: 0000000000000000 R09: 0000000000000001
+R10: ffffed1015a25c27 R11: ffff8880ad12e13b R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458c29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9f15bf6c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458c29
-RDX: 0000000000000007 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9f15bf76d4
-R13: 00000000004c8386 R14: 00000000004de8b8 R15: 00000000ffffffff
+RIP: 0033:0x7fcfefb99577
+Code: f0 ff ff 77 02 f3 c3 48 8b 15 bd 38 2b 00 f7 d8 64 89 02 83 c8 ff c3  
+90 90 90 90 90 90 90 90 90 90 90 90 b8 59 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 73 01 c3 48 8b 0d 91 38 2b 00 31 d2 48 29 c2 64
+RSP: 002b:00007ffe20473c28 EFLAGS: 00000246 ORIG_RAX: 0000000000000059
+RAX: ffffffffffffffea RBX: 0000000000626250 RCX: 00007fcfefb99577
+RDX: 0000000000000400 RSI: 00007ffe20473c30 RDI: 00007ffe20474110
+RBP: 0000000000635fd0 R08: 0000000000635fd0 R09: 75642f6d726f6674
+R10: 2e6364755f796d6d R11: 0000000000000246 R12: 00007ffe20474110
+R13: 0000000000000400 R14: 0000000000626250 R15: 000000000000000b
 Modules linked in:
----[ end trace 026b9c3311d87f36 ]---
-RIP: 0010:fanotify_get_fsid fs/notify/fanotify/fanotify.c:352 [inline]
-RIP: 0010:fanotify_handle_event+0x7d0/0xc40  
-fs/notify/fanotify/fanotify.c:412
-Code: ff ff 48 8b 18 48 8d 7b 68 48 89 f8 48 c1 e8 03 42 80 3c 38 00 0f 85  
-47 04 00 00 48 8b 5b 68 48 8d 7b 3c 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 3a  
-48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
-RSP: 0018:ffff8880a8947b78 EFLAGS: 00010203
-RAX: 1ffff110127b460d RBX: 0000000000000000 RCX: ffffffff81c41e9e
-RDX: 0000000000000007 RSI: ffffffff81c41eab RDI: 000000000000003c
-RBP: ffff8880a8947cc0 R08: ffff888087904240 R09: 0000000000000000
-R10: ffff888087904b10 R11: ffff888087904240 R12: 0000000000000002
-R13: 0000000000000000 R14: 0000000000000001 R15: dffffc0000000000
-FS:  00007f9f15bf7700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+---[ end trace 9119e43ae4e6c65e ]---
+RIP: 0010:dev_name include/linux/device.h:1087 [inline]
+RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
+Code: 89 f5 53 e8 1e 24 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 10 24 1c fc 48  
+8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
+05 e8 31 39 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 e3
+RSP: 0018:ffff8880ad107930 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: ffffed1015a20f2d RCX: 00000000ffffffed
+RDX: 0000000000000010 RSI: ffffffff85559bf0 RDI: 0000000000000080
+RBP: 0000000000000030 R08: ffff888091578000 R09: ffffed1015a24fc9
+R10: ffffed1015a24fc8 R11: ffff8880ad127e47 R12: ffffffff8f031a00
+R13: ffff8880ad107988 R14: 0000000000000000 R15: ffff88809b9b1600
+FS:  00007fcff04907a0(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9f15bb4db8 CR3: 000000008d545000 CR4: 00000000001406e0
+CR2: 00007fcff0496000 CR3: 0000000097678000 CR4: 00000000001406e0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
