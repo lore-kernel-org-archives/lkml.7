@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B34C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438FBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046C821872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1207B20652
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611128;
-	bh=BRKte31lEDPFn5g4yhMtFQhj4wb4okRT7tVYLUOlF+U=;
+	s=default; t=1555611131;
+	bh=NhXdt7TgWnNs+QEsbVp2LFmUXZjDpAh4OV8VssSm5fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GsOGu/oKze9UsZmz9v3ksCqOKOpsqZvMAlBhVMemgtf0Rv24w+3i4/bRz4hYVrA5G
-	 RaAJmDTxEMrhP/A6NdqlsY6pVHxpsyonhAGRTa/chjNfRPjXmAZD99ktQt6ly8gUX8
-	 AdRl62UTa39cOaMu4+AAOM6jk5Rvv8TkPUbzWE2k=
+	b=gLoVoxJwSUYjKg3e1qsCI9iVIT2Zro7j5Qh7Tt+n01OSjbkyP9sa1cB1cevowgcVM
+	 /Gs5o5qJets5Y5d1eWzCPRueJpGefNY6aUXFju1vWQ7otpPQ1IRV4Nl7WpoIGA98+G
+	 N//earylct9oDwmzXlnCLukjmtWto5ooPHpFdu3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391979AbfDRSMF (ORCPT
+        id S2391993AbfDRSMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44426 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404012AbfDRSME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:04 -0400
+        id S2391980AbfDRSMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC9CA206B6;
-        Thu, 18 Apr 2019 18:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B2D921871;
+        Thu, 18 Apr 2019 18:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611123;
-        bh=BRKte31lEDPFn5g4yhMtFQhj4wb4okRT7tVYLUOlF+U=;
+        s=default; t=1555611126;
+        bh=NhXdt7TgWnNs+QEsbVp2LFmUXZjDpAh4OV8VssSm5fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTC3icgFS5RoUguWrkaiPRRKlPFQAjR8gykkjEfMdOcffPyASB931En8fPKLjvCfh
-         CkKazxj4+U3u8NJsuROu2I8szIaYKenXLlHdmylSp+uaF8Co7jgnRAYfmRZSj7I3+b
-         U5354Cc+N27MsQfPeSnuauCsijqFxmkl4GBTMMvs=
+        b=kLcmpgExJWdyUsbvpLdyBytynHIyCsrqfApDK7pp9W/Sqo1VYw2qG5O5p/77jxpi7
+         nBuvgfmbSKd6oP7EOT5RlZ3u2tf45PlKj5g/87UaS7TED/1bZJ7pXQO5V8pI4zGEm5
+         bCjJHY0ulgOh2v7BIzsJqS4EbBPsUyTYhuIgr6zE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,9 +51,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 34/93] perf list: Dont forget to drop the reference to the allocated thread_map
-Date:   Thu, 18 Apr 2019 19:57:12 +0200
-Message-Id: <20190418160440.571252105@linuxfoundation.org>
+Subject: [PATCH 5.0 35/93] perf tools: Fix errors under optimization level -Og
+Date:   Thu, 18 Apr 2019 19:57:13 +0200
+Message-Id: <20190418160440.660287035@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -66,23 +66,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 39df730b09774bd860e39ea208a48d15078236cb ]
+[ Upstream commit 11c1ea6f1a9bc97bf857fd12f72eacb6c69794e2 ]
 
-Detected via gcc's ASan:
+Optimization level '-Og' offers a reasonable level of optimization while
+maintaining fast compilation and a good debugging experience. This patch
+tries to make it work.
 
-  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
-   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
-   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
-   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
-   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  $ make DEBUG=1 EXTRA_CFLAGS='-Og'
+  bench/epoll-ctl.c: In function ‘do_threads’:
+  bench/epoll-ctl.c:274:9: error: ‘ret’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+    return ret;
+           ^~~
+  ...
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -91,26 +86,68 @@ Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
-Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Link: http://lkml.kernel.org/r/20190316080556.3075-4-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/bpf/libbpf.c                  | 2 +-
+ tools/perf/bench/epoll-ctl.c            | 2 +-
+ tools/perf/bench/epoll-wait.c           | 2 +-
+ tools/perf/tests/backward-ring-buffer.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 920e1e6551dd..9afd0d2beef5 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2271,6 +2271,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 169e347c76f6..9ba1a2e1ed7a 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -627,7 +627,7 @@ bpf_object__init_maps(struct bpf_object *obj, int flags)
+ 	bool strict = !(flags & MAPS_RELAX_COMPAT);
+ 	int i, map_idx, map_def_sz, nr_maps = 0;
+ 	Elf_Scn *scn;
+-	Elf_Data *data;
++	Elf_Data *data = NULL;
+ 	Elf_Data *symbols = obj->efile.symbols;
  
-+	thread_map__put(tmap);
- 	return ret;
- }
+ 	if (obj->efile.maps_shndx < 0)
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index 0c0a6e824934..2af067859966 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -224,7 +224,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret;
++	int ret = 0;
  
+ 	if (!noaffinity)
+ 		pthread_attr_init(&thread_attr);
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 5a11534e96a0..fe85448abd45 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -293,7 +293,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret, events = EPOLLIN;
++	int ret = 0, events = EPOLLIN;
+ 
+ 	if (oneshot)
+ 		events |= EPOLLONESHOT;
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index 6d598cc071ae..1a9c3becf5ff 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -18,7 +18,7 @@ static void testcase(void)
+ 	int i;
+ 
+ 	for (i = 0; i < NR_ITERS; i++) {
+-		char proc_name[10];
++		char proc_name[15];
+ 
+ 		snprintf(proc_name, sizeof(proc_name), "p:%d\n", i);
+ 		prctl(PR_SET_NAME, proc_name);
 -- 
 2.19.1
 
