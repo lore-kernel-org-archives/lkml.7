@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E449EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E99C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B883020643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1341A20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612184;
-	bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
+	s=default; t=1555612197;
+	bh=QdV2UYoasuAb35mPDXv/u4Qq6hJ0ZVqxrUYokNQ9tVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUn/wfYVxqGuCQygTVIKSKglqgjtsxkTwM6alGxZlWuQPpJknmos3qqtNzbatp/sO
-	 nXmpb6Pimbw/3Hd1dUuNcPQf0piF/nnYzHud+5iql8eX0OEHMDL6YCWjZhHkIYuFGf
-	 e8FcM9Pyeb4X32fxOFL7gWj3EsUHuLSdmYSkG8og=
+	b=0xfGKNJNnwJwO+o7omwo3hOFmoD1u5+zxfKxx1tZpdvTy30ZtGmZBIaui8Rns9FeK
+	 QunSAwg2QCEofLWpvP4zp7A6iM2zj+OznGnwBrca5pVxFul4/W74buoXVSXICizff3
+	 BMZU+wZGxhmFJ2xSNRAmQ5iPucZLR6azOE7oojXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390739AbfDRSCU (ORCPT
+        id S2390765AbfDRS3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:29:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390286AbfDRSCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:17 -0400
+        id S2389932AbfDRSCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12DCD2186A;
-        Thu, 18 Apr 2019 18:02:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFF95217FA;
+        Thu, 18 Apr 2019 18:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610536;
-        bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
+        s=default; t=1555610531;
+        bh=QdV2UYoasuAb35mPDXv/u4Qq6hJ0ZVqxrUYokNQ9tVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bcG42IQmSnn/gautM8wBNQ4fjme15I/ScGu4Sg/tRTvkhYLRQfvzyDRcshV7KdqkY
-         7RaVpQFZ2gjTZtngq7FsExWUBRH9IzxHWlCbUywykXD9/oqkFeSwW3x7OJgeONWbZj
-         FjbuXLlBssQc0eCcVIGUY/7hm+wdGEvQdkwpQY14=
+        b=u43WfWLPY2EcHdimpntEKC6OQGKtQcrUWbJ2moeJ8Kurg7HBR71Ry8ms9OhdzsdFK
+         +NLR/5ubJqbK1QP5ZysC+HzUeA5Cje5cwZppU4iLNnNusd0GRtZvEPURSB6GsWJVFv
+         QVlxURCTS2VgknEN23f2uyzhOtx/v3OLLNmIB9L0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
-        Oak Zeng <Oak.Zeng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/110] drm/amdkfd: use init_mqd function to allocate object for hid_mqd (CI)
-Date:   Thu, 18 Apr 2019 19:57:29 +0200
-Message-Id: <20190418160447.152540902@linuxfoundation.org>
+Subject: [PATCH 4.19 098/110] drm/nouveau/volt/gf117: fix speedo readout register
+Date:   Thu, 18 Apr 2019 19:57:27 +0200
+Message-Id: <20190418160447.007243654@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,113 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cac734c2dbd2514f14c8c6a17caba1990d83bf1d ]
+[ Upstream commit fc782242749fa4235592854fafe1a1297583c1fb ]
 
-if use the legacy method to allocate object, when mqd_hiq need to run
-uninit code, it will be cause WARNING call trace.
+GF117 appears to use the same register as GK104 (but still with the
+general Fermi readout mechanism).
 
-eg: (s3 suspend test)
-[   34.918944] Call Trace:
-[   34.918948]  [<ffffffff92961dc1>] dump_stack+0x19/0x1b
-[   34.918950]  [<ffffffff92297648>] __warn+0xd8/0x100
-[   34.918951]  [<ffffffff9229778d>] warn_slowpath_null+0x1d/0x20
-[   34.918991]  [<ffffffffc03ce1fe>] uninit_mqd_hiq_sdma+0x4e/0x50 [amdgpu]
-[   34.919028]  [<ffffffffc03d0ef7>] uninitialize+0x37/0xe0 [amdgpu]
-[   34.919064]  [<ffffffffc03d15a6>] kernel_queue_uninit+0x16/0x30 [amdgpu]
-[   34.919086]  [<ffffffffc03d26c2>] pm_uninit+0x12/0x20 [amdgpu]
-[   34.919107]  [<ffffffffc03d4915>] stop_nocpsch+0x15/0x20 [amdgpu]
-[   34.919129]  [<ffffffffc03c1dce>] kgd2kfd_suspend.part.4+0x2e/0x50 [amdgpu]
-[   34.919150]  [<ffffffffc03c2667>] kgd2kfd_suspend+0x17/0x20 [amdgpu]
-[   34.919171]  [<ffffffffc03c103a>] amdgpu_amdkfd_suspend+0x1a/0x20 [amdgpu]
-[   34.919187]  [<ffffffffc02ec428>] amdgpu_device_suspend+0x88/0x3a0 [amdgpu]
-[   34.919189]  [<ffffffff922e22cf>] ? enqueue_entity+0x2ef/0xbe0
-[   34.919205]  [<ffffffffc02e8220>] amdgpu_pmops_suspend+0x20/0x30 [amdgpu]
-[   34.919207]  [<ffffffff925c56ff>] pci_pm_suspend+0x6f/0x150
-[   34.919208]  [<ffffffff925c5690>] ? pci_pm_freeze+0xf0/0xf0
-[   34.919210]  [<ffffffff926b45c6>] dpm_run_callback+0x46/0x90
-[   34.919212]  [<ffffffff926b49db>] __device_suspend+0xfb/0x2a0
-[   34.919213]  [<ffffffff926b4b9f>] async_suspend+0x1f/0xa0
-[   34.919214]  [<ffffffff922c918f>] async_run_entry_fn+0x3f/0x130
-[   34.919216]  [<ffffffff922b9d4f>] process_one_work+0x17f/0x440
-[   34.919217]  [<ffffffff922bade6>] worker_thread+0x126/0x3c0
-[   34.919218]  [<ffffffff922bacc0>] ? manage_workers.isra.25+0x2a0/0x2a0
-[   34.919220]  [<ffffffff922c1c31>] kthread+0xd1/0xe0
-[   34.919221]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
-[   34.919222]  [<ffffffff92974c1d>] ret_from_fork_nospec_begin+0x7/0x21
-[   34.919224]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
-[   34.919224] ---[ end trace 38cd9f65c963adad ]---
-
-Signed-off-by: Kevin Wang <kevin1.wang@amd.com>
-Reviewed-by: Oak Zeng <Oak.Zeng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108980
+Signed-off-by: Ilia Mirkin <imirkin@alum.mit.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c  | 52 +------------------
- 1 file changed, 1 insertion(+), 51 deletions(-)
+ .../drm/nouveau/include/nvkm/subdev/volt.h    |  1 +
+ .../gpu/drm/nouveau/nvkm/engine/device/base.c |  2 +-
+ .../gpu/drm/nouveau/nvkm/subdev/volt/Kbuild   |  1 +
+ .../gpu/drm/nouveau/nvkm/subdev/volt/gf117.c  | 60 +++++++++++++++++++
+ 4 files changed, 63 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
-index 47243165a082..ae90a99909ef 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
-@@ -323,57 +323,7 @@ static int init_mqd_hiq(struct mqd_manager *mm, void **mqd,
- 		struct kfd_mem_obj **mqd_mem_obj, uint64_t *gart_addr,
- 		struct queue_properties *q)
- {
--	uint64_t addr;
--	struct cik_mqd *m;
--	int retval;
--
--	retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct cik_mqd),
--					mqd_mem_obj);
--
--	if (retval != 0)
--		return -ENOMEM;
--
--	m = (struct cik_mqd *) (*mqd_mem_obj)->cpu_ptr;
--	addr = (*mqd_mem_obj)->gpu_addr;
--
--	memset(m, 0, ALIGN(sizeof(struct cik_mqd), 256));
--
--	m->header = 0xC0310800;
--	m->compute_pipelinestat_enable = 1;
--	m->compute_static_thread_mgmt_se0 = 0xFFFFFFFF;
--	m->compute_static_thread_mgmt_se1 = 0xFFFFFFFF;
--	m->compute_static_thread_mgmt_se2 = 0xFFFFFFFF;
--	m->compute_static_thread_mgmt_se3 = 0xFFFFFFFF;
--
--	m->cp_hqd_persistent_state = DEFAULT_CP_HQD_PERSISTENT_STATE |
--					PRELOAD_REQ;
--	m->cp_hqd_quantum = QUANTUM_EN | QUANTUM_SCALE_1MS |
--				QUANTUM_DURATION(10);
--
--	m->cp_mqd_control             = MQD_CONTROL_PRIV_STATE_EN;
--	m->cp_mqd_base_addr_lo        = lower_32_bits(addr);
--	m->cp_mqd_base_addr_hi        = upper_32_bits(addr);
--
--	m->cp_hqd_ib_control = DEFAULT_MIN_IB_AVAIL_SIZE;
--
--	/*
--	 * Pipe Priority
--	 * Identifies the pipe relative priority when this queue is connected
--	 * to the pipeline. The pipe priority is against the GFX pipe and HP3D.
--	 * In KFD we are using a fixed pipe priority set to CS_MEDIUM.
--	 * 0 = CS_LOW (typically below GFX)
--	 * 1 = CS_MEDIUM (typically between HP3D and GFX
--	 * 2 = CS_HIGH (typically above HP3D)
--	 */
--	m->cp_hqd_pipe_priority = 1;
--	m->cp_hqd_queue_priority = 15;
--
--	*mqd = m;
--	if (gart_addr)
--		*gart_addr = addr;
--	retval = mm->update_mqd(mm, m, q);
--
--	return retval;
-+	return init_mqd(mm, mqd, mqd_mem_obj, gart_addr, q);
- }
+diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h
+index 8a0f85f5fc1a..6a765682fbfa 100644
+--- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h
++++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/volt.h
+@@ -38,6 +38,7 @@ int nvkm_volt_set_id(struct nvkm_volt *, u8 id, u8 min_id, u8 temp,
  
- static int update_mqd_hiq(struct mqd_manager *mm, void *mqd,
+ int nv40_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
+ int gf100_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
++int gf117_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
+ int gk104_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
+ int gk20a_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
+ int gm20b_volt_new(struct nvkm_device *, int, struct nvkm_volt **);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c b/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
+index e294013426ce..347a6a4cb339 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
+@@ -1613,7 +1613,7 @@ nvd7_chipset = {
+ 	.pci = gf106_pci_new,
+ 	.therm = gf119_therm_new,
+ 	.timer = nv41_timer_new,
+-	.volt = gf100_volt_new,
++	.volt = gf117_volt_new,
+ 	.ce[0] = gf100_ce_new,
+ 	.disp = gf119_disp_new,
+ 	.dma = gf119_dma_new,
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild
+index bcd179ba11d0..146adcdd316a 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/Kbuild
+@@ -2,6 +2,7 @@ nvkm-y += nvkm/subdev/volt/base.o
+ nvkm-y += nvkm/subdev/volt/gpio.o
+ nvkm-y += nvkm/subdev/volt/nv40.o
+ nvkm-y += nvkm/subdev/volt/gf100.o
++nvkm-y += nvkm/subdev/volt/gf117.o
+ nvkm-y += nvkm/subdev/volt/gk104.o
+ nvkm-y += nvkm/subdev/volt/gk20a.o
+ nvkm-y += nvkm/subdev/volt/gm20b.o
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c
+new file mode 100644
+index 000000000000..547a58f0aeac
+--- /dev/null
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/volt/gf117.c
+@@ -0,0 +1,60 @@
++/*
++ * Copyright 2019 Ilia Mirkin
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in
++ * all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
++ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
++ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ * OTHER DEALINGS IN THE SOFTWARE.
++ *
++ * Authors: Ilia Mirkin
++ */
++#include "priv.h"
++
++#include <subdev/fuse.h>
++
++static int
++gf117_volt_speedo_read(struct nvkm_volt *volt)
++{
++	struct nvkm_device *device = volt->subdev.device;
++	struct nvkm_fuse *fuse = device->fuse;
++
++	if (!fuse)
++		return -EINVAL;
++
++	return nvkm_fuse_read(fuse, 0x3a8);
++}
++
++static const struct nvkm_volt_func
++gf117_volt = {
++	.oneinit = gf100_volt_oneinit,
++	.vid_get = nvkm_voltgpio_get,
++	.vid_set = nvkm_voltgpio_set,
++	.speedo_read = gf117_volt_speedo_read,
++};
++
++int
++gf117_volt_new(struct nvkm_device *device, int index, struct nvkm_volt **pvolt)
++{
++	struct nvkm_volt *volt;
++	int ret;
++
++	ret = nvkm_volt_new_(&gf117_volt, device, index, &volt);
++	*pvolt = volt;
++	if (ret)
++		return ret;
++
++	return nvkm_voltgpio_init(volt);
++}
 -- 
 2.19.1
 
