@@ -2,96 +2,313 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E5BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C403EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343E720643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnGy8nV+"
+	by mail.kernel.org (Postfix) with ESMTP id 8A3BD20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390070AbfDRTtC (ORCPT
+        id S2390116AbfDRTtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:49:02 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46086 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389866AbfDRTtC (ORCPT
+        Thu, 18 Apr 2019 15:49:17 -0400
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:15724 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389853AbfDRTtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:49:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 9so1552149pfj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nv1osdKMnyQhFpXAYzfTc/y8P4eQhfnwJ3z9VJHumRs=;
-        b=XnGy8nV+vrlbZLrGOz/2ITivLC4FD5nuOPNiQP39Nwi2Gff+bcupMcExivueyD+z4q
-         Go4gLOQzKLBdAhlU1UFvA6mJ/k2mQAsY0MiA6Fj/0c2Uks1VRkL5eMVDgdeSFuqqHknh
-         gFqVhfzZEtWCIJZzGTm9argq1WxEObOFJLsFmk181hFJUQ/4Rwa9wmOHbhQWBXSzvrLX
-         ZDf/iLZrVTMrUuPGKKCkPG3jc3FJVXRUsRCwB7fIUkgz9zul3803EgfjxsaVzR27tsqi
-         yia0T6ibseVHWa1l1bBeAXTCpcCG1vnuUKn6pY00thLmzsPgbupuGk6nwMDrLlgyL8nS
-         PbWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nv1osdKMnyQhFpXAYzfTc/y8P4eQhfnwJ3z9VJHumRs=;
-        b=Wvxis3A3XZxNpWBYmReG5HIGLiRO3E3L/qPmxzn3t2PSZhfofwzx4ASP5RrATotiTL
-         d3M2qrSQo+ElqeAcpUCiP0d+BbdUQMvkx5Zzg4LyU4VQYCz7oPt1CGRjQrRpghbyyBaW
-         Dt2Qb8bt8OQOjERuOa8f+SSHYrkNFKe0mAHaLRS+B6bZII12siPrLfDFiDlZHCjasX/8
-         L8YwIC4IauqGG0mr9y/ZWhTP59GwEwbgv4YkqTEfcVP8Oil09YUWbmyUadnIsyAzUnfR
-         9O1WJwHAeeXXi3UiDkErTcury7PXARZZdYZKI049xbzWqEpoaesvi1Cb66KpsqaW21e2
-         OZZA==
-X-Gm-Message-State: APjAAAX+qHbdyH0G4myoApLFWIHNX5YzRj4avLDVTQcnGFeFSDhLeYbG
-        UbApCaqi/NSTyPX1XME4504=
-X-Google-Smtp-Source: APXvYqws8l3BHlRoJ8O3n8PyNUaV9SDlmTRmQ2aAZP27lA4t4fOhIUvpl8zDughhtClhkxUHkgXcWw==
-X-Received: by 2002:a65:4bce:: with SMTP id p14mr92784659pgr.376.1555616941584;
-        Thu, 18 Apr 2019 12:49:01 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id m23sm3924311pfa.117.2019.04.18.12.49.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 12:49:01 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 12:48:58 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2] ASoC: fsl_esai: Add pm runtime function
-Message-ID: <20190418194857.GB14885@Asurada-Nvidia.nvidia.com>
-References: <8c78be27ef3795e9b870de7789c25454bd3774b3.1555586023.git.shengjiu.wang@nxp.com>
+        Thu, 18 Apr 2019 15:49:17 -0400
+Subject: Re: [PATCH 5.0 39/93] perf top: Delete the evlist before
+ perf_session, fixing heap-use-after-free issue
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <stable@vger.kernel.org>, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20190418160436.781762249@linuxfoundation.org>
+ <20190418160441.339477070@linuxfoundation.org>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <b33d7fd2-c18d-9513-1a99-fea31d5f2df3@mageia.org>
+Date:   Thu, 18 Apr 2019 22:33:16 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c78be27ef3795e9b870de7789c25454bd3774b3.1555586023.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190418160441.339477070@linuxfoundation.org>
+Content-Type: multipart/mixed;
+        boundary="------------F151799C9EBAFCA68FED3310"
+Content-Language: en-US
+X-WatchGuard-Spam-ID: str=0001.0A0C0208.5CB8D485.0007,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:34:15AM +0000, S.j. Wang wrote:
-> Add pm runtime support and move clock handling there.
-> fsl_esai_suspend is replaced by pm_runtime_force_suspend.
-> fsl_esai_resume is replaced by pm_runtime_force_resume.
+--------------F151799C9EBAFCA68FED3310
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The change looks fine, yet I'd prefer to have a good justification
-in the commit message. It could be simply some benefit of doing so
-like what you have discussed with Mark.
+Den 18-04-2019 kl. 20:57, skrev Greg Kroah-Hartman:
+> [ Upstream commit 0dba9e4be95b59e77060645ca8e37ca3231061f5 ]
+> 
+> The evlist should be destroyed before the perf session.
+> 
+> Detected with gcc's ASan:
+> 
+>    =================================================================
+>    ==27350==ERROR: AddressSanitizer: heap-use-after-free on address 0x62b000002e38 at pc 0x5611da276999 bp 0x7ffce8f1d1a0 sp 0x7ffce8f1d190
+>    WRITE of size 8 at 0x62b000002e38 thread T0
+>        #0 0x5611da276998 in __list_del /home/work/linux/tools/include/linux/list.h:89
+>        #1 0x5611da276d4a in __list_del_entry /home/work/linux/tools/include/linux/list.h:102
+>        #2 0x5611da276e77 in list_del_init /home/work/linux/tools/include/linux/list.h:145
+>        #3 0x5611da2781cd in thread__put util/thread.c:130
+>        #4 0x5611da2cc0a8 in __thread__zput util/thread.h:68
+>        #5 0x5611da2d2dcb in hist_entry__delete util/hist.c:1148
+>        #6 0x5611da2cdf91 in hists__delete_entry util/hist.c:337
+>        #7 0x5611da2ce19e in hists__delete_entries util/hist.c:365
+>        #8 0x5611da2db2ab in hists__delete_all_entries util/hist.c:2639
+>        #9 0x5611da2db325 in hists_evsel__exit util/hist.c:2651
+>        #10 0x5611da1c5352 in perf_evsel__exit util/evsel.c:1304
+>        #11 0x5611da1c5390 in perf_evsel__delete util/evsel.c:1309
+>        #12 0x5611da1b35f0 in perf_evlist__purge util/evlist.c:124
+>        #13 0x5611da1b38e2 in perf_evlist__delete util/evlist.c:148
+>        #14 0x5611da069781 in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1645
+>        #15 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+>        #16 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+>        #17 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+>        #18 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+>        #19 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+>        #20 0x5611d9ff35c9 in _start (/home/work/linux/tools/perf/perf+0x3e95c9)
+> 
+>    0x62b000002e38 is located 11320 bytes inside of 27448-byte region [0x62b000000200,0x62b000006d38)
+>    freed by thread T0 here:
+>        #0 0x7fdccb04ab70 in free (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedb70)
+>        #1 0x5611da260df4 in perf_session__delete util/session.c:201
+>        #2 0x5611da063de5 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1300
+>        #3 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+>        #4 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+>        #5 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+>        #6 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+>        #7 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+>        #8 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+> 
+>    previously allocated by thread T0 here:
+>        #0 0x7fdccb04b138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+>        #1 0x5611da26010c in zalloc util/util.h:23
+>        #2 0x5611da260824 in perf_session__new util/session.c:118
+>        #3 0x5611da0633a6 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1192
+>        #4 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+>        #5 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+>        #6 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+>        #7 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+>        #8 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+>        #9 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+> 
+>    SUMMARY: AddressSanitizer: heap-use-after-free /home/work/linux/tools/include/linux/list.h:89 in __list_del
+>    Shadow bytes around the buggy address:
+>      0x0c567fff8570: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff8580: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff8590: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff85a0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff85b0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>    =>0x0c567fff85c0: fd fd fd fd fd fd fd[fd]fd fd fd fd fd fd fd fd
+>      0x0c567fff85d0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff85e0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff85f0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff8600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>      0x0c567fff8610: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>    Shadow byte legend (one shadow byte represents 8 application bytes):
+>      Addressable:           00
+>      Partially addressable: 01 02 03 04 05 06 07
+>      Heap left redzone:       fa
+>      Freed heap region:       fd
+>      Stack left redzone:      f1
+>      Stack mid redzone:       f2
+>      Stack right redzone:     f3
+>      Stack after return:      f5
+>      Stack use after scope:   f8
+>      Global redzone:          f9
+>      Global init order:       f6
+>      Poisoned by user:        f7
+>      Container overflow:      fc
+>      Array cookie:            ac
+>      Intra object redzone:    bb
+>      ASan internal:           fe
+>      Left alloca redzone:     ca
+>      Right alloca redzone:    cb
+>    ==27350==ABORTING
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Link: http://lkml.kernel.org/r/20190316080556.3075-8-changbin.du@gmail.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   tools/perf/builtin-top.c | 42 ++++++++++++++++++----------------------
+>   1 file changed, 19 insertions(+), 23 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index f64e312db787..9b215007924b 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1192,23 +1192,19 @@ static int __cmd_top(struct perf_top *top)
+>   	pthread_t thread, thread_process;
+>   	int ret;
+>   
+> -	top->session = perf_session__new(NULL, false, NULL);
+> -	if (top->session == NULL)
+> -		return -1;
+> -
+>   	if (!top->annotation_opts.objdump_path) {
+>   		ret = perf_env__lookup_objdump(&top->session->header.env,
+>   					       &top->annotation_opts.objdump_path);
+>   		if (ret)
+> -			goto out_delete;
+> +			return ret;
+>   	}
+>   
+>   	ret = callchain_param__setup_sample_type(&callchain_param);
+>   	if (ret)
+> -		goto out_delete;
+> +		return ret;
+>   
+>   	if (perf_session__register_idle_thread(top->session) < 0)
+> -		goto out_delete;
+> +		return ret;
+>   
+>   	if (top->nr_threads_synthesize > 1)
+>   		perf_set_multithreaded();
+> @@ -1224,13 +1220,18 @@ static int __cmd_top(struct perf_top *top)
+>   
+>   	if (perf_hpp_list.socket) {
+>   		ret = perf_env__read_cpu_topology_map(&perf_env);
+> -		if (ret < 0)
+> -			goto out_err_cpu_topo;
+> +		if (ret < 0) {
+> +			char errbuf[BUFSIZ];
+> +			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
+> +
+> +			ui__error("Could not read the CPU topology map: %s\n", err);
+> +			return ret;
+> +		}
+>   	}
+>   
+>   	ret = perf_top__start_counters(top);
+>   	if (ret)
+> -		goto out_delete;
+> +		return ret;
+>   
+>   	ret = perf_evlist__apply_drv_configs(evlist, &pos, &err_term);
+>   	if (ret) {
+> @@ -1257,7 +1258,7 @@ static int __cmd_top(struct perf_top *top)
+>   	ret = -1;
+>   	if (pthread_create(&thread_process, NULL, process_thread, top)) {
+>   		ui__error("Could not create process thread.\n");
+> -		goto out_delete;
+> +		return ret;
+>   	}
+>   
+>   	if (pthread_create(&thread, NULL, (use_browser > 0 ? display_thread_tui :
+> @@ -1301,19 +1302,7 @@ static int __cmd_top(struct perf_top *top)
+>   out_join_thread:
+>   	pthread_cond_signal(&top->qe.cond);
+>   	pthread_join(thread_process, NULL);
+> -out_delete:
+> -	perf_session__delete(top->session);
+> -	top->session = NULL;
+> -
+>   	return ret;
+> -
+> -out_err_cpu_topo: {
+> -	char errbuf[BUFSIZ];
+> -	const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
+> -
+> -	ui__error("Could not read the CPU topology map: %s\n", err);
+> -	goto out_delete;
+> -}
+>   }
+>   
+>   static int
+> @@ -1644,10 +1633,17 @@ int cmd_top(int argc, const char **argv)
+>   		signal(SIGWINCH, winch_sig);
+>   	}
+>   
+> +	top.session = perf_session__new(NULL, false, NULL);
+> +	if (top.session == NULL) {
+> +		status = -1;
+> +		goto out_delete_evlist;
+> +	}
+> +
+>   	status = __cmd_top(&top);
+>   
+>   out_delete_evlist:
+>   	perf_evlist__delete(top.evlist);
+> +	perf_session__delete(top.session);
+>   
+>   	return status;
+>   }
+> 
 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Please add it in next version upon commit message update:
+This one breaks perf build like this:
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+builtin-top.c: In function '__cmd_top':
+builtin-top.c:1241:3: error: label 'out_delete' used but not defined
+    goto out_delete;
 
-Thanks
+
+Suggested 5.0 specific fix attached.
+
+--------------F151799C9EBAFCA68FED3310
+Content-Type: text/x-patch; name="tools-perf-builtin-top-fix-build.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="tools-perf-builtin-top-fix-build.patch"
+
+
+Subject: perf top: fix builtin-top build breakage.
+
+In 5.0 -stable queue, backported upstream commit 0dba9e4be95b (perf top: Delete
+the evlist before perf_session, fixing heap-use-after-free issue)
+
+causes the perf build to break with:
+
+builtin-top.c: In function '__cmd_top':
+builtin-top.c:1241:3: error: label 'out_delete' used but not defined
+   goto out_delete;
+   ^~~~
+
+This does not happend in upstream linus tree as the affected code is removed
+in commit 159b0da50adb (perf pmu: Remove set_drv_config API) that I assume
+is not ok to backport in -stable trees.
+
+Fix it up like other code in commit 0dba9e4be95b.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1238,7 +1238,7 @@ static int __cmd_top(struct perf_top *to
+ 		pr_err("failed to set config \"%s\" on event %s with %d (%s)\n",
+ 			err_term->val.drv_cfg, perf_evsel__name(pos), errno,
+ 			str_error_r(errno, msg, sizeof(msg)));
+-		goto out_delete;
++		return ret;
+ 	}
+ 
+ 	top->session->evlist = top->evlist;
+
+--------------F151799C9EBAFCA68FED3310--
