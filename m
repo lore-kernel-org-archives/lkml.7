@@ -2,138 +2,96 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	URIBL_RHS_DOB,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B842F2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B683C2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfDRMpQ (ORCPT
+        id S2388992AbfDRMp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:45:16 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57849 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfDRMpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:45:16 -0400
-Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id CB1A6240004;
-        Thu, 18 Apr 2019 12:45:12 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 14:45:12 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Pablo =?utf-8?Q?Sebasti=C3=A1n?= Greco <pgreco@centosproject.org>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [linux-sunxi] Re: [PATCH v3 1/7] ARM: dts: sun8i: r40:
- bananapi-m2-ultra: Tie GMAC regulators to the PIO
-Message-ID: <20190418124512.theixlxnsghidpjp@flea>
-References: <1555492863-88860-1-git-send-email-pgreco@centosproject.org>
- <1555492863-88860-2-git-send-email-pgreco@centosproject.org>
- <20190417101757.traviffiulwnzr6x@flea>
- <666caeac-4297-17b0-065e-00b7fd9623b4@centosproject.org>
+        Thu, 18 Apr 2019 08:45:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43032 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfDRMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 08:45:26 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83FA681129;
+        Thu, 18 Apr 2019 12:45:25 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CC6519C65;
+        Thu, 18 Apr 2019 12:45:11 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        osalvador@suse.de
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20190417150331.90219ca42a1c0db8632d0fd5@linux-foundation.org>
+        <CAPcyv4hB47NJrVi1sm+7msL+6dJNhBD10BJbtLPZRcK2JK6+pg@mail.gmail.com>
+        <CAPcyv4iW=xhhUQbg0bt=xCgVaR_jUvATeLxSoCfvzG5gTEAX6A@mail.gmail.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 18 Apr 2019 08:45:10 -0400
+In-Reply-To: <CAPcyv4iW=xhhUQbg0bt=xCgVaR_jUvATeLxSoCfvzG5gTEAX6A@mail.gmail.com>
+        (Dan Williams's message of "Wed, 17 Apr 2019 19:09:12 -0700")
+Message-ID: <x49lg07eb3d.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zqgbvc2dvbkaqti4"
-Content-Disposition: inline
-In-Reply-To: <666caeac-4297-17b0-065e-00b7fd9623b4@centosproject.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 18 Apr 2019 12:45:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dan Williams <dan.j.williams@intel.com> writes:
 
---zqgbvc2dvbkaqti4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Apr 18, 2019 at 09:25:19AM -0300, Pablo Sebasti=E1n Greco wrote:
-> El 17/4/19 a las 07:17, Maxime Ripard escribi=F3:
-> > On Wed, Apr 17, 2019 at 06:20:56AM -0300, Pablo Greco wrote:
-> > > When the GMAC support was added to the bananapi-m2-ultra, regulators
-> > > weren't tied to the pinctrl. Fix that.
-> > >
-> > > Signed-off-by: Pablo Greco <pgreco@centosproject.org>
-> > > ---
-> > >   arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch=
-/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > > index c488aaa..3da3598 100644
-> > > --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > > +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > > @@ -201,6 +201,8 @@
-> > >   &pio {
-> > >   	pinctrl-names =3D "default";
-> > >   	pinctrl-0 =3D <&clk_out_a_pin>;
-> > > +	vcc-pa-supply =3D <&reg_aldo2>;
-> > You should list all the regulators that are needed for all the pin
-> > banks to operate properly, not just PA
-> Ok, I "think" I finally understand what you mean, so according to schemat=
-ics
-> in https://drive.google.com/file/d/0B4PAo2nW2KfndFpmZG1OOWJ5NEU/view, it
-> should look like this
-> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> index c488aaa..699579d 100644
-> --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> @@ -201,6 +201,12 @@
-> =A0&pio {
-> =A0=A0=A0=A0 pinctrl-names =3D "default";
-> =A0=A0=A0=A0 pinctrl-0 =3D <&clk_out_a_pin>;
-> +=A0=A0=A0 vcc-pa-supply =3D <&reg_aldo2>;
-> +=A0=A0=A0 vcc-pc-supply =3D <&reg_dcdc1>;
-> +=A0=A0=A0 vcc-pd-supply =3D <&reg_dcdc1>;
-> +=A0=A0=A0 vcc-pe-supply =3D <&reg_eldo1>;
-> +=A0=A0=A0 vcc-pf-supply =3D <&reg_dcdc1>;
-> +=A0=A0=A0 vcc-pg-supply =3D <&reg_dldo1>;
-> =A0};
-
-That makes sense yep
-
-> =A0&reg_aldo2 {
-> --
+>> On Wed, Apr 17, 2019 at 3:59 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>>
+>> On Wed, Apr 17, 2019 at 3:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>> >
+>> > On Wed, 17 Apr 2019 11:38:55 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+>> >
+>> > > The memory hotplug section is an arbitrary / convenient unit for memory
+>> > > hotplug. 'Section-size' units have bled into the user interface
+>> > > ('memblock' sysfs) and can not be changed without breaking existing
+>> > > userspace. The section-size constraint, while mostly benign for typical
+>> > > memory hotplug, has and continues to wreak havoc with 'device-memory'
+>> > > use cases, persistent memory (pmem) in particular. Recall that pmem uses
+>> > > devm_memremap_pages(), and subsequently arch_add_memory(), to allocate a
+>> > > 'struct page' memmap for pmem. However, it does not use the 'bottom
+>> > > half' of memory hotplug, i.e. never marks pmem pages online and never
+>> > > exposes the userspace memblock interface for pmem. This leaves an
+>> > > opening to redress the section-size constraint.
+>> >
+>> > v6 and we're not showing any review activity.  Who would be suitable
+>> > people to help out here?
+>>
+>> There was quite a bit of review of the cover letter from Michal and
+>> David, but you're right the details not so much as of yet. I'd like to
+>> call out other people where I can reciprocate with some review of my
+>> own. Oscar's altmap work looks like a good candidate for that.
 >
-> I couldn't find vcc-pb, vcc-ph or vcc-pi.
+> I'm also hoping Jeff can give a tested-by for the customer scenarios
+> that fall over with the current implementation.
 
-The R40 doesn't have them, so there's no suprise there :)
+Sure.  I'll also have a look over the patches.
 
-(if you ever want to find that info again in the future, the various
-vcc-p* that you need to find are in the datasheet)
-
-> If this is ok, I'll generate a v4 based on v2, and throw v3 in the trash
-> where it belongs
-
-Sounds good, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---zqgbvc2dvbkaqti4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLhxWAAKCRDj7w1vZxhR
-xYjxAP96S50pe+i0RxcXurVb6Gq6P3wILPZgfw2YZfFlBOqBVQD/Y3JUzQSgyTUg
-sFcR27YRufsmqYO5Euh1nl5UpP4MDAE=
-=6Yuo
------END PGP SIGNATURE-----
-
---zqgbvc2dvbkaqti4--
+-Jeff
