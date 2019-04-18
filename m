@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3187EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D879BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D7121479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F1621479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jas9PT7h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lcs3eiyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389721AbfDRQov (ORCPT
+        id S2389689AbfDRQpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 12:44:51 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46475 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388388AbfDRQov (ORCPT
+        Thu, 18 Apr 2019 12:45:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39450 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388299AbfDRQpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 12:44:51 -0400
-Received: by mail-io1-f67.google.com with SMTP id p23so2382106iol.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:44:50 -0700 (PDT)
+        Thu, 18 Apr 2019 12:45:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id e13so2417722ioq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
         bh=mptKACXQhQgDUMyPlZCGnxz/gjpJxP41cGsb1cPqYVU=;
-        b=Jas9PT7hRyxdXVOrAwhsvVbuZB04g9Z9xXlLTgglV+UCs12tYcgeTH6adJhAKAfCd2
-         lVPvCz3e7j0DEzqo5dDdlq4TuCtgbEHTqPhAtH080DR/kc8OfXuLI8seB45BFcqUdbOy
-         oqBG/Fl+fXDnjPvrMFrgDxoJbdlxlYWBx6Pls=
+        b=Lcs3eiyyFcEA+V7To6sBQ/lWb9+JMWUzg+x2FuCrrKcXLqDRDZ4SCbwoo0jCNJUxcy
+         r/muKC+QFHFa9DxsOpWq3Vptal9b+dsyg1dZQLHdAlomBlGfZUty3pGmWv3eBuSpi3HP
+         wbhNXyM3LuuvjCsN4XPG3bhF6awdSl+cn5sRE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
         bh=mptKACXQhQgDUMyPlZCGnxz/gjpJxP41cGsb1cPqYVU=;
-        b=D1gsFm8zaXLs62jo88kSf0akY48n8FhJQIEUJds6EyoUCfHmY7imMrU7R5kyiJM4Oz
-         Wd3E5tbZ0bc9ywWH7Hjv7YfHVqKotNPv6jFDCU41T4+mJHQ5jOYfkvWurtZ2R9kHnv5M
-         uLLE3SWtmKw19VHh3sqhRGZkbRPU/Ox8tF+epjwf/wklKQ9+S3OjANaJqPBp3flSlyk9
-         Q8LNqPwuGNRiNtm03MKOjo++Hq4VXEys39ha8GRqMvQBnTHb5j608oDVHiFnnEKRedDk
-         7SGfd3ma9I1qb2NNKlyjRWsZsSj70zLeNwqSo4J3s9JdklDCMS0elIbTydShzii6L/8F
-         RYPw==
-X-Gm-Message-State: APjAAAWAeMa3IEZHC+gPV4mqQRVpzXMGraLJw6UCnzQ+PULqfc0ws7HA
-        Y7VM2eFGTORGF5FYuMYZqOqbsw==
-X-Google-Smtp-Source: APXvYqyUx8YAWvoQTmsRRjnuReKrsKe/WE3JTCO052uWpp2AKqOqpyogSnE72AKdNgYbS9m7kA583A==
-X-Received: by 2002:a5d:9cd5:: with SMTP id w21mr5012126iow.298.1555605889928;
-        Thu, 18 Apr 2019 09:44:49 -0700 (PDT)
+        b=NMznEUvKcS1z05krVlATaf8GwBRVH13RRt+rnrZ8XV83muIwyy99ZYN8iwiIR0j8VV
+         VFXKjjyhjRJZDomsQjnfBAAO2SkwSaci/2c8wq9gM1rQUfjPyKJregWT101g6p1n2jUy
+         AcKUzzV33fy5X0NL2YN2PGLqbw/3EuLLJTuCpd4v+W4IZqjhJB0pm6otVKtyvaXOiO4A
+         eu8HLb/kwh7hx0iDlIaw0KtXwz97YjdAND4ud/BJgjm0rTXJM9UPSBxGpDiDHQzZEnR7
+         nIjgcg10PySwuhO40XaldszpEyq0KR83g+uLtd4yalAgusYKVXH+Huv0W0cTc1u8qgYQ
+         HMNg==
+X-Gm-Message-State: APjAAAUp+f9BgFQgrlShXbF8a42lSN5XP0r0BPToLYiyqa96jmwzGEkj
+        WtU9Id5cWpeVyf8XaeORay115w==
+X-Google-Smtp-Source: APXvYqwCtLeMVtDKFDBrnlxw1rWMgT85G7R0ICO3Vh5OkBfwELpGrTz30+KU2WcJzeOzKqERsYEQfg==
+X-Received: by 2002:a6b:4910:: with SMTP id u16mr30438463iob.150.1555605937967;
+        Thu, 18 Apr 2019 09:45:37 -0700 (PDT)
 Received: from twawrzynczak.bld.corp.google.com ([2620:15c:183:200:3175:8c2d:44b6:cfea])
-        by smtp.gmail.com with ESMTPSA id u26sm851675iob.78.2019.04.18.09.44.48
+        by smtp.gmail.com with ESMTPSA id c92sm1149186itd.26.2019.04.18.09.45.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 18 Apr 2019 09:44:49 -0700 (PDT)
+        Thu, 18 Apr 2019 09:45:37 -0700 (PDT)
 From:   Tim Wawrzynczak <twawrzynczak@chromium.org>
 To:     Tim Wawrzynczak <twawrzynczak@chromium.org>
-Cc:     EnricBalletboiSerraenric.balletbo@collabora.com,
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Benson Leung <bleung@chromium.org>,
         Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org
 Subject: [PATCH v4] platform/chrome: mfd/cros_ec_debugfs: Add debugfs entry to retrieve EC uptime.
-Date:   Thu, 18 Apr 2019 10:44:44 -0600
-Message-Id: <20190418164444.258107-1-twawrzynczak@chromium.org>
+Date:   Thu, 18 Apr 2019 10:45:35 -0600
+Message-Id: <20190418164535.258319-1-twawrzynczak@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190325170250.2547-1-twawrzynczak@chromium.org>
 References: <20190325170250.2547-1-twawrzynczak@chromium.org>
