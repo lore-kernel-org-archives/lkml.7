@@ -2,33 +2,33 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E00C2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E651206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388719AbfDRJIQ (ORCPT
+        id S2388740AbfDRJIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:08:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:36159 "EHLO
+        Thu, 18 Apr 2019 05:08:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60465 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388244AbfDRJIO (ORCPT
+        with ESMTP id S2388709AbfDRJIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:08:14 -0400
-X-UUID: faa9e705d0454b10b25c80cbaa2020eb-20190418
-X-UUID: faa9e705d0454b10b25c80cbaa2020eb-20190418
+        Thu, 18 Apr 2019 05:08:16 -0400
+X-UUID: 88763945fa9240349013fd3dcd49afb3-20190418
+X-UUID: 88763945fa9240349013fd3dcd49afb3-20190418
 Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <sean.wang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 908188968; Thu, 18 Apr 2019 17:08:05 +0800
+        with ESMTP id 2045535816; Thu, 18 Apr 2019 17:08:06 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 18 Apr 2019 17:08:03 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 18 Apr 2019 17:08:04 +0800
 Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
  Transport; Thu, 18 Apr 2019 17:08:04 +0800
@@ -37,12 +37,15 @@ To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
 CC:     <ulf.hansson@linaro.org>, <linux-bluetooth@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>, <linux-mmc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH v1 0/4] Add a couple of enhancements to btmtksdio
-Date:   Thu, 18 Apr 2019 17:07:58 +0800
-Message-ID: <cover.1555577565.git.sean.wang@mediatek.com>
+Subject: [PATCH v1 4/4] Bluetooth: btmtksdio: Add runtime PM support to SDIO based Bluetooth
+Date:   Thu, 18 Apr 2019 17:08:02 +0800
+Message-ID: <3946c88c48f088c242d94204d7302364133fe2b9.1555577565.git.sean.wang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1555577565.git.sean.wang@mediatek.com>
+References: <cover.1555577565.git.sean.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 1E24946ECF3F6A7B0B2D9190D01471AB1373641E07AC3C5C91675AD5886222B72000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,19 +54,274 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-First three are all minor changes and the final one adds a runtime pm support to
-enter a lower power state for decreasing power dissipation when there is idle
-traffic in SDIO transport for a while.
+Add runtime PM support to btmtksdio. With this way, there will be the
+benefit of the device entering the more power saving state once it is
+been a while data traffic is idle.
 
-Sean Wang (4):
-  Bluetooth: btmtksdio: Drop newline with bt_dev logging macros
-  Bluetooth: btmtksdio: Add a bit definition for CHLPCR
-  Bluetooth: btmtksdio: Fix hdev->stat.byte_rx accumulation
-  Bluetooth: btmtksdio: Add runtime PM support to SDIO based Bluetooth
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/bluetooth/btmtksdio.c | 144 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
 
- drivers/bluetooth/btmtksdio.c | 161 ++++++++++++++++++++++++++++++++--
- 1 file changed, 153 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
+index 877c0a831775..813338288453 100644
+--- a/drivers/bluetooth/btmtksdio.c
++++ b/drivers/bluetooth/btmtksdio.c
+@@ -17,6 +17,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/pm_runtime.h>
+ #include <linux/skbuff.h>
+ 
+ #include <linux/mmc/host.h>
+@@ -33,6 +34,10 @@
+ #define FIRMWARE_MT7663		"mediatek/mt7663pr2h.bin"
+ #define FIRMWARE_MT7668		"mediatek/mt7668pr2h.bin"
+ 
++#define MTKBTSDIO_AUTOSUSPEND_DELAY	8000
++
++static bool enable_autosuspend;
++
+ struct btmtksdio_data {
+ 	const char *fwname;
+ };
+@@ -150,6 +155,7 @@ struct btmtk_hci_wmt_params {
+ struct btmtksdio_dev {
+ 	struct hci_dev *hdev;
+ 	struct sdio_func *func;
++	struct device *dev;
+ 
+ 	struct work_struct tx_work;
+ 	unsigned long tx_state;
+@@ -301,6 +307,8 @@ static void btmtksdio_tx_work(struct work_struct *work)
+ 	struct sk_buff *skb;
+ 	int err;
+ 
++	pm_runtime_get_sync(bdev->dev);
++
+ 	sdio_claim_host(bdev->func);
+ 
+ 	while ((skb = skb_dequeue(&bdev->txq))) {
+@@ -313,6 +321,9 @@ static void btmtksdio_tx_work(struct work_struct *work)
+ 	}
+ 
+ 	sdio_release_host(bdev->func);
++
++	pm_runtime_mark_last_busy(bdev->dev);
++	pm_runtime_put_autosuspend(bdev->dev);
+ }
+ 
+ static int btmtksdio_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
+@@ -471,6 +482,18 @@ static void btmtksdio_interrupt(struct sdio_func *func)
+ 	u32 int_status;
+ 	u16 rx_size;
+ 
++	/* It is required that the host gets ownership from the device before
++	 * accessing any register, however, if SDIO host is not being released,
++	 * a potential deadlock probably happens in a circular wait between SDIO
++	 * IRQ work and PM runtime work. So, we have to explicitly release SDIO
++	 * host here and claim again after the PM runtime work is all done.
++	 */
++	sdio_release_host(bdev->func);
++
++	pm_runtime_get_sync(bdev->dev);
++
++	sdio_claim_host(bdev->func);
++
+ 	/* Disable interrupt */
+ 	sdio_writel(func, C_INT_EN_CLR, MTK_REG_CHLPCR, 0);
+ 
+@@ -507,6 +530,9 @@ static void btmtksdio_interrupt(struct sdio_func *func)
+ 
+ 	/* Enable interrupt */
+ 	sdio_writel(func, C_INT_EN_SET, MTK_REG_CHLPCR, 0);
++
++	pm_runtime_mark_last_busy(bdev->dev);
++	pm_runtime_put_autosuspend(bdev->dev);
+ }
+ 
+ static int btmtksdio_open(struct hci_dev *hdev)
+@@ -815,6 +841,23 @@ static int btmtksdio_setup(struct hci_dev *hdev)
+ 	delta = ktime_sub(rettime, calltime);
+ 	duration = (unsigned long long)ktime_to_ns(delta) >> 10;
+ 
++	pm_runtime_set_autosuspend_delay(bdev->dev,
++					 MTKBTSDIO_AUTOSUSPEND_DELAY);
++	pm_runtime_use_autosuspend(bdev->dev);
++
++	err = pm_runtime_set_active(bdev->dev);
++	if (err < 0)
++		return err;
++
++	/* Default forbid runtime auto suspend, that can be allowed by
++	 * enable_autosuspend flag or the PM runtime entry under sysfs.
++	 */
++	pm_runtime_forbid(bdev->dev);
++	pm_runtime_enable(bdev->dev);
++
++	if (enable_autosuspend)
++		pm_runtime_allow(bdev->dev);
++
+ 	bt_dev_info(hdev, "Device setup in %llu usecs", duration);
+ 
+ 	return 0;
+@@ -822,10 +865,16 @@ static int btmtksdio_setup(struct hci_dev *hdev)
+ 
+ static int btmtksdio_shutdown(struct hci_dev *hdev)
+ {
++	struct btmtksdio_dev *bdev = hci_get_drvdata(hdev);
+ 	struct btmtk_hci_wmt_params wmt_params;
+ 	u8 param = 0x0;
+ 	int err;
+ 
++	/* Get back the state to be consistent with the state
++	 * in btmtksdio_setup.
++	 */
++	pm_runtime_get_sync(bdev->dev);
++
+ 	/* Disable the device */
+ 	wmt_params.op = MTK_WMT_FUNC_CTRL;
+ 	wmt_params.flag = 0;
+@@ -839,6 +888,9 @@ static int btmtksdio_shutdown(struct hci_dev *hdev)
+ 		return err;
+ 	}
+ 
++	pm_runtime_put_noidle(bdev->dev);
++	pm_runtime_disable(bdev->dev);
++
+ 	return 0;
+ }
+ 
+@@ -885,6 +937,7 @@ static int btmtksdio_probe(struct sdio_func *func,
+ 	if (!bdev->data)
+ 		return -ENODEV;
+ 
++	bdev->dev = &func->dev;
+ 	bdev->func = func;
+ 
+ 	INIT_WORK(&bdev->tx_work, btmtksdio_tx_work);
+@@ -922,6 +975,25 @@ static int btmtksdio_probe(struct sdio_func *func,
+ 
+ 	sdio_set_drvdata(func, bdev);
+ 
++	/* pm_runtime_enable would be done after the firmware is being
++	 * downloaded because the core layer probably already enables
++	 * runtime PM for this func such as the case host->caps &
++	 * MMC_CAP_POWER_OFF_CARD.
++	 */
++	if (pm_runtime_enabled(bdev->dev))
++		pm_runtime_disable(bdev->dev);
++
++	/* As explaination in drivers/mmc/core/sdio_bus.c tells us:
++	 * Unbound SDIO functions are always suspended.
++	 * During probe, the function is set active and the usage count
++	 * is incremented.  If the driver supports runtime PM,
++	 * it should call pm_runtime_put_noidle() in its probe routine and
++	 * pm_runtime_get_noresume() in its remove routine.
++	 *
++	 * So, put a pm_runtime_put_noidle here !
++	 */
++	pm_runtime_put_noidle(bdev->dev);
++
+ 	return 0;
+ }
+ 
+@@ -933,6 +1005,9 @@ static void btmtksdio_remove(struct sdio_func *func)
+ 	if (!bdev)
+ 		return;
+ 
++	/* Be consistent the state in btmtksdio_probe */
++	pm_runtime_get_noresume(bdev->dev);
++
+ 	hdev = bdev->hdev;
+ 
+ 	sdio_set_drvdata(func, NULL);
+@@ -940,15 +1015,84 @@ static void btmtksdio_remove(struct sdio_func *func)
+ 	hci_free_dev(hdev);
+ }
+ 
++#ifdef CONFIG_PM
++static int btmtksdio_runtime_suspend(struct device *dev)
++{
++	struct sdio_func *func = dev_to_sdio_func(dev);
++	struct btmtksdio_dev *bdev;
++	u32 status;
++	int err;
++
++	bdev = sdio_get_drvdata(func);
++	if (!bdev)
++		return 0;
++
++	sdio_claim_host(bdev->func);
++
++	sdio_writel(bdev->func, C_FW_OWN_REQ_SET, MTK_REG_CHLPCR, &err);
++	if (err < 0)
++		goto out;
++
++	err = readx_poll_timeout(btmtksdio_drv_own_query, bdev, status,
++				 !(status & C_COM_DRV_OWN), 2000, 1000000);
++out:
++	bt_dev_info(bdev->hdev, "status (%d) return ownership to device", err);
++
++	sdio_release_host(bdev->func);
++
++	return err;
++}
++
++static int btmtksdio_runtime_resume(struct device *dev)
++{
++	struct sdio_func *func = dev_to_sdio_func(dev);
++	struct btmtksdio_dev *bdev;
++	u32 status;
++	int err;
++
++	bdev = sdio_get_drvdata(func);
++	if (!bdev)
++		return 0;
++
++	sdio_claim_host(bdev->func);
++
++	sdio_writel(bdev->func, C_FW_OWN_REQ_CLR, MTK_REG_CHLPCR, &err);
++	if (err < 0)
++		goto out;
++
++	err = readx_poll_timeout(btmtksdio_drv_own_query, bdev, status,
++				 status & C_COM_DRV_OWN, 2000, 1000000);
++out:
++	bt_dev_info(bdev->hdev, "status (%d) get ownership from device", err);
++
++	sdio_release_host(bdev->func);
++
++	return err;
++}
++
++static UNIVERSAL_DEV_PM_OPS(btmtksdio_pm_ops, btmtksdio_runtime_suspend,
++			    btmtksdio_runtime_resume, NULL);
++#define BTMTKSDIO_PM_OPS (&btmtksdio_pm_ops)
++#else	/* CONFIG_PM */
++#define BTMTKSDIO_PM_OPS NULL
++#endif	/* CONFIG_PM */
++
+ static struct sdio_driver btmtksdio_driver = {
+ 	.name		= "btmtksdio",
+ 	.probe		= btmtksdio_probe,
+ 	.remove		= btmtksdio_remove,
+ 	.id_table	= btmtksdio_table,
++	.drv = {
++		.owner = THIS_MODULE,
++		.pm = BTMTKSDIO_PM_OPS,
++	}
+ };
+ 
+ module_sdio_driver(btmtksdio_driver);
+ 
++module_param(enable_autosuspend, bool, 0644);
++MODULE_PARM_DESC(enable_autosuspend, "Enable autosuspend by default");
++
+ MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
+ MODULE_DESCRIPTION("MediaTek Bluetooth SDIO driver ver " VERSION);
+ MODULE_VERSION(VERSION);
 -- 
 2.18.0
 
