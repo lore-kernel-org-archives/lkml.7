@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05966C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21EEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C5C2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31C821871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610817;
-	bh=BO6Q3LeR74hWH6fO4Z2YxuwA+OpqTZMJEe+77T7oqGc=;
+	s=default; t=1555610820;
+	bh=WKjXY9YQ4rlmY3c6kfn5KH2MNcBYwYehcR3Tk7r+pPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czH4PCGeKK0loKQgrswC6Hyg8/Hy4xgcnwupyQTWHBTQCEG4SJJmH844ENmwXlKH2
-	 0nEMdISfqwkyDlLt19OBBJOAI5aBM8IP1LSm2oNb076SBjMYwZM7j9+N9SuAbjamRT
-	 ttWot1pl8Xkso8/BakZO/CYzrPhKjXedbVNGIQY4=
+	b=kaipgaW6RsSqJ2jR7qAEVr5mJKbYOW0GhBy3LzrcmW+LXcl+/kL9zg0mtby1aNeWt
+	 HXx0SNaquivMaduC4ltCzSylOHkdD0ESaX0o+P21jvTLIuTt91LmiivpEJa0YRq/sI
+	 5dUA/jfUPdqNNXtKwf+p9wTlGNjELJ4dRWcV0LMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391551AbfDRSG4 (ORCPT
+        id S2391563AbfDRSG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:06:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36858 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391542AbfDRSGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:06:51 -0400
+        id S2391547AbfDRSG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:06:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A84D218A6;
-        Thu, 18 Apr 2019 18:06:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B21B217FA;
+        Thu, 18 Apr 2019 18:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610810;
-        bh=BO6Q3LeR74hWH6fO4Z2YxuwA+OpqTZMJEe+77T7oqGc=;
+        s=default; t=1555610815;
+        bh=WKjXY9YQ4rlmY3c6kfn5KH2MNcBYwYehcR3Tk7r+pPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMu88u9wgd3ek8SvPUuplQFCkbUuggUNaErj7r/fg86aeTDT1BUduR67xVLdy9K2P
-         3OfGulBO69DXZPVuW4c735Xu9yK6nXtbJAUCnZJDvUBlmZkeHfngWmt2X3BPoXxr2f
-         RTe1i/SaqMwpx9WCxmy9M1VjZ7TA5wkq3jxfm2BQ=
+        b=qy6KaiS7rPSLdeD8aVgJBKFI2Av+e9mNH5OwkTdHmvSFVXQJT/ngdIddX98dI9GX0
+         ipNCdVa1nYu7Azv6/LPX7e5FP04+rXFvyojqcEknBoQUP3PNwA2o/8eQXyQgbe7Xwe
+         CGvO2Z2wkLsX8edi23scqBuvNudSNJU9XIipQyF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH 4.14 92/92] [PATCH 4.19.y 2/2] mm: hide incomplete nr_indirectly_reclaimable in sysfs
-Date:   Thu, 18 Apr 2019 19:57:50 +0200
-Message-Id: <20190418160438.583188342@linuxfoundation.org>
+        stable@vger.kernel.org, Alexei Starovoitov <ast@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Balbir Singh <sblbir@amzn.com>
+Subject: [PATCH 4.14 74/92] bpf: fix verifier memory leaks
+Date:   Thu, 18 Apr 2019 19:57:32 +0200
+Message-Id: <20190418160436.689944333@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -58,48 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Alexei Starovoitov <ast@fb.com>
 
-In upstream branch this fixed by commit b29940c1abd7 ("mm: rename and
-change semantics of nr_indirectly_reclaimable_bytes").
+commit 1969db47f8d0e800397abd4ee4e8d27d2b578587 upstream.
 
-This fixes /sys/devices/system/node/node*/vmstat format:
+fix verifier memory leaks
 
-...
-nr_dirtied 6613155
-nr_written 5796802
- 11089216
-...
-
-Cc: <stable@vger.kernel.org> # 4.19.y
-Fixes: 7aaf77272358 ("mm: don't show nr_indirectly_reclaimable in /proc/vmstat")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
+Fixes: 638f5b90d460 ("bpf: reduce verifier memory consumption")
+Signed-off-by: Alexei Starovoitov <ast@fb.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Balbir Singh <sblbir@amzn.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/node.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/bpf/verifier.c |   27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -197,11 +197,16 @@ static ssize_t node_read_vmstat(struct d
- 			     sum_zone_numa_state(nid, i));
- #endif
- 
--	for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-+	for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++) {
-+		/* Skip hidden vmstat items. */
-+		if (*vmstat_text[i + NR_VM_ZONE_STAT_ITEMS +
-+				 NR_VM_NUMA_STAT_ITEMS] == '\0')
-+			continue;
- 		n += sprintf(buf+n, "%s %lu\n",
- 			     vmstat_text[i + NR_VM_ZONE_STAT_ITEMS +
- 			     NR_VM_NUMA_STAT_ITEMS],
- 			     node_page_state(pgdat, i));
-+	}
- 
- 	return n;
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -491,10 +491,12 @@ static int realloc_verifier_state(struct
+ 	return 0;
  }
+ 
+-static void free_verifier_state(struct bpf_verifier_state *state)
++static void free_verifier_state(struct bpf_verifier_state *state,
++				bool free_self)
+ {
+ 	kfree(state->stack);
+-	kfree(state);
++	if (free_self)
++		kfree(state);
+ }
+ 
+ /* copy verifier state from src to dst growing dst stack space
+@@ -532,6 +534,7 @@ static int pop_stack(struct bpf_verifier
+ 	if (prev_insn_idx)
+ 		*prev_insn_idx = head->prev_insn_idx;
+ 	elem = head->next;
++	free_verifier_state(&head->st, false);
+ 	kfree(head);
+ 	env->head = elem;
+ 	env->stack_size--;
+@@ -549,14 +552,14 @@ static struct bpf_verifier_state *push_s
+ 	if (!elem)
+ 		goto err;
+ 
+-	err = copy_verifier_state(&elem->st, cur);
+-	if (err)
+-		return NULL;
+ 	elem->insn_idx = insn_idx;
+ 	elem->prev_insn_idx = prev_insn_idx;
+ 	elem->next = env->head;
+ 	env->head = elem;
+ 	env->stack_size++;
++	err = copy_verifier_state(&elem->st, cur);
++	if (err)
++		goto err;
+ 	if (env->stack_size > BPF_COMPLEXITY_LIMIT_STACK) {
+ 		verbose("BPF program is too complex\n");
+ 		goto err;
+@@ -3812,7 +3815,7 @@ static int is_state_visited(struct bpf_v
+ 	struct bpf_verifier_state_list *new_sl;
+ 	struct bpf_verifier_state_list *sl;
+ 	struct bpf_verifier_state *cur = env->cur_state;
+-	int i;
++	int i, err;
+ 
+ 	sl = env->explored_states[insn_idx];
+ 	if (!sl)
+@@ -3850,7 +3853,12 @@ static int is_state_visited(struct bpf_v
+ 		return -ENOMEM;
+ 
+ 	/* add new state to the head of linked list */
+-	copy_verifier_state(&new_sl->state, cur);
++	err = copy_verifier_state(&new_sl->state, cur);
++	if (err) {
++		free_verifier_state(&new_sl->state, false);
++		kfree(new_sl);
++		return err;
++	}
+ 	new_sl->next = env->explored_states[insn_idx];
+ 	env->explored_states[insn_idx] = new_sl;
+ 	/* connect new state to parentage chain */
+@@ -4692,6 +4700,7 @@ static void free_states(struct bpf_verif
+ 		if (sl)
+ 			while (sl != STATE_LIST_MARK) {
+ 				sln = sl->next;
++				free_verifier_state(&sl->state, false);
+ 				kfree(sl);
+ 				sl = sln;
+ 			}
+@@ -4768,7 +4777,7 @@ int bpf_check(struct bpf_prog **prog, un
+ 	env->allow_ptr_leaks = capable(CAP_SYS_ADMIN);
+ 
+ 	ret = do_check(env);
+-	free_verifier_state(env->cur_state);
++	free_verifier_state(env->cur_state, true);
+ 	env->cur_state = NULL;
+ 
+ skip_full_check:
+@@ -4878,7 +4887,7 @@ int bpf_analyzer(struct bpf_prog *prog,
+ 	env->allow_ptr_leaks = capable(CAP_SYS_ADMIN);
+ 
+ 	ret = do_check(env);
+-	free_verifier_state(env->cur_state);
++	free_verifier_state(env->cur_state, true);
+ 	env->cur_state = NULL;
+ 
+ skip_full_check:
 
 
