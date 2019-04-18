@@ -7,57 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780E8C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71B5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE6321871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8991320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611070;
-	bh=f66SDBxJ92CaD4EXd4mkVOlyCUadXdzmnULD5beLgtw=;
+	s=default; t=1555611073;
+	bh=mxAQzm1jcGjNZhRBYLNA2ZrH0pakSkliB3g4qnZrpOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mHHiPBzfTvtJCQWQG+IHhn69pNBV1PvQl3vGB0zJaIlsBUx8uep5eFSvLBb1Fnn39
-	 1IkHTv/zpdeHxt8WxXzgPIamjJYrHzu7CmE4WGEQ7DKAfPTht04x1UPFcGIraDxZdi
-	 rE8rXuGf/cnNK48AZ+qwzqQBNAQ76czaL5TN2OA4=
+	b=0n4IBUlJQj6ZgTX8Kn5KmnqHtaQ3jYthfVHmwUrIMYkGeV2e2Pz+6x5pdjwfRrNIL
+	 kkwciHv+7/xq1mTnPhZ356g8ZG24F+piCD8cvk67ps1hm+nsZPH6cnP8JW7ANa8+MB
+	 rPWSCdZ0KKBJvgYCzVEvzLXPNp4sD49COagvEKtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391805AbfDRSLJ (ORCPT
+        id S2391894AbfDRSLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391278AbfDRSLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:11:04 -0400
+        id S2391669AbfDRSLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:11:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD8A20652;
-        Thu, 18 Apr 2019 18:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD39E2186A;
+        Thu, 18 Apr 2019 18:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611063;
-        bh=f66SDBxJ92CaD4EXd4mkVOlyCUadXdzmnULD5beLgtw=;
+        s=default; t=1555611066;
+        bh=mxAQzm1jcGjNZhRBYLNA2ZrH0pakSkliB3g4qnZrpOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPhVQiWUksj0DUGX5NEiIN5ffUYF9X4Im3B/n7mfvW7fuabLcuaKAb8qqKhk9ABdN
-         DCFooytcPgJxMu64tfxkD+i5dt+k/fDahHLg5JoyuNmKNbEOE4W81g3mrzMVSrCy1X
-         ANDGMgGTVx+p234glJFtFCuNiorBzoL612rxK4G8=
+        b=pM8ufoy2ns2ARRg//NFU9uhLl/jUVElG9fMs7AW4bpaaGtEC89JivcQop5/STYRqG
+         PpxQwvhM9FCXrXf2+nE5ZT66uUw/fvDPsNWVXY+U8WUDiorrcRChp0HRhwj2swPyrh
+         wKWpc+IHpYDjciB8krGi4cdxkfstN2keEQZNhh3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 28/93] sched/core: Fix buffer overflow in cgroup2 property cpu.max
-Date:   Thu, 18 Apr 2019 19:57:06 +0200
-Message-Id: <20190418160439.740438937@linuxfoundation.org>
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 46/93] perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
+Date:   Thu, 18 Apr 2019 19:57:24 +0200
+Message-Id: <20190418160442.305842371@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -70,44 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c47acd824aaaa8fc6dc519fb4e08d1522105b7a ]
+[ Upstream commit 93faa52e8371f0291ee1ff4994edae2b336b6233 ]
 
-Add limit into sscanf format string for on-stack buffer.
+  =================================================================
+  ==7497==ERROR: LeakSanitizer: detected memory leaks
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Li Zefan <lizefan@huawei.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+  Direct leak of 40 byte(s) in 1 object(s) allocated from:
+      #0 0x7f0333a88f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x5625e5326213 in cpu_map__trim_new util/cpumap.c:45
+      #2 0x5625e5326703 in cpu_map__read util/cpumap.c:103
+      #3 0x5625e53267ef in cpu_map__read_all_cpu_map util/cpumap.c:120
+      #4 0x5625e5326915 in cpu_map__new util/cpumap.c:135
+      #5 0x5625e517b355 in test__openat_syscall_event_on_all_cpus tests/openat-syscall-all-cpus.c:36
+      #6 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #7 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #8 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #9 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #10 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #11 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #12 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #13 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #14 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 0d5936344f30 ("sched: Implement interface for cgroup unified hierarchy")
-Link: https://lkml.kernel.org/r/155189230232.2620.13120481613524200065.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: f30a79b012e5 ("perf tools: Add reference counting for cpu_map object")
+Link: http://lkml.kernel.org/r/20190316080556.3075-15-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/openat-syscall-all-cpus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 01a2489de94e..62cc29364fba 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6942,7 +6942,7 @@ static int __maybe_unused cpu_period_quota_parse(char *buf,
- {
- 	char tok[21];	/* U64_MAX */
+diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
+index c531e6deb104..493ecb611540 100644
+--- a/tools/perf/tests/openat-syscall-all-cpus.c
++++ b/tools/perf/tests/openat-syscall-all-cpus.c
+@@ -45,7 +45,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
+ 	if (IS_ERR(evsel)) {
+ 		tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "syscalls", "sys_enter_openat");
+ 		pr_debug("%s\n", errbuf);
+-		goto out_thread_map_delete;
++		goto out_cpu_map_delete;
+ 	}
  
--	if (!sscanf(buf, "%s %llu", tok, periodp))
-+	if (sscanf(buf, "%20s %llu", tok, periodp) < 1)
- 		return -EINVAL;
- 
- 	*periodp *= NSEC_PER_USEC;
+ 	if (perf_evsel__open(evsel, cpus, threads) < 0) {
+@@ -119,6 +119,8 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
+ 	perf_evsel__close_fd(evsel);
+ out_evsel_delete:
+ 	perf_evsel__delete(evsel);
++out_cpu_map_delete:
++	cpu_map__put(cpus);
+ out_thread_map_delete:
+ 	thread_map__put(threads);
+ 	return err;
 -- 
 2.19.1
 
