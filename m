@@ -2,109 +2,154 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77323C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B700FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D5C2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="rTy9XcjP"
+	by mail.kernel.org (Postfix) with ESMTP id 85C0E21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555595568;
+	bh=ZakMli7hFlPh99l4ek94XhUVSSrqW9iReJFzaTAxPK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w20AFzeneXiEHuVGdYiy2HzjRYOBGfEk7RUF0cCH5hUHHPc86FOISkNYfkErnKRt5
+	 LNRix37TCEtLArD9H6PXbDSx+BABkpLOn7AYgPArpK8ZXlz8+j0wnntP2MBCa/xKSv
+	 jEZEJSpq95sNWNMhb45blHNFVjTaeeu1DN1IAMd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbfDRNwo (ORCPT
+        id S2389255AbfDRNwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 18 Apr 2019 09:52:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389103AbfDRNwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 09:52:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43811 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRNwo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:52:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c8so1143275pfd.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 06:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f6u0NsaHuXkBa0FvVxI82I2fZsIMvs/TpAdd6MlVacQ=;
-        b=rTy9XcjPrpwDwKG+V36EeMbFaV4xL3/EDThtXHBG7qfPOojsQBlpaYv1y68XelzPNg
-         9q5X9J5E+lp3SwcBpvGTfVxXjdYOMf8xbFwlaAL0U206m6UluHX28Ud7TbgqvjtwGmJI
-         HPN8FbBotEVjzTk3fvef39qG2hKWCiz2+5cBw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f6u0NsaHuXkBa0FvVxI82I2fZsIMvs/TpAdd6MlVacQ=;
-        b=J5jCohtPcS+Np0sEHjPVnpQltM38aI3aV7MqgHhi+tvjzA0fJB1pQOd7UE5Rj+ecAw
-         X/CEHd7LB80qib8JrR1jS2ta0yj7xgN6cJFdLoMVD3XTV2q7hncR638TxT5ZJxp+JUbL
-         rsY+PJawn/Fwmb5PnbE5WRhI6BsqFmke/XG4JrPEl3MXv0RFXrxzENeQhw08SfF1HpAR
-         X62ctu7gZjOGg0mgoavozpAELV1W8MxPIkgZjPpyaZBNxF/AswPbIB+SpMZgtqsC8/fP
-         HP6gzI7ReOMLLt89NK71JOuRjopVX7Ah8ejjkD4mHennU+6tKQTbH3cI4beLXDHtWlD+
-         YI+A==
-X-Gm-Message-State: APjAAAUJ9oANo30+ZHZKTdOZfggKG6jqEvjX6q8LqDpP8r/qyiGwH7Wu
-        LKa3jr3U2vhn5R0LecFBuPM7xw==
-X-Google-Smtp-Source: APXvYqzltQp54VEaBgATxKz1OzJZ9mn1NuEw8wRg0+pRH/RIBirGYOn1UhLKi3kdhlAcV6VtGYulpg==
-X-Received: by 2002:a65:410c:: with SMTP id w12mr3735801pgp.268.1555595563362;
-        Thu, 18 Apr 2019 06:52:43 -0700 (PDT)
-Received: from localhost.localdomain ([115.97.185.144])
-        by smtp.gmail.com with ESMTPSA id c5sm2357861pgh.5.2019.04.18.06.52.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 06:52:42 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 1/2] arm64: dts: allwinner: a64: Add pinmux setting for CSI MCLK on PE1
-Date:   Thu, 18 Apr 2019 19:22:31 +0530
-Message-Id: <20190418135232.9368-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+Received: from linux-8ccs (nat.nue.novell.com [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F098217FA;
+        Thu, 18 Apr 2019 13:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555595563;
+        bh=ZakMli7hFlPh99l4ek94XhUVSSrqW9iReJFzaTAxPK0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VyB94APfwxOByF0vPynBB0wu5XqdcgWYEDCktENcxBzMQvtpA/K92yhRUjpJ5Zwmq
+         wZiouZ1xWypqYtZ+kxMdeTMFAD397CtADh6naBq03o5+gUFa3/mINDS784YDcIRYYC
+         mRO1S79YDo/OCZ9Cw6ELNdtt/5uoz7jVhN4IkANI=
+Date:   Thu, 18 Apr 2019 15:52:38 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
+Subject: Re: [PATCH v2] moduleparam: Save information about built-in modules
+ in separate file
+Message-ID: <20190418135238.GA5626@linux-8ccs>
+References: <20190406121447.GB4047@localhost.localdomain>
+ <CAK7LNATfo0K6kzwobkAZ_u2KnWL3XycJzbr3KPtPF=ePziCuDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNATfo0K6kzwobkAZ_u2KnWL3XycJzbr3KPtPF=ePziCuDg@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some camera modules have the SoC feeding a master clock to the sensor
-instead of having a standalone crystal. This clock signal is generated
-from the clock control unit and output from the CSI MCLK function of
-pin PE1.
++++ Masahiro Yamada [18/04/19 20:10 +0900]:
+>On Sat, Apr 6, 2019 at 9:15 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
+>>
+>> Problem:
+>>
+>> When a kernel module is compiled as a separate module, some important
+>> information about the kernel module is available via .modinfo section of
+>> the module.  In contrast, when the kernel module is compiled into the
+>> kernel, that information is not available.
+>>
+>> Information about built-in modules is necessary in the following cases:
+>>
+>> 1. When it is necessary to find out what additional parameters can be
+>> passed to the kernel at boot time.
+>>
+>> 2. When you need to know which module names and their aliases are in
+>> the kernel. This is very useful for creating an initrd image.
+>>
+>> Proposal:
+>>
+>> The proposed patch does not remove .modinfo section with module
+>> information from the vmlinux at the build time and saves it into a
+>> separate file after kernel linking. So, the kernel does not increase in
+>> size and no additional information remains in it. Information is stored
+>> in the same format as in the separate modules (null-terminated string
+>> array). Because the .modinfo section is already exported with a separate
+>> modules, we are not creating a new API.
+>>
+>> It can be easily read in the userspace:
+>>
+>> $ tr '\0' '\n' < kernel.builtin
+>> ext4.softdep=pre: crc32c
+>> ext4.license=GPL
+>> ext4.description=Fourth Extended Filesystem
+>> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
+>> ext4.alias=fs-ext4
+>> ext4.alias=ext3
+>> ext4.alias=fs-ext3
+>> ext4.alias=ext2
+>> ext4.alias=fs-ext2
+>> md_mod.alias=block-major-9-*
+>> md_mod.alias=md
+>> md_mod.description=MD RAID framework
+>> md_mod.license=GPL
+>> md_mod.parmtype=create_on_open:bool
+>> md_mod.parmtype=start_dirty_degraded:int
+>> ...
+>>
+>> v2:
+>>  * Extract modinfo from vmlinux.o as suggested by Masahiro Yamada;
+>>  * Rename output file to kernel.builtin;
+>
+>Sorry, I do not get why you renamed
+>"kernel.builtin.modinfo" to "kernel.builtin".
+>
+>If you drop "modinfo", we do not understand
+>what kind information is contained in it.
+>
+>I think "kernel" and "builtin" have
+>a quite similar meaning here.
+>
+>How about "builtin.modinfo" for example?
+>
+>
+>It is shorter, and it is clear enough
+>that it contains module_info.
 
-Add a pinmux setting for it for camera sensors to reference.
+I agree that the name kernel.builtin is unclear in what kind of
+information it contains. Apologies for not having clarified this in
+the previous review.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- add /omit-if-no-ref/
-- add pin name as csi-mclk-pin instead of csi-mclk 
+Since kbuild already produces "modules.order" and "modules.builtin"
+files, why not just name it "modules.builtin.modinfo" to keep the
+names consistent with what is already there? It clearly conveys that
+this file contains modinfo for builtin modules.
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+I'll leave it up to Lucas to decide if the file format is OK for kmod.
+With the modinfo dump, kmod could then decide what to do with the
+information, append to modules.alias{,.bin}, etc.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 728f70018c51..8c5b521e6389 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -595,6 +595,12 @@
- 				function = "csi";
- 			};
- 
-+			/omit-if-no-ref/
-+			csi_mclk_pin: csi-mclk-pin {
-+				pins = "PE1";
-+				function = "csi";
-+			};
-+
- 			i2c0_pins: i2c0-pins {
- 				pins = "PH0", "PH1";
- 				function = "i2c0";
--- 
-2.18.0.321.gffc6fa0e3
+Also, I think this file needs to be documented in Documentation/kbuild/kbuild.txt.
 
+Thanks,
+
+Jessica
