@@ -2,84 +2,100 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7E9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922E2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EDB217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:51:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UYHUy5G/"
+	by mail.kernel.org (Postfix) with ESMTP id 6036920674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfDRNv6 (ORCPT
+        id S2389186AbfDRNw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:51:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRNv5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:51:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P6+OGjDfwKwHsqIDP/h7YfjOTPXy5c3nSVcWGN0O+nQ=; b=UYHUy5G/zyWcCnCLKcH9BnCtk
-        lPpKZCE0BFqrbJJYt6SDaplD0Ruco2J3b0Z5K6/cHedtj30Blr61ZC82EGszH0VPtsFh5yk8eDYj6
-        7it66fOdpWKHlt/EjW+g9AFyvZyS5JW7KZd22Tk4o+CqVjzVYOQ5eXbdsgo7V6jOyxUITzLSita9G
-        G6rpWK/nYxTBzc+54KtjukKesvDvCBmWCwrl69h+ZLHvgmVXVqF4M/PyEH2lgB6TlBetTHxWCXtB9
-        D0JlJIaMEGpEgnho1qsCdhpgzMEqmX6qWfbQrRJfQz58G51WnF/L/FXlpursbxuOw6Rgqz+/VhRoc
-        12mtsMTuQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hH7SC-0005OE-Mn; Thu, 18 Apr 2019 13:51:52 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0F81329B9B7A0; Thu, 18 Apr 2019 15:51:51 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 15:51:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
- negative
-Message-ID: <20190418135151.GB12232@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-15-longman@redhat.com>
+        Thu, 18 Apr 2019 09:52:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46552 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731317AbfDRNw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:52:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5E26FB6AF;
+        Thu, 18 Apr 2019 13:52:26 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 933201E15AE; Thu, 18 Apr 2019 15:52:23 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 15:52:23 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, prakash.v@samsung.com
+Subject: Re: [PATCH v4 5/7] nvme: register stream info with block layer
+Message-ID: <20190418135223.GK28541@quack2.suse.cz>
+References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
+ <CGME20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3@epcas2p2.samsung.com>
+ <1555523406-2380-6-git-send-email-joshi.k@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190413172259.2740-15-longman@redhat.com>
+In-Reply-To: <1555523406-2380-6-git-send-email-joshi.k@samsung.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 01:22:57PM -0400, Waiman Long wrote:
->  inline void __down_read(struct rw_semaphore *sem)
+On Wed 17-04-19 23:20:04, Kanchan Joshi wrote:
+> Make nvme driver register number of streams with block layer. Block
+> layer will use that for write-hint to stream-id conversion. Registration
+> is done for each namespace. Since NVMe spec allow all available
+> streams (within subsystem) to be used by all namespaces, no attempt
+> has been made to add reservation at namespace level.
+> 
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> ---
+>  drivers/nvme/host/core.c | 23 ++++++-----------------
+>  1 file changed, 6 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index 2c43e12..81b86fa 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -464,10 +464,6 @@ static int nvme_toggle_streams(struct nvme_ctrl *ctrl, bool enable)
+>  	return nvme_submit_sync_cmd(ctrl->admin_q, &c, NULL, 0);
+>  }
+>  
+> -static int nvme_disable_streams(struct nvme_ctrl *ctrl)
+> -{
+> -	return nvme_toggle_streams(ctrl, false);
+> -}
+>  
+>  static int nvme_enable_streams(struct nvme_ctrl *ctrl)
 >  {
-> +	long count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
-> +						   &sem->count);
-> +
-> +	if (unlikely(count & RWSEM_READ_FAILED_MASK)) {
-> +		rwsem_down_read_failed(sem, count);
->  		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
->  	} else {
->  		rwsem_set_reader_owned(sem);
+> @@ -510,14 +506,7 @@ static int nvme_configure_directives(struct nvme_ctrl *ctrl)
+>  		return ret;
+>  
+>  	ctrl->nssa = le16_to_cpu(s.nssa);
+> -	if (ctrl->nssa < BLK_MAX_WRITE_HINTS - 1) {
+> -		dev_info(ctrl->device, "too few streams (%u) available\n",
+> -					ctrl->nssa);
+> -		nvme_disable_streams(ctrl);
+> -		return 0;
+> -	}
+> -
+> -	ctrl->nr_streams = min_t(unsigned, ctrl->nssa, BLK_MAX_WRITE_HINTS - 1);
+> +	ctrl->nr_streams = ctrl->nssa;
+>  	dev_info(ctrl->device, "Using %u streams\n", ctrl->nr_streams);
+>  	return 0;
+>  }
 
-*groan*, that is not provably correct. It is entirely possible to get
-enough fetch_add()s piled on top of one another to overflow regardless.
+This changes the current behavior, doesn't it? Previously devices with less
+than 5 hints got streams completely disabled, now they will have streams
+enabled but ids beyond supported max will be mapped to 0. I'm not against
+this but I guess it should be spelled out explicitely in the changelog.
 
-Unlikely, yes, impossible, no.
-
-This makes me nervious as heck, I really don't want to ever have to
-debug something like that :-(
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
