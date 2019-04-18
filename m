@@ -2,196 +2,174 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0964FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF21C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C8F2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793B521479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/c5Y/nD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388522AbfDRJ6V convert rfc822-to-8bit (ORCPT
+        id S2388567AbfDRJ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:58:21 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2921 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728074AbfDRJ6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:58:21 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 0E4A5E1A772DA16B629A;
-        Thu, 18 Apr 2019 17:58:19 +0800 (CST)
-Received: from dggeme759-chm.china.huawei.com (10.3.19.105) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 18 Apr 2019 17:58:18 +0800
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- dggeme759-chm.china.huawei.com (10.3.19.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 18 Apr 2019 17:58:17 +0800
-Received: from dggeme762-chm.china.huawei.com ([10.8.68.53]) by
- dggeme762-chm.china.huawei.com ([10.8.68.53]) with mapi id 15.01.1591.008;
- Thu, 18 Apr 2019 17:58:17 +0800
-From:   "zhuyan (M)" <zhuyan34@huawei.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     Alan Stern <stern@rowland.harvard.edu>,
-        "anton@enomsg.org" <anton@enomsg.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhuyan (M)" <zhuyan34@huawei.com>
-Subject: Re: [PATCH v2] usb:host: fix divide-by-zero in function
- fhci_queue_urb
-Thread-Topic: [PATCH v2] usb:host: fix divide-by-zero in function
- fhci_queue_urb
-Thread-Index: AdT1zSREg6Rr/q0XRBeXbW3Dz7nOAw==
-Date:   Thu, 18 Apr 2019 09:58:17 +0000
-Message-ID: <4634c9459e9840f5aa64ee8b589e6e81@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.40.99.186]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 18 Apr 2019 05:58:32 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:36812 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbfDRJ6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:58:32 -0400
+Received: by mail-vs1-f67.google.com with SMTP id n4so845377vsm.3;
+        Thu, 18 Apr 2019 02:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0hn2Wjh784brf5WxXi3weFw+L8yk+6mLW77kQr3FuEY=;
+        b=C/c5Y/nDS23q3ZGi5jvlrWrHemrAPXLLcY8iEhiFSckZ9OT62f513w8c0PzfQBdfFS
+         +3jcC1yhigr3Em4AEUa855/f+8hWGb4ZR4T67tAPvBoqjXENnrg9ZopE075aJlqsUVw7
+         66511MjdorTs1oYQa+/i+xxyOsjyQe4zoSNR54F9E4jieiP0JbCWKTRTVibkh4g8rLjD
+         aPjhO1al5F/4ph1jr14J2is3t/I7+Hu/a6zCih6QJ0Mqnf+Ya9Jvd28T0t3N4gz0qZl+
+         XXiQqXi7NhfoWVoXYL9gML7zIZknk9Gcat4C1EnAtlZOP/dwQgJ7CBDXItFvLtVUgnZK
+         MNUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0hn2Wjh784brf5WxXi3weFw+L8yk+6mLW77kQr3FuEY=;
+        b=Cw8UsblO2+2tXtnEDXdff0bDo6c4Se7GjvQhSIIQJ85hrdcn37gG4EH252kTMMdbm5
+         3auRRgnjRfi4uNuXF2oR4CYOGLhSnNuPpDHzz72kAhFrb44kXzAq0hJm4uJmHCJyv1RM
+         6alo+uIkskH6YaS5V2/b4Vbli04z67lCa/9ynhvsxyRWiOTVOnX8eh7Yd93b+tc8P03b
+         ZfgDIIM+Za+Ke9FsOBRu24qOVuULdvrWWvIbuOUT+NokOb82Y0tdF6HqOyD8gm5IhjGU
+         CnJXVPdrYVby5CKvmkSUPD8lTt3p9Up04+6J+2jd90sZGlGaFGxqgkRS1hfbMXp9N07V
+         ezWA==
+X-Gm-Message-State: APjAAAXOkhJDvrgmjpP8XmSsE2GHRvXi3wtfkArj92ZNsRHk8iC8j2EO
+        8+vsiQMI/c3vudGA6Wt3O2IbytDAykn4UTd7EA==
+X-Google-Smtp-Source: APXvYqzmvn7fE6V/p1LQuB4k8Mo3hougYKtqHE4wtgDpet1+3WGOsXovPdoo3b7E1FquHokHa49ZqRx0dr9o2KLfiCc=
+X-Received: by 2002:a67:e881:: with SMTP id x1mr52718105vsn.48.1555581510407;
+ Thu, 18 Apr 2019 02:58:30 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20190402125609.30313-1-rdong.ge@gmail.com> <20190403174441.2l7xyk5o2hftrdm3@salvia>
+ <CAN1Lvyov_GOjg=1zrgWsV0_ptBGoFfLBsQKU7RswgmzZEjFkmw@mail.gmail.com>
+In-Reply-To: <CAN1Lvyov_GOjg=1zrgWsV0_ptBGoFfLBsQKU7RswgmzZEjFkmw@mail.gmail.com>
+From:   Rundong Ge <rdong.ge@gmail.com>
+Date:   Thu, 18 Apr 2019 17:58:19 +0800
+Message-ID: <CAN1Lvyq7U1fWaGY4j6DTRPXrv_Wm7-K6Vh0fgeHjbOSizm7fGg@mail.gmail.com>
+Subject: Re: [PATCH] netfilter:bridge: Hold bridge dev for fake_rtable to
+ avoid the dangling pointer
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        nikolay@cumulusnetworks.com, davem@davemloft.net,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 21:49:03 +0200, Greg KH wrote:
-> On Wed, Apr 17, 2019 at 05:05:33PM +0000, zhuyan (M) wrote:
-> > On Wed, 17 Apr 2019, Alan Stern wrote:
-> > 
-> > > On Wed, 17 Apr 2019, zhuyan (M) wrote:
-> > > 
-> > > > On Tue, 16 Apr 2019 11:07:56 -0400, Alan Stern wrote:
-> > > > 
-> > > > > On Tue, 16 Apr 2019, zhuyan (M) wrote:
-> > > > > > On Tue, 16 Apr 2019 at 11:45:45 +0200, Greg KH wrote:
-> > > > > > > On Tue, Apr 09, 2019 at 10:37:12PM +0800, zhuyan wrote:
-> > > > > > > > In function fhci_queue_urb, the divisor of expression 
-> > > > > > > > (urb->transfer_buffer_length % usb_maxpacket(urb->dev,
-> > > > > > > > urb->pipe,
-> > > > > > > > usb_pipeout(urb->pipe))) may be zero.
-> > > > > > > 
-> > > > > > > How can you hit that?
-> > > > > > > 
-> > > > > > > > When it is zero, unexpected results may occur, so it is 
-> > > > > > > > necessary to ensure that the divisor is not zero.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: zhuyan <zhuyan34@huawei.com>
-> > > > > > > 
-> > > > > > > I need a "Full" name here, not just a single name.  Whatever you use to sign documents is good.
-> > > > > > > 
-> > > > > > > thanks,
-> > > > > > > 
-> > > > > > > greg k-h
-> > > > > > 
-> > > > > > In function usb_maxpacket, when ep is NULL, its return value is 0.  
-> > > > > 
-> > > > > fhci_queue_urb() shouldn't use urb->pipe to compute the 
-> > > > > maxpacket size anyway.  It should use usb_endpoint_maxp(&urb->ep->desc).
-> > > > 
-> > > > Currently, fhci_queue_urb(), call usb_maxpacket() multiple times 
-> > > > to calculate  the maxpacket size. The usb_maxpacket() will call
-> > > > usb_endpoint_maxp() to compute the maxpacket size.
-> > > 
-> > > I know that.  What fhci_queue_urb() is doing is wrong.  You should change it: 
-> > > Make it call usb_endpoint_maxp directly instead of calling usb_maxpacket.
-> > > 
-> > 
-> > >From 1996456d0cc17b5ff7746a598ff355b25d13db3e Mon Sep 17 00:00:00 
-> > >2001
-> > From: zhuyan <zhuyan34@huawei.com>
-> > Date: Thu, 18 Apr 2019 00:53:03 +0800
-> > Subject: [PATCH] usb: host: fix divide-by-zero in function 
-> > fhci_queue_urb
-> > 
-> > fhci_queue_urb() shouldn't use urb->pipe to compute the maxpacket size 
-> > anyway.It should use usb_endpoint_maxp(&urb->ep->desc).
-> > 
-> > In function fhci_queue_urb, the divisor of expression 
-> > (urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe,
-> > usb_pipeout(urb->pipe))) may be zero. When it is zero, unexpected 
-> > results may occur, so it is necessary to ensure that the divisor is not zero.
-> > 
-> > Signed-off-by: zhuyan <zhuyan34@huawei.com>
-> 
-> I still need a full name here and on the From: line :(
+friendly ping
 
-I am so sorry. I will change it.
-
-From 1996456d0cc17b5ff7746a598ff355b25d13db3e Mon Sep 17 00:00:00 2001
-From: Yan Zhu <zhuyan34@huawei.com>
-Date: Thu, 18 Apr 2019 00:53:03 +0800
-Subject: [PATCH] usb: host: fix divide-by-zero in function fhci_queue_urb
-
-fhci_queue_urb() shouldn't use urb->pipe to compute the maxpacket
-size anyway.It should use usb_endpoint_maxp(&urb->ep->desc).
-
-In function fhci_queue_urb, the divisor of expression
-(urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe,
-usb_pipeout(urb->pipe))) may be zero. When it is zero, unexpected results
-may occur, so it is necessary to ensure that the divisor is not zero.
-
-Signed-off-by: Yan Zhu <zhuyan34@huawei.com>
----
- drivers/usb/host/fhci-sched.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/host/fhci-sched.c b/drivers/usb/host/fhci-sched.c
-index 3d12cdd..7dcfe22 100644
---- a/drivers/usb/host/fhci-sched.c
-+++ b/drivers/usb/host/fhci-sched.c
-@@ -704,6 +704,7 @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
- 	struct td *td;
- 	u8 *data;
- 	u16 cnt = 0;
-+	u16 max_pkt_size = 0;
- 
- 	if (ed == NULL) {
- 		ed = fhci_get_empty_ed(fhci);
-@@ -727,8 +728,7 @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
- 		}
- 		ed->speed = (urb->dev->speed == USB_SPEED_LOW) ?
- 			FHCI_LOW_SPEED : FHCI_FULL_SPEED;
--		ed->max_pkt_size = usb_maxpacket(urb->dev,
--			urb->pipe, usb_pipeout(urb->pipe));
-+		ed->max_pkt_size = usb_endpoint_maxp(&urb->ep->desc);
- 		urb->ep->hcpriv = ed;
- 		fhci_dbg(fhci, "new ep speed=%d max_pkt_size=%d\n",
- 			 ed->speed, ed->max_pkt_size);
-@@ -765,11 +765,12 @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
- 
- 	switch (ed->mode) {
- 	case FHCI_TF_BULK:
-+		max_pkt_size = usb_endpoint_maxp(&urb->ep->desc);
- 		if (urb->transfer_flags & URB_ZERO_PACKET &&
- 				urb->transfer_buffer_length > 0 &&
-+				(max_pkt_size != 0) &&
- 				((urb->transfer_buffer_length %
--				usb_maxpacket(urb->dev, urb->pipe,
--				usb_pipeout(urb->pipe))) == 0))
-+				max_pkt_size) == 0))
- 			urb_state = US_BULK0;
- 		while (data_len > 4096) {
- 			td = fhci_td_fill(fhci, urb, urb_priv, ed, cnt,
-@@ -807,8 +808,8 @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
- 		break;
- 	case FHCI_TF_CTRL:
- 		ed->dev_addr = usb_pipedevice(urb->pipe);
--		ed->max_pkt_size = usb_maxpacket(urb->dev, urb->pipe,
--			usb_pipeout(urb->pipe));
-+		ed->max_pkt_size = usb_endpoint_maxp(&urb->ep->desc);
-+
- 		/* setup stage */
- 		td = fhci_td_fill(fhci, urb, urb_priv, ed, cnt++, FHCI_TA_SETUP,
- 			USB_TD_TOGGLE_DATA0, urb->setup_packet, 8, 0, 0, true);
--- 
-1.8.5.6
-
-
-
-
+Rundong Ge <rdong.ge@gmail.com> =E4=BA=8E2019=E5=B9=B44=E6=9C=889=E6=97=A5=
+=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=882:33=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Pablo
+>
+> I've tested on mainline v5.0. The dangling pointer access of fake_rtable
+> still exists.
+>
+> My env is like this: client0--box--client1.
+> The box runs ubuntu with v5.0 kernel, br_netfilter and nfnetlink_queue
+> are inserted.
+>
+> Reproduce steps:
+> 1.Create a bridge on the box.
+> 2.echo 1 >/proc/sys/net/bridge/bridge-nf-call-iptables
+> 3.Add a netfilter hook function to queue the packets to nfqueuenum 0.
+>   The hook point must between <NF_BR_PRE_ROUTING,NF_BR_PRI_BRNF> and
+>   <NF_BR_FORWARD,NF_BR_PRI_BRNF - 1>.
+> 4.Add a userspace process "nfqueue_rcv" to continuously read and
+>   set_verdict "NF_ACCEPT" to packets from queue 0.
+> 5.Continuosly ping client1 from client0
+> 6.Send "Ctrl + Z" to pause the "nfqueue_rcv" to simulate the queue
+>   congestion.
+> 7.Using "ifconfig br0 down&&brctl delbr br0" to delete the bridge.
+> 8.At this time the _skb_refdst of skbs in the nfqueue become dangling
+>   pointer. If we send "fg" to resume the "nfqueue_rcv", the kernel
+>   may try to access the freed memory.
+>
+> Debug log:
+> Here I add debug logs in "netdev_freemem" and "dst_release" to prove
+> the freed memory access. As the log shows, the "dst_release" accessed
+> bridge's fake_rtable after the bridge was freed.
+>
+> Apr  8 22:25:14 raydon kernel: [62139.005062] netdev_freemem name:br0,
+> fake_rtable:000000009d76cef0
+> Apr  8 22:25:21 raydon kernel: [62145.967133] dst_release
+> dst:000000009d76cef0 dst->dev->name: =C5=99KU=C2=A1TH
+> Apr  8 22:25:21 raydon kernel: [62145.967154] dst_release
+> dst:000000009d76cef0 dst->dev->name: =C5=99KU=C2=A1TH
+> Apr  8 22:25:21 raydon kernel: [62145.967180] dst_release
+> dst:000000009d76cef0 dst->dev->name: =C5=99KU=C2=A1TH
+> Apr  8 22:25:21 raydon kernel: [62145.967197] dst_release
+> dst:000000009d76cef0 dst->dev->name: =C5=99KU=C2=A1TH
+>
+>
+>
+> The reason why the hook point should be after <NF_BR_PRE_ROUTING,
+> NF_BR_PRI_BRNF> is skbs reference bridge's fake_rtable in
+> "br_nf_pre_routing_finish" hooked at <NF_BR_PRE_ROUTING,NF_BR_PRI_BRNF>.
+>
+> And the reason why the hook point should be before <NF_BR_FORWARD,
+> NF_BR_PRI_BRNF - 1> is "br_nf_forward_ip" will set the state.out to
+> bridge dev. After this hook point, the "nfqnl_dev_drop" triggered by
+> the bridge's NETDEV_DOWN event can flush the queued skbs before
+> bridge's memory is freed, because the state.out now matches the
+> bridge's dev.
+>
+> So the root cause is "nfqnl_dev_drop" didn't flush the skbs properly
+> queued between <NF_BR_PRE_ROUTING,NF_BR_PRI_BRNF> and <NF_BR_FORWARD,
+> NF_BR_PRI_BRNF - 1>.
+>
+> As you mentioned, hold the bridge dev for these skbs is not a proper
+> solution. I will send another patch to let "nfqnl_dev_drop" can flush
+> these skbs.
+>
+> Thanks
+> Rundong
+>
+>
+> Pablo Neira Ayuso <pablo@netfilter.org> =E4=BA=8E2019=E5=B9=B44=E6=9C=884=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=881:44=E5=86=99=E9=81=93=EF=BC=
+=9A
+> >
+> > On Tue, Apr 02, 2019 at 12:56:09PM +0000, Rundong Ge wrote:
+> > > Problem:
+> > > When bridge-nf-call-iptables is enabled, skb_dst(skb) of packets that
+> > > in the nfqueue may be a dangling pointer if user delete the bridge.
+> > > Because packets go through the br_nf_pre_routing_finish will set the =
+dst
+> > > pointer to the br->fake_rtable. But the br struct will be freed
+> > > without the reference check for these skbs.
+> > >
+> > > User impact:
+> > > Kernel panic may happen when user delete the bridge if there are
+> > > continuous traffics go through the nfqueue.
+> > > Here is a panic in my device which using kernel v3.10.
+> >
+> > This kernel is _very old_.
+> >
+> > Could you provide the steps to reproduce this issue?
+> >
+> > Holding the device doesn't seem the way to go to me, we have a of
+> > netdevice_notifier that is dropping packets for an interface that is
+> > gone in nfnetlink_queue. We also drop packets whenever a hook in gone.
+> >
+> > So I wonder if this is still a problem in mainline kernels.
