@@ -2,116 +2,82 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53E4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A555C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C012217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C837121479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389558AbfDRPrc (ORCPT
+        id S2389542AbfDRPt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:47:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:36691 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387519AbfDRPrc (ORCPT
+        Thu, 18 Apr 2019 11:49:26 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:51245 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfDRPt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:47:32 -0400
-Received: from [192.168.1.110] ([77.9.47.20]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mv3Ds-1gzTo12OIK-00r1CN; Thu, 18 Apr 2019 17:46:49 +0200
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin>
- <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <c783a83a-01a1-9813-e2f7-0516cf7a1c16@metux.net>
- <CALCETrWWoEvnzx6oLTEajBmiArScX5sSt74o2VO+aTiwEi_9mQ@mail.gmail.com>
- <e58d1694-c143-3465-512d-43301422bd8b@metux.net>
- <20190417125422.bhyrmzom4kwuenwm@brauner.io>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <ac16b51d-3bcf-45ff-aa57-85d5da7224c2@metux.net>
-Date:   Thu, 18 Apr 2019 17:46:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 18 Apr 2019 11:49:26 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A3FEB200009;
+        Thu, 18 Apr 2019 15:49:22 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 17:49:22 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 0/7] ARM: sun8i: a83t: Enable USB OTG
+Message-ID: <20190418154922.rvvxpiznjiv7kpee@flea>
+References: <20190416064024.20414-1-wens@kernel.org>
+ <20190417212703.7qq3nzjdvnceaim2@earth.universe>
 MIME-Version: 1.0
-In-Reply-To: <20190417125422.bhyrmzom4kwuenwm@brauner.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:IYyhrkNwNtN2c6nuYeX55XOpxaneFFayWbSo+WzAChYG4HifQ9Y
- 2EBkdauofB47gqh6ieyX0QBtJiEXZJt6gJzKKsZ4uZMIvpaloJiMHJl+/qUWegj34i7efv2
- sOl45zyKVlZeY09RnstPdYSwTuW8DzzosqhkSsG4Oc6BElqAMF+k+LhOEJaQmPdO4SR9umH
- LcCBrP3lBjNiZ3tbiarOg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7ebDP8A//y0=:1vYuZJYwjSWxGy66UCRA8j
- kb8gEpsP5mY20IMUxfrnsjTAngLbksePjqncQYDwHwfctUyaLGVScfnrq4l/befRpA75taIxR
- fFBynx79+ZcSBml9oNmECqWszqwrSzFKUdbGOgThFSal58oEfJKioFMO0uT5QziowURULVszw
- QCYArVYdDk1uK1pYw+jfHajWc5tMxbRZP3+ZBzwXhiJoAuuU5KhJczhgLtLHxUAcDSs3/UhEE
- imJyaZmGmCBeucxigKTDpkvbu4iuYTUvomv+ZUhoik0sqvNg0z4ktCr8dxDxnZJ43KYeeQqWI
- b/d8I9zBVjYzOyJ6PKGbps5EBcKq/Ugp2soggAHDRFQsAwNa4T80CktnPcEuoQ7xc54zGE/+6
- mb0+gfb8QuxeUNrvOFwsNOdHdZBgyfxuz7dukYxYOnYrEYv9FzdCiuZD3QgTK2932QyYRj6ah
- G0R52YwvoOBL+uzk8gyNwUk7ChsvfrandvsNx7Qu6OY8RALp0WK7uEAxM6MfC1J/fAFbY7A+V
- oV1HBczXmSUZm+RBghBP66JsLsGAy1WEfh++H1mE5qkpPN9csRnSt16AxiMihUB85DkPUpxUV
- YXM8bVYZJdHluDwTiTLVTOh6xh2Y5U2dtU4cn6DO4/FI26+no2/y41Y+takTc1zWIBwdhAQBP
- YvdjrkpGpAVQwYyZ0IJDsTk55Rk1586hTl0+foeRJ0lipxKxdIpQULAg4HM8vYhpFQf04By1R
- eB6t68VD04Lj8t8WsHpcwsuyEmPn0WyY+s9E+Ueo5qeigo3eebzUrRe0fTQ=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4s2awzwutf52hbae"
+Content-Disposition: inline
+In-Reply-To: <20190417212703.7qq3nzjdvnceaim2@earth.universe>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.19 14:54, Christian Brauner wrote:
 
->> Ah, that is a cool thing !>> I suppose that also works across namespaces ?> > Yes, it should. If
-you hand off the pidfd to another pidns (e.g. via SCM> credentials) for
-example.
-I thought about things like sending the pidfd via unix socket.
-It would be really cool if the receiving process could then control
-the referred process (eg. send signals), even if it's in a different
-pidns.
+--4s2awzwutf52hbae
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> What other things can be done via pidfd ?
-> 
-> Very basic things right now and until CLONE_PIDFD is accepted (possibly
-> for 5.2) we won't enable any more features.
-> I'm not a fan of wild speculations and grand schemes that then don't
-> come to fruition. :) Right now it's about focussing on somewhat cleanly
-> covering the basics. Coming to a consensus there was hard enough. We
-> have no intention in making this more complex right now as it needs to
-> be.
+On Wed, Apr 17, 2019 at 11:27:03PM +0200, Sebastian Reichel wrote:
+> Hi,
+>
+> On Tue, Apr 16, 2019 at 02:40:17PM +0800, Chen-Yu Tsai wrote:
+> > This is v4 of my A83T USB power supply / OTG series. Hopefully this is
+> > the last revision even though it's kind of late in the -rc cycle for
+> > the patches to make the next release. Fingers crossed.
+>
+> Patches 1-5 (i.e. all except DTS) queued to power-supply subsystem.
 
-IMHO, it would be good if it would support all operations that now can
-be done via numerical PID, and w/ the permissions of the process who
-created that pidfd. Certainly, that would also need some lockdown
-mechanism, so the creating process can define what the holder of the
-fd can actually do.
+Applied 6 and 7, thanks!
+Maxime
 
---mtx
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+--4s2awzwutf52hbae
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLicggAKCRDj7w1vZxhR
+xcjmAPsExx+ObhmzFPzNakWk+3jIHQv5lf/NKwHkfKZlj+44+gD+MAClY05iAllo
+tQybyFGM7nvD7QeOLO5vixGfmIh2cQU=
+=S8Za
+-----END PGP SIGNATURE-----
+
+--4s2awzwutf52hbae--
