@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88A1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F89C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD14A21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7461D206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610721;
-	bh=P8qdGJ/h7B4JZzP4HkyA3wfTSexlHbiugQ2c9QwmxUs=;
+	s=default; t=1555610723;
+	bh=iueocTZXac1SYer0svcBFqBJ7JeV1/hLvcjwiQagcj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njxHTwvnFn73G+3C7yQ2UQ+4eiTjwAKgFAdh/YHSmLdayMi850vvfc30+rPf26sQl
-	 47AwWOrtUiypPO3UYCc/vyp1KhMJw5D9L0QBPRBAsl//eq0L0hXMoEbZneZCPzKoAQ
-	 W8uJNbfP0Fat2wYq0mn1V2v0ALiBhhi/JaEg8p5c=
+	b=DUENKtu0QsFU+y5VoOpRuJrt28fE/goyRTvpRptcGiBF/bnNJlGF2eO9hoXw8nEPT
+	 ccsxxSTxkbPQ0dqyvZxnDs6JRTfodLDnM00QKi933LB2PXV12ralRIj4wfLbqzWbr/
+	 A9qtotd9tPfM0/x85TW9uO4Uo7InPMeNbDASny9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391301AbfDRSFU (ORCPT
+        id S2391312AbfDRSFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34544 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390836AbfDRSFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:05:17 -0400
+        id S2391298AbfDRSFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:05:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94AA921872;
-        Thu, 18 Apr 2019 18:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22170206B6;
+        Thu, 18 Apr 2019 18:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610717;
-        bh=P8qdGJ/h7B4JZzP4HkyA3wfTSexlHbiugQ2c9QwmxUs=;
+        s=default; t=1555610719;
+        bh=iueocTZXac1SYer0svcBFqBJ7JeV1/hLvcjwiQagcj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BXOeY66Cdkl/IplbZ0721UnZpXFZ1sf9udNSw1+oow+qbohHOa0uvDcNKf1+e19nl
-         Eh7tBmBKvUe/2nfLCcxa3PxR4XvYs+CCLeM6aksDV3sx755/ycSRbFHtN9a3VLZxbI
-         pIjTyr8B/CE59gUT/68HYbk+qU0I152aAQoO0uMw=
+        b=QvW72P3ieuX24gS3tvV3SdssIvVUDx86kkectgUBvjb4zdat9FVWCdaEQgfWkKVON
+         JQ/AIIe5M09t9SCK5Bni4UyrwMNsc0Exn5sK9jt4TGH8pvgwVPd+wxHgMpBRZI9Hev
+         2IV0gQWdKOtlzZeXfhXPZgBMqADONBOQfwJw1t4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Cartwright <julia@ni.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 57/92] iommu/dmar: Fix buffer overflow during PCI bus notification
-Date:   Thu, 18 Apr 2019 19:57:15 +0200
-Message-Id: <20190418160435.133945157@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 58/92] soc/tegra: pmc: Drop locking from tegra_powergate_is_powered()
+Date:   Thu, 18 Apr 2019 19:57:16 +0200
+Message-Id: <20190418160435.201974696@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -59,85 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
+[ Upstream commit b6e1fd17a38bd1d97c11d69fd3207b3ef9bfa4b3 ]
 
-Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
-device path") changed the type of the path data, however, the change in
-path type was not reflected in size calculations.  Update to use the
-correct type and prevent a buffer overflow.
+This fixes splats like the one below if CONFIG_DEBUG_ATOMIC_SLEEP=y
+and machine (Tegra30) booted with SMP=n or all secondary CPU's are put
+offline. Locking isn't needed because it protects atomic operation.
 
-This bug manifests in systems with deep PCI hierarchies, and can lead to
-an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
-or can lead to overflow of slab-allocated data.
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:254
+in_atomic(): 1, irqs_disabled(): 128, pid: 0, name: swapper/0
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G         C        4.18.0-next-20180821-00180-gc3ebb6544e44-dirty #823
+Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+[<c01134f4>] (unwind_backtrace) from [<c010db2c>] (show_stack+0x20/0x24)
+[<c010db2c>] (show_stack) from [<c0bd0f3c>] (dump_stack+0x94/0xa8)
+[<c0bd0f3c>] (dump_stack) from [<c0151df8>] (___might_sleep+0x13c/0x174)
+[<c0151df8>] (___might_sleep) from [<c0151ea0>] (__might_sleep+0x70/0xa8)
+[<c0151ea0>] (__might_sleep) from [<c0bec2b8>] (mutex_lock+0x2c/0x70)
+[<c0bec2b8>] (mutex_lock) from [<c0589844>] (tegra_powergate_is_powered+0x44/0xa8)
+[<c0589844>] (tegra_powergate_is_powered) from [<c0581a60>] (tegra30_cpu_rail_off_ready+0x30/0x74)
+[<c0581a60>] (tegra30_cpu_rail_off_ready) from [<c0122244>] (tegra30_idle_lp2+0xa0/0x108)
+[<c0122244>] (tegra30_idle_lp2) from [<c0853438>] (cpuidle_enter_state+0x140/0x540)
+[<c0853438>] (cpuidle_enter_state) from [<c08538a4>] (cpuidle_enter+0x40/0x4c)
+[<c08538a4>] (cpuidle_enter) from [<c01595e0>] (call_cpuidle+0x30/0x48)
+[<c01595e0>] (call_cpuidle) from [<c01599f8>] (do_idle+0x238/0x28c)
+[<c01599f8>] (do_idle) from [<c0159d28>] (cpu_startup_entry+0x28/0x2c)
+[<c0159d28>] (cpu_startup_entry) from [<c0be76c8>] (rest_init+0xd8/0xdc)
+[<c0be76c8>] (rest_init) from [<c1200f50>] (start_kernel+0x41c/0x430)
 
-   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
-   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
-   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
-   Call Trace:
-    ? dump_stack+0x46/0x59
-    ? print_address_description+0x1df/0x290
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? kasan_report+0x256/0x340
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? dmar_dev_scope_init+0x424/0x48f
-    ? __down_write_common+0x1ec/0x230
-    ? dmar_dev_scope_init+0x48f/0x48f
-    ? dmar_free_unused_resources+0x109/0x109
-    ? cpumask_next+0x16/0x20
-    ? __kmem_cache_create+0x392/0x430
-    ? kmem_cache_create+0x135/0x2f0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? intel_iommu_init+0x170/0x1848
-    ? _raw_spin_unlock_irqrestore+0x32/0x60
-    ? migrate_enable+0x27a/0x5b0
-    ? sched_setattr+0x20/0x20
-    ? migrate_disable+0x1fc/0x380
-    ? task_rq_lock+0x170/0x170
-    ? try_to_run_init_process+0x40/0x40
-    ? locks_remove_file+0x85/0x2f0
-    ? dev_prepare_static_identity_mapping+0x78/0x78
-    ? rt_spin_unlock+0x39/0x50
-    ? lockref_put_or_lock+0x2a/0x40
-    ? dput+0x128/0x2f0
-    ? __rcu_read_unlock+0x66/0x80
-    ? __fput+0x250/0x300
-    ? __rcu_read_lock+0x1b/0x30
-    ? mntput_no_expire+0x38/0x290
-    ? e820__memblock_setup+0xb0/0xb0
-    ? pci_iommu_init+0x25/0x63
-    ? pci_iommu_init+0x25/0x63
-    ? do_one_initcall+0x7e/0x1c0
-    ? initcall_blacklisted+0x120/0x120
-    ? kernel_init_freeable+0x27b/0x307
-    ? rest_init+0xd0/0xd0
-    ? kernel_init+0xf/0x120
-    ? rest_init+0xd0/0xd0
-    ? ret_from_fork+0x1f/0x40
-   The buggy address belongs to the variable:
-    dmar_pci_notify_info_buf+0x40/0x60
-
-Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
-Signed-off-by: Julia Cartwright <julia@ni.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/tegra/pmc.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index c0d1c4db5794..38d0128b8135 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -144,7 +144,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
- 		for (tmp = dev; tmp; tmp = tmp->bus->self)
- 			level++;
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 7e9ef3431bea..2422ed56895a 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -521,16 +521,10 @@ EXPORT_SYMBOL(tegra_powergate_power_off);
+  */
+ int tegra_powergate_is_powered(unsigned int id)
+ {
+-	int status;
+-
+ 	if (!tegra_powergate_is_valid(id))
+ 		return -EINVAL;
  
--	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
-+	size = sizeof(*info) + level * sizeof(info->path[0]);
- 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
- 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
- 	} else {
+-	mutex_lock(&pmc->powergates_lock);
+-	status = tegra_powergate_state(id);
+-	mutex_unlock(&pmc->powergates_lock);
+-
+-	return status;
++	return tegra_powergate_state(id);
+ }
+ 
+ /**
 -- 
 2.19.1
 
