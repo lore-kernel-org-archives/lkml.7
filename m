@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23DAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34F9218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D57206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611178;
-	bh=nACJVCZPYKuwKcjuFEBrHctyut3FoHo30skNPHK7+ss=;
+	s=default; t=1555611182;
+	bh=+h4lgpY+l1qQr/JlzD4bm+Ct6ycPXUYCkERUSUk+iOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SHQW8Sc7IrcxgGhOec9JXkCmldtxCJvuU9KWBOLUvahnaijTsaGqNxqADddxiawtG
-	 Mc9NNyDJqyRCyEtDBqtyQIrdmvXOHF+2Q0rTib3O5mFXeSn3Wl739QyuI0W/OWupIH
-	 EJLQH2RI9Nrrv8lwgM9xAN4pG+j3a+zoKWE6+thY=
+	b=rGd+/aPWRa9DXCflerHF8sOvhY4E7XUTcYgfkW7BRvjhf7BbRKYWnYZ58HoAOt0q3
+	 bFxc4q6eaBtLndJsgRoop6N5zxy1SdC1U5ev72+/5KeDwE1O51vaADLhuOrIvlzIMX
+	 vqUa153FYgC9X4t0ynCZndkdLR653T9nhOwjuoXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404392AbfDRSM5 (ORCPT
+        id S2391575AbfDRSNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45514 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404351AbfDRSMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:54 -0400
+        id S2403906AbfDRSM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2277121871;
-        Thu, 18 Apr 2019 18:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA09A21871;
+        Thu, 18 Apr 2019 18:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611173;
-        bh=nACJVCZPYKuwKcjuFEBrHctyut3FoHo30skNPHK7+ss=;
+        s=default; t=1555611176;
+        bh=+h4lgpY+l1qQr/JlzD4bm+Ct6ycPXUYCkERUSUk+iOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpmsM9vjJevdWlILdX98/vv7xen/Dnagf0+W4ZTzjaIa2vhPhDSKLq75TE/vzDxT+
-         YliYlXB6ySKRPsisGWnzOaNuhPXIQe0L9ghihN3cMWmp7Li1NHQdc+/GIw+Gt7mnB6
-         6+t2Hd/31uGhg7kOKNvPTOW/u2GknnXUrlrdHToA=
+        b=EjB7lKc+VUUwlIA/AlXvpOLnX4OGorC2nCuuQGhvp4Fk7YvZPCGLEA9313+AvMgNF
+         1neEUKVwuFwxnGvUt1Swe4na0VFTVeeoaYuBlOKbkApJ8OgLqDOjaObU24pq4+i2y8
+         eDNZffvfxmRrH4qpscYvLRCmjvCJhzbtaflxAd9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Siarhei Volkau <lis8215@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 86/93] lib/div64.c: off by one in shift
-Date:   Thu, 18 Apr 2019 19:58:04 +0200
-Message-Id: <20190418160445.542131030@linuxfoundation.org>
+Subject: [PATCH 5.0 87/93] rxrpc: Fix client call connect/disconnect race
+Date:   Thu, 18 Apr 2019 19:58:05 +0200
+Message-Id: <20190418160445.618718697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -63,50 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cdc94a37493135e355dfc0b0e086d84e3eadb50d ]
+[ Upstream commit 930c9f9125c85b5134b3e711bc252ecc094708e3 ]
 
-fls counts bits starting from 1 to 32 (returns 0 for zero argument).  If
-we add 1 we shift right one bit more and loose precision from divisor,
-what cause function incorect results with some numbers.
+rxrpc_disconnect_client_call() reads the call's connection ID protocol
+value (call->cid) as part of that function's variable declarations.  This
+is bad because it's not inside the locked section and so may race with
+someone granting use of the channel to the call.
 
-Corrected code was tested in user-space, see bugzilla:
-   https://bugzilla.kernel.org/show_bug.cgi?id=202391
+This manifests as an assertion failure (see below) where the call in the
+presumed channel (0 because call->cid wasn't set when we read it) doesn't
+match the call attached to the channel we were actually granted (if 1, 2 or
+3).
 
-Link: http://lkml.kernel.org/r/1548686944-11891-1-git-send-email-sgruszka@redhat.com
-Fixes: 658716d19f8f ("div64_u64(): improve precision on 32bit platforms")
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Reported-by: Siarhei Volkau <lis8215@gmail.com>
-Tested-by: Siarhei Volkau <lis8215@gmail.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fix this by moving the read and dependent calculations inside of the
+channel_lock section.  Also, only set the channel number and pointer
+variables if cid is not zero (ie. unset).
+
+This problem can be induced by injecting an occasional error in
+rxrpc_wait_for_channel() before the call to schedule().
+
+Make two further changes also:
+
+ (1) Add a trace for wait failure in rxrpc_connect_call().
+
+ (2) Drop channel_lock before BUG'ing in the case of the assertion failure.
+
+The failure causes a trace akin to the following:
+
+rxrpc: Assertion failed - 18446612685268945920(0xffff8880beab8c00) == 18446612685268621312(0xffff8880bea69800) is false
+------------[ cut here ]------------
+kernel BUG at net/rxrpc/conn_client.c:824!
+...
+RIP: 0010:rxrpc_disconnect_client_call+0x2bf/0x99d
+...
+Call Trace:
+ rxrpc_connect_call+0x902/0x9b3
+ ? wake_up_q+0x54/0x54
+ rxrpc_new_client_call+0x3a0/0x751
+ ? rxrpc_kernel_begin_call+0x141/0x1bc
+ ? afs_alloc_call+0x1b5/0x1b5
+ rxrpc_kernel_begin_call+0x141/0x1bc
+ afs_make_call+0x20c/0x525
+ ? afs_alloc_call+0x1b5/0x1b5
+ ? __lock_is_held+0x40/0x71
+ ? lockdep_init_map+0xaf/0x193
+ ? lockdep_init_map+0xaf/0x193
+ ? __lock_is_held+0x40/0x71
+ ? yfs_fs_fetch_data+0x33b/0x34a
+ yfs_fs_fetch_data+0x33b/0x34a
+ afs_fetch_data+0xdc/0x3b7
+ afs_read_dir+0x52d/0x97f
+ afs_dir_iterate+0xa0/0x661
+ ? iterate_dir+0x63/0x141
+ iterate_dir+0xa2/0x141
+ ksys_getdents64+0x9f/0x11b
+ ? filldir+0x111/0x111
+ ? do_syscall_64+0x3e/0x1a0
+ __x64_sys_getdents64+0x16/0x19
+ do_syscall_64+0x7d/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/div64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/trace/events/rxrpc.h |  2 ++
+ net/rxrpc/conn_client.c      | 20 +++++++++++++++-----
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/lib/div64.c b/lib/div64.c
-index 01c8602bb6ff..ee146bb4c558 100644
---- a/lib/div64.c
-+++ b/lib/div64.c
-@@ -109,7 +109,7 @@ u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
- 		quot = div_u64_rem(dividend, divisor, &rem32);
- 		*remainder = rem32;
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index 5b50fe4906d2..7b60fd186cfe 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -76,6 +76,7 @@ enum rxrpc_client_trace {
+ 	rxrpc_client_chan_disconnect,
+ 	rxrpc_client_chan_pass,
+ 	rxrpc_client_chan_unstarted,
++	rxrpc_client_chan_wait_failed,
+ 	rxrpc_client_cleanup,
+ 	rxrpc_client_count,
+ 	rxrpc_client_discard,
+@@ -276,6 +277,7 @@ enum rxrpc_tx_point {
+ 	EM(rxrpc_client_chan_disconnect,	"ChDisc") \
+ 	EM(rxrpc_client_chan_pass,		"ChPass") \
+ 	EM(rxrpc_client_chan_unstarted,		"ChUnst") \
++	EM(rxrpc_client_chan_wait_failed,	"ChWtFl") \
+ 	EM(rxrpc_client_cleanup,		"Clean ") \
+ 	EM(rxrpc_client_count,			"Count ") \
+ 	EM(rxrpc_client_discard,		"Discar") \
+diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
+index 5cf6d9f4761d..83797b3949e2 100644
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -704,6 +704,7 @@ int rxrpc_connect_call(struct rxrpc_sock *rx,
  
- 		if (quot != 0)
-@@ -147,7 +147,7 @@ u64 div64_u64(u64 dividend, u64 divisor)
- 	if (high == 0) {
- 		quot = div_u64(dividend, divisor);
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
+ 	ret = rxrpc_wait_for_channel(call, gfp);
+ 	if (ret < 0) {
++		trace_rxrpc_client(call->conn, ret, rxrpc_client_chan_wait_failed);
+ 		rxrpc_disconnect_client_call(call);
+ 		goto out;
+ 	}
+@@ -774,16 +775,22 @@ static void rxrpc_set_client_reap_timer(struct rxrpc_net *rxnet)
+  */
+ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
+ {
+-	unsigned int channel = call->cid & RXRPC_CHANNELMASK;
+ 	struct rxrpc_connection *conn = call->conn;
+-	struct rxrpc_channel *chan = &conn->channels[channel];
++	struct rxrpc_channel *chan = NULL;
+ 	struct rxrpc_net *rxnet = conn->params.local->rxnet;
++	unsigned int channel = -1;
++	u32 cid;
  
- 		if (quot != 0)
++	spin_lock(&conn->channel_lock);
++
++	cid = call->cid;
++	if (cid) {
++		channel = cid & RXRPC_CHANNELMASK;
++		chan = &conn->channels[channel];
++	}
+ 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
+ 	call->conn = NULL;
+ 
+-	spin_lock(&conn->channel_lock);
+-
+ 	/* Calls that have never actually been assigned a channel can simply be
+ 	 * discarded.  If the conn didn't get used either, it will follow
+ 	 * immediately unless someone else grabs it in the meantime.
+@@ -807,7 +814,10 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
+ 		goto out;
+ 	}
+ 
+-	ASSERTCMP(rcu_access_pointer(chan->call), ==, call);
++	if (rcu_access_pointer(chan->call) != call) {
++		spin_unlock(&conn->channel_lock);
++		BUG();
++	}
+ 
+ 	/* If a client call was exposed to the world, we save the result for
+ 	 * retransmission.
 -- 
 2.19.1
 
