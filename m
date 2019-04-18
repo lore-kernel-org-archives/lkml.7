@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C57CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC11EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B23E2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941CD217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610525;
-	bh=1XRom/ebnLAXkehHty1zWUc2dfrq1wjPIR7wQfX505k=;
+	s=default; t=1555610529;
+	bh=C5OwFAdraY+7TfWGCJvCDGEsvQrMSQ9BhZpt1IQhFvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h3MG8Fl1FcAWA2CDNIV8buN+6yGuc7V9Dwu0izGuvJMB+i4WtMxytXym5L6U3euvR
-	 Q8ZVanloq2OW2AK0tH8UDl8vsP19CSn3Aup6BsxGAiq5Xsbk3KI9C52/4uw1ecHIXQ
-	 THb7MkbSd2y+ycHlVp4MraCoaqdMqGQju9rHbnWk=
+	b=rpJxaaY09nHw8oAbG3GcLyQhp9l1M6McJ+FBeCfmNE6IWqwYduU0E4pD+YaliL7hv
+	 M9CzqxS8fadgnSmDVP6uNUbK+B5mIWRRdiA20lkxuXdzCGk+/8sXfCArQM8IyePS7T
+	 GZgnH11wK8mrMfpN+UQ86WiMISSplhNOQYHpuCgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390690AbfDRSCE (ORCPT
+        id S2390698AbfDRSCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390040AbfDRSCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:02 -0400
+        id S2390686AbfDRSCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B14C3206B6;
-        Thu, 18 Apr 2019 18:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 429F0217FA;
+        Thu, 18 Apr 2019 18:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610521;
-        bh=1XRom/ebnLAXkehHty1zWUc2dfrq1wjPIR7wQfX505k=;
+        s=default; t=1555610523;
+        bh=C5OwFAdraY+7TfWGCJvCDGEsvQrMSQ9BhZpt1IQhFvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1WsmUbP+bavU5RZY2aOn3uxv+CvHuvLJTBkGKmMlmmewtBfZjIT6a7GfOpt2l5YKl
-         aBiCtMfbQkSR2TPeU3TucLGoXfCpdVX/O38Vek55ScJqjHV++ciTCQePetyv90ruvl
-         gygJKOJs+6zQ7DHGOXW0ByovMMNUhMWqzn8uk0xU=
+        b=sk8No9vhXdIxB31ZZ+Ly2t8x+HcLUgeNLD8uJr+Ituhov7rfKufUk2gJqiiL/nwYU
+         7qA7VQuRvT7rriO7AmwwnGdJmiFDv4WraK1qmLNrdOHYRkem95YqDOX9SCfv5itya5
+         UOmq3jRMtIoEYPTjVL+Zh4ibQ0+YTF1nZqIqWjlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Persson <larper@axis.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ortwin=20Gl=C3=BCck?= <odi@odi.ch>,
+        Francisco Cribari <cribari@gmail.com>,
+        Balazs Varga <balazs4web@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/110] crypto: axis - fix for recursive locking from bottom half
-Date:   Thu, 18 Apr 2019 19:57:23 +0200
-Message-Id: <20190418160446.728415210@linuxfoundation.org>
+Subject: [PATCH 4.19 095/110] Revert "ACPI / EC: Remove old CLEAR_ON_RESUME quirk"
+Date:   Thu, 18 Apr 2019 19:57:24 +0200
+Message-Id: <20190418160446.791679066@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,132 +64,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c34a83820f59bb275e5f2d55cd5ea99c64f6ef23 ]
+[ Upstream commit b6a3e1475b0220378ad32bdf4d8692f058b1fc03 ]
 
-Clients may submit a new requests from the completion callback
-context. The driver was not prepared to receive a request in this
-state because it already held the request queue lock and a recursive
-lock error is triggered.
+On some Samsung hardware, it is necessary to clear events accumulated by
+the EC during sleep. These ECs stop reporting GPEs until they are manually
+polled, if too many events are accumulated.
+Thus the CLEAR_ON_RESUME quirk is introduced to send EC query commands
+unconditionally after resume to clear all the EC query events on those
+platforms.
 
-Now all completions are queued up until we are ready to drop the queue
-lock and then delivered.
+Later, commit 4c237371f290 ("ACPI / EC: Remove old CLEAR_ON_RESUME quirk")
+removes the CLEAR_ON_RESUME quirk because we thought the new EC IRQ
+polling logic should handle this case.
 
-The fault was triggered by TCP over an IPsec connection in the LTP
-test suite:
-  LTP: starting tcp4_ipsec02 (tcp_ipsec.sh -p ah -m transport -s "100 1000 65535")
-  BUG: spinlock recursion on CPU#1, genload/943
-   lock: 0xbf3c3094, .magic: dead4ead, .owner: genload/943, .owner_cpu: 1
-  CPU: 1 PID: 943 Comm: genload Tainted: G           O    4.9.62-axis5-devel #6
-  Hardware name: Axis ARTPEC-6 Platform
-   (unwind_backtrace) from [<8010d134>] (show_stack+0x18/0x1c)
-   (show_stack) from [<803a289c>] (dump_stack+0x84/0x98)
-   (dump_stack) from [<8016e164>] (do_raw_spin_lock+0x124/0x128)
-   (do_raw_spin_lock) from [<804de1a4>] (artpec6_crypto_submit+0x2c/0xa0)
-   (artpec6_crypto_submit) from [<804def38>] (artpec6_crypto_prepare_submit_hash+0xd0/0x54c)
-   (artpec6_crypto_prepare_submit_hash) from [<7f3165f0>] (ah_output+0x2a4/0x3dc [ah4])
-   (ah_output [ah4]) from [<805df9bc>] (xfrm_output_resume+0x178/0x4a4)
-   (xfrm_output_resume) from [<805d283c>] (xfrm4_output+0xac/0xbc)
-   (xfrm4_output) from [<80587928>] (ip_queue_xmit+0x140/0x3b4)
-   (ip_queue_xmit) from [<805a13b4>] (tcp_transmit_skb+0x4c4/0x95c)
-   (tcp_transmit_skb) from [<8059f218>] (tcp_rcv_state_process+0xdf4/0xdfc)
-   (tcp_rcv_state_process) from [<805a7530>] (tcp_v4_do_rcv+0x64/0x1ac)
-   (tcp_v4_do_rcv) from [<805a9724>] (tcp_v4_rcv+0xa34/0xb74)
-   (tcp_v4_rcv) from [<80581d34>] (ip_local_deliver_finish+0x78/0x2b0)
-   (ip_local_deliver_finish) from [<8058259c>] (ip_local_deliver+0xe4/0x104)
-   (ip_local_deliver) from [<805d23ec>] (xfrm4_transport_finish+0xf4/0x144)
-   (xfrm4_transport_finish) from [<805df564>] (xfrm_input+0x4f4/0x74c)
-   (xfrm_input) from [<804de420>] (artpec6_crypto_task+0x208/0x38c)
-   (artpec6_crypto_task) from [<801271b0>] (tasklet_action+0x60/0xec)
-   (tasklet_action) from [<801266d4>] (__do_softirq+0xcc/0x3a4)
-   (__do_softirq) from [<80126d20>] (irq_exit+0xf4/0x15c)
-   (irq_exit) from [<801741e8>] (__handle_domain_irq+0x68/0xbc)
-   (__handle_domain_irq) from [<801014f0>] (gic_handle_irq+0x50/0x94)
-   (gic_handle_irq) from [<80657370>] (__irq_usr+0x50/0x80)
+Now it has been proved that the EC IRQ Polling logic does not fix the
+issue actually because we got regression report on these Samsung
+platforms after removing the quirk.
 
-Signed-off-by: Lars Persson <larper@axis.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Thus revert commit 4c237371f290 ("ACPI / EC: Remove old CLEAR_ON_RESUME
+quirk") to introduce back the Samsung quirk in this patch.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=44161
+Tested-by: Ortwin Glück <odi@odi.ch>
+Tested-by: Francisco Cribari <cribari@gmail.com>
+Tested-by: Balazs Varga <balazs4web@gmail.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/axis/artpec6_crypto.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+ drivers/acpi/ec.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/drivers/crypto/axis/artpec6_crypto.c b/drivers/crypto/axis/artpec6_crypto.c
-index 7f07a5085e9b..fdcdc751d03b 100644
---- a/drivers/crypto/axis/artpec6_crypto.c
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -284,6 +284,7 @@ enum artpec6_crypto_hash_flags {
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index 9d66a47d32fb..49e16f009095 100644
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -194,6 +194,7 @@ static struct workqueue_struct *ec_query_wq;
+ static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
+ static int EC_FLAGS_CORRECT_ECDT; /* Needs ECDT port address correction */
+ static int EC_FLAGS_IGNORE_DSDT_GPE; /* Needs ECDT GPE as correction setting */
++static int EC_FLAGS_CLEAR_ON_RESUME; /* Needs acpi_ec_clear() on boot/resume */
  
- struct artpec6_crypto_req_common {
- 	struct list_head list;
-+	struct list_head complete_in_progress;
- 	struct artpec6_crypto_dma_descriptors *dma;
- 	struct crypto_async_request *req;
- 	void (*complete)(struct crypto_async_request *req);
-@@ -2046,7 +2047,8 @@ static int artpec6_crypto_prepare_aead(struct aead_request *areq)
- 	return artpec6_crypto_dma_map_descs(common);
+ /* --------------------------------------------------------------------------
+  *                           Logging/Debugging
+@@ -499,6 +500,26 @@ static inline void __acpi_ec_disable_event(struct acpi_ec *ec)
+ 		ec_log_drv("event blocked");
  }
  
--static void artpec6_crypto_process_queue(struct artpec6_crypto *ac)
-+static void artpec6_crypto_process_queue(struct artpec6_crypto *ac,
-+	    struct list_head *completions)
++/*
++ * Process _Q events that might have accumulated in the EC.
++ * Run with locked ec mutex.
++ */
++static void acpi_ec_clear(struct acpi_ec *ec)
++{
++	int i, status;
++	u8 value = 0;
++
++	for (i = 0; i < ACPI_EC_CLEAR_MAX; i++) {
++		status = acpi_ec_query(ec, &value);
++		if (status || !value)
++			break;
++	}
++	if (unlikely(i == ACPI_EC_CLEAR_MAX))
++		pr_warn("Warning: Maximum of %d stale EC events cleared\n", i);
++	else
++		pr_info("%d stale EC events cleared\n", i);
++}
++
+ static void acpi_ec_enable_event(struct acpi_ec *ec)
  {
- 	struct artpec6_crypto_req_common *req;
- 
-@@ -2057,7 +2059,7 @@ static void artpec6_crypto_process_queue(struct artpec6_crypto *ac)
- 		list_move_tail(&req->list, &ac->pending);
- 		artpec6_crypto_start_dma(req);
- 
--		req->req->complete(req->req, -EINPROGRESS);
-+		list_add_tail(&req->complete_in_progress, completions);
- 	}
- 
- 	/*
-@@ -2087,6 +2089,11 @@ static void artpec6_crypto_task(unsigned long data)
- 	struct artpec6_crypto *ac = (struct artpec6_crypto *)data;
- 	struct artpec6_crypto_req_common *req;
- 	struct artpec6_crypto_req_common *n;
-+	struct list_head complete_done;
-+	struct list_head complete_in_progress;
+ 	unsigned long flags;
+@@ -507,6 +528,10 @@ static void acpi_ec_enable_event(struct acpi_ec *ec)
+ 	if (acpi_ec_started(ec))
+ 		__acpi_ec_enable_event(ec);
+ 	spin_unlock_irqrestore(&ec->lock, flags);
 +
-+	INIT_LIST_HEAD(&complete_done);
-+	INIT_LIST_HEAD(&complete_in_progress);
- 
- 	if (list_empty(&ac->pending)) {
- 		pr_debug("Spurious IRQ\n");
-@@ -2120,19 +2127,30 @@ static void artpec6_crypto_task(unsigned long data)
- 
- 		pr_debug("Completing request %p\n", req);
- 
--		list_del(&req->list);
-+		list_move_tail(&req->list, &complete_done);
- 
- 		artpec6_crypto_dma_unmap_all(req);
- 		artpec6_crypto_copy_bounce_buffers(req);
- 
- 		ac->pending_count--;
- 		artpec6_crypto_common_destroy(req);
--		req->complete(req->req);
- 	}
- 
--	artpec6_crypto_process_queue(ac);
-+	artpec6_crypto_process_queue(ac, &complete_in_progress);
- 
- 	spin_unlock_bh(&ac->queue_lock);
-+
-+	/* Perform the completion callbacks without holding the queue lock
-+	 * to allow new request submissions from the callbacks.
-+	 */
-+	list_for_each_entry_safe(req, n, &complete_done, list) {
-+		req->complete(req->req);
-+	}
-+
-+	list_for_each_entry_safe(req, n, &complete_in_progress,
-+				 complete_in_progress) {
-+		req->req->complete(req->req, -EINPROGRESS);
-+	}
++	/* Drain additional events if hardware requires that */
++	if (EC_FLAGS_CLEAR_ON_RESUME)
++		acpi_ec_clear(ec);
  }
  
- static void artpec6_crypto_complete_crypto(struct crypto_async_request *req)
+ #ifdef CONFIG_PM_SLEEP
+@@ -1820,6 +1845,31 @@ static int ec_flag_query_handshake(const struct dmi_system_id *id)
+ }
+ #endif
+ 
++/*
++ * On some hardware it is necessary to clear events accumulated by the EC during
++ * sleep. These ECs stop reporting GPEs until they are manually polled, if too
++ * many events are accumulated. (e.g. Samsung Series 5/9 notebooks)
++ *
++ * https://bugzilla.kernel.org/show_bug.cgi?id=44161
++ *
++ * Ideally, the EC should also be instructed NOT to accumulate events during
++ * sleep (which Windows seems to do somehow), but the interface to control this
++ * behaviour is not known at this time.
++ *
++ * Models known to be affected are Samsung 530Uxx/535Uxx/540Uxx/550Pxx/900Xxx,
++ * however it is very likely that other Samsung models are affected.
++ *
++ * On systems which don't accumulate _Q events during sleep, this extra check
++ * should be harmless.
++ */
++static int ec_clear_on_resume(const struct dmi_system_id *id)
++{
++	pr_debug("Detected system needing EC poll on resume.\n");
++	EC_FLAGS_CLEAR_ON_RESUME = 1;
++	ec_event_clearing = ACPI_EC_EVT_TIMING_STATUS;
++	return 0;
++}
++
+ /*
+  * Some ECDTs contain wrong register addresses.
+  * MSI MS-171F
+@@ -1869,6 +1919,9 @@ static const struct dmi_system_id ec_dmi_table[] __initconst = {
+ 	ec_honor_ecdt_gpe, "ASUS X580VD", {
+ 	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 	DMI_MATCH(DMI_PRODUCT_NAME, "X580VD"),}, NULL},
++	{
++	ec_clear_on_resume, "Samsung hardware", {
++	DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD.")}, NULL},
+ 	{},
+ };
+ 
 -- 
 2.19.1
 
