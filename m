@@ -2,83 +2,98 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC297C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A841C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62C8205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555600045;
-	bh=MUhdhFrOLM4zcc4C4CsZIl2+GLyD2pt4jCtnmd9DaK4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KHnnO0GEuVFz4yQ3a+mh9CWMmAfoQojxulfYtNmA0FmxHmingIrjPzb4WgPEZsUra
-	 fzbzfEGiOxz6GJdvaQONsWQcrsfo5ZwUTKjbYg7rHNb0Y0MZ28XFw/rLoEy+SY+K1E
-	 bnij0ljziPYsu/WihVnHoGEzlLF4ZuX5Ncv8e5j8=
+	by mail.kernel.org (Postfix) with ESMTP id 0473820869
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389432AbfDRPHY (ORCPT
+        id S2389462AbfDRPIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:07:24 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37355 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389141AbfDRPHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:07:24 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v84so1863242oif.4;
-        Thu, 18 Apr 2019 08:07:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MUhdhFrOLM4zcc4C4CsZIl2+GLyD2pt4jCtnmd9DaK4=;
-        b=tU7GTQ22vRr1vwO0MtH2G05n+E16tQ5K7gSMnW3XN3oViQ9lkVDt8UaIjpT8TCWLF9
-         C94g1QLEuwc9fAx98dVIkEIuUsX03kb7n9KJZO1oME8i4Fb20zVck8fG8WnRjrZFQIqj
-         Pw8uC0jMiKyv/M0WB8K20PecCZVWxCYEUbavKCJc+fe4hq1lWABVo0Si89+wKMTDehJj
-         2mNbfpnwoEiPsSScMl+o4DvFfdG6F2jsHL1frXmvRkIWpzAoi9ofUJ9fbDmsjhTWuDG2
-         jS1XDsrrmZSTHZNM58PA5WdDXzGNSpjcZvdcr5XUqk9y9iYDi/Nc3H7fektVf54QPpFe
-         AsMQ==
-X-Gm-Message-State: APjAAAWDqx7kDPjkqJBjn2yedYAYe9KnFJKn4yCwrIFC55kZ9N/jUgpG
-        xBZ6/jLTuwrQkg2T97Kfh4zP+GvR19i9FKM3+GzOhA==
-X-Google-Smtp-Source: APXvYqyf06lSGGJZvjXf57aOXckOfNwtOToTZ7LYtWQ4NrH5rRlG4Xz39OTc10mZNbVZOnc/M28WeD2MnSWsoGWi2Kg=
-X-Received: by 2002:aca:ab06:: with SMTP id u6mr2133902oie.68.1555600043240;
- Thu, 18 Apr 2019 08:07:23 -0700 (PDT)
+        Thu, 18 Apr 2019 11:08:06 -0400
+Received: from [5.180.42.13] ([5.180.42.13]:55618 "EHLO deadmen.hmeau.com"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388392AbfDRPIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:08:05 -0400
+X-Greylist: delayed 2566 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 11:08:01 EDT
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hH7yO-0004lu-Ec; Thu, 18 Apr 2019 22:25:08 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hH7yL-0004DA-RF; Thu, 18 Apr 2019 22:25:05 +0800
+Date:   Thu, 18 Apr 2019 22:25:05 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Vitaly Chikunov <vt@altlinux.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 00/10] crypto: add EC-RDSA (GOST 34.10) algorithm
+Message-ID: <20190418142505.tkd4bgf76imzuu3g@gondor.apana.org.au>
+References: <20190411155122.13245-1-vt@altlinux.org>
 MIME-Version: 1.0
-References: <20190417181310.27613-1-alison.schofield@intel.com> <20190418145640.GA7659@localhost.localdomain>
-In-Reply-To: <20190418145640.GA7659@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 18 Apr 2019 17:07:12 +0200
-Message-ID: <CAJZ5v0g1EZbzr6BJhVBVb8JZGnVQg2Sz8NHtz_0Ji9R_58wMbA@mail.gmail.com>
-Subject: Re: [PATCH] acpi/hmat: Update acpi_hmat_type enum with ACPI_HMAT_TYPE_PROXIMITY
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robert Moore <robert.moore@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411155122.13245-1-vt@altlinux.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 5:02 PM Keith Busch <keith.busch@intel.com> wrote:
+On Thu, Apr 11, 2019 at 06:51:12PM +0300, Vitaly Chikunov wrote:
 >
-> On Wed, Apr 17, 2019 at 11:13:10AM -0700, Alison Schofield wrote:
-> > ACPI 6.3 changed the subtable "Memory Subsystem Address Range Structure"
-> > to "Memory Proximity Domain Attributes Structure".
-> >
-> > Updating and renaming of the structure was included in commit:
-> > ACPICA: ACPI 6.3: HMAT updates (9a8d961f1ef835b0d338fbe13da03cb424e87ae5)
->
-> I was not really happy with that HMAT update. Platforms implementing
-> 6.2's HMAT continue to exist even if 6.3 isn't backward compatible. We
-> just lost the original subtable definition.
+> Vitaly Chikunov (10):
+>   crypto: akcipher - default implementations for request callbacks
+>   crypto: rsa - unimplement sign/verify for raw RSA backends
+>   crypto: akcipher - new verify API for public key algorithms
+>   KEYS: do not kmemdup digest in {public,tpm}_key_verify_signature
+>   X.509: parse public key parameters from x509 for akcipher
+>   crypto: Kconfig - create Public-key cryptography section
+>   crypto: ecc - make ecc into separate module
+>   crypto: ecrdsa - add EC-RDSA (GOST 34.10) algorithm
+>   crypto: ecrdsa - add EC-RDSA test vectors to testmgr
+>   integrity: support EC-RDSA signatures for asymmetric_verify
+> 
+>  crypto/Kconfig                                |  63 ++--
+>  crypto/Makefile                               |  10 +-
+>  crypto/akcipher.c                             |  14 +
+>  crypto/asymmetric_keys/asym_tpm.c             |  43 +--
+>  crypto/asymmetric_keys/public_key.c           | 105 ++++---
+>  crypto/asymmetric_keys/x509.asn1              |   2 +-
+>  crypto/asymmetric_keys/x509_cert_parser.c     |  57 +++-
+>  crypto/ecc.c                                  | 417 +++++++++++++++++++++++++-
+>  crypto/ecc.h                                  | 153 +++++++++-
+>  crypto/ecc_curve_defs.h                       |  15 -
+>  crypto/ecrdsa.c                               | 296 ++++++++++++++++++
+>  crypto/ecrdsa_defs.h                          | 225 ++++++++++++++
+>  crypto/ecrdsa_params.asn1                     |   4 +
+>  crypto/ecrdsa_pub_key.asn1                    |   1 +
+>  crypto/rsa-pkcs1pad.c                         |  33 +-
+>  crypto/rsa.c                                  | 109 -------
+>  crypto/testmgr.c                              |  80 +++--
+>  crypto/testmgr.h                              | 159 ++++++++++
+>  drivers/crypto/caam/caampkc.c                 |   2 -
+>  drivers/crypto/ccp/ccp-crypto-rsa.c           |   2 -
+>  drivers/crypto/qat/qat_common/qat_asym_algs.c |   2 -
+>  include/crypto/akcipher.h                     |  54 ++--
+>  include/crypto/public_key.h                   |   4 +
+>  include/linux/oid_registry.h                  |  18 ++
+>  security/integrity/digsig_asymmetric.c        |  11 +-
+>  25 files changed, 1574 insertions(+), 305 deletions(-)
+>  create mode 100644 crypto/ecrdsa.c
+>  create mode 100644 crypto/ecrdsa_defs.h
+>  create mode 100644 crypto/ecrdsa_params.asn1
+>  create mode 100644 crypto/ecrdsa_pub_key.asn1
 
-Well, that's true, sadly, but the question is what to do in the kernel.
-
-Definitely, the 6.3 format needs to be supported, but if the 6.2 ships
-anywhere in practice, that will need to be supported too.
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
