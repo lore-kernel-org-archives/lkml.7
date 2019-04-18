@@ -2,212 +2,303 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E05C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97464206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7BE2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388349AbfDRJB3 (ORCPT
+        id S2388357AbfDRJC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:01:29 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12722 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbfDRJB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:01:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 02:01:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,365,1549958400"; 
-   d="scan'208";a="162677577"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Apr 2019 02:01:27 -0700
-Received: from [10.125.252.181] (abudanko-mobl.ccr.corp.intel.com [10.125.252.181])
-        by linux.intel.com (Postfix) with ESMTP id B55705800BD;
-        Thu, 18 Apr 2019 02:01:25 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v1] perf record: collect user registers set jointly with
- dwarf stacks
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
- <20190417073952.GF17024@krava> <20190417143542.GA5246@kernel.org>
- <20190417144002.GB2705@krava>
- <60FB78F1-BC48-4172-9669-DD3846F1F0E0@kernel.org>
- <d68cd29b-16fe-7117-b2f4-720c72d6c146@linux.intel.com>
- <20190417184704.GE5246@kernel.org>
-Organization: Intel Corp.
-Message-ID: <74eee58d-f3d8-5e48-c4e5-928c6431c74f@linux.intel.com>
-Date:   Thu, 18 Apr 2019 12:01:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 05:02:27 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48489 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388036AbfDRJC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:02:26 -0400
+X-Originating-IP: 90.88.160.238
+Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 2FE5A4002A;
+        Thu, 18 Apr 2019 09:02:22 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 11:02:21 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+Message-ID: <20190418090221.e57dogn4yx5nwdni@flea>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+ <20190417154121.GJ13337@phenom.ffwll.local>
+ <20190418062229.eyog4i62eg4pr6uf@flea>
+ <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417184704.GE5246@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ku5lnx6rytxcw6t4"
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.2019 21:47, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Apr 17, 2019 at 08:45:08PM +0300, Alexey Budankov escreveu:
->> Hi Arnaldo,
->>
->> On 17.04.2019 18:48, Arnaldo Carvalho de Melo wrote:
->>> On April 17, 2019 11:40:02 AM GMT-03:00, Jiri Olsa <jolsa@redhat.com> wrote:
->>>> On Wed, Apr 17, 2019 at 11:35:42AM -0300, Arnaldo Carvalho de Melo
->>>> wrote:
->>>>> Em Wed, Apr 17, 2019 at 09:39:52AM +0200, Jiri Olsa escreveu:
->>>>>> On Mon, Apr 15, 2019 at 06:36:13PM +0300, Alexey Budankov wrote:
->>>>>>>
->>>>>>> When dwarf stacks are collected jointly with user specified
->>>> register
->>>>>>> set using --user-regs option like below the full register context
->>>> is
->>>>>>> still captured on a sample:
->>>>>>>
->>>>>>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP
->>>> -- matrix.gcc.g.O3
->>>>>>>
->>>>>>>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002):
->>>> 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
->>>>>>>   ... FP chain: nr:0
->>>>>>>   ... user regs: mask 0xff0fff ABI 64-bit
->>>>>>>   .... AX    0x53b
->>>>>>>   .... BX    0x7ffedbdd3cc0
->>>>>>>   .... CX    0xffffffff
->>>>>>>   .... DX    0x33d3a
->>>>>>>   .... SI    0x7f09b74c38d0
->>>>>>>   .... DI    0x0
->>>>>>>   .... BP    0x401260
->>>>>>>   .... SP    0x7ffedbdd3cc0
->>>>>>>   .... IP    0x401236
->>>>>>>   .... FLAGS 0x20a
->>>>>>>   .... CS    0x33
->>>>>>>   .... SS    0x2b
->>>>>>>   .... R8    0x7f09b74c3800
->>>>>>>   .... R9    0x7f09b74c2da0
->>>>>>>   .... R10   0xfffffffffffff3ce
->>>>>>>   .... R11   0x246
->>>>>>>   .... R12   0x401070
->>>>>>>   .... R13   0x7ffedbdd5db0
->>>>>>>   .... R14   0x0
->>>>>>>   .... R15   0x0
->>>>>>>   ... ustack: size 1024, offset 0xe0
->>>>>>>    . data_src: 0x5080021
->>>>>>>    ... thread: stack_test2.g.O:23828
->>>>>>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
->>>>>>>
->>>>>>> After applying the change suggested in the patch the sample data
->>>> contain
->>>>>>> only user specified register values:
->>>>>>>
->>>>>>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP
->>>> -- matrix.gcc.g.03
->>>>>>>
->>>>>>>   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002):
->>>> 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
->>>>>>>   ... FP chain: nr:0
->>>>>>>   ... user regs: mask 0x1c0 ABI 64-bit
->>>>>>>   .... BP    0x401260
->>>>>>>   .... SP    0x7ffd3d85cc20
->>>>>>>   .... IP    0x401236
->>>>>>>   ... ustack: size 1024, offset 0x58
->>>>>>>    . data_src: 0x5080021
->>>>>>>    ... thread: stack_test2.g.O:23839
->>>>>>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
->>>>>>>
->>>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>>>>
->>>>>> Acked-by: Jiri Olsa <jolsa@kernel.org>
->>>>>
->>>>> So, there are registers that are needed to do the DWARF unwinding,
->>>>> right? But at the same time, if the user says only some are needed,
->>>> he
->>>>> better know what they're doing and ask for at least the registers
->>>> needed
->>>>> for the unwinding process to be successfull, right?
->>>>
->>>> yep, that's how understand that
->>>
->>> So we need to document that, stating that specifying a set of registers together with requesting DWARF callchains may break things.
->>
->> Do you mean break callchains if omitting IP,SP,BP? 
->> For example like this: 
->> $ perf record -g --call-graph dwarf,1024 --user-regs=AX,BX,CX -- matrix.gcc.g.O3
-> 
-> Right, i.e. if you don't use --user-regs, then a set of registers will
-> be asked for by --call-graph dwarf, right? If you use both and specify a
 
-Right. Full register set is collected.
+--ku5lnx6rytxcw6t4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> subset that doesn't have some of the asked for --call-graph dwarf, what
-> happens?
+On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
+> On Thu, Apr 18, 2019 at 8:22 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > On Wed, Apr 17, 2019 at 05:41:21PM +0200, Daniel Vetter wrote:
+> > > On Wed, Apr 17, 2019 at 09:54:26AM +0200, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > DRM comes with an extensive format support to retrieve the various
+> > > > parameters associated with a given format (such as the subsampling, or the
+> > > > bits per pixel), as well as some helpers and utilities to ease the driver
+> > > > development.
+> > > >
+> > > > v4l2, on the other side, doesn't provide such facilities, leaving each
+> > > > driver reimplement a subset of the formats parameters for the one supported
+> > > > by that particular driver. This leads to a lot of duplication and
+> > > > boilerplate code in the v4l2 drivers.
+> > > >
+> > > > This series tries to address this by moving the DRM format API into lib and
+> > > > turning it into a more generic API. In order to do this, we've needed to do
+> > > > some preliminary changes on the DRM drivers, then moved the API and finally
+> > > > converted a v4l2 driver to give an example of how such library could be
+> > > > used.
+> > > >
+> > > > Let me know what you think,
+> > > > Maxime
+> > > >
+> > > > Changes from RFC:
+> > > >   - Rebased on next
+> > > >   - Fixed the various formats mapping
+> > > >   - Added tags
+> > > >   - Did most of the formats functions as inline functions
+> > > >   - Used a consistent prefix for all the utilities functions
+> > > >   - Fixed the compilation breakages, and did a run of allmodconfig for arm,
+> > > >     arm64 and x86_64
+> > > >   - Fixed out of array bounds warnings in the image_format_info_block_*
+> > > >     functions
+> > > >   - Added License and copyright headers on missing files
+> > > >
+> > > > Maxime Ripard (20):
+> > > >   drm: Remove users of drm_format_num_planes
+> > > >   drm: Remove users of drm_format_(horz|vert)_chroma_subsampling
+> > > >   drm/fourcc: Pass the format_info pointer to drm_format_plane_cpp
+> > > >   drm/fourcc: Pass the format_info pointer to drm_format_plane_width/height
+> > > >   drm: Replace instances of drm_format_info by drm_get_format_info
+> > > >   lib: Add video format information library
+> > > >   drm/fb: Move from drm_format_info to image_format_info
+> > > >   drm/malidp: Convert to generic image format library
+> > > >   drm/client: Convert to generic image format library
+> > > >   drm/exynos: Convert to generic image format library
+> > > >   drm/i915: Convert to generic image format library
+> > > >   drm/ipuv3: Convert to generic image format library
+> > > >   drm/msm: Convert to generic image format library
+> > > >   drm/omap: Convert to generic image format library
+> > > >   drm/rockchip: Convert to generic image format library
+> > > >   drm/tegra: Convert to generic image format library
+> > > >   drm/fourcc: Remove old DRM format API
+> > > >   lib: image-formats: Add v4l2 formats support
+> > > >   lib: image-formats: Add more functions
+> > > >   media: sun6i: Convert to the image format API
+> > >
+> > > In the interest of making myself unpopular: Why move this out of drm?
+> > >
+> > > We do have a bunch of other such shared helpers already (mostly in
+> > > drivers/video) for dt videomode and hdmi infoframes, and I'm not super
+> > > sure that's going better than keeping it maintained in drm.
+> > >
+> > > Plus the uapi is already that you include drm_fourcc.h to get at these,
+> > > dropping the drm prefix isn't going to help I think.
+> > >
+> > > Of course we'd need to make it a separate drm_formats.ko (so that v4l can
+> > > use it without dragging in all of drm), and we need to add some fields for
+> > > converting to v4l fourcc codes (which are different). But that should be
+> > > all possible. And I don't think the drm_ prefix in v4l code is a problem,
+> > > it's actually a feature: It makes it really clear that these are the drm
+> > > fourcc codes, as allocated in drm_fourcc.h, plus their modifiers, and all
+> > > that. That allocation authority is also already baked into various khr/ext
+> > > standards, too.
+> >
+> > The way I see it, there's a fundamental difference between the UAPI
+> > and the kernel. I don't suggest we change anything about the UAPI: the
+> > drm formats should keep their prefix, drm_fourcc.h can remain that
+> > authority, it's all fine.
+> >
+> > Internally however, the long term goal is to share the fourcc's
+> > between DRM and V4L2 for the same formats. It basically means that of
+> > course v4l2 should be using the DRM fourcc when a format exists in DRM
+> > and not v4l2, but also that DRM should use v4l2 fourcc when the format
+> > exists in v4l2 but not DRM, and that is far more likely, given the
+> > already extensive v4l2 formats support.
+>
+> Uh no. We did look at v4l fourcc extensively when deciding upon a drm
+> format identifier space.
 
-It reports corrupted trace:
-./perf record -g --call-graph dwarf,1024 --user-regs=IP -- ./stack_test2.2048.g.O3
-in foo() ...
-in bar() ...
-done
-[ perf record: Woken up 254 times to write data ]
-[ perf record: Captured and wrote 63.341 MB perf.data (59286 samples) ]
-[root@nntvtune39 stacks]# ./perf report -D > log.txt
-unwind: can't read reg 7
-0x835c0 [0x8]: failed to process type: 68
-Error:
-failed to process sample
+No to what exactly?
 
-./perf record -g --call-graph dwarf,1024 --user-regs=SP -- ./stack_test2.2048.g.O3
-in foo() ...
-in bar() ...
-done
-[ perf record: Woken up 256 times to write data ]
-[ perf record: Captured and wrote 63.863 MB perf.data (59773 samples) ]
-[root@nntvtune39 stacks]# ./perf report -D > log.txt
-0x83180 [0x8]: failed to process type: 68
-Error:
-failed to process sample
+> And a lot of people pushed for the "fourcc is a standard", when
+> really it's totally not.
 
-./perf record -g --call-graph dwarf,1024 --user-regs=IP,SP -- ./stack_test2.2048.g.O3
-in foo() ...
-in bar() ...
-done
-[ perf record: Woken up 258 times to write data ]
-[ perf record: Captured and wrote 64.301 MB perf.data (59757 samples) ]
-[root@nntvtune39 stacks]# ./perf report -D > log.txt
-unwind: can't read reg 6
+Even if it's not a standard, having consistency would be a good thing.
 
-./perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- ./stack_test2.2048.g.O3
-in foo() ...
-in bar() ...
-done
-[ perf record: Woken up 259 times to write data ]
-[ perf record: Captured and wrote 64.737 MB perf.data (59739 samples) ]
-[root@nntvtune39 stacks]# ./perf report -D > log.txt
+And you said yourself that DRM fourcc is now pretty much an authority
+for the fourcc, so it definitely looks like a standard to me.
 
-It looks like some dwarf set IP,SP,BP has to be collected anyways
-and the set has to be consolidated with the registers specified 
-using --user-regs option:
+> v4l tends to conflate pixel format with stuff that we tend to encode
+> in modifiers a lot more.
 
--g call-graph dwarf,K				all_regs
--g call-graph dwarf,K --user-regs=user_regs	dwarf_regs | user_regs
---user-regs=user_regs				user_regs
+Boris is working on adding the modifiers concept to v4l2, so we're
+converging here, and we can totally have a layer in v4l2 to convert
+between old v4l2 "format+modifiers" formats, and DRM style formats.
 
-~Alexey
+> There's a bunch of reasons we can't just use v4l, and they're as
+> valid as ever:
+>
+> - We overlap badly in some areas, so even if fourcc codes match, we
+>   can't use them and need a duplicated DRM_FOURCC code.
 
-> 
-> - Arnaldo
-> 
+Do yo have an example of one of those areas?
+
+> - v4l encodes some metadata into the fourcc that we encode elsewhere,
+>   e.g. offset for planar yuv formats, or tiling mode
+
+As I was saying, this changes on the v4l2 side, and converging to
+what DRM is doing.
+
+> - drm fourcc code doesn't actually define the drm_format_info
+>   uniquely, drivers can override that (that's an explicit design
+>   intent of modifiers, to allow drivers to add another plane for
+>   e.g. compression information). You'd need to pull that driver
+>   knowledge into your format library.
+
+I'm not sure how my patches are changing anything here. This is
+litterally the same code, with the functions renamed.
+
+If drivers want to override that, then yeah, fine, we can let them do
+that. Just like any helper this just provides a default that covers
+most of the cases.
+
+> Iow there's no way we can easily adopt v4l fourcc, except if we do
+> something like a new addfb flag.
+
+For the formats that would be described as a modifier, sure. For all
+the others (that are not yet supported by DRM), then I don't really
+see why not.
+
+> > And given how the current state is a mess in this regard, I'm not too
+> > optimistic about keeping the formats in their relevant frameworks.
+> >
+> > Having a shared library, governed by both, will make this far easier,
+> > since it will be easy to discover the formats that are already
+> > supported by the other subsystem.
+>
+> I think a compat library that (tries to, best effort) convert between
+> v4l and drm fourcc would make sense. Somewhere in drivers/video, next
+> to the conversion functions for videomode <-> drm_display_mode
+> perhaps. That should be useful for drivers.
+
+That's not really what this series is about though. That series is
+about sharing the (image|pixels) formats database across everyone so
+that everyone can benefit from it.
+
+> Unifying the formats themselves, and all the associated metadata is
+> imo a no-go, and was a pretty conscious decision when we implemented
+> drm_fourcc a few years back.
+>
+> > If we want to keep the current library in DRM, we have two options
+> > then:
+> >
+> >   - Support all the v4l2 formats in the DRM library, which is
+> >     essentially what I'm doing in the last patches. However, that
+> >     would require to have the v4l2 developpers also reviewing stuff
+> >     there. And given how busy they are, I cannot really see how that
+> >     would work.
+>
+> Well, if we end up with a common library then yes we need cross
+> review. There's no way around that. Doesn't matter where exactly that
+> library is in the filesystem tree, and adding a special MAINTAINERS
+> entry for anything related to fourcc (both drm and v4l) to make sure
+> they get cross-posted is easy. No file renaming needed.
+
+That would create some governing issues as well. For example, if you
+ever have a patch from one fourcc addition (that might or might not be
+covered by v4l2), will you wait for any v4l2 developper to review it?
+
+If it's shared code, then it should be shared, and every client
+framework put on an equal footing.
+
+> >   - Develop the same library from within v4l2. That is really a poor
+> >     solution, since the information would be greatly duplicated
+> >     between the two, and in terms of maintainance, code, and binary
+> >     size that would be duplicated too.
+>
+> It's essentially what we decided to do for drm years back.
+
+And it was probably the right solution back then, but I'm really not
+convinced it's still the right thing to do today.
+
+> > Having it shared allows to easily share, and discover formats from the
+> > other subsystem, and to have a single, unique place where this is
+> > centralized.
+>
+> What I think could work as middle ground:
+> - Put drm_format stuff into a separate .ko
+> - Add a MAINTAINERS entry to make sure all things fourcc are cross
+> posted to both drm and v4l lists. Easy on the drm side, since it's all
+> separate files. Not sure it's so convenient for v4l uapi.
+> - Add a conversion library that tries to best-effort map between drm
+> and v4l formats. On the drm side that most likely means you need
+> offsets for planes, and modifiers too (since those are implied in some
+> v4l fourcc). Emphasis on "best effort" i.e. only support as much as
+> the drivers that use this library need.
+> - Add drm_fourcc as-needed by these drivers that want to use a unified
+> format space.
+>
+> Forcing this unification on everyone otoh is imo way too much.
+
+v4l2 is starting to converge with DRM, and we're using the DRM API
+pretty much untouched for that library, so I'm not really sure how
+anyone is hurt by that unification.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ku5lnx6rytxcw6t4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLg9HQAKCRDj7w1vZxhR
+xXrZAQCjuV6O3ycJjy50aJ8yIJ4Cwi43TE8JopBxsc3crmtshwEAmBT1lc+Cr1z0
+6qm5zgN8iKw0cXvRWAQP8LqZU91gkwA=
+=00aT
+-----END PGP SIGNATURE-----
+
+--ku5lnx6rytxcw6t4--
