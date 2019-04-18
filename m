@@ -2,111 +2,115 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709ACC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398AD20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612095;
-	bh=k4Hd1HgeDmBHLzemX9xP7r78x1nypYSadH9J8St+7F8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvGw//bh+gFzMEKLI8u7zpjI5AHfyyt1HT4ouPJJUSJLCShPbxqyatFWo5+Mm1o81
-	 SMaIdNFavTeUI8qXi/oh+Bp9f0u0TVGzX/CnH/uVCFzYg7YdFcskWaquVoVaZMjHv9
-	 EAzpvs47pr7Kxt8pGLWUkoIjJzSWXvBsf8OXXjLU=
+	by mail.kernel.org (Postfix) with ESMTP id F0E8A20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Pi+d5jcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390201AbfDRSD3 (ORCPT
+        id S2391112AbfDRS2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 18 Apr 2019 14:28:20 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40579 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390933AbfDRSD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 14:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390185AbfDRSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:03:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C131E218AE;
-        Thu, 18 Apr 2019 18:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610603;
-        bh=k4Hd1HgeDmBHLzemX9xP7r78x1nypYSadH9J8St+7F8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=esjxZmOXaLIJkmTXeFGvJNbxW3O/Z9gmk/mtLalj1+Nf1ZpTFPztfYnRgTWRSg2vo
-         GbTQkMThHEKSrlbo14mxvcWseG5RhYjp3Tt3jMiyiPer+uLi3AFeWYNL9KfcniMDB5
-         9VfEiw4POJm9PVDeSz+Zc3sRSyFbOgRjJxh/850E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Nisha Aram <nisha.aram@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/92] thermal/int340x_thermal: Add additional UUIDs
-Date:   Thu, 18 Apr 2019 19:56:32 +0200
-Message-Id: <20190418160431.606919328@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
-References: <20190418160430.325165109@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ot1-f68.google.com with SMTP id t8so2436713otp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mE/aKnKM07J0Pu0N2LzFy/Q/VzfI3mw7PzAs98ACEDg=;
+        b=Pi+d5jcDSHcAWLBXnKRmKYoO1iabyeSTCoyHSoTOFhkKyRX8hG7BC/wJxV3ZiaaTHg
+         gqUwMreZZXfYu6yxSY7fNS7+AsxCZBLdai0E/tgX6dakt1Vg7YlSVn+Kd4PHdtbWvxpF
+         TSE8bBAh2jy9I7OZP0MbdtJ8NCo7BAmZBkwOAOr+qoYXbL1jhwkEAvy/iZ54jbMkgpV4
+         rBamBDXT4Dgdgo3L1ust6B79WCBZ4JuMx34GdC915WYRLYth1m5lgCn2Db3Xc95wXzsu
+         UUa6wvLnoXjP1x2Yymhffr1xJqHpgJqMCmXfQUe0Pi5RFu42SttM5KWp/xKnctdKTUYZ
+         OPrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mE/aKnKM07J0Pu0N2LzFy/Q/VzfI3mw7PzAs98ACEDg=;
+        b=YaGZqwDeJTabUNe5OiyMYbtk2kkCELfumz30vYGHfVaFKiKq9pySS891HwJ0O8TsyM
+         VC7cBq4GmSwZEhApChiL2MsxAZ8lXvZWGY9w3v/eekFQQbNUdbASsQrm9d6/zJ1cADwm
+         dtYrpdPVAUymNGUTM35pp9CyNFb6DH/7DF09wiRYJsdppvRwV/24zNNxkeVF0U9lNVSA
+         QPF+uO1fXzDuqiYL52BGxtqpXJPj4VHwnVgk5dutmd9sJ5onpQ/TNWsEbKPpOjS4N6K+
+         x9iUu6OT8IVHdxbxKNZMZWszxGYPlGai9wYQOgqqJNdH8Lx5+DWs97Mi7sADuiIpZuP6
+         RUmA==
+X-Gm-Message-State: APjAAAXkh9837ElEEBnMLi/DDQvu8rJ/pudBuMhbue/WcjhqTvAZsU1+
+        gLQ4XyxiQ5p+YgSbb+jVcXuQcs3Q+kfYL92kaFyDog==
+X-Google-Smtp-Source: APXvYqx4tO5lZ9wTPWxuvQfWFmrPptbNCa+xEdfDv7AiLwjobEZcCsrg/NKC/qicGh9+cjnVUqPevHsybbd7Ng30nHg=
+X-Received: by 2002:a9d:27e3:: with SMTP id c90mr60419177otb.214.1555610608522;
+ Thu, 18 Apr 2019 11:03:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190411210834.4105-1-jglisse@redhat.com> <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel> <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <20190416194936.GD21526@redhat.com> <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
+ <20190417222858.GA4146@redhat.com> <20190418104205.GA28541@quack2.suse.cz>
+In-Reply-To: <20190418104205.GA28541@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 18 Apr 2019 11:03:16 -0700
+Message-ID: <CAPcyv4iSyM2r5fv=p4B=h=1sR8Zok3gxb1BVsQOy6FHmQtjGCg@mail.gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        =?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
+On Thu, Apr 18, 2019 at 3:42 AM Jan Kara <jack@suse.cz> wrote:
+> > Except that this solution (biasing everyone in bio) would _more complex_
+> > it is only conceptualy appealing. The changes are on the other hand much
+> > deeper and much riskier but you decided to ignore that and focus on some-
+> > thing i was just giving as an example.
+>
+> Yeah, after going and reading several places like fs/iomap.c, fs/mpage.c,
+> drivers/md/dm-io.c I agree with you. The places that are not doing direct
+> IO usually just don't hold any page reference that could be directly
+> attributed to the bio (and they don't drop it when bio finishes). They
+> rather use other means (like PageLocked, PageWriteback) to make sure the
+> page stays alive so mandating gup-pin reference for all pages attached to a
+> bio would require a lot of reworking of places that are not related to our
+> problem and currently work just fine. So I withdraw my suggestion. Nice in
+> theory, too much work in practice ;).
 
-Add more supported DPTF policies than the driver currently exposes.
-
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Nisha Aram <nisha.aram@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 43b90fd577e4..34dc4d6dda66 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -22,6 +22,13 @@ enum int3400_thermal_uuid {
- 	INT3400_THERMAL_PASSIVE_1,
- 	INT3400_THERMAL_ACTIVE,
- 	INT3400_THERMAL_CRITICAL,
-+	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
-+	INT3400_THERMAL_EMERGENCY_CALL_MODE,
-+	INT3400_THERMAL_PASSIVE_2,
-+	INT3400_THERMAL_POWER_BOSS,
-+	INT3400_THERMAL_VIRTUAL_SENSOR,
-+	INT3400_THERMAL_COOLING_MODE,
-+	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
- 	INT3400_THERMAL_MAXIMUM_UUID,
- };
- 
-@@ -29,6 +36,13 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
- 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
- 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
- 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
-+	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
-+	"5349962F-71E6-431D-9AE8-0A635B710AEE",
-+	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
-+	"F5A35014-C209-46A4-993A-EB56DE7530A1",
-+	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
-+	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
-+	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
- };
- 
- struct int3400_thermal_priv {
--- 
-2.19.1
-
-
-
+Is it though? We already have BIO_NO_PAGE_REF, so it seems it would be
+a useful cleanup to have all locations that don't participate in page
+references use that existing flag and then teach all other locations
+to use gup-pinned pages.
