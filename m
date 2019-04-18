@@ -2,85 +2,83 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A5FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB0AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DE720674
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFEFY2qW"
+	by mail.kernel.org (Postfix) with ESMTP id 5B3A620674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555628352;
+	bh=GJUGMmSU6m4TkJBcxkyc5JCmEDVChhroBIwaxkfxeQQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=X2miVdqvQVTc7gZ0/UxiJ4uTq38zNGR7+rVQoOMtx7XwqW28wrFAf+XtMJSoOjOI/
+	 lgbbDjH5NOMEJwNfWzfciZ75Rd1JoTQcBz+ZI3mXIi9DD83s/WGMaRTrSSZhA8JREW
+	 j/pG1qv9725BWY4wbBw2ct9S9J3C8utYlyGsrI3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbfDRW6q (ORCPT
+        id S1726359AbfDRW7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 18:58:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38330 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfDRW6p (ORCPT
+        Thu, 18 Apr 2019 18:59:11 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:35300 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfDRW7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 18:58:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so1753670pfo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 15:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eHksTS8uj6LgnVRr/W7+Jie87BJjsqBO+MRB/xckssk=;
-        b=HFEFY2qWuThtw7vRwO1Oy4LoNNWDaHLcVzcUUKBI/CrYHkJH42z2PUi2HH+bjv3xt4
-         qbQtn5O7jiy94A+PVonJUNCuHNp+MKHRZT0WHGvbb2MzuTRsmAVh9xF3vLC7K0Z0Tpfv
-         wIkFtP86yVGoqsFW7wrCuwWcgI/p1ohCONlqB74eA82z7pJHJU8LaNLP9wa2DFd4yeQ4
-         tecKWwl8kXMzBP7V0mYBbGZzZVJJggahX1LHw0TbtyKusfLSxLStLAqs+0/AW9EShDlW
-         5jAu3yRKUx8z+R5Etv/+2v165b0YgwrZckJ+LovJnXeyHrWmi/zkNei4lp2rGpLWF7D3
-         lIrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eHksTS8uj6LgnVRr/W7+Jie87BJjsqBO+MRB/xckssk=;
-        b=XJ1w7kZ5cKPGXQCfLskRqFUhA0m624+j//7OKp3M7PGejnvoYOQrcI4U6ZNGjPWBH8
-         PnYPISx7bm+l1xxJgDbjey1kplcT/c8nxi0HGO55nKmLGoZNKcDFl8Kg1Mb+gBuYh2GP
-         U44HkN0EydEdSSlQo1sB8tcH9YxWqhCt26QfoP1bE/VYIwUzAYINHSxPprIOiAnpJcLt
-         /2//3oHe9c7PooEcu6R53SJao36xfsQEPO8Os8npidYc6ZxTuLu/0Y2il5JzblOzlU8o
-         OY8oGuWpbvBuWLse/h7rg69Pt/z1NxpswSJ68MRV+0B4x1wGcpxpNgAhHYL4VOwcUH1h
-         RNkg==
-X-Gm-Message-State: APjAAAUJdIdQDQtkdE97tERwAOXItJIhG2WPx4kU6kN/mkG09H9O+nMQ
-        z7+4BMqnbIHtOWbofdoSpkw4t2tfP6Kfl9X6D+4=
-X-Google-Smtp-Source: APXvYqzJWSzMC1D1b/OJS7TvYjAsQRrntS+B0MYq0eC2OI90oflw+W/RX2Ead5DTv3wCBRp1abgilw7YCs+3Ha93ma4=
-X-Received: by 2002:aa7:914d:: with SMTP id 13mr211719pfi.149.1555627879623;
- Thu, 18 Apr 2019 15:51:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190418220229.32133-1-tony.luck@intel.com>
-In-Reply-To: <20190418220229.32133-1-tony.luck@intel.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 18 Apr 2019 15:51:07 -0700
-Message-ID: <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
-Subject: Re: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
-To:     Tony Luck <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Apr 2019 18:59:10 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 689491A12;
+        Thu, 18 Apr 2019 22:50:20 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 15:50:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+Cc:     jannh@google.com, reiserfs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] reiserfs: Force type conversion in xattr_hash
+Message-Id: <20190418155019.ab5189e4e317df2b36861012@linux-foundation.org>
+In-Reply-To: <20190417115200.GA10168@bharath12345-Inspiron-5559>
+References: <20190417115200.GA10168@bharath12345-Inspiron-5559>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 3:02 PM Tony Luck <tony.luck@intel.com> wrote:
+On Wed, 17 Apr 2019 17:22:00 +0530 Bharath Vedartham <linux.bhar@gmail.com> wrote:
+
+> This patch fixes the sparse warning:
+> 
+> fs/reiserfs//xattr.c:453:28: warning: incorrect type in return
+> expression (different base types)
+> fs/reiserfs//xattr.c:453:28:    expected unsigned int
+> fs/reiserfs//xattr.c:453:28:    got restricted __wsum
+> fs/reiserfs//xattr.c:453:28: warning: incorrect type in return
+> expression (different base types)
+> fs/reiserfs//xattr.c:453:28:    expected unsigned int
+> fs/reiserfs//xattr.c:453:28:    got restricted __wsum
+> 
+> csum_partial returns restricted integer __wsum whereas xattr_hash
+> expects a return type of __u32.
+> 
+> ...
 >
-> Useful when running error injection tests that want to
-> see all of the MCi_(STATUS|ADDR|MISC) data via /dev/mcelog.
->
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> --- a/fs/reiserfs/xattr.c
+> +++ b/fs/reiserfs/xattr.c
+> @@ -450,7 +450,7 @@ static struct page *reiserfs_get_page(struct inode *dir, size_t n)
+>  
+>  static inline __u32 xattr_hash(const char *msg, int len)
+>  {
+> -	return csum_partial(msg, len, 0);
+> +	return (__force __u32)csum_partial(msg, len, 0);
+>  }
+>  
+>  int reiserfs_commit_write(struct file *f, struct page *page,
 
-We saw the same problem, CONFIG_RAS hijacks all the
-correctable memory errors, which leaves mcelog "broken"
-silently. I know it is arguable, but until we can switch from
-mcelog to rasdaemon, mcelog should still work as before.
+hm.  Conversion from int to __u32 should be OK - why is sparse being so
+picky here?
 
-I like this idea of disabling it at runtime, so:
-
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-
-Thanks.
+Why is the __force needed, btw?
