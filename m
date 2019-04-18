@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9484C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014E7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEEF20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C722B20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611455;
-	bh=bKqwVv9yjqHquJY/6k654Djzhp7VUy5HUN6yxtJ7BEw=;
+	s=default; t=1555611464;
+	bh=AIvmDoMJ+MW+8VnR42M59AVC4Yo8iRiSIjFSAjd0o2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+w2703ZUS73EH5rq/btKWVx3ZUFd7cvePN9mue9LnGkyGc4c5ue3Ly9Dg6hDgUS0
-	 t/Ue9e7YUh/eu0EUUHk0O38iK8q69hdsLkkzLbnpvJflOdqRFKP6ZOT4keneU3iV7d
-	 SFL8DzetrM8WJXHHGYRqatsoeRLG2TXEKmJm4gCA=
+	b=KCpgWJg5/MkTBKi6+8y9vbSRuEXJU2Gs9hJg5sJd6ZfGWqDitmgzOWkv+3mpiei7Z
+	 fDCKyfFu1zgDCrYrERbuXJVNGjmAcnrA7cnecD5VRsOtKRWUvroVqlfYd+m+oFJK7z
+	 JcVw/QgM+k6WS28ze6dJpBkx29sF9CXxZ9OOoj0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404274AbfDRSRe (ORCPT
+        id S2404309AbfDRSRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43458 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391686AbfDRSLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:11:17 -0400
+        id S2391797AbfDRSLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:11:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC20520652;
-        Thu, 18 Apr 2019 18:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A1021872;
+        Thu, 18 Apr 2019 18:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611076;
-        bh=bKqwVv9yjqHquJY/6k654Djzhp7VUy5HUN6yxtJ7BEw=;
+        s=default; t=1555611068;
+        bh=AIvmDoMJ+MW+8VnR42M59AVC4Yo8iRiSIjFSAjd0o2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yTVVh9sk5qBu+CWpNT9DBityvZ+KvTwkZPGR2PM8YSAQ5aKqlp0DdDDyToDkWlafu
-         iGWwZkQVhDSOiee7XlWrhyw0i9zNNu/ydbv004n+5cJ5T/vjhh1/2XkrTdh13H72Q2
-         rB6T4339mWyMwfsWPJcS2Eb7LUxjMrOlNU3tSm4A=
+        b=AGaqh/aHyW26y+mMYhiGHO4029M1xv8hqgFVSsX164cp7vgE9bLUSYEsGF2SBqeB9
+         uHymRcM48g0SIxoTeNt4i4+bz/HzAq3DT4mkmlh1D2rhHLR0oIqrF3BO4fXRrm+Nm2
+         Rd8ZXxaSFo1h8j3HJ++7gcpkF8jHP2RVwC/aScWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 50/93] PM / Domains: Avoid a potential deadlock
-Date:   Thu, 18 Apr 2019 19:57:28 +0200
-Message-Id: <20190418160442.790170632@linuxfoundation.org>
+Subject: [PATCH 5.0 47/93] perf tests: Fix memory leak by expr__find_other() in test__expr()
+Date:   Thu, 18 Apr 2019 19:57:25 +0200
+Message-Id: <20190418160442.413553766@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -62,100 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2071ac985d37efe496782c34318dbead93beb02f ]
+[ Upstream commit f97a8991d3b998e518f56794d879f645964de649 ]
 
-Lockdep warns that prepare_lock and genpd->mlock can cause a deadlock
-the deadlock scenario is like following:
-First thread is probing cs2000
-cs2000_probe()
-  clk_register()
-    __clk_core_init()
-      clk_prepare_lock()                            ----> acquires prepare_lock
-        cs2000_recalc_rate()
-          i2c_smbus_read_byte_data()
-            rcar_i2c_master_xfer()
-              dma_request_chan()
-                rcar_dmac_of_xlate()
-                  rcar_dmac_alloc_chan_resources()
-                    pm_runtime_get_sync()
-                      __pm_runtime_resume()
-                        rpm_resume()
-                          rpm_callback()
-                            genpd_runtime_resume()   ----> acquires genpd->mlock
+  =================================================================
+  ==7506==ERROR: LeakSanitizer: detected memory leaks
 
-Second thread is attaching any device to the same PM domain
-genpd_add_device()
-  genpd_lock()                                       ----> acquires genpd->mlock
-    cpg_mssr_attach_dev()
-      of_clk_get_from_provider()
-        __of_clk_get_from_provider()
-          __clk_create_clk()
-            clk_prepare_lock()                       ----> acquires prepare_lock
+  Direct leak of 13 byte(s) in 3 object(s) allocated from:
+      #0 0x7f03339d6070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
+      #1 0x5625e53aaef0 in expr__find_other util/expr.y:221
+      #2 0x5625e51bcd3f in test__expr tests/expr.c:52
+      #3 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #4 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #5 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #6 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #7 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #8 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #9 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #10 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #11 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-Since currently no PM provider access genpd's critical section
-in .attach_dev, and .detach_dev callbacks, so there is no need to protect
-these two callbacks with genpd->mlock.
-This patch avoids a potential deadlock by moving out .attach_dev and .detach_dev
-from genpd->mlock, so that genpd->mlock won't be held when prepare_lock is acquired
-in .attach_dev and .detach_dev
-
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 075167363f8b ("perf tools: Add a simple expression parser for JSON")
+Link: http://lkml.kernel.org/r/20190316080556.3075-16-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/domain.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ tools/perf/tests/expr.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 500de1dee967..a00ca6b8117b 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1467,12 +1467,12 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
- 	if (IS_ERR(gpd_data))
- 		return PTR_ERR(gpd_data);
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 01f0706995a9..9acc1e80b936 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -19,7 +19,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	const char *p;
+ 	const char **other;
+ 	double val;
+-	int ret;
++	int i, ret;
+ 	struct parse_ctx ctx;
+ 	int num_other;
  
--	genpd_lock(genpd);
--
- 	ret = genpd->attach_dev ? genpd->attach_dev(genpd, dev) : 0;
- 	if (ret)
- 		goto out;
- 
-+	genpd_lock(genpd);
+@@ -56,6 +56,9 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	TEST_ASSERT_VAL("find other", !strcmp(other[1], "BAZ"));
+ 	TEST_ASSERT_VAL("find other", !strcmp(other[2], "BOZO"));
+ 	TEST_ASSERT_VAL("find other", other[3] == NULL);
 +
- 	dev_pm_domain_set(dev, &genpd->domain);
- 
- 	genpd->device_count++;
-@@ -1480,9 +1480,8 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
- 
- 	list_add_tail(&gpd_data->base.list_node, &genpd->dev_list);
- 
-- out:
- 	genpd_unlock(genpd);
--
-+ out:
- 	if (ret)
- 		genpd_free_dev_data(dev, gpd_data);
- 	else
-@@ -1531,15 +1530,15 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
- 	genpd->device_count--;
- 	genpd->max_off_time_changed = true;
- 
--	if (genpd->detach_dev)
--		genpd->detach_dev(genpd, dev);
--
- 	dev_pm_domain_set(dev, NULL);
- 
- 	list_del_init(&pdd->list_node);
- 
- 	genpd_unlock(genpd);
- 
-+	if (genpd->detach_dev)
-+		genpd->detach_dev(genpd, dev);
-+
- 	genpd_free_dev_data(dev, gpd_data);
++	for (i = 0; i < num_other; i++)
++		free((void *)other[i]);
+ 	free((void *)other);
  
  	return 0;
 -- 
