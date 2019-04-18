@@ -7,59 +7,62 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A1AC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A659DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F16214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698E0214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VtmWPyO8"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cdOWuRlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388825AbfDRL0X (ORCPT
+        id S2388838AbfDRL01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:26:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40525 "EHLO
+        Thu, 18 Apr 2019 07:26:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53209 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfDRL0W (ORCPT
+        with ESMTP id S1728074AbfDRL0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:26:22 -0400
+        Thu, 18 Apr 2019 07:26:25 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3IBQ5iO166649
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3IBPOh9166585
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Apr 2019 04:26:05 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3IBQ5iO166649
+        Thu, 18 Apr 2019 04:25:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3IBPOh9166585
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555586766;
-        bh=aG75LDi+S/MLkFq6ZRzL6s1NCKZSoTNA0rV7fYcp8s4=;
+        s=2019041745; t=1555586725;
+        bh=UvvezZ0fTZ9f9BlVrDebjkzNzwSZFgLjd0ElzXuSiSY=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=VtmWPyO8YodinRU+8RfkGCbmwFFUFbJK0CsC1LgeuG9vPApneyYBErgk+FeN/iopb
-         ZnvQzJiuxBxpRCQcqve2Y8+eWwCalNv5cN8qIMa9tdtuYwdtGJ9gJmyEwXqCpByVZ0
-         zxrntZ24+1gl2IN5EdkZXSSX2tyeR478AeLr5+4DZJ9HTRapXFu4zkTu/UpcM9BLSz
-         zub9p5mc/3X/fZfju21UXawPzckkjqrptRR2km1FcuI0mGntccmKaDaOr842Gjze+H
-         yRXfuUUF4ktqJorbc+lfduqdzYiyiEL3TLOuDTwIR0Vqhr/lS9io1CAefAKpVW3znQ
-         xzR+FP4pVSbnA==
+        b=cdOWuRlLsArDBuzwJ2ZItfxAlX9zCBycyBns1lsnsZBmv4LWA23QBpzy9f9t5oSHZ
+         k0UsxcCRhTND0Ug73mksSQJ/KEKYjWfKaANW8WJVm3F+hzXL8E/1zQA89aLgtNunWV
+         0petLXkIPae/pviftwlkP86gvxV4rLqxDY4PuHUMrkZ4QnbBlW7lsEOzy39mNynAUj
+         /D3QwfPUBfI7jMQ6dS78lbxauIV6ZmnMM9DLQOQiIAQpBE0mqL3fAYX2rU8y9ESyT3
+         jA9ekvKCeOlj7mA5Q+gV8IQtJOUMPpRtWdm8CFRX+CwGOVIGPrFpa3HUEzxq00GNEm
+         SJXWqS1Z6Kq0w==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3IBQ419166645;
-        Thu, 18 Apr 2019 04:26:04 -0700
-Date:   Thu, 18 Apr 2019 04:26:04 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3IBPNF0166581;
+        Thu, 18 Apr 2019 04:25:23 -0700
+Date:   Thu, 18 Apr 2019 04:25:23 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Frederic Weisbecker <tipbot@zytor.com>
-Message-ID: <tip-0d2cc3b3453254f1c56f9456ba03e092ed4cfb72@git.kernel.org>
-Cc:     akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        frederic@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-        mingo@kernel.org, hpa@zytor.com, paulmck@linux.vnet.ibm.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
-          paulmck@linux.vnet.ibm.com, will.deacon@arm.com,
-          akpm@linux-foundation.org, torvalds@linux-foundation.org,
-          frederic@kernel.org, tglx@linutronix.de, mingo@kernel.org,
-          peterz@infradead.org
-In-Reply-To: <20190402160244.32434-2-frederic@kernel.org>
-References: <20190402160244.32434-2-frederic@kernel.org>
+From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
+Message-ID: <tip-3ab68397950772b0dccf565b1294d929f573a8a2@git.kernel.org>
+Cc:     hpa@zytor.com, sjitindarsingh@gmail.com,
+        torvalds@linux-foundation.org, frederic@kernel.org,
+        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, paulus@samba.org, peterz@infradead.org,
+        tglx@linutronix.de, bigeasy@linutronix.de, mingo@kernel.org,
+        clg@kaod.org
+Reply-To: clg@kaod.org, mingo@kernel.org, tglx@linutronix.de,
+          peterz@infradead.org, bigeasy@linutronix.de, npiggin@gmail.com,
+          paulus@samba.org, linux-kernel@vger.kernel.org,
+          torvalds@linux-foundation.org, hpa@zytor.com,
+          sjitindarsingh@gmail.com, rostedt@goodmis.org,
+          frederic@kernel.org
+In-Reply-To: <20190409093403.20994-1-npiggin@gmail.com>
+References: <20190409093403.20994-1-npiggin@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Move valid_state() inside
- CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
-Git-Commit-ID: 0d2cc3b3453254f1c56f9456ba03e092ed4cfb72
+Subject: [tip:irq/core] irq_work: Do not raise an IPI when queueing work on
+ the local CPU
+Git-Commit-ID: 3ab68397950772b0dccf565b1294d929f573a8a2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,63 +76,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0d2cc3b3453254f1c56f9456ba03e092ed4cfb72
-Gitweb:     https://git.kernel.org/tip/0d2cc3b3453254f1c56f9456ba03e092ed4cfb72
-Author:     Frederic Weisbecker <frederic@kernel.org>
-AuthorDate: Tue, 2 Apr 2019 18:02:41 +0200
+Commit-ID:  3ab68397950772b0dccf565b1294d929f573a8a2
+Gitweb:     https://git.kernel.org/tip/3ab68397950772b0dccf565b1294d929f573a8a2
+Author:     Nicholas Piggin <npiggin@gmail.com>
+AuthorDate: Tue, 9 Apr 2019 19:34:03 +1000
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 18 Apr 2019 12:50:17 +0200
+CommitDate: Thu, 18 Apr 2019 12:48:49 +0200
 
-locking/lockdep: Move valid_state() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
+irq_work: Do not raise an IPI when queueing work on the local CPU
 
-valid_state() and print_usage_bug*() functions are not used beyond
-irq locking correctness checks under CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING.
+The QEMU PowerPC/PSeries machine model was not expecting a self-IPI,
+and it may be a bit surprising thing to do, so have irq_work_queue_on
+do local queueing when target is the current CPU.
 
-Sadly the "unused function" warning wouldn't fire because valid_state()
-is inline so the unused case has remained unseen until now.
-
-So move them inside the appropriate CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
-section.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Paul Mackerras <paulus@samba.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20190402160244.32434-2-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20190409093403.20994-1-npiggin@gmail.com
+[ Simplified the preprocessor comments. ]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/lockdep.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ kernel/irq_work.c | 78 ++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 43 insertions(+), 35 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 34cdcbedda49..9c5819ef4a28 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2784,6 +2784,12 @@ static void check_chain_key(struct task_struct *curr)
- #endif
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 6b7cdf17ccf8..e5f9fe961078 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -56,61 +56,69 @@ void __weak arch_irq_work_raise(void)
+ 	 */
  }
  
-+static int mark_lock(struct task_struct *curr, struct held_lock *this,
-+		     enum lock_usage_bit new_bit);
-+
-+#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
-+
-+
- static void
- print_usage_bug_scenario(struct held_lock *lock)
+-/*
+- * Enqueue the irq_work @work on @cpu unless it's already pending
+- * somewhere.
+- *
+- * Can be re-enqueued while the callback is still in progress.
+- */
+-bool irq_work_queue_on(struct irq_work *work, int cpu)
++/* Enqueue on current CPU, work must already be claimed and preempt disabled */
++static void __irq_work_queue_local(struct irq_work *work)
  {
-@@ -2853,10 +2859,6 @@ valid_state(struct task_struct *curr, struct held_lock *this,
- 	return 1;
- }
- 
--static int mark_lock(struct task_struct *curr, struct held_lock *this,
--		     enum lock_usage_bit new_bit);
+-	/* All work should have been flushed before going offline */
+-	WARN_ON_ONCE(cpu_is_offline(cpu));
 -
--#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
+-#ifdef CONFIG_SMP
+-
+-	/* Arch remote IPI send/receive backend aren't NMI safe */
+-	WARN_ON_ONCE(in_nmi());
++	/* If the work is "lazy", handle it from next tick if any */
++	if (work->flags & IRQ_WORK_LAZY) {
++		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
++		    tick_nohz_tick_stopped())
++			arch_irq_work_raise();
++	} else {
++		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
++			arch_irq_work_raise();
++	}
++}
  
- /*
-  * print irq inversion bug:
++/* Enqueue the irq work @work on the current CPU */
++bool irq_work_queue(struct irq_work *work)
++{
+ 	/* Only queue if not already pending */
+ 	if (!irq_work_claim(work))
+ 		return false;
+ 
+-	if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
+-		arch_send_call_function_single_ipi(cpu);
+-
+-#else /* #ifdef CONFIG_SMP */
+-	irq_work_queue(work);
+-#endif /* #else #ifdef CONFIG_SMP */
++	/* Queue the entry and raise the IPI if needed. */
++	preempt_disable();
++	__irq_work_queue_local(work);
++	preempt_enable();
+ 
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(irq_work_queue);
+ 
+-/* Enqueue the irq work @work on the current CPU */
+-bool irq_work_queue(struct irq_work *work)
++/*
++ * Enqueue the irq_work @work on @cpu unless it's already pending
++ * somewhere.
++ *
++ * Can be re-enqueued while the callback is still in progress.
++ */
++bool irq_work_queue_on(struct irq_work *work, int cpu)
+ {
++#ifndef CONFIG_SMP
++	return irq_work_queue(work);
++
++#else /* CONFIG_SMP: */
++	/* All work should have been flushed before going offline */
++	WARN_ON_ONCE(cpu_is_offline(cpu));
++
+ 	/* Only queue if not already pending */
+ 	if (!irq_work_claim(work))
+ 		return false;
+ 
+-	/* Queue the entry and raise the IPI if needed. */
+ 	preempt_disable();
+-
+-	/* If the work is "lazy", handle it from next tick if any */
+-	if (work->flags & IRQ_WORK_LAZY) {
+-		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
+-		    tick_nohz_tick_stopped())
+-			arch_irq_work_raise();
+-	} else {
+-		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
+-			arch_irq_work_raise();
+-	}
+-
++	if (cpu != smp_processor_id()) {
++		/* Arch remote IPI send/receive backend aren't NMI safe */
++		WARN_ON_ONCE(in_nmi());
++		if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
++			arch_send_call_function_single_ipi(cpu);
++	} else
++		__irq_work_queue_local(work);
+ 	preempt_enable();
+ 
+ 	return true;
++#endif /* CONFIG_SMP */
+ }
+-EXPORT_SYMBOL_GPL(irq_work_queue);
++
+ 
+ bool irq_work_needs_cpu(void)
+ {
