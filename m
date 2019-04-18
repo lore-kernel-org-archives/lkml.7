@@ -2,78 +2,108 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C132BC10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 05:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BA0C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 05:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DACB2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 05:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555564658;
-	bh=9I4swAVKjdH10ubnJcsOBFGDVxI67C4v5gGkyOoNAdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OHSIoXsiqDelGWjCJE+q/Ruw1cu1EXSuzoPJHx1Nh4gv+IsxNd+CxOqcYKiN5kxFS
-	 cmri7IKqE3DdAtc8DEtib+Q2NmM1zK92hE9Y28SH9CbCcj8vU8fqpbmQ670/95QqWS
-	 +fRGl9yG124+Oz9keyQrRdgZHrC91WfEgvva2N6Y=
+	by mail.kernel.org (Postfix) with ESMTP id E64582183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 05:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfDRFRg (ORCPT
+        id S1731225AbfDRFR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 01:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbfDRFRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 01:17:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3419F21850;
-        Thu, 18 Apr 2019 05:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555564655;
-        bh=9I4swAVKjdH10ubnJcsOBFGDVxI67C4v5gGkyOoNAdM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u8QPprCMEfSXrmMHsm9yJPU074UVXeQwGGOgfzTbbY8JvoJji46iCg1PbvAzT23Qf
-         2vfioBW4HrBWNshpTkbZ7CUc60O4fzg/10ErLhTMBzb8SUyfNGxlunl4axRLsCjT3G
-         rJfuOh+QLvdS2QLtOzOA4/UdK1GbzyP84zJlBdig=
-Date:   Thu, 18 Apr 2019 07:17:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sugaya Taichi <sugaya.taichi@socionext.com>
-Cc:     Jiri Slaby <jslaby@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3] serial: Add Milbeaut serial control
-Message-ID: <20190418051732.GA17053@kroah.com>
-References: <1555555916-22251-1-git-send-email-sugaya.taichi@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555555916-22251-1-git-send-email-sugaya.taichi@socionext.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 18 Apr 2019 01:17:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725876AbfDRFR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 01:17:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 45D7CADD4;
+        Thu, 18 Apr 2019 05:17:55 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 07:17:54 +0200
+Message-ID: <s5h8sw7riwt.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Jacek Anaszewski" <jacek.anaszewski@gmail.com>
+Cc:     <linux-leds@vger.kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        <dtor@google.com>, <robh@kernel.org>,
+        "Jaroslav Kysela" <perex@perex.cz>, <linux@roeck-us.net>,
+        <tiwai@suse.de>, <pavel@ucw.cz>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 01/26] ALSA: line6: Avoid polluting led_* namespace
+In-Reply-To: <20190417205439.17685-2-jacek.anaszewski@gmail.com>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+        <20190417205439.17685-2-jacek.anaszewski@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:51:56AM +0900, Sugaya Taichi wrote:
-> Add Milbeaut serial control including earlycon and console.
+On Wed, 17 Apr 2019 22:54:14 +0200,
+Jacek Anaszewski wrote:
 > 
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> ---
-> Changes from v2:
->  - Fix build warning.
+> led_colors clashes with the array of the same name being added
+> to the LED class. Do the following amendments to fix this issue
+> and the other prospective one.
+> 
+> led_colors -> toneport_led_colors
+> led_init_vals -> toneport_led_init_vals
+> 
+> Fixes: f44edd7b2bbed ("ALSA: line6/toneport: Implement LED controls via LED class")
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
 
-No, I only need an incremental patch fixing the one sparse warning
-found, not a whole new patch as I have already merged your original
-patch, right?
+Looks good.
+
+Feel free to take my ack:
+  Reviewed-by: Takashi Iwai <tiwai@suse.de>
+
 
 thanks,
 
-greg k-h
+Takashi
+
+> ---
+>  sound/usb/line6/toneport.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/sound/usb/line6/toneport.c b/sound/usb/line6/toneport.c
+> index f47ba94e6f4a..56875526b182 100644
+> --- a/sound/usb/line6/toneport.c
+> +++ b/sound/usb/line6/toneport.c
+> @@ -291,8 +291,8 @@ static bool toneport_has_led(struct usb_line6_toneport *toneport)
+>  	}
+>  }
+>  
+> -static const char * const led_colors[2] = { "red", "green" };
+> -static const int led_init_vals[2] = { 0x00, 0x26 };
+> +static const char * const toneport_led_colors[2] = { "red", "green" };
+> +static const int toneport_led_init_vals[2] = { 0x00, 0x26 };
+>  
+>  static void toneport_update_led(struct usb_line6_toneport *toneport)
+>  {
+> @@ -320,9 +320,9 @@ static int toneport_init_leds(struct usb_line6_toneport *toneport)
+>  
+>  		led->toneport = toneport;
+>  		snprintf(led->name, sizeof(led->name), "%s::%s",
+> -			 dev_name(dev), led_colors[i]);
+> +			 dev_name(dev), toneport_led_colors[i]);
+>  		leddev->name = led->name;
+> -		leddev->brightness = led_init_vals[i];
+> +		leddev->brightness = toneport_led_init_vals[i];
+>  		leddev->max_brightness = 0x26;
+>  		leddev->brightness_set = toneport_led_brightness_set;
+>  		err = led_classdev_register(dev, leddev);
+> -- 
+> 2.11.0
+> 
+> 
