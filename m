@@ -2,131 +2,244 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD46BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247B5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8606E206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD33D206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611499;
-	bh=qB/Vh3kd5u9xuDMWkg6bSqTMWbGkr/mNbtBDoaojIiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xFAYRej6fZTRpkLtjkAJekWVpsy/L8Z3NrcZSIUwp2pYHWrs9GCxCzJjZGv38IZHl
-	 1B+G1+3P2VYm7Dl8zC8FnC2NqdDpokqvw4u42+OtaHBrEmHbS4u66e3yX97grJTEcu
-	 vmGfizSI7Hn7piGFVsC58R0ok8Gdjiurt6Sn0YNo=
+	s=default; t=1555611503;
+	bh=wOz438wfGRJ0y8eOASyS7ZjEoL1gxH/yMtbNGHV09zU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZdpXgDdT9Ux/G7ElGld0g+CyRfJNRW2CVvwE9X0mqfE2YnrKIpL0iNWgrV9dvC4CW
+	 egyWlZaBAc+bmcr0/lXOhe8absXmvpbWBPxjQImCqsuOgVirTacZ71COIGiFtZI9gV
+	 2EdRkH6Ed8jrjLTeJkttC5WzEu379Cd5nAIiiDkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404165AbfDRSKo (ORCPT
+        id S2404152AbfDRSKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:10:44 -0400
-Received: from casper.infradead.org ([85.118.1.10]:52346 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391603AbfDRSKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391608AbfDRSKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 14:10:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Q97wY6btVCHy/kFofHI09uzvbtwu21iq5Uz5kIDdyws=; b=urJdq4JxwV4eFQA2l8/RVg4szk
-        /MBfg0DCCjnUbMwm3panxmAoIN7YgOQgTN8RO8Bv5+//absL/8MJBesC7NeU5eJ1Vr/L1Yt/w8ZD2
-        Fsb6qhmrYMqmN8cJL/gEMzOHcxKQWEBD+hp57z/RQ8sx/Si44CzGGaNng7DGufNBXVYW7QHO7OsmG
-        H0u2IzZeSGqWLI1k1T+mQtgT1Oqm1iwTGi/CxyVSpQoENW6HLSnt7KK6o0J2fiNcA4voLFShnaAod
-        +lyxyCitOLNndxBhrPTs0xsKa1KOztFaWmiQfJ8ctlg1/J11PCDy00pi1byCZ7L/N8KBi4rsxl4bd
-        Gv8RcjHw==;
-Received: from 177.132.233.55.dynamic.adsl.gvt.net.br ([177.132.233.55] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hHBUX-0005MG-Iw; Thu, 18 Apr 2019 18:10:34 +0000
-Date:   Thu, 18 Apr 2019 15:10:28 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] docs: hwmon: convert three docs to ReST format
-Message-ID: <20190418151028.341723f7@coco.lan>
-In-Reply-To: <87k1frgysq.fsf@intel.com>
-References: <287cf72fc213656c1593f8bd42feb62f7a5f26e7.1555580417.git.mchehab+samsung@kernel.org>
-        <87k1frgysq.fsf@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1713A20675;
+        Thu, 18 Apr 2019 18:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555611036;
+        bh=wOz438wfGRJ0y8eOASyS7ZjEoL1gxH/yMtbNGHV09zU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SlU87ZUjjfxr1cwCV6kvwx1rqGEid1zWjt9E6giaDNl5lWAPpD0+iBq4TZ7WVBf7i
+         51M4ybsgVbksbgR1fPlrGDkiVl5bJmQzckiERfC5TUa53Jxv4ysysCBodV5lFOUQS+
+         sjFkOn2l/HDg5wVe8ZTFWmHrudggy0JFgNuTzrBk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vincent Wang <vincent.wang@unisoc.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 27/93] sched/cpufreq: Fix 32-bit math overflow
+Date:   Thu, 18 Apr 2019 19:57:05 +0200
+Message-Id: <20190418160439.639670384@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
+References: <20190418160436.781762249@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 18 Apr 2019 17:42:29 +0300
-Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+[ Upstream commit a23314e9d88d89d49e69db08f60b7caa470f04e1 ]
 
-> On Thu, 18 Apr 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> > Those three new drivers were missed on the initial conversion
-> > to ReST format. So:
-> >
-> > - Rename them to .rst;
-> > - Add them to the hwmon index.rst index;
-> > - add some blank lines at the "Supported systems:" part, in
-> >   order to allow Sphinx to properly identify new lines,
-> >   suppressing warnings and avoid it to output some random
-> >   lines in bold;
-> > - When multiple authors are involved, change the authors
-> >   part to a list, in order to avoid adding blank lines.
-> > - adjust the table cells (one of the tables seemed to be
-> >   assuming that tab is 4 positions instead of 8) and add
-> >   the table markup.
-> > - be sure that the section markups have the same number of
-> >   characters as the section title.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > ---
-> >  Documentation/hwmon/index.rst                 |  3 +++
-> >  Documentation/hwmon/{ir38064 => ir38064.rst}  | 21 ++++++++++++-------
-> >  .../hwmon/{isl68137 => isl68137.rst}          | 16 ++++++++++----
-> >  .../hwmon/{lochnagar => lochnagar.rst}        |  7 +++++--
-> >  4 files changed, 33 insertions(+), 14 deletions(-)
-> >  rename Documentation/hwmon/{ir38064 => ir38064.rst} (76%)
-> >  rename Documentation/hwmon/{isl68137 => isl68137.rst} (85%)
-> >  rename Documentation/hwmon/{lochnagar => lochnagar.rst} (93%)
-> >
-> > diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> > index 893804414510..3fa14fe7b49c 100644
-> > --- a/Documentation/hwmon/index.rst
-> > +++ b/Documentation/hwmon/index.rst
-> > @@ -65,6 +65,8 @@ Hardware Monitoring Kernel Drivers
-> >     ina2xx.rst
-> >     ina3221.rst
-> >     ir35221.rst
-> > +   ir38064.rst
-> > +   isl68137.rst  
-> 
-> Didn't notice it on the first patch adding index.rst, but I don't think
-> it's customary to add .rst suffix to the toctree.
+Vincent Wang reported that get_next_freq() has a mult overflow bug on
+32-bit platforms in the IOWAIT boost case, since in that case {util,max}
+are in freq units instead of capacity units.
 
-Provided that all documents are at the same time, I guess it
-doesn't matter having a .rst there or not.
+Solve this by moving the IOWAIT boost to capacity units. And since this
+means @max is constant; simplify the code.
 
-Btw, newer versions of Sphinx build can work with other formats
-like markdown. I suspect that, if we end mixing markdown documents,
-it would be worth having the extension there.
+Reported-by: Vincent Wang <vincent.wang@unisoc.com>
+Tested-by: Vincent Wang <vincent.wang@unisoc.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190305083202.GU32494@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sched/cpufreq_schedutil.c | 59 ++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
-FYI, someone recently added a markdown file at the tree:
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 033ec7c45f13..1ccf77f6d346 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -48,10 +48,10 @@ struct sugov_cpu {
+ 
+ 	bool			iowait_boost_pending;
+ 	unsigned int		iowait_boost;
+-	unsigned int		iowait_boost_max;
+ 	u64			last_update;
+ 
+ 	unsigned long		bw_dl;
++	unsigned long		min;
+ 	unsigned long		max;
+ 
+ 	/* The field below is for single-CPU policies only: */
+@@ -303,8 +303,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
+ 	if (delta_ns <= TICK_NSEC)
+ 		return false;
+ 
+-	sg_cpu->iowait_boost = set_iowait_boost
+-		? sg_cpu->sg_policy->policy->min : 0;
++	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
+ 	sg_cpu->iowait_boost_pending = set_iowait_boost;
+ 
+ 	return true;
+@@ -344,14 +343,13 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+ 
+ 	/* Double the boost at each request */
+ 	if (sg_cpu->iowait_boost) {
+-		sg_cpu->iowait_boost <<= 1;
+-		if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
+-			sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
++		sg_cpu->iowait_boost =
++			min_t(unsigned int, sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
+ 		return;
+ 	}
+ 
+ 	/* First wakeup after IO: start with minimum boost */
+-	sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
++	sg_cpu->iowait_boost = sg_cpu->min;
+ }
+ 
+ /**
+@@ -373,47 +371,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+  * This mechanism is designed to boost high frequently IO waiting tasks, while
+  * being more conservative on tasks which does sporadic IO operations.
+  */
+-static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+-			       unsigned long *util, unsigned long *max)
++static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
++					unsigned long util, unsigned long max)
+ {
+-	unsigned int boost_util, boost_max;
++	unsigned long boost;
+ 
+ 	/* No boost currently required */
+ 	if (!sg_cpu->iowait_boost)
+-		return;
++		return util;
+ 
+ 	/* Reset boost if the CPU appears to have been idle enough */
+ 	if (sugov_iowait_reset(sg_cpu, time, false))
+-		return;
++		return util;
+ 
+-	/*
+-	 * An IO waiting task has just woken up:
+-	 * allow to further double the boost value
+-	 */
+-	if (sg_cpu->iowait_boost_pending) {
+-		sg_cpu->iowait_boost_pending = false;
+-	} else {
++	if (!sg_cpu->iowait_boost_pending) {
+ 		/*
+-		 * Otherwise: reduce the boost value and disable it when we
+-		 * reach the minimum.
++		 * No boost pending; reduce the boost value.
+ 		 */
+ 		sg_cpu->iowait_boost >>= 1;
+-		if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
++		if (sg_cpu->iowait_boost < sg_cpu->min) {
+ 			sg_cpu->iowait_boost = 0;
+-			return;
++			return util;
+ 		}
+ 	}
+ 
++	sg_cpu->iowait_boost_pending = false;
++
+ 	/*
+-	 * Apply the current boost value: a CPU is boosted only if its current
+-	 * utilization is smaller then the current IO boost level.
++	 * @util is already in capacity scale; convert iowait_boost
++	 * into the same scale so we can compare.
+ 	 */
+-	boost_util = sg_cpu->iowait_boost;
+-	boost_max = sg_cpu->iowait_boost_max;
+-	if (*util * boost_max < *max * boost_util) {
+-		*util = boost_util;
+-		*max = boost_max;
+-	}
++	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
++	return max(boost, util);
+ }
+ 
+ #ifdef CONFIG_NO_HZ_COMMON
+@@ -460,7 +449,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+-	sugov_iowait_apply(sg_cpu, time, &util, &max);
++	util = sugov_iowait_apply(sg_cpu, time, util, max);
+ 	next_f = get_next_freq(sg_policy, util, max);
+ 	/*
+ 	 * Do not reduce the frequency if the CPU has not been idle
+@@ -500,7 +489,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+ 
+ 		j_util = sugov_get_util(j_sg_cpu);
+ 		j_max = j_sg_cpu->max;
+-		sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
++		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+ 
+ 		if (j_util * max > j_max * util) {
+ 			util = j_util;
+@@ -837,7 +826,9 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 		memset(sg_cpu, 0, sizeof(*sg_cpu));
+ 		sg_cpu->cpu			= cpu;
+ 		sg_cpu->sg_policy		= sg_policy;
+-		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
++		sg_cpu->min			=
++			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
++			policy->cpuinfo.max_freq;
+ 	}
+ 
+ 	for_each_cpu(cpu, policy->cpus) {
+-- 
+2.19.1
 
-commit e453fa60e086786fe89ba15ee8fef80bc2e6ecc3
-Author: Sascha Hauer <s.hauer@pengutronix.de>
-Date:   Fri Sep 7 14:36:46 2018 +0200
 
-    Documentation: ubifs: Add authentication whitepaper
 
-	Documentation/filesystems/ubifs-authentication.md
-
-IMO, the best would be to just run pandoc into it and convert
-to .rst, than to mix different markup languages.
-
-Thanks,
-Mauro
