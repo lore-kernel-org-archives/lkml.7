@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF57C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A45C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002DB21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B1D21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610933;
-	bh=8RwdhNu0g0nIe+g7ofHWU6Cdf6aGp0tp+B0Qd2kzXSk=;
+	s=default; t=1555610936;
+	bh=P0xE/wyTKOUZ/DOak70UJbTvGvJ+D9swr4Jbor9m0rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwd8M1+dTyFejXixzHR0/yuCvfF4XFEXr4hN+bww0UkiNEClqBb1L8zAok7UZcOJ4
-	 rCHJwEWQXloV+kUHIKgQG0rsEU6MO6eKD8CuMoXHWn5YnYH46l8oAWdz/VUcr5x05N
-	 6zftotn+FUss4fCjgC665+LG4Ct8lz/d/mDPAkBs=
+	b=BmHFePVvEv3UpL/e9rWgOwKDtHwyPPzB9/v/qL/bCxq9uvcWK9BkpvV/U1dgt1l1w
+	 uIgJZ6NzQd+EhesO2KZb9R2vbwwkjNGUDt7K80FTvuNyRojt+Tu4Lsc0X2A+/tel++
+	 oC80PI30LHuQ6kpH+btu3lgrXzmKm3hoVX/XBJd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391800AbfDRSIv (ORCPT
+        id S2391810AbfDRSIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40192 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391789AbfDRSIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:49 -0400
+        id S2391792AbfDRSIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AAD21872;
-        Thu, 18 Apr 2019 18:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89D492186A;
+        Thu, 18 Apr 2019 18:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610928;
-        bh=8RwdhNu0g0nIe+g7ofHWU6Cdf6aGp0tp+B0Qd2kzXSk=;
+        s=default; t=1555610931;
+        bh=P0xE/wyTKOUZ/DOak70UJbTvGvJ+D9swr4Jbor9m0rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qdkA2QmOHoq7y5MSDwc9yrGXBkYNCwqthQ1imUpNkplAYSmGMRjdSUYYi5LHeDyf7
-         RxPE0yUsxvsXixjsnMba59qU3mqOXmkmOSMZJbDwNfreXN3mZgtra5/cC2b3ZCd2Ly
-         HAnarLQFztY7AefcFe2a5tpLj6FMcFO5tmWhIp3A=
+        b=hhCrAcfmp3oNkDrrd8segifxOYukREWNLLbno0kGzAprIuRkDa215R2rYy1jrwMLN
+         W2Skgw5u2foiSzNvrgGcWebrYsI460x9aGfd9NATRWY+CA8LkEVlws39EjEhPS55sK
+         J6+I9r4WOrHZNfJge7IWdDswakhuQ7H/NpqSPsLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linaro.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 44/50] ARM: 8839/1: kprobe: make patch_lock a raw_spinlock_t
-Date:   Thu, 18 Apr 2019 19:57:55 +0200
-Message-Id: <20190418160427.778810744@linuxfoundation.org>
+Subject: [PATCH 4.9 45/50] appletalk: Fix use-after-free in atalk_proc_exit
+Date:   Thu, 18 Apr 2019 19:57:56 +0200
+Message-Id: <20190418160427.908025061@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -62,65 +61,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 143c2a89e0e5fda6c6fd08d7bc1126438c19ae90 ]
+[ Upstream commit 6377f787aeb945cae7abbb6474798de129e1f3ac ]
 
-When running kprobe on -rt kernel, the below bug is caught:
+KASAN report this:
 
-|BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:931
-|in_atomic(): 1, irqs_disabled(): 128, pid: 14, name: migration/0
-|Preemption disabled at:[<802f2b98>] cpu_stopper_thread+0xc0/0x140
-|CPU: 0 PID: 14 Comm: migration/0 Tainted: G O 4.8.3-rt2 #1
-|Hardware name: Freescale LS1021A
-|[<8025a43c>] (___might_sleep)
-|[<80b5b324>] (rt_spin_lock)
-|[<80b5c31c>] (__patch_text_real)
-|[<80b5c3ac>] (patch_text_stop_machine)
-|[<802f2920>] (multi_cpu_stop)
+BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
 
-Since patch_text_stop_machine() is called in stop_machine() which
-disables IRQ, sleepable lock should be not used in this atomic context,
- so replace patch_lock to raw lock.
+CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+ remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
+ atalk_proc_exit+0x18/0x820 [appletalk]
+ atalk_exit+0xf/0x5a [appletalk]
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
+R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
 
-Signed-off-by: Yang Shi <yang.shi@linaro.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Allocated by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2739 [inline]
+ slab_alloc mm/slub.c:2747 [inline]
+ kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
+ kmem_cache_zalloc include/linux/slab.h:730 [inline]
+ __proc_create+0x30f/0xa20 fs/proc/generic.c:408
+ proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
+ 0xffffffffc10c01bb
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
+ pde_put+0x6e/0x80 fs/proc/generic.c:647
+ remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
+ 0xffffffffc10c031c
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881f41fe500
+ which belongs to the cache proc_dir_entry of size 256
+The buggy address is located 176 bytes inside of
+ 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
+The buggy address belongs to the page:
+page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+ ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+It should check the return value of atalk_proc_init fails,
+otherwise atalk_exit will trgger use-after-free in pde_subdir_find
+while unload the module.This patch fix error cleanup path of atalk_init
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/patch.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/atalk.h            |  2 +-
+ net/appletalk/atalk_proc.c       |  2 +-
+ net/appletalk/ddp.c              | 37 ++++++++++++++++++++++++++------
+ net/appletalk/sysctl_net_atalk.c |  5 ++++-
+ 4 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/kernel/patch.c b/arch/arm/kernel/patch.c
-index 69bda1a5707e..1f665acaa6a9 100644
---- a/arch/arm/kernel/patch.c
-+++ b/arch/arm/kernel/patch.c
-@@ -15,7 +15,7 @@ struct patch {
- 	unsigned int insn;
- };
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index 73fd8b7e9534..716d53799d1f 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -150,7 +150,7 @@ extern int sysctl_aarp_retransmit_limit;
+ extern int sysctl_aarp_resolve_time;
  
--static DEFINE_SPINLOCK(patch_lock);
-+static DEFINE_RAW_SPINLOCK(patch_lock);
- 
- static void __kprobes *patch_map(void *addr, int fixmap, unsigned long *flags)
- 	__acquires(&patch_lock)
-@@ -32,7 +32,7 @@ static void __kprobes *patch_map(void *addr, int fixmap, unsigned long *flags)
- 		return addr;
- 
- 	if (flags)
--		spin_lock_irqsave(&patch_lock, *flags);
-+		raw_spin_lock_irqsave(&patch_lock, *flags);
- 	else
- 		__acquire(&patch_lock);
- 
-@@ -47,7 +47,7 @@ static void __kprobes patch_unmap(int fixmap, unsigned long *flags)
- 	clear_fixmap(fixmap);
- 
- 	if (flags)
--		spin_unlock_irqrestore(&patch_lock, *flags);
-+		raw_spin_unlock_irqrestore(&patch_lock, *flags);
- 	else
- 		__release(&patch_lock);
+ #ifdef CONFIG_SYSCTL
+-extern void atalk_register_sysctl(void);
++extern int atalk_register_sysctl(void);
+ extern void atalk_unregister_sysctl(void);
+ #else
+ #define atalk_register_sysctl()		do { } while(0)
+diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
+index af46bc49e1e9..b5f84f428aa6 100644
+--- a/net/appletalk/atalk_proc.c
++++ b/net/appletalk/atalk_proc.c
+@@ -293,7 +293,7 @@ int __init atalk_proc_init(void)
+ 	goto out;
  }
+ 
+-void __exit atalk_proc_exit(void)
++void atalk_proc_exit(void)
+ {
+ 	remove_proc_entry("interface", atalk_proc_dir);
+ 	remove_proc_entry("route", atalk_proc_dir);
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 10d2bdce686e..e206d98b3b82 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1912,12 +1912,16 @@ static const char atalk_err_snap[] __initconst =
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+-	int rc = proto_register(&ddp_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&ddp_proto, 0);
++	if (rc)
+ 		goto out;
+ 
+-	(void)sock_register(&atalk_family_ops);
++	rc = sock_register(&atalk_family_ops);
++	if (rc)
++		goto out_proto;
++
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+ 	if (!ddp_dl)
+ 		printk(atalk_err_snap);
+@@ -1925,12 +1929,33 @@ static int __init atalk_init(void)
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+-	register_netdevice_notifier(&ddp_notifier);
++	rc = register_netdevice_notifier(&ddp_notifier);
++	if (rc)
++		goto out_sock;
++
+ 	aarp_proto_init();
+-	atalk_proc_init();
+-	atalk_register_sysctl();
++	rc = atalk_proc_init();
++	if (rc)
++		goto out_aarp;
++
++	rc = atalk_register_sysctl();
++	if (rc)
++		goto out_proc;
+ out:
+ 	return rc;
++out_proc:
++	atalk_proc_exit();
++out_aarp:
++	aarp_cleanup_module();
++	unregister_netdevice_notifier(&ddp_notifier);
++out_sock:
++	dev_remove_pack(&ppptalk_packet_type);
++	dev_remove_pack(&ltalk_packet_type);
++	unregister_snap_client(ddp_dl);
++	sock_unregister(PF_APPLETALK);
++out_proto:
++	proto_unregister(&ddp_proto);
++	goto out;
+ }
+ module_init(atalk_init);
+ 
+diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
+index ebb864361f7a..4e6042e0fcac 100644
+--- a/net/appletalk/sysctl_net_atalk.c
++++ b/net/appletalk/sysctl_net_atalk.c
+@@ -44,9 +44,12 @@ static struct ctl_table atalk_table[] = {
+ 
+ static struct ctl_table_header *atalk_table_header;
+ 
+-void atalk_register_sysctl(void)
++int __init atalk_register_sysctl(void)
+ {
+ 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
++	if (!atalk_table_header)
++		return -ENOMEM;
++	return 0;
+ }
+ 
+ void atalk_unregister_sysctl(void)
 -- 
 2.19.1
 
