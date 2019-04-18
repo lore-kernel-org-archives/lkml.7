@@ -2,133 +2,260 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD8DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8A1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5DA20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHcVB/38"
+	by mail.kernel.org (Postfix) with ESMTP id 2876C2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388313AbfDRInh (ORCPT
+        id S2388248AbfDRIsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:43:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42773 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388197AbfDRInh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:43:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g3so1899583wrx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 01:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XaG+VmIuFzFcyeH04Vkt+dOmHujdLld/OhJ1u+Y9zcc=;
-        b=kHcVB/38JpLU+vYPNimis8TXXS5FAWmQ8MKBiuQmWS8YQ8Z5jRue/GIBHUEC65BdO0
-         fIzHjto/uD8UAY74AVFihjrm8IWVULu4SeXMgFF6hOyY7kTUJYfX9RdecbHcRV6K8t6z
-         HOEfIu8piiAv9nCTZaDTU9wkevPk4Yp4R2F2GKqEXIg0KA7qL5CdluL2ZRQ/l/KqOEde
-         y14bs9iwXYKeleHVgTs0+opAvRymwlVXi366MvgzxnkaGfEUgYQJgsmLv/Sv9zabEHnu
-         7q8k9V+kCo3wmOmtnWAmqup/XApNKMDido8sE2st3UW+eC+dDI7zXr/ikEKe3TpkqIrR
-         rGIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=XaG+VmIuFzFcyeH04Vkt+dOmHujdLld/OhJ1u+Y9zcc=;
-        b=ewIEVlFiAkAAIKROCK7wuMO3YxTmqMdc4GA5hO/sYg4C7qP2qUmD3Z1TBDaDpIvANH
-         Bral45FRXlYfmVziPIklAZkDF8KI3lYWxP+4HfpIHZ0Sfi4oMZZu9z3ybnI0HoVSZnM1
-         xWVdkPIGExXrhN6GSEfvVtVfkzbOEJr1wfNNJ85BU934N8s5RzyhsV5aXWPbJibpZVD3
-         MISovJ7qvFHfb4IaNv+8av66uzWV9YForseY9/55NA2EQeZ1J8cQCpBpIRnvECdH79Tm
-         eQh0TLFEiYLkzxcLqwXxCNizQbRnMY5zXA5xQyEzeDHA8LHTa03wBl6jhujyYyYKfKm0
-         to/A==
-X-Gm-Message-State: APjAAAWycaC5EaL1vhYOXmb6sDjZFFenA9jAKmH4CiZltCIh5+qrUpMp
-        AHfOpYBxm2AkYFjggHTKrwbiD7QQ
-X-Google-Smtp-Source: APXvYqyCZ0rGrpXhrVfkpy+bQqBaL0cJax9xOY+BKtTwwWH+PBy06FTHLi0wDJxfQuL+aFrl+1CVJw==
-X-Received: by 2002:a5d:4588:: with SMTP id p8mr1483240wrq.155.1555577015208;
-        Thu, 18 Apr 2019 01:43:35 -0700 (PDT)
-Received: from cizrna.lan ([109.72.12.122])
-        by smtp.gmail.com with ESMTPSA id w14sm1767733wrr.16.2019.04.18.01.43.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 01:43:34 -0700 (PDT)
-From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/panfrost: Prevent concurrent resets
-Date:   Thu, 18 Apr 2019 10:41:48 +0200
-Message-Id: <20190418084305.45021-1-tomeu.vizoso@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 18 Apr 2019 04:48:22 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57682 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733049AbfDRIsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:48:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C46B15AB;
+        Thu, 18 Apr 2019 01:48:21 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18B1E3F68F;
+        Thu, 18 Apr 2019 01:48:16 -0700 (PDT)
+Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth for
+ guest
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
+ <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
+ <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
+ <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
+ <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
+ <20190417145255.GB3567@e103592.cambridge.arm.com>
+ <a04c6bfd-fd6a-8ff9-a66a-3391af53afb5@arm.com>
+ <20190417172010.GE3567@e103592.cambridge.arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <bec616ee-2765-4243-2108-84f3230c6aa0@arm.com>
+Date:   Thu, 18 Apr 2019 09:48:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190417172010.GE3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a job times out in slot 0 while a reset is performed because a job
-timed out in slot 1, the drm-sched core can get into a deadlock.
+On 17/04/2019 18:20, Dave Martin wrote:
+> On Wed, Apr 17, 2019 at 04:54:32PM +0100, Marc Zyngier wrote:
+>> On 17/04/2019 15:52, Dave Martin wrote:
+>>> On Wed, Apr 17, 2019 at 03:19:11PM +0100, Marc Zyngier wrote:
+>>>> On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 4/17/19 2:05 PM, Marc Zyngier wrote:
+>>>>>> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
+>>>>>>> A per vcpu flag is added to check if pointer authentication is
+>>>>>>> enabled for the vcpu or not. This flag may be enabled according to
+>>>>>>> the necessary user policies and host capabilities.
+>>>>>>>
+>>>>>>> This patch also adds a helper to check the flag.
+>>>>>>>
+>>>>>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>>>>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>>>>>> Cc: kvmarm@lists.cs.columbia.edu
+>>>>>>> ---
+>>>>>>>
+>>>>>>> Changes since v8:
+>>>>>>> * Added a new per vcpu flag which will store Pointer Authentication enable
+>>>>>>>    status instead of checking them again. [Dave Martin]
+>>>>>>>
+>>>>>>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
+>>>>>>>   1 file changed, 4 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>>>>>>> index 9d57cf8..31dbc7c 100644
+>>>>>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>>>>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>>>>>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
+>>>>>>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
+>>>>>>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
+>>>>>>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
+>>>>>>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
+>>>>>>>   
+>>>>>>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
+>>>>>>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
+>>>>>>>   
+>>>>>>> +#define vcpu_has_ptrauth(vcpu)	\
+>>>>>>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
+>>>>>>> +
+>>>>>>
+>>>>>> Just as for SVE, please first check that the system has PTRAUTH.
+>>>>>> Something like:
+>>>>>>
+>>>>>> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
+>>>>>> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
+>>>>>
+>>>>> In the subsequent patches, vcpu->arch.flags is only set to 
+>>>>> KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
+>>>>> matches such as system_supports_address_auth(), 
+>>>>> system_supports_generic_auth() so doing them again is repetitive in my view.
+>>>>
+>>>> It isn't the setting of the flag I care about, but the check of that
+>>>> flag. Checking a flag for a feature that cannot be used on the running
+>>>> system should have a zero cost, which isn't the case here.
+>>>>
+>>>> Granted, the impact should be minimal and it looks like it mostly happen
+>>>> on the slow path, but at the very least it would be consistent. So even
+>>>> if you don't buy my argument about efficiency, please change it in the
+>>>> name of consistency.
+>>>
+>>> One of the annoyances here is there is no single static key for ptrauth.
+>>>
+>>> I'm assuming we don't want to check both static keys (for address and
+>>> generic auth) on hot paths.
+>>
+>> They both just branches, so I don't see why not. Of course, for people
+>> using a lesser compiler (gcc 4.8 or clang), things will suck. But they
+>> got it coming anyway.
+> 
+> I seem to recall Christoffer expressing concerns about this at some
+> point: even unconditional branches branches to a fixed address are not
+> free (or even correctly predicted).
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
----
- drivers/gpu/drm/panfrost/panfrost_device.c | 1 +
- drivers/gpu/drm/panfrost/panfrost_device.h | 1 +
- drivers/gpu/drm/panfrost/panfrost_job.c    | 4 ++++
- 3 files changed, 6 insertions(+)
+Certainly not free, but likely less expensive than a load followed by a
+conditional branch. And actually, this is not a comparison against a branch,
+but against a nop.
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index 91e8fb0f2b25..970f669c6d29 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -98,6 +98,7 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 	struct resource *res;
- 
- 	mutex_init(&pfdev->sched_lock);
-+	mutex_init(&pfdev->reset_lock);
- 	INIT_LIST_HEAD(&pfdev->scheduled_jobs);
- 
- 	spin_lock_init(&pfdev->hwaccess_lock);
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 1ba48d105763..56f452dfb490 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -78,6 +78,7 @@ struct panfrost_device {
- 	struct list_head scheduled_jobs;
- 
- 	struct mutex sched_lock;
-+	struct mutex reset_lock;
- 
- 	struct {
- 		struct devfreq *devfreq;
-diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
-index 0a7ed04f7d52..a5716c8fe8b3 100644
---- a/drivers/gpu/drm/panfrost/panfrost_job.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_job.c
-@@ -384,6 +384,8 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
- 		job_read(pfdev, JS_TAIL_LO(js)),
- 		sched_job);
- 
-+	mutex_lock(&pfdev->reset_lock);
-+
- 	for (i = 0; i < NUM_JOB_SLOTS; i++)
- 		drm_sched_stop(&pfdev->js->queue[i].sched);
- 
-@@ -406,6 +408,8 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
- 	/* restart scheduler after GPU is usable again */
- 	for (i = 0; i < NUM_JOB_SLOTS; i++)
- 		drm_sched_start(&pfdev->js->queue[i].sched, true);
-+
-+	mutex_unlock(&pfdev->reset_lock);
- }
- 
- static const struct drm_sched_backend_ops panfrost_sched_ops = {
+> I don't think any compiler can elide static key checks of merge them
+> together.
+
+It is not about eliding them, it is about having a cheap fast path.
+
+Compiling this:
+
+bool kvm_hack_test_static_key(struct kvm_vcpu *vcpu)
+{
+	return ((system_supports_address_auth() ||
+		 system_supports_generic_auth()) &&
+		vcpu->arch.flags & (1 << 6));
+
+}
+
+I get:
+
+[...]
+ffff0000100db5c8:       1400000c        b       ffff0000100db5f8 <kvm_hack_test_static_key+0x48>
+ffff0000100db5cc:       d503201f        nop
+ffff0000100db5d0:       14000012        b       ffff0000100db618 <kvm_hack_test_static_key+0x68>
+ffff0000100db5d4:       d503201f        nop
+ffff0000100db5d8:       14000014        b       ffff0000100db628 <kvm_hack_test_static_key+0x78>
+ffff0000100db5dc:       d503201f        nop
+ffff0000100db5e0:       14000017        b       ffff0000100db63c <kvm_hack_test_static_key+0x8c>
+ffff0000100db5e4:       d503201f        nop
+ffff0000100db5e8:       52800000        mov     w0, #0x0                        // #0
+ffff0000100db5ec:       f9400bf3        ldr     x19, [sp, #16]
+ffff0000100db5f0:       a8c27bfd        ldp     x29, x30, [sp], #32
+ffff0000100db5f4:       d65f03c0        ret
+ffff0000100db5f8:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
+ffff0000100db5fc:       f942a400        ldr     x0, [x0, #1352]
+ffff0000100db600:       b637fe80        tbz     x0, #38, ffff0000100db5d0 <kvm_hack_test_static_key+0x20>
+ffff0000100db604:       f9441660        ldr     x0, [x19, #2088]
+ffff0000100db608:       f9400bf3        ldr     x19, [sp, #16]
+ffff0000100db60c:       53061800        ubfx    w0, w0, #6, #1
+ffff0000100db610:       a8c27bfd        ldp     x29, x30, [sp], #32
+ffff0000100db614:       d65f03c0        ret
+ffff0000100db618:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
+ffff0000100db61c:       f942a400        ldr     x0, [x0, #1352]
+ffff0000100db620:       b73fff20        tbnz    x0, #39, ffff0000100db604 <kvm_hack_test_static_key+0x54>
+ffff0000100db624:       17ffffed        b       ffff0000100db5d8 <kvm_hack_test_static_key+0x28>
+ffff0000100db628:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
+ffff0000100db62c:       f942a400        ldr     x0, [x0, #1352]
+ffff0000100db630:       b747fea0        tbnz    x0, #40, ffff0000100db604 <kvm_hack_test_static_key+0x54>
+ffff0000100db634:       14000002        b       ffff0000100db63c <kvm_hack_test_static_key+0x8c>
+ffff0000100db638:       17ffffeb        b       ffff0000100db5e4 <kvm_hack_test_static_key+0x34>
+ffff0000100db63c:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
+ffff0000100db640:       f942a400        ldr     x0, [x0, #1352]
+ffff0000100db644:       b74ffe00        tbnz    x0, #41, ffff0000100db604 <kvm_hack_test_static_key+0x54>
+ffff0000100db648:       52800000        mov     w0, #0x0                        // #0
+ffff0000100db64c:       17ffffe8        b       ffff0000100db5ec <kvm_hack_test_static_key+0x3c>
+
+Once the initial 4 branches that are there to deal with the pre static 
+keys checks are nop-ed, everything is controlled by the remaining 4
+nops which are turned into branches to ffff0000100db604 if any of the 
+conditions become true.
+
+Which is exactly what we want: a fall through to returning zero without
+doing anything else.
+
+Thanks,
+
+	M.
+
+> Maybe I am misremembering.
+> 
+> Cheers
+> ---Dave
+> 
+
+
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
