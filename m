@@ -2,84 +2,211 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BDFC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7251C282DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BE2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809532184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="o0PT76bd"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="D8ZKOD/I";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XkNACIXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387844AbfDRDDO (ORCPT
+        id S2387922AbfDRDID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 23:03:14 -0400
-Received: from m50-132.163.com ([123.125.50.132]:32831 "EHLO m50-132.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731985AbfDRDDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 23:03:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=Cw1Kp4F8rudsIsH9nr
-        z8PZXrCFnjTmyP6A82n35dok0=; b=o0PT76bd1p1tJzGfQILHvbV9ZGToYSjjbj
-        3x30oZgksw7iShvxiXQK9J1h1OK+6JX08peE/W/LstFGtEyR7SGaynlv/vLLexAW
-        ifAFa1duxrIoQOOa2QqpaA15RprbrPfEudCgnOlpRQ8uK+165rDPNcbjkG1TRlZn
-        wPfUSD/iA=
-Received: from bp.localdomain (unknown [218.106.182.174])
-        by smtp2 (Coremail) with SMTP id DNGowAD3SY7h6Ldc4YNNAA--.119S3;
-        Thu, 18 Apr 2019 11:02:59 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: iio: dummy_evgen: fix possible memleak in evgen init
-Date:   Thu, 18 Apr 2019 11:02:56 +0800
-Message-Id: <1555556576-6927-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: DNGowAD3SY7h6Ldc4YNNAA--.119S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7XFy7ZFyxAr1kJFWDCrWrGrg_yoWfCFX_WF
-        1FvF97XF1fGa1UKr45AF43ZrWFkayjvFs3JF17tF1fGF9YqFn7ZFWDXrZ8tr4DWw4Ygryv
-        gr4Utrn2ya1I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjtfH5UUUUU==
-X-Originating-IP: [218.106.182.174]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBUQOaclaD2Iam6gAAs9
+        Wed, 17 Apr 2019 23:08:03 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40054 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731985AbfDRDID (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 23:08:03 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x3I37M9K003913;
+        Wed, 17 Apr 2019 20:07:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Z2dJelOQ0yl/7TG6RhC7wYBCcKk0cxBJ3I7/DHMqBN4=;
+ b=D8ZKOD/Ihzyye6iV/EbZGj495tOCgRifPz41G+rx2tGqLvZ0zSAzFx5sMGmX6bqLXE2z
+ SfFsGZWNSRelafkUPT+1rZeox0HmK9F9vCF3xxnlPspLknalz9GjFo2MunEcBXOkoj32
+ z/Qy5usbs1SqLZP02CA97sEdJWJ5pDKCiOw= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2rwm8mdmgv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 17 Apr 2019 20:07:42 -0700
+Received: from prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 17 Apr 2019 20:07:41 -0700
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 17 Apr 2019 20:07:40 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 17 Apr 2019 20:07:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z2dJelOQ0yl/7TG6RhC7wYBCcKk0cxBJ3I7/DHMqBN4=;
+ b=XkNACIXA9ktp4uZ/hi3GBQcWnc49gLlB5iH9DRdfGGvhW9Tb1MfrfIEQPw5WB7ZLZC0HUpOh/eU5vCwL69jrN9NHAmpmCQAKA99Ny8UD0H++Rg4GT/1HCKKNlEsa2R8BqdmU5Gi05no4GqWz5M4ATkukbjcwcp7/EanUMCQ6RkE=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3477.namprd15.prod.outlook.com (20.179.60.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Thu, 18 Apr 2019 03:07:37 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.021; Thu, 18 Apr 2019
+ 03:07:37 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Roman Gushchin <guroan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "Christoph Lameter" <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 4/5] mm: rework non-root kmem_cache lifecycle management
+Thread-Topic: [PATCH 4/5] mm: rework non-root kmem_cache lifecycle management
+Thread-Index: AQHU9WhFLwAo90XwHUSqs2s91sh5hqZBAzaA//+a0QCAAIqtAIAAFDUA
+Date:   Thu, 18 Apr 2019 03:07:37 +0000
+Message-ID: <20190418030729.GA5038@castle>
+References: <20190417215434.25897-1-guro@fb.com>
+ <20190417215434.25897-5-guro@fb.com>
+ <CALvZod5K8SM2EQFH1WM9bbwWBtyXWb_PvzJGvF5dg1Z=bdR7zg@mail.gmail.com>
+ <20190418003850.GA13977@tower.DHCP.thefacebook.com>
+ <CALvZod6UiTeN40RgpE-4zE5zagSifqh3o_AXaw8o-ubVUWf=4w@mail.gmail.com>
+In-Reply-To: <CALvZod6UiTeN40RgpE-4zE5zagSifqh3o_AXaw8o-ubVUWf=4w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR2201CA0040.namprd22.prod.outlook.com
+ (2603:10b6:301:16::14) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::3f5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87abc140-bcc3-48df-d2c1-08d6c3ab02a1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB3477;
+x-ms-traffictypediagnostic: BYAPR15MB3477:
+x-microsoft-antispam-prvs: <BYAPR15MB34771EF43DB9470AAB2AFAF9BE260@BYAPR15MB3477.namprd15.prod.outlook.com>
+x-forefront-prvs: 0011612A55
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(346002)(136003)(366004)(39860400002)(396003)(55674003)(54094003)(189003)(199004)(33656002)(5660300002)(486006)(52116002)(476003)(76176011)(68736007)(8936002)(316002)(81166006)(99286004)(186003)(54906003)(11346002)(8676002)(53546011)(386003)(6916009)(46003)(6116002)(446003)(7736002)(6506007)(14444005)(71190400001)(71200400001)(305945005)(256004)(97736004)(6486002)(478600001)(7416002)(86362001)(102836004)(25786009)(81156014)(33716001)(1076003)(4326008)(53936002)(93886005)(9686003)(6246003)(229853002)(2906002)(6436002)(6512007)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3477;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OOvb08rZP7Ag0/s7hw+nAGUHEjK+WKpRCONorlIFbJvVjVX4Ra26585ye/81+fU/anYn24VszrAfWzKwPA9KTuYyAVf8IjRdy3lvPXuPGt2kkGkLuOh70lHnsJCVMvgXVoShi2m//9UF9YV/Zk5Q4tzf3VulxSZ0cFba0XLZVQpMkyDQQVAoyfNKfntVjwfC5d6804zMS9fS/lP4vi6JZxxH05eW+7e3yJd3/cdQ3vIZYKovrkb4Q6rcZ9Mey5JjBk46hhtR20EF5x/DMS715/AKkMeXhcwwthdaAF0B1BmqiI/JHBrDMnhgYdHieJlsrgZW119e2AfyCfPIKMaECFtXFa+xoXvt2dJZX4otH+Dxz1Mp1NBYCZmhyUHeMZKu6W3nM2OrY6PSFY4FGO0h2BoLCECX2Z98g0yZtpTiU6g=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <247B59BC911AF840B54250803B8E442F@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87abc140-bcc3-48df-d2c1-08d6c3ab02a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 03:07:37.4820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3477
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-18_02:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memory allocated in the function iio_dummy_evgen_create is not
-released if it fails to add the evgen device to device hierarchy. This
-may result in a memory leak bug.
+On Wed, Apr 17, 2019 at 06:55:12PM -0700, Shakeel Butt wrote:
+> On Wed, Apr 17, 2019 at 5:39 PM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > On Wed, Apr 17, 2019 at 04:41:01PM -0700, Shakeel Butt wrote:
+> > > On Wed, Apr 17, 2019 at 2:55 PM Roman Gushchin <guroan@gmail.com> wro=
+te:
+> > > >
+> > > > This commit makes several important changes in the lifecycle
+> > > > of a non-root kmem_cache, which also affect the lifecycle
+> > > > of a memory cgroup.
+> > > >
+> > > > Currently each charged slab page has a page->mem_cgroup pointer
+> > > > to the memory cgroup and holds a reference to it.
+> > > > Kmem_caches are held by the cgroup. On offlining empty kmem_caches
+> > > > are freed, all other are freed on cgroup release.
+> > >
+> > > No, they are not freed (i.e. destroyed) on offlining, only
+> > > deactivated. All memcg kmem_caches are freed/destroyed on memcg's
+> > > css_free.
+> >
+> > You're right, my bad. I was thinking about the corresponding sysfs entr=
+y
+> > when was writing it. We try to free it from the deactivation path too.
+> >
+> > >
+> > > >
+> > > > So the current scheme can be illustrated as:
+> > > > page->mem_cgroup->kmem_cache.
+> > > >
+> > > > To implement the slab memory reparenting we need to invert the sche=
+me
+> > > > into: page->kmem_cache->mem_cgroup.
+> > > >
+> > > > Let's make every page to hold a reference to the kmem_cache (we
+> > > > already have a stable pointer), and make kmem_caches to hold a sing=
+le
+> > > > reference to the memory cgroup.
+> > >
+> > > What about memcg_kmem_get_cache()? That function assumes that by
+> > > taking reference on memcg, it's kmem_caches will stay. I think you
+> > > need to get reference on the kmem_cache in memcg_kmem_get_cache()
+> > > within the rcu lock where you get the memcg through css_tryget_online=
+.
+> >
+> > Yeah, a very good question.
+> >
+> > I believe it's safe because css_tryget_online() guarantees that
+> > the cgroup is online and won't go offline before css_free() in
+> > slab_post_alloc_hook(). I do initialize kmem_cache's refcount to 1
+> > and drop it on offlining, so it protects the online kmem_cache.
+> >
+>=20
+> Let's suppose a thread doing a remote charging calls
+> memcg_kmem_get_cache() and gets an empty kmem_cache of the remote
+> memcg having refcnt equal to 1. That thread got a reference on the
+> remote memcg but no reference on the kmem_cache. Let's suppose that
+> thread got stuck in the reclaim and scheduled away. In the meantime
+> that remote memcg got offlined and decremented the refcnt of all of
+> its kmem_caches. The empty kmem_cache which the thread stuck in
+> reclaim have pointer to can get deleted and may be using an already
+> destroyed kmem_cache after coming back from reclaim.
+>=20
+> I think the above situation is possible unless the thread gets the
+> reference on the kmem_cache in memcg_kmem_get_cache().
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/iio/dummy/iio_dummy_evgen.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Yes, you're right and I'm writing a nonsense: css_tryget_online()
+can't prevent the cgroup from being offlined.
 
-diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
-index efd0005..f96c0a3 100644
---- a/drivers/iio/dummy/iio_dummy_evgen.c
-+++ b/drivers/iio/dummy/iio_dummy_evgen.c
-@@ -196,7 +196,10 @@ static __init int iio_dummy_evgen_init(void)
- 		return ret;
- 	device_initialize(&iio_evgen_dev);
- 	dev_set_name(&iio_evgen_dev, "iio_evgen");
--	return device_add(&iio_evgen_dev);
-+	ret = device_add(&iio_evgen_dev);
-+	if (ret)
-+		put_device(&iio_evgen_dev);
-+	return ret;
- }
- module_init(iio_dummy_evgen_init);
- 
--- 
-2.7.4
+So, the problem with getting a reference in memcg_kmem_get_cache()
+is that it's an atomic operation on the hot path, something I'd like
+to avoid.
 
+I can make the refcounter percpu, but it'll add some complexity and size
+to the kmem_cache object. Still an option, of course.
 
+I wonder if we can use rcu_read_lock() instead, and bump the refcounter
+only if we're going into reclaim.
+
+What do you think?
+
+Thanks!
