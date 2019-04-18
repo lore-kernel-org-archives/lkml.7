@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED59C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3804D20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3373720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611675;
-	bh=QOPhOtsI890217ZLprqm3dHIJaVXc4IHks0T7uj9qLs=;
+	s=default; t=1555611680;
+	bh=sr2/c6ZFz6S1DDcVXG5GRSj4R2z+zr6gULZPI7eLkxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EkZEqo0ijB2DdIG+zLPW3HfMybBJBGoU+BRggBZg4yLYuEx04LvWXWkh0pMQUOMPl
-	 xjmmrs1synVmPQQP+PZC0udcIT80Kpw5OwYY6pasxCxzr60GmcjJUCv2OJuZia9o6t
-	 +r5vZQP9WT0tPDsjTlGYoLxAc2CXdKppB0RiSOhU=
+	b=H3OdpQlybQh9t6/7NrdBWokwZMR901GxUq+UFD1rFXynIBiDqL6M7AgYvzt4e2L1e
+	 ZokXRyWTyqfTeyU2HmOjI3wGUT8MAkxTdtglMYxkEoQIqagx1PdEb+6h+BETHM2BVD
+	 IB+Vx+TWzUaDTDk6qohs8ta3BybegJvuwvLuombU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391699AbfDRSH6 (ORCPT
+        id S2403989AbfDRSVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389862AbfDRSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:07:56 -0400
+        id S2391661AbfDRSHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:07:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964B5217FA;
-        Thu, 18 Apr 2019 18:07:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17C4A218AF;
+        Thu, 18 Apr 2019 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610876;
-        bh=QOPhOtsI890217ZLprqm3dHIJaVXc4IHks0T7uj9qLs=;
+        s=default; t=1555610873;
+        bh=sr2/c6ZFz6S1DDcVXG5GRSj4R2z+zr6gULZPI7eLkxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhhmvCSh/oRuUewyOmKd+Bg5NRqawk6+rAsZBQyoiPtVlEVR3b6VNTqUZi6Y966HY
-         LOQea0iUUbsd5PkqYdWDERLAImM4xxRUT8CxfVRhNKFe/JRQ5xtYbo+KhW86m1Fj/l
-         fxWTuSNCKSXz3EezoI6TuAA1vAY3SVlSBhEZlFtU=
+        b=oHqzUa45btc/WtX85cmOwteRIQV7odrH0yHODumAdHxUdJZWFR1RBcXoQu3ByeOMN
+         FGADqT97+rY3Tksh/UIDsMna3/s6dbbR56iQqr/89ml07RXcAp6T5WMhLHP6kAe+QD
+         L2mNzbarMEaMe82Id3nJtk6BE3gVThh8FChsbll4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/50] ALSA: echoaudio: add a check for ioremap_nocache
-Date:   Thu, 18 Apr 2019 19:57:16 +0200
-Message-Id: <20190418160423.565942478@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 04/50] ext4: report real fs size after failed resize
+Date:   Thu, 18 Apr 2019 19:57:15 +0200
+Message-Id: <20190418160423.405452539@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -59,34 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ade657d6125ec3ec07f95fa51e28138aef6208f ]
+[ Upstream commit 6c7328400e0488f7d49e19e02290ba343b6811b2 ]
 
-In case ioremap_nocache fails, the fix releases chip and returns
-an error code upstream to avoid NULL pointer dereference.
+Currently when the file system resize using ext4_resize_fs() fails it
+will report into log that "resized filesystem to <requested block
+count>".  However this may not be true in the case of failure.  Use the
+current block count as returned by ext4_blocks_count() to report the
+block count.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Additionally, report a warning that "error occurred during file system
+resize"
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/echoaudio/echoaudio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ext4/resize.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-index 286f5e3686a3..d73ee11a32bd 100644
---- a/sound/pci/echoaudio/echoaudio.c
-+++ b/sound/pci/echoaudio/echoaudio.c
-@@ -1953,6 +1953,11 @@ static int snd_echo_create(struct snd_card *card,
- 	}
- 	chip->dsp_registers = (volatile u32 __iomem *)
- 		ioremap_nocache(chip->dsp_registers_phys, sz);
-+	if (!chip->dsp_registers) {
-+		dev_err(chip->card->dev, "ioremap failed\n");
-+		snd_echo_free(chip);
-+		return -ENOMEM;
-+	}
- 
- 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
- 			KBUILD_MODNAME, chip)) {
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index e16fb545d441..aef2a24dc9f9 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -2047,6 +2047,10 @@ int ext4_resize_fs(struct super_block *sb, ext4_fsblk_t n_blocks_count)
+ 		free_flex_gd(flex_gd);
+ 	if (resize_inode != NULL)
+ 		iput(resize_inode);
+-	ext4_msg(sb, KERN_INFO, "resized filesystem to %llu", n_blocks_count);
++	if (err)
++		ext4_warning(sb, "error (%d) occurred during "
++			     "file system resize", err);
++	ext4_msg(sb, KERN_INFO, "resized filesystem to %llu",
++		 ext4_blocks_count(es));
+ 	return err;
+ }
 -- 
 2.19.1
 
