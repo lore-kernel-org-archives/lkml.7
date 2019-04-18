@@ -2,126 +2,122 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A61C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FA1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFEA4214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D3C214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:34:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfvK2lpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388448AbfDRJcI (ORCPT
+        id S2388383AbfDRJeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:32:08 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58340 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbfDRJcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:32:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC66015AB;
-        Thu, 18 Apr 2019 02:32:06 -0700 (PDT)
-Received: from [10.37.12.217] (unknown [10.37.12.217])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 003AB3F68F;
-        Thu, 18 Apr 2019 02:32:04 -0700 (PDT)
-Subject: Re: [PATCH] ARM: mach-shmobile: Don't configure ARCH timer if PSCI is
- enabled
-To:     Oleksandr Tyshchenko <olekstysh@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1555521040-16706-1-git-send-email-olekstysh@gmail.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <1b33dca4-e3ae-4588-05f2-37b23ac8df78@arm.com>
-Date:   Thu, 18 Apr 2019 10:32:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 05:34:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37384 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733049AbfDRJef (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:34:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so2076717wmf.2;
+        Thu, 18 Apr 2019 02:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OY+Y5/4e/0bQmElG3rhImszyAhq0oLz+g1+5d97dMhg=;
+        b=RfvK2lpTeJQ76cJBoX/gY5k1dQoYvwUQjKTlYEZ5vhYoZjLghToERlT9YC62ZuZ42o
+         0MknLkAzmlcxc5d9Kql7Z2d/WbTscRC7f+mksWHZuR+urso3ETaKWZO7pH8Mu69O2mM8
+         bN3b04jfb6tvbGcmUFPrldDPw00LCeOG9FAqcB4DAp53S3daXf6ZG3uq55QqzJa7mzi0
+         afZbkYXFnxrHcWi9cL3RN420NTeIIZgea1B0p940dGBoNFn5hsXHUnIQcQ/XxDuhaJ2W
+         jxF84L46Jxh0cWu5M49bXV9t20whVyCYE2RZ/QdbxZ5Xh0bs5TFCU9qnzdkOah51a/4A
+         Wfmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OY+Y5/4e/0bQmElG3rhImszyAhq0oLz+g1+5d97dMhg=;
+        b=Tg/DEgN0QtZblYVwxhVfj6FbO03WyO+UweHXxLa5es5m8CFVOGL6hls6iLwrnWHbrs
+         ULT8jZELL+HZlLhJpxuoVttUxMCnwfKwcYagrfZ5dQDuaaBTlX23j2ZJS98vuYu9s0bj
+         7xI68d29gViyOV2DjVxz6YhRTDsznk2HGXxBYzmIRbGlPg1vzZWOkc8TxW7JxofUJ5Rm
+         SoHd3MCYMhILRPUwuzGhWKG7ZrN708OXPwMYpRzSgt0wE9d6ZhClqhzCd+9Wf1gx7xg/
+         dA3bt4Onr0xsvEKP1FiSy1sX2Lg2vqRsY+UvMG+4iU9p8qlZQqqS2x4cmLbvnW9qdhlh
+         +CHQ==
+X-Gm-Message-State: APjAAAUr9bLggO5JBCP2+lJ+hpSYMRL0qVuRiN4pBAbJJ4s17mI340BT
+        XNluVgawwQ+M7bOQQvyM5aE=
+X-Google-Smtp-Source: APXvYqzRPQ8jz49vTmM6c+28gYNENFonicWPi8XCkG1IHhXINhDHz+JtTZUI6Co+X8pkR0RymfqTiA==
+X-Received: by 2002:a1c:9d4c:: with SMTP id g73mr2500962wme.48.1555580073833;
+        Thu, 18 Apr 2019 02:34:33 -0700 (PDT)
+Received: from localhost (p2E5BE61D.dip0.t-ipconnect.de. [46.91.230.29])
+        by smtp.gmail.com with ESMTPSA id n1sm1057026wmc.19.2019.04.18.02.34.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 02:34:32 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 11:34:31 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ARM: tegra: cpuidle: Handle tick broadcasting within
+ cpuidle core on Tegra20/30
+Message-ID: <20190418093431.GA26909@ulmo>
+References: <20190224152114.6161-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1555521040-16706-1-git-send-email-olekstysh@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Content-Disposition: inline
+In-Reply-To: <20190224152114.6161-1-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 4/17/19 6:10 PM, Oleksandr Tyshchenko wrote:
-> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-> 
-> If CONFIG_PSCI is enabled then most likely we are running on
-> PSCI-enabled U-Boot which, we assume, has already taken care of
-> configuring ARCH timer stuff before switching to non-secure mode.
-> 
-> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-> 
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Feb 24, 2019 at 06:21:14PM +0300, Dmitry Osipenko wrote:
+> Tegra20/30 drivers do not handle the tick_broadcast_enter() error which
+> potentially could happen when CPU timer isn't permitted to be stopped.
+> Let's just move out the broadcasting to the CPUIDLE core by setting the
+> respective flag in the Tegra20/30 drivers. This patch doesn't fix any
+> problem because currently tick_broadcast_enter() could fail only on
+> ARM64, so consider this change as a minor cleanup.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
-> A bit of context here...
-> 
-> We are highly interested in Renesas "Stout" board support (r8a7790)
-> in Xen hypervisor. The reason is to have fully supported HW for
-> performing "OSSTEST" (Xen automatic test system) on ARM32.
-> 
-> To reach that target we need a "generic way" for the secondary CPU cores
-> bring up and switching them to non-secure hyp mode.
-> So, the PSCI as a generic well-known way to bring up CPUs, was chosen
-> for that purpose.
-> 
-> You can find corresponding patches for U-Boot here:
-> http://u-boot.10912.n7.nabble.com/PATCH-0-3-PSCI-support-for-r8a7790-SoC-Lager-Stout-boards-td357352.html
-> 
-> You can find corresponding patches for Xen hypervisor here:
-> https://www.mail-archive.com/xen-devel@lists.xenproject.org/msg43332.html
-> 
-> To sumarize:
-> Together with enabling CONFIG_PSCI in shmobile_defconfig, current patch
-> is a minimal required change needed to run mainline Linux on top of
-> PSCI-enabled U-Boot.
-> There is no need to modify device tree. U-Boot will take care of inserting
-> proper "enable-method" strings in CPU nodes.
-> 
-> ---
->   arch/arm/mach-shmobile/setup-rcar-gen2.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-> index eea60b2..bac4490 100644
-> --- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-> +++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-> @@ -32,7 +32,7 @@ static const struct of_device_id cpg_matches[] __initconst = {
->   	{ /* sentinel */ }
->   };
->   
-> -static unsigned int __init get_extal_freq(void)
-> +static unsigned int __init __maybe_unused get_extal_freq(void)
->   {
->   	const struct of_device_id *match;
->   	struct device_node *cpg, *extal;
-> @@ -60,6 +60,12 @@ static unsigned int __init get_extal_freq(void)
->   
->   void __init rcar_gen2_timer_init(void)
->   {
-> +/*
-> + * If CONFIG_PSCI is enabled then most likely we are running on PSCI-enabled
-> + * U-Boot which, we assume, has already taken care of configuring ARCH timer
-> + * stuff before switching to non-secure mode.
-> + */
+>  arch/arm/mach-tegra/cpuidle-tegra20.c | 11 ++---------
+>  arch/arm/mach-tegra/cpuidle-tegra30.c |  9 +--------
+>  2 files changed, 3 insertions(+), 17 deletions(-)
 
-I disagree with that statement. CONFIG_ARM_PSCI may be selected in your 
-.config for multiple reasons:
-      - CONFIG_XEN will selected it
-      - you build a .config targeting multiple platforms
+Applied to for-5.2/arm/soc, thanks.
 
-Yet you may still want to boot the kernel on older U-boot. Such change 
-would make it impossible.
+Thierry
 
-If there are code that should not be called when PSCI is used, then you 
-need to make sure the function is not called at runtime.
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Julien Grall
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly4RKMACgkQ3SOs138+
+s6EKeRAAtsGYzZqPjid4skeUt7zmCvp5nBwtyRRn0aN1t9IxqxYQE8RczF1LgHm3
+QS3vbw3DLK0QiOrdwnZwQ+WZt/xCPVqp4itoZGxxM0JuYoxebrAzjjJNKO8cdsDR
+fw8ERefyVav+ZFNGq87AK/gwNC8Oreyt4SeouN18zi/5pNfqVxMAhLhefsVID+9k
+xFxg0wm+QNdvGXurwztCAAiVsesDdFTJGC062dqYTWmQDFaNOkkp1L5xEJJ2/OPr
+m6rINNeh11zzol77+S7Lft/WuA0ZuPnG7wtlELSqI8Ic0ekx/IXpLr8coxko8xA3
+UEbBGd78ISGxFKZJM/SfvFKIyLwbytbI79WGc4ikbDXBbrTXIvF8083OFRb3iqiq
+wOgdDGfppKPY9+EDsREyoPdyyLZZVWZpgjMgcezfX60A+V9AiOfBR7yOMlXx+Wzi
+z5wn2dNPe2+9ne06OiEn0oPZzDXA3MnQ1z7wJAPhKvEHz/h6RPSnEDrw8ZfTLEl0
+xdREBaIWxc/gouVSlzHvYUG69ZOPeh+BLFLu9a7qo6z2TZL83tvGNOBylVDLyGxl
+a3Myi6GGHuVeEgooCcwdrch6oMhJdIJmRtAlp6ks1CqK3ZeN04OJaDpZ36R4WrkP
+R/1cAYtx6gbf0aFRhzqc5psHfvwZ4ClWyUKHMu3h5gHCBDYazms=
+=PxYd
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
