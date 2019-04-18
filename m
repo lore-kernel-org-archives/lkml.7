@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5223DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E67FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107B0206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF09217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610479;
-	bh=j76+wj2FqeUTDomXAmIxUiHj9e20PU0KqNRwIL5fk90=;
+	s=default; t=1555610485;
+	bh=+udT0kFDJdycTpaw1Ab2NsHIYtH5Im/geoaaCnI2xwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Od+VlT/RcCluQHrrAYVl/oBzeaS+ztE9RdYt3qj+Ee9f2rV2nx5gK514UgJkFulVx
-	 +0vJtPNMrH7SylWezveFQQT5kZ64Wc3GEzulnrbObzA811+CW8OZs3r0PDN0Wo0W7o
-	 Trg5IbFsdT6QeMJE34G597kML2JUN2fuIuhlk71U=
+	b=FeFlt2bdw+Fg6txD16Zya9dtponB27OgRwwRwfnF4A1Q2VQR5gPhxUcWyDPoDxS6D
+	 fDMzoAc/I+S8btd9TGpwJ+pa3SAyOMPis3n4Hw/Shyp6LARuacCH94igxtnMOfcV3i
+	 CNS0blCGXQmAqV4DggdY/ScqeJSquDFpZTW38diQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390133AbfDRSBR (ORCPT
+        id S2390548AbfDRSBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:01:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390097AbfDRSBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:16 -0400
+        id S2390095AbfDRSBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85CAA206B6;
-        Thu, 18 Apr 2019 18:01:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAA13206B6;
+        Thu, 18 Apr 2019 18:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610475;
-        bh=j76+wj2FqeUTDomXAmIxUiHj9e20PU0KqNRwIL5fk90=;
+        s=default; t=1555610480;
+        bh=+udT0kFDJdycTpaw1Ab2NsHIYtH5Im/geoaaCnI2xwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhk+ICdeGR1i6szigtFcYnW8gqUDYnPyKmk7M11v33SYWULmOQAEAlKXx2mFmkw52
-         WA57w7oDISECE/V5e0ZwJd+Tv+IDa8hdtInpd0pZKQzD3tpi0EGffmzElnBCHQNn0z
-         VVHduPEngGn6ek1qtTaNQO3E5Isci5gbCCuiiB6M=
+        b=O8IYd+J9kzax3GgG9NgxUq0AWfeLn1yVvDsoNt/weqIHvOl6ZzoEPOXMY6KeuTw++
+         FBEHmgEY2NGvG490y7S30g8W76D0i+8upPiPKtXG69+o1YKC54an8P5UqFp8K0Tva3
+         3gM7AueMQvx+eFBfUplQR2e/FBlxHlzUtLUwvUbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sheng Yong <shengyong1@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/110] f2fs: cleanup dirty pages if recover failed
-Date:   Thu, 18 Apr 2019 19:57:04 +0200
-Message-Id: <20190418160445.324956583@linuxfoundation.org>
+Subject: [PATCH 4.19 077/110] cifs: fallback to older infolevels on findfirst queryinfo retry
+Date:   Thu, 18 Apr 2019 19:57:06 +0200
+Message-Id: <20190418160445.478785952@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,225 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26b5a079197c8cb6725565968b7fd3299bd1877b ]
+[ Upstream commit 3b7960caceafdfc2cdfe2850487f8d091eb41144 ]
 
-During recover, we will try to create new dentries for inodes with
-dentry_mark. But if the parent is missing (e.g. killed by fsck),
-recover will break. But those recovered dirty pages are not cleanup.
-This will hit f2fs_bug_on:
+In cases where queryinfo fails, we have cases in cifs (vers=1.0)
+where with backupuid mounts we retry the query info with findfirst.
+This doesn't work to some NetApp servers which don't support
+WindowsXP (and later) infolevel 261 (SMB_FIND_FILE_ID_FULL_DIR_INFO)
+so in this case use other info levels (in this case it will usually
+be level 257, SMB_FIND_FILE_DIRECTORY_INFO).
 
-[   53.519566] F2FS-fs (loop0): Found nat_bits in checkpoint
-[   53.539354] F2FS-fs (loop0): recover_inode: ino = 5, name = file, inline = 3
-[   53.539402] F2FS-fs (loop0): recover_dentry: ino = 5, name = file, dir = 0, err = -2
-[   53.545760] F2FS-fs (loop0): Cannot recover all fsync data errno=-2
-[   53.546105] F2FS-fs (loop0): access invalid blkaddr:4294967295
-[   53.546171] WARNING: CPU: 1 PID: 1798 at fs/f2fs/checkpoint.c:163 f2fs_is_valid_blkaddr+0x26c/0x320
-[   53.546174] Modules linked in:
-[   53.546183] CPU: 1 PID: 1798 Comm: mount Not tainted 4.19.0-rc2+ #1
-[   53.546186] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   53.546191] RIP: 0010:f2fs_is_valid_blkaddr+0x26c/0x320
-[   53.546195] Code: 85 bb 00 00 00 48 89 df 88 44 24 07 e8 ad a8 db ff 48 8b 3b 44 89 e1 48 c7 c2 40 03 72 a9 48 c7 c6 e0 01 72 a9 e8 84 3c ff ff <0f> 0b 0f b6 44 24 07 e9 8a 00 00 00 48 8d bf 38 01 00 00 e8 7c a8
-[   53.546201] RSP: 0018:ffff88006c067768 EFLAGS: 00010282
-[   53.546208] RAX: 0000000000000000 RBX: ffff880068844200 RCX: ffffffffa83e1a33
-[   53.546211] RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88006d51e590
-[   53.546215] RBP: 0000000000000005 R08: ffffed000daa3cb3 R09: ffffed000daa3cb3
-[   53.546218] R10: 0000000000000001 R11: ffffed000daa3cb2 R12: 00000000ffffffff
-[   53.546221] R13: ffff88006a1f8000 R14: 0000000000000200 R15: 0000000000000009
-[   53.546226] FS:  00007fb2f3646840(0000) GS:ffff88006d500000(0000) knlGS:0000000000000000
-[   53.546229] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   53.546234] CR2: 00007f0fd77f0008 CR3: 00000000687e6002 CR4: 00000000000206e0
-[   53.546237] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   53.546240] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   53.546242] Call Trace:
-[   53.546248]  f2fs_submit_page_bio+0x95/0x740
-[   53.546253]  read_node_page+0x161/0x1e0
-[   53.546271]  ? truncate_node+0x650/0x650
-[   53.546283]  ? add_to_page_cache_lru+0x12c/0x170
-[   53.546288]  ? pagecache_get_page+0x262/0x2d0
-[   53.546292]  __get_node_page+0x200/0x660
-[   53.546302]  f2fs_update_inode_page+0x4a/0x160
-[   53.546306]  f2fs_write_inode+0x86/0xb0
-[   53.546317]  __writeback_single_inode+0x49c/0x620
-[   53.546322]  writeback_single_inode+0xe4/0x1e0
-[   53.546326]  sync_inode_metadata+0x93/0xd0
-[   53.546330]  ? sync_inode+0x10/0x10
-[   53.546342]  ? do_raw_spin_unlock+0xed/0x100
-[   53.546347]  f2fs_sync_inode_meta+0xe0/0x130
-[   53.546351]  f2fs_fill_super+0x287d/0x2d10
-[   53.546367]  ? vsnprintf+0x742/0x7a0
-[   53.546372]  ? f2fs_commit_super+0x180/0x180
-[   53.546379]  ? up_write+0x20/0x40
-[   53.546385]  ? set_blocksize+0x5f/0x140
-[   53.546391]  ? f2fs_commit_super+0x180/0x180
-[   53.546402]  mount_bdev+0x181/0x200
-[   53.546406]  mount_fs+0x94/0x180
-[   53.546411]  vfs_kern_mount+0x6c/0x1e0
-[   53.546415]  do_mount+0xe5e/0x1510
-[   53.546420]  ? fs_reclaim_release+0x9/0x30
-[   53.546424]  ? copy_mount_string+0x20/0x20
-[   53.546428]  ? fs_reclaim_acquire+0xd/0x30
-[   53.546435]  ? __might_sleep+0x2c/0xc0
-[   53.546440]  ? ___might_sleep+0x53/0x170
-[   53.546453]  ? __might_fault+0x4c/0x60
-[   53.546468]  ? _copy_from_user+0x95/0xa0
-[   53.546474]  ? memdup_user+0x39/0x60
-[   53.546478]  ksys_mount+0x88/0xb0
-[   53.546482]  __x64_sys_mount+0x5d/0x70
-[   53.546495]  do_syscall_64+0x65/0x130
-[   53.546503]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   53.547639] ---[ end trace b804d1ea2fec893e ]---
+(Also fixes some indentation)
 
-So if recover fails, we need to drop all recovered data.
+See kernel bugzilla 201435
 
-Signed-off-by: Sheng Yong <shengyong1@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 32 +++++++++++++++++++++-----------
- fs/f2fs/super.c    | 15 ++++++++++++++-
- 2 files changed, 35 insertions(+), 12 deletions(-)
+ fs/cifs/inode.c | 67 +++++++++++++++++++++++++++----------------------
+ 1 file changed, 37 insertions(+), 30 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 9a8579fb3a30..ae0e5f2e67b4 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -99,8 +99,12 @@ static struct fsync_inode_entry *add_fsync_inode(struct f2fs_sb_info *sbi,
- 	return ERR_PTR(err);
- }
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 020f49c15b30..b59ebed4f615 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -780,43 +780,50 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
+ 	} else if ((rc == -EACCES) && backup_cred(cifs_sb) &&
+ 		   (strcmp(server->vals->version_string, SMB1_VERSION_STRING)
+ 		      == 0)) {
+-			/*
+-			 * For SMB2 and later the backup intent flag is already
+-			 * sent if needed on open and there is no path based
+-			 * FindFirst operation to use to retry with
+-			 */
++		/*
++		 * For SMB2 and later the backup intent flag is already
++		 * sent if needed on open and there is no path based
++		 * FindFirst operation to use to retry with
++		 */
  
--static void del_fsync_inode(struct fsync_inode_entry *entry)
-+static void del_fsync_inode(struct fsync_inode_entry *entry, int drop)
- {
-+	if (drop) {
-+		/* inode should not be recovered, drop it */
-+		f2fs_inode_synced(entry->inode);
-+	}
- 	iput(entry->inode);
- 	list_del(&entry->list);
- 	kmem_cache_free(fsync_entry_slab, entry);
-@@ -321,12 +325,12 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
- 	return err;
- }
+-			srchinf = kzalloc(sizeof(struct cifs_search_info),
+-						GFP_KERNEL);
+-			if (srchinf == NULL) {
+-				rc = -ENOMEM;
+-				goto cgii_exit;
+-			}
++		srchinf = kzalloc(sizeof(struct cifs_search_info),
++					GFP_KERNEL);
++		if (srchinf == NULL) {
++			rc = -ENOMEM;
++			goto cgii_exit;
++		}
  
--static void destroy_fsync_dnodes(struct list_head *head)
-+static void destroy_fsync_dnodes(struct list_head *head, int drop)
- {
- 	struct fsync_inode_entry *entry, *tmp;
+-			srchinf->endOfSearch = false;
++		srchinf->endOfSearch = false;
++		if (tcon->unix_ext)
++			srchinf->info_level = SMB_FIND_FILE_UNIX;
++		else if ((tcon->ses->capabilities &
++			 tcon->ses->server->vals->cap_nt_find) == 0)
++			srchinf->info_level = SMB_FIND_FILE_INFO_STANDARD;
++		else if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)
+ 			srchinf->info_level = SMB_FIND_FILE_ID_FULL_DIR_INFO;
++		else /* no srvino useful for fallback to some netapp */
++			srchinf->info_level = SMB_FIND_FILE_DIRECTORY_INFO;
  
- 	list_for_each_entry_safe(entry, tmp, head, list)
--		del_fsync_inode(entry);
-+		del_fsync_inode(entry, drop);
- }
+-			srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
+-					CIFS_SEARCH_CLOSE_AT_END |
+-					CIFS_SEARCH_BACKUP_SEARCH;
++		srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
++				CIFS_SEARCH_CLOSE_AT_END |
++				CIFS_SEARCH_BACKUP_SEARCH;
  
- static int check_index_in_prev_nodes(struct f2fs_sb_info *sbi,
-@@ -561,7 +565,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- }
+-			rc = CIFSFindFirst(xid, tcon, full_path,
+-				cifs_sb, NULL, srchflgs, srchinf, false);
+-			if (!rc) {
+-				data =
+-				(FILE_ALL_INFO *)srchinf->srch_entries_start;
++		rc = CIFSFindFirst(xid, tcon, full_path,
++			cifs_sb, NULL, srchflgs, srchinf, false);
++		if (!rc) {
++			data = (FILE_ALL_INFO *)srchinf->srch_entries_start;
  
- static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
--						struct list_head *dir_list)
-+		struct list_head *tmp_inode_list, struct list_head *dir_list)
- {
- 	struct curseg_info *curseg;
- 	struct page *page = NULL;
-@@ -615,7 +619,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
- 		}
+-				cifs_dir_info_to_fattr(&fattr,
+-				(FILE_DIRECTORY_INFO *)data, cifs_sb);
+-				fattr.cf_uniqueid = le64_to_cpu(
+-				((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
+-				validinum = true;
++			cifs_dir_info_to_fattr(&fattr,
++			(FILE_DIRECTORY_INFO *)data, cifs_sb);
++			fattr.cf_uniqueid = le64_to_cpu(
++			((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
++			validinum = true;
  
- 		if (entry->blkaddr == blkaddr)
--			del_fsync_inode(entry);
-+			list_move_tail(&entry->list, tmp_inode_list);
- next:
- 		/* check next segment */
- 		blkaddr = next_blkaddr_of_node(page);
-@@ -628,7 +632,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+-				cifs_buf_release(srchinf->ntwrk_buf_start);
+-			}
+-			kfree(srchinf);
+-			if (rc)
+-				goto cgii_exit;
++			cifs_buf_release(srchinf->ntwrk_buf_start);
++		}
++		kfree(srchinf);
++		if (rc)
++			goto cgii_exit;
+ 	} else
+ 		goto cgii_exit;
  
- int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
- {
--	struct list_head inode_list;
-+	struct list_head inode_list, tmp_inode_list;
- 	struct list_head dir_list;
- 	int err;
- 	int ret = 0;
-@@ -659,6 +663,7 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
- 	}
- 
- 	INIT_LIST_HEAD(&inode_list);
-+	INIT_LIST_HEAD(&tmp_inode_list);
- 	INIT_LIST_HEAD(&dir_list);
- 
- 	/* prevent checkpoint */
-@@ -677,11 +682,16 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
- 	need_writecp = true;
- 
- 	/* step #2: recover data */
--	err = recover_data(sbi, &inode_list, &dir_list);
-+	err = recover_data(sbi, &inode_list, &tmp_inode_list, &dir_list);
- 	if (!err)
- 		f2fs_bug_on(sbi, !list_empty(&inode_list));
-+	else {
-+		/* restore s_flags to let iput() trash data */
-+		sbi->sb->s_flags = s_flags;
-+	}
- skip:
--	destroy_fsync_dnodes(&inode_list);
-+	destroy_fsync_dnodes(&inode_list, err);
-+	destroy_fsync_dnodes(&tmp_inode_list, err);
- 
- 	/* truncate meta pages to be used by the recovery */
- 	truncate_inode_pages_range(META_MAPPING(sbi),
-@@ -690,13 +700,13 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
- 	if (err) {
- 		truncate_inode_pages_final(NODE_MAPPING(sbi));
- 		truncate_inode_pages_final(META_MAPPING(sbi));
-+	} else {
-+		clear_sbi_flag(sbi, SBI_POR_DOING);
- 	}
--
--	clear_sbi_flag(sbi, SBI_POR_DOING);
- 	mutex_unlock(&sbi->cp_mutex);
- 
- 	/* let's drop all the directory inodes for clean checkpoint */
--	destroy_fsync_dnodes(&dir_list);
-+	destroy_fsync_dnodes(&dir_list, err);
- 
- 	if (need_writecp) {
- 		set_sbi_flag(sbi, SBI_IS_RECOVERED);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 06017138eab0..2264f27fd26d 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1885,6 +1885,19 @@ void f2fs_quota_off_umount(struct super_block *sb)
- 	}
- }
- 
-+static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
-+{
-+	struct quota_info *dqopt = sb_dqopt(sb);
-+	int type;
-+
-+	for (type = 0; type < MAXQUOTAS; type++) {
-+		if (!dqopt->files[type])
-+			continue;
-+		f2fs_inode_synced(dqopt->files[type]);
-+	}
-+}
-+
-+
- static int f2fs_get_projid(struct inode *inode, kprojid_t *projid)
- {
- 	*projid = F2FS_I(inode)->i_projid;
-@@ -3131,10 +3144,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 
- free_meta:
- #ifdef CONFIG_QUOTA
-+	f2fs_truncate_quota_inode_pages(sb);
- 	if (f2fs_sb_has_quota_ino(sb) && !f2fs_readonly(sb))
- 		f2fs_quota_off_umount(sbi->sb);
- #endif
--	f2fs_sync_inode_meta(sbi);
- 	/*
- 	 * Some dirty meta pages can be produced by f2fs_recover_orphan_inodes()
- 	 * failed by EIO. Then, iput(node_inode) can trigger balance_fs_bg()
 -- 
 2.19.1
 
