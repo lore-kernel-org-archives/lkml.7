@@ -2,119 +2,68 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE09C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB06C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559C0206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C1521903
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388481AbfDRJHX (ORCPT
+        id S2388506AbfDRJH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:07:23 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:33978 "EHLO
+        Thu, 18 Apr 2019 05:07:29 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34003 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388461AbfDRJHU (ORCPT
+        with ESMTP id S2388476AbfDRJHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:07:20 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
+        Thu, 18 Apr 2019 05:07:22 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH2zy-0001qB-1o; Thu, 18 Apr 2019 11:06:26 +0200
-Message-Id: <20190418084254.270025615@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:32 +0200
+        id 1hH30q-00025T-FO; Thu, 18 Apr 2019 11:07:20 +0200
+Date:   Thu, 18 Apr 2019 11:07:14 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        dm-devel@redhat.com, Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [patch V2 13/29] btrfs: ref-verify: Simplify stack trace retrieval
-References: <20190418084119.056416939@linutronix.de>
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: Re: [PATCH] ntp: Allow TAI-UTC offset to be set to zero
+In-Reply-To: <20190418080710.GE5984@localhost>
+Message-ID: <alpine.DEB.2.21.1904181106150.3174@nanos.tec.linutronix.de>
+References: <20190417084833.7401-1-mlichvar@redhat.com> <CAFqZXNu_pc1BEGZJb=3Ez58uN+BfoECpSm2yVqv1MMx7iTLfRw@mail.gmail.com> <20190418080710.GE5984@localhost>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace with an invocation of
-the storage array based interface.
+On Thu, 18 Apr 2019, Miroslav Lichvar wrote:
+> On Wed, Apr 17, 2019 at 11:00:23AM +0200, Ondrej Mosnacek wrote:
+> > On Wed, Apr 17, 2019 at 10:48 AM Miroslav Lichvar <mlichvar@redhat.com> wrote:
+> > > Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+> > > order to allow setting it back to the initial value.
+> 
+> > Thanks for sending the patch! Maybe you (or the committer) could
+> > consider adding:
+> > 
+> > Fixes: 153b5d054ac2 ("ntp: support for TAI")
+> 
+> To me the change looks more like an extension of the API, rather than
+> a bug fix, so I'd leave that up to the committer.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Acked-by: David Sterba <dsterba@suse.com>
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-btrfs@vger.kernel.org
----
- fs/btrfs/ref-verify.c |   15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+I don't see why we need to backport that all the way, but I'm happy to add
+the tag if there is some really good reason.
 
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -205,28 +205,17 @@ static struct root_entry *lookup_root_en
- #ifdef CONFIG_STACKTRACE
- static void __save_stack_trace(struct ref_action *ra)
- {
--	struct stack_trace stack_trace;
--
--	stack_trace.max_entries = MAX_TRACE;
--	stack_trace.nr_entries = 0;
--	stack_trace.entries = ra->trace;
--	stack_trace.skip = 2;
--	save_stack_trace(&stack_trace);
--	ra->trace_len = stack_trace.nr_entries;
-+	ra->trace_len = stack_trace_save(ra->trace, MAX_TRACE, 2);
- }
- 
- static void __print_stack_trace(struct btrfs_fs_info *fs_info,
- 				struct ref_action *ra)
- {
--	struct stack_trace trace;
--
- 	if (ra->trace_len == 0) {
- 		btrfs_err(fs_info, "  ref-verify: no stacktrace");
- 		return;
- 	}
--	trace.nr_entries = ra->trace_len;
--	trace.entries = ra->trace;
--	print_stack_trace(&trace, 2);
-+	stack_trace_print(ra->trace, ra->trace_len, 2);
- }
- #else
- static void inline __save_stack_trace(struct ref_action *ra)
+Thanks,
 
-
+	tglx
