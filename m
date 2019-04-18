@@ -2,110 +2,138 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7261C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B1AC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7921320821
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DE220835
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:36:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="LSbJ75ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388271AbfDRIeJ (ORCPT
+        id S2388278AbfDRIgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:34:09 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:32911 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfDRIeI (ORCPT
+        Thu, 18 Apr 2019 04:36:01 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46056 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfDRIgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:34:08 -0400
-Received: from [192.168.1.110] ([77.9.47.20]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MKszj-1hXt3w3FLJ-00LCQu; Thu, 18 Apr 2019 10:32:21 +0200
-Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
- card
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <20190409144250.7237-1-TheSven73@gmail.com>
- <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
- <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
- <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
- <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
- <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
- <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <7ceaeb70-f937-bd84-95e5-d7a6baeb5d87@metux.net>
-Date:   Thu, 18 Apr 2019 10:32:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 18 Apr 2019 04:36:01 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bf11so815939plb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 01:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6qV3KxK0aW64iJSBNcMR5tp9F6Bs2X4FIoa5U3lna/o=;
+        b=LSbJ75ezZhJntTsLbqSopErPhnkuwUY2Gie/VmMcw4SA687fAmJDhVSbtn/jzQVmLy
+         m+4cDNDrmm8XmEe+Kn7J3o9TyiZ6/hnhQgsoRRYqBS6KqhnpOyqm8XvXb5d9Y47dIwoY
+         wHxuOtpNRVaGrBOArpnvailKWGiOXRs2zcbxs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6qV3KxK0aW64iJSBNcMR5tp9F6Bs2X4FIoa5U3lna/o=;
+        b=H2yBV0ZcRIJOoP7wTaLm3LbETnSjUz3zVTWlFajZLLk+t2oO2eqJsJrtLinVjKU7Hq
+         RNTYPXgtEVbFeqqyKAojsE1NZWGFRgn9PoBlLn5vIvEvFAWmdcvHrkfzChBf36PXYUrf
+         PU0k5xD2UFPfGzc6YD/g3OMPulctJV4hT0t8uVCZ98V4CcvcoQBE7zYw5Fi9BSqNfn4J
+         wJtepB2cpDMXCA/38HLhn4XXvKq6OFfBntWckyN5Iwlfjt5d3jSX6zmgAPdo8yFGs3x0
+         hxATumQcLHR9sr1J/HjAEmyBZQFUTftsjDvF25D0clz4Y+bSUOWn++qSG7qiR7X5TLNS
+         sk6A==
+X-Gm-Message-State: APjAAAXlDnEiPSrQ97hNDCugX8jdRsp/4WmRGjtFkaIMlM/J1TW79WXU
+        M9YwnjknI600hOBFp6ziUNSfLA==
+X-Google-Smtp-Source: APXvYqxzg1hSklUejgBT7dKI0al5VGUsn8SXsxS44ZTLnty5e1ex4exW31rWRuTXal4LYyjCAeTjvg==
+X-Received: by 2002:a17:902:5c5:: with SMTP id f63mr4612220plf.327.1555576557680;
+        Thu, 18 Apr 2019 01:35:57 -0700 (PDT)
+Received: from localhost.localdomain ([115.97.185.144])
+        by smtp.gmail.com with ESMTPSA id s12sm3166255pgc.28.2019.04.18.01.35.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 01:35:56 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/2] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
+Date:   Thu, 18 Apr 2019 14:05:42 +0530
+Message-Id: <20190418083543.11695-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:LeMVM4oiJEs6z4P0rdTtgEAOxj8YetWvkXGBSR54cpTgWDffYk7
- PT5mxzmyvvBzR6MRneLfOw5Pif7S0p5YC3ivXvgN7EFzjUAr7Lc5tYasXJvd5WiiAWvCi0I
- up8vBY3GAUb5lW/Q6FhtMnFzQTWrI7ZudvbNxoI64iyZ+BhJ8N5A9Oq96/gvLfarCQkLqRO
- McAZk4SKRPH1DOVTSEjFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i0A0u5Zs6gA=:1e8722c5dNnOJvb+cAeGQz
- AllFeHoZsyMh/MMzGfbmXiax7nT4T7BPJUS5yAHJWhuFbHgP62LWafeJFIQE1RWMU1DykY+CS
- ZN+R8upIQnHM53bGILrXwz7CO1aDxORN/ni3HNjMS3SL1HdVhZ0tmubeqhVoOJa+fmyH7VueF
- DORLZ/G7kU+midlsJgcc2gZocMdH2q5JkX0/07GdEsQPy11a/kW8os7LHRGclP06Cq0a3usl4
- m76Z0fnYsU/SUPmhxaUm3z7MClkjFEusuUZUAy5wayAFyqWU1pLCEfB+nbDOjvIDC9wRngwyJ
- PuIW4TfM6Fd/YFU8pGWqYqRCW0gslz9M0mX+oJn8k2D5nxmOJEfjfEC1bFwnV2uZ7A+gyMQmE
- rmS/ZuLj+io/EleYl4orjs0aDw+hJhGrFAZwHaJf2Zon8jfYr/RqIayIfcNrBJU8m6M51BdX3
- 1Ux6gvQ6xeFQoEX7JIH3qTVB5CuI2VNssZNCVia04XuwDZC0EY3RRu2z0Ph9cAR7lActySdq1
- 07rHy4sh+HObvlxNImvycC1HwTcFB79uu5qjiNET/aD6aZszJJ8SgxVMcnPY5/dycXUBWPBzu
- z+44hV+kf1/GhCvaoJMYGSqXgqGsS1s9fHMBdSAoVddDhwSlig2hiISiFfTR3Dp4UcTgQPCx6
- aHZ7l6y9oK0rhsZymYkhjzidKWZgLIhXbDxXyeaHVY9vwDloWG+Efm4mtF6xkWbNg5m5L3IyH
- bEmR1PI79zQCiCt6Dvl/t+6HI9pzjajhamrDyDj0bhlabmvC2XNXa4QWsAI=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.19 00:12, Sven Van Asbroeck wrote:
+Add Goodix GT5663 capacitive touch controller node on
+Amarula A64-Relic board.
 
-> PS do you have a specific fieldbus device in mind which could be added
-> to Linux? 
+The CTP connected to board with,
+- SDA, SCK from i2c1
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH8 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
 
-I actually had some Duagon MVB controllers (Ionia) in the pipeline.
-That's stalled for quite some time, as my customer doesn't need the
-MVB communication yet, for now just the machine as generic Linux host
-w/ ADCs+DIOs.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- drop i2c1, bias-pull-up 
 
-Can't tell when exactly the MVB issue comes up again, or whether
-the device will be connected to WTB instead. But I'm sure either one
-will come in a few years.
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-> Would it support multiple plc process memories?
-
-Not quite. More like SNMP. Theoretically, (parts of) that could be
-somehow mapped into a logical process memory, but handling async
-signals could be tricky (at least we'd need a mtime for each field
-and an change notification mechanism).
-
-
---mtx
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 3575db216016..3819ce396073 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -49,6 +49,24 @@
+ 	bias-pull-up;
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt5663";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
++
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+@@ -212,6 +230,13 @@
+ 	regulator-name = "vdd-cpus";
+ };
+ 
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
+ &reg_rtc_ldo {
+ 	regulator-name = "vcc-rtc";
+ };
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.18.0.321.gffc6fa0e3
+
