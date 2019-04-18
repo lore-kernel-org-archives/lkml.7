@@ -2,151 +2,122 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF5CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 04:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A22CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 04:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724D521872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 04:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555562511;
-	bh=ZzJFjyGToYfbKAC7a2m7yS86J4A8OLDkslCG6xa8cQM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fRgzOan6ephZT36HS/fq+FoYbKXtu45xdpMto2F7TNuZC1eHSvB2A+o6Z5L4CYjzM
-	 6Sw1R5m+Xs8v7Oekww2YEoD9k4GGDQesEdEeeMEBlgKOo1vk6bi0ucLPf4SGYCbHh+
-	 QVRJP/U62xbHHze+2LvV7PILSNZDnM3Sgl11rgNE=
+	by mail.kernel.org (Postfix) with ESMTP id 3A5AF2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 04:46:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="g+NibsXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfDRElu (ORCPT
+        id S1726734AbfDREqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 00:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 00:46:52 -0400
+Received: from mout.gmx.net ([212.227.17.22]:49289 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfDRElt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 00:41:49 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1752D21908
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 04:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555562508;
-        bh=ZzJFjyGToYfbKAC7a2m7yS86J4A8OLDkslCG6xa8cQM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QVWUihYIOED3b6sf++tgY3iRdj8kiMHZVbckG4nNfCAClSFzLnTcPH+IgFSB9PrKC
-         Z2tMpLhiQqQpdAO8Vqghyo+PaFXtDr9TPVxG3ICymGFgejmh9f9/1/nnjg3BTRsxMd
-         IElW3sPpwA7MwJfgB7BILSJAa6MZxHiR0qJmXz6w=
-Received: by mail-wr1-f44.google.com with SMTP id w10so1161926wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 21:41:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAXB2qEqFTGgtwLfzw3ZoC32LtB8JijivdO/w+IEZDGYFMBv7ePl
-        8NZeUVwJFV8bvmd5fjqc1C6Nmm1I+HGWn/JV8i9emQ==
-X-Google-Smtp-Source: APXvYqyfUEuC3mEmPG9s4i6tESlRo9oZEsPzue7aX/a76mK2HZr1+EEwlvQomlchaeb55fwDfrvGp+xyZoI6blk5d70=
-X-Received: by 2002:adf:efc1:: with SMTP id i1mr59073183wrp.199.1555562504832;
- Wed, 17 Apr 2019 21:41:44 -0700 (PDT)
+        id S1725710AbfDREqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 00:46:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1555562803;
+        bh=8tS7bpBhtkoI0dYCLrd7uGVEa9ncF8t48Ghfbe80uvc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=g+NibsXtovx0V/aHZoxy3xD6UDuB/AoGF79F8m4j7tCKM1rKYV1xycnNdG25IRkQB
+         KFL7zr5ueKIG2N0Ummf8HC67cHs21eTSxqAA1N/s2iA5MccgLDdFkyFmN25ywTDwzX
+         LXmbyZBD/ZSQmmT0IzJe26mf3bnJvFf2qJlowbjI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from notebook.internal ([84.160.214.37]) by mail.gmx.com (mrgmx101
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0Lp7d2-1gedz50P92-00eq5G; Thu, 18
+ Apr 2019 06:46:43 +0200
+From:   Mathias =?ISO-8859-1?Q?Fr=F6hlich?= <Mathias.Froehlich@gmx.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.0 072/246] drm/amd/display: Fix reference counting for struct dc_sink.
+Date:   Thu, 18 Apr 2019 06:46:41 +0200
+Message-ID: <12751920.KfR1oLxoXd@notebook.internal>
+In-Reply-To: <20190415105029.GC9397@kroah.com>
+References: <20190404084619.236418459@linuxfoundation.org> <4990954.l4Ku8jBaGM@notebook.internal> <20190415105029.GC9397@kroah.com>
 MIME-Version: 1.0
-References: <cover.1554248001.git.khalid.aziz@oracle.com> <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
- <20190417161042.GA43453@gmail.com> <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
- <20190417170918.GA68678@gmail.com> <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com>
- <20190417172632.GA95485@gmail.com> <063753CC-5D83-4789-B594-019048DE22D9@gmail.com>
- <alpine.DEB.2.21.1904172317460.3174@nanos.tec.linutronix.de>
- <CAHk-=wgBMg9P-nYQR2pS0XwVdikPCBqLsMFqR9nk=wSmAd4_5g@mail.gmail.com>
- <alpine.DEB.2.21.1904180129000.3174@nanos.tec.linutronix.de> <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 17 Apr 2019 21:41:33 -0700
-X-Gmail-Original-Message-ID: <CALCETrXm9PuUTEEmzA8bQJmg=PHC_2XSywECittVhXbMJS1rSA@mail.gmail.com>
-Message-ID: <CALCETrXm9PuUTEEmzA8bQJmg=PHC_2XSywECittVhXbMJS1rSA@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Juerg Haefliger <juergh@gmail.com>,
-        Tycho Andersen <tycho@tycho.ws>, jsteckli@amazon.de,
-        Kees Cook <keescook@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris hyser <chris.hyser@oracle.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Jon Masters <jcm@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Provags-ID: V03:K1:H3MnPmqDNjS7Qi0VN27dO/M2SkFHnxNghFEkAI8cU+DhrCJuF8J
+ FXJfQluSyMKGY/Q6k/XL0KnCi0dKTPGiqOnDTv/hg6Lkx+0Fo07Rs4fvZK1UeDqTLF6j7r1
+ c+INcTsin3vFITayb0QHiPXPC3eU0E2s1Q25AZdU1+32o/nyF5fiX/vk2huT9f6RGW1UsJf
+ ugVVZwNpWZ2MgBPK4cCGw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EOf6wQRe6Do=:qbP/DOHIW2gXpVgwemY5nb
+ SgZ4c2LfC6zN+AH7VlHoph5WH2AmiWJZ7WT6FBtmPtNumplCt6T8u28Gu6sx3i5BEm7asL/Ia
+ Yqs4Eyhu3PqDlq5EVtLe0w0FxsvrQfImb9EsvXTwYuXAEOvSUrLojQSamNmnvcWCBQ7YGFYs4
+ L6tl0U45SnYOKdjQ04GNwCCm3Jdp8GPsE+0r/7hq0rqFcNDIhD/K5nPOlVOAd6Wnakjyz80IT
+ LTQunnHjMPqoOEZoZ2pnioJqU3xAwoy1R8oq0RrSh/W6dyBG4AYWsK0yJd3vtdUhnaHFdwTfX
+ YEb8SSQ6318OFESEzW2D5RRpKgMcZNj3MZLxAEIPdoqYNN6kwbnDF9qfTPu0rPy0lTa9lMtgD
+ iMrabKei/GrUWsvYguJl6Kv4sGtZ+4IZjyqmzSC0M/0oC0iB9i45lM46aaLst/Gq0Mg51iObj
+ 71HyaN7GJcADp62qwP2H9GAOVJPTwhRlPuVnsjJVsI7BRa73llVOTvg2it5XHxs/K74kdhAI9
+ +XQ6n9e7SAKiVrue+Ip70Mh/amKHW/VJWBYKzU5XjhYrvzWpGDAIgUf2KOTqrOQf0HBQxm6m5
+ YLj18WKa5aW9Uh8n0x/8UIvVcFlvEzsT/tJ28Egm18uQMFRJJGMxu6HeAPyrC3BFz2o0Tqf7S
+ 3HBk5tOPyZ7KQ0BFQb5TuTLSRoSiawjCofcCKKSb4soW1xyUVwP0e47sQjbGUtEEOa0oArgof
+ AOzDjYhehuxl6FBb4mnw8w2XYRLLlZXIdnAKZewvI/nn9IeZzMyRXOHvUVQLIALMBY5Djinwl
+ ACwE/YGfdoQfMZyYa9pjGQ29mfQXHy0gkKHb7FBFQFvbEh/nvQyAvEn49VAz55oIOIXptDP2a
+ vvtVzPSaXyf7FgLdryyw/6vN++O49LExqLm0jgTydo72y78/gLmy3kCweqtdpzzyL22dI1MXF
+ cHRjNJBgRfA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 5:00 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Apr 17, 2019 at 4:42 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Wed, 17 Apr 2019, Linus Torvalds wrote:
-> >
-> > > With SMEP, user space pages are always NX.
-> >
-> > We talk past each other. The user space page in the ring3 valid virtual
-> > address space (non negative) is of course protected by SMEP.
-> >
-> > The attack utilizes the kernel linear mapping of the physical
-> > memory. I.e. user space address 0x43210 has a kernel equivalent at
-> > 0xfxxxxxxxxxx. So if the attack manages to trick the kernel to that valid
-> > kernel address and that is mapped X --> game over. SMEP does not help
-> > there.
->
-> Oh, agreed.
->
-> But that would simply be a kernel bug. We should only map kernel pages
-> executable when we have kernel code in them, and we should certainly
-> not allow those pages to be mapped writably in user space.
->
-> That kind of "executable in kernel, writable in user" would be a
-> horrendous and major bug.
->
-> So i think it's a non-issue.
->
-> > From the top of my head I'd say this is a non issue as those kernel address
-> > space mappings _should_ be NX, but we got bitten by _should_ in the past:)
->
-> I do agree that bugs can happen, obviously, and we might have missed something.
->
-> But in the context of XPFO, I would argue (*very* strongly) that the
-> likelihood of the above kind of bug is absolutely *miniscule* compared
-> to the likelihood that we'd have something wrong in the software
-> implementation of XPFO.
->
-> So if the argument is "we might have bugs in software", then I think
-> that's an argument _against_ XPFO rather than for it.
->
+Hi Greg,
 
-I don't think this type of NX goof was ever the argument for XPFO.
-The main argument I've heard is that a malicious user program writes a
-ROP payload into user memory (regular anonymous user memory) and then
-gets the kernel to erroneously set RSP (*not* RIP) to point there.
+On Monday, 15 April 2019 12:50:29 CEST Greg Kroah-Hartman wrote:
+> On Fri, Apr 05, 2019 at 07:12:47AM +0200, Mathias Fr=F6hlich wrote:
+> > Greg,
+> >=20
+> > as I mentioned in the commit message, I saw more fixes to that area in =
+Alex
+> > Deuchers queue when I fed that to Alex. There is one fix that I can thi=
+nk of
+> > that interacts with my fixes. Means, we may get unwanted side effects o=
+f my
+> > patch without the fix mentioned below. With that below patch also selec=
+ted,
+> > I think we should be ok for stable.
+> > Alex, AMD people, your opinion?
+> >=20
+> > The one that I can spot not already in linux-5.0.y is:
+> >=20
+> > commit 3f01f098a4e2ef30ef628497c43a3d568e720376
+> > Author: Jerry (Fangzhi) Zuo <Jerry.Zuo@amd.com>
+> > Date:   Thu Jan 24 11:46:49 2019 -0500
+> >=20
+> >     drm/amd/display: Clear dc_sink after it gets released
+> >    =20
+> >     [Why]
+> >     The dc_sink was released but the pointer on the aconnector was
+> >     not cleared.
+> >    =20
+> >     [How]
+> >     Clear it.
+>=20
+> This patch does not apply to the 5.0.y tree, so I can not queue it up :(
 
-I find this argument fairly weak for a couple reasons.  First, if
-we're worried about this, let's do in-kernel CFI, not XPFO, to
-mitigate it.  Second, I don't see why the exact same attack can't be
-done using, say, page cache, and unless I'm missing something, XPFO
-doesn't protect page cache.  Or network buffers, or pipe buffers, etc.
+Sounds plausible.
+And thanks for trying!
+
+I had now the chance to test the 5.0.7 kernel tree as is including just
+my patch on the box in question. I can say that it works as expected with 5=
+=2E0.7
+and since I did also not hear complaints on the lists I hope we are good as=
+ is!
+
+Many thanks!
+
+best
+
+Mathias
+
+
