@@ -2,109 +2,66 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CAEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77B4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F7C21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B5720652
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ab1gt2ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389066AbfDRNeC (ORCPT
+        id S2388875AbfDRNey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:34:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbfDRNeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:34:01 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B2D20652;
-        Thu, 18 Apr 2019 13:33:57 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 09:33:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Thu, 18 Apr 2019 09:34:54 -0400
+Received: from a9-32.smtp-out.amazonses.com ([54.240.9.32]:49086 "EHLO
+        a9-32.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727807AbfDRNey (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:34:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1555594493;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=tGKbg7T4m2hja67VSnD+5sN45YQjy0gEHiOhoXRYwnE=;
+        b=ab1gt2ubDBnvlERvCSi1ce9rbtCoG/YS77M3OGWWcVMUjDZG7kdCTAIh3pFVU73u
+        JBYkidNGYMpwtlzEcOGCrYV7+GGxIkApxsJL4FIYB0Sro4vm00cQ7klrHZkK5gkWFTd
+        +5z2ftsGtTwkIdbIkR74gay/PBi7mTjrZi0orids=
+Date:   Thu, 18 Apr 2019 13:34:52 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Roman Gushchin <guroan@gmail.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>, david@fromorbit.com,
         Pekka Enberg <penberg@kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [patch V2 14/29] dm bufio: Simplify stack trace retrieval
-Message-ID: <20190418093356.5d4b7732@gandalf.local.home>
-In-Reply-To: <CAG_fn=WL0yLqavV_mhodT=B6KcAzJ+LS0hss1jqany9Cn92RHw@mail.gmail.com>
-References: <20190418084119.056416939@linutronix.de>
-        <20190418084254.361284697@linutronix.de>
-        <CAG_fn=WP9+bVv9hedoaTzWK+xBzedxaGJGVOPnF0o115s-oWvg@mail.gmail.com>
-        <alpine.DEB.2.21.1904181353420.3174@nanos.tec.linutronix.de>
-        <CAG_fn=WL0yLqavV_mhodT=B6KcAzJ+LS0hss1jqany9Cn92RHw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH 4/5] mm: rework non-root kmem_cache lifecycle
+ management
+In-Reply-To: <20190417215434.25897-5-guro@fb.com>
+Message-ID: <0100016a30a83bcf-7f99039c-77ec-4c48-a1c4-92e398f8f185-000000@email.amazonses.com>
+References: <20190417215434.25897-1-guro@fb.com> <20190417215434.25897-5-guro@fb.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.04.18-54.240.9.32
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 14:11:44 +0200
-Alexander Potapenko <glider@google.com> wrote:
+On Wed, 17 Apr 2019, Roman Gushchin wrote:
 
-> On Thu, Apr 18, 2019 at 1:54 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Thu, 18 Apr 2019, Alexander Potapenko wrote:  
-> > > On Thu, Apr 18, 2019 at 11:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:  
-> > > > -       save_stack_trace(&b->stack_trace);
-> > > > +       b->stack_len = stack_trace_save(b->stack_entries, MAX_STACK, 2);  
-> > > As noted in one of similar patches before, can we have an inline
-> > > comment to indicate what does this "2" stand for?  
-> >
-> > Come on. We have gazillion of functions which take numerical constant
-> > arguments. Should we add comments to all of them?  
-> Ok, sorry. I might not be familiar enough with the kernel style guide.
+> Let's make every page to hold a reference to the kmem_cache (we
+> already have a stable pointer), and make kmem_caches to hold a single
+> reference to the memory cgroup.
 
-It is a legitimate complaint but not for this series. I only complain
-about hard coded constants when they are added. That "2" was not
-added by this series. This patch set is a clean up of the stack tracing
-code, not a clean up of removing hard coded constants, or commenting
-them.
+Ok you are freeing one word in the page struct that can be used for other
+purposes now?
 
-The hard coded "2" was there without a comment before this patch series
-and Thomas is correct to leave it as is for these changes. This patch
-series should not modify what was already there which is out of scope
-for the purpose of these changes.
-
-A separate clean up patch to the maintainer of the subsystem (dm bufio
-in this case) is fine. But it's not Thomas's responsibility.
-
--- Steve
