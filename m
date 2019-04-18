@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FEFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF57C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3A72186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002DB21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610930;
-	bh=ZzUzwgxjCTFmScR/hxPVMaKUDsdmEpyz3ZC9vT28NPA=;
+	s=default; t=1555610933;
+	bh=8RwdhNu0g0nIe+g7ofHWU6Cdf6aGp0tp+B0Qd2kzXSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zQfpybNEhmzbXF/BUA4nOzehmTR87lRdgetYQ/mkpQS4oc2fvHggj6U28ErtlHT+f
-	 ebuC4Yl8Yfgbn/OzTdWM56IIeYFCXhpFtQNj1TDJb1YexPpHSEYMiWERK/QAUfKC7B
-	 sX6q5U7b4BvLDXvyFJRTcsAq+s7+ieZpft9IurZ0=
+	b=pwd8M1+dTyFejXixzHR0/yuCvfF4XFEXr4hN+bww0UkiNEClqBb1L8zAok7UZcOJ4
+	 rCHJwEWQXloV+kUHIKgQG0rsEU6MO6eKD8CuMoXHWn5YnYH46l8oAWdz/VUcr5x05N
+	 6zftotn+FUss4fCjgC665+LG4Ct8lz/d/mDPAkBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391790AbfDRSIs (ORCPT
+        id S2391800AbfDRSIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40118 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391775AbfDRSIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:46 -0400
+        id S2391789AbfDRSIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 762622186A;
-        Thu, 18 Apr 2019 18:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AAD21872;
+        Thu, 18 Apr 2019 18:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610925;
-        bh=ZzUzwgxjCTFmScR/hxPVMaKUDsdmEpyz3ZC9vT28NPA=;
+        s=default; t=1555610928;
+        bh=8RwdhNu0g0nIe+g7ofHWU6Cdf6aGp0tp+B0Qd2kzXSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XCYsUmufZ6qvE7mQt8XMmBR7tY1ce4Ad15RBvMed1BYhiD7iXIP2/sInCQqCgO6un
-         k3337PGCrNVcHCWiICDDFCv90NMXRsa0Ylya0b1FOpJNWtznriy6n75hUQv7zmRTRh
-         ZQeOK0PoEgVrr/7zs2TJ7O4Ibl3/7FjfCXtjjknE=
+        b=qdkA2QmOHoq7y5MSDwc9yrGXBkYNCwqthQ1imUpNkplAYSmGMRjdSUYYi5LHeDyf7
+         RxPE0yUsxvsXixjsnMba59qU3mqOXmkmOSMZJbDwNfreXN3mZgtra5/cC2b3ZCd2Ly
+         HAnarLQFztY7AefcFe2a5tpLj6FMcFO5tmWhIp3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Yang Shi <yang.shi@linaro.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 43/50] lkdtm: Add tests for NULL pointer dereference
-Date:   Thu, 18 Apr 2019 19:57:54 +0200
-Message-Id: <20190418160427.662462410@linuxfoundation.org>
+Subject: [PATCH 4.9 44/50] ARM: 8839/1: kprobe: make patch_lock a raw_spinlock_t
+Date:   Thu, 18 Apr 2019 19:57:55 +0200
+Message-Id: <20190418160427.778810744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -60,89 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 59a12205d3c32aee4c13ca36889fdf7cfed31126 ]
+[ Upstream commit 143c2a89e0e5fda6c6fd08d7bc1126438c19ae90 ]
 
-Introduce lkdtm tests for NULL pointer dereference: check access or exec
-at NULL address, since these errors tend to be reported differently from
-the general fault error text. For example from x86:
+When running kprobe on -rt kernel, the below bug is caught:
 
-    pr_alert("BUG: unable to handle kernel %s at %px\n",
-        address < PAGE_SIZE ? "NULL pointer dereference" : "paging request",
-        (void *)address);
+|BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:931
+|in_atomic(): 1, irqs_disabled(): 128, pid: 14, name: migration/0
+|Preemption disabled at:[<802f2b98>] cpu_stopper_thread+0xc0/0x140
+|CPU: 0 PID: 14 Comm: migration/0 Tainted: G O 4.8.3-rt2 #1
+|Hardware name: Freescale LS1021A
+|[<8025a43c>] (___might_sleep)
+|[<80b5b324>] (rt_spin_lock)
+|[<80b5c31c>] (__patch_text_real)
+|[<80b5c3ac>] (patch_text_stop_machine)
+|[<802f2920>] (multi_cpu_stop)
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Since patch_text_stop_machine() is called in stop_machine() which
+disables IRQ, sleepable lock should be not used in this atomic context,
+ so replace patch_lock to raw lock.
+
+Signed-off-by: Yang Shi <yang.shi@linaro.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm.h       |  2 ++
- drivers/misc/lkdtm_core.c  |  2 ++
- drivers/misc/lkdtm_perms.c | 18 ++++++++++++++++++
- 3 files changed, 22 insertions(+)
+ arch/arm/kernel/patch.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/lkdtm.h b/drivers/misc/lkdtm.h
-index fdf954c2107f..6abc97b245e4 100644
---- a/drivers/misc/lkdtm.h
-+++ b/drivers/misc/lkdtm.h
-@@ -40,7 +40,9 @@ void lkdtm_EXEC_KMALLOC(void);
- void lkdtm_EXEC_VMALLOC(void);
- void lkdtm_EXEC_RODATA(void);
- void lkdtm_EXEC_USERSPACE(void);
-+void lkdtm_EXEC_NULL(void);
- void lkdtm_ACCESS_USERSPACE(void);
-+void lkdtm_ACCESS_NULL(void);
+diff --git a/arch/arm/kernel/patch.c b/arch/arm/kernel/patch.c
+index 69bda1a5707e..1f665acaa6a9 100644
+--- a/arch/arm/kernel/patch.c
++++ b/arch/arm/kernel/patch.c
+@@ -15,7 +15,7 @@ struct patch {
+ 	unsigned int insn;
+ };
  
- /* lkdtm_rodata.c */
- void lkdtm_rodata_do_nothing(void);
-diff --git a/drivers/misc/lkdtm_core.c b/drivers/misc/lkdtm_core.c
-index b2989f2d3126..035e51bea450 100644
---- a/drivers/misc/lkdtm_core.c
-+++ b/drivers/misc/lkdtm_core.c
-@@ -214,7 +214,9 @@ struct crashtype crashtypes[] = {
- 	CRASHTYPE(EXEC_VMALLOC),
- 	CRASHTYPE(EXEC_RODATA),
- 	CRASHTYPE(EXEC_USERSPACE),
-+	CRASHTYPE(EXEC_NULL),
- 	CRASHTYPE(ACCESS_USERSPACE),
-+	CRASHTYPE(ACCESS_NULL),
- 	CRASHTYPE(WRITE_RO),
- 	CRASHTYPE(WRITE_RO_AFTER_INIT),
- 	CRASHTYPE(WRITE_KERN),
-diff --git a/drivers/misc/lkdtm_perms.c b/drivers/misc/lkdtm_perms.c
-index 45f1c0f96612..1a9dcdaa95f0 100644
---- a/drivers/misc/lkdtm_perms.c
-+++ b/drivers/misc/lkdtm_perms.c
-@@ -160,6 +160,11 @@ void lkdtm_EXEC_USERSPACE(void)
- 	vm_munmap(user_addr, PAGE_SIZE);
+-static DEFINE_SPINLOCK(patch_lock);
++static DEFINE_RAW_SPINLOCK(patch_lock);
+ 
+ static void __kprobes *patch_map(void *addr, int fixmap, unsigned long *flags)
+ 	__acquires(&patch_lock)
+@@ -32,7 +32,7 @@ static void __kprobes *patch_map(void *addr, int fixmap, unsigned long *flags)
+ 		return addr;
+ 
+ 	if (flags)
+-		spin_lock_irqsave(&patch_lock, *flags);
++		raw_spin_lock_irqsave(&patch_lock, *flags);
+ 	else
+ 		__acquire(&patch_lock);
+ 
+@@ -47,7 +47,7 @@ static void __kprobes patch_unmap(int fixmap, unsigned long *flags)
+ 	clear_fixmap(fixmap);
+ 
+ 	if (flags)
+-		spin_unlock_irqrestore(&patch_lock, *flags);
++		raw_spin_unlock_irqrestore(&patch_lock, *flags);
+ 	else
+ 		__release(&patch_lock);
  }
- 
-+void lkdtm_EXEC_NULL(void)
-+{
-+	execute_location(NULL, CODE_AS_IS);
-+}
-+
- void lkdtm_ACCESS_USERSPACE(void)
- {
- 	unsigned long user_addr, tmp = 0;
-@@ -191,6 +196,19 @@ void lkdtm_ACCESS_USERSPACE(void)
- 	vm_munmap(user_addr, PAGE_SIZE);
- }
- 
-+void lkdtm_ACCESS_NULL(void)
-+{
-+	unsigned long tmp;
-+	unsigned long *ptr = (unsigned long *)NULL;
-+
-+	pr_info("attempting bad read at %px\n", ptr);
-+	tmp = *ptr;
-+	tmp += 0xc0dec0de;
-+
-+	pr_info("attempting bad write at %px\n", ptr);
-+	*ptr = tmp;
-+}
-+
- void __init lkdtm_perms_init(void)
- {
- 	/* Make sure we can write to __ro_after_init values during __init */
 -- 
 2.19.1
 
