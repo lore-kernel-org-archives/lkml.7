@@ -2,228 +2,121 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17CFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E019AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C1F20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D3A20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389644AbfDRQJT (ORCPT
+        id S2389606AbfDRQLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 12:09:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43866 "EHLO mx1.redhat.com"
+        Thu, 18 Apr 2019 12:11:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41390 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfDRQJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 12:09:19 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1725888AbfDRQLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 12:11:00 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CF9DE308A112;
-        Thu, 18 Apr 2019 16:09:17 +0000 (UTC)
-Received: from dhcp-129-237.pek.redhat.com (unknown [10.66.129.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A43B65D9CC;
-        Thu, 18 Apr 2019 16:09:13 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Kairui Song <kasong@redhat.com>
-Subject: [RFC PATCH v3] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-Date:   Thu, 18 Apr 2019 12:07:30 -0400
-Message-Id: <20190418160730.11901-1-kasong@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 042CB306C3EC;
+        Thu, 18 Apr 2019 16:11:00 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 024235C206;
+        Thu, 18 Apr 2019 16:10:45 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Pankaj Gupta <pagupta@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
+Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
+References: <20190410040826.24371-1-pagupta@redhat.com>
+        <20190410040826.24371-2-pagupta@redhat.com>
+        <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
+        <20190412083230.GA29850@quack2.suse.cz>
+        <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+        <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 18 Apr 2019 12:10:44 -0400
+In-Reply-To: <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
+        (Dan Williams's message of "Thu, 18 Apr 2019 09:05:05 -0700")
+Message-ID: <x49lg07cn0b.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 18 Apr 2019 16:09:18 +0000 (UTC)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 18 Apr 2019 16:11:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently perf callchain doesn't work well when sampling from trace
-point, with ORC unwinder enabled and CONFIG_FRAME_POINTER disabled.
-We'll get useless in kernel callchain like this:
+Dan Williams <dan.j.williams@intel.com> writes:
 
-perf  6429 [000]    22.498450:             kmem:mm_page_alloc: page=0x176a17 pfn=1534487 order=0 migratetype=0 gfp_flags=GFP_KERNEL
-    ffffffffbe23e32e __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
-	7efdf7f7d3e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
-	5651468729c1 [unknown] (/usr/bin/perf)
-	5651467ee82a main+0x69a (/usr/bin/perf)
-	7efdf7eaf413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
-    5541f689495641d7 [unknown] ([unknown])
+> On Fri, Apr 12, 2019 at 6:12 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>>
+>> Jan Kara <jack@suse.cz> writes:
+>>
+>> > On Thu 11-04-19 07:51:48, Dan Williams wrote:
+>> >> On Tue, Apr 9, 2019 at 9:09 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+>> >> > +       } else {
+>> >> > +               if (nd_region->flush(nd_region))
+>> >> > +                       rc = -EIO;
+>> >>
+>> >> Given the common case wants to be fast and synchronous I think we
+>> >> should try to avoid retpoline overhead by default. So something like
+>> >> this:
+>> >>
+>> >> if (nd_region->flush == generic_nvdimm_flush)
+>> >>     rc = generic_nvdimm_flush(...);
+>> >
+>> > I'd either add a comment about avoiding retpoline overhead here or just
+>> > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
+>> > get confused by the code.
+>>
+>> Isn't this premature optimization?  I really don't like adding things
+>> like this without some numbers to show it's worth it.
+>
+> I don't think it's premature given this optimization technique is
+> already being deployed elsewhere, see:
+>
+> https://lwn.net/Articles/774347/
 
-The root cause is within a trace point perf will try to dump the
-required caller's registers, but without CONFIG_FRAME_POINTER we
-can't get caller's BP as the frame pointer, so current frame pointer
-is returned instead. We get a invalid register combination which
-confuse the unwinder and end the stacktrace early.
+The technique is fine, but that doesn't mean it should be applied
+everywhere.  Is *this* code path really going to benefit from the
+optimization?
 
-So in such case just don't try dump BP when doing partial register
-dump. And just let the unwinder start directly when the register is
-incapable of presenting a unwinding start point. Use SP as the skip
-mark, skip all the frames until we meet the frame we want.
-
-This make the callchain get the full kernel space stacktrace again:
-
-perf  6503 [000]  1567.570191:             kmem:mm_page_alloc: page=0x16c904 pfn=1493252 order=0 migratetype=0 gfp_flags=GFP_KERNEL
-    ffffffffb523e2ae __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52383bd __get_free_pages+0xd (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52fd28a __pollwait+0x8a (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb521426f perf_poll+0x2f (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52fe3e2 do_sys_poll+0x252 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb52ff027 __x64_sys_poll+0x37 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb500418b do_syscall_64+0x5b (/lib/modules/5.1.0-rc3+/build/vmlinux)
-    ffffffffb5a0008c entry_SYSCALL_64_after_hwframe+0x44 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-	7f71e92d03e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
-	55a22960d9c1 [unknown] (/usr/bin/perf)
-	55a22958982a main+0x69a (/usr/bin/perf)
-	7f71e9202413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
-    5541f689495641d7 [unknown] ([unknown])
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
-
-Update from V2:
-  - Instead of looking at if BP is 0, use X86_EFLAGS_FIXED flag bit as
-    the indicator of where the pt_regs is valid for unwinding. As
-    suggested by Peter Zijlstra
-  - Update some comments accordingly.
-
-Update from V1:
-  Get rid of a lot of unneccessary code and just don't dump a inaccurate
-  BP, and use SP as the marker for target frame.
-
- arch/x86/events/core.c            | 24 +++++++++++++++++++++---
- arch/x86/include/asm/perf_event.h |  5 +++++
- arch/x86/include/asm/stacktrace.h |  9 +++++++--
- include/linux/perf_event.h        |  6 +++---
- 4 files changed, 36 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e2b1447192a8..e181e195fe5d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2355,6 +2355,18 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	cyc2ns_read_end();
- }
- 
-+static inline int
-+valid_unwinding_registers(struct pt_regs *regs)
-+{
-+	/*
-+	 * regs might be a fake one, it won't dump the flags reg,
-+	 * and without frame pointer, it won't have a valid BP.
-+	 */
-+	if (IS_ENABLED(CONFIG_FRAME_POINTER))
-+		return 1;
-+	return (regs->flags & PERF_EFLAGS_SNAP);
-+}
-+
- void
- perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
- {
-@@ -2366,11 +2378,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
- 
--	if (perf_callchain_store(entry, regs->ip))
-+	if (valid_unwinding_registers(regs)) {
-+		if (perf_callchain_store(entry, regs->ip))
-+			return;
-+		unwind_start(&state, current, regs, NULL);
-+	} else if (regs->sp) {
-+		unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-+	} else {
- 		return;
-+	}
- 
--	for (unwind_start(&state, current, regs, NULL); !unwind_done(&state);
--	     unwind_next_frame(&state)) {
-+	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
- 		if (!addr || perf_callchain_store(entry, addr))
- 			return;
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 8bdf74902293..77c8519512ff 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -239,11 +239,16 @@ extern void perf_events_lapic_init(void);
-  * Abuse bits {3,5} of the cpu eflags register. These flags are otherwise
-  * unused and ABI specified to be 0, so nobody should care what we do with
-  * them.
-+ * And also leverage X86_EFLAGS_FIXED (bit 1). This bit is reserved as
-+ * always set.
-  *
-+ * SNAP  - flags is considered a real snapshot captured upon event
-+ *         is triggered.
-  * EXACT - the IP points to the exact instruction that triggered the
-  *         event (HW bugs exempt).
-  * VM    - original X86_VM_MASK; see set_linear_ip().
-  */
-+#define PERF_EFLAGS_SNAP	X86_EFLAGS_FIXED
- #define PERF_EFLAGS_EXACT	(1UL << 3)
- #define PERF_EFLAGS_VM		(1UL << 5)
- 
-diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-index f335aad404a4..226077e20412 100644
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -98,18 +98,23 @@ struct stack_frame_ia32 {
-     u32 return_address;
- };
- 
-+#ifdef CONFIG_FRAME_POINTER
- static inline unsigned long caller_frame_pointer(void)
- {
- 	struct stack_frame *frame;
- 
- 	frame = __builtin_frame_address(0);
- 
--#ifdef CONFIG_FRAME_POINTER
- 	frame = frame->next_frame;
--#endif
- 
- 	return (unsigned long)frame;
- }
-+#else
-+static inline unsigned long caller_frame_pointer(void)
-+{
-+	return 0;
-+}
-+#endif
- 
- void show_opcodes(struct pt_regs *regs, const char *loglvl);
- void show_ip(struct pt_regs *regs, const char *loglvl);
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e47ef764f613..07bcb1870220 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1055,11 +1055,11 @@ static inline void perf_arch_fetch_caller_regs(struct pt_regs *regs, unsigned lo
- #endif
- 
- /*
-- * Take a snapshot of the regs. Skip ip and frame pointer to
-- * the nth caller. We only need a few of the regs:
-+ * Take a partial snapshot of the caller's regs.
-+ * We only need a few of the regs:
-  * - ip for PERF_SAMPLE_IP
-  * - cs for user_mode() tests
-- * - bp for callchains
-+ * - sp, bp for callchains
-  * - eflags, for future purposes, just in case
-  */
- static inline void perf_fetch_caller_regs(struct pt_regs *regs)
--- 
-2.20.1
-
+-Jeff
