@@ -2,52 +2,55 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5412C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CE6218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04F7206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610572;
-	bh=10dkV9/VH2wk2rg6HZsI4y5IdMCsOLCKIBYHH0Pm4yM=;
+	s=default; t=1555610575;
+	bh=oISuHX9rVI2/Tzlh24gqSYt5ClngymG0FZNJnIAIoC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BsZSK+xWuLsk3NNEaF+VOl3becb67NaT4XfbpK9rWzbdIrGeHCZpUXchLk8omaKQS
-	 dVInInzcIL/qD2HD6gHpVz/SIYwRbNlbHxflpwd42PaOCl0pl7ozxl0pE+5fW1X04B
-	 8Kqbqqi3lR2hutDAmVmArr9aXnG8KEAknlArP/FQ=
+	b=ggh+8CSFNg1GHzU+LNvbjy7/cS6EkXNVi7Ya6ez2VGm5Pur2kwBLv5K3HIxWnqo0S
+	 kr179xS8p4nFvETBsSLTDLzMl5k9N2N0Vy3JZJTpZjE2OzRwd4w3htmWGvRLSK3SV5
+	 TB/zz2UlSQjcMRqYOkO9fOVUtugbIyImmchcP7G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390829AbfDRSCv (ORCPT
+        id S2390838AbfDRSCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59062 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390809AbfDRSCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:48 -0400
+        id S2390429AbfDRSCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DEE3218A6;
-        Thu, 18 Apr 2019 18:02:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9258206B6;
+        Thu, 18 Apr 2019 18:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610567;
-        bh=10dkV9/VH2wk2rg6HZsI4y5IdMCsOLCKIBYHH0Pm4yM=;
+        s=default; t=1555610570;
+        bh=oISuHX9rVI2/Tzlh24gqSYt5ClngymG0FZNJnIAIoC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avL5xw/IzEC30AjGc1lI8iUGy6izeJueB41zg26mcVLrEw7OPfPXRiRUqkAdWQDP5
-         JJSDIEcUXzW6miiXu+WGZgXqK+gTxlXjmBV2PjkFUoUDlUjhJ5yRVQGtLoG/kyIzDL
-         lH05FtvNeLX8RrpCI6DFzpiakZUnCii5Kdg+3puE=
+        b=pjtOdp9YoBjt8ktXwDMqDF0Z8uLmcU5CwVuEwIhLVTJHCYe1K3gRL18TN3uhyFf3R
+         14BP3iHd9VPhC9yptboKrQHX0nHxJKjLZ53CA6LmNsuA8WRRSTQOcCewWs42YFtO7X
+         sGwZ+txKyUb7dpQTmoEFVkXLHi0hBHMwVgcewUls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/110] crypto: sha512/arm - fix crash bug in Thumb2 build
-Date:   Thu, 18 Apr 2019 19:57:15 +0200
-Message-Id: <20190418160446.184994171@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Greg Rose <gvrose8192@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+30191cf1057abd3064af@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 087/110] net: ip6_gre: fix possible NULL pointer dereference in ip6erspan_set_version
+Date:   Thu, 18 Apr 2019 19:57:16 +0200
+Message-Id: <20190418160446.262694903@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,95 +63,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c64316502008064c158fa40cc250665e461b0f2a ]
+[ Upstream commit efcc9bcaf77c07df01371a7c34e50424c291f3ac ]
 
-The SHA512 code we adopted from the OpenSSL project uses a rather
-peculiar way to take the address of the round constant table: it
-takes the address of the sha256_block_data_order() routine, and
-substracts a constant known quantity to arrive at the base of the
-table, which is emitted by the same assembler code right before
-the routine's entry point.
+Fix a possible NULL pointer dereference in ip6erspan_set_version checking
+nlattr data pointer
 
-However, recent versions of binutils have helpfully changed the
-behavior of references emitted via an ADR instruction when running
-in Thumb2 mode: it now takes the Thumb execution mode bit into
-account, which is bit 0 af the address. This means the produced
-table address also has bit 0 set, and so we end up with an address
-value pointing 1 byte past the start of the table, which results
-in crashes such as
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7549 Comm: syz-executor432 Not tainted 5.0.0-rc6-next-20190218
+#37
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+RIP: 0010:ip6erspan_set_version+0x5c/0x350 net/ipv6/ip6_gre.c:1726
+Code: 07 38 d0 7f 08 84 c0 0f 85 9f 02 00 00 49 8d bc 24 b0 00 00 00 c6 43
+54 01 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
+85 9a 02 00 00 4d 8b ac 24 b0 00 00 00 4d 85 ed 0f
+RSP: 0018:ffff888089ed7168 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880869d6e58 RCX: 0000000000000000
+RDX: 0000000000000016 RSI: ffffffff862736b4 RDI: 00000000000000b0
+RBP: ffff888089ed7180 R08: 1ffff11010d3adcb R09: ffff8880869d6e58
+R10: ffffed1010d3add5 R11: ffff8880869d6eaf R12: 0000000000000000
+R13: ffffffff8931f8c0 R14: ffffffff862825d0 R15: ffff8880869d6e58
+FS:  0000000000b3d880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000184 CR3: 0000000092cc5000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  ip6erspan_newlink+0x66/0x7b0 net/ipv6/ip6_gre.c:2210
+  __rtnl_newlink+0x107b/0x16c0 net/core/rtnetlink.c:3176
+  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3234
+  rtnetlink_rcv_msg+0x465/0xb00 net/core/rtnetlink.c:5192
+  netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
+  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5210
+  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
+  netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
+  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
+  sock_sendmsg_nosec net/socket.c:621 [inline]
+  sock_sendmsg+0xdd/0x130 net/socket.c:631
+  ___sys_sendmsg+0x806/0x930 net/socket.c:2136
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2174
+  __do_sys_sendmsg net/socket.c:2183 [inline]
+  __se_sys_sendmsg net/socket.c:2181 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2181
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440159
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffa69156e8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
+RDX: 0000000000000000 RSI: 0000000020001340 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000001 R09: 00000000004002c8
+R10: 0000000000000011 R11: 0000000000000246 R12: 00000000004019e0
+R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 09f8a7d13b4faaa1 ]---
+RIP: 0010:ip6erspan_set_version+0x5c/0x350 net/ipv6/ip6_gre.c:1726
+Code: 07 38 d0 7f 08 84 c0 0f 85 9f 02 00 00 49 8d bc 24 b0 00 00 00 c6 43
+54 01 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
+85 9a 02 00 00 4d 8b ac 24 b0 00 00 00 4d 85 ed 0f
+RSP: 0018:ffff888089ed7168 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880869d6e58 RCX: 0000000000000000
+RDX: 0000000000000016 RSI: ffffffff862736b4 RDI: 00000000000000b0
+RBP: ffff888089ed7180 R08: 1ffff11010d3adcb R09: ffff8880869d6e58
+R10: ffffed1010d3add5 R11: ffff8880869d6eaf R12: 0000000000000000
+R13: ffffffff8931f8c0 R14: ffffffff862825d0 R15: ffff8880869d6e58
+FS:  0000000000b3d880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000184 CR3: 0000000092cc5000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-  Unable to handle kernel paging request at virtual address bf825000
-  pgd = 42f44b11
-  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
-  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
-  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
-  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
-  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
-  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
-  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
-  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
-  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
-  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
-  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
-  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
-  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
-  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
-  Stack: (0xebc8bbe8 to 0xebc8c000)
-  ...
-  unwind: Unknown symbol address bf820bca
-  unwind: Index not found bf820bca
-  Code: 441a ea80 40f9 440a (f85e) 3b04
-  ---[ end trace e560cce92700ef8a ]---
+Fixes: 4974d5f678ab ("net: ip6_gre: initialize erspan_ver just for erspan tunnels")
+Reported-and-tested-by: syzbot+30191cf1057abd3064af@syzkaller.appspotmail.com
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Reviewed-by: Greg Rose <gvrose8192@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 
-Given that this affects older kernels as well, in case they are built
-with a recent toolchain, apply a minimal backportable fix, which is
-to emit another non-code label at the start of the routine, and
-reference that instead. (This is similar to the current upstream state
-of this file in OpenSSL)
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha512-armv4.pl       | 3 ++-
- arch/arm/crypto/sha512-core.S_shipped | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ net/ipv6/ip6_gre.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/crypto/sha512-armv4.pl b/arch/arm/crypto/sha512-armv4.pl
-index fb5d15048c0b..788c17b56ecc 100644
---- a/arch/arm/crypto/sha512-armv4.pl
-+++ b/arch/arm/crypto/sha512-armv4.pl
-@@ -274,10 +274,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
-diff --git a/arch/arm/crypto/sha512-core.S_shipped b/arch/arm/crypto/sha512-core.S_shipped
-index b1c334a49cda..710ea309769e 100644
---- a/arch/arm/crypto/sha512-core.S_shipped
-+++ b/arch/arm/crypto/sha512-core.S_shipped
-@@ -141,10 +141,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
+diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+index c4a7db62658e..01ecd510014f 100644
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -1743,6 +1743,9 @@ static int ip6erspan_tap_validate(struct nlattr *tb[], struct nlattr *data[],
+ static void ip6erspan_set_version(struct nlattr *data[],
+ 				  struct __ip6_tnl_parm *parms)
+ {
++	if (!data)
++		return;
++
+ 	parms->erspan_ver = 1;
+ 	if (data[IFLA_GRE_ERSPAN_VER])
+ 		parms->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
 -- 
 2.19.1
 
