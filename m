@@ -3,99 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C858AC10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11DCC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2092183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D10217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388251AbfDRIUS (ORCPT
+        id S2388261AbfDRIVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:20:18 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:40477 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733049AbfDRIUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:20:17 -0400
-Received: from [192.168.1.110] ([77.9.47.20]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MgNpJ-1gdIKB1Jp1-00hyJV; Thu, 18 Apr 2019 10:18:52 +0200
-Subject: Re: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <20190416155618.1369-1-TheSven73@gmail.com>
- <20190416155618.1369-4-TheSven73@gmail.com>
- <2caf5f92-164a-3723-e2ef-42e4045d2ec3@metux.net>
- <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
- <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net>
- <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
- <3103f45a-facf-89a3-8a36-84507c570909@metux.net>
- <CAGngYiXd34hTriDsKvhOWogaF0uLfVbUn5BzJc3cUnZcWpFXAg@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c1c84e6b-99db-672e-4062-9129d5e89d10@metux.net>
-Date:   Thu, 18 Apr 2019 10:18:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 18 Apr 2019 04:21:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29362 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfDRIVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:21:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 01:21:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,365,1549958400"; 
+   d="scan'208";a="143718973"
+Received: from xshen14-mobl.ccr.corp.intel.com (HELO [10.238.129.23]) ([10.238.129.23])
+  by orsmga003.jf.intel.com with ESMTP; 18 Apr 2019 01:20:57 -0700
+Subject: Re: [tip:x86/cache] x86/resctrl: Initialize a new resource group with
+ default MBA values
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tony.luck@intel.com, x86@kernel.org, mingo@redhat.com, bp@suse.de,
+        reinette.chatre@intel.com, hpa@zytor.com, tglx@linutronix.de,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, linux-tip-commits@vger.kernel.org,
+        Xiaochen Shen <xiaochen.shen@intel.com>
+References: <1555499329-1170-3-git-send-email-xiaochen.shen@intel.com>
+ <tip-47820e73f5b3a1fdb8ebd1219191edc96e0c85c1@git.kernel.org>
+ <0ab6a79f-d1ae-1c99-1447-722f18405309@intel.com>
+ <20190418072845.GA27160@zn.tnic>
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+Message-ID: <27c69929-58ee-0a96-0953-e7cfa8976e78@intel.com>
+Date:   Thu, 18 Apr 2019 16:20:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiXd34hTriDsKvhOWogaF0uLfVbUn5BzJc3cUnZcWpFXAg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190418072845.GA27160@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:1TyE5mF5j6cS9zDc//KHnvOiv5sVa46LUSHfJis33KQNTcq8zjd
- tS3ftryLllNWQ59B1w/TTqG9f23pJiax/cRv8XHH5U93R3SvZV3lExPiqBh4sDY/lm9xnht
- ZU0L9Hpoa8YnOduM2qEr2qzx7gcamUPHubjRQW5O/iVKTipU7lIw4HH3lUMHAEizCaX4jgh
- cwvWnu+GTTZDWT/vDpVsw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TVVILci4b5M=:dBTAiEISpgGHcGZOBU0+TL
- 8WwL4XhGBlBOCK0QiB+wv2Bm1T83+ZuZrKXvwyFGtdk+L5kIgRC2v4IRfgi4Tv0N7WKmiX0Yp
- 5IjirGUQJAGybc7AG0ya6yTFZf4Vk8FbmbGqcGtXEmca9Pu9GbqIE4DCTYgfQUh86fgKgIyxD
- tsNM1EVxADDUUd5CnRiYpPXflQNI7jhnbbEEfgtvOWTYfX1qCegOFTabjBdK46cnDB3hVtJ2Y
- 2Ws4COeKTqE85JtATHHQ+LPLRqKcRfv3cufWN83Fvlnhrn97ylHN/sbOzNO4AdQE0OjN2wuZi
- y0mGn8vnSdbuIZ58AAjRycJfJET7ffF7DRBOJ8l/GKF5QO8wBFsiHKlOPRmqlD/RptinnHkFv
- kTB/UF3KUlwFfMEY1eQvxHgGBat/AnIPW5CrA8hxR9wowDTK+tyGK4B2rI/YErFHqsiO/R7py
- r8kMrd58WGJl0zyNFz/myBqRzsDxJzRkZIZZwtH5mexNzWWftNTDCkfzqAJxZzYCTaYqZorND
- DQ8nBWAKmrKoQDymTp7qe7sfrt1F2TrVmtZ3hlpaeD74/nII/EePjNiITMrJ3GvtofeDRS2tj
- qPHHW/xS+5z/tz4L55rLwqRrNrDbwhLpzsCK7F3abFd7WNQAkMcPiJAso4YBwbs3cLqwJ8ekJ
- 0or8fX6V97KMMjw+uY5SvgruGGZVX582UEZTcK2iaa0/ZUNxtmskM+XaQ2DJxRhOF86C932yz
- cVUg6YwvGkz3rWD0WbwO23n/w5ilH5UHJXqroQoJpkbw6LiXJTAGjNqN7cw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.19 16:17, Sven Van Asbroeck wrote:
+Hi Boris,
 
-<snip>
+On 4/18/2019 15:28, Borislav Petkov wrote:
+> On Thu, Apr 18, 2019 at 03:03:35PM +0800, Xiaochen Shen wrote:
+>> In my opinion, this newline is unnecessary. Thank you.
+> 
+> See commit message:
+> 
+>>    [ bp: Add newlines between code blocks for better readability. ]
+> 
 
-> But in this case, it's really a power output from an external card> on a PCB assembly. Regulator seemed the kernel abstraction> closest to
-what this actually represents.
-Oh, just missed that in my other mail.
+I got this commit message and the code changes.
+Really appreciated that you helped add several newlines between code
+blocks. The newlines really make the readability of the code better.
 
-So, that input line is *always* hardwired to the regulator ?Okay, that's
-a different situation.
+ >	for_each_alloc_enabled_rdt_resource(r) {
+ >		...;
+ >   		ret = update_domains(r, rdtgrp->closid);
+ >   		if (ret < 0) {
+ >   			rdt_last_cmd_puts("Failed to initialize allocations\n");
+ >   			return ret;
+ >   		}
+ > +
+ >   	}
 
+But is this newline an exception?
+This newline is in the middle of two "}"s - the first "}" is the end of
+if condition, and the second "}" is the end of
+"for_each_alloc_enabled_rdt_resource" loop. I don't think the newline is
+necessary.
 
---mtx
+> And I didn't add enough. That code is too crammed.
+> 
+> For example, the new __init_one_rdt_domain() could use some newlines
+> too, to separate code blocks for better readability. At least before
+> each comment so that one can visually distinguish code groups
+> better/faster.
+> 
+> Here the whole function pasted with newlines added where I think they
+> make sense. This way you have visual separation between the code blocks
+> and not one big fat clump of code which one has to painstakingly pick
+> apart.
+
+Thank you very much for pointing this out and helping make the changes.
+
+Should I submit a separate fixing patch for __init_one_rdt_domain()?
+Thank you.
+
+> 
+> static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
+>                                   u32 closid)
+> {
+>          struct rdt_resource *r_cdp = NULL;
+>          struct rdt_domain *d_cdp = NULL;
+>          u32 used_b = 0, unused_b = 0;
+>          unsigned long tmp_cbm;
+>          enum rdtgrp_mode mode;
+>          u32 peer_ctl, *ctrl;
+>          int i;
+> 
+>          rdt_cdp_peer_get(r, d, &r_cdp, &d_cdp);
+>          d->have_new_ctrl = false;
+>          d->new_ctrl = r->cache.shareable_bits;
+>          used_b = r->cache.shareable_bits;
+>          ctrl = d->ctrl_val;
+> 
+>          for (i = 0; i < closids_supported(); i++, ctrl++) {
+>                  if (closid_allocated(i) && i != closid) {
+>                          mode = rdtgroup_mode_by_closid(i);
+>                          if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
+>                                  break;
+> 
+>                          /*
+>                           * If CDP is active include peer domain's
+>                           * usage to ensure there is no overlap
+>                           * with an exclusive group.
+>                           */
+>                          if (d_cdp)
+>                                  peer_ctl = d_cdp->ctrl_val[i];
+>                          else
+>                                  peer_ctl = 0;
+> 
+>                          used_b |= *ctrl | peer_ctl;
+>                          if (mode == RDT_MODE_SHAREABLE)
+>                                  d->new_ctrl |= *ctrl | peer_ctl;
+>                  }
+>          }
+> 
+>          if (d->plr && d->plr->cbm > 0)
+>                  used_b |= d->plr->cbm;
+> 
+>          unused_b = used_b ^ (BIT_MASK(r->cache.cbm_len) - 1);
+>          unused_b &= BIT_MASK(r->cache.cbm_len) - 1;
+>          d->new_ctrl |= unused_b;
+> 
+>          /*
+>           * Force the initial CBM to be valid, user can
+>           * modify the CBM based on system availability.
+>           */
+>          cbm_ensure_valid(&d->new_ctrl, r);
+> 
+>          /*
+>           * Assign the u32 CBM to an unsigned long to ensure that
+>           * bitmap_weight() does not access out-of-bound memory.
+>           */
+>          tmp_cbm = d->new_ctrl;
+> 
+>          if (bitmap_weight(&tmp_cbm, r->cache.cbm_len) < r->cache.min_cbm_bits) {
+>                  rdt_last_cmd_printf("No space on %s:%d\n", r->name, d->id);
+>                  return -ENOSPC;
+>          }
+>          d->have_new_ctrl = true;
+> 
+>          return 0;
+> }
+> 
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Best regards,
+Xiaochen
