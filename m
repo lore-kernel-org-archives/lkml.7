@@ -2,55 +2,55 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF128C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE06C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83747218A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209FD206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610946;
-	bh=dPaVjQutAIx/PPavxXfZzfOBSONQJayQyh2tIXTJWm4=;
+	s=default; t=1555610951;
+	bh=0UPkEvrKYdCW8jnBQghSe4seVAjovMENmuWztmSbG5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FGeaifT0EkDEjP/bZZ3j3Gv8EX7q658hqDGGfWSLUXoy46d6S94fpfHl9asrtUjHy
-	 9ysG4Zi1KCYCzC9cuZuWXeUebBtz4reDN3EejRkwKCbuIvXR0RkZgQrxfoNtf2azbA
-	 TM1j7II0e1W6uBfnrk9St+6pNiqMwZs0jibCpE8I=
+	b=tQPn1ZI+VeLvMChZ0xmEnmlPOquoSGMNNs8kVHemWenFZynJGVwvvsFn4bQliG7Kn
+	 UqM4byLaG4THbaNSHVO9ysLlWJ3QKSWPrGVKqfSUL93RCm3zX8D/w4gPrgHApyQHBr
+	 IkzC1dzgb/32DJaMZYTE3p6+eBdnqjj+j/rri8nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391836AbfDRSJF (ORCPT
+        id S2391845AbfDRSJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40508 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391820AbfDRSJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:02 -0400
+        id S2391533AbfDRSJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:09:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF30E2186A;
-        Thu, 18 Apr 2019 18:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 254D121871;
+        Thu, 18 Apr 2019 18:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610941;
-        bh=dPaVjQutAIx/PPavxXfZzfOBSONQJayQyh2tIXTJWm4=;
+        s=default; t=1555610946;
+        bh=0UPkEvrKYdCW8jnBQghSe4seVAjovMENmuWztmSbG5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/sGBsKglu1cqaqC+uH8h58ei4WVvaDobrNYbi6SLnX1rXoSYVLrLhvKYTV+LgXXs
-         tpF2N2J5o5WBjZ3hvUEh9uww96rB3OPopY63C8EUByFT0mjQpsT+KHdPgAVGbMSsVV
-         pOFnL8j4blGEW/gIvkP3ayhlGokf2GpSJmKqg7rM=
+        b=17uHAjykmSAEMIM0TpURzlCgjo5JcisSRgdMyq8osvQvb0ly0IVokAFlQBsyBnB9l
+         0hiYxHFrSutY+6lQe6j5TuicYyGKyVugTDappVViDNrL3faqUTEOhUm5Ry2SfLVCQW
+         M3ywr9qt1zWx6TtVR8C6dZrgMhc2W8B0CeKnlJRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 49/50] tools include: Adopt linux/bits.h
-Date:   Thu, 18 Apr 2019 19:58:00 +0200
-Message-Id: <20190418160428.266447988@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 25/50] x86/hw_breakpoints: Make default case in hw_breakpoint_arch_parse() return an error
+Date:   Thu, 18 Apr 2019 19:57:36 +0200
+Message-Id: <20190418160425.866241024@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -63,97 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+[ Upstream commit e898e69d6b9475bf123f99b3c5d1a67bb7cb2361 ]
 
-commit ba4aa02b417f08a0bee5e7b8ed70cac788a7c854 upstream.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-So that we reduce the difference of tools/include/linux/bitops.h to the
-original kernel file, include/linux/bitops.h, trying to remove the need
-to define BITS_PER_LONG, to avoid clashes with asm/bitsperlong.h.
+arch/x86/kernel/hw_breakpoint.c:355:2: warning: variable 'align' is used
+uninitialized whenever switch default is taken
+[-Wsometimes-uninitialized]
 
-And the things removed from tools/include/linux/bitops.h are really in
-linux/bits.h, so that we can have a copy and then
-tools/perf/check_headers.sh will tell us when new stuff gets added to
-linux/bits.h so that we can check if it is useful and if any adjustment
-needs to be done to the tools/{include,arch}/ copies.
+The default cannot be reached because arch_build_bp_info() initializes
+hw->len to one of the specified cases. Nevertheless the warning is valid
+and returning -EINVAL makes sure that this cannot be broken by future
+modifications.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-y1sqyydvfzo0bjjoj4zsl562@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/392
+Link: https://lkml.kernel.org/r/20190307212756.4648-1-natechancellor@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/linux/bitops.h |    6 ++----
- tools/include/linux/bits.h   |   26 ++++++++++++++++++++++++++
- tools/perf/check-headers.sh  |    1 +
- 3 files changed, 29 insertions(+), 4 deletions(-)
+ arch/x86/kernel/hw_breakpoint.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -3,7 +3,6 @@
- 
- #include <asm/types.h>
- #include <linux/kernel.h>
--#include <linux/compiler.h>
- 
- #ifndef __WORDSIZE
- #define __WORDSIZE (__SIZEOF_LONG__ * 8)
-@@ -12,10 +11,9 @@
- #ifndef BITS_PER_LONG
- # define BITS_PER_LONG __WORDSIZE
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index 8771766d46b6..9954a604a822 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -352,6 +352,7 @@ int arch_validate_hwbkpt_settings(struct perf_event *bp)
  #endif
-+#include <linux/bits.h>
-+#include <linux/compiler.h>
+ 	default:
+ 		WARN_ON_ONCE(1);
++		return -EINVAL;
+ 	}
  
--#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
--#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
--#define BITS_PER_BYTE		8
- #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
- #define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
- #define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
---- /dev/null
-+++ b/tools/include/linux/bits.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_BITS_H
-+#define __LINUX_BITS_H
-+#include <asm/bitsperlong.h>
-+
-+#define BIT(nr)			(1UL << (nr))
-+#define BIT_ULL(nr)		(1ULL << (nr))
-+#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
-+#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
-+#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
-+#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
-+#define BITS_PER_BYTE		8
-+
-+/*
-+ * Create a contiguous bitmask starting at bit position @l and ending at
-+ * position @h. For example
-+ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-+ */
-+#define GENMASK(h, l) \
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-+
-+#define GENMASK_ULL(h, l) \
-+	(((~0ULL) - (1ULL << (l)) + 1) & \
-+	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-+
-+#endif	/* __LINUX_BITS_H */
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -4,6 +4,7 @@ HEADERS='
- include/uapi/linux/fcntl.h
- include/uapi/linux/perf_event.h
- include/uapi/linux/stat.h
-+include/linux/bits.h
- include/linux/hash.h
- include/uapi/linux/hw_breakpoint.h
- arch/x86/include/asm/disabled-features.h
+ 	/*
+-- 
+2.19.1
+
 
 
