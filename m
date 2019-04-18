@@ -2,100 +2,113 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3653C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33667C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A262B2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:59:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GtmG1vtG"
+	by mail.kernel.org (Postfix) with ESMTP id EC506214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555574530;
+	bh=L3yVJP/o/Td8297AkNWgNfn5COhl0vrJMj+gAG3ralQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L7zesaOLTpUj2o/wxg/t0L996SjcKjH0SF0D69/FRC3gQXDiFrFRgap6uoIANnstN
+	 +RuTu+fdFZ4oStkTjC4rFCDyDf+kZZO1ZMFb0mjUfnU1FqxdQ3rrWFzKSNNgCoXb3O
+	 I4Jl5daL3P1RH0On29UM7DckoveSumRyTMCWfcSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbfDRH7O (ORCPT
+        id S2388159AbfDRICI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 03:59:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57899 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfDRH7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 03:59:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44lBML4blCz9s55;
-        Thu, 18 Apr 2019 17:59:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555574351;
-        bh=AlhUs6IwDSuiAXVwWxkz/i3n97ZHVw6sIkR/gk1uEsc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GtmG1vtGnfmJlAM69TCUAXMzun3CI+iVvhIMn7MCJWqKzv9IDv8GaYlkonM5aIaxp
-         zRESfjwS3mWWzlRSzv/MwKoj8/YMnopfbzup42Dvdphfqd+qfWVJZz/VYUXVPTp9QT
-         vGcDiGYyKUE5iLoA+Jo8ymcQJj0KWLGNP5eWjve1dokZLG/UvvSwVmNNliypV3E5N3
-         k6RsGhunF6l6h64ToYJuZ2yMMwQymqTWdsmA4XKzMhuguoaw86mH/xIy5BvBFgsrTR
-         GRQiWB60fMcPmYHuPHd0Rh8AtRQBB3tGEYDOsEXQI4Sy/v95VSWjLsn/cuagSvmEQv
-         S4IP5Gs5BuVvQ==
-Date:   Thu, 18 Apr 2019 17:59:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Gross <agross@kernel.org>,
-        Linux Next <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: linux-next: manual merge of the phy-next tree with the qcom
- tree
-Message-ID: <20190418175909.76f16930@canb.auug.org.au>
-In-Reply-To: <d194fa50-8bff-544e-eb88-128810f525f9@free.fr>
-References: <20190418152954.255015e1@canb.auug.org.au>
-        <d194fa50-8bff-544e-eb88-128810f525f9@free.fr>
+        Thu, 18 Apr 2019 04:02:08 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:39335 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfDRICI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:02:08 -0400
+Received: by mail-wm1-f41.google.com with SMTP id n25so1715744wmk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 01:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/HO1WJysrK++hQK3vuYQ2Hya/ZmVw9Z59OyDAf3UQaE=;
+        b=sJwrtURSrBE1cx8FuGMuHoqSuWtQ1mFk0uLI6cREvKT4JkPrMXFpvDvj3K7h0qeG8m
+         n/fyP/Xo/ag+WWUxwr1tJrzdMdml6sRUsRBwmGpax4JlyXN/9s4IH4W2RPx9lUHYCPGK
+         ZnyWamxSkjDpHmUZ3UVKwJGO1kWrJbkxvo7jYkqRRBvjQuLZMfLsXODIg4GBP7VGexbR
+         2DZt3GuWiaH/7JQGR5FivwXesbipVf0/G9okHTDt2jlmbRoKBzw2jkGhDBR175nQs8QT
+         ErRShXGb5LqmmLnarQ9Fmm8mXcJgWC8CaDcS9u0BVvowE7yIXh+MLF2+bmC/7UIX1tBK
+         vCEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/HO1WJysrK++hQK3vuYQ2Hya/ZmVw9Z59OyDAf3UQaE=;
+        b=ggbtKjGDlFTE5IRmJVppNLhZJVC94ARsTLz69RRdNxAbLPNU0Dbyyn8JwuozpGoS6e
+         lLAegmI4QtKD9hY0EULhjhohFM2mpvbBkEPmlAQK0n1W6CQCaUf9LzxJ5Ml2BuUzaLDw
+         GcKBej5HnlBK63iY9nJ5hYWrKSLMP5Eoubwjf3DH3eiRXR3e+JFLl/q0sI6lO9WDAPK1
+         uYNZjOqvmlZxxT8aWlT42DUNtimjbScCzPjF1rMK9mZRndcbJwYDhjEcNVPPjF+ApH78
+         HsJ1YCO7aFfbDudWVili3caXePiLUmSUQtqiz1NwPvxvXN3yATrnhHsG0lJ9FEwoXg3n
+         RKoA==
+X-Gm-Message-State: APjAAAXz2dzQHrCF1pWpTMhystE3pP0/2oM5tot95HzeQ2ppO8h7ODXX
+        w5Xvz6FOfLuTYL1HVPw80t8=
+X-Google-Smtp-Source: APXvYqw/aEvPQcb3L3ZnGAxZDsW0mYWbDY94YPDu6dFO81UXtD8j/Ls8XnaVH/mKc48NoLRTugGMRQ==
+X-Received: by 2002:a1c:4e19:: with SMTP id g25mr2087800wmh.9.1555574526416;
+        Thu, 18 Apr 2019 01:02:06 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id m17sm1024638wrx.3.2019.04.18.01.02.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 01:02:05 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 10:02:02 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2
+ follow-up patches
+Message-ID: <20190418080202.GA13653@gmail.com>
+References: <20190415205829.32707-1-longman@redhat.com>
+ <20190416131047.GW11158@hirez.programming.kicks-ass.net>
+ <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
+ <20190416141747.GN4038@hirez.programming.kicks-ass.net>
+ <18af71ce-1ef3-c6cd-4088-3b2a9bf0016e@redhat.com>
+ <20190416173700.GQ4038@hirez.programming.kicks-ass.net>
+ <2873c42c-f2a6-64e9-bf0f-9c86536984b7@redhat.com>
+ <20190417055745.GA95755@gmail.com>
+ <3a9bbc09-2cd1-4f64-1d56-6b04e298902e@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/+AshyETYX/BeJTHUPqiBhL2"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a9bbc09-2cd1-4f64-1d56-6b04e298902e@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+AshyETYX/BeJTHUPqiBhL2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Marc,
+* Waiman Long <longman@redhat.com> wrote:
 
-On Thu, 18 Apr 2019 09:35:44 +0200 Marc Gonzalez <marc.w.gonzalez@free.fr> =
-wrote:
->
-> It is not clear to me what I could/should have done differently to avoid
-> the conflict?
+> As the part2 patches are still being actively modified, it doesn't look 
+> like it will make the next merge window. I am fine with postponing it 
+> to 5.3. However, I would like to request the merging of just patch 1 of 
+> the part 2 patchset. It fixes a locking selftest problem that was 
+> introduced in the part 1 patches.
 
-Nothing really, it will need to be fixed up when these trees are merged
-into Linus' tree (or some other tree along the way).  It is not a big
-problem as the conflict is pretty simple.  I send the emails just so
-people can see what I think the resolution should be and correct me if
-I am mistaken.
+Sure, I've promoted this commit:
 
---=20
-Cheers,
-Stephen Rothwell
+  26536e7c242e: locking/rwsem: Prevent unneeded warning during locking selftest
 
---Sig_/+AshyETYX/BeJTHUPqiBhL2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+from tip:WIP.locking/core into tip:locking/core, for a v5.2 merge.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly4Lk0ACgkQAVBC80lX
-0GzyxQgAjLDPt/0aB7gYWTpzZ4eyr5+ZNBefenCqyThvkmhre+oktf96SM94dk/S
-Lo6H+dlw2JLJiSMaHKouImgFGAWcPY2iwRRhcSO2tv2HUdu2VNbXCoNf8qcGytO7
-8e9HsyIOIsRAWAg00B6i1OKIZ802860yHj7ZPuYICCmELRlltamwPrcqKo/CFxGc
-QV3zTFp8Cx9M8/ZQ+KrykfaCAbrOSmYRgYLoBr3ZinU5je4ucBVsZvE6s1M0TLAl
-knn0CYx5U00w9IR+GqyulwSFRBa9HQhD4qI/+Xmo+BtkvlRs+/IMna6EIfsjIf4G
-gksIPkytUs2j/fssD2t8LBlRRdGqxw==
-=FrcR
------END PGP SIGNATURE-----
-
---Sig_/+AshyETYX/BeJTHUPqiBhL2--
+	Ingo
