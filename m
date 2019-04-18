@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDB3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E506C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FF52186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C24C218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610906;
-	bh=8wZ5Lct4DM28lY55ZQ6s0gS+mAosk7vZ7MSZpw4MOUM=;
+	s=default; t=1555610910;
+	bh=QnH3ytiC+kEYheQUyQvPUnQpkY7apqCXmH1lXzwABak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F2GqmLkHKbSE/Vg6f7C58d1fKm09bE+EUcMMSzCRkMMPdXKZ+EcpD58S6uIcLxQev
-	 0iVtjSTbwdzs5pTBPbsKR8Pp51tvityu2X+MfMt4LWClrzavI7NSFjREnJQthTIMkJ
-	 rY0g3HY3NNjdLbQ1jXXty2pTndWhB7GIeqXTzlNs=
+	b=h5Dnxr9nrj0u7UeRTCgAnuP8+8YYR777pB0OXHKkF5q/2Pr+dOU0Yxdw8Ih4FHBx+
+	 DoT/xd/KtOtQILpvvW2K5artHp7+y6IFEuWCl1HGdkFalPhydly7xCjMLG/6CPqKU4
+	 OIKCF8QYTGq/MDEELujcUacoDr9s5+yulFpwOSQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403837AbfDRSIY (ORCPT
+        id S2403852AbfDRSI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391419AbfDRSIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:21 -0400
+        id S2403838AbfDRSIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B334C21905;
-        Thu, 18 Apr 2019 18:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25BD7206B6;
+        Thu, 18 Apr 2019 18:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610899;
-        bh=8wZ5Lct4DM28lY55ZQ6s0gS+mAosk7vZ7MSZpw4MOUM=;
+        s=default; t=1555610904;
+        bh=QnH3ytiC+kEYheQUyQvPUnQpkY7apqCXmH1lXzwABak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6cB3+OPOrV5TAMrfhHJDDCHrm1ic3V3W3I2JdlfZZEO2EcaeW6Kr3/h/DC7ppXAh
-         zhbZCVh2pVpoehLEh6MsvDOnWXQre2BV53zf05A0wrD7InjnyTA+1mZTyLemPnlERs
-         DvSfa79E/g5d5u8HRARBjXF1NW0pq/ze07SHWQ/c=
+        b=vc54gM1VhK/JUoM4V1Kw/lyo3VapW9MUR5mh8HcRaXuv9YLbI/89Jryvig1cOVR9s
+         GThapX2JqsBWQXiZIonZo/gG5J6w0jZSUMdqQtxLwceXnFLfWtw0x375Tl+0Jz/nsW
+         2OJZaFGWq2OB2vMSSsLVWB+f7d1EhE42TV28/BFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Julian Sax <jsbc@gmx.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        ahormann@gmx.net, Bruno Jesus <bruno.fl.jesus@gmail.com>,
-        Dietrich <enaut.w@googlemail.com>, kloxdami@yahoo.com
-Subject: [PATCH 4.9 34/50] HID: i2c-hid: override HID descriptors for certain devices
-Date:   Thu, 18 Apr 2019 19:57:45 +0200
-Message-Id: <20190418160426.822776118@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 36/50] ACPI / SBS: Fix GPE storm on recent MacBookPros
+Date:   Thu, 18 Apr 2019 19:57:47 +0200
+Message-Id: <20190418160427.009629681@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -63,554 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ee3e06610fdb8a601cde59c92089fb6c1deb4aa ]
+[ Upstream commit ca1721c5bee77105829cbd7baab8ee0eab85b06d ]
 
-A particular touchpad (SIPODEV SP1064) refuses to supply the HID
-descriptors. This patch provides the framework for overriding these
-descriptors based on DMI data. It also includes the descriptors for
-said touchpad, which were extracted by listening to the traffic of the
-windows filter driver, as well as the DMI data for the laptops known
-to use this device.
+On Apple machines, plugging-in or unplugging the power triggers a GPE
+for the EC. Since these machines expose an SBS device, this GPE ends
+up triggering the acpi_sbs_callback(). This in turn tries to get the
+status of the SBS charger. However, on MBP13,* and MBP14,* machines,
+performing the smbus-read operation to get the charger's status triggers
+the EC's GPE again. The result is an endless re-triggering and handling
+of that GPE, consuming significant CPU resources (> 50% in irq).
 
-Relevant Bug: https://bugzilla.redhat.com/show_bug.cgi?id=1526312
+In the end this is quite similar to commit 3031cddea633 (ACPI / SBS:
+Don't assume the existence of an SBS charger), except that on the above
+machines a status of all 1's is returned. And like there, we just want
+ignore the charger here.
 
-Cc: Hans de Goede <hdegoede@redhat.com>
-Reported-and-tested-by: ahormann@gmx.net
-Reported-and-tested-by: Bruno Jesus <bruno.fl.jesus@gmail.com>
-Reported-and-tested-by: Dietrich <enaut.w@googlemail.com>
-Reported-and-tested-by: kloxdami@yahoo.com
-Signed-off-by: Julian Sax <jsbc@gmx.de>
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=198169
+Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/Makefile                  |   3 +
- .../hid/i2c-hid/{i2c-hid.c => i2c-hid-core.c} |  56 ++-
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c      | 376 ++++++++++++++++++
- drivers/hid/i2c-hid/i2c-hid.h                 |  20 +
- 4 files changed, 437 insertions(+), 18 deletions(-)
- rename drivers/hid/i2c-hid/{i2c-hid.c => i2c-hid-core.c} (96%)
- create mode 100644 drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
- create mode 100644 drivers/hid/i2c-hid/i2c-hid.h
+ drivers/acpi/sbs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/i2c-hid/Makefile b/drivers/hid/i2c-hid/Makefile
-index 832d8f9aaba2..099e1ce2f234 100644
---- a/drivers/hid/i2c-hid/Makefile
-+++ b/drivers/hid/i2c-hid/Makefile
-@@ -3,3 +3,6 @@
- #
+diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
+index ad0b13ad4bbb..4a76000bcf7a 100644
+--- a/drivers/acpi/sbs.c
++++ b/drivers/acpi/sbs.c
+@@ -443,9 +443,13 @@ static int acpi_ac_get_present(struct acpi_sbs *sbs)
  
- obj-$(CONFIG_I2C_HID)				+= i2c-hid.o
-+
-+i2c-hid-objs					=  i2c-hid-core.o
-+i2c-hid-$(CONFIG_DMI)				+= i2c-hid-dmi-quirks.o
-diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-similarity index 96%
-rename from drivers/hid/i2c-hid/i2c-hid.c
-rename to drivers/hid/i2c-hid/i2c-hid-core.c
-index ce2b80009c19..850527d5fab1 100644
---- a/drivers/hid/i2c-hid/i2c-hid.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -42,6 +42,7 @@
- #include <linux/i2c/i2c-hid.h>
+ 	/*
+ 	 * The spec requires that bit 4 always be 1. If it's not set, assume
+-	 * that the implementation doesn't support an SBS charger
++	 * that the implementation doesn't support an SBS charger.
++	 *
++	 * And on some MacBooks a status of 0xffff is always returned, no
++	 * matter whether the charger is plugged in or not, which is also
++	 * wrong, so ignore the SBS charger for those too.
+ 	 */
+-	if (!((status >> 4) & 0x1))
++	if (!((status >> 4) & 0x1) || status == 0xffff)
+ 		return -ENODEV;
  
- #include "../hid-ids.h"
-+#include "i2c-hid.h"
- 
- /* quirks to control the device */
- #define I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV	BIT(0)
-@@ -724,6 +725,7 @@ static int i2c_hid_parse(struct hid_device *hid)
- 	char *rdesc;
- 	int ret;
- 	int tries = 3;
-+	char *use_override;
- 
- 	i2c_hid_dbg(ihid, "entering %s\n", __func__);
- 
-@@ -742,26 +744,37 @@ static int i2c_hid_parse(struct hid_device *hid)
- 	if (ret)
- 		return ret;
- 
--	rdesc = kzalloc(rsize, GFP_KERNEL);
-+	use_override = i2c_hid_get_dmi_hid_report_desc_override(client->name,
-+								&rsize);
- 
--	if (!rdesc) {
--		dbg_hid("couldn't allocate rdesc memory\n");
--		return -ENOMEM;
--	}
-+	if (use_override) {
-+		rdesc = use_override;
-+		i2c_hid_dbg(ihid, "Using a HID report descriptor override\n");
-+	} else {
-+		rdesc = kzalloc(rsize, GFP_KERNEL);
- 
--	i2c_hid_dbg(ihid, "asking HID report descriptor\n");
-+		if (!rdesc) {
-+			dbg_hid("couldn't allocate rdesc memory\n");
-+			return -ENOMEM;
-+		}
- 
--	ret = i2c_hid_command(client, &hid_report_descr_cmd, rdesc, rsize);
--	if (ret) {
--		hid_err(hid, "reading report descriptor failed\n");
--		kfree(rdesc);
--		return -EIO;
-+		i2c_hid_dbg(ihid, "asking HID report descriptor\n");
-+
-+		ret = i2c_hid_command(client, &hid_report_descr_cmd,
-+				      rdesc, rsize);
-+		if (ret) {
-+			hid_err(hid, "reading report descriptor failed\n");
-+			kfree(rdesc);
-+			return -EIO;
-+		}
- 	}
- 
- 	i2c_hid_dbg(ihid, "Report Descriptor: %*ph\n", rsize, rdesc);
- 
- 	ret = hid_parse_report(hid, rdesc, rsize);
--	kfree(rdesc);
-+	if (!use_override)
-+		kfree(rdesc);
-+
- 	if (ret) {
- 		dbg_hid("parsing report descriptor failed\n");
- 		return ret;
-@@ -899,12 +912,19 @@ static int i2c_hid_fetch_hid_descriptor(struct i2c_hid *ihid)
- 	int ret;
- 
- 	/* i2c hid fetch using a fixed descriptor size (30 bytes) */
--	i2c_hid_dbg(ihid, "Fetching the HID descriptor\n");
--	ret = i2c_hid_command(client, &hid_descr_cmd, ihid->hdesc_buffer,
--				sizeof(struct i2c_hid_desc));
--	if (ret) {
--		dev_err(&client->dev, "hid_descr_cmd failed\n");
--		return -ENODEV;
-+	if (i2c_hid_get_dmi_i2c_hid_desc_override(client->name)) {
-+		i2c_hid_dbg(ihid, "Using a HID descriptor override\n");
-+		ihid->hdesc =
-+			*i2c_hid_get_dmi_i2c_hid_desc_override(client->name);
-+	} else {
-+		i2c_hid_dbg(ihid, "Fetching the HID descriptor\n");
-+		ret = i2c_hid_command(client, &hid_descr_cmd,
-+				      ihid->hdesc_buffer,
-+				      sizeof(struct i2c_hid_desc));
-+		if (ret) {
-+			dev_err(&client->dev, "hid_descr_cmd failed\n");
-+			return -ENODEV;
-+		}
- 	}
- 
- 	/* Validate the length of HID descriptor, the 4 first bytes:
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-new file mode 100644
-index 000000000000..1d645c9ab417
---- /dev/null
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -0,0 +1,376 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * Quirks for I2C-HID devices that do not supply proper descriptors
-+ *
-+ * Copyright (c) 2018 Julian Sax <jsbc@gmx.de>
-+ *
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/dmi.h>
-+#include <linux/mod_devicetable.h>
-+
-+#include "i2c-hid.h"
-+
-+
-+struct i2c_hid_desc_override {
-+	union {
-+		struct i2c_hid_desc *i2c_hid_desc;
-+		uint8_t             *i2c_hid_desc_buffer;
-+	};
-+	uint8_t              *hid_report_desc;
-+	unsigned int          hid_report_desc_size;
-+	uint8_t              *i2c_name;
-+};
-+
-+
-+/*
-+ * descriptors for the SIPODEV SP1064 touchpad
-+ *
-+ * This device does not supply any descriptors and on windows a filter
-+ * driver operates between the i2c-hid layer and the device and injects
-+ * these descriptors when the device is prompted. The descriptors were
-+ * extracted by listening to the i2c-hid traffic that occurs between the
-+ * windows filter driver and the windows i2c-hid driver.
-+ */
-+
-+static const struct i2c_hid_desc_override sipodev_desc = {
-+	.i2c_hid_desc_buffer = (uint8_t [])
-+	{0x1e, 0x00,                  /* Length of descriptor                 */
-+	 0x00, 0x01,                  /* Version of descriptor                */
-+	 0xdb, 0x01,                  /* Length of report descriptor          */
-+	 0x21, 0x00,                  /* Location of report descriptor        */
-+	 0x24, 0x00,                  /* Location of input report             */
-+	 0x1b, 0x00,                  /* Max input report length              */
-+	 0x25, 0x00,                  /* Location of output report            */
-+	 0x11, 0x00,                  /* Max output report length             */
-+	 0x22, 0x00,                  /* Location of command register         */
-+	 0x23, 0x00,                  /* Location of data register            */
-+	 0x11, 0x09,                  /* Vendor ID                            */
-+	 0x88, 0x52,                  /* Product ID                           */
-+	 0x06, 0x00,                  /* Version ID                           */
-+	 0x00, 0x00, 0x00, 0x00       /* Reserved                             */
-+	},
-+
-+	.hid_report_desc = (uint8_t [])
-+	{0x05, 0x01,                  /* Usage Page (Desktop),                */
-+	 0x09, 0x02,                  /* Usage (Mouse),                       */
-+	 0xA1, 0x01,                  /* Collection (Application),            */
-+	 0x85, 0x01,                  /*     Report ID (1),                   */
-+	 0x09, 0x01,                  /*     Usage (Pointer),                 */
-+	 0xA1, 0x00,                  /*     Collection (Physical),           */
-+	 0x05, 0x09,                  /*         Usage Page (Button),         */
-+	 0x19, 0x01,                  /*         Usage Minimum (01h),         */
-+	 0x29, 0x02,                  /*         Usage Maximum (02h),         */
-+	 0x25, 0x01,                  /*         Logical Maximum (1),         */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x95, 0x06,                  /*         Report Count (6),            */
-+	 0x81, 0x01,                  /*         Input (Constant),            */
-+	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
-+	 0x09, 0x30,                  /*         Usage (X),                   */
-+	 0x09, 0x31,                  /*         Usage (Y),                   */
-+	 0x15, 0x81,                  /*         Logical Minimum (-127),      */
-+	 0x25, 0x7F,                  /*         Logical Maximum (127),       */
-+	 0x75, 0x08,                  /*         Report Size (8),             */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x81, 0x06,                  /*         Input (Variable, Relative),  */
-+	 0xC0,                        /*     End Collection,                  */
-+	 0xC0,                        /* End Collection,                      */
-+	 0x05, 0x0D,                  /* Usage Page (Digitizer),              */
-+	 0x09, 0x05,                  /* Usage (Touchpad),                    */
-+	 0xA1, 0x01,                  /* Collection (Application),            */
-+	 0x85, 0x04,                  /*     Report ID (4),                   */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x09, 0x22,                  /*     Usage (Finger),                  */
-+	 0xA1, 0x02,                  /*     Collection (Logical),            */
-+	 0x15, 0x00,                  /*         Logical Minimum (0),         */
-+	 0x25, 0x01,                  /*         Logical Maximum (1),         */
-+	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
-+	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x75, 0x03,                  /*         Report Size (3),             */
-+	 0x25, 0x05,                  /*         Logical Maximum (5),         */
-+	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x95, 0x03,                  /*         Report Count (3),            */
-+	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
-+	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
-+	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
-+	 0x75, 0x10,                  /*         Report Size (16),            */
-+	 0x55, 0x0E,                  /*         Unit Exponent (14),          */
-+	 0x65, 0x11,                  /*         Unit (Centimeter),           */
-+	 0x09, 0x30,                  /*         Usage (X),                   */
-+	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
-+	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
-+	 0x09, 0x31,                  /*         Usage (Y),                   */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0xC0,                        /*     End Collection,                  */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x09, 0x22,                  /*     Usage (Finger),                  */
-+	 0xA1, 0x02,                  /*     Collection (Logical),            */
-+	 0x25, 0x01,                  /*         Logical Maximum (1),         */
-+	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
-+	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x75, 0x03,                  /*         Report Size (3),             */
-+	 0x25, 0x05,                  /*         Logical Maximum (5),         */
-+	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x95, 0x03,                  /*         Report Count (3),            */
-+	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
-+	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
-+	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
-+	 0x75, 0x10,                  /*         Report Size (16),            */
-+	 0x09, 0x30,                  /*         Usage (X),                   */
-+	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
-+	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
-+	 0x09, 0x31,                  /*         Usage (Y),                   */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0xC0,                        /*     End Collection,                  */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x09, 0x22,                  /*     Usage (Finger),                  */
-+	 0xA1, 0x02,                  /*     Collection (Logical),            */
-+	 0x25, 0x01,                  /*         Logical Maximum (1),         */
-+	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
-+	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x75, 0x03,                  /*         Report Size (3),             */
-+	 0x25, 0x05,                  /*         Logical Maximum (5),         */
-+	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x95, 0x03,                  /*         Report Count (3),            */
-+	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
-+	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
-+	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
-+	 0x75, 0x10,                  /*         Report Size (16),            */
-+	 0x09, 0x30,                  /*         Usage (X),                   */
-+	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
-+	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
-+	 0x09, 0x31,                  /*         Usage (Y),                   */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0xC0,                        /*     End Collection,                  */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x09, 0x22,                  /*     Usage (Finger),                  */
-+	 0xA1, 0x02,                  /*     Collection (Logical),            */
-+	 0x25, 0x01,                  /*         Logical Maximum (1),         */
-+	 0x09, 0x47,                  /*         Usage (Touch Valid),         */
-+	 0x09, 0x42,                  /*         Usage (Tip Switch),          */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x75, 0x03,                  /*         Report Size (3),             */
-+	 0x25, 0x05,                  /*         Logical Maximum (5),         */
-+	 0x09, 0x51,                  /*         Usage (Contact Identifier),  */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x95, 0x03,                  /*         Report Count (3),            */
-+	 0x81, 0x03,                  /*         Input (Constant, Variable),  */
-+	 0x05, 0x01,                  /*         Usage Page (Desktop),        */
-+	 0x26, 0x44, 0x0A,            /*         Logical Maximum (2628),      */
-+	 0x75, 0x10,                  /*         Report Size (16),            */
-+	 0x09, 0x30,                  /*         Usage (X),                   */
-+	 0x46, 0x1A, 0x04,            /*         Physical Maximum (1050),     */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0x46, 0xBC, 0x02,            /*         Physical Maximum (700),      */
-+	 0x26, 0x34, 0x05,            /*         Logical Maximum (1332),      */
-+	 0x09, 0x31,                  /*         Usage (Y),                   */
-+	 0x81, 0x02,                  /*         Input (Variable),            */
-+	 0xC0,                        /*     End Collection,                  */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x55, 0x0C,                  /*     Unit Exponent (12),              */
-+	 0x66, 0x01, 0x10,            /*     Unit (Seconds),                  */
-+	 0x47, 0xFF, 0xFF, 0x00, 0x00,/*     Physical Maximum (65535),        */
-+	 0x27, 0xFF, 0xFF, 0x00, 0x00,/*     Logical Maximum (65535),         */
-+	 0x75, 0x10,                  /*     Report Size (16),                */
-+	 0x95, 0x01,                  /*     Report Count (1),                */
-+	 0x09, 0x56,                  /*     Usage (Scan Time),               */
-+	 0x81, 0x02,                  /*     Input (Variable),                */
-+	 0x09, 0x54,                  /*     Usage (Contact Count),           */
-+	 0x25, 0x7F,                  /*     Logical Maximum (127),           */
-+	 0x75, 0x08,                  /*     Report Size (8),                 */
-+	 0x81, 0x02,                  /*     Input (Variable),                */
-+	 0x05, 0x09,                  /*     Usage Page (Button),             */
-+	 0x09, 0x01,                  /*     Usage (01h),                     */
-+	 0x25, 0x01,                  /*     Logical Maximum (1),             */
-+	 0x75, 0x01,                  /*     Report Size (1),                 */
-+	 0x95, 0x01,                  /*     Report Count (1),                */
-+	 0x81, 0x02,                  /*     Input (Variable),                */
-+	 0x95, 0x07,                  /*     Report Count (7),                */
-+	 0x81, 0x03,                  /*     Input (Constant, Variable),      */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x85, 0x02,                  /*     Report ID (2),                   */
-+	 0x09, 0x55,                  /*     Usage (Contact Count Maximum),   */
-+	 0x09, 0x59,                  /*     Usage (59h),                     */
-+	 0x75, 0x04,                  /*     Report Size (4),                 */
-+	 0x95, 0x02,                  /*     Report Count (2),                */
-+	 0x25, 0x0F,                  /*     Logical Maximum (15),            */
-+	 0xB1, 0x02,                  /*     Feature (Variable),              */
-+	 0x05, 0x0D,                  /*     Usage Page (Digitizer),          */
-+	 0x85, 0x07,                  /*     Report ID (7),                   */
-+	 0x09, 0x60,                  /*     Usage (60h),                     */
-+	 0x75, 0x01,                  /*     Report Size (1),                 */
-+	 0x95, 0x01,                  /*     Report Count (1),                */
-+	 0x25, 0x01,                  /*     Logical Maximum (1),             */
-+	 0xB1, 0x02,                  /*     Feature (Variable),              */
-+	 0x95, 0x07,                  /*     Report Count (7),                */
-+	 0xB1, 0x03,                  /*     Feature (Constant, Variable),    */
-+	 0x85, 0x06,                  /*     Report ID (6),                   */
-+	 0x06, 0x00, 0xFF,            /*     Usage Page (FF00h),              */
-+	 0x09, 0xC5,                  /*     Usage (C5h),                     */
-+	 0x26, 0xFF, 0x00,            /*     Logical Maximum (255),           */
-+	 0x75, 0x08,                  /*     Report Size (8),                 */
-+	 0x96, 0x00, 0x01,            /*     Report Count (256),              */
-+	 0xB1, 0x02,                  /*     Feature (Variable),              */
-+	 0xC0,                        /* End Collection,                      */
-+	 0x06, 0x00, 0xFF,            /* Usage Page (FF00h),                  */
-+	 0x09, 0x01,                  /* Usage (01h),                         */
-+	 0xA1, 0x01,                  /* Collection (Application),            */
-+	 0x85, 0x0D,                  /*     Report ID (13),                  */
-+	 0x26, 0xFF, 0x00,            /*     Logical Maximum (255),           */
-+	 0x19, 0x01,                  /*     Usage Minimum (01h),             */
-+	 0x29, 0x02,                  /*     Usage Maximum (02h),             */
-+	 0x75, 0x08,                  /*     Report Size (8),                 */
-+	 0x95, 0x02,                  /*     Report Count (2),                */
-+	 0xB1, 0x02,                  /*     Feature (Variable),              */
-+	 0xC0,                        /* End Collection,                      */
-+	 0x05, 0x0D,                  /* Usage Page (Digitizer),              */
-+	 0x09, 0x0E,                  /* Usage (Configuration),               */
-+	 0xA1, 0x01,                  /* Collection (Application),            */
-+	 0x85, 0x03,                  /*     Report ID (3),                   */
-+	 0x09, 0x22,                  /*     Usage (Finger),                  */
-+	 0xA1, 0x02,                  /*     Collection (Logical),            */
-+	 0x09, 0x52,                  /*         Usage (Device Mode),         */
-+	 0x25, 0x0A,                  /*         Logical Maximum (10),        */
-+	 0x95, 0x01,                  /*         Report Count (1),            */
-+	 0xB1, 0x02,                  /*         Feature (Variable),          */
-+	 0xC0,                        /*     End Collection,                  */
-+	 0x09, 0x22,                  /*     Usage (Finger),                  */
-+	 0xA1, 0x00,                  /*     Collection (Physical),           */
-+	 0x85, 0x05,                  /*         Report ID (5),               */
-+	 0x09, 0x57,                  /*         Usage (57h),                 */
-+	 0x09, 0x58,                  /*         Usage (58h),                 */
-+	 0x75, 0x01,                  /*         Report Size (1),             */
-+	 0x95, 0x02,                  /*         Report Count (2),            */
-+	 0x25, 0x01,                  /*         Logical Maximum (1),         */
-+	 0xB1, 0x02,                  /*         Feature (Variable),          */
-+	 0x95, 0x06,                  /*         Report Count (6),            */
-+	 0xB1, 0x03,                  /*         Feature (Constant, Variable),*/
-+	 0xC0,                        /*     End Collection,                  */
-+	 0xC0                         /* End Collection                       */
-+	},
-+	.hid_report_desc_size = 475,
-+	.i2c_name = "SYNA3602:00"
-+};
-+
-+
-+static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
-+	{
-+		.ident = "Teclast F6 Pro",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "F6 Pro"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
-+	{
-+		.ident = "Teclast F7",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "F7"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
-+	{
-+		.ident = "Trekstor Primebook C13",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C13"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
-+	{
-+		.ident = "Trekstor Primebook C11",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Primebook C11"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
-+	{
-+		.ident = "Direkt-Tek DTLAPY116-2",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Direkt-Tek"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "DTLAPY116-2"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
-+	{
-+		.ident = "Mediacom Flexbook Edge 11",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	}
-+};
-+
-+
-+struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
-+{
-+	struct i2c_hid_desc_override *override;
-+	const struct dmi_system_id *system_id;
-+
-+	system_id = dmi_first_match(i2c_hid_dmi_desc_override_table);
-+	if (!system_id)
-+		return NULL;
-+
-+	override = system_id->driver_data;
-+	if (strcmp(override->i2c_name, i2c_name))
-+		return NULL;
-+
-+	return override->i2c_hid_desc;
-+}
-+
-+char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
-+					       unsigned int *size)
-+{
-+	struct i2c_hid_desc_override *override;
-+	const struct dmi_system_id *system_id;
-+
-+	system_id = dmi_first_match(i2c_hid_dmi_desc_override_table);
-+	if (!system_id)
-+		return NULL;
-+
-+	override = system_id->driver_data;
-+	if (strcmp(override->i2c_name, i2c_name))
-+		return NULL;
-+
-+	*size = override->hid_report_desc_size;
-+	return override->hid_report_desc;
-+}
-diff --git a/drivers/hid/i2c-hid/i2c-hid.h b/drivers/hid/i2c-hid/i2c-hid.h
-new file mode 100644
-index 000000000000..a8c19aef5824
---- /dev/null
-+++ b/drivers/hid/i2c-hid/i2c-hid.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+
-+#ifndef I2C_HID_H
-+#define I2C_HID_H
-+
-+
-+#ifdef CONFIG_DMI
-+struct i2c_hid_desc *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name);
-+char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
-+					       unsigned int *size);
-+#else
-+static inline struct i2c_hid_desc
-+		   *i2c_hid_get_dmi_i2c_hid_desc_override(uint8_t *i2c_name)
-+{ return NULL; }
-+static inline char *i2c_hid_get_dmi_hid_report_desc_override(uint8_t *i2c_name,
-+							     unsigned int *size)
-+{ return NULL; }
-+#endif
-+
-+#endif
+ 	sbs->charger_present = (status >> 15) & 0x1;
 -- 
 2.19.1
 
