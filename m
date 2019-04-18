@@ -2,55 +2,53 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CACC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F2DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6971B20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C2E20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612162;
-	bh=wHT9pwE+jWg6dZ68IjmaOivb0kJlqGOZMLa30r9E2uI=;
+	s=default; t=1555612180;
+	bh=vaHdLYsIgzmR2z/eJl8FaDyukq+rorcealy9iB4ZIAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OK/t+HAgDdhl9qOLPwLHTypz2+GZ1mpuR4aSriIyaKRnnGXIn5QZ3iR7hVInVUWdW
-	 pbHc0GL4y1WFp89kvGz6RLx/PAiE9lcr9rnyoq8o8oyajiyRZ3f4FgBgZAi0uYE6G+
-	 ZW8oAy1Mxg5lp5rA+Hnk8FFODLlL1XyWlO7b7Tzw=
+	b=Hsg7PH9M4oXoy/zpfpD2W/UQX+cmGejtg19QRxOIWp6n+sBf1BThzUpwBr3RNf68M
+	 1Q72hCfhWI4lHYVZfa6Au/lHsUHqniwYQqrwHgHtCdxQ5HuaFZD7aKl1dzWtafGnlS
+	 mc9FUdikMV0wxGYnRUURCZ5bMWeeM1DZKn2pP7cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390834AbfDRS3U (ORCPT
+        id S2391483AbfDRS3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58816 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:29:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390778AbfDRSCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:38 -0400
+        id S2390110AbfDRSC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF69206B6;
-        Thu, 18 Apr 2019 18:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2B8217FA;
+        Thu, 18 Apr 2019 18:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610557;
-        bh=wHT9pwE+jWg6dZ68IjmaOivb0kJlqGOZMLa30r9E2uI=;
+        s=default; t=1555610546;
+        bh=vaHdLYsIgzmR2z/eJl8FaDyukq+rorcealy9iB4ZIAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyompbpkzzIjFnpRsaWclDr11HEvOvBDAnXVtFWOyhK0fc5G19ZSaWnV+bb7azUsJ
-         1skwzzf39Qu8jRsky1TfpeEY7jtygaP+GaAZFz8uLYGSasUZQBGdMAHFkISGddO1lq
-         lfDTqjQtG8U8WuCcKDmnjC7nunz6RC+933YVKDmU=
+        b=1HmrB2s/l+0ydWOB/ZpssaPRi8gzb7NAwqMb/S/X85cMGFn2UBT5C3YNPG95kABMz
+         2RQKYij53OedhuAtY9sCEfqan+Mwwsag2p4MMH4pNL1EMiMN3luxnYvVbnShSqDQkN
+         Y6cHNC52kFpjZjEeCznvMOZf4MJMnEOSbMPXJkPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 107/110] tools include: Adopt linux/bits.h
-Date:   Thu, 18 Apr 2019 19:57:36 +0200
-Message-Id: <20190418160447.671052468@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 103/110] rxrpc: Fix client call connect/disconnect race
+Date:   Thu, 18 Apr 2019 19:57:32 +0200
+Message-Id: <20190418160447.368256784@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -63,98 +61,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+[ Upstream commit 930c9f9125c85b5134b3e711bc252ecc094708e3 ]
 
-commit ba4aa02b417f08a0bee5e7b8ed70cac788a7c854 upstream.
+rxrpc_disconnect_client_call() reads the call's connection ID protocol
+value (call->cid) as part of that function's variable declarations.  This
+is bad because it's not inside the locked section and so may race with
+someone granting use of the channel to the call.
 
-So that we reduce the difference of tools/include/linux/bitops.h to the
-original kernel file, include/linux/bitops.h, trying to remove the need
-to define BITS_PER_LONG, to avoid clashes with asm/bitsperlong.h.
+This manifests as an assertion failure (see below) where the call in the
+presumed channel (0 because call->cid wasn't set when we read it) doesn't
+match the call attached to the channel we were actually granted (if 1, 2 or
+3).
 
-And the things removed from tools/include/linux/bitops.h are really in
-linux/bits.h, so that we can have a copy and then
-tools/perf/check_headers.sh will tell us when new stuff gets added to
-linux/bits.h so that we can check if it is useful and if any adjustment
-needs to be done to the tools/{include,arch}/ copies.
+Fix this by moving the read and dependent calculations inside of the
+channel_lock section.  Also, only set the channel number and pointer
+variables if cid is not zero (ie. unset).
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-y1sqyydvfzo0bjjoj4zsl562@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This problem can be induced by injecting an occasional error in
+rxrpc_wait_for_channel() before the call to schedule().
 
+Make two further changes also:
+
+ (1) Add a trace for wait failure in rxrpc_connect_call().
+
+ (2) Drop channel_lock before BUG'ing in the case of the assertion failure.
+
+The failure causes a trace akin to the following:
+
+rxrpc: Assertion failed - 18446612685268945920(0xffff8880beab8c00) == 18446612685268621312(0xffff8880bea69800) is false
+------------[ cut here ]------------
+kernel BUG at net/rxrpc/conn_client.c:824!
+...
+RIP: 0010:rxrpc_disconnect_client_call+0x2bf/0x99d
+...
+Call Trace:
+ rxrpc_connect_call+0x902/0x9b3
+ ? wake_up_q+0x54/0x54
+ rxrpc_new_client_call+0x3a0/0x751
+ ? rxrpc_kernel_begin_call+0x141/0x1bc
+ ? afs_alloc_call+0x1b5/0x1b5
+ rxrpc_kernel_begin_call+0x141/0x1bc
+ afs_make_call+0x20c/0x525
+ ? afs_alloc_call+0x1b5/0x1b5
+ ? __lock_is_held+0x40/0x71
+ ? lockdep_init_map+0xaf/0x193
+ ? lockdep_init_map+0xaf/0x193
+ ? __lock_is_held+0x40/0x71
+ ? yfs_fs_fetch_data+0x33b/0x34a
+ yfs_fs_fetch_data+0x33b/0x34a
+ afs_fetch_data+0xdc/0x3b7
+ afs_read_dir+0x52d/0x97f
+ afs_dir_iterate+0xa0/0x661
+ ? iterate_dir+0x63/0x141
+ iterate_dir+0xa2/0x141
+ ksys_getdents64+0x9f/0x11b
+ ? filldir+0x111/0x111
+ ? do_syscall_64+0x3e/0x1a0
+ __x64_sys_getdents64+0x16/0x19
+ do_syscall_64+0x7d/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/linux/bitops.h |    7 ++-----
- tools/include/linux/bits.h   |   26 ++++++++++++++++++++++++++
- tools/perf/check-headers.sh  |    1 +
- 3 files changed, 29 insertions(+), 5 deletions(-)
+ include/trace/events/rxrpc.h |  2 ++
+ net/rxrpc/conn_client.c      | 20 +++++++++++++++-----
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -3,8 +3,6 @@
- #define _TOOLS_LINUX_BITOPS_H_
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index 573d5b901fb1..6d182746afab 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -76,6 +76,7 @@ enum rxrpc_client_trace {
+ 	rxrpc_client_chan_disconnect,
+ 	rxrpc_client_chan_pass,
+ 	rxrpc_client_chan_unstarted,
++	rxrpc_client_chan_wait_failed,
+ 	rxrpc_client_cleanup,
+ 	rxrpc_client_count,
+ 	rxrpc_client_discard,
+@@ -275,6 +276,7 @@ enum rxrpc_tx_point {
+ 	EM(rxrpc_client_chan_disconnect,	"ChDisc") \
+ 	EM(rxrpc_client_chan_pass,		"ChPass") \
+ 	EM(rxrpc_client_chan_unstarted,		"ChUnst") \
++	EM(rxrpc_client_chan_wait_failed,	"ChWtFl") \
+ 	EM(rxrpc_client_cleanup,		"Clean ") \
+ 	EM(rxrpc_client_count,			"Count ") \
+ 	EM(rxrpc_client_discard,		"Discar") \
+diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
+index 6e419b15a9f8..c979a56faaef 100644
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -707,6 +707,7 @@ int rxrpc_connect_call(struct rxrpc_sock *rx,
  
- #include <asm/types.h>
--#include <linux/compiler.h>
+ 	ret = rxrpc_wait_for_channel(call, gfp);
+ 	if (ret < 0) {
++		trace_rxrpc_client(call->conn, ret, rxrpc_client_chan_wait_failed);
+ 		rxrpc_disconnect_client_call(call);
+ 		goto out;
+ 	}
+@@ -777,16 +778,22 @@ static void rxrpc_set_client_reap_timer(struct rxrpc_net *rxnet)
+  */
+ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
+ {
+-	unsigned int channel = call->cid & RXRPC_CHANNELMASK;
+ 	struct rxrpc_connection *conn = call->conn;
+-	struct rxrpc_channel *chan = &conn->channels[channel];
++	struct rxrpc_channel *chan = NULL;
+ 	struct rxrpc_net *rxnet = conn->params.local->rxnet;
++	unsigned int channel = -1;
++	u32 cid;
+ 
++	spin_lock(&conn->channel_lock);
++
++	cid = call->cid;
++	if (cid) {
++		channel = cid & RXRPC_CHANNELMASK;
++		chan = &conn->channels[channel];
++	}
+ 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
+ 	call->conn = NULL;
+ 
+-	spin_lock(&conn->channel_lock);
 -
- #ifndef __WORDSIZE
- #define __WORDSIZE (__SIZEOF_LONG__ * 8)
- #endif
-@@ -12,10 +10,9 @@
- #ifndef BITS_PER_LONG
- # define BITS_PER_LONG __WORDSIZE
- #endif
-+#include <linux/bits.h>
-+#include <linux/compiler.h>
+ 	/* Calls that have never actually been assigned a channel can simply be
+ 	 * discarded.  If the conn didn't get used either, it will follow
+ 	 * immediately unless someone else grabs it in the meantime.
+@@ -810,7 +817,10 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
+ 		goto out;
+ 	}
  
--#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
--#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
--#define BITS_PER_BYTE		8
- #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
- #define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
- #define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
---- /dev/null
-+++ b/tools/include/linux/bits.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_BITS_H
-+#define __LINUX_BITS_H
-+#include <asm/bitsperlong.h>
-+
-+#define BIT(nr)			(1UL << (nr))
-+#define BIT_ULL(nr)		(1ULL << (nr))
-+#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
-+#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
-+#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
-+#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
-+#define BITS_PER_BYTE		8
-+
-+/*
-+ * Create a contiguous bitmask starting at bit position @l and ending at
-+ * position @h. For example
-+ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-+ */
-+#define GENMASK(h, l) \
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-+
-+#define GENMASK_ULL(h, l) \
-+	(((~0ULL) - (1ULL << (l)) + 1) & \
-+	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-+
-+#endif	/* __LINUX_BITS_H */
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -14,6 +14,7 @@ include/uapi/linux/sched.h
- include/uapi/linux/stat.h
- include/uapi/linux/vhost.h
- include/uapi/sound/asound.h
-+include/linux/bits.h
- include/linux/hash.h
- include/uapi/linux/hw_breakpoint.h
- arch/x86/include/asm/disabled-features.h
+-	ASSERTCMP(rcu_access_pointer(chan->call), ==, call);
++	if (rcu_access_pointer(chan->call) != call) {
++		spin_unlock(&conn->channel_lock);
++		BUG();
++	}
+ 
+ 	/* If a client call was exposed to the world, we save the result for
+ 	 * retransmission.
+-- 
+2.19.1
+
 
 
