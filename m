@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BBBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EAFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90AF2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1B52183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lsSTVAhb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h0cyWpdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388970AbfDRM1a (ORCPT
+        id S2388988AbfDRM1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:27:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40551 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388430AbfDRM11 (ORCPT
+        Thu, 18 Apr 2019 08:27:33 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39466 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388375AbfDRM12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:27:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so2737884wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 05:27:26 -0700 (PDT)
+        Thu, 18 Apr 2019 08:27:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so2679403wmk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 05:27:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9GXR/XbcC+MuPwrv6yn5gN1sB6ocW5hyXF8NUjGi26E=;
-        b=lsSTVAhb+qlYZx6/VJZVKeluppYr+EBnKnGJ3q+BLnQRCCtudLXHVoKFhBfbV4ya+M
-         JcZNjtXkyeA5QgzkwlBoBr6NXwqnHIu2BFFvoA0mQfJv1y/9asKzk4bZXUizQJcB5xTb
-         0l6rDJpgrrGbzTge5SddZq+W0/7hstXWk9qVGWK87oa0Bf0YqkVJF2DUArmGLRM7kWty
-         G/yg8Tu9gVGhXRrFHEo8+g5HAW/ruFyn99oC4D0QCS2I952CREt9ZeyI26GuGs63yPpG
-         XyCeTTApAcxGJpkiXOuWOPijDlZo18ZrqL5fIkZ7O7cdPkxZQxWoiSbIPm03apaXDLe7
-         BYxA==
+        bh=yaNaoCP8pznZw7TWRPuJzQR6dBbJDMZ7bf+8pYaycCk=;
+        b=h0cyWpdfjXxV8o+0QGI1FlzKHsaxQknwUXk/WWbneAyFQps4Pba5SIW3NSGPWWsnFL
+         43t62Hrj7vX2kkjEvMPdQzQzVuK8vaXFquY10j9xlxnSvwUFe5GcjSIgNQIaN8V2H3Or
+         PBUBDrFB4LhLjJFzpimxMICN05ySGkVd8on/MU9DF2dgvCmGaRS+gBn/iU2E1li/g9pU
+         q517mhg0TJ4KNmzZBiOtK7hnomX4EqtkPN14ddYyShTOdtzpocBQkcZDfRoavw3WaSQk
+         AQJ8rdHfZAV9GXpqkdxvceT1obOmnnSJujhYpPDYKb/3QxY8SF6Vb+PhYu86FrCTqnrO
+         asCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9GXR/XbcC+MuPwrv6yn5gN1sB6ocW5hyXF8NUjGi26E=;
-        b=NryuO9cGnuXUfv9zznlY6WAttY1uNFlKEQkBsqMlXxlPCP+bGTdfNQakMRbv+hRrfK
-         1NnSlyZ5d57Qt5HNZ2TZscfFDXsL38Yp0PvNBt+zYgnQljo1eF/g7bZTH0UpKuv97fYN
-         K/1c6xkyKJZKD0+PeoywxerZDnnOSv2vSLObUdcM18HVG6+FRL3VJj8Z3CXH5Rtm/xtt
-         4DW5/IyTdnAywtFMBYRelQpOxQwcP4DXAVKGHPV/Q9Tdz3HSC82SUGY0U1t9gYp3xCl0
-         KE+dFWuGT78tTS2+CBubxoBQ2Lv+3IsE7TdP++alj05gcnwviDXoSfla2o9YCGq/hgBD
-         iC6w==
-X-Gm-Message-State: APjAAAU1YBBBxwOOzCiMNNV1nKkeflNMUJfGGbMKvqJHkGV55+MZADxn
-        LeNjZs0Nv6dzjbFwZkLmBDgZ+A==
-X-Google-Smtp-Source: APXvYqw3FHqzmykIz55fADriP7f/Vj9TMin3ermX/n1eHPrq40L7JksYv3X7ZwQu+Szw3rc2cNlXJg==
-X-Received: by 2002:a5d:6687:: with SMTP id l7mr484340wru.307.1555590445504;
-        Thu, 18 Apr 2019 05:27:25 -0700 (PDT)
+        bh=yaNaoCP8pznZw7TWRPuJzQR6dBbJDMZ7bf+8pYaycCk=;
+        b=AEmFT8MTnGBbYwcHk57yesEhIFlb7SnwII0TAx2RAswtUSWcpvtwqP9cs2nVEW1Hx0
+         mrC2Q+3O5t35uhwD8YJb06s8WGx1/U2WSmEKos4p2IQ2LR5EXSQkkGNI3rPSFqgbvIBP
+         ppf2I0G57WiGAxw88zt7HhoJzqQrGzLuFaAm72yvA1k/hOWVXCE8fdycPhTlrYbudAGX
+         Kdc9nlE7rPFx1Kv5JInP/CtiI4hR0lW215AM8ddVCWMBdYiMSYuNrFdzGkk4F21TQrWM
+         ySdnYFcfzJVZZCAU1J4rCJ0rsRPhMDldHDT2Ve1OYeZyQwKA0VG6DyMNsruNF3iAyaLQ
+         qUDw==
+X-Gm-Message-State: APjAAAUkVinqx1HTn65DJap9tAW1BVRYnyciPipF6PMbGw6bJ0nMcRmc
+        EPqM2SSmyMJXLXZ8w/Ge7LaYEg==
+X-Google-Smtp-Source: APXvYqzXo52LNbrT7WhG1D3rHAqhwljMhATMhsgkdlDTHXLjnfTqq8nO4kPHYeDdHP5ItwfliWQUvQ==
+X-Received: by 2002:a1c:7e0e:: with SMTP id z14mr2817731wmc.95.1555590446600;
+        Thu, 18 Apr 2019 05:27:26 -0700 (PDT)
 Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id z14sm1510110wro.81.2019.04.18.05.27.24
+        by smtp.googlemail.com with ESMTPSA id z14sm1510110wro.81.2019.04.18.05.27.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 05:27:24 -0700 (PDT)
+        Thu, 18 Apr 2019 05:27:25 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Kevin Hilman <khilman@baylibre.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         patchwork-bot+notify@kernel.org
-Subject: [PATCH 1/6] arm64: dts: meson: libretech-cc: set eMMC as removable
-Date:   Thu, 18 Apr 2019 14:27:09 +0200
-Message-Id: <20190418122714.30805-2-jbrunet@baylibre.com>
+Subject: [PATCH 2/6] arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
+Date:   Thu, 18 Apr 2019 14:27:10 +0200
+Message-Id: <20190418122714.30805-3-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190418122714.30805-1-jbrunet@baylibre.com>
 References: <20190418122714.30805-1-jbrunet@baylibre.com>
@@ -75,25 +75,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The eMMC on this board is add-on module which is not mandatory. Removing
-'non-removable' property should prevent some errors when booting a board
-w/o an eMMC module present.
+While some 3.3v eMMC 4.0 are available from libretech, Only the 1.8v 5.0
+modules are recommended and supported for the aml-s905x-cc.
 
-Fixes: 72fb2c852188 ("ARM64: dts: meson-gxl-s905x-libretech-cc: fixup board definition")
+the 1.8v is provided by LDOs on the eMMC card, from vcc 3.3v
+
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 1 -
- 1 file changed, 1 deletion(-)
+ .../boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 255cede7b447..d4d5e3e5439d 100644
+index d4d5e3e5439d..b0f22cdb586c 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -255,7 +255,6 @@
+@@ -115,11 +115,13 @@
+ 		regulator-max-microvolt = <1800000>;
+ 	};
+ 
++	/* This is provided by LDOs on the eMMC daugther card */
+ 	vddio_boot: regulator-vddio_boot {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VDDIO_BOOT";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3>;
+ 	};
+ };
+ 
+@@ -253,8 +255,9 @@
+ 
+ 	bus-width = <8>;
  	cap-mmc-highspeed;
- 	mmc-ddr-3_3v;
- 	max-frequency = <50000000>;
--	non-removable;
+-	mmc-ddr-3_3v;
+-	max-frequency = <50000000>;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++	max-frequency = <200000000>;
  	disable-wp;
  
  	mmc-pwrseq = <&emmc_pwrseq>;
