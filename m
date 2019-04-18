@@ -2,104 +2,180 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADBAC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD5CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3782184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555578410;
-	bh=3HIKo4TJ7arFeFGllVQWH4Zy1kee7tJAEJfaQEc9lqA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aKjRZa9BXsn+raYp++DFOkxdGtQ/H1SQCUOT6Ah+i7kjiUR+NsOcClj2XD+g1IRmY
-	 krrv1RWUSkoDGF9NqnGYVMpN68xFxX9ykhIfj7IyqisvNJQPyOymW/j1VYRmII35EU
-	 5/sE/K/VG4Xh6lA4PPnOBG2tnRWnmdY15bwSspjo=
+	by mail.kernel.org (Postfix) with ESMTP id 85E672184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388363AbfDRJGt (ORCPT
+        id S2388386AbfDRJGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:06:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51752 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfDRJGs (ORCPT
+        Thu, 18 Apr 2019 05:06:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33654 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388344AbfDRJGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:06:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3HIKo4TJ7arFeFGllVQWH4Zy1kee7tJAEJfaQEc9lqA=; b=t25R1zLCLQQLYZao47Wzvqc6P
-        9q+MdBj3J0gRPa4hYzj6fh09E//7i+IuahGCg877ktcKJUsHvaLIlto3y3MpO9JwN7GIKj6aDi5AZ
-        ZeT8syzGoVxzVX8FMWJkB9pmaOly+/cGtUTQUvy+8Kaoh9tst9dNq0VKefPpw6kyS3tLU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hH30B-00013G-Es; Thu, 18 Apr 2019 09:06:39 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 63DC11126DA9; Thu, 18 Apr 2019 10:06:38 +0100 (BST)
-Date:   Thu, 18 Apr 2019 10:06:38 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_esai: Add pm runtime function
-Message-ID: <20190418090638.GA6702@sirena.org.uk>
-References: <1555558152-32196-1-git-send-email-shengjiu.wang@nxp.com>
- <20190418090011.GA4028@Asurada>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
-In-Reply-To: <20190418090011.GA4028@Asurada>
-X-Cookie: A watched clock never boils.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 18 Apr 2019 05:06:50 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hH2zW-0001ls-Ty; Thu, 18 Apr 2019 11:05:59 +0200
+Message-Id: <20190418084119.056416939@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Thu, 18 Apr 2019 10:41:19 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [patch V2 00/29] stacktrace: Consolidate stack trace usage
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an update to V1:
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ https://lkml.kernel.org/r/20190410102754.387743324@linutronix.de
 
-On Thu, Apr 18, 2019 at 02:00:12AM -0700, Nicolin Chen wrote:
-> On Thu, Apr 18, 2019 at 03:29:09AM +0000, S.j. Wang wrote:
+Struct stack_trace is a sinkhole for input and output parameters which is
+largely pointless for most usage sites. In fact if embedded into other data
+structures it creates indirections and extra storage overhead for no
+benefit.
 
-> > In imx8 when systerm enter suspend state, the power of subsystem will
-> > be off, the clock enable state will be lost and register configuration
+Looking at all usage sites makes it clear that they just require an
+interface which is based on a storage array. That array is either on stack,
+global or embedded into some other data structure.
 
-> Just for curiosity, we had similar situation on imx6sx, so we
-> added suspend/resume with regcache. Why will the clock enable
-> state be lost too? Does CCM on imx8 (might not be called CCM
-> though) have any difference? What about clock rate settings?
+Some of the stack depot usage sites are outright wrong, but fortunately the
+wrongness just causes more stack being used for nothing and does not have
+functional impact.
 
-That sounds like a bug somewhere else - I'd expect that after resume the
-clocking would be restored to the state it was in before suspend.
+Fix this up by:
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
+  1) Providing plain storage array based interfaces for stacktrace and
+     stackdepot.
 
------BEGIN PGP SIGNATURE-----
+  2) Cleaning up the mess at the callsites including some related
+     cleanups.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly4PhsACgkQJNaLcl1U
-h9D0+Qf/Qb3ZB7++N4KWIotelaGoJliU91cFGeVtbV14n7Hb9xPZ3PzNlZBY9iYN
-zhzzBdDCqWV5btb21LZ8lCcFicsKQTJieKm6Ufjrnr7SJ/9pjoOuV4JnDZ6aFucA
-1krwDMkcK/ZD4Dj+favuOXRQUQ892A1Km2dp1ihRlQTIVIRyubA/7F3PQdr8ZjQl
-8sLhALAl7K5u5ylLUX9SItPTJSQeVxb7V+JaHCrmVpsYP1oSu3I77DHvHPKLNK7p
-JJe0CvyDco+KWEJ4VXnZVt/hkEyT8tvhlmAX37A+NxYxjyXdHQZYVNOn83FuWPo7
-f2Krw/3Jy9Th/DZfw4A0/wLL+dMzDA==
-=OW6D
------END PGP SIGNATURE-----
+  3) Removing the struct stack_trace based interfaces
 
---bp/iNruPH9dso1Pn--
+  This is not yet changing the struct stack_trace interfaces at the
+  architecture level, but it removes the exposure to the usage sites.
+
+The last two patches are extending the cleanup to the architecture level by
+replacing the various save_stack_trace.* architecture interfaces with a
+more unified arch_stack_walk() interface. x86 is converted, but I have
+worked through all architectures already and it removes lots of duplicated
+code and allows consolidation across the board. The rest of the
+architecture patches are not included in this posting as I want to get
+feedback on the approach itself. The diffstat of cleaning up the remaining
+architectures is currently on top of the current lot is:
+
+   47 files changed, 402 insertions(+), 1196 deletions(-)
+
+Once this has settled, the core interfaces can be improved by adding
+features, which allow to get rid of the imprecise 'skip number of entries'
+approach which tries to remove the stack tracer and the callsites themself
+from the trace. That's error prone due to inlining and other issues. Having
+e.g. a _RET_IP_ based filter allows to do that far more reliable.
+
+The series is based on:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/stacktrace
+
+which contains the removal of the inconsistent and pointless ULONG_MAX
+termination of stacktraces.
+
+It's also available from git:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.core/stacktrace
+
+   up to:  131038eb3e2f ("x86/stacktrace: Use common infrastructure")
+
+Changes vs. V1:
+
+   - Applied the ULONG_MAX termination cleanup in tip
+
+   - Addressed the review comments
+
+   - Fixed up the last users of struct stack_trace outside the stacktrace
+     core and architecture code (livepatch, tracing)
+
+   - Added the new arch_stack_walk() model and converted x86 to it
+
+Thanks,
+
+	tglx
+
+---
+ arch/x86/Kconfig                              |    1 
+ arch/x86/kernel/stacktrace.c                  |  116 +--------
+ drivers/gpu/drm/drm_mm.c                      |   22 -
+ drivers/gpu/drm/i915/i915_vma.c               |   11 
+ drivers/gpu/drm/i915/intel_runtime_pm.c       |   21 -
+ drivers/md/dm-bufio.c                         |   15 -
+ drivers/md/persistent-data/dm-block-manager.c |   19 -
+ fs/btrfs/ref-verify.c                         |   15 -
+ fs/proc/base.c                                |   14 -
+ include/linux/ftrace.h                        |   18 -
+ include/linux/lockdep.h                       |    9 
+ include/linux/stackdepot.h                    |    8 
+ include/linux/stacktrace.h                    |   80 +++++-
+ kernel/backtracetest.c                        |   11 
+ kernel/dma/debug.c                            |   13 -
+ kernel/latencytop.c                           |   17 -
+ kernel/livepatch/transition.c                 |   22 -
+ kernel/locking/lockdep.c                      |   81 ++----
+ kernel/stacktrace.c                           |  323 ++++++++++++++++++++++++--
+ kernel/trace/trace.c                          |  105 +++-----
+ kernel/trace/trace.h                          |    8 
+ kernel/trace/trace_events_hist.c              |   12 
+ kernel/trace/trace_stack.c                    |   76 ++----
+ lib/Kconfig                                   |    4 
+ lib/fault-inject.c                            |   12 
+ lib/stackdepot.c                              |   50 ++--
+ mm/kasan/common.c                             |   30 --
+ mm/kasan/report.c                             |    7 
+ mm/kmemleak.c                                 |   24 -
+ mm/page_owner.c                               |   79 ++----
+ mm/slub.c                                     |   12 
+ 31 files changed, 664 insertions(+), 571 deletions(-)
+
+
+
