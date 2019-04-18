@@ -2,55 +2,51 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5412C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B0FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04F7206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C7A21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610575;
-	bh=oISuHX9rVI2/Tzlh24gqSYt5ClngymG0FZNJnIAIoC0=;
+	s=default; t=1555610579;
+	bh=4qIowbeOCH5yQ03ezDB60BGrun1FSPzNZEDk9WyO/ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggh+8CSFNg1GHzU+LNvbjy7/cS6EkXNVi7Ya6ez2VGm5Pur2kwBLv5K3HIxWnqo0S
-	 kr179xS8p4nFvETBsSLTDLzMl5k9N2N0Vy3JZJTpZjE2OzRwd4w3htmWGvRLSK3SV5
-	 TB/zz2UlSQjcMRqYOkO9fOVUtugbIyImmchcP7G0=
+	b=uPk/k/VQUJCvsqlntv6dajmjCg6XtsrVN60UPT5FFRRktGjrQ6Sl1dwIiEJgOZLSR
+	 lUi6PbHLdKmg/kJLw0Y1Tosmlpv2QqSPMCX+pVHuNeLH7dkBdxj4Qk3rlODn/1SkdX
+	 RGUKSu+L6FD53ZMAzbDacrYYVrwh8JcB2fFz8S68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390838AbfDRSCy (ORCPT
+        id S2390848AbfDRSC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390429AbfDRSCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:51 -0400
+        id S2390831AbfDRSCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9258206B6;
-        Thu, 18 Apr 2019 18:02:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD21206B6;
+        Thu, 18 Apr 2019 18:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610570;
-        bh=oISuHX9rVI2/Tzlh24gqSYt5ClngymG0FZNJnIAIoC0=;
+        s=default; t=1555610572;
+        bh=4qIowbeOCH5yQ03ezDB60BGrun1FSPzNZEDk9WyO/ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjtOdp9YoBjt8ktXwDMqDF0Z8uLmcU5CwVuEwIhLVTJHCYe1K3gRL18TN3uhyFf3R
-         14BP3iHd9VPhC9yptboKrQHX0nHxJKjLZ53CA6LmNsuA8WRRSTQOcCewWs42YFtO7X
-         sGwZ+txKyUb7dpQTmoEFVkXLHi0hBHMwVgcewUls=
+        b=gf0BJJ/juAExKNAwsOTn5zVN08K3Qn4nmtiSkYpW3AIsoIs/H9ztHR0CJAfQhGR9p
+         HJqrXRBDLYCfS71M1NeXMXafQU4+ZtNNKwD/RI7arbja5s3tkv5CEi3xZlzaGgzyXW
+         WNN1qdEQbMzbIvyjqNnnhE2jhugWdxmDpuXm8Vv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Greg Rose <gvrose8192@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+30191cf1057abd3064af@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 087/110] net: ip6_gre: fix possible NULL pointer dereference in ip6erspan_set_version
-Date:   Thu, 18 Apr 2019 19:57:16 +0200
-Message-Id: <20190418160446.262694903@linuxfoundation.org>
+        stable@vger.kernel.org, Julia Cartwright <julia@ni.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/110] iommu/dmar: Fix buffer overflow during PCI bus notification
+Date:   Thu, 18 Apr 2019 19:57:17 +0200
+Message-Id: <20190418160446.324894309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -63,105 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit efcc9bcaf77c07df01371a7c34e50424c291f3ac ]
+[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
 
-Fix a possible NULL pointer dereference in ip6erspan_set_version checking
-nlattr data pointer
+Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
+device path") changed the type of the path data, however, the change in
+path type was not reflected in size calculations.  Update to use the
+correct type and prevent a buffer overflow.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 7549 Comm: syz-executor432 Not tainted 5.0.0-rc6-next-20190218
-#37
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-RIP: 0010:ip6erspan_set_version+0x5c/0x350 net/ipv6/ip6_gre.c:1726
-Code: 07 38 d0 7f 08 84 c0 0f 85 9f 02 00 00 49 8d bc 24 b0 00 00 00 c6 43
-54 01 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
-85 9a 02 00 00 4d 8b ac 24 b0 00 00 00 4d 85 ed 0f
-RSP: 0018:ffff888089ed7168 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880869d6e58 RCX: 0000000000000000
-RDX: 0000000000000016 RSI: ffffffff862736b4 RDI: 00000000000000b0
-RBP: ffff888089ed7180 R08: 1ffff11010d3adcb R09: ffff8880869d6e58
-R10: ffffed1010d3add5 R11: ffff8880869d6eaf R12: 0000000000000000
-R13: ffffffff8931f8c0 R14: ffffffff862825d0 R15: ffff8880869d6e58
-FS:  0000000000b3d880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000184 CR3: 0000000092cc5000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ip6erspan_newlink+0x66/0x7b0 net/ipv6/ip6_gre.c:2210
-  __rtnl_newlink+0x107b/0x16c0 net/core/rtnetlink.c:3176
-  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3234
-  rtnetlink_rcv_msg+0x465/0xb00 net/core/rtnetlink.c:5192
-  netlink_rcv_skb+0x17a/0x460 net/netlink/af_netlink.c:2485
-  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5210
-  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-  netlink_unicast+0x536/0x720 net/netlink/af_netlink.c:1336
-  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1925
-  sock_sendmsg_nosec net/socket.c:621 [inline]
-  sock_sendmsg+0xdd/0x130 net/socket.c:631
-  ___sys_sendmsg+0x806/0x930 net/socket.c:2136
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2174
-  __do_sys_sendmsg net/socket.c:2183 [inline]
-  __se_sys_sendmsg net/socket.c:2181 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2181
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440159
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffa69156e8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
-RDX: 0000000000000000 RSI: 0000000020001340 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000011 R11: 0000000000000246 R12: 00000000004019e0
-R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 09f8a7d13b4faaa1 ]---
-RIP: 0010:ip6erspan_set_version+0x5c/0x350 net/ipv6/ip6_gre.c:1726
-Code: 07 38 d0 7f 08 84 c0 0f 85 9f 02 00 00 49 8d bc 24 b0 00 00 00 c6 43
-54 01 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
-85 9a 02 00 00 4d 8b ac 24 b0 00 00 00 4d 85 ed 0f
-RSP: 0018:ffff888089ed7168 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880869d6e58 RCX: 0000000000000000
-RDX: 0000000000000016 RSI: ffffffff862736b4 RDI: 00000000000000b0
-RBP: ffff888089ed7180 R08: 1ffff11010d3adcb R09: ffff8880869d6e58
-R10: ffffed1010d3add5 R11: ffff8880869d6eaf R12: 0000000000000000
-R13: ffffffff8931f8c0 R14: ffffffff862825d0 R15: ffff8880869d6e58
-FS:  0000000000b3d880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000184 CR3: 0000000092cc5000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+This bug manifests in systems with deep PCI hierarchies, and can lead to
+an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
+or can lead to overflow of slab-allocated data.
 
-Fixes: 4974d5f678ab ("net: ip6_gre: initialize erspan_ver just for erspan tunnels")
-Reported-and-tested-by: syzbot+30191cf1057abd3064af@syzkaller.appspotmail.com
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Reviewed-by: Greg Rose <gvrose8192@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
+   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
+   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
+   Call Trace:
+    ? dump_stack+0x46/0x59
+    ? print_address_description+0x1df/0x290
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? kasan_report+0x256/0x340
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? dmar_dev_scope_init+0x424/0x48f
+    ? __down_write_common+0x1ec/0x230
+    ? dmar_dev_scope_init+0x48f/0x48f
+    ? dmar_free_unused_resources+0x109/0x109
+    ? cpumask_next+0x16/0x20
+    ? __kmem_cache_create+0x392/0x430
+    ? kmem_cache_create+0x135/0x2f0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? intel_iommu_init+0x170/0x1848
+    ? _raw_spin_unlock_irqrestore+0x32/0x60
+    ? migrate_enable+0x27a/0x5b0
+    ? sched_setattr+0x20/0x20
+    ? migrate_disable+0x1fc/0x380
+    ? task_rq_lock+0x170/0x170
+    ? try_to_run_init_process+0x40/0x40
+    ? locks_remove_file+0x85/0x2f0
+    ? dev_prepare_static_identity_mapping+0x78/0x78
+    ? rt_spin_unlock+0x39/0x50
+    ? lockref_put_or_lock+0x2a/0x40
+    ? dput+0x128/0x2f0
+    ? __rcu_read_unlock+0x66/0x80
+    ? __fput+0x250/0x300
+    ? __rcu_read_lock+0x1b/0x30
+    ? mntput_no_expire+0x38/0x290
+    ? e820__memblock_setup+0xb0/0xb0
+    ? pci_iommu_init+0x25/0x63
+    ? pci_iommu_init+0x25/0x63
+    ? do_one_initcall+0x7e/0x1c0
+    ? initcall_blacklisted+0x120/0x120
+    ? kernel_init_freeable+0x27b/0x307
+    ? rest_init+0xd0/0xd0
+    ? kernel_init+0xf/0x120
+    ? rest_init+0xd0/0xd0
+    ? ret_from_fork+0x1f/0x40
+   The buggy address belongs to the variable:
+    dmar_pci_notify_info_buf+0x40/0x60
 
+Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
+Signed-off-by: Julia Cartwright <julia@ni.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_gre.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index c4a7db62658e..01ecd510014f 100644
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -1743,6 +1743,9 @@ static int ip6erspan_tap_validate(struct nlattr *tb[], struct nlattr *data[],
- static void ip6erspan_set_version(struct nlattr *data[],
- 				  struct __ip6_tnl_parm *parms)
- {
-+	if (!data)
-+		return;
-+
- 	parms->erspan_ver = 1;
- 	if (data[IFLA_GRE_ERSPAN_VER])
- 		parms->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index d9c748b6f9e4..7f9824b0609e 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -144,7 +144,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
+ 		for (tmp = dev; tmp; tmp = tmp->bus->self)
+ 			level++;
+ 
+-	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
++	size = sizeof(*info) + level * sizeof(info->path[0]);
+ 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
+ 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
+ 	} else {
 -- 
 2.19.1
 
