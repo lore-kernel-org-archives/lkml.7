@@ -2,90 +2,167 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B75C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E074BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79E42083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0F42083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388891AbfDRLzM (ORCPT
+        id S2388905AbfDRLzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:55:12 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35732 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388535AbfDRLzM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:55:12 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH5ck-00063t-VR; Thu, 18 Apr 2019 13:54:39 +0200
-Date:   Thu, 18 Apr 2019 13:54:37 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alexander Potapenko <glider@google.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [patch V2 14/29] dm bufio: Simplify stack trace retrieval
-In-Reply-To: <CAG_fn=WP9+bVv9hedoaTzWK+xBzedxaGJGVOPnF0o115s-oWvg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1904181353420.3174@nanos.tec.linutronix.de>
-References: <20190418084119.056416939@linutronix.de> <20190418084254.361284697@linutronix.de> <CAG_fn=WP9+bVv9hedoaTzWK+xBzedxaGJGVOPnF0o115s-oWvg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Apr 2019 07:55:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46860 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388716AbfDRLzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 07:55:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 708C2AEBC;
+        Thu, 18 Apr 2019 11:55:36 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 3DB1E1E15AE; Thu, 18 Apr 2019 13:55:34 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 13:55:34 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Barret Rhoden <brho@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: fix use-after-free race with debug_want_extra_isize
+Message-ID: <20190418115534.GF28541@quack2.suse.cz>
+References: <20190415211945.27343-1-brho@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415211945.27343-1-brho@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019, Alexander Potapenko wrote:
-> On Thu, Apr 18, 2019 at 11:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > -       save_stack_trace(&b->stack_trace);
-> > +       b->stack_len = stack_trace_save(b->stack_entries, MAX_STACK, 2);
-> As noted in one of similar patches before, can we have an inline
-> comment to indicate what does this "2" stand for?
+On Mon 15-04-19 17:19:45, Barret Rhoden wrote:
+> When remounting with debug_want_extra_isize, we were not performing the
+> same checks that we do during a normal mount.  That allowed us to set a
+> value for s_want_extra_isize that reached outside the s_inode_size.
+> 
+> Reported-by: syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> Cc: stable@vger.kernel.org
 
-Come on. We have gazillion of functions which take numerical constant
-arguments. Should we add comments to all of them?
+The patch looks good to me. You can add:
 
-Thanks,
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-	tglx
+								Honza
+
+> ---
+> 
+> - In the current code, it looks like someone could mount with want_extra_isize
+>   with some value > 0 but less than the minimums in the s_es.  If that's a bug,
+>   I can submit a follow-on patch.
+> 
+> - Similarly, on a failed remount, sbi->s_want_extra_isize is changed to the
+>   remounted value.  I can fix that too if it's a problem.
+> 
+> - Is it OK to remount with a smaller s_want_extra_isize than the previous mount?
+>   I thought it was, but figured I'd ask while I'm looking at it.
+> 
+> 
+>  fs/ext4/super.c | 58 +++++++++++++++++++++++++++++--------------------
+>  1 file changed, 34 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 6ed4eb81e674..184944d4d8d1 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -3513,6 +3513,37 @@ int ext4_calculate_overhead(struct super_block *sb)
+>  	return 0;
+>  }
+>  
+> +static void ext4_clamp_want_extra_isize(struct super_block *sb)
+> +{
+> +	struct ext4_sb_info *sbi = EXT4_SB(sb);
+> +	struct ext4_super_block *es = sbi->s_es;
+> +
+> +	/* determine the minimum size of new large inodes, if present */
+> +	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
+> +	    sbi->s_want_extra_isize == 0) {
+> +		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+> +						     EXT4_GOOD_OLD_INODE_SIZE;
+> +		if (ext4_has_feature_extra_isize(sb)) {
+> +			if (sbi->s_want_extra_isize <
+> +			    le16_to_cpu(es->s_want_extra_isize))
+> +				sbi->s_want_extra_isize =
+> +					le16_to_cpu(es->s_want_extra_isize);
+> +			if (sbi->s_want_extra_isize <
+> +			    le16_to_cpu(es->s_min_extra_isize))
+> +				sbi->s_want_extra_isize =
+> +					le16_to_cpu(es->s_min_extra_isize);
+> +		}
+> +	}
+> +	/* Check if enough inode space is available */
+> +	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
+> +							sbi->s_inode_size) {
+> +		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+> +						       EXT4_GOOD_OLD_INODE_SIZE;
+> +		ext4_msg(sb, KERN_INFO,
+> +			 "required extra inode space not available");
+> +	}
+> +}
+> +
+>  static void ext4_set_resv_clusters(struct super_block *sb)
+>  {
+>  	ext4_fsblk_t resv_clusters;
+> @@ -4387,30 +4418,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+>  	} else if (ret)
+>  		goto failed_mount4a;
+>  
+> -	/* determine the minimum size of new large inodes, if present */
+> -	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE &&
+> -	    sbi->s_want_extra_isize == 0) {
+> -		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+> -						     EXT4_GOOD_OLD_INODE_SIZE;
+> -		if (ext4_has_feature_extra_isize(sb)) {
+> -			if (sbi->s_want_extra_isize <
+> -			    le16_to_cpu(es->s_want_extra_isize))
+> -				sbi->s_want_extra_isize =
+> -					le16_to_cpu(es->s_want_extra_isize);
+> -			if (sbi->s_want_extra_isize <
+> -			    le16_to_cpu(es->s_min_extra_isize))
+> -				sbi->s_want_extra_isize =
+> -					le16_to_cpu(es->s_min_extra_isize);
+> -		}
+> -	}
+> -	/* Check if enough inode space is available */
+> -	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
+> -							sbi->s_inode_size) {
+> -		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
+> -						       EXT4_GOOD_OLD_INODE_SIZE;
+> -		ext4_msg(sb, KERN_INFO, "required extra inode space not"
+> -			 "available");
+> -	}
+> +	ext4_clamp_want_extra_isize(sb);
+>  
+>  	ext4_set_resv_clusters(sb);
+>  
+> @@ -5194,6 +5202,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  		goto restore_opts;
+>  	}
+>  
+> +	ext4_clamp_want_extra_isize(sb);
+> +
+>  	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
+>  	    test_opt(sb, JOURNAL_CHECKSUM)) {
+>  		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
