@@ -2,143 +2,139 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4625EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6230C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147BA206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlY0oAkz"
+	by mail.kernel.org (Postfix) with ESMTP id B3A6B21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555610305;
+	bh=30DcQzNpnRbJ+4lbo+OIzP4nTP1nyRCV6+MDOVi3c1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xnfz/URisyns2rdWPPV2wnsz4k9YWDG9UAXeie7KFn9mx4fBHXjA807Qbr/n3PsgV
+	 PFGA7tgUpLDn5RAkrBKv86T1mO0w2350IABkqPMGMaCZt7rKgS+dJ/x3mx/ezEGrom
+	 SN8Ji0rTqH2yRNllyMU95obdc6AeDwufGtqidC74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389747AbfDRR5V (ORCPT
+        id S2389802AbfDRR6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:57:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37215 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388301AbfDRR5V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:57:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e6so1541158pgc.4;
-        Thu, 18 Apr 2019 10:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M84pVHi7QUoGbkpTQqGc/KjlrR1jeH2e5lPBKjhZDPk=;
-        b=mlY0oAkzq0+MVQFSgkGQhAjwKSgeRsRSBghWqkCn1MtnC+Gvl4FKgHzfJ0Ie8Lo5kP
-         rPjKirrf8OAaFomqCOXoFB1SjHNxJo5v27Ko0zEBQ8OqkV5vjFqHIcup/8w2IQvSLUqn
-         KHgVtebB3PtHkOVZFZEP3IftK2Wn44fDFA63pm5Ss4wW8Pv/GjoF/OxsQFsT1pGXiWsJ
-         VMab1ep0K4joWPdH/G8y0JmGiAE9h0d9+/36HXg1DQN3I1wtIjBiEA0UuN2PRwpAycKX
-         Qz4xy6SiipLbGR0vbAsd8jIPvL8JzGFe8rI6SbwvYUTyVjrFnDzfizzP7Jhv/ZZ7huZn
-         LJCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=M84pVHi7QUoGbkpTQqGc/KjlrR1jeH2e5lPBKjhZDPk=;
-        b=CS9TCXp3O2g2F3UVKt1ZFT4InQ3Phh7HYH3IQwnL4BsaAK/U+m7OHPKkXHnxH4EBTk
-         osc/nKOJ6H2I0qfB7t04hExw6yoaHUOOxqdJ0UGAx2lI8/ltHzlFwurOgYC04ak+GlNn
-         2nL5i9umemtQ5BBGwS2nXmS7OEQJRDSWeQB4Yy2thp3ZoxeqJPN/ihm/G9RiaxoCT7Mt
-         1ntB4Yyfz9SSJvAmKcLPPF7L2la0RYT70RWBj8+roHIvJYISpSb+DnwmTRqoGwDZQ8JV
-         Xn1KbRYMbtar0t/u98DP4vx/GW5LAaEKCY7YuzyYIWVPE8jOH4TdLBgLy/g1o3Ifx6Ff
-         fOQg==
-X-Gm-Message-State: APjAAAUrjjafwPa2m8LYNn9u+29XDM62+X2EOkOroohccHIl8QYCPl4A
-        BDy00AxcUgFVXRdL9sK7rv4EQmE8
-X-Google-Smtp-Source: APXvYqzeX/oOZWVYA+z9tKNjjftxnjlJD/UWK52ceDxL28IGA8FFrHsxtJyzT3Z1MizQ3goeKOPU5Q==
-X-Received: by 2002:a63:30c5:: with SMTP id w188mr89134996pgw.76.1555610239907;
-        Thu, 18 Apr 2019 10:57:19 -0700 (PDT)
-Received: from udknight.localhost ([59.57.228.71])
-        by smtp.gmail.com with ESMTPSA id l19sm3502465pff.1.2019.04.18.10.57.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 10:57:19 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id x3IHxla1004504;
-        Fri, 19 Apr 2019 01:59:47 +0800
-Received: (from root@localhost)
-        by localhost.localdomain (8.14.9/8.14.9/Submit) id x3IHBjrL020471;
-        Fri, 19 Apr 2019 01:11:45 +0800
-Date:   Fri, 19 Apr 2019 01:11:44 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] selftests/bpf: fix compile errors with older glibc
-Message-ID: <20190418171144.GA4210@udknight-ThinkPad-E550>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
-        Yonghong Song <yhs@fb.com>, "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190417174839.GA16679@udknight>
- <ecd56ebd-d19f-8834-9373-088ad7c9a725@fb.com>
+        Thu, 18 Apr 2019 13:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388299AbfDRR6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:58:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D25206B6;
+        Thu, 18 Apr 2019 17:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555610302;
+        bh=30DcQzNpnRbJ+4lbo+OIzP4nTP1nyRCV6+MDOVi3c1g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ik8gOkK5qYCg12DCy8SNgwy0Hwalwro8+1W2H1eGcAgkFKd5jv1cx8VLAdD6wktFm
+         peqzLznpQCyPFw9DZn1WgV7XPJDhm+IGt2HHWA2jBmJv/3DEDlHTFLsYTjHBaAdqZ2
+         FS9HB0TUnRhcYh4RJtCfDFclDk0AAAE8B8hyNBQE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 001/110] ARC: u-boot args: check that magic number is correct
+Date:   Thu, 18 Apr 2019 19:55:50 +0200
+Message-Id: <20190418160437.664681001@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
+References: <20190418160437.484158340@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ecd56ebd-d19f-8834-9373-088ad7c9a725@fb.com>
-User-Agent: Mutt/1.7.1 (2016-10-04)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 05:09:53AM +0000, Yonghong Song wrote:
-> 
-> 
-> On 4/17/19 10:48 AM, Wang YanQing wrote:
-> > The older glibc (for example, 2.23) doesn't handle __UAPI_DEF_*
-> > in libc-compat.h properly, and it bring below compile errors:
-> 
-> I have an even old glibc 2.17 and it still works. Not sure
-> why it failed here. Could you explain more?
+[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
 
-We will meet these errors with the combination of some versions of kernel headers and
-some versions of glibc headers.
+In case of devboards we really often disable bootloader and load
+Linux image in memory via JTAG. Even if kernel tries to verify
+uboot_tag and uboot_arg there is sill a chance that we treat some
+garbage in registers as valid u-boot arguments in JTAG case.
+E.g. it is enough to have '1' in r0 to treat any value in r2 as
+a boot command line.
 
-After some research on the git history of glibc and kernel, I find the reason behind
-the scene is a little complex:
-There are some same definitions between glibc's netinet/in.h and kernel's linux/in6.h,
-IPPROTO_HOPOPTS, etc.
-These same definitions willn't bring trouble when we include both of them if kernel and
-glibc coordinates with each other well, but the reality is the coordination is poor and
-unsynchronous in history.
+So check that magic number passed from u-boot is correct and drop
+u-boot arguments otherwise. That helps to reduce the possibility
+of using garbage as u-boot arguments in JTAG case.
 
-Kernel and glibc uses guard macros to detect whether need to export their definitions,
-linux/in6.h includes libc-compat.h which will check the guard macro, _NETINET_IN_H, and
-netinet/in.h includes bits/in.h which will check the guard macro, _UAPI_LINUX_IN6_H
-(glibc-2.19~821 6c82a2f8d7c8e21e39237225c819f182ae438db3 "Coordinate IPv6 definitions for Linux and glibc"),
+We can safely check U-boot magic value (0x0) in linux passed via
+r1 register as U-boot pass it from the beginning. So there is no
+backward-compatibility issues.
 
-the problem is in the installation process of kernel headers, the "_UAPI" in _UAPI_LINUX_IN6_H
-in linux/in6.h will be stripped due to commit 56c176c9cac9
-("UAPI: strip the _UAPI prefix from header guards during header installation").
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arc/kernel/head.S  | 1 +
+ arch/arc/kernel/setup.c | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-The good news is the glibc fix this the trouble by checking the guard macro, _LINUX_IN6_H, too.
-(glibc c9bd40daaee18cf1d9824e4a7ebaebe321e0a5a8 "Bug 20214: Fix linux/in6.h and netinet/in.h sync.").
+diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
+index 1f945d0f40da..208bf2c9e7b0 100644
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -107,6 +107,7 @@ ENTRY(stext)
+ 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
+ 	; These are handled later in handle_uboot_args()
+ 	st	r0, [@uboot_tag]
++	st      r1, [@uboot_magic]
+ 	st	r2, [@uboot_arg]
+ #endif
+ 
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 3320ca2fe20f..a1218937abd6 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -35,6 +35,7 @@ unsigned int intr_to_DE_cnt;
+ 
+ /* Part of U-boot ABI: see head.S */
+ int __initdata uboot_tag;
++int __initdata uboot_magic;
+ char __initdata *uboot_arg;
+ 
+ const struct machine_desc *machine_desc;
+@@ -484,6 +485,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
+ #define UBOOT_TAG_NONE		0
+ #define UBOOT_TAG_CMDLINE	1
+ #define UBOOT_TAG_DTB		2
++/* We always pass 0 as magic from U-boot */
++#define UBOOT_MAGIC_VALUE	0
+ 
+ void __init handle_uboot_args(void)
+ {
+@@ -499,6 +502,11 @@ void __init handle_uboot_args(void)
+ 		goto ignore_uboot_args;
+ 	}
+ 
++	if (uboot_magic != UBOOT_MAGIC_VALUE) {
++		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
++		goto ignore_uboot_args;
++	}
++
+ 	if (uboot_tag != UBOOT_TAG_NONE &&
+             uboot_arg_invalid((unsigned long)uboot_arg)) {
+ 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
+-- 
+2.19.1
 
-My environment still have this trouble:
-lsb_release -a:
-No LSB modules are available.
-Distributor ID:	Ubuntu
-Description:	Ubuntu 16.04.6 LTS
-Release:	16.04
-Codename:	xenial
-
-dpkg -l | grep libc-dev:
-ii  libc-dev-bin              2.23-0ubuntu11           amd64        GNU C Library: Development binaries
-ii  linux-libc-dev:amd64      4.4.0-145.171            amd64        Linux Kernel Headers for development.
 
 
-I will send out the v2 which I will change some words in changelog.
-
-Thanks for review.
