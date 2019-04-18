@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC33C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45182C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7118121871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154DE218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610587;
-	bh=xF0TOWc7e2J8vc50T1ggSAbby129Zq08vr5bk8ecc7A=;
+	s=default; t=1555610591;
+	bh=qdaWwRzT3WBJ6sEBBz4xNGuOfljmx4FoN3OTCUr07CU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=je8AMK/QGkdqpZ3ZIk1J/8COf504YhTsHKh/X+FeNbqDpqDal7hM0aIOQOO9S3oPw
-	 sIG1nLDe18WTVTEyLN3PLHNv5N7cfHl6bgop37IZuHMLjhFGVy9srJusCnmbrjTqAF
-	 C5oAJDKarLMAhm3Bytio+hvQAXsAxj4RW5nqLL14=
+	b=sKqv2Y2ns4PseUBL93BJVZE4QM36D16KrjklJ3r+qWNciNJHjpRUqN3GuI8LszW5Y
+	 zPIU4ak9Kz9uhJJUox39Rhb1dHUHciKlb8qP0gRLyptHeUPIE4B3h6vBUPW3r2XfZT
+	 Zqb/cRu/joObcGEwvmQqQ+/wdssmvJpQRIMeMvlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390866AbfDRSDG (ORCPT
+        id S2390876AbfDRSDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:03:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390857AbfDRSDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:03:03 -0400
+        id S2390861AbfDRSDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:03:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3087F21871;
-        Thu, 18 Apr 2019 18:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B6C217FA;
+        Thu, 18 Apr 2019 18:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610582;
-        bh=xF0TOWc7e2J8vc50T1ggSAbby129Zq08vr5bk8ecc7A=;
+        s=default; t=1555610585;
+        bh=qdaWwRzT3WBJ6sEBBz4xNGuOfljmx4FoN3OTCUr07CU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6lFcOkOm14oCkVfNi5CGJ1195to+Vsgu08Vh2gk53ZrzRzZVIeqr/yc6oSi/VdJn
-         co4Bzj2BLGryLXlDnuHk1TwbZ9idGtQsxyx3amjaNzy5/iDNc2kX93WWs+Xq9dZ941
-         Ejk9v24yCbjDCMZ2CZrIa7goSkyaSTXsRfW3AA60=
+        b=MJaYm9PeV6KCRNNTQ+7zH2IQmbJ1YgjwHgNCM6FxN6fm1JqMFONImRQsSG1YzheDZ
+         23xFuqPbvIj0uxeawB84qioeZPok/ZKjYI0AahEesGj2PnJjxollO55lFX88j6+XGz
+         3GhQZvjOYSqFr6gYQt9U3UU3S0+NiqKZzdxZmLH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/110] lkdtm: Print real addresses
-Date:   Thu, 18 Apr 2019 19:57:20 +0200
-Message-Id: <20190418160446.521619972@linuxfoundation.org>
+Subject: [PATCH 4.19 092/110] lkdtm: Add tests for NULL pointer dereference
+Date:   Thu, 18 Apr 2019 19:57:21 +0200
+Message-Id: <20190418160446.588817225@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,113 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c411157a42f122051ae3469bee0b5cabe89e139 ]
+[ Upstream commit 59a12205d3c32aee4c13ca36889fdf7cfed31126 ]
 
-Today, when doing a lkdtm test before the readiness of the
-random generator, (ptrval) is printed instead of the address
-at which it perform the fault:
+Introduce lkdtm tests for NULL pointer dereference: check access or exec
+at NULL address, since these errors tend to be reported differently from
+the general fault error text. For example from x86:
 
-[ 1597.337030] lkdtm: Performing direct entry EXEC_USERSPACE
-[ 1597.337142] lkdtm: attempting ok execution at (ptrval)
-[ 1597.337398] lkdtm: attempting bad execution at (ptrval)
-[ 1597.337460] kernel tried to execute user page (77858000) -exploit attempt? (uid: 0)
-[ 1597.344769] Unable to handle kernel paging request for instruction fetch
-[ 1597.351392] Faulting instruction address: 0x77858000
-[ 1597.356312] Oops: Kernel access of bad area, sig: 11 [#1]
-
-If the lkdtm test is done later on, it prints an hashed address.
-
-In both cases this is pointless. The purpose of the test is to
-ensure the kernel generates an Oops at the expected address,
-so real addresses needs to be printed. This patch fixes that.
+    pr_alert("BUG: unable to handle kernel %s at %px\n",
+        address < PAGE_SIZE ? "NULL pointer dereference" : "paging request",
+        (void *)address);
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm/perms.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/misc/lkdtm/core.c  |  2 ++
+ drivers/misc/lkdtm/lkdtm.h |  2 ++
+ drivers/misc/lkdtm/perms.c | 18 ++++++++++++++++++
+ 3 files changed, 22 insertions(+)
 
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index 2154d1bfd18b..07caaa2cfe1e 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -152,7 +152,9 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(EXEC_VMALLOC),
+ 	CRASHTYPE(EXEC_RODATA),
+ 	CRASHTYPE(EXEC_USERSPACE),
++	CRASHTYPE(EXEC_NULL),
+ 	CRASHTYPE(ACCESS_USERSPACE),
++	CRASHTYPE(ACCESS_NULL),
+ 	CRASHTYPE(WRITE_RO),
+ 	CRASHTYPE(WRITE_RO_AFTER_INIT),
+ 	CRASHTYPE(WRITE_KERN),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 9e513dcfd809..8c3f2e6af256 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -45,7 +45,9 @@ void lkdtm_EXEC_KMALLOC(void);
+ void lkdtm_EXEC_VMALLOC(void);
+ void lkdtm_EXEC_RODATA(void);
+ void lkdtm_EXEC_USERSPACE(void);
++void lkdtm_EXEC_NULL(void);
+ void lkdtm_ACCESS_USERSPACE(void);
++void lkdtm_ACCESS_NULL(void);
+ 
+ /* lkdtm_refcount.c */
+ void lkdtm_REFCOUNT_INC_OVERFLOW(void);
 diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-index 53b85c9d16b8..fa54add6375a 100644
+index fa54add6375a..62f76d506f04 100644
 --- a/drivers/misc/lkdtm/perms.c
 +++ b/drivers/misc/lkdtm/perms.c
-@@ -47,7 +47,7 @@ static noinline void execute_location(void *dst, bool write)
- {
- 	void (*func)(void) = dst;
- 
--	pr_info("attempting ok execution at %p\n", do_nothing);
-+	pr_info("attempting ok execution at %px\n", do_nothing);
- 	do_nothing();
- 
- 	if (write == CODE_WRITE) {
-@@ -55,7 +55,7 @@ static noinline void execute_location(void *dst, bool write)
- 		flush_icache_range((unsigned long)dst,
- 				   (unsigned long)dst + EXEC_SIZE);
- 	}
--	pr_info("attempting bad execution at %p\n", func);
-+	pr_info("attempting bad execution at %px\n", func);
- 	func();
- }
- 
-@@ -66,14 +66,14 @@ static void execute_user_location(void *dst)
- 	/* Intentionally crossing kernel/user memory boundary. */
- 	void (*func)(void) = dst;
- 
--	pr_info("attempting ok execution at %p\n", do_nothing);
-+	pr_info("attempting ok execution at %px\n", do_nothing);
- 	do_nothing();
- 
- 	copied = access_process_vm(current, (unsigned long)dst, do_nothing,
- 				   EXEC_SIZE, FOLL_WRITE);
- 	if (copied < EXEC_SIZE)
- 		return;
--	pr_info("attempting bad execution at %p\n", func);
-+	pr_info("attempting bad execution at %px\n", func);
- 	func();
- }
- 
-@@ -82,7 +82,7 @@ void lkdtm_WRITE_RO(void)
- 	/* Explicitly cast away "const" for the test. */
- 	unsigned long *ptr = (unsigned long *)&rodata;
- 
--	pr_info("attempting bad rodata write at %p\n", ptr);
-+	pr_info("attempting bad rodata write at %px\n", ptr);
- 	*ptr ^= 0xabcd1234;
- }
- 
-@@ -100,7 +100,7 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
- 		return;
- 	}
- 
--	pr_info("attempting bad ro_after_init write at %p\n", ptr);
-+	pr_info("attempting bad ro_after_init write at %px\n", ptr);
- 	*ptr ^= 0xabcd1234;
- }
- 
-@@ -112,7 +112,7 @@ void lkdtm_WRITE_KERN(void)
- 	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
- 	ptr = (unsigned char *)do_overwritten;
- 
--	pr_info("attempting bad %zu byte write at %p\n", size, ptr);
-+	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
- 	memcpy(ptr, (unsigned char *)do_nothing, size);
- 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
- 
-@@ -185,11 +185,11 @@ void lkdtm_ACCESS_USERSPACE(void)
- 
- 	ptr = (unsigned long *)user_addr;
- 
--	pr_info("attempting bad read at %p\n", ptr);
-+	pr_info("attempting bad read at %px\n", ptr);
- 	tmp = *ptr;
- 	tmp += 0xc0dec0de;
- 
--	pr_info("attempting bad write at %p\n", ptr);
-+	pr_info("attempting bad write at %px\n", ptr);
- 	*ptr = tmp;
- 
+@@ -164,6 +164,11 @@ void lkdtm_EXEC_USERSPACE(void)
  	vm_munmap(user_addr, PAGE_SIZE);
+ }
+ 
++void lkdtm_EXEC_NULL(void)
++{
++	execute_location(NULL, CODE_AS_IS);
++}
++
+ void lkdtm_ACCESS_USERSPACE(void)
+ {
+ 	unsigned long user_addr, tmp = 0;
+@@ -195,6 +200,19 @@ void lkdtm_ACCESS_USERSPACE(void)
+ 	vm_munmap(user_addr, PAGE_SIZE);
+ }
+ 
++void lkdtm_ACCESS_NULL(void)
++{
++	unsigned long tmp;
++	unsigned long *ptr = (unsigned long *)NULL;
++
++	pr_info("attempting bad read at %px\n", ptr);
++	tmp = *ptr;
++	tmp += 0xc0dec0de;
++
++	pr_info("attempting bad write at %px\n", ptr);
++	*ptr = tmp;
++}
++
+ void __init lkdtm_perms_init(void)
+ {
+ 	/* Make sure we can write to __ro_after_init values during __init */
 -- 
 2.19.1
 
