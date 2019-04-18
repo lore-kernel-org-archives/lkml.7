@@ -2,53 +2,55 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF807C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB59C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BCC21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8F121872
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610411;
-	bh=QSKLCHx7e4tc5DBpoDOAM1eENBvIy8ZeEp5LRECzd8Q=;
+	s=default; t=1555610416;
+	bh=Jfe4LxnnKcdAuXGufB9/wP+WEB9MvzHvf3SaxjB/QPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1l7N6tThJzUymlE4+muUsZiWZ6utHbY7KMgBoBmAi9qW0BydEY5DhFpvnaYYIpU5
-	 teVaJYpXM6eK7RJWgdVGH5hF+PDAnaA8IfE+rCIkh+ByCNE5kiZ7vUCn+B89NBafDg
-	 aQQR56GvWe4ZoSSJwMjBIr4UQzc7T/SKNg5XWBzA=
+	b=RtTVKqFesqldWZhkqKfPLJJ7tUbcXXiOjjPB6VS+1xpr/cgEOywI1M9bNwHDamyTk
+	 ivf25HNFpMXiJIBa7Twa8XCLnTAgCD6a7vtJTLOrgim7Y419qrC3pO7GddBiuMRsH/
+	 yeiaimXkgcAJIpYraDMtN2TDuA9I7Vz8BJ6HFegk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390307AbfDRSAK (ORCPT
+        id S2390320AbfDRSAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390287AbfDRSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:00:07 -0400
+        id S2390302AbfDRSAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:00:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC397218A6;
-        Thu, 18 Apr 2019 18:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCA4206B6;
+        Thu, 18 Apr 2019 18:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610407;
-        bh=QSKLCHx7e4tc5DBpoDOAM1eENBvIy8ZeEp5LRECzd8Q=;
+        s=default; t=1555610409;
+        bh=Jfe4LxnnKcdAuXGufB9/wP+WEB9MvzHvf3SaxjB/QPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYB9QLFByaSl7W/9x0I/F3ZdhkilDY6+ddahEisuWDzZ6bpFTv2FGwYkFRV8yQdGm
-         /uHrpbcHjCqrLCrb1bXIy9RBXslZrtm0lSJcZFLuJsRpWzsNX1wrE044xSsXUTlkW/
-         +JFQT6HHB78btPBt0FzM//nosEUVz2lPLIzL+7zk=
+        b=g22E3OtPACXG1ttB0BPW8XmLCE5JKj1bo5a4X/u40GAVHEC3Oi6xE8nZAukVzLJcU
+         GaJp0hqrYaF3Z8Urs9nKjesh8a31up1OceNRFc5sScjJWt7Zo4SWshnCmfRbarul/H
+         tk9WJMtOCiKBdcfi6yJdmdwNgMdug5XF6+04CYGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Ashok Raj <ashok.raj@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 048/110] iommu/vt-d: Check capability before disabling protected memory
-Date:   Thu, 18 Apr 2019 19:56:37 +0200
-Message-Id: <20190418160443.335324857@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 049/110] x86/hw_breakpoints: Make default case in hw_breakpoint_arch_parse() return an error
+Date:   Thu, 18 Apr 2019 19:56:38 +0200
+Message-Id: <20190418160443.410234334@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,38 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit e898e69d6b9475bf123f99b3c5d1a67bb7cb2361 ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+arch/x86/kernel/hw_breakpoint.c:355:2: warning: variable 'align' is used
+uninitialized whenever switch default is taken
+[-Wsometimes-uninitialized]
+
+The default cannot be reached because arch_build_bp_info() initializes
+hw->len to one of the specified cases. Nevertheless the warning is valid
+and returning -EINVAL makes sure that this cannot be broken by future
+modifications.
+
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/392
+Link: https://lkml.kernel.org/r/20190307212756.4648-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/hw_breakpoint.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2b8f5ebae821..603bf5233a99 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1624,6 +1624,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index 34a5c1715148..2882fe1d2a78 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -357,6 +357,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ #endif
+ 	default:
+ 		WARN_ON_ONCE(1);
++		return -EINVAL;
+ 	}
  
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+ 	/*
 -- 
 2.19.1
 
