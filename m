@@ -2,313 +2,135 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C403EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3BD20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A9720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rGggi2b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbfDRTtR (ORCPT
+        id S2390146AbfDRTuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:49:17 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:15724 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389853AbfDRTtR (ORCPT
+        Thu, 18 Apr 2019 15:50:37 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42546 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRTug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:49:17 -0400
-Subject: Re: [PATCH 5.0 39/93] perf top: Delete the evlist before
- perf_session, fixing heap-use-after-free issue
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, Changbin Du <changbin.du@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20190418160436.781762249@linuxfoundation.org>
- <20190418160441.339477070@linuxfoundation.org>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <b33d7fd2-c18d-9513-1a99-fea31d5f2df3@mageia.org>
-Date:   Thu, 18 Apr 2019 22:33:16 +0300
+        Thu, 18 Apr 2019 15:50:36 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w139so2518910oie.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RRvT1PEVseMZAP2ynkS/SS5qFXKObpz+RcLF5TwvBXk=;
+        b=rGggi2b0m/5WpygkewyHZhqZ4YCrnifo4SxyC67gS7vCldse0rBXEw94uSd1GhrKQ7
+         DLJ5DhGEZxg9bK6XF3rM9I2+fydi+9m6PM5m38JgF3wg9KUlnqS0fRUPgkcG2MCcQ+pE
+         Lla3gh3OMUDOEvvgL+8uBI5RBxKEnyTboGvstoU4myq94OyeGkyI2frTmri+bboM9wTd
+         MrAdvlDSo3PtyPU74/S+7AN0sGHKQxeGHdu0e7fmlrR8uRi3WklIPMewSQw9gBQFXiLF
+         u2Ik+/CCPE94yHTbX3T2cPMzz4b7OyIOBGtjdAIxErbT7v4pPCVuPT7a59GggwD76INX
+         Boaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RRvT1PEVseMZAP2ynkS/SS5qFXKObpz+RcLF5TwvBXk=;
+        b=SXDj6ife4iS15J3zwmTeraqlLu7NDafrH42nfwpWpnXFJpJSAXwRqbpl0sOIpR82ie
+         1yID+ukwKGcLZiF4ba5ybonNUgNxwpjF4zVoHObLt40KTSrVzsZMSd4hyEdNSOVumGp1
+         Ju7DPs1EcueUy1u4RqHDKNLtGDADoghYD29MBrVmFm40GAXqX7ojbFo8eGXU3qxZCIzX
+         vhk7ZglHBCR7WpVxESZHAWZT+VC1LU/XrmNyy+GRZmFWP00n90W7Ll0GaKQVNh5T2l0v
+         zSoNahwx/vwOCRHk9X3GWFeDEjLH88P3DrZE1rFdezfwy3C9SW9Bi/6RzsV8pnamohdJ
+         c0gw==
+X-Gm-Message-State: APjAAAW5OQcA6yhJhlqjx+PwF8JqTd0P6ggANt+EjkXmIU5MiXS21yBU
+        /qLzPzfJna7syVMc3pAzNyqz+QO8FyH+c+kRTRJbccWx
+X-Google-Smtp-Source: APXvYqxJGLZyK9SBJ5gTvhX4LITdBpL+VDqbCCkvMoR7TiLp2bOwDBC3yJnUSiSepeDpi6ZM3ELU54+1/aBp6t95PdI=
+X-Received: by 2002:aca:ecd1:: with SMTP id k200mr3126007oih.15.1555617036093;
+ Thu, 18 Apr 2019 12:50:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190418160441.339477070@linuxfoundation.org>
-Content-Type: multipart/mixed;
-        boundary="------------F151799C9EBAFCA68FED3310"
-Content-Language: en-US
-X-WatchGuard-Spam-ID: str=0001.0A0C0208.5CB8D485.0007,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+References: <20190413171532.25967-1-martin.blumenstingl@googlemail.com> <CAHStOZ5Pe9LvDk4cKAVB4SS5wgFcK-bweFTqU_mnEhOAyZKHuA@mail.gmail.com>
+In-Reply-To: <CAHStOZ5Pe9LvDk4cKAVB4SS5wgFcK-bweFTqU_mnEhOAyZKHuA@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 18 Apr 2019 21:50:25 +0200
+Message-ID: <CAFBinCD4OnBbU0YR5P5cAhut==XXUxdHSxHQkBVm28DHZWkbAw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] 32-bit Meson: add the canvas module
+To:     Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Cc:     linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Kevin Hilman <khilman@baylibre.com>, mjourdan@baylibre.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------F151799C9EBAFCA68FED3310
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi Maxime,
 
-Den 18-04-2019 kl. 20:57, skrev Greg Kroah-Hartman:
-> [ Upstream commit 0dba9e4be95b59e77060645ca8e37ca3231061f5 ]
-> 
-> The evlist should be destroyed before the perf session.
-> 
-> Detected with gcc's ASan:
-> 
->    =================================================================
->    ==27350==ERROR: AddressSanitizer: heap-use-after-free on address 0x62b000002e38 at pc 0x5611da276999 bp 0x7ffce8f1d1a0 sp 0x7ffce8f1d190
->    WRITE of size 8 at 0x62b000002e38 thread T0
->        #0 0x5611da276998 in __list_del /home/work/linux/tools/include/linux/list.h:89
->        #1 0x5611da276d4a in __list_del_entry /home/work/linux/tools/include/linux/list.h:102
->        #2 0x5611da276e77 in list_del_init /home/work/linux/tools/include/linux/list.h:145
->        #3 0x5611da2781cd in thread__put util/thread.c:130
->        #4 0x5611da2cc0a8 in __thread__zput util/thread.h:68
->        #5 0x5611da2d2dcb in hist_entry__delete util/hist.c:1148
->        #6 0x5611da2cdf91 in hists__delete_entry util/hist.c:337
->        #7 0x5611da2ce19e in hists__delete_entries util/hist.c:365
->        #8 0x5611da2db2ab in hists__delete_all_entries util/hist.c:2639
->        #9 0x5611da2db325 in hists_evsel__exit util/hist.c:2651
->        #10 0x5611da1c5352 in perf_evsel__exit util/evsel.c:1304
->        #11 0x5611da1c5390 in perf_evsel__delete util/evsel.c:1309
->        #12 0x5611da1b35f0 in perf_evlist__purge util/evlist.c:124
->        #13 0x5611da1b38e2 in perf_evlist__delete util/evlist.c:148
->        #14 0x5611da069781 in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1645
->        #15 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
->        #16 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
->        #17 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
->        #18 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
->        #19 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
->        #20 0x5611d9ff35c9 in _start (/home/work/linux/tools/perf/perf+0x3e95c9)
-> 
->    0x62b000002e38 is located 11320 bytes inside of 27448-byte region [0x62b000000200,0x62b000006d38)
->    freed by thread T0 here:
->        #0 0x7fdccb04ab70 in free (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedb70)
->        #1 0x5611da260df4 in perf_session__delete util/session.c:201
->        #2 0x5611da063de5 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1300
->        #3 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
->        #4 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
->        #5 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
->        #6 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
->        #7 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
->        #8 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
-> 
->    previously allocated by thread T0 here:
->        #0 0x7fdccb04b138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
->        #1 0x5611da26010c in zalloc util/util.h:23
->        #2 0x5611da260824 in perf_session__new util/session.c:118
->        #3 0x5611da0633a6 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1192
->        #4 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
->        #5 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
->        #6 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
->        #7 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
->        #8 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
->        #9 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
-> 
->    SUMMARY: AddressSanitizer: heap-use-after-free /home/work/linux/tools/include/linux/list.h:89 in __list_del
->    Shadow bytes around the buggy address:
->      0x0c567fff8570: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff8580: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff8590: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff85a0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff85b0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->    =>0x0c567fff85c0: fd fd fd fd fd fd fd[fd]fd fd fd fd fd fd fd fd
->      0x0c567fff85d0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff85e0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff85f0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff8600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->      0x0c567fff8610: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
->    Shadow byte legend (one shadow byte represents 8 application bytes):
->      Addressable:           00
->      Partially addressable: 01 02 03 04 05 06 07
->      Heap left redzone:       fa
->      Freed heap region:       fd
->      Stack left redzone:      f1
->      Stack mid redzone:       f2
->      Stack right redzone:     f3
->      Stack after return:      f5
->      Stack use after scope:   f8
->      Global redzone:          f9
->      Global init order:       f6
->      Poisoned by user:        f7
->      Container overflow:      fc
->      Array cookie:            ac
->      Intra object redzone:    bb
->      ASan internal:           fe
->      Left alloca redzone:     ca
->      Right alloca redzone:    cb
->    ==27350==ABORTING
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Link: http://lkml.kernel.org/r/20190316080556.3075-8-changbin.du@gmail.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   tools/perf/builtin-top.c | 42 ++++++++++++++++++----------------------
->   1 file changed, 19 insertions(+), 23 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index f64e312db787..9b215007924b 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1192,23 +1192,19 @@ static int __cmd_top(struct perf_top *top)
->   	pthread_t thread, thread_process;
->   	int ret;
->   
-> -	top->session = perf_session__new(NULL, false, NULL);
-> -	if (top->session == NULL)
-> -		return -1;
-> -
->   	if (!top->annotation_opts.objdump_path) {
->   		ret = perf_env__lookup_objdump(&top->session->header.env,
->   					       &top->annotation_opts.objdump_path);
->   		if (ret)
-> -			goto out_delete;
-> +			return ret;
->   	}
->   
->   	ret = callchain_param__setup_sample_type(&callchain_param);
->   	if (ret)
-> -		goto out_delete;
-> +		return ret;
->   
->   	if (perf_session__register_idle_thread(top->session) < 0)
-> -		goto out_delete;
-> +		return ret;
->   
->   	if (top->nr_threads_synthesize > 1)
->   		perf_set_multithreaded();
-> @@ -1224,13 +1220,18 @@ static int __cmd_top(struct perf_top *top)
->   
->   	if (perf_hpp_list.socket) {
->   		ret = perf_env__read_cpu_topology_map(&perf_env);
-> -		if (ret < 0)
-> -			goto out_err_cpu_topo;
-> +		if (ret < 0) {
-> +			char errbuf[BUFSIZ];
-> +			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
-> +
-> +			ui__error("Could not read the CPU topology map: %s\n", err);
-> +			return ret;
-> +		}
->   	}
->   
->   	ret = perf_top__start_counters(top);
->   	if (ret)
-> -		goto out_delete;
-> +		return ret;
->   
->   	ret = perf_evlist__apply_drv_configs(evlist, &pos, &err_term);
->   	if (ret) {
-> @@ -1257,7 +1258,7 @@ static int __cmd_top(struct perf_top *top)
->   	ret = -1;
->   	if (pthread_create(&thread_process, NULL, process_thread, top)) {
->   		ui__error("Could not create process thread.\n");
-> -		goto out_delete;
-> +		return ret;
->   	}
->   
->   	if (pthread_create(&thread, NULL, (use_browser > 0 ? display_thread_tui :
-> @@ -1301,19 +1302,7 @@ static int __cmd_top(struct perf_top *top)
->   out_join_thread:
->   	pthread_cond_signal(&top->qe.cond);
->   	pthread_join(thread_process, NULL);
-> -out_delete:
-> -	perf_session__delete(top->session);
-> -	top->session = NULL;
-> -
->   	return ret;
-> -
-> -out_err_cpu_topo: {
-> -	char errbuf[BUFSIZ];
-> -	const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
-> -
-> -	ui__error("Could not read the CPU topology map: %s\n", err);
-> -	goto out_delete;
-> -}
->   }
->   
->   static int
-> @@ -1644,10 +1633,17 @@ int cmd_top(int argc, const char **argv)
->   		signal(SIGWINCH, winch_sig);
->   	}
->   
-> +	top.session = perf_session__new(NULL, false, NULL);
-> +	if (top.session == NULL) {
-> +		status = -1;
-> +		goto out_delete_evlist;
-> +	}
-> +
->   	status = __cmd_top(&top);
->   
->   out_delete_evlist:
->   	perf_evlist__delete(top.evlist);
-> +	perf_session__delete(top.session);
->   
->   	return status;
->   }
-> 
+On Sat, Apr 13, 2019 at 8:54 PM Maxime Jourdan <maxi.jourdan@wanadoo.fr> wrote:
+>
+> Hi Martin,
+> On Sat, Apr 13, 2019 at 7:15 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > This adds the canvas module on Meson8, Meson8b and Meson8m2. The canvas
+> > IP is used by the video decoder hardware as well as the VPU (video
+> > output) hardware.
+> >
+> > Neither the VPU nor the video decoder driver support the 32-bit SoCs
+> > yet. However, we can still add the canvas module to have it available
+> > once these drivers gain support for the older SoCs.
+> >
+> > I have tested this on my Meson8m2 board by hacking the VPU driver to
+> > not re-initialize the VPU (and to use the configuration set by u-boot).
+> > With that hack I could get some image out of the CVBS connector. No
+> > changes to the canvas driver were required.
+> >
+> > Due to lack of hardware I could not test Meson8, but I'm following (as
+> > always) what the Amlogic 3.10 vendor kernel uses.
+> > Meson8b is also not tested because u-boot of my EC-100 doesn't have
+> > video output enabled (so I couldn't use the same hack I used on my
+> > Meson8m2 board).
+> >
+> > This series meant to be applied on top of "Meson8b: add support for the
+> > RTC on EC-100 and Odroid-C1" from [0]
+> >
+> >
+>
+> The series looks good to me, however I wonder if we should maybe add a
+> new compatible ?
+>
+> The canvas IP before the GX* generation does not handle what Amlogic
+> calls "endianness", the field that allows doing some byte-switching to
+> get proper NV12/NV21. So the following defines are unusable:
+>
+> #define MESON_CANVAS_ENDIAN_SWAP16 0x1
+> #define MESON_CANVAS_ENDIAN_SWAP32 0x3
+> #define MESON_CANVAS_ENDIAN_SWAP64 0x7
+> #define MESON_CANVAS_ENDIAN_SWAP128 0xf
+I didn't know about this - thank you for pointing this out.
+
+your suggestions to add new compatible strings is a good idea for that case.
+Amlogic uses different defines for Meson8 and Meson8m2 in their vendor
+kernel and they keep Meson8b different.
+I will add three new compatibles, one for each SoC (Meson8, Meson8b,
+Meson8m2) just to be on the safe side if we discover differences in
+the canvas IP on these SoCs.
+
+what do you think?
+
+> It wouldn't change much functionally, but we could have e.g a warning
+> if a m8 canvas user tries to set endianness even though it does
+> nothing.
+this is a good idea, that will make it easier to spot why something
+doesn't work.
+we can also return -EINVAL, like you already do for the case where the
+canvas ID is already used.
 
 
-This one breaks perf build like this:
-
-builtin-top.c: In function '__cmd_top':
-builtin-top.c:1241:3: error: label 'out_delete' used but not defined
-    goto out_delete;
-
-
-Suggested 5.0 specific fix attached.
-
---------------F151799C9EBAFCA68FED3310
-Content-Type: text/x-patch; name="tools-perf-builtin-top-fix-build.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="tools-perf-builtin-top-fix-build.patch"
-
-
-Subject: perf top: fix builtin-top build breakage.
-
-In 5.0 -stable queue, backported upstream commit 0dba9e4be95b (perf top: Delete
-the evlist before perf_session, fixing heap-use-after-free issue)
-
-causes the perf build to break with:
-
-builtin-top.c: In function '__cmd_top':
-builtin-top.c:1241:3: error: label 'out_delete' used but not defined
-   goto out_delete;
-   ^~~~
-
-This does not happend in upstream linus tree as the affected code is removed
-in commit 159b0da50adb (perf pmu: Remove set_drv_config API) that I assume
-is not ok to backport in -stable trees.
-
-Fix it up like other code in commit 0dba9e4be95b.
-
-Signed-off-by: Thomas Backlund <tmb@mageia.org>
-
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1238,7 +1238,7 @@ static int __cmd_top(struct perf_top *to
- 		pr_err("failed to set config \"%s\" on event %s with %d (%s)\n",
- 			err_term->val.drv_cfg, perf_evsel__name(pos), errno,
- 			str_error_r(errno, msg, sizeof(msg)));
--		goto out_delete;
-+		return ret;
- 	}
- 
- 	top->session->evlist = top->evlist;
-
---------------F151799C9EBAFCA68FED3310--
+Martin
