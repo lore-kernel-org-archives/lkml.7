@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A4DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9681C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C762186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893B420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611033;
-	bh=/7PvaA4MTYVn1/1EBnANmgriFF4k5g7ONuPAPVG8p68=;
+	s=default; t=1555611035;
+	bh=Ry/fhiyEgWF0AA1ikIdMjZpB+mjIFoMWeKf5AtmVcDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKU7UnhtGXjR35f+RtiLUWWjHT87gD4PQZE3pANhqvjjTBAnI4RqbmpZwsCfY1YAi
-	 axbRy5n0UItxPzsjFoROZC6siFf2rJdmn7XNaJKECwiQlNf3/b1f20NodD6UvTLXnJ
-	 9X19f2sh4ufprEbAxWXQMjd9CXRvXzv0MG21Fmmk=
+	b=SE0EsYiIVCwysUBIQK4k26rpYj9XW0bJ23hnrLCHQer6xlhj43rcGL/SVB5sv5FuG
+	 R/H0iCNJUjtBiDWai53b9tr4gS+ZYgOQaXI6uUE5h0os9G6vKYZzrB8jiOmjBTIAlK
+	 69OhS16XCF5NzyLwmOnLEacKojCJa27km+ehM3Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391703AbfDRSKc (ORCPT
+        id S2404132AbfDRSKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42242 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391539AbfDRSK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:29 -0400
+        id S2391486AbfDRSK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A1D1206B6;
-        Thu, 18 Apr 2019 18:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF6D20652;
+        Thu, 18 Apr 2019 18:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611028;
-        bh=/7PvaA4MTYVn1/1EBnANmgriFF4k5g7ONuPAPVG8p68=;
+        s=default; t=1555611026;
+        bh=Ry/fhiyEgWF0AA1ikIdMjZpB+mjIFoMWeKf5AtmVcDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/LRbaOJ0oOutF39sECBnjWLGR175LOr7Tz2ShCWZGQJzcQBG4iZeGsGTHiJEbPzg
-         gcN9iflVbyxurb/Jt8buqbaJcv0wBodYoSc8xG3c2rK0x6in0U3tLlDClVS6/0kN+U
-         PsoXK4ssECWV9zb1UjJZrVwKtQorq2Xb655L+bns=
+        b=UO0Dt4IzqD0tSvwXy44qr6gWJMjGaeoM80p6E2GFFV398/tRoDnUiFu2MoI09ZLbE
+         XQ6rUQoq8MnUL5ufcW+aS+q1PKnYFdTfZEk3i/BD+KGLNK1EFgmq+eJeokBK6+R/67
+         +WIb0+bOsR0OZSnZI0af7FaEm0lpFThfoHm6L92E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
         Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 08/93] ext4: add missing brelse() in add_new_gdb_meta_bg()
-Date:   Thu, 18 Apr 2019 19:56:46 +0200
-Message-Id: <20190418160437.845355313@linuxfoundation.org>
+Subject: [PATCH 5.0 07/93] ext4: avoid panic during forced reboot
+Date:   Thu, 18 Apr 2019 19:56:45 +0200
+Message-Id: <20190418160437.771182786@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -59,47 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d64264d6218e6892edd832dc3a5a5857c2856c53 ]
+[ Upstream commit 1dc1097ff60e4105216da7cd0aa99032b039a994 ]
 
-Currently in add_new_gdb_meta_bg() there is a missing brelse of gdb_bh
-in case ext4_journal_get_write_access() fails.
-Additionally kvfree() is missing in the same error path. Fix it by
-moving the ext4_journal_get_write_access() before the ext4 sb update as
-Ted suggested and release n_group_desc and gdb_bh in case it fails.
+When admin calls "reboot -f" - i.e., does a hard system reboot by
+directly calling reboot(2) - ext4 filesystem mounted with errors=panic
+can panic the system. This happens because the underlying device gets
+disabled without unmounting the filesystem and thus some syscall running
+in parallel to reboot(2) can result in the filesystem getting IO errors.
 
-Fixes: 61a9c11e5e7a ("ext4: add missing brelse() add_new_gdb_meta_bg()'s error path")
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+This is somewhat surprising to the users so try improve the behavior by
+switching to errors=remount-ro behavior when the system is running
+reboot(2).
+
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/resize.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/ext4/super.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
-index 3d9b18505c0c..90061c3d048b 100644
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -932,11 +932,18 @@ static int add_new_gdb_meta_bg(struct super_block *sb,
- 	memcpy(n_group_desc, o_group_desc,
- 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
- 	n_group_desc[gdb_num] = gdb_bh;
-+
-+	BUFFER_TRACE(gdb_bh, "get_write_access");
-+	err = ext4_journal_get_write_access(handle, gdb_bh);
-+	if (err) {
-+		kvfree(n_group_desc);
-+		brelse(gdb_bh);
-+		return err;
-+	}
-+
- 	EXT4_SB(sb)->s_group_desc = n_group_desc;
- 	EXT4_SB(sb)->s_gdb_count++;
- 	kvfree(o_group_desc);
--	BUFFER_TRACE(gdb_bh, "get_write_access");
--	err = ext4_journal_get_write_access(handle, gdb_bh);
- 	return err;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index fb12d3c17c1b..b9bca7298f96 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -430,6 +430,12 @@ static void ext4_journal_commit_callback(journal_t *journal, transaction_t *txn)
+ 	spin_unlock(&sbi->s_md_lock);
  }
  
++static bool system_going_down(void)
++{
++	return system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF
++		|| system_state == SYSTEM_RESTART;
++}
++
+ /* Deal with the reporting of failure conditions on a filesystem such as
+  * inconsistencies detected or read IO failures.
+  *
+@@ -460,7 +466,12 @@ static void ext4_handle_error(struct super_block *sb)
+ 		if (journal)
+ 			jbd2_journal_abort(journal, -EIO);
+ 	}
+-	if (test_opt(sb, ERRORS_RO)) {
++	/*
++	 * We force ERRORS_RO behavior when system is rebooting. Otherwise we
++	 * could panic during 'reboot -f' as the underlying device got already
++	 * disabled.
++	 */
++	if (test_opt(sb, ERRORS_RO) || system_going_down()) {
+ 		ext4_msg(sb, KERN_CRIT, "Remounting filesystem read-only");
+ 		/*
+ 		 * Make sure updated value of ->s_mount_flags will be visible
+@@ -468,8 +479,7 @@ static void ext4_handle_error(struct super_block *sb)
+ 		 */
+ 		smp_wmb();
+ 		sb->s_flags |= SB_RDONLY;
+-	}
+-	if (test_opt(sb, ERRORS_PANIC)) {
++	} else if (test_opt(sb, ERRORS_PANIC)) {
+ 		if (EXT4_SB(sb)->s_journal &&
+ 		  !(EXT4_SB(sb)->s_journal->j_flags & JBD2_REC_ERR))
+ 			return;
 -- 
 2.19.1
 
