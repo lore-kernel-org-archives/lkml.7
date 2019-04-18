@@ -2,166 +2,109 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EF3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8A9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 04:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A2F214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184CB2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 04:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tVDkPgAf"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jaMpsNJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387985AbfDRDxa (ORCPT
+        id S1726043AbfDREOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 23:53:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34505 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387763AbfDRDx3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 23:53:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v12so543428pgq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 20:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=18rgLRX6g0Y1/lOFEoiyIdXM2XzwSH57sglGtKBWBsA=;
-        b=tVDkPgAfdyxBwXsEAsBKhrOoI+UrR1Ge9hX658hzBfD/DzVcDXrDZaKYkNgAC/Z7Z3
-         7Us/Li3DfY4zinWhWLPyZWcbDu9rnR9YiP3Z2ICwCoH5uBFZXSbP1+efN5PjJgTWqxwW
-         B5dUBw1DE4JhP1Dx9ApLZJcx1nMMQymWZBrFZ7Fmp/TaFuMmqDjYa4qxZMjNCva7L72j
-         l2wWMp0uqfxffIq4+i/ZYVe4KlO/MpIc50sKnMXjZyzVksN0u0MgtC4FqxKIuSDWixjE
-         hdpUnmXUWsKvyu7s4Wf1l+fheMo81BNFQwodZXqzUHjbVfXUXbY8BWRDKYOleMdrxjuO
-         MIQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=18rgLRX6g0Y1/lOFEoiyIdXM2XzwSH57sglGtKBWBsA=;
-        b=S5D87XPFEGpeli4AsCqH0MnUlyyyXKmzeQfok9iaJc2lHFMLfyO+iwXXWOWmR5mos7
-         k2bEBRZ97vcRempBpxzfXWtm8EvEK+SVUq5DMeeEQflUjc0jIiIgbt1Ay0ALvZUv6q79
-         uBygcCnKzuTAvMOYf/v2ny+UKfJg+SKSfMrmOFEFrXhJglbPUbkmXsj1N4QWH/wDFPKQ
-         xcr2+W2v0JAJ/oGKQs/xKQ3r+LaJhQj9aYPf9EV2Bt6DePYQo9M0BpH5AWT4oJ1NMEax
-         89evAeO7pZ+pIePguP8VolGWtxJWT6LEhaSlUMf3UerZWGGAdvgrkvRZ9Vemz3syVG7j
-         LiJA==
-X-Gm-Message-State: APjAAAWvIwGpeYw+gRsIstG3yWz5gfBOdCBFuSaJkuPY7qjFJpUpYdVh
-        FIPauXvcN9WbqXYdDp6cSs79yg==
-X-Google-Smtp-Source: APXvYqw1AgjVO/oO3DC5jV6LNvvf65Qt/UOl3ffCrVLj7XsNlTtMjSejwgzA0TathK2MiOfM1rOndQ==
-X-Received: by 2002:a63:25c4:: with SMTP id l187mr88041249pgl.202.1555559608619;
-        Wed, 17 Apr 2019 20:53:28 -0700 (PDT)
-Received: from localhost ([103.48.124.5])
-        by smtp.gmail.com with ESMTPSA id 4sm844684pfn.159.2019.04.17.20.53.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 20:53:26 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 09:23:23 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
-        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mka@chromium.org
-Subject: Re: [PATCH v2 3/3] thermal: cpu_cooling: Migrate to using the EM
- framework
-Message-ID: <20190418035323.onyfxo4kprwqz2wl@vireshk-mac-ubuntu>
-References: <20190417094301.17622-1-quentin.perret@arm.com>
- <20190417094301.17622-4-quentin.perret@arm.com>
+        Thu, 18 Apr 2019 00:14:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53937 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbfDREOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 00:14:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44l5Mm3d79z9s3l;
+        Thu, 18 Apr 2019 14:14:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555560853;
+        bh=P3F7TqdXZAwYdJIugEs//zkAsdTMjOeOGfu1ll05HVc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jaMpsNJNofWBBEOgg9FUweba/VS5QbtttGtloqxN5dpoCyGuxea1EsAv0vLMSRWyn
+         i4WvT4Uywj25McS+6f/0Ln6p9vF7xIKcN2cL6e1oHsXCenLRxQFArB4LivI2Fz8hjV
+         eNOXtWaNG+SHUTCk4o10yg6vxpenNxa4hSVy3JeDoLstJyDQce919BoTIwQ5s4jRrJ
+         i+YLoll2C4AqfaoydzmGBMjXegve/7RccjANfD97PUWdOBHVriC1HSQqkIT/RdILyH
+         czA55CS8wrVADn5JF4qq+gaPkKlccDUOEuh8F9ZMsqaVclHAKaYUwPkHhKY9RhiAxj
+         0BkNiFhAr9DQA==
+Date:   Thu, 18 Apr 2019 14:14:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: linux-next: manual merge of the tip tree with the printk tree
+Message-ID: <20190418141411.417e5c99@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417094301.17622-4-quentin.perret@arm.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/_vOeBQlSfJaWe6hFJ8BwoxI"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-04-19, 10:43, Quentin Perret wrote:
->  static struct thermal_cooling_device *
->  __cpufreq_cooling_register(struct device_node *np,
-> -			struct cpufreq_policy *policy, u32 capacitance)
-> +			struct cpufreq_policy *policy,
-> +			struct em_perf_domain *em)
->  {
+--Sig_/_vOeBQlSfJaWe6hFJ8BwoxI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> +	if (em_is_sane(cpufreq_cdev, em)) {
-> +		cpufreq_cdev->em = em;
->  		cooling_ops = &cpufreq_power_cooling_ops;
-> -	} else {
-> +	} else if (policy->freq_table_sorted != CPUFREQ_TABLE_UNSORTED) {
->  		cooling_ops = &cpufreq_cooling_ops;
-> +	} else {
-> +		WARN(1, "cpu_cooling: no valid frequency table found\n");
+Hi all,
 
-Well the frequency table is valid, isn't it ? Maybe something like: "cpu_cooling
-doesn't support unsorted frequency tables" ?
+Today's linux-next merge of the tip tree got a conflict in:
 
-> +		cdev = ERR_PTR(-EINVAL);
-> +		goto remove_ida;
->  	}
->  
->  	cdev = thermal_of_cooling_device_register(np, dev_name, cpufreq_cdev,
-> @@ -691,7 +619,7 @@ __cpufreq_cooling_register(struct device_node *np,
->  	if (IS_ERR(cdev))
->  		goto remove_ida;
->  
-> -	cpufreq_cdev->clipped_freq = cpufreq_cdev->freq_table[0].frequency;
-> +	cpufreq_cdev->clipped_freq = get_state_freq(cpufreq_cdev, 0);
->  	cpufreq_cdev->cdev = cdev;
->  
->  	mutex_lock(&cooling_list_lock);
-> @@ -708,8 +636,6 @@ __cpufreq_cooling_register(struct device_node *np,
->  
->  remove_ida:
->  	ida_simple_remove(&cpufreq_ida, cpufreq_cdev->id);
-> -free_table:
-> -	kfree(cpufreq_cdev->freq_table);
->  free_idle_time:
->  	kfree(cpufreq_cdev->idle_time);
->  free_cdev:
-> @@ -731,7 +657,7 @@ __cpufreq_cooling_register(struct device_node *np,
->  struct thermal_cooling_device *
->  cpufreq_cooling_register(struct cpufreq_policy *policy)
->  {
-> -	return __cpufreq_cooling_register(NULL, policy, 0);
-> +	return __cpufreq_cooling_register(NULL, policy, NULL);
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_cooling_register);
->  
-> @@ -759,7 +685,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
->  {
->  	struct device_node *np = of_get_cpu_node(policy->cpu, NULL);
->  	struct thermal_cooling_device *cdev = NULL;
-> -	u32 capacitance = 0;
->  
->  	if (!np) {
->  		pr_err("cpu_cooling: OF node not available for cpu%d\n",
-> @@ -768,10 +693,9 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
->  	}
->  
->  	if (of_find_property(np, "#cooling-cells", NULL)) {
-> -		of_property_read_u32(np, "dynamic-power-coefficient",
-> -				     &capacitance);
-> +		struct em_perf_domain *em = em_cpu_get(policy->cpu);
->  
-> -		cdev = __cpufreq_cooling_register(np, policy, capacitance);
-> +		cdev = __cpufreq_cooling_register(np, policy, em);
->  		if (IS_ERR(cdev)) {
->  			pr_err("cpu_cooling: cpu%d failed to register as cooling device: %ld\n",
->  			       policy->cpu, PTR_ERR(cdev));
-> @@ -813,7 +737,6 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
->  	thermal_cooling_device_unregister(cpufreq_cdev->cdev);
->  	ida_simple_remove(&cpufreq_ida, cpufreq_cdev->id);
->  	kfree(cpufreq_cdev->idle_time);
-> -	kfree(cpufreq_cdev->freq_table);
->  	kfree(cpufreq_cdev);
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_cooling_unregister);
-> -- 
-> 2.21.0
+  arch/x86/kernel/irq_64.c
 
--- 
-viresh
+between commit:
+
+  d75f773c86a2 ("treewide: Switch printk users from %pf and %pF to %ps and =
+%pS, respectively")
+
+from the printk tree and commit:
+
+  117ed4548541 ("x86/irq/64: Remove stack overflow debug code")
+
+from the tip tree.
+
+I fixed it up (the latter removed taht code updated by the former) and
+can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_vOeBQlSfJaWe6hFJ8BwoxI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly3+ZMACgkQAVBC80lX
+0GzMbwgAhbS4CbE61NbDYUAffPKO7r8e31VCo7CsSPAWcztIdusvrFELeMe0A8J0
+ut0F75yv4xCSNrM7aMM7nO+k3wajCecGmXZqzjExqQ+qVZJhxUOP54TYcwPeCI4I
+hyLSpasLKjD/UzRZG6P82CeUaJBVNRdz9QWg+UJx9aabObHMy2QfxNNu3J+XkU8S
+mroxvEoHc1mLtDHIH9+251k0rznFsvaT7Ih+MR/TUCesXLY/Gm66aujZk3IXaulg
+MvUPbokNbifYQ3y/rs+FtQ3oSbLzkhyLzMb5fUf/TIob97GJexphqbYJtKacCELW
+XVAHUnSzuYbv+lW91g55FDrnwE0M4A==
+=paty
+-----END PGP SIGNATURE-----
+
+--Sig_/_vOeBQlSfJaWe6hFJ8BwoxI--
