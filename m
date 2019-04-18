@@ -2,94 +2,119 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FF5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0345E2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56658206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWRFX++Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388424AbfDRJna (ORCPT
+        id S2388486AbfDRJn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:43:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36396 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfDRJna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:43:30 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B53928202;
-        Thu, 18 Apr 2019 09:43:30 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-35.pek2.redhat.com [10.72.8.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2EA6F608C8;
-        Thu, 18 Apr 2019 09:43:19 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 17:43:15 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
- BIO_MAX_PAGES
-Message-ID: <20190418094313.GC15834@ming.t460p>
-References: <20190417115207.30202-1-pbonzini@redhat.com>
- <20190418021903.GB9520@ming.t460p>
- <1950505c-c1ff-3a99-bf4d-319ae1be381b@redhat.com>
- <20190418092918.GB15834@ming.t460p>
- <1cb6a060-79ee-c665-5a68-4f173ff03416@redhat.com>
+        Thu, 18 Apr 2019 05:43:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55175 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfDRJn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:43:58 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c1so2002592wml.4;
+        Thu, 18 Apr 2019 02:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K0FLtOfXpWaZbif33VOkSsJZBPCbQPbqlBeJZqp/xKk=;
+        b=PWRFX++Q9zE64Jqj/C/tGA5OgR5YHdJqlJ+NE3o2D2u21wGazt9ZKzg+4kLKvJEZU6
+         LtHJWwq8ZZpHxL8k4/woLCThaz9j6/cWvxC9JRfl48+pVTxYbIlaQVgERf8CwvXN70VF
+         sttKtVZF9YnLrTr1vuQJ4AGG1uPseZdFATuZvFhNk8S5MOgEqgeqyjlt/HHBHrM8eHHF
+         eJ+m1gb5DVw2ZpeMAEAlqwtNLjv/OskSF0WSWiXhJVqFtij6eknCY5DVQmxdjhDM/NkX
+         iHX2SUa2sn3d8eoIl5CvWKiOu59hZuxZL8dpykDiJ57QXdFAHMwe19H7+CZlqnOAzSMK
+         n9wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K0FLtOfXpWaZbif33VOkSsJZBPCbQPbqlBeJZqp/xKk=;
+        b=QRXj55U/mEFJ3d+hhq+/IgxdMKUIKo82y9I5d9RtLLQfI04mtZdCZxpyve8WizZZhs
+         u31IKci2xwsoxvkDIheRIVdgdGfUEVu4w3Jz3X9lAac3SmR5S37tHizpYgSmHNmITMAE
+         lxh5CsdZYroyDolCQVLF/G92q/KQJrQMhoqgmqoacFsSsZsYZAaS7D7mq/Jtt7IXIKfi
+         aoU4KLvx7qUVK+v24yvANX6rftv+7RP531ibXsFi8aOcGCPatGl4qzlM1bJnmLfMmEdb
+         5UdYUU4N78zUzpfMxCnrgqu3Nq2sd5dUgGZvwZRYNOHn3diA4pT64MkcFMRSPcO16D+f
+         lctw==
+X-Gm-Message-State: APjAAAVoG0wwVw2ssqhypor576a9ZatomuKPUHhIk6BmvvW+p/9So1uu
+        7rRn1Hk1lmzP4vS7ckEkHIU=
+X-Google-Smtp-Source: APXvYqxykLV5XNFfmKoVR1ImnqYTe4ZWpzgVdQno2HnBJnn4EjMneGx37F2/2Tq1ChpwTuvBKW535g==
+X-Received: by 2002:a1c:4056:: with SMTP id n83mr2333683wma.146.1555580635784;
+        Thu, 18 Apr 2019 02:43:55 -0700 (PDT)
+Received: from localhost (p2E5BE61D.dip0.t-ipconnect.de. [46.91.230.29])
+        by smtp.gmail.com with ESMTPSA id r18sm2654755wme.18.2019.04.18.02.43.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 02:43:55 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 11:43:54 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1] ARM: dts: tegra30: Add ACTMON node
+Message-ID: <20190418094354.GC26909@ulmo>
+References: <20190411223042.25809-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
 Content-Disposition: inline
-In-Reply-To: <1cb6a060-79ee-c665-5a68-4f173ff03416@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 18 Apr 2019 09:43:30 +0000 (UTC)
+In-Reply-To: <20190411223042.25809-1-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:36:03AM +0200, Paolo Bonzini wrote:
-> On 18/04/19 11:29, Ming Lei wrote:
-> > On Thu, Apr 18, 2019 at 10:42:21AM +0200, Paolo Bonzini wrote:
-> >> On 18/04/19 04:19, Ming Lei wrote:
-> >>> Hi Paolo,
-> >>>
-> >>> On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
-> >>>> Because bio_kmalloc uses inline iovecs, the limit on the number of entries
-> >>>> is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
-> >>>> in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
-> >>>> to report a DMA overrun.
-> >>>
-> >>> BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
-> >>> can't hold all user space request, new bio will be allocated and appended
-> >>> to the passthrough request if queue limits aren't reached.
-> >>
-> >> Stupid question: where?  I don't see any place starting at
-> >> blk_rq_map_user_iov (and then __blk_rq_map_user_iov->bio_map_user_iov)
-> >> that would allocate a second bio.  The only bio_kmalloc in that path is
-> >> the one I'm patching.
-> > 
-> > Each bio is created inside __blk_rq_map_user_iov() which is run inside
-> > a loop, and the created bio is added to request via blk_rq_append_bio(),
-> > see the following code:
-> 
-> Uff, I can't read apparently. :(  This is the commit that introduced it:
-> 
->     commit 4d6af73d9e43f78651a43ee4c5ad221107ac8365
->     Author: Christoph Hellwig <hch@lst.de>
->     Date:   Wed Mar 2 18:07:14 2016 +0100
-> 
->     block: support large requests in blk_rq_map_user_iov
 
-Exactly, the above commit starts to build multiple bios for a request.
+--wxDdMuZNg1r63Hyj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Then I guess your issue is triggered on kernel without the commit.
+On Fri, Apr 12, 2019 at 01:30:42AM +0300, Dmitry Osipenko wrote:
+> Add ACTMON node to the Tegra30's device-tree.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/boot/dts/tegra30.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 
-Thanks,
-Ming
+Applied to for-5.2/arm/dt, thanks.
+
+Thierry
+
+--wxDdMuZNg1r63Hyj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly4RtkACgkQ3SOs138+
+s6HXnw//cy1isrQsfetZ391dyHewlkERIHxtGrQde2E5DdQyyqezUpwnQ440u1A/
+z69vskHEOfsL4xqxRcRkaWg6jVA6yQa6WrTd3B1ZuIVm766B/OpDXDPPmInGLJXh
+cvXjNquWZCbt/QF3y9M4tne/T7Ix48w9m4mYAzCIvzg0myvzi/ijZEx6HlPcUqfI
+OzgAKQeVcFl6Rc38VebMR0AZo4H4pwpdW2FCjPwUWojOMqP3R9jxcgF2TrxYk0S9
+NNL7v8YPcb1SKI57zeC6hwmbrlPU/YRlc+K7LrMxk7aMSmQ0j9A5cCjEQr0KHnpK
+gNjgLrnv1pk3+1fSuDsph0t/1d5n9qNt4fKe5tkjoSSVv7wSxyA+Zar5exOT13/s
+db2MKFGLZC2QfLSF/1uRLQo8wnlhMPcatiTDZoptPeJXOjFPpaO1ACl7Joc78COH
+SgDqCFBy2razhvIHtZ9M4MpIDPKOByyu+U1EW3R90dOjDBms6LHF3R4WXHiDjV4b
+mF2n8Xy0xkW82yUKJb2/BprV2j59isszkd9kg296f86mmRcTnVAPsZrm119zIo6w
+oFV3KRN8Ur0P1XOwQ3J7of1629yV7k+tY5xYrjtJ+q9R+/1WtJusszfq30h8syuT
+fTwARTFlHCpybtPANPaE8ma2hZ2zXAIYIpTGm3tzAErwi4Mk1jI=
+=9pCI
+-----END PGP SIGNATURE-----
+
+--wxDdMuZNg1r63Hyj--
