@@ -2,197 +2,143 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739BEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20104C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3911F214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13A1214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 21:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AL/SFOvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389888AbfDRVMb (ORCPT
+        id S2388819AbfDRVPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 17:12:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50068 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfDRVMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 17:12:30 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A289D3086227;
-        Thu, 18 Apr 2019 21:12:29 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7066660BE5;
-        Thu, 18 Apr 2019 21:12:28 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 17:12:26 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Steve French <smfrench@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] cifs: fix page reference leak with readv/writev
-Message-ID: <20190418211226.GO3288@redhat.com>
-References: <20190410193747.25302-1-jglisse@redhat.com>
- <CAH2r5ms-Y3FWhrabPEFt7T8MvC8Pwi1jjPFS7viWWRzx5rbVDw@mail.gmail.com>
+        Thu, 18 Apr 2019 17:15:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36979 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbfDRVPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 17:15:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v14so4398362wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 14:15:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=IxpSWGO1Tmz/SMG8ECwGOzCKnUr/jKuNewyS3PdDbos=;
+        b=AL/SFOvhcNuLWQkzWZOabeg4MbfI3CN2NNhkNqy3ebUxXWIW/pUcs9GbtfoBS+mmdv
+         2r5vZtVtnmm02o27KipYTFsMq2xj9cf6/Y7sqGWy2tt3342tm+et14zDD16iOnLxQpcd
+         M47H9TtGBAlvqB+7+QlLz1jJdJdPBQOiIrioXku9CU3IlC+UXCRewOIQY8Kx1TgzmQjA
+         KXQBsczramf6JAMd9IKkg+JKYupm9gP1dbTy+RTrC4OF8XCwhRFij2S/wZy2nSz0bcIB
+         4fpBwmOJOKP7dmxz/37qBCitlBz0YcMK/0d2KTdJXJhNCf3Opn3GA2wpFbq6QGzAsgg6
+         TDjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=IxpSWGO1Tmz/SMG8ECwGOzCKnUr/jKuNewyS3PdDbos=;
+        b=Z50YG1umOB9hure+0xzBhc+XcuHF1Eup4pL8TJx2IbLkI+EjAiEIupj2Z1P9IA+H0X
+         cXGx1RM4eRz4FDgWkh3DB9qmU1q+AdGxJ2SFn4EG+MU9+4+E+Na0/vMalV/nb9IK2KFF
+         0d8rC0ZjoDvNhOkXpZmDS5ER1HEc27VkbgmlvfbzijF8T8LNoU6kpHVBG2DyEmnLTvR2
+         4si4XbhJHsrEqyFKmH/pJeGIG/9DFuX+eXy3H/ew9qx4+UDE2Gk9/gr/AzgbBvB/SEfF
+         KoFNCV+hXYY6SKaYtnEUIQvjXNlakWThXVjRJHm7XwIakQMC0A3w0ceio9VlFXdfR+i6
+         XcRg==
+X-Gm-Message-State: APjAAAUAnk/vkx0iKxr3z6dGbljVeRKhpaVfjN5QZaiiJB7nZmIHcG8e
+        iGjzh161N+XP3EKy9oDVEEWNww==
+X-Google-Smtp-Source: APXvYqwfvXKELWltHoybPpWO9POZf6OHiTGua/h5I6onsUHELa1XfhjIcqthQ9jT02o6JqLX4H9XBA==
+X-Received: by 2002:a1c:7008:: with SMTP id l8mr215333wmc.49.1555622123598;
+        Thu, 18 Apr 2019 14:15:23 -0700 (PDT)
+Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id y125sm4636450wmc.39.2019.04.18.14.15.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Apr 2019 14:15:22 -0700 (PDT)
+Message-ID: <5b19d32be23fbe630339fd48f93b16e9301385d1.camel@baylibre.com>
+Subject: Re: [PATCH 5/7] mmc: meson-gx: avoid clock glitch when switching to
+ DDR modes
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 18 Apr 2019 23:15:21 +0200
+In-Reply-To: <CAFBinCBQPSsqwDSd6nQMLqOuApiESwHXn4wQbOp49WLpXfBk=Q@mail.gmail.com>
+References: <20190417204355.469-1-jbrunet@baylibre.com>
+         <20190417204355.469-6-jbrunet@baylibre.com>
+         <CAFBinCCAbMpWYY6-W+909Q=jLpweC2F6ED6CVf6zVGrRiA1hxg@mail.gmail.com>
+         <8316d7875bf0479e91cc11ce5fbf3b2e21f92a2c.camel@baylibre.com>
+         <CAFBinCBQPSsqwDSd6nQMLqOuApiESwHXn4wQbOp49WLpXfBk=Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH2r5ms-Y3FWhrabPEFt7T8MvC8Pwi1jjPFS7viWWRzx5rbVDw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 18 Apr 2019 21:12:29 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 09:47:01PM -0500, Steve French wrote:
-> How was this discovered? Does it address a reported user problem?
+On Thu, 2019-04-18 at 22:53 +0200, Martin Blumenstingl wrote:
+> Hi Jerome,
+> 
+> On Thu, Apr 18, 2019 at 10:46 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > On Thu, 2019-04-18 at 22:16 +0200, Martin Blumenstingl wrote:
+> > > Hi Jerome,
+> > > 
+> > > On Wed, Apr 17, 2019 at 10:44 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > > > Activating DDR in the Amlogic mmc controller, among other things, will
+> > > > divide the output clock by 2. So by activating it with clock on, we are
+> > > > creating a glitch on the output.
+> > > > 
+> > > > Instead, let's deal with DDR when the clock output is off, when setting
+> > > > the clock.
+> > > > 
+> > > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > > it seems that this patch breaks SD card on my Khadas VIM and Khadas VIM2.
+> > 
+> > The error I see in your logs is with eMMC and hs200, not SD card.
+> sorry, I should have been more clear that there are two errors:
+> eMMC, this is what I have been seeing for a while on my Khadas VIM2
+> (it's probably not related to this patch):
+>   mmc1: mmc_select_hs200 failed, error -84
+>   mmc1: error -84 whilst initialising MMC card
 
-I have spotted it while tracking down how page reference are taken
-for bio and how they are release. In the current code, once the page
-are GUPed they are never release if there is any failure, on failure
-cifs_aio_ctx_release() will be call but it will just free the bio_vec
-not release the page reference.
-
-Page reference are only drop if everything is successful.
-
-So this patch move the page reference droping to cifs_aio_ctx_release()
-which is call from all code path including failure AFAICT and thus page
-reference will be drop if failure does happen.
-
-Cheers,
-Jérôme
+Following patches were also supposed to help the vim2. 
+... something I tested numerous time on this particular board.
 
 > 
-> On Wed, Apr 10, 2019 at 2:38 PM <jglisse@redhat.com> wrote:
-> >
-> > From: Jérôme Glisse <jglisse@redhat.com>
-> >
-> > CIFS can leak pages reference gotten through GUP (get_user_pages*()
-> > through iov_iter_get_pages()). This happen if cifs_send_async_read()
-> > or cifs_write_from_iter() calls fail from within __cifs_readv() and
-> > __cifs_writev() respectively. This patch move page unreference to
-> > cifs_aio_ctx_release() which will happens on all code paths this is
-> > all simpler to follow for correctness.
-> >
-> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> > Cc: Steve French <sfrench@samba.org>
-> > Cc: linux-cifs@vger.kernel.org
-> > Cc: samba-technical@lists.samba.org
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Stable <stable@vger.kernel.org>
-> > ---
-> >  fs/cifs/file.c | 15 +--------------
-> >  fs/cifs/misc.c | 23 ++++++++++++++++++++++-
-> >  2 files changed, 23 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-> > index 89006e044973..a756a4d3f70f 100644
-> > --- a/fs/cifs/file.c
-> > +++ b/fs/cifs/file.c
-> > @@ -2858,7 +2858,6 @@ static void collect_uncached_write_data(struct cifs_aio_ctx *ctx)
-> >         struct cifs_tcon *tcon;
-> >         struct cifs_sb_info *cifs_sb;
-> >         struct dentry *dentry = ctx->cfile->dentry;
-> > -       unsigned int i;
-> >         int rc;
-> >
-> >         tcon = tlink_tcon(ctx->cfile->tlink);
-> > @@ -2922,10 +2921,6 @@ static void collect_uncached_write_data(struct cifs_aio_ctx *ctx)
-> >                 kref_put(&wdata->refcount, cifs_uncached_writedata_release);
-> >         }
-> >
-> > -       if (!ctx->direct_io)
-> > -               for (i = 0; i < ctx->npages; i++)
-> > -                       put_page(ctx->bv[i].bv_page);
-> > -
-> >         cifs_stats_bytes_written(tcon, ctx->total_len);
-> >         set_bit(CIFS_INO_INVALID_MAPPING, &CIFS_I(dentry->d_inode)->flags);
-> >
-> > @@ -3563,7 +3558,6 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx)
-> >         struct iov_iter *to = &ctx->iter;
-> >         struct cifs_sb_info *cifs_sb;
-> >         struct cifs_tcon *tcon;
-> > -       unsigned int i;
-> >         int rc;
-> >
-> >         tcon = tlink_tcon(ctx->cfile->tlink);
-> > @@ -3647,15 +3641,8 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx)
-> >                 kref_put(&rdata->refcount, cifs_uncached_readdata_release);
-> >         }
-> >
-> > -       if (!ctx->direct_io) {
-> > -               for (i = 0; i < ctx->npages; i++) {
-> > -                       if (ctx->should_dirty)
-> > -                               set_page_dirty(ctx->bv[i].bv_page);
-> > -                       put_page(ctx->bv[i].bv_page);
-> > -               }
-> > -
-> > +       if (!ctx->direct_io)
-> >                 ctx->total_len = ctx->len - iov_iter_count(to);
-> > -       }
-> >
-> >         /* mask nodata case */
-> >         if (rc == -ENODATA)
-> > diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
-> > index bee203055b30..9bc0d17a9d77 100644
-> > --- a/fs/cifs/misc.c
-> > +++ b/fs/cifs/misc.c
-> > @@ -768,6 +768,11 @@ cifs_aio_ctx_alloc(void)
-> >  {
-> >         struct cifs_aio_ctx *ctx;
-> >
-> > +       /*
-> > +        * Must use kzalloc to initialize ctx->bv to NULL and ctx->direct_io
-> > +        * to false so that we know when we have to unreference pages within
-> > +        * cifs_aio_ctx_release()
-> > +        */
-> >         ctx = kzalloc(sizeof(struct cifs_aio_ctx), GFP_KERNEL);
-> >         if (!ctx)
-> >                 return NULL;
-> > @@ -786,7 +791,23 @@ cifs_aio_ctx_release(struct kref *refcount)
-> >                                         struct cifs_aio_ctx, refcount);
-> >
-> >         cifsFileInfo_put(ctx->cfile);
-> > -       kvfree(ctx->bv);
-> > +
-> > +       /*
-> > +        * ctx->bv is only set if setup_aio_ctx_iter() was call successfuly
-> > +        * which means that iov_iter_get_pages() was a success and thus that
-> > +        * we have taken reference on pages.
-> > +        */
-> > +       if (ctx->bv) {
-> > +               unsigned i;
-> > +
-> > +               for (i = 0; i < ctx->npages; i++) {
-> > +                       if (ctx->should_dirty)
-> > +                               set_page_dirty(ctx->bv[i].bv_page);
-> > +                       put_page(ctx->bv[i].bv_page);
-> > +               }
-> > +               kvfree(ctx->bv);
-> > +       }
-> > +
-> >         kfree(ctx);
-> >  }
-> >
-> > --
-> > 2.20.1
-> >
+> however, then there's this other error:
+>   print_req_error: I/O error, dev mmcblk0, sector 0 flags 0
+>   Buffer I/O error on dev mmcblk0, logical block 0, async page read
+> as result of this the partition table cannot be read and my kernel
+> cannot find the rootfs.
+
+I don't know what the problem is (probably some CRC error - you can check the log
+in interrupt for this) but I'm pretty sure it is not related to this patch.
+
+I see in the log SD is indeed in HS mode, so not in any DDR mode.
+I also see that the SDIO fails as well. There something really weird, which can't
+be explained by this patch alone AFAICT.
+
+> 
+> > Either way, There is something I don't really get. eMMC should not go through
+> > any DDR mode to reach HS200 (which is an SDR mode), neither should SD to reach
+> > HS.
+> > 
+> > All this does is flipping the DDR bit (when necessary) when clock if off for
+> > the mmc device, avoiding a glitch on clk line.
+> > 
+> > This patch should not make any difference for SDR only setup, Maybe I missed
+> > something, but I don't see how it could make anything different for SDR only.
+> > 
+> > I (repeatedly) tested both vim1 and vim2, without seeing this issue, so I can't
+> > debug this. I'll need more detail to progress, something does not make sense here.
+> please let me know from which part of the driver do you want debug logs
 > 
 > 
-> -- 
-> Thanks,
-> 
-> Steve
+> Regards
+> Martin
+
+
