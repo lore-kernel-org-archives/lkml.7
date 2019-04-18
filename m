@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762ADC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F024DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E37420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EFC21902
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611165;
-	bh=K6aRbgcpuqt14CJ/rw0LrBLNI5faPvMEkzPdAxcyggA=;
+	s=default; t=1555611170;
+	bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hb7edOhHxooNLk4QFKkp2Cia945W/99tvO/eggg5wZF+3lEHcUSsBYUEvvzEPCKTN
-	 6vQ0U+mQWLyzUgA4vKuntSgJwizhGiES71UGkwR+7Ri2bzpfVB1EMsy1HYpMz2E52L
-	 7a+n30LlrlpKdNdypTZkGa/f+17HlVg1tURWhSu0=
+	b=fCV8kB30Plk746iwt6/tj66rrj/ZMhQE9QiNnsaVmwGn7PUzyoEGZWi6flwnFO9P7
+	 1YuHy2lXBedd8/SpAiEE2YsIAVZwip3ecu3xFJTlIHRpCQHpvnVN84AdzPO+atFORu
+	 TqHPuE2EIsph5rjT6NlWkD+Z6MyBw7TMsZBnleuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404338AbfDRSMo (ORCPT
+        id S2404361AbfDRSMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403806AbfDRSMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:41 -0400
+        id S2404341AbfDRSMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24A0E206B6;
-        Thu, 18 Apr 2019 18:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BE4A206B6;
+        Thu, 18 Apr 2019 18:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611160;
-        bh=K6aRbgcpuqt14CJ/rw0LrBLNI5faPvMEkzPdAxcyggA=;
+        s=default; t=1555611165;
+        bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L6kEr2bW7LM9UBj5cy+bfNHphZPxVsCYFoJY5P1GQY7Yz5NrHcXKADE627+30Nm5x
-         yURwZ5nS4ulFD7PRrzp8HurG6YkpgGGCirgVxGbTQRis8PjUtWNzonhQ2VxlAJhsIR
-         kP+DgwZ2cLUXfH7pmyenEjYdubJTySRFeLmlz8GI=
+        b=JaPN7qdzDm4xKUJCCzJu2UedTpIlLOoO/7HplujjffBKBqSq2+1LA4id0zbubcdWR
+         K+czsOi+JL2sVKbC+uG5+JBMMcUou9vRAlqFPdCqd4CmWZWFjr51G/jRpx5eq3AVgj
+         ud3eKRnOfUgaaZUjwHoL/dDg/Z+DeaCOL1q9kxYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
+        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
+        Oak Zeng <Oak.Zeng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 64/93] fix incorrect error code mapping for OBJECTID_NOT_FOUND
-Date:   Thu, 18 Apr 2019 19:57:42 +0200
-Message-Id: <20190418160443.857691398@linuxfoundation.org>
+Subject: [PATCH 5.0 83/93] drm/amdkfd: use init_mqd function to allocate object for hid_mqd (CI)
+Date:   Thu, 18 Apr 2019 19:58:01 +0200
+Message-Id: <20190418160445.334760048@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -60,38 +61,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
+[ Upstream commit cac734c2dbd2514f14c8c6a17caba1990d83bf1d ]
 
-It was mapped to EIO which can be confusing when user space
-queries for an object GUID for an object for which the server
-file system doesn't support (or hasn't saved one).
+if use the legacy method to allocate object, when mqd_hiq need to run
+uninit code, it will be cause WARNING call trace.
 
-As Amir Goldstein suggested this is similar to ENOATTR
-(equivalently ENODATA in Linux errno definitions) so
-changing NT STATUS code mapping for OBJECTID_NOT_FOUND
-to ENODATA.
+eg: (s3 suspend test)
+[   34.918944] Call Trace:
+[   34.918948]  [<ffffffff92961dc1>] dump_stack+0x19/0x1b
+[   34.918950]  [<ffffffff92297648>] __warn+0xd8/0x100
+[   34.918951]  [<ffffffff9229778d>] warn_slowpath_null+0x1d/0x20
+[   34.918991]  [<ffffffffc03ce1fe>] uninit_mqd_hiq_sdma+0x4e/0x50 [amdgpu]
+[   34.919028]  [<ffffffffc03d0ef7>] uninitialize+0x37/0xe0 [amdgpu]
+[   34.919064]  [<ffffffffc03d15a6>] kernel_queue_uninit+0x16/0x30 [amdgpu]
+[   34.919086]  [<ffffffffc03d26c2>] pm_uninit+0x12/0x20 [amdgpu]
+[   34.919107]  [<ffffffffc03d4915>] stop_nocpsch+0x15/0x20 [amdgpu]
+[   34.919129]  [<ffffffffc03c1dce>] kgd2kfd_suspend.part.4+0x2e/0x50 [amdgpu]
+[   34.919150]  [<ffffffffc03c2667>] kgd2kfd_suspend+0x17/0x20 [amdgpu]
+[   34.919171]  [<ffffffffc03c103a>] amdgpu_amdkfd_suspend+0x1a/0x20 [amdgpu]
+[   34.919187]  [<ffffffffc02ec428>] amdgpu_device_suspend+0x88/0x3a0 [amdgpu]
+[   34.919189]  [<ffffffff922e22cf>] ? enqueue_entity+0x2ef/0xbe0
+[   34.919205]  [<ffffffffc02e8220>] amdgpu_pmops_suspend+0x20/0x30 [amdgpu]
+[   34.919207]  [<ffffffff925c56ff>] pci_pm_suspend+0x6f/0x150
+[   34.919208]  [<ffffffff925c5690>] ? pci_pm_freeze+0xf0/0xf0
+[   34.919210]  [<ffffffff926b45c6>] dpm_run_callback+0x46/0x90
+[   34.919212]  [<ffffffff926b49db>] __device_suspend+0xfb/0x2a0
+[   34.919213]  [<ffffffff926b4b9f>] async_suspend+0x1f/0xa0
+[   34.919214]  [<ffffffff922c918f>] async_run_entry_fn+0x3f/0x130
+[   34.919216]  [<ffffffff922b9d4f>] process_one_work+0x17f/0x440
+[   34.919217]  [<ffffffff922bade6>] worker_thread+0x126/0x3c0
+[   34.919218]  [<ffffffff922bacc0>] ? manage_workers.isra.25+0x2a0/0x2a0
+[   34.919220]  [<ffffffff922c1c31>] kthread+0xd1/0xe0
+[   34.919221]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
+[   34.919222]  [<ffffffff92974c1d>] ret_from_fork_nospec_begin+0x7/0x21
+[   34.919224]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
+[   34.919224] ---[ end trace 38cd9f65c963adad ]---
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Kevin Wang <kevin1.wang@amd.com>
+Reviewed-by: Oak Zeng <Oak.Zeng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2maperror.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c  | 52 +------------------
+ 1 file changed, 1 insertion(+), 51 deletions(-)
 
-diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
-index 924269cec135..e32c264e3adb 100644
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -1036,7 +1036,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
- 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
- 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
- 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
--	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
-+	/* Note that ENOATTTR and ENODATA are the same errno */
-+	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
- 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
- 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
- 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
+index 47243165a082..ae90a99909ef 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
+@@ -323,57 +323,7 @@ static int init_mqd_hiq(struct mqd_manager *mm, void **mqd,
+ 		struct kfd_mem_obj **mqd_mem_obj, uint64_t *gart_addr,
+ 		struct queue_properties *q)
+ {
+-	uint64_t addr;
+-	struct cik_mqd *m;
+-	int retval;
+-
+-	retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct cik_mqd),
+-					mqd_mem_obj);
+-
+-	if (retval != 0)
+-		return -ENOMEM;
+-
+-	m = (struct cik_mqd *) (*mqd_mem_obj)->cpu_ptr;
+-	addr = (*mqd_mem_obj)->gpu_addr;
+-
+-	memset(m, 0, ALIGN(sizeof(struct cik_mqd), 256));
+-
+-	m->header = 0xC0310800;
+-	m->compute_pipelinestat_enable = 1;
+-	m->compute_static_thread_mgmt_se0 = 0xFFFFFFFF;
+-	m->compute_static_thread_mgmt_se1 = 0xFFFFFFFF;
+-	m->compute_static_thread_mgmt_se2 = 0xFFFFFFFF;
+-	m->compute_static_thread_mgmt_se3 = 0xFFFFFFFF;
+-
+-	m->cp_hqd_persistent_state = DEFAULT_CP_HQD_PERSISTENT_STATE |
+-					PRELOAD_REQ;
+-	m->cp_hqd_quantum = QUANTUM_EN | QUANTUM_SCALE_1MS |
+-				QUANTUM_DURATION(10);
+-
+-	m->cp_mqd_control             = MQD_CONTROL_PRIV_STATE_EN;
+-	m->cp_mqd_base_addr_lo        = lower_32_bits(addr);
+-	m->cp_mqd_base_addr_hi        = upper_32_bits(addr);
+-
+-	m->cp_hqd_ib_control = DEFAULT_MIN_IB_AVAIL_SIZE;
+-
+-	/*
+-	 * Pipe Priority
+-	 * Identifies the pipe relative priority when this queue is connected
+-	 * to the pipeline. The pipe priority is against the GFX pipe and HP3D.
+-	 * In KFD we are using a fixed pipe priority set to CS_MEDIUM.
+-	 * 0 = CS_LOW (typically below GFX)
+-	 * 1 = CS_MEDIUM (typically between HP3D and GFX
+-	 * 2 = CS_HIGH (typically above HP3D)
+-	 */
+-	m->cp_hqd_pipe_priority = 1;
+-	m->cp_hqd_queue_priority = 15;
+-
+-	*mqd = m;
+-	if (gart_addr)
+-		*gart_addr = addr;
+-	retval = mm->update_mqd(mm, m, q);
+-
+-	return retval;
++	return init_mqd(mm, mqd, mqd_mem_obj, gart_addr, q);
+ }
+ 
+ static int update_mqd_hiq(struct mqd_manager *mm, void *mqd,
 -- 
 2.19.1
 
