@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75849C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB5CC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4732721871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA27B214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611972;
-	bh=9kyegzZ/xJK+AyviEj4LuYf/JcELxuLlVx3y6daBQLg=;
+	s=default; t=1555611980;
+	bh=gkN3xcji+2pp1uzwx9C469lpl177Lrgc6v8G5RLQeHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qo1E6cChC4v524Jp0SfJ6WfwCWEWObRQEOhE6yikMlL/CHwp/kCxxpYpgTBlpUeWi
-	 mFjUTQh56Q8xppmKcWQjdwKTUa1UKD5x0BdPXhwQOXELoOWSuA1RD5yhIAXJE53UGh
-	 mkpOyZIhWBZMNdEa34v8I1L5WFvTiY1lP2zkucBs=
+	b=fy0tFHh0hg+KwD9XKFC+Ie7IMPfXmU7dsOm7f+ntAUrb028DiuA72HboRDsELx7DM
+	 /bkmWtY0uDFxBl+o4BUrkKuZAQuRUNH5oUyGTiZnbhGQqXUB7n+2jEB+ZTz/py0FoH
+	 kP9xbIITcDTF5SswO4U1VFm0Dy4d9sN0ypVI5x3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403878AbfDRS0K (ORCPT
+        id S2391196AbfDRSEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391211AbfDRSE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:04:56 -0400
+        id S2403772AbfDRSEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0EEB206B6;
-        Thu, 18 Apr 2019 18:04:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D82F206B6;
+        Thu, 18 Apr 2019 18:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610696;
-        bh=9kyegzZ/xJK+AyviEj4LuYf/JcELxuLlVx3y6daBQLg=;
+        s=default; t=1555610685;
+        bh=gkN3xcji+2pp1uzwx9C469lpl177Lrgc6v8G5RLQeHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAj/iBQnB5+Y4J6ihDKXH024DlB7ZFFh9uPYhuBB7mV8cP3zVZoAPQcRR+c+FUqTi
-         2f9djWgMSBMhZj1n77WPtfZ5ml/IERhZ31NRYiaUv0+6QcAe8jGxihHcWCnCtx1Q3l
-         1WwzPJuTUO3qvnBJXVPVo/3oHRE4yxtfdFDsetHM=
+        b=Dckh5A7nFXoV3LoG6D5hzRn4EhD9YB8vQFBvLWzBJdu5elLuwdQmFonjrNI9UKauJ
+         fI9u2A1spN02DL3JPJoQiur/yTR10Vj+eJvwkJCgpAWNap3hsWKVBEqrwVJzdqFT1c
+         aHHgSLAS/cDQ+tCTRWJAOqd0uIT1cSdpYRXy6diQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 50/92] ACPI / SBS: Fix GPE storm on recent MacBookPros
-Date:   Thu, 18 Apr 2019 19:57:08 +0200
-Message-Id: <20190418160434.458535362@linuxfoundation.org>
+Subject: [PATCH 4.14 46/92] media: au0828: cannot kfree dev before usb disconnect
+Date:   Thu, 18 Apr 2019 19:57:04 +0200
+Message-Id: <20190418160434.152721181@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -61,49 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ca1721c5bee77105829cbd7baab8ee0eab85b06d ]
+[ Upstream commit 4add7104919f9e94e0db03e234caeadbfcc02ea9 ]
 
-On Apple machines, plugging-in or unplugging the power triggers a GPE
-for the EC. Since these machines expose an SBS device, this GPE ends
-up triggering the acpi_sbs_callback(). This in turn tries to get the
-status of the SBS charger. However, on MBP13,* and MBP14,* machines,
-performing the smbus-read operation to get the charger's status triggers
-the EC's GPE again. The result is an endless re-triggering and handling
-of that GPE, consuming significant CPU resources (> 50% in irq).
+If au0828_analog_register fails, the dev is kfree'd and then flow
+jumps to done, which can call au0828_usb_disconnect. Since all USB
+error codes are negative, au0828_usb_disconnect will be called. The
+problem is au0828_usb_disconnect uses dev, if dev is NULL then there
+is immediate oops encountered.
 
-In the end this is quite similar to commit 3031cddea633 (ACPI / SBS:
-Don't assume the existence of an SBS charger), except that on the above
-machines a status of all 1's is returned. And like there, we just want
-ignore the charger here.
+[    7.454307] au0828: au0828_usb_probe() au0282_dev_register failed to register on V4L2
+[    7.454323] BUG: unable to handle kernel NULL pointer dereference at 0000000000000050
+[    7.454421] PGD 0 P4D 0
+[    7.454457] Oops: 0002 [#1] SMP PTI
+[    7.454500] CPU: 1 PID: 262 Comm: systemd-udevd Tainted: P           O      4.18.3 #1
+[    7.454584] Hardware name: Google Panther/Panther, BIOS MattDevo 04/27/2015
+[    7.454670] RIP: 0010:_raw_spin_lock_irqsave+0x2c/0x50
+[    7.454725] Code: 44 00 00 55 48 89 e5 41 54 53 48 89 fb 9c 58 0f 1f 44 00 00 49 89 c4 fa 66 0f 1f 44 00 00 e8 db 23 1b ff 31 c0 ba 01 00 00 00 <f0> 0f b1 13 85 c0 75 08 4c 89 e0 5b 41 5c 5d c3 89 c6 48 89 df e8
+[    7.455004] RSP: 0018:ffff9130f53ef988 EFLAGS: 00010046
+[    7.455063] RAX: 0000000000000000 RBX: 0000000000000050 RCX: 0000000000000000
+[    7.455139] RDX: 0000000000000001 RSI: 0000000000000003 RDI: 0000000000000050
+[    7.455216] RBP: ffff9130f53ef998 R08: 0000000000000018 R09: 0000000000000090
+[    7.455292] R10: ffffed4cc53cb000 R11: ffffed4cc53cb108 R12: 0000000000000082
+[    7.455369] R13: ffff9130cf2c6188 R14: 0000000000000000 R15: 0000000000000018
+[    7.455447] FS:  00007f2ff8514cc0(0000) GS:ffff9130fcb00000(0000) knlGS:0000000000000000
+[    7.455535] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    7.455597] CR2: 0000000000000050 CR3: 00000001753f0002 CR4: 00000000000606a0
+[    7.455675] Call Trace:
+[    7.455713]  __wake_up_common_lock+0x65/0xc0
+[    7.455764]  __wake_up+0x13/0x20
+[    7.455808]  ir_lirc_unregister+0x57/0xe0 [rc_core]
+[    7.455865]  rc_unregister_device+0xa0/0xc0 [rc_core]
+[    7.455935]  au0828_rc_unregister+0x25/0x40 [au0828]
+[    7.455999]  au0828_usb_disconnect+0x33/0x80 [au0828]
+[    7.456064]  au0828_usb_probe.cold.16+0x8d/0x2aa [au0828]
+[    7.456130]  usb_probe_interface+0xf1/0x300
+[    7.456184]  driver_probe_device+0x2e3/0x460
+[    7.456235]  __driver_attach+0xe4/0x110
+[    7.456282]  ? driver_probe_device+0x460/0x460
+[    7.456335]  bus_for_each_dev+0x74/0xb0
+[    7.456385]  ? kmem_cache_alloc_trace+0x15d/0x1d0
+[    7.456441]  driver_attach+0x1e/0x20
+[    7.456485]  bus_add_driver+0x159/0x230
+[    7.456532]  driver_register+0x70/0xc0
+[    7.456578]  usb_register_driver+0x7f/0x140
+[    7.456626]  ? 0xffffffffc0474000
+[    7.456674]  au0828_init+0xbc/0x1000 [au0828]
+[    7.456725]  do_one_initcall+0x4a/0x1c9
+[    7.456771]  ? _cond_resched+0x19/0x30
+[    7.456817]  ? kmem_cache_alloc_trace+0x15d/0x1d0
+[    7.456873]  do_init_module+0x60/0x210
+[    7.456918]  load_module+0x221b/0x2710
+[    7.456966]  ? vfs_read+0xf5/0x120
+[    7.457010]  __do_sys_finit_module+0xbd/0x120
+[    7.457061]  ? __do_sys_finit_module+0xbd/0x120
+[    7.457115]  __x64_sys_finit_module+0x1a/0x20
+[    7.457166]  do_syscall_64+0x5b/0x110
+[    7.457210]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=198169
-Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Brad Love <brad@nextdimension.cc>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/sbs.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/usb/au0828/au0828-core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
-index a2428e9462dd..3c092f07d7e3 100644
---- a/drivers/acpi/sbs.c
-+++ b/drivers/acpi/sbs.c
-@@ -441,9 +441,13 @@ static int acpi_ac_get_present(struct acpi_sbs *sbs)
+diff --git a/drivers/media/usb/au0828/au0828-core.c b/drivers/media/usb/au0828/au0828-core.c
+index cd363a2100d4..257ae0d8cfe2 100644
+--- a/drivers/media/usb/au0828/au0828-core.c
++++ b/drivers/media/usb/au0828/au0828-core.c
+@@ -629,7 +629,6 @@ static int au0828_usb_probe(struct usb_interface *interface,
+ 		pr_err("%s() au0282_dev_register failed to register on V4L2\n",
+ 			__func__);
+ 		mutex_unlock(&dev->lock);
+-		kfree(dev);
+ 		goto done;
+ 	}
  
- 	/*
- 	 * The spec requires that bit 4 always be 1. If it's not set, assume
--	 * that the implementation doesn't support an SBS charger
-+	 * that the implementation doesn't support an SBS charger.
-+	 *
-+	 * And on some MacBooks a status of 0xffff is always returned, no
-+	 * matter whether the charger is plugged in or not, which is also
-+	 * wrong, so ignore the SBS charger for those too.
- 	 */
--	if (!((status >> 4) & 0x1))
-+	if (!((status >> 4) & 0x1) || status == 0xffff)
- 		return -ENODEV;
- 
- 	sbs->charger_present = (status >> 15) & 0x1;
 -- 
 2.19.1
 
