@@ -3,42 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4ECC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAB5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6AC206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624FF206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389102AbfDRQWE convert rfc822-to-8bit (ORCPT
+        id S2389636AbfDRQWo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 12:22:04 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:35745 "EHLO
+        Thu, 18 Apr 2019 12:22:44 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49515 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfDRQWE (ORCPT
+        with ESMTP id S1725888AbfDRQWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 12:22:04 -0400
+        Thu, 18 Apr 2019 12:22:43 -0400
 X-Originating-IP: 91.224.148.103
 Received: from xps13 (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C58C420003;
-        Thu, 18 Apr 2019 16:22:00 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 18:21:59 +0200
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7C84A20004;
+        Thu, 18 Apr 2019 16:22:40 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 18:22:38 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH] mtd: rawnand: constify elements of
- NAND_OP_PARSER(_PATTERN)
-Message-ID: <20190418182159.66d5188c@xps13>
-In-Reply-To: <20190409045332.5452-1-yamada.masahiro@socionext.com>
-References: <20190409045332.5452-1-yamada.masahiro@socionext.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     <bbrezillon@kernel.org>, <richard@nod.at>, <dwmw2@infradead.org>,
+        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
+        <paul@crapouillou.net>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH -next] mtd: rawnand: ingenic: Make jz4725b_ooblayout_ops
+ static
+Message-ID: <20190418182238.2284f917@xps13>
+In-Reply-To: <20190410140035.33004-1-yuehaibing@huawei.com>
+References: <20190410140035.33004-1-yuehaibing@huawei.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
@@ -49,21 +47,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+Hi Yue,
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue,  9 Apr
-2019 13:53:32 +0900:
+Yue Haibing <yuehaibing@huawei.com> wrote on Wed, 10 Apr 2019 22:00:35
++0800:
 
-> Currently, drivers are able to constify a nand_op_parser array,
-> but not nand_op_parser_pattern and nand_op_parser_pattern_elem
-> since they are instantiated by using the NAND_OP_PARSER(_PATTERN).
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> Add 'const' to them in order to move more driver data from .data to
-> .rodata section.
+> Fix sparse warning:
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> drivers/mtd/nand/raw/ingenic/ingenic_nand.c:140:32: warning:
+>  symbol 'jz4725b_ooblayout_ops' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> 
+
 
 Applied to 
 https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git 
