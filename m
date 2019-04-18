@@ -2,108 +2,139 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3591C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471CDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3502183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:08:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DPE9pK2o";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="m3pNlkpk"
+	by mail.kernel.org (Postfix) with ESMTP id 181672183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388691AbfDRLIu (ORCPT
+        id S2388772AbfDRLKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:08:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:49272 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfDRLIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:08:50 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 993E660721; Thu, 18 Apr 2019 11:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555585729;
-        bh=YBsJULlA80zIYHgmJ4RMOhaZw0W3VjqokfkpTpWQbkQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DPE9pK2oGLyXKDb+p2L5UGDU3p1mTxRKRmYoYTbb3Zwi5jiYVl/SM2+SV4vSTqorH
-         QLnwAX4QkVZED3d1Pk+oHmSikof9qDf3eQxprOPGitCReLh34+XD/OSPEVCugFRpc1
-         ZLfr/CWJGHEfvtBVjMF+E6lja/0hayGBoHMzMQp8=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 18 Apr 2019 07:10:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34576 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727807AbfDRLKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 07:10:30 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F69D601B4;
-        Thu, 18 Apr 2019 11:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555585728;
-        bh=YBsJULlA80zIYHgmJ4RMOhaZw0W3VjqokfkpTpWQbkQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=m3pNlkpkUQ35U2V9Orf6C8b4qMDW/8/k2B/wY57vOrPX79Dbjmvv0NBnwHg3GWlc6
-         a902UcnMgKxo1Km0GVu1wofGhTZeVcLKXfC7qHWWXcYysNLr85u40zu5aqxrRaTjW0
-         3G8+HF2Jx1O0JyVN6fjSDUn+GumfvAn/8Vz+r6RA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F69D601B4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] drm/i915: fix spelling mistake "resseting" -> "resetting"
-To:     Colin King <colin.king@canonical.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190418110622.11452-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <0cf4de0f-c58e-d3e0-a134-b7aa73c3dfeb@codeaurora.org>
-Date:   Thu, 18 Apr 2019 16:38:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mx1.redhat.com (Postfix) with ESMTPS id BAC1330058D9;
+        Thu, 18 Apr 2019 11:10:28 +0000 (UTC)
+Received: from localhost (ovpn-116-27.ams2.redhat.com [10.36.116.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B691C608C7;
+        Thu, 18 Apr 2019 11:10:18 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 12:10:17 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-integrity@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-usb@vger.kernel.org,
+        linux-input@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 09/26] compat_ioctl: move drivers to compat_ptr_ioctl
+Message-ID: <20190418111017.GE23876@stefanha-x1.localdomain>
+References: <20190416202013.4034148-1-arnd@arndb.de>
+ <20190416202013.4034148-10-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190418110622.11452-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KlAEzMkarCnErv5Q"
+Content-Disposition: inline
+In-Reply-To: <20190416202013.4034148-10-arnd@arndb.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 18 Apr 2019 11:10:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/18/2019 4:36 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a gvt_dbg_core debug message. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+--KlAEzMkarCnErv5Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
-
+On Tue, Apr 16, 2019 at 10:19:47PM +0200, Arnd Bergmann wrote:
+> Each of these drivers has a copy of the same trivial helper function to
+> convert the pointer argument and then call the native ioctl handler.
+>=20
+> We now have a generic implementation of that, so use it.
+>=20
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->   drivers/gpu/drm/i915/gvt/vgpu.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/i915/gvt/vgpu.c b/drivers/gpu/drm/i915/gvt/vgpu.c
-> index 44ce3c2b9ac1..d1e818f2b521 100644
-> --- a/drivers/gpu/drm/i915/gvt/vgpu.c
-> +++ b/drivers/gpu/drm/i915/gvt/vgpu.c
-> @@ -533,7 +533,7 @@ void intel_gvt_reset_vgpu_locked(struct intel_vgpu *vgpu, bool dmlr,
->   	intel_engine_mask_t resetting_eng = dmlr ? ALL_ENGINES : engine_mask;
->   
->   	gvt_dbg_core("------------------------------------------\n");
-> -	gvt_dbg_core("resseting vgpu%d, dmlr %d, engine_mask %08x\n",
-> +	gvt_dbg_core("resetting vgpu%d, dmlr %d, engine_mask %08x\n",
->   		     vgpu->id, dmlr, engine_mask);
->   
->   	vgpu->resetting_eng = resetting_eng;
+>  drivers/char/ppdev.c              | 12 +---------
+>  drivers/char/tpm/tpm_vtpm_proxy.c | 12 +---------
+>  drivers/firewire/core-cdev.c      | 12 +---------
+>  drivers/hid/usbhid/hiddev.c       | 11 +--------
+>  drivers/hwtracing/stm/core.c      | 12 +---------
+>  drivers/misc/mei/main.c           | 22 +----------------
+>  drivers/mtd/ubi/cdev.c            | 36 +++-------------------------
+>  drivers/net/tap.c                 | 12 +---------
+>  drivers/staging/pi433/pi433_if.c  | 12 +---------
+>  drivers/usb/core/devio.c          | 16 +------------
+>  drivers/vfio/vfio.c               | 39 +++----------------------------
+>  drivers/vhost/net.c               | 12 +---------
+>  drivers/vhost/scsi.c              | 12 +---------
+>  drivers/vhost/test.c              | 12 +---------
+>  drivers/vhost/vsock.c             | 12 +---------
+>  fs/fat/file.c                     | 13 +----------
+>  16 files changed, 20 insertions(+), 237 deletions(-)
+
+The vhost parts look good:
+
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--KlAEzMkarCnErv5Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBAgAGBQJcuFsZAAoJEJykq7OBq3PIjmUH/3YzT8r/nZGWhf+D9Jhao8p9
+N6eNCnBkQtsAj+s6IhmhZxdmPlkw0b8X0ws3iIw/zE3PNeLtIt2hG92evE9QSRzD
+dkSG0m+8KJ1fQK73GrmLousrFnSOagczYoTD/svPhC3WMptVGlPB4aqBZO4Eh79w
+SyUrD7cXe2NQXUFVRI9/QVj+yu59BtvUivzkDwGZxYa5Y8RvwDvelz+xTAkKP/cl
+CZ9Gnc2gCrzuK26f5odjmby93QWbAVkiMe5k22pzy/RRpuzsijL5ujr+Ayeti45g
+cDTLJ4YjNSzM07rYoa8nqHgZATbSokG/gvbNByeC//MoqtmpE23wNzmMwuFJdi8=
+=85Rm
+-----END PGP SIGNATURE-----
+
+--KlAEzMkarCnErv5Q--
