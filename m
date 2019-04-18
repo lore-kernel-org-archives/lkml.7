@@ -5,106 +5,104 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36993C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA082C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120E621871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9201421850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388208AbfDRGlo (ORCPT
+        id S2388141AbfDRGlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:41:44 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60437 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733049AbfDRGln (ORCPT
+        Thu, 18 Apr 2019 02:41:32 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.130]:43749 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726162AbfDRGlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:41:43 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH0jj-00076A-4b; Thu, 18 Apr 2019 08:41:31 +0200
-Date:   Thu, 18 Apr 2019 08:41:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
- enable/disable split lock detection during run time
-In-Reply-To: <20190418005711.GB18776@romley-ivt3.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1904180832290.3174@nanos.tec.linutronix.de>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com> <1555536851-17462-16-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1904180042090.3174@nanos.tec.linutronix.de> <20190418005711.GB18776@romley-ivt3.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Apr 2019 02:41:31 -0400
+Received: from [46.226.53.50] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-c.eu-west-1.aws.symcld.net id D4/8E-23848-81C18BC5; Thu, 18 Apr 2019 06:41:28 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGIsWRWlGSWpSXmKPExsVy8MN7XV1xmR0
+  xBhMeGltMffiEzWL+kXOsFk3fVzNbfLvSwWRxedccNoul1y8yWbTuPcLuwO6xZt4aRo+ds+6y
+  e2xa1cnm8XmTXABLFGtmXlJ+RQJrxoWvIQVnOCu2ff/O2sC4ib2LkYtDSGAto8SqzmmsXYycQ
+  E6FxMkVv9hBbF4BF4k530+AxdkETCQ2HdnDCGKzCKhKvPz2jQXEFhawk1j7exMziC0ikC1xd9
+  lJsKHMAlsYJXZtmMgGMUhQ4uTMJ2ANzAISEgdfvGCGWKYn0T15HtgCCQF7ienvrzJD2PoSL79
+  uZIKwDSW+z4JYJiFgLjHzzx2oGmuJ6x9msU1gFJiFZMUsJCsWMDKtYrRIKspMzyjJTczM0TU0
+  MNA1NDTSNTIw0jU0MtFLrNJN1kst1S1PLS7RNdRLLC/WK67MTc5J0ctLLdnECAz/lIJTNTsYp
+  3enH2KU5GBSEuUtEd0RI8SXlJ9SmZFYnBFfVJqTWnyIUYaDQ0mCt1sKKCdYlJqeWpGWmQOMRJ
+  i0BAePkgjvPJA0b3FBYm5xZjpE6hSjopQ472aQhABIIqM0D64NFv2XGGWlhHkZGRgYhHgKUot
+  yM0tQ5V8xinMwKgnzHgKZwpOZVwI3/RXQYiagxVN0VoMsLklESEk1MM4WuFu+sNu6hbnlxwtf
+  znsdps9Td3f7HfKUuOnGs/6Rm1B2/ZfdYTr+G1dMmjS3IY+fU+/LVlfNG80HbvmeFfre1XMmM
+  UfO1Wv3ZKvuvSvCb88uS+5Wl577IbT1nsK/R2+kJ+9PUzPJ7/ksv//ZC77AFeXv98zLnq4hoK
+  9t+mnjlrsszSKfjZVYijMSDbWYi4oTAT2VIv/5AgAA
+X-Env-Sender: eric.jeong.opensource@diasemi.com
+X-Msg-Ref: server-19.tower-302.messagelabs.com!1555569687!6616895!1
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 28235 invoked from network); 18 Apr 2019 06:41:27 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-19.tower-302.messagelabs.com with AES128-SHA256 encrypted SMTP; 18 Apr 2019 06:41:27 -0000
+Received: from krsrvapps-01.diasemi.com (10.95.17.50) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 18 Apr 2019 08:41:26 +0200
+Received: by krsrvapps-01.diasemi.com (Postfix, from userid 22095)      id
+ B9FD05F7FC; Thu, 18 Apr 2019 15:41:24 +0900 (KST)
+Message-ID: <cover.1555567784.git.eric.jeong.opensource@diasemi.com>
+From:   Eric Jeong <eric.jeong.opensource@diasemi.com>
+Date:   Thu, 18 Apr 2019 15:09:44 +0900
+Subject: [PATCH V2 0/3]  slg51000: regulator driver submission
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     DEVICETREE <devicetree@vger.kernel.org>,
+        LINUX-KERNEL <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
+X-KSE-ServerInfo: NB-EX-CASHUB01.diasemi.com, 9
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 18.04.2019 02:42:00
+X-EXCLAIMER-MD-CONFIG: 8d172408-bd6a-42b1-8e53-daaedf35a5af
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Fenghua Yu wrote:
-> On Thu, Apr 18, 2019 at 12:47:24AM +0200, Thomas Gleixner wrote:
-> > On Wed, 17 Apr 2019, Fenghua Yu wrote:
-> > 
-> > > The interface /sys/device/system/cpu/split_lock_detect is added
-> > > to allow user to control split lock detection and show current split
-> > > lock detection setting.
-> > > 
-> > > Writing [yY1] or [oO][nN] to the file enables split lock detection and
-> > > writing [nN0] or [oO][fF] disables split lock detection. Split lock
-> > > detection is enabled or disabled on all CPUs.
-> > > 
-> > > Reading the file returns current global split lock detection setting:
-> > > 0: disabled
-> > > 1: enabled
-> > 
-> > Again, You explain WHAT this patch does and still there is zero
-> > justification why this sysfs knob is needed at all. I still do not see any
-> > reason why this knob should exist.
-> 
-> An important application has split lock issues which are already discovered
-> and need to be fixed. But before the issues are fixed, sysadmin still wants to
-> run the application without rebooting the system, the sysfs knob can be useful
-> to turn off split lock detection. After the application is done, split lock
-> detection will be enabled again through the sysfs knob.
 
-Are you sure that you are talking about the real world? I might buy the
-'off' part somehow, but the 'on' part is beyond theoretical.
+This patch adds support for the Dialog SLG51000 regulator device.
 
-Even the 'off' part is dubious on a multi user machine. I personally would
-neither think about using the sysfs knob nor about rebooting the machine
-simply because I'd consider a lock operation accross a cacheline an malicious
-DoS attempt. Why would I allow that?
+In this patch set the following is provided:
 
-So in reality the sysadmin will either move the workload to a machine w/o
-the #AC magic or just tell the user to fix his crap.
+[PATCH V2 1/3] MAINTAINERS file update for SLG51000
+[PATCH V2 2/3] SLG51000 DT binding
+[PATCH V2 3/3] SLG51000 regulator driver
 
-> Without the sysfs knob, sysadmin has to reboot the system with kernel option
-> "no_split_lock_detect" to run the application before the split lock issues
-> are fixed.
-> 
-> Is this a valid justification why the sysfs knob is needed? If it is, I can
-> add the justification in the next version.
+This patch applies against linux-next and next-20190417 
 
-Why has this information not been in the changelog right away? I'm really
-tired of asking the same questions and pointing you to
-Documentation/process over and over.
+Thank you,
+Eric Jeong, Dialog Semiconductor Ltd.
 
-Thanks,
+Eric Jeong (3):
+  MAINTAINERS: slg51000 updates to the Dialog Semiconductor search
+    terms
+  dt-bindings: regulator: add document bindings for slg51000
+  regulator: slg51000: add slg51000 regulator driver
 
-	tglx
+ .../devicetree/bindings/regulator/slg51000.txt     |   88 ++++
+ MAINTAINERS                                        |    2 +
+ drivers/regulator/Kconfig                          |    9 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/slg51000-regulator.c             |  528 ++++++++++++++++++++
+ drivers/regulator/slg51000-regulator.h             |  505 +++++++++++++++++++
+ 6 files changed, 1133 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/slg51000.txt
+ create mode 100644 drivers/regulator/slg51000-regulator.c
+ create mode 100644 drivers/regulator/slg51000-regulator.h
+
+-- 
+end-of-patch for PATCH V2
+
