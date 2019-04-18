@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBD1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791C7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBE920643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3BA20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612459;
-	bh=r2KqU+t+RKCCImE3Q6NolhQaJsHdP3GGWW10/oVwdsA=;
+	s=default; t=1555612471;
+	bh=gt3BloQFJzLlyAUC1GyOGGq9HIpGz+T3aP1dH+xtdQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaOMLqiaasHKh9WT/dO6fWfch9+OGyiNuRVqXsMsL5InIb351gmmalXAckcvkj8FW
-	 PT2/7a2bgFPJt3Yct3GEv3pCSQ3YRT5vELfvTgwptKIDjqIFs70YSJpsvStKQlnlJW
-	 NCBkNCWiwZpMm9VfRWpJz33WCQj9GbE9SoMkA6+0=
+	b=SfwUbfljt+jyY/x6hxHbc2zQlVSUBS93fu/KKZr+5jOSaXwO5PADovXr9UNISpjEP
+	 czYSfoaPV/Qmgg1hlhzN8s7ELfbvF92At7w3fCPEWQjSzyrsML5Q4b/hPcP6lyVmC4
+	 IQJge0tZvgfaSWtsUVLZsWmxrZSawsTgIbHdaKko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389980AbfDRR6x (ORCPT
+        id S2389938AbfDRR6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:58:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389958AbfDRR6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:58:49 -0400
+        id S2389920AbfDRR6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:58:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A5F4217FA;
-        Thu, 18 Apr 2019 17:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DB8B218A6;
+        Thu, 18 Apr 2019 17:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610329;
-        bh=r2KqU+t+RKCCImE3Q6NolhQaJsHdP3GGWW10/oVwdsA=;
+        s=default; t=1555610321;
+        bh=gt3BloQFJzLlyAUC1GyOGGq9HIpGz+T3aP1dH+xtdQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kl09xBFGyr6gL1QiXKH+U0NdveTpk33p6qSi44GTMVpLcAbUjF4MHT+UTgAP7ndMj
-         8LI3kax4VNcIQZSXlXQQKRWSRzGjS3I9eI0OuvQKCA8NRXVv8SPAxoMVLamCj1pWfB
-         sBGADnzwouvTMH0mrvvhKADHA0c2cyAAKOkvH64U=
+        b=TogH9HCqDkCK0GD+W+/Zmv+lGUxcMk9ftK6lNnaVMwft8R4m0KTqGV06ctyRi+NEz
+         Me1WVicE22oDFW79trY3ZjVKADzF/6VAHFM1yAuCc/QvqJbzAXu5QZ/8T3jQqC2WE+
+         90ivZjDsjqnNqATucbaUZv2W8fEuTUw38pGzlNds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/110] perf/core: Restore mmap record type correctly
-Date:   Thu, 18 Apr 2019 19:55:53 +0200
-Message-Id: <20190418160437.900878628@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 016/110] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
+Date:   Thu, 18 Apr 2019 19:56:05 +0200
+Message-Id: <20190418160438.866996990@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -63,59 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d9c1bb2f6a2157b38e8eb63af437cb22701d31ee ]
+[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
 
-On mmap(), perf_events generates a RECORD_MMAP record and then checks
-which events are interested in this record. There are currently 2
-versions of mmap records: RECORD_MMAP and RECORD_MMAP2. MMAP2 is larger.
-The event configuration controls which version the user level tool
-accepts.
+The function snd_opl3_drum_switch declaration in the header file
+has the order of the two arguments on_off and vel swapped when
+compared to the definition arguments of vel and on_off.  Fix this
+by swapping them around to match the definition.
 
-If the event->attr.mmap2=1 field then MMAP2 record is returned.  The
-perf_event_mmap_output() takes care of this. It checks attr->mmap2 and
-corrects the record fields before putting it in the sampling buffer of
-the event.  At the end the function restores the modified MMAP record
-fields.
+This error predates the git history, so no idea when this error
+was introduced.
 
-The problem is that the function restores the size but not the type.
-Thus, if a subsequent event only accepts MMAP type, then it would
-instead receive an MMAP2 record with a size of MMAP record.
-
-This patch fixes the problem by restoring the record type on exit.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: 13d7a2410fa6 ("perf: Add attr->mmap2 attribute to an event")
-Link: http://lkml.kernel.org/r/20190307185233.225521-1-eranian@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/drivers/opl3/opl3_voice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index aa996a0854b9..87bd96399d1c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7178,6 +7178,7 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	int size = mmap_event->event_id.header.size;
-+	u32 type = mmap_event->event_id.header.type;
- 	int ret;
+diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
+index 5b02bd49fde4..4e4ecc21760b 100644
+--- a/sound/drivers/opl3/opl3_voice.h
++++ b/sound/drivers/opl3/opl3_voice.h
+@@ -41,7 +41,7 @@ void snd_opl3_timer_func(struct timer_list *t);
  
- 	if (!perf_event_mmap_match(event, data))
-@@ -7221,6 +7222,7 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	perf_output_end(&handle);
- out:
- 	mmap_event->event_id.header.size = size;
-+	mmap_event->event_id.header.type = type;
- }
+ /* Prototypes for opl3_drums.c */
+ void snd_opl3_load_drums(struct snd_opl3 *opl3);
+-void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
++void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
  
- static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
+ /* Prototypes for opl3_oss.c */
+ #if IS_ENABLED(CONFIG_SND_SEQUENCER_OSS)
 -- 
 2.19.1
 
