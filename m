@@ -2,177 +2,217 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE0FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C93AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE1F217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555601779;
-	bh=78iavSD/b9SZDW+cR51Rk4CTyGCyTXphw4FShVXvYkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CGjyzO+HR3VAVA68UCNa7SsLAUiugxAMiNucoTVpD+ZOnc2dsyLD+6ioawPB9U7vm
-	 tOrllCi2XxJozliLALCQ0tJCogkpRSAUJ0x64VCc053w1uaPds1LIoPg6meRz/CwP9
-	 HaNKNgBhfX05Gu7mhdR0jQaU2l/uAH4ePygG6Fqg=
+	by mail.kernel.org (Postfix) with ESMTP id 5EEEA2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389509AbfDRPgT (ORCPT
+        id S2389546AbfDRPgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 11:36:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56542 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388299AbfDRPgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:36:18 -0400
-Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387519AbfDRPge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:36:34 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A85C920675;
-        Thu, 18 Apr 2019 15:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555601776;
-        bh=78iavSD/b9SZDW+cR51Rk4CTyGCyTXphw4FShVXvYkY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xWh4nQdNPb+Lg0KhraTaIEdiWXtQnRf70XVvG8QRIAj8cQUYXpWUqKgodNI0QpURq
-         bD9GYTPh+AGIFKTLF1c9av1eJNcgjS1H6LDlLbCXcNT514gKBDvtK19gkTXV4IlagZ
-         3blOXX6qIZUrmOsbe7GHIUpkXG9u/VsGbhFSoFJM=
-Date:   Thu, 18 Apr 2019 17:36:12 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        by mx1.redhat.com (Postfix) with ESMTPS id CB06A308A10D;
+        Thu, 18 Apr 2019 15:36:32 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C764A5C224;
+        Thu, 18 Apr 2019 15:36:20 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 11:36:19 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>
-Subject: Re: [PATCH v2] moduleparam: Save information about built-in modules
- in separate file
-Message-ID: <20190418153611.GB5626@linux-8ccs>
-References: <20190406121447.GB4047@localhost.localdomain>
- <CAK7LNATfo0K6kzwobkAZ_u2KnWL3XycJzbr3KPtPF=ePziCuDg@mail.gmail.com>
- <20190418135238.GA5626@linux-8ccs>
- <CAK7LNARKHXLgniczKXY01JhxhBpL2p-X_hWg70AcsrXRaLyDSg@mail.gmail.com>
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+Message-ID: <20190418153618.GE3288@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel>
+ <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <20190416194936.GD21526@redhat.com>
+ <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
+ <20190417222858.GA4146@redhat.com>
+ <20190418104205.GA28541@quack2.suse.cz>
+ <20190418142729.GB3288@redhat.com>
+ <20190418153047.GN28541@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARKHXLgniczKXY01JhxhBpL2p-X_hWg70AcsrXRaLyDSg@mail.gmail.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190418153047.GN28541@quack2.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 18 Apr 2019 15:36:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [19/04/19 00:26 +0900]:
->On Thu, Apr 18, 2019 at 10:52 PM Jessica Yu <jeyu@kernel.org> wrote:
->>
->> +++ Masahiro Yamada [18/04/19 20:10 +0900]:
->> >On Sat, Apr 6, 2019 at 9:15 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
->> >>
->> >> Problem:
->> >>
->> >> When a kernel module is compiled as a separate module, some important
->> >> information about the kernel module is available via .modinfo section of
->> >> the module.  In contrast, when the kernel module is compiled into the
->> >> kernel, that information is not available.
->> >>
->> >> Information about built-in modules is necessary in the following cases:
->> >>
->> >> 1. When it is necessary to find out what additional parameters can be
->> >> passed to the kernel at boot time.
->> >>
->> >> 2. When you need to know which module names and their aliases are in
->> >> the kernel. This is very useful for creating an initrd image.
->> >>
->> >> Proposal:
->> >>
->> >> The proposed patch does not remove .modinfo section with module
->> >> information from the vmlinux at the build time and saves it into a
->> >> separate file after kernel linking. So, the kernel does not increase in
->> >> size and no additional information remains in it. Information is stored
->> >> in the same format as in the separate modules (null-terminated string
->> >> array). Because the .modinfo section is already exported with a separate
->> >> modules, we are not creating a new API.
->> >>
->> >> It can be easily read in the userspace:
->> >>
->> >> $ tr '\0' '\n' < kernel.builtin
->> >> ext4.softdep=pre: crc32c
->> >> ext4.license=GPL
->> >> ext4.description=Fourth Extended Filesystem
->> >> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
->> >> ext4.alias=fs-ext4
->> >> ext4.alias=ext3
->> >> ext4.alias=fs-ext3
->> >> ext4.alias=ext2
->> >> ext4.alias=fs-ext2
->> >> md_mod.alias=block-major-9-*
->> >> md_mod.alias=md
->> >> md_mod.description=MD RAID framework
->> >> md_mod.license=GPL
->> >> md_mod.parmtype=create_on_open:bool
->> >> md_mod.parmtype=start_dirty_degraded:int
->> >> ...
->> >>
->> >> v2:
->> >>  * Extract modinfo from vmlinux.o as suggested by Masahiro Yamada;
->> >>  * Rename output file to kernel.builtin;
->> >
->> >Sorry, I do not get why you renamed
->> >"kernel.builtin.modinfo" to "kernel.builtin".
->> >
->> >If you drop "modinfo", we do not understand
->> >what kind information is contained in it.
->> >
->> >I think "kernel" and "builtin" have
->> >a quite similar meaning here.
->> >
->> >How about "builtin.modinfo" for example?
->> >
->> >
->> >It is shorter, and it is clear enough
->> >that it contains module_info.
->>
->> I agree that the name kernel.builtin is unclear in what kind of
->> information it contains. Apologies for not having clarified this in
->> the previous review.
->>
->> Since kbuild already produces "modules.order" and "modules.builtin"
->> files, why not just name it "modules.builtin.modinfo" to keep the
->> names consistent with what is already there?
->
->
->Is it consistent?
->
->If we had "modules.order" and "modules.builtin.order" there,
->I would agree with "modules.builtin.modinfo",
->and also "modules.alias" vs "modules.builtin.alias".
->
->
->We already have "modules.builtin", and probably impossible
->to rename it, so we cannot keep consistency in any way.
->
->
->"modules.builtin" is a weird name since
->it actually contains "order", but its extension
->does not express what kind of information is in it.
->Hence, I doubt "modules.builtin" is a good precedent.
->
->IMHO, "modules" and "builtin" are opposite
->to each other. "modules.builtin" sounds iffy to me.
+On Thu, Apr 18, 2019 at 05:30:47PM +0200, Jan Kara wrote:
+> On Thu 18-04-19 10:27:29, Jerome Glisse wrote:
+> > On Thu, Apr 18, 2019 at 12:42:05PM +0200, Jan Kara wrote:
+> > > On Wed 17-04-19 18:28:58, Jerome Glisse wrote:
+> > > > On Wed, Apr 17, 2019 at 02:53:28PM -0700, Dan Williams wrote:
+> > > > > On Tue, Apr 16, 2019 at 12:50 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 16, 2019 at 12:12:27PM -0700, Dan Williams wrote:
+> > > > > > > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
+> > > > > > > <kent.overstreet@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
+> > > > > > > > > On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
+> > > > > > > > > > From: Jérôme Glisse <jglisse@redhat.com>
+> > > > > > > > > >
+> > > > > > > > > > This patchset depends on various small fixes [1] and also on patchset
+> > > > > > > > > > which introduce put_user_page*() [2] and thus is 5.3 material as those
+> > > > > > > > > > pre-requisite will get in 5.2 at best. Nonetheless i am posting it now
+> > > > > > > > > > so that it can get review and comments on how and what should be done
+> > > > > > > > > > to test things.
+> > > > > > > > > >
+> > > > > > > > > > For various reasons [2] [3] we want to track page reference through GUP
+> > > > > > > > > > differently than "regular" page reference. Thus we need to keep track
+> > > > > > > > > > of how we got a page within the block and fs layer. To do so this patch-
+> > > > > > > > > > set change the bio_bvec struct to store a pfn and flags instead of a
+> > > > > > > > > > direct pointer to a page. This way we can flag page that are coming from
+> > > > > > > > > > GUP.
+> > > > > > > > > >
+> > > > > > > > > > This patchset is divided as follow:
+> > > > > > > > > >     - First part of the patchset is just small cleanup i believe they
+> > > > > > > > > >       can go in as his assuming people are ok with them.
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn this is
+> > > > > > > > > >       done in multi-step, first we replace all direct dereference of
+> > > > > > > > > >       the field by call to inline helper, then we introduce macro for
+> > > > > > > > > >       bio_bvec that are initialized on the stack. Finaly we change the
+> > > > > > > > > >       bv_page field to bv_pfn.
+> > > > > > > > >
+> > > > > > > > > Why do we need a bv_pfn. Why not just use the lowest bit of the page-ptr
+> > > > > > > > > as a flag (pointer always aligned to 64 bytes in our case).
+> > > > > > > > >
+> > > > > > > > > So yes we need an inline helper for reference of the page but is it not clearer
+> > > > > > > > > that we assume a page* and not any kind of pfn ?
+> > > > > > > > > It will not be the first place using low bits of a pointer for flags.
+> > > > > > > > >
+> > > > > > > > > That said. Why we need it at all? I mean why not have it as a bio flag. If it exist
+> > > > > > > > > at all that a user has a GUP and none-GUP pages to IO at the same request he/she
+> > > > > > > > > can just submit them as two separate BIOs (chained at the block layer).
+> > > > > > > > >
+> > > > > > > > > Many users just submit one page bios and let elevator merge them any way.
+> > > > > > > >
+> > > > > > > > Let's please not add additional flags and weirdness to struct bio - "if this
+> > > > > > > > flag is set interpret one way, if not interpret another" - or eventually bios
+> > > > > > > > will be as bad as skbuffs. I would much prefer just changing bv_page to bv_pfn.
+> > > > > > >
+> > > > > > > This all reminds of the failed attempt to teach the block layer to
+> > > > > > > operate without pages:
+> > > > > > >
+> > > > > > > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-desk3.amr.corp.intel.com/
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Question though - why do we need a flag for whether a page is a GUP page or not?
+> > > > > > > > Couldn't the needed information just be determined by what range the pfn is not
+> > > > > > > > (i.e. whether or not it has a struct page associated with it)?
+> > > > > > >
+> > > > > > > That amounts to a pfn_valid() check which is a bit heavier than if we
+> > > > > > > can store a flag in the bv_pfn entry directly.
+> > > > > > >
+> > > > > > > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
+> > > > > > > an 'unsigned long'.
+> > > > > > >
+> > > > > > > That said, I'm still in favor of Jan's proposal to just make the
+> > > > > > > bv_page semantics uniform. Otherwise we're complicating this core
+> > > > > > > infrastructure for some yet to be implemented GPU memory management
+> > > > > > > capabilities with yet to be determined value. Circle back when that
+> > > > > > > value is clear, but in the meantime fix the GUP bug.
+> > > > > >
+> > > > > > This has nothing to do with GPU, what make you think so ? Here i am
+> > > > > > trying to solve GUP and to keep the value of knowing wether a page
+> > > > > > has been GUP or not. I argue that if we bias every page in every bio
+> > > > > > then we loose that information and thus the value.
+> > > > > >
+> > > > > > I gave the page protection mechanisms as an example that would be
+> > > > > > impacted but it is not the only one. Knowing if a page has been GUP
+> > > > > > can be useful for memory reclaimation, compaction, NUMA balancing,
+> > > > > 
+> > > > > Right, this is what I was reacting to in your pushback to Jan's
+> > > > > proposal. You're claiming value for not doing the simple thing for
+> > > > > some future "may be useful in these contexts". To my knowledge those
+> > > > > things are not broken today. You're asking for the complexity to be
+> > > > > carried today for some future benefit, and I'm asking for the
+> > > > > simplicity to be maintained as much as possible today and let the
+> > > > > value of future changes stand on their own to push for more complexity
+> > > > > later.
+> > > > > 
+> > > > > Effectively don't use this bug fix to push complexity for a future
+> > > > > agenda where the value has yet to be quantified.
+> > > > 
+> > > > Except that this solution (biasing everyone in bio) would _more complex_
+> > > > it is only conceptualy appealing. The changes are on the other hand much
+> > > > deeper and much riskier but you decided to ignore that and focus on some-
+> > > > thing i was just giving as an example.
+> > > 
+> > > Yeah, after going and reading several places like fs/iomap.c, fs/mpage.c,
+> > > drivers/md/dm-io.c I agree with you. The places that are not doing direct
+> > > IO usually just don't hold any page reference that could be directly
+> > > attributed to the bio (and they don't drop it when bio finishes). They
+> > > rather use other means (like PageLocked, PageWriteback) to make sure the
+> > > page stays alive so mandating gup-pin reference for all pages attached to a
+> > > bio would require a lot of reworking of places that are not related to our
+> > > problem and currently work just fine. So I withdraw my suggestion. Nice in
+> > > theory, too much work in practice ;).
+> > 
+> > Have you seem Boaz proposal ? I have started it and it does not look to
+> > bad (but you knwo taste and color :)) You can take a peek:
+> > 
+> > https://cgit.freedesktop.org/~glisse/linux/log/?h=gup-bio-v2
+> > 
+> > I need to finish that and run fstests on bunch of different fs before
+> > posting. Dunno if i will have enough time to do that before LSF/MM.
+> 
+> Yes, I've seen it. I just wasn't sure how the result will look like. What
+> you have in your tree looks pretty clean so far. BTW (I know I'm repeating
+> myself ;) what if we made iov_iter_get_pages() & iov_iter_get_pages_alloc()
+> always return gup-pin reference? That would get rid of the need for two
+> ioend handlers for each call site...
 
-I've always interpreted "modules.builtin" to mean "this is a list of
-modules that have been built-in into the kernel", no? So I thought the
-name made sense. But you are the maintainer, so I do not have a strong
-opinion on this either way :-)
+No it would not everywhere, some of the callsite have more way to fill
+the bio then just iov_iter_get_pages*() so i expect a good chunk of
+the patches i have would stay the same because of that. So in the end
+it might now simplify much maybe couple place.
 
-Thanks,
-
-Jessica
+Cheers,
+Jérôme
