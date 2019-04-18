@@ -2,85 +2,74 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EEEC10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C60C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081F0214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9393214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555569142;
+	bh=a6TcY4NDn654iRe26wHBWmi1P0ogCH8rBAaFTg0XiUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C2KN+HEV3ltaTjrFXV28YnNA4YwTY/UFMZTR0/hzvGuZ26qMv3BznwaZekaeps3su
+	 3DMmNgJLALa/erzRl1EzThtIcdBwNhXy3Zx2GhB7EFjYGG+aHS8T9Vl/fF2xZIbeTq
+	 vqP8Y6AQHTYSb1mo6VxTBTNa7oMPSP1m8ayz6Ihc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388133AbfDRGcK (ORCPT
+        id S2388146AbfDRGcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:32:10 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60415 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388011AbfDRGcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:32:09 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH0aQ-0006tR-2u; Thu, 18 Apr 2019 08:31:54 +0200
-Date:   Thu, 18 Apr 2019 08:31:52 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Subject: Re: [PATCH v7 10/21] x86/split_lock: Define per CPU variable to
- cache MSR TEST_CTL
-In-Reply-To: <20190418012848.GC18776@romley-ivt3.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1904180827440.3174@nanos.tec.linutronix.de>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com> <1555536851-17462-11-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1904180009200.3174@nanos.tec.linutronix.de> <20190418012848.GC18776@romley-ivt3.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Apr 2019 02:32:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47738 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388084AbfDRGcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 02:32:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4D71EAF8A;
+        Thu, 18 Apr 2019 06:32:20 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 08:32:18 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [QUESTIONS] THP allocation in NUMA fault migration path
+Message-ID: <20190418063218.GA6567@dhcp22.suse.cz>
+References: <aa34f38e-5e55-bdb2-133c-016b91245533@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa34f38e-5e55-bdb2-133c-016b91245533@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Fenghua Yu wrote:
-> On Thu, Apr 18, 2019 at 12:14:12AM +0200, Thomas Gleixner wrote:
-> > On Wed, 17 Apr 2019, Fenghua Yu wrote:
-> > > +DEFINE_PER_CPU(u64, msr_test_ctl_cache);
-> > > +EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
-> > 
-> > Contrary to things like cpufeatures or MSR bits, it's pretty useless to
-> > have a separate patch for this. Please fold this into the place which
-> > actualy uses it.
+On Wed 17-04-19 21:15:41, Yang Shi wrote:
+> Hi folks,
 > 
-> Can I fold this patch into the KVM patch 0013 which first uses (reads) the
-> variable? But the variable will be set in later patches when enabling split
-> lock feature (patch 0014) and when enabling/disabling split lock feature
-> (patch 0015).
 > 
-> Is this a right sequence to fit the variable in the patch set?
+> I noticed that there might be new THP allocation in NUMA fault migration
+> path (migrate_misplaced_transhuge_page()) even when THP is disabled (set to
+> "never"). When THP is set to "never", there should be not any new THP
+> allocation, but the migration path is kind of special. So I'm not quite sure
+> if this is the expected behavior or not?
+> 
+> 
+> And, it looks this allocation disregards defrag setting too, is this
+> expected behavior too?H
 
-As I said in the other reply, you are assuming that the content of that MSR
-is 0. Which might be true now, but is that true in a year from now?
-
-So you really want to at least initialize the variable by reading the MSR
-_before_ you make use of it in KVM.
-
-Thanks,
-
-	tglx
+Could you point to the specific code? But in general the miTgration path
+should allocate the memory matching the migration origin. If the origin
+was a THP then I find it quite natural if the target was a huge page as
+well. How hard the allocation should try is another question and I
+suspect we do want to obedy the defrag setting.
+-- 
+Michal Hocko
+SUSE Labs
