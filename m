@@ -2,85 +2,126 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51883C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BDBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1751820651
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555626275;
-	bh=hftJc36X3fIepzS0pe5Bd5zqY9jmYizdCLndpeQqBko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CdQv1z1kymZLUNOIpKC41AZaeRjxGKGWPkW1/6eiFCvb9F+kie3FjIoHa2+rWxTzW
-	 aFtGT0qqLLQNvRXNkvoo58+PsRkwQ/feVQCwI51xoL+6+4s/uQEEVdJOEKLPUlE39Q
-	 /Pw48sdjCUN7ofXAK16PejscI4qLdLKe8K8pWkzE=
+	by mail.kernel.org (Postfix) with ESMTP id E24A32087F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbfDRWYd (ORCPT
+        id S1726171AbfDRWaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 18:24:33 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:59410 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbfDRWYd (ORCPT
+        Thu, 18 Apr 2019 18:30:11 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39380 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfDRWaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 18:24:33 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 584911F5A;
-        Thu, 18 Apr 2019 22:24:32 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 15:24:31 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Roman Gushchin <guroan@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Joel Fernandes <joelaf@google.com>
-Subject: Re: [PATCH v4 1/2] mm: refactor __vunmap() to avoid duplicated call
- to find_vm_area()
-Message-Id: <20190418152431.c583ef892a8028c662db3e6a@linux-foundation.org>
-In-Reply-To: <20190418111834.GE7751@bombadil.infradead.org>
-References: <20190417194002.12369-1-guro@fb.com>
-        <20190417194002.12369-2-guro@fb.com>
-        <20190417145827.8b1c83bf22de8ba514f157e3@linux-foundation.org>
-        <20190418111834.GE7751@bombadil.infradead.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Thu, 18 Apr 2019 18:30:11 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hHFXf-0008IB-Sq; Fri, 19 Apr 2019 00:30:04 +0200
+Date:   Fri, 19 Apr 2019 00:30:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Daniel Drake <drake@endlessm.com>
+cc:     Len Brown <lenb@kernel.org>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: Detecting x86 LAPIC timer frequency from CPUID data
+In-Reply-To: <alpine.DEB.2.21.1904181511150.3174@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1904182359360.3174@nanos.tec.linutronix.de>
+References: <20190417052810.3052-1-drake@endlessm.com> <alpine.DEB.2.21.1904181511150.3174@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 04:18:34 -0700 Matthew Wilcox <willy@infradead.org> wrote:
-
-> On Wed, Apr 17, 2019 at 02:58:27PM -0700, Andrew Morton wrote:
-> > On Wed, 17 Apr 2019 12:40:01 -0700 Roman Gushchin <guroan@gmail.com> wrote:
-> > > +static struct vm_struct *__remove_vm_area(struct vmap_area *va)
-> > > +{
-> > > +	struct vm_struct *vm = va->vm;
-> > > +
-> > > +	might_sleep();
-> > 
-> > Where might __remove_vm_area() sleep?
-> > 
-> > >From a quick scan I'm only seeing vfree(), and that has the
-> > might_sleep_if(!in_interrupt()).
-> > 
-> > So perhaps we can remove this...
+On Thu, 18 Apr 2019, Thomas Gleixner wrote:
+> On Wed, 17 Apr 2019, Daniel Drake wrote:
 > 
-> See commit 5803ed292e63 ("mm: mark all calls into the vmalloc subsystem as potentially sleeping")
+> > The CPUID.0x16 leaf provides "Bus (Reference) Frequency (in MHz)".
+> > 
+> > In the thread "No 8254 PIT & no HPET on new Intel N3350 platforms
+> > causes kernel panic during early boot" we are exploring ways to have
+> > the kernel avoid using the PIT/HPET IRQ0 timer in more cases, and
+> > Thomas Gleixner suggested that we could use this CPUID data to set
+> > lapic_timer_frequency, avoiding the need for calibrate_APIC_clock()
+> > to measure the APIC clock against the IRQ0 timer.
+> > 
+> > I'm thinking of the the following code change, however I get
+> > unexpected results on Intel i7-8565U (Whiskey Lake). When
+> > booting without this change, and with apic=notscdeadline (so that
+> > APIC clock gets calibrated and used), the bus speed is detected as
+> > 23MHz:
+> > 
+> >  ... lapic delta = 149994
+> >  ... PM-Timer delta = 357939
+> >  ... PM-Timer result ok
+> >  ..... delta 149994
+> >  ..... mult: 6442193
+> >  ..... calibration result: 23999
+
+That's 24MHZ which is the nominal clock for these machines.
+
+> >  ..... CPU clock speed is 1991.0916 MHz.
+> >  ..... host bus clock speed is 23.0999 MHz.
+
+I think that printout is wrong in two aspects. First it should be
+23.9999Mhz, second it should be 100MHz. This stuff comes from old systems
+which had completely different clock setups.
+
+> > However the CPUID.0x16 ECX reports a 100MHz bus speed on this device,
+> > so this code change would produce a significantly different calibration.
+
+Yes.
+
+> > Am I doing anything obviously wrong?
 > 
-> It looks like the intent is to unconditionally check might_sleep() at
-> the entry points to the vmalloc code, rather than only catch them in
-> the occasional place where it happens to go wrong.
+> It's probably just my fault sending you down the wrong path. What's the
+> content of CPUUD.0x15 on that box?
 
-afaict, vfree() will only do a mutex_trylock() in
-try_purge_vmap_area_lazy().  So does vfree actually sleep in any
-situation?  Whether or not local interrupts are enabled?
+I bet that CPUID.0x15 ECX says 24Mhz or it just says 0 like on my
+machine. But then interestingly enough on that box I see:
 
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 168/2
+      nominal core crystal clock = 0 Hz
 
+   Processor Frequency Information (0x16):
+      Core Base Frequency (MHz) = 0x834 (2100)
+      Core Maximum Frequency (MHz) = 0xed8 (3800)
+      Bus (Reference) Frequency (MHz) = 0x64 (100)
+
+Assuming that TSC and local APIC timer run from the same frequency on these
+modern machines.
+
+       2100MHz * 2 / 168 = 25MHz
+
+and disabling the tsc deadline timer tells me:
+
+  ..... calibration result: 24999
+
+Close enough. Thinking about it - that makes a lot of sense. With TSC
+deadline timer available it would be pretty silly if there is yet another
+clock feeding into local APIC.
+
+And the 0x15 -> 0x16 correlation is clear as well. The TSC runs at the
+nominal CPU frequency, in this case 2100MHz. So the nominator/denominator
+pair from 0x15 allows to deduce the nominal core crystal clock which seems
+to be exactly the clock which is fed into the local APIC timer.
+
+If someone from Intel could confirm that, then we could make that work for
+any modern system.
+
+Thanks,
+
+	tglx
