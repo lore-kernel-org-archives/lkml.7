@@ -2,161 +2,139 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94975C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07163C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582A12184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9432083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="B82lOyt4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fAK7nV75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388288AbfDRIux (ORCPT
+        id S2388280AbfDRIwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:50:53 -0400
-Received: from mail-eopbgr00060.outbound.protection.outlook.com ([40.107.0.60]:26607
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728074AbfDRIux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:50:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oDH8Gs9gOI6Nt3wZaAXnUE98uF9FNVdZ2DMPgSDXiJk=;
- b=B82lOyt4rFgDQuakCtiMFvTVE1f5JHMwBMa+V1Xy/OKEkGyCruAldKQ90uzpCgK/QIsqNUZeOWTzrFcmWSavTZwZ7vt0DBlXb1mfBBN3OnwFNa0q2ycK8NpE+lOmQC0dPcIwZuSNvfiKY4PsvchKvMlcgxx33tdNj5klh2mCgao=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6717.eurprd04.prod.outlook.com (20.179.235.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Thu, 18 Apr 2019 08:50:49 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1813.013; Thu, 18 Apr 2019
- 08:50:49 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
- with function
-Thread-Topic: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
- with function
-Thread-Index: AdT1wt4f0LfTMAkAQai/jI2p7SWJLw==
-Date:   Thu, 18 Apr 2019 08:50:48 +0000
-Message-ID: <VE1PR04MB647965FEAF3506E1775397AEE3260@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 081fec1e-0255-40e5-2686-08d6c3daf470
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6717;
-x-ms-traffictypediagnostic: VE1PR04MB6717:
-x-microsoft-antispam-prvs: <VE1PR04MB67175017C40BB87EA0F3CFB3E3260@VE1PR04MB6717.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0011612A55
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(376002)(346002)(396003)(189003)(199004)(51444003)(55016002)(9686003)(53936002)(68736007)(1411001)(476003)(486006)(186003)(6916009)(97736004)(54906003)(99286004)(7696005)(6436002)(316002)(2906002)(3846002)(6116002)(33656002)(86362001)(102836004)(6506007)(26005)(81166006)(8936002)(81156014)(8676002)(229853002)(4326008)(5660300002)(66066001)(52536014)(305945005)(14444005)(74316002)(478600001)(25786009)(7736002)(14454004)(256004)(71200400001)(71190400001)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6717;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LZOk+NPwfNw5giji0Rstr12bzxoDrqDfFRE2vHjppUSx4llq/zsim0YpkhMthMRmVFR5qbvLGutHhS6HlZH+8FKAJecxww5hb62uQ71N+guf8MxNQl95LJw0js385uDf2on0toMsHVtmsSf5YGYl7JwDaXIssorwho9yz25n6RBPXTH76lUFMqkhz4JQihLjspmEX5FiU24S6mB46T/BqQUJfBMMD95aep1ZetFWRsq1pFzl0TQ4oea59X+ASm4ayK2WUlufrxqtocRyHBYyH+xA5NRK8YUzgt9toJ+pxZm4KzB8OF8aR4dkMcQi2cjUgG5+4MSfV3LIHcZWWObAK1ap0YxZWDEFEZygopykccNfRuM9StZvjHnhAHX+pzC/7hamHU7ub+v72kNE0C4yZjipMobH9XI78MetiibYEwU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Apr 2019 04:52:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37426 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfDRIwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ABfuDNegMmvg64HlNWj/EUfOOiHsDeMbbxpXc0NqIN4=; b=fAK7nV75mYvErbSmiAxQBkXjX
+        khDcOUJQU0c7rfZVGGW0+tHHV3CIoHN6gbRY2SxsR0Ir0upDNhjyYAw88qlHyY/gp3DOIRZRqwcAO
+        oPKkmufVhv40v+t28qdYloXz7WKRTyIsavza5YQc6nxmLWoZHd7/KlFYc7OsqpBuF7GmmJslrDThL
+        vIFQtNsNIfiFOBxw3yN4bAfD9jjQUfVA6wFdqQxJKNGQHiU815NaG4Qnc3fBW54QF/k5sUhSOjgNS
+        MJRD+59JVF7uFGwKBLaV8DhTFfYUlchcy0DGRC1YYO4KuwSDUCdli/HtBqMLKkGQ9ISULuzPjBr09
+        pynYN87jA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hH2mT-0000j4-UE; Thu, 18 Apr 2019 08:52:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E53A129B98550; Thu, 18 Apr 2019 10:52:27 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 10:52:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 09/16] locking/rwsem: Ensure an RT task will not spin
+ on reader
+Message-ID: <20190418085227.GV12232@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-10-longman@redhat.com>
+ <20190417131841.GF4038@hirez.programming.kicks-ass.net>
+ <1c37b8f2-232e-7ced-0483-31c8c6a4ffd1@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 081fec1e-0255-40e5-2686-08d6c3daf470
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 08:50:48.9570
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6717
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c37b8f2-232e-7ced-0483-31c8c6a4ffd1@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Wed, Apr 17, 2019 at 02:47:07PM -0400, Waiman Long wrote:
+> >> @@ -566,13 +573,28 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+> >>  		}
+> >>  
+> >>  		/*
+> >> -		 * When there's no owner, we might have preempted between the
+> >> -		 * owner acquiring the lock and setting the owner field. If
+> >> -		 * we're an RT task that will live-lock because we won't let
+> >> -		 * the owner complete.
+> >> +		 * An RT task cannot do optimistic spinning if it cannot
+> >> +		 * be sure the lock holder is running or live-lock may
+> >> +		 * happen if the current task and the lock holder happen
+> >> +		 * to run in the same CPU.
+> >> +		 *
+> >> +		 * When there's no owner or is reader-owned, an RT task
+> >> +		 * will stop spinning if the owner state is not a writer
+> >> +		 * at the previous iteration of the loop. This allows the
+> >> +		 * RT task to recheck if the task that steals the lock is
+> >> +		 * a spinnable writer. If so, it can keeps on spinning.
+> >> +		 *
+> >> +		 * If the owner is a writer, the need_resched() check is
+> >> +		 * done inside rwsem_spin_on_owner(). If the owner is not
+> >> +		 * a writer, need_resched() check needs to be done here.
+> >>  		 */
+> >> -		if (!sem->owner && (need_resched() || rt_task(current)))
+> >> -			break;
+> >> +		if (owner_state != OWNER_WRITER) {
+> >> +			if (need_resched())
+> >> +				break;
+> >> +			if (is_rt_task && (prev_owner_state != OWNER_WRITER))
+> >> +				break;
+> >> +		}
+> >> +		prev_owner_state = owner_state;
+> >>  
+> >>  		/*
+> >>  		 * The cpu_relax() call is a compiler barrier which forces
+> > This patch confuses me mightily. I mean, I see what it does, but I can't
+> > figure out why. The Changelog is just one big source of confusion.
+> 
+> Sorry for confusing you. If count and owner are separate, there is a
+> time lag where the owner is NULL, but the lock is not free yet.
 
->=20
->=20
-> On Thu, Apr 18, 2019 at 02:37:03AM +0000, S.j. Wang wrote:
-> > > Here:
-> > > > +     /* Does not support cases: Tsout > 8.125 * Tsin */
-> > > > +     if (inrate * 8 > 65 * outrate)
->=20
-> Though it might not matter any more (see my last comments), it should be
-> "inrate > 8.125 * outrate" in the comments.
->=20
-> > > > +             return -EINVAL;
-> > > And here:
-> > > > +     ret =3D fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_p=
-roc);
-> > > > +     if (ret) {
-> > > > +             pair_err("No supported pre-processing options\n");
-> > > > +             return ret;
-> > > > +     }
-> > >
-> > > Instead of a general message, I was thinking of a more specific one
-> > > by telling users that the ratio between the two rates isn't
-> > > supported -- something similar to what I suggested previously:
-> > >
-> > >         pair_err("Does not support %d (input) > 8.125 * %d (output)\n=
-",
-> > >                  outrate, inrate);
-> > >
->=20
-> > In fsl_asrc_sel_proc,  we can't call the pair_err for there is no
-> > struct fsl_asrc_pair *pair in the argument. Do you think we need to
-> > add this argument?
->=20
-> I's thinking of adding it to the top of fsl_asrc_config_pair() as a part =
-of
-> inrate-outrate-validation, however, I found that actually we already have=
- a
-> similar check in the early routine:
->         if ((outrate > 8000 && outrate < 30000) &&
->             (outrate/inrate > 24 || inrate/outrate > 8)) {
->                 pair_err("exceed supported ratio range [1/24, 8] for \
->                          inrate/outrate: %d/%d\n", inrate, outrate);
->                 return -EINVAL;
->         }
->=20
-> And this is according to IMX6DQRM:
->     Limited support for the case when output sampling rates is
->     between 8kHz and 30kHz. The limitation is the supported ratio
->     (Fsin/Fsout) range as between 1/24 to 8
->=20
-> This should cover your 8.125 condition already, even if having an outrate
-> range between [8KHz, 30KHz] check, since an outrate above 30KHz will not
-> have an inrate bigger than 8.125 times of it, given the maximum input rat=
-e
-> is 192KHz.
->=20
-> So I think that we can just drop that 8.125 condition from your change an=
-d
-> there's no need to error out any more.
->=20
-No, if outrate=3D8kHz,  inrate > 88.2kHz, these cases are not supported.=20
-This is not covered by
+Right.
 
-        if ((outrate > 8000 && outrate < 30000) &&
-            (outrate/inrate > 24 || inrate/outrate > 8)) {
+> Similarly, the lock could be free but another task may have stolen the
+> lock if the waiter bit isn't set.
 
-> However, we do need a patch to fix a potential rounding issue:
-> -           (outrate/inrate > 24 || inrate/outrate > 8)) {
-> +           (outrate > 24 * inrate || inrate > 8 * outrate)) {
->=20
-> Should fix the missing whitespace also. And it will be needed to send to
-> stable kernel too. Will you help submit a change?
->=20
-> Thanks
+> In the former case,
+
+(free)
+
+> an extra iteration gives it more time for the lock holder to release
+> the lock.
+
+
+> In the latter case,
+
+(stolen)
+
+> if the new lock owner is a writer and set owner in time,
+> the RT task can keep on spinning. Will clarify that in the commit log
+> and the comment.
+
+Blergh.. so by going around once extra, you hope ->owner will be set
+again and we keep spinning. And this is actually measurable.
+
+Yuck yuck yuck. I much prefer getting rid of that hole, as you do later
+on in the series, that would avoid this complecity. Let me continue
+reading...
+
+
+
