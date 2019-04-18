@@ -2,104 +2,144 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA7C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BBDC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25352214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Q1sf1Rhk"
+	by mail.kernel.org (Postfix) with ESMTP id 5A4EA214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388152AbfDRHX7 (ORCPT
+        id S2388171AbfDRHZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 03:23:59 -0400
-Received: from m50-132.163.com ([123.125.50.132]:41047 "EHLO m50-132.163.com"
+        Thu, 18 Apr 2019 03:25:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47026 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731317AbfDRHX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 03:23:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=A2avxIEXMxtUFGqdlf
-        UaJw2dGK5fmozKEPD9FwObH70=; b=Q1sf1Rhku4O9XOBto8Sjj0Gd2pxHy4Z5AH
-        nuo2LuqplfA64do2+Ibq9t0wNt4N8TZPUeQikn3BFBPAOVhIxiAj0N2i1Y/HL6+f
-        oGkN/EyRZCWC4TToyPMKbadPhzUEESDh1isKIGJIMzCN0KaaLvnp93wPg7pG2Z9o
-        1ZlnOmXlU=
-Received: from bp.localdomain (unknown [218.106.182.174])
-        by smtp2 (Coremail) with SMTP id DNGowACniR_TJbhcX+MIAA--.174S3;
-        Thu, 18 Apr 2019 15:23:06 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: stm class: Fix possible double free
-Date:   Thu, 18 Apr 2019 15:22:58 +0800
-Message-Id: <1555572178-73786-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: DNGowACniR_TJbhcX+MIAA--.174S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7try3Cw4DAr1kCr1kKw1ftFb_yoW8GF43pa
-        18Ga4Yyry8Krsrur1DJF18ZFy5GayIkw1ruFy0kwna9FZ8Z34vyryYya45CayDJrW8AFWa
-        qFW3ArW8ur1UAw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UlkskUUUUU=
-X-Originating-IP: [218.106.182.174]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBZBKaclQHEfe2+AAAsl
+        id S1725886AbfDRHZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 03:25:44 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 451913007426;
+        Thu, 18 Apr 2019 07:25:44 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA3DF600C2;
+        Thu, 18 Apr 2019 07:25:42 +0000 (UTC)
+Message-ID: <25e684a4d347181aa6b6dc1e41d1794203bbae03.camel@redhat.com>
+Subject: Re: [PATCH] nvme: determine the number of IO queues
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Aaron Ma <aaron.ma@canonical.com>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, keith.busch@intel.com, axboe@fb.com
+Date:   Thu, 18 Apr 2019 10:25:41 +0300
+In-Reply-To: <e79703d5-3502-6519-a497-71b2b2a8768f@canonical.com>
+References: <1555510379-20199-1-git-send-email-aaron.ma@canonical.com>
+         <a2f0a97e14b884dc1183db9cbdd6f4b520000ce3.camel@redhat.com>
+         <096935354b16662eb481aeda1f48001ba489463c.camel@redhat.com>
+         <e79703d5-3502-6519-a497-71b2b2a8768f@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 18 Apr 2019 07:25:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function stm_register_device() calls put_device(&stm->dev) to
-release allocated memory (in stm_device_release()) on error paths.
-However, after that, the freed memory stm is released again, resulting
-in a double free bug. There is a similar issue in the function
-stm_source_register_device. This patch fixes these issues.
+On Thu, 2019-04-18 at 14:21 +0800, Aaron Ma wrote:
+> On 4/18/19 1:33 AM, Maxim Levitsky wrote:
+> > On Wed, 2019-04-17 at 20:32 +0300, Maxim Levitsky wrote:
+> > > On Wed, 2019-04-17 at 22:12 +0800, Aaron Ma wrote:
+> > > > Some controllers support limited IO queues, when over set
+> > > > the number, it will return invalid field error.
+> > > > Then NVME will be removed by driver.
+> > > > 
+> > > > Find the max number of IO queues that controller supports.
+> > > > When it still got invalid result, set 1 IO queue at least to
+> > > > bring NVME online.
+> > > 
+> > > To be honest a spec compliant device should not need this.
+> > > The spec states:
+> > > 
+> > > "Number of I/O Completion Queues Requested (NCQR): Indicates the number of
+> > > I/O
+> > > Completion
+> > > Queues requested by software. This number does not include the Admin
+> > > Completion
+> > > Queue. A
+> > > minimum of one queue shall be requested, reflecting that the minimum
+> > > support
+> > > is
+> > > for one I/O
+> > > Completion Queue. This is a 0’s based value. The maximum value that may be
+> > > specified is 65,534
+> > > (i.e., 65,535 I/O Completion Queues). If the value specified is 65,535,
+> > > the
+> > > controller should return
+> > > an error of Invalid Field in Command."
+> > > 
+> > > 
+> > > This implies that you can ask for any value and the controller must not
+> > > respond
+> > > with an error, but rather indicate how many queues it supports.
+> > > 
+> > > Maybe its better to add a quirk for the broken device, which needs this?
+> 
+> Adding quirk only makes the code more complicated.
+> This patch doesn't change the default behavior.
+> Only handle the NVME error code.
+> 
+> Yes the IO queues number is 0's based, but driver would return error and
+> remove the nvme device as dead.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/hwtracing/stm/core.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+No, no, the spec says that no matter what the number queues you ask for, unless
+it is 65,535, the controller should not fail with an error, but rather indicate
+in the return value (in the completion entry) the actual number of queues it
+allocated which can be larger or smaller that what you asked for.
 
-diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-index c7ba8ac..cfb5c4d 100644
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -886,8 +886,10 @@ int stm_register_device(struct device *parent, struct stm_data *stm_data,
- 		return -ENOMEM;
- 
- 	stm->major = register_chrdev(0, stm_data->name, &stm_fops);
--	if (stm->major < 0)
--		goto err_free;
-+	if (stm->major < 0) {
-+		vfree(stm);
-+		return err;
-+	}
- 
- 	device_initialize(&stm->dev);
- 	stm->dev.devt = MKDEV(stm->major, 0);
-@@ -933,8 +935,6 @@ int stm_register_device(struct device *parent, struct stm_data *stm_data,
- 
- 	/* matches device_initialize() above */
- 	put_device(&stm->dev);
--err_free:
--	vfree(stm);
- 
- 	return err;
- }
-@@ -1277,7 +1277,6 @@ int stm_source_register_device(struct device *parent,
- 
- err:
- 	put_device(&src->dev);
--	kfree(src);
- 
- 	return err;
- }
--- 
-2.7.4
+If controller returns an error, that means its firmware has a bug, which is not
+something unusual but usually those cases are handled with a quirk rather than
+with general code change.
+
+But anyway that is just my opinion, as someone who studied and implemented
+(hopefully mostly correctly) the spec very recently (I am the author of nvme-
+mdev device).
+
+It doesn't really matter to me if this is implemented this or another way as
+long as it doesn't break things.
+
+Best regards,
+	Maxim Levitsky
+
+
+
+> 
+> So set it as 1 at least the NVME can be probed properly.
+> 
+> Regards,
+> Aaron
+> 
+> > I forgot to add the relevant paragraph:
+> > 
+> > "Note: The value allocated may be smaller or larger than the number of
+> > queues
+> > requested, often in virtualized
+> > implementations. The controller may not have as many queues to allocate as
+> > are
+> > requested. Alternatively,
+> > the controller may have an allocation unit of queues (e.g. power of two) and
+> > may
+> > supply more queues to
+> > host software to satisfy its allocation unit."
+
+
+
+
+> > 
+> > 
+> > Best regards,
+> > 	Maxim Levitsky
+> > 
 
 
