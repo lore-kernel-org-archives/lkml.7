@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18041C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F647C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D584D21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3082721872
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610600;
-	bh=DXO0GETJ5oNnRvivMZ/ULvcZETyxG/ls+D2ui/mqmAo=;
+	s=default; t=1555610605;
+	bh=j3pVMqzDq7XnP2iyLz/eRYs301p+pk5iyQOdszhJm+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRryztojLwE2NZsyJ6OlxU4i2TeMhIEpmeJGYK8jsMXL2J5G8Rg486CLR5UeJeqAj
-	 42Haikz3tWBKpFj6g/t4Q+j9TLufDhrWXHSpvU5HN9Be+m6lhOBeqPl5LB1+QbNFNW
-	 JEGyrlmuqbjPJ0vkcpbHVK+k1rOei+zI73rq44ko=
+	b=ClJaS4/hL3M61367FfXtnceSCjcbTineavRTe00QKO681yPdII8C9xtwmOJRJa5AO
+	 hDoi/FBIMmTgyn8RCswfYNLbZBk9/fUrkMvuO/SJaf/tZ5+X0nt7A0MRJzcPy9z4WL
+	 ut1pDsLh8uCAn7aBb9gM5VHdR/R6A5D62pMfZO6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390901AbfDRSDS (ORCPT
+        id S2390917AbfDRSDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390891AbfDRSDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:03:16 -0400
+        id S2390903AbfDRSDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:03:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D5421872;
-        Thu, 18 Apr 2019 18:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEFF9217FA;
+        Thu, 18 Apr 2019 18:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610595;
-        bh=DXO0GETJ5oNnRvivMZ/ULvcZETyxG/ls+D2ui/mqmAo=;
+        s=default; t=1555610598;
+        bh=j3pVMqzDq7XnP2iyLz/eRYs301p+pk5iyQOdszhJm+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTvDT4U6BiWVLxrQfhYTXCIL3GjIXk1W+uFHILf6T5rtANfJkGJb0HX0/M3/RMEx8
-         WYYANkoHs0PsyxMpuYlj/UqgpIqM/pgZyzANwUIYDd62FtG1m9AdDvgB2ZJkvZhwrF
-         pWluva2DmhpycRgbaVHtMoG6Z3wj1bnTJ4OuU0Qk=
+        b=U8pJkvBWTicNr3TnYT6g1bYifJL8lln1CNv4txHvx/fFzCudo9kV9pbjOvIRra3fD
+         mqjkXfpeHnyrjuFr8VltnvSHOd/nc40GZyY33ewT/017PifhmXwqJ4SGsQ3lMEbmfz
+         BAcsjheFBCmQLIsdQrjHAAb2P/BgD5yZ7Dhki3qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/92] ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
-Date:   Thu, 18 Apr 2019 19:56:29 +0200
-Message-Id: <20190418160431.382424852@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 12/92] thermal/intel_powerclamp: fix __percpu declaration of worker_data
+Date:   Thu, 18 Apr 2019 19:56:30 +0200
+Message-Id: <20190418160431.455727033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -59,36 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b4748e7ab731e436cf5db4786358ada5dd2db6dd ]
+[ Upstream commit aa36e3616532f82a920b5ebf4e059fbafae63d88 ]
 
-The function snd_opl3_drum_switch declaration in the header file
-has the order of the two arguments on_off and vel swapped when
-compared to the definition arguments of vel and on_off.  Fix this
-by swapping them around to match the definition.
+This variable is declared as:
+	static struct powerclamp_worker_data * __percpu worker_data;
+In other words, a percpu pointer to struct ...
 
-This error predates the git history, so no idea when this error
-was introduced.
+But this variable not used like so but as a pointer to a percpu
+struct powerclamp_worker_data.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+So fix the declaration as:
+	static struct powerclamp_worker_data __percpu *worker_data;
+
+This also quiets Sparse's warnings from __verify_pcpu_ptr(), like:
+  494:49: warning: incorrect type in initializer (different address spaces)
+  494:49:    expected void const [noderef] <asn:3> *__vpp_verify
+  494:49:    got struct powerclamp_worker_data *
+
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/drivers/opl3/opl3_voice.h | 2 +-
+ drivers/thermal/intel_powerclamp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/drivers/opl3/opl3_voice.h b/sound/drivers/opl3/opl3_voice.h
-index eaef435e0528..abf6c23a721c 100644
---- a/sound/drivers/opl3/opl3_voice.h
-+++ b/sound/drivers/opl3/opl3_voice.h
-@@ -41,7 +41,7 @@ void snd_opl3_timer_func(unsigned long data);
+diff --git a/drivers/thermal/intel_powerclamp.c b/drivers/thermal/intel_powerclamp.c
+index d718cd179ddb..45d9840491bd 100644
+--- a/drivers/thermal/intel_powerclamp.c
++++ b/drivers/thermal/intel_powerclamp.c
+@@ -101,7 +101,7 @@ struct powerclamp_worker_data {
+ 	bool clamping;
+ };
  
- /* Prototypes for opl3_drums.c */
- void snd_opl3_load_drums(struct snd_opl3 *opl3);
--void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int on_off, int vel, struct snd_midi_channel *chan);
-+void snd_opl3_drum_switch(struct snd_opl3 *opl3, int note, int vel, int on_off, struct snd_midi_channel *chan);
- 
- /* Prototypes for opl3_oss.c */
- #if IS_ENABLED(CONFIG_SND_SEQUENCER_OSS)
+-static struct powerclamp_worker_data * __percpu worker_data;
++static struct powerclamp_worker_data __percpu *worker_data;
+ static struct thermal_cooling_device *cooling_dev;
+ static unsigned long *cpu_clamping_mask;  /* bit map for tracking per cpu
+ 					   * clamping kthread worker
 -- 
 2.19.1
 
