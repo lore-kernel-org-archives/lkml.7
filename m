@@ -2,79 +2,121 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1CC282DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4EBC282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEF4217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7498C217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbfDRCTS (ORCPT
+        id S2387886AbfDRCWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 22:19:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36184 "EHLO mx1.redhat.com"
+        Wed, 17 Apr 2019 22:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbfDRCTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 22:19:17 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729189AbfDRCWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 22:22:08 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 931513073AFE;
-        Thu, 18 Apr 2019 02:19:17 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 674B65D9CC;
-        Thu, 18 Apr 2019 02:19:09 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 10:19:04 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
- BIO_MAX_PAGES
-Message-ID: <20190418021903.GB9520@ming.t460p>
-References: <20190417115207.30202-1-pbonzini@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AD063217FA;
+        Thu, 18 Apr 2019 02:22:07 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 22:22:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ktest: Add workaround to avoid unexpected power cycle
+Message-ID: <20190417222205.71650f42@oasis.local.home>
+In-Reply-To: <20190417205912.pqwzbrrm6435mqqu@gabell>
+References: <20190417201442.15030-1-msys.mizuma@gmail.com>
+        <20190417162942.375b3e3f@gandalf.local.home>
+        <20190417205912.pqwzbrrm6435mqqu@gabell>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417115207.30202-1-pbonzini@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Apr 2019 02:19:17 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+On Wed, 17 Apr 2019 16:59:13 -0400
+Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
 
-On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
-> Because bio_kmalloc uses inline iovecs, the limit on the number of entries
-> is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
-> in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
-> to report a DMA overrun.
+> > > diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+> > > index ea07d43856b8..765c6bc83ab4 100755
+> > > --- a/tools/testing/ktest/ktest.pl
+> > > +++ b/tools/testing/ktest/ktest.pl
+> > > @@ -1737,6 +1737,11 @@ sub run_command {
+> > >      my $dord = 0;
+> > >      my $dostdout = 0;
+> > >      my $pid;
+> > > +    my $is_default_reboot = 0;
+> > > +
+> > > +    if ($command eq $default{REBOOT}) {
+> > > +	$is_default_reboot = 1;
+> > > +    }  
+> > 
+> > Do we really need to add this variable?
+> >   
+> 
+> > >  
+> > >      $command =~ s/\$SSH_USER/$ssh_user/g;
+> > >      $command =~ s/\$MACHINE/$machine/g;  
+> 
+> $command is modified here, so...
 
-BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
-can't hold all user space request, new bio will be allocated and appended
-to the passthrough request if queue limits aren't reached.
-
-So I understand SG_IO request shouldn't be truncated because of
-BIO_MAX_PAGES, or could you explain it in a bit detail or provide
-a reproducer?
+Ah thanks. This is what I get for reviewing patches without looking at
+the code it touches ;-)
 
 > 
-> Note that if the argument to iov_iter_npages were changed to UIO_MAXIOV,
-> we would still truncate SG_IO requests beyond UIO_MAXIOV pages.  Changing
-> it to UIO_MAXIOV + 1 instead ensures that bio_kmalloc notices that the
-> request is too big and blocks it.
+> > > @@ -1791,6 +1796,10 @@ sub run_command {
+> > >      # shift 8 for real exit status
+> > >      $run_command_status = $? >> 8;
+> > >  
+> > > +    if ($run_command_status == 255 && $is_default_reboot) {  
+> > 
+> > Instead can we have:
+> > 
+> > 	if ($command eq $default{REBOOT} &&
+> > 	    $run_command_status == $reboot_return_code) {
+> > 
+> > ?  
+> 
+> How about the following?
+> 
+> @@ -1737,6 +1740,7 @@ sub run_command {
+>      my $dord = 0;
+>      my $dostdout = 0;
+>      my $pid;
+> +    my $command_orig = $command;
+> 
+>      $command =~ s/\$SSH_USER/$ssh_user/g;
+>      $command =~ s/\$MACHINE/$machine/g;
+> @@ -1791,6 +1795,11 @@ sub run_command {
+>      # shift 8 for real exit status
+>      $run_command_status = $? >> 8;
+> 
+> +    if ($command_orig eq $default{REBOOT} &&
+> +       $run_command_status == $reboot_return_code) {
+> +       $run_command_status = 0;
+> +    }
+> +
 
-We should pass UIO_MAXIOV instead of UIO_MAXIOV + 1, otherwise bio_kmalloc()
-will fail. Otherwise, the patch looks fine, but shouldn't be a fix if my
-above analysis is correct.
+Looks fine to me.
 
-Thanks,
-Ming
+Thanks!
+
+-- Steve
+
+>      close(CMD);
+>      close(LOG) if ($dolog);
+>      close(RD)  if ($dord);
+> 
+> Thanks!
+> Masa
+
