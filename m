@@ -2,205 +2,130 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80A4C282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958EDC282DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A07B2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6615A2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555551345;
+	bh=t3djVohQhsnFHTNoSybpVk5Pus6dANYeEQB6Rq7UnCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H/gR5SsmasPTgU59qRKZxW27GJ+EjCfD3bXlNS4rmXxeP9jaM+r7hzLbSlwHos2LX
+	 WgTf7ym19kYEzTHIiNZpfVvgZ5XT3C3+4sxhCKWV9JVN3AcGgPEKp8KjMKru7tuUQZ
+	 7ELAWMdNRbYpYs0qKNHLNV7BKXCj/xzlEzkUcnHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387810AbfDRBek (ORCPT
+        id S2387846AbfDRBfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 21:34:40 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5258 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728268AbfDRBek (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 21:34:40 -0400
-X-UUID: 99a3936551dd4d639097015f5e8d0bee-20190418
-X-UUID: 99a3936551dd4d639097015f5e8d0bee-20190418
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1957517224; Thu, 18 Apr 2019 09:34:30 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 18 Apr 2019 09:34:29 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 18 Apr 2019 09:34:29 +0800
-Message-ID: <1555551269.2407.9.camel@mtksdaap41>
-Subject: Re: [PATCH v2 02/15] [media] mtk-mipicsi: add mediatek mipicsi
- driver for mt2712
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Stu Hsieh <stu.hsieh@mediatek.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Wed, 17 Apr 2019 21:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbfDRBfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 21:35:40 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B977F21872;
+        Thu, 18 Apr 2019 01:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555551339;
+        bh=t3djVohQhsnFHTNoSybpVk5Pus6dANYeEQB6Rq7UnCk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bzatYYyAQ/IY7bzLms8qEwPVxXGDdmlb12kIvM3MVI5vjG/5OHqjRY/r5wB/GMFUO
+         QgSdomhZi+/Bv65RzDntixPH2IQofOyEE3mkyxHKzHUxRHeUD5x0Q5/8hmEqs+w77p
+         EZ5flVL6OxvS/peeLoheQe1/MtburzahLz7rS5Vc=
+Received: by mail-qt1-f173.google.com with SMTP id k14so560955qtb.0;
+        Wed, 17 Apr 2019 18:35:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAUMbVgfkz4DRBZG5jJ586dVwjd0tndqNBNjAdeiaCtbOMPCyucK
+        HSx6hDrteiwEWTi1hOA9144AoPgozT4mfuXCVQ==
+X-Google-Smtp-Source: APXvYqxNZ7hcdLYsozYNOaTUKU61rv1CUqvpva89sJ8kxFJrlPP23w/Dp+bepFxUmW4Sqbjp1qgjpeeM8OCDbsAn6No=
+X-Received: by 2002:ac8:2a51:: with SMTP id l17mr77787896qtl.76.1555551338863;
+ Wed, 17 Apr 2019 18:35:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190412150625.28384-1-luca@z3ntu.xyz> <15255825.75VNnaJK3T@g550jk>
+In-Reply-To: <15255825.75VNnaJK3T@g550jk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 17 Apr 2019 20:35:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL7awWWLK3G6u2yzse2aU7KUSuUELuacCnCpfErWA_UaQ@mail.gmail.com>
+Message-ID: <CAL_JsqL7awWWLK3G6u2yzse2aU7KUSuUELuacCnCpfErWA_UaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: input: add GPIO controllable vibrator
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Date:   Thu, 18 Apr 2019 09:34:29 +0800
-In-Reply-To: <1555407015-18130-3-git-send-email-stu.hsieh@mediatek.com>
-References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
-         <1555407015-18130-3-git-send-email-stu.hsieh@mediatek.com>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Rob Herring <robh@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Stu:
+On Wed, Apr 17, 2019 at 11:02 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> On Freitag, 12. April 2019 17:06:23 CEST Luca Weiss wrote:
+> > Provide a simple driver for GPIO controllable vibrators.
+> > It will be used by the Fairphone 2.
+> >
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> >  .../bindings/input/gpio-vibrator.txt          | 20 +++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> > b/Documentation/devicetree/bindings/input/gpio-vibrator.txt new file mode
+> > 100644
+> > index 000000000000..93e5a8e7622d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+> > @@ -0,0 +1,20 @@
+> > +* GPIO vibrator device tree bindings
+> > +
+> > +Registers a GPIO device as vibrator, where the vibration motor just has the
+> > +capability to turn on or off. If the device is connected to a pwm, you
+> > should +use the pwm-vibrator driver instead.
+> > +
+> > +Required properties:
+> > +- compatible: should contain "gpio-vibrator"
+> > +- enable-gpios: Should contain a GPIO handle
+> > +
+> > +Optional properties:
+> > +- vcc-supply: Phandle for the regulator supplying power
+> > +
+> > +Example from Fairphone 2:
+> > +
+> > +vibrator {
+> > +     compatible = "gpio-vibrator";
+> > +     enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
+> > +     vcc-supply = <&pm8941_l18>;
+> > +};
+>
+> I see that the yaml based device tree binding docs seem to be the new hotness?
+> Is there any "policy" / preference about new drivers?
 
-On Tue, 2019-04-16 at 17:30 +0800, Stu Hsieh wrote:
-> This patch add mediatek mipicsi driver for mt2712,
-> including probe function to get the value from device tree,
-> and register to v4l2 the host device.
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> ---
->  drivers/media/platform/mtk-mipicsi/Makefile   |   4 +
->  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 767 ++++++++++++++++++
->  2 files changed, 771 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
->  create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> 
-> diff --git a/drivers/media/platform/mtk-mipicsi/Makefile b/drivers/media/platform/mtk-mipicsi/Makefile
-> new file mode 100644
-> index 000000000000..326a5e3808fa
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-mipicsi/Makefile
-> @@ -0,0 +1,4 @@
-> +mtk-mipicsi-y += mtk_mipicsi.o
-> +
-> +obj-$(CONFIG_VIDEO_MEDIATEK_MIPICSI) += mtk-mipicsi.o
-> +
-> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> new file mode 100644
-> index 000000000000..e26bebe17fe5
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> @@ -0,0 +1,767 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2017 MediaTek Inc.
-> + * Author: Ricky Zhang <ricky.zhang@mediatek.com>
-> + *         Baoyin Zhang <baoyin.zhang@mediatek.com>
-> + *         Alan Yue <alan.yue@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * http://www.gnu.org/licenses/gpl-2.0.html for more details.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/fs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/sched.h>
-> +#include <linux/slab.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/iommu.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <media/v4l2-common.h>
-> +#include <media/v4l2-dev.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +#include <media/soc_camera.h>
-> +#include <media/drv-intf/soc_mediabus.h>
-> +#include <media/videobuf2-core.h>
-> +#include <linux/videodev2.h>
-> +#include <soc/mediatek/smi.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +#ifdef CONFIG_VB2_MEDIATEK_DMA_SG
-> +#include "mtkbuf-dma-cache-sg.h"
-> +#endif
-> +
-> +#define MTK_MIPICSI_DRV_NAME "mtk-mipicsi"
-> +#define MTK_PLATFORM_STR "platform:mt2712"
-> +#define MIPICSI_COMMON_CLK 2
-> +#define MTK_CAMDMA_MAX_NUM 4U
-> +#define MIPICSI_CLK (MIPICSI_COMMON_CLK + MTK_CAMDMA_MAX_NUM)
-> +#define MTK_DATAWIDTH_8					(0x01U << 7U)
-> +#define MAX_SUPPORT_WIDTH             4096U
-> +#define MAX_SUPPORT_HEIGHT            4096U
-> +#define MAX_BUFFER_NUM			32U
-> +#define VID_LIMIT_BYTES			(100U * 1024U * 1024U)
-> +
-> +/* buffer for one video frame */
-> +struct mtk_mipicsi_buf {
-> +	struct list_head queue;
-> +	struct vb2_buffer *vb;
-> +	dma_addr_t vb_dma_addr_phy;
-> +	int prepare_flag;
-> +};
-> +
-> +struct mtk_mipicsi_dev {
-> +	struct soc_camera_host	soc_host;
-> +	struct platform_device *pdev;
-> +	unsigned int camsv_num;
-> +	struct v4l2_device	v4l2_dev;
-> +	struct device *larb_pdev;
-> +	void __iomem		*ana;
-> +	void __iomem		*seninf_ctrl;
+Not required yet, but welcomed. It's still a trickle so we can work
+out any issues and in some cases the common bindings still need to be
+done. I'm starting to ask subsystem maintainers to require DT schemas
+though.
 
-Separating register control to another patch looks strange to me.
-Register control is the bottom part and this patch is the top part. You
-send a top part first then the bottom part. 'seninf_ctrl' is useless in
-this patch, you may move this to the patch that use this variable or
-merge that patch into this patch.
+This one looks straightforward to use the schema.
 
-Regards,
-CK
-
-> +	void __iomem		*seninf;
-> +	struct regmap		*seninf_top;
-> +	void __iomem		*seninf_mux[MTK_CAMDMA_MAX_NUM];
-> +	void __iomem		*camsv[MTK_CAMDMA_MAX_NUM];
-> +	const struct soc_camera_format_xlate *current_fmt;
-> +	u16				width_flags;	/* max 12 bits */
-> +	struct list_head	capture_list[MTK_CAMDMA_MAX_NUM];
-> +	struct list_head	fb_list;
-> +	spinlock_t		lock;
-> +	spinlock_t		queue_lock;
-> +	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
-> +	bool streamon;
-> +	unsigned long frame_cnt[MTK_CAMDMA_MAX_NUM];
-> +	unsigned int link;
-> +	unsigned long enqueue_cnt;
-> +	unsigned long dequeue_cnt;
-> +	struct v4l2_ctrl_handler ctrl_hdl;
-> +	char drv_name[16];
-> +	u32 id;
-> +	int clk_num;
-> +	struct clk		*clk[MIPICSI_CLK];
-> +};
-> +
-
+Rob
