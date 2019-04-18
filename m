@@ -2,197 +2,128 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BCCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06270C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ADF206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:14:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g63Jrcfp"
+	by mail.kernel.org (Postfix) with ESMTP id CB713206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555611300;
+	bh=w2ar1zzQGS+MbihlOwPDJJzFGQOf4tudb6KXMChNcrY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PzxDGKstrIVeJdZ9fm66DxB9tryc+3xk4/306BJ5K2vEkvq9Y4GT2vzV8YyJlhQBH
+	 5tkRKAtvNP6OFP679Tco95sRXDoCbLBUgfHD5fSWN3p44258mfckNuuCLrhXzxbJ6X
+	 OH0Xc6XlLC2ubfBO8nHt59X3PCndmWJYmlfn9VXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392122AbfDRSO4 (ORCPT
+        id S2392131AbfDRSO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:14:56 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46615 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391146AbfDRSOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:14:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 9so1451410pfj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o16/LdvJgUhzxLOzJLz4tqzs41ZSZqXnYt0SCNmPbYM=;
-        b=g63Jrcfpp0CpXF2CFaPR5HqCA2ZwtddghF2cRaGIrjv8hGHzvfH1BA9XAD8CC6jt0W
-         zqM465FEm5g4bFAFr+9UJmI9GET9/8YToiMNWmX21CQoyUx9Eym/mjRDPV/oNUeud1oD
-         UBQ6dnxgefhAj3NTMRVArkwDHH2jt2F2YE7n9eERT/zSkftQlxVxwXaKyhhmru24ZkyT
-         kxQhYXAIUGzRWcf9WKe46Yi6ckQTJJJNXZ22BgUxuSIWawMbPlyCrVxkn2C2mzZUifNp
-         YbERyV33RwG/f4mhGDMtnAzyWZe/aNpk2hsD03496o5eEYVySItfVMYJ8mX9OmY+EsaN
-         sY1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o16/LdvJgUhzxLOzJLz4tqzs41ZSZqXnYt0SCNmPbYM=;
-        b=lB1V/fb62Q+6wwTl8f5CyqKeBO7rTCT9QqBraB3YRjf5Q5MZ4grxmmViivZHcoVKib
-         7sGEUg/IiPNreMiFREk6Pyq7o4fICroduOnMrUo10lP1PYL/mZcSy/EIAqrHrfaLgHrP
-         v1ox1WDNlK4RBLtmyONo3hdbDCWtlTgxCL3ZfAJy5ark7YJj/dwnqEc2o1tenjAKitII
-         4W4MLbyCriQpTi2E/VvUXp4FvIPv52Fm2bcxcBAPH2LVSUjPg+kJm2sW8E320+T6X9CQ
-         zwvQlreuzZtbwC4yZVGVIxS/XN4xku/JsGBIUyrejLvVHg4oQM0t/2CInoRAlhpaN9hl
-         49+g==
-X-Gm-Message-State: APjAAAUVhnasvdFu6xsd13S4LbgGk4SysBiL54qRsvDhHTMRPWj9Jd0O
-        HJJA8GX4lE1rEtOysqtc+bfD2w==
-X-Google-Smtp-Source: APXvYqySah2SU+varGc+UC5VL+EUx98oNt8QxAn/OemSNcn2Ar603CT9p5I3Yqp1jfE51gY+bDdkDw==
-X-Received: by 2002:a63:df12:: with SMTP id u18mr90482891pgg.135.1555611291965;
-        Thu, 18 Apr 2019 11:14:51 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 8sm4339349pfs.50.2019.04.18.11.14.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 11:14:51 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 12:14:48 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        rjw@rjwysocki.net, robert.walker@arm.com
-Subject: Re: [PATCH v2 20/36] coresight: Make device to CPU mapping generic
-Message-ID: <20190418181448.GC10675@xps15>
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-21-git-send-email-suzuki.poulose@arm.com>
+        Thu, 18 Apr 2019 14:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392076AbfDRSOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:14:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D6D206B6;
+        Thu, 18 Apr 2019 18:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555611295;
+        bh=w2ar1zzQGS+MbihlOwPDJJzFGQOf4tudb6KXMChNcrY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VXgXAvFUBb3r+fMgw+GEMYyU2cVKpzRzA2TGmS1+jxDDB4UwZ8hSY1JI/5SkkKE/x
+         vHmIo5Ap3rSrgbK/1Wdpv8wmMy82jvI5+28EWCz16d9ICBpFB1A4kdbRug6AIhqZr2
+         UQNi88WgtePfs+gUkNGLqyvDz9AxQf80pJ0OJdJs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Hsin-Yi, Wang" <hsinyi@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 61/92] drm/panel: panel-innolux: set display off in innolux_panel_unprepare
+Date:   Thu, 18 Apr 2019 19:57:19 +0200
+Message-Id: <20190418160435.471416028@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
+References: <20190418160430.325165109@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555344260-12375-21-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:04:03PM +0100, Suzuki K Poulose wrote:
-> The CoreSight components ETM and CPU-Debug are always associated
-> with CPUs. Replace the of_coresight_get_cpu() with a platform
-> agnostic helper, in preparation to add ACPI support.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-cpu-debug.c |  3 +--
->  drivers/hwtracing/coresight/coresight-platform.c  | 18 +++++++++++++-----
->  include/linux/coresight.h                         |  7 +------
->  3 files changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index e8819d7..07a1367 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -572,14 +572,13 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
->  	struct device *dev = &adev->dev;
->  	struct debug_drvdata *drvdata;
->  	struct resource *res = &adev->res;
-> -	struct device_node *np = adev->dev.of_node;
->  	int ret;
->  
->  	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
-> +	drvdata->cpu = coresight_get_cpu(dev);
->  	if (per_cpu(debug_drvdata, drvdata->cpu)) {
->  		dev_err(dev, "CPU%d drvdata has already been initialized\n",
->  			drvdata->cpu);
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 25a1838..8a86ba3 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -151,12 +151,14 @@ static void of_coresight_get_ports(const struct device_node *node,
->  	}
->  }
->  
-> -int of_coresight_get_cpu(const struct device_node *node)
-> +static int of_coresight_get_cpu(struct device *dev)
->  {
->  	int cpu;
->  	struct device_node *dn;
->  
-> -	dn = of_parse_phandle(node, "cpu", 0);
-> +	if (!dev->of_node)
-> +		return 0;
-> +	dn = of_parse_phandle(dev->of_node, "cpu", 0);
->  	/* Affinity defaults to CPU0 */
->  	if (!dn)
->  		return 0;
-> @@ -166,7 +168,6 @@ int of_coresight_get_cpu(const struct device_node *node)
->  	/* Affinity to CPU0 if no cpu nodes are found */
->  	return (cpu < 0) ? 0 : cpu;
->  }
-> -EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
->  
->  /*
->   * of_coresight_parse_endpoint : Parse the given output endpoint @ep
-> @@ -241,8 +242,6 @@ of_get_coresight_platform_data(struct device *dev,
->  	bool legacy_binding = false;
->  	struct device_node *node = dev->of_node;
->  
-> -	pdata->cpu = of_coresight_get_cpu(node);
-> -
->  	/* Get the number of input and output port for this component */
->  	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
->  
-> @@ -294,6 +293,14 @@ of_get_coresight_platform_data(struct device *dev,
->  }
->  #endif
->  
-> +int coresight_get_cpu(struct device *dev)
-> +{
-> +	if (is_of_node(dev->fwnode))
-> +		return of_coresight_get_cpu(dev);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_get_cpu);
-> +
->  struct coresight_platform_data *
->  coresight_get_platform_data(struct device *dev)
->  {
-> @@ -309,6 +316,7 @@ coresight_get_platform_data(struct device *dev)
->  
->  	/* Use device name as sysfs handle */
->  	pdata->name = dev_name(dev);
-> +	pdata->cpu = coresight_get_cpu(dev);
->  
->  	if (is_of_node(fwnode))
->  		return of_get_coresight_platform_data(dev, pdata);
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 5b29255..a48cd9b 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -291,12 +291,7 @@ static inline void coresight_disclaim_device_unlocked(void __iomem *base) {}
->  
->  #endif
->  
-> -#ifdef CONFIG_OF
-> -extern int of_coresight_get_cpu(const struct device_node *node);
-> -#else
-> -static inline int of_coresight_get_cpu(const struct device_node *node)
-> -{ return 0; }
-> -#endif
-> +extern int coresight_get_cpu(struct device *dev);
->  
->  struct coresight_platform_data *coresight_get_platform_data(struct device *dev);
+[ Upstream commit 46f3ceaffa81e846677bca8668e0ad40e643cffd ]
 
-For patches 12, 13 and 15-20:
+Move mipi_dsi_dcs_set_display_off() from innolux_panel_disable()
+to innolux_panel_unprepare(), so they are consistent with
+innolux_panel_enable() and innolux_panel_prepare().
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+This also fixes some mode check and irq timeout issue in MTK dsi code.
 
->  
-> -- 
-> 2.7.4
-> 
+Since some dsi code (e.g. mtk_dsi) have following call trace:
+1. drm_panel_disable(), which calls innolux_panel_disable()
+2. switch to cmd mode
+3. drm_panel_unprepare(), which calls innolux_panel_unprepare()
+
+However, mtk_dsi needs to be in cmd mode to be able to send commands
+(e.g. mipi_dsi_dcs_set_display_off() and mipi_dsi_dcs_enter_sleep_mode()),
+so we need these functions to be called after the switch to cmd mode happens,
+i.e. in innolux_panel_unprepare.
+
+Signed-off-by: Hsin-Yi, Wang <hsinyi@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190109065922.231753-1-hsinyi@chromium.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/panel/panel-innolux-p079zca.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+index 6ba93449fcfb..58b67e0cc385 100644
+--- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
++++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+@@ -40,7 +40,6 @@ static inline struct innolux_panel *to_innolux_panel(struct drm_panel *panel)
+ static int innolux_panel_disable(struct drm_panel *panel)
+ {
+ 	struct innolux_panel *innolux = to_innolux_panel(panel);
+-	int err;
+ 
+ 	if (!innolux->enabled)
+ 		return 0;
+@@ -48,11 +47,6 @@ static int innolux_panel_disable(struct drm_panel *panel)
+ 	innolux->backlight->props.power = FB_BLANK_POWERDOWN;
+ 	backlight_update_status(innolux->backlight);
+ 
+-	err = mipi_dsi_dcs_set_display_off(innolux->link);
+-	if (err < 0)
+-		DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
+-			      err);
+-
+ 	innolux->enabled = false;
+ 
+ 	return 0;
+@@ -66,6 +60,11 @@ static int innolux_panel_unprepare(struct drm_panel *panel)
+ 	if (!innolux->prepared)
+ 		return 0;
+ 
++	err = mipi_dsi_dcs_set_display_off(innolux->link);
++	if (err < 0)
++		DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
++			      err);
++
+ 	err = mipi_dsi_dcs_enter_sleep_mode(innolux->link);
+ 	if (err < 0) {
+ 		DRM_DEV_ERROR(panel->dev, "failed to enter sleep mode: %d\n",
+-- 
+2.19.1
+
+
+
