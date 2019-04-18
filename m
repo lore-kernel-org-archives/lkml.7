@@ -2,94 +2,118 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC41C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8832C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E49214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FF5214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388092AbfDRGZk (ORCPT
+        id S2388063AbfDRG1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:25:40 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16089 "EHLO mga01.intel.com"
+        Thu, 18 Apr 2019 02:27:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59990 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbfDRGZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:25:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 23:25:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,364,1549958400"; 
-   d="scan'208";a="151841923"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga002.jf.intel.com with ESMTP; 17 Apr 2019 23:25:34 -0700
-Subject: Re: [PATCH v1 0/4] Add tracing for SDHCI register access
-To:     Raul Rangel <rrangel@chromium.org>
-Cc:     linux-trace-devel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        djkurtz@chromium.org, zwisler@chromium.org,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Liming Sun <lsun@mellanox.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Prabu Thangamuthu <Prabu.T@synopsys.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-References: <20190411220822.81845-1-rrangel@chromium.org>
- <7b77ebcb-b42b-2d14-f5f1-b37e07b88469@intel.com>
- <20190412145012.GA101407@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <bd3a1df1-5ac4-e23c-35a3-78361a5c356e@intel.com>
-Date:   Thu, 18 Apr 2019 09:24:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1725864AbfDRG1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 02:27:03 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A3BA6307D853;
+        Thu, 18 Apr 2019 06:27:02 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C65F60BF7;
+        Thu, 18 Apr 2019 06:27:02 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 1A4C3181AC43;
+        Thu, 18 Apr 2019 06:27:01 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 02:27:00 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jeff Moyer <jmoyer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     cohuck@redhat.com, KVM list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, david <david@fromorbit.com>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        virtualization@lists.linux-foundation.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>, kilobyte@angband.pl,
+        Rik van Riel <riel@surriel.com>,
+        yuval shaia <yuval.shaia@oracle.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        Kevin Wolf <kwolf@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Igor Mammedov <imammedo@redhat.com>
+Message-ID: <695036448.22376013.1555568820649.JavaMail.zimbra@redhat.com>
+In-Reply-To: <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com> <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com> <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+Subject: Re: [Qemu-devel] [PATCH v5 1/6] libnvdimm: nd_region flush callback
+ support
 MIME-Version: 1.0
-In-Reply-To: <20190412145012.GA101407@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.16.113, 10.4.195.14]
+Thread-Topic: libnvdimm: nd_region flush callback support
+Thread-Index: RQT8Mi0vbK6u7EvKBqBlDf90vecY1Q==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 18 Apr 2019 06:27:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/19 5:50 PM, Raul Rangel wrote:
-> On Fri, Apr 12, 2019 at 09:26:44AM +0300, Adrian Hunter wrote:
->> On 12/04/19 1:08 AM, Raul E Rangel wrote:
->>> I was debugging a SDHC hardware bug and got tired of having to
->>> translate the register values by hand. This patch set makes it so all
->>> SDHC register read and write operations can be traced and easily read by
->>> a human.
->>
->> While this might be useful for people unfamiliar with SDHCI, I am not sure
->> it should be in the upstream kernel.
-> Can you help me understand your hesitation? Would you prefer removing the
-> pretty printing? Or would you prefer not having any trace events at all?
 
-It is just cost/benefit.  I am not sure the cost of maintaining it is worth
-the benefit of having it upstream.
+Hello,
 
-> The xhci driver has a bunch of pretty print trace events that make it
-> invaluable when debugging.
-> https://github.com/torvalds/linux/blob/d7563ca5bfca53398e100eb74345c5d3ef06bf9d/drivers/usb/host/xhci.h#L2160
+Thank you for the suggestions on this.
+
 > 
->> Also, it doesn't seem ideal for every
->> driver to add its own plumbing for such a feature.
-> What do you mean by every driver having to add it's own plumbing? Any
-> driver that uses sdhci_readX or sdhci_writeX get the functionality for
-> free.
+> > On Thu 11-04-19 07:51:48, Dan Williams wrote:
+> >> On Tue, Apr 9, 2019 at 9:09 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+> >> > +       } else {
+> >> > +               if (nd_region->flush(nd_region))
+> >> > +                       rc = -EIO;
+> >> 
+> >> Given the common case wants to be fast and synchronous I think we
+> >> should try to avoid retpoline overhead by default. So something like
+> >> this:
+> >> 
+> >> if (nd_region->flush == generic_nvdimm_flush)
+> >>     rc = generic_nvdimm_flush(...);
+> >
+> > I'd either add a comment about avoiding retpoline overhead here or just
+> > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
+> > get confused by the code.
+> 
+> Isn't this premature optimization?  I really don't like adding things
+> like this without some numbers to show it's worth it.
 
-I/O memory mappings are recorded for devices. e.g. /proc/iomem so it could
-be possible to add tracing for all I/O memory accesses via readx/writex etc,
-configurable / filterable by device id.
+Can we add the optimization after this version is merged.
+
+Best regards,
+Pankaj 
+
+> 
+> -Jeff
+> 
+> 
