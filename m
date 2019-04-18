@@ -2,126 +2,126 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0249EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF99C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34FF214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A351214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="paJn9PWN"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Dl98arVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388540AbfDRJhO (ORCPT
+        id S2388476AbfDRJh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:37:14 -0400
-Received: from mail-eopbgr10066.outbound.protection.outlook.com ([40.107.1.66]:26478
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388044AbfDRJhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:37:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8YHjxUNBgMXBbG0jmqUwKUXuBu/lrO2z7nNJ23zeaZg=;
- b=paJn9PWNVKD7TKo1gUn/7spApbqMqndRZQWbzXm1ZCRxfKy+bQ9AqHIFeJLd8vqinyHOitMZUbaYtq4xF9sUzlIX+VPw6+Yan896d9znjLf16gs+JMlqZ+hBGM4G3ulq52tLvFx23re9NeMugc5YrcWJ+cGEWD6w5QjcY03F5pA=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6431.eurprd04.prod.outlook.com (20.179.232.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Thu, 18 Apr 2019 09:37:07 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1813.013; Thu, 18 Apr 2019
- 09:37:07 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
- with function
-Thread-Topic: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
- with function
-Thread-Index: AdT1ygSoHCmReGuZQEy0/qItfl4BNQ==
-Date:   Thu, 18 Apr 2019 09:37:06 +0000
-Message-ID: <VE1PR04MB6479228E9CAE2A432D904BC7E3260@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 903b7bda-cde2-47fd-72cb-08d6c3e16c3b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR04MB6431;
-x-ms-traffictypediagnostic: VE1PR04MB6431:
-x-microsoft-antispam-prvs: <VE1PR04MB643166C840E94A2007F761A1E3260@VE1PR04MB6431.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0011612A55
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(39860400002)(376002)(189003)(199004)(51444003)(81156014)(81166006)(8676002)(26005)(8936002)(102836004)(486006)(6506007)(186003)(68736007)(86362001)(97736004)(74316002)(5660300002)(71190400001)(52536014)(71200400001)(2906002)(316002)(25786009)(305945005)(6116002)(3846002)(7736002)(6436002)(4326008)(33656002)(54906003)(229853002)(99286004)(6916009)(7696005)(256004)(1411001)(6246003)(55016002)(9686003)(66066001)(53936002)(478600001)(14454004)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6431;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: z2RJ2yQgkLdOu4sBl6dANVry+3q4PV+2eYYx9K7jKBmoznHkPE/MHM0btW42JvSt2FtRcmUj1hKxrKr1SPN8TiX0HP7Z+6+krEHJfIsSisMJijP8aw89MpDBQ2Xai8sXMEcHnSR0McXpYGoO6Y14/sVXag+23J2MUMk9z1rrk8hrmhD4mJ3o41X3IvQGH27Rgmfb6i3CpM3bEHaNA7xcI8BYtqMLw5ibqT8G+mchuX7mduChKWhYQbniuT7Es/UnZImgO8nY2PeS9GMk78pKnrwsy0wuzFFdJ4YskjIQq8K5Nhno7sQokpORO4lkZTxNYyBpaDf7rcGZcmB84qwWTI+G8LUX5bOQldFLlUP/ihNVvXXyFuYf5Sem0WD1u2PkryJ0Xoi8EyEy4zm2uoowjslpcwnLIeSgrIsaQbnwkpo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Apr 2019 05:37:56 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:53822 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387971AbfDRJhz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:37:55 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x3I9bhke004493
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 18:37:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3I9bhke004493
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555580264;
+        bh=GvCnFzttfkpHV2W9ZV7OdJOO8DbXAej1AeNOSZh+MZE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dl98arVcHxSD2O+sEzo2OyKTvoV5tr3mFl9Rsg0DBpsTUfSPLG1LboIgDz96QhSiO
+         zy/cRgnkHIvMTbu3qX6MiRXjbpCYEFW8zVrEDInveE4fIJIEYtYrNXwI+k/x1HclH4
+         zqGgpllY5e92BgaeeSktR9SyF/6bTF+57G+3svobKuUe09+Pl5jm5PJpscKG8EEnvG
+         Mz1YbPhUt3uoWWloMoh2JAZVbNOELBs44bjj0EcQOVkVpolIMeq3U+uvsXL/B91nDt
+         J8eDWQj3y98ARsVw/mD9lrcM+7b56wIeZI+g58XN+8SpyIzWCa6/sGNIOlBuWpQ2y+
+         roZZeRz9E+Jhg==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id f15so803238vsk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 02:37:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAXogbmXCknV2p5bINA/RXP6uWJdFnZrZ6OKuQ3nc7xuGNrm5Yto
+        wPary52ZZoHnbpOcNl8OVJTxzrWjd/GzQb767p0=
+X-Google-Smtp-Source: APXvYqzNRKPdOjCQFaktvHqD3Ra9xtRp42QikA9kmSrlbyB2+Rxwic+obZydn/sCDad5N4gKueO6Y5KqtiwQFoEPwL0=
+X-Received: by 2002:a67:f105:: with SMTP id n5mr25677045vsk.181.1555580263133;
+ Thu, 18 Apr 2019 02:37:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 903b7bda-cde2-47fd-72cb-08d6c3e16c3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 09:37:07.0086
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6431
+References: <1554280633-11457-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1554280633-11457-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 18 Apr 2019 18:37:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASUtor7Cxq35EUrNo0qhi8Kd9Tmfgg7mfiBg=NPtgb30g@mail.gmail.com>
+Message-ID: <CAK7LNASUtor7Cxq35EUrNo0qhi8Kd9Tmfgg7mfiBg=NPtgb30g@mail.gmail.com>
+Subject: Re: [PATCH] nds32: vdso: fix and clean-up Makefile
+To:     Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi Greentime,
 
->=20
-> On Thu, Apr 18, 2019 at 08:50:48AM +0000, S.j. Wang wrote:
-> > > And this is according to IMX6DQRM:
-> > >     Limited support for the case when output sampling rates is
-> > >     between 8kHz and 30kHz. The limitation is the supported ratio
-> > >     (Fsin/Fsout) range as between 1/24 to 8
-> > >
-> > > This should cover your 8.125 condition already, even if having an
-> > > outrate range between [8KHz, 30KHz] check, since an outrate above
-> > > 30KHz will not have an inrate bigger than 8.125 times of it, given
-> > > the maximum input rate is 192KHz.
-> > >
-> > > So I think that we can just drop that 8.125 condition from your
-> > > change and there's no need to error out any more.
-> > >
-> > No, if outrate=3D8kHz,  inrate > 88.2kHz, these cases are not supported=
-.
-> > This is not covered by
-> >
-> >         if ((outrate > 8000 && outrate < 30000) &&
-> >             (outrate/inrate > 24 || inrate/outrate > 8)) {
->=20
-> Good catch. The range should be [8KHz, 30KHz] vs. (8KHz, 32KHz) in the
-> code. Then I think the fix should be at both lines:
->=20
-> -         if ((outrate > 8000 && outrate < 30000) &&
-> -             (outrate/inrate > 24 || inrate/outrate > 8)) {
-> +         if ((outrate >=3D 8000 && outrate =3D< 30000) &&
-> +             (outrate > 24 * inrate || inrate > 8 * outrate)) {
->=20
-> Overall, I think we should fix this instead of adding an extra one, since=
- it is
-> very likely saying the same thing.
 
-Actually if outrate < 8kHz, there will be issue too.
+On Wed, Apr 3, 2019 at 5:38 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> - $(call if_changed,...) must have FORCE as a prerequisite
+>
+> - vdso.lds is a generated file, so it should be prefixed with
+>   $(obj)/ instead of $(src)/.
+>
+> - cmd_vdsosym is a one-liner rule, so the assignment with '='
+>   is simpler.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Best regards
-Wang shengjiu
+Ping?
+
+
+>  arch/nds32/kernel/vdso/Makefile | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Makefile
+> index e6c50a7..01a9610 100644
+> --- a/arch/nds32/kernel/vdso/Makefile
+> +++ b/arch/nds32/kernel/vdso/Makefile
+> @@ -28,7 +28,7 @@ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+>  $(obj)/vdso.o : $(obj)/vdso.so
+>
+>  # Link rule for the .so file, .lds has to be first
+> -$(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso)
+> +$(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
+>         $(call if_changed,vdsold)
+>
+>
+> @@ -40,9 +40,7 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
+>  # Generate VDSO offsets using helper script
+>  gen-vdsosym := $(srctree)/$(src)/gen_vdso_offsets.sh
+>  quiet_cmd_vdsosym = VDSOSYM $@
+> -define cmd_vdsosym
+> -       $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
+> -endef
+> +      cmd_vdsosym = $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
+>
+>  include/generated/vdso-offsets.h: $(obj)/vdso.so.dbg FORCE
+>         $(call if_changed,vdsosym)
+> @@ -65,7 +63,7 @@ gettimeofday.o : gettimeofday.c FORCE
+>
+>  # Actual build commands
+>  quiet_cmd_vdsold = VDSOL   $@
+> -      cmd_vdsold = $(CC) $(c_flags) -Wl,-n -Wl,-T $^ -o $@
+> +      cmd_vdsold = $(CC) $(c_flags) -Wl,-n -Wl,-T $(real-prereqs) -o $@
+>  quiet_cmd_vdsoas = VDSOA   $@
+>        cmd_vdsoas = $(CC) $(a_flags) -c -o $@ $<
+>  quiet_cmd_vdsocc = VDSOA   $@
+> --
+> 2.7.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
