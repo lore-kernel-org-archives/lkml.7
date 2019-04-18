@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF87C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A57C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12883218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B30D218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610795;
-	bh=l3mEksAhETOfE9vy+dVzH51J7h5d56XNOPUG2rnxr7k=;
+	s=default; t=1555610798;
+	bh=FkcgN0sC8JjFHDxYbEilXDzWfhUtVmz57J6VhZtk63s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOF7hooDQ1a0vz5Ydl3dBWPG9VaL5Rsmcl2PoO5KLWDD09OHCVi8PWCXROlRvJPJ4
-	 1wfUIxk1JeqEHt1IgvEEBLbQRYqmfrmFt0Sh6bq5Y3sEO6dTr3suMJ/o+idnS21i0q
-	 N+36kMEO+Tl0d9bcBVSjvrokACYvqtZ+WAnyn4MI=
+	b=0MWtiG3TUFjumFpjq8FaLlicAjt52rXMichLygMrbwrayKliA+r+8+tkkssV2sRZ9
+	 bF47XVd+OnPXrCZSZO9t6sct2nisp+HJEcRj/3FzP99bsrBPymsAOLoQnPD6x2be87
+	 vORH9vRdyC+1qQ8x5x2yvpNaoAqn9baXR4e1dSa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403808AbfDRSGd (ORCPT
+        id S2391507AbfDRSGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:06:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:06:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391490AbfDRSGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:06:30 -0400
+        id S2391118AbfDRSGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:06:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61221217FA;
-        Thu, 18 Apr 2019 18:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C712B218A1;
+        Thu, 18 Apr 2019 18:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610789;
-        bh=l3mEksAhETOfE9vy+dVzH51J7h5d56XNOPUG2rnxr7k=;
+        s=default; t=1555610792;
+        bh=FkcgN0sC8JjFHDxYbEilXDzWfhUtVmz57J6VhZtk63s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVwdSiJgv+noFUWpxkyWhNglNyA1dIoyQWzvbtUBVR84JpfR1lkuv+ujwbXrzeSqu
-         hMj0eKQN4MuAObZziwqyG2VZ58MBZ6S2JWGmqwaro1e1014vvq/4UuRfylH6b2PYfz
-         PtYPBR8wX2MUAI7Qi+YuAA0MI/RnggSnPZLoAR/I=
+        b=PdFmLa7zliFL8Pv1UishobdncBzQZ9d59yrNsW97B2o0rRPlNCSn9iq5rKY51P+On
+         23Har0QGXCdC28jDaCOTBrA7xACWd8lfWhbZboD/2sZP/zelttJclIvTMKQ6Inztsj
+         OTPUhMki8IDVGUdWxe7mK3ZS8hp/AmMR39J0wtiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Vallish Vaidyeshwara <vallish@amazon.com>,
         Balbir Singh <sblbir@amzn.com>
-Subject: [PATCH 4.14 85/92] bpf: fix sanitation of alu op with pointer / scalar type from different paths
-Date:   Thu, 18 Apr 2019 19:57:43 +0200
-Message-Id: <20190418160437.947159927@linuxfoundation.org>
+Subject: [PATCH 4.14 86/92] bpf: fix inner map masking to prevent oob under speculation
+Date:   Thu, 18 Apr 2019 19:57:44 +0200
+Message-Id: <20190418160438.021404394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -64,145 +64,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit d3bd7413e0ca40b60cf60d4003246d067cafdeda upstream.
+commit 9d5564ddcf2a0f5ba3fa1c3a1f8a1b59ad309553 upstream.
 
-While 979d63d50c0c ("bpf: prevent out of bounds speculation on pointer
-arithmetic") took care of rejecting alu op on pointer when e.g. pointer
-came from two different map values with different map properties such as
-value size, Jann reported that a case was not covered yet when a given
-alu op is used in both "ptr_reg += reg" and "numeric_reg += reg" from
-different branches where we would incorrectly try to sanitize based
-on the pointer's limit. Catch this corner case and reject the program
-instead.
+During review I noticed that inner meta map setup for map in
+map is buggy in that it does not propagate all needed data
+from the reference map which the verifier is later accessing.
 
-Fixes: 979d63d50c0c ("bpf: prevent out of bounds speculation on pointer arithmetic")
-Reported-by: Jann Horn <jannh@google.com>
+In particular one such case is index masking to prevent out of
+bounds access under speculative execution due to missing the
+map's unpriv_array/index_mask field propagation. Fix this such
+that the verifier is generating the correct code for inlined
+lookups in case of unpriviledged use.
+
+Before patch (test_verifier's 'map in map access' dump):
+
+  # bpftool prog dump xla id 3
+     0: (62) *(u32 *)(r10 -4) = 0
+     1: (bf) r2 = r10
+     2: (07) r2 += -4
+     3: (18) r1 = map[id:4]
+     5: (07) r1 += 272                |
+     6: (61) r0 = *(u32 *)(r2 +0)     |
+     7: (35) if r0 >= 0x1 goto pc+6   | Inlined map in map lookup
+     8: (54) (u32) r0 &= (u32) 0      | with index masking for
+     9: (67) r0 <<= 3                 | map->unpriv_array.
+    10: (0f) r0 += r1                 |
+    11: (79) r0 = *(u64 *)(r0 +0)     |
+    12: (15) if r0 == 0x0 goto pc+1   |
+    13: (05) goto pc+1                |
+    14: (b7) r0 = 0                   |
+    15: (15) if r0 == 0x0 goto pc+11
+    16: (62) *(u32 *)(r10 -4) = 0
+    17: (bf) r2 = r10
+    18: (07) r2 += -4
+    19: (bf) r1 = r0
+    20: (07) r1 += 272                |
+    21: (61) r0 = *(u32 *)(r2 +0)     | Index masking missing (!)
+    22: (35) if r0 >= 0x1 goto pc+3   | for inner map despite
+    23: (67) r0 <<= 3                 | map->unpriv_array set.
+    24: (0f) r0 += r1                 |
+    25: (05) goto pc+1                |
+    26: (b7) r0 = 0                   |
+    27: (b7) r0 = 0
+    28: (95) exit
+
+After patch:
+
+  # bpftool prog dump xla id 1
+     0: (62) *(u32 *)(r10 -4) = 0
+     1: (bf) r2 = r10
+     2: (07) r2 += -4
+     3: (18) r1 = map[id:2]
+     5: (07) r1 += 272                |
+     6: (61) r0 = *(u32 *)(r2 +0)     |
+     7: (35) if r0 >= 0x1 goto pc+6   | Same inlined map in map lookup
+     8: (54) (u32) r0 &= (u32) 0      | with index masking due to
+     9: (67) r0 <<= 3                 | map->unpriv_array.
+    10: (0f) r0 += r1                 |
+    11: (79) r0 = *(u64 *)(r0 +0)     |
+    12: (15) if r0 == 0x0 goto pc+1   |
+    13: (05) goto pc+1                |
+    14: (b7) r0 = 0                   |
+    15: (15) if r0 == 0x0 goto pc+12
+    16: (62) *(u32 *)(r10 -4) = 0
+    17: (bf) r2 = r10
+    18: (07) r2 += -4
+    19: (bf) r1 = r0
+    20: (07) r1 += 272                |
+    21: (61) r0 = *(u32 *)(r2 +0)     |
+    22: (35) if r0 >= 0x1 goto pc+4   | Now fixed inlined inner map
+    23: (54) (u32) r0 &= (u32) 0      | lookup with proper index masking
+    24: (67) r0 <<= 3                 | for map->unpriv_array.
+    25: (0f) r0 += r1                 |
+    26: (05) goto pc+1                |
+    27: (b7) r0 = 0                   |
+    28: (b7) r0 = 0
+    29: (95) exit
+
+
+Fixes: b2157399cc98 ("bpf: prevent out-of-bounds speculation")
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Vallish Vaidyeshwara <vallish@amazon.com>
 Signed-off-by: Balbir Singh <sblbir@amzn.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/bpf_verifier.h |    1 
- kernel/bpf/verifier.c        |   61 +++++++++++++++++++++++++++++++++----------
- 2 files changed, 49 insertions(+), 13 deletions(-)
+ kernel/bpf/map_in_map.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/include/linux/bpf_verifier.h
-+++ b/include/linux/bpf_verifier.h
-@@ -117,6 +117,7 @@ struct bpf_verifier_state_list {
- #define BPF_ALU_SANITIZE_SRC		1U
- #define BPF_ALU_SANITIZE_DST		2U
- #define BPF_ALU_NEG_VALUE		(1U << 2)
-+#define BPF_ALU_NON_POINTER		(1U << 3)
- #define BPF_ALU_SANITIZE		(BPF_ALU_SANITIZE_SRC | \
- 					 BPF_ALU_SANITIZE_DST)
+--- a/kernel/bpf/map_in_map.c
++++ b/kernel/bpf/map_in_map.c
+@@ -12,6 +12,7 @@
+ struct bpf_map *bpf_map_meta_alloc(int inner_map_ufd)
+ {
+ 	struct bpf_map *inner_map, *inner_map_meta;
++	u32 inner_map_meta_size;
+ 	struct fd f;
  
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2037,6 +2037,40 @@ static int retrieve_ptr_limit(const stru
+ 	f = fdget(inner_map_ufd);
+@@ -34,7 +35,12 @@ struct bpf_map *bpf_map_meta_alloc(int i
+ 		return ERR_PTR(-EINVAL);
  	}
+ 
+-	inner_map_meta = kzalloc(sizeof(*inner_map_meta), GFP_USER);
++	inner_map_meta_size = sizeof(*inner_map_meta);
++	/* In some cases verifier needs to access beyond just base map. */
++	if (inner_map->ops == &array_map_ops)
++		inner_map_meta_size = sizeof(struct bpf_array);
++
++	inner_map_meta = kzalloc(inner_map_meta_size, GFP_USER);
+ 	if (!inner_map_meta) {
+ 		fdput(f);
+ 		return ERR_PTR(-ENOMEM);
+@@ -44,9 +50,16 @@ struct bpf_map *bpf_map_meta_alloc(int i
+ 	inner_map_meta->key_size = inner_map->key_size;
+ 	inner_map_meta->value_size = inner_map->value_size;
+ 	inner_map_meta->map_flags = inner_map->map_flags;
+-	inner_map_meta->ops = inner_map->ops;
+ 	inner_map_meta->max_entries = inner_map->max_entries;
+ 
++	/* Misc members not needed in bpf_map_meta_equal() check. */
++	inner_map_meta->ops = inner_map->ops;
++	if (inner_map->ops == &array_map_ops) {
++		inner_map_meta->unpriv_array = inner_map->unpriv_array;
++		container_of(inner_map_meta, struct bpf_array, map)->index_mask =
++		     container_of(inner_map, struct bpf_array, map)->index_mask;
++	}
++
+ 	fdput(f);
+ 	return inner_map_meta;
  }
- 
-+static bool can_skip_alu_sanitation(const struct bpf_verifier_env *env,
-+				    const struct bpf_insn *insn)
-+{
-+	return env->allow_ptr_leaks || BPF_SRC(insn->code) == BPF_K;
-+}
-+
-+static int update_alu_sanitation_state(struct bpf_insn_aux_data *aux,
-+				       u32 alu_state, u32 alu_limit)
-+{
-+	/* If we arrived here from different branches with different
-+	 * state or limits to sanitize, then this won't work.
-+	 */
-+	if (aux->alu_state &&
-+	    (aux->alu_state != alu_state ||
-+	     aux->alu_limit != alu_limit))
-+		return -EACCES;
-+
-+	/* Corresponding fixup done in fixup_bpf_calls(). */
-+	aux->alu_state = alu_state;
-+	aux->alu_limit = alu_limit;
-+	return 0;
-+}
-+
-+static int sanitize_val_alu(struct bpf_verifier_env *env,
-+			    struct bpf_insn *insn)
-+{
-+	struct bpf_insn_aux_data *aux = cur_aux(env);
-+
-+	if (can_skip_alu_sanitation(env, insn))
-+		return 0;
-+
-+	return update_alu_sanitation_state(aux, BPF_ALU_NON_POINTER, 0);
-+}
-+
- static int sanitize_ptr_alu(struct bpf_verifier_env *env,
- 			    struct bpf_insn *insn,
- 			    const struct bpf_reg_state *ptr_reg,
-@@ -2051,7 +2085,7 @@ static int sanitize_ptr_alu(struct bpf_v
- 	struct bpf_reg_state tmp;
- 	bool ret;
- 
--	if (env->allow_ptr_leaks || BPF_SRC(insn->code) == BPF_K)
-+	if (can_skip_alu_sanitation(env, insn))
- 		return 0;
- 
- 	/* We already marked aux for masking from non-speculative
-@@ -2067,19 +2101,8 @@ static int sanitize_ptr_alu(struct bpf_v
- 
- 	if (retrieve_ptr_limit(ptr_reg, &alu_limit, opcode, off_is_neg))
- 		return 0;
--
--	/* If we arrived here from different branches with different
--	 * limits to sanitize, then this won't work.
--	 */
--	if (aux->alu_state &&
--	    (aux->alu_state != alu_state ||
--	     aux->alu_limit != alu_limit))
-+	if (update_alu_sanitation_state(aux, alu_state, alu_limit))
- 		return -EACCES;
--
--	/* Corresponding fixup done in fixup_bpf_calls(). */
--	aux->alu_state = alu_state;
--	aux->alu_limit = alu_limit;
--
- do_sim:
- 	/* Simulate and find potential out-of-bounds access under
- 	 * speculative execution from truncation as a result of
-@@ -2360,6 +2383,8 @@ static int adjust_scalar_min_max_vals(st
- 	s64 smin_val, smax_val;
- 	u64 umin_val, umax_val;
- 	u64 insn_bitness = (BPF_CLASS(insn->code) == BPF_ALU64) ? 64 : 32;
-+	u32 dst = insn->dst_reg;
-+	int ret;
- 
- 	if (insn_bitness == 32) {
- 		/* Relevant for 32-bit RSH: Information can propagate towards
-@@ -2394,6 +2419,11 @@ static int adjust_scalar_min_max_vals(st
- 
- 	switch (opcode) {
- 	case BPF_ADD:
-+		ret = sanitize_val_alu(env, insn);
-+		if (ret < 0) {
-+			verbose("R%d tried to add from different pointers or scalars\n", dst);
-+			return ret;
-+		}
- 		if (signed_add_overflows(dst_reg->smin_value, smin_val) ||
- 		    signed_add_overflows(dst_reg->smax_value, smax_val)) {
- 			dst_reg->smin_value = S64_MIN;
-@@ -2413,6 +2443,11 @@ static int adjust_scalar_min_max_vals(st
- 		dst_reg->var_off = tnum_add(dst_reg->var_off, src_reg.var_off);
- 		break;
- 	case BPF_SUB:
-+		ret = sanitize_val_alu(env, insn);
-+		if (ret < 0) {
-+			verbose("R%d tried to sub from different pointers or scalars\n", dst);
-+			return ret;
-+		}
- 		if (signed_sub_overflows(dst_reg->smin_value, smax_val) ||
- 		    signed_sub_overflows(dst_reg->smax_value, smin_val)) {
- 			/* Overflow possible, we know nothing */
 
 
