@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A98AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E819CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01FF2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC63A218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbfDRJGx (ORCPT
+        id S2388412AbfDRJHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:06:53 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:33655 "EHLO
+        Thu, 18 Apr 2019 05:07:05 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33832 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388343AbfDRJGu (ORCPT
+        with ESMTP id S2388257AbfDRJHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:06:50 -0400
+        Thu, 18 Apr 2019 05:07:03 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH2zc-0001m4-W3; Thu, 18 Apr 2019 11:06:05 +0200
-Message-Id: <20190418084253.337266121@linutronix.de>
+        id 1hH2zZ-0001lv-2D; Thu, 18 Apr 2019 11:06:01 +0200
+Message-Id: <20190418084253.142712304@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:22 +0200
+Date:   Thu, 18 Apr 2019 10:41:20 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
@@ -62,8 +62,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Daniel Vetter <daniel@ffwll.ch>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         linux-arch@vger.kernel.org
-Subject: [patch V2 03/29] lib/stackdepot: Provide functions which operate on
- plain storage arrays
+Subject: [patch V2 01/29] tracing: Cleanup stack trace code
 References: <20190418084119.056416939@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,146 +71,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The struct stack_trace indirection in the stack depot functions is a truly
-pointless excercise which requires horrible code at the callsites.
+- Remove the extra array member of stack_dump_trace[]. It's not required as
+  the stack tracer stores at max array size - 1 entries so there is still
+  an empty slot.
 
-Provide interfaces based on plain storage arrays.
+- Make variables which are only used in trace_stack.c static.
+
+- Simplify the enable/disable logic.
+
+- Rename stack_trace_print() as it's using the stack_trace_ namespace. Free
+  the name up for stack trace related functions.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Alexander Potapenko <glider@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- include/linux/stackdepot.h |    4 ++
- lib/stackdepot.c           |   66 ++++++++++++++++++++++++++++++++-------------
- 2 files changed, 51 insertions(+), 19 deletions(-)
+V2: Add more cleanups and use print_max_stack() as requested by Steven.
+---
+ include/linux/ftrace.h     |   18 ++++--------------
+ kernel/trace/trace_stack.c |   36 ++++++++++++------------------------
+ 2 files changed, 16 insertions(+), 38 deletions(-)
 
---- a/include/linux/stackdepot.h
-+++ b/include/linux/stackdepot.h
-@@ -26,7 +26,11 @@ typedef u32 depot_stack_handle_t;
- struct stack_trace;
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -241,21 +241,11 @@ static inline void ftrace_free_mem(struc
  
- depot_stack_handle_t depot_save_stack(struct stack_trace *trace, gfp_t flags);
-+depot_stack_handle_t stack_depot_save(unsigned long *entries,
-+				      unsigned int nr_entries, gfp_t gfp_flags);
+ #ifdef CONFIG_STACK_TRACER
  
- void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace);
-+unsigned int stack_depot_fetch(depot_stack_handle_t handle,
-+			       unsigned long **entries);
+-#define STACK_TRACE_ENTRIES 500
+-
+-struct stack_trace;
+-
+-extern unsigned stack_trace_index[];
+-extern struct stack_trace stack_trace_max;
+-extern unsigned long stack_trace_max_size;
+-extern arch_spinlock_t stack_trace_max_lock;
+-
+ extern int stack_tracer_enabled;
+-void stack_trace_print(void);
+-int
+-stack_trace_sysctl(struct ctl_table *table, int write,
+-		   void __user *buffer, size_t *lenp,
+-		   loff_t *ppos);
++
++int stack_trace_sysctl(struct ctl_table *table, int write,
++		       void __user *buffer, size_t *lenp,
++		       loff_t *ppos);
  
- #endif
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -194,40 +194,56 @@ static inline struct stack_record *find_
- 	return NULL;
- }
+ /* DO NOT MODIFY THIS VARIABLE DIRECTLY! */
+ DECLARE_PER_CPU(int, disable_stack_tracer);
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -18,8 +18,10 @@
  
--void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
-+/**
-+ * stack_depot_fetch - Fetch stack entries from a depot
-+ *
-+ * @entries:		Pointer to store the entries address
-+ */
-+unsigned int stack_depot_fetch(depot_stack_handle_t handle,
-+			       unsigned long **entries)
+ #include "trace.h"
+ 
+-static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES + 1];
+-unsigned stack_trace_index[STACK_TRACE_ENTRIES];
++#define STACK_TRACE_ENTRIES 500
++
++static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES];
++static unsigned stack_trace_index[STACK_TRACE_ENTRIES];
+ 
+ /*
+  * Reserve one entry for the passed in ip. This will allow
+@@ -31,17 +33,16 @@ struct stack_trace stack_trace_max = {
+ 	.entries		= &stack_dump_trace[0],
+ };
+ 
+-unsigned long stack_trace_max_size;
+-arch_spinlock_t stack_trace_max_lock =
++static unsigned long stack_trace_max_size;
++static arch_spinlock_t stack_trace_max_lock =
+ 	(arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
+ 
+ DEFINE_PER_CPU(int, disable_stack_tracer);
+ static DEFINE_MUTEX(stack_sysctl_mutex);
+ 
+ int stack_tracer_enabled;
+-static int last_stack_tracer_enabled;
+ 
+-void stack_trace_print(void)
++static void print_max_stack(void)
  {
- 	union handle_parts parts = { .handle = handle };
- 	void *slab = stack_slabs[parts.slabindex];
- 	size_t offset = parts.offset << STACK_ALLOC_ALIGN;
- 	struct stack_record *stack = slab + offset;
- 
--	trace->nr_entries = trace->max_entries = stack->size;
--	trace->entries = stack->entries;
--	trace->skip = 0;
-+	*entries = stack->entries;
-+	return stack->size;
-+}
-+EXPORT_SYMBOL_GPL(stack_depot_fetch);
-+
-+void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
-+{
-+	unsigned int nent = stack_depot_fetch(handle, &trace->entries);
-+
-+	trace->max_entries = trace->nr_entries = nent;
+ 	long i;
+ 	int size;
+@@ -61,16 +62,7 @@ void stack_trace_print(void)
+ 	}
  }
- EXPORT_SYMBOL_GPL(depot_fetch_stack);
  
- /**
-- * depot_save_stack - save stack in a stack depot.
-- * @trace - the stacktrace to save.
-- * @alloc_flags - flags for allocating additional memory if required.
-+ * stack_depot_save - Save a stack trace from an array
-  *
-- * Returns the handle of the stack struct stored in depot.
-+ * @entries:		Pointer to storage array
-+ * @nr_entries:		Size of the storage array
-+ * @alloc_flags:	Allocation gfp flags
-+ *
-+ * Returns the handle of the stack struct stored in depot
-  */
--depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
--				    gfp_t alloc_flags)
-+depot_stack_handle_t stack_depot_save(unsigned long *entries,
-+				      unsigned int nr_entries,
-+				      gfp_t alloc_flags)
+-/*
+- * When arch-specific code overrides this function, the following
+- * data should be filled up, assuming stack_trace_max_lock is held to
+- * prevent concurrent updates.
+- *     stack_trace_index[]
+- *     stack_trace_max
+- *     stack_trace_max_size
+- */
+-void __weak
+-check_stack(unsigned long ip, unsigned long *stack)
++static void check_stack(unsigned long ip, unsigned long *stack)
  {
--	u32 hash;
--	depot_stack_handle_t retval = 0;
- 	struct stack_record *found = NULL, **bucket;
--	unsigned long flags;
-+	depot_stack_handle_t retval = 0;
- 	struct page *page = NULL;
- 	void *prealloc = NULL;
-+	unsigned long flags;
-+	u32 hash;
+ 	unsigned long this_size, flags; unsigned long *p, *top, *start;
+ 	static int tracer_frame;
+@@ -179,7 +171,7 @@ check_stack(unsigned long ip, unsigned l
+ 	stack_trace_max.nr_entries = x;
  
--	if (unlikely(trace->nr_entries == 0))
-+	if (unlikely(nr_entries == 0))
- 		goto fast_exit;
+ 	if (task_stack_end_corrupted(current)) {
+-		stack_trace_print();
++		print_max_stack();
+ 		BUG();
+ 	}
  
--	hash = hash_stack(trace->entries, trace->nr_entries);
-+	hash = hash_stack(entries, nr_entries);
- 	bucket = &stack_table[hash & STACK_HASH_MASK];
+@@ -412,23 +404,20 @@ stack_trace_sysctl(struct ctl_table *tab
+ 		   void __user *buffer, size_t *lenp,
+ 		   loff_t *ppos)
+ {
+-	int ret;
++	int ret, was_enabled;
  
- 	/*
-@@ -235,8 +251,8 @@ depot_stack_handle_t depot_save_stack(st
- 	 * The smp_load_acquire() here pairs with smp_store_release() to
- 	 * |bucket| below.
- 	 */
--	found = find_stack(smp_load_acquire(bucket), trace->entries,
--			   trace->nr_entries, hash);
-+	found = find_stack(smp_load_acquire(bucket), entries,
-+			   nr_entries, hash);
- 	if (found)
- 		goto exit;
+ 	mutex_lock(&stack_sysctl_mutex);
++	was_enabled = !!stack_tracer_enabled;
  
-@@ -264,10 +280,10 @@ depot_stack_handle_t depot_save_stack(st
+ 	ret = proc_dointvec(table, write, buffer, lenp, ppos);
  
- 	spin_lock_irqsave(&depot_lock, flags);
+-	if (ret || !write ||
+-	    (last_stack_tracer_enabled == !!stack_tracer_enabled))
++	if (ret || !write || (was_enabled == !!stack_tracer_enabled))
+ 		goto out;
  
--	found = find_stack(*bucket, trace->entries, trace->nr_entries, hash);
-+	found = find_stack(*bucket, entries, nr_entries, hash);
- 	if (!found) {
- 		struct stack_record *new =
--			depot_alloc_stack(trace->entries, trace->nr_entries,
-+			depot_alloc_stack(entries, nr_entries,
- 					  hash, &prealloc, alloc_flags);
- 		if (new) {
- 			new->next = *bucket;
-@@ -297,4 +313,16 @@ depot_stack_handle_t depot_save_stack(st
- fast_exit:
- 	return retval;
+-	last_stack_tracer_enabled = !!stack_tracer_enabled;
+-
+ 	if (stack_tracer_enabled)
+ 		register_ftrace_function(&trace_ops);
+ 	else
+ 		unregister_ftrace_function(&trace_ops);
+-
+  out:
+ 	mutex_unlock(&stack_sysctl_mutex);
+ 	return ret;
+@@ -444,7 +433,6 @@ static __init int enable_stacktrace(char
+ 		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
+ 
+ 	stack_tracer_enabled = 1;
+-	last_stack_tracer_enabled = 1;
+ 	return 1;
  }
-+EXPORT_SYMBOL_GPL(stack_depot_save);
-+
-+/**
-+ * depot_save_stack - save stack in a stack depot.
-+ * @trace - the stacktrace to save.
-+ * @alloc_flags - flags for allocating additional memory if required.
-+ */
-+depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
-+				      gfp_t alloc_flags)
-+{
-+	return stack_depot_save(trace->entries, trace->nr_entries, alloc_flags);
-+}
- EXPORT_SYMBOL_GPL(depot_save_stack);
+ __setup("stacktrace", enable_stacktrace);
 
 
