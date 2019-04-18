@@ -2,357 +2,229 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CF8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D7CC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144942184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D29B205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehauzwdq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="teiV11uL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388084AbfDRGsV (ORCPT
+        id S2388111AbfDRGtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:48:21 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:33258 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfDRGsV (ORCPT
+        Thu, 18 Apr 2019 02:49:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37997 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfDRGtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:48:21 -0400
-Received: by mail-vs1-f66.google.com with SMTP id s11so611310vsn.0;
-        Wed, 17 Apr 2019 23:48:20 -0700 (PDT)
+        Thu, 18 Apr 2019 02:49:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id j26so731313pgl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 23:49:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zXkvHjpaF40zD5jX92LN0fw5RxTmOIUOQpaluOwwbJQ=;
-        b=ehauzwdqnWV069uu6ov28GFqJZQ0zj0V7scGYY2c6300/M2WdxIXEjwtd1IJ/lPTH8
-         SW9S9oE9JzrE0Jo/N7XtUgrwURTSoCTj948nvWIh4AR5BLZzzCQtNMCLL5i+ZOXoxlUx
-         tsI4bZcdcIupLGgV6Gw1zppvHbkdoBLhIfawITq5GT6RhjwfoV3p1E4L+/LDPsC5qld0
-         B+XfXvE8GWWt34WhhoOeGtisw36+TY+vUxwiTWXR4l3eNQjY6QcMpcTpzIenZbbM/0pj
-         PiVsASp74QHX4t+FEZuJeHfM1GKbiajGzTfZY33DQeT/T4cUU6BOrK22+9Z5LgHWx86+
-         pRRg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=AXMa+Azt/dOU4Y6GZ4BwUwm/ktKuKR/i75lOLSQoX8k=;
+        b=teiV11uL/KeES7DuBT7aLS/RyTdCVaK6SO6NFnjZIm7ovhNyOAYsdBhlYittOIbE5w
+         yCHafa/ZIDeGT4zvNotDbEK9E44RiRFBVUCeEtktUS9hCJHKm9Vye46j59x0xcuORjgB
+         ZmmjwkqiEN2CqtA20DPmoBaMIUzZT/2J6TPmGhBogxBUloDOE/zC+r8pJ/e0+fkPM2X7
+         1PerNowdlSiQM/DbahKane9PiXjnU4p3IXnGmjkGILWOs5CyD1YGrxdN+U/FdTHoj1s/
+         snQT/V7ee5s4jjw2cR0tvX4huCG04Qir8CZd2diDuqlJOFT+R5C1AaB3eyZKtdEcifJ3
+         CEaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zXkvHjpaF40zD5jX92LN0fw5RxTmOIUOQpaluOwwbJQ=;
-        b=Djf28Kp+BmBs1qZxo9kBUlJ3uKw/Mkmhpc1kBh9yxPC7PA3b/hLl69A3iuiGp5gHZm
-         eA6wPQMXNZUcWax7zXw6m+o9FaHw5cYiNLV4/4Py+ijjRiTDHavMsGES0+0WtqXFMEia
-         Uf0rfuyPq/8F1tcPPjvMdtnsYYQiH6vyGFS7St77herKhI7e+ytNtiGZLX/uaemvzj3+
-         X7fxXQmAO8rHwyB2xXacewS4JzRmuDuOVPjQ3supE5ACdWp2RWPzZAlQPVO9Cu0j4qhj
-         WZFwIEehRFesm9b+STIgt0tTpfkb5tFT6hjBZp3c7mMcbjoBrARWG4pCHznhB5qSqvqS
-         2ytQ==
-X-Gm-Message-State: APjAAAXwZfNb1DhDiIaA2gYMboQYSwFn/ONgngzcGQuSkIYg07tvg027
-        HD2oyjfdOT4xpjPuNuOiGcbHgfYUzVM3QkFC3F4=
-X-Google-Smtp-Source: APXvYqxmphR7Us175NibG5bk7BFHmDuY4TzfH/nqjWagWwBFDMvq4MB32ot6zhwSyukfmdNzmjcEIkVgyHvpB+QSGSE=
-X-Received: by 2002:a67:e258:: with SMTP id w24mr28105527vse.20.1555570100206;
- Wed, 17 Apr 2019 23:48:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=AXMa+Azt/dOU4Y6GZ4BwUwm/ktKuKR/i75lOLSQoX8k=;
+        b=oTjUoL7bBpm/eDcrKk84SAtoDVM6iHJBtH93yf//UiWEzFljZbuGlecF95pddvHiwb
+         BGWmLOEtKI3QsGMgvZeanOX3ICsyxUyTHFJflok2n1ENnVhfB6AQx9ldNc9P34uREcDt
+         1wIxJ8oNpOY2F30a9A0nhx0FCgP6nX662pdopok6bNzXsWG54MS/nzyF5bCwF599zdGM
+         ae6J9QvKn7J1VX7jcKHTvrALr96aQPAzt4glqEDkNQ6lbNWnEcCSSl9gpvFytZr6ttaV
+         SXEW8JxQgEtPy/lCyoLrNxAgJzjMLmG2lCSCsVuW5CJ9UqXyl1EQhgLZG8/wUwH6T0r1
+         CXzw==
+X-Gm-Message-State: APjAAAWCcbIf+w/YQqaOZ5CFqE8HUxydyZfVSXlJxqV7WcDJz76FNSwR
+        3PdWaPIJmF+4/WqMMVQlbW2ZXmoYoxIsxA==
+X-Google-Smtp-Source: APXvYqyjzE2ONvgWByoMLirKG9TSevUqnfBvbroSB6sw0OLVz0brCZRlAB5N9wDTYTg2ZhyiVL4Iqw==
+X-Received: by 2002:a63:e051:: with SMTP id n17mr87103884pgj.19.1555570143328;
+        Wed, 17 Apr 2019 23:49:03 -0700 (PDT)
+Received: from compute1 ([123.51.210.126])
+        by smtp.gmail.com with ESMTPSA id c62sm2191032pfg.33.2019.04.17.23.49.01
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Apr 2019 23:49:02 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 14:48:55 +0800
+From:   Jerry Lin <wahahab11@gmail.com>
+To:     Jens Frederich <jfrederich@gmail.com>,
+        Daniel Drake <dsd@laptop.org>, jon.nettleton@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Jerry Lin <wahahab11@gmail.com>
+Subject: [PATCH] staging: olpc_dcon: Convert all uses of old GPIO API to new
+ descriptor API
+Message-ID: <20190418064855.GA27108@compute1>
 MIME-Version: 1.0
-References: <1542633272-16161-1-git-send-email-sundeep.lkml@gmail.com> <20190417201645.GR126710@google.com>
-In-Reply-To: <20190417201645.GR126710@google.com>
-From:   sundeep subbaraya <sundeep.lkml@gmail.com>
-Date:   Thu, 18 Apr 2019 12:18:09 +0530
-Message-ID: <CALHRZuoOs7ya1EOxrj0gx7QD7_TNjmpSL_qi0OiYEA9mHpZBWQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: assign bus numbers present in EA capability for bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Stalley, Sean" <sean.stalley@intel.com>, sgoutham@marvell.com,
-        Subbaraya Sundeep <sbhatta@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+This commit eliminate all uses of legacy integer base GPIO API in
+olpc_dcon_xo_1_5.c and replace them with new descriptor GPIO API like
+those in olpc_dcon_xo_1.c.
 
-On Thu, Apr 18, 2019 at 1:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Nov 19, 2018 at 06:44:32PM +0530, sundeep.lkml@gmail.com wrote:
-> > From: Subbaraya Sundeep <sbhatta@marvell.com>
-> >
-> > As per the spec, bridges with EA capability work
-> > with fixed secondary and subordinate bus numbers.
-> > Hence assign bus numbers to bridges from EA if the
-> > capability exists.
-> >
-> > Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
->
-> I applied this with minor revisions to pci/enumeration for v5.2,
-> thanks!
->
-> > ---
-> > Changes for v2:
-> >       No changes just added Sean Stalley who did EA support for BARs.
-> >
-> >  drivers/pci/probe.c           | 58 ++++++++++++++++++++++++++++++++++++++++---
-> >  include/uapi/linux/pci_regs.h |  6 +++++
-> >  2 files changed, 60 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index b1c05b5..f41d2e6 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -1030,6 +1030,40 @@ static void pci_enable_crs(struct pci_dev *pdev)
-> >
-> >  static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-> >                                             unsigned int available_buses);
-> > +/*
-> > + * pci_ea_fixed_busnrs() - Read fixed Secondary and Subordinate bus
-> > + * numbers from EA capability.
-> > + * @dev: Bridge with EA
-> > + * @secondary: updated with secondary bus number in EA
-> > + * @subordinate: updated with subordinate bus number in EA
-> > + *
-> > + * If it is a bridge with EA capability then fixed bus numbers are
-> > + * read from EA capability list and secondary, subordinate reference
-> > + * variables will be updated. Otherwise secondary and subordinate reference
-> > + * variables will be zeroed.
-> > + */
-> > +static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *secondary,
-> > +                             u8 *subordinate)
-> > +{
-> > +     int ea;
-> > +     int offset;
-> > +     u32 dw;
-> > +
-> > +     *secondary = *subordinate = 0;
-> > +
-> > +     if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
-> > +             return;
-> > +
-> > +     /* find PCI EA capability in list */
-> > +     ea = pci_find_capability(dev, PCI_CAP_ID_EA);
-> > +     if (!ea)
-> > +             return;
-> > +
-> > +     offset = ea + PCI_EA_FIRST_ENT;
-> > +     pci_read_config_dword(dev, offset, &dw);
-> > +     *secondary =  dw & PCI_EA_SEC_BUS_MASK;
-> > +     *subordinate = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
-> > +}
-> >
-> >  /*
-> >   * pci_scan_bridge_extend() - Scan buses behind a bridge
-> > @@ -1064,6 +1098,8 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
-> >       u16 bctl;
-> >       u8 primary, secondary, subordinate;
-> >       int broken = 0;
-> > +     u8 fixed_sec, fixed_sub;
-> > +     int next_busnr;
-> >
-> >       /*
-> >        * Make sure the bridge is powered on to be able to access config
-> > @@ -1163,17 +1199,25 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
-> >               /* Clear errors */
-> >               pci_write_config_word(dev, PCI_STATUS, 0xffff);
-> >
-> > +             /* read bus numbers from EA */
-> > +             pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
-> > +
-> > +             next_busnr = max + 1;
-> > +             /* Use secondary bus number in EA */
-> > +             if (fixed_sec)
-> > +                     next_busnr = fixed_sec;
->
-> I initially thought this was not quite safe because EA could supply a
-> secondary bus number of 0, in which case we would erroneously ignore
-> it.  But it's actually not possible for a PCI-to-PCI bridge to have a
-> secondary bus number of 0, so it *is* safe.
->
-> But it's still a little subtle and since I've already done the work to
-> add a bool return value from pci_ea_fixed_busnrs(), maybe it will be
-> OK to keep that.  The patch as applied is below, let me know if you
-> have any comments.
->
-Your changes looks good. Thanks for applying the patch.
+Also pull some common code with olpc_dcon_xo_1.c to olpc_dcon.h for code
+sharing.
 
-Sundeep
-> > +
-> >               /*
-> >                * Prevent assigning a bus number that already exists.
-> >                * This can happen when a bridge is hot-plugged, so in this
-> >                * case we only re-scan this bus.
-> >                */
-> > -             child = pci_find_bus(pci_domain_nr(bus), max+1);
-> > +             child = pci_find_bus(pci_domain_nr(bus), next_busnr);
-> >               if (!child) {
-> > -                     child = pci_add_new_bus(bus, dev, max+1);
-> > +                     child = pci_add_new_bus(bus, dev, next_busnr);
-> >                       if (!child)
-> >                               goto out;
-> > -                     pci_bus_insert_busn_res(child, max+1,
-> > +                     pci_bus_insert_busn_res(child, next_busnr,
-> >                                               bus->busn_res.end);
-> >               }
-> >               max++;
-> > @@ -1234,7 +1278,13 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
-> >                       max += i;
-> >               }
-> >
-> > -             /* Set subordinate bus number to its real value */
-> > +             /*
-> > +              * Set subordinate bus number to its real value.
-> > +              * If fixed subordinate bus number exists from EA
-> > +              * capability then use it.
-> > +              */
-> > +             if (fixed_sub)
-> > +                     max = fixed_sub;
-> >               pci_bus_update_busn_res_end(child, max);
-> >               pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
-> >       }
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > index e1e9888..c3d0904 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -372,6 +372,12 @@
-> >  #define PCI_EA_FIRST_ENT_BRIDGE      8       /* First EA Entry for Bridges */
-> >  #define  PCI_EA_ES           0x00000007 /* Entry Size */
-> >  #define  PCI_EA_BEI          0x000000f0 /* BAR Equivalent Indicator */
-> > +
-> > +/* EA fixed Secondary and Subordinate bus numbers for Bridge */
-> > +#define PCI_EA_SEC_BUS_MASK  0xff
-> > +#define PCI_EA_SUB_BUS_MASK  0xff00
-> > +#define PCI_EA_SUB_BUS_SHIFT 8
-> > +
-> >  /* 0-5 map to BARs 0-5 respectively */
-> >  #define   PCI_EA_BEI_BAR0            0
-> >  #define   PCI_EA_BEI_BAR5            5
-> > --
-> > 1.8.3.1
-> >
->
-> commit 2dbce5901179
-> Author: Subbaraya Sundeep <sbhatta@marvell.com>
-> Date:   Mon Nov 19 18:44:32 2018 +0530
->
->     PCI: Assign bus numbers present in EA capability for bridges
->
->     The "Enhanced Allocation (EA) for Memory and I/O Resources" ECN, approved
->     23 October 2014, sec 6.9.1.2, specifies a second DW in the capability for
->     type 1 (bridge) functions to describe fixed secondary and subordinate bus
->     numbers.  This ECN was included in the PCIe r4.0 spec, but sec 6.9.1.2 was
->     omitted, presumably by mistake.
->
->     Read fixed bus numbers from the EA capability for bridges.
->
->     Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
->     [bhelgaas: add pci_ea_fixed_busnrs() return value]
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 012250a78da7..a6874c306908 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1086,6 +1086,36 @@ static void pci_enable_crs(struct pci_dev *pdev)
->
->  static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->                                               unsigned int available_buses);
-> +/**
-> + * pci_ea_fixed_busnrs() - Read fixed Secondary and Subordinate bus
-> + * numbers from EA capability.
-> + * @dev: Bridge
-> + * @sec: updated with secondary bus number from EA
-> + * @sub: updated with subordinate bus number from EA
-> + *
-> + * If @dev is a bridge with EA capability, update @sec and @sub with
-> + * fixed bus numbers from the capability and return true.  Otherwise,
-> + * return false.
-> + */
-> +static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
-> +{
-> +       int ea, offset;
-> +       u32 dw;
-> +
-> +       if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
-> +               return false;
-> +
-> +       /* find PCI EA capability in list */
-> +       ea = pci_find_capability(dev, PCI_CAP_ID_EA);
-> +       if (!ea)
-> +               return false;
-> +
-> +       offset = ea + PCI_EA_FIRST_ENT;
-> +       pci_read_config_dword(dev, offset, &dw);
-> +       *sec =  dw & PCI_EA_SEC_BUS_MASK;
-> +       *sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
-> +       return true;
-> +}
->
->  /*
->   * pci_scan_bridge_extend() - Scan buses behind a bridge
-> @@ -1120,6 +1150,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->         u16 bctl;
->         u8 primary, secondary, subordinate;
->         int broken = 0;
-> +       bool fixed_buses;
-> +       u8 fixed_sec, fixed_sub;
-> +       int next_busnr;
->
->         /*
->          * Make sure the bridge is powered on to be able to access config
-> @@ -1219,17 +1252,24 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->                 /* Clear errors */
->                 pci_write_config_word(dev, PCI_STATUS, 0xffff);
->
-> +               /* Read bus numbers from EA Capability (if present) */
-> +               fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
-> +               if (fixed_buses)
-> +                       next_busnr = fixed_sec;
-> +               else
-> +                       next_busnr = max + 1;
-> +
->                 /*
->                  * Prevent assigning a bus number that already exists.
->                  * This can happen when a bridge is hot-plugged, so in this
->                  * case we only re-scan this bus.
->                  */
-> -               child = pci_find_bus(pci_domain_nr(bus), max+1);
-> +               child = pci_find_bus(pci_domain_nr(bus), next_busnr);
->                 if (!child) {
-> -                       child = pci_add_new_bus(bus, dev, max+1);
-> +                       child = pci_add_new_bus(bus, dev, next_busnr);
->                         if (!child)
->                                 goto out;
-> -                       pci_bus_insert_busn_res(child, max+1,
-> +                       pci_bus_insert_busn_res(child, next_busnr,
->                                                 bus->busn_res.end);
->                 }
->                 max++;
-> @@ -1290,7 +1330,13 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->                         max += i;
->                 }
->
-> -               /* Set subordinate bus number to its real value */
-> +               /*
-> +                * Set subordinate bus number to its real value.
-> +                * If fixed subordinate bus number exists from EA
-> +                * capability then use it.
-> +                */
-> +               if (fixed_buses)
-> +                       max = fixed_sub;
->                 pci_bus_update_busn_res_end(child, max);
->                 pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
->         }
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 5c98133f2c94..c51e0066de8b 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -372,6 +372,12 @@
->  #define PCI_EA_FIRST_ENT_BRIDGE        8       /* First EA Entry for Bridges */
->  #define  PCI_EA_ES             0x00000007 /* Entry Size */
->  #define  PCI_EA_BEI            0x000000f0 /* BAR Equivalent Indicator */
-> +
-> +/* EA fixed Secondary and Subordinate bus numbers for Bridge */
-> +#define PCI_EA_SEC_BUS_MASK    0xff
-> +#define PCI_EA_SUB_BUS_MASK    0xff00
-> +#define PCI_EA_SUB_BUS_SHIFT   8
-> +
->  /* 0-5 map to BARs 0-5 respectively */
->  #define   PCI_EA_BEI_BAR0              0
->  #define   PCI_EA_BEI_BAR5              5
+Signed-off-by: Jerry Lin <wahahab11@gmail.com>
+---
+ drivers/staging/olpc_dcon/olpc_dcon.h        |  5 +++
+ drivers/staging/olpc_dcon/olpc_dcon_xo_1.c   |  7 +---
+ drivers/staging/olpc_dcon/olpc_dcon_xo_1_5.c | 56 ++++++++++++++++++++++++++--
+ 3 files changed, 58 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/staging/olpc_dcon/olpc_dcon.h b/drivers/staging/olpc_dcon/olpc_dcon.h
+index c987aaf..22d976a 100644
+--- a/drivers/staging/olpc_dcon/olpc_dcon.h
++++ b/drivers/staging/olpc_dcon/olpc_dcon.h
+@@ -97,6 +97,11 @@ struct dcon_platform_data {
+ 	int (*read_status)(u8 *status);
+ };
+ 
++struct dcon_gpio {
++	const char *name;
++	unsigned long flags;
++};
++
+ #include <linux/interrupt.h>
+ 
+ irqreturn_t dcon_interrupt(int irq, void *id);
+diff --git a/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c b/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
+index a542864..02c0598 100644
+--- a/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
++++ b/drivers/staging/olpc_dcon/olpc_dcon_xo_1.c
+@@ -26,11 +26,6 @@ enum dcon_gpios {
+ 	OLPC_DCON_BLANK,
+ };
+ 
+-struct dcon_gpio {
+-	const char *name;
+-	unsigned long flags;
+-};
+-
+ static const struct dcon_gpio gpios_asis[] = {
+ 	[OLPC_DCON_STAT0] = { .name = "dcon_stat0", .flags = GPIOD_ASIS },
+ 	[OLPC_DCON_STAT1] = { .name = "dcon_stat1", .flags = GPIOD_ASIS },
+@@ -39,7 +34,7 @@ static const struct dcon_gpio gpios_asis[] = {
+ 	[OLPC_DCON_BLANK] = { .name = "dcon_blank", .flags = GPIOD_ASIS },
+ };
+ 
+-struct gpio_desc *gpios[5];
++static struct gpio_desc *gpios[5];
+ 
+ static int dcon_init_xo_1(struct dcon_priv *dcon)
+ {
+diff --git a/drivers/staging/olpc_dcon/olpc_dcon_xo_1_5.c b/drivers/staging/olpc_dcon/olpc_dcon_xo_1_5.c
+index 838daa2..52cdcd2 100644
+--- a/drivers/staging/olpc_dcon/olpc_dcon_xo_1_5.c
++++ b/drivers/staging/olpc_dcon/olpc_dcon_xo_1_5.c
+@@ -7,7 +7,9 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
++#include <linux/i2c.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/machine.h>
+ #include <asm/olpc.h>
+ 
+ /* TODO: this eventually belongs in linux/vx855.h */
+@@ -38,6 +40,33 @@
+ 
+ #define PREFIX "OLPC DCON:"
+ 
++enum dcon_gpios {
++	OLPC_DCON_STAT0,
++	OLPC_DCON_STAT1,
++	OLPC_DCON_LOAD,
++};
++
++struct gpiod_lookup_table gpios_table = {
++	.dev_id = NULL,
++	.table = {
++		GPIO_LOOKUP("VX855 South Bridge", VX855_GPIO(1), "dcon_load",
++			    GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("VX855 South Bridge", VX855_GPI(10), "dcon_stat0",
++			    GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("VX855 South Bridge", VX855_GPI(11), "dcon_stat1",
++			    GPIO_ACTIVE_LOW),
++		{ },
++	},
++};
++
++static const struct dcon_gpio gpios_asis[] = {
++	[OLPC_DCON_STAT0] = { .name = "dcon_stat0", .flags = GPIOD_ASIS },
++	[OLPC_DCON_STAT1] = { .name = "dcon_stat1", .flags = GPIOD_ASIS },
++	[OLPC_DCON_LOAD] = { .name = "dcon_load", .flags = GPIOD_ASIS },
++};
++
++static struct gpio_desc *gpios[3];
++
+ static void dcon_clear_irq(void)
+ {
+ 	/* irq status will appear in PMIO_Rx50[6] (RW1C) on gpio12 */
+@@ -57,6 +86,25 @@ static int dcon_was_irq(void)
+ static int dcon_init_xo_1_5(struct dcon_priv *dcon)
+ {
+ 	unsigned int irq;
++	const struct dcon_gpio *pin = &gpios_asis[0];
++	int i;
++	int ret;
++
++	/* Add GPIO look up table */
++	gpios_table.dev_id = dev_name(&dcon->client->dev);
++	gpiod_add_lookup_table(&gpios_table);
++
++	/* Get GPIO descriptor */
++	for (i = 0; i < ARRAY_SIZE(gpios_asis); i++) {
++		gpios[i] = devm_gpiod_get(&dcon->client->dev, pin[i].name,
++					  pin[i].flags);
++		if (IS_ERR(gpios[i])) {
++			ret = PTR_ERR(gpios[i]);
++			pr_err("failed to request %s GPIO: %d\n", pin[i].name,
++			       ret);
++			return ret;
++		}
++	}
+ 
+ 	dcon_clear_irq();
+ 
+@@ -131,7 +179,7 @@ static void dcon_wiggle_xo_1_5(void)
+ 
+ static void dcon_set_dconload_xo_1_5(int val)
+ {
+-	gpio_set_value(VX855_GPIO(1), val);
++	gpiod_set_value(gpios[OLPC_DCON_LOAD], val);
+ }
+ 
+ static int dcon_read_status_xo_1_5(u8 *status)
+@@ -140,8 +188,8 @@ static int dcon_read_status_xo_1_5(u8 *status)
+ 		return -1;
+ 
+ 	/* i believe this is the same as "inb(0x44b) & 3" */
+-	*status = gpio_get_value(VX855_GPI(10));
+-	*status |= gpio_get_value(VX855_GPI(11)) << 1;
++	*status = gpiod_get_value(gpios[OLPC_DCON_STAT0]);
++	*status |= gpiod_get_value(gpios[OLPC_DCON_STAT1]) << 1;
+ 
+ 	dcon_clear_irq();
+ 
+-- 
+2.7.4
+
