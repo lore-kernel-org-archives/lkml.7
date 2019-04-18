@@ -2,140 +2,130 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8694EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11378C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E043214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555614920;
-	bh=yF0ASliWFGOqtTNFNd9ApfMVJnOQNOqpPdAJCnRMduQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WXMX1p1jR4hbWAyM8exemqy2duwIUQRpx6XWeWkdTPn9y164P4ab7rDrJ9g7cPLP/
-	 jxO3boV3nKa1Q76BVH0aw0sWsat8oC++kHiVogRlJgYafPovTmCPBwskJZA0cTsK/G
-	 EQ8eaiMdC9BNuhwB5ZfOBTVZEwSXJvcE/8P1smBc=
+	by mail.kernel.org (Postfix) with ESMTP id CBFCF214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pM313Ela"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389832AbfDRTPT (ORCPT
+        id S2389849AbfDRTRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:15:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38245 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfDRTPS (ORCPT
+        Thu, 18 Apr 2019 15:17:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35866 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbfDRTRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:15:18 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v1so2439832lfg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:15:17 -0700 (PDT)
+        Thu, 18 Apr 2019 15:17:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ck15so1604935plb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WjkwEC2X7f81mf9W5bTPXnbaAR/cw3xla7sDK1DJ93w=;
-        b=F93MvXeFPx4zJosWUg3P8P/z7oNIbI6Qc31xGEhP9uUkp8ZZXigB717fkcgW2iZm7x
-         yAf2QBmvG1U+saXwrvJhAYl5DQs3BzgDa9DlCw8Y6qbenblzJVlE/GGzUnnVPwPeojnT
-         4Bs6Eg5kV9rpCyc2NrUBw4hFQl/7filqMQWfM=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9IOoh+ojDuOZjVJx3eBsChtB80YQzisCQ5BSvwFzh/E=;
+        b=pM313ElaIaqfLREkQdN71i43sENBBL14DMtrQ401ZHsZrlUFjq17dH5XS2k76YBGM9
+         eh1lo7tRwf3QImePjxUFYK0Ldvn1fgzSwMJDGypDP1Ng3zoal4gh4fY+XHSYkNNNgcI5
+         s03YG1Rb1gS/VEt+CyozsQ5gWWqaUf5K+WbdRUuL5ZPlqu9y51cwMo7OP6bjeQ4jIoHL
+         pANxsPi+UzOO6CCPpbDYlGA+1oGiLsie/QU2b8XajhBE1iKY45y3MfNPvnisVvbAClEX
+         h5ul4fLk5AK/IY8GdYdKISm97xYphKVeCXDWfGWjKCvEErKVtuoEJj/7tOuzIWTHBVvx
+         LYdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WjkwEC2X7f81mf9W5bTPXnbaAR/cw3xla7sDK1DJ93w=;
-        b=CpjRNJogAtAmfySgIJynjA3cXfzuOSkzgziph+aA25x7o08DL3JQ+g8J0eeQDzBrHw
-         W7+qbkxhAGptV5nMzqGKfEvEG6Ntk4hSyVIbMG0NoarqYuXXG784bxHFXZur33PtcdT1
-         mKdbjSEStHbZtwJjyujbBmBnRQexk/NIZq7oboK2c2g/oXp3PsoyfYC/cOtuC1pQZjYd
-         bQGsY/Of87fO8Nq5VrtEX+VfYKJ/In4JEclglUsaXJ0kEiucpd8grwbGTS/Fa20UEYv0
-         7T+wFa9sSFTqrxGAQBVv+NDfytCT0n5FfqZ9gc1Vf4qAZ7JRwtQNyN1ujpEUCIrr/Mxs
-         J/jA==
-X-Gm-Message-State: APjAAAV8Wff3AqXbV8ploBO0qbVd/G1uET9B4KlDRcURAupUanE0MQpK
-        rff5r+WIV1ht4YcCcv+G/xH+vhbzT2s=
-X-Google-Smtp-Source: APXvYqw8BO81rK9TCLSShHBKsywji0aOsVTtFufRS5wVkCaBwnq3ENus2JEZiFRHA0LnK7dpGZElAg==
-X-Received: by 2002:ac2:48bb:: with SMTP id u27mr264855lfg.17.1555614916143;
-        Thu, 18 Apr 2019 12:15:16 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id k2sm607233lfb.62.2019.04.18.12.15.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 12:15:15 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id l7so2834923ljg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:15:14 -0700 (PDT)
-X-Received: by 2002:a2e:22c4:: with SMTP id i187mr51112790lji.94.1555614914550;
- Thu, 18 Apr 2019 12:15:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9IOoh+ojDuOZjVJx3eBsChtB80YQzisCQ5BSvwFzh/E=;
+        b=ZFWAdXqu5fJY9lYzot2smctQclhXX9qgIjcUwNgVvIcJCzO53ReMHFXjKoWOLtGVJ6
+         nW5v79Aj6S9UXfbV+d3+tuyGPwLxDwLNx705eriGEpJ3Qp7YxPg0p9Yl/5w/YU/ywd9J
+         8OJ2f8L7Mzklgc71m4cW6Tj7JokO+7gq454PSQs5D6Ju3TcyC8yqOhOv9OIiKHP0D3Lq
+         l4B8zLVG3k+rWXWc7vUW12E6kKdZu73oDXkFaD0s9xJMS23lRKgMuEvO1j+x4bhs7/cg
+         UsbH7wS67ygyO2uYpxJF4Ktb/UEGH6Nppar4MQyVCyGueuumGg0cho9n0AUEOYky20z+
+         5lIw==
+X-Gm-Message-State: APjAAAU2cnLoLA5PK+kihEDYbXA8L2j77NCRcdIXKdcTEDBDiTeFmHHX
+        4u4mN8+Ja58Y1BDAMdhjOmA=
+X-Google-Smtp-Source: APXvYqxYBLCdan6vFoVsKEPBO+mBYiuomX4BdL/gbjarMJpuAQotjUwCG0p8kWR90D39M8W89YntYg==
+X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr74984901plb.190.1555615035057;
+        Thu, 18 Apr 2019 12:17:15 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id o67sm3397539pga.55.2019.04.18.12.17.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 12:17:14 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 12:17:09 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Message-ID: <20190418191708.GA14885@Asurada-Nvidia.nvidia.com>
+References: <VE1PR04MB6479228E9CAE2A432D904BC7E3260@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
- <CAGLj2rELsr0PUgu41uZX_TKCpT-Q00X+cvgBhJ-U7RU3EBo5tA@mail.gmail.com> <CAKOZueu=5aNf+oDFBM56TbqZwKpB6q1y81V1cbL+k4DTyV53+A@mail.gmail.com>
-In-Reply-To: <CAKOZueu=5aNf+oDFBM56TbqZwKpB6q1y81V1cbL+k4DTyV53+A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 18 Apr 2019 12:14:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi79KTxCYZgMZNapULR-ratPiZVt+fgh=DhgtYR_gYPAA@mail.gmail.com>
-Message-ID: <CAHk-=wi79KTxCYZgMZNapULR-ratPiZVt+fgh=DhgtYR_gYPAA@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6479228E9CAE2A432D904BC7E3260@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:58 AM Daniel Colascione <dancol@google.com> wrote:
->
-> On Thu, Apr 18, 2019 at 11:44 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
-> >
-> > Would using something other than POLLIN be an option (maybe POLLPRI)?
-> > The convention is to use it to indicate readability on the descriptor,
-> > and also possibly POLLHUP instead of POLLERR (the latter is less of a
-> > problem, but FreeBSD also does the same, so it'd help with some
-> > consistency for libraries wanting to use this, which aren't interested
-> > in other sub states).
->
-> Existing event loop libraries generally support checking only for
-> readability and writability. Not setting POLLIN would make these FDs
-> more difficult to use with existing event loop libraries. What
-> advantage would compensate for this difficulty?
+On Thu, Apr 18, 2019 at 09:37:06AM +0000, S.j. Wang wrote:
+> > > > And this is according to IMX6DQRM:
+> > > >     Limited support for the case when output sampling rates is
+> > > >     between 8kHz and 30kHz. The limitation is the supported ratio
+> > > >     (Fsin/Fsout) range as between 1/24 to 8
+> > > >
+> > > > This should cover your 8.125 condition already, even if having an
+> > > > outrate range between [8KHz, 30KHz] check, since an outrate above
+> > > > 30KHz will not have an inrate bigger than 8.125 times of it, given
+> > > > the maximum input rate is 192KHz.
+> > > >
+> > > > So I think that we can just drop that 8.125 condition from your
+> > > > change and there's no need to error out any more.
+> > > >
+> > > No, if outrate=8kHz,  inrate > 88.2kHz, these cases are not supported.
+> > > This is not covered by
+> > >
+> > >         if ((outrate > 8000 && outrate < 30000) &&
+> > >             (outrate/inrate > 24 || inrate/outrate > 8)) {
+> > 
+> > Good catch. The range should be [8KHz, 30KHz] vs. (8KHz, 32KHz) in the
+> > code. Then I think the fix should be at both lines:
+> > 
+> > -         if ((outrate > 8000 && outrate < 30000) &&
+> > -             (outrate/inrate > 24 || inrate/outrate > 8)) {
+> > +         if ((outrate >= 8000 && outrate =< 30000) &&
+> > +             (outrate > 24 * inrate || inrate > 8 * outrate)) {
+> > 
+> > Overall, I think we should fix this instead of adding an extra one, since it is
+> > very likely saying the same thing.
+> 
+> Actually if outrate < 8kHz, there will be issue too.
 
-Right.
+Here is the thing, the RM doesn't explicitly state that ASRC can
+support a lower output sample rate than 8KHz. And I actually had
+a concern when reviewing your PATCH-2, as the table of supported
+output sample rate no longer matches RM.
 
-Usually you'd set POLLIN in _addition_ to any other more specialized poll flag.
+If you've verified a lower output sample rate working solid with
+the process_option function, that means our driver can go beyond
+the limitation mentioned in the RM, then I believe [8KHz, 32KHz]
+should be updated too -- that says we can do:
+-	if ((outrate > 8000 && outrate < 30000) &&
+-	    (outrate/inrate > 24 || inrate/outrate > 8)) {
++	if ((outrate >= 5512 && outrate =< 30000) &&
++	    (outrate > 24 * inrate || inrate > 8 * outrate)) {
 
-For example, when a socket has shut down the read side, we do
-
-        if (sk->sk_shutdown & RCV_SHUTDOWN)
-                mask |= EPOLLRDHUP | EPOLLIN | EPOLLRDNORM;
-
-because while it's true that EPOLLRDHUP is the most _specific_ poll
-bit, it's _also_ true that a read shutdown means that the read() will
-return immediately.
-
-So generally a HUP condition should mean that POLLIN and POLLOUT also
-get set. Not because there's any actual _data_ to be read, but simply
-because the read will not block.
-
-                   Linus
+Actually "ourate > 24 * inrate" is kind of pointless for range
+[5KHz, 32KHz] but we can keep it since it matches RM.
