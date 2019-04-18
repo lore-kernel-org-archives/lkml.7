@@ -2,118 +2,124 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD1CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78546C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E902183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4621B217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:57:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YCY2bSLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388337AbfDRI5I (ORCPT
+        id S2388351AbfDRI5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:57:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38940 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388201AbfDRI5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:57:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 01:57:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,365,1549958400"; 
-   d="scan'208";a="338691071"
-Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Apr 2019 01:57:05 -0700
-Date:   Thu, 18 Apr 2019 17:00:44 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, ying.huang@intel.com
-Subject: Re: [PATCH v2] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190418090044.wqpc7wooboamvl6t@shbuild888>
-References: <20190410153718.22905-1-feng.tang@intel.com>
- <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
- <20190417064844.ppyqxcx2mgek5455@shbuild888>
- <20190417091832.z252cvcf4ktxeamv@pathway.suse.cz>
- <20190417094614.GB4260@jagdpanzerIV>
- <20190417105010.GA8492@jagdpanzerIV>
- <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
- <20190417151817.xsun2k7cxff5rknn@shbuild888>
- <20190418000014.GA2059@jagdpanzerIV>
- <20190418074552.x7bl7tr76dui64f5@pathway.suse.cz>
+        Thu, 18 Apr 2019 04:57:16 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37482 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388196AbfDRI5Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:57:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=D7zLSethVEHi5khOP5DxgDAOzGNMwOwjlxQFcCjRB10=; b=YCY2bSLhNMwOPC9qSyTNvm8PI
+        QgyRNywbT/boF4zeFD90uc0T9Vdm/R0M28Kj7yl3NEDh9vGEuaQ2kvv28CA9Zr+shh/ZsRwlSWsLy
+        N5UUQBoXY4Sq0FS2CzvFblZh7Fu2dF/O4mbnWR8/RY2JELoVZ94KoiX88bBG/+wmj+wcgpLsShp9S
+        CzB59tW4Dd08tiNwAmwDxsjXYwcKTKQcd8lFihwbxJMWbl5vkMegKxIn6Q3CjY8OxrN4idT+i5rnk
+        KOAn5QL+jLw1UmRO1uANmxrRCQbbXgqM4Sh/nIRka9StnGWhWHKg/f/1KejQs1mVTEY0qr+ecRmVn
+        LOAuoKH4w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hH2qt-0000k6-IL; Thu, 18 Apr 2019 08:57:03 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F64529B98552; Thu, 18 Apr 2019 10:57:02 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 10:57:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+Message-ID: <20190418085702.GW12232@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-12-longman@redhat.com>
+ <20190417135659.GH4038@hirez.programming.kicks-ass.net>
+ <725e9765-b46e-5adb-1e81-90aefc6c38ad@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190418074552.x7bl7tr76dui64f5@pathway.suse.cz>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <725e9765-b46e-5adb-1e81-90aefc6c38ad@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+On Wed, Apr 17, 2019 at 01:34:01PM -0400, Waiman Long wrote:
+> On 04/17/2019 09:56 AM, Peter Zijlstra wrote:
+> > On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
+> >> @@ -549,7 +582,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+> >>  	return !owner ? OWNER_NULL : OWNER_READER;
+> >>  }
+> >>  
+> >> -static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+> >> +static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
+> >>  {
+> >>  	bool taken = false;
+> >>  	bool is_rt_task = rt_task(current);
+> >> @@ -558,9 +591,6 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+> >>  	preempt_disable();
+> >>  
+> >>  	/* sem->wait_lock should not be held when doing optimistic spinning */
+> >> -	if (!rwsem_can_spin_on_owner(sem))
+> >> -		goto done;
+> >> -
+> >>  	if (!osq_lock(&sem->osq))
+> >>  		goto done;
+> >>  
+> >> @@ -580,10 +610,11 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+> >>  		/*
+> >>  		 * Try to acquire the lock
+> >>  		 */
+> >> -		if (rwsem_try_write_lock_unqueued(sem)) {
+> >> -			taken = true;
+> >> +		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
+> >> +			      : rwsem_try_read_lock_unqueued(sem);
+> >> +
+> >> +		if (taken)
+> >>  			break;
+> >> -		}
+> >>  
+> >>  		/*
+> >>  		 * An RT task cannot do optimistic spinning if it cannot
+> > Alternatively you pass the trylock function as an argument:
+> >
+> > static bool rwsem_optimistic_spin(struct rw_semaphore *sem,
+> > 				  bool (*trylock)(struct rw_semaphore *sem))
+> > {
+> > 	...
+> > 		if (trylock(sem)) {
+> > 			taken = true;
+> > 			goto unlock;
+> > 		}
+> > 	...
+> > }
+> >
+> With retpoline, an indirect function call will be slower.
 
-On Thu, Apr 18, 2019 at 09:45:52AM +0200, Petr Mladek wrote:
-> On Thu 2019-04-18 09:00:14, Sergey Senozhatsky wrote:
-> > I think that PANIC_PRINT_ALL_PRINTK_MSG is a debugging option; a quite
-> > specific one. So people who ask the kernel to PANIC_PRINT_ALL_PRINTK_MSG
-> > they know what they are doing, and we probably will not cofuse anyone.
-> > After all, we don't print any headers when we ftrace_dump() or imitate
-> > sysrq via sysrq_timer_list_show(), or for any other panic_print_sys_info()
-> > printouts. So it's OK to just do the simple thing for
-> > PANIC_PRINT_ALL_PRINTK_MSG.
-> 
-> The following functions are currently called from panic_print_sys_info():
-> 
-> + show_state():
-> 	printk(KERN_INFO
-> 		"  task                        PC stack   pid father\n");
-> + show_mem():
-> 	printk("Mem-Info:\n");
-> 
-> + sysrq_timer_list_show()
-> 	no global header; but each section can be easily distinguished
-> 	because there are several static strings that explains the
-> 	content
-> 
-> + debug_show_all_locks()
-> 	pr_warn("\nShowing all locks held in the system:\n");
-> 
-> + ftrace_dump():
-> 	printk(KERN_TRACE "Dumping ftrace buffer:\n");
-> 
-> 
-> The person that enabled the debugging option might know what it did
-> when it process the log the very same day. It might be less clear
-> for others reading the log.
-> 
-> Also it still might be convenient to find the beginning easily.
-> Or it might help to orientate when several test runs
-> (over night test) are squashed in a single file. I see
-> such logs pretty often.
+With compiler optimization we can avoid that. Just mark the function as
+__always_inline, there's only two call-sites, each with a different
+trylock.
 
-Thanks for checking all the info. For the note, how about adding
-something like this inside panic_print_sys_info()?
-
-	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG) {
-		printk("\nprintk: will replay all the messages in buffer:\n");
-		console_flush_on_panic(CONSOLE_FLUSH_ALL);
-	}
-
-If you are all fine with it, I'll go post a v3, thanks,
-
-- Feng
-
-> 
-> That said, I do not resist on it.
-> 
-> Best Regards,
-> Petr
+It might have already done that anyway, and used constant propagation
+on your bool, but the function pointer one is far easier to read.
