@@ -2,183 +2,126 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D7BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E94BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8038218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:50:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J6/Ev2dw"
+	by mail.kernel.org (Postfix) with ESMTP id 1DF6120821
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbfDRJur (ORCPT
+        id S2388564AbfDRJwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:50:47 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33853 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388451AbfDRJuq (ORCPT
+        Thu, 18 Apr 2019 05:52:01 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38874 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388359AbfDRJwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:50:46 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190418095045euoutp01c8e5d07d79eac374895d81b7911c196a~WiLf27Vll0640506405euoutp01-
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:50:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190418095045euoutp01c8e5d07d79eac374895d81b7911c196a~WiLf27Vll0640506405euoutp01-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555581045;
-        bh=XlqFo64OpA4M2BnDSdVN7DWkiQzakanWPd1XvuFCBlk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=J6/Ev2dw+oo8ma+fMGq14Rd/DgWGrFnStRDcUMfxLP/yajwM6iHkD3p4wkX+EMm4p
-         FztUmuZtw57vJ471sriJglu2PJSDVXV7hjh6Wbockg+FZmrgo3fUmjvbrqJCO5vMDq
-         wjk8+5lZLyqRnd7/qSi4eqN+RWyhGEKB5IvAL+pk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190418095044eucas1p27932d434c588c36df892d573a09524eb~WiLfLL1Rz2827628276eucas1p22;
-        Thu, 18 Apr 2019 09:50:44 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id DF.F1.04325.37848BC5; Thu, 18
-        Apr 2019 10:50:43 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190418095043eucas1p25a9c84f12fd8edfe1748f70257e604ff~WiLeapQ6w2825328253eucas1p2u;
-        Thu, 18 Apr 2019 09:50:43 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190418095043eusmtrp13e1c4a44f49ebb6a722bbb637b8834bc~WiLeMWs5T2722127221eusmtrp1A;
-        Thu, 18 Apr 2019 09:50:43 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-83-5cb84873ac21
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id C6.C8.04146.37848BC5; Thu, 18
-        Apr 2019 10:50:43 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190418095042eusmtip2f5294e9e1fee167a3306b1b372d77a1b~WiLdhyoH83051630516eusmtip23;
-        Thu, 18 Apr 2019 09:50:42 +0000 (GMT)
-Subject: Re: [PATCH 3/3] Documentation: devicetree: add PPMU events
- description
-To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, kgene@kernel.org
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <ec6c7ce1-ee13-6921-2656-8a027c3c0686@partner.samsung.com>
-Date:   Thu, 18 Apr 2019 11:50:46 +0200
+        Thu, 18 Apr 2019 05:52:00 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d13so1284937edr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 02:51:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Py+W8O5r+OgardGm4gdSqsDVm4dd/+R1JdVdjbJLkL4=;
+        b=rfv52c2FnkFqliZNCSsvAUIOV0Ti4S8RCT3MGsek4mkCiTN/pKFJNsIAVKiQuQuQUK
+         dxezfRN3fMUqrmut7j3t5rQ8kIYVqGLggML61eniLCTiyxgo7Lyeh2WvtcA5Jo5/fx1s
+         HmFgRsZWo5SP4kKT2I7cOdKNgeeZGyl4qNmTubiaHvDaA4jslP1z+9d6+KrhPRCCYgSC
+         B8L/dQUhPSVqCn7gTWkjllJC4lfnMieVziFsEIQaRWnmX09EXPidXsRHjPZTj5kflzL9
+         3zE4QwldBhyDlTHC3QpjcWW3NI329cEfcbE5DngcxqmuFV/HBwJpO4qOh8zIwNQQyXxo
+         wWtg==
+X-Gm-Message-State: APjAAAUKxqA5M0Wd6hOkwjHWnMpiOnxTQoh3KYYijMPOZpLBOxYCbL3c
+        ozJWssE+nfGw7rTd8O+cyTzqxb5XzLw=
+X-Google-Smtp-Source: APXvYqx2gsxzK3X1zm/CM1fBagbTF7LGU65ElbodXTDR2rtaPtk+1a1Gb8oIqhrHO+PljRQVcM0/OA==
+X-Received: by 2002:a17:906:b298:: with SMTP id q24mr50365887ejz.62.1555581118296;
+        Thu, 18 Apr 2019 02:51:58 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id h11sm388982eds.44.2019.04.18.02.51.57
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 02:51:57 -0700 (PDT)
+Subject: Re: [PATCH v3 2/3] HID: quirks: Fix keyboard + touchpad on Lenovo
+ Miix 630 for DT
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Jiri Kosina <jikos@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, bjorn.andersson@linaro.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>, agross@kernel.org,
+        david.brown@linaro.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com>
+ <20190415161108.16419-1-jeffrey.l.hugo@gmail.com>
+ <CAO-hwJKeACBPW52ej6mVeG4aVDYvGF8zEMtegonVwFjT-ZoLOQ@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a47672ed-fc25-dd07-0ddf-2deca08283ef@redhat.com>
+Date:   Thu, 18 Apr 2019 11:51:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <0d867843-ec56-f30b-8a3f-b3172f325bef@samsung.com>
+In-Reply-To: <CAO-hwJKeACBPW52ej6mVeG4aVDYvGF8zEMtegonVwFjT-ZoLOQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3bO2Y7D2XFqvpglLcSM1C5SB7JSsFoUXSm8QU49qOR1R811
-        IU3KNC9dzHRqVijaMDSdOgUldDrMbIp5y2yWlpFJhVsUhNXpKPnf73m+5/2+94GPxKRGwomM
-        jktilHGKGJlQjDd1/3zhwcp1IZt/fvOhnxTVEvSIeYagy/UvCDp/ahajjcY6Ed13+bOIrp8a
-        JujB1lIhPZ+rR3SRsV1AP9ZPiOjKkQEBPZ5eLaSvtOlFdOfnTMJ3pbzmXg2S12uyhPKGikvy
-        PK0Gyefr1x4lgsQ+EUxMdAqj9NodKo6afNQsTKi0Ta3qVQvSULpNNrIigfKGFss7PBuJSSlV
-        jaBy8sOiMCPIK9ULuJSUmkcw89tlacJs6l8MVSHoGc7CeDGHoFSv/TtBknbUMWgzXuJ8e6oH
-        QW76BMEJjHqJ4L35IcaFhJQn6DSJ3K0Sah809T3FOMYpV6g0jeIcO1ABYOquI/iMLfQUT//z
-        rag90DdRgDjGKEd4NV0u4NkFMhpLMH5Tiwh+lATy7A8ZN7sInu3gk0Er4tkZem/n4DyzkJb7
-        APF8AabyyxYzO6HTMEBwK2OUO9S2evG2H3wZy8Q5GygbGJ2z5TewgVtNdzHelsC1q1I+vQG0
-        Of0CnldBVU2h6AaSqZf1Ui/rol7WRf3/3fsI1yBHJpmNjWTYbXHMWU9WEcsmx0V6hsfH1qO/
-        36x3wWDRofZfYR2IIpHMWlLt2hwiJRQprCq2AwGJyewlfhHaEKkkQqE6xyjjTyuTYxi2A60m
-        cZmj5PyKyWApFalIYs4wTAKjXDoVkFZOaWj41BvZxO/rVi0H6vAVidlubsyakzE3bSzPV5Yp
-        3gZ7DzfuvxPW9uOaa2nQx71g7XB2vWpXVH5qokveCdOQee54RVkJLZcbBq//ci7+PqSyrOnc
-        Md7oMasr3P4sYYzc5B9w6PXFBlV+uNh0cK/wiGZriso9MK1g92GXr+u6fL1CFxxlOBul2LIR
-        U7KKP9vgkNdiAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xe7rFHjtiDH78Z7PYOGM9q8X1L89Z
-        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
-        cbtxBZtF694j7BaH37SzOvB7rJm3htFj06pONo/NS+o9+rasYvT4vEkugDVKz6Yov7QkVSEj
-        v7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PByu1sBUsFK5afnsXU
-        wNjI18XIySEhYCLx5f4Fli5GLg4hgaWMElOPvWKGSIhJTNq3nR3CFpb4c62LDaLoNaPEvElL
-        gRwODmGBQIm95+tB4iICJxklZk/4ywTiMAtcYZRYfm0yK0THJCaJdXMXMIF0sAnoSexYVQgy
-        lVfATWLb2QNg21gEVCWW3r/BAmKLCkRInHm/ggWiRlDi5MwnYDangL3E2btTGEFsZgEziXmb
-        HzJD2OISt57MZ4Kw5SWat85mnsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xoV5xYm5x
-        aV66XnJ+7iZGYBRvO/Zz8w7GSxuDDzEKcDAq8fCuUN0eI8SaWFZcmXuIUYKDWUmE1zFlS4wQ
-        b0piZVVqUX58UWlOavEhRlOg5yYyS4km5wMTTF5JvKGpobmFpaG5sbmxmYWSOO95g8ooIYH0
-        xJLU7NTUgtQimD4mDk6pBsa5DoG2EnwXS9XCCpZ6zlfqynUwZDx9U+/vt+QHMx0iq+x4Vb58
-        UVSbd+VqQqjjip9nNAKnBT5I7HiX+fC8WeeT3Y+uCTxeJn6sMykiN4g988m+Y2LFW+q/vJ0a
-        PD9h+p2fwf1+R50YVOVsf8SzVb9e/PLAweJVb29Hz05atSa6YVpi8mq1qUeUWIozEg21mIuK
-        EwGgt0o3+AIAAA==
-X-CMS-MailID: 20190418095043eucas1p25a9c84f12fd8edfe1748f70257e604ff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190417074835eucas1p19319bedd176d55e10b272881b7c68919
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190417074835eucas1p19319bedd176d55e10b272881b7c68919
-References: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190417074835eucas1p19319bedd176d55e10b272881b7c68919@eucas1p1.samsung.com>
-        <1555487288-4777-4-git-send-email-l.luba@partner.samsung.com>
-        <0d867843-ec56-f30b-8a3f-b3172f325bef@samsung.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+Hi,
 
-On 4/17/19 10:26 AM, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> On 19. 4. 17. 오후 4:48, Lukasz Luba wrote:
->> Extend the documenation by events description with new 'event-data-type'
->> field. Add example how the event might be defined in DT.
+On 18-04-19 11:34, Benjamin Tissoires wrote:
+> On Mon, Apr 15, 2019 at 6:11 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
 >>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> Following up on commit 2bafa1e96254 ("HID: quirks: Fix keyboard + touchpad
+>> on Lenovo Miix 630"), the devicetree (DT) identifier for the combo keyboard
+>> + touchpad device is "elan,combo400-i2c", which differs from the ACPI ID,
+>> thus if we want the quirk to work properly when booting via DT instead of
+>> ACPI, we need to key off the DT id as well.
+>>
+>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 >> ---
->>   .../devicetree/bindings/devfreq/event/exynos-ppmu.txt  | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
+>>   drivers/hid/hid-quirks.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> index 3e36c1d..47feb5f 100644
->> --- a/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> +++ b/Documentation/devicetree/bindings/devfreq/event/exynos-ppmu.txt
->> @@ -145,3 +145,21 @@ Example3 : PPMUv2 nodes in exynos5433.dtsi are listed below.
->>   			reg = <0x104d0000 0x2000>;
->>   			status = "disabled";
->>   		};
->> +
->> +The 'event' type specified in the PPMU node defines 'event-name'
->> +which also contains 'id' number and optionally 'event-data-type'.
->> +
->> +Example:
->> +
->> +		events {
->> +			ppmu_leftbus_0: ppmu-event0-leftbus {
->> +				event-name = "ppmu-event0-leftbus";
->> +				event-data-type = <PPMU_RO_DATA_CNT>;
->> +			};
->> +		};
->> +
->> +The 'event-data-type' defines the type of data which shell be counted
->> +by the counter. You can check include/dt-bindings/pmu/exynos_ppmu.h for
+>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>> index 77ffba48cc73..00c08f8318b8 100644
+>> --- a/drivers/hid/hid-quirks.c
+>> +++ b/drivers/hid/hid-quirks.c
+>> @@ -997,7 +997,8 @@ bool hid_ignore(struct hid_device *hdev)
+>>                          return true;
+>>                  /* Same with product id 0x0400 */
+>>                  if (hdev->product == 0x0400 &&
+>> -                   strncmp(hdev->name, "QTEC0001", 8) != 0)
+>> +                   (strncmp(hdev->name, "QTEC0001", 8) != 0 ||
+>> +                    strncmp(hdev->name, "elan,combo400-i2c", 17) != 0))
 > 
-> I replied about 'pmu' name on patch2. Please check it.
-Yes, I've seen it and responded.
+> I think we are taking the problem the wrong way here.
 > 
->> +all possible type, i.e. count read requests, count write data in bytes,
->> +etc. This field is optional and when it is missing, the driver code will
->> +use default data type.
->>
-> Looks good to me.
-> But, If you want to add the new 'event-data-type' property,
-> you better to add 'event-data-type' to Exynos dts file including
-> PPMU device.
+> When I first introduced 6ccfe64, I thought 0x0400 would be reserved
+> for the elan_i2c touchpads only. But it turns out we are deliberately
+> disabling valid HID touchpads hoping that they would be picked up by
+> elan_i2c when elan_i2c has its own whitelist of devices.
 > 
-> If the dts file contain the data type information,
-> I think it is easy to understand for the user
-> what is monitoring on PPMU device.
+> How about we turn this into list with the matching ones from elan_i2c:
+> if ((hdev->product == 0x0400 || hdev->product == 0x0401) &&
+>     (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
+>      strncmp(hdev->name, "ELAN0100", 8) == 0 ||
+>      ...
+>      strncmp(hdev->name, "ELAN1000", 8) == 0))
+>        return true;
+> 
+> So next time we need to force binding a HID touchpad to elan_i2c, we
+> can just blacklist here and whitelist it in elan_i2c.
 
-Make sense, I will do that. It will be explicitly telling the user what
-is currently monitored in the PPMU device event.
+This indeed sounds like a better way forward with this.
 
 Regards,
-Lukasz
-> 
-> 
+
+Hans
+
