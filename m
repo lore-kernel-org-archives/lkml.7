@@ -2,118 +2,86 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384F7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57C3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0502C217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SwnFKNon"
+	by mail.kernel.org (Postfix) with ESMTP id 8062C217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555619570;
+	bh=3cAiyFyV/p+bBSU+y5ieU7sRvyEc8uS1u/a+EV/Eaeg=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=u3T+FVCn69DN10pjAzqihsft2uXOqPfe2idVmc1X0AXFqWVvIUi4YbsAtFpG3/MHM
+	 EYks+Dk3LdDEDrKvAnwkQb+ex6fdLGD7yS5ohej6hX128oAoi1kZHwcW07aVHSCDFQ
+	 mWok1NyyEt3/U55rwD7F7/bc75v2dZQxtJXZAYpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390118AbfDRUac (ORCPT
+        id S2390014AbfDRUct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 16:30:32 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17090 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731565AbfDRUab (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 16:30:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cb8de6c0001>; Thu, 18 Apr 2019 13:30:36 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 18 Apr 2019 13:30:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 18 Apr 2019 13:30:31 -0700
-Received: from [10.2.163.72] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Apr
- 2019 20:30:29 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-CC:     <mhocko@suse.com>, <kirill.shutemov@linux.intel.com>,
-        <rppt@linux.vnet.ibm.com>, <corbet@lwn.net>,
-        <akpm@linux-foundation.org>, <linux-doc@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] doc: mm: migration doesn't use FOLL_SPLIT anymore
-Date:   Thu, 18 Apr 2019 16:30:27 -0400
-X-Mailer: MailMate (1.12.4r5622)
-Message-ID: <C8CBF3A3-5ADA-4CA6-8AEB-4836AE9146D7@nvidia.com>
-In-Reply-To: <1555618624-23957-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1555618624-23957-1-git-send-email-yang.shi@linux.alibaba.com>
+        Thu, 18 Apr 2019 16:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389754AbfDRUct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 16:32:49 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4835E214C6;
+        Thu, 18 Apr 2019 20:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555619568;
+        bh=3cAiyFyV/p+bBSU+y5ieU7sRvyEc8uS1u/a+EV/Eaeg=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=Bk/0o+eq9UbsJE1I4dX6fwnutzWfiZQzUWuZaBgDIk4Jj9kBVjW/AUHRXGKBkU9ah
+         01qVlQl2IkahL0cg2mh4VWsYi6fre1dEq6wbe6+vzYUR95Lj/SDl4hXYgu0oDI2Fvx
+         Y8QJKFZAFwKIKK1Hsiv6apZaMrAipqCJJOwlA92U=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; format=flowed
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555619436; bh=T3JD0sgSOXk1vRSr1uVe9SorhMd4n+SS+HWTi6IFNCc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=SwnFKNonXOE1zQVJWCyAkBVjCLR/gdo0c98WcA4gmTZefaRGQCthtZhxg/jleQzpb
-         9ey3mfNA2l5uwtSrjts4734cmnAQzrvuHJkA0/uVgRhdrUSqaEEH5iSCLqsgZ+z1mf
-         eeg11NLcYkIb/mqsgxPlqRYvLKPIDYGdSbrtnlZUeJ4SkRHOQlXkM81nzq/VmKWoBq
-         F+ZustVToSp/Ww2x7qBHKYszHEDGptzDItgUiSNegC2a4t8wVt2Udzszw5zk7EYoRl
-         T2VVXWCXJVBoGCwEAjqmLJrf4butHZI6agSmOQ0mGBaG9CzXgI07vrYyRDygRIjFSL
-         N81lBCiahYjRw==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1555545233.9064.0@crapouillou.net>
+References: <20190417112420.3034-1-paul@crapouillou.net> <155554493444.15276.2577888773542833089@swboyd.mtv.corp.google.com> <1555545233.9064.0@crapouillou.net>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: ingenic/jz4725b: Fix parent of pixel clock
+To:     Paul Cercueil <paul@crapouillou.net>
+Message-ID: <155561956762.15276.194017354834843301@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 18 Apr 2019 13:32:47 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18 Apr 2019, at 16:17, Yang Shi wrote:
+Quoting Paul Cercueil (2019-04-17 16:53:53)
+> Hi Stephen,
+>=20
+> Le jeu. 18 avril 2019 =C3=A0 1:48, Stephen Boyd <sboyd@kernel.org> a =C3=
+=A9crit=20
+> :
+> > Quoting Paul Cercueil (2019-04-17 04:24:20)
+> >>  The pixel clock is directly connected to the output of the PLL, and=20
+> >> not
+> >>  to the /2 divider.
+> >>=20
+> >>  Cc: stable@vger.kernel.org
+> >>  Fixes: 226dfa4726eb ("clk: Add Ingenic jz4725b CGU driver")
+> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>  ---
+> >=20
+> > Is this breaking something in 5.1-rc series? Or just found by
+> > inspection? I'm trying to understand the priority of this patch.
+>=20
+> I verified it with the hardware. It fixes a bug that has been present
+> since the introduction of this driver.
+>=20
+> However until now nothing uses this particular clock so it can go to=20
+> 5.2.
+>=20
 
-> When demonstrating FOLL_SPLIT in transhuge document, migration is used
-> as an example.  But, since commit 94723aafb9e7 ("mm: unclutter THP
-> migration"), the way of THP migration is totally changed.  FOLL_SPLIT 
-> is
-> not used by migration anymore due to the change.
->
-> Remove the obsolete example to avoid confusion.
->
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  Documentation/vm/transhuge.rst | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/Documentation/vm/transhuge.rst 
-> b/Documentation/vm/transhuge.rst
-> index a8cf680..8df3806 100644
-> --- a/Documentation/vm/transhuge.rst
-> +++ b/Documentation/vm/transhuge.rst
-> @@ -55,13 +55,7 @@ prevent page from being split by anyone.
->  In case you can't handle compound pages if they're returned by
->  follow_page, the FOLL_SPLIT bit can be specified as parameter to
->  follow_page, so that it will split the hugepages before returning
-> -them. Migration for example passes FOLL_SPLIT as parameter to
-> -follow_page because it's not hugepage aware and in fact it can't work
-> -at all on hugetlbfs (but it instead works fine on transparent
-> -hugepages thanks to FOLL_SPLIT). migration simply can't deal with
-> -hugepages being returned (as it's not only checking the pfn of the
-> -page and pinning it during the copy but it pretends to migrate the
-> -memory in regular page sizes and with regular pte/pmd mappings).
-> +them.
->
->  Graceful fallback
->  =================
-> -- 
-> 1.8.3.1
+Great. Thanks for the background!
 
-Thanks for updating the document.
-
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-
-
-
---
-Best Regards,
-Yan Zi
