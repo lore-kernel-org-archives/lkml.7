@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9027C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6215DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791372186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355DF21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610922;
-	bh=+wDCbQFSIlARIGinIShr3Pj2sMLDdEviy6SpIqXrcxc=;
+	s=default; t=1555610924;
+	bh=Hen+TTSEe0XSwNuPPVwf/vSjZrHh+340oHQeEFOLcjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWk1Tvdv2PYiN3f3AM/4ArcXnRMF6d0D8xlN29+qfdjvdQUmMUSO2E5DaiZRTbEMu
-	 bzSeH7lg7g6AtlCbeI40iniUXwVYU/qsIpbCyvQLqKt41spM+OdQZ/+T0Zi/Fbwed6
-	 pypRfLx/fEF6HzSQ6oyVnDSdSXmMxIZEP0b6whkM=
+	b=TRhY7Pnst4LZvueQoPi3rfsmckdQt1zPyllp1k0D0SLWS8YzfYbYJaJfiHowrEkmA
+	 +MOSfAn1RCdePngiMwlSpKffkTiMQUhzgUUN/mwg2kV3Sh4E063asHZv/Mzn0YVtWK
+	 98VC4iYp9woAmec5Y2A05D+Ub83ferSnBjB3GJL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391213AbfDRSIk (ORCPT
+        id S2391449AbfDRSIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403874AbfDRSIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:36 -0400
+        id S2391291AbfDRSIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E51D2217FA;
-        Thu, 18 Apr 2019 18:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 338632186A;
+        Thu, 18 Apr 2019 18:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610915;
-        bh=+wDCbQFSIlARIGinIShr3Pj2sMLDdEviy6SpIqXrcxc=;
+        s=default; t=1555610920;
+        bh=Hen+TTSEe0XSwNuPPVwf/vSjZrHh+340oHQeEFOLcjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJ8GHTq7juGIB4a6O8Tzd6uXxDW/ILqNTp/zfTOjXcqi2+o864wyN5guFWsCJRoc/
-         Q6PgXZCNzpHu5lI+vY3G2MKMDuCEP6DeC4V3PErQ9BD2F+zTP7t824iDA1HSwf7XxR
-         NLQdRp9oGqucsVwrIiRUFReEkD4n3fOtSYX5U+OU=
+        b=DTUwsRjoouDPt7Ves0UZJElXP6V56/jVuQNGXbr8d4jDSLB1qSnusfSFT8YgDkeu5
+         ms/0/R0qrE/5LNcYWOc077GJEzPCrvnoWB2cgqRrV68dwSer3ygm73iHI0Ii1abeTQ
+         t8PNG6r3ilJZa7pGOE7sNAamPLZfnFMvZ/fiDtXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 40/50] crypto: sha512/arm - fix crash bug in Thumb2 build
-Date:   Thu, 18 Apr 2019 19:57:51 +0200
-Message-Id: <20190418160427.379070520@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        mark gross <mgross@intel.com>, Ashok Raj <ashok.raj@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 24/50] iommu/vt-d: Check capability before disabling protected memory
+Date:   Thu, 18 Apr 2019 19:57:35 +0200
+Message-Id: <20190418160425.651753798@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -60,95 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c64316502008064c158fa40cc250665e461b0f2a ]
+[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
 
-The SHA512 code we adopted from the OpenSSL project uses a rather
-peculiar way to take the address of the round constant table: it
-takes the address of the sha256_block_data_order() routine, and
-substracts a constant known quantity to arrive at the base of the
-table, which is emitted by the same assembler code right before
-the routine's entry point.
+The spec states in 10.4.16 that the Protected Memory Enable
+Register should be treated as read-only for implementations
+not supporting protected memory regions (PLMR and PHMR fields
+reported as Clear in the Capability register).
 
-However, recent versions of binutils have helpfully changed the
-behavior of references emitted via an ADR instruction when running
-in Thumb2 mode: it now takes the Thumb execution mode bit into
-account, which is bit 0 af the address. This means the produced
-table address also has bit 0 set, and so we end up with an address
-value pointing 1 byte past the start of the table, which results
-in crashes such as
-
-  Unable to handle kernel paging request at virtual address bf825000
-  pgd = 42f44b11
-  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
-  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
-  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
-  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
-  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
-  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
-  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
-  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
-  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
-  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
-  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
-  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
-  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
-  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
-  Stack: (0xebc8bbe8 to 0xebc8c000)
-  ...
-  unwind: Unknown symbol address bf820bca
-  unwind: Index not found bf820bca
-  Code: 441a ea80 40f9 440a (f85e) 3b04
-  ---[ end trace e560cce92700ef8a ]---
-
-Given that this affects older kernels as well, in case they are built
-with a recent toolchain, apply a minimal backportable fix, which is
-to emit another non-code label at the start of the routine, and
-reference that instead. (This is similar to the current upstream state
-of this file in OpenSSL)
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: mark gross <mgross@intel.com>
+Suggested-by: Ashok Raj <ashok.raj@intel.com>
+Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha512-armv4.pl       | 3 ++-
- arch/arm/crypto/sha512-core.S_shipped | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/crypto/sha512-armv4.pl b/arch/arm/crypto/sha512-armv4.pl
-index a2b11a844357..5fe336420bcf 100644
---- a/arch/arm/crypto/sha512-armv4.pl
-+++ b/arch/arm/crypto/sha512-armv4.pl
-@@ -267,10 +267,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
-diff --git a/arch/arm/crypto/sha512-core.S_shipped b/arch/arm/crypto/sha512-core.S_shipped
-index 3694c4d4ca2b..de9bd7f55242 100644
---- a/arch/arm/crypto/sha512-core.S_shipped
-+++ b/arch/arm/crypto/sha512-core.S_shipped
-@@ -134,10 +134,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 86e349614e21..28feb1744710 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -1636,6 +1636,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
+ 	u32 pmen;
+ 	unsigned long flags;
+ 
++	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
++		return;
++
+ 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+ 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
+ 	pmen &= ~DMA_PMEN_EPM;
 -- 
 2.19.1
 
