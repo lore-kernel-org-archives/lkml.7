@@ -2,217 +2,162 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C93AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C8AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEEA2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C7420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:37:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="GCscovTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389546AbfDRPgf (ORCPT
+        id S2389550AbfDRPhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:36:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56542 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfDRPge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:36:34 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB06A308A10D;
-        Thu, 18 Apr 2019 15:36:32 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C764A5C224;
-        Thu, 18 Apr 2019 15:36:20 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 11:36:19 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
-        linux-bcache@vger.kernel.org,
-        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>
-Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
-Message-ID: <20190418153618.GE3288@redhat.com>
-References: <20190411210834.4105-1-jglisse@redhat.com>
- <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
- <20190416185922.GA12818@kmo-pixel>
- <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
- <20190416194936.GD21526@redhat.com>
- <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
- <20190417222858.GA4146@redhat.com>
- <20190418104205.GA28541@quack2.suse.cz>
- <20190418142729.GB3288@redhat.com>
- <20190418153047.GN28541@quack2.suse.cz>
+        Thu, 18 Apr 2019 11:37:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46126 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfDRPhO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:37:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h21so2284485ljk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XxlQKWWnFNnJwsC95iNP/OBoRzp1til1naMm19IOSgs=;
+        b=GCscovTz+VnvGiW6tBnmlRAoJznLmTvP9lebSyKUBpnBfZ34Hk+jrt84IqthPTdp0W
+         LF6xJyYqo7jhJRB2/Nt/Op7I4CUfQ5+YJJbGGN6a+EmyjnzIqVMv+nSyy+5JAj/05atG
+         pqNq3jR41q4RBLdjf9F/ShrGNnoPi08AI0OfUPterfeTz4zM0m/l3lSoJODJMoLYv5MK
+         At0oJa6GjgM1W2s/4hKai/Fygb53b5pQxAdREA8iKoW0PzNdIIbLP0K+pF++qyyAMPIa
+         wwCLJ6PnRvAowll9BfV/fDUwcCUBxUG1clgXo4gfzAiatuJLruajvbI56fe72jo1x8ra
+         xPvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XxlQKWWnFNnJwsC95iNP/OBoRzp1til1naMm19IOSgs=;
+        b=S+kCdJpHHnV6eHtvxmrRQLaX5SZBuSPMuw1nJu9vEGIbTaPP631sZI01DwBpY1BMyo
+         R3VCfOPmOzP+hNB/FjWrq7pK3a3JwNuLlg9T1L5qIfPAnolCAt2Fv2PUxUhM6bYWudl7
+         WayohY64eijSGoDcuDtpesg0DJ8+iNqW7Fcqae36gmG0FAy98t4wOWzs7OMALAopWrZT
+         YQ/Nxk51QcbH1C6s58hZU4prSCZcnqO8sCxpLTzFNlZoLvhZBkI9NomF8DgXxZhKPLNS
+         AvDTtwUH2i+4jgAspHnedI3IYnr32BUznlfSSkNcWe+UGUUTeJQ2RgXkRM7v7h5jCIWI
+         qQxg==
+X-Gm-Message-State: APjAAAW+kWMMgY+ys3UBPWjlA4VvnRtMBy/MSVsJCX250yua69hLJEhX
+        D12LUMZDMm0m9S/N38doYecLIK4aQQ9R19bvRp/E
+X-Google-Smtp-Source: APXvYqwmbHYNiUfgZD2Te72BsUtKU2FETXcxqSpQTQ/FFhf+4QCvWzKC8h0IMTu8DMrcPnzvF+pHVaQLhkSi1x9na5w=
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr94110ljk.5.1555601831141; Thu,
+ 18 Apr 2019 08:37:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190418153047.GN28541@quack2.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 18 Apr 2019 15:36:33 +0000 (UTC)
+References: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
+ <CAHC9VhSCRrbFYy3KnSAt4GhADCfTXW-_uSm8focUk-i7_FPjrA@mail.gmail.com> <20190418151642.nb5mgrxfw55hqecs@madcap2.tricolour.ca>
+In-Reply-To: <20190418151642.nb5mgrxfw55hqecs@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 18 Apr 2019 11:37:00 -0400
+Message-ID: <CAHC9VhQGqywNxBs-LbrYh5xZ12GyWDS9Ju=kmLnzeV3ZsXiv9g@mail.gmail.com>
+Subject: Re: [PATCH ghak111 V1] audit: deliver siginfo regarless of syscall
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        sgrubb@redhat.com, omosnace@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        oleg@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 05:30:47PM +0200, Jan Kara wrote:
-> On Thu 18-04-19 10:27:29, Jerome Glisse wrote:
-> > On Thu, Apr 18, 2019 at 12:42:05PM +0200, Jan Kara wrote:
-> > > On Wed 17-04-19 18:28:58, Jerome Glisse wrote:
-> > > > On Wed, Apr 17, 2019 at 02:53:28PM -0700, Dan Williams wrote:
-> > > > > On Tue, Apr 16, 2019 at 12:50 PM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > > > >
-> > > > > > On Tue, Apr 16, 2019 at 12:12:27PM -0700, Dan Williams wrote:
-> > > > > > > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
-> > > > > > > <kent.overstreet@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
-> > > > > > > > > On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
-> > > > > > > > > > From: Jérôme Glisse <jglisse@redhat.com>
-> > > > > > > > > >
-> > > > > > > > > > This patchset depends on various small fixes [1] and also on patchset
-> > > > > > > > > > which introduce put_user_page*() [2] and thus is 5.3 material as those
-> > > > > > > > > > pre-requisite will get in 5.2 at best. Nonetheless i am posting it now
-> > > > > > > > > > so that it can get review and comments on how and what should be done
-> > > > > > > > > > to test things.
-> > > > > > > > > >
-> > > > > > > > > > For various reasons [2] [3] we want to track page reference through GUP
-> > > > > > > > > > differently than "regular" page reference. Thus we need to keep track
-> > > > > > > > > > of how we got a page within the block and fs layer. To do so this patch-
-> > > > > > > > > > set change the bio_bvec struct to store a pfn and flags instead of a
-> > > > > > > > > > direct pointer to a page. This way we can flag page that are coming from
-> > > > > > > > > > GUP.
-> > > > > > > > > >
-> > > > > > > > > > This patchset is divided as follow:
-> > > > > > > > > >     - First part of the patchset is just small cleanup i believe they
-> > > > > > > > > >       can go in as his assuming people are ok with them.
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn this is
-> > > > > > > > > >       done in multi-step, first we replace all direct dereference of
-> > > > > > > > > >       the field by call to inline helper, then we introduce macro for
-> > > > > > > > > >       bio_bvec that are initialized on the stack. Finaly we change the
-> > > > > > > > > >       bv_page field to bv_pfn.
-> > > > > > > > >
-> > > > > > > > > Why do we need a bv_pfn. Why not just use the lowest bit of the page-ptr
-> > > > > > > > > as a flag (pointer always aligned to 64 bytes in our case).
-> > > > > > > > >
-> > > > > > > > > So yes we need an inline helper for reference of the page but is it not clearer
-> > > > > > > > > that we assume a page* and not any kind of pfn ?
-> > > > > > > > > It will not be the first place using low bits of a pointer for flags.
-> > > > > > > > >
-> > > > > > > > > That said. Why we need it at all? I mean why not have it as a bio flag. If it exist
-> > > > > > > > > at all that a user has a GUP and none-GUP pages to IO at the same request he/she
-> > > > > > > > > can just submit them as two separate BIOs (chained at the block layer).
-> > > > > > > > >
-> > > > > > > > > Many users just submit one page bios and let elevator merge them any way.
-> > > > > > > >
-> > > > > > > > Let's please not add additional flags and weirdness to struct bio - "if this
-> > > > > > > > flag is set interpret one way, if not interpret another" - or eventually bios
-> > > > > > > > will be as bad as skbuffs. I would much prefer just changing bv_page to bv_pfn.
-> > > > > > >
-> > > > > > > This all reminds of the failed attempt to teach the block layer to
-> > > > > > > operate without pages:
-> > > > > > >
-> > > > > > > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-desk3.amr.corp.intel.com/
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Question though - why do we need a flag for whether a page is a GUP page or not?
-> > > > > > > > Couldn't the needed information just be determined by what range the pfn is not
-> > > > > > > > (i.e. whether or not it has a struct page associated with it)?
-> > > > > > >
-> > > > > > > That amounts to a pfn_valid() check which is a bit heavier than if we
-> > > > > > > can store a flag in the bv_pfn entry directly.
-> > > > > > >
-> > > > > > > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
-> > > > > > > an 'unsigned long'.
-> > > > > > >
-> > > > > > > That said, I'm still in favor of Jan's proposal to just make the
-> > > > > > > bv_page semantics uniform. Otherwise we're complicating this core
-> > > > > > > infrastructure for some yet to be implemented GPU memory management
-> > > > > > > capabilities with yet to be determined value. Circle back when that
-> > > > > > > value is clear, but in the meantime fix the GUP bug.
-> > > > > >
-> > > > > > This has nothing to do with GPU, what make you think so ? Here i am
-> > > > > > trying to solve GUP and to keep the value of knowing wether a page
-> > > > > > has been GUP or not. I argue that if we bias every page in every bio
-> > > > > > then we loose that information and thus the value.
-> > > > > >
-> > > > > > I gave the page protection mechanisms as an example that would be
-> > > > > > impacted but it is not the only one. Knowing if a page has been GUP
-> > > > > > can be useful for memory reclaimation, compaction, NUMA balancing,
-> > > > > 
-> > > > > Right, this is what I was reacting to in your pushback to Jan's
-> > > > > proposal. You're claiming value for not doing the simple thing for
-> > > > > some future "may be useful in these contexts". To my knowledge those
-> > > > > things are not broken today. You're asking for the complexity to be
-> > > > > carried today for some future benefit, and I'm asking for the
-> > > > > simplicity to be maintained as much as possible today and let the
-> > > > > value of future changes stand on their own to push for more complexity
-> > > > > later.
-> > > > > 
-> > > > > Effectively don't use this bug fix to push complexity for a future
-> > > > > agenda where the value has yet to be quantified.
-> > > > 
-> > > > Except that this solution (biasing everyone in bio) would _more complex_
-> > > > it is only conceptualy appealing. The changes are on the other hand much
-> > > > deeper and much riskier but you decided to ignore that and focus on some-
-> > > > thing i was just giving as an example.
-> > > 
-> > > Yeah, after going and reading several places like fs/iomap.c, fs/mpage.c,
-> > > drivers/md/dm-io.c I agree with you. The places that are not doing direct
-> > > IO usually just don't hold any page reference that could be directly
-> > > attributed to the bio (and they don't drop it when bio finishes). They
-> > > rather use other means (like PageLocked, PageWriteback) to make sure the
-> > > page stays alive so mandating gup-pin reference for all pages attached to a
-> > > bio would require a lot of reworking of places that are not related to our
-> > > problem and currently work just fine. So I withdraw my suggestion. Nice in
-> > > theory, too much work in practice ;).
-> > 
-> > Have you seem Boaz proposal ? I have started it and it does not look to
-> > bad (but you knwo taste and color :)) You can take a peek:
-> > 
-> > https://cgit.freedesktop.org/~glisse/linux/log/?h=gup-bio-v2
-> > 
-> > I need to finish that and run fstests on bunch of different fs before
-> > posting. Dunno if i will have enough time to do that before LSF/MM.
-> 
-> Yes, I've seen it. I just wasn't sure how the result will look like. What
-> you have in your tree looks pretty clean so far. BTW (I know I'm repeating
-> myself ;) what if we made iov_iter_get_pages() & iov_iter_get_pages_alloc()
-> always return gup-pin reference? That would get rid of the need for two
-> ioend handlers for each call site...
+On Thu, Apr 18, 2019 at 11:16 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-04-18 10:59, Paul Moore wrote:
+> > On Mon, Apr 8, 2019 at 11:53 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > When a process signals the audit daemon (shutdown, rotate, resume,
+> > > reconfig) but syscall auditing is not enabled, we still want to know the
+> > > identity of the process sending the signal to the audit daemon.
+> > >
+> > > Move audit_signal_info() out of syscall auditing to general auditing but
+> > > create a new function audit_signal_info_syscall() to take care of the
+> > > syscall dependent parts for when syscall auditing is enabled.
+> > >
+> > > Please see the github kernel audit issue
+> > > https://github.com/linux-audit/audit-kernel/issues/111
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h |  6 ++++++
+> > >  kernel/audit.c        | 27 +++++++++++++++++++++++++++
+> > >  kernel/audit.h        |  4 ++--
+> > >  kernel/auditsc.c      | 19 +++----------------
+> > >  kernel/signal.c       |  2 +-
+> > >  5 files changed, 39 insertions(+), 19 deletions(-)
+> >
+> > ...
+> >
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index 1e69d9fe16da..4a22fc3f824f 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -226,6 +229,9 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
+> > >  }
+> > >
+> > >  #define audit_enabled AUDIT_OFF
+> > > +
+> > > +#define audit_signal_info(s, t) AUDIT_OFF
+> > > +
+> >
+> > Should this be AUDIT_DISABLED to preserve the current value/behavior?
+> > Technically they should both have a value of zero right now, but since
+> > the AUDIT_DISABLED value isn't explicit it seems safer to go with
+> > AUDIT_DISABLED.
+>
+> I did that first, but that symbol was not available when one or both of
+> CONFIG_AUDITSYSCALL or CONFIG_AUDIT was off, so I had to change it to
+> AUDIT_OFF.  I followed the logic to confirm that is what was intended by
+> the original code.
+>
+> When auidit is off, we want to just return zero so it gets skipped
+> rather than throwing an error.
 
-No it would not everywhere, some of the callsite have more way to fill
-the bio then just iov_iter_get_pages*() so i expect a good chunk of
-the patches i have would stay the same because of that. So in the end
-it might now simplify much maybe couple place.
+I understand the desire to return zero in that case, I'm not arguing
+against that, I'm just not really in love with how these are defined
+when CONFIG_AUDIT isn't.  Part of it is the AUDIT_DISABLED/AUDIT_OFF
+change, part of it is the function being defined as a cpp macro
+instead of a dummy function (this of course predates your change).
+Based on other comments in this thread it looks like you're looking
+into a few things and will likely be respinning this patch, since that
+is the case, I would prefer if you changed this to just using simply
+"0" as opposed to AUDIT_OFF.
 
-Cheers,
-Jérôme
+If you really want to make me happy about this patch, you would also
+change this to a dummy function instead of a cpp macro.  This is a
+style nit, and isn't strictly necessary, but I would appreciate it :)
+
+> > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > index 958d5b8fc1b3..18a8ae812e9f 100644
+> > > --- a/kernel/audit.h
+> > > +++ b/kernel/audit.h
+> > > @@ -299,7 +299,7 @@ extern bool audit_tree_match(struct audit_chunk *chunk,
+> > >  extern void audit_put_tree(struct audit_tree *tree);
+> > >  extern void audit_kill_trees(struct audit_context *context);
+> > >
+> > > -extern int audit_signal_info(int sig, struct task_struct *t);
+> > > +extern int audit_signal_info_syscall(struct task_struct *t);
+> > >  extern void audit_filter_inodes(struct task_struct *tsk,
+> > >                                 struct audit_context *ctx);
+> > >  extern struct list_head *audit_killed_trees(void);
+> > > @@ -330,7 +330,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
+> > >  #define audit_tree_path(rule) ""       /* never called */
+> > >  #define audit_kill_trees(context) BUG()
+> > >
+> > > -#define audit_signal_info(s, t) AUDIT_DISABLED
+> > > +#define audit_signal_info_syscall(t) AUDIT_OFF
+> >
+> > Similar as above.
+
+-- 
+paul moore
+www.paul-moore.com
