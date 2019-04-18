@@ -2,123 +2,95 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE07C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA57C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C05217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555593654;
-	bh=tB6W23DqVoY0ovjvn+gfIFqrcvOuFPUUX6EhZ2Swf2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PlUGmN4IUHTzfNo2RxTGOszuf8BtGD7Sjr9WX2Yuf8a5uEKyeGoM+iZ7Q9t9XdtUW
-	 MdZ6n0V7RrEygq3vv3+kJ+EYS+hOKrxI5DouLbqSOPJ7QcIZi3tNGNmcIPZmz/HFVC
-	 5tXnUwQ+EmchSA8rs+C/baG8ItSoBWc4fMuNoPCU=
+	by mail.kernel.org (Postfix) with ESMTP id 4E07C217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SRe9lZDm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eFxaBNl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389011AbfDRNUx (ORCPT
+        id S2389040AbfDRNVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:20:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33744 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfDRNUw (ORCPT
+        Thu, 18 Apr 2019 09:21:38 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41322 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfDRNVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:20:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k1so1780371wrw.0;
-        Thu, 18 Apr 2019 06:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XQCHoAAFT5Z9bDRSYOBbJEBinvShFFVBSkUMOBYi/Tc=;
-        b=OBVI3mxBq7hJJ7GMq63UZAs5eDSNSQHVMQhmsRcAzOUlEvQybBl1shmYvk0PdKKK5/
-         0AT3aJ9peUWu6DDE2+uo/dmc7PEUAwXzlwkLRi6iJQAHlOzIPupYPzVxLR6BgJ1aoE8/
-         PaA7Uf6uU6WdoZEbRyIT6Bl8wnNCRk7UlthLWf1af5Bs/hdbglOXeyfrugNoRNZbu+ve
-         K6oedra3Ss9p/ADCD3fv4vNKJ1x2sNjXk8UGfrCFuaZT7pQkl/USfphp6YQaSoQn1qZZ
-         OJjlYQjkhJvXBlSdRxhmEm7YT/CUd/7rFK/KQcjGeGoFbZTeIJoWsQ6fLUy7H1fnUd8s
-         b6mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XQCHoAAFT5Z9bDRSYOBbJEBinvShFFVBSkUMOBYi/Tc=;
-        b=HyAedJ13BSndJyNGMfLKRQ35i4vThDLmzI3hShhbYtODM/y/VId9Kt9S22Y0acdgQ8
-         n4ii6hTWqXEbmR5bLiMYB5V4ulQa9fGzkY4arMvxhAsb1xmZK/0mASRwxmZBoo+XEH9L
-         Qhr8qOwzc/jg+w2Yxh3z8ysyUeKShRMcPFoBYBi+EVYmPUsmRwlN+tTJJPmYhkRcN4as
-         DUX+Z9/7d1Ok51P7/I1foRT2T/dKWcnnSvhKFZMrgEr2gXeooYRh81X/hgDXv9CHpzfE
-         aWCmxJp88yuOrrjzl4SqfyNKbWd5DgbCFJbXXlmRntbO2mzlJpMDUD/hm8tfWv0quQiZ
-         3epA==
-X-Gm-Message-State: APjAAAUBXnIn3sfLDDOVXwY6OkmT5h2hykRKX/nOhWUTWFcxRZEX1BrC
-        P1qc0nUQiLwzTn9jrrndrEQ=
-X-Google-Smtp-Source: APXvYqzJ/ySJ+z0VjPKhlTQyMQFU1iuU9BCAPDw4iU0TqindWFDaAlZ0lD4Q/VA3V2aWhbWS1mn+aA==
-X-Received: by 2002:a05:6000:1111:: with SMTP id z17mr282634wrw.103.1555593650693;
-        Thu, 18 Apr 2019 06:20:50 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id r18sm3417736wme.18.2019.04.18.06.20.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 06:20:49 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 15:20:47 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        x86@kernel.org, linux-mtd@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Dave Hansen <dave@sr71.net>,
-        linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] compiler: allow all arches to enable
- CONFIG_OPTIMIZE_INLINING
-Message-ID: <20190418132047.GA21430@gmail.com>
-References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+        Thu, 18 Apr 2019 09:21:38 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A5BF36019D; Thu, 18 Apr 2019 13:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555593697;
+        bh=VcOJpKXAD3lG/aesfN7KgBMt1UoAlP9YFJRdcI72nHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SRe9lZDm7ANaHXd9oWobQ2kD94LHBV0MY4mKPjY9o0XVSJ0+ntkofw2ypzlrqQKK3
+         pYnDq23XsrpXSE6PPeLoA0em4Et9xYSbPLSsTDjm2GL54qXm+PogU6YccUf/B4Ynk+
+         EOCUQElXb/TrCTMeloAx6pmk0geKSW5ES7/hRbws=
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05E956019D;
+        Thu, 18 Apr 2019 13:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555593695;
+        bh=VcOJpKXAD3lG/aesfN7KgBMt1UoAlP9YFJRdcI72nHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eFxaBNl/Pq5hdQFK1gH6PUvbFMvTccGDYrl57dXQQiJdyqPjMNdIaBmYYiXbgbsDB
+         ZrQnTTpxelG6w1IdA79TC61PPfdeoCqiMJpYsOeWdIv/gmlp6uwOsTirSfpkdFQ+oo
+         ks5MxClI5Lb84FTFts+InuYnjneXg/5YbcuSafF0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 05E956019D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [RFC v1] Bluetooth: hci_core: Don't stop BT if the BD address missing in dts
+Date:   Thu, 18 Apr 2019 18:51:23 +0530
+Message-Id: <20190418132123.12816-1-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When flag HCI_QUIRK_USE_BDADDR_PROPERTY is set, we will read the
+bluetooth address from dts. If the bluetooth address node is missing
+from the dts we will enable it controller UNCONFIGURED state.
+This patch enables the normal flow even if the BD address is missing
+from the dts tree.
 
-* Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+---
+ net/bluetooth/hci_core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> Commit 60a3cdd06394 ("x86: add optimized inlining") introduced
-> CONFIG_OPTIMIZE_INLINING, but it has been available only for x86.
-> 
-> The idea is obviously arch-agnostic although we need some code fixups.
-> This commit moves the config entry from arch/x86/Kconfig.debug to
-> lib/Kconfig.debug so that all architectures (except MIPS for now) can
-> benefit from it.
-> 
-> At this moment, I added "depends on !MIPS" because fixing 0day bot reports
-> for MIPS was complex to me.
-> 
-> I tested this patch on my arm/arm64 boards.
-> 
-> This can make a huge difference in kernel image size especially when
-> CONFIG_OPTIMIZE_FOR_SIZE is enabled.
-> 
-> For example, I got 3.5% smaller arm64 kernel image for v5.1-rc1.
-> 
->   dec       file
->   18983424  arch/arm64/boot/Image.before
->   18321920  arch/arm64/boot/Image.after
-> 
-> This also slightly improves the "Kernel hacking" Kconfig menu.
-> Commit e61aca5158a8 ("Merge branch 'kconfig-diet' from Dave Hansen')
-> mentioned this config option would be a good fit in the "compiler option"
-> menu. I did so.
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index d6b2540ba7f8..3d9175f130b3 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -1460,8 +1460,6 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+ 			    hdev->set_bdaddr)
+ 				ret = hdev->set_bdaddr(hdev,
+ 						       &hdev->public_addr);
+-			else
+-				ret = -EADDRNOTAVAIL;
+ 		}
+ 
+ setup_failed:
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-No objections against moving it from x86 code to generic code.
-
-Thanks,
-
-	Ingo
