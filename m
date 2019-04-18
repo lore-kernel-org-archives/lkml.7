@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F1AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A872C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085052186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE74218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610622;
-	bh=xl4Q5FxowmnvoZUlCV3IJYoeImmT/nry9Uz/9lCDToE=;
+	s=default; t=1555610625;
+	bh=FH7nOPGMgGtrcFtaCC5DSByNzYMSi1SC0gstC8deV6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFOlBiJxb2LjC/LLp8omx93Kgf5XcSDBox0Ca3Bvscv/u1sVmeZfLwH8wBbuPunmR
-	 S4T7UciwLy9MMh07Lp5w+oP7BBRwmC+n1uJpGJL0bMIGLpjvCGn91EUdp7pda+d5Wo
-	 3owfvw3dvpxybq7HWpfnUlN0GnilS8M6RKGfdjHA=
+	b=tSO8jvA8QsO8NP1uCijH7MjKJWGox/P47DDz1Lk47bojXONsNj4RoFK9AJcqgYqID
+	 JbVtarh5wieTUzojW9ClvhZahv4u+qW020/UHsJ0WVzA4R+KbQvN3664AIbdBhYaeZ
+	 7rR7bmh1Jww8shxyoXGe42Nsth3VDZZDLWBtqQkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390985AbfDRSDk (ORCPT
+        id S2390297AbfDRSDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60402 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390974AbfDRSDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:03:39 -0400
+        id S2390356AbfDRSDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:03:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43853206B6;
-        Thu, 18 Apr 2019 18:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAFF4206B6;
+        Thu, 18 Apr 2019 18:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610618;
-        bh=xl4Q5FxowmnvoZUlCV3IJYoeImmT/nry9Uz/9lCDToE=;
+        s=default; t=1555610622;
+        bh=FH7nOPGMgGtrcFtaCC5DSByNzYMSi1SC0gstC8deV6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ce1XaDKvwIoZvexdGzVMTTQEKW4Ra3YOeFGYHYS0b/RlnfvA1DOpvRQeeSFjYpZs2
-         3Hm5Gv1OLM9lQyq2s8cPk0wcA8vtqNJfASnf7hd57qRiu+i9tPbI6BvXF3xFFGXLbB
-         LfQFmtnhfkjPBRDrjEJSAlN/e+Zy+hXcpbFemgNk=
+        b=DYY2M8HHl1XQG2HE2KUcuzPl8plEFzhEAvgrRKM4PdND0/UDA1TnKclKeBGKlZq4V
+         c1nxeCfSWrGHb0/tH6N+HIP1YuOFEVdrcrhrFCwvgYtx21KRiaCJxMhQDR2/UEQWMz
+         n+tOfTKLQjFA3V+u03s0CX0rD38/BlAPVQshf8u4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 02/92] arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
-Date:   Thu, 18 Apr 2019 19:56:20 +0200
-Message-Id: <20190418160430.572092185@linuxfoundation.org>
+Subject: [PATCH 4.14 20/92] perf list: Dont forget to drop the reference to the allocated thread_map
+Date:   Thu, 18 Apr 2019 19:56:38 +0200
+Message-Id: <20190418160432.137066386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -61,34 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0728aeb7ead99a9b0dac2f3c92b3752b4e02ff97 ]
+[ Upstream commit 39df730b09774bd860e39ea208a48d15078236cb ]
 
-We have now a HSDK device in our kernelci lab, but kernel builded via
-the hsdk_defconfig lacks ramfs supports, so it cannot boot kernelci jobs
-yet.
+Detected via gcc's ASan:
 
-So this patch enable CONFIG_BLK_DEV_RAM in hsdk_defconfig.
+  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
+    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
+    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
+    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
+    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
+   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
+   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
+   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
+   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
+   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
+Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/configs/hsdk_defconfig | 1 +
+ tools/perf/util/parse-events.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 083560e9e571..4dac1169f528 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -9,6 +9,7 @@ CONFIG_NAMESPACES=y
- # CONFIG_UTS_NS is not set
- # CONFIG_PID_NS is not set
- CONFIG_BLK_DEV_INITRD=y
-+CONFIG_BLK_DEV_RAM=y
- CONFIG_EMBEDDED=y
- CONFIG_PERF_EVENTS=y
- # CONFIG_VM_EVENT_COUNTERS is not set
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index d0b92d374ba9..ec3517326a68 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2109,6 +2109,7 @@ static bool is_event_supported(u8 type, unsigned config)
+ 		perf_evsel__delete(evsel);
+ 	}
+ 
++	thread_map__put(tmap);
+ 	return ret;
+ }
+ 
 -- 
 2.19.1
 
