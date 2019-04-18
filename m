@@ -2,118 +2,139 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B281C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB82C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568FB21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PLJ0mV2u"
+	by mail.kernel.org (Postfix) with ESMTP id 9629C21479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389284AbfDROhe (ORCPT
+        id S2389418AbfDROhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:37:34 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38526 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388387AbfDROhd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:37:33 -0400
-Received: by mail-ua1-f67.google.com with SMTP id t15so829114uao.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Yc0kXPSW43gvjQq3OdjvHcxyway7inOXa8pO7tmmXs=;
-        b=PLJ0mV2uS++UfoeiaSqa2nVZFwJnqAoWwk04XqWlMMDTlU4uefsWohZI7VqGls5haV
-         K+yHIQQt2SS9TuwgpB4jX7kQexPcMYO5EsNTjkSo56rqwBwKvD8iE78q4+EGRYYsAOCm
-         IYYKlCt+US6vl+wK+fcQtT1HCDZEhXB2nKx5k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Yc0kXPSW43gvjQq3OdjvHcxyway7inOXa8pO7tmmXs=;
-        b=QolFug7gSbA181EEsVRqVKaSot3U3u1SnMjKf3M7powsPUakfvRnfYrv/u8bRTPcJW
-         uHRdvNBNTssQ4MZE+Y2Gf+Jg0nAE/B34rjtuUYmOMDOz4Y+fZXiiyNWbIOG7GfA2su8Z
-         azEXpLXFJLRAUXpNljLQMLZyWJEjeMwbA5htwyDlAlEPJ3scEj88IQMYS3EDQ3nBK/GD
-         roBIg81nTG4rt/qDII2QqZL7MJ1etrfEjJZA4xXs0aH22oNxsUVNWpAr8uJ/gkGcRRCs
-         t+N6ucQhbLXYzK0aWW+uIZCwcVw02AjBpAKYjDvgpROtt8bhijSInTNI8nGNT1d3xwf5
-         /iXQ==
-X-Gm-Message-State: APjAAAUn/GynGJ9gap3teOpotvqeYoYtAMwumHmfZ+6Z3L2A5uT/6Fmj
-        D541JIzA8KHCJ/GQcbBwRe3yA7LVR6Y=
-X-Google-Smtp-Source: APXvYqyRsm0cesnL7Brm5MRFLbbrfImcVetk2PsEfd8f6uMvW7nn/bPszv7RY/aXKBoOVTXto8/mHw==
-X-Received: by 2002:ab0:2303:: with SMTP id a3mr3836031uao.142.1555598252499;
-        Thu, 18 Apr 2019 07:37:32 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id q12sm583072vsr.13.2019.04.18.07.37.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 07:37:32 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id l22so824967uao.8
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:37:32 -0700 (PDT)
-X-Received: by 2002:ab0:72c2:: with SMTP id g2mr51109622uap.112.1555597784764;
- Thu, 18 Apr 2019 07:29:44 -0700 (PDT)
+        Thu, 18 Apr 2019 10:37:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57008 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388263AbfDROht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:37:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E16F33002716;
+        Thu, 18 Apr 2019 14:37:48 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA24D5D9C5;
+        Thu, 18 Apr 2019 14:37:47 +0000 (UTC)
+Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-12-longman@redhat.com>
+ <20190417140527.GJ4038@hirez.programming.kicks-ass.net>
+ <d18aa365-cedc-cd45-36a5-48d78af2fcce@redhat.com>
+ <20190418091109.GY12232@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <e3902d8a-e853-c669-6ce5-c256e4c0c27f@redhat.com>
+Date:   Thu, 18 Apr 2019 10:37:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1462963502-11636-1-git-send-email-hecmargi@upv.es>
- <CAGXu5jLZ-DgTfokLTqUHOUphO4C1FwHgYDLTA1oB9HBHnH-a1Q@mail.gmail.com>
- <alpine.DEB.2.21.1904181015270.3174@nanos.tec.linutronix.de> <74755222-0B16-4A81-85F6-D2803E4C0334@amacapital.net>
-In-Reply-To: <74755222-0B16-4A81-85F6-D2803E4C0334@amacapital.net>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 18 Apr 2019 09:29:33 -0500
-X-Gmail-Original-Message-ID: <CAGXu5jJpyhN7H2K7a+AT_zWn+G55RkeP9umsBVhDy9KO9B_5eg@mail.gmail.com>
-Message-ID: <CAGXu5jJpyhN7H2K7a+AT_zWn+G55RkeP9umsBVhDy9KO9B_5eg@mail.gmail.com>
-Subject: Re: [PATCH] x86_64: Disabling read-implies-exec when the stack is executable
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Huaitong Han <huaitong.han@intel.com>,
-        Ismael Ripoll Ripoll <iripoll@upv.es>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190418091109.GY12232@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 18 Apr 2019 14:37:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 9:15 AM Andy Lutomirski <luto@amacapital.net> wrote:
-> I have the opposite question: who cares if we have NX?  On a CPU without NX, read implies exec, full stop. Why should nasty personality stuff matter at all?  The personality stuff is about supporting old crufty binaries.
->
-> So: are there old 64-bit binaries that have their stacks marked RX that expect mmap to automatically return X memory?  If so, then the patch is a problem. If not, then maybe the patch is okay.
+On 04/18/2019 05:11 AM, Peter Zijlstra wrote:
+> On Wed, Apr 17, 2019 at 01:51:24PM -0400, Waiman Long wrote:
+>> On 04/17/2019 10:05 AM, Peter Zijlstra wrote:
+>>> On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
+>>>> @@ -650,6 +686,33 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
+>>>>  	struct rwsem_waiter waiter;
+>>>>  	DEFINE_WAKE_Q(wake_q);
+>>>>  
+>>>> +	if (!rwsem_can_spin_on_owner(sem))
+>>>> +		goto queue;
+>>>> +
+>>>> +	/*
+>>>> +	 * Undo read bias from down_read() and do optimistic spinning.
+>>>> +	 */
+>>>> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+>>>> +	adjustment = 0;
+>>>> +	if (rwsem_optimistic_spin(sem, false)) {
+>>>> +		unsigned long flags;
+>>>> +
+>>>> +		/*
+>>>> +		 * Opportunistically wake up other readers in the wait queue.
+>>>> +		 * It has another chance of wakeup at unlock time.
+>>>> +		 */
+>>>> +		if ((atomic_long_read(&sem->count) & RWSEM_FLAG_WAITERS) &&
+>>>> +		    raw_spin_trylock_irqsave(&sem->wait_lock, flags)) {
+>>> why trylock?
+>> I used trylock to avoid getting stuck in the spinlock while holding a
+>> read lock on the rwsem.
+> Is that a real concern? I would think that not waking further readers
+> would, esp. under high contention, be a bigger deal.
 
-That's what I'm wondering too. (Though remember that ia32 PAE has NX,
-so it's also 32-bit binaries.) The matrix I have in my head is:
+Yes, I can certainly change it to a regular spin_lock().
 
-             CPU: |  lacks NX      |  has NX            |
-ELF:              |                |                    |
---------------------------------------------------------|
-missing GNU_STACK | doesn't matter | needs RIE          |
-GNU_STACK == RWX  | doesn't matter | needs only stack X | *
-GNU_STACK == RW   | doesn't matter | needs stack NX     |
+Cheers,
+Longman
 
-(hopefully gmail doesn't mangle this whitespace)
-
-The "*" line here is the question. The question is "when does
-GNU_STACK == RWX also mean all mmaps must be X?" If it's only on ia32,
-okay, fine we can adjust it, but why is it only an issue for ia32
-toolchains? If it's a non-issue, then the above logic stands.
-
-> All that being said, the comment in the patch seems to be highly misleading.  If the patch is to be applied, the comment needs serious work.
-
-Yes, absolutely. (I'd include the chart above, for example...)
-
--- 
-Kees Cook
