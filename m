@@ -2,71 +2,58 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938FDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5A7205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7DC205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389483AbfDRPIL (ORCPT
+        id S2389492AbfDRPIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:08:11 -0400
-Received: from [5.180.42.13] ([5.180.42.13]:55624 "EHLO deadmen.hmeau.com"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388392AbfDRPIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:08:10 -0400
-X-Greylist: delayed 2668 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 11:08:09 EDT
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hH7wx-0004kO-PY; Thu, 18 Apr 2019 22:23:39 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hH7wv-0004BL-54; Thu, 18 Apr 2019 22:23:37 +0800
-Date:   Thu, 18 Apr 2019 22:23:37 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] crypto: ccp: Do not free psp_master when PLATFORM_INIT
- fails
-Message-ID: <20190418142337.hrdykxre3g5bvjbz@gondor.apana.org.au>
-References: <20190408204241.20393-1-brijesh.singh@amd.com>
+        Thu, 18 Apr 2019 11:08:43 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:36734 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388457AbfDRPIn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:08:43 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hH8eQ-0006DN-1x; Thu, 18 Apr 2019 15:08:34 +0000
+Date:   Thu, 18 Apr 2019 16:08:34 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-ntfs-dev@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/6] ext4: Search for an inode to update under the
+ RCU lock if we can
+Message-ID: <20190418150833.GE2217@ZenIV.linux.org.uk>
+References: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
+ <155559640398.21702.15109713276957584268.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190408204241.20393-1-brijesh.singh@amd.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <155559640398.21702.15109713276957584268.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 08:42:55PM +0000, Singh, Brijesh wrote:
-> Currently, we free the psp_master if the PLATFORM_INIT fails during the
-> SEV FW probe. If psp_master is freed then driver does not invoke the PSP
-> FW. As per SEV FW spec, there are several commands (PLATFORM_RESET,
-> PLATFORM_STATUS, GET_ID etc) which can be executed in the UNINIT state
-> We should not free the psp_master when PLATFORM_INIT fails.
-> 
-> Fixes: 200664d5237f ("crypto: ccp: Add SEV support")
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Gary Hook <gary.hook@amd.com>
-> Cc: stable@vger.kernel.org # 4.19.y
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  drivers/crypto/ccp/psp-dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Apr 18, 2019 at 03:06:44PM +0100, David Howells wrote:
+> +	inode = find_inode_by_ino_rcu(sb, ino);
+> +	if (!inode)
+> +		return;
+>  
+>  	if ((inode->i_ino != ino) ||
+>  	    (inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
+>  			       I_DIRTY_INODE)) ||
+>  	    ((inode->i_state & I_DIRTY_TIME) == 0))
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Umm...  The situation with memory barriers here needs to be documented,
+IMO.  And I'm not sure if the thing is actually correct...
