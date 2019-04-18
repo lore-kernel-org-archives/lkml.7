@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A44FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28729C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10020217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C69218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610544;
-	bh=HcH53ygjqasasf5Bln5H0GMNfxfHMqP+FIOKJEOicJU=;
+	s=default; t=1555610551;
+	bh=ElacLwfxYBcpdSVhc0+8rH11+kq6NJ5LmCTNsPfvqoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lto/Zqg4rr9LCzycrQe7V+sjQzJWqSvKuPKT2GRcKmXaD56NUEUgmkw77nA67qZaJ
-	 bAeoxfYI1elPYrWWwP6RpxCQgNeDaW5J55fblwlMNWi+3Ls3NmDV07eGVhf97HLTtZ
-	 /wJ6GMUcmJS8ZEdaFNd0nrYaE6gWMMyFNoyp2eA8=
+	b=Amnj1Vx8jh+FYfG7qhDQrr0OPoRa2bIjcgeMLunwySvqtwbUVcNX2WH7HKx7S1pX2
+	 FpmzvwvqMqeVo3RCC2/+7yfA/NJ2Kz361Tyw1E8qVdC/FecezaAk/Wyfr58v0C0vev
+	 wDj6VCYII219FbALVeE9H2jb7n7SAiemd9bBg9Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390756AbfDRSCX (ORCPT
+        id S2390761AbfDRSC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58444 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390336AbfDRSCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:19 -0400
+        id S2390088AbfDRSCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92F34218A1;
-        Thu, 18 Apr 2019 18:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A4C2186A;
+        Thu, 18 Apr 2019 18:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610539;
-        bh=HcH53ygjqasasf5Bln5H0GMNfxfHMqP+FIOKJEOicJU=;
+        s=default; t=1555610544;
+        bh=ElacLwfxYBcpdSVhc0+8rH11+kq6NJ5LmCTNsPfvqoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ybcR808hJKbXwEEE2ykqaSb92nsy7995D4H3+zPY8a7j1pE6D8hUwihG4DCLJKR5i
-         TSzFkse02SW6jPvJwfnUkNDRixGJS5tKgIMN0sOSWcZwjpQWGQN/AVfL3QlWm4ZUcY
-         ZNrgGdvP/zjI3Sth/UjlCluox5zmYYd9nZpi+6/8=
+        b=YBui8v9FrbnhUhlGGD5v2JLhFW/ZVrg7l7gdnWPjSdJy0hIs8lw+1P9/6ae8cuu6I
+         WW4oD8sU0lXmAu6FZ7DVDa4mnVyIab2rB4DCUQhkVz6aVai421CN7Wg8YWfhAGt/u6
+         ROViN5kC7njn/NvFFt25vqQuf3mlo+KFCm8pURQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/110] appletalk: Fix use-after-free in atalk_proc_exit
-Date:   Thu, 18 Apr 2019 19:57:30 +0200
-Message-Id: <20190418160447.218405415@linuxfoundation.org>
+Subject: [PATCH 4.19 085/110] crypto: sha256/arm - fix crash bug in Thumb2 build
+Date:   Thu, 18 Apr 2019 19:57:14 +0200
+Message-Id: <20190418160446.119817943@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,214 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6377f787aeb945cae7abbb6474798de129e1f3ac ]
+[ Upstream commit 69216a545cf81b2b32d01948f7039315abaf75a0 ]
 
-KASAN report this:
+The SHA256 code we adopted from the OpenSSL project uses a rather
+peculiar way to take the address of the round constant table: it
+takes the address of the sha256_block_data_order() routine, and
+substracts a constant known quantity to arrive at the base of the
+table, which is emitted by the same assembler code right before
+the routine's entry point.
 
-BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
-Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
+However, recent versions of binutils have helpfully changed the
+behavior of references emitted via an ADR instruction when running
+in Thumb2 mode: it now takes the Thumb execution mode bit into
+account, which is bit 0 af the address. This means the produced
+table address also has bit 0 set, and so we end up with an address
+value pointing 1 byte past the start of the table, which results
+in crashes such as
 
-CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
- remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
- atalk_proc_exit+0x18/0x820 [appletalk]
- atalk_exit+0xf/0x5a [appletalk]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
-R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
+  Unable to handle kernel paging request at virtual address bf825000
+  pgd = 42f44b11
+  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
+  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
+  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
+  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
+  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
+  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
+  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
+  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
+  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
+  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
+  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
+  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
+  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
+  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
+  Stack: (0xebc8bbe8 to 0xebc8c000)
+  ...
+  unwind: Unknown symbol address bf820bca
+  unwind: Index not found bf820bca
+  Code: 441a ea80 40f9 440a (f85e) 3b04
+  ---[ end trace e560cce92700ef8a ]---
 
-Allocated by task 2806:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
- slab_post_alloc_hook mm/slab.h:444 [inline]
- slab_alloc_node mm/slub.c:2739 [inline]
- slab_alloc mm/slub.c:2747 [inline]
- kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
- kmem_cache_zalloc include/linux/slab.h:730 [inline]
- __proc_create+0x30f/0xa20 fs/proc/generic.c:408
- proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
- 0xffffffffc10c01bb
- 0xffffffffc10c0166
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Given that this affects older kernels as well, in case they are built
+with a recent toolchain, apply a minimal backportable fix, which is
+to emit another non-code label at the start of the routine, and
+reference that instead. (This is similar to the current upstream state
+of this file in OpenSSL)
 
-Freed by task 2806:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
- slab_free_hook mm/slub.c:1409 [inline]
- slab_free_freelist_hook mm/slub.c:1436 [inline]
- slab_free mm/slub.c:2986 [inline]
- kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
- pde_put+0x6e/0x80 fs/proc/generic.c:647
- remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
- 0xffffffffc10c031c
- 0xffffffffc10c0166
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881f41fe500
- which belongs to the cache proc_dir_entry of size 256
-The buggy address is located 176 bytes inside of
- 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
-The buggy address belongs to the page:
-page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
- ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-It should check the return value of atalk_proc_init fails,
-otherwise atalk_exit will trgger use-after-free in pde_subdir_find
-while unload the module.This patch fix error cleanup path of atalk_init
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/atalk.h            |  2 +-
- net/appletalk/atalk_proc.c       |  2 +-
- net/appletalk/ddp.c              | 37 ++++++++++++++++++++++++++------
- net/appletalk/sysctl_net_atalk.c |  5 ++++-
- 4 files changed, 37 insertions(+), 9 deletions(-)
+ arch/arm/crypto/sha256-armv4.pl       | 3 ++-
+ arch/arm/crypto/sha256-core.S_shipped | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/atalk.h b/include/linux/atalk.h
-index 23f805562f4e..5a90f28d5ff2 100644
---- a/include/linux/atalk.h
-+++ b/include/linux/atalk.h
-@@ -158,7 +158,7 @@ extern int sysctl_aarp_retransmit_limit;
- extern int sysctl_aarp_resolve_time;
- 
- #ifdef CONFIG_SYSCTL
--extern void atalk_register_sysctl(void);
-+extern int atalk_register_sysctl(void);
- extern void atalk_unregister_sysctl(void);
+diff --git a/arch/arm/crypto/sha256-armv4.pl b/arch/arm/crypto/sha256-armv4.pl
+index b9ec44060ed3..a03cf4dfb781 100644
+--- a/arch/arm/crypto/sha256-armv4.pl
++++ b/arch/arm/crypto/sha256-armv4.pl
+@@ -212,10 +212,11 @@ K256:
+ .global	sha256_block_data_order
+ .type	sha256_block_data_order,%function
+ sha256_block_data_order:
++.Lsha256_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha256_block_data_order
  #else
- #define atalk_register_sysctl()		do { } while(0)
-diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
-index 8006295f8bd7..dda73991bb54 100644
---- a/net/appletalk/atalk_proc.c
-+++ b/net/appletalk/atalk_proc.c
-@@ -255,7 +255,7 @@ int __init atalk_proc_init(void)
- 	goto out;
- }
- 
--void __exit atalk_proc_exit(void)
-+void atalk_proc_exit(void)
- {
- 	remove_proc_entry("interface", atalk_proc_dir);
- 	remove_proc_entry("route", atalk_proc_dir);
-diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
-index 9b6bc5abe946..795fbc6c06aa 100644
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1910,12 +1910,16 @@ static const char atalk_err_snap[] __initconst =
- /* Called by proto.c on kernel start up */
- static int __init atalk_init(void)
- {
--	int rc = proto_register(&ddp_proto, 0);
-+	int rc;
- 
--	if (rc != 0)
-+	rc = proto_register(&ddp_proto, 0);
-+	if (rc)
- 		goto out;
- 
--	(void)sock_register(&atalk_family_ops);
-+	rc = sock_register(&atalk_family_ops);
-+	if (rc)
-+		goto out_proto;
-+
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl)
- 		printk(atalk_err_snap);
-@@ -1923,12 +1927,33 @@ static int __init atalk_init(void)
- 	dev_add_pack(&ltalk_packet_type);
- 	dev_add_pack(&ppptalk_packet_type);
- 
--	register_netdevice_notifier(&ddp_notifier);
-+	rc = register_netdevice_notifier(&ddp_notifier);
-+	if (rc)
-+		goto out_sock;
-+
- 	aarp_proto_init();
--	atalk_proc_init();
--	atalk_register_sysctl();
-+	rc = atalk_proc_init();
-+	if (rc)
-+		goto out_aarp;
-+
-+	rc = atalk_register_sysctl();
-+	if (rc)
-+		goto out_proc;
- out:
- 	return rc;
-+out_proc:
-+	atalk_proc_exit();
-+out_aarp:
-+	aarp_cleanup_module();
-+	unregister_netdevice_notifier(&ddp_notifier);
-+out_sock:
-+	dev_remove_pack(&ppptalk_packet_type);
-+	dev_remove_pack(&ltalk_packet_type);
-+	unregister_snap_client(ddp_dl);
-+	sock_unregister(PF_APPLETALK);
-+out_proto:
-+	proto_unregister(&ddp_proto);
-+	goto out;
- }
- module_init(atalk_init);
- 
-diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
-index c744a853fa5f..d945b7c0176d 100644
---- a/net/appletalk/sysctl_net_atalk.c
-+++ b/net/appletalk/sysctl_net_atalk.c
-@@ -45,9 +45,12 @@ static struct ctl_table atalk_table[] = {
- 
- static struct ctl_table_header *atalk_table_header;
- 
--void atalk_register_sysctl(void)
-+int __init atalk_register_sysctl(void)
- {
- 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
-+	if (!atalk_table_header)
-+		return -ENOMEM;
-+	return 0;
- }
- 
- void atalk_unregister_sysctl(void)
+-	adr	r3,sha256_block_data_order
++	adr	r3,.Lsha256_block_data_order
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
+diff --git a/arch/arm/crypto/sha256-core.S_shipped b/arch/arm/crypto/sha256-core.S_shipped
+index 3b58300d611c..054aae0edfce 100644
+--- a/arch/arm/crypto/sha256-core.S_shipped
++++ b/arch/arm/crypto/sha256-core.S_shipped
+@@ -93,10 +93,11 @@ K256:
+ .global	sha256_block_data_order
+ .type	sha256_block_data_order,%function
+ sha256_block_data_order:
++.Lsha256_block_data_order:
+ #if __ARM_ARCH__<7
+ 	sub	r3,pc,#8		@ sha256_block_data_order
+ #else
+-	adr	r3,sha256_block_data_order
++	adr	r3,.Lsha256_block_data_order
+ #endif
+ #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
+ 	ldr	r12,.LOPENSSL_armcap
 -- 
 2.19.1
 
