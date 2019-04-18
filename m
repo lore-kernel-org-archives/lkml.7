@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA97C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75849C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E84120643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4732721871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611967;
-	bh=pkzGvBQSwiZVsnJsH9MSTLUl6m8IndwiPjURJPXby3I=;
+	s=default; t=1555611972;
+	bh=9kyegzZ/xJK+AyviEj4LuYf/JcELxuLlVx3y6daBQLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pTmFWQdA2QjPSfzixdnNNyo/LKnpPyY2MhbTeJKW5UsV889UxTYlcmEt7VFZVdjov
-	 H04h3rmVJfdcrdel82OJA6nHbrcA5T11wQqH7NsTC7+03yU8EEwBpz+F+Aj9dXFxca
-	 6jJ5QdCs63ZlWZNnWOiw4UOwa6CsSkWFSe3mCuB8=
+	b=Qo1E6cChC4v524Jp0SfJ6WfwCWEWObRQEOhE6yikMlL/CHwp/kCxxpYpgTBlpUeWi
+	 mFjUTQh56Q8xppmKcWQjdwKTUa1UKD5x0BdPXhwQOXELoOWSuA1RD5yhIAXJE53UGh
+	 mkpOyZIhWBZMNdEa34v8I1L5WFvTiY1lP2zkucBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403782AbfDRSE5 (ORCPT
+        id S2403878AbfDRS0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34062 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391176AbfDRSEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:04:54 -0400
+        id S2391211AbfDRSE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:04:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 455C2206B6;
-        Thu, 18 Apr 2019 18:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0EEB206B6;
+        Thu, 18 Apr 2019 18:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610693;
-        bh=pkzGvBQSwiZVsnJsH9MSTLUl6m8IndwiPjURJPXby3I=;
+        s=default; t=1555610696;
+        bh=9kyegzZ/xJK+AyviEj4LuYf/JcELxuLlVx3y6daBQLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zs/ZNnEs8un0EIJNLIm6fTB98ke+PG5DgxTn+IRQc3AvCr100Em0fTxzXWmOMj2Cm
-         J1jfmQWLnDPMyTs6JazsU2uSte8WRYd0e0IC9Cl7VqiNBKitXDntvHUYYIR/vCGd0J
-         3Iayi4xKY2NdmBJY0aRUsT5MTNun9GNz6RljXzgo=
+        b=sAj/iBQnB5+Y4J6ihDKXH024DlB7ZFFh9uPYhuBB7mV8cP3zVZoAPQcRR+c+FUqTi
+         2f9djWgMSBMhZj1n77WPtfZ5ml/IERhZ31NRYiaUv0+6QcAe8jGxihHcWCnCtx1Q3l
+         1WwzPJuTUO3qvnBJXVPVo/3oHRE4yxtfdFDsetHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Dieter <jdieter@gmail.com>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 49/92] usbip: fix vhci_hcd controller counting
-Date:   Thu, 18 Apr 2019 19:57:07 +0200
-Message-Id: <20190418160434.377300492@linuxfoundation.org>
+Subject: [PATCH 4.14 50/92] ACPI / SBS: Fix GPE storm on recent MacBookPros
+Date:   Thu, 18 Apr 2019 19:57:08 +0200
+Message-Id: <20190418160434.458535362@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -62,56 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e0a2e73e501c77037c8756137e87b12c7c3c9793 ]
+[ Upstream commit ca1721c5bee77105829cbd7baab8ee0eab85b06d ]
 
-Without this usbip fails on a machine with devices
-that lexicographically come after vhci_hcd.
+On Apple machines, plugging-in or unplugging the power triggers a GPE
+for the EC. Since these machines expose an SBS device, this GPE ends
+up triggering the acpi_sbs_callback(). This in turn tries to get the
+status of the SBS charger. However, on MBP13,* and MBP14,* machines,
+performing the smbus-read operation to get the charger's status triggers
+the EC's GPE again. The result is an endless re-triggering and handling
+of that GPE, consuming significant CPU resources (> 50% in irq).
 
-ie.
-  $ ls -l /sys/devices/platform
-  ...
-  drwxr-xr-x. 4 root root    0 Sep 19 16:21 serial8250
-  -rw-r--r--. 1 root root 4096 Sep 19 23:50 uevent
-  drwxr-xr-x. 6 root root    0 Sep 20 13:15 vhci_hcd.0
-  drwxr-xr-x. 4 root root    0 Sep 19 16:22 w83627hf.656
+In the end this is quite similar to commit 3031cddea633 (ACPI / SBS:
+Don't assume the existence of an SBS charger), except that on the above
+machines a status of all 1's is returned. And like there, we just want
+ignore the charger here.
 
-Because it detects 'w83627hf.656' as another vhci_hcd controller,
-and then fails to be able to talk to it.
-
-Note: this doesn't actually fix usbip's support for multiple
-controllers... that's still broken for other reasons
-("vhci_hcd.0" is hardcoded in a string macro), but is enough to
-actually make it work on the above machine.
-
-See also:
-  https://bugzilla.redhat.com/show_bug.cgi?id=1631148
-
-Cc: Jonathan Dieter <jdieter@gmail.com>
-Cc: Valentina Manea <valentina.manea.m@gmail.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-usb@vger.kernel.org
-Signed-off-by: Maciej Żenczykowski <zenczykowski@gmail.com>
-Acked-by: Shuah Khan (Samsung OSG) <shuah@kernel.org>
-Tested-by: Jonathan Dieter <jdieter@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=198169
+Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/usb/usbip/libsrc/vhci_driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/sbs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/usb/usbip/libsrc/vhci_driver.c b/tools/usb/usbip/libsrc/vhci_driver.c
-index ed8c9d360c0f..4225d462701d 100644
---- a/tools/usb/usbip/libsrc/vhci_driver.c
-+++ b/tools/usb/usbip/libsrc/vhci_driver.c
-@@ -150,7 +150,7 @@ static int get_nports(struct udev_device *hc_device)
+diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
+index a2428e9462dd..3c092f07d7e3 100644
+--- a/drivers/acpi/sbs.c
++++ b/drivers/acpi/sbs.c
+@@ -441,9 +441,13 @@ static int acpi_ac_get_present(struct acpi_sbs *sbs)
  
- static int vhci_hcd_filter(const struct dirent *dirent)
- {
--	return strcmp(dirent->d_name, "vhci_hcd") >= 0;
-+	return !strncmp(dirent->d_name, "vhci_hcd.", 9);
- }
+ 	/*
+ 	 * The spec requires that bit 4 always be 1. If it's not set, assume
+-	 * that the implementation doesn't support an SBS charger
++	 * that the implementation doesn't support an SBS charger.
++	 *
++	 * And on some MacBooks a status of 0xffff is always returned, no
++	 * matter whether the charger is plugged in or not, which is also
++	 * wrong, so ignore the SBS charger for those too.
+ 	 */
+-	if (!((status >> 4) & 0x1))
++	if (!((status >> 4) & 0x1) || status == 0xffff)
+ 		return -ENODEV;
  
- static int get_ncontrollers(void)
+ 	sbs->charger_present = (status >> 15) & 0x1;
 -- 
 2.19.1
 
