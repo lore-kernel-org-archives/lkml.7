@@ -2,70 +2,77 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBB8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD84FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8E52083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555600818;
-	bh=U23Fsk2NX+vv8L/g9KkqElrn6QEPwPPTDnaiOXhUWhQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TLZlUcCQzbSzCGCVQKHP4t+sE/U2KH+XSPMt0jO8XGkEDxeycWX2wHOzRbrvz+Xpk
-	 XZq5NreVqfSaeZNr/yuudTzfKFHuKpTQfx7Dc/pw+2h54fjwS2yOhTZuEgdc0CUdYp
-	 Cy9XKQXB57csXXx+jgm7XykxAUUqMGYBHv1ivNY8=
+	by mail.kernel.org (Postfix) with ESMTP id 82A1F2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389623AbfDRPUR (ORCPT
+        id S2389391AbfDRP0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 11:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389538AbfDRPUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:20:06 -0400
-Subject: Re: [GIT PULL] s390 patches for 5.1-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555600805;
-        bh=U23Fsk2NX+vv8L/g9KkqElrn6QEPwPPTDnaiOXhUWhQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xPhiDq3A4sr11CEjt+pK5icOtIJBr7qVuxytIi0t0wgvRf9pPX5pTaCVBCgsem59d
-         gHzOFjrKjfub2PV4YkO0VrOGy5OH02jzGEg+s800ykcNkAEPqaEY2pJX3ByZQcdu5t
-         I0pCJGBtIfIhwlrldAeba7cSg2jHjkn8LSp+M/Gc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190418164733.798aa386@mschwideX1>
-References: <20190418164733.798aa386@mschwideX1>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190418164733.798aa386@mschwideX1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
- tags/s390-5.1-3
-X-PR-Tracked-Commit-Id: 35af0d469c6694c05f06e75c5d75caee9be66122
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d22113a2cd1f908e0e4809aa101542b02fb2abc2
-Message-Id: <155560080552.14770.17896343530438068771.pr-tracker-bot@kernel.org>
-Date:   Thu, 18 Apr 2019 15:20:05 +0000
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
+        id S1731317AbfDRP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:26:09 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D240A20821;
+        Thu, 18 Apr 2019 15:26:08 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 11:26:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ktest: introduce REBOOT_RETURN_CODE to confirm the
+ result of REBOOT
+Message-ID: <20190418112607.0923e5df@gandalf.local.home>
+In-Reply-To: <20190418135943.12640-1-msys.mizuma@gmail.com>
+References: <20190418135943.12640-1-msys.mizuma@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 18 Apr 2019 16:47:33 +0200:
+On Thu, 18 Apr 2019 09:59:43 -0400
+Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux tags/s390-5.1-3
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> 
+> Unexpected power cycle occurs while the installation of the
+> kernel.
+> 
+>    ssh root@Test sync ... [0 seconds] SUCCESS
+>    ssh root@Test reboot ... [1 second] FAILED!
+>    virsh destroy Test; sleep 5; virsh start Test ... [6 seconds] SUCCESS
+> 
+> That is because REBOOT, the default is "ssh $SSH_USER@$MACHINE
+> reboot", exits as 255 even if the reboot is successfully done,
+> like as:
+> 
+>    ]# ssh root@Test reboot
+>    Connection to Test closed by remote host.
+>    ]# echo $?
+>    255
+>    ]#
+> 
+> To avoid the unexpected power cycle, introduce a new parameter,
+> REBOOT_RETURN_CODE to judge whether REBOOT is successfully done
+> or not.
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d22113a2cd1f908e0e4809aa101542b02fb2abc2
+Thanks for sending the patch. I added it to my local queue, and will
+use it for testing of my changes to the Linux kernel, and it will
+eventually be merged upstream.
 
-Thank you!
+-- Steve
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
