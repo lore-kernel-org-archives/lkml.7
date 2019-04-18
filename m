@@ -2,127 +2,176 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E0AC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86F4C282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728132184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F589214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qjo+wyDn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYmkJ9Qe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387762AbfDRAAU (ORCPT
+        id S2387608AbfDRAH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 20:00:20 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33955 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbfDRAAT (ORCPT
+        Wed, 17 Apr 2019 20:07:29 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42556 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfDRAH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 20:00:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so262736plt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:00:19 -0700 (PDT)
+        Wed, 17 Apr 2019 20:07:29 -0400
+Received: by mail-qk1-f195.google.com with SMTP id b74so165106qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PH0BWaeZBYyHBkNVuDHXcFcEioCoZhwO44ywYgKNc6M=;
-        b=Qjo+wyDnfa5/ECxZfLqPwN2/GqOBsQef4vpOX7a8RUb1AN726Sfy5vXE2XiihrXYiN
-         Mt9g/rwumNRBiNu/gvfyA4sIP/jQWEDp3tAIgVfuOTdVZ3bf3MSamUlcibM2X2KnIvBb
-         FPSMGOe2chS+DPm7l072kl5PrXHsmgcoSmnXbEL4pD9iC3U+CyIuQgAIgt0PH27Hxzbu
-         lafmytVXphICKq0phihiMu0XdZ++iYyJglARs+38TJyuSZXvzSldpW+uHUqn2ypEPvBE
-         3qXOqcPQXrh/Ca7V5Wz1DkwXUSUeMNjVOcMp8V8aXM1o8NOUJGlmC3UYxHvitU15ad+/
-         hA7Q==
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=zJ9zh28NNxNh3Mw1cRnRKx8H/+GM9GuFzONlOu2SyYc=;
+        b=JYmkJ9QefanONbT6nQVDyMVgHYNN1vwhRwqgoassTx30TcDtTRgBHapuoxdylzGPeH
+         wso71vDaR74ZK1C0mVuk8HIrTXn/NbZavQwHzfj6Sa4s0lWOZY3614DoNN/uKsZDmZ64
+         4VSyad1+amOLsWk0zxEMcSTZQ29DEhxWcqO5KTjlHE0dOyOMHWB0UhbPCCq0JjGN3tz3
+         FCsmZHj9/Eb6Q78lvtjCxfVxOiXbTdwV0j4r+T4zhz0FBksZFLYUGhUnnvhynMrtOv+I
+         zcImfQnDVc3FHtTIMe2x5iactiKQHsjzceYhp9xcpFX8cLQxnZsUepLUsUBii01JxksD
+         An7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PH0BWaeZBYyHBkNVuDHXcFcEioCoZhwO44ywYgKNc6M=;
-        b=l1aCI425hE+KnagjRH6vllQU5iGllFwvFPargEJ/dLNmnJzb6+7RzNn87dzCwscrQG
-         Fo4WPT+Ykbs1d2d8qnIz2M4BZxsGJ8lVH1iPqnsxusouiCsFfRUZubT7N237NeA6BkZr
-         GYKkX45M+6cnvaiWg8Gkacfjg9kGtLXfq/PckLa3H0S6IDR5Rpy7IHGsKyY+Z0FrZ2y3
-         y8lCLUS3G0aeCkTxxyfm7sAPbmVtph4WbVpxxJTqP9hNqMab+gx3+h9b4Z+9Cg2AS8JF
-         v+CxL3CK2wSw+QGmDRf+K/OKhN1U3f11U2bn/CSaTkdhHxB3v8sY2xZc4i+7aX8SUVPW
-         HlTg==
-X-Gm-Message-State: APjAAAX3cuveLTAZzCgr+kGHdSIZHZrHviyXTJmI/fvPoiC/h4xCW2ju
-        xBVQ5VHTK7RM+I8U7ST9in8=
-X-Google-Smtp-Source: APXvYqy1NQhvNScPl5csQZKPmD4/RIayT88vYfoEvPEvJ/8vD+0D+W2j0nvdigXpomalFVn1PEwwuw==
-X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr38710117plp.294.1555545619240;
-        Wed, 17 Apr 2019 17:00:19 -0700 (PDT)
-Received: from localhost ([110.70.26.132])
-        by smtp.gmail.com with ESMTPSA id x5sm391895pfi.91.2019.04.17.17.00.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 17:00:18 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 09:00:14 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>, Feng Tang <feng.tang@intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, ying.huang@intel.com
-Subject: Re: [PATCH v2] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190418000014.GA2059@jagdpanzerIV>
-References: <20190410153718.22905-1-feng.tang@intel.com>
- <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
- <20190417064844.ppyqxcx2mgek5455@shbuild888>
- <20190417091832.z252cvcf4ktxeamv@pathway.suse.cz>
- <20190417094614.GB4260@jagdpanzerIV>
- <20190417105010.GA8492@jagdpanzerIV>
- <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
- <20190417151817.xsun2k7cxff5rknn@shbuild888>
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=zJ9zh28NNxNh3Mw1cRnRKx8H/+GM9GuFzONlOu2SyYc=;
+        b=EFgmxxJ7apLsi+NL0s/K6MSOQ7MS77SgDpZAe5SrwkbP8TV6vLJIkxI3pntxZjzYMa
+         L1gwEOtfYwWPyiNHonbiAHVgXpIKiRi7VEYxqC2ZDXAV/ZY93PJU/FwM2jORsIW5BfFH
+         nyj8zVRV7W1kBYiEQ2Wq47fvP4Ya+6KK45WLFOFvXDQLLhCK0Dsq58n+d07T9REfQGyq
+         SMZpc0341Mzv9Nz6qE0JWZfYD8R3S1fuxsnD1/3I1F26m94+sOfOswa5san5K4pbTEPK
+         nGuRIqs6OxyKd7YeZGlQZkKsJnILItvN7FKGHfsCaDJGpuQ2YG6hVi0p1l1MbftmOwH9
+         RCMg==
+X-Gm-Message-State: APjAAAXkx/hbmtZaFKgHx7uREa++LNFeCoPChch+FnVX0uZ1hPhZX99+
+        9NRGqG7yvxGRN+nSDhn6TXVOiw==
+X-Google-Smtp-Source: APXvYqzO/O9O2Mkl/YJiO5BtHZ2rlF6ywprFRbxoclw+dzZhShbkcQFD+Rr7U27LKjvl5bzjwYY/Kg==
+X-Received: by 2002:ae9:edd0:: with SMTP id c199mr67749053qkg.116.1555546047721;
+        Wed, 17 Apr 2019 17:07:27 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
+        by smtp.gmail.com with ESMTPSA id p27sm365605qte.25.2019.04.17.17.07.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 17:07:26 -0700 (PDT)
+Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
+To:     Ingo Molnar <mingo@kernel.org>
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <20190417053626.GA47282@gmail.com> <5CB75FD9.3070207@linaro.org>
+ <20190417182932.GB5140@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5CB7BFBC.9090007@linaro.org>
+Date:   Wed, 17 Apr 2019 20:07:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417151817.xsun2k7cxff5rknn@shbuild888>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190417182932.GB5140@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (04/17/19 23:18), Feng Tang wrote:
-> > > +++ b/kernel/printk/printk.c
-> > > @@ -2549,6 +2549,14 @@ void console_flush_on_panic(void)
-> > >  	 */
-> > >  	console_trylock();
-> > >  	console_may_schedule = 0;
-> > > +	if (flush_mode == CONSOLE_FLUSH_ALL) {
-> > > +		/*
-> > > +		 * Can be done under logbuf lock, but it's unlikely that
-> > > +		 * we will have any race conditions here.
-> > > +		 */
-> > > +		console_seq = log_first_seq;
-> > > +		console_idx = log_first_idx;
+On 04/17/2019 02:29 PM, Ingo Molnar wrote:
 > 
-> This is very similar to my V1 patch :), excepted I used a bool
-> as the parameter.
+> * Thara Gopinath <thara.gopinath@linaro.org> wrote:
+> 
+>>
+>> On 04/17/2019 01:36 AM, Ingo Molnar wrote:
+>>>
+>>> * Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>>>
+>>>> The test results below shows 3-5% improvement in performance when
+>>>> using the third solution compared to the default system today where
+>>>> scheduler is unware of cpu capacity limitations due to thermal events.
+>>>
+>>> The numbers look very promising!
+>>
+>> Hello Ingo,
+>> Thank you for the review.
+>>>
+>>> I've rearranged the results to make the performance properties of the 
+>>> various approaches and parameters easier to see:
+>>>
+>>>                                          (seconds, lower is better)
+>>>
+>>> 			                 Hackbench   Aobench   Dhrystone
+>>>                                          =========   =======   =========
+>>> Vanilla kernel (No Thermal Pressure)         10.21    141.58        1.14
+>>> Instantaneous thermal pressure               10.16    141.63        1.15
+>>> Thermal Pressure Averaging:
+>>>       - PELT fmwk                             9.88    134.48        1.19
+>>>       - non-PELT Algo. Decay : 500 ms         9.94    133.62        1.09
+>>>       - non-PELT Algo. Decay : 250 ms         7.52    137.22        1.012
+>>>       - non-PELT Algo. Decay : 125 ms         9.87    137.55        1.12
+>>>
+>>>
+>>> Firstly, a couple of questions about the numbers:
+>>>
+>>>    1)
+>>>
+>>>       Is the 1.012 result for "non-PELT 250 msecs Dhrystone" really 1.012?
+>>>       You reported it as:
+>>>
+>>>              non-PELT Algo. Decay : 250 ms   1.012                   7.02%
+>>
+>> It is indeed 1.012. So, I ran the "non-PELT Algo 250 ms" benchmarks
+>> multiple time because of the anomalies noticed.  1.012 is a formatting
+>> error on my part when I copy pasted the results into a google sheet I am
+>> maintaining to capture the test results. Sorry about the confusion.
+> 
+> That's actually pretty good, because it suggests a 35% and 15% 
+> improvement over the vanilla kernel - which is very good for such 
+> CPU-bound workloads.
+> 
+> Not that 5% is bad in itself - but 15% is better ;-)
+> 
+>> Regarding the decay period, I agree that more testing can be done. I 
+>> like your suggestions below and I am going to try implementing them 
+>> sometime next week. Once I have some solid results, I will send them 
+>> out.
+> 
+> Thanks!
+> 
+>> My concern regarding getting hung up too much on decay period is that I 
+>> think it could vary from SoC to SoC depending on the type and number of 
+>> cores and thermal characteristics. So I was thinking eventually the 
+>> decay period should be configurable via a config option or by any other 
+>> means. Testing on different systems will definitely help and maybe I am 
+>> wrong and there is no much variation between systems.
+> 
+> Absolutely, so I'd not be against keeping it a SCHED_DEBUG tunable or so, 
+> until there's a better understanding of how the physical properties of 
+> the SoC map to an ideal decay period.
+> 
+> Assuming PeterZ & Rafael & Quentin doesn't hate the whole thermal load 
+> tracking approach. I suppose there's some connection of this to Energy 
+> Aware Scheduling? Or not ...
+Mmm.. Not so much. This does not have much to do with EAS. The feature
+itself will be really useful if there are asymmetric cpus in the  system
+rather than symmetric cpus. In case of SMP, since all cores have same
+capacity and assuming any thermal mitigation will be implemented across
+the all the cpus, there won't be any different scheduler behavior.
 
-Yes it is :)
+Regards
+Thara
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
 
-I will reply to Petr's and Feng's email.
 
-> > I agree that it is easier. The cost is that the same messages are
-> > printed again without any explanation.
-> > 
-> > I still think that it would be convenient to write a header line.
-> > It would help to understand the log for any, even 3rd-party, reader.
-> > Also it would help to find the beginning in a very long log.
->
-> My thought is, the replay is only a debug option and disabled by default,
-> so when user specifically enable the bit of PANIC_PRINT_ALL_PRINTK_MSG,
-> the whole replay of printk msg should be expected.
-
-I think that PANIC_PRINT_ALL_PRINTK_MSG is a debugging option; a quite
-specific one. So people who ask the kernel to PANIC_PRINT_ALL_PRINTK_MSG
-they know what they are doing, and we probably will not cofuse anyone.
-After all, we don't print any headers when we ftrace_dump() or imitate
-sysrq via sysrq_timer_list_show(), or for any other panic_print_sys_info()
-printouts. So it's OK to just do the simple thing for
-PANIC_PRINT_ALL_PRINTK_MSG.
-
-	-ss
+-- 
+Regards
+Thara
