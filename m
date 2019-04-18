@@ -2,76 +2,111 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A881C282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B9AC282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D6E20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C532184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=i.ua header.i=@i.ua header.b="e51AU003"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pOYusUng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387619AbfDRBSp (ORCPT
+        id S2387825AbfDRBTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 21:18:45 -0400
-Received: from out15.mi6.kiev.ua ([91.198.36.82]:57471 "EHLO out15.mi6.kiev.ua"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfDRBSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 21:18:44 -0400
-X-Greylist: delayed 9552 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Apr 2019 21:18:43 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=i.ua;
-        s=mail; h=Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Date
-        :From:Subject:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Dv2dqHkNC3DsF5P0nC1dL6kdGl3pT9l08M57ZMYACkk=; b=e51AU003/LiLQAckNHHNGFNUOg
-        MpmR8voxz0GPrMIAqYvKIO3n8JK3JTzKvpN0lYOEgfD+OPKLj8xGylMhHWSYaZs4W6PIZ1A3bsWMl
-        m+BKe0U76PJ9Ok1mJ9y1c6DNLlyTLWMnqJHcsHrdLwMAANcAJF7wazvatFWO7lh47+SY=;
-Received: from st10.mi6.kiev.ua ([91.198.36.32])
-        by out15.mi6.kiev.ua with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <nfecarmasu1982@i.ua>)
-        id 1hGtDA-0003Xt-Qt
-        for linux-kernel@vger.kernel.org; Thu, 18 Apr 2019 01:39:24 +0300
-Received: from web by st10.mi6.kiev.ua with local (Exim 4.90_1)
-        (envelope-from <nfecarmasu1982@i.ua>)
-        id 1hGtDA-0005ft-Ky
-        for linux-kernel@vger.kernel.org; Thu, 18 Apr 2019 01:39:24 +0300
-To:     linux-kernel@vger.kernel.org
-Subject: =?utf-8?B?0JfQsNGA0YPQu9GOINCy0LDRiCDRgdCw0LnRgiDQsiB0b3AgNC4=?=
-From:   =?utf-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCf0LXRgtGA0L7Qsg==?= 
-        <nfecarmasu1982@i.ua>
-Date:   Thu, 18 Apr 2019 01:39:24 +0300
+        Wed, 17 Apr 2019 21:19:10 -0400
+Received: from mail-eopbgr140050.outbound.protection.outlook.com ([40.107.14.50]:8031
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728268AbfDRBTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 21:19:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e2YAdM0eycG+gl1h+3koYXaKVXykEKrNZXlF6Xc/Iyg=;
+ b=pOYusUngOtklAcLBabbK3JPvERITSazbkaMCJR7B1MwOTB4BE8+IudmGW/MXE1V9qsDPJoNu8bphyJx6brkMZb6WUizeqQMQCA+u63BK+KscXVSOSyUaNxzq5mYPwoxcHED9gkRQbkWc531kzvTcvop2xO+19keUIHEDQ59Azyk=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB6285.eurprd04.prod.outlook.com (20.179.27.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Thu, 18 Apr 2019 01:19:05 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1792.021; Thu, 18 Apr 2019
+ 01:19:05 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Igor Plyatov <plyatov@gmail.com>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Duan <fugang.duan@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Clark Wang <xiaoning.wang@nxp.com>
+Subject: RE: Issues with i.MX SPI DMA transfers
+Thread-Topic: Issues with i.MX SPI DMA transfers
+Thread-Index: AQHU5MQedyysM/Gs0UKoyWKgyiIok6YgnCuAgAADPICAACYCkIAAHYGAgAEpjtCABnMWgIAAEhKQgAqpimCADgHlUA==
+Date:   Thu, 18 Apr 2019 01:19:05 +0000
+Message-ID: <VI1PR04MB4543A5CA46FBB3ACC9F3B3E289260@VI1PR04MB4543.eurprd04.prod.outlook.com>
+References: <08fcbd65-510f-84f8-d6d6-ff56aa9ca9ad@gmail.com>
+ <20190328065247.uz73lap7ljf5q3tb@pengutronix.de>
+ <b8e80127-e377-9ef9-2447-b0126fdad7dc@gmail.com>
+ <VI1PR04MB45438E01D91829849A4E0BB289590@VI1PR04MB4543.eurprd04.prod.outlook.com>
+ <d7a2e5c5-4ee0-8c89-1bab-654db0ae38dd@gmail.com>
+ <VI1PR04MB4543B1708FA151EED0CB722A89550@VI1PR04MB4543.eurprd04.prod.outlook.com>
+ <95df9334-3d0c-7d13-e431-5a4aa2b9907e@gmail.com>
+ <VI1PR04MB454305A56372466A38E9F81989560@VI1PR04MB4543.eurprd04.prod.outlook.com>
+ <VI1PR04MB454302BAF353124ED13747DC892D0@VI1PR04MB4543.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB454302BAF353124ED13747DC892D0@VI1PR04MB4543.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 36a0ace1-876e-4d2f-5dce-08d6c39bd989
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB6285;
+x-ms-traffictypediagnostic: VI1PR04MB6285:
+x-microsoft-antispam-prvs: <VI1PR04MB62856720DF34A0C8E5C1582A89260@VI1PR04MB6285.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0011612A55
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(366004)(136003)(13464003)(199004)(189003)(81166006)(11346002)(8676002)(55016002)(7696005)(3846002)(6436002)(33656002)(68736007)(53936002)(97736004)(26005)(6116002)(25786009)(9686003)(2906002)(81156014)(4744005)(99286004)(6246003)(229853002)(478600001)(8936002)(486006)(76176011)(66066001)(74316002)(4326008)(7416002)(305945005)(7736002)(14454004)(446003)(110136005)(476003)(14444005)(186003)(54906003)(5660300002)(71200400001)(71190400001)(52536014)(316002)(102836004)(6506007)(86362001)(93886005)(5024004)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6285;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: zcwewHvu50mgw5TrywMRHaXTXjVJ88Avi3b+cDByHafHjYgJ8e3+dyJWkp3SieKrjOzxkhi2KVAb1CyPrJF1Z7XdDKBi2vgVeHgTUsr1DdbfEtZ4pOWOu27Dd3qLeq40yjdM392L8xJbMhJIFhJuE1TYqaGa6Ytf9MaJh4L0oN24ve34hu3zc7FEQ9YqD9ey3X9d4MdgxQeAW6rKZRIVo21aFPnOEIL3bY1koI2UrlY41pAwRcS03tXmR4n5mKHOeWj+Q7WqmXEUV0QkddBSCfH741olXsJcIAb9EtcgYAvrmJ9UracbVQEttOCYwUhVUs9oGAq0JcAhutL3vCJxCKwLrBAQ9dJ3c6CzNJu8/vgGd0QUlGGRQ9NhYHrAQquHN+JrbwIYstPN/lSjGTuKZYMYLUJjECbSBG4rdxPyUKE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Mailer: I.UA Mail System
-X-Server: st10.mi6.kiev.ua
-X-Sender-IP: 195.234.215.81
-X-User-Agent: Mozilla/5.0 (Windows NT 7.1; rv:37.1) Gecko/20100101 Firefox/37.1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Message-Id: <E1hGtDA-0005ft-Ky@st10.mi6.kiev.ua>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36a0ace1-876e-4d2f-5dce-08d6c39bd989
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 01:19:05.5178
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6285
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Я знаю как стать первым номером в росте позиций сайтов.
-Вы покаместь не в top=1? 
-Я эксперт в продвижении сео уже девять лет. Есть перворазрядное портфолио и опыт.
-Умудрюсь просунуть в google поиск.
-Первостепенное с чем могу помочь это аудит.
-Следом исправить что необходимо.
-И в конце протолкнуть в top 7.
-Если вам это требуется отпишитесь.
-Портфолио по пожеланию.
-Помесячные отчеты.
-Обнаружьте о своем сайте всё, жду ответа.
-Ноль шесть 7 три один пять сем два 0 8
-
--- реклама -----------------------------------------------------------
-Поторопись зарегистрировать самый короткий почтовый адрес @i.ua
-https://mail.i.ua/reg - и получи 1Gb для хранения писем
+SGkgSWdvciwNCglEaWQgeW91IG1lZXQgYW55IGlzc3VlIHdpdGggbXkgbGF0ZXN0IHBhdGNoPw0K
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYmluIEdvbmcNCj4gU2Vu
+dDogQXByaWwgOSwgMjAxOSAxMToyNj4gDQo+IEhpIElnb3IsDQo+IAlQbGVhc2UgaGF2ZSBhIHRy
+eSB3aXRoIHRoZSBhdHRhY2hlZCBwYXRjaGVzLCBhbmQgcmV2ZXJ0IDI1YWFhNzVkZjFlNiwNCj4g
+YWQwZDkyZDdiYTZhICwgZGQ0YjQ4N2IzMmEzLCBkZjA3MTAxZTFjNGEgYmVmb3JlIGFwcGx5LiBC
+ZXNpZGVzIFhDSCwgdHgNCj4gdGhyZXNoIHNob3VsZCBiZSBzZXQgdG8gMCAsIG5vdyBubyBmYWls
+dXJlIGNhdWdodCBvbiBlY3NwaTUuDQo+IA0K
