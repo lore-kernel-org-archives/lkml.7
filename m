@@ -3,91 +3,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01491C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8857C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD09F2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3CF217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389051AbfDRNZN (ORCPT
+        id S2389063AbfDRN02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:25:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:42114 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733192AbfDRNZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:25:11 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-17-B7dANWa6PEWHAhN1ybAteA-1; Thu, 18 Apr 2019 14:25:05 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 18 Apr 2019 14:26:15 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 18 Apr 2019 14:26:15 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Thomas Gleixner' <tglx@linutronix.de>
-CC:     'Fenghua Yu' <fenghua.yu@intel.com>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Borislav Petkov' <bp@alien8.de>,
-        'H Peter Anvin' <hpa@zytor.com>,
-        "'Paolo Bonzini'" <pbonzini@redhat.com>,
-        'Dave Hansen' <dave.hansen@intel.com>,
-        'Ashok Raj' <ashok.raj@intel.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Ravi V Shankar' <ravi.v.shankar@intel.com>,
-        'Xiaoyao Li ' <xiaoyao.li@intel.com>,
-        'Christopherson Sean J' <sean.j.christopherson@intel.com>,
-        'Kalle Valo' <kvalo@codeaurora.org>,
-        'Michael Chan' <michael.chan@broadcom.com>,
-        'linux-kernel' <linux-kernel@vger.kernel.org>,
-        'x86' <x86@kernel.org>,
-        "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>,
-        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
-        "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>
-Subject: RE: [PATCH v7 04/21] x86/split_lock: Align x86_capability to unsigned
- long to avoid split locked access
-Thread-Topic: [PATCH v7 04/21] x86/split_lock: Align x86_capability to
- unsigned long to avoid split locked access
-Thread-Index: AQHU9Wc8cfw3/6sx9k22vKHnyDMwNqZBowBwgAAfOzD///urAIAAIrYggAAIWHA=
-Date:   Thu, 18 Apr 2019 13:26:15 +0000
-Message-ID: <43db378b84c54908bd2fbf305dd9f8ec@AcuMS.aculab.com>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
- <1555536851-17462-5-git-send-email-fenghua.yu@intel.com>
- <c8ca959a4bc549b59baca563660d42d6@AcuMS.aculab.com>
- <698b9419c81b443fb9c180d2b27fd34a@AcuMS.aculab.com>
- <alpine.DEB.2.21.1904181347210.3174@nanos.tec.linutronix.de>
- <aceeddaa107a4aed9add47945acaa129@AcuMS.aculab.com>
-In-Reply-To: <aceeddaa107a4aed9add47945acaa129@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 18 Apr 2019 09:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388302AbfDRN02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:26:28 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 769B6217D7;
+        Thu, 18 Apr 2019 13:26:26 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 09:26:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Gustavo Padovan" <gustavo.padovan@collabora.com>
+Cc:     "Dhaval Giani" <dhaval.giani@gmail.com>,
+        "Sasha Levin" <alexander.levin@microsoft.com>,
+        "shuah" <shuah@kernel.org>, "Kevin Hilman" <khilman@baylibre.com>,
+        "Tim Bird" <tbird20d@gmail.com>,
+        "LKML" <linux-kernel@vger.kernel.org>,
+        "Carpenter,Dan" <dan.carpenter@oracle.com>, willy@infradead.org,
+        "Dmitry Vyukov" <dvyukov@google.com>, knut.omang@oracle.com,
+        "Guillaume Charles Tucker" <guillaume.tucker@collabora.com>
+Subject: Re: Linux Testing Microconference at LPC
+Message-ID: <20190418092624.61b3611b@gandalf.local.home>
+In-Reply-To: <2dfb-5cb85000-7-65937800@86141034>
+References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
+        <2dfb-5cb85000-7-65937800@86141034>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MC-Unique: B7dANWa6PEWHAhN1ybAteA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDE4IEFwcmlsIDIwMTkgMTQ6MTUNCi4uLg0KPiBS
-dW5uaW5nDQo+IGdyZXAgLXIgLS1pbmNsdWRlICcqLltjaF0nICdfYml0KFteKF0qLCAqKFteKV0q
-ICcgLg0KPiBvdmVyIHRoZSBlbnRpcmUga2VybmVsIHNvdXJjZSB0cmVlIHNob3dzIHF1aXRlIGEg
-ZmV3ICdkdWJpb3VzJyBjYXN0cy4NCj4gDQo+IFRoZXknbGwgYmUgZG91Ymx5IGR1YmlvdXMgb24g
-QkUgc3lzdGVtcy4NCg0KVGhlIGFsdGVybmF0ZSBwYXR0ZXJuOg0KZ3JlcCAtciAtLWluY2x1ZGUg
-JyouW2NoXScgJ19iaXQoW14oXSosICooW14pXSpcKiknIC4NCmhhcyBhIGZldyBsZXNzIGZhbHNl
-IHBvc2l0aXZlcyBhbmQgZGV0ZWN0cyBzb21lIGV4dHJhcyB3aXRoICh2b2lkKikmZm9vLT5iYXIu
-DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9h
-ZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBO
-bzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Thu, 18 Apr 2019 11:22:47 +0100
+"Gustavo Padovan" <gustavo.padovan@collabora.com> wrote:
 
+> Guillaume would like to talk about the his work on kernelCI on automated bisection, functional testing and modular pipelines.
+
+Can you be more specific about what Guillaume wants to talk about for
+those topics? I hope it's not just a "let everyone know what Guillaume
+has done" talk. Plumbers is about discussions of on going and future
+work. If these are all work-in-progress and Guillaume is looking for
+input from other stakeholder developers, then that is exactly what
+Plumbers is about. But if this is just to show developers what was done
+and how to use the finished work, then save that for something like
+Open Source Summit.
+
+-- Steve
