@@ -2,159 +2,150 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F304CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3ADC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF2BC21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93F42183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555591054;
+	bh=bSY2ERrnn9DQ42Z9xlSzuf+GCUi6Ii7f7cn+Hz4/NdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1+2tNY7eqmkcCuf1LsfbjlYOTOEFPPbj/fPyqelYAo0/mOOKdEOIl8yK1UUizaOQ6
+	 5bqLsykXLDmjoKIcSdkYS9sTRvFONBB57v/mGXl2LjgDIgDUrC7tzx+Dq4BDeK4s7a
+	 vAGRBVzZVvTr8BTGld/jU8rd+6FB3Lbk6D7CWRvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388744AbfDRMgI (ORCPT
+        id S2388572AbfDRMhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:36:08 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:42817 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388263AbfDRMgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:36:06 -0400
-Received: by mail-it1-f200.google.com with SMTP id r186so2064369ita.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 05:36:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=i+tomZsCMzsnHr3874poPaxJCpmgaqjJEfGN6uwmJv0=;
-        b=rRFWM1ilSGrNzx6PEdWeHPw/a+1P+gqhiUSgD+bwxqbrOT/aBwPBaFpkLoGuYi2YBq
-         10mDCrPkb8H7tA003Tyq7q4JHONHZ+2x5Y+R3br3oOnPV0rHlMnEnu+vHxtIAfaLfux9
-         x7fdTjs2XziVOBp/hyXxs5jwchAqj9eVkBokjkg1Ot1xPXkZjErvY+wpMWtbqwKjc//+
-         UlL6MUAcdMMjo7/WeYVaBP8h30qjSRGg+zELLiOK1hJ5UtS+OW/AbqNqNfKbO1hx7Ht/
-         N5QxuByeAD3GDQme6PilZa3reumxuqe6wvTUOAx/E8GmicYcRa/cyMw5+7VWNpyZlLIF
-         iAHg==
-X-Gm-Message-State: APjAAAXe+C5rTp5fax8rOY14inbF6diKojt5xFaJGMkpGRZH9SbPrwa1
-        vL2ORBf0iVlogTy5tpjO7ev8YfLLFVsecP5PRzaduk08mM3E
-X-Google-Smtp-Source: APXvYqxNc5aU67epG4FuCxsatGM/4m1OETB/YtPcWPEF5e6Rzc4NdVhbYtgiItDICqxkcrTJ3kkGle02EMYEDf7nNg9b3juDh6xn
+        Thu, 18 Apr 2019 08:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733192AbfDRMhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 08:37:33 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF7621479;
+        Thu, 18 Apr 2019 12:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555591051;
+        bh=bSY2ERrnn9DQ42Z9xlSzuf+GCUi6Ii7f7cn+Hz4/NdA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i6aOz9hN1KocvJCVhNl5RA12uw6cHpUi/iTRE7H/AWFgimP9HH9/MwAhKzrKsenyd
+         FPn95oETCjCZSMVPgchYn2JGXsnoN26rVsjyvYD9OAabSmdKu1CBLPs/Xje1fso2kY
+         blJ7c4BI38Vd7ltZU0inEfOzExxHqqXlWVDSBcno=
+Date:   Thu, 18 Apr 2019 07:37:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kbuild-all@01.org, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Message-ID: <20190418123730.GX126710@google.com>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien>
+ <20190417215420.GV126710@google.com>
+ <alpine.DEB.2.21.1904180728420.8144@hadrien>
+ <20190418103755.GA14294@deco.navytux.spb.ru>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7108:: with SMTP id q8mr3957038iog.85.1555590965482;
- Thu, 18 Apr 2019 05:36:05 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 05:36:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e9e1990586cd3e40@google.com>
-Subject: BUG: unable to handle kernel paging request in osq_lock
-From:   syzbot <syzbot+e5c9afc3e1eed1dfc2b0@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, brad@nextdimension.cc,
-        hans.verkuil@cisco.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418103755.GA14294@deco.navytux.spb.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Apr 18, 2019 at 10:38:02AM +0000, Kirill Smelkov wrote:
+> On Thu, Apr 18, 2019 at 07:31:02AM +0200, Julia Lawall wrote:
+> > On Wed, 17 Apr 2019, Bjorn Helgaas wrote:
+> > > On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
+> > > > Hello,
+> > > >
+> > > > Kirill will explain about this issue.
+> > > >
+> > > > julia
+> > > >
+> > > > ---------- Forwarded message ----------
+> > > > Date: Sat, 13 Apr 2019 11:22:51 +0800
+> > > > From: kbuild test robot <lkp@intel.com>
+> > > > To: kbuild@01.org
+> > > > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> > > >
+> > > > CC: kbuild-all@01.org
+> > > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> > > > CC: Logan Gunthorpe <logang@deltatee.com>
+> > > > CC: Bjorn Helgaas <helgaas@kernel.org>
+> > > > CC: linux-pci@vger.kernel.org
+> > > > CC: linux-kernel@vger.kernel.org
+> > > >
+> > > > From: kbuild test robot <lkp@intel.com>
+> > > >
+> > > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> > > >
+> > > > Generated by: scripts/coccinelle/api/stream_open.cocci
+> > > >
+> > > > Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
+> > > > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > >
+> > > Based on Kirill's subsequent email saying this is already queued to
+> > > the merge window, I assume I need to do nothing here.
+> > >
+> > > I think a signed-off-by from a robot, i.e., not from a real person, is
+> > > meaningless, and I don't think I would personally accept it.  It's
+> > > certainly OK to indicate that a patch was auto-generated, but I think
+> > > a real person still needs to take responsibility for it.
+> > >
+> > > Documentation/process/submitting-patches.rst says it must contain a
+> > > real name (no pseudonyms or anonymous contributions), and I don't
+> > > think a robot fits in the spirit of that.
+> > >
+> > > I see that
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?id=8a29a3bae2a2
+> > > (mentioned below) does have a good signed-off-by from Sebastian, but
+> > > that's not *this* patch, so I don't know what's what.
+> > 
+> > Normally, for these robot generated patches, when I approve them, I put my
+> > own sign off, but under the robot one, since the robot has put a From
+> > line.  In this case, I handed the problem off to Kirill, so I didn't do
+> > that.  I agree that it would be good for Kirill to sign off on it.
+> 
+> Just for the reference: I have put my signature on the mass converstion
+> patch as well as ack's that were received:
+> 
+> https://lab.nexedi.com/kirr/linux/commit/edaeb4101860
 
-syzbot found the following crash on:
+Looks good, thanks.  Feel free to add my
 
-HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1338d3e3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-dashboard link: https://syzkaller.appspot.com/bug?extid=e5c9afc3e1eed1dfc2b0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+  Acked-by: Bjorn Helgaas <bhelgaas@google.com> [drivers/pci/switch/switchtec]
 
-Unfortunately, I don't have any reproducer for this crash yet.
+to the https://lab.nexedi.com/kirr/linux/commit/edaeb4101860 patch.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e5c9afc3e1eed1dfc2b0@syzkaller.appspotmail.com
+It looks like maybe the commit log could use
 
-au0828: recv_control_msg() Failed receiving control message, error -71.
-au8522_writereg: writereg error (reg == 0x106, val == 0x0001, ret == -5)
-usb 1-1: selecting invalid altsetting 5
-au0828: Failure setting usb interface0 to as5
-au0828: au0828_usb_probe() au0828_analog_register failed to register on V4L2
-BUG: unable to handle kernel paging request at fffffffc45040758
-#PF error: [normal kernel read fault]
-PGD 1167e067 P4D 1167e067 PUD 0
-Oops: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc5-319617-gd34f951 #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:decode_cpu kernel/locking/osq_lock.c:34 [inline]
-RIP: 0010:osq_lock+0xfd/0x5a0 kernel/locking/osq_lock.c:111
-Code: 48 63 e8 48 b8 00 00 00 00 00 fc ff df 48 8d 3c ed 60 c0 39 91 48 89  
-f9 48 c1 e9 03 80 3c 01 00 0f 85 2c 04 00 00 48 8d 53 08 <4c> 03 2c ed 60  
-c0 39 91 48 b8 00 00 00 00 00 fc ff df 48 89 d6 48
-RSP: 0018:ffff8880a846f0e8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880ad02dfc0 RCX: 1fffffff88a080eb
-RDX: ffff8880ad02dfc8 RSI: 0000000000000004 RDI: fffffffc45040758
-RBP: ffffffff967948df R08: 0000000000000000 R09: ffffed1012299b1e
-R10: ffffed1012299b1d R11: ffff8880914cd8eb R12: ffff8880ad02dfd0
-R13: 000000000002dfc0 R14: ffff8880a8443100 R15: ffff8880914cd8e8
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffc45040758 CR3: 000000009f4ac000 CR4: 00000000001406f0
-Call Trace:
-  mutex_optimistic_spin kernel/locking/mutex.c:630 [inline]
-  __mutex_lock_common kernel/locking/mutex.c:928 [inline]
-  __mutex_lock+0x27d/0x12b0 kernel/locking/mutex.c:1072
-  au0828_usb_disconnect+0xa3/0x130 drivers/media/usb/au0828/au0828-core.c:194
-  au0828_usb_probe.cold+0x121/0x7d8  
-drivers/media/usb/au0828/au0828-core.c:661
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1398/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
-CR2: fffffffc45040758
----[ end trace 41843cb8c360ab9e ]---
-RIP: 0010:decode_cpu kernel/locking/osq_lock.c:34 [inline]
-RIP: 0010:osq_lock+0xfd/0x5a0 kernel/locking/osq_lock.c:111
-Code: 48 63 e8 48 b8 00 00 00 00 00 fc ff df 48 8d 3c ed 60 c0 39 91 48 89  
-f9 48 c1 e9 03 80 3c 01 00 0f 85 2c 04 00 00 48 8d 53 08 <4c> 03 2c ed 60  
-c0 39 91 48 b8 00 00 00 00 00 fc ff df 48 89 d6 48
-RSP: 0018:ffff8880a846f0e8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880ad02dfc0 RCX: 1fffffff88a080eb
-RDX: ffff8880ad02dfc8 RSI: 0000000000000004 RDI: fffffffc45040758
-RBP: ffffffff967948df R08: 0000000000000000 R09: ffffed1012299b1e
-R10: ffffed1012299b1d R11: ffff8880914cd8eb R12: ffff8880ad02dfd0
-R13: 000000000002dfc0 R14: ffff8880a8443100 R15: ffff8880914cd8e8
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: fffffffc45040758 CR3: 000000009f4ac000 CR4: 00000000001406f0
+  s/and the reset were/and the rest were/
 
+It also mentions "the previous patch" a couple times, which may lose
+some of its meaning depending on how things get merged into git.  If
+that previous patch has already been merged, a SHA1 reference would be
+more specific.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I would personally split that into two patches: one to avoid the
+potential deadlocks and a second to do the "safe to change to
+stream_open" changes.  It seems like the first is more serious and
+urgent while the second is more of a cleanup.  Then you could
+streamline the commit logs by including a single diagnostic and
+omitting the entire list of files.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+But that's all bike-shedding and I'm totally fine with this as-is.
+
+Bjorn
