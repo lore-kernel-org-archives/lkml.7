@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E90AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A394C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1166A206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1274421872
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610990;
-	bh=K4OBAaUL1645McQUoybnngqod54ZyJTQKxaJOic90VY=;
+	s=default; t=1555610998;
+	bh=dvRYEgICU7B9lvD98/PMOD4n2rvOT2dfBGAP+bmKAY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JpOksg1jrds4WAilK+zDUxbaEJQ2giXHA9Tl9vxWIL8DZhwPpdWw+bnRr2ZkGUl3e
-	 x1EQqcwIa+KGS2Kms5WolZ2y+fpJPVjHIR6al+etGGDQZ9/sZNU2XjssVW+KGbGBMS
-	 VQ8ny3Z7Gl+O9i78GW7h4J8dOUWeukqSMypIkN6U=
+	b=e1wAaA5q3kjMfPG2mYA8BI5FXv/ablydS9j8Ol1V94of56Pn4++SltBznUemXK+P8
+	 iM+H4uCFHpFHO3wxNU80yZWFC0h54xtLSCXKz3HACAjMARWCt0VAUl4qWdG8SHQuXN
+	 7Iktu+uZeVyVSK7EEKVlQ8e8mWiylFHZZgIjSiTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403948AbfDRSJs (ORCPT
+        id S2404042AbfDRSJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:09:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41420 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391886AbfDRSJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:45 -0400
+        id S2403986AbfDRSJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:09:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96C4B21871;
-        Thu, 18 Apr 2019 18:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40923206B6;
+        Thu, 18 Apr 2019 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610985;
-        bh=K4OBAaUL1645McQUoybnngqod54ZyJTQKxaJOic90VY=;
+        s=default; t=1555610992;
+        bh=dvRYEgICU7B9lvD98/PMOD4n2rvOT2dfBGAP+bmKAY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gS/1JOEeZxaAjCsaBXSNXphQQUdzuse21xvOWyhS/D8A9U207bmnUUGI04wNyLhYP
-         JXMdlSkHHthglbxNcOIJR5+zdkTGRMgAadF2AdX1RW+4ADypMqvOl4YElMnsQztYKU
-         EBRP6TWdGISNH/2fyj0ys0mQM26l2tpF78gT1EHU=
+        b=sK5zBVXArCQIojSDG6uzRfcQMt+Nbjr3ffqOhNkgusddMaIP4z5jZV951uQHMmyEX
+         bS028yyXSxrICqpQTzLI1uLTCCsgDBJu1JynGlXeYfW+wOjsqnsEjfdV59vXAWAoYs
+         6gTX685UDwdY5NGaDeDndXR6lKLeg269KWtrO1u8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 15/93] i40iw: Avoid panic when handling the inetdev event
-Date:   Thu, 18 Apr 2019 19:56:53 +0200
-Message-Id: <20190418160438.371064859@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 18/93] paride/pf: cleanup queues when detection fails
+Date:   Thu, 18 Apr 2019 19:56:56 +0200
+Message-Id: <20190418160438.663257972@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -60,75 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec4fe4bcc584b55e24e8d1768f5510a62c0fd619 ]
+[ Upstream commit 6ce59025f1182125e75c8d121daf44056b65dd1f ]
 
-There is a panic reported that on a system with x722 ethernet, when doing
-the operations like:
+The driver allocates queues for all the units it potentially
+supports. But if we fail to detect any drives, then we fail
+loading the module without cleaning up those queues. This is
+now evident with the switch to blk-mq, though the bug has
+been there forever as far as I can tell.
 
-	# ip link add br0 type bridge
-	# ip link set eno1 master br0
-	# systemctl restart systemd-networkd
+Also fix cleanup through regular module exit.
 
-The system will panic "BUG: unable to handle kernel null pointer
-dereference at 0000000000000034", with call chain:
-
-	i40iw_inetaddr_event
-	notifier_call_chain
-	blocking_notifier_call_chain
-	notifier_call_chain
-	__inet_del_ifa
-	inet_rtm_deladdr
-	rtnetlink_rcv_msg
-	netlink_rcv_skb
-	rtnetlink_rcv
-	netlink_unicast
-	netlink_sendmsg
-	sock_sendmsg
-	__sys_sendto
-
-It is caused by "local_ipaddr = ntohl(in->ifa_list->ifa_address)", while
-the in->ifa_list is NULL.
-
-So add a check for the "in->ifa_list == NULL" case, and skip the ARP
-operation accordingly.
-
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_utils.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/block/paride/pf.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_utils.c b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-index 59e978141ad4..e99177533930 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_utils.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-@@ -173,7 +173,12 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
+diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
+index e92e7a8eeeb2..103b617cdc31 100644
+--- a/drivers/block/paride/pf.c
++++ b/drivers/block/paride/pf.c
+@@ -761,8 +761,12 @@ static int pf_detect(void)
+ 		return 0;
  
- 		rcu_read_lock();
- 		in = __in_dev_get_rcu(upper_dev);
--		local_ipaddr = ntohl(in->ifa_list->ifa_address);
+ 	printk("%s: No ATAPI disk detected\n", name);
+-	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
++	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
++		blk_cleanup_queue(pf->disk->queue);
++		pf->disk->queue = NULL;
++		blk_mq_free_tag_set(&pf->tag_set);
+ 		put_disk(pf->disk);
++	}
+ 	pi_unregister_driver(par_drv);
+ 	return -1;
+ }
+@@ -1047,13 +1051,15 @@ static void __exit pf_exit(void)
+ 	int unit;
+ 	unregister_blkdev(major, name);
+ 	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
+-		if (!pf->present)
+-			continue;
+-		del_gendisk(pf->disk);
++		if (pf->present)
++			del_gendisk(pf->disk);
 +
-+		if (!in->ifa_list)
-+			local_ipaddr = 0;
-+		else
-+			local_ipaddr = ntohl(in->ifa_list->ifa_address);
+ 		blk_cleanup_queue(pf->disk->queue);
+ 		blk_mq_free_tag_set(&pf->tag_set);
+ 		put_disk(pf->disk);
+-		pi_release(pf->pi);
 +
- 		rcu_read_unlock();
- 	} else {
- 		local_ipaddr = ntohl(ifa->ifa_address);
-@@ -185,6 +190,11 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
- 	case NETDEV_UP:
- 		/* Fall through */
- 	case NETDEV_CHANGEADDR:
-+
-+		/* Just skip if no need to handle ARP cache */
-+		if (!local_ipaddr)
-+			break;
-+
- 		i40iw_manage_arp_cache(iwdev,
- 				       netdev->dev_addr,
- 				       &local_ipaddr,
++		if (pf->present)
++			pi_release(pf->pi);
+ 	}
+ }
+ 
 -- 
 2.19.1
 
