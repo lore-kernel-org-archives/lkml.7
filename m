@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F024DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3E3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4EFC21902
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4C920652
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611170;
-	bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
+	s=default; t=1555611173;
+	bh=K5/Ao5HwkXD9vZdtG45XyXWQ/nFt7vvLUv6WpJEGJZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fCV8kB30Plk746iwt6/tj66rrj/ZMhQE9QiNnsaVmwGn7PUzyoEGZWi6flwnFO9P7
-	 1YuHy2lXBedd8/SpAiEE2YsIAVZwip3ecu3xFJTlIHRpCQHpvnVN84AdzPO+atFORu
-	 TqHPuE2EIsph5rjT6NlWkD+Z6MyBw7TMsZBnleuU=
+	b=XwKM3bR1DJJ/tMimlGDDC8wa3zIOSa1nPvmP4VIeIKYRggFzZrEMRILmwcDn6frME
+	 I7SrJyRjF1aNElUhW7Z840hFSSFxW5tiZqlt6Que2TgX62399mgaKlgMnn531Hjgqf
+	 wCscjc/zkuGjNMxt02vUZBe5WwTpZUC47WFyClV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404361AbfDRSMt (ORCPT
+        id S2404372AbfDRSMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45376 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404341AbfDRSMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:46 -0400
+        id S2404351AbfDRSMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE4A206B6;
-        Thu, 18 Apr 2019 18:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7FD2206B6;
+        Thu, 18 Apr 2019 18:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611165;
-        bh=sjP1CF4bWVNjBNfECEalECF9uygiVpuw2XhtSC3acWM=;
+        s=default; t=1555611168;
+        bh=K5/Ao5HwkXD9vZdtG45XyXWQ/nFt7vvLUv6WpJEGJZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JaPN7qdzDm4xKUJCCzJu2UedTpIlLOoO/7HplujjffBKBqSq2+1LA4id0zbubcdWR
-         K+czsOi+JL2sVKbC+uG5+JBMMcUou9vRAlqFPdCqd4CmWZWFjr51G/jRpx5eq3AVgj
-         ud3eKRnOfUgaaZUjwHoL/dDg/Z+DeaCOL1q9kxYY=
+        b=nkfUI0SEnRgES/xcHyj/jF62JYG4qgK247cfkGvAIpXptt85c4hEL9Rzb8AnuVAS7
+         6eKD2mcBCjsQNgfuAajgSfEGueH31iA1dYvXLb+CD+lsoO0i7YZewhthRAVg7GWr/g
+         tK5asYCC23YmFjX89K991NDuYenXYaSGFxWZmes4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Wang <kevin1.wang@amd.com>,
-        Oak Zeng <Oak.Zeng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 83/93] drm/amdkfd: use init_mqd function to allocate object for hid_mqd (CI)
-Date:   Thu, 18 Apr 2019 19:58:01 +0200
-Message-Id: <20190418160445.334760048@linuxfoundation.org>
+Subject: [PATCH 5.0 84/93] appletalk: Fix use-after-free in atalk_proc_exit
+Date:   Thu, 18 Apr 2019 19:58:02 +0200
+Message-Id: <20190418160445.399592574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -61,113 +61,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cac734c2dbd2514f14c8c6a17caba1990d83bf1d ]
+[ Upstream commit 6377f787aeb945cae7abbb6474798de129e1f3ac ]
 
-if use the legacy method to allocate object, when mqd_hiq need to run
-uninit code, it will be cause WARNING call trace.
+KASAN report this:
 
-eg: (s3 suspend test)
-[   34.918944] Call Trace:
-[   34.918948]  [<ffffffff92961dc1>] dump_stack+0x19/0x1b
-[   34.918950]  [<ffffffff92297648>] __warn+0xd8/0x100
-[   34.918951]  [<ffffffff9229778d>] warn_slowpath_null+0x1d/0x20
-[   34.918991]  [<ffffffffc03ce1fe>] uninit_mqd_hiq_sdma+0x4e/0x50 [amdgpu]
-[   34.919028]  [<ffffffffc03d0ef7>] uninitialize+0x37/0xe0 [amdgpu]
-[   34.919064]  [<ffffffffc03d15a6>] kernel_queue_uninit+0x16/0x30 [amdgpu]
-[   34.919086]  [<ffffffffc03d26c2>] pm_uninit+0x12/0x20 [amdgpu]
-[   34.919107]  [<ffffffffc03d4915>] stop_nocpsch+0x15/0x20 [amdgpu]
-[   34.919129]  [<ffffffffc03c1dce>] kgd2kfd_suspend.part.4+0x2e/0x50 [amdgpu]
-[   34.919150]  [<ffffffffc03c2667>] kgd2kfd_suspend+0x17/0x20 [amdgpu]
-[   34.919171]  [<ffffffffc03c103a>] amdgpu_amdkfd_suspend+0x1a/0x20 [amdgpu]
-[   34.919187]  [<ffffffffc02ec428>] amdgpu_device_suspend+0x88/0x3a0 [amdgpu]
-[   34.919189]  [<ffffffff922e22cf>] ? enqueue_entity+0x2ef/0xbe0
-[   34.919205]  [<ffffffffc02e8220>] amdgpu_pmops_suspend+0x20/0x30 [amdgpu]
-[   34.919207]  [<ffffffff925c56ff>] pci_pm_suspend+0x6f/0x150
-[   34.919208]  [<ffffffff925c5690>] ? pci_pm_freeze+0xf0/0xf0
-[   34.919210]  [<ffffffff926b45c6>] dpm_run_callback+0x46/0x90
-[   34.919212]  [<ffffffff926b49db>] __device_suspend+0xfb/0x2a0
-[   34.919213]  [<ffffffff926b4b9f>] async_suspend+0x1f/0xa0
-[   34.919214]  [<ffffffff922c918f>] async_run_entry_fn+0x3f/0x130
-[   34.919216]  [<ffffffff922b9d4f>] process_one_work+0x17f/0x440
-[   34.919217]  [<ffffffff922bade6>] worker_thread+0x126/0x3c0
-[   34.919218]  [<ffffffff922bacc0>] ? manage_workers.isra.25+0x2a0/0x2a0
-[   34.919220]  [<ffffffff922c1c31>] kthread+0xd1/0xe0
-[   34.919221]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
-[   34.919222]  [<ffffffff92974c1d>] ret_from_fork_nospec_begin+0x7/0x21
-[   34.919224]  [<ffffffff922c1b60>] ? insert_kthread_work+0x40/0x40
-[   34.919224] ---[ end trace 38cd9f65c963adad ]---
+BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
 
-Signed-off-by: Kevin Wang <kevin1.wang@amd.com>
-Reviewed-by: Oak Zeng <Oak.Zeng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+ remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
+ atalk_proc_exit+0x18/0x820 [appletalk]
+ atalk_exit+0xf/0x5a [appletalk]
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
+R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
+
+Allocated by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2739 [inline]
+ slab_alloc mm/slub.c:2747 [inline]
+ kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
+ kmem_cache_zalloc include/linux/slab.h:730 [inline]
+ __proc_create+0x30f/0xa20 fs/proc/generic.c:408
+ proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
+ 0xffffffffc10c01bb
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
+ pde_put+0x6e/0x80 fs/proc/generic.c:647
+ remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
+ 0xffffffffc10c031c
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881f41fe500
+ which belongs to the cache proc_dir_entry of size 256
+The buggy address is located 176 bytes inside of
+ 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
+The buggy address belongs to the page:
+page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+ ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+It should check the return value of atalk_proc_init fails,
+otherwise atalk_exit will trgger use-after-free in pde_subdir_find
+while unload the module.This patch fix error cleanup path of atalk_init
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c  | 52 +------------------
- 1 file changed, 1 insertion(+), 51 deletions(-)
+ include/linux/atalk.h            |  2 +-
+ net/appletalk/atalk_proc.c       |  2 +-
+ net/appletalk/ddp.c              | 37 ++++++++++++++++++++++++++------
+ net/appletalk/sysctl_net_atalk.c |  5 ++++-
+ 4 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
-index 47243165a082..ae90a99909ef 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_cik.c
-@@ -323,57 +323,7 @@ static int init_mqd_hiq(struct mqd_manager *mm, void **mqd,
- 		struct kfd_mem_obj **mqd_mem_obj, uint64_t *gart_addr,
- 		struct queue_properties *q)
- {
--	uint64_t addr;
--	struct cik_mqd *m;
--	int retval;
--
--	retval = kfd_gtt_sa_allocate(mm->dev, sizeof(struct cik_mqd),
--					mqd_mem_obj);
--
--	if (retval != 0)
--		return -ENOMEM;
--
--	m = (struct cik_mqd *) (*mqd_mem_obj)->cpu_ptr;
--	addr = (*mqd_mem_obj)->gpu_addr;
--
--	memset(m, 0, ALIGN(sizeof(struct cik_mqd), 256));
--
--	m->header = 0xC0310800;
--	m->compute_pipelinestat_enable = 1;
--	m->compute_static_thread_mgmt_se0 = 0xFFFFFFFF;
--	m->compute_static_thread_mgmt_se1 = 0xFFFFFFFF;
--	m->compute_static_thread_mgmt_se2 = 0xFFFFFFFF;
--	m->compute_static_thread_mgmt_se3 = 0xFFFFFFFF;
--
--	m->cp_hqd_persistent_state = DEFAULT_CP_HQD_PERSISTENT_STATE |
--					PRELOAD_REQ;
--	m->cp_hqd_quantum = QUANTUM_EN | QUANTUM_SCALE_1MS |
--				QUANTUM_DURATION(10);
--
--	m->cp_mqd_control             = MQD_CONTROL_PRIV_STATE_EN;
--	m->cp_mqd_base_addr_lo        = lower_32_bits(addr);
--	m->cp_mqd_base_addr_hi        = upper_32_bits(addr);
--
--	m->cp_hqd_ib_control = DEFAULT_MIN_IB_AVAIL_SIZE;
--
--	/*
--	 * Pipe Priority
--	 * Identifies the pipe relative priority when this queue is connected
--	 * to the pipeline. The pipe priority is against the GFX pipe and HP3D.
--	 * In KFD we are using a fixed pipe priority set to CS_MEDIUM.
--	 * 0 = CS_LOW (typically below GFX)
--	 * 1 = CS_MEDIUM (typically between HP3D and GFX
--	 * 2 = CS_HIGH (typically above HP3D)
--	 */
--	m->cp_hqd_pipe_priority = 1;
--	m->cp_hqd_queue_priority = 15;
--
--	*mqd = m;
--	if (gart_addr)
--		*gart_addr = addr;
--	retval = mm->update_mqd(mm, m, q);
--
--	return retval;
-+	return init_mqd(mm, mqd, mqd_mem_obj, gart_addr, q);
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index 840cf92307ba..d5cfc0b15b76 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -158,7 +158,7 @@ extern int sysctl_aarp_retransmit_limit;
+ extern int sysctl_aarp_resolve_time;
+ 
+ #ifdef CONFIG_SYSCTL
+-extern void atalk_register_sysctl(void);
++extern int atalk_register_sysctl(void);
+ extern void atalk_unregister_sysctl(void);
+ #else
+ static inline int atalk_register_sysctl(void)
+diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
+index 8006295f8bd7..dda73991bb54 100644
+--- a/net/appletalk/atalk_proc.c
++++ b/net/appletalk/atalk_proc.c
+@@ -255,7 +255,7 @@ int __init atalk_proc_init(void)
+ 	goto out;
  }
  
- static int update_mqd_hiq(struct mqd_manager *mm, void *mqd,
+-void __exit atalk_proc_exit(void)
++void atalk_proc_exit(void)
+ {
+ 	remove_proc_entry("interface", atalk_proc_dir);
+ 	remove_proc_entry("route", atalk_proc_dir);
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 9b6bc5abe946..795fbc6c06aa 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1910,12 +1910,16 @@ static const char atalk_err_snap[] __initconst =
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+-	int rc = proto_register(&ddp_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&ddp_proto, 0);
++	if (rc)
+ 		goto out;
+ 
+-	(void)sock_register(&atalk_family_ops);
++	rc = sock_register(&atalk_family_ops);
++	if (rc)
++		goto out_proto;
++
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+ 	if (!ddp_dl)
+ 		printk(atalk_err_snap);
+@@ -1923,12 +1927,33 @@ static int __init atalk_init(void)
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+-	register_netdevice_notifier(&ddp_notifier);
++	rc = register_netdevice_notifier(&ddp_notifier);
++	if (rc)
++		goto out_sock;
++
+ 	aarp_proto_init();
+-	atalk_proc_init();
+-	atalk_register_sysctl();
++	rc = atalk_proc_init();
++	if (rc)
++		goto out_aarp;
++
++	rc = atalk_register_sysctl();
++	if (rc)
++		goto out_proc;
+ out:
+ 	return rc;
++out_proc:
++	atalk_proc_exit();
++out_aarp:
++	aarp_cleanup_module();
++	unregister_netdevice_notifier(&ddp_notifier);
++out_sock:
++	dev_remove_pack(&ppptalk_packet_type);
++	dev_remove_pack(&ltalk_packet_type);
++	unregister_snap_client(ddp_dl);
++	sock_unregister(PF_APPLETALK);
++out_proto:
++	proto_unregister(&ddp_proto);
++	goto out;
+ }
+ module_init(atalk_init);
+ 
+diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
+index c744a853fa5f..d945b7c0176d 100644
+--- a/net/appletalk/sysctl_net_atalk.c
++++ b/net/appletalk/sysctl_net_atalk.c
+@@ -45,9 +45,12 @@ static struct ctl_table atalk_table[] = {
+ 
+ static struct ctl_table_header *atalk_table_header;
+ 
+-void atalk_register_sysctl(void)
++int __init atalk_register_sysctl(void)
+ {
+ 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
++	if (!atalk_table_header)
++		return -ENOMEM;
++	return 0;
+ }
+ 
+ void atalk_unregister_sysctl(void)
 -- 
 2.19.1
 
