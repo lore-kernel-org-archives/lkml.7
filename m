@@ -2,82 +2,103 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2751C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8509FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABE4208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FE3208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389007AbfDRNMQ (ORCPT
+        id S2389028AbfDRNMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:12:16 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:36130 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733205AbfDRNMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:12:16 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH6pp-0007z0-AW; Thu, 18 Apr 2019 15:12:13 +0200
-Date:   Thu, 18 Apr 2019 15:12:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Daniel Drake <drake@endlessm.com>
-cc:     lenb@kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com, rjw@rjwysocki.net
-Subject: Re: Detecting x86 LAPIC timer frequency from CPUID data
-In-Reply-To: <20190417052810.3052-1-drake@endlessm.com>
-Message-ID: <alpine.DEB.2.21.1904181511150.3174@nanos.tec.linutronix.de>
-References: <20190417052810.3052-1-drake@endlessm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Apr 2019 09:12:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39754 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733205AbfDRNMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:12:19 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B232E3099FD3;
+        Thu, 18 Apr 2019 13:12:12 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E8F4119C65;
+        Thu, 18 Apr 2019 13:12:07 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 18 Apr 2019 15:12:12 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 15:12:07 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        tglx@linutronix.de, mtk.manpages@gmail.com,
+        akpm@linux-foundation.org, cyphar@cyphar.com,
+        joel@joelfernandes.org, dancol@google.com
+Subject: Re: [PATCH v2 2/5] clone: add CLONE_PIDFD
+Message-ID: <20190418131206.GB13701@redhat.com>
+References: <20190418101841.4476-1-christian@brauner.io>
+ <20190418101841.4476-3-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418101841.4476-3-christian@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Apr 2019 13:12:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Daniel Drake wrote:
+On 04/18, Christian Brauner wrote:
+>
+> @@ -1674,13 +1729,14 @@ static __latent_entropy struct task_struct *copy_process(
+>  					unsigned long clone_flags,
+>  					unsigned long stack_start,
+>  					unsigned long stack_size,
+> +					int __user *parent_tidptr,
+>  					int __user *child_tidptr,
+>  					struct pid *pid,
+>  					int trace,
+>  					unsigned long tls,
+>  					int node)
+>  {
+> -	int retval;
+> +	int pidfd = -1, retval;
 
-> The CPUID.0x16 leaf provides "Bus (Reference) Frequency (in MHz)".
-> 
-> In the thread "No 8254 PIT & no HPET on new Intel N3350 platforms
-> causes kernel panic during early boot" we are exploring ways to have
-> the kernel avoid using the PIT/HPET IRQ0 timer in more cases, and
-> Thomas Gleixner suggested that we could use this CPUID data to set
-> lapic_timer_frequency, avoiding the need for calibrate_APIC_clock()
-> to measure the APIC clock against the IRQ0 timer.
-> 
-> I'm thinking of the the following code change, however I get
-> unexpected results on Intel i7-8565U (Whiskey Lake). When
-> booting without this change, and with apic=notscdeadline (so that
-> APIC clock gets calibrated and used), the bus speed is detected as
-> 23MHz:
-> 
->  ... lapic delta = 149994
->  ... PM-Timer delta = 357939
->  ... PM-Timer result ok
->  ..... delta 149994
->  ..... mult: 6442193
->  ..... calibration result: 23999
->  ..... CPU clock speed is 1991.0916 MHz.
->  ..... host bus clock speed is 23.0999 MHz.
-> 
-> However the CPUID.0x16 ECX reports a 100MHz bus speed on this device,
-> so this code change would produce a significantly different calibration.
-> 
-> Am I doing anything obviously wrong?
+it seems that initialization is unneeded, but this is cosmetic.
 
-It's probably just my fault sending you down the wrong path. What's the
-content of CPUUD.0x15 on that box?
+I see no technical problems, feel free to add my reviewed-by.
 
-Thanks,
 
-	tglx
+But let me ask a couple of questions...
+
+
+Why O_CLOEXEC? I am just curious, I do not really care.
+
+
+Should we allow CLONE_THREAD | CLONE_PIDFD ?
+
+
+Are you sure we will never need to extend this interface? If not, then perhaps it
+make sense to add something like
+
+	if (CLONE_PIDFD) {
+		unsigned long not_used_yet;
+		if (get_user(not_used_yet, parent_tidptr) ||
+		    not_used_yet != 0)
+			return -EINVAL;
+	}
+
+this way we can easily add more arguments in future or even turn CLONE_PIDFD into
+CLONE_MORE_ARGS_IN_PARENT_TIDPTR.
+
+Not that I think this is really good idea, sys_clone2() makes more sense, but still.
+
+Oleg.
+
