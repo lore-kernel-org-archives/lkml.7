@@ -2,160 +2,208 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E05C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA25C20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922B120869
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbfDRP3L (ORCPT
+        id S2389430AbfDRPay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:29:11 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51392 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRP3L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:29:11 -0400
-Received: by mail-it1-f195.google.com with SMTP id s3so3933263itk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:29:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PTV7w2sFD53HDQMqtsdrCsqIcgw/TVT2YeOyBYCnr5o=;
-        b=ZwbsfNoF2wE0VlUqMdQm4QRGSpBepAzSm+PeMUg1lRzgiZthWwgwJTJibYEPB+h5eh
-         CkQVJTkD90LJvvb56JcOp6TyZxqHDbHY26mB+q4e7oKnGrEUMytZg9RGocADikm/q4M1
-         zxWHsizKuRcFeSJ4hufwKHkWeryVwk3dgW5kVFWbDBRCwFLxpJA+mqttGGT1QHEad/yi
-         FVL/J7cJwUGENQhB5wE9JMF/rynmmJptf5OEwSccYs1FE0lHm6BPmmMnsYNpxIH4BQm4
-         Vnqqv3dXi9ZOMsyHGOqEBXm8BF6aN8+ZaNwzGt4LYZlFt7BguS8vwtfPaTRUdy+cwyB6
-         VlSg==
-X-Gm-Message-State: APjAAAVaLQMJXNpMiStVZSB9co5TuOyQ/aUkVGiT9cXsUIbgXGpbtsJP
-        zO0Qviwl7NIbrnDvVKEMFKoZ6Q==
-X-Google-Smtp-Source: APXvYqyvcfVGNOGMK+GZbb7AZqNZCVjS9j6kjjivsM+QlsoZ2vEDj70m8h4QmgUxsDxZt9+Op2eLlg==
-X-Received: by 2002:a05:660c:12ce:: with SMTP id k14mr3743232itd.23.1555601348493;
-        Thu, 18 Apr 2019 08:29:08 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id p17sm790420iol.69.2019.04.18.08.29.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Apr 2019 08:29:07 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 09:29:02 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <groeck@google.com>, linux-usb@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        Daniel Kurtz <djkurtz@chromium.org>, zwisler@chromium.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Johan Hovold <johan@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Raul Rangel <rrangel@chromium.org>
-Subject: Re: [PATCH v3] usb/hcd: Send a uevent signaling that the host
- controller had died
-Message-ID: <20190418152902.GA185502@google.com>
-References: <20190418065141.GB12503@kroah.com>
- <Pine.LNX.4.44L0.1904181011020.1513-100000@iolanthe.rowland.org>
- <20190418143048.GA11555@kroah.com>
+        Thu, 18 Apr 2019 11:30:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36616 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731317AbfDRPay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:30:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B2FC1B11D;
+        Thu, 18 Apr 2019 15:30:50 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4B1B01E15AE; Thu, 18 Apr 2019 17:30:47 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 17:30:47 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+Message-ID: <20190418153047.GN28541@quack2.suse.cz>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel>
+ <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <20190416194936.GD21526@redhat.com>
+ <CAPcyv4i-YHH+dH8za1i1aMcHzQXfovVSrRFp_nfa-KYN-XhAvw@mail.gmail.com>
+ <20190417222858.GA4146@redhat.com>
+ <20190418104205.GA28541@quack2.suse.cz>
+ <20190418142729.GB3288@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190418143048.GA11555@kroah.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190418142729.GB3288@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 04:30:48PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Apr 18, 2019 at 10:21:32AM -0400, Alan Stern wrote:
-> > On Thu, 18 Apr 2019, Greg Kroah-Hartman wrote:
-> > 
-> > > On Wed, Apr 17, 2019 at 04:20:09PM -0700, Guenter Roeck wrote:
-> > > > On Wed, Apr 17, 2019 at 3:41 PM Raul Rangel <rrangel@chromium.org> wrote:
+On Thu 18-04-19 10:27:29, Jerome Glisse wrote:
+> On Thu, Apr 18, 2019 at 12:42:05PM +0200, Jan Kara wrote:
+> > On Wed 17-04-19 18:28:58, Jerome Glisse wrote:
+> > > On Wed, Apr 17, 2019 at 02:53:28PM -0700, Dan Williams wrote:
+> > > > On Tue, Apr 16, 2019 at 12:50 PM Jerome Glisse <jglisse@redhat.com> wrote:
 > > > > >
-> > > > > On Wed, Apr 17, 2019 at 03:23:52PM -0700, Guenter Roeck wrote:
-> > > > > > On Wed, Apr 17, 2019 at 3:11 PM Raul Rangel <rrangel@chromium.org> wrote:
+> > > > > On Tue, Apr 16, 2019 at 12:12:27PM -0700, Dan Williams wrote:
+> > > > > > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
+> > > > > > <kent.overstreet@gmail.com> wrote:
 > > > > > > >
-> > > > > > > On Wed, Apr 17, 2019 at 04:39:23PM -0400, Alan Stern wrote:
+> > > > > > > On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
+> > > > > > > > On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
+> > > > > > > > > From: Jérôme Glisse <jglisse@redhat.com>
+> > > > > > > > >
+> > > > > > > > > This patchset depends on various small fixes [1] and also on patchset
+> > > > > > > > > which introduce put_user_page*() [2] and thus is 5.3 material as those
+> > > > > > > > > pre-requisite will get in 5.2 at best. Nonetheless i am posting it now
+> > > > > > > > > so that it can get review and comments on how and what should be done
+> > > > > > > > > to test things.
+> > > > > > > > >
+> > > > > > > > > For various reasons [2] [3] we want to track page reference through GUP
+> > > > > > > > > differently than "regular" page reference. Thus we need to keep track
+> > > > > > > > > of how we got a page within the block and fs layer. To do so this patch-
+> > > > > > > > > set change the bio_bvec struct to store a pfn and flags instead of a
+> > > > > > > > > direct pointer to a page. This way we can flag page that are coming from
+> > > > > > > > > GUP.
+> > > > > > > > >
+> > > > > > > > > This patchset is divided as follow:
+> > > > > > > > >     - First part of the patchset is just small cleanup i believe they
+> > > > > > > > >       can go in as his assuming people are ok with them.
 > > > > > > > >
-> > > > > > > > This sounds like a golden opportunity!  Submit a separate patch making
-> > > > > > > > the parameter to kobject_uevent_env be const (actually const char *
-> > > > > > > > const []), then submit this patch on top of that one.
-> > > > > > > So there are other parts of the code base that dynamically create their
-> > > > > > > array values. So by making the function take const, it breaks :(
+> > > > > > > >
+> > > > > > > > >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn this is
+> > > > > > > > >       done in multi-step, first we replace all direct dereference of
+> > > > > > > > >       the field by call to inline helper, then we introduce macro for
+> > > > > > > > >       bio_bvec that are initialized on the stack. Finaly we change the
+> > > > > > > > >       bv_page field to bv_pfn.
+> > > > > > > >
+> > > > > > > > Why do we need a bv_pfn. Why not just use the lowest bit of the page-ptr
+> > > > > > > > as a flag (pointer always aligned to 64 bytes in our case).
+> > > > > > > >
+> > > > > > > > So yes we need an inline helper for reference of the page but is it not clearer
+> > > > > > > > that we assume a page* and not any kind of pfn ?
+> > > > > > > > It will not be the first place using low bits of a pointer for flags.
+> > > > > > > >
+> > > > > > > > That said. Why we need it at all? I mean why not have it as a bio flag. If it exist
+> > > > > > > > at all that a user has a GUP and none-GUP pages to IO at the same request he/she
+> > > > > > > > can just submit them as two separate BIOs (chained at the block layer).
+> > > > > > > >
+> > > > > > > > Many users just submit one page bios and let elevator merge them any way.
+> > > > > > >
+> > > > > > > Let's please not add additional flags and weirdness to struct bio - "if this
+> > > > > > > flag is set interpret one way, if not interpret another" - or eventually bios
+> > > > > > > will be as bad as skbuffs. I would much prefer just changing bv_page to bv_pfn.
 > > > > > >
-> > > > > > Confused. The calling code can still be non-const. I don't see the
-> > > > > > parameter modified in kobject_uevent_env(), so declaring it const
-> > > > > > should be possible. Can you give an example of code that no longer
-> > > > > > works ?
-> > > > > static int notify_user_space(struct thermal_zone_device *tz, int trip)
-> > > > > {
-> > > > >         char *thermal_prop[5];
-> > > > >         int i;
+> > > > > > This all reminds of the failed attempt to teach the block layer to
+> > > > > > operate without pages:
+> > > > > >
+> > > > > > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-desk3.amr.corp.intel.com/
+> > > > > >
+> > > > > > >
+> > > > > > > Question though - why do we need a flag for whether a page is a GUP page or not?
+> > > > > > > Couldn't the needed information just be determined by what range the pfn is not
+> > > > > > > (i.e. whether or not it has a struct page associated with it)?
+> > > > > >
+> > > > > > That amounts to a pfn_valid() check which is a bit heavier than if we
+> > > > > > can store a flag in the bv_pfn entry directly.
+> > > > > >
+> > > > > > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
+> > > > > > an 'unsigned long'.
+> > > > > >
+> > > > > > That said, I'm still in favor of Jan's proposal to just make the
+> > > > > > bv_page semantics uniform. Otherwise we're complicating this core
+> > > > > > infrastructure for some yet to be implemented GPU memory management
+> > > > > > capabilities with yet to be determined value. Circle back when that
+> > > > > > value is clear, but in the meantime fix the GUP bug.
 > > > > >
-> > > > >         mutex_lock(&tz->lock);
-> > > > >         thermal_prop[0] = kasprintf(GFP_KERNEL, "NAME=%s", tz->type);
-> > > > >         thermal_prop[1] = kasprintf(GFP_KERNEL, "TEMP=%d", tz->temperature);
-> > > > >         thermal_prop[2] = kasprintf(GFP_KERNEL, "TRIP=%d", trip);
-> > > > >         thermal_prop[3] = kasprintf(GFP_KERNEL, "EVENT=%d", tz->notify_event);
-> > > > >         thermal_prop[4] = NULL;
-> > > > >         kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
-> > > > >         for (i = 0; i < 4; ++i)
-> > > > >                 kfree(thermal_prop[i]);
-> > > > >         mutex_unlock(&tz->lock);
-> > > > >         return 0;
-> > > > > }
+> > > > > This has nothing to do with GPU, what make you think so ? Here i am
+> > > > > trying to solve GUP and to keep the value of knowing wether a page
+> > > > > has been GUP or not. I argue that if we bias every page in every bio
+> > > > > then we loose that information and thus the value.
 > > > > >
-> > > > > drivers/thermal/user_space.c:48:52: error: passing 'char *[5]' to parameter of type 'const char *const *' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-> > > > >         kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
-> > > > >                                                           ^~~~~~~~~~~~
-> > > > > include/linux/kobject.h:238:22: note: passing argument to parameter 'envp' here
-> > > > >                         const char *const envp[]);
-> > > > >                                           ^
-> > > > >
-> > > > > http://c-faq.com/ansi/constmismatch.html explains why it fails.
-> > > > >
-> > > > Interesting. One never stops learning. So the best you could do would
-> > > > be char * const envp[], but I guess that doesn't help much.
+> > > > > I gave the page protection mechanisms as an example that would be
+> > > > > impacted but it is not the only one. Knowing if a page has been GUP
+> > > > > can be useful for memory reclaimation, compaction, NUMA balancing,
+> > > > 
+> > > > Right, this is what I was reacting to in your pushback to Jan's
+> > > > proposal. You're claiming value for not doing the simple thing for
+> > > > some future "may be useful in these contexts". To my knowledge those
+> > > > things are not broken today. You're asking for the complexity to be
+> > > > carried today for some future benefit, and I'm asking for the
+> > > > simplicity to be maintained as much as possible today and let the
+> > > > value of future changes stand on their own to push for more complexity
+> > > > later.
+> > > > 
+> > > > Effectively don't use this bug fix to push complexity for a future
+> > > > agenda where the value has yet to be quantified.
 > > > 
-> > > Yeah, I went down this path a year or so ago and had to give it up as
-> > > well :(
+> > > Except that this solution (biasing everyone in bio) would _more complex_
+> > > it is only conceptualy appealing. The changes are on the other hand much
+> > > deeper and much riskier but you decided to ignore that and focus on some-
+> > > thing i was just giving as an example.
 > > 
-> > Well, the signature could still be changed as Guenter suggests.
-> > 
-> > And the array being added in the new code could still be static.  
-> > After all, there isn't really any danger that the contents of those
-> > strings will be modified, right?  It's just that the const modifiers
-> > weren't put in until it was too late and there were too many existing
-> > callers.  Perhaps a comment about this could be included in the 
-> > kerneldoc for kobject_uevent_env.
+> > Yeah, after going and reading several places like fs/iomap.c, fs/mpage.c,
+> > drivers/md/dm-io.c I agree with you. The places that are not doing direct
+> > IO usually just don't hold any page reference that could be directly
+> > attributed to the bio (and they don't drop it when bio finishes). They
+> > rather use other means (like PageLocked, PageWriteback) to make sure the
+> > page stays alive so mandating gup-pin reference for all pages attached to a
+> > bio would require a lot of reworking of places that are not related to our
+> > problem and currently work just fine. So I withdraw my suggestion. Nice in
+> > theory, too much work in practice ;).
 > 
-> I am all for changing this, but I remember I tried to, and somehow
-> failed, but I don't remember the full details sorry, it was a while ago.
-> If someone figures out how to make this all const, I will gladly take
-> that patch.
+> Have you seem Boaz proposal ? I have started it and it does not look to
+> bad (but you knwo taste and color :)) You can take a peek:
 > 
-Well we could use varargs...
-int kobject_uevent_env(struct kobject *kobj,
-		       enum kobject_action action,
-		       ...);
-
-This will accept both const char* and char *.
-
-Example https://repl.it/@RaulRangel/Const-char-var-args
-
-It seems like most callers have a fixed number of env params, so you
-wouldn't need a function that takes a list.
-
-> thanks,
+> https://cgit.freedesktop.org/~glisse/linux/log/?h=gup-bio-v2
 > 
-> greg k-h
+> I need to finish that and run fstests on bunch of different fs before
+> posting. Dunno if i will have enough time to do that before LSF/MM.
+
+Yes, I've seen it. I just wasn't sure how the result will look like. What
+you have in your tree looks pretty clean so far. BTW (I know I'm repeating
+myself ;) what if we made iov_iter_get_pages() & iov_iter_get_pages_alloc()
+always return gup-pin reference? That would get rid of the need for two
+ioend handlers for each call site...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
