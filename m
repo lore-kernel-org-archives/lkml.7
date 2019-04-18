@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCE9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A81C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0642083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8008B20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389376AbfDRNky (ORCPT
+        id S2389105AbfDRNlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:40:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:33620 "EHLO foss.arm.com"
+        Thu, 18 Apr 2019 09:41:00 -0400
+Received: from foss.arm.com ([217.140.101.70]:33628 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388301AbfDRNkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:40:53 -0400
+        id S2388582AbfDRNk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:40:59 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B9B80D;
-        Thu, 18 Apr 2019 06:40:53 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE9CD80D;
+        Thu, 18 Apr 2019 06:40:58 -0700 (PDT)
 Received: from e110176-lin.kfn.arm.com (e110176-lin.kfn.arm.com [10.50.4.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB4663F5AF;
-        Thu, 18 Apr 2019 06:40:51 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62BBA3F5AF;
+        Thu, 18 Apr 2019 06:40:57 -0700 (PDT)
 From:   Gilad Ben-Yossef <gilad@benyossef.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 16/35] crypto: ccree: use devm_kzalloc for device data
-Date:   Thu, 18 Apr 2019 16:38:51 +0300
-Message-Id: <20190418133913.9122-17-gilad@benyossef.com>
+Subject: [PATCH 17/35] crypto: ccree: use std api when possible
+Date:   Thu, 18 Apr 2019 16:38:52 +0300
+Message-Id: <20190418133913.9122-18-gilad@benyossef.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418133913.9122-1-gilad@benyossef.com>
 References: <20190418133913.9122-1-gilad@benyossef.com>
@@ -43,60 +43,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move some remaining device data allocation to the safer devm_*
-interface.
+Move to use the std api sg_nents_for_len() when we do not in fact
+require the extra information about the number of bytes in the last
+entry provided by the in-driver variant cc_get_sgl_nents().
+
+This also resolves a Coverity warning cause by us not using
+the output value.
 
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 ---
- drivers/crypto/ccree/cc_fips.c     | 4 +---
- drivers/crypto/ccree/cc_sram_mgr.c | 5 ++---
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/crypto/ccree/cc_buffer_mgr.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_fips.c b/drivers/crypto/ccree/cc_fips.c
-index b4d0a6d983e0..9c03ab238a75 100644
---- a/drivers/crypto/ccree/cc_fips.c
-+++ b/drivers/crypto/ccree/cc_fips.c
-@@ -49,8 +49,6 @@ void cc_fips_fini(struct cc_drvdata *drvdata)
- 
- 	/* Kill tasklet */
- 	tasklet_kill(&fips_h->tasklet);
--
--	kfree(fips_h);
- 	drvdata->fips_handle = NULL;
- }
- 
-@@ -104,7 +102,7 @@ int cc_fips_init(struct cc_drvdata *p_drvdata)
- 	if (p_drvdata->hw_rev < CC_HW_REV_712)
- 		return 0;
- 
--	fips_h = kzalloc(sizeof(*fips_h), GFP_KERNEL);
-+	fips_h = devm_kzalloc(dev, sizeof(*fips_h), GFP_KERNEL);
- 	if (!fips_h)
- 		return -ENOMEM;
- 
-diff --git a/drivers/crypto/ccree/cc_sram_mgr.c b/drivers/crypto/ccree/cc_sram_mgr.c
-index c8c276f6dee9..86319788e390 100644
---- a/drivers/crypto/ccree/cc_sram_mgr.c
-+++ b/drivers/crypto/ccree/cc_sram_mgr.c
-@@ -19,8 +19,7 @@ struct cc_sram_ctx {
-  */
- void cc_sram_mgr_fini(struct cc_drvdata *drvdata)
+diff --git a/drivers/crypto/ccree/cc_buffer_mgr.c b/drivers/crypto/ccree/cc_buffer_mgr.c
+index 7c92373df351..ccb0257bdc58 100644
+--- a/drivers/crypto/ccree/cc_buffer_mgr.c
++++ b/drivers/crypto/ccree/cc_buffer_mgr.c
+@@ -133,9 +133,9 @@ void cc_zero_sgl(struct scatterlist *sgl, u32 data_len)
+ void cc_copy_sg_portion(struct device *dev, u8 *dest, struct scatterlist *sg,
+ 			u32 to_skip, u32 end, enum cc_sg_cpy_direct direct)
  {
--	/* Free "this" context */
--	kfree(drvdata->sram_mgr_handle);
-+	/* Nothing needed */
+-	u32 nents, lbytes;
++	u32 nents;
+ 
+-	nents = cc_get_sgl_nents(dev, sg, end, &lbytes);
++	nents = sg_nents_for_len(sg, end);
+ 	sg_copy_buffer(sg, nents, (void *)dest, (end - to_skip + 1), to_skip,
+ 		       (direct == CC_SG_TO_BUF));
  }
+@@ -519,7 +519,6 @@ void cc_unmap_aead_request(struct device *dev, struct aead_request *req)
+ 	unsigned int hw_iv_size = areq_ctx->hw_iv_size;
+ 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+-	u32 dummy;
+ 	u32 size_to_unmap = 0;
  
- /**
-@@ -48,7 +47,7 @@ int cc_sram_mgr_init(struct cc_drvdata *drvdata)
+ 	if (areq_ctx->mac_buf_dma_addr) {
+@@ -583,15 +582,13 @@ void cc_unmap_aead_request(struct device *dev, struct aead_request *req)
+ 	if (areq_ctx->is_gcm4543)
+ 		size_to_unmap += crypto_aead_ivsize(tfm);
+ 
+-	dma_unmap_sg(dev, req->src,
+-		     cc_get_sgl_nents(dev, req->src, size_to_unmap, &dummy),
++	dma_unmap_sg(dev, req->src, sg_nents_for_len(req->src, size_to_unmap),
+ 		     DMA_BIDIRECTIONAL);
+ 	if (req->src != req->dst) {
+ 		dev_dbg(dev, "Unmapping dst sgl: req->dst=%pK\n",
+ 			sg_virt(req->dst));
+ 		dma_unmap_sg(dev, req->dst,
+-			     cc_get_sgl_nents(dev, req->dst, size_to_unmap,
+-					      &dummy),
++			     sg_nents_for_len(req->dst, size_to_unmap),
+ 			     DMA_BIDIRECTIONAL);
  	}
- 
- 	/* Allocate "this" context */
--	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
- 
- 	if (!ctx)
- 		return -ENOMEM;
+ 	if (drvdata->coherent &&
+@@ -1429,8 +1426,7 @@ int cc_map_hash_request_update(struct cc_drvdata *drvdata, void *ctx,
+ 	if (total_in_len < block_size) {
+ 		dev_dbg(dev, " less than one block: curr_buff=%pK *curr_buff_cnt=0x%X copy_to=%pK\n",
+ 			curr_buff, *curr_buff_cnt, &curr_buff[*curr_buff_cnt]);
+-		areq_ctx->in_nents =
+-			cc_get_sgl_nents(dev, src, nbytes, &dummy);
++		areq_ctx->in_nents = sg_nents_for_len(src, nbytes);
+ 		sg_copy_to_buffer(src, areq_ctx->in_nents,
+ 				  &curr_buff[*curr_buff_cnt], nbytes);
+ 		*curr_buff_cnt += nbytes;
 -- 
 2.21.0
 
