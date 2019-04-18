@@ -2,119 +2,144 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68770C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56658206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F372183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWRFX++Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nvkEZdQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbfDRJn6 (ORCPT
+        id S2388499AbfDRJoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:43:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55175 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387519AbfDRJn6 (ORCPT
+        Thu, 18 Apr 2019 05:44:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60850 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388070AbfDRJox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:43:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c1so2002592wml.4;
-        Thu, 18 Apr 2019 02:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K0FLtOfXpWaZbif33VOkSsJZBPCbQPbqlBeJZqp/xKk=;
-        b=PWRFX++Q9zE64Jqj/C/tGA5OgR5YHdJqlJ+NE3o2D2u21wGazt9ZKzg+4kLKvJEZU6
-         LtHJWwq8ZZpHxL8k4/woLCThaz9j6/cWvxC9JRfl48+pVTxYbIlaQVgERf8CwvXN70VF
-         sttKtVZF9YnLrTr1vuQJ4AGG1uPseZdFATuZvFhNk8S5MOgEqgeqyjlt/HHBHrM8eHHF
-         eJ+m1gb5DVw2ZpeMAEAlqwtNLjv/OskSF0WSWiXhJVqFtij6eknCY5DVQmxdjhDM/NkX
-         iHX2SUa2sn3d8eoIl5CvWKiOu59hZuxZL8dpykDiJ57QXdFAHMwe19H7+CZlqnOAzSMK
-         n9wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K0FLtOfXpWaZbif33VOkSsJZBPCbQPbqlBeJZqp/xKk=;
-        b=QRXj55U/mEFJ3d+hhq+/IgxdMKUIKo82y9I5d9RtLLQfI04mtZdCZxpyve8WizZZhs
-         u31IKci2xwsoxvkDIheRIVdgdGfUEVu4w3Jz3X9lAac3SmR5S37tHizpYgSmHNmITMAE
-         lxh5CsdZYroyDolCQVLF/G92q/KQJrQMhoqgmqoacFsSsZsYZAaS7D7mq/Jtt7IXIKfi
-         aoU4KLvx7qUVK+v24yvANX6rftv+7RP531ibXsFi8aOcGCPatGl4qzlM1bJnmLfMmEdb
-         5UdYUU4N78zUzpfMxCnrgqu3Nq2sd5dUgGZvwZRYNOHn3diA4pT64MkcFMRSPcO16D+f
-         lctw==
-X-Gm-Message-State: APjAAAVoG0wwVw2ssqhypor576a9ZatomuKPUHhIk6BmvvW+p/9So1uu
-        7rRn1Hk1lmzP4vS7ckEkHIU=
-X-Google-Smtp-Source: APXvYqxykLV5XNFfmKoVR1ImnqYTe4ZWpzgVdQno2HnBJnn4EjMneGx37F2/2Tq1ChpwTuvBKW535g==
-X-Received: by 2002:a1c:4056:: with SMTP id n83mr2333683wma.146.1555580635784;
-        Thu, 18 Apr 2019 02:43:55 -0700 (PDT)
-Received: from localhost (p2E5BE61D.dip0.t-ipconnect.de. [46.91.230.29])
-        by smtp.gmail.com with ESMTPSA id r18sm2654755wme.18.2019.04.18.02.43.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 02:43:55 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 11:43:54 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1] ARM: dts: tegra30: Add ACTMON node
-Message-ID: <20190418094354.GC26909@ulmo>
-References: <20190411223042.25809-1-digetx@gmail.com>
+        Thu, 18 Apr 2019 05:44:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qMkC1T6ZJuUcdXnH9Yp0SsrwKBb1Irh2P/qjZGqcIw4=; b=nvkEZdQ9rFH3Terix674ZEQNo
+        zCC4F0acxM9ojsrnHyOSjlqY9IfKpsl7TWinVqA7j7pqsQM0gWsi8gU011AauMKo3rimuqDWhhbYy
+        KdiW8dseMvkzVJk0I+P0HB63KfkCHxCmWRrE/MKjIUfbD8gFW13T7Qkcj1IByCn7MpfotPWmvszMG
+        aG6Q455QgSlVDU+/hF7IPRg2xl4DLB0QycoIsDxV0qI9734oVSfMaUohOfKr/35v0uyhNpYGm+O33
+        1xsBqvrOHHFYeFrkKIoQobiUN/PaqSsKAzXjqj+9UfP8bBZ73hu1cBfbbB0QwligB4C0TP6d1ocgP
+        EACpO1pcw==;
+Received: from 177.132.233.55.dynamic.adsl.gvt.net.br ([177.132.233.55] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hH3b3-0000fU-Ni; Thu, 18 Apr 2019 09:44:46 +0000
+Date:   Thu, 18 Apr 2019 06:44:36 -0300
+From:   Mauro Carvalho Chehab <mchehab@infradead.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dirk Eibach <eibach@gdsys.de>,
+        George Joseph <george.joseph@fairview5.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Juerg Haefliger <juergh@gmail.com>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        Huang Rui <ray.huang@amd.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Rudolf Marek <r.marek@assembler.cz>,
+        Andreas Werner <andreas.werner@men.de>,
+        Jim Cromie <jim.cromie@gmail.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Hulsman <m.hulsman@tudelft.nl>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
+ to *.rst
+Message-ID: <20190418064436.1803bf3a@coco.lan>
+In-Reply-To: <20190417174728.GA17706@roeck-us.net>
+References: <cover.1555494108.git.mchehab+samsung@kernel.org>
+        <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
+        <20190417164741.GA12147@roeck-us.net>
+        <20190417141352.3225bbb3@coco.lan>
+        <20190417142215.791df5e7@coco.lan>
+        <20190417174337.GA16749@roeck-us.net>
+        <20190417174728.GA17706@roeck-us.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
-Content-Disposition: inline
-In-Reply-To: <20190411223042.25809-1-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <mchehab@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, 17 Apr 2019 10:47:28 -0700
+Guenter Roeck <linux@roeck-us.net> escreveu:
 
---wxDdMuZNg1r63Hyj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Apr 17, 2019 at 10:43:37AM -0700, Guenter Roeck wrote:
+> > On Wed, Apr 17, 2019 at 02:22:15PM -0300, Mauro Carvalho Chehab wrote:  
+> > > Em Wed, 17 Apr 2019 14:13:52 -0300
+> > > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
+> > >   
+> > > > Em Wed, 17 Apr 2019 09:47:41 -0700
+> > > > Guenter Roeck <linux@roeck-us.net> escreveu:
+> > > >   
+> > > > > On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:    
+> > > > > > Now that all files were converted to ReST format, rename them
+> > > > > > and add an index.
+> > > > > > 
+> > > > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > > > > Acked-by: Liviu Dudau <liviu.dudau@arm.com>      
+> > > > > 
+> > > > > I applied all patches except this one, which fails due to a conflict in
+> > > > > ab8500. I also notice that this file has not been touched by your series,
+> > > > > which is odd. At the same time, patch 20/21 is missing from your series,
+> > > > > and has been missing all along. Does the missing patch possibly touch
+> > > > > Documentation/hwmon/ab8500 ?    
+> > > > 
+> > > > Patch 20/21 is the biggest one. Maybe vger rejected it either due to
+> > > > its size or due to the number of c/c.
+> > > > 
+> > > > Just bounced it to you. Please let me know if you didn't receive it
+> > > > yet.  
+> > > 
+> > > Btw, LKML got it:
+> > > 
+> > > https://lore.kernel.org/lkml/cccc2a52363a5aaeea10e186ead8570503ea648e.1555494108.git.mchehab+samsung@kernel.org/
+> > >   
+> > patchwork didn't get it (or didn't accept it). I got it now.
+> > All patches applied, and pushed out to hwmon-next.
+> > 
+> > We have one (new) unconverted file left - Documentation/hwmon/lochnagar.  
+> 
+> Plus ir38064 and isl68137. Lots of new drivers recently.
 
-On Fri, Apr 12, 2019 at 01:30:42AM +0300, Dmitry Osipenko wrote:
-> Add ACTMON node to the Tegra30's device-tree.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  arch/arm/boot/dts/tegra30.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+Ok, just sent a patch for those three new files. I wrote a more
+detailed description about what steps I followed at the conversion
+of those tree files, and why I did it. 
 
-Applied to for-5.2/arm/dt, thanks.
+Hopefully, this would help hwmon developers
+that may already be preparing a new driver for submission.
 
-Thierry
-
---wxDdMuZNg1r63Hyj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly4RtkACgkQ3SOs138+
-s6HXnw//cy1isrQsfetZ391dyHewlkERIHxtGrQde2E5DdQyyqezUpwnQ440u1A/
-z69vskHEOfsL4xqxRcRkaWg6jVA6yQa6WrTd3B1ZuIVm766B/OpDXDPPmInGLJXh
-cvXjNquWZCbt/QF3y9M4tne/T7Ix48w9m4mYAzCIvzg0myvzi/ijZEx6HlPcUqfI
-OzgAKQeVcFl6Rc38VebMR0AZo4H4pwpdW2FCjPwUWojOMqP3R9jxcgF2TrxYk0S9
-NNL7v8YPcb1SKI57zeC6hwmbrlPU/YRlc+K7LrMxk7aMSmQ0j9A5cCjEQr0KHnpK
-gNjgLrnv1pk3+1fSuDsph0t/1d5n9qNt4fKe5tkjoSSVv7wSxyA+Zar5exOT13/s
-db2MKFGLZC2QfLSF/1uRLQo8wnlhMPcatiTDZoptPeJXOjFPpaO1ACl7Joc78COH
-SgDqCFBy2razhvIHtZ9M4MpIDPKOByyu+U1EW3R90dOjDBms6LHF3R4WXHiDjV4b
-mF2n8Xy0xkW82yUKJb2/BprV2j59isszkd9kg296f86mmRcTnVAPsZrm119zIo6w
-oFV3KRN8Ur0P1XOwQ3J7of1629yV7k+tY5xYrjtJ+q9R+/1WtJusszfq30h8syuT
-fTwARTFlHCpybtPANPaE8ma2hZ2zXAIYIpTGm3tzAErwi4Mk1jI=
-=9pCI
------END PGP SIGNATURE-----
-
---wxDdMuZNg1r63Hyj--
+Thanks,
+Mauro
