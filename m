@@ -2,135 +2,293 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E25C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4530C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE752064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612487;
-	bh=EeKTikSizQZ/J9EcfmHYN84AY0ue2uB7f4LvH1R05a0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNHB/3/XfXDloY3FywkAiARr3AeepjFWuEoVVPnanHT2w71mAjon+1rCJvt7fkrk5
-	 ManAiurK0PPXTb+7wLmAlDgUy3DLcSH4joURvHBnOtKBa6xlCXgwt/sv/cNSWwTsSz
-	 hCW94ehxffMF3hPZEblpmWLDIcogjwGLGarlB7R0=
+	by mail.kernel.org (Postfix) with ESMTP id 95C9A2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390445AbfDRSeq (ORCPT
+        id S2389887AbfDRShV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389883AbfDRR6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:58:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55206217FA;
-        Thu, 18 Apr 2019 17:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610315;
-        bh=EeKTikSizQZ/J9EcfmHYN84AY0ue2uB7f4LvH1R05a0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULGvHgyAv/YcBGcQb1AElgADa54S+tVQQUxryZO/5p6RadgSVJzZd0hKPjH9J235j
-         zrBIoqIMPMTzZcDeSgqj4eZ0rZtUxFCUeQSt7k474XTe1KCLRN9yQ1BTO1Y3vI5oLg
-         9lRKIy+texyDPznXnGpes8e76ekgM1LrTLtY5TM0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/110] i40iw: Avoid panic when handling the inetdev event
-Date:   Thu, 18 Apr 2019 19:56:03 +0200
-Message-Id: <20190418160438.724778159@linuxfoundation.org>
+        Thu, 18 Apr 2019 14:37:21 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:55333 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388450AbfDRShV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:37:21 -0400
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 0B8CB240003;
+        Thu, 18 Apr 2019 18:37:15 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-pm@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3] power: supply: add Ingenic JZ47xx battery driver.
+Date:   Thu, 18 Apr 2019 20:24:04 +0200
+Message-Id: <20190418182404.20183-1-contact@artur-rojek.eu>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
-References: <20190418160437.484158340@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec4fe4bcc584b55e24e8d1768f5510a62c0fd619 ]
+Add a driver for battery present on Ingenic JZ47xx SoCs.
 
-There is a panic reported that on a system with x722 ethernet, when doing
-the operations like:
-
-	# ip link add br0 type bridge
-	# ip link set eno1 master br0
-	# systemctl restart systemd-networkd
-
-The system will panic "BUG: unable to handle kernel null pointer
-dereference at 0000000000000034", with call chain:
-
-	i40iw_inetaddr_event
-	notifier_call_chain
-	blocking_notifier_call_chain
-	notifier_call_chain
-	__inet_del_ifa
-	inet_rtm_deladdr
-	rtnetlink_rcv_msg
-	netlink_rcv_skb
-	rtnetlink_rcv
-	netlink_unicast
-	netlink_sendmsg
-	sock_sendmsg
-	__sys_sendto
-
-It is caused by "local_ipaddr = ntohl(in->ifa_list->ifa_address)", while
-the in->ifa_list is NULL.
-
-So add a check for the "in->ifa_list == NULL" case, and skip the ARP
-operation accordingly.
-
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/infiniband/hw/i40iw/i40iw_utils.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_utils.c b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-index a9ea966877f2..dda8e79d4b27 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_utils.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_utils.c
-@@ -173,7 +173,12 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
+Changes:
+
+v2: - rework the return logic in ingenic_battery_get_property,
+    - make index offsets point forward in ingenic_battery_set_scale,
+    - fix spacing around scale_raw[best_idx + 1]
+
+v3: Add the missing MODULE_LICENSE & Co.
+
+ drivers/power/supply/Kconfig           |  11 ++
+ drivers/power/supply/Makefile          |   1 +
+ drivers/power/supply/ingenic-battery.c | 184 +++++++++++++++++++++++++
+ 3 files changed, 196 insertions(+)
+ create mode 100644 drivers/power/supply/ingenic-battery.c
+
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index b6a4265bf0ec..81b0c20b24dd 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -169,6 +169,17 @@ config BATTERY_COLLIE
+ 	  Say Y to enable support for the battery on the Sharp Zaurus
+ 	  SL-5500 (collie) models.
  
- 		rcu_read_lock();
- 		in = __in_dev_get_rcu(upper_dev);
--		local_ipaddr = ntohl(in->ifa_list->ifa_address);
++config BATTERY_INGENIC
++	tristate "Ingenic JZ47xx SoCs battery driver"
++	depends on MIPS || COMPILE_TEST
++	depends on INGENIC_ADC
++	help
++	  Choose this option if you want to monitor battery status on
++	  Ingenic JZ47xx SoC based devices.
 +
-+		if (!in->ifa_list)
-+			local_ipaddr = 0;
++	  This driver can also be built as a module. If so, the module will be
++	  called ingenic-battery.
++
+ config BATTERY_IPAQ_MICRO
+ 	tristate "iPAQ Atmel Micro ASIC battery driver"
+ 	depends on MFD_IPAQ_MICRO
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index 1cdce3ded839..976dc1698134 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
+ obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
+ obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
+ obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
++obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
+ obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
+ obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
+ obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
+diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
+new file mode 100644
+index 000000000000..35816d4b3012
+--- /dev/null
++++ b/drivers/power/supply/ingenic-battery.c
+@@ -0,0 +1,184 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Battery driver for the Ingenic JZ47xx SoCs
++ * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
++ *
++ * based on drivers/power/supply/jz4740-battery.c
++ */
++
++#include <linux/iio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/power_supply.h>
++#include <linux/property.h>
++
++struct ingenic_battery {
++	struct device *dev;
++	struct iio_channel *channel;
++	struct power_supply_desc desc;
++	struct power_supply *battery;
++	struct power_supply_battery_info info;
++};
++
++static int ingenic_battery_get_property(struct power_supply *psy,
++					enum power_supply_property psp,
++					union power_supply_propval *val)
++{
++	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
++	struct power_supply_battery_info *info = &bat->info;
++	int ret;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_HEALTH:
++		ret = iio_read_channel_processed(bat->channel, &val->intval);
++		val->intval *= 1000;
++		if (val->intval < info->voltage_min_design_uv)
++			val->intval = POWER_SUPPLY_HEALTH_DEAD;
++		else if (val->intval > info->voltage_max_design_uv)
++			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
 +		else
-+			local_ipaddr = ntohl(in->ifa_list->ifa_address);
++			val->intval = POWER_SUPPLY_HEALTH_GOOD;
++		return ret;
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++		ret = iio_read_channel_processed(bat->channel, &val->intval);
++		val->intval *= 1000;
++		return ret;
++	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
++		val->intval = info->voltage_min_design_uv;
++		return 0;
++	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
++		val->intval = info->voltage_max_design_uv;
++		return 0;
++	default:
++		return -EINVAL;
++	};
++}
 +
- 		rcu_read_unlock();
- 	} else {
- 		local_ipaddr = ntohl(ifa->ifa_address);
-@@ -185,6 +190,11 @@ int i40iw_inetaddr_event(struct notifier_block *notifier,
- 	case NETDEV_UP:
- 		/* Fall through */
- 	case NETDEV_CHANGEADDR:
++/* Set the most appropriate IIO channel voltage reference scale
++ * based on the battery's max voltage.
++ */
++static int ingenic_battery_set_scale(struct ingenic_battery *bat)
++{
++	const int *scale_raw;
++	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
++	u64 max_mV;
 +
-+		/* Just skip if no need to handle ARP cache */
-+		if (!local_ipaddr)
-+			break;
++	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
++	if (ret) {
++		dev_err(bat->dev, "Unable to read max raw channel value\n");
++		return ret;
++	}
 +
- 		i40iw_manage_arp_cache(iwdev,
- 				       netdev->dev_addr,
- 				       &local_ipaddr,
++	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
++					       &scale_type, &scale_len,
++					       IIO_CHAN_INFO_SCALE);
++	if (ret < 0) {
++		dev_err(bat->dev, "Unable to read channel avail scale\n");
++		return ret;
++	}
++	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
++		return -EINVAL;
++
++	max_mV = bat->info.voltage_max_design_uv / 1000;
++
++	for (i = 0; i < scale_len; i += 2) {
++		u64 scale_mV = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
++
++		if (scale_mV < max_mV)
++			continue;
++
++		if (best_idx >= 0 && scale_mV > best_mV)
++			continue;
++
++		best_mV = scale_mV;
++		best_idx = i;
++	}
++
++	if (best_idx < 0) {
++		dev_err(bat->dev, "Unable to find matching voltage scale\n");
++		return -EINVAL;
++	}
++
++	return iio_write_channel_attribute(bat->channel,
++					   scale_raw[best_idx],
++					   scale_raw[best_idx + 1],
++					   IIO_CHAN_INFO_SCALE);
++}
++
++static enum power_supply_property ingenic_battery_properties[] = {
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
++	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
++};
++
++static int ingenic_battery_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct ingenic_battery *bat;
++	struct power_supply_config psy_cfg = {};
++	struct power_supply_desc *desc;
++	int ret;
++
++	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
++	if (!bat)
++		return -ENOMEM;
++
++	bat->dev = dev;
++	bat->channel = devm_iio_channel_get(dev, "battery");
++	if (IS_ERR(bat->channel))
++		return PTR_ERR(bat->channel);
++
++	desc = &bat->desc;
++	desc->name = "jz-battery";
++	desc->type = POWER_SUPPLY_TYPE_BATTERY;
++	desc->properties = ingenic_battery_properties;
++	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
++	desc->get_property = ingenic_battery_get_property;
++	psy_cfg.drv_data = bat;
++	psy_cfg.of_node = dev->of_node;
++
++	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
++	if (IS_ERR(bat->battery)) {
++		dev_err(dev, "Unable to register battery\n");
++		return PTR_ERR(bat->battery);
++	}
++
++	ret = power_supply_get_battery_info(bat->battery, &bat->info);
++	if (ret) {
++		dev_err(dev, "Unable to get battery info: %d\n", ret);
++		return ret;
++	}
++	if (bat->info.voltage_min_design_uv < 0) {
++		dev_err(dev, "Unable to get voltage min design\n");
++		return bat->info.voltage_min_design_uv;
++	}
++	if (bat->info.voltage_max_design_uv < 0) {
++		dev_err(dev, "Unable to get voltage max design\n");
++		return bat->info.voltage_max_design_uv;
++	}
++
++	return ingenic_battery_set_scale(bat);
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id ingenic_battery_of_match[] = {
++	{ .compatible = "ingenic,jz4740-battery", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
++#endif
++
++static struct platform_driver ingenic_battery_driver = {
++	.driver = {
++		.name = "ingenic-battery",
++		.of_match_table = of_match_ptr(ingenic_battery_of_match),
++	},
++	.probe = ingenic_battery_probe,
++};
++module_platform_driver(ingenic_battery_driver);
++
++MODULE_DESCRIPTION("Battery driver for Ingenic JZ47xx SoCs");
++MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
++MODULE_LICENSE("GPL");
 -- 
-2.19.1
-
-
+2.21.0
 
