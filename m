@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A54C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532D9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F9A217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236EC206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610666;
-	bh=Axz59moKgMJfsNbXi9hS7Wm12MSR0cYvjle8NE4YFLs=;
+	s=default; t=1555610669;
+	bh=/XA/G3Hjsc+MpKCnf/j3RCuQcWqhP0/vA8CEC0dtWDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBVwr1SfERKTsKcj5ptGEcgca9i2+mhmP7dQV3wg6xNWgSg52LVUleUQw2wi3Sj6s
-	 ejqSIeuT+N/Y9KXVN+hdTZR6oSQSnbXKXXtYFG5QjApVb3nplRIWPs+Cd35ZKVQUUT
-	 6sWhTeBkwa/sF3ARC5sWFjMTm7/g8ihXt9ejxiP0=
+	b=17m/u2hxJ/EnUYpf4hj3rN8az57Yg1TzrZ3SIlzVT7pf3hKzr+UHF/Ycw74drKLUL
+	 DKyi26U9EHQxKOdqmrNZ+ygjAC9CRfA8Af/e0g1HMB389a9C9eD/4mPrSszX7BrZlu
+	 bjUHxdPZGVBhSZuf0EPS/uKnC9pLTPHQSF7cS54c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391107AbfDRSEZ (ORCPT
+        id S2391116AbfDRSE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390675AbfDRSER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:04:17 -0400
+        id S2391085AbfDRSEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:04:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A43921871;
-        Thu, 18 Apr 2019 18:04:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF61218A1;
+        Thu, 18 Apr 2019 18:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610657;
-        bh=Axz59moKgMJfsNbXi9hS7Wm12MSR0cYvjle8NE4YFLs=;
+        s=default; t=1555610659;
+        bh=/XA/G3Hjsc+MpKCnf/j3RCuQcWqhP0/vA8CEC0dtWDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MrKcs2PFzpbrejL4/JANoTKjM8nvugzaDN1GWW4TAZoz6LWtSr2fgUWKEVOxCX4Wn
-         /oThelJxNSAvYDw6XtWNS/jhxd7jxCPw9j8A14clPPVYqRUzD0QpMXG6/JofJBz8NK
-         qj9KVnstjBCxIeEUGKImYR4R3q8Ud2ZEkwIusZ1Y=
+        b=ahAn6y9N7mbm4jDqLBH1Ti3yEzB+30psVU50sfnraVeLvm4TI0mQTDZsbpiurjceN
+         reDuA0h0x6r9ZT1Zg+gGI5H332N0VTGZSbzkkI8TGq+HBml7IntkfLW2yfXFUHl4YF
+         H17qwZvLya1lqAtyDr5FDLGGfwjqVfmoy8MuhQKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/92] drm/nouveau/debugfs: Fix check of pm_runtime_get_sync failure
-Date:   Thu, 18 Apr 2019 19:56:51 +0200
-Message-Id: <20190418160433.289956688@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 04/92] ext4: add missing brelse() in add_new_gdb_meta_bg()
+Date:   Thu, 18 Apr 2019 19:56:22 +0200
+Message-Id: <20190418160430.856605701@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -60,31 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 909e9c9c428376e2a43d178ed4b0a2d5ba9cb7d3 ]
+[ Upstream commit d64264d6218e6892edd832dc3a5a5857c2856c53 ]
 
-pm_runtime_get_sync returns negative on failure.
+Currently in add_new_gdb_meta_bg() there is a missing brelse of gdb_bh
+in case ext4_journal_get_write_access() fails.
+Additionally kvfree() is missing in the same error path. Fix it by
+moving the ext4_journal_get_write_access() before the ext4 sb update as
+Ted suggested and release n_group_desc and gdb_bh in case it fails.
 
-Fixes: eaeb9010bb4b ("drm/nouveau/debugfs: Wake up GPU before doing any reclocking")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 61a9c11e5e7a ("ext4: add missing brelse() add_new_gdb_meta_bg()'s error path")
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/resize.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-index 9109b69cd052..9635704a1d86 100644
---- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-@@ -161,7 +161,7 @@ nouveau_debugfs_pstate_set(struct file *file, const char __user *ubuf,
- 	}
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index 6f0acfe31418..fb9fbf993e22 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -907,11 +907,18 @@ static int add_new_gdb_meta_bg(struct super_block *sb,
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
+ 	n_group_desc[gdb_num] = gdb_bh;
++
++	BUFFER_TRACE(gdb_bh, "get_write_access");
++	err = ext4_journal_get_write_access(handle, gdb_bh);
++	if (err) {
++		kvfree(n_group_desc);
++		brelse(gdb_bh);
++		return err;
++	}
++
+ 	EXT4_SB(sb)->s_group_desc = n_group_desc;
+ 	EXT4_SB(sb)->s_gdb_count++;
+ 	kvfree(o_group_desc);
+-	BUFFER_TRACE(gdb_bh, "get_write_access");
+-	err = ext4_journal_get_write_access(handle, gdb_bh);
+ 	return err;
+ }
  
- 	ret = pm_runtime_get_sync(drm->dev);
--	if (IS_ERR_VALUE(ret) && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES)
- 		return ret;
- 	ret = nvif_mthd(ctrl, NVIF_CONTROL_PSTATE_USER, &args, sizeof(args));
- 	pm_runtime_put_autosuspend(drm->dev);
 -- 
 2.19.1
 
