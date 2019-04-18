@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98403C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC314C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C7F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECC720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611158;
-	bh=dOiG9SUgp61Nxz9UIb3sYhrk1D+i7qhpKTp+VGXCK7I=;
+	s=default; t=1555611161;
+	bh=eZ7balOe1P4dCh2PtPSrsGbrsHZB00FQdELE53Dv6Js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kB1tDZWVa+v1pxxW/H6B/k3AIp3a6kvNX6fuIwLB9L+ui9nGtIMm7u9X4DnYhjL3R
-	 yXL5d7qPmc7YvhxhenNJJOJYV3fqkara1cx68XRLycVdrQPj8qBaJAB3nNMeZKxnry
-	 Y6JiJtp7BsmDLPezGtyjLshKBJBrrHeYQM+eiuzY=
+	b=QKwd6xZBQ2id2WTqYMYIqiiaxrjltZQ8y/8IKSBRYnjKZFnMafaWCRAsssjdewit0
+	 BRUXdAYkoAiTuXzHvPp5MrFx2C0p+OPZsePaOTus5DAL0lF7LFG3SLWsMyQRd2syjU
+	 pVCY3x1FxfGEPPDi96VEAQvifpFQO5laD7z+yW1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404316AbfDRSMh (ORCPT
+        id S2404329AbfDRSMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404300AbfDRSMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:33 -0400
+        id S2404300AbfDRSMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F35020652;
-        Thu, 18 Apr 2019 18:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CDE620652;
+        Thu, 18 Apr 2019 18:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611151;
-        bh=dOiG9SUgp61Nxz9UIb3sYhrk1D+i7qhpKTp+VGXCK7I=;
+        s=default; t=1555611157;
+        bh=eZ7balOe1P4dCh2PtPSrsGbrsHZB00FQdELE53Dv6Js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGVV0H/M5hQNQ9P72LxD28aIrWxyIhTBgB5gBLAnCeF+GtShXcRFCR6xsVyKPklCO
-         hTUh/fn62BCt5iRQOotckOWPN5USowS2KRU3RofOH3RvDG07Y/Jb93MidReMjCTLLQ
-         XVKyL3ODSlvc/QLzxlZUEtTo/GBCvxfGEh30UgO0=
+        b=SQae3m99fKu+ztQFke0qn1tJ7iPNoTPtkDScLTMm0dyquwyNy32VawSYO4Cz5RzGC
+         PshcXR+HmZGM4Wl1Y+U4dn8GC8YCzt71nNpo5wOkvlGPztN34aw6M6Wg4Dl7/PszA1
+         0ltOoVw48cq9mDVYKrhoh4hH8776mDKjy3VYiCvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 79/93] f2fs: sync filesystem after roll-forward recovery
-Date:   Thu, 18 Apr 2019 19:57:57 +0200
-Message-Id: <20190418160445.019871077@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        russianneuromancer <russianneuromancer@ya.ru>
+Subject: [PATCH 5.0 81/93] platform/x86: intel_pmc_core: Quirk to ignore XTAL shutdown
+Date:   Thu, 18 Apr 2019 19:57:59 +0200
+Message-Id: <20190418160445.178163032@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -60,174 +64,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 812a95977fd2f0d1f220c716a98a7f22e22f488d ]
+[ Upstream commit 238f9c11351f8af8534ae0318b4d9acc77b09ee8 ]
 
-Some works after roll-forward recovery can get an error which will release
-all the data structures. Let's flush them in order to make it clean.
+On some platforms such as HP Elite-x2-1013-g3, the platform BIOS
+enforces XTAL to remain off before S0ix state can be achieved. This may
+not be optimum when we want to enable use cases like Low Power Audio,
+Wake on Voice etc which always need 24mhz clock.
 
-One possible corruption came from:
+This introduces a new quirk to allow S0ix entry when all other
+conditions except for XTAL clock are good on a given platform. The extra
+power consumed by XTAL clock is about 2mw but it saves much more
+platform power compared to the system that remains in just PC10.
 
-[   90.400500] list_del corruption. prev->next should be ffffffed1f566208, but was (null)
-[   90.675349] Call trace:
-[   90.677869]  __list_del_entry_valid+0x94/0xb4
-[   90.682351]  remove_dirty_inode+0xac/0x114
-[   90.686563]  __f2fs_write_data_pages+0x6a8/0x6c8
-[   90.691302]  f2fs_write_data_pages+0x40/0x4c
-[   90.695695]  do_writepages+0x80/0xf0
-[   90.699372]  __writeback_single_inode+0xdc/0x4ac
-[   90.704113]  writeback_sb_inodes+0x280/0x440
-[   90.708501]  wb_writeback+0x1b8/0x3d0
-[   90.712267]  wb_workfn+0x1a8/0x4d4
-[   90.715765]  process_one_work+0x1c0/0x3d4
-[   90.719883]  worker_thread+0x224/0x344
-[   90.723739]  kthread+0x120/0x130
-[   90.727055]  ret_from_fork+0x10/0x18
-
-Reported-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Link: https://bit.ly/2UmnrFf
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=201579
+Tested-by: "David E. Box" <david.e.box@linux.intel.com>
+Reported-and-tested-by: russianneuromancer <russianneuromancer@ya.ru>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/checkpoint.c |  5 +++--
- fs/f2fs/node.c       |  4 +++-
- fs/f2fs/super.c      | 44 +++++++++++++++++++++++++++++++++-----------
- 3 files changed, 39 insertions(+), 14 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 34 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h |  5 ++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index f955cd3e0677..ccccf0ce2f06 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -306,8 +306,9 @@ static int f2fs_write_meta_pages(struct address_space *mapping,
- 		goto skip_write;
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index c37e74ee609d..a9cbe5be277b 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -15,6 +15,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
++#include <linux/dmi.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+@@ -139,6 +140,7 @@ static const struct pmc_reg_map spt_reg_map = {
+ 	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
+ 	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
++	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+ };
  
- 	/* collect a number of dirty meta pages and write together */
--	if (wbc->for_kupdate ||
--		get_pages(sbi, F2FS_DIRTY_META) < nr_pages_to_skip(sbi, META))
-+	if (wbc->sync_mode != WB_SYNC_ALL &&
-+			get_pages(sbi, F2FS_DIRTY_META) <
-+					nr_pages_to_skip(sbi, META))
- 		goto skip_write;
+ /* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
+@@ -751,6 +753,37 @@ static const struct pci_device_id pmc_pci_ids[] = {
+ 	{ 0, },
+ };
  
- 	/* if locked failed, cp will flush dirty pages instead */
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 4f450e573312..f6ff84e29749 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1920,7 +1920,9 @@ static int f2fs_write_node_pages(struct address_space *mapping,
- 	f2fs_balance_fs_bg(sbi);
- 
- 	/* collect a number of dirty node pages and write together */
--	if (get_pages(sbi, F2FS_DIRTY_NODES) < nr_pages_to_skip(sbi, NODE))
-+	if (wbc->sync_mode != WB_SYNC_ALL &&
-+			get_pages(sbi, F2FS_DIRTY_NODES) <
-+					nr_pages_to_skip(sbi, NODE))
- 		goto skip_write;
- 
- 	if (wbc->sync_mode == WB_SYNC_ALL)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 5892fa3c885f..144ffba3ec5a 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1460,9 +1460,16 @@ static int f2fs_enable_quotas(struct super_block *sb);
- 
- static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- {
-+	unsigned int s_flags = sbi->sb->s_flags;
- 	struct cp_control cpc;
--	int err;
-+	int err = 0;
-+	int ret;
- 
-+	if (s_flags & SB_RDONLY) {
-+		f2fs_msg(sbi->sb, KERN_ERR,
-+				"checkpoint=disable on readonly fs");
-+		return -EINVAL;
-+	}
- 	sbi->sb->s_flags |= SB_ACTIVE;
- 
- 	f2fs_update_time(sbi, DISABLE_TIME);
-@@ -1470,18 +1477,24 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- 	while (!f2fs_time_over(sbi, DISABLE_TIME)) {
- 		mutex_lock(&sbi->gc_mutex);
- 		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
--		if (err == -ENODATA)
-+		if (err == -ENODATA) {
-+			err = 0;
- 			break;
-+		}
- 		if (err && err != -EAGAIN)
--			return err;
-+			break;
- 	}
- 
--	err = sync_filesystem(sbi->sb);
--	if (err)
--		return err;
-+	ret = sync_filesystem(sbi->sb);
-+	if (ret || err) {
-+		err = ret ? ret: err;
-+		goto restore_flag;
-+	}
- 
--	if (f2fs_disable_cp_again(sbi))
--		return -EAGAIN;
-+	if (f2fs_disable_cp_again(sbi)) {
-+		err = -EAGAIN;
-+		goto restore_flag;
-+	}
- 
- 	mutex_lock(&sbi->gc_mutex);
- 	cpc.reason = CP_PAUSE;
-@@ -1490,7 +1503,9 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- 
- 	sbi->unusable_block_count = 0;
- 	mutex_unlock(&sbi->gc_mutex);
--	return 0;
-+restore_flag:
-+	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
-+	return err;
- }
- 
- static void f2fs_enable_checkpoint(struct f2fs_sb_info *sbi)
-@@ -3359,7 +3374,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (test_opt(sbi, DISABLE_CHECKPOINT)) {
- 		err = f2fs_disable_checkpoint(sbi);
- 		if (err)
--			goto free_meta;
-+			goto sync_free_meta;
- 	} else if (is_set_ckpt_flags(sbi, CP_DISABLED_FLAG)) {
- 		f2fs_enable_checkpoint(sbi);
- 	}
-@@ -3372,7 +3387,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 		/* After POR, we can run background GC thread.*/
- 		err = f2fs_start_gc_thread(sbi);
- 		if (err)
--			goto free_meta;
-+			goto sync_free_meta;
- 	}
- 	kvfree(options);
- 
-@@ -3394,6 +3409,11 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	f2fs_update_time(sbi, REQ_TIME);
- 	return 0;
- 
-+sync_free_meta:
-+	/* safe to flush all the data */
-+	sync_filesystem(sbi->sb);
-+	retry = false;
++/*
++ * This quirk can be used on those platforms where
++ * the platform BIOS enforces 24Mhx Crystal to shutdown
++ * before PMC can assert SLP_S0#.
++ */
++int quirk_xtal_ignore(const struct dmi_system_id *id)
++{
++	struct pmc_dev *pmcdev = &pmc;
++	u32 value;
 +
- free_meta:
- #ifdef CONFIG_QUOTA
- 	f2fs_truncate_quota_inode_pages(sb);
-@@ -3407,6 +3427,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	 * falls into an infinite loop in f2fs_sync_meta_pages().
- 	 */
- 	truncate_inode_pages_final(META_MAPPING(sbi));
-+	/* evict some inodes being cached by GC */
-+	evict_inodes(sb);
- 	f2fs_unregister_sysfs(sbi);
- free_root_inode:
- 	dput(sb->s_root);
++	value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_vric1_offset);
++	/* 24MHz Crystal Shutdown Qualification Disable */
++	value |= SPT_PMC_VRIC1_XTALSDQDIS;
++	/* Low Voltage Mode Enable */
++	value &= ~SPT_PMC_VRIC1_SLPS0LVEN;
++	pmc_core_reg_write(pmcdev, pmcdev->map->pm_vric1_offset, value);
++	return 0;
++}
++
++static const struct dmi_system_id pmc_core_dmi_table[]  = {
++	{
++	.callback = quirk_xtal_ignore,
++	.ident = "HP Elite x2 1013 G3",
++	.matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite x2 1013 G3"),
++		},
++	},
++	{}
++};
++
+ static int __init pmc_core_probe(void)
+ {
+ 	struct pmc_dev *pmcdev = &pmc;
+@@ -792,6 +825,7 @@ static int __init pmc_core_probe(void)
+ 		return err;
+ 	}
+ 
++	dmi_check_system(pmc_core_dmi_table);
+ 	pr_info(" initialized\n");
+ 	return 0;
+ }
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 1a0104d2cbf0..9bc16d7d2917 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -25,6 +25,7 @@
+ #define SPT_PMC_MTPMC_OFFSET			0x20
+ #define SPT_PMC_MFPMC_OFFSET			0x38
+ #define SPT_PMC_LTR_IGNORE_OFFSET		0x30C
++#define SPT_PMC_VRIC1_OFFSET			0x31c
+ #define SPT_PMC_MPHY_CORE_STS_0			0x1143
+ #define SPT_PMC_MPHY_CORE_STS_1			0x1142
+ #define SPT_PMC_MPHY_COM_STS_0			0x1155
+@@ -135,6 +136,9 @@ enum ppfear_regs {
+ #define SPT_PMC_BIT_MPHY_CMN_LANE2		BIT(2)
+ #define SPT_PMC_BIT_MPHY_CMN_LANE3		BIT(3)
+ 
++#define SPT_PMC_VRIC1_SLPS0LVEN			BIT(13)
++#define SPT_PMC_VRIC1_XTALSDQDIS		BIT(22)
++
+ /* Cannonlake Power Management Controller register offsets */
+ #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+ #define CNP_PMC_PM_CFG_OFFSET			0x1818
+@@ -217,6 +221,7 @@ struct pmc_reg_map {
+ 	const int pm_read_disable_bit;
+ 	const u32 slps0_dbg_offset;
+ 	const u32 ltr_ignore_max;
++	const u32 pm_vric1_offset;
+ };
+ 
+ /**
 -- 
 2.19.1
 
