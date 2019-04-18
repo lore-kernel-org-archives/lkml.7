@@ -2,156 +2,195 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C86C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79847C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B184C217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3EF2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nFy9LdUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389719AbfDRRHI (ORCPT
+        id S2389717AbfDRRKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:07:08 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:42080 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733192AbfDRRHH (ORCPT
+        Thu, 18 Apr 2019 13:10:53 -0400
+Received: from mail.efficios.com ([167.114.142.138]:49496 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388346AbfDRRKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:07:07 -0400
-Received: by mail-it1-f197.google.com with SMTP id t196so529779ita.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:07:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=elZ0CuNd87Fgxl68cPLOE/hKxhs+pPd6TQtRUVUsyyQ=;
-        b=Ao8e9Ue+7TaUysKiRVnH0OZTscBCMTGG8SkG9VlrT3smki/4AhvpA+YJERLJQ1v+aW
-         NrmvYrwjcPXrNdFfSYlfmFnaYYb24lcAxle/byOz0Lnb4FnmLyd8N33daVTxlRhJZeDk
-         t2s4NyPxfp5GQa/V0RlUDwsNgx/fKPgAYE8DXdluN6GdNC+5Xje1sUDf3xsZZ0ZSXnJ2
-         F0MWgJM0NwgBhsu3Vyvi1xNVEfenSZ/r/DUhERyFlinV5XOZpDv6O9iUg99si77I7X5R
-         ZqYvNvDiAbIlPFYFEloQnY04gUpmYC8nkBAbRO24+q1RGtc9XFblh5oFlT/ojrjxYOS1
-         neog==
-X-Gm-Message-State: APjAAAUvkiD+c7cGuHGqVcuLNiOySDcu1Rn9PXaXIcZ/ltcDl37R4B6s
-        BT8Mnd9Us4NAe6txUHrVkcEnnRX1QXBg0ao2xKJPpfDoUNJE
-X-Google-Smtp-Source: APXvYqxLeUDRqFjsF1nSbDJBr0kqv5ZFRHhsGRhikB2vAmrudNBpQTCfh/ffF6QC5dJ5Q4SfDy9bYXqQoeP1B+QPwfuYKOgvu17I
+        Thu, 18 Apr 2019 13:10:53 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 077ECA5861;
+        Thu, 18 Apr 2019 13:10:51 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id drHSsg0j_T0N; Thu, 18 Apr 2019 13:10:50 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 3C385A585B;
+        Thu, 18 Apr 2019 13:10:50 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3C385A585B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555607450;
+        bh=aVytAGNwrTvvxV+sASyrlf31BIstRE2Rs9JCSVXuf/Q=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=nFy9LdUDyCZIjJk/s8ohAAj2oSiB7wWlZx53LuPgV2O1EvNROHSZEQac0+QPWfgu7
+         ELE6rSh7pplRNUJ77Ybcg2DNhzj4Mf5ZdDgnQzGRu1iZCOGjyy1ahw0cH8UiL8O+Qz
+         CKt3kpoNPwi6/jneL3Ashk917WK4yHpqpdnlgE7FUCUMdrGScsXSPK5LSkE9EhS1+Z
+         npYUIicZis812keTOS3Pp9i8vwT3vf3ekPsjRMufnandRi/XyWPADCngwXBChfk1Gl
+         XFP4zU/i1cHI7SOpaBqRfrXPiyMoKBSvc+rbHhsHc5PcOcAYtelAqkqmMJcslLZtjD
+         NoTkAJriQiOLQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id my85Rs_89mBI; Thu, 18 Apr 2019 13:10:50 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 1CF18A5855;
+        Thu, 18 Apr 2019 13:10:50 -0400 (EDT)
+Date:   Thu, 18 Apr 2019 13:10:49 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Cc:     nd <nd@arm.com>, Joseph Myers <joseph@codesourcery.com>,
+        Will Deacon <Will.Deacon@arm.com>, carlos <carlos@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <604915684.1299.1555607449814.JavaMail.zimbra@efficios.com>
+In-Reply-To: <79996d13-2ba2-ed7d-b202-e7d38f1fd870@arm.com>
+References: <20190416173216.9028-1-mathieu.desnoyers@efficios.com> <364803063.586.1555516769056.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1904171601540.32123@digraph.polyomino.org.uk> <1770787324.668.1555530989646.JavaMail.zimbra@efficios.com> <1066731871.915.1555593471194.JavaMail.zimbra@efficios.com> <6cbfea7b-9d83-74a5-9cd2-af56a5d68818@arm.com> <1055153722.1072.1555602067220.JavaMail.zimbra@efficios.com> <79996d13-2ba2-ed7d-b202-e7d38f1fd870@arm.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v8)
 MIME-Version: 1.0
-X-Received: by 2002:a24:e208:: with SMTP id q8mr3426260ith.145.1555607226760;
- Thu, 18 Apr 2019 10:07:06 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 10:07:06 -0700
-In-Reply-To: <000000000000bdc2e30586b826ce@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000029431d0586d10813@google.com>
-Subject: Re: general protection fault in __dev_printk
-From:   syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v8)
+Thread-Index: AQHU9HpbUigwBDiNHkaVVFlkWH4PtKZAhB6AgAAE+oCAAD0+gIABIvSAgAAl0IBuJwpORvyO0U2AIepFMNM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
 
-HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=10adfe6b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-dashboard link: https://syzkaller.appspot.com/bug?extid=2eb9121678bdb36e6d57
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145cb7e3200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f8bd2d200000
+----- On Apr 18, 2019, at 12:07 PM, Szabolcs Nagy Szabolcs.Nagy@arm.com wrote:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+> On 18/04/2019 16:41, Mathieu Desnoyers wrote:
+>> ----- On Apr 18, 2019, at 11:33 AM, Szabolcs Nagy Szabolcs.Nagy@arm.com wrote:
+>> 
+>>> On 18/04/2019 14:17, Mathieu Desnoyers wrote:
+>>>> ----- On Apr 17, 2019, at 3:56 PM, Mathieu Desnoyers
+>>>> mathieu.desnoyers@efficios.com wrote:
+>>>>> ----- On Apr 17, 2019, at 12:17 PM, Joseph Myers joseph@codesourcery.com wrote:
+>>>>>> On Wed, 17 Apr 2019, Mathieu Desnoyers wrote:
+>>>>>>
+>>>>>>>> +/* RSEQ_SIG is a signature required before each abort handler code.
+>>>>>>>> +
+>>>>>>>> +   It is a 32-bit value that maps to actual architecture code compiled
+>>>>>>>> +   into applications and libraries. It needs to be defined for each
+>>>>>>>> +   architecture. When choosing this value, it needs to be taken into
+>>>>>>>> +   account that generating invalid instructions may have ill effects on
+>>>>>>>> +   tools like objdump, and may also have impact on the CPU speculative
+>>>>>>>> +   execution efficiency in some cases.  */
+>>>>>>>> +
+>>>>>>>> +#define RSEQ_SIG 0xd428bc00	/* BRK #0x45E0.  */
+>>>>>>>
+>>>>>>> After further investigation, we should probably do the following
+>>>>>>> to handle compiling with -mbig-endian on aarch64, which generates
+>>>>>>> binaries with mixed code vs data endianness (little endian code,
+>>>>>>> big endian data):
+>>>>>>
+>>>>>> First, the comment on RSEQ_SIG should specify whether it is to be
+>>>>>> interpreted in the code or the data endianness.
+>>>>>
+>>>>> Right. The signature passed as argument to the rseq registration
+>>>>> system call needs to be in data endianness (currently exposed kernel
+>>>>> ABI).
+>>>>>
+>>>>> Ideally for userspace, we want to define a signature in code endianness
+>>>>> that happens to nicely match specific code patterns.
+>>> ...
+>>>> For aarch64, I think we can simply do:
+>>>>
+>>>> /*
+>>>>  * aarch64 -mbig-endian generates mixed endianness code vs data:
+>>>>  * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
+>>>>  * matches code endianness.
+>>>>  */
+>>>> #define RSEQ_SIG_CODE   0xd428bc00      /* BRK #0x45E0.  */
+>>>>
+>>>> #ifdef __ARM_BIG_ENDIAN
+>>>> #define RSEQ_SIG_DATA   0x00bc28d4      /* BRK #0x45E0.  */
+>>>> #else
+>>>> #define RSEQ_SIG_DATA   RSEQ_SIG_CODE
+>>>> #endif
+>>>>
+>>>> #define RSEQ_SIG        RSEQ_SIG_DATA
+>>>>
+>>>> Feedback is most welcome,
+>>>
+>>> so the RSEQ_SIG value is supposed to be used with .word
+>>> in asm instead of .inst?
+>> 
+>> We want a .inst so it translates into a valid trap instruction.
+>> It's better to trap in case program execution reaches this
+>> by mistake (makes debugging easier).
+> 
+> that does not make sense to me.
+> 
+> ".inst" is an asm directive that requires a the value to
+> be the same on BE and LE (normal insn encoding).
+> 
+> ".word" is an asm directive that requires the value to
+> use swapped encoding on BE (if it's used in the instruction
+> stream it will create a data mapping symbol and disasm to
+> .word value instead of the instruction mnemonics).
+> 
+> so which one is it?
 
-yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
-usb 1-1: USB disconnect, device number 112
-yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 1 PID: 5402 Comm: udevd Not tainted 5.1.0-rc5-319617-gd34f951 #4
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:dev_name include/linux/device.h:1087 [inline]
-RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
-Code: 89 f5 53 e8 1e 24 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 10 24 1c fc 48  
-8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-05 e8 31 39 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 e3
-RSP: 0018:ffff8880ad107930 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: ffffed1015a20f2d RCX: 00000000ffffffed
-RDX: 0000000000000010 RSI: ffffffff85559bf0 RDI: 0000000000000080
-RBP: 0000000000000030 R08: ffff888091578000 R09: ffffed1015a24fc9
-R10: ffffed1015a24fc8 R11: ffff8880ad127e47 R12: ffffffff8f031a00
-R13: ffff8880ad107988 R14: 0000000000000000 R15: ffff88809b9b1600
-FS:  00007fcff04907a0(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fcff0496000 CR3: 0000000097678000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  <IRQ>
-  _dev_err+0xdc/0x10e drivers/base/core.c:3251
-  yurex_interrupt.cold+0x12e/0x13d drivers/usb/misc/yurex.c:183
-  __usb_hcd_giveback_urb+0x1f4/0x470 drivers/usb/core/hcd.c:1758
-  usb_hcd_giveback_urb+0x346/0x400 drivers/usb/core/hcd.c:1823
-  dummy_timer+0x100b/0x32c0 drivers/usb/gadget/udc/dummy_hcd.c:1968
-  call_timer_fn+0x161/0x5f0 kernel/time/timer.c:1325
-  expire_timers kernel/time/timer.c:1362 [inline]
-  __run_timers kernel/time/timer.c:1681 [inline]
-  __run_timers kernel/time/timer.c:1649 [inline]
-  run_timer_softirq+0x58b/0x1400 kernel/time/timer.c:1694
-  __do_softirq+0x22a/0x8cd kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:374 [inline]
-  irq_exit+0x187/0x1b0 kernel/softirq.c:414
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0xfe/0x4a0 arch/x86/kernel/apic/apic.c:1062
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
-  </IRQ>
-RIP: 0010:__read_once_size include/linux/compiler.h:193 [inline]
-RIP: 0010:syscall_return_slowpath arch/x86/entry/common.c:250 [inline]
-RIP: 0010:do_syscall_64+0x115/0x4f0 arch/x86/entry/common.c:293
-Code: 03 00 00 48 89 45 50 e8 99 2c 71 00 48 b8 00 00 00 00 00 fc ff df 65  
-48 8b 1c 25 00 ee 01 00 48 89 da 48 c1 ea 03 80 3c 02 00 <0f> 85 6f 03 00  
-00 4c 8b 23 9c 58 0f 1f 44 00 00 25 00 02 00 00 31
-RSP: 0018:ffff88809fceff28 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: dffffc0000000000 RBX: ffff888091578000 RCX: 1ffff11013f9dff5
-RDX: 1ffff110122af000 RSI: ffffffff81009367 RDI: ffff88809fceffa8
-RBP: ffff88809fceff58 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffed1015a25c27 R11: ffff8880ad12e13b R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fcfefb99577
-Code: f0 ff ff 77 02 f3 c3 48 8b 15 bd 38 2b 00 f7 d8 64 89 02 83 c8 ff c3  
-90 90 90 90 90 90 90 90 90 90 90 90 b8 59 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 01 c3 48 8b 0d 91 38 2b 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffe20473c28 EFLAGS: 00000246 ORIG_RAX: 0000000000000059
-RAX: ffffffffffffffea RBX: 0000000000626250 RCX: 00007fcfefb99577
-RDX: 0000000000000400 RSI: 00007ffe20473c30 RDI: 00007ffe20474110
-RBP: 0000000000635fd0 R08: 0000000000635fd0 R09: 75642f6d726f6674
-R10: 2e6364755f796d6d R11: 0000000000000246 R12: 00007ffe20474110
-R13: 0000000000000400 R14: 0000000000626250 R15: 000000000000000b
-Modules linked in:
----[ end trace 9119e43ae4e6c65e ]---
-RIP: 0010:dev_name include/linux/device.h:1087 [inline]
-RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
-Code: 89 f5 53 e8 1e 24 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 10 24 1c fc 48  
-8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-05 e8 31 39 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 e3
-RSP: 0018:ffff8880ad107930 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: ffffed1015a20f2d RCX: 00000000ffffffed
-RDX: 0000000000000010 RSI: ffffffff85559bf0 RDI: 0000000000000080
-RBP: 0000000000000030 R08: ffff888091578000 R09: ffffed1015a24fc9
-R10: ffffed1015a24fc8 R11: ffff8880ad127e47 R12: ffffffff8f031a00
-R13: ffff8880ad107988 R14: 0000000000000000 R15: ffff88809b9b1600
-FS:  00007fcff04907a0(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fcff0496000 CR3: 0000000097678000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+We declare the signature with ".inst" in assembler.
 
+However, we also need to pass that 32-bit signature value as
+argument to the rseq system call when registering rseq.
+
+The signature comparison is performed by the kernel before
+moving the instruction pointer to the abort handler. It compares
+the signature received as parameter by sys_rseq (data) to the
+4-byte signature preceding the abort IP.
+
+On aarch64 big endian, AFAIU the signature in the code is in
+little endian, and the signature value passed as argument to
+the rseq system call is in big endian. One way to handle this
+is to swap the byte order of the signature "data" representation
+passed as argument to sys_rseq.
+
+> 
+>>> i don't think we use __ARM_* in public headers currently,
+>>> but hopefully aarch64_be compilers implement it.
+>> 
+>> Can I use #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__  then ?
+> 
+> hm, i'd either use #ifdef __AARCH64EB__ (since we already use it)
+> or the portable #include endian.h and __BYTE_ORDER == __BIG_ENDIAN
+
+I'll use #ifdef __AARCH64EB__ given this header is specific to aarch64.
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
