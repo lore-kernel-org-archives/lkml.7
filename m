@@ -6,100 +6,66 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE33C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C590C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684EB20821
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD1E20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388669AbfDRKf4 (ORCPT
+        id S2388598AbfDRKj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 06:35:56 -0400
-Received: from www.osadl.org ([62.245.132.105]:40924 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388369AbfDRKfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 06:35:55 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3IAZ8Hf025627;
-        Thu, 18 Apr 2019 12:35:08 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Eric Anholt <eric@anholt.net>
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dominic Braun <inf.braun@fau.de>,
-        Tobias Buettner <tobias.buettner@fau.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Phil Elwell <phil@raspberrypi.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH RFC] staging: vc04_services: handle kzalloc failure
-Date:   Thu, 18 Apr 2019 12:29:44 +0200
-Message-Id: <1555583384-15670-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Thu, 18 Apr 2019 06:39:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35600 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388369AbfDRKj0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 06:39:26 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hH4Rr-0007gb-8U; Thu, 18 Apr 2019 10:39:19 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ipv6: addrlabel: fix spelling mistake "requewst" -> "request"
+Date:   Thu, 18 Apr 2019 11:39:18 +0100
+Message-Id: <20190418103918.10729-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kzalloc here was being used without checking the return - if the
-kzalloc fails return VCHIQ_ERROR. The call-site of
-vchiq_platform_init_state() vchiq_init_state() was not responding
-to an allocation failure so checks for != VCHIQ_SUCCESS
-and pass VCHIQ_ERROR up to vchiq_platform_init() which then
-will fail with -EINVAL.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+There is a spelling mistake in a NL_SET_ERR_MSG_MOD error message,
+fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
+ net/ipv6/addrlabel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Problem located with experimental coccinelle script
-
-Patch was compile-tested with: bcm2835_defconfig (implies BCM2835_VCHIQ=m)
-(with sparse warning:
-  CHECK   drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c:410:29: warning: incorrect type in argument 1 (different address spaces)
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c:410:29:    expected void const *x
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c:410:29:    got char [noderef] <asn:1> *buf
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c:416:63: warning: incorrect type in argument 1 (different address spaces)
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c:416:63:    expected void const *addr
-drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c:416:63:    got char [noderef] <asn:1> *
-  CC [M]  drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.o
-Q: should this buf have been remapped to user space e.g. remap_vmalloc_range ?
-
-Patch is against 5.1-rc5 (localversion next is 20190417)
-
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 3 +++
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c     | 2 ++
- 2 files changed, 5 insertions(+)
-
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index 31eb7d5..a9a2291 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -179,6 +179,9 @@ vchiq_platform_init_state(struct vchiq_state *state)
- 	struct vchiq_2835_state *platform_state;
+diff --git a/net/ipv6/addrlabel.c b/net/ipv6/addrlabel.c
+index d43d076c98f5..1766325423b5 100644
+--- a/net/ipv6/addrlabel.c
++++ b/net/ipv6/addrlabel.c
+@@ -476,7 +476,7 @@ static int ip6addrlbl_valid_dump_req(const struct nlmsghdr *nlh,
+ 	}
  
- 	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
-+	if (!state->platform_state)
-+		return VCHIQ_ERROR;
-+
- 	platform_state = (struct vchiq_2835_state *)state->platform_state;
+ 	if (nlmsg_attrlen(nlh, sizeof(*ifal))) {
+-		NL_SET_ERR_MSG_MOD(extack, "Invalid data after header for address label dump requewst");
++		NL_SET_ERR_MSG_MOD(extack, "Invalid data after header for address label dump request");
+ 		return -EINVAL;
+ 	}
  
- 	platform_state->inited = 1;
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 6057a90..92e6221 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -2209,6 +2209,8 @@ vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero)
- 	local->debug[DEBUG_ENTRIES] = DEBUG_MAX;
- 
- 	status = vchiq_platform_init_state(state);
-+	if (status != VCHIQ_SUCCES)
-+		return VCHIQ_ERROR;
- 
- 	/*
- 		bring up slot handler thread
 -- 
-2.1.4
+2.20.1
 
