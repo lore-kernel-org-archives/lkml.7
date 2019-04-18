@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAC5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DCBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB792183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE15217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555600764;
-	bh=IWqxIGOpvoDkp+YCOfAum5ChAyoOiZ4eMgAcrQ5rbPs=;
+	s=default; t=1555600771;
+	bh=3nxiG9CJktiF+Ochp4Znep7VA+0pCcaYOmPVEyqRGXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=Ncm7kbIKB9nDtLh1PtSqDYASr66t0HGhlEXELfNQmth2XO2fnS26p1azyw26UHDEs
-	 Yat4mXg8ZrYmKmHuutK4aJ6XeRtIYnXuNBdC5sbHYLGPHEdCyzm5ZNMXrO4gIraj3K
-	 QwLJpBn9vh2noAk8H8vcEKVC/f0/4b7UlQJeUQpk=
+	b=QfsNMr+murm5vKn9jnBsIGheRffIxwLOBkf3lUedHZk4NWlfK968iKf34PnnIng/v
+	 k/FwNiHwbAatc08olly+UXqtYAIWIzZANSsHQHjbjvMUlIsp0aW0hqaEXonW3fSHI5
+	 5rKYJGdYzOD5l1gma9LQNPFrPwnOHRYw1P7l8dIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389585AbfDRPTX (ORCPT
+        id S2389591AbfDRPTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:19:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53002 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 11:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389520AbfDRPTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:19:19 -0400
+        id S2389561AbfDRPTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:19:21 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98C2820821;
-        Thu, 18 Apr 2019 15:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE5892083D;
+        Thu, 18 Apr 2019 15:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555600759;
-        bh=IWqxIGOpvoDkp+YCOfAum5ChAyoOiZ4eMgAcrQ5rbPs=;
+        s=default; t=1555600760;
+        bh=3nxiG9CJktiF+Ochp4Znep7VA+0pCcaYOmPVEyqRGXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=gI2Sd37f3E/6xBxblak5gFRPIzKhjvpIzeJ0/C7nV3yXJ35B+xX7xFVgdldC9RI4i
-         Cxe9UkPMkYo2mFpyNT5vQTcXtodVLemtWaOtnUQwe2tXHWPwa3vuzE6adVohu0HtGN
-         J+5g0mmIXTra0ngYABHnI4LaFoy8D/knYOEybqhM=
+        b=Ua9DGBmoFbwtBE8/gTuFpZJI27OC9Pxzg3j65Vlm0lVv9Ys2AovF0e+s28cbU9e9o
+         /JdwJWvM15SGDfNlqvOcUAGLTtL+NN7q5/9tomJU1bxBdty/gU2064echlwMpkMPgK
+         rEV/DWV6fNGSzV9DKZqUoMk9aDLfeefUwtEOqRUQ=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     vincent@bernat.ch, linux-kernel@vger.kernel.org,
         linux-rt-users@vger.kernel.org
-Subject: [PATCH v2 2/3] tracing: Check keys for variable references in expressions too
-Date:   Thu, 18 Apr 2019 10:18:51 -0500
-Message-Id: <e8c3d3d53db5ca90ceea5a46e5413103a6902fc7.1555597045.git.tom.zanussi@linux.intel.com>
+Subject: [PATCH 3/3] tracing: Add a check_val() check before updating cond_snapshot() track_val
+Date:   Thu, 18 Apr 2019 10:18:52 -0500
+Message-Id: <95958351329f129c07504b4d1769c47a97b70d65.1555597045.git.tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1555597045.git.tom.zanussi@linux.intel.com>
 References: <cover.1555597045.git.tom.zanussi@linux.intel.com>
@@ -59,42 +59,167 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-There's an existing check for variable references in keys, but it
-doesn't go far enough.  It checks whether a key field is a variable
-reference but doesn't check whether it's an expression containing
-variable references, which can cause the same problems for callers.
+Without this check a snapshot is taken whenever a bucket's max is hit,
+rather than only when the global max is hit, as it should be.
 
-Use the existing field_has_hist_vars() function rather than a direct
-top-level flag check to catch all possible variable references.
+Before:
+
+  In this example, we do a first run of the workload (cyclictest),
+  examine the output, note the max ('triggering value') (347), then do
+  a second run and note the max again.
+
+  In this case, the max in the second run (39) is below the max in the
+  first run, but since we haven't cleared the histogram, the first max
+  is still in the histogram and is higher than any other max, so it
+  should still be the max for the snapshot.  It isn't however - the
+  value should still be 347 after the second run.
+
+  # echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="cyclictest"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+  # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0:onmax($wakeup_lat).save(next_prio,next_comm,prev_pid,prev_prio,prev_comm):onmax($wakeup_lat).snapshot() if next_comm=="cyclictest"' >> /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
+
+  # cyclictest -p 80 -n -s -t 2 -D 2
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+
+  { next_pid:       2143 } hitcount:        199
+    max:         44  next_prio:        120  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/4
+
+  { next_pid:       2145 } hitcount:       1325
+    max:         38  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/2
+
+  { next_pid:       2144 } hitcount:       1982
+    max:        347  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+
+  Snapshot taken (see tracing/snapshot).  Details:
+      triggering value { onmax($wakeup_lat) }:        347
+      triggered by event with key: { next_pid:       2144 }
+
+  # cyclictest -p 80 -n -s -t 2 -D 2
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+
+  { next_pid:       2143 } hitcount:        199
+    max:         44  next_prio:        120  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/4
+
+  { next_pid:       2148 } hitcount:        199
+    max:         16  next_prio:        120  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/1
+
+  { next_pid:       2145 } hitcount:       1325
+    max:         38  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/2
+
+  { next_pid:       2150 } hitcount:       1326
+    max:         39  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/4
+
+  { next_pid:       2144 } hitcount:       1982
+    max:        347  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+
+  { next_pid:       2149 } hitcount:       1983
+    max:        130  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/0
+
+  Snapshot taken (see tracing/snapshot).  Details:
+    triggering value { onmax($wakeup_lat) }:    39
+    triggered by event with key: { next_pid:       2150 }
+
+After:
+
+  In this example, we do a first run of the workload (cyclictest),
+  examine the output, note the max ('triggering value') (375), then do
+  a second run and note the max again.
+
+  In this case, the max in the second run is still 375, the highest in
+  any bucket, as it should be.
+
+  # cyclictest -p 80 -n -s -t 2 -D 2
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+
+  { next_pid:       2072 } hitcount:        200
+    max:         28  next_prio:        120  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/5
+
+  { next_pid:       2074 } hitcount:       1323
+    max:        375  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/2
+
+  { next_pid:       2073 } hitcount:       1980
+    max:        153  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+
+  Snapshot taken (see tracing/snapshot).  Details:
+    triggering value { onmax($wakeup_lat) }:        375
+    triggered by event with key: { next_pid:       2074 }
+
+  # cyclictest -p 80 -n -s -t 2 -D 2
+
+  # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+
+  { next_pid:       2101 } hitcount:        199
+    max:         49  next_prio:        120  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+
+  { next_pid:       2072 } hitcount:        200
+    max:         28  next_prio:        120  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/5
+
+  { next_pid:       2074 } hitcount:       1323
+    max:        375  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/2
+
+  { next_pid:       2103 } hitcount:       1325
+    max:         74  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/4
+
+  { next_pid:       2073 } hitcount:       1980
+    max:        153  next_prio:         19  next_comm: cyclictest
+    prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+
+  { next_pid:       2102 } hitcount:       1981
+    max:         84  next_prio:         19  next_comm: cyclictest
+    prev_pid:         12  prev_prio:        120  prev_comm: kworker/0:1
+
+  Snapshot taken (see tracing/snapshot).  Details:
+    triggering value { onmax($wakeup_lat) }:        375
+    triggered by event with key: { next_pid:       2074 }
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Reported-by: Vincent Bernat <vincent@bernat.ch>
 ---
- kernel/trace/trace_events_hist.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events_hist.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 453f51ef83ca..cb56c7c456fa 100644
+index cb56c7c456fa..61b58c906489 100644
 --- a/kernel/trace/trace_events_hist.c
 +++ b/kernel/trace/trace_events_hist.c
-@@ -59,7 +59,7 @@
- 	C(NO_CLOSING_PAREN,	"No closing paren found"),		\
- 	C(SUBSYS_NOT_FOUND,	"Missing subsystem"),			\
- 	C(INVALID_SUBSYS_EVENT,	"Invalid subsystem or event name"),	\
--	C(INVALID_REF_KEY,	"Using variable references as keys not supported"), \
-+	C(INVALID_REF_KEY,	"Using variable references in keys not supported"), \
- 	C(VAR_NOT_FOUND,	"Couldn't find variable"),		\
- 	C(FIELD_NOT_FOUND,	"Couldn't find field"),
+@@ -3585,14 +3585,20 @@ static bool cond_snapshot_update(struct trace_array *tr, void *cond_data)
+ 	struct track_data *track_data = tr->cond_snapshot->cond_data;
+ 	struct hist_elt_data *elt_data, *track_elt_data;
+ 	struct snapshot_context *context = cond_data;
++	struct action_data *action;
+ 	u64 track_val;
  
-@@ -4506,7 +4506,7 @@ static int create_key_field(struct hist_trigger_data *hist_data,
- 			goto out;
- 		}
+ 	if (!track_data)
+ 		return false;
  
--		if (hist_field->flags & HIST_FIELD_FL_VAR_REF) {
-+		if (field_has_hist_vars(hist_field, 0))	{
- 			hist_err(tr, HIST_ERR_INVALID_REF_KEY, errpos(field_str));
- 			destroy_hist_field(hist_field, 0);
- 			ret = -EINVAL;
++	action = track_data->action_data;
++
+ 	track_val = get_track_val(track_data->hist_data, context->elt,
+ 				  track_data->action_data);
+ 
++	if (!action->track_data.check_val(track_data->track_val, track_val))
++		return false;
++
+ 	track_data->track_val = track_val;
+ 	memcpy(track_data->key, context->key, track_data->key_len);
+ 
 -- 
 2.14.1
 
