@@ -2,135 +2,103 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0423C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A9720643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BDD20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rGggi2b0"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RToypm0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390146AbfDRTuh (ORCPT
+        id S2390161AbfDRTw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:50:37 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42546 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRTug (ORCPT
+        Thu, 18 Apr 2019 15:52:59 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33442 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRTw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:50:36 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w139so2518910oie.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:50:36 -0700 (PDT)
+        Thu, 18 Apr 2019 15:52:58 -0400
+Received: by mail-oi1-f194.google.com with SMTP id e5so2561406oii.0;
+        Thu, 18 Apr 2019 12:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RRvT1PEVseMZAP2ynkS/SS5qFXKObpz+RcLF5TwvBXk=;
-        b=rGggi2b0m/5WpygkewyHZhqZ4YCrnifo4SxyC67gS7vCldse0rBXEw94uSd1GhrKQ7
-         DLJ5DhGEZxg9bK6XF3rM9I2+fydi+9m6PM5m38JgF3wg9KUlnqS0fRUPgkcG2MCcQ+pE
-         Lla3gh3OMUDOEvvgL+8uBI5RBxKEnyTboGvstoU4myq94OyeGkyI2frTmri+bboM9wTd
-         MrAdvlDSo3PtyPU74/S+7AN0sGHKQxeGHdu0e7fmlrR8uRi3WklIPMewSQw9gBQFXiLF
-         u2Ik+/CCPE94yHTbX3T2cPMzz4b7OyIOBGtjdAIxErbT7v4pPCVuPT7a59GggwD76INX
-         Boaw==
+        bh=MHnwyGfhVr9Zztuv2ApDOuCX8Y7zltAfnvrToemqRvQ=;
+        b=RToypm0LzA7aEPsdwcyZWsDpf7kcuyHilgD6PotVZegNUDJInGcPC/fDzBAYaIiy0x
+         AftRuV639VZM/qmxzzm5wsCFHk5FAdzTUOqozhwTOxqkp6rYjzj+UTukmFd8/fD/33Yk
+         jfpY1ja1LMNGV8HDnvlsTvc2KzGV3b+aJUl6lKcuBdKEnoge/hDSHtlTDsNnCgH9bc6m
+         p1r23wKO/Rt1yKM5j44oTmmoOwcHg04+U4D7aMakK1D/VFpDV36vZpndGFhf1h9Ig2di
+         4Y7R7+tmD7AQRVTtloegb8VhOpym7Fc8pw4VxWTprJg1ngV4BKa/oUscmzvJtYDDa8KY
+         bkbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RRvT1PEVseMZAP2ynkS/SS5qFXKObpz+RcLF5TwvBXk=;
-        b=SXDj6ife4iS15J3zwmTeraqlLu7NDafrH42nfwpWpnXFJpJSAXwRqbpl0sOIpR82ie
-         1yID+ukwKGcLZiF4ba5ybonNUgNxwpjF4zVoHObLt40KTSrVzsZMSd4hyEdNSOVumGp1
-         Ju7DPs1EcueUy1u4RqHDKNLtGDADoghYD29MBrVmFm40GAXqX7ojbFo8eGXU3qxZCIzX
-         vhk7ZglHBCR7WpVxESZHAWZT+VC1LU/XrmNyy+GRZmFWP00n90W7Ll0GaKQVNh5T2l0v
-         zSoNahwx/vwOCRHk9X3GWFeDEjLH88P3DrZE1rFdezfwy3C9SW9Bi/6RzsV8pnamohdJ
-         c0gw==
-X-Gm-Message-State: APjAAAW5OQcA6yhJhlqjx+PwF8JqTd0P6ggANt+EjkXmIU5MiXS21yBU
-        /qLzPzfJna7syVMc3pAzNyqz+QO8FyH+c+kRTRJbccWx
-X-Google-Smtp-Source: APXvYqxJGLZyK9SBJ5gTvhX4LITdBpL+VDqbCCkvMoR7TiLp2bOwDBC3yJnUSiSepeDpi6ZM3ELU54+1/aBp6t95PdI=
-X-Received: by 2002:aca:ecd1:: with SMTP id k200mr3126007oih.15.1555617036093;
- Thu, 18 Apr 2019 12:50:36 -0700 (PDT)
+        bh=MHnwyGfhVr9Zztuv2ApDOuCX8Y7zltAfnvrToemqRvQ=;
+        b=OVVcC8Ztn6jLPFvwdOPLEtkmVggQpnKAte+ln8sSNUBGlfKqa0EI2wf2lI/kShBUzE
+         UtAyzxcpIQshzZQjlPFlqxQRwQgavy+mxxNl5mnxGjmYwP++yyfnvMxKljJZcuDUZkl4
+         mPdAzVyh+/DgmyxHM9fZETL0WZd+hU+A2/kfoxMq5bP19cXedguz3VlvoApJcKqhpzsm
+         XS1qTxrYSDSgY8bL9cXYsf/wfugUqrXP/P9nl2wj1DBfJQ6Cq3HjrIkUh/YMo8H6JE0C
+         uHUDcJpP/Ki7kZM7Jzs0aF+FjU70dJmnl1UxtfoQzFwDo1+9OnHAe3rOMJA6yUcoZ1VY
+         IZ4A==
+X-Gm-Message-State: APjAAAWxZQpHr/HXNrplVnN/wnLvpER2gWV2CpWzZbo4JQQNnDi+6hcE
+        D+g2DcSzBcD2vSMRWmalJGEiryNDGya6sY7KoD+TgJW6
+X-Google-Smtp-Source: APXvYqzhRGDYdQYcsQ0iJMDM/aYQoo017EmckJ6XW6iArqLhjBj6Bpkndhtr7fXXiXm4jsqSoVJyGr+edJFUU08wgF4=
+X-Received: by 2002:aca:ecd1:: with SMTP id k200mr3131053oih.15.1555617177999;
+ Thu, 18 Apr 2019 12:52:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190413171532.25967-1-martin.blumenstingl@googlemail.com> <CAHStOZ5Pe9LvDk4cKAVB4SS5wgFcK-bweFTqU_mnEhOAyZKHuA@mail.gmail.com>
-In-Reply-To: <CAHStOZ5Pe9LvDk4cKAVB4SS5wgFcK-bweFTqU_mnEhOAyZKHuA@mail.gmail.com>
+References: <20190417204355.469-1-jbrunet@baylibre.com> <20190417204355.469-4-jbrunet@baylibre.com>
+In-Reply-To: <20190417204355.469-4-jbrunet@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 18 Apr 2019 21:50:25 +0200
-Message-ID: <CAFBinCD4OnBbU0YR5P5cAhut==XXUxdHSxHQkBVm28DHZWkbAw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] 32-bit Meson: add the canvas module
-To:     Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Cc:     linux-amlogic <linux-amlogic@lists.infradead.org>,
-        Kevin Hilman <khilman@baylibre.com>, mjourdan@baylibre.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
+Date:   Thu, 18 Apr 2019 21:52:47 +0200
+Message-ID: <CAFBinCCLr2-zBhAUcYsyqF1f0hvH03zoXd9SmSjMU5aA3K7Ytw@mail.gmail.com>
+Subject: Re: [PATCH 3/7] mmc: meson-gx: irq is not shared
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+Hi Jerome,
 
-On Sat, Apr 13, 2019 at 8:54 PM Maxime Jourdan <maxi.jourdan@wanadoo.fr> wrote:
+On Wed, Apr 17, 2019 at 10:44 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> Hi Martin,
-> On Sat, Apr 13, 2019 at 7:15 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> >
-> > This adds the canvas module on Meson8, Meson8b and Meson8m2. The canvas
-> > IP is used by the video decoder hardware as well as the VPU (video
-> > output) hardware.
-> >
-> > Neither the VPU nor the video decoder driver support the 32-bit SoCs
-> > yet. However, we can still add the canvas module to have it available
-> > once these drivers gain support for the older SoCs.
-> >
-> > I have tested this on my Meson8m2 board by hacking the VPU driver to
-> > not re-initialize the VPU (and to use the configuration set by u-boot).
-> > With that hack I could get some image out of the CVBS connector. No
-> > changes to the canvas driver were required.
-> >
-> > Due to lack of hardware I could not test Meson8, but I'm following (as
-> > always) what the Amlogic 3.10 vendor kernel uses.
-> > Meson8b is also not tested because u-boot of my EC-100 doesn't have
-> > video output enabled (so I couldn't use the same hack I used on my
-> > Meson8m2 board).
-> >
-> > This series meant to be applied on top of "Meson8b: add support for the
-> > RTC on EC-100 and Odroid-C1" from [0]
-> >
-> >
+> There is no reason for another device to request the MMC irq. It should
+> only be used the MMC device.
 >
-> The series looks good to me, however I wonder if we should maybe add a
-> new compatible ?
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/mmc/host/meson-gx-mmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> The canvas IP before the GX* generation does not handle what Amlogic
-> calls "endianness", the field that allows doing some byte-switching to
-> get proper NV12/NV21. So the following defines are unusable:
+> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+> index 8b690ecde4c5..3df50b53f834 100644
+> --- a/drivers/mmc/host/meson-gx-mmc.c
+> +++ b/drivers/mmc/host/meson-gx-mmc.c
+> @@ -1328,7 +1328,7 @@ static int meson_mmc_probe(struct platform_device *pdev)
+>                host->regs + SD_EMMC_IRQ_EN);
 >
-> #define MESON_CANVAS_ENDIAN_SWAP16 0x1
-> #define MESON_CANVAS_ENDIAN_SWAP32 0x3
-> #define MESON_CANVAS_ENDIAN_SWAP64 0x7
-> #define MESON_CANVAS_ENDIAN_SWAP128 0xf
-I didn't know about this - thank you for pointing this out.
+>         ret = request_threaded_irq(host->irq, meson_mmc_irq,
+> -                                  meson_mmc_irq_thread, IRQF_SHARED,
+> +                                  meson_mmc_irq_thread, IRQF_ONESHOT,
+>                                    dev_name(&pdev->dev), host);
+the commit message reads as if the intention is to remove the IRQF_SHARED flag.
+however, the commit message doesn't mention IRQF_ONESHOT (which was
+not set before).
 
-your suggestions to add new compatible strings is a good idea for that case.
-Amlogic uses different defines for Meson8 and Meson8m2 in their vendor
-kernel and they keep Meson8b different.
-I will add three new compatibles, one for each SoC (Meson8, Meson8b,
-Meson8m2) just to be on the safe side if we discover differences in
-the canvas IP on these SoCs.
-
-what do you think?
-
-> It wouldn't change much functionally, but we could have e.g a warning
-> if a m8 canvas user tries to set endianness even though it does
-> nothing.
-this is a good idea, that will make it easier to spot why something
-doesn't work.
-we can also return -EINVAL, like you already do for the case where the
-canvas ID is already used.
+if you used IRQF_ONESHOT on purpose then please mention it in the
+patch description.
 
 
 Martin
