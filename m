@@ -2,142 +2,154 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7870EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4416820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED5D217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IBJkS7mO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SVcgtSBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389863AbfDRRrm (ORCPT
+        id S2389779AbfDRRxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:47:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43708 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389836AbfDRRrj (ORCPT
+        Thu, 18 Apr 2019 13:53:47 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:42528 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388716AbfDRRxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:47:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c8so1429955pfd.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:47:39 -0700 (PDT)
+        Thu, 18 Apr 2019 13:53:46 -0400
+Received: by mail-vs1-f65.google.com with SMTP id f15so1619125vsk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vTSnpVfPDJjqTfZA3qDasHHVtLoc8OViA7pV96ip3mc=;
-        b=IBJkS7mOpM2Iky0JQFjKJtsoACjqRC5DA1R4hqiPepieccdELfNJiwSriQnZwE2pJg
-         32+37RU1bbeWVtqorOtjfIqKaHHTwmmnnvfub899bQhg3iZ/upeevdpS5dJ4FMl/W2dV
-         UkEb1pVrAeiy4Z1wwQIf9DXc8fdVREl+JPMuM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+aCB51wSzBRb+g6w79GERBDmxHkdK0m0brStvsO0x24=;
+        b=SVcgtSBLmc2xM0J5DquLhMFb3hyfz4jZTgTJA9db/Q8DtxuxUWeCly6ndSd7MftMTo
+         QSxPEAq4uZJkuDwesNVjJGjqmFdzN6buw4++xszB5VkqtCrdrpX9PieeYFgpI96cXT45
+         KXQIMoPCG8r/4kLJ+982MtD6FxhXq+tNQPbV781ZYkeXwRkVr0ysQEwRPekTwrcD5x07
+         SG5s+UWiaynVqfgkx5W66M0NiitSqBM7uZmj/7Dhv6noOVotqh8WVRNN+ThVMo065w6T
+         ljotwg4tXAZEcg+fOmJM3yf8jBBMUVSb1ZU/FGvZVS62zlKzO3C3t/uYTBoME2J/VhkP
+         YkFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vTSnpVfPDJjqTfZA3qDasHHVtLoc8OViA7pV96ip3mc=;
-        b=MqlHdvPaMqvqoKrFOfmYBLm66hKhCl/Xeiks7h6LUwsw3jKgEdUTS/WdwUP/s83yuD
-         obA2mLsoEVOglpQbQmu/NbPEB+NlmdAxJzSSWarcm4E8gKWYFbAPfMyVpm0q/948/Ht8
-         s+RyXxf36YAymRtrj2b+2TEgfK+Mj29p7AykJLDxd7FgY0IEsnBRq/eDJxD3X69eeztw
-         iGziK1V17YcV5Y8tN+jYP53cmhOaXyhJlZz64vRG7nC+Po0CplgX2cinlGXUR0OFdRVz
-         +tiybpwwwBieLYqVqMnDBcQIGgmz2yf0ITnkE/I1tHuGBrkmSMhG4EKIDYgs++5soWx+
-         g1Sw==
-X-Gm-Message-State: APjAAAV0rMb1OdiNY8wcGU7CySiZX+2m1/aje318byNzNJ9cY+pkt7i7
-        NNZ+XwS0uDZDLMuDtMFQMiB69w==
-X-Google-Smtp-Source: APXvYqwYl0dGq2ihoOHLZDrrVyT/Nf1VKGwfvOxDvrZ0FV3kGa9J3WzHg3hdnkJYiaNjT2R4HxSu8w==
-X-Received: by 2002:a63:ed48:: with SMTP id m8mr76181642pgk.104.1555609658841;
-        Thu, 18 Apr 2019 10:47:38 -0700 (PDT)
-Received: from localhost.localdomain ([115.97.185.144])
-        by smtp.gmail.com with ESMTPSA id j4sm5223547pgi.71.2019.04.18.10.47.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 10:47:38 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        linux-sunxi@googlegroups.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4 3/3] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable GT911 CTP
-Date:   Thu, 18 Apr 2019 23:17:20 +0530
-Message-Id: <20190418174720.17230-3-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190418174720.17230-1-jagan@amarulasolutions.com>
-References: <20190418174720.17230-1-jagan@amarulasolutions.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+aCB51wSzBRb+g6w79GERBDmxHkdK0m0brStvsO0x24=;
+        b=lg4ZSI8beqgPrJDT1wSqpu9hs/X6E++ujitXmersWAInDROOiGZcXAt2Ea6/airxpr
+         kbMo/NLBtPuCHn3LTdXk6H0iDqIKbZIOMLuzikKCiPUuomPLsjpAoLfuTzQjkbSaYEHh
+         TXASNxbStoWl0rSWPVFl/CUrSdC/oBzOKDagPnROP4FVRa16IWtwJEYPiSQ7UW6avUJA
+         tcmdRqYWCkKCgeIqYvT/GoWFIsoACGP/LJuSG7vX2gzAuGVXS/5BJbg93m4/Kd6Q4RVa
+         Gu36ZsVOPj9k1iLogRWxWVbmiJPLRTq0/n3NhL0NWDrJhfGErr8dLo8nVd9A+vlDopT1
+         FhoQ==
+X-Gm-Message-State: APjAAAXkNRPQl6ybP1oE6/bJmr1sjw+YJQMToE6i55msJxVRD6Y4VBLU
+        mkBv8Wc1fZw9t5lUnKUHR453Cximf38Zo3fq+F+b5Q==
+X-Google-Smtp-Source: APXvYqzHYvVcAcOQAwnRLj6YgPyJZ7DIOcssgUOygTW1U3l1rCQmKILucHf0R9Ig/AIM9bDZMr/6LQyMo2j+hWPp2EU=
+X-Received: by 2002:a05:6102:18d:: with SMTP id r13mr55413741vsq.171.1555610025262;
+ Thu, 18 Apr 2019 10:53:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+In-Reply-To: <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 18 Apr 2019 10:53:33 -0700
+Message-ID: <CAKOZues8mnjvUUopNoeXcDezXKscQLNAgCgodqUno_Z39kV7Dw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
+On Thu, Apr 18, 2019 at 10:26 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
+> >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> >> On 04/16, Joel Fernandes wrote:
+> >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
+> >> > >
+> >> > > Could you explain when it should return POLLIN? When the whole
+> >process exits?
+> >> >
+> >> > It returns POLLIN when the task is dead or doesn't exist anymore,
+> >or when it
+> >> > is in a zombie state and there's no other thread in the thread
+> >group.
+> >>
+> >> IOW, when the whole thread group exits, so it can't be used to
+> >monitor sub-threads.
+> >>
+> >> just in case... speaking of this patch it doesn't modify
+> >proc_tid_base_operations,
+> >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
+> >going to use
+> >> the anonymous file returned by CLONE_PIDFD ?
+> >
+> >I don't think procfs works that way. /proc/sub-thread-tid has
+> >proc_tgid_base_operations despite not being a thread group leader.
 
-The CTP connected to board with,
-- SDA, SCK from i2c0
-- GPIO-LD0 as AVDD28 supply
-- PH4 gpio as interrupt pin
-- PH11 gpio as reset pin
-- X axis is inverted
-- Y axis is inverted
+Huh. That seems very weird. Is that too late to change now? It feels like a bug.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v4:
-- drop i2c0 pinctrl
-Changes for v3:
-- Use 2.8v for reg_ldo_io0
-Changes for v2:
-- drop i2c1, bias-pull-up
+> >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
+> >be hit trivially, and then the code will misbehave.
+> >
+> >@Joel: I think you'll have to either rewrite this to explicitly bail
+> >out if you're dealing with a thread group leader
 
- .../sun50i-a64-oceanic-5205-5inmfd.dts        | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+If you're _not_ dealing with a leader, right?
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index 6a2154525d1e..787ebd805a3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -37,6 +37,22 @@
- 	status = "okay";
- };
- 
-+&i2c0 {
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
-@@ -52,6 +68,13 @@
- 	regulator-name = "vcc-phy";
- };
- 
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vdd-ctp";
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
--- 
-2.18.0.321.gffc6fa0e3
+> , or make the code
+> >work for threads, too.
+> The latter case probably being preferred if this API is supposed to be useable for thread management in userspace.
 
+IMHO, focusing on the thread group case for now might be best. We can
+always support thread management in future work.
+
+Besides: I'm not sure that we need kernel support for thread
+monitoring. Can't libc provide a pollable FD for a thread internally?
+libc can always run code just before thread exit, and it can wake a
+signalfd at that point. Directly terminating individual threads
+without going through userland is something that breaks the process
+anyway: it's legal and normal to SIGKILL a process a whole, but if an
+individual thread terminates without going through libc, the process
+is likely going to be fatally broken anyway. (What if it's holding the
+heap lock?)
+
+I know that in some tools want to wait for termination of individual
+threads in an external monitored process, but couldn't these tools
+cooperate with libc to get these per-thread eventfds?
+
+Is there a use case I'm missing?
