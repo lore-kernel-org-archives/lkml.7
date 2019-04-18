@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9DEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A642C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF02206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6AE218DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610867;
-	bh=0igPpzF5r32wZa+fH18mJRNNbdIctC8+SFq8MpPX1ng=;
+	s=default; t=1555610869;
+	bh=XoltjV7X4EO+haISBgFLyTJpFXnvJr5YFJ/pONe+H3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=psuIgUyTVQpK/Bs1ofGB7BhJ7ylU6TghmlTqWmlRCGa+1EJOjxAZ6rxnVpi7h2k2F
-	 qYTYyVXlHeJfqozVLiJL8HEVVEKEsI9iDKaU6vLr247fLxX2TCmA7msBpphq7ASKeo
-	 ztQt9XCS6FLZ4Fr5oleUyvkE+8hAebcpyvJYnLds=
+	b=pwhkC+eZNa4GTuPl7fMJRVwSh+5aNfXLwwNz3szZrAOCmn2YCt8bMZ1DA4xuRJKsI
+	 nTJX1CYkr1NFT3FM8ob4Rl8zJYU/gkDiwsZrdjjYN1h5qQnvn20XSykue8i05I3i2q
+	 A0EsXmoABiqS2chkrobnLlZbad5ko5sG6+aSwDuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388762AbfDRSHq (ORCPT
+        id S2391663AbfDRSHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38612 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390038AbfDRSHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:07:42 -0400
+        id S2391638AbfDRSHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:07:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D356E218AF;
-        Thu, 18 Apr 2019 18:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D75E21871;
+        Thu, 18 Apr 2019 18:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610862;
-        bh=0igPpzF5r32wZa+fH18mJRNNbdIctC8+SFq8MpPX1ng=;
+        s=default; t=1555610859;
+        bh=XoltjV7X4EO+haISBgFLyTJpFXnvJr5YFJ/pONe+H3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=blMK9XhkOkuhVgfR2E9shnir54d4Zt/zqbwCjN9nfdKGesJheo6p8mQ//JIoZz0tF
-         URw0lIqXEBNF4raqz7cOGaI+FEAUr14mWjx6ulANk9Mvlx4MMSyXi1dIy5O/6qJTac
-         hB+ZHT6iBmfpk2iNTHOcm6ZggYSh1Ie3eZDikLbg=
+        b=sLiKu7yD0CMQv9LXN/75z2YuZc0uZtkbtT0xBLRYX2PDatAQkhNpaC63i5na6Rin8
+         wAZpZoZ9iQLXhFB+OoaNXxxRdZ2ZGeGG7S9SruWxLm7+sio+utGOKo6dXY1rWBkoUK
+         Rr/I/Ryviqm8vJpvRltVWmUwyWQnCaVqw+e2J0FM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/50] perf/core: Restore mmap record type correctly
-Date:   Thu, 18 Apr 2019 19:57:13 +0200
-Message-Id: <20190418160422.995613775@linuxfoundation.org>
+Subject: [PATCH 4.9 19/50] perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
+Date:   Thu, 18 Apr 2019 19:57:30 +0200
+Message-Id: <20190418160425.074832673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -63,59 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d9c1bb2f6a2157b38e8eb63af437cb22701d31ee ]
+[ Upstream commit 93faa52e8371f0291ee1ff4994edae2b336b6233 ]
 
-On mmap(), perf_events generates a RECORD_MMAP record and then checks
-which events are interested in this record. There are currently 2
-versions of mmap records: RECORD_MMAP and RECORD_MMAP2. MMAP2 is larger.
-The event configuration controls which version the user level tool
-accepts.
+  =================================================================
+  ==7497==ERROR: LeakSanitizer: detected memory leaks
 
-If the event->attr.mmap2=1 field then MMAP2 record is returned.  The
-perf_event_mmap_output() takes care of this. It checks attr->mmap2 and
-corrects the record fields before putting it in the sampling buffer of
-the event.  At the end the function restores the modified MMAP record
-fields.
+  Direct leak of 40 byte(s) in 1 object(s) allocated from:
+      #0 0x7f0333a88f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x5625e5326213 in cpu_map__trim_new util/cpumap.c:45
+      #2 0x5625e5326703 in cpu_map__read util/cpumap.c:103
+      #3 0x5625e53267ef in cpu_map__read_all_cpu_map util/cpumap.c:120
+      #4 0x5625e5326915 in cpu_map__new util/cpumap.c:135
+      #5 0x5625e517b355 in test__openat_syscall_event_on_all_cpus tests/openat-syscall-all-cpus.c:36
+      #6 0x5625e51528e6 in run_test tests/builtin-test.c:358
+      #7 0x5625e5152baf in test_and_print tests/builtin-test.c:388
+      #8 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
+      #9 0x5625e515572f in cmd_test tests/builtin-test.c:722
+      #10 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #11 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #12 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #13 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #14 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-The problem is that the function restores the size but not the type.
-Thus, if a subsequent event only accepts MMAP type, then it would
-instead receive an MMAP2 record with a size of MMAP record.
-
-This patch fixes the problem by restoring the record type on exit.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: 13d7a2410fa6 ("perf: Add attr->mmap2 attribute to an event")
-Link: http://lkml.kernel.org/r/20190307185233.225521-1-eranian@google.com
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: f30a79b012e5 ("perf tools: Add reference counting for cpu_map object")
+Link: http://lkml.kernel.org/r/20190316080556.3075-15-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/openat-syscall-all-cpus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5cbb2eda80b5..7929526e96e2 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6616,6 +6616,7 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	int size = mmap_event->event_id.header.size;
-+	u32 type = mmap_event->event_id.header.type;
- 	int ret;
+diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
+index c8d9592eb142..75d504e9eeaf 100644
+--- a/tools/perf/tests/openat-syscall-all-cpus.c
++++ b/tools/perf/tests/openat-syscall-all-cpus.c
+@@ -38,7 +38,7 @@ int test__openat_syscall_event_on_all_cpus(int subtest __maybe_unused)
+ 	if (IS_ERR(evsel)) {
+ 		tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "syscalls", "sys_enter_openat");
+ 		pr_debug("%s\n", errbuf);
+-		goto out_thread_map_delete;
++		goto out_cpu_map_delete;
+ 	}
  
- 	if (!perf_event_mmap_match(event, data))
-@@ -6659,6 +6660,7 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	perf_output_end(&handle);
- out:
- 	mmap_event->event_id.header.size = size;
-+	mmap_event->event_id.header.type = type;
- }
- 
- static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
+ 	if (perf_evsel__open(evsel, cpus, threads) < 0) {
+@@ -112,6 +112,8 @@ int test__openat_syscall_event_on_all_cpus(int subtest __maybe_unused)
+ 	perf_evsel__close_fd(evsel, 1, threads->nr);
+ out_evsel_delete:
+ 	perf_evsel__delete(evsel);
++out_cpu_map_delete:
++	cpu_map__put(cpus);
+ out_thread_map_delete:
+ 	thread_map__put(threads);
+ 	return err;
 -- 
 2.19.1
 
