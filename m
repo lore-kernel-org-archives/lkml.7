@@ -2,89 +2,123 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8308EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E2AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D422183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246A8206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbfDRJIu (ORCPT
+        id S2388456AbfDRJJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:08:50 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:63039 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388323AbfDRJIP (ORCPT
+        Thu, 18 Apr 2019 05:09:09 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34117 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388614AbfDRJHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:08:15 -0400
-X-UUID: dc404390ff544b44a6b5d2f2808bcbdd-20190418
-X-UUID: dc404390ff544b44a6b5d2f2808bcbdd-20190418
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 549511622; Thu, 18 Apr 2019 17:08:06 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 18 Apr 2019 17:08:04 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 18 Apr 2019 17:08:04 +0800
-From:   <sean.wang@mediatek.com>
-To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
-CC:     <ulf.hansson@linaro.org>, <linux-bluetooth@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
-Subject: [PATCH v1 1/4] Bluetooth: btmtksdio: Drop newline with bt_dev logging macros
-Date:   Thu, 18 Apr 2019 17:07:59 +0800
-Message-ID: <ca617836b66cb11f5c7a1131bd3f55d81cf6380b.1555577565.git.sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1555577565.git.sean.wang@mediatek.com>
-References: <cover.1555577565.git.sean.wang@mediatek.com>
+        Thu, 18 Apr 2019 05:07:48 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hH2zw-0001pi-65; Thu, 18 Apr 2019 11:06:24 +0200
+Message-Id: <20190418084254.180116966@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Thu, 18 Apr 2019 10:41:31 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [patch V2 12/29] dma/debug: Simplify stracktrace retrieval
+References: <20190418084119.056416939@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: A75B78FB8E75C462A55038F593A5395F79D92548085D17BDF2D06D07CDFE12CC2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+Replace the indirection through struct stack_trace with an invocation of
+the storage array based interface.
 
-bt_dev logging macros already include a newline at each output
-so drop these unnecessary additional newlines in the driver.
-
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: iommu@lists.linux-foundation.org
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/bluetooth/btmtksdio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/dma/debug.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-index 7d0d1cb93b0e..681e3e34977e 100644
---- a/drivers/bluetooth/btmtksdio.c
-+++ b/drivers/bluetooth/btmtksdio.c
-@@ -487,15 +487,15 @@ static void btmtksdio_interrupt(struct sdio_func *func)
- 	sdio_writel(func, int_status, MTK_REG_CHISR, NULL);
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -89,8 +89,8 @@ struct dma_debug_entry {
+ 	int		 sg_mapped_ents;
+ 	enum map_err_types  map_err_type;
+ #ifdef CONFIG_STACKTRACE
+-	struct		 stack_trace stacktrace;
+-	unsigned long	 st_entries[DMA_DEBUG_STACKTRACE_ENTRIES];
++	unsigned int	stack_len;
++	unsigned long	stack_entries[DMA_DEBUG_STACKTRACE_ENTRIES];
+ #endif
+ };
  
- 	if (unlikely(!int_status))
--		bt_dev_err(bdev->hdev, "CHISR is 0\n");
-+		bt_dev_err(bdev->hdev, "CHISR is 0");
+@@ -174,7 +174,7 @@ static inline void dump_entry_trace(stru
+ #ifdef CONFIG_STACKTRACE
+ 	if (entry) {
+ 		pr_warning("Mapped at:\n");
+-		print_stack_trace(&entry->stacktrace, 0);
++		stack_trace_print(entry->stack_entries, entry->stack_len, 0);
+ 	}
+ #endif
+ }
+@@ -704,12 +704,9 @@ static struct dma_debug_entry *dma_entry
+ 	spin_unlock_irqrestore(&free_entries_lock, flags);
  
- 	if (int_status & FW_OWN_BACK_INT)
--		bt_dev_dbg(bdev->hdev, "Get fw own back\n");
-+		bt_dev_dbg(bdev->hdev, "Get fw own back");
+ #ifdef CONFIG_STACKTRACE
+-	entry->stacktrace.max_entries = DMA_DEBUG_STACKTRACE_ENTRIES;
+-	entry->stacktrace.entries = entry->st_entries;
+-	entry->stacktrace.skip = 1;
+-	save_stack_trace(&entry->stacktrace);
++	entry->stack_len = stack_trace_save(entry->stack_entries,
++					    ARRAY_SIZE(entry->stack_entries), 1);
+ #endif
+-
+ 	return entry;
+ }
  
- 	if (int_status & TX_EMPTY)
- 		schedule_work(&bdev->tx_work);
- 	else if (unlikely(int_status & TX_FIFO_OVERFLOW))
--		bt_dev_warn(bdev->hdev, "Tx fifo overflow\n");
-+		bt_dev_warn(bdev->hdev, "Tx fifo overflow");
- 
- 	if (int_status & RX_DONE_INT) {
- 		rx_size = (int_status & RX_PKT_LEN) >> 16;
--- 
-2.18.0
+
 
