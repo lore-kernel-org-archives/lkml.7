@@ -2,130 +2,120 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958EDC282DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E3FC282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6615A2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555551345;
-	bh=t3djVohQhsnFHTNoSybpVk5Pus6dANYeEQB6Rq7UnCk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=H/gR5SsmasPTgU59qRKZxW27GJ+EjCfD3bXlNS4rmXxeP9jaM+r7hzLbSlwHos2LX
-	 WgTf7ym19kYEzTHIiNZpfVvgZ5XT3C3+4sxhCKWV9JVN3AcGgPEKp8KjMKru7tuUQZ
-	 7ELAWMdNRbYpYs0qKNHLNV7BKXCj/xzlEzkUcnHo=
+	by mail.kernel.org (Postfix) with ESMTP id 1696B2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfDRBfl (ORCPT
+        id S2387876AbfDRBgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 21:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35090 "EHLO mail.kernel.org"
+        Wed, 17 Apr 2019 21:36:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1866 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbfDRBfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 21:35:40 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B977F21872;
-        Thu, 18 Apr 2019 01:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555551339;
-        bh=t3djVohQhsnFHTNoSybpVk5Pus6dANYeEQB6Rq7UnCk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bzatYYyAQ/IY7bzLms8qEwPVxXGDdmlb12kIvM3MVI5vjG/5OHqjRY/r5wB/GMFUO
-         QgSdomhZi+/Bv65RzDntixPH2IQofOyEE3mkyxHKzHUxRHeUD5x0Q5/8hmEqs+w77p
-         EZ5flVL6OxvS/peeLoheQe1/MtburzahLz7rS5Vc=
-Received: by mail-qt1-f173.google.com with SMTP id k14so560955qtb.0;
-        Wed, 17 Apr 2019 18:35:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAUMbVgfkz4DRBZG5jJ586dVwjd0tndqNBNjAdeiaCtbOMPCyucK
-        HSx6hDrteiwEWTi1hOA9144AoPgozT4mfuXCVQ==
-X-Google-Smtp-Source: APXvYqxNZ7hcdLYsozYNOaTUKU61rv1CUqvpva89sJ8kxFJrlPP23w/Dp+bepFxUmW4Sqbjp1qgjpeeM8OCDbsAn6No=
-X-Received: by 2002:ac8:2a51:: with SMTP id l17mr77787896qtl.76.1555551338863;
- Wed, 17 Apr 2019 18:35:38 -0700 (PDT)
+        id S1729331AbfDRBgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 21:36:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 18:36:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,364,1549958400"; 
+   d="scan'208";a="162874869"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Apr 2019 18:36:47 -0700
+Date:   Wed, 17 Apr 2019 18:28:49 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Subject: Re: [PATCH v7 10/21] x86/split_lock: Define per CPU variable to
+ cache MSR TEST_CTL
+Message-ID: <20190418012848.GC18776@romley-ivt3.sc.intel.com>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
+ <1555536851-17462-11-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904180009200.3174@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20190412150625.28384-1-luca@z3ntu.xyz> <15255825.75VNnaJK3T@g550jk>
-In-Reply-To: <15255825.75VNnaJK3T@g550jk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 17 Apr 2019 20:35:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL7awWWLK3G6u2yzse2aU7KUSuUELuacCnCpfErWA_UaQ@mail.gmail.com>
-Message-ID: <CAL_JsqL7awWWLK3G6u2yzse2aU7KUSuUELuacCnCpfErWA_UaQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: input: add GPIO controllable vibrator
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904180009200.3174@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 11:02 AM Luca Weiss <luca@z3ntu.xyz> wrote:
->
-> On Freitag, 12. April 2019 17:06:23 CEST Luca Weiss wrote:
-> > Provide a simple driver for GPIO controllable vibrators.
-> > It will be used by the Fairphone 2.
-> >
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+On Thu, Apr 18, 2019 at 12:14:12AM +0200, Thomas Gleixner wrote:
+> On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> 
+> > MSR TEST_CTL (0x33) value is cached in per CPU variable msr_test_ctl_cache.
+> 
+> It _is_ cached? How so?
+> 
+> > The cached value will be used in virutalization to avoid costly MSR read.
+> > 
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> 
+> That SOB chain is bogus.
+> 
 > > ---
-> >  .../bindings/input/gpio-vibrator.txt          | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/input/gpio-vibrator.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-> > b/Documentation/devicetree/bindings/input/gpio-vibrator.txt new file mode
-> > 100644
-> > index 000000000000..93e5a8e7622d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
-> > @@ -0,0 +1,20 @@
-> > +* GPIO vibrator device tree bindings
-> > +
-> > +Registers a GPIO device as vibrator, where the vibration motor just has the
-> > +capability to turn on or off. If the device is connected to a pwm, you
-> > should +use the pwm-vibrator driver instead.
-> > +
-> > +Required properties:
-> > +- compatible: should contain "gpio-vibrator"
-> > +- enable-gpios: Should contain a GPIO handle
-> > +
-> > +Optional properties:
-> > +- vcc-supply: Phandle for the regulator supplying power
-> > +
-> > +Example from Fairphone 2:
-> > +
-> > +vibrator {
-> > +     compatible = "gpio-vibrator";
-> > +     enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
-> > +     vcc-supply = <&pm8941_l18>;
-> > +};
->
-> I see that the yaml based device tree binding docs seem to be the new hotness?
-> Is there any "policy" / preference about new drivers?
+> >  arch/x86/include/asm/cpu.h  | 1 +
+> >  arch/x86/kernel/cpu/intel.c | 3 +++
+> >  2 files changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> > index 4e03f53fc079..cd7493f20234 100644
+> > --- a/arch/x86/include/asm/cpu.h
+> > +++ b/arch/x86/include/asm/cpu.h
+> > @@ -40,6 +40,7 @@ int mwait_usable(const struct cpuinfo_x86 *);
+> >  unsigned int x86_family(unsigned int sig);
+> >  unsigned int x86_model(unsigned int sig);
+> >  unsigned int x86_stepping(unsigned int sig);
+> > +DECLARE_PER_CPU(u64, msr_test_ctl_cache);
+> >  #ifdef CONFIG_CPU_SUP_INTEL
+> >  void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+> >  #else
+> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> > index 62f61a961eb6..997d683d3c27 100644
+> > --- a/arch/x86/kernel/cpu/intel.c
+> > +++ b/arch/x86/kernel/cpu/intel.c
+> > @@ -31,6 +31,9 @@
+> >  #include <asm/apic.h>
+> >  #endif
+> >  
+> > +DEFINE_PER_CPU(u64, msr_test_ctl_cache);
+> > +EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
+> 
+> Contrary to things like cpufeatures or MSR bits, it's pretty useless to
+> have a separate patch for this. Please fold this into the place which
+> actualy uses it.
 
-Not required yet, but welcomed. It's still a trickle so we can work
-out any issues and in some cases the common bindings still need to be
-done. I'm starting to ask subsystem maintainers to require DT schemas
-though.
+Can I fold this patch into the KVM patch 0013 which first uses (reads) the
+variable? But the variable will be set in later patches when enabling split
+lock feature (patch 0014) and when enabling/disabling split lock feature
+(patch 0015).
 
-This one looks straightforward to use the schema.
+Is this a right sequence to fit the variable in the patch set?
 
-Rob
+Thanks.
+
+-Fenghua
