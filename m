@@ -2,159 +2,177 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC2DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE0FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB555208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE1F217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555601779;
+	bh=78iavSD/b9SZDW+cR51Rk4CTyGCyTXphw4FShVXvYkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CGjyzO+HR3VAVA68UCNa7SsLAUiugxAMiNucoTVpD+ZOnc2dsyLD+6ioawPB9U7vm
+	 tOrllCi2XxJozliLALCQ0tJCogkpRSAUJ0x64VCc053w1uaPds1LIoPg6meRz/CwP9
+	 HaNKNgBhfX05Gu7mhdR0jQaU2l/uAH4ePygG6Fqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389463AbfDRPgH (ORCPT
+        id S2389509AbfDRPgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:36:07 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35890 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfDRPgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:36:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EFD015AB;
-        Thu, 18 Apr 2019 08:36:06 -0700 (PDT)
-Received: from [10.1.32.54] (unknown [10.1.32.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09D3E3F5AF;
-        Thu, 18 Apr 2019 08:36:03 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 10/18] iommu/vt-d: Add custom allocator for IOASID
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1554767973-30125-11-git-send-email-jacob.jun.pan@linux.intel.com>
- <20190415143711.13c29308@x1.home> <20190415161015.564cb071@jacob-builder>
-Message-ID: <70c6b197-029e-94cd-2745-d4a193cbbcd0@arm.com>
-Date:   Thu, 18 Apr 2019 16:36:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 11:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388299AbfDRPgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:36:18 -0400
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A85C920675;
+        Thu, 18 Apr 2019 15:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555601776;
+        bh=78iavSD/b9SZDW+cR51Rk4CTyGCyTXphw4FShVXvYkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xWh4nQdNPb+Lg0KhraTaIEdiWXtQnRf70XVvG8QRIAj8cQUYXpWUqKgodNI0QpURq
+         bD9GYTPh+AGIFKTLF1c9av1eJNcgjS1H6LDlLbCXcNT514gKBDvtK19gkTXV4IlagZ
+         3blOXX6qIZUrmOsbe7GHIUpkXG9u/VsGbhFSoFJM=
+Date:   Thu, 18 Apr 2019 17:36:12 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
+Subject: Re: [PATCH v2] moduleparam: Save information about built-in modules
+ in separate file
+Message-ID: <20190418153611.GB5626@linux-8ccs>
+References: <20190406121447.GB4047@localhost.localdomain>
+ <CAK7LNATfo0K6kzwobkAZ_u2KnWL3XycJzbr3KPtPF=ePziCuDg@mail.gmail.com>
+ <20190418135238.GA5626@linux-8ccs>
+ <CAK7LNARKHXLgniczKXY01JhxhBpL2p-X_hWg70AcsrXRaLyDSg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190415161015.564cb071@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARKHXLgniczKXY01JhxhBpL2p-X_hWg70AcsrXRaLyDSg@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/2019 00:10, Jacob Pan wrote:[...]
->> > +                   /*
->> > +                    * Register a custom ASID allocator if we
->> > are running
->> > +                    * in a guest, the purpose is to have a
->> > system wide PASID
->> > +                    * namespace among all PASID users.
->> > +                    * Note that only one vIOMMU in each guest
->> > is supported.  
->> 
->> Why one vIOMMU per guest?  This would prevent guests with multiple PCI
->> domains aiui.
->> 
-> This is mainly for simplicity reasons. These are all virtual BDFs
-> anyway. As long as guest BDF can be mapped to a host BDF, it should be
-> sufficient, am I missing anything?
-> 
-> From PASID allocation perspective, it is not tied to any PCI device
-> until bind call. We only need to track PASID ownership per guest.
-> 
-> virtio-IOMMU spec does support multiple PCI domains but I am not sure
-> if that applies to all assigned devices, whether all assigned devices
-> are under the same domain. Perhaps Jean can help to clarify how PASID
-> allocation API looks like on virtio IOMMU.
++++ Masahiro Yamada [19/04/19 00:26 +0900]:
+>On Thu, Apr 18, 2019 at 10:52 PM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> +++ Masahiro Yamada [18/04/19 20:10 +0900]:
+>> >On Sat, Apr 6, 2019 at 9:15 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
+>> >>
+>> >> Problem:
+>> >>
+>> >> When a kernel module is compiled as a separate module, some important
+>> >> information about the kernel module is available via .modinfo section of
+>> >> the module.  In contrast, when the kernel module is compiled into the
+>> >> kernel, that information is not available.
+>> >>
+>> >> Information about built-in modules is necessary in the following cases:
+>> >>
+>> >> 1. When it is necessary to find out what additional parameters can be
+>> >> passed to the kernel at boot time.
+>> >>
+>> >> 2. When you need to know which module names and their aliases are in
+>> >> the kernel. This is very useful for creating an initrd image.
+>> >>
+>> >> Proposal:
+>> >>
+>> >> The proposed patch does not remove .modinfo section with module
+>> >> information from the vmlinux at the build time and saves it into a
+>> >> separate file after kernel linking. So, the kernel does not increase in
+>> >> size and no additional information remains in it. Information is stored
+>> >> in the same format as in the separate modules (null-terminated string
+>> >> array). Because the .modinfo section is already exported with a separate
+>> >> modules, we are not creating a new API.
+>> >>
+>> >> It can be easily read in the userspace:
+>> >>
+>> >> $ tr '\0' '\n' < kernel.builtin
+>> >> ext4.softdep=pre: crc32c
+>> >> ext4.license=GPL
+>> >> ext4.description=Fourth Extended Filesystem
+>> >> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
+>> >> ext4.alias=fs-ext4
+>> >> ext4.alias=ext3
+>> >> ext4.alias=fs-ext3
+>> >> ext4.alias=ext2
+>> >> ext4.alias=fs-ext2
+>> >> md_mod.alias=block-major-9-*
+>> >> md_mod.alias=md
+>> >> md_mod.description=MD RAID framework
+>> >> md_mod.license=GPL
+>> >> md_mod.parmtype=create_on_open:bool
+>> >> md_mod.parmtype=start_dirty_degraded:int
+>> >> ...
+>> >>
+>> >> v2:
+>> >>  * Extract modinfo from vmlinux.o as suggested by Masahiro Yamada;
+>> >>  * Rename output file to kernel.builtin;
+>> >
+>> >Sorry, I do not get why you renamed
+>> >"kernel.builtin.modinfo" to "kernel.builtin".
+>> >
+>> >If you drop "modinfo", we do not understand
+>> >what kind information is contained in it.
+>> >
+>> >I think "kernel" and "builtin" have
+>> >a quite similar meaning here.
+>> >
+>> >How about "builtin.modinfo" for example?
+>> >
+>> >
+>> >It is shorter, and it is clear enough
+>> >that it contains module_info.
+>>
+>> I agree that the name kernel.builtin is unclear in what kind of
+>> information it contains. Apologies for not having clarified this in
+>> the previous review.
+>>
+>> Since kbuild already produces "modules.order" and "modules.builtin"
+>> files, why not just name it "modules.builtin.modinfo" to keep the
+>> names consistent with what is already there?
+>
+>
+>Is it consistent?
+>
+>If we had "modules.order" and "modules.builtin.order" there,
+>I would agree with "modules.builtin.modinfo",
+>and also "modules.alias" vs "modules.builtin.alias".
+>
+>
+>We already have "modules.builtin", and probably impossible
+>to rename it, so we cannot keep consistency in any way.
+>
+>
+>"modules.builtin" is a weird name since
+>it actually contains "order", but its extension
+>does not express what kind of information is in it.
+>Hence, I doubt "modules.builtin" is a good precedent.
+>
+>IMHO, "modules" and "builtin" are opposite
+>to each other. "modules.builtin" sounds iffy to me.
 
-[Ugh, this is much longer than I hoped. In short I don't think multiple
-vIOMMUs is a problem, because the host uses the same allocator for all of
-them.]
-
-Yes there can be a single virtio-iommu instance for multiple PCI
-domains, or multiple instances each managing assigned devices. It's up to
-the hypervisor to decide on the topology.
-
-For Linux and QEMU I was assuming that choosing the vIOMMU used for PASID
-allocation isn't a big deal, since in the end they all use the same
-allocator in the host. It gets complicated when some vIOMMUs can be
-removed at runtime (unload the virtio-iommu module that was providing the
-PASID allocator, and then you can't allocate PASIDs for the VT-d instance
-anymore), so maybe limiting to one type of vIOMMU (don't mix VT-d and
-virtio-iommu in the same VM) is more reasonable.
-
-It's a bit more delicate from the virtio-iommu perspective. The
-interface is portable and I can't tie it down to the choices we're making
-for Linux and KVM. Having a system-wide PASID space is what we picked for
-Linux but the PCIe architecture allows for each device to have
-their own PASID space, and I suppose some hypervisors and guests might
-prefer implementing it that way.
-
-My plan for the moment is to implement global PASID allocation using one
-feature bit and two new requests, but leave space for a per-device PASID
-allocation, introduced with another feature bit if necessary. If it ever
-gets added, I expect the per-device allocation to be done during the bind
-request rather than with a separate PASID_ALLOC request.
-
-So currently I have a new feature bit and two commands:
-
-#define VIRTIO_IOMMU_F_PASID_ALLOC
-#define VIRTIO_IOMMU_T_ALLOC_PASID
-#define VIRTIO_IOMMU_T_FREE_PASID
-
-struct virtio_iommu_req_alloc_pasid {
-        struct virtio_iommu_req_head head;
-        u32 reserved;
-
-        /* Device-writeable */
-        le32 pasid;
-        struct virtio_iommu_req_tail tail;
-};
-
-struct virtio_iommu_req_free_pasid {
-        struct virtio_iommu_req_head head;
-        u32 reserved;
-        le32 pasid;
-
-        /* Device-writeable */
-        struct virtio_iommu_req_tail tail;
-};
-
-If the feature bit is offered it must be used, and the guest can only use
-PASIDs allocated via VIRTIO_IOMMU_T_ALLOC_PASID in its bind requests.
-
-The PASID space is global at the host scope. If multiple virtio-iommu
-devices in the VM offer the feature bit, then using either of their
-command queue to issue a VIRTIO_IOMMU_F_ALLOC_PASID and
-VIRTIO_IOMMU_F_FREE_PASID is equivalent. Another possibility is to require
-that only one of the virtio-iommu instances per VM offers the feature bit.
-I do prefer this option, but there is the vIOMMU removal problem mentioned
-above - which, with the first option, could be solved by keeping a list of
-PASID allocator functions rather than a single one.
-
-I'm considering adding max_pasid field to virtio_iommu_req_alloc_pasid. If
-VIRTIO_IOMMU_T_ALLOC_PASID returns a random 20-bit value then a lot of
-space might be needed for storing PASID contexts (is that a real concern
-though? For internal data it can use a binary tree, and the guest is not
-in charge of hardware PASID tables here). If the guest is short on memory
-then it could benefit from a smaller number of PASID bits. That could
-either be globally configurable in the virtio-iommu config space, or using
-a max_pasid field in the VIRTIO_IOMMU_T_ALLOC_PASID request. The latter
-allows to support devices with less than 20 PASID bits, though we're
-hoping that no one will implement that.
+I've always interpreted "modules.builtin" to mean "this is a list of
+modules that have been built-in into the kernel", no? So I thought the
+name made sense. But you are the maintainer, so I do not have a strong
+opinion on this either way :-)
 
 Thanks,
-Jean
+
+Jessica
