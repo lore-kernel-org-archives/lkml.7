@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5773EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3632C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB1C20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADA720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611846;
-	bh=GJi2JNKo/h+hbFSyFs6tMdNJopHV2QNqFz8bhKeIfQ4=;
+	s=default; t=1555611860;
+	bh=jSYeYiJF80OkDt6g1mNOb+1uxoJuiUKAeMBEwfUL/6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E8iIGxOa+uYG58ULvPYftrIEz5SAQ3sNTx3umUvw4+b2X8NnjZcJHPWGYXCVaWJC1
-	 aIxFWm0G8t9lwgUUdcAhQwm53jH31/CRvqLEo+IjwEgbW1y5XGknpeZ0nZHkOgZYGH
-	 tlO9eJpt3XWCSnSmoW6JaBH7glehd6zDPEMd9K3s=
+	b=MYmPOWpKI/7QzuH2kjzjRpAIYSP4zNcdLdtKdlAt9l3/GckW5Ecg6/GaCaRyP9JEp
+	 l06x1J7r0ZS+z0NtDrTYrCWcwWXUruZwkFbxP5bhs+1RCi7hv5ahEthtD2qM3orlLV
+	 wMki7LkEIhfi1MnuiIAlgH4oCpJe9jIiXFqh9cfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391457AbfDRSYF (ORCPT
+        id S2391538AbfDRSYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390029AbfDRSGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:06:08 -0400
+        id S2390979AbfDRSFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:05:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB4E218A6;
-        Thu, 18 Apr 2019 18:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 690BD206B6;
+        Thu, 18 Apr 2019 18:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610766;
-        bh=GJi2JNKo/h+hbFSyFs6tMdNJopHV2QNqFz8bhKeIfQ4=;
+        s=default; t=1555610753;
+        bh=jSYeYiJF80OkDt6g1mNOb+1uxoJuiUKAeMBEwfUL/6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C9SxBNirl5Q0Dwo9jSboqI/cHoe/acxn0HzH2Z5R4bPUJ5MOCKOTlHdZWFDw9MH+Q
-         TH+Ic1WYrhKN3sKxuKuiO8cda7BxWZhSCltXWuWUc8xExnzuYDL1SYyToBx60tlLuZ
-         G+QepixsSYRtSm+z/MoLch4mswA+hO8dqk5IlftM=
+        b=PavaQN7IiOAsZMvgFdaorhRd6DfCNhff07n+DArN/BNEll7OSVVC+NA/Yt+AwNBdl
+         KqAuSCPEr2yfNpccB6pmgdWY23aD1wm0YejMSnERoht0H15eaQb8zU+IjU2qE56Hns
+         r6To8qEEb8pwcxiZoqCwdwuWl+i3WewZdfLTwGzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/92] netfilter: xt_cgroup: shrink size of v2 path
-Date:   Thu, 18 Apr 2019 19:57:01 +0200
-Message-Id: <20190418160433.958865210@linuxfoundation.org>
+Subject: [PATCH 4.14 38/92] gpio: pxa: handle corner case of unprobed device
+Date:   Thu, 18 Apr 2019 19:56:56 +0200
+Message-Id: <20190418160433.634630112@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -60,156 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0d704967f4a49cc2212350b3e4a8231f8b4283ed ]
+[ Upstream commit 9ce3ebe973bf4073426f35f282c6b955ed802765 ]
 
-cgroup v2 path field is PATH_MAX which is too large, this is placing too
-much pressure on memory allocation for people with many rules doing
-cgroup v1 classid matching, side effects of this are bug reports like:
+In the corner case where the gpio driver probe fails, for whatever
+reason, the suspend and resume handlers will still be called as they
+have to be registered as syscore operations. This applies as well when
+no probe was called while the driver has been built in the kernel.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=200639
+Nicolas tracked this in :
+https://bugzilla.kernel.org/show_bug.cgi?id=200905
 
-This patch registers a new revision that shrinks the cgroup path to 512
-bytes, which is the same approach we follow in similar extensions that
-have a path field.
+Therefore, add a failsafe in these function, and test if a proper probe
+succeeded and the driver is functional.
 
-Cc: Tejun Heo <tj@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Reported-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_cgroup.h | 16 ++++++
- net/netfilter/xt_cgroup.c                | 72 ++++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
+ drivers/gpio/gpio-pxa.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/uapi/linux/netfilter/xt_cgroup.h b/include/uapi/linux/netfilter/xt_cgroup.h
-index e96dfa1b34f7..b74e370d6133 100644
---- a/include/uapi/linux/netfilter/xt_cgroup.h
-+++ b/include/uapi/linux/netfilter/xt_cgroup.h
-@@ -22,4 +22,20 @@ struct xt_cgroup_info_v1 {
- 	void		*priv __attribute__((aligned(8)));
- };
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index 2943dfc4c470..822ad220f0af 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -776,6 +776,9 @@ static int pxa_gpio_suspend(void)
+ 	struct pxa_gpio_bank *c;
+ 	int gpio;
  
-+#define XT_CGROUP_PATH_MAX	512
++	if (!pchip)
++		return 0;
 +
-+struct xt_cgroup_info_v2 {
-+	__u8		has_path;
-+	__u8		has_classid;
-+	__u8		invert_path;
-+	__u8		invert_classid;
-+	union {
-+		char	path[XT_CGROUP_PATH_MAX];
-+		__u32	classid;
-+	};
-+
-+	/* kernel internal data */
-+	void		*priv __attribute__((aligned(8)));
-+};
-+
- #endif /* _UAPI_XT_CGROUP_H */
-diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
-index 891f4e7e8ea7..db18c0177b0f 100644
---- a/net/netfilter/xt_cgroup.c
-+++ b/net/netfilter/xt_cgroup.c
-@@ -66,6 +66,38 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
- 	return 0;
- }
+ 	for_each_gpio_bank(gpio, c, pchip) {
+ 		c->saved_gplr = readl_relaxed(c->regbase + GPLR_OFFSET);
+ 		c->saved_gpdr = readl_relaxed(c->regbase + GPDR_OFFSET);
+@@ -794,6 +797,9 @@ static void pxa_gpio_resume(void)
+ 	struct pxa_gpio_bank *c;
+ 	int gpio;
  
-+static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
-+{
-+	struct xt_cgroup_info_v2 *info = par->matchinfo;
-+	struct cgroup *cgrp;
++	if (!pchip)
++		return;
 +
-+	if ((info->invert_path & ~1) || (info->invert_classid & ~1))
-+		return -EINVAL;
-+
-+	if (!info->has_path && !info->has_classid) {
-+		pr_info("xt_cgroup: no path or classid specified\n");
-+		return -EINVAL;
-+	}
-+
-+	if (info->has_path && info->has_classid) {
-+		pr_info_ratelimited("path and classid specified\n");
-+		return -EINVAL;
-+	}
-+
-+	info->priv = NULL;
-+	if (info->has_path) {
-+		cgrp = cgroup_get_from_path(info->path);
-+		if (IS_ERR(cgrp)) {
-+			pr_info_ratelimited("invalid path, errno=%ld\n",
-+					    PTR_ERR(cgrp));
-+			return -EINVAL;
-+		}
-+		info->priv = cgrp;
-+	}
-+
-+	return 0;
-+}
-+
- static bool
- cgroup_mt_v0(const struct sk_buff *skb, struct xt_action_param *par)
- {
-@@ -95,6 +127,24 @@ static bool cgroup_mt_v1(const struct sk_buff *skb, struct xt_action_param *par)
- 			info->invert_classid;
- }
- 
-+static bool cgroup_mt_v2(const struct sk_buff *skb, struct xt_action_param *par)
-+{
-+	const struct xt_cgroup_info_v2 *info = par->matchinfo;
-+	struct sock_cgroup_data *skcd = &skb->sk->sk_cgrp_data;
-+	struct cgroup *ancestor = info->priv;
-+	struct sock *sk = skb->sk;
-+
-+	if (!sk || !sk_fullsock(sk) || !net_eq(xt_net(par), sock_net(sk)))
-+		return false;
-+
-+	if (ancestor)
-+		return cgroup_is_descendant(sock_cgroup_ptr(skcd), ancestor) ^
-+			info->invert_path;
-+	else
-+		return (info->classid == sock_cgroup_classid(skcd)) ^
-+			info->invert_classid;
-+}
-+
- static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
- {
- 	struct xt_cgroup_info_v1 *info = par->matchinfo;
-@@ -103,6 +153,14 @@ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
- 		cgroup_put(info->priv);
- }
- 
-+static void cgroup_mt_destroy_v2(const struct xt_mtdtor_param *par)
-+{
-+	struct xt_cgroup_info_v2 *info = par->matchinfo;
-+
-+	if (info->priv)
-+		cgroup_put(info->priv);
-+}
-+
- static struct xt_match cgroup_mt_reg[] __read_mostly = {
- 	{
- 		.name		= "cgroup",
-@@ -130,6 +188,20 @@ static struct xt_match cgroup_mt_reg[] __read_mostly = {
- 				  (1 << NF_INET_POST_ROUTING) |
- 				  (1 << NF_INET_LOCAL_IN),
- 	},
-+	{
-+		.name		= "cgroup",
-+		.revision	= 2,
-+		.family		= NFPROTO_UNSPEC,
-+		.checkentry	= cgroup_mt_check_v2,
-+		.match		= cgroup_mt_v2,
-+		.matchsize	= sizeof(struct xt_cgroup_info_v2),
-+		.usersize	= offsetof(struct xt_cgroup_info_v2, priv),
-+		.destroy	= cgroup_mt_destroy_v2,
-+		.me		= THIS_MODULE,
-+		.hooks		= (1 << NF_INET_LOCAL_OUT) |
-+				  (1 << NF_INET_POST_ROUTING) |
-+				  (1 << NF_INET_LOCAL_IN),
-+	},
- };
- 
- static int __init cgroup_mt_init(void)
+ 	for_each_gpio_bank(gpio, c, pchip) {
+ 		/* restore level with set/clear */
+ 		writel_relaxed(c->saved_gplr, c->regbase + GPSR_OFFSET);
 -- 
 2.19.1
 
