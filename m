@@ -2,190 +2,160 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B97C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14D120869
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RcGv2MsV"
+	by mail.kernel.org (Postfix) with ESMTP id EA25C20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388983AbfDRP1a (ORCPT
+        id S2389160AbfDRP3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:27:30 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:28274 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRP1a (ORCPT
+        Thu, 18 Apr 2019 11:29:11 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51392 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRP3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:27:30 -0400
-X-Greylist: delayed 15376 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 11:27:28 EDT
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x3IFRAI1000644;
-        Fri, 19 Apr 2019 00:27:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3IFRAI1000644
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555601231;
-        bh=IZhFShJ6jDiysCuABWEkQgQvv5e4ZaTURElBN4UyQy8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RcGv2MsVY9871J747cWMrMvVAJrvKtzcous8CoBAOH4ZTw1RFFdKfWrhFUSZs+BTA
-         MmmKd26RRXLeHHXpiDeemnE4mXrz4jf4EQvts5p1S0lp76qkgMZA8erHdGzvlgF9/o
-         MZgWYw8eqvoYsU05enUbPD283kbMm0+pZvw3f7UQrlkGIRkHJieJv6Dw+lN5dpQxPz
-         wXpWFp7pL9wgqFK7XByS8mB7wNG3JNfv/d2U5C+QruqfoNzzIK5A9STYxsAQhXa1/3
-         7+7DTGLksLJPOGX/4NXJbh1Bm2/wdrayx77fWLzS0eSnlduC5HR60LTCzcQLKq2K4j
-         N2YyM0n/VDP7w==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id g127so1372552vsd.6;
-        Thu, 18 Apr 2019 08:27:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAVcEdLFwvv0T5BDNutyiKtQ5wpSc7y1nZCJNMrW6gN5e0cZZvzb
-        J61Gj8W+MeccAEdtO8uWdSeWDspZ2Hq51snpcjc=
-X-Google-Smtp-Source: APXvYqyOpBWWg2uYNK0qf3CyHiNJr6VMFSUPz8vF9tVsbcHZpS8rkp9GWstvnRugAXFQPG1W7QOPifC4D5msTLBFX6w=
-X-Received: by 2002:a67:f948:: with SMTP id u8mr9436544vsq.179.1555601229490;
- Thu, 18 Apr 2019 08:27:09 -0700 (PDT)
+        Thu, 18 Apr 2019 11:29:11 -0400
+Received: by mail-it1-f195.google.com with SMTP id s3so3933263itk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:29:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PTV7w2sFD53HDQMqtsdrCsqIcgw/TVT2YeOyBYCnr5o=;
+        b=ZwbsfNoF2wE0VlUqMdQm4QRGSpBepAzSm+PeMUg1lRzgiZthWwgwJTJibYEPB+h5eh
+         CkQVJTkD90LJvvb56JcOp6TyZxqHDbHY26mB+q4e7oKnGrEUMytZg9RGocADikm/q4M1
+         zxWHsizKuRcFeSJ4hufwKHkWeryVwk3dgW5kVFWbDBRCwFLxpJA+mqttGGT1QHEad/yi
+         FVL/J7cJwUGENQhB5wE9JMF/rynmmJptf5OEwSccYs1FE0lHm6BPmmMnsYNpxIH4BQm4
+         Vnqqv3dXi9ZOMsyHGOqEBXm8BF6aN8+ZaNwzGt4LYZlFt7BguS8vwtfPaTRUdy+cwyB6
+         VlSg==
+X-Gm-Message-State: APjAAAVaLQMJXNpMiStVZSB9co5TuOyQ/aUkVGiT9cXsUIbgXGpbtsJP
+        zO0Qviwl7NIbrnDvVKEMFKoZ6Q==
+X-Google-Smtp-Source: APXvYqyvcfVGNOGMK+GZbb7AZqNZCVjS9j6kjjivsM+QlsoZ2vEDj70m8h4QmgUxsDxZt9+Op2eLlg==
+X-Received: by 2002:a05:660c:12ce:: with SMTP id k14mr3743232itd.23.1555601348493;
+        Thu, 18 Apr 2019 08:29:08 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id p17sm790420iol.69.2019.04.18.08.29.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Apr 2019 08:29:07 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 09:29:02 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Guenter Roeck <groeck@google.com>, linux-usb@vger.kernel.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Daniel Kurtz <djkurtz@chromium.org>, zwisler@chromium.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Johan Hovold <johan@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Raul Rangel <rrangel@chromium.org>
+Subject: Re: [PATCH v3] usb/hcd: Send a uevent signaling that the host
+ controller had died
+Message-ID: <20190418152902.GA185502@google.com>
+References: <20190418065141.GB12503@kroah.com>
+ <Pine.LNX.4.44L0.1904181011020.1513-100000@iolanthe.rowland.org>
+ <20190418143048.GA11555@kroah.com>
 MIME-Version: 1.0
-References: <20190406121447.GB4047@localhost.localdomain> <CAK7LNATfo0K6kzwobkAZ_u2KnWL3XycJzbr3KPtPF=ePziCuDg@mail.gmail.com>
- <20190418135238.GA5626@linux-8ccs>
-In-Reply-To: <20190418135238.GA5626@linux-8ccs>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 19 Apr 2019 00:26:33 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARKHXLgniczKXY01JhxhBpL2p-X_hWg70AcsrXRaLyDSg@mail.gmail.com>
-Message-ID: <CAK7LNARKHXLgniczKXY01JhxhBpL2p-X_hWg70AcsrXRaLyDSg@mail.gmail.com>
-Subject: Re: [PATCH v2] moduleparam: Save information about built-in modules
- in separate file
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-modules@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418143048.GA11555@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:52 PM Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Masahiro Yamada [18/04/19 20:10 +0900]:
-> >On Sat, Apr 6, 2019 at 9:15 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
-> >>
-> >> Problem:
-> >>
-> >> When a kernel module is compiled as a separate module, some important
-> >> information about the kernel module is available via .modinfo section of
-> >> the module.  In contrast, when the kernel module is compiled into the
-> >> kernel, that information is not available.
-> >>
-> >> Information about built-in modules is necessary in the following cases:
-> >>
-> >> 1. When it is necessary to find out what additional parameters can be
-> >> passed to the kernel at boot time.
-> >>
-> >> 2. When you need to know which module names and their aliases are in
-> >> the kernel. This is very useful for creating an initrd image.
-> >>
-> >> Proposal:
-> >>
-> >> The proposed patch does not remove .modinfo section with module
-> >> information from the vmlinux at the build time and saves it into a
-> >> separate file after kernel linking. So, the kernel does not increase in
-> >> size and no additional information remains in it. Information is stored
-> >> in the same format as in the separate modules (null-terminated string
-> >> array). Because the .modinfo section is already exported with a separate
-> >> modules, we are not creating a new API.
-> >>
-> >> It can be easily read in the userspace:
-> >>
-> >> $ tr '\0' '\n' < kernel.builtin
-> >> ext4.softdep=pre: crc32c
-> >> ext4.license=GPL
-> >> ext4.description=Fourth Extended Filesystem
-> >> ext4.author=Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others
-> >> ext4.alias=fs-ext4
-> >> ext4.alias=ext3
-> >> ext4.alias=fs-ext3
-> >> ext4.alias=ext2
-> >> ext4.alias=fs-ext2
-> >> md_mod.alias=block-major-9-*
-> >> md_mod.alias=md
-> >> md_mod.description=MD RAID framework
-> >> md_mod.license=GPL
-> >> md_mod.parmtype=create_on_open:bool
-> >> md_mod.parmtype=start_dirty_degraded:int
-> >> ...
-> >>
-> >> v2:
-> >>  * Extract modinfo from vmlinux.o as suggested by Masahiro Yamada;
-> >>  * Rename output file to kernel.builtin;
-> >
-> >Sorry, I do not get why you renamed
-> >"kernel.builtin.modinfo" to "kernel.builtin".
-> >
-> >If you drop "modinfo", we do not understand
-> >what kind information is contained in it.
-> >
-> >I think "kernel" and "builtin" have
-> >a quite similar meaning here.
-> >
-> >How about "builtin.modinfo" for example?
-> >
-> >
-> >It is shorter, and it is clear enough
-> >that it contains module_info.
->
-> I agree that the name kernel.builtin is unclear in what kind of
-> information it contains. Apologies for not having clarified this in
-> the previous review.
->
-> Since kbuild already produces "modules.order" and "modules.builtin"
-> files, why not just name it "modules.builtin.modinfo" to keep the
-> names consistent with what is already there?
+On Thu, Apr 18, 2019 at 04:30:48PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Apr 18, 2019 at 10:21:32AM -0400, Alan Stern wrote:
+> > On Thu, 18 Apr 2019, Greg Kroah-Hartman wrote:
+> > 
+> > > On Wed, Apr 17, 2019 at 04:20:09PM -0700, Guenter Roeck wrote:
+> > > > On Wed, Apr 17, 2019 at 3:41 PM Raul Rangel <rrangel@chromium.org> wrote:
+> > > > >
+> > > > > On Wed, Apr 17, 2019 at 03:23:52PM -0700, Guenter Roeck wrote:
+> > > > > > On Wed, Apr 17, 2019 at 3:11 PM Raul Rangel <rrangel@chromium.org> wrote:
+> > > > > > >
+> > > > > > > On Wed, Apr 17, 2019 at 04:39:23PM -0400, Alan Stern wrote:
+> > > > > > > >
+> > > > > > > > This sounds like a golden opportunity!  Submit a separate patch making
+> > > > > > > > the parameter to kobject_uevent_env be const (actually const char *
+> > > > > > > > const []), then submit this patch on top of that one.
+> > > > > > > So there are other parts of the code base that dynamically create their
+> > > > > > > array values. So by making the function take const, it breaks :(
+> > > > > >
+> > > > > > Confused. The calling code can still be non-const. I don't see the
+> > > > > > parameter modified in kobject_uevent_env(), so declaring it const
+> > > > > > should be possible. Can you give an example of code that no longer
+> > > > > > works ?
+> > > > > static int notify_user_space(struct thermal_zone_device *tz, int trip)
+> > > > > {
+> > > > >         char *thermal_prop[5];
+> > > > >         int i;
+> > > > >
+> > > > >         mutex_lock(&tz->lock);
+> > > > >         thermal_prop[0] = kasprintf(GFP_KERNEL, "NAME=%s", tz->type);
+> > > > >         thermal_prop[1] = kasprintf(GFP_KERNEL, "TEMP=%d", tz->temperature);
+> > > > >         thermal_prop[2] = kasprintf(GFP_KERNEL, "TRIP=%d", trip);
+> > > > >         thermal_prop[3] = kasprintf(GFP_KERNEL, "EVENT=%d", tz->notify_event);
+> > > > >         thermal_prop[4] = NULL;
+> > > > >         kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
+> > > > >         for (i = 0; i < 4; ++i)
+> > > > >                 kfree(thermal_prop[i]);
+> > > > >         mutex_unlock(&tz->lock);
+> > > > >         return 0;
+> > > > > }
+> > > > >
+> > > > > drivers/thermal/user_space.c:48:52: error: passing 'char *[5]' to parameter of type 'const char *const *' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+> > > > >         kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
+> > > > >                                                           ^~~~~~~~~~~~
+> > > > > include/linux/kobject.h:238:22: note: passing argument to parameter 'envp' here
+> > > > >                         const char *const envp[]);
+> > > > >                                           ^
+> > > > >
+> > > > > http://c-faq.com/ansi/constmismatch.html explains why it fails.
+> > > > >
+> > > > Interesting. One never stops learning. So the best you could do would
+> > > > be char * const envp[], but I guess that doesn't help much.
+> > > 
+> > > Yeah, I went down this path a year or so ago and had to give it up as
+> > > well :(
+> > 
+> > Well, the signature could still be changed as Guenter suggests.
+> > 
+> > And the array being added in the new code could still be static.  
+> > After all, there isn't really any danger that the contents of those
+> > strings will be modified, right?  It's just that the const modifiers
+> > weren't put in until it was too late and there were too many existing
+> > callers.  Perhaps a comment about this could be included in the 
+> > kerneldoc for kobject_uevent_env.
+> 
+> I am all for changing this, but I remember I tried to, and somehow
+> failed, but I don't remember the full details sorry, it was a while ago.
+> If someone figures out how to make this all const, I will gladly take
+> that patch.
+> 
+Well we could use varargs...
+int kobject_uevent_env(struct kobject *kobj,
+		       enum kobject_action action,
+		       ...);
 
+This will accept both const char* and char *.
 
-Is it consistent?
+Example https://repl.it/@RaulRangel/Const-char-var-args
 
-If we had "modules.order" and "modules.builtin.order" there,
-I would agree with "modules.builtin.modinfo",
-and also "modules.alias" vs "modules.builtin.alias".
+It seems like most callers have a fixed number of env params, so you
+wouldn't need a function that takes a list.
 
-
-We already have "modules.builtin", and probably impossible
-to rename it, so we cannot keep consistency in any way.
-
-
-"modules.builtin" is a weird name since
-it actually contains "order", but its extension
-does not express what kind of information is in it.
-Hence, I doubt "modules.builtin" is a good precedent.
-
-IMHO, "modules" and "builtin" are opposite
-to each other. "modules.builtin" sounds iffy to me.
-
-
-
-
-
-> It clearly conveys that
-> this file contains modinfo for builtin modules.
->
-> I'll leave it up to Lucas to decide if the file format is OK for kmod.
-> With the modinfo dump, kmod could then decide what to do with the
-> information, append to modules.alias{,.bin}, etc.
->
-> Also, I think this file needs to be documented in Documentation/kbuild/kbuild.txt.
->
-> Thanks,
->
-> Jessica
---
-Best Regards
-Masahiro Yamada
+> thanks,
+> 
+> greg k-h
