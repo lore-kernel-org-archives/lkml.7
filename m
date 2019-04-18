@@ -2,275 +2,131 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C377DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD46BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C772186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8606E206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611493;
-	bh=pL+PpkzPvIetroSvc3YKZ69+nDMq/7LXY42hVqIeVl0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rfNf2FfhA1xiBuynwjYjp08zO35sDs6hcAMTin/Iaonk+3Oxw6kMnPsHgcIuKGtQO
-	 RXjXsNYmdE/MkPrfYewU0woUj/SZG2lPhtVbkyt6ZpxGicJ0W9MxOrvO0ac5Ok5we8
-	 DgbmwuaJ1Oea122vCr4nKHQ3w1+Lfs5fjCmi8Wsw=
+	s=default; t=1555611499;
+	bh=qB/Vh3kd5u9xuDMWkg6bSqTMWbGkr/mNbtBDoaojIiw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xFAYRej6fZTRpkLtjkAJekWVpsy/L8Z3NrcZSIUwp2pYHWrs9GCxCzJjZGv38IZHl
+	 1B+G1+3P2VYm7Dl8zC8FnC2NqdDpokqvw4u42+OtaHBrEmHbS4u66e3yX97grJTEcu
+	 vmGfizSI7Hn7piGFVsC58R0ok8Gdjiurt6Sn0YNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404177AbfDRSSM (ORCPT
+        id S2404165AbfDRSKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391268AbfDRSKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C4420675;
-        Thu, 18 Apr 2019 18:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611046;
-        bh=pL+PpkzPvIetroSvc3YKZ69+nDMq/7LXY42hVqIeVl0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+Dx8u6sTK/gfBVCJmWXbMKJyD6vvrj6MThYVDrZFulNklgH0VUi9qGS4+QEaNX2N
-         yPAeXX9IC2904JZEldkvBi7eup4UragNbs08b5lGr1OlquPoUNUdFKT1gdp5Y13G0r
-         rqesybAHnXmv5zPa8seLKbTQP4r7GwBW8CgTh6GY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 39/93] perf top: Delete the evlist before perf_session, fixing heap-use-after-free issue
-Date:   Thu, 18 Apr 2019 19:57:17 +0200
-Message-Id: <20190418160441.339477070@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
-References: <20190418160436.781762249@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 18 Apr 2019 14:10:44 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52346 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391603AbfDRSKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Q97wY6btVCHy/kFofHI09uzvbtwu21iq5Uz5kIDdyws=; b=urJdq4JxwV4eFQA2l8/RVg4szk
+        /MBfg0DCCjnUbMwm3panxmAoIN7YgOQgTN8RO8Bv5+//absL/8MJBesC7NeU5eJ1Vr/L1Yt/w8ZD2
+        Fsb6qhmrYMqmN8cJL/gEMzOHcxKQWEBD+hp57z/RQ8sx/Si44CzGGaNng7DGufNBXVYW7QHO7OsmG
+        H0u2IzZeSGqWLI1k1T+mQtgT1Oqm1iwTGi/CxyVSpQoENW6HLSnt7KK6o0J2fiNcA4voLFShnaAod
+        +lyxyCitOLNndxBhrPTs0xsKa1KOztFaWmiQfJ8ctlg1/J11PCDy00pi1byCZ7L/N8KBi4rsxl4bd
+        Gv8RcjHw==;
+Received: from 177.132.233.55.dynamic.adsl.gvt.net.br ([177.132.233.55] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hHBUX-0005MG-Iw; Thu, 18 Apr 2019 18:10:34 +0000
+Date:   Thu, 18 Apr 2019 15:10:28 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] docs: hwmon: convert three docs to ReST format
+Message-ID: <20190418151028.341723f7@coco.lan>
+In-Reply-To: <87k1frgysq.fsf@intel.com>
+References: <287cf72fc213656c1593f8bd42feb62f7a5f26e7.1555580417.git.mchehab+samsung@kernel.org>
+        <87k1frgysq.fsf@intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0dba9e4be95b59e77060645ca8e37ca3231061f5 ]
+Em Thu, 18 Apr 2019 17:42:29 +0300
+Jani Nikula <jani.nikula@linux.intel.com> escreveu:
 
-The evlist should be destroyed before the perf session.
+> On Thu, 18 Apr 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> > Those three new drivers were missed on the initial conversion
+> > to ReST format. So:
+> >
+> > - Rename them to .rst;
+> > - Add them to the hwmon index.rst index;
+> > - add some blank lines at the "Supported systems:" part, in
+> >   order to allow Sphinx to properly identify new lines,
+> >   suppressing warnings and avoid it to output some random
+> >   lines in bold;
+> > - When multiple authors are involved, change the authors
+> >   part to a list, in order to avoid adding blank lines.
+> > - adjust the table cells (one of the tables seemed to be
+> >   assuming that tab is 4 positions instead of 8) and add
+> >   the table markup.
+> > - be sure that the section markups have the same number of
+> >   characters as the section title.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > ---
+> >  Documentation/hwmon/index.rst                 |  3 +++
+> >  Documentation/hwmon/{ir38064 => ir38064.rst}  | 21 ++++++++++++-------
+> >  .../hwmon/{isl68137 => isl68137.rst}          | 16 ++++++++++----
+> >  .../hwmon/{lochnagar => lochnagar.rst}        |  7 +++++--
+> >  4 files changed, 33 insertions(+), 14 deletions(-)
+> >  rename Documentation/hwmon/{ir38064 => ir38064.rst} (76%)
+> >  rename Documentation/hwmon/{isl68137 => isl68137.rst} (85%)
+> >  rename Documentation/hwmon/{lochnagar => lochnagar.rst} (93%)
+> >
+> > diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> > index 893804414510..3fa14fe7b49c 100644
+> > --- a/Documentation/hwmon/index.rst
+> > +++ b/Documentation/hwmon/index.rst
+> > @@ -65,6 +65,8 @@ Hardware Monitoring Kernel Drivers
+> >     ina2xx.rst
+> >     ina3221.rst
+> >     ir35221.rst
+> > +   ir38064.rst
+> > +   isl68137.rst  
+> 
+> Didn't notice it on the first patch adding index.rst, but I don't think
+> it's customary to add .rst suffix to the toctree.
 
-Detected with gcc's ASan:
+Provided that all documents are at the same time, I guess it
+doesn't matter having a .rst there or not.
 
-  =================================================================
-  ==27350==ERROR: AddressSanitizer: heap-use-after-free on address 0x62b000002e38 at pc 0x5611da276999 bp 0x7ffce8f1d1a0 sp 0x7ffce8f1d190
-  WRITE of size 8 at 0x62b000002e38 thread T0
-      #0 0x5611da276998 in __list_del /home/work/linux/tools/include/linux/list.h:89
-      #1 0x5611da276d4a in __list_del_entry /home/work/linux/tools/include/linux/list.h:102
-      #2 0x5611da276e77 in list_del_init /home/work/linux/tools/include/linux/list.h:145
-      #3 0x5611da2781cd in thread__put util/thread.c:130
-      #4 0x5611da2cc0a8 in __thread__zput util/thread.h:68
-      #5 0x5611da2d2dcb in hist_entry__delete util/hist.c:1148
-      #6 0x5611da2cdf91 in hists__delete_entry util/hist.c:337
-      #7 0x5611da2ce19e in hists__delete_entries util/hist.c:365
-      #8 0x5611da2db2ab in hists__delete_all_entries util/hist.c:2639
-      #9 0x5611da2db325 in hists_evsel__exit util/hist.c:2651
-      #10 0x5611da1c5352 in perf_evsel__exit util/evsel.c:1304
-      #11 0x5611da1c5390 in perf_evsel__delete util/evsel.c:1309
-      #12 0x5611da1b35f0 in perf_evlist__purge util/evlist.c:124
-      #13 0x5611da1b38e2 in perf_evlist__delete util/evlist.c:148
-      #14 0x5611da069781 in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1645
-      #15 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #16 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #17 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #18 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #19 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
-      #20 0x5611d9ff35c9 in _start (/home/work/linux/tools/perf/perf+0x3e95c9)
+Btw, newer versions of Sphinx build can work with other formats
+like markdown. I suspect that, if we end mixing markdown documents,
+it would be worth having the extension there.
 
-  0x62b000002e38 is located 11320 bytes inside of 27448-byte region [0x62b000000200,0x62b000006d38)
-  freed by thread T0 here:
-      #0 0x7fdccb04ab70 in free (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedb70)
-      #1 0x5611da260df4 in perf_session__delete util/session.c:201
-      #2 0x5611da063de5 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1300
-      #3 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
-      #4 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #5 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #6 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #7 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #8 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+FYI, someone recently added a markdown file at the tree:
 
-  previously allocated by thread T0 here:
-      #0 0x7fdccb04b138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
-      #1 0x5611da26010c in zalloc util/util.h:23
-      #2 0x5611da260824 in perf_session__new util/session.c:118
-      #3 0x5611da0633a6 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1192
-      #4 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
-      #5 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #6 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #7 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #8 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #9 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+commit e453fa60e086786fe89ba15ee8fef80bc2e6ecc3
+Author: Sascha Hauer <s.hauer@pengutronix.de>
+Date:   Fri Sep 7 14:36:46 2018 +0200
 
-  SUMMARY: AddressSanitizer: heap-use-after-free /home/work/linux/tools/include/linux/list.h:89 in __list_del
-  Shadow bytes around the buggy address:
-    0x0c567fff8570: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff8580: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff8590: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff85a0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff85b0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-  =>0x0c567fff85c0: fd fd fd fd fd fd fd[fd]fd fd fd fd fd fd fd fd
-    0x0c567fff85d0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff85e0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff85f0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff8600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-    0x0c567fff8610: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-  Shadow byte legend (one shadow byte represents 8 application bytes):
-    Addressable:           00
-    Partially addressable: 01 02 03 04 05 06 07
-    Heap left redzone:       fa
-    Freed heap region:       fd
-    Stack left redzone:      f1
-    Stack mid redzone:       f2
-    Stack right redzone:     f3
-    Stack after return:      f5
-    Stack use after scope:   f8
-    Global redzone:          f9
-    Global init order:       f6
-    Poisoned by user:        f7
-    Container overflow:      fc
-    Array cookie:            ac
-    Intra object redzone:    bb
-    ASan internal:           fe
-    Left alloca redzone:     ca
-    Right alloca redzone:    cb
-  ==27350==ABORTING
+    Documentation: ubifs: Add authentication whitepaper
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190316080556.3075-8-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/builtin-top.c | 42 ++++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 23 deletions(-)
+	Documentation/filesystems/ubifs-authentication.md
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index f64e312db787..9b215007924b 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1192,23 +1192,19 @@ static int __cmd_top(struct perf_top *top)
- 	pthread_t thread, thread_process;
- 	int ret;
- 
--	top->session = perf_session__new(NULL, false, NULL);
--	if (top->session == NULL)
--		return -1;
--
- 	if (!top->annotation_opts.objdump_path) {
- 		ret = perf_env__lookup_objdump(&top->session->header.env,
- 					       &top->annotation_opts.objdump_path);
- 		if (ret)
--			goto out_delete;
-+			return ret;
- 	}
- 
- 	ret = callchain_param__setup_sample_type(&callchain_param);
- 	if (ret)
--		goto out_delete;
-+		return ret;
- 
- 	if (perf_session__register_idle_thread(top->session) < 0)
--		goto out_delete;
-+		return ret;
- 
- 	if (top->nr_threads_synthesize > 1)
- 		perf_set_multithreaded();
-@@ -1224,13 +1220,18 @@ static int __cmd_top(struct perf_top *top)
- 
- 	if (perf_hpp_list.socket) {
- 		ret = perf_env__read_cpu_topology_map(&perf_env);
--		if (ret < 0)
--			goto out_err_cpu_topo;
-+		if (ret < 0) {
-+			char errbuf[BUFSIZ];
-+			const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
-+
-+			ui__error("Could not read the CPU topology map: %s\n", err);
-+			return ret;
-+		}
- 	}
- 
- 	ret = perf_top__start_counters(top);
- 	if (ret)
--		goto out_delete;
-+		return ret;
- 
- 	ret = perf_evlist__apply_drv_configs(evlist, &pos, &err_term);
- 	if (ret) {
-@@ -1257,7 +1258,7 @@ static int __cmd_top(struct perf_top *top)
- 	ret = -1;
- 	if (pthread_create(&thread_process, NULL, process_thread, top)) {
- 		ui__error("Could not create process thread.\n");
--		goto out_delete;
-+		return ret;
- 	}
- 
- 	if (pthread_create(&thread, NULL, (use_browser > 0 ? display_thread_tui :
-@@ -1301,19 +1302,7 @@ static int __cmd_top(struct perf_top *top)
- out_join_thread:
- 	pthread_cond_signal(&top->qe.cond);
- 	pthread_join(thread_process, NULL);
--out_delete:
--	perf_session__delete(top->session);
--	top->session = NULL;
--
- 	return ret;
--
--out_err_cpu_topo: {
--	char errbuf[BUFSIZ];
--	const char *err = str_error_r(-ret, errbuf, sizeof(errbuf));
--
--	ui__error("Could not read the CPU topology map: %s\n", err);
--	goto out_delete;
--}
- }
- 
- static int
-@@ -1644,10 +1633,17 @@ int cmd_top(int argc, const char **argv)
- 		signal(SIGWINCH, winch_sig);
- 	}
- 
-+	top.session = perf_session__new(NULL, false, NULL);
-+	if (top.session == NULL) {
-+		status = -1;
-+		goto out_delete_evlist;
-+	}
-+
- 	status = __cmd_top(&top);
- 
- out_delete_evlist:
- 	perf_evlist__delete(top.evlist);
-+	perf_session__delete(top.session);
- 
- 	return status;
- }
--- 
-2.19.1
+IMO, the best would be to just run pandoc into it and convert
+to .rst, than to mix different markup languages.
 
-
-
+Thanks,
+Mauro
