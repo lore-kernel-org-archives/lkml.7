@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C116C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA5EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC222064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF020643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611634;
-	bh=HCcaOXthsoXLGltvkYc6PgPl3u3rQseNWOQE314GKLo=;
+	s=default; t=1555611651;
+	bh=ZIyGuThsbVKGaQNbGgxjt4Jx+6Beoi4C6pE0ktsuEZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nj6I//gd82hdj+VTuVkHP5jyaAyjqvYQfk01RvuCSCOEE4muSZ3fzbh1YyfYp6xZn
-	 gy1f8NoWW1zJSrfN0fJ6+kwvOQZbziuixGAQjnlMQCk5TUYUwfASp0Y+gwQVcLGe9N
-	 bOP97Jt3UEhmMtMHPYt3+dOGVUsWsiFU4UBCsaYk=
+	b=wT7N5edodFmILGmZOJ9GsVJo4JUav+1NZM48lRL59r0p2hCmcFJlCiRDx0j7HJgxv
+	 ffbOtxhvd3saX+bNntmJ4HZl+D9nr+PVVZvWtnLi0gBZ7BnLeuT9/vbz2rOGfmOIr1
+	 OVckaeTAvoHv9ghRnujEqQopxmtWRMkTAhrkaTOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403897AbfDRSUd (ORCPT
+        id S2391960AbfDRSUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39884 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403879AbfDRSIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:39 -0400
+        id S2391212AbfDRSIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C1B2186A;
-        Thu, 18 Apr 2019 18:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98DFA2186A;
+        Thu, 18 Apr 2019 18:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610918;
-        bh=HCcaOXthsoXLGltvkYc6PgPl3u3rQseNWOQE314GKLo=;
+        s=default; t=1555610902;
+        bh=ZIyGuThsbVKGaQNbGgxjt4Jx+6Beoi4C6pE0ktsuEZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyctsGJxZur4LEQiQv20rLoNfYahawE29DKbKCjni2pyAlOe8W/x7vdmo92J9iQvN
-         O+/dMHy3zipGyRqTHQp+1XvHzZpWEW5JujmBSS2Z6QhmYEYibnAKm+TuyA0aUjMckV
-         7YHRNZqSoIE64Pq1zrKK8kWcHg2IIfn+LY97WP6M=
+        b=2g74nOEFpYi96rysuloP8rZYeTDRIdkE0sUUFzP3W0FTfaR/KS4Dhc3K5NTQT5/yN
+         36MylwiNKGOhvCww+DxuxuyAL2tERPi8CVyDlI8VmOnLEf6Gx26Nikt7kZl1Audvnb
+         TDNVznSNmhrHYYmhZMt94CGn6JdtljwK07ROtKpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Cartwright <julia@ni.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 41/50] iommu/dmar: Fix buffer overflow during PCI bus notification
-Date:   Thu, 18 Apr 2019 19:57:52 +0200
-Message-Id: <20190418160427.463606376@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 35/50] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
+Date:   Thu, 18 Apr 2019 19:57:46 +0200
+Message-Id: <20190418160426.918588431@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -59,85 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
+[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
 
-Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
-device path") changed the type of the path data, however, the change in
-path type was not reflected in size calculations.  Update to use the
-correct type and prevent a buffer overflow.
+"S3C2410 PM Suspend Memory CRC" feature (controlled by
+SAMSUNG_PM_CHECK config option) is incompatible with highmem
+(uses phys_to_virt() instead of proper mapping) which is used by
+the majority of Exynos boards. The issue manifests itself in OOPS
+on affected boards, i.e. on Odroid-U3 I got the following one:
 
-This bug manifests in systems with deep PCI hierarchies, and can lead to
-an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
-or can lead to overflow of slab-allocated data.
+Unable to handle kernel paging request at virtual address f0000000
+pgd = 1c0f9bb4
+[f0000000] *pgd=00000000
+Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
+[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
+[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
+[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
+[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
+[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
+[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
+[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
+[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
+[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
+[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
+[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
+[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
+[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
 
-   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
-   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
-   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
-   Call Trace:
-    ? dump_stack+0x46/0x59
-    ? print_address_description+0x1df/0x290
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? kasan_report+0x256/0x340
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? dmar_dev_scope_init+0x424/0x48f
-    ? __down_write_common+0x1ec/0x230
-    ? dmar_dev_scope_init+0x48f/0x48f
-    ? dmar_free_unused_resources+0x109/0x109
-    ? cpumask_next+0x16/0x20
-    ? __kmem_cache_create+0x392/0x430
-    ? kmem_cache_create+0x135/0x2f0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? intel_iommu_init+0x170/0x1848
-    ? _raw_spin_unlock_irqrestore+0x32/0x60
-    ? migrate_enable+0x27a/0x5b0
-    ? sched_setattr+0x20/0x20
-    ? migrate_disable+0x1fc/0x380
-    ? task_rq_lock+0x170/0x170
-    ? try_to_run_init_process+0x40/0x40
-    ? locks_remove_file+0x85/0x2f0
-    ? dev_prepare_static_identity_mapping+0x78/0x78
-    ? rt_spin_unlock+0x39/0x50
-    ? lockref_put_or_lock+0x2a/0x40
-    ? dput+0x128/0x2f0
-    ? __rcu_read_unlock+0x66/0x80
-    ? __fput+0x250/0x300
-    ? __rcu_read_lock+0x1b/0x30
-    ? mntput_no_expire+0x38/0x290
-    ? e820__memblock_setup+0xb0/0xb0
-    ? pci_iommu_init+0x25/0x63
-    ? pci_iommu_init+0x25/0x63
-    ? do_one_initcall+0x7e/0x1c0
-    ? initcall_blacklisted+0x120/0x120
-    ? kernel_init_freeable+0x27b/0x307
-    ? rest_init+0xd0/0xd0
-    ? kernel_init+0xf/0x120
-    ? rest_init+0xd0/0xd0
-    ? ret_from_fork+0x1f/0x40
-   The buggy address belongs to the variable:
-    dmar_pci_notify_info_buf+0x40/0x60
+Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
+SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
 
-Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
-Signed-off-by: Julia Cartwright <julia@ni.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
+ arch/arm/plat-samsung/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 63110fbbb410..d51734e0c350 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -143,7 +143,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
- 		for (tmp = dev; tmp; tmp = tmp->bus->self)
- 			level++;
+diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+index e8229b9fee4a..3265b8f86069 100644
+--- a/arch/arm/plat-samsung/Kconfig
++++ b/arch/arm/plat-samsung/Kconfig
+@@ -258,7 +258,7 @@ config S3C_PM_DEBUG_LED_SMDK
  
--	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
-+	size = sizeof(*info) + level * sizeof(info->path[0]);
- 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
- 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
- 	} else {
+ config SAMSUNG_PM_CHECK
+ 	bool "S3C2410 PM Suspend Memory CRC"
+-	depends on PM
++	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
+ 	select CRC32
+ 	help
+ 	  Enable the PM code's memory area checksum over sleep. This option
 -- 
 2.19.1
 
