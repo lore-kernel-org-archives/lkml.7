@@ -2,148 +2,159 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB137C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC2DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C1F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BjAG+2cf"
+	by mail.kernel.org (Postfix) with ESMTP id DB555208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389216AbfDRPfk (ORCPT
+        id S2389463AbfDRPgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:35:40 -0400
-Received: from mail-vs1-f47.google.com ([209.85.217.47]:33360 "EHLO
-        mail-vs1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387519AbfDRPfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:35:39 -0400
-Received: by mail-vs1-f47.google.com with SMTP id s11so1406934vsn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hi4lqBhaN/AwwaaJeItLf8qSxmTg8+ij+o9xauLCQJ8=;
-        b=BjAG+2cf//Fi00v0D/sekU7PZd3rTw9Do8+cr4GzVamCzuewtkVlYkMluzjb8sqgfT
-         8qDJOWB4UudlRDI3rTVWs0yayxeNJztxrYiPAzxY1jZ8a48Q58P0oI7yzV4NrkFvvHVi
-         c80srcG6fTON4msNrMK5UEONylegHMpjQC/0Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hi4lqBhaN/AwwaaJeItLf8qSxmTg8+ij+o9xauLCQJ8=;
-        b=ofolvMXloP3KMKIEUdqklbTr1aCul+cRH+CYmQAztLIX4FEeu/+GZy1SebDa/3ONoD
-         R/dcNeAYydFCyt8jh7njnYwMZ5SO+Xn99mhZKDXNiO9SC8ZA1kKTetKmfh+yUOgrZp/D
-         vY36GjD+rjMsen9Aew71xX/JneguPapWLnuLQeXsbVPXfBVabNBPCBiIaHC0McFKaX3K
-         ohYBxH0uwpjYsrEuHL6ZE3jTetID7Qw5cKShk6Hn5OGcZ25bycSno4z+YCJlMsQ9BFK4
-         B+Tf+Sm1q48w8jfQeYneBh4byBl1LNmeFUYYQ9fnCLdSNISwMzo3XrJFKvo7qTuPdq8+
-         Jb8w==
-X-Gm-Message-State: APjAAAWUD8xmIYhtlo98tdClfqP4uZYU7Hz9ipZVa65XI4EkddsxSF2K
-        1TtVTe57LaFvOUFNzx28s5YETdXh5EsPZ22Hoh3b6w==
-X-Google-Smtp-Source: APXvYqxdLdBCHZVg0VEy0bEuGpn4RsJH8JEMEoe+h2Wf7lm/HDLI7Rnca3gI/U8BoI3FnRP60QeYngZQ13uOi17Aj7o=
-X-Received: by 2002:a05:6102:119:: with SMTP id z25mr4058764vsq.232.1555601738068;
- Thu, 18 Apr 2019 08:35:38 -0700 (PDT)
+        Thu, 18 Apr 2019 11:36:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35890 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387519AbfDRPgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:36:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EFD015AB;
+        Thu, 18 Apr 2019 08:36:06 -0700 (PDT)
+Received: from [10.1.32.54] (unknown [10.1.32.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09D3E3F5AF;
+        Thu, 18 Apr 2019 08:36:03 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 10/18] iommu/vt-d: Add custom allocator for IOASID
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1554767973-30125-11-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20190415143711.13c29308@x1.home> <20190415161015.564cb071@jacob-builder>
+Message-ID: <70c6b197-029e-94cd-2745-d4a193cbbcd0@arm.com>
+Date:   Thu, 18 Apr 2019 16:36:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190412224539.161321-1-ncrews@chromium.org> <1d9add8f-6205-dfa2-d15c-c2fab29b091a@metux.net>
-In-Reply-To: <1d9add8f-6205-dfa2-d15c-c2fab29b091a@metux.net>
-From:   Duncan Laurie <dlaurie@chromium.org>
-Date:   Thu, 18 Apr 2019 08:35:22 -0700
-Message-ID: <CADv6+05iC-QtdHdHoCvka4r=LfW1iENxkuGbKEtD7P0=GtAFAw@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Add telemetry data char device interface
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        linux-kernel@vger.kernel.org, Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Simon Glass <sjg@chromium.org>, bartfab@chromium.org,
-        Oleh Lamzin <lamzin@google.com>,
-        Jason Wong <jchwong@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190415161015.564cb071@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 1:04 AM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> On 13.04.19 00:45, Nick Crews wrote:
-> > The Wilco Embedded Controller is able to send telemetry data
-> > which is useful for enterprise applications.
->
-> What kind of "enterprise applications" exactly ?
->
-> > A daemon running on
-> > the OS sends a command to the EC via write() to char device,
-> > and can read the response with a read() request.
-> > Both the request and the response are in an opaque
-> > binary format so that information which is proprietary to the
-> > enterprise service provider is secure.
->
-> In other words: a direct backdoor for the "provider", who can do
-> anything he wants remotely on the user's machine, w/o the user having
-> a chance of seeing what's actually going on ?
->
-> Seriously ?!
->
-> In some of your previous mails (*1) you indicate that it sends some
-> diagnostics information (eg. "dock is not working"). WTH does that
-> have to be "proprietary", IOW: encrypted = kept secret from the owner ?
->
-> If I *own* such a device, this is some information, I *need* to know,
-> I *deserve* to know, and it is *my* data, as it's a state of *my*
-> device. And that's some kind of information that *nobody* else has
-> any business with that. Period.
->
+On 16/04/2019 00:10, Jacob Pan wrote:[...]
+>> > +                   /*
+>> > +                    * Register a custom ASID allocator if we
+>> > are running
+>> > +                    * in a guest, the purpose is to have a
+>> > system wide PASID
+>> > +                    * namespace among all PASID users.
+>> > +                    * Note that only one vIOMMU in each guest
+>> > is supported.  
+>> 
+>> Why one vIOMMU per guest?  This would prevent guests with multiple PCI
+>> domains aiui.
+>> 
+> This is mainly for simplicity reasons. These are all virtual BDFs
+> anyway. As long as guest BDF can be mapped to a host BDF, it should be
+> sufficient, am I missing anything?
+> 
+> From PASID allocation perspective, it is not tied to any PCI device
+> until bind call. We only need to track PASID ownership per guest.
+> 
+> virtio-IOMMU spec does support multiple PCI domains but I am not sure
+> if that applies to all assigned devices, whether all assigned devices
+> are under the same domain. Perhaps Jean can help to clarify how PASID
+> allocation API looks like on virtio IOMMU.
 
-We on the Chrome OS team happen to strongly agree with you, which is
-why Chromebooks are the only mass market devices to ship with an open
-source Embedded Controller.
+[Ugh, this is much longer than I hoped. In short I don't think multiple
+vIOMMUs is a problem, because the host uses the same allocator for all of
+them.]
 
-For devices with the Wilco EC we are working with an OEM who builds
-specific computers for "enterprise" scenarios where a company owns or
-leases the device and is responsible for the management of it, while
-the end user is an employee or contractor who does not own the device
-they are using.  For various business reasons we are not able to get
-our usual open source EC firmware on this board, so we are forced to
-rely on the vendor's closed EC firmware.
+Yes there can be a single virtio-iommu instance for multiple PCI
+domains, or multiple instances each managing assigned devices. It's up to
+the hypervisor to decide on the topology.
 
-The reality is that this is exactly what a standard EC firmware is
-today: a black box with an opaque mailbox interface that provides
-hundreds of undocumented commands.  Typically this mailbox interface
-is hidden behind the BIOS with SMI and WMI and the user has no idea
-that these even exist.
+For Linux and QEMU I was assuming that choosing the vIOMMU used for PASID
+allocation isn't a big deal, since in the end they all use the same
+allocator in the host. It gets complicated when some vIOMMUs can be
+removed at runtime (unload the virtio-iommu module that was providing the
+PASID allocator, and then you can't allocate PASIDs for the VT-d instance
+anymore), so maybe limiting to one type of vIOMMU (don't mix VT-d and
+virtio-iommu in the same VM) is more reasonable.
 
-We are attempting to cope with this closed EC by fitting these mailbox
-commands into standard kernel interfaces wherever possible, rather
-than go the traditional route of hiding it in the BIOS or simply
-exposing an opaque /dev node and letting user space send whatever
-commands it wants.  Our intent is for the interface to the EC to be
-intentionally limited by the kernel driver and to be very clear what
-commands are available and what they do.  The drivers are also modular
-so that if an end user does acquire one of these devices they can
-choose not to load some modules and further limit what EC interfaces
-are exposed to the OS.
+It's a bit more delicate from the virtio-iommu perspective. The
+interface is portable and I can't tie it down to the choices we're making
+for Linux and KVM. Having a system-wide PASID space is what we picked for
+Linux but the PCIe architecture allows for each device to have
+their own PASID space, and I suppose some hypervisors and guests might
+prefer implementing it that way.
 
-This specific telemetry command provides hardware information about
-the device, such as voltages, fan speeds, temperatures, power numbers,
-etc.  This is the one command where the vendor we are working with is
-not willing to document the returned data format publicly (or even to
-us) as they consider the hardware diagnostic data that they gather
-here, and the analytics that they run on it, to be critical IP for
-their enterprise device replacement program.
+My plan for the moment is to implement global PASID allocation using one
+feature bit and two new requests, but leave space for a per-device PASID
+allocation, introduced with another feature bit if necessary. If it ever
+gets added, I expect the per-device allocation to be done during the bind
+request rather than with a separate PASID_ALLOC request.
 
-It is clear from feedback that this telemetry command is still too
-opaque, and we will continue to work with the vendor to try and come
-up with a more flexible command set that still allows us to implement
-the interface in the kernel without resorting to the usual tricks to
-hide it from the user.
+So currently I have a new feature bit and two commands:
 
--duncan
+#define VIRTIO_IOMMU_F_PASID_ALLOC
+#define VIRTIO_IOMMU_T_ALLOC_PASID
+#define VIRTIO_IOMMU_T_FREE_PASID
+
+struct virtio_iommu_req_alloc_pasid {
+        struct virtio_iommu_req_head head;
+        u32 reserved;
+
+        /* Device-writeable */
+        le32 pasid;
+        struct virtio_iommu_req_tail tail;
+};
+
+struct virtio_iommu_req_free_pasid {
+        struct virtio_iommu_req_head head;
+        u32 reserved;
+        le32 pasid;
+
+        /* Device-writeable */
+        struct virtio_iommu_req_tail tail;
+};
+
+If the feature bit is offered it must be used, and the guest can only use
+PASIDs allocated via VIRTIO_IOMMU_T_ALLOC_PASID in its bind requests.
+
+The PASID space is global at the host scope. If multiple virtio-iommu
+devices in the VM offer the feature bit, then using either of their
+command queue to issue a VIRTIO_IOMMU_F_ALLOC_PASID and
+VIRTIO_IOMMU_F_FREE_PASID is equivalent. Another possibility is to require
+that only one of the virtio-iommu instances per VM offers the feature bit.
+I do prefer this option, but there is the vIOMMU removal problem mentioned
+above - which, with the first option, could be solved by keeping a list of
+PASID allocator functions rather than a single one.
+
+I'm considering adding max_pasid field to virtio_iommu_req_alloc_pasid. If
+VIRTIO_IOMMU_T_ALLOC_PASID returns a random 20-bit value then a lot of
+space might be needed for storing PASID contexts (is that a real concern
+though? For internal data it can use a binary tree, and the guest is not
+in charge of hardware PASID tables here). If the guest is short on memory
+then it could benefit from a smaller number of PASID bits. That could
+either be globally configurable in the virtio-iommu config space, or using
+a max_pasid field in the VIRTIO_IOMMU_T_ALLOC_PASID request. The latter
+allows to support devices with less than 20 PASID bits, though we're
+hoping that no one will implement that.
+
+Thanks,
+Jean
