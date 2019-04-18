@@ -2,154 +2,81 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0245C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A09AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F28920675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="UJVsd9rS"
+	by mail.kernel.org (Postfix) with ESMTP id 417B0217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389123AbfDROR6 (ORCPT
+        id S2389209AbfDROTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:17:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45181 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389209AbfDROR5 (ORCPT
+        Thu, 18 Apr 2019 10:19:31 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.73.12]:50417 "HELO
+        aliyun-sdnproxy-4.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S2388344AbfDROTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:17:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bf11so1232051plb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LGgAiu5VY4540GgNnynKeXs+gbdV/xnZr4APrSZdW00=;
-        b=UJVsd9rSiqR3LBV73sq5cU+6PZPsRVK/XGS6KtpoOYEwXwztLFGB2OPhVx3ipGyvjI
-         cL67gIjYi2wlqtHfUMw+IL6W0gV+wKFtR1011zkGDQAjwSTFgfhkVKOgtm3x5LyUJ53X
-         JYj0wFBhlwFMpU3zoAGiWI4EYwRcHb1zYjAyU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LGgAiu5VY4540GgNnynKeXs+gbdV/xnZr4APrSZdW00=;
-        b=mIsPo8hTaDkF0pEhak9ifQdbjqsG84+2K7qqsYkgCKzAOQpJ2K79abicTlR00JojaV
-         NofMIlvICw6GkfpviTPON6e+mG183ubbJj3yjGGPeY8IIek3ZFbxrtrJXlHvrO3KtEoX
-         FdRu5Fw8YwZuQP/O6xhpXleD+Ng7UPh3WVlO97OBn1pFsgQyc0rT3CaQNT+mqAndu/wt
-         rj77k8UMmbEUWHIppomeicKHMQp/0kwjyhj0fgkTYwKzug+gOG44BIjBOGM9j6C0I61D
-         dn1O10Q1zXtc+TkbPziw2/JZwqVy53lw6zLwnEk7zbDkiRD2gBZWMOzOvQWvBleieWDC
-         lJOw==
-X-Gm-Message-State: APjAAAVJdSu/7RrpvhhkEntXvk12vVQklWX43QVtaGwnEwv2A7L5kGzM
-        Nyg6u+6/Ws/nq41MY/OBDc7bAA==
-X-Google-Smtp-Source: APXvYqxgc2FOhNQztP+Mg98lDAPl7CTxCF5gsVLGTcRUYYJXK6JypJshoIGEj7l8jL0UyeE8GQTm8g==
-X-Received: by 2002:a17:902:e183:: with SMTP id cd3mr79964404plb.233.1555597076157;
-        Thu, 18 Apr 2019 07:17:56 -0700 (PDT)
-Received: from localhost.localdomain ([115.97.185.144])
-        by smtp.gmail.com with ESMTPSA id q74sm6208939pfc.111.2019.04.18.07.17.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 07:17:55 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        linux-sunxi@googlegroups.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable CAN
-Date:   Thu, 18 Apr 2019 19:46:58 +0530
-Message-Id: <20190418141658.10868-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+        Thu, 18 Apr 2019 10:19:30 -0400
+X-Greylist: delayed 715 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 10:19:29 EDT
+Received: from localhost (unknown [111.202.192.5])
+        by email2 (Coremail) with SMTP id AgBjCgBX9X3pgrhckM4CAg--.57193S2;
+        Thu, 18 Apr 2019 22:00:14 +0800 (CST)
+From:   Peng Wang <rocking@whu.edu.cn>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@whu.edu.cn>
+Subject: [PATCH] dm: initialize md->dax_dev only with CONFIG_DAX_DRIVER enabled
+Date:   Thu, 18 Apr 2019 21:59:19 +0800
+Message-Id: <20190418135919.10754-1-rocking@whu.edu.cn>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AgBjCgBX9X3pgrhckM4CAg--.57193S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF48AF45WrWkKF45AF15twb_yoWxurgEkw
+        15XFW3Xr4Skwnakr1Y9F4fZFy2yw1v9r4ruFnrKFnxJrZIvrsIgFyvvF1DX3ZxZFy5ury7
+        ur12qw15Ar48KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5XwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUe_M3DUUUU
+X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oceanic 5205 5inMFD has MCP2515 CAN device connected via SPI1.
+md->dax_dev is NULL default and there is no need to process it
+without CONFIG_DAX_DRIVER configured.
 
-- via SPI1 bus
-- vdd supplied by 5V supply along with PL2 enable pin
-- xceiver supply same as vdd
-- can oscillator connected at 20MHz
-- PB2 gpio as interrupt pin
-- PD6 gpio as RX_BUF1_CAN0
-- PD7 gpio as RX_BUF0_CAN0
-
-Tested-by: Tamas Papp <tamas@osukl.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Peng Wang <rocking@whu.edu.cn>
 ---
- .../sun50i-a64-oceanic-5205-5inmfd.dts        | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/md/dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index f0cd6587f619..22535a297f51 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -21,6 +21,24 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	can_osc: can-osc {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <20000000>;
-+	};
-+
-+	reg_can_v5v: reg-can-v5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "reg-can-v5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		enable-active-high;
-+		gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* CAN_3V3_EN: PL2 */
-+		status = "okay";
-+	};
-+
- };
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 043f0761e4a0..418a51cf194c 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1972,8 +1972,8 @@ static struct mapped_device *alloc_dev(int minor)
+ 		dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops);
+ 		if (!dax_dev)
+ 			goto bad;
++		md->dax_dev = dax_dev;
+ 	}
+-	md->dax_dev = dax_dev;
  
- &ehci0 {
-@@ -77,6 +95,31 @@
- 	status = "okay";
- };
- 
-+&pio {
-+	can_pins: can-pins {
-+		pins = "PD6",			/* RX_BUF1_CAN0 */
-+		       "PD7";			/* RX_BUF0_CAN0 */
-+		function = "gpio_in";
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+
-+	can@0 {
-+		compatible = "microchip,mcp2515";
-+		reg = <0>;
-+		spi-max-frequency = <10000000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&can_pins>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <1 2 IRQ_TYPE_EDGE_FALLING>;	/* INT_CAN0: PB2 */
-+		clocks = <&can_osc>;
-+		vdd-supply = <&reg_can_v5v>;
-+		xceiver-supply = <&reg_can_v5v>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+ 	add_disk_no_queue_reg(md->disk);
+ 	format_dev_t(md->name, MKDEV(_major, minor));
 -- 
-2.18.0.321.gffc6fa0e3
+2.19.1
 
