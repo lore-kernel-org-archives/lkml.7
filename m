@@ -2,251 +2,164 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A256C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AEAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E1B218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01B3217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Am/DuWnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389194AbfDROAM (ORCPT
+        id S2389203AbfDROAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:00:12 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35608 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729331AbfDROAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:00:11 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4D6D927C1B49D1288B7F;
-        Thu, 18 Apr 2019 22:00:07 +0800 (CST)
-Received: from HGHY1l002753561.china.huawei.com (10.177.23.164) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 18 Apr 2019 21:59:57 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v6 1/1] iommu: enhance IOMMU dma mode build options
-Date:   Thu, 18 Apr 2019 21:57:01 +0800
-Message-ID: <20190418135701.24668-2-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20190418135701.24668-1-thunder.leizhen@huawei.com>
-References: <20190418135701.24668-1-thunder.leizhen@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
+        Thu, 18 Apr 2019 10:00:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36323 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfDROAj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:00:39 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s83so1198801qke.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fU33i2t0JsbXbTrgFcHGxGxjaSIcKOBtCPoE/HmqfNs=;
+        b=Am/DuWnRjzrUqI6+QfqM/uha/AEU1TjxWtdRleJWPQGRMUMHsPtT5ZLgIz3uSn7syp
+         rD+2SG1qWR4iqoAxXFk0OQGGLgoHPW6r7tkRwGmS20q0037cnF1l/e7vw/iw3UBjT0n7
+         m1trbtrtW8k3cK/tW+0IPOnVUkxnJfycGVqKTKg3HDohMzrSZ4tXZv0PUJoF71XiE6oc
+         ZTXlsqwFnybQzU+4k+qhVnQ95w1TKq9FWR0KEN3AzuXdxhIN/VKHjuO9f5clVSe0R3ei
+         i6qAcaSAOxPXwj6xm9h2ogfzsNUR/FuhVQud8/sYwmD5eMFMYEAHmDtIoc1jZDOKDWl5
+         C40Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fU33i2t0JsbXbTrgFcHGxGxjaSIcKOBtCPoE/HmqfNs=;
+        b=IlxsK59vDgMWBLGoTtluuBb8/yPYosy+ihHMJqwmcxo09EwaX7wYukvlihrhtOzjNV
+         ZPjluuDhZ6+9t2lTuvbPfw/d/v5/g7+udX4NVS47DQ1lgRMljC76jcOgD3eEfaR1X4w8
+         +B80NTt+fQ9CzmvOaizXbAzbADWz3D7K+Vz5VV39fwpAWXn/Zp88BG2wTfX0arstzlvX
+         Vrl0/OJAjVHh21gvLPKpv7NwqIdEo/yMnU1Xqfdr9DBSd5v6LgXAXLhuFydDJ45etN2W
+         uJY4wbQ5NlR6MtSfvFJQe4kg7OwdvNo6ZvcoinRCFlkopioOaHCuMagCTY97qSsXV+3F
+         DsCw==
+X-Gm-Message-State: APjAAAV7tdaVG5NtmiCcrnJPdjIhSEebmZQG73bpsmRXpInKa9+cnKGH
+        U/fmUVk78MJ5glGvWOdbGA==
+X-Google-Smtp-Source: APXvYqwvOFpWOMBpV+AlC8X6HVE5dJth9w/PCsZ7kpa1TSxSFaRP73K5uL5UQs65kp49nM1r+1uSPw==
+X-Received: by 2002:a37:a02:: with SMTP id 2mr29034870qkk.258.1555596038368;
+        Thu, 18 Apr 2019 07:00:38 -0700 (PDT)
+Received: from gabell.cable.rcn.com (209-6-122-159.s2973.c3-0.arl-cbr1.sbo-arl.ma.cable.rcncustomer.com. [209.6.122.159])
+        by smtp.gmail.com with ESMTPSA id b24sm980332qtr.51.2019.04.18.07.00.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 07:00:37 -0700 (PDT)
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ktest: introduce REBOOT_RETURN_CODE to confirm the result of REBOOT
+Date:   Thu, 18 Apr 2019 09:59:43 -0400
+Message-Id: <20190418135943.12640-1-msys.mizuma@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
-opportunity to set {lazy|strict} mode as default at build time. Then put
-the three config options in an choice, make people can only choose one of
-the three at a time.
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-The default IOMMU dma modes on each ARCHs have no change.
+Unexpected power cycle occurs while the installation of the
+kernel.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+   ssh root@Test sync ... [0 seconds] SUCCESS
+   ssh root@Test reboot ... [1 second] FAILED!
+   virsh destroy Test; sleep 5; virsh start Test ... [6 seconds] SUCCESS
+
+That is because REBOOT, the default is "ssh $SSH_USER@$MACHINE
+reboot", exits as 255 even if the reboot is successfully done,
+like as:
+
+   ]# ssh root@Test reboot
+   Connection to Test closed by remote host.
+   ]# echo $?
+   255
+   ]#
+
+To avoid the unexpected power cycle, introduce a new parameter,
+REBOOT_RETURN_CODE to judge whether REBOOT is successfully done
+or not.
+
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 ---
- arch/ia64/kernel/pci-dma.c                |  2 +-
- arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
- arch/s390/pci/pci_dma.c                   |  2 +-
- arch/x86/kernel/pci-dma.c                 |  7 ++---
- drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
- drivers/iommu/amd_iommu_init.c            |  3 ++-
- drivers/iommu/intel-iommu.c               |  2 +-
- drivers/iommu/iommu.c                     |  3 ++-
- 8 files changed, 48 insertions(+), 18 deletions(-)
+ tools/testing/ktest/ktest.pl    | 9 +++++++++
+ tools/testing/ktest/sample.conf | 4 ++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-index fe988c49f01ce6a..655511dbf3c3b34 100644
---- a/arch/ia64/kernel/pci-dma.c
-+++ b/arch/ia64/kernel/pci-dma.c
-@@ -22,7 +22,7 @@
- int force_iommu __read_mostly;
- #endif
-
--int iommu_pass_through;
-+int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-
- static int __init pci_iommu_init(void)
- {
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 3ead4c237ed0ec9..383e082a9bb985c 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
- 	va_end(args);
- }
-
--static bool pnv_iommu_bypass_disabled __read_mostly;
-+static bool pnv_iommu_bypass_disabled __read_mostly =
-+			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
- static bool pci_reset_phbs __read_mostly;
-
- static int __init iommu_setup(char *str)
-diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-index 9e52d1527f71495..784ad1e0acecfb1 100644
---- a/arch/s390/pci/pci_dma.c
-+++ b/arch/s390/pci/pci_dma.c
-@@ -17,7 +17,7 @@
-
- static struct kmem_cache *dma_region_table_cache;
- static struct kmem_cache *dma_page_table_cache;
--static int s390_iommu_strict;
-+static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-
- static int zpci_refresh_global(struct zpci_dev *zdev)
- {
-diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-index d460998ae828514..fb2bab42a0a3173 100644
---- a/arch/x86/kernel/pci-dma.c
-+++ b/arch/x86/kernel/pci-dma.c
-@@ -43,11 +43,8 @@
-  * It is also possible to disable by default in kernel config, and enable with
-  * iommu=nopt at boot time.
-  */
--#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
--int iommu_pass_through __read_mostly = 1;
--#else
--int iommu_pass_through __read_mostly;
--#endif
-+int iommu_pass_through __read_mostly =
-+			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-
- extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
-
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 6f07f3b21816c64..8a1f1793cde76b4 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
- 	  debug/iommu directory, and then populate a subdirectory with
- 	  entries as required.
-
--config IOMMU_DEFAULT_PASSTHROUGH
--	bool "IOMMU passthrough by default"
-+choice
-+	prompt "IOMMU dma mode"
- 	depends on IOMMU_API
--        help
--	  Enable passthrough by default, removing the need to pass in
--	  iommu.passthrough=on or iommu=pt through command line. If this
--	  is enabled, you can still disable with iommu.passthrough=off
--	  or iommu=nopt depending on the architecture.
-+	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
-+	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
-+	default IOMMU_DEFAULT_STRICT
-+	help
-+	  This option allows IOMMU dma mode to be chose at build time, to
-+	  override the default dma mode of each ARCHs, removing the need to
-+	  pass in kernel parameters through command line. You can still use
-+	  ARCHs specific boot options to override this option again.
+diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+index fc6140d45280..751e32a31ed4 100755
+--- a/tools/testing/ktest/ktest.pl
++++ b/tools/testing/ktest/ktest.pl
+@@ -58,6 +58,7 @@ my %default = (
+     "SCP_TO_TARGET"		=> "scp \$SRC_FILE \$SSH_USER\@\$MACHINE:\$DST_FILE",
+     "SCP_TO_TARGET_INSTALL"	=> "\${SCP_TO_TARGET}",
+     "REBOOT"			=> "ssh \$SSH_USER\@\$MACHINE reboot",
++    "REBOOT_RETURN_CODE"	=> 255,
+     "STOP_AFTER_SUCCESS"	=> 10,
+     "STOP_AFTER_FAILURE"	=> 60,
+     "STOP_TEST_AFTER"		=> 600,
+@@ -105,6 +106,7 @@ my $reboot_type;
+ my $reboot_script;
+ my $power_cycle;
+ my $reboot;
++my $reboot_return_code;
+ my $reboot_on_error;
+ my $switch_to_good;
+ my $switch_to_test;
+@@ -278,6 +280,7 @@ my %option_map = (
+     "POST_BUILD_DIE"		=> \$post_build_die,
+     "POWER_CYCLE"		=> \$power_cycle,
+     "REBOOT"			=> \$reboot,
++    "REBOOT_RETURN_CODE"	=> \$reboot_return_code,
+     "BUILD_NOCLEAN"		=> \$noclean,
+     "MIN_CONFIG"		=> \$minconfig,
+     "OUTPUT_MIN_CONFIG"		=> \$output_minconfig,
+@@ -1737,6 +1740,7 @@ sub run_command {
+     my $dord = 0;
+     my $dostdout = 0;
+     my $pid;
++    my $command_orig = $command;
+ 
+     $command =~ s/\$SSH_USER/$ssh_user/g;
+     $command =~ s/\$MACHINE/$machine/g;
+@@ -1791,6 +1795,11 @@ sub run_command {
+     # shift 8 for real exit status
+     $run_command_status = $? >> 8;
+ 
++    if ($command_orig eq $default{REBOOT} &&
++	$run_command_status == $reboot_return_code) {
++	$run_command_status = 0;
++    }
 +
-+config IOMMU_DEFAULT_PASSTHROUGH
-+	bool "passthrough"
-+	help
-+	  In this mode, the dma access through IOMMU without any addresses
-+	  transformation. That means, the wrong or illegal dma access can not
-+	  be caught, no error information will be reported.
-
- 	  If unsure, say N here.
-
-+config IOMMU_DEFAULT_LAZY
-+	bool "lazy"
-+	help
-+	  Support lazy mode, where for every IOMMU DMA unmap operation, the
-+	  flush operation of IOTLB and the free operation of IOVA are deferred.
-+	  They are only guaranteed to be done before the related IOVA will be
-+	  reused.
+     close(CMD);
+     close(LOG) if ($dolog);
+     close(RD)  if ($dord);
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 6ca6ca0ce695..8c893a58b68e 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -887,6 +887,10 @@
+ # The variables SSH_USER and MACHINE are defined.
+ #REBOOT = ssh $SSH_USER@$MACHINE reboot
+ 
++# The return code of REBOOT
++# (default 255)
++#REBOOT_RETURN_CODE = 255
 +
-+config IOMMU_DEFAULT_STRICT
-+	bool "strict"
-+	help
-+	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
-+	  the free operation of IOVA are guaranteed to be done in the unmap
-+	  function.
-+
-+	  This mode is safer than the two above, but it maybe slow in some high
-+	  performace scenarios.
-+
-+endchoice
-+
- config OF_IOMMU
-        def_bool y
-        depends on OF && IOMMU_API
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index ff40ba758cf365e..16c02b08adb4cb2 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -166,7 +166,8 @@ struct ivmd_header {
- 					   to handle */
- LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
- 					   we find in ACPI */
--bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
-+bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-+					/* if true, flush on every unmap */
-
- LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
- 					   system */
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 28cb713d728ceef..0c3cc716210f35a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
-
- static int dmar_map_gfx = 1;
- static int dmar_forcedac;
--static int intel_iommu_strict;
-+static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
- static int intel_iommu_superpage = 1;
- static int intel_iommu_sm;
- static int iommu_identity_mapping;
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 109de67d5d727c2..0ec5952ac60e2a3 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -43,7 +43,8 @@
- #else
- static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
- #endif
--static bool iommu_dma_strict __read_mostly = true;
-+static bool iommu_dma_strict __read_mostly =
-+			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-
- struct iommu_callback_data {
- 	const struct iommu_ops *ops;
---
-1.8.3
-
+ # The way triple faults are detected is by testing the kernel
+ # banner. If the kernel banner for the kernel we are testing is
+ # found, and then later a kernel banner for another kernel version
+-- 
+2.20.1
 
