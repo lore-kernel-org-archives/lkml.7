@@ -4,51 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43184C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696C1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5B52186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A3A218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610427;
-	bh=VWqZKrQwtleHpchVJj8znrCXZsWagdXGd86AYWwwZME=;
+	s=default; t=1555610431;
+	bh=vUyme3zX1XFi1JpxtolzolERD+huMVqHlNxtfyYPEj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FvPYP1zSZ81aEDZMjGt7/RbFjk85PsxiRkfJymx1xmyRXLAVT96rs0sC/MlCjqXGf
-	 P4sDsmXCh+Igf5Wd+41wWDcWY7Kr6W1kbe8qzFLCJAC0ilnVRhBD2ZclTAQtlmgXEV
-	 nX9M2FXhKoJH0qWWdUOxp2FjSHj0XkxFdDoGbOZ0=
+	b=oeO0MtbAsKJotAhVEjUhsIEFWF7jq/hYd3xebJXB9kdb5KEdybx0fcKOkDU8CvPva
+	 89QQ0VPx0v5TRKVr/BOvR2S3p6S4IhI/reOsLfDTAGHZaE+RfdjIkgy6DW6lHUtIee
+	 e744nCm0t/ztHboN6xUX+iaX3zQqTFJ4RM36Cupk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390363AbfDRSA0 (ORCPT
+        id S2390376AbfDRSA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:00:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390330AbfDRSAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:00:24 -0400
+        id S2390357AbfDRSA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:00:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CCD9206B6;
-        Thu, 18 Apr 2019 18:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8672D21871;
+        Thu, 18 Apr 2019 18:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610422;
-        bh=VWqZKrQwtleHpchVJj8znrCXZsWagdXGd86AYWwwZME=;
+        s=default; t=1555610425;
+        bh=vUyme3zX1XFi1JpxtolzolERD+huMVqHlNxtfyYPEj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fc+Ypcylt1ooIin7iE00myNCDtmGbHD7F+MyukhbrourPC1A3ocBMv/zd2MQpgYA
-         F1NhboViCnV7VWYq3ZMnVQTa7jHECIMjn0sol8VBE0FZefCstNw2gZ1X0yQvjXdm9I
-         MVzmoK+NmaO9x08ZNYSS75wzaPPb0REoww9Rmnqc=
+        b=WOOGgnUW2d2MqPQ2AL0/kTU/4lc4yyeN0iLVmioPtA3vcbjHwy+YKkH1WtX5KcS4J
+         zFktsdqem+AB4swRl4CYa/A73p5yf+E4aEGBHLKx49dplFF5a2eBf03hRCVR/iI0z3
+         ajdgKF86jTHwLP0FCQoxgCoKZ7QIsBV23/Ic9lcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maurizio Lombardi <mlombard@redhat.com>,
-        Chris Leech <cleech@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/110] scsi: iscsi: flush running unbind operations when removing a session
-Date:   Thu, 18 Apr 2019 19:56:12 +0200
-Message-Id: <20190418160439.961726839@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Wang <vincent.wang@unisoc.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 024/110] sched/cpufreq: Fix 32-bit math overflow
+Date:   Thu, 18 Apr 2019 19:56:13 +0200
+Message-Id: <20190418160440.134629082@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,69 +71,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 165aa2bfb42904b1bec4bf2fa257c8c603c14a06 ]
+[ Upstream commit a23314e9d88d89d49e69db08f60b7caa470f04e1 ]
 
-In some cases, the iscsi_remove_session() function is called while an
-unbind_work operation is still running.  This may cause a situation where
-sysfs objects are removed in an incorrect order, triggering a kernel
-warning.
+Vincent Wang reported that get_next_freq() has a mult overflow bug on
+32-bit platforms in the IOWAIT boost case, since in that case {util,max}
+are in freq units instead of capacity units.
 
-[  605.249442] ------------[ cut here ]------------
-[  605.259180] sysfs group 'power' not found for kobject 'target2:0:0'
-[  605.321371] WARNING: CPU: 1 PID: 26794 at fs/sysfs/group.c:235 sysfs_remove_group+0x76/0x80
-[  605.341266] Modules linked in: dm_service_time target_core_user target_core_pscsi target_core_file target_core_iblock iscsi_target_mod target_core_mod nls_utf8 isofs ppdev bochs_drm nfit ttm libnvdimm drm_kms_helper syscopyarea sysfillrect sysimgblt joydev pcspkr fb_sys_fops drm i2c_piix4 sg parport_pc parport xfs libcrc32c dm_multipath sr_mod sd_mod cdrom ata_generic 8021q garp mrp ata_piix stp crct10dif_pclmul crc32_pclmul llc libata crc32c_intel virtio_net net_failover ghash_clmulni_intel serio_raw failover sunrpc dm_mirror dm_region_hash dm_log dm_mod be2iscsi bnx2i cnic uio cxgb4i cxgb4 libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi
-[  605.627479] CPU: 1 PID: 26794 Comm: kworker/u32:2 Not tainted 4.18.0-60.el8.x86_64 #1
-[  605.721401] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-[  605.823651] Workqueue: scsi_wq_2 __iscsi_unbind_session [scsi_transport_iscsi]
-[  605.830940] RIP: 0010:sysfs_remove_group+0x76/0x80
-[  605.922907] Code: 48 89 df 5b 5d 41 5c e9 38 c4 ff ff 48 89 df e8 e0 bf ff ff eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 38 73 cb a7 e8 24 77 d7 ff <0f> 0b 5b 5d 41 5c c3 0f 1f 00 0f 1f 44 00 00 41 56 41 55 41 54 55
-[  606.122304] RSP: 0018:ffffbadcc8d1bda8 EFLAGS: 00010286
-[  606.218492] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  606.326381] RDX: ffff98bdfe85eb40 RSI: ffff98bdfe856818 RDI: ffff98bdfe856818
-[  606.514498] RBP: ffffffffa7ab73e0 R08: 0000000000000268 R09: 0000000000000007
-[  606.529469] R10: 0000000000000000 R11: ffffffffa860d9ad R12: ffff98bdf978e838
-[  606.630535] R13: ffff98bdc2cd4010 R14: ffff98bdc2cd3ff0 R15: ffff98bdc2cd4000
-[  606.824707] FS:  0000000000000000(0000) GS:ffff98bdfe840000(0000) knlGS:0000000000000000
-[  607.018333] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  607.117844] CR2: 00007f84b78ac024 CR3: 000000002c00a003 CR4: 00000000003606e0
-[  607.117844] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  607.420926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  607.524236] Call Trace:
-[  607.530591]  device_del+0x56/0x350
-[  607.624393]  ? ata_tlink_match+0x30/0x30 [libata]
-[  607.727805]  ? attribute_container_device_trigger+0xb4/0xf0
-[  607.829911]  scsi_target_reap_ref_release+0x39/0x50
-[  607.928572]  scsi_remove_target+0x1a2/0x1d0
-[  608.017350]  __iscsi_unbind_session+0xb3/0x160 [scsi_transport_iscsi]
-[  608.117435]  process_one_work+0x1a7/0x360
-[  608.132917]  worker_thread+0x30/0x390
-[  608.222900]  ? pwq_unbound_release_workfn+0xd0/0xd0
-[  608.323989]  kthread+0x112/0x130
-[  608.418318]  ? kthread_bind+0x30/0x30
-[  608.513821]  ret_from_fork+0x35/0x40
-[  608.613909] ---[ end trace 0b98c310c8a6138c ]---
+Solve this by moving the IOWAIT boost to capacity units. And since this
+means @max is constant; simplify the code.
 
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Acked-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Vincent Wang <vincent.wang@unisoc.com>
+Tested-by: Vincent Wang <vincent.wang@unisoc.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190305083202.GU32494@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/cpufreq_schedutil.c | 59 ++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 6fd2fe210fc3..4d0fc6b01fa0 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2185,6 +2185,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
- 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
- 	/* flush running scans then delete devices */
- 	flush_work(&session->scan_work);
-+	/* flush running unbind operations */
-+	flush_work(&session->unbind_work);
- 	__iscsi_unbind_session(&session->unbind_work);
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 3fffad3bc8a8..217f81ecae17 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -50,10 +50,10 @@ struct sugov_cpu {
  
- 	/* hw iscsi may not have removed all connections from session */
+ 	bool			iowait_boost_pending;
+ 	unsigned int		iowait_boost;
+-	unsigned int		iowait_boost_max;
+ 	u64			last_update;
+ 
+ 	unsigned long		bw_dl;
++	unsigned long		min;
+ 	unsigned long		max;
+ 
+ 	/* The field below is for single-CPU policies only: */
+@@ -283,8 +283,7 @@ static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
+ 	if (delta_ns <= TICK_NSEC)
+ 		return false;
+ 
+-	sg_cpu->iowait_boost = set_iowait_boost
+-		? sg_cpu->sg_policy->policy->min : 0;
++	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
+ 	sg_cpu->iowait_boost_pending = set_iowait_boost;
+ 
+ 	return true;
+@@ -324,14 +323,13 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+ 
+ 	/* Double the boost at each request */
+ 	if (sg_cpu->iowait_boost) {
+-		sg_cpu->iowait_boost <<= 1;
+-		if (sg_cpu->iowait_boost > sg_cpu->iowait_boost_max)
+-			sg_cpu->iowait_boost = sg_cpu->iowait_boost_max;
++		sg_cpu->iowait_boost =
++			min_t(unsigned int, sg_cpu->iowait_boost << 1, SCHED_CAPACITY_SCALE);
+ 		return;
+ 	}
+ 
+ 	/* First wakeup after IO: start with minimum boost */
+-	sg_cpu->iowait_boost = sg_cpu->sg_policy->policy->min;
++	sg_cpu->iowait_boost = sg_cpu->min;
+ }
+ 
+ /**
+@@ -353,47 +351,38 @@ static void sugov_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
+  * This mechanism is designed to boost high frequently IO waiting tasks, while
+  * being more conservative on tasks which does sporadic IO operations.
+  */
+-static void sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
+-			       unsigned long *util, unsigned long *max)
++static unsigned long sugov_iowait_apply(struct sugov_cpu *sg_cpu, u64 time,
++					unsigned long util, unsigned long max)
+ {
+-	unsigned int boost_util, boost_max;
++	unsigned long boost;
+ 
+ 	/* No boost currently required */
+ 	if (!sg_cpu->iowait_boost)
+-		return;
++		return util;
+ 
+ 	/* Reset boost if the CPU appears to have been idle enough */
+ 	if (sugov_iowait_reset(sg_cpu, time, false))
+-		return;
++		return util;
+ 
+-	/*
+-	 * An IO waiting task has just woken up:
+-	 * allow to further double the boost value
+-	 */
+-	if (sg_cpu->iowait_boost_pending) {
+-		sg_cpu->iowait_boost_pending = false;
+-	} else {
++	if (!sg_cpu->iowait_boost_pending) {
+ 		/*
+-		 * Otherwise: reduce the boost value and disable it when we
+-		 * reach the minimum.
++		 * No boost pending; reduce the boost value.
+ 		 */
+ 		sg_cpu->iowait_boost >>= 1;
+-		if (sg_cpu->iowait_boost < sg_cpu->sg_policy->policy->min) {
++		if (sg_cpu->iowait_boost < sg_cpu->min) {
+ 			sg_cpu->iowait_boost = 0;
+-			return;
++			return util;
+ 		}
+ 	}
+ 
++	sg_cpu->iowait_boost_pending = false;
++
+ 	/*
+-	 * Apply the current boost value: a CPU is boosted only if its current
+-	 * utilization is smaller then the current IO boost level.
++	 * @util is already in capacity scale; convert iowait_boost
++	 * into the same scale so we can compare.
+ 	 */
+-	boost_util = sg_cpu->iowait_boost;
+-	boost_max = sg_cpu->iowait_boost_max;
+-	if (*util * boost_max < *max * boost_util) {
+-		*util = boost_util;
+-		*max = boost_max;
+-	}
++	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
++	return max(boost, util);
+ }
+ 
+ #ifdef CONFIG_NO_HZ_COMMON
+@@ -440,7 +429,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+-	sugov_iowait_apply(sg_cpu, time, &util, &max);
++	util = sugov_iowait_apply(sg_cpu, time, util, max);
+ 	next_f = get_next_freq(sg_policy, util, max);
+ 	/*
+ 	 * Do not reduce the frequency if the CPU has not been idle
+@@ -480,7 +469,7 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+ 
+ 		j_util = sugov_get_util(j_sg_cpu);
+ 		j_max = j_sg_cpu->max;
+-		sugov_iowait_apply(j_sg_cpu, time, &j_util, &j_max);
++		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
+ 
+ 		if (j_util * max > j_max * util) {
+ 			util = j_util;
+@@ -817,7 +806,9 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 		memset(sg_cpu, 0, sizeof(*sg_cpu));
+ 		sg_cpu->cpu			= cpu;
+ 		sg_cpu->sg_policy		= sg_policy;
+-		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
++		sg_cpu->min			=
++			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
++			policy->cpuinfo.max_freq;
+ 	}
+ 
+ 	for_each_cpu(cpu, policy->cpus) {
 -- 
 2.19.1
 
