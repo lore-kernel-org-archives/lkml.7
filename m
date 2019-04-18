@@ -2,198 +2,257 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DB1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA078C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A07217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="E2bPLc6w";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Tlt1bTgz"
+	by mail.kernel.org (Postfix) with ESMTP id 7B285206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbfDROmY (ORCPT
+        id S2389343AbfDROmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:42:24 -0400
-Received: from mail18.wdc04.mandrillapp.com ([205.201.139.18]:10913 "EHLO
-        mail18.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388070AbfDROmY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:42:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=Vja9J+rviwQ640U9SB3zs3yDI0ULoZ4Pnzv2AfWAzFU=;
- b=E2bPLc6wWRSD54LDk3G7PScdDZP89ig5rhDzFzDprNn4LuPJKhYJrYgn0NAGcLpWgLDvuea86zME
-   KHhpPDCcNymXuKc6PWu+1e/kjk4MOCEYg/AYBPn6ILxt88+O5Aj/WC2dCxbYBn6LrYnarktBTREK
-   Y5sSSmKxrWGPuzERBfY=
-Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hn26cu1jvmgr for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 14:42:22 +0000 (envelope-from <bounce-md_31050260.5cb88cce.v1-e0cf071d4de04239b47a967112b35bb2@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555598542; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=Vja9J+rviwQ640U9SB3zs3yDI0ULoZ4Pnzv2AfWAzFU=; 
- b=Tlt1bTgzNPHhzQXDYCE1O+1ioNvc+IS+7ZYA6GiXnhHS/pNZEusT0J+jKofl3eTXe0r805
- /rHYWJN7xJ8vqlM6kbZE6z1NsNEZF1zDYXLJ195367y4lv9dqLZYsvfUOSAdk/X9NBvfJBqo
- fkoYUm5lYi6viTvCOmx8MnSGIevnM=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Received: from [87.98.221.171] by mandrillapp.com id e0cf071d4de04239b47a967112b35bb2; Thu, 18 Apr 2019 14:42:22 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        <kbuild-all@01.org>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Message-Id: <20190418144215.GA25178@deco.navytux.spb.ru>
-References: <alpine.DEB.2.21.1904131849350.2536@hadrien> <20190417215420.GV126710@google.com> <alpine.DEB.2.21.1904180728420.8144@hadrien> <20190418103755.GA14294@deco.navytux.spb.ru> <20190418123730.GX126710@google.com>
-In-Reply-To: <20190418123730.GX126710@google.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.e0cf071d4de04239b47a967112b35bb2
-X-Mandrill-User: md_31050260
-Date:   Thu, 18 Apr 2019 14:42:22 +0000
+        Thu, 18 Apr 2019 10:42:33 -0400
+Received: from mga03.intel.com ([134.134.136.65]:20392 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388392AbfDROmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:42:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 07:42:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,366,1549958400"; 
+   d="scan'208";a="165850855"
+Received: from swidman-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.47.214])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Apr 2019 07:42:28 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] docs: hwmon: convert three docs to ReST format
+In-Reply-To: <287cf72fc213656c1593f8bd42feb62f7a5f26e7.1555580417.git.mchehab+samsung@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <287cf72fc213656c1593f8bd42feb62f7a5f26e7.1555580417.git.mchehab+samsung@kernel.org>
+Date:   Thu, 18 Apr 2019 17:42:29 +0300
+Message-ID: <87k1frgysq.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 07:37:30AM -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 18, 2019 at 10:38:02AM +0000, Kirill Smelkov wrote:
-> > On Thu, Apr 18, 2019 at 07:31:02AM +0200, Julia Lawall wrote:
-> > > On Wed, 17 Apr 2019, Bjorn Helgaas wrote:
-> > > > On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
-> > > > > Hello,
-> > > > >
-> > > > > Kirill will explain about this issue.
-> > > > >
-> > > > > julia
-> > > > >
-> > > > > ---------- Forwarded message ----------
-> > > > > Date: Sat, 13 Apr 2019 11:22:51 +0800
-> > > > > From: kbuild test robot <lkp@intel.com>
-> > > > > To: kbuild@01.org
-> > > > > Cc: Julia Lawall <julia.lawall@lip6.fr>
-> > > > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-> > > > >
-> > > > > CC: kbuild-all@01.org
-> > > > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> > > > > CC: Logan Gunthorpe <logang@deltatee.com>
-> > > > > CC: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > CC: linux-pci@vger.kernel.org
-> > > > > CC: linux-kernel@vger.kernel.org
-> > > > >
-> > > > > From: kbuild test robot <lkp@intel.com>
-> > > > >
-> > > > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-> > > > >
-> > > > > Generated by: scripts/coccinelle/api/stream_open.cocci
-> > > > >
-> > > > > Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
-> > > > > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > > >
-> > > > Based on Kirill's subsequent email saying this is already queued to
-> > > > the merge window, I assume I need to do nothing here.
-> > > >
-> > > > I think a signed-off-by from a robot, i.e., not from a real person, is
-> > > > meaningless, and I don't think I would personally accept it.  It's
-> > > > certainly OK to indicate that a patch was auto-generated, but I think
-> > > > a real person still needs to take responsibility for it.
-> > > >
-> > > > Documentation/process/submitting-patches.rst says it must contain a
-> > > > real name (no pseudonyms or anonymous contributions), and I don't
-> > > > think a robot fits in the spirit of that.
-> > > >
-> > > > I see that
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?id=8a29a3bae2a2
-> > > > (mentioned below) does have a good signed-off-by from Sebastian, but
-> > > > that's not *this* patch, so I don't know what's what.
-> > > 
-> > > Normally, for these robot generated patches, when I approve them, I put my
-> > > own sign off, but under the robot one, since the robot has put a From
-> > > line.  In this case, I handed the problem off to Kirill, so I didn't do
-> > > that.  I agree that it would be good for Kirill to sign off on it.
-> > 
-> > Just for the reference: I have put my signature on the mass converstion
-> > patch as well as ack's that were received:
-> > 
-> > https://lab.nexedi.com/kirr/linux/commit/edaeb4101860
-> 
-> Looks good, thanks.  Feel free to add my
-> 
->   Acked-by: Bjorn Helgaas <bhelgaas@google.com> [drivers/pci/switch/switchtec]
-> 
-> to the https://lab.nexedi.com/kirr/linux/commit/edaeb4101860 patch.
-> 
-> It looks like maybe the commit log could use
-> 
->   s/and the reset were/and the rest were/
+On Thu, 18 Apr 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> Those three new drivers were missed on the initial conversion
+> to ReST format. So:
+>
+> - Rename them to .rst;
+> - Add them to the hwmon index.rst index;
+> - add some blank lines at the "Supported systems:" part, in
+>   order to allow Sphinx to properly identify new lines,
+>   suppressing warnings and avoid it to output some random
+>   lines in bold;
+> - When multiple authors are involved, change the authors
+>   part to a list, in order to avoid adding blank lines.
+> - adjust the table cells (one of the tables seemed to be
+>   assuming that tab is 4 positions instead of 8) and add
+>   the table markup.
+> - be sure that the section markups have the same number of
+>   characters as the section title.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/hwmon/index.rst                 |  3 +++
+>  Documentation/hwmon/{ir38064 => ir38064.rst}  | 21 ++++++++++++-------
+>  .../hwmon/{isl68137 => isl68137.rst}          | 16 ++++++++++----
+>  .../hwmon/{lochnagar => lochnagar.rst}        |  7 +++++--
+>  4 files changed, 33 insertions(+), 14 deletions(-)
+>  rename Documentation/hwmon/{ir38064 => ir38064.rst} (76%)
+>  rename Documentation/hwmon/{isl68137 => isl68137.rst} (85%)
+>  rename Documentation/hwmon/{lochnagar => lochnagar.rst} (93%)
+>
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index 893804414510..3fa14fe7b49c 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -65,6 +65,8 @@ Hardware Monitoring Kernel Drivers
+>     ina2xx.rst
+>     ina3221.rst
+>     ir35221.rst
+> +   ir38064.rst
+> +   isl68137.rst
 
-Bjorn, thanks for feedback. I've added your ack and fixed that typo.
+Didn't notice it on the first patch adding index.rst, but I don't think
+it's customary to add .rst suffix to the toctree.
 
-> It also mentions "the previous patch" a couple times, which may lose
-> some of its meaning depending on how things get merged into git.  If
-> that previous patch has already been merged, a SHA1 reference would be
-> more specific.
+BR,
+Jani.
 
-Good point. Initially those patches were coming together, but the
-first one landed to master while the conversion is only scheduled to be
-done. I've changed this reference to 10dce8af3422 ("fs: stream_open -
-opener for stream-like files so that read and write can run
-simultaneously without deadlock").
+>     it87.rst
+>     jc42.rst
+>     k10temp.rst
+> @@ -86,6 +88,7 @@ Hardware Monitoring Kernel Drivers
+>     lm93.rst
+>     lm95234.rst
+>     lm95245.rst
+> +   lochnagar.rst
+>     ltc2945.rst
+>     ltc2978.rst
+>     ltc2990.rst
+> diff --git a/Documentation/hwmon/ir38064 b/Documentation/hwmon/ir38064.rst
+> similarity index 76%
+> rename from Documentation/hwmon/ir38064
+> rename to Documentation/hwmon/ir38064.rst
+> index 9f218c39bfe6..c455d755a267 100644
+> --- a/Documentation/hwmon/ir38064
+> +++ b/Documentation/hwmon/ir38064.rst
+> @@ -2,15 +2,18 @@ Kernel driver ir38064
+>  =====================
+>  
+>  Supported chips:
+> +
+>    * Infineon IR38064
+> +
+>      Prefix: 'ir38064'
+>      Addresses scanned: -
+> +
+>      Datasheet: Publicly available at the Infineon webiste
+>        https://www.infineon.com/dgdl/Infineon-IR38064MTRPBF-DS-v03_07-EN.pdf?fileId=5546d462584d1d4a0158db0d9efb67ca
+>  
+>  Authors:
+> -        Maxim Sloyko <maxims@google.com>
+> -        Patrick Venture <venture@google.com>
+> +      - Maxim Sloyko <maxims@google.com>
+> +      - Patrick Venture <venture@google.com>
+>  
+>  Description
+>  -----------
+> @@ -26,29 +29,30 @@ devices explicitly.
+>  Sysfs attributes
+>  ----------------
+>  
+> +======================= ===========================
+>  curr1_label		"iout1"
+>  curr1_input		Measured output current
+>  curr1_crit		Critical maximum current
+>  curr1_crit_alarm	Current critical high alarm
+>  curr1_max		Maximum current
+> -curr1_max_alarm	Current high alarm
+> +curr1_max_alarm		Current high alarm
+>  
+>  in1_label		"vin"
+>  in1_input		Measured input voltage
+>  in1_crit		Critical maximum input voltage
+>  in1_crit_alarm		Input voltage critical high alarm
+> -in1_min		Minimum input voltage
+> +in1_min			Minimum input voltage
+>  in1_min_alarm		Input voltage low alarm
+>  
+>  in2_label		"vout1"
+>  in2_input		Measured output voltage
+>  in2_lcrit		Critical minimum output voltage
+> -in2_lcrit_alarm	Output voltage critical low alarm
+> +in2_lcrit_alarm		Output voltage critical low alarm
+>  in2_crit		Critical maximum output voltage
+>  in2_crit_alarm		Output voltage critical high alarm
+> -in2_max		Maximum output voltage
+> +in2_max			Maximum output voltage
+>  in2_max_alarm		Output voltage high alarm
+> -in2_min		Minimum output voltage
+> +in2_min			Minimum output voltage
+>  in2_min_alarm		Output voltage low alarm
+>  
+>  power1_label		"pout1"
+> @@ -58,4 +62,5 @@ temp1_input		Measured temperature
+>  temp1_crit		Critical high temperature
+>  temp1_crit_alarm	Chip temperature critical high alarm
+>  temp1_max		Maximum temperature
+> -temp1_max_alarm	Chip temperature high alarm
+> +temp1_max_alarm		Chip temperature high alarm
+> +======================= ===========================
+> diff --git a/Documentation/hwmon/isl68137 b/Documentation/hwmon/isl68137.rst
+> similarity index 85%
+> rename from Documentation/hwmon/isl68137
+> rename to Documentation/hwmon/isl68137.rst
+> index 92e5c5fc5b77..a5a7c8545c9e 100644
+> --- a/Documentation/hwmon/isl68137
+> +++ b/Documentation/hwmon/isl68137.rst
+> @@ -2,16 +2,22 @@ Kernel driver isl68137
+>  ======================
+>  
+>  Supported chips:
+> +
+>    * Intersil ISL68137
+> +
+>      Prefix: 'isl68137'
+> +
+>      Addresses scanned: -
+> -    Datasheet: Publicly available at the Intersil website
+> +
+> +    Datasheet:
+> +
+> +      Publicly available at the Intersil website
+>        https://www.intersil.com/content/dam/Intersil/documents/isl6/isl68137.pdf
+>  
+>  Authors:
+> -        Maxim Sloyko <maxims@google.com>
+> -        Robert Lippert <rlippert@google.com>
+> -        Patrick Venture <venture@google.com>
+> +      - Maxim Sloyko <maxims@google.com>
+> +      - Robert Lippert <rlippert@google.com>
+> +      - Patrick Venture <venture@google.com>
+>  
+>  Description
+>  -----------
+> @@ -32,6 +38,7 @@ Beyond the normal sysfs pmbus attributes, the driver exposes a control attribute
+>  Additional Sysfs attributes
+>  ---------------------------
+>  
+> +======================= ====================================
+>  avs(0|1)_enable		Controls the AVS state of each rail.
+>  
+>  curr1_label		"iin"
+> @@ -70,3 +77,4 @@ temp[1-3]_crit		Critical high temperature
+>  temp[1-3]_crit_alarm	Chip temperature critical high alarm
+>  temp[1-3]_max		Maximum temperature
+>  temp[1-3]_max_alarm	Chip temperature high alarm
+> +======================= ====================================
+> diff --git a/Documentation/hwmon/lochnagar b/Documentation/hwmon/lochnagar.rst
+> similarity index 93%
+> rename from Documentation/hwmon/lochnagar
+> rename to Documentation/hwmon/lochnagar.rst
+> index e9686fb3eb40..1d609c4d18c3 100644
+> --- a/Documentation/hwmon/lochnagar
+> +++ b/Documentation/hwmon/lochnagar.rst
+> @@ -1,5 +1,5 @@
+>  Kernel Driver Lochnagar
+> -========================
+> +=======================
+>  
+>  Supported systems:
+>    * Cirrus Logic : Lochnagar 2
+> @@ -21,6 +21,7 @@ by software.
+>  Sysfs attributes
+>  ----------------
+>  
+> +======================= =======================================================
+>  temp1_input             The Lochnagar board temperature (milliCelsius)
+>  in0_input               Measured voltage for DBVDD1 (milliVolts)
+>  in0_label               "DBVDD1"
+> @@ -76,5 +77,7 @@ curr8_label             "MICVDD"
+>  power8_average          Measured average power for MICVDD (microWatts)
+>  power8_average_interval Power averaging time input valid from 1 to 1708mS
+>  power8_label            "MICVDD"
+> +======================= =======================================================
+>  
+> -Note: It is not possible to measure voltage on the SYSVDD rail.
+> +Note:
+> +    It is not possible to measure voltage on the SYSVDD rail.
 
-> I would personally split that into two patches: one to avoid the
-> potential deadlocks and a second to do the "safe to change to
-> stream_open" changes.  It seems like the first is more serious and
-> urgent while the second is more of a cleanup.  Then you could
-> streamline the commit logs by including a single diagnostic and
-> omitting the entire list of files.
-
-I was contemplating how to split this too. And one of the way was to go
-with separate patch for every subsystem. However I still hope to do the
-mass conversion all at one conversion, because otherwise it would be
-many patches and it will take my time to propagate them all / ping
-maintainers etc.  About splitting deadlock / just safe:
-stream_open.cocci does not have complete coverage for detecting whether
-a .read() blocks, and as pci/switchtec case shows there are indeed other
-cases that might be deadlocking but are not currently detected as such.
-I would thus prefer not to split the conversion.
-
-I've added the following note to the patch:
-
-    and the rest were just safe to convert to stream_open because their read and
-    write do not use ppos at all and corresponding file_operations do not
-    have methods that assume @offset file access(*):
-
-    <long list>
-
-    ...
-
-    (*) This second group also contains cases with read/write deadlocks that
-    stream_open.cocci don't yet detect, but which are still valid to convert to
-    stream_open since ppos is not used. For example drivers/pci/switch/switchtec.c
-    calls wait_for_completion_interruptible() in its .read, but stream_open.cocci
-    currently detects only "wait_event*" as blocking.
-
-hope it is ok.
-
-> But that's all bike-shedding and I'm totally fine with this as-is.
-
-Thanks. Your input was useful. The updated patch is here:
-
-https://lab.nexedi.com/kirr/linux/commit/a34a8a9cb2d7
-
-as well as related patches to tighten stream_open semantic and
-corresponding FUSE bits:
-
-https://lab.nexedi.com/kirr/linux/commit/47ee8df337a9
-https://lab.nexedi.com/kirr/linux/commit/1b4636172835
-
-Kirill
+-- 
+Jani Nikula, Intel Open Source Graphics Center
