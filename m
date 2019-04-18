@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDCDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BF1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3378218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66752218FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610363;
-	bh=MNe2eAK3gAJ3/Y2dktKpqct4MaR4fugBNxuXb7CX744=;
+	s=default; t=1555610366;
+	bh=lOUif2utH4T/eMe+zNP0ouODHiJKyVbBWH7L1ibkU6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0eUYZTb4hwi5Y3gnRknkV+vP/r87/s3zORU3wSUJfVlqRGYoMrLwUN27IpYZpJJ3
-	 siKUsAXaEko/4sb9yl1MnJ4BpgHYyUlT14RLWeGzvHgYO3VKPr5/Ne3e00PIYOep7F
-	 QCb8nik+Mw4LnOLIG93GR2htSi5qTCEBH6lXjvh4=
+	b=W06pKrF2Gx9SC3eyR/e2gRbT72oP6AgK8Yl5YGAwP8MKtPbbwOytksbZLgmo2Lb9X
+	 qo7tcM5YyaaIvDmx21kczsP7FfjkQ+0/xR+rUP7UHvBtYOvmgsgSEaOiBr3AM7A0UR
+	 mftwswT/bmo5e45n4cQt+5OZx1p7TPjTXMkfiyoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390115AbfDRR7W (ORCPT
+        id S2390128AbfDRR7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbfDRR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:20 -0400
+        id S2390094AbfDRR7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6677218AE;
-        Thu, 18 Apr 2019 17:59:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E81F218CD;
+        Thu, 18 Apr 2019 17:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610359;
-        bh=MNe2eAK3gAJ3/Y2dktKpqct4MaR4fugBNxuXb7CX744=;
+        s=default; t=1555610357;
+        bh=lOUif2utH4T/eMe+zNP0ouODHiJKyVbBWH7L1ibkU6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uPzIXmlBQDTZwXEuyO6p/8fOsSwNm/2IpmQvBhLFFOitrZEezW+XD3NMKFK2CIHBO
-         GxDyvrdtHu+dQjNDjTF8+zxcBoD4cIJBbI8lF5GMq1gyckLHuMD3IkblKC7ypKfCh8
-         kHjoUAW4mVV9lMuutJ1JNtWYPbsI3lQ5Z3wxQ+9k=
+        b=G513OiqU5x2jh+zmtvrBbgBYB9ar88XVIRU8HzLamXo8GeXW58yuDnCpY5C7fsnOw
+         2rKIpjmFA8dzRqiBGnjd5nJFjKPUKMbYG27qFFAoE+GWFg75mX059ZJY0cNZLoSBU3
+         wZRk0l8alDukJCNBHo+Dc0icHV54zwX5h2ATYsFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,15 +46,15 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Taeung Song <treeze.taeung@gmail.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/110] perf build-id: Fix memory leak in print_sdt_events()
-Date:   Thu, 18 Apr 2019 19:56:20 +0200
-Message-Id: <20190418160441.330729944@linuxfoundation.org>
+Subject: [PATCH 4.19 030/110] perf config: Fix a memory leak in collect_config()
+Date:   Thu, 18 Apr 2019 19:56:19 +0200
+Message-Id: <20190418160441.152038845@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -67,63 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8bde8516893da5a5fdf06121f74d11b52ab92df5 ]
+[ Upstream commit 54569ba4b06d5baedae4614bde33a25a191473ba ]
 
 Detected with gcc's ASan:
 
-  Direct leak of 4356 byte(s) in 120 object(s) allocated from:
-      #0 0x7ff1a2b5a070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x55719aef4814 in build_id_cache__origname util/build-id.c:215
-      #2 0x55719af649b6 in print_sdt_events util/parse-events.c:2339
-      #3 0x55719af66272 in print_events util/parse-events.c:2542
-      #4 0x55719ad1ecaa in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-      #5 0x55719aec745d in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #6 0x55719aec7d1a in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #7 0x55719aec8184 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #8 0x55719aeca41a in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #9 0x7ff1a07ae09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  Direct leak of 66 byte(s) in 5 object(s) allocated from:
+      #0 0x7ff3b1f32070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
+      #1 0x560c8761034d in collect_config util/config.c:597
+      #2 0x560c8760d9cb in get_value util/config.c:169
+      #3 0x560c8760dfd7 in perf_parse_file util/config.c:285
+      #4 0x560c8760e0d2 in perf_config_from_file util/config.c:476
+      #5 0x560c876108fd in perf_config_set__init util/config.c:661
+      #6 0x560c87610c72 in perf_config_set__new util/config.c:709
+      #7 0x560c87610d2f in perf_config__init util/config.c:718
+      #8 0x560c87610e5d in perf_config util/config.c:730
+      #9 0x560c875ddea0 in main /home/changbin/work/linux/tools/perf/perf.c:442
+      #10 0x7ff3afb8609a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 40218daea1db ("perf list: Show SDT and pre-cached events")
-Link: http://lkml.kernel.org/r/20190316080556.3075-7-changbin.du@gmail.com
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Fixes: 20105ca1240c ("perf config: Introduce perf_config_set class")
+Link: http://lkml.kernel.org/r/20190316080556.3075-6-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/build-id.c     | 1 +
- tools/perf/util/parse-events.c | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/util/config.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 04b1d53e4bf9..1d352621bd48 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -183,6 +183,7 @@ char *build_id_cache__linkname(const char *sbuild_id, char *bf, size_t size)
- 	return bf;
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 5ac157056cdf..9bb742accfa5 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -628,11 +628,10 @@ static int collect_config(const char *var, const char *value,
+ 	}
+ 
+ 	ret = set_value(item, value);
+-	return ret;
+ 
+ out_free:
+ 	free(key);
+-	return -1;
++	return ret;
  }
  
-+/* The caller is responsible to free the returned buffer. */
- char *build_id_cache__origname(const char *sbuild_id)
- {
- 	char *linkname;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 85977cebf87c..1a7c76d2baa8 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2334,6 +2334,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
- 				printf("  %-50s [%s]\n", buf, "SDT event");
- 				free(buf);
- 			}
-+			free(path);
- 		} else
- 			printf("  %-50s [%s]\n", nd->s, "SDT event");
- 		if (nd2) {
+ int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
 -- 
 2.19.1
 
