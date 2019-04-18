@@ -2,217 +2,225 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33026C282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F9C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0D7217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3372184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aXmav6lm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQCZG8vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbfDRD3Q (ORCPT
+        id S2387929AbfDRDiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 23:29:16 -0400
-Received: from mail-eopbgr130083.outbound.protection.outlook.com ([40.107.13.83]:26557
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731985AbfDRD3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 23:29:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HHhkIYpC1yG+k6UyKtZV26CwYVtQUTX3Jks5wSk1Te0=;
- b=aXmav6lmz7R4IRNgWpsmoCeHjhHssztf/ntw2Md86SOLi6nQJlB+3WhnJzWhURu+vgsPbSnenvAZj6d0neIFABi2fJmJlqLUmip4b2Sb1mJBABoAS0ZsRiFhQNHB8ejNHqB3ULMj8ZnbCJvKM/tqHm1kw37cxxm58vQRgx7QR/8=
-Received: from AM6PR04MB6470.eurprd04.prod.outlook.com (20.179.245.79) by
- AM6PR04MB6454.eurprd04.prod.outlook.com (20.179.245.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.19; Thu, 18 Apr 2019 03:29:09 +0000
-Received: from AM6PR04MB6470.eurprd04.prod.outlook.com
- ([fe80::bc8d:21be:2cd6:f549]) by AM6PR04MB6470.eurprd04.prod.outlook.com
- ([fe80::bc8d:21be:2cd6:f549%3]) with mapi id 15.20.1813.011; Thu, 18 Apr 2019
- 03:29:09 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: fsl_esai: Add pm runtime function
-Thread-Topic: [PATCH] ASoC: fsl_esai: Add pm runtime function
-Thread-Index: AQHU9ZbiZU/zXTBSIUWbqTWj8Owr4Q==
-Date:   Thu, 18 Apr 2019 03:29:09 +0000
-Message-ID: <1555558152-32196-1-git-send-email-shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 1.9.1
-x-clientproxiedby: HK2PR04CA0067.apcprd04.prod.outlook.com
- (2603:1096:202:15::11) To AM6PR04MB6470.eurprd04.prod.outlook.com
- (2603:10a6:20b:f6::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ba0427b-7ad3-453e-daf2-08d6c3ae04be
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR04MB6454;
-x-ms-traffictypediagnostic: AM6PR04MB6454:
-x-microsoft-antispam-prvs: <AM6PR04MB6454B17246B5B01931D8414BE3260@AM6PR04MB6454.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0011612A55
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(366004)(136003)(39860400002)(189003)(199004)(86362001)(8936002)(53936002)(4326008)(6512007)(50226002)(66066001)(36756003)(478600001)(97736004)(110136005)(71190400001)(71200400001)(14444005)(14454004)(256004)(54906003)(305945005)(25786009)(476003)(81166006)(6436002)(2201001)(68736007)(7736002)(386003)(81156014)(99286004)(6506007)(102836004)(5660300002)(186003)(6486002)(2616005)(6116002)(52116002)(316002)(8676002)(26005)(2501003)(3846002)(2906002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6454;H:AM6PR04MB6470.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8tNB371X6dBgoN15ZUbN5mRTEkX77hU7rj02XgRLMCOakpUVTobXKbRXF6x8ZzEBsLteQPdZ7EY2CS5qre4M3+jTios8iZboffG/QbRuJPfj8f8sGJHBT3EsCkazC7GzWtSE3eWztnuze2uGKEz+2y12Hgu9OBQtCMZjTnG3+V3feXxk7Wib1Arccoe3JXL1hMK+HJpMHKQkWBMxJk9tK0nLGxNqbs3YMKD6hllzZ5a84EpCi14Vvyetbw82cZGnyUj1HB6cXxmHuz0GfrPJJGJp6Re1qqeAO5XGMYB6cgsPXacoAsavqYnV8cSU4hHOfrAJkscYlOIDG2SP1UVoZxkmNUrdneqCo9jeLxAErOmiylEl1qTduDAbBLQIxMhNcEfVwSUxRAESKwwgf1RCEsqPSq6bLCtHinthh57W2Bo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 17 Apr 2019 23:38:06 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35969 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732325AbfDRDiF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 23:38:05 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s83so397095qke.3;
+        Wed, 17 Apr 2019 20:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NBYuFnwbcjYOpiEKrKPQVkOk6Eg+rvfTC74KUi0ag2Q=;
+        b=mQCZG8vcWogE0a1HYzn20xOQKcuCNRxxH2AwF8vuDENsU8QTs0XFmBICzQttAmFvxL
+         v6deNdqbEPWk3sYPzQQVmXvBJwPk2wMVeGCQMjCFQGKc3kDx4QEjfYB2JU0uObqHkhR2
+         znPm3bydtuLLi0trR8Qh+9oCogasgIbFDi5L9RoXsaZgh7D0Dr0CWxkVzR60T/VPO+5D
+         9oCk0mAlYYy+Yk5tPBAXTTKnijmr0jIUJotqQyogBrenLTDYMsiAZf8xX9Tmk9a3kFTH
+         dgkjuqLwGOSuC31drcsZJ4no4jP5KkMLcTmy+JOJIr+wfZkxDfa6gM6EzKm9qxLiATaL
+         OJDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NBYuFnwbcjYOpiEKrKPQVkOk6Eg+rvfTC74KUi0ag2Q=;
+        b=nPqZvQvmSDXuBW38UoQ93uUW2FYnMnZ/7q7rC7KQSPKDPwBFYwol1B4GcI/ziPj+o6
+         bqvU9Y9rnUZplbUixadLdBKEw18jMvwdrCIcBTfp3mL5i43t0kF7Gqv7pFS+fUmVmIYN
+         s1ZpTWN2h2ryIGhkNNGzghhhcQLH8Z7iZjOAP7yM32alPQZ25qXlLhoiH+CX9gbapEBq
+         GVvzgoItfVNwL5rtl9aoH7nYbA9EEwGCiYDQSf2nuJBqpD8sRkHDfkW0opNF9uoRxvx6
+         kBL3xKawzSMa4iH5A9EiEtTSwD70hwNkcmooKCsjg38Hk+mDNYYyxoqLXWPG2cmwoxgI
+         3H/Q==
+X-Gm-Message-State: APjAAAVmF1JhBe1GqOxmZMcCJKsePAE8ZB/SZXXydKy02o+4mY/OHDeU
+        Ep9gT6Zqa/sSejexPIizm0yOsmziyRZWK/dNQLADlESXYiQ=
+X-Google-Smtp-Source: APXvYqykd2uUYNctyvy9ymieqCW0BkA5GCMA8jyzjgFPvWcgrLIEbF8jnRb15+XWll6rgQ3Ro7SEySxj6FddhCTwIg0=
+X-Received: by 2002:a37:9fc6:: with SMTP id i189mr71827628qke.246.1555558683979;
+ Wed, 17 Apr 2019 20:38:03 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ba0427b-7ad3-453e-daf2-08d6c3ae04be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 03:29:09.5960
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6454
+References: <20190315111107.15154-1-lhenriques@suse.com> <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
+ <87r2b4zd2q.fsf@suse.com> <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
+ <87lg1c17b2.fsf@suse.com> <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
+ <87a7hr19v7.fsf@suse.com> <87o963jkcj.fsf@suse.com> <CAAM7YAko8qnfjWEdEqX=XE3azDZLpO_+egxDEsqowK9ByYZxwg@mail.gmail.com>
+ <878swre7xz.fsf@suse.com> <87d0lm6psq.fsf@suse.com>
+In-Reply-To: <87d0lm6psq.fsf@suse.com>
+From:   "Yan, Zheng" <ukernel@gmail.com>
+Date:   Thu, 18 Apr 2019 11:37:52 +0800
+Message-ID: <CAAM7YAmGzYM0wKGKJ3Z_uHOTgcmEjXhXtuu8NwE+sbRhiRj=Mg@mail.gmail.com>
+Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW4gaW14OCB3aGVuIHN5c3Rlcm0gZW50ZXIgc3VzcGVuZCBzdGF0ZSwgdGhlIHBvd2VyIG9mIHN1
-YnN5c3RlbSB3aWxsDQpiZSBvZmYsIHRoZSBjbG9jayBlbmFibGUgc3RhdGUgd2lsbCBiZSBsb3N0
-IGFuZCByZWdpc3RlciBjb25maWd1cmF0aW9uDQp3aWxsIGJlIGxvc3QuIFNvIHRoZSBkcml2ZXIg
-bmVlZCB0byBlbnRlciBydW50aW1lIHN1c3BlbmQgc3RhdGUgaW4NCnN1c3BlbmQuDQoNCldpdGgg
-dGhpcyBpbXBsZW1lbnRhdGlvbiB0aGUgc3VzcGVuZCBmdW5jdGlvbiBhbG1vc3Qgc2FtZSBhcyBy
-dW50aW1lDQpzdXNwZW5kIGZ1bmN0aW9uLCBzbyByZW1vdmUgdGhlIHN1c3BlbmQgZnVuY3Rpb24s
-IGp1c3QgdXNlDQpwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQgaW5zdGVhZCwgYW5kIHNhbWUgZm9y
-IHRoZSByZXN1bWUgZnVuY3Rpb24uDQoNCkFuZCBhbHNvIG5lZWQgdG8gbW92ZSBjbG9jayBlbmFi
-bGVtZW50IHRvIHJ1bnRpbWUgcmVzdW1lIGFuZCBjbG9jaw0KZGlzYWJsZW1lbnQgdG8gcnVudGlt
-ZSBzdXNwZW5kLg0KDQpTaWduZWQtb2ZmLWJ5OiBTaGVuZ2ppdSBXYW5nIDxzaGVuZ2ppdS53YW5n
-QG54cC5jb20+DQotLS0NCiBzb3VuZC9zb2MvZnNsL2ZzbF9lc2FpLmMgfCAxNDEgKysrKysrKysr
-KysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwg
-NzcgaW5zZXJ0aW9ucygrKSwgNjQgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9zb3VuZC9z
-b2MvZnNsL2ZzbF9lc2FpLmMgYi9zb3VuZC9zb2MvZnNsL2ZzbF9lc2FpLmMNCmluZGV4IGJhZDBk
-ZmVkNmI2OC4uYjFlMjdkYjM3NTJiIDEwMDY0NA0KLS0tIGEvc291bmQvc29jL2ZzbC9mc2xfZXNh
-aS5jDQorKysgYi9zb3VuZC9zb2MvZnNsL2ZzbF9lc2FpLmMNCkBAIC05LDYgKzksNyBAQA0KICNp
-bmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQogI2lu
-Y2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+DQorI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUu
-aD4NCiAjaW5jbHVkZSA8c291bmQvZG1hZW5naW5lX3BjbS5oPg0KICNpbmNsdWRlIDxzb3VuZC9w
-Y21fcGFyYW1zLmg+DQogDQpAQCAtNDY2LDMwICs0NjcsNiBAQCBzdGF0aWMgaW50IGZzbF9lc2Fp
-X3N0YXJ0dXAoc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQogCQkJICAgIHN0
-cnVjdCBzbmRfc29jX2RhaSAqZGFpKQ0KIHsNCiAJc3RydWN0IGZzbF9lc2FpICplc2FpX3ByaXYg
-PSBzbmRfc29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOw0KLQlpbnQgcmV0Ow0KLQ0KLQkvKg0KLQkg
-KiBTb21lIHBsYXRmb3JtcyBtaWdodCB1c2UgdGhlIHNhbWUgYml0IHRvIGdhdGUgYWxsIHRocmVl
-IG9yIHR3byBvZg0KLQkgKiBjbG9ja3MsIHNvIGtlZXAgYWxsIGNsb2NrcyBvcGVuL2Nsb3NlIGF0
-IHRoZSBzYW1lIHRpbWUgZm9yIHNhZmV0eQ0KLQkgKi8NCi0JcmV0ID0gY2xrX3ByZXBhcmVfZW5h
-YmxlKGVzYWlfcHJpdi0+Y29yZWNsayk7DQotCWlmIChyZXQpDQotCQlyZXR1cm4gcmV0Ow0KLQlp
-ZiAoIUlTX0VSUihlc2FpX3ByaXYtPnNwYmFjbGspKSB7DQotCQlyZXQgPSBjbGtfcHJlcGFyZV9l
-bmFibGUoZXNhaV9wcml2LT5zcGJhY2xrKTsNCi0JCWlmIChyZXQpDQotCQkJZ290byBlcnJfc3Bi
-YWNsazsNCi0JfQ0KLQlpZiAoIUlTX0VSUihlc2FpX3ByaXYtPmV4dGFsY2xrKSkgew0KLQkJcmV0
-ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGVzYWlfcHJpdi0+ZXh0YWxjbGspOw0KLQkJaWYgKHJldCkN
-Ci0JCQlnb3RvIGVycl9leHRhbGNrOw0KLQl9DQotCWlmICghSVNfRVJSKGVzYWlfcHJpdi0+ZnN5
-c2NsaykpIHsNCi0JCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShlc2FpX3ByaXYtPmZzeXNjbGsp
-Ow0KLQkJaWYgKHJldCkNCi0JCQlnb3RvIGVycl9mc3lzY2xrOw0KLQl9DQogDQogCWlmICghZGFp
-LT5hY3RpdmUpIHsNCiAJCS8qIFNldCBzeW5jaHJvbm91cyBtb2RlICovDQpAQCAtNTA2LDE2ICs0
-ODMsNiBAQCBzdGF0aWMgaW50IGZzbF9lc2FpX3N0YXJ0dXAoc3RydWN0IHNuZF9wY21fc3Vic3Ry
-ZWFtICpzdWJzdHJlYW0sDQogDQogCXJldHVybiAwOw0KIA0KLWVycl9mc3lzY2xrOg0KLQlpZiAo
-IUlTX0VSUihlc2FpX3ByaXYtPmV4dGFsY2xrKSkNCi0JCWNsa19kaXNhYmxlX3VucHJlcGFyZShl
-c2FpX3ByaXYtPmV4dGFsY2xrKTsNCi1lcnJfZXh0YWxjazoNCi0JaWYgKCFJU19FUlIoZXNhaV9w
-cml2LT5zcGJhY2xrKSkNCi0JCWNsa19kaXNhYmxlX3VucHJlcGFyZShlc2FpX3ByaXYtPnNwYmFj
-bGspOw0KLWVycl9zcGJhY2xrOg0KLQljbGtfZGlzYWJsZV91bnByZXBhcmUoZXNhaV9wcml2LT5j
-b3JlY2xrKTsNCi0NCi0JcmV0dXJuIHJldDsNCiB9DQogDQogc3RhdGljIGludCBmc2xfZXNhaV9o
-d19wYXJhbXMoc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQpAQCAtNTc2LDIw
-ICs1NDMsNiBAQCBzdGF0aWMgaW50IGZzbF9lc2FpX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9z
-dWJzdHJlYW0gKnN1YnN0cmVhbSwNCiAJcmV0dXJuIDA7DQogfQ0KIA0KLXN0YXRpYyB2b2lkIGZz
-bF9lc2FpX3NodXRkb3duKHN0cnVjdCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLA0KLQkJ
-CSAgICAgIHN0cnVjdCBzbmRfc29jX2RhaSAqZGFpKQ0KLXsNCi0Jc3RydWN0IGZzbF9lc2FpICpl
-c2FpX3ByaXYgPSBzbmRfc29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOw0KLQ0KLQlpZiAoIUlTX0VS
-Uihlc2FpX3ByaXYtPmZzeXNjbGspKQ0KLQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGVzYWlfcHJp
-di0+ZnN5c2Nsayk7DQotCWlmICghSVNfRVJSKGVzYWlfcHJpdi0+ZXh0YWxjbGspKQ0KLQkJY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKGVzYWlfcHJpdi0+ZXh0YWxjbGspOw0KLQlpZiAoIUlTX0VSUihl
-c2FpX3ByaXYtPnNwYmFjbGspKQ0KLQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGVzYWlfcHJpdi0+
-c3BiYWNsayk7DQotCWNsa19kaXNhYmxlX3VucHJlcGFyZShlc2FpX3ByaXYtPmNvcmVjbGspOw0K
-LX0NCi0NCiBzdGF0aWMgaW50IGZzbF9lc2FpX3RyaWdnZXIoc3RydWN0IHNuZF9wY21fc3Vic3Ry
-ZWFtICpzdWJzdHJlYW0sIGludCBjbWQsDQogCQkJICAgIHN0cnVjdCBzbmRfc29jX2RhaSAqZGFp
-KQ0KIHsNCkBAIC02NTgsNyArNjExLDYgQEAgc3RhdGljIGludCBmc2xfZXNhaV90cmlnZ2VyKHN0
-cnVjdCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLCBpbnQgY21kLA0KIA0KIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgc25kX3NvY19kYWlfb3BzIGZzbF9lc2FpX2RhaV9vcHMgPSB7DQogCS5zdGFy
-dHVwID0gZnNsX2VzYWlfc3RhcnR1cCwNCi0JLnNodXRkb3duID0gZnNsX2VzYWlfc2h1dGRvd24s
-DQogCS50cmlnZ2VyID0gZnNsX2VzYWlfdHJpZ2dlciwNCiAJLmh3X3BhcmFtcyA9IGZzbF9lc2Fp
-X2h3X3BhcmFtcywNCiAJLnNldF9zeXNjbGsgPSBmc2xfZXNhaV9zZXRfZGFpX3N5c2NsaywNCkBA
-IC05NDcsNiArODk5LDEwIEBAIHN0YXRpYyBpbnQgZnNsX2VzYWlfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCiAJCXJldHVybiByZXQ7DQogCX0NCiANCisJcG1fcnVudGltZV9l
-bmFibGUoJnBkZXYtPmRldik7DQorDQorCXJlZ2NhY2hlX2NhY2hlX29ubHkoZXNhaV9wcml2LT5y
-ZWdtYXAsIHRydWUpOw0KKw0KIAlyZXQgPSBpbXhfcGNtX2RtYV9pbml0KHBkZXYsIElNWF9FU0FJ
-X0RNQUJVRl9TSVpFKTsNCiAJaWYgKHJldCkNCiAJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxl
-ZCB0byBpbml0IGlteCBwY20gZG1hOiAlZFxuIiwgcmV0KTsNCkBAIC05NTQsNiArOTEwLDEzIEBA
-IHN0YXRpYyBpbnQgZnNsX2VzYWlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
-CiAJcmV0dXJuIHJldDsNCiB9DQogDQorc3RhdGljIGludCBmc2xfZXNhaV9yZW1vdmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikNCit7DQorCXBtX3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+
-ZGV2KTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
-aWNlX2lkIGZzbF9lc2FpX2R0X2lkc1tdID0gew0KIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXgz
-NS1lc2FpIiwgfSwNCiAJeyAuY29tcGF0aWJsZSA9ICJmc2wsdmY2MTAtZXNhaSIsIH0sDQpAQCAt
-OTYxLDIzICs5MjQsMzcgQEAgc3RhdGljIGludCBmc2xfZXNhaV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgZnNsX2VzYWlf
-ZHRfaWRzKTsNCiANCi0jaWZkZWYgQ09ORklHX1BNX1NMRUVQDQotc3RhdGljIGludCBmc2xfZXNh
-aV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCi17DQotCXN0cnVjdCBmc2xfZXNhaSAqZXNh
-aSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KLQ0KLQlyZWdjYWNoZV9jYWNoZV9vbmx5KGVzYWkt
-PnJlZ21hcCwgdHJ1ZSk7DQotCXJlZ2NhY2hlX21hcmtfZGlydHkoZXNhaS0+cmVnbWFwKTsNCi0N
-Ci0JcmV0dXJuIDA7DQotfQ0KLQ0KLXN0YXRpYyBpbnQgZnNsX2VzYWlfcmVzdW1lKHN0cnVjdCBk
-ZXZpY2UgKmRldikNCisjaWZkZWYgQ09ORklHX1BNDQorc3RhdGljIGludCBmc2xfZXNhaV9ydW50
-aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KIAlzdHJ1Y3QgZnNsX2VzYWkgKmVz
-YWkgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCiAJaW50IHJldDsNCiANCisJLyoNCisJICogU29t
-ZSBwbGF0Zm9ybXMgbWlnaHQgdXNlIHRoZSBzYW1lIGJpdCB0byBnYXRlIGFsbCB0aHJlZSBvciB0
-d28gb2YNCisJICogY2xvY2tzLCBzbyBrZWVwIGFsbCBjbG9ja3Mgb3Blbi9jbG9zZSBhdCB0aGUg
-c2FtZSB0aW1lIGZvciBzYWZldHkNCisJICovDQorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShl
-c2FpLT5jb3JlY2xrKTsNCisJaWYgKHJldCkNCisJCXJldHVybiByZXQ7DQorCWlmICghSVNfRVJS
-KGVzYWktPnNwYmFjbGspKSB7DQorCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZXNhaS0+c3Bi
-YWNsayk7DQorCQlpZiAocmV0KQ0KKwkJCWdvdG8gZXJyX3NwYmFjbGs7DQorCX0NCisJaWYgKCFJ
-U19FUlIoZXNhaS0+ZXh0YWxjbGspKSB7DQorCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZXNh
-aS0+ZXh0YWxjbGspOw0KKwkJaWYgKHJldCkNCisJCQlnb3RvIGVycl9leHRhbGNsazsNCisJfQ0K
-KwlpZiAoIUlTX0VSUihlc2FpLT5mc3lzY2xrKSkgew0KKwkJcmV0ID0gY2xrX3ByZXBhcmVfZW5h
-YmxlKGVzYWktPmZzeXNjbGspOw0KKwkJaWYgKHJldCkNCisJCQlnb3RvIGVycl9mc3lzY2xrOw0K
-Kwl9DQorDQogCXJlZ2NhY2hlX2NhY2hlX29ubHkoZXNhaS0+cmVnbWFwLCBmYWxzZSk7DQorCXJl
-Z2NhY2hlX21hcmtfZGlydHkoZXNhaS0+cmVnbWFwKTsNCiANCiAJLyogRklGTyByZXNldCBmb3Ig
-c2FmZXR5ICovDQogCXJlZ21hcF91cGRhdGVfYml0cyhlc2FpLT5yZWdtYXAsIFJFR19FU0FJX1RG
-Q1IsDQpAQCAtOTg3LDIyICs5NjQsNTggQEAgc3RhdGljIGludCBmc2xfZXNhaV9yZXN1bWUoc3Ry
-dWN0IGRldmljZSAqZGV2KQ0KIA0KIAlyZXQgPSByZWdjYWNoZV9zeW5jKGVzYWktPnJlZ21hcCk7
-DQogCWlmIChyZXQpDQotCQlyZXR1cm4gcmV0Ow0KKwkJZ290byBlcnJfcmVnY2FjaGVfc3luYzsN
-CiANCiAJLyogRklGTyByZXNldCBkb25lICovDQogCXJlZ21hcF91cGRhdGVfYml0cyhlc2FpLT5y
-ZWdtYXAsIFJFR19FU0FJX1RGQ1IsIEVTQUlfeEZDUl94RlIsIDApOw0KIAlyZWdtYXBfdXBkYXRl
-X2JpdHMoZXNhaS0+cmVnbWFwLCBSRUdfRVNBSV9SRkNSLCBFU0FJX3hGQ1JfeEZSLCAwKTsNCiAN
-CiAJcmV0dXJuIDA7DQorDQorZXJyX3JlZ2NhY2hlX3N5bmM6DQorCWlmICghSVNfRVJSKGVzYWkt
-PmZzeXNjbGspKQ0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGVzYWktPmZzeXNjbGspOw0KK2Vy
-cl9mc3lzY2xrOg0KKwlpZiAoIUlTX0VSUihlc2FpLT5leHRhbGNsaykpDQorCQljbGtfZGlzYWJs
-ZV91bnByZXBhcmUoZXNhaS0+ZXh0YWxjbGspOw0KK2Vycl9leHRhbGNsazoNCisJaWYgKCFJU19F
-UlIoZXNhaS0+c3BiYWNsaykpDQorCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZXNhaS0+c3BiYWNs
-ayk7DQorZXJyX3NwYmFjbGs6DQorCWNsa19kaXNhYmxlX3VucHJlcGFyZShlc2FpLT5jb3JlY2xr
-KTsNCisNCisJcmV0dXJuIHJldDsNCit9DQorDQorc3RhdGljIGludCBmc2xfZXNhaV9ydW50aW1l
-X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGZzbF9lc2FpICplc2Fp
-ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQorDQorCXJlZ2NhY2hlX2NhY2hlX29ubHkoZXNhaS0+
-cmVnbWFwLCB0cnVlKTsNCisNCisJaWYgKCFJU19FUlIoZXNhaS0+ZnN5c2NsaykpDQorCQljbGtf
-ZGlzYWJsZV91bnByZXBhcmUoZXNhaS0+ZnN5c2Nsayk7DQorCWlmICghSVNfRVJSKGVzYWktPmV4
-dGFsY2xrKSkNCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShlc2FpLT5leHRhbGNsayk7DQorCWlm
-ICghSVNfRVJSKGVzYWktPnNwYmFjbGspKQ0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGVzYWkt
-PnNwYmFjbGspOw0KKwljbGtfZGlzYWJsZV91bnByZXBhcmUoZXNhaS0+Y29yZWNsayk7DQorDQor
-CXJldHVybiAwOw0KIH0NCi0jZW5kaWYgLyogQ09ORklHX1BNX1NMRUVQICovDQorI2VuZGlmIC8q
-IENPTkZJR19QTSAqLw0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBmc2xfZXNh
-aV9wbV9vcHMgPSB7DQotCVNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKGZzbF9lc2FpX3N1c3BlbmQs
-IGZzbF9lc2FpX3Jlc3VtZSkNCisJU0VUX1JVTlRJTUVfUE1fT1BTKGZzbF9lc2FpX3J1bnRpbWVf
-c3VzcGVuZCwNCisJCQkgICBmc2xfZXNhaV9ydW50aW1lX3Jlc3VtZSwNCisJCQkgICBOVUxMKQ0K
-KwlTRVRfU1lTVEVNX1NMRUVQX1BNX09QUyhwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQsDQorCQkJ
-CXBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKQ0KIH07DQogDQogc3RhdGljIHN0cnVjdCBwbGF0Zm9y
-bV9kcml2ZXIgZnNsX2VzYWlfZHJpdmVyID0gew0KIAkucHJvYmUgPSBmc2xfZXNhaV9wcm9iZSwN
-CisJLnJlbW92ZSA9IGZzbF9lc2FpX3JlbW92ZSwNCiAJLmRyaXZlciA9IHsNCiAJCS5uYW1lID0g
-ImZzbC1lc2FpLWRhaSIsDQogCQkucG0gPSAmZnNsX2VzYWlfcG1fb3BzLA0KLS0gDQoxLjkuMQ0K
-DQo=
+On Tue, Apr 16, 2019 at 9:30 PM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> Luis Henriques <lhenriques@suse.com> writes:
+>
+> > "Yan, Zheng" <ukernel@gmail.com> writes:
+> >
+> >> On Fri, Mar 22, 2019 at 6:04 PM Luis Henriques <lhenriques@suse.com> wrote:
+> >>>
+> >>> Luis Henriques <lhenriques@suse.com> writes:
+> >>>
+> >>> > "Yan, Zheng" <ukernel@gmail.com> writes:
+> >>> >
+> >>> >> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
+> >>> >>>
+> >>> >>> "Yan, Zheng" <ukernel@gmail.com> writes:
+> >>> >>>
+> >>> >>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
+> >>> >>> >>
+> >>> >>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
+> >>> >>> >>
+> >>> >>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
+> >>> >>> >> >>
+> >>> >>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
+> >>> >>> >> >>
+> >>> >>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
+> >>> >>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
+> >>> >>> >> >>   hex dump (first 32 bytes):
+> >>> >>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+> >>> >>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >>> >>> >> >>   backtrace:
+> >>> >>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
+> >>> >>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
+> >>> >>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
+> >>> >>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
+> >>> >>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
+> >>> >>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
+> >>> >>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
+> >>> >>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
+> >>> >>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
+> >>> >>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
+> >>> >>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
+> >>> >>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
+> >>> >>> >> >>
+> >>> >>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
+> >>> >>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
+> >>> >>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
+> >>> >>> >> >>
+> >>> >>> >> >> Link: https://tracker.ceph.com/issues/38224
+> >>> >>> >> >> Cc: stable@vger.kernel.org
+> >>> >>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> >>> >>> >> >> ---
+> >>> >>> >> >>  fs/ceph/caps.c | 7 +++++++
+> >>> >>> >> >>  1 file changed, 7 insertions(+)
+> >>> >>> >> >>
+> >>> >>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> >>> >>> >> >> index 36a8dc699448..208f4dc6f574 100644
+> >>> >>> >> >> --- a/fs/ceph/caps.c
+> >>> >>> >> >> +++ b/fs/ceph/caps.c
+> >>> >>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
+> >>> >>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+> >>> >>> >> >>  {
+> >>> >>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
+> >>> >>> >> >> +
+> >>> >>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
+> >>> >>> >> >>         list_del_init(&ci->i_snap_realm_item);
+> >>> >>> >> >>         ci->i_snap_realm_counter++;
+> >>> >>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+> >>> >>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
+> >>> >>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+> >>> >>> >> >>                             realm);
+> >>> >>> >> >> +       /*
+> >>> >>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
+> >>> >>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
+> >>> >>> >> >> +        * ceph_snap_context and we need to drop it.
+> >>> >>> >> >> +        */
+> >>> >>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
+> >>> >>> >> >>  }
+> >>> >>> >> >>
+> >>> >>> >> >>  /*
+> >>> >>> >> >
+> >>> >>> >> > This does not seem right.  i_head_snapc is cleared when
+> >>> >>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
+> >>> >>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
+> >>> >>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
+> >>> >>> >> > should be in iterate_session_caps()
+> >>> >>> >> >
+> >>> >>> >>
+> >>> >>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
+> >>> >>> >> seems to execute fine, except from the memory leak.
+> >>> >>> >>
+> >>> >>> >> It's very difficult to reproduce this issue, but last time I managed to
+> >>> >>> >> get this memory leak to trigger I actually had some debugging code in
+> >>> >>> >> drop_inode_snap_realm, something like:
+> >>> >>> >>
+> >>> >>> >>   if (ci->i_head_snapc)
+> >>> >>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
+> >>> >>> >
+> >>> >>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
+> >>> >>> > i_flushing_caps. and try reproducing it again.
+> >>> >>> >
+> >>> >>>
+> >>> >>> Ok, it took me a few hours, but I managed to reproduce the bug, with
+> >>> >>> those extra printks.  All those values are set to 0 when the bug
+> >>> >>> triggers (and i_head_snapc != NULL).
+> >>> >>>
+> >>> >>
+> >>> >> Thanks, which test triggers this bug?
+> >>> >
+> >>> > That's generic/013.  It usually triggers after a few hours of running it
+> >>> > in a loop (I'm using a vstart cluster for that).
+> >>> >
+> >>> >>
+> >>> >> I searched that code, found we may fail to cleanup i_head_snap in two
+> >>> >> places. One is in ceph_queue_cap_snap, Another is in
+> >>> >> remove_session_caps_cb().
+> >>> >
+> >>> > Ah, great!  I spent a lot of time looking but I couldn't really find it.
+> >>> > My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
+> >>> > and that the corresponding ceph_put_snap_context would be done in
+> >>> > handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
+> >>> > MDS.
+> >>>
+> >>> Something that I didn't said explicitly is that I *know* that the
+> >>> unbalanced ceph_get_snap_context() is the one in function
+> >>> ceph_queue_cap_snap().  I know this for sure because I've managed to
+> >>> reproduce the issue several times with an instrumented kernel (with
+> >>> tracepoints) that allowed me to keep track of all ceph_snap_context
+> >>> operations (create, get, put, delete).
+> >>>
+> >>
+> >> Sorry for the delay. please try
+> >
+> > Thank you, I'll try the test with your patch applied and see if I still
+> > see the issue (obviously, this will take some time as it takes several
+> > hours for the bug to trigger).
+>
+> Ok, after several hours of running it, I confirm that I was not able to
+> reproduce the issue with your patch.  It took me a while because my test
+> environment changed a bit and I was failing to reproduce it even without
+> the patch.
+>
+
+Thanks, I pushed the patch to testing branch.
+
+Yan, Zheng
+
+> Cheers,
+> --
+> Luis
