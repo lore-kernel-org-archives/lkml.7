@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1984C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACE5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2FF2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ECE9206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388545AbfDRJHe (ORCPT
+        id S2388592AbfDRJHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:07:34 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:34066 "EHLO
+        Thu, 18 Apr 2019 05:07:40 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34081 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388508AbfDRJHb (ORCPT
+        with ESMTP id S2388540AbfDRJHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:07:31 -0400
+        Thu, 18 Apr 2019 05:07:35 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH30N-0001wk-9B; Thu, 18 Apr 2019 11:06:51 +0200
-Message-Id: <20190418084255.275696472@linutronix.de>
+        id 1hH30L-0001w5-1f; Thu, 18 Apr 2019 11:06:49 +0200
+Message-Id: <20190418084255.186774860@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:43 +0200
+Date:   Thu, 18 Apr 2019 10:41:42 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
@@ -62,7 +62,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Daniel Vetter <daniel@ffwll.ch>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         linux-arch@vger.kernel.org
-Subject: [patch V2 24/29] tracing: Remove the last struct stack_trace usage
+Subject: [patch V2 23/29] tracing: Simplify stack trace retrieval
 References: <20190418084119.056416939@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,130 +71,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the stack retrieval code by using the storage array based
-interface.
+Replace the indirection through struct stack_trace by using the storage
+array based interfaces.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- kernel/trace/trace_stack.c |   42 ++++++++++++++++--------------------------
- 1 file changed, 16 insertions(+), 26 deletions(-)
+ kernel/trace/trace.c |   40 +++++++++++++---------------------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
 
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -23,16 +23,7 @@
- static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES];
- static unsigned stack_trace_index[STACK_TRACE_ENTRIES];
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2774,22 +2774,18 @@ static void __ftrace_trace_stack(struct
+ {
+ 	struct trace_event_call *call = &event_kernel_stack;
+ 	struct ring_buffer_event *event;
++	unsigned int size, nr_entries;
+ 	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+-	struct stack_trace trace;
+-	int size = FTRACE_KSTACK_ENTRIES;
+ 	int stackidx;
  
--/*
-- * Reserve one entry for the passed in ip. This will allow
-- * us to remove most or all of the stack size overhead
-- * added by the stack tracer itself.
-- */
--struct stack_trace stack_trace_max = {
--	.max_entries		= STACK_TRACE_ENTRIES - 1,
--	.entries		= &stack_dump_trace[0],
--};
+-	trace.nr_entries	= 0;
+-	trace.skip		= skip;
 -
-+static unsigned int stack_trace_entries;
- static unsigned long stack_trace_max_size;
- static arch_spinlock_t stack_trace_max_lock =
- 	(arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
-@@ -49,10 +40,10 @@ static void print_max_stack(void)
- 
- 	pr_emerg("        Depth    Size   Location    (%d entries)\n"
- 			   "        -----    ----   --------\n",
--			   stack_trace_max.nr_entries);
-+			   stack_trace_entries);
- 
--	for (i = 0; i < stack_trace_max.nr_entries; i++) {
--		if (i + 1 == stack_trace_max.nr_entries)
-+	for (i = 0; i < stack_trace_entries; i++) {
-+		if (i + 1 == stack_trace_entries)
- 			size = stack_trace_index[i];
- 		else
- 			size = stack_trace_index[i] - stack_trace_index[i+1];
-@@ -98,13 +89,12 @@ static void check_stack(unsigned long ip
- 
- 	stack_trace_max_size = this_size;
- 
--	stack_trace_max.nr_entries = 0;
--	stack_trace_max.skip = 0;
--
--	save_stack_trace(&stack_trace_max);
-+	stack_trace_entries = stack_trace_save(stack_dump_trace,
-+					       ARRAY_SIZE(stack_dump_trace) - 1,
-+					       0);
- 
- 	/* Skip over the overhead of the stack tracer itself */
--	for (i = 0; i < stack_trace_max.nr_entries; i++) {
-+	for (i = 0; i < stack_trace_entries; i++) {
- 		if (stack_dump_trace[i] == ip)
- 			break;
- 	}
-@@ -113,7 +103,7 @@ static void check_stack(unsigned long ip
- 	 * Some archs may not have the passed in ip in the dump.
- 	 * If that happens, we need to show everything.
+ 	/*
+ 	 * Add one, for this function and the call to save_stack_trace()
+ 	 * If regs is set, then these functions will not be in the way.
  	 */
--	if (i == stack_trace_max.nr_entries)
-+	if (i == stack_trace_entries)
- 		i = 0;
+ #ifndef CONFIG_UNWINDER_ORC
+ 	if (!regs)
+-		trace.skip++;
++		skip++;
+ #endif
  
  	/*
-@@ -131,13 +121,13 @@ static void check_stack(unsigned long ip
- 	 * loop will only happen once. This code only takes place
- 	 * on a new max, so it is far from a fast path.
- 	 */
--	while (i < stack_trace_max.nr_entries) {
-+	while (i < stack_trace_entries) {
- 		int found = 0;
+@@ -2816,28 +2812,24 @@ static void __ftrace_trace_stack(struct
+ 	barrier();
  
- 		stack_trace_index[x] = this_size;
- 		p = start;
+ 	fstack = this_cpu_ptr(ftrace_stacks.stacks) + (stackidx - 1);
+-	trace.entries		= fstack->calls;
+-	trace.max_entries	= FTRACE_KSTACK_ENTRIES;
+-
+-	if (regs)
+-		save_stack_trace_regs(regs, &trace);
+-	else
+-		save_stack_trace(&trace);
+-
+-	if (trace.nr_entries > size)
+-		size = trace.nr_entries;
++	size = ARRAY_SIZE(fstack->calls);
  
--		for (; p < top && i < stack_trace_max.nr_entries; p++) {
-+		for (; p < top && i < stack_trace_entries; p++) {
- 			/*
- 			 * The READ_ONCE_NOCHECK is used to let KASAN know that
- 			 * this is not a stack-out-of-bounds error.
-@@ -168,7 +158,7 @@ static void check_stack(unsigned long ip
- 			i++;
- 	}
+-	size *= sizeof(unsigned long);
++	if (regs) {
++		nr_entries = stack_trace_save_regs(regs, fstack->calls,
++						   size, skip);
++	} else {
++		nr_entries = stack_trace_save(fstack->calls, size, skip);
++	}
  
--	stack_trace_max.nr_entries = x;
-+	stack_trace_entries = x;
++	size = nr_entries * sizeof(unsigned long);
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
+ 					    sizeof(*entry) + size, flags, pc);
+ 	if (!event)
+ 		goto out;
+ 	entry = ring_buffer_event_data(event);
  
- 	if (task_stack_end_corrupted(current)) {
- 		print_max_stack();
-@@ -270,7 +260,7 @@ static void *
- {
- 	long n = *pos - 1;
+-	memcpy(&entry->caller, trace.entries, size);
+-
+-	entry->size = trace.nr_entries;
++	memcpy(&entry->caller, fstack->calls, size);
++	entry->size = nr_entries;
  
--	if (n >= stack_trace_max.nr_entries)
-+	if (n >= stack_trace_entries)
- 		return NULL;
+ 	if (!call_filter_check_discard(call, entry, buffer, event))
+ 		__buffer_unlock_commit(buffer, event);
+@@ -2916,7 +2908,6 @@ ftrace_trace_userstack(struct ring_buffe
+ 	struct trace_event_call *call = &event_user_stack;
+ 	struct ring_buffer_event *event;
+ 	struct userstack_entry *entry;
+-	struct stack_trace trace;
  
- 	m->private = (void *)n;
-@@ -334,7 +324,7 @@ static int t_show(struct seq_file *m, vo
- 		seq_printf(m, "        Depth    Size   Location"
- 			   "    (%d entries)\n"
- 			   "        -----    ----   --------\n",
--			   stack_trace_max.nr_entries);
-+			   stack_trace_entries);
+ 	if (!(global_trace.trace_flags & TRACE_ITER_USERSTACKTRACE))
+ 		return;
+@@ -2947,12 +2938,7 @@ ftrace_trace_userstack(struct ring_buffe
+ 	entry->tgid		= current->tgid;
+ 	memset(&entry->caller, 0, sizeof(entry->caller));
  
- 		if (!stack_tracer_enabled && !stack_trace_max_size)
- 			print_disabled(m);
-@@ -344,10 +334,10 @@ static int t_show(struct seq_file *m, vo
+-	trace.nr_entries	= 0;
+-	trace.max_entries	= FTRACE_STACK_ENTRIES;
+-	trace.skip		= 0;
+-	trace.entries		= entry->caller;
+-
+-	save_stack_trace_user(&trace);
++	stack_trace_save_user(entry->caller, FTRACE_STACK_ENTRIES);
+ 	if (!call_filter_check_discard(call, entry, buffer, event))
+ 		__buffer_unlock_commit(buffer, event);
  
- 	i = *(long *)v;
- 
--	if (i >= stack_trace_max.nr_entries)
-+	if (i >= stack_trace_entries)
- 		return 0;
- 
--	if (i + 1 == stack_trace_max.nr_entries)
-+	if (i + 1 == stack_trace_entries)
- 		size = stack_trace_index[i];
- 	else
- 		size = stack_trace_index[i] - stack_trace_index[i+1];
 
 
