@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0428C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADEFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806602186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73627218A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610490;
-	bh=FQJgoyTh0UdQvIaotCQkrR/AfZAly8xdJ8Wz/lrLT9w=;
+	s=default; t=1555610493;
+	bh=sV8mWTo9p8NJ4Nl1Fo3Q/V8wy/rpFhRJqa+ARGfU3pI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teS13hczBhU/HJWxA6Du+wlLQAMOS2vZdtvlYl4FigYjju2T5TLHDY8QXNlLxYb3p
-	 UGlD3HTtt3SDIHosIZuG/zj+M99kgKgi6/owqiEuuqbZQS42Rgi8gYxmkHPlf7MGvb
-	 +HhMW3MOGCzOSeQ9Tey8C5gc8mpTa4p8fCb5wzsM=
+	b=gqghEGKPsU5HVFRLILv7Y8+S6zyeeook7JDYfohh2PSkqUxVX3tjVgxNsEevf58yM
+	 YC1tjYDOc7lIFSAJTKNDTXZ0saEUQSMdZ14G46YFjV6uxVZNwKXyy4IGbtdZhw+MSr
+	 E3ngV0CG28U66auXVwHztbull92gWLZfv3quoOZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390150AbfDRSB3 (ORCPT
+        id S2390580AbfDRSBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390536AbfDRSBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:24 -0400
+        id S2390564AbfDRSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487F6217FA;
-        Thu, 18 Apr 2019 18:01:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99948217FA;
+        Thu, 18 Apr 2019 18:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610482;
-        bh=FQJgoyTh0UdQvIaotCQkrR/AfZAly8xdJ8Wz/lrLT9w=;
+        s=default; t=1555610488;
+        bh=sV8mWTo9p8NJ4Nl1Fo3Q/V8wy/rpFhRJqa+ARGfU3pI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yKmrnPCG4fC0kGvA3fdkV7LiVcngUuDFNI2UESsA6+68tz+r41RVKSkPB1iOVir9X
-         ifVhgNyHqGuARlnshXX4bzkhk47uWxA83rZuncp77a4JP2jp4ePNFXFMiAu+CSg+hw
-         UxJRFtHyShQgBOSwp1kKjMJirUG72OHc2lYdn8Gs=
+        b=xelz9GJF/32SkwQ2LrLM4c98B1D1nLnczvNEAvU91Tp7YaT9XW/bUGOffXTCBkoPN
+         /RsIIUz3QpuIu0nWCxIms99nxO0XuPFlA/Gqe4fY9Mi2Osm9GflBnt28EQ0yZXXHaQ
+         +XE7qAS3rMpkmM8fh2RxKFmkj5IHZZgut7tFtP/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Trigger Huang <Trigger.Huang@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/110] kernel: hung_task.c: disable on suspend
-Date:   Thu, 18 Apr 2019 19:57:07 +0200
-Message-Id: <20190418160445.555719161@linuxfoundation.org>
+Subject: [PATCH 4.19 080/110] drm/ttm: Fix bo_global and mem_global kfree error
+Date:   Thu, 18 Apr 2019 19:57:09 +0200
+Message-Id: <20190418160445.699482284@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,100 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a1c6ca3c6de763459a6e93b644ec6518c890ba1c ]
+[ Upstream commit 30f33126feca0fe16df9e9302ffc28a953e2eb37 ]
 
-It is possible to observe hung_task complaints when system goes to
-suspend-to-idle state:
+ttm_bo_glob and ttm_mem_glob are defined as structure instance, while
+not allocated by kzalloc, so kfree should not be invoked to release
+them anymore. Otherwise, it will cause the following kernel BUG when
+unloading amdgpu module
 
- # echo freeze > /sys/power/state
+[   48.419294] kernel BUG at /build/linux-5s7Xkn/linux-4.15.0/mm/slub.c:3894!
+[   48.419352] invalid opcode: 0000 [#1] SMP PTI
+[   48.419387] Modules linked in: amdgpu(OE-) amdchash(OE) amdttm(OE) amd_sched(OE) amdkcl(OE) amd_iommu_v2 drm_kms_helper drm i2c_algo_bit fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hda_codec_generic snd_hda_intel snd_hda_codec snd_hda_core snd_hwdep kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi pcbc snd_seq snd_seq_device snd_timer aesni_intel snd soundcore joydev aes_x86_64 crypto_simd glue_helper cryptd input_leds mac_hid serio_raw binfmt_misc nfsd auth_rpcgss nfs_acl lockd grace sunrpc sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4 8139too psmouse i2c_piix4 8139cp mii floppy pata_acpi
+[   48.419782] CPU: 1 PID: 1281 Comm: modprobe Tainted: G           OE    4.15.0-20-generic #21-Ubuntu
+[   48.419838] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[   48.419901] RIP: 0010:kfree+0x137/0x180
+[   48.419934] RSP: 0018:ffffb02101273bf8 EFLAGS: 00010246
+[   48.419974] RAX: ffffeee1418ad7e0 RBX: ffffffffc075f100 RCX: ffff8fed7fca7ed0
+[   48.420025] RDX: 0000000000000000 RSI: 000000000003440e RDI: 0000000022400000
+[   48.420073] RBP: ffffb02101273c10 R08: 0000000000000010 R09: ffff8fed7ffd3680
+[   48.420121] R10: ffffeee1418ad7c0 R11: ffff8fed7ffd3000 R12: ffffffffc075e2c0
+[   48.420169] R13: ffffffffc074ec10 R14: ffff8fed73063900 R15: ffff8fed737428e8
+[   48.420216] FS:  00007fdc912ec540(0000) GS:ffff8fed7fc80000(0000) knlGS:0000000000000000
+[   48.420267] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   48.420308] CR2: 000055fa40c30060 CR3: 000000023470a006 CR4: 00000000003606e0
+[   48.420358] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   48.420405] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   48.420452] Call Trace:
+[   48.420485]  ttm_bo_global_kobj_release+0x20/0x30 [amdttm]
+[   48.420528]  kobject_release+0x6a/0x180
+[   48.420562]  kobject_put+0x28/0x50
+[   48.420595]  ttm_bo_global_release+0x36/0x50 [amdttm]
+[   48.420636]  amdttm_bo_device_release+0x119/0x180 [amdttm]
+[   48.420678]  ? amdttm_bo_clean_mm+0xa6/0xf0 [amdttm]
+[   48.420760]  amdgpu_ttm_fini+0xc9/0x180 [amdgpu]
+[   48.420821]  amdgpu_bo_fini+0x12/0x40 [amdgpu]
+[   48.420889]  gmc_v9_0_sw_fini+0x40/0x50 [amdgpu]
+[   48.420947]  amdgpu_device_fini+0x36f/0x4c0 [amdgpu]
+[   48.421007]  amdgpu_driver_unload_kms+0xb4/0x150 [amdgpu]
+[   48.421058]  drm_dev_unregister+0x46/0xf0 [drm]
+[   48.421102]  drm_dev_unplug+0x12/0x70 [drm]
 
- PM: Syncing filesystems ... done.
- Freezing user space processes ... (elapsed 0.001 seconds) done.
- OOM killer disabled.
- Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
- sd 0:0:0:0: [sda] Synchronizing SCSI cache
- INFO: task bash:1569 blocked for more than 120 seconds.
-       Not tainted 4.19.0-rc3_+ #687
- "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
- bash            D    0  1569    604 0x00000000
- Call Trace:
-  ? __schedule+0x1fe/0x7e0
-  schedule+0x28/0x80
-  suspend_devices_and_enter+0x4ac/0x750
-  pm_suspend+0x2c0/0x310
-
-Register a PM notifier to disable the detector on suspend and re-enable
-back on wakeup.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Trigger Huang <Trigger.Huang@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/hung_task.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/ttm/ttm_bo.c     | 1 -
+ drivers/gpu/drm/ttm/ttm_memory.c | 9 ---------
+ 2 files changed, 10 deletions(-)
 
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 9eca2371f189..4a9191617076 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -15,6 +15,7 @@
- #include <linux/lockdep.h>
- #include <linux/export.h>
- #include <linux/sysctl.h>
-+#include <linux/suspend.h>
- #include <linux/utsname.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/debug.h>
-@@ -240,6 +241,28 @@ void reset_hung_task_detector(void)
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 7c484729f9b2..268f5a3b3122 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -1445,7 +1445,6 @@ static void ttm_bo_global_kobj_release(struct kobject *kobj)
+ 		container_of(kobj, struct ttm_bo_global, kobj);
+ 
+ 	__free_page(glob->dummy_read_page);
+-	kfree(glob);
  }
- EXPORT_SYMBOL_GPL(reset_hung_task_detector);
  
-+static bool hung_detector_suspended;
-+
-+static int hungtask_pm_notify(struct notifier_block *self,
-+			      unsigned long action, void *hcpu)
-+{
-+	switch (action) {
-+	case PM_SUSPEND_PREPARE:
-+	case PM_HIBERNATION_PREPARE:
-+	case PM_RESTORE_PREPARE:
-+		hung_detector_suspended = true;
-+		break;
-+	case PM_POST_SUSPEND:
-+	case PM_POST_HIBERNATION:
-+	case PM_POST_RESTORE:
-+		hung_detector_suspended = false;
-+		break;
-+	default:
-+		break;
-+	}
-+	return NOTIFY_OK;
-+}
-+
- /*
-  * kthread which checks for tasks stuck in D state
-  */
-@@ -259,7 +282,8 @@ static int watchdog(void *dummy)
- 		interval = min_t(unsigned long, interval, timeout);
- 		t = hung_timeout_jiffies(hung_last_checked, interval);
- 		if (t <= 0) {
--			if (!atomic_xchg(&reset_hung_task, 0))
-+			if (!atomic_xchg(&reset_hung_task, 0) &&
-+			    !hung_detector_suspended)
- 				check_hung_uninterruptible_tasks(timeout);
- 			hung_last_checked = jiffies;
- 			continue;
-@@ -273,6 +297,10 @@ static int watchdog(void *dummy)
- static int __init hung_task_init(void)
- {
- 	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
-+
-+	/* Disable hung task detector on suspend */
-+	pm_notifier(hungtask_pm_notify, 0);
-+
- 	watchdog_task = kthread_run(watchdog, NULL, "khungtaskd");
+ void ttm_bo_global_release(struct drm_global_reference *ref)
+diff --git a/drivers/gpu/drm/ttm/ttm_memory.c b/drivers/gpu/drm/ttm/ttm_memory.c
+index 450387c92b63..df73d5ff84a8 100644
+--- a/drivers/gpu/drm/ttm/ttm_memory.c
++++ b/drivers/gpu/drm/ttm/ttm_memory.c
+@@ -216,14 +216,6 @@ static ssize_t ttm_mem_global_store(struct kobject *kobj,
+ 	return size;
+ }
  
- 	return 0;
+-static void ttm_mem_global_kobj_release(struct kobject *kobj)
+-{
+-	struct ttm_mem_global *glob =
+-		container_of(kobj, struct ttm_mem_global, kobj);
+-
+-	kfree(glob);
+-}
+-
+ static struct attribute *ttm_mem_global_attrs[] = {
+ 	&ttm_mem_global_lower_mem_limit,
+ 	NULL
+@@ -235,7 +227,6 @@ static const struct sysfs_ops ttm_mem_global_ops = {
+ };
+ 
+ static struct kobj_type ttm_mem_glob_kobj_type = {
+-	.release = &ttm_mem_global_kobj_release,
+ 	.sysfs_ops = &ttm_mem_global_ops,
+ 	.default_attrs = ttm_mem_global_attrs,
+ };
 -- 
 2.19.1
 
