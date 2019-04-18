@@ -2,181 +2,112 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD5C282DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC2DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E742218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B491E218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610857;
-	bh=IpRhbSjXtgRtUXeY/pxMzOVKIZHWLd27A1JF0KHnLqg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n/dt0MLhYd8f9rgkUYlk2ST/loq0Gezrdh76U/cP/M6fD6R5/ZC7Dd08mpSLbb/Oe
-	 wvRZL+wUSIu7eSI8n6vkWxEBw3cIShTvEDknjbsMvD1UGFuOE86XufWj+l9JPQKaxX
-	 rr95eTEhUL7NOOJQVrOT/DIrIDK6xh/2DcOYALBk=
+	s=default; t=1555610860;
+	bh=fuUeL3w551QrNdVsjT5hP7ohUo9+0KYwy4wzAVMXvec=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zfGXYpQ246dCd+hl48XM7TKkXhFlyzCNDHOO6TE/EgEGaQxGokHTDlFPIhcG4B09o
+	 jsuBMdrVq+lXPXSTewp8W7pUbYCBf0tM1Xrrp8fYngEil08zZrcz0RwgBSSlC6j/9v
+	 uJjMCgWTWGloH4nPEUlSREX8NVG2n6RVnHxUdBSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391644AbfDRSHf (ORCPT
+        id S2391649AbfDRSHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38214 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391278AbfDRSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:07:32 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2391638AbfDRSHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:07:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFEB4218A6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 18:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C2921872;
+        Thu, 18 Apr 2019 18:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610851;
-        bh=IpRhbSjXtgRtUXeY/pxMzOVKIZHWLd27A1JF0KHnLqg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jj8ygHs04wG9j5d4K0G7J5sMz+T6/wAqE1jCXlg29NytzVFK613HF9uk5x+gyXqas
-         0XhPiTjbZrmVLbaufp4TCpk2F1cW9LBQ6mrfaxyAMJofUznuajPLHoGDmkD7PygwoP
-         3+PiMh5L72DrgaPukpMjJ6Rit2WeJzhEkqb3DhN8=
-Received: by mail-wr1-f45.google.com with SMTP id t17so4011363wrw.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:07:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAX6lx7/xfVLKAYzlgJ+BONkCiRYPLjqo6b9wLn2jmpF5Oo3pWO6
-        4XO1To6sh3ECPcwCOvF5Shev/xlFjvp4KF+28s9EzQ==
-X-Google-Smtp-Source: APXvYqwNilIIJls/LaAxD1SFXJmD/wO12eJizVP9CrQzNbWzW9bYR3/7nK0huK0vOCEsxKkHQWV3R6mQ6UbX+vhHTjQ=
-X-Received: by 2002:adf:f344:: with SMTP id e4mr995076wrp.77.1555610849447;
- Thu, 18 Apr 2019 11:07:29 -0700 (PDT)
+        s=default; t=1555610854;
+        bh=fuUeL3w551QrNdVsjT5hP7ohUo9+0KYwy4wzAVMXvec=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CpV6EN2EpuPBcgpSi0VJ6+V2Z+EzRi4V0DjecuijRckvC9ynYl/gLJRKKiN5C3kBN
+         8dx6YSBBvIkb8XcfRBHAgxFgVPRx8G2ei+o8z8dBX3TaghvG+skr5WG8XGExYdSMxt
+         vLlJJFu7NYruCDsvLFkhLfBs8vKT48ipkfMgGDb8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Krister Johansen <kjlx@templeofstupid.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 17/50] perf hist: Add missing map__put() in error case
+Date:   Thu, 18 Apr 2019 19:57:28 +0200
+Message-Id: <20190418160424.808095653@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+References: <20190418160422.455656724@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190418171059.GA20819@wind.enjellic.com>
-In-Reply-To: <20190418171059.GA20819@wind.enjellic.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 18 Apr 2019 11:07:17 -0700
-X-Gmail-Original-Message-ID: <CALCETrXSFh2v9WZe9c1sT3w6di7uvk4j2fk6bGdb6YT4=rrHdQ@mail.gmail.com>
-Message-ID: <CALCETrXSFh2v9WZe9c1sT3w6di7uvk4j2fk6bGdb6YT4=rrHdQ@mail.gmail.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        nhorman@redhat.com, npmccallum@redhat.com,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:11 AM Dr. Greg <greg@enjellic.com> wrote:
->
-> On Wed, Apr 17, 2019 at 01:39:10PM +0300, Jarkko Sakkinen wrote:
->
-> Good morning, I hope this note finds the impending end of the work
-> week going well for everyone.
->
-> First of all, a thank you to Jarkko for his efforts in advancing this
-> driver, a process that can be decidedly thankless.  Our apologies in
-> advance for contributing to this phenomenon.
->
-> > Intel(R) SGX is a set of CPU instructions that can be used by
-> > applications to set aside private regions of code and data. The code
-> > outside the enclave is disallowed to access the memory inside the
-> > enclave by the CPU access control.  In a way you can think that SGX
-> > provides inverted sandbox. It protects the application from a
-> > malicious host.
->
-> Unfortunately, in its current implementation, the driver will not
-> protect a host from malicious enclaves.  If it advances in its current
-> form, the mainline Linux kernel will be implementing a driver with
-> known and documented security issues.
+[ Upstream commit cb6186aeffda4d27e56066c79e9579e7831541d3 ]
 
-"I can use this kernel or CPU feature to do something unpleasant that
-I could do anyway, if less nicely" is a far cry from "known and
-documented security issues".
+We need to map__put() before returning from failure of
+sample__resolve_callchain().
 
-We've hashed this out to death.  Once SGX is upstream, feel free to
-submit patches.
+Detected with gcc's ASan.
 
->
-> In addition, the driver breaks all existing SGX software by breaking
-> compatibility with what is a 3+ year ABI provided by the existing
-> driver.  This seems to contravene the well understood philosophy that
-> Linux doesn't, if at all possible, break existing applications,
-> something that we believe can be easily prevented if those interested
-> in these issues choose to read on.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Krister Johansen <kjlx@templeofstupid.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 9c68ae98c6f7 ("perf callchain: Reference count maps")
+Link: http://lkml.kernel.org/r/20190316080556.3075-10-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/hist.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-As I understand it, Cedric is going to submit a patch for this
-shortly, assuming I have correctly guessed what supposed ABI break
-you're talking about.
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index ad613ea51434..82833ceba339 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1027,8 +1027,10 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+ 
+ 	err = sample__resolve_callchain(iter->sample, &callchain_cursor, &iter->parent,
+ 					iter->evsel, al, max_stack_depth);
+-	if (err)
++	if (err) {
++		map__put(alm);
+ 		return err;
++	}
+ 
+ 	err = iter->ops->prepare_entry(iter, al);
+ 	if (err)
+-- 
+2.19.1
 
-In the mean time, I need to correct you on a critical point.  Linux
-has *never* had a policy that it will retain compatibility with an API
-that wasn't upstream in the first place.
 
-[removed extensive verbiage.  Dr. Greg, if you want your emails to be
-read, please try to be more concise, and please try to repeat yourself
-less.]
 
-> The attached patch, against the jarkko-sgx/master branch of Jarkko's
-> driver repository, provides a framework that implements
-> cryptographically secure enclave initialization policies.  The patch
-> and it's signature are also available from the following URL's:
->
-> ftp://ftp.idfusion.net/pub/idfusion/jarkko-master-SFLC.patch
-
-I just spend several minutes trying to read your code.  It would
-benefit dramatically from some attempt at documentation, and, at the
-very least, you can't have a function foo(type *ptr) that does
-something almost completely different when ptr == NULL and when ptr !=
-NULL.  For a concrete example, consider sgx_launch_control().  If you
-pass NULL, then there's a vaguely credible argument that the function
-does what the name suggests.  If you pass non-NULL, it doesn't.  The
-result is bug-prone and unreadable.
-
-If I'm understanding it right, it causes the SGX ABI to be almost
-completely incompatible between the case where the list of launch
-signers is empty and the case where the list is non-empty.  This is a
-non-starter.  We're also extensively discussed how launch enclaves
-would be supported if we were to support them, and the generally
-agreed-upon solution was that the *kernel* would handle running a
-launch enclave.  Jarkko even has code for this, but it's tabled until
-someone comes up with a credible argument that we *want* to support
-launch enclaves.
-
-> The policy architecture allows just about any conceivable
-> initialization policy to be implemented and in any combination.
-
-No it doesn't, because it requires the application (or its runtime or
-SDK or whatever) to bundle the launch enclave that implements the
-fancy policy, which means that the platform owner actually can't swap
-out the policy without breaking all the applications.  This is the
-primary reason that, if Linux were to support LE-based launch control,
-it would do so in the kernel.
-
-> If the platform owner chooses to do nothing, the driver will
-> initialize any enclave that is presented to it.  FWIW, we have close
-> to a century of enterprise system's administration experience on our
-> team and we could not envision any competent system's administrator,
-> concerned about security, who would allow such a configuration.
-
-A sufficiently careful administrator who wants to protect against
-enclave malware might want the ability to revoke permission to run a
-specific enclave, which your approach can't do.  Again, this has all
-been covered extensively.
-
-To be crystal clear, i fully agree that we are likely to eventually
-want some kind of in-kernel launch policy.  But I don't think that
-defining such a policy should block the upstreaming of the driver, and
-I don't think that your proposal for how the policy should work is an
-acceptable proposal.
