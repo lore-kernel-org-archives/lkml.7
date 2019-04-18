@@ -2,162 +2,123 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C8AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84946C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C7420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560F520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="GCscovTz"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="UgPfO/Hd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389550AbfDRPhO (ORCPT
+        id S2389567AbfDRPhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:37:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46126 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387519AbfDRPhO (ORCPT
+        Thu, 18 Apr 2019 11:37:18 -0400
+Received: from mail.efficios.com ([167.114.142.138]:34284 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387519AbfDRPhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:37:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h21so2284485ljk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XxlQKWWnFNnJwsC95iNP/OBoRzp1til1naMm19IOSgs=;
-        b=GCscovTz+VnvGiW6tBnmlRAoJznLmTvP9lebSyKUBpnBfZ34Hk+jrt84IqthPTdp0W
-         LF6xJyYqo7jhJRB2/Nt/Op7I4CUfQ5+YJJbGGN6a+EmyjnzIqVMv+nSyy+5JAj/05atG
-         pqNq3jR41q4RBLdjf9F/ShrGNnoPi08AI0OfUPterfeTz4zM0m/l3lSoJODJMoLYv5MK
-         At0oJa6GjgM1W2s/4hKai/Fygb53b5pQxAdREA8iKoW0PzNdIIbLP0K+pF++qyyAMPIa
-         wwCLJ6PnRvAowll9BfV/fDUwcCUBxUG1clgXo4gfzAiatuJLruajvbI56fe72jo1x8ra
-         xPvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XxlQKWWnFNnJwsC95iNP/OBoRzp1til1naMm19IOSgs=;
-        b=S+kCdJpHHnV6eHtvxmrRQLaX5SZBuSPMuw1nJu9vEGIbTaPP631sZI01DwBpY1BMyo
-         R3VCfOPmOzP+hNB/FjWrq7pK3a3JwNuLlg9T1L5qIfPAnolCAt2Fv2PUxUhM6bYWudl7
-         WayohY64eijSGoDcuDtpesg0DJ8+iNqW7Fcqae36gmG0FAy98t4wOWzs7OMALAopWrZT
-         YQ/Nxk51QcbH1C6s58hZU4prSCZcnqO8sCxpLTzFNlZoLvhZBkI9NomF8DgXxZhKPLNS
-         AvDTtwUH2i+4jgAspHnedI3IYnr32BUznlfSSkNcWe+UGUUTeJQ2RgXkRM7v7h5jCIWI
-         qQxg==
-X-Gm-Message-State: APjAAAW+kWMMgY+ys3UBPWjlA4VvnRtMBy/MSVsJCX250yua69hLJEhX
-        D12LUMZDMm0m9S/N38doYecLIK4aQQ9R19bvRp/E
-X-Google-Smtp-Source: APXvYqwmbHYNiUfgZD2Te72BsUtKU2FETXcxqSpQTQ/FFhf+4QCvWzKC8h0IMTu8DMrcPnzvF+pHVaQLhkSi1x9na5w=
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr94110ljk.5.1555601831141; Thu,
- 18 Apr 2019 08:37:11 -0700 (PDT)
+        Thu, 18 Apr 2019 11:37:16 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0F70B18C8B7;
+        Thu, 18 Apr 2019 11:37:15 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 3DdFlkPAnvEo; Thu, 18 Apr 2019 11:37:14 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 8E6D618C8A9;
+        Thu, 18 Apr 2019 11:37:14 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8E6D618C8A9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555601834;
+        bh=5CMv8qZ4HwVF1Sby94Lwmwtanm6tpBExDcR+pw5Yp9I=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=UgPfO/HdRk9boDHYIYKV0205n+o9hxiYvEVDidcKGgnECP2f25NCj3LME6PNfe+Gr
+         ygTYf1jML7YKga50vr3MDxWj01pVC6ClGH6v4iPEMbeZbmWt6XF4xA7VlTXHx6BNWV
+         5Th5AMmjUuNPbSzPON9EHVC7t+jKcF5i1AMf8lvWzokM04EKYjnBh858smyhGJT/Dl
+         HsNJx08Y3ad53mk8pWRHXRRUCS3LGyQxHIxtdiVFdBHjtsJedFc0/2W+0hmpe7TGmU
+         QeriboGzfSy/++Hv8vAPejrZMVMLBwU4v2JYKG00iRdeCRPcsJVDJLPzN12Wzt7kiQ
+         IvA1ewIhP7T6Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id RQ2OYkA4kz9M; Thu, 18 Apr 2019 11:37:14 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 744C918C8A2;
+        Thu, 18 Apr 2019 11:37:14 -0400 (EDT)
+Date:   Thu, 18 Apr 2019 11:37:14 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Joseph Myers <joseph@codesourcery.com>
+Cc:     Will Deacon <will.deacon@arm.com>, carlos <carlos@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1515751456.1060.1555601834395.JavaMail.zimbra@efficios.com>
+In-Reply-To: <alpine.DEB.2.21.1904181445550.5356@digraph.polyomino.org.uk>
+References: <20190416173216.9028-1-mathieu.desnoyers@efficios.com> <20190416173216.9028-2-mathieu.desnoyers@efficios.com> <364803063.586.1555516769056.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1904171601540.32123@digraph.polyomino.org.uk> <1770787324.668.1555530989646.JavaMail.zimbra@efficios.com> <1066731871.915.1555593471194.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1904181445550.5356@digraph.polyomino.org.uk>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v8)
 MIME-Version: 1.0
-References: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
- <CAHC9VhSCRrbFYy3KnSAt4GhADCfTXW-_uSm8focUk-i7_FPjrA@mail.gmail.com> <20190418151642.nb5mgrxfw55hqecs@madcap2.tricolour.ca>
-In-Reply-To: <20190418151642.nb5mgrxfw55hqecs@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 18 Apr 2019 11:37:00 -0400
-Message-ID: <CAHC9VhQGqywNxBs-LbrYh5xZ12GyWDS9Ju=kmLnzeV3ZsXiv9g@mail.gmail.com>
-Subject: Re: [PATCH ghak111 V1] audit: deliver siginfo regarless of syscall
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        sgrubb@redhat.com, omosnace@redhat.com,
-        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
-        oleg@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v8)
+Thread-Index: F1wC+FMSeBMlyzfAdd3W2xxk4GueFg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:16 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-04-18 10:59, Paul Moore wrote:
-> > On Mon, Apr 8, 2019 at 11:53 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > When a process signals the audit daemon (shutdown, rotate, resume,
-> > > reconfig) but syscall auditing is not enabled, we still want to know the
-> > > identity of the process sending the signal to the audit daemon.
-> > >
-> > > Move audit_signal_info() out of syscall auditing to general auditing but
-> > > create a new function audit_signal_info_syscall() to take care of the
-> > > syscall dependent parts for when syscall auditing is enabled.
-> > >
-> > > Please see the github kernel audit issue
-> > > https://github.com/linux-audit/audit-kernel/issues/111
-> > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  include/linux/audit.h |  6 ++++++
-> > >  kernel/audit.c        | 27 +++++++++++++++++++++++++++
-> > >  kernel/audit.h        |  4 ++--
-> > >  kernel/auditsc.c      | 19 +++----------------
-> > >  kernel/signal.c       |  2 +-
-> > >  5 files changed, 39 insertions(+), 19 deletions(-)
-> >
-> > ...
-> >
-> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > index 1e69d9fe16da..4a22fc3f824f 100644
-> > > --- a/include/linux/audit.h
-> > > +++ b/include/linux/audit.h
-> > > @@ -226,6 +229,9 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
-> > >  }
-> > >
-> > >  #define audit_enabled AUDIT_OFF
-> > > +
-> > > +#define audit_signal_info(s, t) AUDIT_OFF
-> > > +
-> >
-> > Should this be AUDIT_DISABLED to preserve the current value/behavior?
-> > Technically they should both have a value of zero right now, but since
-> > the AUDIT_DISABLED value isn't explicit it seems safer to go with
-> > AUDIT_DISABLED.
->
-> I did that first, but that symbol was not available when one or both of
-> CONFIG_AUDITSYSCALL or CONFIG_AUDIT was off, so I had to change it to
-> AUDIT_OFF.  I followed the logic to confirm that is what was intended by
-> the original code.
->
-> When auidit is off, we want to just return zero so it gets skipped
-> rather than throwing an error.
+----- On Apr 18, 2019, at 10:48 AM, Joseph Myers joseph@codesourcery.com wrote:
 
-I understand the desire to return zero in that case, I'm not arguing
-against that, I'm just not really in love with how these are defined
-when CONFIG_AUDIT isn't.  Part of it is the AUDIT_DISABLED/AUDIT_OFF
-change, part of it is the function being defined as a cpp macro
-instead of a dummy function (this of course predates your change).
-Based on other comments in this thread it looks like you're looking
-into a few things and will likely be respinning this patch, since that
-is the case, I would prefer if you changed this to just using simply
-"0" as opposed to AUDIT_OFF.
+> On Thu, 18 Apr 2019, Mathieu Desnoyers wrote:
+> 
+>> The approach above should work for arm32 be8 vs be32 linker weirdness.
+>> 
+>> For aarch64, I think we can simply do:
+>> 
+>> /*
+>>  * aarch64 -mbig-endian generates mixed endianness code vs data:
+>>  * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
+>>  * matches code endianness.
+>>  */
+>> #define RSEQ_SIG_CODE   0xd428bc00      /* BRK #0x45E0.  */
+>> 
+>> #ifdef __ARM_BIG_ENDIAN
+>> #define RSEQ_SIG_DATA   0x00bc28d4      /* BRK #0x45E0.  */
+>> #else
+>> #define RSEQ_SIG_DATA   RSEQ_SIG_CODE
+>> #endif
+>> 
+>> #define RSEQ_SIG        RSEQ_SIG_DATA
+>> 
+>> Feedback is most welcome,
+> 
+> You'll also need __ASSEMBLER__ conditionals in the installed sys/rseq.h
+> header so that it only defines constants and doesn't include any C
+> declarations in that case, if RSEQ_SIG_CODE is meant to be usable in .S
+> files rather than just inline asm in C files.
 
-If you really want to make me happy about this patch, you would also
-change this to a dummy function instead of a cpp macro.  This is a
-style nit, and isn't strictly necessary, but I would appreciate it :)
+Good point!
 
-> > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > index 958d5b8fc1b3..18a8ae812e9f 100644
-> > > --- a/kernel/audit.h
-> > > +++ b/kernel/audit.h
-> > > @@ -299,7 +299,7 @@ extern bool audit_tree_match(struct audit_chunk *chunk,
-> > >  extern void audit_put_tree(struct audit_tree *tree);
-> > >  extern void audit_kill_trees(struct audit_context *context);
-> > >
-> > > -extern int audit_signal_info(int sig, struct task_struct *t);
-> > > +extern int audit_signal_info_syscall(struct task_struct *t);
-> > >  extern void audit_filter_inodes(struct task_struct *tsk,
-> > >                                 struct audit_context *ctx);
-> > >  extern struct list_head *audit_killed_trees(void);
-> > > @@ -330,7 +330,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
-> > >  #define audit_tree_path(rule) ""       /* never called */
-> > >  #define audit_kill_trees(context) BUG()
-> > >
-> > > -#define audit_signal_info(s, t) AUDIT_DISABLED
-> > > +#define audit_signal_info_syscall(t) AUDIT_OFF
-> >
-> > Similar as above.
+Thanks,
+
+Mathieu
 
 -- 
-paul moore
-www.paul-moore.com
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
