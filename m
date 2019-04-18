@@ -2,133 +2,117 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD8CC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15487C282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318462183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyvDfTTa"
+	by mail.kernel.org (Postfix) with ESMTP id E0B12217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387755AbfDRA4a (ORCPT
+        id S2387798AbfDRA5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 20:56:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45426 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfDRA43 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 20:56:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y3so327931pgk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NCTHDha1xM/aVhgZQjb426tHN47IE4D29YS6s+8P+hI=;
-        b=lyvDfTTaK38CqH1AhVyLFO5T4uwMdNwEKxMXlLK6Lpa3f85mFo4McQeMf8zqhAOhXR
-         bzNV3fMbnmQTCPuPsop6W2MbELV/HdTm6TOmNhicM5OpKt617ir9uMXZrm/aeE6mqS5L
-         oklQjol5CW+xUvNOci0gOlMPa9X3RKaSzvTkVFmkzQY2lWFnqOHn7FxqyQ4Oj0HuraTQ
-         48vTGo0JB5aRwV8wjJ5WwkcKvyQZo37HI+uoUGXoZC5IMnUw4yLuM3/v1Buyc4F0Eh3a
-         1Y12KICsKkRC1RIdvDEd91/cvpPoYk6CmhGJol4zWVvuRNpJbKCSRXH/I9FAtZxQkgki
-         GyZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NCTHDha1xM/aVhgZQjb426tHN47IE4D29YS6s+8P+hI=;
-        b=c+rnl7lCEihCm2tRmBoDliRR8ubiuFDMRJn1BWRRvfW1sRNVhVPisCmpd0qjzDmYN/
-         MMk0UXp62WmZJcRgVI7PMFx73pDXeQTz7lkITkwl/Ng6GURiuHjTI4toKnKhLFKVpp4S
-         JDbAbiAetQY/XQSzHXRuWfbVW2pmS+VSsTcf1kIC4vWB3TGnLf7bn0vu8nYhxPYDnZiB
-         GeOUPNLUMkZPsRFUwH+aoQUsiU14xnO358FXEddna5GcVX2pajzl/pN1Tat2M4104h6D
-         KGli/6xINKuxGWlFLnhr6poghXgVbs1oIXlVavK8ff695NZ40s6AuUlv38lDc+PxWO/X
-         S86Q==
-X-Gm-Message-State: APjAAAWCHcmgG0yRI0H7N6qM475OfSU1M/7Q2fUz5aSIIAdIllkKwvYK
-        cJeSm6pfd/y+Uc2lpAaMdVo=
-X-Google-Smtp-Source: APXvYqwzKcJWAZA8gk9S1Rf9zj2fXvswUwesJyaWKSO+DGtnzhnROt1yEAC+FUIf//a2bzMHhUBTCA==
-X-Received: by 2002:a63:4e10:: with SMTP id c16mr85610316pgb.302.1555548989107;
-        Wed, 17 Apr 2019 17:56:29 -0700 (PDT)
-Received: from pcliush.allwinnertech.com ([223.197.233.48])
-        by smtp.gmail.com with ESMTPSA id p14sm535622pfa.26.2019.04.17.17.56.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Apr 2019 17:56:28 -0700 (PDT)
-From:   damon <liush.damon@gmail.com>
-To:     palmer@sifive.com
-Cc:     aou@eecs.berkeley.edu, anup.patel@wdc.com, liush.damon@gmail.com,
-        rppt@linux.ibm.com, sorear2@gmail.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] RISC-V: redefine PTRS_PER_PGD/PTRS_PER_PMD/PTRS_PER_PTE
-Date:   Thu, 18 Apr 2019 08:56:15 +0800
-Message-Id: <1555548975-7011-1-git-send-email-liush.damon@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 17 Apr 2019 20:57:17 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2541 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729331AbfDRA5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 20:57:16 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 79A5A18C1165C9251781;
+        Thu, 18 Apr 2019 08:57:13 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 18 Apr 2019 08:57:12 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 18 Apr 2019 08:57:12 +0800
+Subject: Re: linux-next: build warning after merge of the block tree
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190417123125.3de22f73@canb.auug.org.au>
+ <0879e11b-c84c-65b8-581f-bf7adcb5e231@huawei.com>
+ <20190417140305.GB23731@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b1fcb057-6d89-9846-766b-dd1b710f7654@huawei.com>
+Date:   Thu, 18 Apr 2019 08:57:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190417140305.GB23731@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the number of addresses to define the relevant macros.
+On 2019/4/17 22:03, Jaegeuk Kim wrote:
+> On 04/17, Chao Yu wrote:
+>> Hi Jaegeuk,
+>>
+>> On 2019/4/17 10:31, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> After merging the block tree, today's linux-next build (x86_64
+>>> allmodconfig) produced this warning:
+>>>
+>>> fs/f2fs/node.c: In function 'f2fs_remove_inode_page':
+>>> fs/f2fs/node.c:1193:47: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'blkcnt_t' {aka 'long long unsigned int'} [-Wformat=]
+>>>     "Inconsistent i_blocks, ino:%lu, iblocks:%zu",
+>>>                                              ~~^
+>>>                                              %llu
+>>>     inode->i_ino, inode->i_blocks);
+>>>                   ~~~~~~~~~~~~~~~       
+>>
+>> Could you please help to fix that as below in your dev branch directly?
+>>
+>> "Inconsistent i_blocks, ino:%lu, iblocks:%llu",
+> 
+> We can just use "%lu"?
 
-Signed-off-by: damon <liush.damon@gmail.com>
----
- arch/riscv/include/asm/pgtable-32.h | 2 ++
- arch/riscv/include/asm/pgtable-64.h | 3 ++-
- arch/riscv/include/asm/pgtable.h    | 4 ++--
- 3 files changed, 6 insertions(+), 3 deletions(-)
+We'd better follow sample in Documentation/core-api/printk-formats.rst:
 
-diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
-index d61974b7..93607f6 100644
---- a/arch/riscv/include/asm/pgtable-32.h
-+++ b/arch/riscv/include/asm/pgtable-32.h
-@@ -17,8 +17,10 @@
- #include <asm-generic/pgtable-nopmd.h>
- #include <linux/const.h>
- 
-+#define MAX_USER_VA_BITS	32
- /* Size of region mapped by a page global directory */
- #define PGDIR_SHIFT     22
-+#define PMD_SHIFT       PGDIR_SHIFT
- #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
- #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
- 
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index 7aa0ea9..a56d4d0 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -16,6 +16,7 @@
- 
- #include <linux/const.h>
- 
-+#define MAX_USER_VA_BITS	39
- #define PGDIR_SHIFT     30
- /* Size of region mapped by a page global directory */
- #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
-@@ -34,7 +35,7 @@
- #define pmd_val(x)      ((x).pmd)
- #define __pmd(x)        ((pmd_t) { (x) })
- 
--#define PTRS_PER_PMD    (PAGE_SIZE / sizeof(pmd_t))
-+#define PTRS_PER_PMD    (1 << (PGDIR_SHIFT - PMD_SHIFT))
- 
- static inline int pud_present(pud_t pud)
- {
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 1141364..d9cb3c8 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -33,9 +33,9 @@
- #endif /* CONFIG_64BIT */
- 
- /* Number of entries in the page global directory */
--#define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
-+#define PTRS_PER_PGD (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
- /* Number of entries in the page table */
--#define PTRS_PER_PTE    (PAGE_SIZE / sizeof(pte_t))
-+#define PTRS_PER_PTE   (1 << (PMD_SHIFT - PAGE_SHIFT))
- 
- /* Number of PGD entries that a user-mode program can use */
- #define USER_PTRS_PER_PGD   (TASK_SIZE / PGDIR_SIZE)
--- 
-1.9.1
+If <type> is dependent on a config option for its size (e.g., sector_t,
+blkcnt_t) or is architecture-dependent for its size (e.g., tcflag_t), use a
+format specifier of its largest possible type and explicitly cast to it.
 
+Example::
+
+        printk("test: sector number/total blocks: %llu/%llu\n",
+                (unsigned long long)sector, (unsigned long long)blockcount);
+
+Thanks,
+
+> 
+>> inode->i_ino, (unsigned long long)inode->i_blocks)
+>>
+>>
+>> It looks that we need to fix below commits as well:
+>>
+>> f2fs: fix to avoid panic in dec_valid_block_count()
+>> f2fs: fix to avoid panic in dec_valid_node_count()
+>>
+>> Thanks,
+>>
+>>>
+>>> Introduced by commit
+>>>
+>>>   90ae238d9dac ("f2fs: fix to avoid panic in f2fs_remove_inode_page()")
+>>>
+>>> from the f2fs tree interacting with commit
+>>>
+>>>   72deb455b5ec ("block: remove CONFIG_LBDAF")
+>>>
+> .
+> 
