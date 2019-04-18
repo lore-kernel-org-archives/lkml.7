@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44628C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEFAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EFC218A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C66821871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610512;
-	bh=kCJt3JwqNdm3aevF7O44+VDGjeLz5bsxXkboIaqkkII=;
+	s=default; t=1555610514;
+	bh=OF6gqi2qhmgcUVWZ0JqXzRNdhv+/za4BN2iATnDdn2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGTXkYl4yMay17f4ofLXBc0YCKEeD0KZFUcjBDQWtNy0vEiIePN9FH8a/amKJoTqf
-	 +C5sXzYmjRSa5KBbCdj604JKFNF0Q1K1oK6+f9Tc4FnG+vhckkMkHnGyoWogYp1aWo
-	 C2ZBuJVkN682tUIeHRV5I0j3Ma/QDrLcgp8AnRPA=
+	b=qkphJEHxjC8INdUZXjCrGXRUlsbfYnya69CtADo1XtRJ9YN7ErIQeDhlfAvnRC5xq
+	 YGQKMaxGugpYe4j0CDgkSCpbWRONgOlTDypvsKr/47RuWjHX6XPAc+EArPKaQkeqXm
+	 OTO0fkUjMo3XGKATn1DWvniQzWtZOvgBOPj4Lsfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390632AbfDRSBu (ORCPT
+        id S2390620AbfDRSBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:01:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:01:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390620AbfDRSBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:46 -0400
+        id S2390630AbfDRSBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9B1E218A6;
-        Thu, 18 Apr 2019 18:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66A45217FA;
+        Thu, 18 Apr 2019 18:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610506;
-        bh=kCJt3JwqNdm3aevF7O44+VDGjeLz5bsxXkboIaqkkII=;
+        s=default; t=1555610508;
+        bh=OF6gqi2qhmgcUVWZ0JqXzRNdhv+/za4BN2iATnDdn2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2leX578/9TMJsJzfkNNNI78dhNcPgKDu1vsF2356jXz2N/ZL52LiVEUViUIzAYibJ
-         F247PZDTnXXE6jFSFgQSoiFKDe3BDnh1ZsrtvwOaHDvHqko1ZpgG00kIh2ZuPXZz1R
-         aifV18i3TJdh+DT2Vp+NKKVpIopjpejS78PebO0o=
+        b=ofMEjA1Qg+safyn6MJGzgZ/ZUalq8R4hyvXniVk6rJvrBv02TAsyV7xeGaJOrhCrd
+         55i730lNwNQuP8ZOJ5TGZJ/oli3Wb3AX/pY4C7w1Jt/VIBjNu3qvcuqrxb+q9azcPD
+         c30Vpip6J/3d/7tbmmDtoOfo6qLuWdOtysCJlKTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rohit kumar <rohitkr@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/110] ASoC: Fix UBSAN warning at snd_soc_get/put_volsw_sx()
-Date:   Thu, 18 Apr 2019 19:56:48 +0200
-Message-Id: <20190418160444.116463393@linuxfoundation.org>
+Subject: [PATCH 4.19 060/110] f2fs: fix to do sanity check with current segment number
+Date:   Thu, 18 Apr 2019 19:56:49 +0200
+Message-Id: <20190418160444.182472490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,55 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ae7d1247d8673ebfd686b17e759d4be391165368 ]
+[ Upstream commit 042be0f849e5fc24116d0afecfaf926eed5cac63 ]
 
-In functions snd_soc_get_volsw_sx() or snd_soc_put_volsw_sx(),
-if the result of (min + max) is negative, then fls() returns
-signed integer with value as 32. This leads to signed integer
-overflow as complete operation is considered as signed integer.
+https://bugzilla.kernel.org/show_bug.cgi?id=200219
 
-UBSAN: Undefined behaviour in sound/soc/soc-ops.c:382:50
-signed integer overflow:
--2147483648 - 1 cannot be represented in type 'int'
-Call trace:
-[<ffffff852f746fe4>] __dump_stack lib/dump_stack.c:15 [inline]
-[<ffffff852f746fe4>] dump_stack+0xec/0x158 lib/dump_stack.c:51
-[<ffffff852f7b5f3c>] ubsan_epilogue+0x18/0x50 lib/ubsan.c:164
-[<ffffff852f7b6840>] handle_overflow+0xf8/0x130 lib/ubsan.c:195
-[<ffffff852f7b68f0>] __ubsan_handle_sub_overflow+0x34/0x44 lib/ubsan.c:211
-[<ffffff85307971a0>] snd_soc_get_volsw_sx+0x1a8/0x1f8 sound/soc/soc-ops.c:382
+Reproduction way:
+- mount image
+- run poc code
+- umount image
 
-Typecast the operation to unsigned int to fix the issue.
+F2FS-fs (loop1): Bitmap was wrongly set, blk:15364
+------------[ cut here ]------------
+kernel BUG at /home/yuchao/git/devf2fs/segment.c:2061!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 2 PID: 17686 Comm: umount Tainted: G        W  O      4.18.0-rc2+ #39
+Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+EIP: update_sit_entry+0x459/0x4e0 [f2fs]
+Code: e8 1c b5 fd ff 0f 0b 0f 0b 8b 45 e4 c7 44 24 08 9c 7a 6c f8 c7 44 24 04 bc 4a 6c f8 89 44 24 0c 8b 06 89 04 24 e8 f7 b4 fd ff <0f> 0b 8b 45 e4 0f b6 d2 89 54 24 10 c7 44 24 08 60 7a 6c f8 c7 44
+EAX: 00000032 EBX: 000000f8 ECX: 00000002 EDX: 00000001
+ESI: d7177000 EDI: f520fe68 EBP: d6477c6c ESP: d6477c34
+DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: b7fbe000 CR3: 2a99b3c0 CR4: 000406f0
+Call Trace:
+ f2fs_allocate_data_block+0x124/0x580 [f2fs]
+ do_write_page+0x78/0x150 [f2fs]
+ f2fs_do_write_node_page+0x25/0xa0 [f2fs]
+ __write_node_page+0x2bf/0x550 [f2fs]
+ f2fs_sync_node_pages+0x60e/0x6d0 [f2fs]
+ ? sync_inode_metadata+0x2f/0x40
+ ? f2fs_write_checkpoint+0x28f/0x7d0 [f2fs]
+ ? up_write+0x1e/0x80
+ f2fs_write_checkpoint+0x2a9/0x7d0 [f2fs]
+ ? mark_held_locks+0x5d/0x80
+ ? _raw_spin_unlock_irq+0x27/0x50
+ kill_f2fs_super+0x68/0x90 [f2fs]
+ deactivate_locked_super+0x3d/0x70
+ deactivate_super+0x40/0x60
+ cleanup_mnt+0x39/0x70
+ __cleanup_mnt+0x10/0x20
+ task_work_run+0x81/0xa0
+ exit_to_usermode_loop+0x59/0xa7
+ do_fast_syscall_32+0x1f5/0x22c
+ entry_SYSENTER_32+0x53/0x86
+EIP: 0xb7f95c51
+Code: c1 1e f7 ff ff 89 e5 8b 55 08 85 d2 8b 81 64 cd ff ff 74 02 89 02 5d c3 8b 0c 24 c3 8b 1c 24 c3 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+EAX: 00000000 EBX: 0871ab90 ECX: bfb2cd00 EDX: 00000000
+ESI: 00000000 EDI: 0871ab90 EBP: 0871ab90 ESP: bfb2cd7c
+DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Modules linked in: f2fs(O) crc32_generic bnep rfcomm bluetooth ecdh_generic snd_intel8x0 snd_ac97_codec ac97_bus snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq pcbc joydev aesni_intel snd_seq_device aes_i586 snd_timer crypto_simd snd cryptd soundcore mac_hid serio_raw video i2c_piix4 parport_pc ppdev lp parport hid_generic psmouse usbhid hid e1000 [last unloaded: f2fs]
+---[ end trace d423f83982cfcdc5 ]---
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The reason is, different log headers using the same segment, once
+one log's next block address is used by another log, it will cause
+panic as above.
+
+Main area: 24 segs, 24 secs 24 zones
+  - COLD  data: 0, 0, 0
+  - WARM  data: 1, 1, 1
+  - HOT   data: 20, 20, 20
+  - Dir   dnode: 22, 22, 22
+  - File   dnode: 22, 22, 22
+  - Indir nodes: 21, 21, 21
+
+So this patch adds sanity check to detect such condition to avoid
+this issue.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-ops.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/super.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-ops.c b/sound/soc/soc-ops.c
-index 592efb370c44..f4dc3d445aae 100644
---- a/sound/soc/soc-ops.c
-+++ b/sound/soc/soc-ops.c
-@@ -373,7 +373,7 @@ int snd_soc_get_volsw_sx(struct snd_kcontrol *kcontrol,
- 	unsigned int rshift = mc->rshift;
- 	int max = mc->max;
- 	int min = mc->min;
--	unsigned int mask = (1 << (fls(min + max) - 1)) - 1;
-+	unsigned int mask = (1U << (fls(min + max) - 1)) - 1;
- 	unsigned int val;
- 	int ret;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 6539969a1c7f..06017138eab0 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2329,7 +2329,7 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 	unsigned int segment_count_main;
+ 	unsigned int cp_pack_start_sum, cp_payload;
+ 	block_t user_block_count;
+-	int i;
++	int i, j;
  
-@@ -418,7 +418,7 @@ int snd_soc_put_volsw_sx(struct snd_kcontrol *kcontrol,
- 	unsigned int rshift = mc->rshift;
- 	int max = mc->max;
- 	int min = mc->min;
--	unsigned int mask = (1 << (fls(min + max) - 1)) - 1;
-+	unsigned int mask = (1U << (fls(min + max) - 1)) - 1;
- 	int err = 0;
- 	unsigned int val, val_mask, val2 = 0;
+ 	total = le32_to_cpu(raw_super->segment_count);
+ 	fsmeta = le32_to_cpu(raw_super->segment_count_ckpt);
+@@ -2370,11 +2370,43 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_NODE_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_node_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Node segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+ 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_data_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_data_segno[i]));
++				return 1;
++			}
++		}
++	}
++	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
++		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u) and Data segment (%u)"
++					" has the same segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
  
+ 	sit_bitmap_size = le32_to_cpu(ckpt->sit_ver_bitmap_bytesize);
 -- 
 2.19.1
 
