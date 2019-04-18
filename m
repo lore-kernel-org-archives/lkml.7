@@ -2,156 +2,97 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE075C282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8D6C282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2913217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A481217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387783AbfDRBAV convert rfc822-to-8bit (ORCPT
+        id S2387800AbfDRBFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 21:00:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34890 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729331AbfDRBAV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 21:00:21 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3I0xB79087148
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 21:00:19 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rx8xfx6ue-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 21:00:19 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Thu, 18 Apr 2019 02:00:18 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Apr 2019 02:00:16 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3I10F8R18350122
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Apr 2019 01:00:15 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFE4FAE06B;
-        Thu, 18 Apr 2019 01:00:15 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 075FBAE05F;
-        Thu, 18 Apr 2019 01:00:14 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.230.182])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Apr 2019 01:00:13 +0000 (GMT)
-References: <20190311193517.23756-1-bauerman@linux.ibm.com> <87bm1dfog4.fsf@morokweng.localdomain> <1555389147.okxbj1prw2.astroid@bobo.none>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3] powerpc/pseries: Only wait for dying CPU after call to rtas_stop_self()
-In-reply-to: <1555389147.okxbj1prw2.astroid@bobo.none>
-Date:   Wed, 17 Apr 2019 22:00:09 -0300
+        Wed, 17 Apr 2019 21:05:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:21275 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbfDRBFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 21:05:12 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 18:05:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,364,1549958400"; 
+   d="scan'208";a="316882231"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2019 18:05:10 -0700
+Date:   Wed, 17 Apr 2019 17:57:12 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
+ enable/disable split lock detection during run time
+Message-ID: <20190418005711.GB18776@romley-ivt3.sc.intel.com>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
+ <1555536851-17462-16-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904180042090.3174@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19041801-0052-0000-0000-000003ADC89F
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010947; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01190610; UDB=6.00623914; IPR=6.00971408;
- MB=3.00026491; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-18 01:00:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041801-0053-0000-0000-0000608A4696
-Message-Id: <87r2a0jffq.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-17_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=982 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904180004
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904180042090.3174@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 18, 2019 at 12:47:24AM +0200, Thomas Gleixner wrote:
+> On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> 
+> > The interface /sys/device/system/cpu/split_lock_detect is added
+> > to allow user to control split lock detection and show current split
+> > lock detection setting.
+> > 
+> > Writing [yY1] or [oO][nN] to the file enables split lock detection and
+> > writing [nN0] or [oO][fF] disables split lock detection. Split lock
+> > detection is enabled or disabled on all CPUs.
+> > 
+> > Reading the file returns current global split lock detection setting:
+> > 0: disabled
+> > 1: enabled
+> 
+> Again, You explain WHAT this patch does and still there is zero
+> justification why this sysfs knob is needed at all. I still do not see any
+> reason why this knob should exist.
 
-Hello Nick,
+An important application has split lock issues which are already discovered
+and need to be fixed. But before the issues are fixed, sysadmin still wants to
+run the application without rebooting the system, the sysfs knob can be useful
+to turn off split lock detection. After the application is done, split lock
+detection will be enabled again through the sysfs knob.
 
-Thank you very much for reviewing this patch!
+Without the sysfs knob, sysadmin has to reboot the system with kernel option
+"no_split_lock_detect" to run the application before the split lock issues
+are fixed.
 
-Nicholas Piggin <npiggin@gmail.com> writes:
+Is this a valid justification why the sysfs knob is needed? If it is, I can
+add the justification in the next version.
 
-> Thiago Jung Bauermann's on April 11, 2019 9:08 am:
->>
->> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
->>
->>> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
->>> index 97feb6e79f1a..ac6dc35ab829 100644
->>> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
->>> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
->>> @@ -214,13 +214,22 @@ static void pseries_cpu_die(unsigned int cpu)
->>>  			msleep(1);
->>>  		}
->>>  	} else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
->>> +		/*
->>> +		 * If the current state is not offline yet, it means that the
->>> +		 * dying CPU (which is either in pseries_mach_cpu_die() or in
->>> +		 * the process of getting there) didn't have a chance yet to
->>> +		 * call rtas_stop_self() and therefore it's too early to query
->>> +		 * if the CPU is stopped.
->>> +		 */
->>> +		spin_event_timeout(get_cpu_current_state(cpu) == CPU_STATE_OFFLINE,
->>> +				   100000, 100);
->
-> If the CPU state does not go to offline here, you should give up and
-> return online, right? Otherwise I think query-cpu-stopped-state can
-> get confused by CPUs in idle and you get a false positive.
+Thanks.
 
-Can it get confused? My impression from reading the definition for
-query-cpu-stopped-state in the PAPR is that it will simply return a
-CPU_status value of 2 in that case, meaning that "the processor thread
-is not in the RTAS stopped state", but I don't know much about this.
-
-> That race can still happen, we would really need a sequence count check
-> over current CPU state to ensure we got a race-free qcss value, but at
-> least a check here should make the race implausible to hit.
-
-Actually, since rtas_stop_self() panics if the processor fails to stop
-and also since callers of pseries_cpu_die()¹ already assume that it is
-going to succeed in stopping the CPU (given that the function returns
-void and can't signal an error), a more straightforward way of
-eliminating the race is to simply do this:
-
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index 97feb6e79f1a..2331a609f48f 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -215,7 +215,7 @@ static void pseries_cpu_die(unsigned int cpu)
-                }
-        } else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
-
--               for (tries = 0; tries < 25; tries++) {
-+               while (true) {
-                        cpu_status = smp_query_cpu_stopped(pcpu);
-                        if (cpu_status == QCSS_STOPPED ||
-                            cpu_status == QCSS_HARDWARE_ERROR)
-
-
-What do you think?
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
-¹ dlpar_offline_cpu() and takedown_cpu() in generic code
-
+-Fenghua
