@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1EEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80539C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579D820675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9BB20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611536;
-	bh=6l4S1EYGOcexUslv2KKPZ9DX/dz3UKDcpvTJJPKAVEE=;
+	s=default; t=1555611541;
+	bh=VqfAqdjv2UA9R3OtYQlfPqcKUrBwrpST/TsVByGc3ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AEl3BpAJ7Y2e9dmAK+ok9L+G6yAXESZGIIFWhRmZ7PL+oBcw3vKoW90l7isjvZg3C
-	 oBnF/bTIAFujNILZ50nV9ee3xRekW5qfSPFVVb2Yd0Z9VTo0iQBnVurL9NqmjXvGMu
-	 7uFYgOfJngNuIZQ3evVVPA3uX7e2ZYTwbeL0xTg0=
+	b=VH7kJiiLXJi+Faa0mkN87VATkms0wH50CQ6Ny4X24/796PpQxC+nULmQM/OXDSIF3
+	 pd81o98o6iQ591IHMstGMzbFtQnfmYHubERtIrChgqneJrXOA4Cz9ol1ts8iWvzWIl
+	 dvY9h+B2/RnfdCdHE5pnK6hcxSyrIs525AubOgB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391847AbfDRSSz (ORCPT
+        id S2404080AbfDRSKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:18:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41952 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390151AbfDRSKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:16 -0400
+        id S2403809AbfDRSKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A5FA20652;
-        Thu, 18 Apr 2019 18:10:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E1EE206B6;
+        Thu, 18 Apr 2019 18:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611016;
-        bh=6l4S1EYGOcexUslv2KKPZ9DX/dz3UKDcpvTJJPKAVEE=;
+        s=default; t=1555611005;
+        bh=VqfAqdjv2UA9R3OtYQlfPqcKUrBwrpST/TsVByGc3ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvgAnKmaq9jopZSqecQv5M9Vm+fampAYpwSUZ72jHdcjvi0o2lWXDsluCa1Tv/q+6
-         49NxkQd3C3vrea4XljrIAYoE0yy5qN9B0JoDBvubalnUazQye8H7lAsNBOWHtuK2Jj
-         umuc1atvLVeN11TMvYIB7a52gWCXLb44HeKp7u2I=
+        b=anIxDgyLdAuOTXboIV87BIn87RM1t4ARplyx7fVBBulweYaOukzUO3mWaZ74BcSyN
+         BjoLHbg3q1ZS7CWGU9snNlVlOsVkw3ziyFiNDpCVTiRrIEgFoutaqCZ9g1CwBYtbqu
+         ouwQQLqAgN6/Kb5skiQTiPzdci1OEFez8ucw29eA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 03/93] inotify: Fix fsnotify_mark refcount leak in inotify_update_existing_watch()
-Date:   Thu, 18 Apr 2019 19:56:41 +0200
-Message-Id: <20190418160437.127072723@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 22/93] thermal: bcm2835: Fix crash in bcm2835_thermal_debugfs
+Date:   Thu, 18 Apr 2019 19:57:00 +0200
+Message-Id: <20190418160438.986278963@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -59,45 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62c9d2674b31d4c8a674bee86b7edc6da2803aea ]
+[ Upstream commit 35122495a8c6683e863acf7b05a7036b2be64c7a ]
 
-Commit 4d97f7d53da7dc83 ("inotify: Add flag IN_MASK_CREATE for
-inotify_add_watch()") forgot to call fsnotify_put_mark() with
-IN_MASK_CREATE after fsnotify_find_mark()
+"cat /sys/kernel/debug/bcm2835_thermal/regset" causes a NULL pointer
+dereference in bcm2835_thermal_debugfs. The driver makes use of the
+implementation details of the thermal framework to retrieve a pointer
+to its private data from a struct thermal_zone_device, and gets it
+wrong - leading to the crash. Instead, store its private data as the
+drvdata and retrieve the thermal_zone_device pointer from it.
 
-Fixes: 4d97f7d53da7dc83 ("inotify: Add flag IN_MASK_CREATE for inotify_add_watch()")
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: bcb7dd9ef206 ("thermal: bcm2835: add thermal driver for bcm2835 SoC")
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/notify/inotify/inotify_user.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/thermal/broadcom/bcm2835_thermal.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-index 798f1253141a..3b7b8e95c98a 100644
---- a/fs/notify/inotify/inotify_user.c
-+++ b/fs/notify/inotify/inotify_user.c
-@@ -519,8 +519,10 @@ static int inotify_update_existing_watch(struct fsnotify_group *group,
- 	fsn_mark = fsnotify_find_mark(&inode->i_fsnotify_marks, group);
- 	if (!fsn_mark)
- 		return -ENOENT;
--	else if (create)
--		return -EEXIST;
-+	else if (create) {
-+		ret = -EEXIST;
-+		goto out;
-+	}
+diff --git a/drivers/thermal/broadcom/bcm2835_thermal.c b/drivers/thermal/broadcom/bcm2835_thermal.c
+index 720760cd493f..ba39647a690c 100644
+--- a/drivers/thermal/broadcom/bcm2835_thermal.c
++++ b/drivers/thermal/broadcom/bcm2835_thermal.c
+@@ -119,8 +119,7 @@ static const struct debugfs_reg32 bcm2835_thermal_regs[] = {
  
- 	i_mark = container_of(fsn_mark, struct inotify_inode_mark, fsn_mark);
+ static void bcm2835_thermal_debugfs(struct platform_device *pdev)
+ {
+-	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
+-	struct bcm2835_thermal_data *data = tz->devdata;
++	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
+ 	struct debugfs_regset32 *regset;
  
-@@ -548,6 +550,7 @@ static int inotify_update_existing_watch(struct fsnotify_group *group,
- 	/* return the wd */
- 	ret = i_mark->wd;
+ 	data->debugfsdir = debugfs_create_dir("bcm2835_thermal", NULL);
+@@ -266,7 +265,7 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
  
-+out:
- 	/* match the get from fsnotify_find_mark() */
- 	fsnotify_put_mark(fsn_mark);
+ 	data->tz = tz;
  
+-	platform_set_drvdata(pdev, tz);
++	platform_set_drvdata(pdev, data);
+ 
+ 	/*
+ 	 * Thermal_zone doesn't enable hwmon as default,
+@@ -290,8 +289,8 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
+ 
+ static int bcm2835_thermal_remove(struct platform_device *pdev)
+ {
+-	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
+-	struct bcm2835_thermal_data *data = tz->devdata;
++	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
++	struct thermal_zone_device *tz = data->tz;
+ 
+ 	debugfs_remove_recursive(data->debugfsdir);
+ 	thermal_zone_of_sensor_unregister(&pdev->dev, tz);
 -- 
 2.19.1
 
