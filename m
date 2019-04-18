@@ -2,128 +2,95 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F212C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8F020693
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ATWDxkO+"
+	by mail.kernel.org (Postfix) with ESMTP id A1A2C20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555603568;
+	bh=epH0oMv9aR1kGXFWT0ji8ZKPiDjGR7C+zhkRMj5pnW8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AVDUROl3eKWzeSWXW+nqK+U6rjEn0XuVxNaxw78Rw0sfvVdNcHKWOON/afQFZgFYm
+	 g5CI68YiRT+WqqXQRA/X+kxabLqMN0epUhIxAnWGwxSq2BQlCE3HVZJBS8/Iz5XNdi
+	 XQkoH0XNhS68K7ByjVdC2bsn1FHDYEfcflMVVkdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389615AbfDRQFT (ORCPT
+        id S2389630AbfDRQGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 12:05:19 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43175 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388401AbfDRQFS (ORCPT
+        Thu, 18 Apr 2019 12:06:07 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36395 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388888AbfDRQGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 12:05:18 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t81so1997695oig.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9656FNKKp4cUVga3XUcreKMqWUBjOMnkCExkfsBvcE0=;
-        b=ATWDxkO+EzohN5YWedA5OnfOl7z0C5wosAmTrDF5hxxtYtjNdCK/9PHgnZhYETJJ8t
-         vacr+rHkJxxNGOmeI1vTif1Vl4SIwdCSz21szdtTalMtQ8a/1Obxe+VdKwZnY8xrFtd+
-         ciBIJxCm9FZlAQVPiOTKZr8Xdghbnp/hQTXS/ucudKTmB79U11kjETh4fqNlfW3T1gK0
-         Zu87he2RHQTC+AM19urSAzmn3PITVUqT2oXHTybHWlpO7u1bFfMxyXZLHVTzCvZ6mXjc
-         bD19cp4gsnL0R2s/7Y3bFqcAI2a5/xvDNGJEJYE3ed3iSmhC+ui2TozfrYHnQqDdah3m
-         ZD3A==
+        Thu, 18 Apr 2019 12:06:07 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u17so2052163lfi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:06:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9656FNKKp4cUVga3XUcreKMqWUBjOMnkCExkfsBvcE0=;
-        b=LHB2KID4fap4CzArrZAg4iRsHW62QSKKO2vaVSeHiOi3lNvD2cRvT1hK3ckzW6Wn2F
-         2WbOMnpkzggB1Y4SV3HwqJ31D1+J+q0HSjVROxjkq6SsyhZpjxPDNhoeEAFjamV4EWaB
-         UpAWnKgJc6le0H//S+hMaWEFNuVM+g7Scc1xmaNqtLimluyONLmqR7sFlE8dylkjKwGo
-         m+JBcVnIOMELsxA8ISnbt3dcsDood5ALjFcqtEe/y097GQ2H1YdHOrvROhYjXj6XTpBw
-         OVXX4U/PzwLf8ck4B+Kgq5HGatLHo/ngq5hb02BhIP6TONJ+hJVchUA5/ipYrWKXRAr5
-         vjrw==
-X-Gm-Message-State: APjAAAV0gbEOUCGeN5mJH0/iA/0BaxWcTzMeXgwgdaB8cKWpRJEx+xtH
-        I08ytagJ9ap+Q/vkwmF3vN+syiOqyFxikKeJFfsZiw==
-X-Google-Smtp-Source: APXvYqzTGVz9ejtUV0liyJEyYqaIHrUyuHEbCYPG5pgMNrA7E3qjZWVF7XUM3SvNiTSOlLSiE2pi4l5w04d9dnUuvxA=
-X-Received: by 2002:aca:ed88:: with SMTP id l130mr2422676oih.70.1555603517276;
- Thu, 18 Apr 2019 09:05:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=blNEZg1O+9B1fHyZr1az8Un2VNCkdA4mdbe50MGdMfQ=;
+        b=hUtJY3pbz7V3VRXqq6jf9VIr0i9Tl5fqeC9ZtTcblKpvMHymn1J0jv9pBUlggJ4/6y
+         Oqhu/JH3YSpQbA72NDyqOnQMcs8jCGqrcMVyg8tlwPL0MqHgMgIWAxM2IiLbtPwmTKlA
+         3QqLIyO+L6NUQIAyBiBeaQ6wKBMTZzsc9Z3J+X/VG0LYxGNn49BKZRo2WlUcVLoTBxxh
+         ySPf8bk/b/aHO2rY8aIPDxUW2NdZ6cTRmf2+Lt1M+eKRec2FaMmGM5CLNtZRnCTj7/ZX
+         mX3kQjERkXhPIsxhGm9mqVlQrauFg4cJmJ4fVRaplSB/MycHVGwBdzDidYzOayk3+KjF
+         l93g==
+X-Gm-Message-State: APjAAAVXAPeeXcUuLoPsjtdk3Tfu2ddydbkQS8Di9mK0eljqE5Ejf+0Q
+        /3CSCzZgmC0dDijUQnAeFzU=
+X-Google-Smtp-Source: APXvYqwyddzlui3WxIoaGKecTF2A6TrgWirsw91Ax1EHi1Bc8+5H740MaMg+vixBx0zdBkVQeVQzZg==
+X-Received: by 2002:a19:6d0b:: with SMTP id i11mr23777984lfc.147.1555603564792;
+        Thu, 18 Apr 2019 09:06:04 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id d23sm514936lfj.64.2019.04.18.09.06.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 09:06:03 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@xi.terra>)
+        id 1hH9YE-0004fV-9t; Thu, 18 Apr 2019 18:06:14 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH] tty: update obsolete termios comment
+Date:   Thu, 18 Apr 2019 18:05:54 +0200
+Message-Id: <20190418160554.17894-1-johan@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
- <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
- <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 18 Apr 2019 09:05:05 -0700
-Message-ID: <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     Jan Kara <jack@suse.cz>, Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 6:12 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->
-> Jan Kara <jack@suse.cz> writes:
->
-> > On Thu 11-04-19 07:51:48, Dan Williams wrote:
-> >> On Tue, Apr 9, 2019 at 9:09 PM Pankaj Gupta <pagupta@redhat.com> wrote:
-> >> > +       } else {
-> >> > +               if (nd_region->flush(nd_region))
-> >> > +                       rc = -EIO;
-> >>
-> >> Given the common case wants to be fast and synchronous I think we
-> >> should try to avoid retpoline overhead by default. So something like
-> >> this:
-> >>
-> >> if (nd_region->flush == generic_nvdimm_flush)
-> >>     rc = generic_nvdimm_flush(...);
-> >
-> > I'd either add a comment about avoiding retpoline overhead here or just
-> > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
-> > get confused by the code.
->
-> Isn't this premature optimization?  I really don't like adding things
-> like this without some numbers to show it's worth it.
+Update an obsolete comment referring to the termios_locked structure
+which was removed over a decade ago by commit fe6e29fdb1a7 ("tty:
+simplify ktermios allocation").
 
-I don't think it's premature given this optimization technique is
-already being deployed elsewhere, see:
+While at it, fix the "Thus" typo.
 
-https://lwn.net/Articles/774347/
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/tty/tty_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 5fa250157025..033ac7e6a70d 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1173,7 +1173,7 @@ static struct tty_struct *tty_driver_lookup_tty(struct tty_driver *driver,
+  *	tty_init_termios	-  helper for termios setup
+  *	@tty: the tty to set up
+  *
+- *	Initialise the termios structures for this tty. Thus runs under
++ *	Initialise the termios structure for this tty. This runs under
+  *	the tty_mutex currently so we can be relaxed about ordering.
+  */
+ 
+-- 
+2.21.0
+
