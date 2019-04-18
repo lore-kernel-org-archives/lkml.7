@@ -2,115 +2,93 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D88C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFD5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBE620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jNca5HYd"
+	by mail.kernel.org (Postfix) with ESMTP id 16AC120675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389323AbfDROT5 (ORCPT
+        id S2389237AbfDROVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:19:57 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35286 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388806AbfDROT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:19:56 -0400
-Received: from zn.tnic (p200300EC2F112E003868EF36058F9C84.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:3868:ef36:58f:9c84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BBB231EC04CD;
-        Thu, 18 Apr 2019 16:19:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555597194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Zla6IUZC5NUqumdwsALqVVzlHUaEhOjQZzDTdtmrxF0=;
-        b=jNca5HYd+fieHVv0NIgBhgXk149ujkFqt46WKOfcexddkadC2ML1O4hevawxr/JdkoMNsG
-        fX+tMf1V3j+7m9SPRNK0+oIVrY/s5UsEVD0KO1ksE0z6MQM4V5DuncJYHaGB0HSU4DBpZ8
-        XuBQMlnhob1sLJy3c4AfEFjMO3BiSB8=
-Date:   Thu, 18 Apr 2019 16:19:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     KVM <kvm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>
-Subject: Re: [PATCH -v5.1] x86/kvm: Implement HWCR support
-Message-ID: <20190418141949.GK27160@zn.tnic>
-References: <20190408090946.GA2315@zn.tnic>
- <20190408144115.GA25880@linux.intel.com>
- <20190408145716.GG15689@zn.tnic>
- <20190418122842.GF27160@zn.tnic>
- <20190418135606.GA17218@linux.intel.com>
+        Thu, 18 Apr 2019 10:21:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39990 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733205AbfDROVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:21:21 -0400
+Received: from [123.118.215.169] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1hH7ua-0008SV-Do; Thu, 18 Apr 2019 14:21:13 +0000
+Subject: Re: [PATCH] nvme: determine the number of IO queues
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, keith.busch@intel.com, axboe@fb.com
+References: <1555510379-20199-1-git-send-email-aaron.ma@canonical.com>
+ <a2f0a97e14b884dc1183db9cbdd6f4b520000ce3.camel@redhat.com>
+ <096935354b16662eb481aeda1f48001ba489463c.camel@redhat.com>
+ <e79703d5-3502-6519-a497-71b2b2a8768f@canonical.com>
+ <20190418134820.GA7589@localhost.localdomain>
+From:   Aaron Ma <aaron.ma@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
+ 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
+ BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
+ MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
+ ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
+ AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
+ AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
+ LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
+ GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
+ 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
+ V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
+ cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
+ sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
+ +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
+ 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
+ mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
+ Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
+ 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
+ VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
+ NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
+ 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
+ nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
+Message-ID: <ddabda2a-b30d-77cc-7b2e-05a6b599cae7@canonical.com>
+Date:   Thu, 18 Apr 2019 22:21:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190418134820.GA7589@localhost.localdomain>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190418135606.GA17218@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 06:56:06AM -0700, Sean Christopherson wrote:
-> This doesn't allow writing '0' regardless of msr_hwcr.BIT(18), which was
-> previously supported.
-
-Restored the old conditional:
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 10f6acc6494c..f74f1280745b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2318,7 +2318,8 @@ static int set_msr_mce(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 				return -1;
- 
- 			/* MCi_STATUS */
--			if ((offset & 0x3) == 1 && !msr_info->host_initiated) {
-+			if (!msr_info->host_initiated &&
-+			    (offset & 0x3) == 1 && data != 0) {
- 				if (!can_set_mci_status(vcpu))
- 					return -1;
- 			}
-
-> And there's no need for multiple if statements.
-
-It is a bit more readable this way.
-
-Actually, I'd break that if above into smaller if-statements with
-flipped logic to make it even more readable:
-
-	if (msr_info->host_initiated)
-		goto set_msr;
-
-	if (!(offset & 0x3))
-		goto set_msr;
-
-	if (!data)
-		goto set_msr;
-
-	if (!can_set_mci_status(vcpu))
-		return -1;
-
-set_msr:
-	...
 
 
-Anything else? Can I send v5.2 now?
+On 4/18/19 9:48 PM, Keith Busch wrote:
+> It does change the default behavior. If I have a degraded controller that
+> can't do IO in a machine with 1000's of CPUs, I have to iterate this
+> non-standard behavior 1000's of times before the drive is servicable
+> again. We currenlty figure that out in just a single try.
+> 
+> At least the quirks document *why* the driver is doing non-standard
+> behavior. We do the IO queue quirks for Macbooks, for example.
+> 
+> But why don't you file a bug report with the device vendor instead? Surely
+> a firmware fix provides the best possible outcome, and would make this
+> device work not only in all versions of Linux, but also every standard
+> compliant driver for any OS.
 
--- 
-Regards/Gruss,
-    Boris.
+I will do it, no v2 for now.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks,
+Aaron
