@@ -6,100 +6,153 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F945C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD67C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651B62083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EBD2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389412AbfDROGk (ORCPT
+        id S2389438AbfDROGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:06:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40680 "EHLO mx1.redhat.com"
+        Thu, 18 Apr 2019 10:06:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52638 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389363AbfDROGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:06:38 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S2389153AbfDROGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:06:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8A2AD571A;
-        Thu, 18 Apr 2019 14:06:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 926A83094501;
+        Thu, 18 Apr 2019 14:06:47 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 52C345D9C5;
-        Thu, 18 Apr 2019 14:06:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB7A519C58;
+        Thu, 18 Apr 2019 14:06:44 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 4/6] afs: Use RCU inode cache search for callback
- resolution
+Subject: [RFC PATCH 5/6] ext4: Search for an inode to update under the RCU
+ lock if we can
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     linux-afs@lists.infradead.org, dhowells@redhat.com,
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, dhowells@redhat.com,
         linux-afs@lists.infradead.org, linux-ext4@vger.kernel.org,
         linux-ntfs-dev@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 18 Apr 2019 15:06:35 +0100
-Message-ID: <155559639544.21702.12655956327932453417.stgit@warthog.procyon.org.uk>
+Date:   Thu, 18 Apr 2019 15:06:44 +0100
+Message-ID: <155559640398.21702.15109713276957584268.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
 References: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 18 Apr 2019 14:06:38 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 18 Apr 2019 14:06:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Search the inode cache under "RCU conditions" when trying to find a vnode
-to break the callback on.  We don't want to be taking the icache lock if we
-can avoid it.
+When we're updating timestamps in an inode, search for that inode under RCU
+conditions to avoid holding the icache lock if we can.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-afs@lists.infradead.org
+cc: "Theodore Ts'o" <tytso@mit.edu>
+cc: Andreas Dilger <adilger.kernel@dilger.ca>
+cc: linux-ext4@vger.kernel.org
 ---
 
- fs/afs/callback.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ fs/ext4/inode.c |   41 +++++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-index 128f2dbe256a..3d0280d4fbf0 100644
---- a/fs/afs/callback.c
-+++ b/fs/afs/callback.c
-@@ -251,6 +251,7 @@ static void afs_break_one_callback(struct afs_server *server,
- 	struct afs_vnode *vnode;
- 	struct inode *inode;
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index b32a57bc5d5d..13e928ae70e5 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5144,21 +5144,23 @@ static int ext4_inode_blocks_set(handle_t *handle,
+ 	return 0;
+ }
  
-+	rcu_read_lock();
- 	read_lock(&server->cb_break_lock);
- 	hlist_for_each_entry(vi, &server->cb_volumes, srv_link) {
- 		if (vi->vid < fid->vid)
-@@ -284,18 +285,23 @@ static void afs_break_one_callback(struct afs_server *server,
- 		} else {
- 			data.volume = NULL;
- 			data.fid = *fid;
--			inode = ilookup5_nowait(cbi->sb, fid->vnode,
--						afs_iget5_test, &data);
+-struct other_inode {
+-	unsigned long		orig_ino;
+-	struct ext4_inode	*raw_inode;
+-};
+-
+-static int other_inode_match(struct inode * inode, unsigned long ino,
+-			     void *data)
++static void __ext4_update_other_inode_time(struct super_block *sb,
++					   unsigned long orig_ino,
++					   unsigned long ino,
++					   struct ext4_inode *raw_inode)
+ {
+-	struct other_inode *oi = (struct other_inode *) data;
++	struct inode *inode;
 +
-+			/* See if we can find a matching inode - even an I_NEW
-+			 * inode needs to be marked as it can have its callback
-+			 * broken before we finish setting up the local inode.
-+			 */
-+			inode = find_inode_rcu(cbi->sb, fid->vnode,
-+					       afs_iget5_test, &data);
- 			if (inode) {
- 				vnode = AFS_FS_I(inode);
- 				afs_break_callback(vnode);
--				iput(inode);
- 			}
- 		}
- 	}
++	inode = find_inode_by_ino_rcu(sb, ino);
++	if (!inode)
++		return;
  
- out:
- 	read_unlock(&server->cb_break_lock);
+ 	if ((inode->i_ino != ino) ||
+ 	    (inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
+ 			       I_DIRTY_INODE)) ||
+ 	    ((inode->i_state & I_DIRTY_TIME) == 0))
+-		return 0;
++		return;
++
+ 	spin_lock(&inode->i_lock);
+ 	if (((inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
+ 				I_DIRTY_INODE)) == 0) &&
+@@ -5169,16 +5171,15 @@ static int other_inode_match(struct inode * inode, unsigned long ino,
+ 		spin_unlock(&inode->i_lock);
+ 
+ 		spin_lock(&ei->i_raw_lock);
+-		EXT4_INODE_SET_XTIME(i_ctime, inode, oi->raw_inode);
+-		EXT4_INODE_SET_XTIME(i_mtime, inode, oi->raw_inode);
+-		EXT4_INODE_SET_XTIME(i_atime, inode, oi->raw_inode);
+-		ext4_inode_csum_set(inode, oi->raw_inode, ei);
++		EXT4_INODE_SET_XTIME(i_ctime, inode, raw_inode);
++		EXT4_INODE_SET_XTIME(i_mtime, inode, raw_inode);
++		EXT4_INODE_SET_XTIME(i_atime, inode, raw_inode);
++		ext4_inode_csum_set(inode, raw_inode, ei);
+ 		spin_unlock(&ei->i_raw_lock);
+-		trace_ext4_other_inode_update_time(inode, oi->orig_ino);
+-		return -1;
++		trace_ext4_other_inode_update_time(inode, orig_ino);
++		return;
+ 	}
+ 	spin_unlock(&inode->i_lock);
+-	return -1;
+ }
+ 
+ /*
+@@ -5188,24 +5189,24 @@ static int other_inode_match(struct inode * inode, unsigned long ino,
+ static void ext4_update_other_inodes_time(struct super_block *sb,
+ 					  unsigned long orig_ino, char *buf)
+ {
+-	struct other_inode oi;
+ 	unsigned long ino;
+ 	int i, inodes_per_block = EXT4_SB(sb)->s_inodes_per_block;
+ 	int inode_size = EXT4_INODE_SIZE(sb);
+ 
+-	oi.orig_ino = orig_ino;
+ 	/*
+ 	 * Calculate the first inode in the inode table block.  Inode
+ 	 * numbers are one-based.  That is, the first inode in a block
+ 	 * (assuming 4k blocks and 256 byte inodes) is (n*16 + 1).
+ 	 */
+ 	ino = ((orig_ino - 1) & ~(inodes_per_block - 1)) + 1;
++	rcu_read_lock();
+ 	for (i = 0; i < inodes_per_block; i++, ino++, buf += inode_size) {
+ 		if (ino == orig_ino)
+ 			continue;
+-		oi.raw_inode = (struct ext4_inode *) buf;
+-		(void) find_inode_nowait(sb, ino, other_inode_match, &oi);
++		__ext4_update_other_inode_time(sb, orig_ino, ino,
++					       (struct ext4_inode *)buf);
+ 	}
 +	rcu_read_unlock();
  }
  
