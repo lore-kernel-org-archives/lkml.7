@@ -2,97 +2,70 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A841C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0473820869
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5A7205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389462AbfDRPIG (ORCPT
+        id S2389483AbfDRPIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:08:06 -0400
-Received: from [5.180.42.13] ([5.180.42.13]:55618 "EHLO deadmen.hmeau.com"
+        Thu, 18 Apr 2019 11:08:11 -0400
+Received: from [5.180.42.13] ([5.180.42.13]:55624 "EHLO deadmen.hmeau.com"
         rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388392AbfDRPIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:08:05 -0400
-X-Greylist: delayed 2566 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 11:08:01 EDT
+        id S2388392AbfDRPIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:08:10 -0400
+X-Greylist: delayed 2668 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 11:08:09 EDT
 Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
         by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hH7yO-0004lu-Ec; Thu, 18 Apr 2019 22:25:08 +0800
+        id 1hH7wx-0004kO-PY; Thu, 18 Apr 2019 22:23:39 +0800
 Received: from herbert by gondobar with local (Exim 4.89)
         (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hH7yL-0004DA-RF; Thu, 18 Apr 2019 22:25:05 +0800
-Date:   Thu, 18 Apr 2019 22:25:05 +0800
+        id 1hH7wv-0004BL-54; Thu, 18 Apr 2019 22:23:37 +0800
+Date:   Thu, 18 Apr 2019 22:23:37 +0800
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Vitaly Chikunov <vt@altlinux.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 00/10] crypto: add EC-RDSA (GOST 34.10) algorithm
-Message-ID: <20190418142505.tkd4bgf76imzuu3g@gondor.apana.org.au>
-References: <20190411155122.13245-1-vt@altlinux.org>
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Hook, Gary" <Gary.Hook@amd.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ccp: Do not free psp_master when PLATFORM_INIT
+ fails
+Message-ID: <20190418142337.hrdykxre3g5bvjbz@gondor.apana.org.au>
+References: <20190408204241.20393-1-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411155122.13245-1-vt@altlinux.org>
+In-Reply-To: <20190408204241.20393-1-brijesh.singh@amd.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 06:51:12PM +0300, Vitaly Chikunov wrote:
->
-> Vitaly Chikunov (10):
->   crypto: akcipher - default implementations for request callbacks
->   crypto: rsa - unimplement sign/verify for raw RSA backends
->   crypto: akcipher - new verify API for public key algorithms
->   KEYS: do not kmemdup digest in {public,tpm}_key_verify_signature
->   X.509: parse public key parameters from x509 for akcipher
->   crypto: Kconfig - create Public-key cryptography section
->   crypto: ecc - make ecc into separate module
->   crypto: ecrdsa - add EC-RDSA (GOST 34.10) algorithm
->   crypto: ecrdsa - add EC-RDSA test vectors to testmgr
->   integrity: support EC-RDSA signatures for asymmetric_verify
+On Mon, Apr 08, 2019 at 08:42:55PM +0000, Singh, Brijesh wrote:
+> Currently, we free the psp_master if the PLATFORM_INIT fails during the
+> SEV FW probe. If psp_master is freed then driver does not invoke the PSP
+> FW. As per SEV FW spec, there are several commands (PLATFORM_RESET,
+> PLATFORM_STATUS, GET_ID etc) which can be executed in the UNINIT state
+> We should not free the psp_master when PLATFORM_INIT fails.
 > 
->  crypto/Kconfig                                |  63 ++--
->  crypto/Makefile                               |  10 +-
->  crypto/akcipher.c                             |  14 +
->  crypto/asymmetric_keys/asym_tpm.c             |  43 +--
->  crypto/asymmetric_keys/public_key.c           | 105 ++++---
->  crypto/asymmetric_keys/x509.asn1              |   2 +-
->  crypto/asymmetric_keys/x509_cert_parser.c     |  57 +++-
->  crypto/ecc.c                                  | 417 +++++++++++++++++++++++++-
->  crypto/ecc.h                                  | 153 +++++++++-
->  crypto/ecc_curve_defs.h                       |  15 -
->  crypto/ecrdsa.c                               | 296 ++++++++++++++++++
->  crypto/ecrdsa_defs.h                          | 225 ++++++++++++++
->  crypto/ecrdsa_params.asn1                     |   4 +
->  crypto/ecrdsa_pub_key.asn1                    |   1 +
->  crypto/rsa-pkcs1pad.c                         |  33 +-
->  crypto/rsa.c                                  | 109 -------
->  crypto/testmgr.c                              |  80 +++--
->  crypto/testmgr.h                              | 159 ++++++++++
->  drivers/crypto/caam/caampkc.c                 |   2 -
->  drivers/crypto/ccp/ccp-crypto-rsa.c           |   2 -
->  drivers/crypto/qat/qat_common/qat_asym_algs.c |   2 -
->  include/crypto/akcipher.h                     |  54 ++--
->  include/crypto/public_key.h                   |   4 +
->  include/linux/oid_registry.h                  |  18 ++
->  security/integrity/digsig_asymmetric.c        |  11 +-
->  25 files changed, 1574 insertions(+), 305 deletions(-)
->  create mode 100644 crypto/ecrdsa.c
->  create mode 100644 crypto/ecrdsa_defs.h
->  create mode 100644 crypto/ecrdsa_params.asn1
->  create mode 100644 crypto/ecrdsa_pub_key.asn1
+> Fixes: 200664d5237f ("crypto: ccp: Add SEV support")
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: Gary Hook <gary.hook@amd.com>
+> Cc: stable@vger.kernel.org # 4.19.y
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  drivers/crypto/ccp/psp-dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-All applied.  Thanks.
+Patch applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
