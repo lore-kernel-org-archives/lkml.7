@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37933C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7215DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86DD2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC3F2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611100;
-	bh=LhcowETXqCJjPfg+8BoraNfngeOLBDItV9NMMOH5dwI=;
+	s=default; t=1555611104;
+	bh=bukiNlZDJ4xlvhCsv6I/IyCGmRL7YDUBJ/K2kF9g/Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1/i3STGoRxUXaKoxDD8ZtvsSzDJDM35/rmZkhDREeYzUmZlTO2HBR6EDAEzR7Ej9F
-	 g9f//zutW8K60804MhwNVrJpBCWThvlndtHF+Erxn5GP6NercZkXNdiWypKDmaFucg
-	 SoXgflwo52CbM7OXdNEp4UzY/fT3Z2j0NXOA8ETE=
+	b=yxnPw6xTxJLevsGYkSZ5/H7Soh8fOHV2h7EMfel3I/3vu6Nol/fiCfL3DkVD1KbyG
+	 fW8UiN+P2YhskjT4062L6bwCNMirjHkiu/ia38NHJpow3GCyhv+5dsjaV0fxoKvXl+
+	 Y0/KgIUIejaJ9bJCXu+nhwZSsxnWlX/EqoyvrTok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391932AbfDRSLi (ORCPT
+        id S2391946AbfDRSLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43848 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404254AbfDRSLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:11:36 -0400
+        id S2391003AbfDRSLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:11:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0617E20675;
-        Thu, 18 Apr 2019 18:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D27D206B6;
+        Thu, 18 Apr 2019 18:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611095;
-        bh=LhcowETXqCJjPfg+8BoraNfngeOLBDItV9NMMOH5dwI=;
+        s=default; t=1555611099;
+        bh=bukiNlZDJ4xlvhCsv6I/IyCGmRL7YDUBJ/K2kF9g/Ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u91+xiIJ4+xaUrtpuODkjXA9yKpzWY4eKjoEhhPCrbhfcGUBOrdj98AC+mvmE/mmP
-         Huw/fDbwsfsKpvM5FzDai6rU3vAVtq0S+pOG0Rj+pMSA5IijfAbW6Qwpfkh8OSM1gN
-         D/zWMJdXY4xdUdNJT6tKJksYY/RAIqj7SR1QMVx8=
+        b=k2ufAqcOCXt4+lEv6/0NO3REVDTACri80EJyfX25KL5AE2kDWNOHbDp9czRJFG15q
+         Lgnjz/RhWzLYJnrzRJq2+wbE03CLnXpPqILp/GNykM9c8Ug6hwWz3OO9eYnCnZEiVN
+         ccbTSGadPkYC/u/2JP2S7gdK1qYuDClIPWjcO3Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>, pakki001@umn.edu,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Roland Dreier <roland@purestorage.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 56/93] x86/hpet: Prevent potential NULL pointer dereference
-Date:   Thu, 18 Apr 2019 19:57:34 +0200
-Message-Id: <20190418160443.244038533@linuxfoundation.org>
+        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org
+Subject: [PATCH 5.0 57/93] x86/hyperv: Prevent potential NULL pointer dereference
+Date:   Thu, 18 Apr 2019 19:57:35 +0200
+Message-Id: <20190418160443.309017791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -66,41 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
+[ Upstream commit 534c89c22e26b183d838294f0937ee092c82ad3a ]
 
-hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
-a check.
+The page allocation in hv_cpu_init() can fail, but the code does not
+have a check for that.
 
-Add a check to prevent NULL pointer dereference.
+Add a check and return -ENOMEM when the allocation fails.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+[ tglx: Massaged changelog ]
+
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: kjlu@umn.edu
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Acked-by: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: pakki001@umn.edu
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Roland Dreier <roland@purestorage.com>
-Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
+Cc: linux-hyperv@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190314054651.1315-1-kjlu@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/hpet.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/hyperv/hv_init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index dfd3aca82c61..fb32925a2e62 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -905,6 +905,8 @@ int __init hpet_enable(void)
- 		return 0;
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index d3f42b6bbdac..8a9cff1f129d 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -102,9 +102,13 @@ static int hv_cpu_init(unsigned int cpu)
+ 	u64 msr_vp_index;
+ 	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+ 	void **input_arg;
++	struct page *pg;
  
- 	hpet_set_mapping();
-+	if (!hpet_virt_address)
-+		return 0;
+ 	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+-	*input_arg = page_address(alloc_page(GFP_KERNEL));
++	pg = alloc_page(GFP_KERNEL);
++	if (unlikely(!pg))
++		return -ENOMEM;
++	*input_arg = page_address(pg);
  
- 	/*
- 	 * Read the period and check for a sane value:
+ 	hv_get_vp_index(msr_vp_index);
+ 
 -- 
 2.19.1
 
