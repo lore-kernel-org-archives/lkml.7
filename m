@@ -2,134 +2,98 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B944BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C55C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3EB214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B6921479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="evhYXQ5f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V3J/S91z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfDRXWg (ORCPT
+        id S1726415AbfDRXXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 19:22:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42004 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfDRXWf (ORCPT
+        Thu, 18 Apr 2019 19:23:10 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:38539 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfDRXXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 19:22:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p6so1853682pgh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 16:22:35 -0700 (PDT)
+        Thu, 18 Apr 2019 19:23:09 -0400
+Received: by mail-yb1-f193.google.com with SMTP id w206so1461750ybg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 16:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=FVLlsVBKPfRjq0jz3LI4f04+gYbfn8cXwIMogPX32xQ=;
-        b=evhYXQ5fBqxSR4sehMjQd7L5X9P3J7KRJIuRUk5gxs8gUehY7LtsDSRdSg5eP/qF4A
-         HPGhSefwEF6AiA6g5y+nZ2LgwxbPS28plivV+DfnvKqfjU1ysjurFK0+B/fD75dwYsrr
-         hyLP9secffcdXrJNb/ON43yVUHnIRVttxsMBE3qd/dKLYPoMaVaxSesO0perhH9CyMHJ
-         8K8caq6gwG9vK7t8x8ZPisWMd8h+eXJHPyl+76ssye8LpqnlVeNZHvZFjq1Tw5VD5O/F
-         8mmwaXLho70RQZqwyJXOCHUjD2nLRPxAhJ/kjn71kbOkXipjw5g8bLHkKPLc/6KMtR66
-         uI5A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n+pUOWkruuYVGS6vVl9afkdSKWdQYXkdtIW5c5qtNkk=;
+        b=V3J/S91zvhdIsxczAIhDN4RNbtYuvdlVC9PzTHew68ooaWiyOmIzUVaSPliEY9p1OY
+         HSAHA3qVbr2d9M3MwsCt2zE2zNYLdUcXruwqCapnc+yhkrPneA4s5qF2hnetCxNOZqCQ
+         6ric8g0nQgy1Q3d+QJNst3+mEOYjnd5XpuztkW1YZ7vErMTcuQ/HykMNRMsCZj2wonq1
+         ovo1UJ+0hi10+DZWhBpgN0UToA38ff1h6q+0axaFk6VcEehVOUINpHY4rYPnINRjTv2V
+         zDYblqeDeHGwtrBQwhwfwGobhtb8Rd3nZeOWblqTxcMQLPL7Q5/2QsCvhvOb4PrOq71u
+         P/vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=FVLlsVBKPfRjq0jz3LI4f04+gYbfn8cXwIMogPX32xQ=;
-        b=YzAggucYmo/7f4/JS8ZrnzFtXwp6pfzk0gxadRUXMzQkQXO8SOG769LNKbQjuvVl5P
-         OAhU+IMMcsgKpX8tm7zuT7MlP4CWdvb2KUFEgHqOlD7mzceV7AoSdDmW+7sBL+wPaYz7
-         ydNUHa4BeY3Nbvp2rkAOy/ZQG349dLKV2AlwDFvH6WIMYLG9hqp/Hb1RSSVofZg9rxJo
-         57N2C/fkkiwHAu8PQvhBQHSc1fbksU29NQAQAmtNOYQvOQe1D7WE5VG+dDHev1IyRRBE
-         ycwt6WVOvVmA3Z7u2bR0VF1ddxNQEC4wJ8yHeOUnc4JqY5DMg4IWEZbXkNbBiK7FDwKV
-         I+9Q==
-X-Gm-Message-State: APjAAAXo6GyYVFKbkFH4wYi4NZEPKGE+tozE5cxJkiy+SSmJJUF8DAK7
-        BReEBjzSGVbHK6pXZDIwCF3LTA==
-X-Google-Smtp-Source: APXvYqwSc0ZjKg1lhYfbFqOHu7X2yRH9Qj7zgZy8PMqw8Y0aNFP9SQGDlwEy4sOf3BTTbxu7BaHwjg==
-X-Received: by 2002:a63:4644:: with SMTP id v4mr657735pgk.422.1555629754415;
-        Thu, 18 Apr 2019 16:22:34 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:9c06:6f96:9c41:be05])
-        by smtp.googlemail.com with ESMTPSA id h4sm3112858pgv.61.2019.04.18.16.22.33
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n+pUOWkruuYVGS6vVl9afkdSKWdQYXkdtIW5c5qtNkk=;
+        b=QbyAyW3zqkZcI8l83dPYS//CwXf9CpyAhCjiB0PGCaoGrYp1enKK9K6F40DW1F7j2h
+         22Rq8mI5UV8U3VhPPIsRzNkqlkPdv6pUtD2BHNsxWDJJJf/3QXVISXEkFa3BpV6xacr1
+         ENJnsNgsC6asTxkPmfy/n5ehpiBqGLpshJqVlSPaMx1fwoaXkbWlExRFlsKUm+6h272l
+         4NZKItekoD60A/mv7Q3eRn9FEL0zmy3Os0KqgQa8vfKhHWQRFvq7DSgTYvd9rzGkGbd6
+         pbxd6OHVERLTs9b/+FqXUZZp3Ku3UMn4HNgpTq/BekcGsMr2j7LOsYEZ3WGzGcVl8npz
+         80Og==
+X-Gm-Message-State: APjAAAU0lH9gO8IKowDhPST9y8nGR/QsfNuwzPfRwutACJW9T3mlv5En
+        14zupyZ3Rnjpj21v1tiCvahlIQ==
+X-Google-Smtp-Source: APXvYqyd8wbDl2/kCkX1/RPPkWx+jXHsMHSz/7OsQFsdBAspZOHpBoGuURvbbpqrdECxDf7LiFFmgw==
+X-Received: by 2002:a5b:885:: with SMTP id e5mr273910ybq.349.1555629788498;
+        Thu, 18 Apr 2019 16:23:08 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li931-65.members.linode.com. [45.56.113.65])
+        by smtp.gmail.com with ESMTPSA id m5sm2378771ywm.67.2019.04.18.16.23.03
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 16:22:33 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-riscv@lists.infradead.org, gregkh@linuxfoundation.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v5 0/2]  tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
-In-Reply-To: <20190413020111.23400-1-paul.walmsley@sifive.com>
-References: <20190413020111.23400-1-paul.walmsley@sifive.com>
-Date:   Thu, 18 Apr 2019 16:22:32 -0700
-Message-ID: <7hmukmew5j.fsf@baylibre.com>
+        Thu, 18 Apr 2019 16:23:06 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 07:23:00 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v2] clk: hi3660: Mark clk_gate_ufs_subsys as critical
+Message-ID: <20190418232300.GB4524@leoy-ThinkPad-X240s>
+References: <20190320100508.6950-1-leo.yan@linaro.org>
+ <20190418053339.GA4524@leoy-ThinkPad-X240s>
+ <155562436407.15276.5265889537123283982@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155562436407.15276.5265889537123283982@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Thu, Apr 18, 2019 at 02:52:44PM -0700, Stephen Boyd wrote:
+> Quoting Leo Yan (2019-04-17 22:33:39)
+> > Hi Michael, Stephen,
+> > 
+> > On Wed, Mar 20, 2019 at 06:05:08PM +0800, Leo Yan wrote:
+> > > clk_gate_ufs_subsys is a system bus clock, turning off it will
+> > > introduce lockup issue during system suspend flow.  Let's mark
+> > > clk_gate_ufs_subsys as critical clock, thus keeps it on during
+> > > system suspend and resume.
+> > 
+> > Could you pick up this patch?  Or should I resend it?
+> > 
+> 
+> I can pick it up. Is it critical or can it wait for v5.2?
 
-Paul Walmsley <paul.walmsley@sifive.com> writes:
-
-> This series adds a serial driver, with console support, for the
-> UART IP block present on the SiFive FU540 SoC.  The programming
-> model is straightforward, but unique.
->
-> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
-> open-source FSBL (with appropriate patches to the DT data).
->
-> This fifth version fixes a bug in the set_termios handler,
-> found by Andreas Schwab <schwab@suse.de>.
->
-> The patches in this series can also be found, with the PRCI patches,
-> DT patches, and DT prerequisite patch, at:
->
-> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
-
-I tried this branch, and it doesn't boot on my unleashed board.
-
-Here's the boot log when I pass the DT built from your branch via
-u-boot: https://termbin.com/rfp3.
-
-I also tried the same thing, but using the DT that's hard-coded into
-SBI/u-boot.  That doesn't boot fully either[1], but one thing I noted is
-that with the DT from the kernel tree, the printk timestamps aren't
-moving.  Maybe I'm still missing some kconfig options to enable the
-right clock and/or IRQ controllers? I'm using this fragment[2] on top of
-the default defconfig (arch/riscv/configs/defconfig).
-
-Could you share the defconfig you're using when testing your branch?
-
-Also for reference, I'm able to successfully build/boot the
-5.1-rc1-unleashed branch from Atish's tree[3] using that kconfig
-fragment[2] (and the hard-coded DT from u-boot/SBI).  Full log here[4].
+It's fine to wait for v5.2.
 
 Thanks,
-
-Kevin
-
-[1] https://termbin.com/wuc9
-[2]
-CONFIG_CLK_SIFIVE=y
-CONFIG_CLK_SIFIVE_FU540_PRCI=y
-
-CONFIG_SERIAL_SIFIVE=y
-CONFIG_SERIAL_SIFIVE_CONSOLE=y
-
-CONFIG_SIFIVE_PLIC=y
-CONFIG_SPI=y
-CONFIG_SPI_SIFIVE=y
-CONFIG_GPIOLIB=y
-CONFIG_GPIO_SIFIVE=y
-CONFIG_PWM_SIFIVE=y
-
-CONFIG_CLK_U54_PRCI=y
-CONFIG_CLK_GEMGXL_MGMT=y
-
-[3] https://github.com/atishp04/linux/tree/5.1-rc1-unleashed
-[4] https://termbin.com/12bg
+Leo Yan
