@@ -2,93 +2,182 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EE9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D444C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DFB2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140F62183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388390AbfDRJ3e (ORCPT
+        id S2388418AbfDRJcD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:29:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56894 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387971AbfDRJ3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:29:33 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 729A14DB12;
-        Thu, 18 Apr 2019 09:29:33 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-35.pek2.redhat.com [10.72.8.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C19B5D6A9;
-        Thu, 18 Apr 2019 09:29:24 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 17:29:19 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
- BIO_MAX_PAGES
-Message-ID: <20190418092918.GB15834@ming.t460p>
-References: <20190417115207.30202-1-pbonzini@redhat.com>
- <20190418021903.GB9520@ming.t460p>
- <1950505c-c1ff-3a99-bf4d-319ae1be381b@redhat.com>
+        Thu, 18 Apr 2019 05:32:03 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2920 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387971AbfDRJcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:32:02 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 07B72AB7A4E782B37099;
+        Thu, 18 Apr 2019 17:31:59 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 18 Apr 2019 17:31:58 +0800
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 18 Apr 2019 17:31:58 +0800
+Received: from dggeme762-chm.china.huawei.com ([10.8.68.53]) by
+ dggeme762-chm.china.huawei.com ([10.8.68.53]) with mapi id 15.01.1591.008;
+ Thu, 18 Apr 2019 17:31:58 +0800
+From:   "zhuyan (M)" <zhuyan34@huawei.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        "anton@enomsg.org" <anton@enomsg.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] usb:host: fix divide-by-zero in function
+ fhci_queue_urb
+Thread-Topic: [PATCH v2] usb:host: fix divide-by-zero in function
+ fhci_queue_urb
+Thread-Index: AdT1yXpqg6Rr/q0XRBeXbW3Dz7nOAw==
+Date:   Thu, 18 Apr 2019 09:31:58 +0000
+Message-ID: <2e3a7b4df8744b508b866db40bb8cf28@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.40.99.186]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1950505c-c1ff-3a99-bf4d-319ae1be381b@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 18 Apr 2019 09:29:33 +0000 (UTC)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:42:21AM +0200, Paolo Bonzini wrote:
-> On 18/04/19 04:19, Ming Lei wrote:
-> > Hi Paolo,
-> > 
-> > On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
-> >> Because bio_kmalloc uses inline iovecs, the limit on the number of entries
-> >> is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
-> >> in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
-> >> to report a DMA overrun.
-> > 
-> > BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
-> > can't hold all user space request, new bio will be allocated and appended
-> > to the passthrough request if queue limits aren't reached.
+On Wed, 17 Apr 2019 14:59:27 -0400, Alan Stern wrote:
 > 
-> Stupid question: where?  I don't see any place starting at
-> blk_rq_map_user_iov (and then __blk_rq_map_user_iov->bio_map_user_iov)
-> that would allocate a second bio.  The only bio_kmalloc in that path is
-> the one I'm patching.
+> On Wed, 17 Apr 2019, zhuyan (M) wrote:
+> 
+> > On Wed, 17 Apr 2019, Alan Stern wrote:
+> > 
+> > > On Wed, 17 Apr 2019, zhuyan (M) wrote:
+> > > 
+> > > > On Tue, 16 Apr 2019 11:07:56 -0400, Alan Stern wrote:
+> > > > 
+> > > > > On Tue, 16 Apr 2019, zhuyan (M) wrote:
+> > > > > > On Tue, 16 Apr 2019 at 11:45:45 +0200, Greg KH wrote:
+> > > > > > > On Tue, Apr 09, 2019 at 10:37:12PM +0800, zhuyan wrote:
+> > > > > > > > In function fhci_queue_urb, the divisor of expression 
+> > > > > > > > (urb->transfer_buffer_length % usb_maxpacket(urb->dev,
+> > > > > > > > urb->pipe,
+> > > > > > > > usb_pipeout(urb->pipe))) may be zero.
+> > > > > > > 
+> > > > > > > How can you hit that?
+> > > > > > > 
+> > > > > > > > When it is zero, unexpected results may occur, so it is 
+> > > > > > > > necessary to ensure that the divisor is not zero.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: zhuyan <zhuyan34@huawei.com>
+> > > > > > > 
+> > > > > > > I need a "Full" name here, not just a single name.  Whatever you use to sign documents is good.
+> > > > > > > 
+> > > > > > > thanks,
+> > > > > > > 
+> > > > > > > greg k-h
+> > > > > > 
+> > > > > > In function usb_maxpacket, when ep is NULL, its return value is 0.  
+> > > > > 
+> > > > > fhci_queue_urb() shouldn't use urb->pipe to compute the 
+> > > > > maxpacket size anyway.  It should use usb_endpoint_maxp(&urb->ep->desc).
+> > > > 
+> > > > Currently, fhci_queue_urb(), call usb_maxpacket() multiple times 
+> > > > to calculate  the maxpacket size. The usb_maxpacket() will call
+> > > > usb_endpoint_maxp() to compute the maxpacket size.
+> > > 
+> > > I know that.  What fhci_queue_urb() is doing is wrong.  You should change it: 
+> > > Make it call usb_endpoint_maxp directly instead of calling usb_maxpacket.
+> > > 
+> > 
+> > From 1996456d0cc17b5ff7746a598ff355b25d13db3e Mon Sep 17 00:00:00 2001
+> > From: zhuyan <zhuyan34@huawei.com>
+> > Date: Thu, 18 Apr 2019 00:53:03 +0800
+> > Subject: [PATCH] usb: host: fix divide-by-zero in function 
+> > fhci_queue_urb
+> > 
+> > fhci_queue_urb() shouldn't use urb->pipe to compute the maxpacket size 
+> > anyway.It should use usb_endpoint_maxp(&urb->ep->desc).
+> > 
+> > In function fhci_queue_urb, the divisor of expression 
+> > (urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe,
+> > usb_pipeout(urb->pipe))) may be zero. When it is zero, unexpected 
+> > results may occur, so it is necessary to ensure that the divisor is not zero.
+> > 
+> > Signed-off-by: zhuyan <zhuyan34@huawei.com>
+> > ---
+> >  drivers/usb/host/fhci-sched.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/usb/host/fhci-sched.c 
+> > b/drivers/usb/host/fhci-sched.c index 3d12cdd..7dcfe22 100644
+> > --- a/drivers/usb/host/fhci-sched.c
+> > +++ b/drivers/usb/host/fhci-sched.c
+> > @@ -704,6 +704,7 @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
+> >  	struct td *td;
+> >  	u8 *data;
+> >  	u16 cnt = 0;
+> > +	u16 max_pkt_size = 0;
+> >  
+> >  	if (ed == NULL) {
+> >  		ed = fhci_get_empty_ed(fhci);
+> > @@ -727,8 +728,7 @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
+> >  		}
+> >  		ed->speed = (urb->dev->speed == USB_SPEED_LOW) ?
+> >  			FHCI_LOW_SPEED : FHCI_FULL_SPEED;
+> > -		ed->max_pkt_size = usb_maxpacket(urb->dev,
+> > -			urb->pipe, usb_pipeout(urb->pipe));
+> > +		ed->max_pkt_size = usb_endpoint_maxp(&urb->ep->desc);
+> >  		urb->ep->hcpriv = ed;
+> >  		fhci_dbg(fhci, "new ep speed=%d max_pkt_size=%d\n",
+> >  			 ed->speed, ed->max_pkt_size);
+> > @@ -765,11 +765,12 @@ void fhci_queue_urb(struct fhci_hcd *fhci, 
+> > struct urb *urb)
+> >  
+> >  	switch (ed->mode) {
+> >  	case FHCI_TF_BULK:
+> > +		max_pkt_size = usb_endpoint_maxp(&urb->ep->desc);
+> >  		if (urb->transfer_flags & URB_ZERO_PACKET &&
+> >  				urb->transfer_buffer_length > 0 &&
+> > +				(max_pkt_size != 0) &&
+> 
+> Now you shouldn't need to add this extra test.
+> 
+> Alan Stern
+> 
+> >  				((urb->transfer_buffer_length %
+> > -				usb_maxpacket(urb->dev, urb->pipe,
+> > -				usb_pipeout(urb->pipe))) == 0))
+> > +				max_pkt_size) == 0))
+> >  			urb_state = US_BULK0;
+> >  		while (data_len > 4096) {
+> >  			td = fhci_td_fill(fhci, urb, urb_priv, ed, cnt, @@ -807,8 +808,8 
+> > @@ void fhci_queue_urb(struct fhci_hcd *fhci, struct urb *urb)
+> >  		break;
+> >  	case FHCI_TF_CTRL:
+> >  		ed->dev_addr = usb_pipedevice(urb->pipe);
+> > -		ed->max_pkt_size = usb_maxpacket(urb->dev, urb->pipe,
+> > -			usb_pipeout(urb->pipe));
+> > +		ed->max_pkt_size = usb_endpoint_maxp(&urb->ep->desc);
+> > +
+> >  		/* setup stage */
+> >  		td = fhci_td_fill(fhci, urb, urb_priv, ed, cnt++, FHCI_TA_SETUP,
+> >  			USB_TD_TOGGLE_DATA0, urb->setup_packet, 8, 0, 0, true);
 
-Each bio is created inside __blk_rq_map_user_iov() which is run inside
-a loop, and the created bio is added to request via blk_rq_append_bio(),
-see the following code:
+But the return value of usb_endpoint_maxp() may be 0. 
+Do we need to take protective measures?
 
-blk_rq_map_user_iov
-	__blk_rq_map_user_iov
-		blk_rq_append_bio
-
-blk_rq_map_user_iov():
-		...
-        do {
-                ret =__blk_rq_map_user_iov(rq, map_data, &i, gfp_mask, copy);
-                if (ret)
-                        goto unmap_rq;
-                if (!bio)
-                        bio = rq->bio;
-        } while (iov_iter_count(&i));
-		...
-
-Thanks,
-Ming
+Yan Zhu
