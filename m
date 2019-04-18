@@ -2,113 +2,140 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33667C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FDEC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC506214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555574530;
-	bh=L3yVJP/o/Td8297AkNWgNfn5COhl0vrJMj+gAG3ralQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L7zesaOLTpUj2o/wxg/t0L996SjcKjH0SF0D69/FRC3gQXDiFrFRgap6uoIANnstN
-	 +RuTu+fdFZ4oStkTjC4rFCDyDf+kZZO1ZMFb0mjUfnU1FqxdQ3rrWFzKSNNgCoXb3O
-	 I4Jl5daL3P1RH0On29UM7DckoveSumRyTMCWfcSo=
+	by mail.kernel.org (Postfix) with ESMTP id C4EBE214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388159AbfDRICI (ORCPT
+        id S2388225AbfDRIC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:02:08 -0400
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:39335 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfDRICI (ORCPT
+        Thu, 18 Apr 2019 04:02:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38604 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729497AbfDRIC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:02:08 -0400
-Received: by mail-wm1-f41.google.com with SMTP id n25so1715744wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 01:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/HO1WJysrK++hQK3vuYQ2Hya/ZmVw9Z59OyDAf3UQaE=;
-        b=sJwrtURSrBE1cx8FuGMuHoqSuWtQ1mFk0uLI6cREvKT4JkPrMXFpvDvj3K7h0qeG8m
-         n/fyP/Xo/ag+WWUxwr1tJrzdMdml6sRUsRBwmGpax4JlyXN/9s4IH4W2RPx9lUHYCPGK
-         ZnyWamxSkjDpHmUZ3UVKwJGO1kWrJbkxvo7jYkqRRBvjQuLZMfLsXODIg4GBP7VGexbR
-         2DZt3GuWiaH/7JQGR5FivwXesbipVf0/G9okHTDt2jlmbRoKBzw2jkGhDBR175nQs8QT
-         ErRShXGb5LqmmLnarQ9Fmm8mXcJgWC8CaDcS9u0BVvowE7yIXh+MLF2+bmC/7UIX1tBK
-         vCEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/HO1WJysrK++hQK3vuYQ2Hya/ZmVw9Z59OyDAf3UQaE=;
-        b=ggbtKjGDlFTE5IRmJVppNLhZJVC94ARsTLz69RRdNxAbLPNU0Dbyyn8JwuozpGoS6e
-         lLAegmI4QtKD9hY0EULhjhohFM2mpvbBkEPmlAQK0n1W6CQCaUf9LzxJ5Ml2BuUzaLDw
-         GcKBej5HnlBK63iY9nJ5hYWrKSLMP5Eoubwjf3DH3eiRXR3e+JFLl/q0sI6lO9WDAPK1
-         uYNZjOqvmlZxxT8aWlT42DUNtimjbScCzPjF1rMK9mZRndcbJwYDhjEcNVPPjF+ApH78
-         HsJ1YCO7aFfbDudWVili3caXePiLUmSUQtqiz1NwPvxvXN3yATrnhHsG0lJ9FEwoXg3n
-         RKoA==
-X-Gm-Message-State: APjAAAXz2dzQHrCF1pWpTMhystE3pP0/2oM5tot95HzeQ2ppO8h7ODXX
-        w5Xvz6FOfLuTYL1HVPw80t8=
-X-Google-Smtp-Source: APXvYqw/aEvPQcb3L3ZnGAxZDsW0mYWbDY94YPDu6dFO81UXtD8j/Ls8XnaVH/mKc48NoLRTugGMRQ==
-X-Received: by 2002:a1c:4e19:: with SMTP id g25mr2087800wmh.9.1555574526416;
-        Thu, 18 Apr 2019 01:02:06 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id m17sm1024638wrx.3.2019.04.18.01.02.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 01:02:05 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 10:02:02 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2
- follow-up patches
-Message-ID: <20190418080202.GA13653@gmail.com>
-References: <20190415205829.32707-1-longman@redhat.com>
- <20190416131047.GW11158@hirez.programming.kicks-ass.net>
- <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
- <20190416141747.GN4038@hirez.programming.kicks-ass.net>
- <18af71ce-1ef3-c6cd-4088-3b2a9bf0016e@redhat.com>
- <20190416173700.GQ4038@hirez.programming.kicks-ass.net>
- <2873c42c-f2a6-64e9-bf0f-9c86536984b7@redhat.com>
- <20190417055745.GA95755@gmail.com>
- <3a9bbc09-2cd1-4f64-1d56-6b04e298902e@redhat.com>
+        Thu, 18 Apr 2019 04:02:29 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3I80EvK033029
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 04:02:28 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rxm5s3fcj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 04:02:27 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Thu, 18 Apr 2019 09:02:25 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Apr 2019 09:02:20 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3I82KMu56492212
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Apr 2019 08:02:20 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22ABA11C04A;
+        Thu, 18 Apr 2019 08:02:20 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D34BE11C06C;
+        Thu, 18 Apr 2019 08:02:19 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.14.146])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Apr 2019 08:02:19 +0000 (GMT)
+Date:   Thu, 18 Apr 2019 10:02:18 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+In-Reply-To: <CAHk-=wj5j-zMo7hVNxiw3+5L2d1WQVm3x4fbpg=OXLzDh8FhYg@mail.gmail.com>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+        <20190415051919.GA31481@infradead.org>
+        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+        <20190416110906.6c773aff@mschwideX1>
+        <20190416140658.2cb73a3f@mschwideX1>
+        <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
+        <CAHk-=wj2SW0Zno0Yn=S9wrsmHOKV0FiFPiPS4TM=Gn8yjfYXAg@mail.gmail.com>
+        <20190417094637.51ad4c67@mschwideX1>
+        <20190417100244.42e29736@mschwideX1>
+        <CAHk-=wj5j-zMo7hVNxiw3+5L2d1WQVm3x4fbpg=OXLzDh8FhYg@mail.gmail.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a9bbc09-2cd1-4f64-1d56-6b04e298902e@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041808-0020-0000-0000-0000033120ED
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041808-0021-0000-0000-000021836FBD
+Message-Id: <20190418100218.0a4afd51@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-18_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=802 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904180056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 17 Apr 2019 09:57:01 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-* Waiman Long <longman@redhat.com> wrote:
+> On Wed, Apr 17, 2019 at 1:02 AM Martin Schwidefsky
+> <schwidefsky@de.ibm.com> wrote:
+> >
+> > Grumpf, that does *not* work. For gup the table entries may be read only
+> > once. Now I remember why I open-coded p4d_offset, pud_offset and pmd_offset
+> > in arch/s390/mm/gup.c, to avoid to read the table entries twice.
+> > It will be hard to use the common gup code after all.  
+> 
+> Hmm. The common gup code generally should do the "read only once"
+> thing too (since by definition the gup-fast case is done without
+> locking), although it's probably the case that most architectures
+> simply don't care.
+> 
+> What would it require for the generic code to work for s390?
 
-> As the part2 patches are still being actively modified, it doesn't look 
-> like it will make the next merge window. I am fine with postponing it 
-> to 5.3. However, I would like to request the merging of just patch 1 of 
-> the part 2 patchset. It fixes a locking selftest problem that was 
-> introduced in the part 1 patches.
+The problematic lines in the generic gup code are these three:
 
-Sure, I've promoted this commit:
+1845:	pmdp = pmd_offset(&pud, addr);
+1888:	pudp = pud_offset(&p4d, addr);
+1916:	p4dp = p4d_offset(&pgd, addr);
 
-  26536e7c242e: locking/rwsem: Prevent unneeded warning during locking selftest
+Passing the pointer of a *copy* of a page table entry to pxd_offset() does
+not work with the page table folding on s390. The pxd_offset() function
+on s390 have to make a choice, either return the dereferenced value behind
+the passed pointer (that works) or return the original page table pointer
+if the table level is folded (that does not work).
 
-from tip:WIP.locking/core into tip:locking/core, for a v5.2 merge.
+To fix this we would need three new helpers pmd_offset_orig, pud_offset_orig
+and p4d_offset_orig, their generic definition would look like this:
 
-Thanks,
+#define p4d_offset_orig(pgdp, pgd, address)    p4d_offset(&pgd, address)
+#define pud_offset_orig(p4dp, p4d, address)    pud_offset(&p4d, address)
+#define pmd_offset_orig(pudp, pud, address)    pmd_offset(&pud, address)
 
-	Ingo
+For the s390 definition see the following branch:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git generic-gup
+
+A quick test with this branch shows everything working normally.
+Keeping my fingers crossed that I did not miss anything.
+
+-- 
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
