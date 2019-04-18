@@ -2,225 +2,155 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F9C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3372184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01732083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 03:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQCZG8vc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUlEM0gs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfDRDiG (ORCPT
+        id S2387948AbfDRDlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 23:38:06 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35969 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732325AbfDRDiF (ORCPT
+        Wed, 17 Apr 2019 23:41:06 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38367 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732325AbfDRDlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 23:38:05 -0400
-Received: by mail-qk1-f195.google.com with SMTP id s83so397095qke.3;
-        Wed, 17 Apr 2019 20:38:04 -0700 (PDT)
+        Wed, 17 Apr 2019 23:41:06 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d13so755990qth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 20:41:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NBYuFnwbcjYOpiEKrKPQVkOk6Eg+rvfTC74KUi0ag2Q=;
-        b=mQCZG8vcWogE0a1HYzn20xOQKcuCNRxxH2AwF8vuDENsU8QTs0XFmBICzQttAmFvxL
-         v6deNdqbEPWk3sYPzQQVmXvBJwPk2wMVeGCQMjCFQGKc3kDx4QEjfYB2JU0uObqHkhR2
-         znPm3bydtuLLi0trR8Qh+9oCogasgIbFDi5L9RoXsaZgh7D0Dr0CWxkVzR60T/VPO+5D
-         9oCk0mAlYYy+Yk5tPBAXTTKnijmr0jIUJotqQyogBrenLTDYMsiAZf8xX9Tmk9a3kFTH
-         dgkjuqLwGOSuC31drcsZJ4no4jP5KkMLcTmy+JOJIr+wfZkxDfa6gM6EzKm9qxLiATaL
-         OJDg==
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=bJHd5xOWM/Xmac4cmLiBif1cn6eV5HV8X6iQxVqT918=;
+        b=AUlEM0gsR9eHfrrvdyZe2IXe3G6xqzVPkr3cOyhQeZsC3Ogf6LRgFoB98aPXK5JrMM
+         py3Gvtp+Gdp2IBm6MMgZqVT/eMAhAMiOh3A3w+kTWn7/PmlL1xmVb65zXXhmdNJUAAJQ
+         rnCyE4TmXj2Lu2S5cB9zTGxPPTKkq0FQ4yaSTxgVZ1eepqIjZ/dYR0dKdJPNr2dWnnWn
+         8tPtnjajhiqnjmON+BgPkvWd5CQ2+ccK7FZ7HuQb0eUR98RpQroN5jMsKlIcw00ku7Yk
+         cjXEri6clkiVgbPkPY9DAOHjtQEgUojpxLo5oPsLrU3NkW2t08xEyy1uW2iGbcilV83w
+         frLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NBYuFnwbcjYOpiEKrKPQVkOk6Eg+rvfTC74KUi0ag2Q=;
-        b=nPqZvQvmSDXuBW38UoQ93uUW2FYnMnZ/7q7rC7KQSPKDPwBFYwol1B4GcI/ziPj+o6
-         bqvU9Y9rnUZplbUixadLdBKEw18jMvwdrCIcBTfp3mL5i43t0kF7Gqv7pFS+fUmVmIYN
-         s1ZpTWN2h2ryIGhkNNGzghhhcQLH8Z7iZjOAP7yM32alPQZ25qXlLhoiH+CX9gbapEBq
-         GVvzgoItfVNwL5rtl9aoH7nYbA9EEwGCiYDQSf2nuJBqpD8sRkHDfkW0opNF9uoRxvx6
-         kBL3xKawzSMa4iH5A9EiEtTSwD70hwNkcmooKCsjg38Hk+mDNYYyxoqLXWPG2cmwoxgI
-         3H/Q==
-X-Gm-Message-State: APjAAAVmF1JhBe1GqOxmZMcCJKsePAE8ZB/SZXXydKy02o+4mY/OHDeU
-        Ep9gT6Zqa/sSejexPIizm0yOsmziyRZWK/dNQLADlESXYiQ=
-X-Google-Smtp-Source: APXvYqykd2uUYNctyvy9ymieqCW0BkA5GCMA8jyzjgFPvWcgrLIEbF8jnRb15+XWll6rgQ3Ro7SEySxj6FddhCTwIg0=
-X-Received: by 2002:a37:9fc6:: with SMTP id i189mr71827628qke.246.1555558683979;
- Wed, 17 Apr 2019 20:38:03 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=bJHd5xOWM/Xmac4cmLiBif1cn6eV5HV8X6iQxVqT918=;
+        b=F/IkDAe6nrzryDkcxccb9TQcxiRX8mis7J54lkTYt0tYcPuV2DQNkgQlXzoIJU95nw
+         ArmntVyuVbb7xJ4qQBiyHgPpn6aiGj39tAF/l/IRObHGv+P9+OkUXDthJjViwNeQFP9z
+         qYl97cs+ee+S9gqZVWxALx5GT9Vh6+rOPLLFjmnm53up/9jFZRrb7lNWVGvRuLIiWp0B
+         kgbe0h8d2gDr3S0uc++oHRQ/sZhL2iPewcs3ujk5wWmyZr3tln5zA0ZhYydoBEUmg5jD
+         ltVsRAwTZUEkqersJ/0sVolQQdDGIUV7gNZGAAj7DWK4st7PtstLzXE6BnveNXOe5Hfz
+         VLUA==
+X-Gm-Message-State: APjAAAUIHONwqounxts2ZoXxhomarbOns8buRwoOBOLuntHQF3R+noYt
+        As9A1mmorvqr/C5mP168mdHMgL0/AEqHWF7BlFj1s4q4Ngg=
+X-Google-Smtp-Source: APXvYqyEAYCOvZT9unCh+/gluSWyQ3yP320ZQtoFhCYmOoXST8tn8tW4A35sE/YJ1hdQx8VrMlWxTRuTEVB+4cj5ouo=
+X-Received: by 2002:a0c:91cc:: with SMTP id r12mr71627943qvr.35.1555558864974;
+ Wed, 17 Apr 2019 20:41:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190315111107.15154-1-lhenriques@suse.com> <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
- <87r2b4zd2q.fsf@suse.com> <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
- <87lg1c17b2.fsf@suse.com> <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
- <87a7hr19v7.fsf@suse.com> <87o963jkcj.fsf@suse.com> <CAAM7YAko8qnfjWEdEqX=XE3azDZLpO_+egxDEsqowK9ByYZxwg@mail.gmail.com>
- <878swre7xz.fsf@suse.com> <87d0lm6psq.fsf@suse.com>
-In-Reply-To: <87d0lm6psq.fsf@suse.com>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Thu, 18 Apr 2019 11:37:52 +0800
-Message-ID: <CAAM7YAmGzYM0wKGKJ3Z_uHOTgcmEjXhXtuu8NwE+sbRhiRj=Mg@mail.gmail.com>
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Thu, 18 Apr 2019 13:40:53 +1000
+Message-ID: <CAPM=9twvtLWe=Z8uMHG47H7NSSYQWEpD+yvs-Dt-FMzcZMZpCg@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.1-rc6
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 9:30 PM Luis Henriques <lhenriques@suse.com> wrote:
->
-> Luis Henriques <lhenriques@suse.com> writes:
->
-> > "Yan, Zheng" <ukernel@gmail.com> writes:
-> >
-> >> On Fri, Mar 22, 2019 at 6:04 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >>>
-> >>> Luis Henriques <lhenriques@suse.com> writes:
-> >>>
-> >>> > "Yan, Zheng" <ukernel@gmail.com> writes:
-> >>> >
-> >>> >> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
-> >>> >>>
-> >>> >>> "Yan, Zheng" <ukernel@gmail.com> writes:
-> >>> >>>
-> >>> >>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >>> >>> >>
-> >>> >>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
-> >>> >>> >>
-> >>> >>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >>> >>> >> >>
-> >>> >>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
-> >>> >>> >> >>
-> >>> >>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
-> >>> >>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
-> >>> >>> >> >>   hex dump (first 32 bytes):
-> >>> >>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-> >>> >>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >>> >>> >> >>   backtrace:
-> >>> >>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
-> >>> >>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
-> >>> >>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
-> >>> >>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
-> >>> >>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
-> >>> >>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
-> >>> >>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
-> >>> >>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
-> >>> >>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
-> >>> >>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
-> >>> >>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
-> >>> >>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
-> >>> >>> >> >>
-> >>> >>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
-> >>> >>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
-> >>> >>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
-> >>> >>> >> >>
-> >>> >>> >> >> Link: https://tracker.ceph.com/issues/38224
-> >>> >>> >> >> Cc: stable@vger.kernel.org
-> >>> >>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> >>> >>> >> >> ---
-> >>> >>> >> >>  fs/ceph/caps.c | 7 +++++++
-> >>> >>> >> >>  1 file changed, 7 insertions(+)
-> >>> >>> >> >>
-> >>> >>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> >>> >>> >> >> index 36a8dc699448..208f4dc6f574 100644
-> >>> >>> >> >> --- a/fs/ceph/caps.c
-> >>> >>> >> >> +++ b/fs/ceph/caps.c
-> >>> >>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
-> >>> >>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
-> >>> >>> >> >>  {
-> >>> >>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
-> >>> >>> >> >> +
-> >>> >>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
-> >>> >>> >> >>         list_del_init(&ci->i_snap_realm_item);
-> >>> >>> >> >>         ci->i_snap_realm_counter++;
-> >>> >>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
-> >>> >>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
-> >>> >>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
-> >>> >>> >> >>                             realm);
-> >>> >>> >> >> +       /*
-> >>> >>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
-> >>> >>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
-> >>> >>> >> >> +        * ceph_snap_context and we need to drop it.
-> >>> >>> >> >> +        */
-> >>> >>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
-> >>> >>> >> >>  }
-> >>> >>> >> >>
-> >>> >>> >> >>  /*
-> >>> >>> >> >
-> >>> >>> >> > This does not seem right.  i_head_snapc is cleared when
-> >>> >>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
-> >>> >>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
-> >>> >>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
-> >>> >>> >> > should be in iterate_session_caps()
-> >>> >>> >> >
-> >>> >>> >>
-> >>> >>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
-> >>> >>> >> seems to execute fine, except from the memory leak.
-> >>> >>> >>
-> >>> >>> >> It's very difficult to reproduce this issue, but last time I managed to
-> >>> >>> >> get this memory leak to trigger I actually had some debugging code in
-> >>> >>> >> drop_inode_snap_realm, something like:
-> >>> >>> >>
-> >>> >>> >>   if (ci->i_head_snapc)
-> >>> >>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
-> >>> >>> >
-> >>> >>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
-> >>> >>> > i_flushing_caps. and try reproducing it again.
-> >>> >>> >
-> >>> >>>
-> >>> >>> Ok, it took me a few hours, but I managed to reproduce the bug, with
-> >>> >>> those extra printks.  All those values are set to 0 when the bug
-> >>> >>> triggers (and i_head_snapc != NULL).
-> >>> >>>
-> >>> >>
-> >>> >> Thanks, which test triggers this bug?
-> >>> >
-> >>> > That's generic/013.  It usually triggers after a few hours of running it
-> >>> > in a loop (I'm using a vstart cluster for that).
-> >>> >
-> >>> >>
-> >>> >> I searched that code, found we may fail to cleanup i_head_snap in two
-> >>> >> places. One is in ceph_queue_cap_snap, Another is in
-> >>> >> remove_session_caps_cb().
-> >>> >
-> >>> > Ah, great!  I spent a lot of time looking but I couldn't really find it.
-> >>> > My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
-> >>> > and that the corresponding ceph_put_snap_context would be done in
-> >>> > handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
-> >>> > MDS.
-> >>>
-> >>> Something that I didn't said explicitly is that I *know* that the
-> >>> unbalanced ceph_get_snap_context() is the one in function
-> >>> ceph_queue_cap_snap().  I know this for sure because I've managed to
-> >>> reproduce the issue several times with an instrumented kernel (with
-> >>> tracepoints) that allowed me to keep track of all ceph_snap_context
-> >>> operations (create, get, put, delete).
-> >>>
-> >>
-> >> Sorry for the delay. please try
-> >
-> > Thank you, I'll try the test with your patch applied and see if I still
-> > see the issue (obviously, this will take some time as it takes several
-> > hours for the bug to trigger).
->
-> Ok, after several hours of running it, I confirm that I was not able to
-> reproduce the issue with your patch.  It took me a while because my test
-> environment changed a bit and I was failing to reproduce it even without
-> the patch.
->
+Hi Linus,
 
-Thanks, I pushed the patch to testing branch.
+Since Easter is looming for me, I'm just pushing whatever is in my
+tree, I'll see what else turns up and maybe I'll send another pull
+early next week if there is anything.
 
-Yan, Zheng
+tegra:
+- stream id programming fix
+- avoid divide by 0 for bad hdmi audio setup code
 
-> Cheers,
-> --
-> Luis
+ttm:
+- Hugepages fix
+- refcount imbalance in error path fix
+
+amdgpu:
+- GPU VM fixes for Vega/RV
+- DC AUX fix for active DP-DVI dongles
+- DC fix for multihead regression.
+
+Dave.
+
+drm-fixes-2019-04-18:
+drm tegra, amdgpu fixes
+The following changes since commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2=
+:
+
+  Linux 5.1-rc5 (2019-04-14 15:17:41 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-04-18
+
+for you to fetch changes up to 00fd14ff3017f64a9a03a08291e4be0d87bedc17:
+
+  Merge branch 'drm-fixes-5.1' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes (2019-04-18
+06:56:35 +1000)
+
+----------------------------------------------------------------
+drm tegra, amdgpu fixes
+
+----------------------------------------------------------------
+Alex Deucher (1):
+      drm/amdgpu/gmc9: fix VM_L2_CNTL3 programming
+
+Arnd Bergmann (1):
+      gpu: host1x: Program stream ID to bypass without SMMU
+
+Christian K=C3=B6nig (3):
+      drm/ttm: fix out-of-bounds read in ttm_put_pages() v2
+      drm/ttm: fix start page for huge page check in ttm_put_pages()
+      drm/ttm: fix incrementing the page pointer for huge pages
+
+Dave Airlie (2):
+      Merge tag 'drm/tegra/for-5.1-rc6' of
+git://anongit.freedesktop.org/tegra/linux into drm-fixes
+      Merge branch 'drm-fixes-5.1' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+
+David Francis (1):
+      drm/amd/display: If one stream full updates, full update all planes
+
+Lin Yi (1):
+      drm/ttm: fix dma_fence refcount imbalance on error path
+
+Martin Leung (1):
+      drm/amd/display: extending AUX SW Timeout
+
+Thierry Reding (1):
+      drm/tegra: hdmi: Setup audio only if configured
+
+wentalou (1):
+      drm/amdgpu: shadow in shadow_list without tbo.mem.start cause
+page fault in sriov TDR
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c   |  1 +
+ drivers/gpu/drm/amd/amdgpu/mmhub_v1_0.c      |  1 +
+ drivers/gpu/drm/amd/display/dc/core/dc.c     | 19 +++++++++++++++++++
+ drivers/gpu/drm/amd/display/dc/dc.h          |  3 +++
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.c |  9 ++++++---
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.h |  6 +++---
+ drivers/gpu/drm/tegra/hdmi.c                 | 12 +++++++++---
+ drivers/gpu/drm/ttm/ttm_bo.c                 |  4 +++-
+ drivers/gpu/drm/ttm/ttm_page_alloc.c         | 13 +++++++------
+ drivers/gpu/host1x/hw/channel_hw.c           |  8 ++++++--
+ 10 files changed, 58 insertions(+), 18 deletions(-)
