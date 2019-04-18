@@ -2,90 +2,81 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8638C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A779AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF43D20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:29:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="r8AHGGv/"
+	by mail.kernel.org (Postfix) with ESMTP id 8064A214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfDRX3S (ORCPT
+        id S1726399AbfDRXbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 19:29:18 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34480 "EHLO mail.skyhub.de"
+        Thu, 18 Apr 2019 19:31:22 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4701 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbfDRX3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 19:29:18 -0400
-Received: from zn.tnic (p200300EC2F112E0014210E9402371E03.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:1421:e94:237:1e03])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 021331EC04CD;
-        Fri, 19 Apr 2019 01:29:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555630156;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ay1T9ReBZMUJMgiPJZ0pv2dr2BflY4bvWpYPQRd1YMc=;
-        b=r8AHGGv/5jNxpWnBLKbDozuYs2nMWRpMnVCjFcYes6Hb4rIQqRVcnuZ/BH9AI1yIkhcJuj
-        SI5/mEuuSw8y3dp43D1uvd6753llxsZt+cn4hJQAEpS/BE76FYqk0VByjO9O+JFWjPWNlE
-        hO4mEn0MelNRqJNh17lOUaa0Nnwamuo=
-Date:   Fri, 19 Apr 2019 01:29:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
-Message-ID: <20190418232910.GR27160@zn.tnic>
-References: <20190418220229.32133-1-tony.luck@intel.com>
- <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
+        id S1726322AbfDRXbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 19:31:21 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 16:31:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,367,1549958400"; 
+   d="scan'208";a="150578893"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Apr 2019 16:31:20 -0700
+Date:   Thu, 18 Apr 2019 16:31:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION 5.0.x] Windows XP broken on KVM
+Message-ID: <20190418233119.GF17218@linux.intel.com>
+References: <s5hy347pxtf.wl-tiwai@suse.de>
+ <20190418075328.GA19532@kroah.com>
+ <s5hr29zpwkx.wl-tiwai@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <s5hr29zpwkx.wl-tiwai@suse.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 03:51:07PM -0700, Cong Wang wrote:
-> On Thu, Apr 18, 2019 at 3:02 PM Tony Luck <tony.luck@intel.com> wrote:
-> >
-> > Useful when running error injection tests that want to
-> > see all of the MCi_(STATUS|ADDR|MISC) data via /dev/mcelog.
-> >
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+On Thu, Apr 18, 2019 at 10:05:34AM +0200, Takashi Iwai wrote:
+> On Thu, 18 Apr 2019 09:53:28 +0200,
+> Greg Kroah-Hartman wrote:
+> > 
+> > On Thu, Apr 18, 2019 at 09:38:52AM +0200, Takashi Iwai wrote:
+> > > Hi,
+> > > 
+> > > we've got a regression report on the recent 5.0.x kernel, starting
+> > > from 5.0.6, where Windows XP can't boot on KVM any longer.
+> > > 
+> > > The culprit seems to be the patch
+> > >    KVM: x86: update %rip after emulating IO
+> > > with the upstream commit 45def77ebf79e2e8942b89ed79294d97ce914fa0.
+> > > Reverting this alone fixed the problem.
+> > > 
+> > > The report is found at openSUSE bugzilla:
+> > >   https://bugzilla.suse.com/show_bug.cgi?id=1132694
+> > > 
+> > > Is there already a followup fix?  If not, we need to revert it from
+> > > stable, at least.
+> > 
+> > Is this also a problem in 5.1-rc5?
 > 
-> We saw the same problem, CONFIG_RAS hijacks all the
-> correctable memory errors, which leaves mcelog "broken"
-> silently. I know it is arguable, but until we can switch from
-> mcelog to rasdaemon, mcelog should still work as before.
+> Only 5.0.x has been tested, so far.
+> I'll ask the reporter to try 5.1-rc if Paolo can't reproduce the
+> problem in his side.
 
-It is "arguable" because this is not how the CEC is supposed to be used.
+I'd be surprised if 5.1-rc* changes anything relative to 5.0.x, the
+commit in question is fairly isolated and specific.
 
-If you want to collect errors with mcelog, you don't use the CEC at all.
-And there's ras=cec_disable for that or you simply don't enable it in
-your .config.
-
-As Tony says in the commit message, the enable should be used only for
-injection tests. Which is where that thing should only be used for -
-debugging the CEC itself.
-
-Which reminds me, Tony, I think all those debugging files "pfn"
-and "array" and the one you add now, should all be under a
-CONFIG_RAS_CEC_DEBUG which is default off and used only for development.
-Mind adding that too pls?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Can we get the Qemu version and command line that is being run?
