@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB1DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A54C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1270218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F9A217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610660;
-	bh=7EUKk0gCF+XfOroSFhPic9E505DvNxWvN0uAUSEC994=;
+	s=default; t=1555610666;
+	bh=Axz59moKgMJfsNbXi9hS7Wm12MSR0cYvjle8NE4YFLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KgGyOf7EKWPuudlXRfCfEaRe8XXfk0PLlycOnV30rlIB/pw4m2sz6VHOencXt6vbS
-	 1KwyzC2gh68UCq1E2gAZyfVXdaWlxVUm2UKrhF+V7cPqsZY9Byddkc+SWEAhRVngsF
-	 zSMofJZG0LDwPa31re6jpId9Aqi9EE/xBCQnO2Y8=
+	b=nBVwr1SfERKTsKcj5ptGEcgca9i2+mhmP7dQV3wg6xNWgSg52LVUleUQw2wi3Sj6s
+	 ejqSIeuT+N/Y9KXVN+hdTZR6oSQSnbXKXXtYFG5QjApVb3nplRIWPs+Cd35ZKVQUUT
+	 6sWhTeBkwa/sF3ARC5sWFjMTm7/g8ihXt9ejxiP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391083AbfDRSET (ORCPT
+        id S2391107AbfDRSEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391074AbfDRSEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:04:12 -0400
+        id S2390675AbfDRSER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:04:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 568CC21872;
-        Thu, 18 Apr 2019 18:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A43921871;
+        Thu, 18 Apr 2019 18:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610651;
-        bh=7EUKk0gCF+XfOroSFhPic9E505DvNxWvN0uAUSEC994=;
+        s=default; t=1555610657;
+        bh=Axz59moKgMJfsNbXi9hS7Wm12MSR0cYvjle8NE4YFLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s69Wz/m4LlOFtUgDme+0Viq3hISMPb7wHjEIMtWfgTSbU0DCCrE46PrrzAKRaL3KA
-         LYxvEQ30pkxCBaVWTaUvvi4c00b3rGUF1YS33YW6R8t5gOOIcMbl10U69sLyWuoWZZ
-         1DZmL4N52/j7xnykf9rcGCJArMG0HFUZ/HfpTUX0=
+        b=MrKcs2PFzpbrejL4/JANoTKjM8nvugzaDN1GWW4TAZoz6LWtSr2fgUWKEVOxCX4Wn
+         /oThelJxNSAvYDw6XtWNS/jhxd7jxCPw9j8A14clPPVYqRUzD0QpMXG6/JofJBz8NK
+         qj9KVnstjBCxIeEUGKImYR4R3q8Ud2ZEkwIusZ1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Roland Dreier <roland@purestorage.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 31/92] x86/hpet: Prevent potential NULL pointer dereference
-Date:   Thu, 18 Apr 2019 19:56:49 +0200
-Message-Id: <20190418160433.162086306@linuxfoundation.org>
+Subject: [PATCH 4.14 33/92] drm/nouveau/debugfs: Fix check of pm_runtime_get_sync failure
+Date:   Thu, 18 Apr 2019 19:56:51 +0200
+Message-Id: <20190418160433.289956688@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -66,41 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
+[ Upstream commit 909e9c9c428376e2a43d178ed4b0a2d5ba9cb7d3 ]
 
-hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
-a check.
+pm_runtime_get_sync returns negative on failure.
 
-Add a check to prevent NULL pointer dereference.
-
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: kjlu@umn.edu
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Roland Dreier <roland@purestorage.com>
-Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
+Fixes: eaeb9010bb4b ("drm/nouveau/debugfs: Wake up GPU before doing any reclocking")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/hpet.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index afa1a204bc6d..df767e6de8dd 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -909,6 +909,8 @@ int __init hpet_enable(void)
- 		return 0;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+index 9109b69cd052..9635704a1d86 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
++++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
+@@ -161,7 +161,7 @@ nouveau_debugfs_pstate_set(struct file *file, const char __user *ubuf,
+ 	}
  
- 	hpet_set_mapping();
-+	if (!hpet_virt_address)
-+		return 0;
- 
- 	/*
- 	 * Read the period and check for a sane value:
+ 	ret = pm_runtime_get_sync(drm->dev);
+-	if (IS_ERR_VALUE(ret) && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES)
+ 		return ret;
+ 	ret = nvif_mthd(ctrl, NVIF_CONTROL_PSTATE_USER, &args, sizeof(args));
+ 	pm_runtime_put_autosuspend(drm->dev);
 -- 
 2.19.1
 
