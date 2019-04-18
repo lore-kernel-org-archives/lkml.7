@@ -2,192 +2,122 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B30C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED54C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC0B206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253FA214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555608578;
+	bh=Vuj0+PqqRe/jlT1t9CTdBgrY2kmDg7/e0+LZ4gRkkeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=chFjP6U+UmEOW/DGOrATO16kSQkep44OumStjzJhLCKGQPpPc4mPKW3Mnuk5hvZvx
+	 F5wRyVsoYjwq7VwKekXjA4uXw3lnA2hapAKwSz+ROjKHL8OtsPxjTHP0C3O1g+f/lO
+	 qcl1iWbfB3HES7MEpqsgIjDPYf4Z53xU1YJenmb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389844AbfDRR03 (ORCPT
+        id S2389730AbfDRR3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:26:29 -0400
-Received: from foss.arm.com ([217.140.101.70]:38064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389826AbfDRR00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:26:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19C9E169E;
-        Thu, 18 Apr 2019 10:26:26 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D61FA3F557;
-        Thu, 18 Apr 2019 10:26:23 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
-        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
-        robin.murphy@arm.com, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org, Julien Grall <julien.grall@arm.com>
-Subject: [PATCH 2/7] iommu/dma-iommu: Split iommu_dma_map_msi_msg in two parts
-Date:   Thu, 18 Apr 2019 18:26:06 +0100
-Message-Id: <20190418172611.21561-3-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190418172611.21561-1-julien.grall@arm.com>
-References: <20190418172611.21561-1-julien.grall@arm.com>
+        Thu, 18 Apr 2019 13:29:36 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46531 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733192AbfDRR3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:29:36 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h21so2571070ljk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YmhsJEoMQ7O7UhLq8QSTaOrSH/bZp40uxbN6BHWWNr0=;
+        b=UGuLulboTYQEjS/Ciy++8yZxkk06N9LgwABGq73yPHR8a4HZghtA3lleHAr5Nz1QiU
+         O2RP1dzE8S0JuxqmjBEN5wIX2l8bbIqpwj2WzHzadE9m4sp2T2rjE5xkNNJ7uD0VDoHi
+         nJwQzGEXAEWfIicJIpo9p5CNeqig8ONazGjA4Y8hieJ1T0P3Nvbsura06ESYkiyBUUKM
+         PSv9FfQXkkoJGHxozek2u8BSv+EKCaiUgaQo8dzPJLYvm3EPBbbPs2d26KbTwwdSitu4
+         csHRNX/nArpIyCXc1T8ge9Y0pYYwc00jEOwMuI0TCWqPHxcvwIhDBxZJZGWdWOUpEgVu
+         gtEw==
+X-Gm-Message-State: APjAAAWgwQHhjthltIm3QxCJZ65r3/z8PS7lQ3GB8SGprfE2VrwYYc9L
+        ZZriC3vyx7Ay/G9A8hXBcT4=
+X-Google-Smtp-Source: APXvYqw2jfaKbPowgTt5aFDdiIZxKPMxEvsnvInRSWZND0QS0k2arzWpbPP4mP4edW3pQyAkPRvCaQ==
+X-Received: by 2002:a2e:864f:: with SMTP id i15mr4431249ljj.99.1555608574417;
+        Thu, 18 Apr 2019 10:29:34 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id t23sm537351ljc.13.2019.04.18.10.29.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 10:29:33 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hHAr1-0006ar-3T; Thu, 18 Apr 2019 19:29:43 +0200
+Date:   Thu, 18 Apr 2019 19:29:43 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Johan Hovold <johan@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
+Message-ID: <20190418172943.GC28269@localhost>
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+ <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
+ <20190414095839.GG28103@vkoul-mobl>
+ <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
+ <20190417093354.GL775@localhost>
+ <200c8e66-4245-967b-b80e-b6f6a63f80c5@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <200c8e66-4245-967b-b80e-b6f6a63f80c5@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On RT, the function iommu_dma_map_msi_msg may be called from
-non-preemptible context. This will lead to a splat with
-CONFIG_DEBUG_ATOMIC_SLEEP as the function is using spin_lock
-(they can sleep on RT).
+On Wed, Apr 17, 2019 at 12:18:22PM -0500, Pierre-Louis Bossart wrote:
+> 
+> >>>> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+> >>>> index 19c8efb9a5ee..84876a74874f 100644
+> >>>> --- a/drivers/soundwire/Kconfig
+> >>>> +++ b/drivers/soundwire/Kconfig
+> >>>> @@ -4,7 +4,7 @@
+> >>>>    
+> >>>>    menuconfig SOUNDWIRE
+> >>>>    	bool "SoundWire support"
+> >>>> -	---help---
+> >>>> +	help
+> >>>
+> >>> Not sure if this is a style issue, kernel seems to have 2990 instances
+> >>> of this!
+> >>
+> >> this is reported by checkpatch.pl --strict.
+> > 
+> > Please don't run checkpatch on code that's already in the kernel, and
+> > especially not with the --strict (a.k.a. --subjective) option enabled.
+> > 
+> > Don't try to fix what isn't broken.
+> 
+> I would agree in general, but this case is different: the SoundWire code 
+> in the upstream kernel is missing parts left and right and isn't fully 
+> functional as is. I will soon be posting what's missing, so this cleanup 
+> is an opportunity to bring SoundWire to the latest coding standards 
+> before adding the missing pieces which will be compliant with --strict. 
+> For the record using --strict already exposed 3 major issues in the 
+> yet-to-be-released code, so it's not as subjective as you describe it.
 
-The function iommu_dma_map_msi_msg is used to map the MSI page in the
-IOMMU PT and update the MSI message with the IOVA.
+It's not just me calling it subjective; --subjective is literally
+another name for the same switch which enables checks that are
+specifically *not* part of the coding standard.
 
-Only the part to lookup for the MSI page requires to be called in
-preemptible context. As the MSI page cannot change over the lifecycle
-of the MSI interrupt, the lookup can be cached and re-used later on.
+By all my means use it on your own patches before you submit them if
+you agree with all or some of those checks, but I doubt all that
+open-parenthesis re-alignment is going to expose any major issues. ;)
 
-This patch split the function iommu_dma_map_msi_msg in two new
-functions:
-    - iommu_dma_prepare_msi: This function will prepare the mapping in
-    the IOMMU and store the cookie in the structure msi_desc. This
-    function should be called in preemptible context.
-    - iommu_dma_compose_msi_msg: This function will update the MSI
-    message with the IOVA when the device is behind an IOMMU.
+It does add noise, and makes code forensic and backports harder though.
 
-Signed-off-by: Julien Grall <julien.grall@arm.com>
----
- drivers/iommu/dma-iommu.c | 43 ++++++++++++++++++++++++++++++++-----------
- include/linux/dma-iommu.h | 21 +++++++++++++++++++++
- 2 files changed, 53 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 77aabe637a60..f5c1f1685095 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -888,17 +888,17 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
- 	return NULL;
- }
- 
--void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
-+int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- {
--	struct device *dev = msi_desc_to_dev(irq_get_msi_desc(irq));
-+	struct device *dev = msi_desc_to_dev(desc);
- 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
- 	struct iommu_dma_cookie *cookie;
--	struct iommu_dma_msi_page *msi_page;
--	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
- 	unsigned long flags;
- 
--	if (!domain || !domain->iova_cookie)
--		return;
-+	if (!domain || !domain->iova_cookie) {
-+		desc->iommu_cookie = NULL;
-+		return 0;
-+	}
- 
- 	cookie = domain->iova_cookie;
- 
-@@ -908,10 +908,33 @@ void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
- 	 * of an MSI from within an IPI handler.
- 	 */
- 	spin_lock_irqsave(&cookie->msi_lock, flags);
--	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
-+	desc->iommu_cookie = iommu_dma_get_msi_page(dev, msi_addr, domain);
- 	spin_unlock_irqrestore(&cookie->msi_lock, flags);
- 
--	if (WARN_ON(!msi_page)) {
-+	return (desc->iommu_cookie) ? 0 : -ENOMEM;
-+}
-+
-+void iommu_dma_compose_msi_msg(int irq, struct msi_msg *msg)
-+{
-+	struct msi_desc *desc = irq_get_msi_desc(irq);
-+	struct device *dev = msi_desc_to_dev(desc);
-+	const struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-+	const struct iommu_dma_msi_page *msi_page = desc->iommu_cookie;
-+
-+	if (!domain || !domain->iova_cookie || WARN_ON(!msi_page))
-+		return;
-+
-+	msg->address_hi = upper_32_bits(msi_page->iova);
-+	msg->address_lo &= cookie_msi_granule(domain->iova_cookie) - 1;
-+	msg->address_lo += lower_32_bits(msi_page->iova);
-+}
-+
-+void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
-+{
-+	struct msi_desc *desc = irq_get_msi_desc(irq);
-+	phys_addr_t msi_addr = (u64)msg->address_hi << 32 | msg->address_lo;
-+
-+	if (WARN_ON(iommu_dma_prepare_msi(desc, msi_addr))) {
- 		/*
- 		 * We're called from a void callback, so the best we can do is
- 		 * 'fail' by filling the message with obviously bogus values.
-@@ -922,8 +945,6 @@ void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
- 		msg->address_lo = ~0U;
- 		msg->data = ~0U;
- 	} else {
--		msg->address_hi = upper_32_bits(msi_page->iova);
--		msg->address_lo &= cookie_msi_granule(cookie) - 1;
--		msg->address_lo += lower_32_bits(msi_page->iova);
-+		iommu_dma_compose_msi_msg(irq, msg);
- 	}
- }
-diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-index e760dc5d1fa8..2f4b2c2cc859 100644
---- a/include/linux/dma-iommu.h
-+++ b/include/linux/dma-iommu.h
-@@ -71,12 +71,23 @@ void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs);
- 
- /* The DMA API isn't _quite_ the whole story, though... */
-+/*
-+ * Map the MSI page in the IOMMU device and store it in @desc
-+ *
-+ * Return 0 if succeeded other an error if the preparation has failed.
-+ */
-+int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
-+
-+/* Update the MSI message if required. */
-+void iommu_dma_compose_msi_msg(int irq, struct msi_msg *msg);
-+
- void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
- void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
- 
- #else
- 
- struct iommu_domain;
-+struct msi_desc;
- struct msi_msg;
- struct device;
- 
-@@ -99,6 +110,16 @@ static inline void iommu_put_dma_cookie(struct iommu_domain *domain)
- {
- }
- 
-+static inline int iommu_dma_prepare_msi(struct msi_desc *desc,
-+					phys_addr_t msi_addr)
-+{
-+	return 0;
-+}
-+
-+static inline void iommu_dma_compose_msi_msg(int irq, struct msi_msg *msg)
-+{
-+}
-+
- static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
- {
- }
--- 
-2.11.0
-
+Johan 
