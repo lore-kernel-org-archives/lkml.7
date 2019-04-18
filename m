@@ -2,60 +2,93 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA46CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82619C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB25205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB59205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389506AbfDRPIt (ORCPT
+        id S2389002AbfDRPLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:08:49 -0400
-Received: from [5.180.42.13] ([5.180.42.13]:55636 "EHLO deadmen.hmeau.com"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388457AbfDRPIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:08:49 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hH7x9-0004ke-N7; Thu, 18 Apr 2019 22:23:51 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hH7x8-0004Bn-0h; Thu, 18 Apr 2019 22:23:50 +0800
-Date:   Thu, 18 Apr 2019 22:23:50 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Joe Perches <joe@perches.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] crypto: sahara: Convert IS_ENABLED uses to
- __is_defined
-Message-ID: <20190418142349.ood6asawybbxy44j@gondor.apana.org.au>
-References: <3c15d21d2b6896e76e8801dc07de2bae1dadceb1.1554827560.git.joe@perches.com>
- <320188162965670a5a0a90f693f8082229b88ee2.1554827560.git.joe@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <320188162965670a5a0a90f693f8082229b88ee2.1554827560.git.joe@perches.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 18 Apr 2019 11:11:35 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:44932 "EHLO
+        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRPLe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:11:34 -0400
+Received: from pgsop.sopnet.com.ar (unknown [179.40.38.12])
+        (Authenticated sender: pablo@fliagreco.com.ar)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id E66C37B05FF;
+        Thu, 18 Apr 2019 12:11:29 -0300 (-03)
+From:   Pablo Greco <pgreco@centosproject.org>
+To:     linux-sunxi@googlegroups.com
+Cc:     Pablo Greco <pgreco@centosproject.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] ARM: dts: sun8i: v40 Rewrite BPi M2 Berry DTS based on BPi M2 Ultra
+Date:   Thu, 18 Apr 2019 12:11:15 -0300
+Message-Id: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+X-Mailer: git-send-email 1.8.3.1
+X-SP2Max-MailScanner-Information: Please contact the ISP for more information
+X-SP2Max-MailScanner-ID: E66C37B05FF.A461E
+X-SP2Max-MailScanner: Sem Virus encontrado
+X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
+        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
+        BAYES_00 -1.90)
+X-SP2Max-MailScanner-From: pgreco@centosproject.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 09:33:13AM -0700, Joe Perches wrote:
-> IS_ENABLED should be reserved for CONFIG_<FOO> uses so convert
-> the uses of IS_ENABLED with a #define to __is_defined.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/crypto/sahara.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+BPi M2 Berry is a trimmed down version of the BPi M2 Ultra, completely
+software compatible.
 
-Patch applied.  Thanks.
+Changes include:
+- 2GiB -> 1GiB
+- no eMMC
+- no onboard microphone
+- no IR
+- no blue LED
+- no charging (and power jack to USB)
+- dropped USB2 and connect USB1 to a 4-port HUB.
+
+Changes in v4:
+- Went back to v2
+- Added GPIO pin-bank regulators (both m2-ultra and m2-berry)
+
+Changes in v3:
+- Removed "Sort device node dereferences" (already applied)
+- Added basic pio node
+- Tied GMAC regulators to the pio (both m2-ultra and m2-berry)
+
+Changes in v2:
+- Split into smaller patches
+
+Pablo Greco (7):
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable GMAC ethernet
+    controller
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable HDMI output
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable AHCI
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Fix WiFi regulator
+    definitions
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Add Bluetooth device node
+  ARM: dts: sun8i: v40: bananapi-m2-berry: Add GPIO pin-bank regulator  
+      supplies
+  ARM: dts: sun8i: r40: bananapi-m2-ultra: Add GPIO pin-bank regulator  
+      supplies
+
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts |   6 ++
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 124 ++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.8.3.1
+
