@@ -2,186 +2,232 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5662C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E5EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FE820674
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3CF20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="ewo0IAN7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dACY2WLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbfDRNjs (ORCPT
+        id S2389027AbfDRNpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:39:48 -0400
-Received: from uhil19pa09.eemsg.mail.mil ([214.24.21.82]:10302 "EHLO
-        uhil19pa09.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389029AbfDRNjr (ORCPT
+        Thu, 18 Apr 2019 09:45:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40757 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388263AbfDRNpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:39:47 -0400
-X-EEMSG-check-017: 8999952|UHIL19PA09_EEMSG_MP7.csd.disa.mil
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by uhil19pa09.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 18 Apr 2019 13:39:42 +0000
+        Thu, 18 Apr 2019 09:45:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d31so1229632pgl.7;
+        Thu, 18 Apr 2019 06:45:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1555594782; x=1587130782;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=jbsVzhdGN2qxQBaPleRMdtIYmErmkoL9LrkNXSB5a6U=;
-  b=ewo0IAN737hr5NrexZKuhPL0DoCR0ybh+J9UOWUFG0LYjzxXufPRu4C8
-   qKyTzAAkeoLxKhXy9jN0mJwzVpZiarFdcUjZN6rMRsQrViN9Y24f+zmi3
-   v96CsuklpWgG4r75pidDhD97Mz3dnRgoG2XDsr9HTM12Sf60fy5unMGlu
-   lWk5I116FzbqZv/4N9oBlx0qZGP3m6mpinkXHo7whWYJoxq4DMui9hoiB
-   GWIwqVzfHNDGYtxMMS4Ov4BDzjoDz4UWaOH7Pl/UagPN/sVD57QYkBwv8
-   MfnACqRRUnLZDQv4wY+8fl7MU4eDifhuuFAjFWcdG3I/jfZ7WVM93xnWz
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,366,1549929600"; 
-   d="scan'208";a="26474121"
-IronPort-PHdr: =?us-ascii?q?9a23=3AK2MDxBwzWfGlbt7XCy+O+j09IxM/srCxBDY+r6?=
- =?us-ascii?q?Qd0uIQL/ad9pjvdHbS+e9qxAeQG9mCsrQf1qGN7uigATVGvc/Z9ihaMdRlbF?=
- =?us-ascii?q?wssY0uhQsuAcqIWwXQDcXBSGgEJvlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk?=
- =?us-ascii?q?2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+IA+5oAnMq8Uam4VvJ6Y+xh?=
- =?us-ascii?q?bHonZDZuBayX91KV6JkBvw+9u88IR//yhMvv4q6tJNX7j9c6kkV7JTES4oM3?=
- =?us-ascii?q?oy5M3ltBnDSRWA634BWWgIkRRGHhbI4gjiUpj+riX1uOx92DKHPcLtVrA7RS?=
- =?us-ascii?q?6i76ZwRxD2jioMKiM0/3vWisx0i6JbvQ6hqhliyIPafI2ZKPxzdb7GcNgEWW?=
- =?us-ascii?q?ROQNpeVy1ZAoO9cYQPCfYBPf1FpIX5vlcCsAeyCRWpCO7pxDBInHv21rAk3e?=
- =?us-ascii?q?onHw/NwQgsE8sAvXnQqdn4MroZX+Kow6nS1TjNcu1Y2Tn95obLfB4ur/6DUr?=
- =?us-ascii?q?BsfsTe0kQvCwDIg0+MpYD5MT6Y1OIAuHWb4ep6UuKvjnYqpRxtojex3scsip?=
- =?us-ascii?q?fGhoQIwV7Z8CV22oI1JdmmR097fNWpF4BQuDyBN4ZtXsMjQ31nuCY9yrEcv5?=
- =?us-ascii?q?67ZzIFxI4oxx7YdfyKao6F6Q/gWuaJOTp0mX1odb2lixuy7ESs0PPwW8aq3F?=
- =?us-ascii?q?pQsyZIlMTHuGoX2BzJ8MeHT+Nw/kKm2TmSyQ/e8vpEIUUolarDLJ4h36Iwmo?=
- =?us-ascii?q?ITsUvdGi/2n137jLOMeUU+++io9v/nbq/6pp6cK4B0igb+Pr4omsOjGuQ3Lh?=
- =?us-ascii?q?ICX22a+eS4zLHj/Ev5T6tWjvAuj6XUv5/XKd4bq6KkGQNZzIku5wilAzu7yN?=
- =?us-ascii?q?gYmGMILFNBeBKJlYjpPFTOLejjDfiimFShiytrxvDaMb3hBZXBNH7DkKz7cr?=
- =?us-ascii?q?pn5E5czxQzwchF551IErEBPO7zWkjpudPEFBA5KBK7wub8BdVmyoweWXiAAr?=
- =?us-ascii?q?KXMKPWr1CI/PsjLPWWa4MPpDn9LP0l7eb0jXAlgV8dYbWp3ZwPZXC/GvRpPU?=
- =?us-ascii?q?qZbGH2gtgfDGgKvhAxTPDwhFKeVj5TYm64X7gg6TEjFIKmEYDDS5i1gLObwS?=
- =?us-ascii?q?e7GoZbZnhcBVCRFXfkboCEW/ALaCKIPMBtiCALVb+kS4U5zxGhqBf6y6Z7Lu?=
- =?us-ascii?q?rT4iAXqZDj2MJp6O3Tix4y8zN0D8ac026XSWF5hWMIRyIs06Fxv0N9y02P3r?=
- =?us-ascii?q?R/g/xdDdZT/e9GUh8mNZ7AyOx3E9PyVRzfcdeSVFmmRdKmATIqQ90tw98OeU?=
- =?us-ascii?q?F9G9CjjhDe2iqmGbgVl6aEBJYs6KLTw2DxJ9phy3bBzKQhiUcpQspLNWK9na?=
- =?us-ascii?q?N/7BXTB5XXnEmDi6mqcqEc1jbX9Gif1WqOoF1YUAloXKjZW3AfYFHZoc7k6E?=
- =?us-ascii?q?zeT7+uFLEnPRFCycGcMKtHcdvpgktaRPj5INTee3i9lHu3BRaN3rmMdpble3?=
- =?us-ascii?q?0B3CXBD0gJiwQT/XeANQgjCSatumHeAyJ0FVLpfUzs9fJzqG20TkAq1QGGdU?=
- =?us-ascii?q?5h2KSv+h4Tm/OcT+kf3rUeuCcusz90Bkqy38rKC9qcoApsZLtcYdIn4FdAzm?=
- =?us-ascii?q?/YthJyPpqhL6B8nFIedwV3v0Xz1xR4EIlAltIqrHwwwApvKqKSyElBeC+A3Z?=
- =?us-ascii?q?DsJr3XLXH//R+ua6HI1VDe0cuW+r4O6Pkjq1XjoRumF0Q8/HVmydVaz3yc5p?=
- =?us-ascii?q?DSBgoITZ3xSlo39wR9p7zCYik9+pnb1HNyPqm1qDPC39MpC/AkyhamZNpfML?=
- =?us-ascii?q?6EGxX8EsIEBsiiMvAlm1+sbhgcJuBd6LY0P9+6d/uBwKOqPPxvnDS8gmRG4o?=
- =?us-ascii?q?B901yD+jF8Su7VxZkEze+X3gqdWzjgi1eht9j9mZpYajEKAmq/1S/kCZZJZq?=
- =?us-ascii?q?JsYYYEF32uIsysy9V/gZ7tVWRY+0S+CFwYwsCmZACeb1vn3Q1fzU4Xu2ComT?=
- =?us-ascii?q?OkzzxolDEktq+f3C3Iw+TtcxoKIXRLS3d/glfsO4e0k8oWU1SvbwgsjBGl/1?=
- =?us-ascii?q?r1x7BHpKRjKGneWUNIfynwL2F/Xaq8r6GCbNBT55M1qyVXUfi8YFCDRr74pB?=
- =?us-ascii?q?sVzj7jH29Ayz0gaTGqtYv2nwZghGKeMnlztnzZdt90xRvF49zcX/FR1CIcRC?=
- =?us-ascii?q?ZkkTnXGkS8P96x8NWPiZjDtuG+V2S8VpxcaiTr04yAuzWh5WFwAh2wgeqzmt?=
- =?us-ascii?q?v5Hgg+yyP70MNqVSrQphbmfobrz7i6Mf5gfkRwBF7z8cx6Go5+k4sxgpEQ1n?=
- =?us-ascii?q?wahpSP8noBnmf+KtVb2b/kY3sDWzELwsTZ7xTi2E1mfTq1wNfSX26Q04NabN?=
- =?us-ascii?q?mzf20S1zh1u8tDE6qFxKdPnSJorF61t0faaL52mTJLjbMJ7HMVy8cEoxYg1C?=
- =?us-ascii?q?KDSuQVGURXFTbhmxSB85a1q6ABIC6XeKW0nG95msqsROWaqxxYcG7wZ5NnGC?=
- =?us-ascii?q?h39Mg5O1XJhi7d8IbhLeLMYMoTuxvcqBLJi+xYOdpljfYRrTZ2MmL6+3s+wq?=
- =?us-ascii?q?g0igI4jsLyh5SON2g4pPHxORVfLDCgIppIqzw=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BoBQAsfbhc/wHyM5BlHQEBBQEHBQGBZYFnKoE5ATIoh?=
- =?us-ascii?q?A6Ie4otTAEBAQEBAQaBECWJSI8WgWc8AYRAAoYZIzgTAQMBAQEEAQEBAQIBb?=
- =?us-ascii?q?CiCOikBgmcBBSMPAQVBEAsYAgImAgJXBgEMBgIBAYJfP4F1FKkJgS+FR4Rmg?=
- =?us-ascii?q?Qsni0oXeIEHgTgMgl8+hC2DIYJXBIx+mUoJggiFPYxhBhuVB4t4ljohgVYrC?=
- =?us-ascii?q?AIYCCEPgyeQbCMDMIEGAQGPagEB?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 18 Apr 2019 13:39:41 +0000
-Received: from localhost.localdomain (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x3IDddRh029733;
-        Thu, 18 Apr 2019 09:39:40 -0400
-Subject: Re: kernel BUG at kernel/cred.c:434!
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Moore <paul@paul-moore.com>
-Cc:     "chengjian (D)" <cj.chengjian@huawei.com>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>,
-        Yang Yingliang <yangyingliang@huawei.com>
-References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <20190415134331.GC22204@redhat.com>
- <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
- <20190415150520.GA13257@redhat.com>
- <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
- <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
- <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
- <20190417145711.GI32622@redhat.com>
- <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
- <20190417162723.GK32622@redhat.com>
- <939a45a6-fc1b-0ac3-759b-0e7c3ce3d670@schaufler-ca.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <4493cc24-4023-028c-1007-0f61f63a5bda@tycho.nsa.gov>
-Date:   Thu, 18 Apr 2019 09:39:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ERIN0ZDeFPChco92LNU+j6MjTlKTGi0GeGyWd/t58BM=;
+        b=dACY2WLgi+ok9Gz7GZogUCyHmuYSwt35M9wPX/VMB84uUFoyBBJbUo0hV8iqJUVpbq
+         8RK00TviQYDZYvHRmZ2k6xvGFxRgbEHUIiu5FSy/HRRUZkiHOUj26sgMKVW22HL5NAvR
+         GA3066KlD4svi7QmfrfGH3WTmTAXCnpPewH/T5nq3mcFyqWf21oVfJFoCSkjUjjYXWxt
+         WgNaAiXbn7W0/MWi43jGHz6CU8LjA2+a8XTbKzhEjoephNPVI4ugYx6hxb+EzsHqa42J
+         EMT2mfwuxUo9BbBVWVeO6w8VV+9DaUUN00hqUKb7BmyUw6c6BDYsuNodoEmabO8apV90
+         8/RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ERIN0ZDeFPChco92LNU+j6MjTlKTGi0GeGyWd/t58BM=;
+        b=lVWJNgT5Pr51ZlE6mVdbf4sCXfqwfcArBTZH63R7EU7o3LUxWS2VnhEg/uvDYOsZcN
+         VYdP6rQiSJCg9DvQaNNyg/zUpvnoYWE1k2BoKstb4Oz/yQAyo+uszfzcF8zXuRl2Dlhy
+         OKWNkKvEZ+XVeW4jeE1TKiSZDjAOINrvQLf46maHqps4KeeUbyyQ4Z1V44A/ou52HyaG
+         ONho0JI1LVpmsLUQ5Eyx1o9V4wQziiQzihy4IJrUI5L4vmhdrkp12w8H8oE/CTWNa0AU
+         pMxH3wmdUsGtiUDya474J+ZEjbaTbvVRLsY0d09eH0hT37Cv1Kfj0PpxcaTrLluRpYk9
+         3EdA==
+X-Gm-Message-State: APjAAAXb+dvXv3/0cPrAMVCbeWtQQwTpiexdJOFBA9YKeN0a9qfeiee+
+        XxFamyy3yHjD6Z9KsoW46bs=
+X-Google-Smtp-Source: APXvYqxGj+XxLK84Ggmo3JK//tNnsWSHD7AifT0oNYTYY9ZyZm5rmyOryXoScTzYV+aoKzlymUbJmA==
+X-Received: by 2002:a62:4554:: with SMTP id s81mr68175071pfa.66.1555595134119;
+        Thu, 18 Apr 2019 06:45:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f87sm3957882pff.56.2019.04.18.06.45.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 06:45:32 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 06:45:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] hwmon: (ina3221) Add voltage conversion time
+ settings
+Message-ID: <20190418134531.GA20851@roeck-us.net>
+References: <20190417231210.5762-1-nicoleotsuka@gmail.com>
+ <20190417231210.5762-3-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <939a45a6-fc1b-0ac3-759b-0e7c3ce3d670@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417231210.5762-3-nicoleotsuka@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/19 12:42 PM, Casey Schaufler wrote:
-> On 4/17/2019 9:27 AM, Oleg Nesterov wrote:
->> On 04/17, Paul Moore wrote:
->>> On Wed, Apr 17, 2019 at 10:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
->>>> On 04/17, Paul Moore wrote:
->>>>> I'm tempted to simply return an error in selinux_setprocattr() if
->>>>> the task's credentials are not the same as its real_cred;
->>>> What about other modules? I have no idea what smack_setprocattr() is,
->>>> but it too does prepare_creds/commit creds.
->>>>
->>>> it seems that the simplest workaround should simply add the additional
->>>> cred == real_cred into proc_pid_attr_write().
->>> Yes, that is simple, but I worry about what other LSMs might want to
->>> do.  While I believe failing if the effective creds are not the same
->>> as the real_creds is okay for SELinux (possibly Smack too), I worry
->>> about what other LSMs may want to do.  After all,
->>> proc_pid_attr_write() doesn't change the the creds itself, that is
->>> something the specific LSMs do.
->> Yes, but if proc_pid_attr_write() is called with cred != real_cred then
->> something is already wrong?
->>
->> In fact, I think that something is already wrong if it is not called by
->> user-space directly. Too late to ask, but why is this /proc/self/attr/
->> magic not implemented via syscall(s) ?
+On Wed, Apr 17, 2019 at 04:12:10PM -0700, Nicolin Chen wrote:
+> The CONFIG register has two 3-bit fields for conversion time
+> settings of Bus-voltage and Shunt-voltage, respectively. The
+> conversion settings, along with averaging mode, allow users
+> to optimize available timing requirement.
 > 
-> Shell scripts, for one thing. It's a straightforward and appropriate
-> use of the /proc interface. System calls would require additional change
-> to existing programs, whereas using the /proc interface allows a good
-> deal to be done in the containing scripts.
+> This patch adds an 'update_interval' sysfs node through the
+> hwmon_chip_info of hwmon core. It reflects a total hardware
+> conversion time:
+>     samples * channels * (Bus + Shunt conversion times)
+> 
+> Though INA3221 supports different conversion time setups for
+> Bus and Shunt voltages, this patch only adds the support of
+> a unified setting for both conversion times, by dividing the
+> conversion time into two equal values.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-It is fairly awkward/fragile to use these interfaces from shell scripts 
-due to limitations of the interface (e.g. no partial writes, thereby 
-breaking if the shell splits up the data into multiple write() calls) 
-and due to the fact that most of the attributes (except for current) are 
-typically reset/cleared upon exec to prevent undue caller/callee 
-influence.  It works well enough for echo -n "somelabel" > 
-/proc/self/attr/current but not much else, and even that doesn't work 
-without the -n due to multiple write() calls.
+Applied to -next. I had to update the documentation for the .rst formatting
+changes. Hope I got it right.
 
-Just for the record, this functionality was originally implemented via 
-separate system calls at least for SELinux (in its original kernel 
-patch), then multiplexed through the single LSM security system call 
-upon porting to LSM (before merging to mainline), but viro and others 
-strongly favored using /proc as the interface for getting/setting any 
-new process attributes.  Understandable, but it does impose some 
-limitations, including a dependency on having a writable proc mount in 
-the namespace of any process that needs to set any of these attributes,
+Thanks,
+Guenter
+
+> ---
+> Changelog
+> v1->v2:
+>  * Merged two adjacent calls of regmap_update_bits().
+>  * Replaced CONFIG register read-back with tmp variable
+> 
+>  Documentation/hwmon/ina3221 |  9 ++++++
+>  drivers/hwmon/ina3221.c     | 58 ++++++++++++++++++++++++++++++++-----
+>  2 files changed, 59 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/hwmon/ina3221 b/Documentation/hwmon/ina3221
+> index ed3f22769d4b..3b05170112f0 100644
+> --- a/Documentation/hwmon/ina3221
+> +++ b/Documentation/hwmon/ina3221
+> @@ -38,3 +38,12 @@ in[456]_input           Shunt voltage(uV) for channels 1, 2, and 3 respectively
+>  samples                 Number of samples using in the averaging mode.
+>                            Supports the list of number of samples:
+>                            1, 4, 16, 64, 128, 256, 512, 1024
+> +update_interval         Data conversion time in millisecond, following:
+> +                          update_interval = C x S x (BC + SC)
+> +                              C: number of enabled channels
+> +                              S: number of samples
+> +                             BC: bus-voltage conversion time in millisecond
+> +                             SC: shunt-voltage conversion time in millisecond
+> +                          Affects both Bus- and Shunt-voltage conversion time.
+> +                          Note that setting update_interval to 0ms sets both BC
+> +                          and SC to 140 us (minimum conversion time).
+> diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
+> index 62040aac653c..e0637fed9585 100644
+> --- a/drivers/hwmon/ina3221.c
+> +++ b/drivers/hwmon/ina3221.c
+> @@ -144,19 +144,37 @@ static const int ina3221_avg_samples[] = {
+>  	1, 4, 16, 64, 128, 256, 512, 1024,
+>  };
+>  
+> -static inline int ina3221_wait_for_data(struct ina3221_data *ina)
+> +/* Converting update_interval in msec to conversion time in usec */
+> +static inline u32 ina3221_interval_ms_to_conv_time(u16 config, int interval)
+> +{
+> +	u32 channels = hweight16(config & INA3221_CONFIG_CHs_EN_MASK);
+> +	u32 samples_idx = INA3221_CONFIG_AVG(config);
+> +	u32 samples = ina3221_avg_samples[samples_idx];
+> +
+> +	/* Bisect the result to Bus and Shunt conversion times */
+> +	return DIV_ROUND_CLOSEST(interval * 1000 / 2, channels * samples);
+> +}
+> +
+> +/* Converting CONFIG register value to update_interval in usec */
+> +static inline u32 ina3221_reg_to_interval_us(u16 config)
+>  {
+> -	u32 channels = hweight16(ina->reg_config & INA3221_CONFIG_CHs_EN_MASK);
+> -	u32 vbus_ct_idx = INA3221_CONFIG_VBUS_CT(ina->reg_config);
+> -	u32 vsh_ct_idx = INA3221_CONFIG_VSH_CT(ina->reg_config);
+> -	u32 samples_idx = INA3221_CONFIG_AVG(ina->reg_config);
+> +	u32 channels = hweight16(config & INA3221_CONFIG_CHs_EN_MASK);
+> +	u32 vbus_ct_idx = INA3221_CONFIG_VBUS_CT(config);
+> +	u32 vsh_ct_idx = INA3221_CONFIG_VSH_CT(config);
+> +	u32 samples_idx = INA3221_CONFIG_AVG(config);
+>  	u32 samples = ina3221_avg_samples[samples_idx];
+>  	u32 vbus_ct = ina3221_conv_time[vbus_ct_idx];
+>  	u32 vsh_ct = ina3221_conv_time[vsh_ct_idx];
+> -	u32 wait, cvrf;
+>  
+>  	/* Calculate total conversion time */
+> -	wait = channels * (vbus_ct + vsh_ct) * samples;
+> +	return channels * (vbus_ct + vsh_ct) * samples;
+> +}
+> +
+> +static inline int ina3221_wait_for_data(struct ina3221_data *ina)
+> +{
+> +	u32 wait, cvrf;
+> +
+> +	wait = ina3221_reg_to_interval_us(ina->reg_config);
+>  
+>  	/* Polling the CVRF bit to make sure read data is ready */
+>  	return regmap_field_read_poll_timeout(ina->fields[F_CVRF],
+> @@ -197,6 +215,11 @@ static int ina3221_read_chip(struct device *dev, u32 attr, long *val)
+>  		regval = INA3221_CONFIG_AVG(ina->reg_config);
+>  		*val = ina3221_avg_samples[regval];
+>  		return 0;
+> +	case hwmon_chip_update_interval:
+> +		/* Return in msec */
+> +		*val = ina3221_reg_to_interval_us(ina->reg_config);
+> +		*val = DIV_ROUND_CLOSEST(*val, 1000);
+> +		return 0;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -322,6 +345,23 @@ static int ina3221_write_chip(struct device *dev, u32 attr, long val)
+>  		if (ret)
+>  			return ret;
+>  
+> +		/* Update reg_config accordingly */
+> +		ina->reg_config = tmp;
+> +		return 0;
+> +	case hwmon_chip_update_interval:
+> +		tmp = ina3221_interval_ms_to_conv_time(ina->reg_config, val);
+> +		idx = find_closest(tmp, ina3221_conv_time,
+> +				   ARRAY_SIZE(ina3221_conv_time));
+> +
+> +		/* Update Bus and Shunt voltage conversion times */
+> +		tmp = INA3221_CONFIG_VBUS_CT_MASK | INA3221_CONFIG_VSH_CT_MASK;
+> +		tmp = (ina->reg_config & ~tmp) |
+> +		      (idx << INA3221_CONFIG_VBUS_CT_SHIFT) |
+> +		      (idx << INA3221_CONFIG_VSH_CT_SHIFT);
+> +		ret = regmap_write(ina->regmap, INA3221_CONFIG, tmp);
+> +		if (ret)
+> +			return ret;
+> +
+>  		/* Update reg_config accordingly */
+>  		ina->reg_config = tmp;
+>  		return 0;
+> @@ -483,6 +523,7 @@ static umode_t ina3221_is_visible(const void *drvdata,
+>  	case hwmon_chip:
+>  		switch (attr) {
+>  		case hwmon_chip_samples:
+> +		case hwmon_chip_update_interval:
+>  			return 0644;
+>  		default:
+>  			return 0;
+> @@ -528,7 +569,8 @@ static umode_t ina3221_is_visible(const void *drvdata,
+>  
+>  static const struct hwmon_channel_info *ina3221_info[] = {
+>  	HWMON_CHANNEL_INFO(chip,
+> -			   HWMON_C_SAMPLES),
+> +			   HWMON_C_SAMPLES,
+> +			   HWMON_C_UPDATE_INTERVAL),
+>  	HWMON_CHANNEL_INFO(in,
+>  			   /* 0: dummy, skipped in is_visible */
+>  			   HWMON_I_INPUT,
