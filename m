@@ -2,103 +2,97 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0423C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE82C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BDD20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F386214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RToypm0L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIz5pksk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390161AbfDRTw7 (ORCPT
+        id S2390041AbfDRT6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:52:59 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33442 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRTw6 (ORCPT
+        Thu, 18 Apr 2019 15:58:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40115 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRT6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:52:58 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e5so2561406oii.0;
-        Thu, 18 Apr 2019 12:52:58 -0700 (PDT)
+        Thu, 18 Apr 2019 15:58:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c207so1573806pfc.7;
+        Thu, 18 Apr 2019 12:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MHnwyGfhVr9Zztuv2ApDOuCX8Y7zltAfnvrToemqRvQ=;
-        b=RToypm0LzA7aEPsdwcyZWsDpf7kcuyHilgD6PotVZegNUDJInGcPC/fDzBAYaIiy0x
-         AftRuV639VZM/qmxzzm5wsCFHk5FAdzTUOqozhwTOxqkp6rYjzj+UTukmFd8/fD/33Yk
-         jfpY1ja1LMNGV8HDnvlsTvc2KzGV3b+aJUl6lKcuBdKEnoge/hDSHtlTDsNnCgH9bc6m
-         p1r23wKO/Rt1yKM5j44oTmmoOwcHg04+U4D7aMakK1D/VFpDV36vZpndGFhf1h9Ig2di
-         4Y7R7+tmD7AQRVTtloegb8VhOpym7Fc8pw4VxWTprJg1ngV4BKa/oUscmzvJtYDDa8KY
-         bkbQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=5vClmzB5ruRG5DfpQI3+/6Tcg0frA3QH3vJ0qCG0ZNU=;
+        b=LIz5pkskdLDTvf/wpQtdZB/Rdb3xa6hScC/e0SIcu2CaAAmqoolajQgaIxB3XS92e8
+         ivmN4MYM6C6JpabkO9zXBwHUAl0bMfvZaTO0KI2ylmuV+yE8C09qbN6uQBtccQ2iUbEW
+         6gMp3VbJEjR0iCRLD3tsNHcPZ3UaDn6Dc4bZ2suoddCPXgNAvum5AC04rixylKsRX+Ct
+         JimXJmeBemDobvjQo7ZeRetTLLKtLdqIRLc686g4ag58bNpSKMOWtBpc0oiYJDKzsTId
+         IKU3mcxm1P9YugE5CL889/DQJrZcO0N3ZHS7XIiwwJY1Llhr5AZGAH6+zQCffXoEGSNI
+         phLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MHnwyGfhVr9Zztuv2ApDOuCX8Y7zltAfnvrToemqRvQ=;
-        b=OVVcC8Ztn6jLPFvwdOPLEtkmVggQpnKAte+ln8sSNUBGlfKqa0EI2wf2lI/kShBUzE
-         UtAyzxcpIQshzZQjlPFlqxQRwQgavy+mxxNl5mnxGjmYwP++yyfnvMxKljJZcuDUZkl4
-         mPdAzVyh+/DgmyxHM9fZETL0WZd+hU+A2/kfoxMq5bP19cXedguz3VlvoApJcKqhpzsm
-         XS1qTxrYSDSgY8bL9cXYsf/wfugUqrXP/P9nl2wj1DBfJQ6Cq3HjrIkUh/YMo8H6JE0C
-         uHUDcJpP/Ki7kZM7Jzs0aF+FjU70dJmnl1UxtfoQzFwDo1+9OnHAe3rOMJA6yUcoZ1VY
-         IZ4A==
-X-Gm-Message-State: APjAAAWxZQpHr/HXNrplVnN/wnLvpER2gWV2CpWzZbo4JQQNnDi+6hcE
-        D+g2DcSzBcD2vSMRWmalJGEiryNDGya6sY7KoD+TgJW6
-X-Google-Smtp-Source: APXvYqzhRGDYdQYcsQ0iJMDM/aYQoo017EmckJ6XW6iArqLhjBj6Bpkndhtr7fXXiXm4jsqSoVJyGr+edJFUU08wgF4=
-X-Received: by 2002:aca:ecd1:: with SMTP id k200mr3131053oih.15.1555617177999;
- Thu, 18 Apr 2019 12:52:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190417204355.469-1-jbrunet@baylibre.com> <20190417204355.469-4-jbrunet@baylibre.com>
-In-Reply-To: <20190417204355.469-4-jbrunet@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 18 Apr 2019 21:52:47 +0200
-Message-ID: <CAFBinCCLr2-zBhAUcYsyqF1f0hvH03zoXd9SmSjMU5aA3K7Ytw@mail.gmail.com>
-Subject: Re: [PATCH 3/7] mmc: meson-gx: irq is not shared
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=5vClmzB5ruRG5DfpQI3+/6Tcg0frA3QH3vJ0qCG0ZNU=;
+        b=dLzF+A4PN+fM0dkSLuvZiN254dhMtEcnQHNAqK3hh0VhQdkcX2nc+/Z4U/b5rIGUUF
+         ux+EsrLoFgGltE9yjls9aW1GqU+H69fpPNS1VzTvYXTsBzNOO44CyvVTCSFdMYwaHSHs
+         qaIzpjMAd/a/GTJjrMPaH3pQ2HYGS0FOTHhzkNyJWpnXrirehD7iwYqTZ2v3QjF97H4q
+         acqim/gz6oaytz+cEQNAKaaXQC5KH5BXf6+KA51LJJ/O1UbsxdLOGbooP6yBfwMFzbPz
+         GkCrjbzUeD7feIgajP4wYrDXIaXRLHe4p9hA+ahjVKbM82RbaWXOYQWZdp45NExWW27L
+         fCfg==
+X-Gm-Message-State: APjAAAVs/rZcy//3kcqw7IsBFzDgh89r0AOIDbFxXAqkUaTBJ80CbnHs
+        zRqwng7j7gnKXBy2T6Cep6iuhc3acb0=
+X-Google-Smtp-Source: APXvYqz9KqL2njowruKOC8kSeVieLJgnycGmub6FNz59l+ivj2LAy9fGa31n4qrBCOJcJJmyVt89KA==
+X-Received: by 2002:a62:565c:: with SMTP id k89mr97032823pfb.175.1555617503748;
+        Thu, 18 Apr 2019 12:58:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p66sm5820800pfb.4.2019.04.18.12.58.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 12:58:22 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-pm@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 0/6] thermal: Introduce devm_thermal_of_cooling_device_register
+Date:   Thu, 18 Apr 2019 12:58:14 -0700
+Message-Id: <1555617500-10862-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
+thermal_of_cooling_device_register() and thermal_cooling_device_register()
+are typically called from driver probe functions, and
+thermal_cooling_device_unregister() is called from remove functions. This
+makes both a perfect candidate for device managed functions.
 
-On Wed, Apr 17, 2019 at 10:44 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> There is no reason for another device to request the MMC irq. It should
-> only be used the MMC device.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/mmc/host/meson-gx-mmc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-> index 8b690ecde4c5..3df50b53f834 100644
-> --- a/drivers/mmc/host/meson-gx-mmc.c
-> +++ b/drivers/mmc/host/meson-gx-mmc.c
-> @@ -1328,7 +1328,7 @@ static int meson_mmc_probe(struct platform_device *pdev)
->                host->regs + SD_EMMC_IRQ_EN);
->
->         ret = request_threaded_irq(host->irq, meson_mmc_irq,
-> -                                  meson_mmc_irq_thread, IRQF_SHARED,
-> +                                  meson_mmc_irq_thread, IRQF_ONESHOT,
->                                    dev_name(&pdev->dev), host);
-the commit message reads as if the intention is to remove the IRQF_SHARED flag.
-however, the commit message doesn't mention IRQF_ONESHOT (which was
-not set before).
+Introduce devm_thermal_of_cooling_device_register(). This function can
+also be used to replace thermal_cooling_device_register() by passing a NULL
+pointer as device node. The new function requires both struct device *
+and struct device_node * as parameters since the struct device_node *
+parameter is not always identical to dev->of_node.
 
-if you used IRQF_ONESHOT on purpose then please mention it in the
-patch description.
+Don't introduce a device managed remove function since it is not needed
+at this point.
 
-
-Martin
+The patch series introduces the new function and then converts various
+hwmon drivers to use it.
