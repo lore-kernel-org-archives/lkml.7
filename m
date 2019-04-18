@@ -2,98 +2,96 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76133C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F388C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E0421479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6825221479
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CMJ5vL4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388423AbfDRJZc (ORCPT
+        id S2388438AbfDRJ0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:25:32 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:53659 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbfDRJZb (ORCPT
+        Thu, 18 Apr 2019 05:26:43 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:55316 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfDRJ0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:25:31 -0400
-X-Greylist: delayed 625 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 05:25:29 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x3I9EwJE015456
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Apr 2019 11:14:58 +0200
-Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x3I9Ev1n009836;
-        Thu, 18 Apr 2019 11:14:57 +0200
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Netdev List <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Su Bao Cheng <baocheng.su@siemens.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH] stmmac: pci: Adjust IOT2000 matching
-Message-ID: <5a547510-2605-bae5-bd58-ab4aff28840d@siemens.com>
-Date:   Thu, 18 Apr 2019 11:14:56 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Thu, 18 Apr 2019 05:26:43 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x3I9QLSv014251;
+        Thu, 18 Apr 2019 18:26:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x3I9QLSv014251
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555579582;
+        bh=mCidIO2kdLrsu0lOZK1cDW6X++3CEu5ocBDg6MWSPR4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CMJ5vL4wUaDAEY8nw9DL3aAJaFwO934GUe/XOUTdgGHQwZoq71nrdD60IdCWJ5XQ9
+         xo2gXg1m4nq9RcIuejPHLntqaAawQuifqsSxne+ZoFeSKsbNmffi0wmVFu5SN1Sebf
+         iqfZn6b/vMYmP6b7m9OHZzrhlHmzi7YC45nkwKzrGdUnGZksylcEZ7t/v5fOPCc6Du
+         voeeTuq8qVcQt4nECgUirNQPPBQ9LerO+Jn67fdNqMs+fXVm77NmZV6nnc4t5eO82+
+         W3GHlJL8lNpJ9+E3ZW9C0G9K2ZKixgAGnkf3BKzHWgkkxUbLz4fYi9WGWkN5rbzzdb
+         rBemZqTkSg+Lw==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id k32so556985uae.3;
+        Thu, 18 Apr 2019 02:26:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAWjtiOyWH6yTl8jDdrwqlxZBjss9ev0JIC2stQPArJVTeOIMG4k
+        U+leSD6KXLDpmMbXXBHl1uAA3IPiD29H1lkpGGE=
+X-Google-Smtp-Source: APXvYqxVdaWJjfJJLAeJy/Oqm2hJrnuAFv6MWyLZLgzi43sa+u93+LQ1lWM4rY0k62AHI1snDMQ9LOyYIufRODczdNA=
+X-Received: by 2002:ab0:7008:: with SMTP id k8mr49427876ual.40.1555579581021;
+ Thu, 18 Apr 2019 02:26:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1555382110.git.mchehab+samsung@kernel.org> <5cfeb21a8841c1e029e8396bdaa7cd55ac0b08a2.1555382110.git.mchehab+samsung@kernel.org>
+In-Reply-To: <5cfeb21a8841c1e029e8396bdaa7cd55ac0b08a2.1555382110.git.mchehab+samsung@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 18 Apr 2019 18:25:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQUGkW=Mnz-EtUkm=7uBpGLZNgO+3MUTmkWOggo+_eHjw@mail.gmail.com>
+Message-ID: <CAK7LNAQUGkW=Mnz-EtUkm=7uBpGLZNgO+3MUTmkWOggo+_eHjw@mail.gmail.com>
+Subject: Re: [PATCH 18/57] docs: kbuild: convert it to ReST output
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Bao Cheng <baocheng.su@siemens.com>
+On Tue, Apr 16, 2019 at 12:01 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> The kbuild documentation clearly shows that the documents
+> there are written at different times: some use markdown,
+> some use their own peculiar logic to split sections.
+>
+> Convert everything to ReST without affecting too much
+> the author's style and avoiding adding uneeded markups.
 
-Since there are more IOT2040 variants with identical hardware but
-different asset tags, the asset tag matching should be adjusted to
-support them.
+Sorry for my ignorance, but shouldn't ReST use
+the extension '.rst' instead of '.txt' ?
 
-For the board name "SIMATIC IOT2000", currently there are 2 types of
-hardware, IOT2020 and IOT2040. The IOT2020 is identified by its unique
-asset tag. Match on it first. If we then match on the board name only,
-we will catch all IOT2040 variants. In the future there will be no other
-devices with the "SIMATIC IOT2000" DMI board name but different
-hardware.
 
-Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index d819e8eaba12..cc1e887e47b5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -159,6 +159,12 @@ static const struct dmi_system_id quark_pci_dmi[] = {
- 		},
- 		.driver_data = (void *)&galileo_stmmac_dmi_data,
- 	},
-+	/*
-+	 * There are 2 types of SIMATIC IOT2000: IOT20202 and IOT2040.
-+	 * The asset tag "6ES7647-0AA00-0YA2" is only for IOT2020 which
-+	 * has only one pci network device while other asset tags are
-+	 * for IOT2040 which has two.
-+	 */
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
-@@ -170,8 +176,6 @@ static const struct dmi_system_id quark_pci_dmi[] = {
- 	{
- 		.matches = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
--			DMI_EXACT_MATCH(DMI_BOARD_ASSET_TAG,
--					"6ES7647-0AA00-1YA2"),
- 		},
- 		.driver_data = (void *)&iot2040_stmmac_dmi_data,
- 	},
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/kbuild/headers_install.txt      |   5 +-
+>  Documentation/kbuild/kbuild.txt               | 119 ++--
+>  Documentation/kbuild/kconfig-language.txt     | 232 ++++----
+>  .../kbuild/kconfig-macro-language.txt         |  37 +-
+>  Documentation/kbuild/kconfig.txt              | 136 +++--
+>  Documentation/kbuild/makefiles.txt            | 518 +++++++++++-------
+>  Documentation/kbuild/modules.txt              | 166 +++---
+>  7 files changed, 720 insertions(+), 493 deletions(-)
+>
+
 -- 
-2.16.4
+Best Regards
+Masahiro Yamada
