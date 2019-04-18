@@ -2,37 +2,38 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	URIBL_RHS_DOB,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB597C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E0DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE4A21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1822184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388709AbfDRKBL (ORCPT
+        id S2388694AbfDRKBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 06:01:11 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:37425 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388683AbfDRKBI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 06:01:08 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:49113 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388664AbfDRKBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 06:01:06 -0400
+X-Originating-IP: 109.212.207.226
 Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8720C240015;
-        Thu, 18 Apr 2019 10:01:05 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 27F5DFF808;
+        Thu, 18 Apr 2019 10:01:04 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Paul Cercueil <paul@crapouillou.net>,
         Mathieu Malaterre <malat@debian.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 6/7] rtc: jz4740: rework invalid time detection
-Date:   Thu, 18 Apr 2019 12:00:44 +0200
-Message-Id: <20190418100045.29288-6-alexandre.belloni@bootlin.com>
+Subject: [PATCH 5/7] rtc: jz4740: use dev_pm_set_wake_irq() to simplify code
+Date:   Thu, 18 Apr 2019 12:00:43 +0200
+Message-Id: <20190418100045.29288-5-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190418100045.29288-1-alexandre.belloni@bootlin.com>
 References: <20190418100045.29288-1-alexandre.belloni@bootlin.com>
@@ -43,69 +44,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The scratchpad register is used to detect an invalid time when power to the
-RTC has been lost. Instead of deleting that precious information and set
-the time to the UNIX epoch, forward it to userspace.
+Use dev_pm_set_wake_irq() to set the RTC as a wakeup source for suspend.
+This allows to remove the whole dev_pm_ops structure.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-jz4740.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ drivers/rtc/rtc-jz4740.c | 37 +++++++------------------------------
+ 1 file changed, 7 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index fa15ad9fbe13..c9e16d857fa8 100644
+index 91ccb45bb886..fa15ad9fbe13 100644
 --- a/drivers/rtc/rtc-jz4740.c
 +++ b/drivers/rtc/rtc-jz4740.c
-@@ -157,6 +157,9 @@ static int jz4740_rtc_read_time(struct device *dev, struct rtc_time *time)
- 	uint32_t secs, secs2;
- 	int timeout = 5;
+@@ -20,6 +20,7 @@
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
+ #include <linux/reboot.h>
+ #include <linux/rtc.h>
+ #include <linux/slab.h>
+@@ -346,6 +347,12 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
  
-+	if (jz4740_rtc_reg_read(rtc, JZ_REG_RTC_SCRATCHPAD) != 0x12345678)
-+		return -EINVAL;
-+
- 	/* If the seconds register is read while it is updated, it can contain a
- 	 * bogus value. This can be avoided by making sure that two consecutive
- 	 * reads have the same value.
-@@ -180,8 +183,13 @@ static int jz4740_rtc_read_time(struct device *dev, struct rtc_time *time)
- static int jz4740_rtc_set_time(struct device *dev, struct rtc_time *time)
- {
- 	struct jz4740_rtc *rtc = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SEC, rtc_tm_to_time64(time));
-+	if (ret)
+ 	device_init_wakeup(&pdev->dev, 1);
+ 
++	ret = dev_pm_set_wake_irq(&pdev->dev, rtc->irq);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to set wake irq: %d\n", ret);
 +		return ret;
- 
--	return jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SEC, rtc_tm_to_time64(time));
-+	return jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SCRATCHPAD, 0x12345678);
++	}
++
+ 	rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
+ 	if (IS_ERR(rtc->rtc)) {
+ 		ret = PTR_ERR(rtc->rtc);
+@@ -403,35 +410,6 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
+ 	return 0;
  }
  
- static int jz4740_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-@@ -308,7 +316,6 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
- {
- 	int ret;
- 	struct jz4740_rtc *rtc;
--	uint32_t scratchpad;
- 	struct resource *mem;
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
- 	const struct of_device_id *of_id = of_match_device(
-@@ -376,16 +383,6 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	scratchpad = jz4740_rtc_reg_read(rtc, JZ_REG_RTC_SCRATCHPAD);
--	if (scratchpad != 0x12345678) {
--		ret = jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SCRATCHPAD, 0x12345678);
--		ret = jz4740_rtc_reg_write(rtc, JZ_REG_RTC_SEC, 0);
--		if (ret) {
--			dev_err(&pdev->dev, "Could not write to RTC registers\n");
--			return ret;
--		}
--	}
+-#ifdef CONFIG_PM
+-static int jz4740_rtc_suspend(struct device *dev)
+-{
+-	struct jz4740_rtc *rtc = dev_get_drvdata(dev);
 -
- 	if (np && of_device_is_system_power_controller(np)) {
- 		if (!pm_power_off) {
- 			/* Default: 60ms */
+-	if (device_may_wakeup(dev))
+-		enable_irq_wake(rtc->irq);
+-	return 0;
+-}
+-
+-static int jz4740_rtc_resume(struct device *dev)
+-{
+-	struct jz4740_rtc *rtc = dev_get_drvdata(dev);
+-
+-	if (device_may_wakeup(dev))
+-		disable_irq_wake(rtc->irq);
+-	return 0;
+-}
+-
+-static const struct dev_pm_ops jz4740_pm_ops = {
+-	.suspend = jz4740_rtc_suspend,
+-	.resume  = jz4740_rtc_resume,
+-};
+-#define JZ4740_RTC_PM_OPS (&jz4740_pm_ops)
+-
+-#else
+-#define JZ4740_RTC_PM_OPS NULL
+-#endif  /* CONFIG_PM */
+-
+ static const struct platform_device_id jz4740_rtc_ids[] = {
+ 	{ "jz4740-rtc", ID_JZ4740 },
+ 	{ "jz4780-rtc", ID_JZ4780 },
+@@ -443,7 +421,6 @@ static struct platform_driver jz4740_rtc_driver = {
+ 	.probe	 = jz4740_rtc_probe,
+ 	.driver	 = {
+ 		.name  = "jz4740-rtc",
+-		.pm    = JZ4740_RTC_PM_OPS,
+ 		.of_match_table = of_match_ptr(jz4740_rtc_of_match),
+ 	},
+ 	.id_table = jz4740_rtc_ids,
 -- 
 2.20.1
 
