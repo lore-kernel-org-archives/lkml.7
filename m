@@ -2,163 +2,141 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C158AC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E18C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C35217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DAD218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfTkhjmi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWEA3zXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387826AbfDRBzN (ORCPT
+        id S2387869AbfDRBzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 21:55:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38348 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730037AbfDRBzN (ORCPT
+        Wed, 17 Apr 2019 21:55:25 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38452 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfDRBzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 21:55:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so337803pfo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 18:55:13 -0700 (PDT)
+        Wed, 17 Apr 2019 21:55:24 -0400
+Received: by mail-yb1-f194.google.com with SMTP id w206so296783ybg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 18:55:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=hRag2r+cRQClvnbXFRGifKjpch/VB6yXiPd+MKpC/OI=;
-        b=HfTkhjmiPibg78nX7rz+t//QBE0dtUWyFpG2qsbR+7T6k1NxDW7Wcww4EkaWRCwWuI
-         4t6n/XR7YKhU6Ip7uJcS4Jdp4v4O8QR5IUOTsz+r/qXNIEDlQwFbRg8VjOrBAvrbMowj
-         vNF3b94lIHyNeJlcYW5YZfYNzTEbtLl6feJXmZaGePfGHM/2HTnSu/YQIgENM99PENOn
-         55rH17hWB9tNbF3xJYl9HZfeXhTZIT72G09/zQMsggdmQdruuSaEwxvhrZ5NXoe85lWQ
-         bWjIUCHNNMSgsjXAB2ssI31LELp8oh6A9v83Jmuj9cOTzkkY4FubJvXYsobUdFCvcWd+
-         Dm2A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KCQ+0ux3f2lhz2JQz+sODUn7gTy6oTF+cvFWZuiFK1k=;
+        b=lWEA3zXd1uUNwv1sfs/UBAcFEGV7gzD1mipY5IZjzjsWevuBoSGre2ffvv0LXhiX4/
+         il0RgAxHngPy2TypBkVVpVhebvUuicEOsLe69KHZgTg2Zena0Fg5SHPJGeGcJUlix0KX
+         weKb4jER8526L50m+2MUd9bNeIw/1seMQ5k/0Z9qBKWVfB5W7YQF7LwAeFzykqOcPsyl
+         2EEp3IbR6TfHeeiJW5IAuOiQa+KVTjR9+cqCX6OraglnF6lFsaoXFgMyDt6OtNR3uKYk
+         0WCmXgoVwQMwrGnETEOjRHfIB7v11L7+Pesh8yrqNVI1oU/z4JfX2WzzMZLRH801nTP+
+         3YwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=hRag2r+cRQClvnbXFRGifKjpch/VB6yXiPd+MKpC/OI=;
-        b=tFLHp82AN4/kcgmVnz0uCEIr0cqf72Pk0hiWKhSQYf4H6+ZyPwQhApFwe7h1PAQsQ+
-         zrUI0yir/QPZVGarVehUaLtU/jGhBKke3j1gSdBCNvZjy9jnsz7bajdeUiIHfFqw18vG
-         /3lrlE6k8W5mtM1oUB7+7IDi5TFsvVA4P44WGb9qPivZ8iOQhDujUHWpy7dh0qeh0pOA
-         8fFxse30HqjdLVjneCMzpHImPyj1V/eGS7N7YLrYAV9FiN1lJmIuTSGFbD0Cc/qufQ3d
-         OzEa1yiB83mMtybJtlPnPirTRQlouhfn7xBT6F0VpPEatZBZ+KD3J+/EAbSsB21Ekx/H
-         FT2w==
-X-Gm-Message-State: APjAAAWEFnvpB04fyxtnWCU6Avbn1Pa/4ZK4ppEvpt/GtSanrEwLulFk
-        MHzVO+ADMNt5kbClhrBHLQO6G4l3
-X-Google-Smtp-Source: APXvYqyHjfF93x3cbVWeXKbtshSYY17+rtsxNfJ8sSQorfiydS6oA2SxUH+sZLHd4xB5kswQ1rmvdQ==
-X-Received: by 2002:a63:195e:: with SMTP id 30mr85422621pgz.312.1555552512900;
-        Wed, 17 Apr 2019 18:55:12 -0700 (PDT)
-Received: from localhost (14-202-58-58.tpgi.com.au. [14.202.58.58])
-        by smtp.gmail.com with ESMTPSA id k79sm791108pfj.28.2019.04.17.18.55.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 18:55:11 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 11:55:06 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3] powerpc/pseries: Only wait for dying CPU after call to
- rtas_stop_self()
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-References: <20190311193517.23756-1-bauerman@linux.ibm.com>
-        <87bm1dfog4.fsf@morokweng.localdomain>
-        <1555389147.okxbj1prw2.astroid@bobo.none>
-        <87r2a0jffq.fsf@morokweng.localdomain>
-In-Reply-To: <87r2a0jffq.fsf@morokweng.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KCQ+0ux3f2lhz2JQz+sODUn7gTy6oTF+cvFWZuiFK1k=;
+        b=IkyEUUFBSgz1JVUpyUq3OevxYwijOpr5koEdK/4mHeElNKOTzhMsNso761YElsvWRC
+         CWc4jMSIareYHS4H2OlfhqWXO1LZeez15veaRbDoKJuPauB/cWyZd4i46hLeaZ6M1Z6w
+         dlGy6FQ6yIyksDsnJ32mBBSPmRUUOT84E5YzMFU7DLuHgOeR8HdoVa9ta6HO73eEuAmT
+         rohuWm37SH9dTy9qS1zfOBz8HKjZqw9ZZnge8pM0a4q40GNuD9OzqfS3NBNF6giPWhhG
+         byK+Rh3SMA8gvygCQtYvt80kMLrI2XxNyXqUtPsxEXGefTx0YsSawmdi0PsgpPnecGP8
+         eG7Q==
+X-Gm-Message-State: APjAAAWeJA7jHfb86xlL6SykAIGmw/LKINBqygSBmOIbjz5cte8O3ig/
+        20IWVr8h+11KPRYt4h2VLXDw0VYUi/+5Rm/OPQ7t0A==
+X-Google-Smtp-Source: APXvYqyG3Qa/sADVmtgfR8FKB8zQ5pNAcFMTM0KK3pvwUWD2+SmxAIyLgj1W5jy5fx0yF+lk8/gSatle6wvaeXaR8H8=
+X-Received: by 2002:a25:2bc4:: with SMTP id r187mr52894861ybr.150.1555552523533;
+ Wed, 17 Apr 2019 18:55:23 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1555552271.zy2w4ddjqe.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190417215434.25897-1-guro@fb.com> <20190417215434.25897-5-guro@fb.com>
+ <CALvZod5K8SM2EQFH1WM9bbwWBtyXWb_PvzJGvF5dg1Z=bdR7zg@mail.gmail.com> <20190418003850.GA13977@tower.DHCP.thefacebook.com>
+In-Reply-To: <20190418003850.GA13977@tower.DHCP.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 17 Apr 2019 18:55:12 -0700
+Message-ID: <CALvZod6UiTeN40RgpE-4zE5zagSifqh3o_AXaw8o-ubVUWf=4w@mail.gmail.com>
+Subject: Re: [PATCH 4/5] mm: rework non-root kmem_cache lifecycle management
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Roman Gushchin <guroan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thiago Jung Bauermann's on April 18, 2019 11:00 am:
->=20
-> Hello Nick,
->=20
-> Thank you very much for reviewing this patch!
->=20
-> Nicholas Piggin <npiggin@gmail.com> writes:
->=20
->> Thiago Jung Bauermann's on April 11, 2019 9:08 am:
->>>
->>> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
->>>
->>>> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/power=
-pc/platforms/pseries/hotplug-cpu.c
->>>> index 97feb6e79f1a..ac6dc35ab829 100644
->>>> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
->>>> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
->>>> @@ -214,13 +214,22 @@ static void pseries_cpu_die(unsigned int cpu)
->>>>  			msleep(1);
->>>>  		}
->>>>  	} else if (get_preferred_offline_state(cpu) =3D=3D CPU_STATE_OFFLINE=
-) {
->>>> +		/*
->>>> +		 * If the current state is not offline yet, it means that the
->>>> +		 * dying CPU (which is either in pseries_mach_cpu_die() or in
->>>> +		 * the process of getting there) didn't have a chance yet to
->>>> +		 * call rtas_stop_self() and therefore it's too early to query
->>>> +		 * if the CPU is stopped.
->>>> +		 */
->>>> +		spin_event_timeout(get_cpu_current_state(cpu) =3D=3D CPU_STATE_OFFL=
-INE,
->>>> +				   100000, 100);
->>
->> If the CPU state does not go to offline here, you should give up and
->> return online, right? Otherwise I think query-cpu-stopped-state can
->> get confused by CPUs in idle and you get a false positive.
->=20
-> Can it get confused? My impression from reading the definition for
-> query-cpu-stopped-state in the PAPR is that it will simply return a
-> CPU_status value of 2 in that case, meaning that "the processor thread
-> is not in the RTAS stopped state", but I don't know much about this.
+On Wed, Apr 17, 2019 at 5:39 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Wed, Apr 17, 2019 at 04:41:01PM -0700, Shakeel Butt wrote:
+> > On Wed, Apr 17, 2019 at 2:55 PM Roman Gushchin <guroan@gmail.com> wrote:
+> > >
+> > > This commit makes several important changes in the lifecycle
+> > > of a non-root kmem_cache, which also affect the lifecycle
+> > > of a memory cgroup.
+> > >
+> > > Currently each charged slab page has a page->mem_cgroup pointer
+> > > to the memory cgroup and holds a reference to it.
+> > > Kmem_caches are held by the cgroup. On offlining empty kmem_caches
+> > > are freed, all other are freed on cgroup release.
+> >
+> > No, they are not freed (i.e. destroyed) on offlining, only
+> > deactivated. All memcg kmem_caches are freed/destroyed on memcg's
+> > css_free.
+>
+> You're right, my bad. I was thinking about the corresponding sysfs entry
+> when was writing it. We try to free it from the deactivation path too.
+>
+> >
+> > >
+> > > So the current scheme can be illustrated as:
+> > > page->mem_cgroup->kmem_cache.
+> > >
+> > > To implement the slab memory reparenting we need to invert the scheme
+> > > into: page->kmem_cache->mem_cgroup.
+> > >
+> > > Let's make every page to hold a reference to the kmem_cache (we
+> > > already have a stable pointer), and make kmem_caches to hold a single
+> > > reference to the memory cgroup.
+> >
+> > What about memcg_kmem_get_cache()? That function assumes that by
+> > taking reference on memcg, it's kmem_caches will stay. I think you
+> > need to get reference on the kmem_cache in memcg_kmem_get_cache()
+> > within the rcu lock where you get the memcg through css_tryget_online.
+>
+> Yeah, a very good question.
+>
+> I believe it's safe because css_tryget_online() guarantees that
+> the cgroup is online and won't go offline before css_free() in
+> slab_post_alloc_hook(). I do initialize kmem_cache's refcount to 1
+> and drop it on offlining, so it protects the online kmem_cache.
+>
 
-In QEMU (non-KVM) mode, qcss I think may get confused between H_CEDE
-and rtas-stop-self. KVM mode may be okay because H_CEDE is handled in
-the kernel.
+Let's suppose a thread doing a remote charging calls
+memcg_kmem_get_cache() and gets an empty kmem_cache of the remote
+memcg having refcnt equal to 1. That thread got a reference on the
+remote memcg but no reference on the kmem_cache. Let's suppose that
+thread got stuck in the reclaim and scheduled away. In the meantime
+that remote memcg got offlined and decremented the refcnt of all of
+its kmem_caches. The empty kmem_cache which the thread stuck in
+reclaim have pointer to can get deleted and may be using an already
+destroyed kmem_cache after coming back from reclaim.
 
->> That race can still happen, we would really need a sequence count check
->> over current CPU state to ensure we got a race-free qcss value, but at
->> least a check here should make the race implausible to hit.
->=20
-> Actually, since rtas_stop_self() panics if the processor fails to stop
-> and also since callers of pseries_cpu_die()=C2=B9 already assume that it =
-is
-> going to succeed in stopping the CPU (given that the function returns
-> void and can't signal an error), a more straightforward way of
-> eliminating the race is to simply do this:
->=20
-> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/=
-platforms/pseries/hotplug-cpu.c
-> index 97feb6e79f1a..2331a609f48f 100644
-> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-> @@ -215,7 +215,7 @@ static void pseries_cpu_die(unsigned int cpu)
->                 }
->         } else if (get_preferred_offline_state(cpu) =3D=3D CPU_STATE_OFFL=
-INE) {
->=20
-> -               for (tries =3D 0; tries < 25; tries++) {
-> +               while (true) {
->                         cpu_status =3D smp_query_cpu_stopped(pcpu);
->                         if (cpu_status =3D=3D QCSS_STOPPED ||
->                             cpu_status =3D=3D QCSS_HARDWARE_ERROR)
->=20
->=20
-> What do you think?
+I think the above situation is possible unless the thread gets the
+reference on the kmem_cache in memcg_kmem_get_cache().
 
-Yeah I think that may be a good idea, just makes things much simpler.
-
-Thanks,
-Nick
-
-=
+Shakeel
