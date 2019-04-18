@@ -2,64 +2,57 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CAEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8E5218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6939C218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610896;
-	bh=DBnQ4szIpoQUFU+eGDdcQxfjFzxpWdSwtnTqodU9Z8w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=a1/mbko3zMmH3cC2uFYxc/H/ewugRfsrslbkqlxiFy3CU1lD+aRxOMXZxcpt+Xzk7
-	 hfzUYZgoChy1S3w485Gw+Tg0swQ3rnQ68SJhH1MsF1AdUespUaaIkUtjaa1513kWX7
-	 8K7gta/44ZKsmM2HTZDkz6LaI4xowfCzI5pq71BU=
+	s=default; t=1555610898;
+	bh=FytjivP7QnZyfloiAHYpM7KVq0jA3Hfod2kRkSAXdHU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tDLb87CJdnIc4Pts11IAa3oBzTvTLq6uLLCqko0wqBEDsyFgyL68A9HH1h+VCC2Da
+	 GbbQAzusbBybSYMYRZzSs1J7M8xWv6VJdwJTIm0UkA+XpjSay4T+pNKXyC1kmb+89f
+	 oYNb+5BrB6065V69g5vi83XcvDGv9YWgKyr05Lns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391750AbfDRSIO (ORCPT
+        id S2391762AbfDRSIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39234 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391734AbfDRSIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:10 -0400
+        id S2391734AbfDRSIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 960B7217FA;
-        Thu, 18 Apr 2019 18:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2F83218A6;
+        Thu, 18 Apr 2019 18:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610889;
-        bh=DBnQ4szIpoQUFU+eGDdcQxfjFzxpWdSwtnTqodU9Z8w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bBMW+CORS0wCaB7jlCmPOWntFA4UaRatU0EDwGz7jFdmwHoGwHOjkBcc1yAZOP11O
-         CuQTMX8xzhqcCmPO7MlfOzshoBtzpj9G5mAB21tRdqxtd+T1GpXwBM46WItKZqLF+H
-         pZKZALCqwLYE6HKYqqVFVJ4pXnv3dSczpz9Z0x7M=
+        s=default; t=1555610894;
+        bh=FytjivP7QnZyfloiAHYpM7KVq0jA3Hfod2kRkSAXdHU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XC537udvD1j0kRm3u1CDn7fEd1hwChnx4wwK4+RsYYqNeNehv1KJ90pUVKfsleD+A
+         q3zayApBWludqj1W7KpQJW7xNn3ZN4bAsHI8V+4qJHKKtCcvsyOYej/GNZMBwxQs0o
+         zbUfNMeJ6n+zs9S8NT8zX7avzhLfx/PBKLD/twUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/50] 4.9.170-stable review
-Date:   Thu, 18 Apr 2019 19:57:11 +0200
-Message-Id: <20190418160422.455656724@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 32/50] f2fs: fix to do sanity check with current segment number
+Date:   Thu, 18 Apr 2019 19:57:43 +0200
+Message-Id: <20190418160426.638791777@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+References: <20190418160422.455656724@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.170-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.170-rc1
-X-KernelTest-Deadline: 2019-04-20T16:04+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,251 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.170 release.
-There are 50 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+[ Upstream commit 042be0f849e5fc24116d0afecfaf926eed5cac63 ]
 
-Responses should be made by Sat Apr 20 16:03:22 UTC 2019.
-Anything received after that time might be too late.
+https://bugzilla.kernel.org/show_bug.cgi?id=200219
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.170-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+Reproduction way:
+- mount image
+- run poc code
+- umount image
 
-thanks,
+F2FS-fs (loop1): Bitmap was wrongly set, blk:15364
+------------[ cut here ]------------
+kernel BUG at /home/yuchao/git/devf2fs/segment.c:2061!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 2 PID: 17686 Comm: umount Tainted: G        W  O      4.18.0-rc2+ #39
+Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+EIP: update_sit_entry+0x459/0x4e0 [f2fs]
+Code: e8 1c b5 fd ff 0f 0b 0f 0b 8b 45 e4 c7 44 24 08 9c 7a 6c f8 c7 44 24 04 bc 4a 6c f8 89 44 24 0c 8b 06 89 04 24 e8 f7 b4 fd ff <0f> 0b 8b 45 e4 0f b6 d2 89 54 24 10 c7 44 24 08 60 7a 6c f8 c7 44
+EAX: 00000032 EBX: 000000f8 ECX: 00000002 EDX: 00000001
+ESI: d7177000 EDI: f520fe68 EBP: d6477c6c ESP: d6477c34
+DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: b7fbe000 CR3: 2a99b3c0 CR4: 000406f0
+Call Trace:
+ f2fs_allocate_data_block+0x124/0x580 [f2fs]
+ do_write_page+0x78/0x150 [f2fs]
+ f2fs_do_write_node_page+0x25/0xa0 [f2fs]
+ __write_node_page+0x2bf/0x550 [f2fs]
+ f2fs_sync_node_pages+0x60e/0x6d0 [f2fs]
+ ? sync_inode_metadata+0x2f/0x40
+ ? f2fs_write_checkpoint+0x28f/0x7d0 [f2fs]
+ ? up_write+0x1e/0x80
+ f2fs_write_checkpoint+0x2a9/0x7d0 [f2fs]
+ ? mark_held_locks+0x5d/0x80
+ ? _raw_spin_unlock_irq+0x27/0x50
+ kill_f2fs_super+0x68/0x90 [f2fs]
+ deactivate_locked_super+0x3d/0x70
+ deactivate_super+0x40/0x60
+ cleanup_mnt+0x39/0x70
+ __cleanup_mnt+0x10/0x20
+ task_work_run+0x81/0xa0
+ exit_to_usermode_loop+0x59/0xa7
+ do_fast_syscall_32+0x1f5/0x22c
+ entry_SYSENTER_32+0x53/0x86
+EIP: 0xb7f95c51
+Code: c1 1e f7 ff ff 89 e5 8b 55 08 85 d2 8b 81 64 cd ff ff 74 02 89 02 5d c3 8b 0c 24 c3 8b 1c 24 c3 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+EAX: 00000000 EBX: 0871ab90 ECX: bfb2cd00 EDX: 00000000
+ESI: 00000000 EDI: 0871ab90 EBP: 0871ab90 ESP: bfb2cd7c
+DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Modules linked in: f2fs(O) crc32_generic bnep rfcomm bluetooth ecdh_generic snd_intel8x0 snd_ac97_codec ac97_bus snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq pcbc joydev aesni_intel snd_seq_device aes_i586 snd_timer crypto_simd snd cryptd soundcore mac_hid serio_raw video i2c_piix4 parport_pc ppdev lp parport hid_generic psmouse usbhid hid e1000 [last unloaded: f2fs]
+---[ end trace d423f83982cfcdc5 ]---
 
-greg k-h
+The reason is, different log headers using the same segment, once
+one log's next block address is used by another log, it will cause
+panic as above.
 
--------------
-Pseudo-Shortlog of commits:
+Main area: 24 segs, 24 secs 24 zones
+  - COLD  data: 0, 0, 0
+  - WARM  data: 1, 1, 1
+  - HOT   data: 20, 20, 20
+  - Dir   dnode: 22, 22, 22
+  - File   dnode: 22, 22, 22
+  - Indir nodes: 21, 21, 21
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.170-rc1
+So this patch adds sanity check to detect such condition to avoid
+this issue.
 
-Lars Persson <lars.persson@axis.com>
-    net: stmmac: Set dma ring length before enabling the DMA
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    tools include: Adopt linux/bits.h
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-    tpm/tpm_crb: Avoid unaligned reads in crb_recv()
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/super.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-Pi-Hsun Shih <pihsun@chromium.org>
-    include/linux/swap.h: use offsetof() instead of custom __swapoffset macro
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 83a96334dc07..4ebe69572475 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1489,7 +1489,7 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 	unsigned int segment_count_main;
+ 	unsigned int cp_pack_start_sum, cp_payload;
+ 	block_t user_block_count;
+-	int i;
++	int i, j;
+ 
+ 	total = le32_to_cpu(raw_super->segment_count);
+ 	fsmeta = le32_to_cpu(raw_super->segment_count_ckpt);
+@@ -1530,11 +1530,43 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_NODE_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_node_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Node segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+ 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_data_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_data_segno[i]));
++				return 1;
++			}
++		}
++	}
++	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
++		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u) and Data segment (%u)"
++					" has the same segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 
+ 	sit_bitmap_size = le32_to_cpu(ckpt->sit_ver_bitmap_bytesize);
+-- 
+2.19.1
 
-Stanislaw Gruszka <sgruszka@redhat.com>
-    lib/div64.c: off by one in shift
-
-YueHaibing <yuehaibing@huawei.com>
-    appletalk: Fix use-after-free in atalk_proc_exit
-
-Yang Shi <yang.shi@linaro.org>
-    ARM: 8839/1: kprobe: make patch_lock a raw_spinlock_t
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    lkdtm: Add tests for NULL pointer dereference
-
-Dmitry Osipenko <digetx@gmail.com>
-    soc/tegra: pmc: Drop locking from tegra_powergate_is_powered()
-
-Julia Cartwright <julia@ni.com>
-    iommu/dmar: Fix buffer overflow during PCI bus notification
-
-Ard Biesheuvel <ard.biesheuvel@linaro.org>
-    crypto: sha512/arm - fix crash bug in Thumb2 build
-
-Ard Biesheuvel <ard.biesheuvel@linaro.org>
-    crypto: sha256/arm - fix crash bug in Thumb2 build
-
-Vitaly Kuznetsov <vkuznets@redhat.com>
-    kernel: hung_task.c: disable on suspend
-
-Steve French <stfrench@microsoft.com>
-    cifs: fallback to older infolevels on findfirst queryinfo retry
-
-Ronald Tschalär <ronald@innovation.ch>
-    ACPI / SBS: Fix GPE storm on recent MacBookPro's
-
-Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-    ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
-
-Julian Sax <jsbc@gmx.de>
-    HID: i2c-hid: override HID descriptors for certain devices
-
-Michal Simek <michal.simek@xilinx.com>
-    serial: uartps: console_setup() can't be placed to init section
-
-Chao Yu <yuchao0@huawei.com>
-    f2fs: fix to do sanity check with current segment number
-
-Dinu-Razvan Chis-Serban <justcsdr@gmail.com>
-    9p locks: add mount option for lock retry interval
-
-Gertjan Halkes <gertjan@google.com>
-    9p: do not trust pdu content for stat item size
-
-Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-    rsi: improve kernel thread handling to fix kernel panic
-
-Robert Jarzmik <robert.jarzmik@free.fr>
-    gpio: pxa: handle corner case of unprobed device
-
-Darrick J. Wong <darrick.wong@oracle.com>
-    ext4: prohibit fstrim in norecovery mode
-
-Steve French <stfrench@microsoft.com>
-    fix incorrect error code mapping for OBJECTID_NOT_FOUND
-
-Nathan Chancellor <natechancellor@gmail.com>
-    x86/hw_breakpoints: Make default case in hw_breakpoint_arch_parse() return an error
-
-Lu Baolu <baolu.lu@linux.intel.com>
-    iommu/vt-d: Check capability before disabling protected memory
-
-Matthew Whitehead <tedheadster@gmail.com>
-    x86/cpu/cyrix: Use correct macros for Cyrix calls on Geode processors
-
-Aditya Pakki <pakki001@umn.edu>
-    x86/hpet: Prevent potential NULL pointer dereference
-
-Jianguo Chen <chenjianguo3@huawei.com>
-    irqchip/mbigen: Don't clear eventid when freeing an MSI
-
-Changbin Du <changbin.du@gmail.com>
-    perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
-
-Changbin Du <changbin.du@gmail.com>
-    perf tests: Fix a memory leak of cpu_map object in the openat_syscall_event_on_all_cpus test
-
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    perf evsel: Free evsel->counts in perf_evsel__exit()
-
-Changbin Du <changbin.du@gmail.com>
-    perf hist: Add missing map__put() in error case
-
-Changbin Du <changbin.du@gmail.com>
-    perf top: Fix error handling in cmd_top()
-
-Changbin Du <changbin.du@gmail.com>
-    perf build-id: Fix memory leak in print_sdt_events()
-
-Changbin Du <changbin.du@gmail.com>
-    perf config: Fix a memory leak in collect_config()
-
-Changbin Du <changbin.du@gmail.com>
-    perf config: Fix an error in the config template documentation
-
-David Arcari <darcari@redhat.com>
-    tools/power turbostat: return the exit status of a command
-
-Matthew Garrett <matthewgarrett@google.com>
-    thermal/int340x_thermal: fix mode setting
-
-Matthew Garrett <matthewgarrett@google.com>
-    thermal/int340x_thermal: Add additional UUIDs
-
-Colin Ian King <colin.king@canonical.com>
-    ALSA: opl3: fix mismatch between snd_opl3_drum_switch definition and declaration
-
-Arnd Bergmann <arnd@arndb.de>
-    mmc: davinci: remove extraneous __init annotation
-
-Jack Morgenstein <jackm@dev.mellanox.co.il>
-    IB/mlx4: Fix race condition between catas error reset and aliasguid flows
-
-Kangjie Lu <kjlu@umn.edu>
-    ALSA: sb8: add a check for request_region
-
-Kangjie Lu <kjlu@umn.edu>
-    ALSA: echoaudio: add a check for ioremap_nocache
-
-Lukas Czerner <lczerner@redhat.com>
-    ext4: report real fs size after failed resize
-
-Lukas Czerner <lczerner@redhat.com>
-    ext4: add missing brelse() in add_new_gdb_meta_bg()
-
-Stephane Eranian <eranian@google.com>
-    perf/core: Restore mmap record type correctly
-
-Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-    ARC: u-boot args: check that magic number is correct
-
-
--------------
-
-Diffstat:
-
- Makefile                                          |   4 +-
- arch/arc/kernel/head.S                            |   1 +
- arch/arc/kernel/setup.c                           |   8 +
- arch/arm/crypto/sha256-armv4.pl                   |   3 +-
- arch/arm/crypto/sha256-core.S_shipped             |   3 +-
- arch/arm/crypto/sha512-armv4.pl                   |   3 +-
- arch/arm/crypto/sha512-core.S_shipped             |   3 +-
- arch/arm/kernel/patch.c                           |   6 +-
- arch/arm/plat-samsung/Kconfig                     |   2 +-
- arch/x86/kernel/cpu/cyrix.c                       |  14 +-
- arch/x86/kernel/hpet.c                            |   2 +
- arch/x86/kernel/hw_breakpoint.c                   |   1 +
- drivers/acpi/sbs.c                                |   8 +-
- drivers/char/tpm/tpm_crb.c                        |  22 +-
- drivers/gpio/gpio-pxa.c                           |   6 +
- drivers/hid/i2c-hid/Makefile                      |   3 +
- drivers/hid/i2c-hid/{i2c-hid.c => i2c-hid-core.c} |  56 ++--
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c          | 376 ++++++++++++++++++++++
- drivers/hid/i2c-hid/i2c-hid.h                     |  20 ++
- drivers/infiniband/hw/mlx4/alias_GUID.c           |   2 +-
- drivers/iommu/dmar.c                              |   2 +-
- drivers/iommu/intel-iommu.c                       |   3 +
- drivers/irqchip/irq-mbigen.c                      |   3 +
- drivers/misc/lkdtm.h                              |   2 +
- drivers/misc/lkdtm_core.c                         |   2 +
- drivers/misc/lkdtm_perms.c                        |  18 ++
- drivers/mmc/host/davinci_mmc.c                    |   2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  10 +-
- drivers/net/wireless/rsi/rsi_common.h             |   1 -
- drivers/soc/tegra/pmc.c                           |   8 +-
- drivers/thermal/int340x_thermal/int3400_thermal.c |  21 +-
- drivers/tty/serial/xilinx_uartps.c                |   2 +-
- fs/9p/v9fs.c                                      |  21 ++
- fs/9p/v9fs.h                                      |   1 +
- fs/9p/vfs_dir.c                                   |   8 +-
- fs/9p/vfs_file.c                                  |   6 +-
- fs/cifs/inode.c                                   |  67 ++--
- fs/cifs/smb2maperror.c                            |   3 +-
- fs/ext4/ioctl.c                                   |   7 +
- fs/ext4/resize.c                                  |  17 +-
- fs/f2fs/super.c                                   |  34 +-
- include/linux/atalk.h                             |   2 +-
- include/linux/swap.h                              |   4 +-
- kernel/events/core.c                              |   2 +
- kernel/hung_task.c                                |  30 +-
- lib/div64.c                                       |   4 +-
- net/9p/protocol.c                                 |   3 +-
- net/appletalk/atalk_proc.c                        |   2 +-
- net/appletalk/ddp.c                               |  37 ++-
- net/appletalk/sysctl_net_atalk.c                  |   5 +-
- sound/drivers/opl3/opl3_voice.h                   |   2 +-
- sound/isa/sb/sb8.c                                |   4 +
- sound/pci/echoaudio/echoaudio.c                   |   5 +
- tools/include/linux/bitops.h                      |   6 +-
- tools/include/linux/bits.h                        |  26 ++
- tools/perf/Documentation/perf-config.txt          |   2 +-
- tools/perf/builtin-top.c                          |   5 +-
- tools/perf/check-headers.sh                       |   1 +
- tools/perf/tests/evsel-tp-sched.c                 |   1 +
- tools/perf/tests/openat-syscall-all-cpus.c        |   4 +-
- tools/perf/util/build-id.c                        |   1 +
- tools/perf/util/config.c                          |   3 +-
- tools/perf/util/evsel.c                           |   1 +
- tools/perf/util/hist.c                            |   4 +-
- tools/perf/util/parse-events.c                    |   1 +
- tools/power/x86/turbostat/turbostat.c             |   3 +
- 66 files changed, 807 insertions(+), 132 deletions(-)
 
 
