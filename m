@@ -2,132 +2,115 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88CCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D88C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A8820675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBE620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FBq8bKtw"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jNca5HYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389303AbfDROTg (ORCPT
+        id S2389323AbfDROT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:19:36 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:39947 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389278AbfDROTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:19:34 -0400
-Received: by mail-vk1-f193.google.com with SMTP id l17so488997vke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8eV2vUS51UMgePfSSxCuXJhq0Gtq0aUu2F6TTcKETz0=;
-        b=FBq8bKtw8jKgNvkAesGOL5wEhVUfIvOVZLawNU9Os5filzXur33S5KXLGi3G59zEmJ
-         MNxbw1dkanZJyl6+Bh/X7hbbi4DCuJUT+N82rjvvIQb1baWE98HINAsh1KYITkSEbQsv
-         WkyhKK/r8PDat9cP9eHISsDMRa0TxCyHkKPk0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8eV2vUS51UMgePfSSxCuXJhq0Gtq0aUu2F6TTcKETz0=;
-        b=hjrXu5rLBJ4//ry+cVYc2CzwF4eD4+MZE6vdC3cpAaaHD5KoYH6rgonLYYPz0Jod1S
-         ZG/g9JsVoQzs6p7IV39VTMy2cOGdYPly8LrJ6SC7UP7aFhyaFxdZrW05QkczI8RSRpUQ
-         eqWsspKhC1L7zefdLyeY5JnzZkNJ8/hs16+eO8y9L8d5zw9aK6TawpXiryVJYB/sLi6w
-         ameE76WBlXSst9H+F39Zs/fBzYhOU7gJWEMUrveSpGQ2FDMoq3TgoeZzPEI7oM8i2a+A
-         1Qjy8Jd+cwQkjAY9sLAfaxiABSHgDmrfgVv0HznZ1t34DfZWu6ViVzDDpkumbJodZZlJ
-         20Qg==
-X-Gm-Message-State: APjAAAUywTnkSXS1gqXTozgTAiIq+uRHbodaID6O5tYbytYxwM+5d5HZ
-        ApvFqPYmbP2SN3HlbP3AiwgDRkHuFhs=
-X-Google-Smtp-Source: APXvYqycS943ckmwWFUDXCzxaJsmmF05s60d3YiCrixLrIMZiLRQ9+UVz7C6MDVv7/KE3X4U/zk4Uw==
-X-Received: by 2002:a1f:c446:: with SMTP id u67mr51760887vkf.52.1555597172387;
-        Thu, 18 Apr 2019 07:19:32 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id t207sm647716vkb.21.2019.04.18.07.19.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 07:19:31 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id x194so498327vke.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:19:30 -0700 (PDT)
-X-Received: by 2002:a1f:2e07:: with SMTP id u7mr50481033vku.44.1555597170338;
- Thu, 18 Apr 2019 07:19:30 -0700 (PDT)
+        Thu, 18 Apr 2019 10:19:57 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35286 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388806AbfDROT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:19:56 -0400
+Received: from zn.tnic (p200300EC2F112E003868EF36058F9C84.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:3868:ef36:58f:9c84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BBB231EC04CD;
+        Thu, 18 Apr 2019 16:19:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555597194;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Zla6IUZC5NUqumdwsALqVVzlHUaEhOjQZzDTdtmrxF0=;
+        b=jNca5HYd+fieHVv0NIgBhgXk149ujkFqt46WKOfcexddkadC2ML1O4hevawxr/JdkoMNsG
+        fX+tMf1V3j+7m9SPRNK0+oIVrY/s5UsEVD0KO1ksE0z6MQM4V5DuncJYHaGB0HSU4DBpZ8
+        XuBQMlnhob1sLJy3c4AfEFjMO3BiSB8=
+Date:   Thu, 18 Apr 2019 16:19:49 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     KVM <kvm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Yazen Ghannam <Yazen.Ghannam@amd.com>
+Subject: Re: [PATCH -v5.1] x86/kvm: Implement HWCR support
+Message-ID: <20190418141949.GK27160@zn.tnic>
+References: <20190408090946.GA2315@zn.tnic>
+ <20190408144115.GA25880@linux.intel.com>
+ <20190408145716.GG15689@zn.tnic>
+ <20190418122842.GF27160@zn.tnic>
+ <20190418135606.GA17218@linux.intel.com>
 MIME-Version: 1.0
-References: <20190417052247.17809-1-alex@ghiti.fr> <20190417052247.17809-5-alex@ghiti.fr>
- <CAGXu5j+NV7nfQ044kvsqqSrWpuXH5J6aZEbvg7YpxyBFjdAHyw@mail.gmail.com> <fd2b02b3-5872-ccf6-9f52-53f692fba02d@ghiti.fr>
-In-Reply-To: <fd2b02b3-5872-ccf6-9f52-53f692fba02d@ghiti.fr>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 18 Apr 2019 09:19:18 -0500
-X-Gmail-Original-Message-ID: <CAGXu5j+NkQ+nwRShuKeHMwuy6++3x0QMS9djE=wUzUUtAkVf3g@mail.gmail.com>
-Message-ID: <CAGXu5j+NkQ+nwRShuKeHMwuy6++3x0QMS9djE=wUzUUtAkVf3g@mail.gmail.com>
-Subject: Re: [PATCH v3 04/11] arm64, mm: Move generic mmap layout functions to mm
-To:     Alex Ghiti <alex@ghiti.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190418135606.GA17218@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 12:55 AM Alex Ghiti <alex@ghiti.fr> wrote:
-> Regarding the help text, I agree that it does not seem to be frequent to
-> place
-> comment above config like that, I'll let Christoph and you decide what's
-> best. And I'll
-> add the possibility for the arch to define its own STACK_RND_MASK.
+On Thu, Apr 18, 2019 at 06:56:06AM -0700, Sean Christopherson wrote:
+> This doesn't allow writing '0' regardless of msr_hwcr.BIT(18), which was
+> previously supported.
 
-Yeah, I think it's very helpful to spell out the requirements for new
-architectures with these kinds of features in the help text (see
-SECCOMP_FILTER for example).
+Restored the old conditional:
 
-> > I think CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT should select
-> > CONFIG_ARCH_HAS_ELF_RANDOMIZE. It would mean moving
->
->
-> I don't think we should link those 2 features together: an architecture
-> may want
-> topdown mmap and don't care about randomization right ?
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 10f6acc6494c..f74f1280745b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2318,7 +2318,8 @@ static int set_msr_mce(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 				return -1;
+ 
+ 			/* MCi_STATUS */
+-			if ((offset & 0x3) == 1 && !msr_info->host_initiated) {
++			if (!msr_info->host_initiated &&
++			    (offset & 0x3) == 1 && data != 0) {
+ 				if (!can_set_mci_status(vcpu))
+ 					return -1;
+ 			}
 
-Given that the mmap randomization and stack randomization are already
-coming along for the ride, it seems weird to make brk randomization an
-optional feature (especially since all the of the architectures you're
-converting include it). I'd also like these kinds of security features
-to be available by default. So, I think one patch to adjust the MIPS
-brk randomization entropy and then you can just include it in this
-move.
+> And there's no need for multiple if statements.
 
-> Actually, I had to add those ifdefs for mmap_rnd_compat_bits, not
-> is_compat_task.
+It is a bit more readable this way.
 
-Oh! In that case, use CONFIG_HAVE_ARCH_MMAP_RND_BITS. :) Actually,
-what would be maybe cleaner would be to add mmap_rnd_bits_min/max
-consts set to 0 for the non-CONFIG_HAVE_ARCH_MMAP_RND_BITS case at the
-top of mm/mmap.c.
+Actually, I'd break that if above into smaller if-statements with
+flipped logic to make it even more readable:
 
-I really like this clean-up! I think we can move x86 to it too without
-too much pain. :)
+	if (msr_info->host_initiated)
+		goto set_msr;
+
+	if (!(offset & 0x3))
+		goto set_msr;
+
+	if (!data)
+		goto set_msr;
+
+	if (!can_set_mci_status(vcpu))
+		return -1;
+
+set_msr:
+	...
+
+
+Anything else? Can I send v5.2 now?
 
 -- 
-Kees Cook
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
