@@ -2,97 +2,131 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A74C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F49C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2857217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555598405;
-	bh=tekO43nJXxpaaeevEmdoVFA6o1lSPhmSz0QpgCW8LDc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dJ6sMhnWNUuYP0SyAUuNY3X64rn4nw3IFkabNv230Sp3ZBfwiV/lXLDLobvs6Lg85
-	 nzuIiPnnJblIxjc2UFFUjup5Z9A+DXKKlaTHqP5N7Jmkjrc37hR3J/OdPyd81ySRb5
-	 dS0vbPtBxHmyu2MmuztLCanbEi6etsnrDVPVkP0U=
+	by mail.kernel.org (Postfix) with ESMTP id DFF05217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbfDROkE (ORCPT
+        id S2389280AbfDROkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:40:04 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33338 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388277AbfDROkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:40:03 -0400
-Received: by mail-oi1-f196.google.com with SMTP id e5so1808363oii.0;
-        Thu, 18 Apr 2019 07:40:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hwMyiCrXg7F4EhT0zxsPBDwK6KZEo1cltBW0EokSJ4o=;
-        b=qCb5xupsBvym06K1m0cG3VYd7rsQ0OBpY18rdj9iYKYbU4PsE6MUC+t4HZxBWX1bq1
-         Oz512pMCrIKHzhHbJAGwwpXoDnvelAod78RSTzJB9hXTEBVwjXfp/0j/qrBjuWvGtugv
-         lKD1JtVw/OvieApObOgK+YJdWq+Y4Q18moRU5pvIRTpa1WKUs/yRGWVoWQr7iE8msr7N
-         rZEEEX9ObLUibCSceowEwZy1Jr8/FTyATmRdROuM76953Q2E52iDj4nBtq6mNQVakMsc
-         MBHltiKDYVlnzXheZZaJwj45PXLQX4dRiXXHkg2kIvji/Tgt1DhyeuumaFkenDy1GqbT
-         LyMg==
-X-Gm-Message-State: APjAAAXJbqxosTVHtechah+EOPrLTFtUwLsc1egJlSgPz0cYC1CeAcft
-        YKy+MMkTdE61YTRMGxCnPzFdUa1upP2Okv+jM08=
-X-Google-Smtp-Source: APXvYqxQJ/eZGM8YukG2KhMNqstirXgSqSvnFEPXxKBHamuwMHGBG+l9h7Dzxjo3nnwli0OutOYXLps3SHxCfZOsprI=
-X-Received: by 2002:aca:ba82:: with SMTP id k124mr2368438oif.110.1555598402635;
- Thu, 18 Apr 2019 07:40:02 -0700 (PDT)
+        Thu, 18 Apr 2019 10:40:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48538 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388277AbfDROkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:40:07 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4FF0F308A110;
+        Thu, 18 Apr 2019 14:40:07 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EF7D600C2;
+        Thu, 18 Apr 2019 14:40:05 +0000 (UTC)
+Subject: Re: [PATCH v4 15/16] locking/rwsem: Merge owner into count on x86-64
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-16-longman@redhat.com>
+ <20190418142822.GC12232@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <a70ee6c0-7904-8c63-e956-57f6d930db07@redhat.com>
+Date:   Thu, 18 Apr 2019 10:40:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com>
- <1555411164-26399-1-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0i2-11rgH5Y+83U041Eyp=SA56oPqDmS2g24SyYYJH3jg@mail.gmail.com> <ebb13205-2548-1c30-fd65-bdfe4c7d9c08@arm.com>
-In-Reply-To: <ebb13205-2548-1c30-fd65-bdfe4c7d9c08@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 18 Apr 2019 16:39:51 +0200
-Message-ID: <CAJZ5v0jXioEAELmHqMhR0wJQkzLQpp1WA-zuWHdFkSWjiX0kVw@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v2 27/36] drivers: Add a generic helper to match
- device by fwnode handle
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        coresight@lists.linaro.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190418142822.GC12232@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 18 Apr 2019 14:40:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:53 PM Suzuki K Poulose
-<suzuki.poulose@arm.com> wrote:
+On 04/18/2019 10:28 AM, Peter Zijlstra wrote:
+> On Sat, Apr 13, 2019 at 01:22:58PM -0400, Waiman Long wrote:
+>> +#ifdef CONFIG_X86_64
+>> +#define RWSEM_MERGE_OWNER_TO_COUNT
+>> +#endif
+>> +#ifdef RWSEM_MERGE_OWNER_TO_COUNT
+>> +
+>> +#ifdef __PHYSICAL_MASK_SHIFT
+>> +#define RWSEM_PA_MASK_SHIFT	__PHYSICAL_MASK_SHIFT
+>> +#else
+>> +#define RWSEM_PA_MASK_SHIFT	52
+>> +#endif
+> I really dislike how this hardcodes x86_64.
 >
-> On 04/16/2019 11:48 AM, Rafael J. Wysocki wrote:
-> > On Tue, Apr 16, 2019 at 12:39 PM Suzuki K Poulose
-> > <suzuki.poulose@arm.com> wrote:
-> >>
-> >> Make the device_fwnode_match() a generic helper to match device
-> >> by fwnode handle for use with bus_find_device(). This will be
-> >> also used by coresight.
-> >>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> >> Cc: linux-acpi@vger.kernel.org
-> >> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >> ---
-> >>
-> >> Resending with linux-acpi in Cc, as requested by Rafael.
-> >
-> > Do any other patches in your series depend on this one?
+> It would be much better to have a CONFIG variable that gives us the
+> PA_BITS. Then all an architecture needs to do is set that right.
 >
-> Yes, I do. But they are in the middle of a big series of changes and
-> I don't expect this series to go into 5.2. So, if you plan to pull this
-> please go ahead.
+> FWIW:
+>
+> arch/arm64/Kconfig:config ARM64_PA_BITS_48
+> arch/arm64/Kconfig:config ARM64_PA_BITS_52
+>
+> So ARM64 could also use this -- provided we get that overflow thing
+> sorted.
 
-I would prefer the new exported function to return bool.  With that
-changed, I can apply the patch I think.
+That will work too. I just a bit hesitant to add new config variable.
+
+Cheers,
+Longman
+
