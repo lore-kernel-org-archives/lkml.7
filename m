@@ -2,82 +2,96 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0B6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E5BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADB0214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343E720643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="beicCXg+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnGy8nV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390053AbfDRTqR (ORCPT
+        id S2390070AbfDRTtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:46:17 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39492 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389853AbfDRTqR (ORCPT
+        Thu, 18 Apr 2019 15:49:02 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46086 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389866AbfDRTtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:46:17 -0400
-Received: by mail-oi1-f193.google.com with SMTP id n187so2522290oih.6;
-        Thu, 18 Apr 2019 12:46:16 -0700 (PDT)
+        Thu, 18 Apr 2019 15:49:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 9so1552149pfj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KEouRq2XUIs+Kr06PT/8QxB3jpIE8DhcFyEyTbtMjCQ=;
-        b=beicCXg+Amiwz2mmQ84fr4YfmKHW6jK/2Bc/vwIFTbt/BpqZf7qqc93W6zvr4497qb
-         WR+zyWY7eqVWZtbK4/TvcGc8qvs6rZWrcgFwTPPAVeLiMpuAZhS8jgyTaHUtCVKwGPLq
-         eid9YChk542PGYfNfrA0skHLMecRZNQcSJdcP3mE1XYk7ZQGUeqinM47Eng6zIZ5i97m
-         o257IbKHmFQTMgLrmrNeSc6YXtNzNxu+UJVpQCyG93bZfF1G+LiN+4KMNPoPCFacfV+0
-         GpTeBbWrcM8ZfOSH3x0xGj1aFHggaJeGwB+vtO7NL6PbGZtKWcMdtmomaFmmelRbXY0r
-         HKCw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Nv1osdKMnyQhFpXAYzfTc/y8P4eQhfnwJ3z9VJHumRs=;
+        b=XnGy8nV+vrlbZLrGOz/2ITivLC4FD5nuOPNiQP39Nwi2Gff+bcupMcExivueyD+z4q
+         Go4gLOQzKLBdAhlU1UFvA6mJ/k2mQAsY0MiA6Fj/0c2Uks1VRkL5eMVDgdeSFuqqHknh
+         gFqVhfzZEtWCIJZzGTm9argq1WxEObOFJLsFmk181hFJUQ/4Rwa9wmOHbhQWBXSzvrLX
+         ZDf/iLZrVTMrUuPGKKCkPG3jc3FJVXRUsRCwB7fIUkgz9zul3803EgfjxsaVzR27tsqi
+         yia0T6ibseVHWa1l1bBeAXTCpcCG1vnuUKn6pY00thLmzsPgbupuGk6nwMDrLlgyL8nS
+         PbWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KEouRq2XUIs+Kr06PT/8QxB3jpIE8DhcFyEyTbtMjCQ=;
-        b=AZFve15+wr0yHLsnRTr0m43AjZFJjIwGCOmUTkKp2Q+4MluFGgip2Ee+x90oiiMh2b
-         VF4HCTLv47aFOKZvuLIjJWEif4k0v52G2pUSPw27k/2O/dnsmxq7GThx6F7yl36Q4tel
-         QKUJPLZq6pge6BtnBxiAFaknnYXrwSRcEOdeov0tzZremYCdWh2LbHvHEamjkUMwvQR8
-         jFJ6Kk4X56J8zO31Jvheof+NoRiw2CTsflwOK3DIDSoubX9FTtE8bhgPHiJjtIAOgEz1
-         3L0WojxSHz8RplClUJNjkd4icn+Qw03gEhQ9kcmtY43/hMLRltq8RY6hqGRNMXXGTrP2
-         jzgQ==
-X-Gm-Message-State: APjAAAUP/E/grpCquH4/Ce59x4UwV9IEg0WnYTcdgCWTbiLSbgzDw8X8
-        nBALpzGj7Dj7Uovskmj2RzQDjab/zQ+Pu8UGjU4J+GzN
-X-Google-Smtp-Source: APXvYqxs1oz6dybsrDbrWbS2iL8KEBfBl2fQ/eR5Sv9tj7ww+xJszPzMqkmfLSvyYXxwryiR2CnMJydyyfu3FK1BHKA=
-X-Received: by 2002:aca:4482:: with SMTP id r124mr3314554oia.39.1555616776408;
- Thu, 18 Apr 2019 12:46:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nv1osdKMnyQhFpXAYzfTc/y8P4eQhfnwJ3z9VJHumRs=;
+        b=Wvxis3A3XZxNpWBYmReG5HIGLiRO3E3L/qPmxzn3t2PSZhfofwzx4ASP5RrATotiTL
+         d3M2qrSQo+ElqeAcpUCiP0d+BbdUQMvkx5Zzg4LyU4VQYCz7oPt1CGRjQrRpghbyyBaW
+         Dt2Qb8bt8OQOjERuOa8f+SSHYrkNFKe0mAHaLRS+B6bZII12siPrLfDFiDlZHCjasX/8
+         L8YwIC4IauqGG0mr9y/ZWhTP59GwEwbgv4YkqTEfcVP8Oil09YUWbmyUadnIsyAzUnfR
+         9O1WJwHAeeXXi3UiDkErTcury7PXARZZdYZKI049xbzWqEpoaesvi1Cb66KpsqaW21e2
+         OZZA==
+X-Gm-Message-State: APjAAAX+qHbdyH0G4myoApLFWIHNX5YzRj4avLDVTQcnGFeFSDhLeYbG
+        UbApCaqi/NSTyPX1XME4504=
+X-Google-Smtp-Source: APXvYqws8l3BHlRoJ8O3n8PyNUaV9SDlmTRmQ2aAZP27lA4t4fOhIUvpl8zDughhtClhkxUHkgXcWw==
+X-Received: by 2002:a65:4bce:: with SMTP id p14mr92784659pgr.376.1555616941584;
+        Thu, 18 Apr 2019 12:49:01 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id m23sm3924311pfa.117.2019.04.18.12.49.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 12:49:01 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 12:48:58 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] ASoC: fsl_esai: Add pm runtime function
+Message-ID: <20190418194857.GB14885@Asurada-Nvidia.nvidia.com>
+References: <8c78be27ef3795e9b870de7789c25454bd3774b3.1555586023.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <20190418122714.30805-1-jbrunet@baylibre.com> <20190418122714.30805-3-jbrunet@baylibre.com>
-In-Reply-To: <20190418122714.30805-3-jbrunet@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 18 Apr 2019 21:46:05 +0200
-Message-ID: <CAFBinCC3+VXwmzCQFL+3zPbi1r1PK6StfaXwT-fk4ogGqgAXRg@mail.gmail.com>
-Subject: Re: [PATCH 2/6] arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c78be27ef3795e9b870de7789c25454bd3774b3.1555586023.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 2:27 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> While some 3.3v eMMC 4.0 are available from libretech, Only the 1.8v 5.0
-> modules are recommended and supported for the aml-s905x-cc.
->
-> the 1.8v is provided by LDOs on the eMMC card, from vcc 3.3v
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Thu, Apr 18, 2019 at 11:34:15AM +0000, S.j. Wang wrote:
+> Add pm runtime support and move clock handling there.
+> fsl_esai_suspend is replaced by pm_runtime_force_suspend.
+> fsl_esai_resume is replaced by pm_runtime_force_resume.
 
-(I don't have an eMMC module for my Libretech-CC so I can't add a Tested-by)
+The change looks fine, yet I'd prefer to have a good justification
+in the commit message. It could be simply some benefit of doing so
+like what you have discussed with Mark.
+
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+
+Please add it in next version upon commit message update:
+
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Thanks
