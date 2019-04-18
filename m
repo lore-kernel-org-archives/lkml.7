@@ -2,91 +2,104 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65A1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB94DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0903206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D7420643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389638AbfDRQOU convert rfc822-to-8bit (ORCPT
+        id S2389661AbfDRQOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 12:14:20 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54913 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbfDRQOT (ORCPT
+        Thu, 18 Apr 2019 12:14:42 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:45952 "EHLO
+        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfDRQOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 12:14:19 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 6F0E460007;
-        Thu, 18 Apr 2019 16:14:16 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 18:14:15 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     <bbrezillon@kernel.org>, <richard@nod.at>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <paul@crapouillou.net>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH -next] mtd: rawnand: ingenic: Add missing MODULE_*
- information
-Message-ID: <20190418181415.221b5c0a@xps13>
-In-Reply-To: <20190404104711.23560-1-yuehaibing@huawei.com>
-References: <20190404104711.23560-1-yuehaibing@huawei.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 18 Apr 2019 12:14:42 -0400
+Received: from [172.17.0.2] (unknown [186.137.130.251])
+        (Authenticated sender: pablo@fliagreco.com.ar)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id B3AE97B05FF;
+        Thu, 18 Apr 2019 13:14:36 -0300 (-03)
+Subject: Re: [PATCH v4 5/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Add
+ Bluetooth device node
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+ <1555600282-9405-6-git-send-email-pgreco@centosproject.org>
+ <20190418155613.shiv7geoqyzfy4kf@flea>
+From:   =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
+Message-ID: <bc5d7e91-74c5-103a-db72-6cb1f3ef53b9@centosproject.org>
+Date:   Thu, 18 Apr 2019 13:14:35 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190418155613.shiv7geoqyzfy4kf@flea>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-SP2Max-MailScanner-Information: Please contact the ISP for more information
+X-SP2Max-MailScanner-ID: B3AE97B05FF.A445C
+X-SP2Max-MailScanner: Sem Virus encontrado
+X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
+        escore=-1.386, requerido 6, ALL_TRUSTED -1.00, BAYES_00 -1.90,
+        URIBL_RHS_DOB 1.51)
+X-SP2Max-MailScanner-From: pgreco@centosproject.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yue,
 
-Yue Haibing <yuehaibing@huawei.com> wrote on Thu, 4 Apr 2019 18:47:11
-+0800:
-
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> gcc warning this:
-> 
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/mtd/nand/raw/ingenic/ingenic_ecc.o
-> 
-> Add MODULE_LICENSE,MODULE_AUTHOR and MODULE_DESCRIPTION.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 9df5741a577e ("mtd: rawnand: ingenic: Separate top-level and SoC specific code")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/mtd/nand/raw/ingenic/ingenic_ecc.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> index 7b07a6a..77e996e 100644
-> --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> @@ -158,3 +158,8 @@ int ingenic_ecc_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  EXPORT_SYMBOL(ingenic_ecc_probe);
-> +
-> +MODULE_AUTHOR("Alex Smith <alex@alex-smith.me.uk>");
-> +MODULE_AUTHOR("Harvey Hunt <harveyhuntnexus@gmail.com>");
-> +MODULE_DESCRIPTION("Ingenic ECC common driver");
-> +MODULE_LICENSE("GPL v2");
-
-
-
-Applied to 
-https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git 
-branch nand/next.
-
-Thanks,
-MiquÃ¨l
+El 18/4/19 a las 12:56, Maxime Ripard escribió:
+> On Thu, Apr 18, 2019 at 12:11:20PM -0300, Pablo Greco wrote:
+>> Since the bananapi-m2-ultra and the bananapi-m2-berry have the same
+>> WiFi/Bluetooth, add the required nodes to the bananapi-m2-berry.
+>>
+>> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+>> ---
+>>   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 26 +++++++++++++++++++++++
+>>   1 file changed, 26 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>> index 78f4a1a..3d0bb7e 100644
+>> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>> @@ -96,6 +96,8 @@
+>>   	wifi_pwrseq: wifi_pwrseq {
+>>   		compatible = "mmc-pwrseq-simple";
+>>   		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+>> +		clocks = <&ccu CLK_OUTA>;
+>> +		clock-names = "ext_clock";
+>>   	};
+>>   };
+>>
+>> @@ -171,6 +173,11 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&pio {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&clk_out_a_pin>;
+>> +};
+>> +
+> I'm not sure you answered my question about why that is needed?
+Because it is the same case as 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts?id=1e5f1db4ccd8348a21da55bff82f4263000879ef
+I can repeat that info in this commit log
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
+>
+Pablo.
