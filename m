@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3746C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EEEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB926217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A49217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610438;
-	bh=qOiI6c97iqOpKnbgrWwaBAyTzNRDa2GBFmbUhclu5iE=;
+	s=default; t=1555610442;
+	bh=kLeEFgdmBhd/KKOoV3ARCXRNPym9r9NBfoDjExiz6oY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JKb/ca7AB6QyQpfdFEMfJ5EB+xmQz50ileVVpcnmDA92KEsnV8aDCv1vnDRLxdJc+
-	 CxI2fN8ydEGuZcACTpdv33giPm2F1xTwmBXGIJtJWNF8KsavSFBMpIQzHTH29AsZFj
-	 BFzLy1GrxmxvjAyvKV8JEewVRhC4JBt6y6MNTwyE=
+	b=HqzBVmvxyKjuvFQKyVhRRjaZDI/A8i3p5rjeQTY45Zs9nZ0nTvHDyjTUxfcQTInFe
+	 ahxzaOHs4C4oHc4XN4OI6ewhSoPDCqB48Dkou5lZHC7BpSQR/pTNthMB+hcb4aW48A
+	 M4JGa3IIOky/MAA5yb4j04JcE+OkQZkDgcIa6uJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390013AbfDRSAh (ORCPT
+        id S2390409AbfDRSAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55880 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390381AbfDRSAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:00:33 -0400
+        id S2390396AbfDRSAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:00:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F12DF218A1;
-        Thu, 18 Apr 2019 18:00:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B680206B6;
+        Thu, 18 Apr 2019 18:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610432;
-        bh=qOiI6c97iqOpKnbgrWwaBAyTzNRDa2GBFmbUhclu5iE=;
+        s=default; t=1555610437;
+        bh=kLeEFgdmBhd/KKOoV3ARCXRNPym9r9NBfoDjExiz6oY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cSctJvjfJCi1+xPYzTCXpdpCRHocPHEmH9r9ye/5AbnH2mbemheLjsS4J2E0q50QU
-         vRGZK1vwWOWBFqp8XPgOMaVgMhnTNX1UEWjULhF1gK0T3Lmvr9rIX2k2M1WLe3Vjwd
-         xlWv95i0tHRW8UYPUeirWgtmeRJ0bkzl9iVfiL9Q=
+        b=g/FDi0vPmPSV2Hp/QHAkJCrUf+XNkwdWUiIIaFYeC0It9nTj12MpL0ERc1VhJioXK
+         z72NJBOuaFERRAlpowj6MAY7+J6AuW23nmhs8qmUuDiIOjQRmbndVlumpBTvWYkUWA
+         xDAVuvlneTfS+agDxtfWhe28RHsLV/F5FPicMaMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Zhang Rui <rui.zhang@intel.com>,
+        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/110] thermal/intel_powerclamp: fix __percpu declaration of worker_data
-Date:   Thu, 18 Apr 2019 19:56:06 +0200
-Message-Id: <20190418160438.945139555@linuxfoundation.org>
+Subject: [PATCH 4.19 062/110] serial: uartps: console_setup() cant be placed to init section
+Date:   Thu, 18 Apr 2019 19:56:51 +0200
+Message-Id: <20190418160444.326776630@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -62,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa36e3616532f82a920b5ebf4e059fbafae63d88 ]
+[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
 
-This variable is declared as:
-	static struct powerclamp_worker_data * __percpu worker_data;
-In other words, a percpu pointer to struct ...
+When console device is rebinded, console_setup() is called again.
+But marking it as __init means that function will be clear after boot is
+complete. If console device is binded again console_setup() is not found
+and error "Unable to handle kernel paging request at virtual address"
+is reported.
 
-But this variable not used like so but as a pointer to a percpu
-struct powerclamp_worker_data.
-
-So fix the declaration as:
-	static struct powerclamp_worker_data __percpu *worker_data;
-
-This also quiets Sparse's warnings from __verify_pcpu_ptr(), like:
-  494:49: warning: incorrect type in initializer (different address spaces)
-  494:49:    expected void const [noderef] <asn:3> *__vpp_verify
-  494:49:    got struct powerclamp_worker_data *
-
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/intel_powerclamp.c | 2 +-
+ drivers/tty/serial/xilinx_uartps.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/intel_powerclamp.c b/drivers/thermal/intel_powerclamp.c
-index cde891c54cde..ea1aa7dbe42c 100644
---- a/drivers/thermal/intel_powerclamp.c
-+++ b/drivers/thermal/intel_powerclamp.c
-@@ -101,7 +101,7 @@ struct powerclamp_worker_data {
- 	bool clamping;
- };
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 0e3627289047..77efa0a43fe7 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1223,7 +1223,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
+  *
+  * Return: 0 on success, negative errno otherwise.
+  */
+-static int __init cdns_uart_console_setup(struct console *co, char *options)
++static int cdns_uart_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *port = console_port;
  
--static struct powerclamp_worker_data * __percpu worker_data;
-+static struct powerclamp_worker_data __percpu *worker_data;
- static struct thermal_cooling_device *cooling_dev;
- static unsigned long *cpu_clamping_mask;  /* bit map for tracking per cpu
- 					   * clamping kthread worker
 -- 
 2.19.1
 
