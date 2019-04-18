@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E04C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C63C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5743520675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8A5206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611016;
-	bh=ilcjOSEvD0u0alIzW8j58XDrmVzgGsrVboqZwNqag8s=;
+	s=default; t=1555611020;
+	bh=wZYzUHLa0AlBXJAqL9nz2F72pBV+OCOVwha45hkY3/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qed8vdS2sefFWowFqyDEokILo8jYYBR6DLQU6Ile5xhsSEYLDJPyRcPsHAhv2Dsll
-	 YzxudPJDyIaMRX82s1XOd/YJrs8dQBXxcSk+x5hj9jYk1KWDcJ7WHNj+TBpYKW8zCT
-	 et0VgFE6jSoWKy7RIvVfsBK+CSfmhSwNDNp8Kku4=
+	b=SrUPjKwbw5YqYefhTBrzUW7EbKMpe8fYSe7gfuBwJVW8ADmhS03cKb3Sr1FiNg1mC
+	 VzqSPC6HEuBOXajZQb98XWjCp9d7V0SnzxPXkOG5I15tBS8mweRozM+c3rbszSI7e5
+	 YRlTaigqMteao3ijrXB4loWYiEwlm0GnNwfW+VRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390011AbfDRSKO (ORCPT
+        id S2404098AbfDRSKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404068AbfDRSKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:08 -0400
+        id S2404086AbfDRSKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFA0521871;
-        Thu, 18 Apr 2019 18:10:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E072620652;
+        Thu, 18 Apr 2019 18:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611008;
-        bh=ilcjOSEvD0u0alIzW8j58XDrmVzgGsrVboqZwNqag8s=;
+        s=default; t=1555611013;
+        bh=wZYzUHLa0AlBXJAqL9nz2F72pBV+OCOVwha45hkY3/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPNFvhIyZMzT0yM7Y7V6VWvOlpQDY0wttGagHHZiJx32E2MUuZ35JFdlhXqGq+Ur4
-         0DpEOymUqEkX4UlmB2HXgovNaMZu4KtXIM84iAyNhghqOD4cIRWWuXa3FmCgnPd/pA
-         BdoIUxqZp2H7ZZ8/OqzXOWWry+0PuLAoHbH9qovM=
+        b=Jyc6Wp/b7g3CYgsAytYIg6lYdxDK5Q6fHPc3B80xNGHe1A7f62HJow42/nqFzOrpn
+         Uo7He/WOdtjWW1pJY8XXU4bEsSedpLj/81w+sX39hZpErlQNZpLSKE/EwooNBCnNFl
+         Q9FOPkCQnH7lr75LGnHgJONXzIXXiazW4p5/Z9OY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Nisha Aram <nisha.aram@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 23/93] thermal/int340x_thermal: Add additional UUIDs
-Date:   Thu, 18 Apr 2019 19:57:01 +0200
-Message-Id: <20190418160439.064861434@linuxfoundation.org>
+Subject: [PATCH 5.0 25/93] thermal/intel_powerclamp: fix truncated kthread name
+Date:   Thu, 18 Apr 2019 19:57:03 +0200
+Message-Id: <20190418160439.363879546@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -61,50 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
+[ Upstream commit e925b5be5751f6a7286bbd9a4cbbc4ac90cc5fa6 ]
 
-Add more supported DPTF policies than the driver currently exposes.
+kthread name only allows 15 characters (TASK_COMMON_LEN is 16).
+Thus rename the kthreads created by intel_powerclamp driver from
+"kidle_inject/ + decimal cpuid" to "kidle_inj/ + decimal cpuid"
+to avoid truncated kthead name for cpu 100 and later.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Nisha Aram <nisha.aram@intel.com>
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../intel/int340x_thermal/int3400_thermal.c        | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/thermal/intel/intel_powerclamp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 61ca7ce3624e..e0f39cacbc18 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -22,6 +22,13 @@ enum int3400_thermal_uuid {
- 	INT3400_THERMAL_PASSIVE_1,
- 	INT3400_THERMAL_ACTIVE,
- 	INT3400_THERMAL_CRITICAL,
-+	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
-+	INT3400_THERMAL_EMERGENCY_CALL_MODE,
-+	INT3400_THERMAL_PASSIVE_2,
-+	INT3400_THERMAL_POWER_BOSS,
-+	INT3400_THERMAL_VIRTUAL_SENSOR,
-+	INT3400_THERMAL_COOLING_MODE,
-+	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
- 	INT3400_THERMAL_MAXIMUM_UUID,
- };
+diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
+index b12ecd436e23..ac7256b5f020 100644
+--- a/drivers/thermal/intel/intel_powerclamp.c
++++ b/drivers/thermal/intel/intel_powerclamp.c
+@@ -494,7 +494,7 @@ static void start_power_clamp_worker(unsigned long cpu)
+ 	struct powerclamp_worker_data *w_data = per_cpu_ptr(worker_data, cpu);
+ 	struct kthread_worker *worker;
  
-@@ -29,6 +36,13 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
- 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
- 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
- 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
-+	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
-+	"5349962F-71E6-431D-9AE8-0A635B710AEE",
-+	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
-+	"F5A35014-C209-46A4-993A-EB56DE7530A1",
-+	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
-+	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
-+	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
- };
+-	worker = kthread_create_worker_on_cpu(cpu, 0, "kidle_inject/%ld", cpu);
++	worker = kthread_create_worker_on_cpu(cpu, 0, "kidle_inj/%ld", cpu);
+ 	if (IS_ERR(worker))
+ 		return;
  
- struct int3400_thermal_priv {
 -- 
 2.19.1
 
