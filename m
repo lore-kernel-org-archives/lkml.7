@@ -2,190 +2,91 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0992C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C927CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881EB2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C092183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:50:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kBrtG7Dr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388944AbfDRMuE (ORCPT
+        id S2389014AbfDRMuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:50:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60852 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726162AbfDRMuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:50:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CA9CEB018;
-        Thu, 18 Apr 2019 12:50:01 +0000 (UTC)
-Subject: Re: [V2] btrfs: drop inode reference count on error path
-To:     Pan Bian <bianpan2016@163.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1555585576-31045-1-git-send-email-bianpan2016@163.com>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ac36d111-547e-a76a-149e-a7ad603d7dfd@suse.com>
-Date:   Thu, 18 Apr 2019 15:50:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 08:50:19 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47724 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388375AbfDRMuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 08:50:19 -0400
+Received: from zn.tnic (p200300EC2F112E003868EF36058F9C84.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:3868:ef36:58f:9c84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E21341EC0380;
+        Thu, 18 Apr 2019 14:50:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555591817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=HNUlulpvxLgueM5KwBkwZM9kUDW+7A8qOVVjx5GX6Uc=;
+        b=kBrtG7DrmDlg8mxIQUX5owKGGclTe/MBIAH9iD2NUhLnfRQd3qUywuC2WSVxNxdiSswvBJ
+        wiOxluTdbEuF3tWsjegvWHRIV1vL3uwrPM2YU/U/uJ7TipAiuABJ2L8cSPdjA5YOSfhhaI
+        DNJOA+eOM7DIpkSEnXwMo7qCr+VX3N4=
+Date:   Thu, 18 Apr 2019 14:50:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
+        aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
+        mchehab@kernel.org, james.morse@arm.com, sachin.ghadi@sifive.com
+Subject: Re: [PATCH 3/3] edac: sifive: Add EDAC platform driver for SiFive
+ SoCs
+Message-ID: <20190418125015.GI27160@zn.tnic>
+References: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
+ <1555328443-30874-4-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <1555585576-31045-1-git-send-email-bianpan2016@163.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <1555328443-30874-4-git-send-email-yash.shah@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 18.04.19 г. 14:06 ч., Pan Bian wrote:
-> The reference count of inode is incremented by ihold. It should be
-> dropped if not used. However, the reference count is not dropped if
-> error occurs during updating the inode or deleting orphan items. This
-> patch fixes the bug.
+On Mon, Apr 15, 2019 at 05:10:43PM +0530, Yash Shah wrote:
+> This initial ver of EDAC driver supports:
+> - ECC event monitoring and reporting through the EDAC framework for SiFive
+>   L2 cache controller.
 > 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> This driver registers for notifier events from the L2 cache controller
+> driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
+> 
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
-> V2: move ihold just before device_initialize to make code clearer
-> ---
->  fs/btrfs/inode.c | 54 +++++++++++++++++++++++++-----------------------------
->  1 file changed, 25 insertions(+), 29 deletions(-)
-> 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 82fdda8..d6630df 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -6579,7 +6579,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
->  	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
->  	u64 index;
->  	int err;
-> -	int drop_inode = 0;
-> +	int log_mode;
->  
->  	/* do not allow sys_link's with other subvols of the same device */
->  	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
-> @@ -6616,41 +6616,37 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
->  	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
->  			1, index);
->  
-> -	if (err) {
-> -		drop_inode = 1;
-> -	} else {
-> -		struct dentry *parent = dentry->d_parent;
-> -		int ret;
-> +	if (err)
-> +		goto err_link;
->  
-> -		err = btrfs_update_inode(trans, root, inode);
-> +	err = btrfs_update_inode(trans, root, inode);
-> +	if (err)
-> +		goto err_link;
-> +	if (inode->i_nlink == 1) {
-> +		/*
-> +		 * If new hard link count is 1, it's a file created
-> +		 * with open(2) O_TMPFILE flag.
-> +		 */
-> +		err = btrfs_orphan_del(trans, BTRFS_I(inode));
->  		if (err)
-> -			goto fail;
-> -		if (inode->i_nlink == 1) {
-> -			/*
-> -			 * If new hard link count is 1, it's a file created
-> -			 * with open(2) O_TMPFILE flag.
-> -			 */
-> -			err = btrfs_orphan_del(trans, BTRFS_I(inode));
-> -			if (err)
-> -				goto fail;
-> -		}
-> -		BTRFS_I(inode)->last_link_trans = trans->transid;
-> -		d_instantiate(dentry, inode);
-> -		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
-> -					 true, NULL);
-> -		if (ret == BTRFS_NEED_TRANS_COMMIT) {
-> -			err = btrfs_commit_transaction(trans);
-> -			trans = NULL;
-> -		}
-> +			goto err_link;
-> +	}
-> +	BTRFS_I(inode)->last_link_trans = trans->transid;
-> +	ihold(inode);
-> +	d_instantiate(dentry, inode);
-> +	log_mode = btrfs_log_new_name(trans, BTRFS_I(inode), NULL,
-> +			dentry->d_parent, true, NULL);
-> +	if (log_mode == BTRFS_NEED_TRANS_COMMIT) {
-> +		err = btrfs_commit_transaction(trans);
-> +		trans = NULL;
->  	}
->  
-> +err_link:
-> +	if (err)
-> +		inode_dec_link_count(inode);
+>  arch/riscv/Kconfig         |   1 +
+>  drivers/edac/Kconfig       |   6 +++
+>  drivers/edac/Makefile      |   1 +
+>  drivers/edac/sifive_edac.c | 121 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 129 insertions(+)
+>  create mode 100644 drivers/edac/sifive_edac.c
 
-Any particular reason why you moved this before ending the transaction?
-It potentially has an effect during tyransaction commit since doing
-inode_dec_link_count does mark_inode_dirty which moves the inode on the
-dirty list. Have you explicitly thought about that ? Note, I'm not
-saying it's wrong but I want the rationale for the code move.
+Please add a MAINTAINERS entry like the other EDAC drivers do so that
+you can get CCed on patches/bug reports.
 
->  fail:
->  	if (trans)
->  		btrfs_end_transaction(trans);
-> -	if (drop_inode) {
-> -		inode_dec_link_count(inode);
-> -		iput(inode);
-> -	}
->  	btrfs_btree_balance_dirty(fs_info);
->  	return err;
->  }
-> 
+The rest looks ok to me.
+
+I'd still like for James to have a look too, when he gets to it.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
