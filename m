@@ -2,124 +2,116 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897A5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E75C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4B12183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:48:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="u4q3BTrL"
+	by mail.kernel.org (Postfix) with ESMTP id 6B0012183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555591723;
+	bh=+F97449T7IAvQwuTrW1iePk7ifpPBIV/f7q90QsVQiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=blFLfnpMtxCQQ5VaVJFcEcpFSbCvTXrwP/LC5IbICKdSGKjkeBYvHgTxOprxy62V+
+	 FSrnZLQgZdUqMRJPiFAgPbtfEHJtyuCkVaoqXgbtPS3Rc6LTvsNfZd9jaxJVPEIR1B
+	 dey5YSqoVD/7Ao3N7el4knyzMlLMvqdQrE0qjcVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389004AbfDRMsV (ORCPT
+        id S2389013AbfDRMsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:48:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44117 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388436AbfDRMsE (ORCPT
+        Thu, 18 Apr 2019 08:48:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38965 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733205AbfDRMsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:48:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so2795663wrv.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 05:48:03 -0700 (PDT)
+        Thu, 18 Apr 2019 08:48:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j9so2829045wrn.6;
+        Thu, 18 Apr 2019 05:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lEmzBEboKIGTezlbO3ot+XflyRscqj5u91q4CMrx2UE=;
-        b=u4q3BTrLMqXm/Udjmd/qNWIWU8LJmqNEWfZ3DyyFFKrNQpGn0lG0+w0L+C4tnUQydO
-         3AHjv8xfkLSJ6JAGPQP3IlDtzIMjv9uchYFdmG7PmUfvu0PNJmymrLHREDEacb4xoJx+
-         DrzfxAuWfPq0c6DktTV9NnyICRHLinKHWFkubv+TqtEXOZlNAAvLgHbIX7/1M74JdOFa
-         YssBzaSYUNhlb7OuV1ttUIVstPqcYfH9g2pIiylu9qNqi6quFHZZPVzM68/rnKxw9ZDn
-         lrRlgQVGZPuCl90Tdv5jMAW/0dhZI+huzzG9F9UkuLn/UdVcTIk1wKU3SsBZthLnyTeg
-         p4sg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MCFgAqBpz/w0Z9dtUSYXfFyNheJYJrXxFA3vkZvBVqY=;
+        b=dHpFEoyfhbSkefs55muUV5ojGuvPmMqqyGhpfSakH1iE5Uu8DsaVAmcyJTcXx1LprA
+         4UWUP+WITFQmE/hw6rdsYqYc8bYbkG7Otkk6Xk1uPQpHax1dS46uBBYoN56MQES9v6vP
+         u/Mk/3M4CBP9wdnBkTLHwil+tZAuIN3izKAx27u6Gifc/aRg+K9Y4Y1JeXtHamwQgVrP
+         7UQoE+regS+2358gFzH4PVFmMVLWTY1JuFEjp2o5GcJjaoXqQc4EHn4r0CPKVUyT0uGu
+         Hkw87T4vfmp48TAdwclUBaifQth3bO2azEfrYevVLouFtSdKq3GFhHcrdr9pLIyWtMlJ
+         rlKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=lEmzBEboKIGTezlbO3ot+XflyRscqj5u91q4CMrx2UE=;
-        b=HxIfEZVLcLUqBtuCD3ejfMm0cHsEQmCzxg0uHaQUyEQtZXTGFKc75tYYXNzj4J29oD
-         3hQRIKS+onMEnPq2/dfoAuZjZ3Ix6clifS04Uxowlu4r8wkXsbssEhl/VHrhu4TkQXfm
-         SRts5RDt/HEA20XIOSUX7gWVHnlcGnEHJUgGOgXDPnhUnW+ywuNaHujd0UuUU1cQK7tQ
-         YwJzRDpOX7Y8Vwo6xnTfDs/OQ3pAUopGnn5sBOe/8LxRvqcun/Nb2ClZxSgtczd+b9tu
-         jWbyqGtOIDIGc/R6JPAcn7yFM+0lnlssBpN5Gg+XTAR0awhMlYNJIqtj3fm49KB2Cd3j
-         qGOg==
-X-Gm-Message-State: APjAAAUVBEFf51AYLFuJiIfE3GIc+NZh/jNHKfTgqk1pepZrYkQjEQMt
-        j9PY1CAV0WDkTkvNxaxjA8f0pg==
-X-Google-Smtp-Source: APXvYqwNUgYTLOwXqXYz4vTrM0NN+0xqSjHKC1RpVZCz5Zf0JHeJBz/Yb3OEX/2GORWOvyzSmLljAQ==
-X-Received: by 2002:adf:ee50:: with SMTP id w16mr38287929wro.293.1555591683176;
-        Thu, 18 Apr 2019 05:48:03 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q17sm1256823wrw.70.2019.04.18.05.48.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 05:48:02 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        khilman@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] pinctrl: generic: add new 'drive-strength-uA' property support
-Date:   Thu, 18 Apr 2019 14:47:56 +0200
-Message-Id: <20190418124758.24022-3-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190418124758.24022-1-glaroque@baylibre.com>
-References: <20190418124758.24022-1-glaroque@baylibre.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MCFgAqBpz/w0Z9dtUSYXfFyNheJYJrXxFA3vkZvBVqY=;
+        b=iYSdcXksxvxxfaHgamZPGBz1Uy9tXD/T08T02iMUe2wxhDe0JYGlm2BsJw9nsJhZ1n
+         WXZP+Egomp5Jjpw7zXpS5l60EVQievHEusp2hHcbmQLBo4R7Cx+GY06zO/drK5V0LjYB
+         hHFX1tzMjnsng6pLtrGY/EiRbYSPpxWV2MV60aBkp7Jlaij399Bhzn7GalpK5HutviD5
+         ss97nPlknSfKbWFHvR1sUUHpRfRzJz6xmfmXQZTIQB+iW+SSylAD8CtfK9ZW6ALrg/ff
+         YsZL7OrGvmL1mzPtB0nFVxiyv93f/LtXyqv6SZCqX2YTK5hC/yWDKmE9Ez+Gmh7Q9ELa
+         jY3A==
+X-Gm-Message-State: APjAAAWXLMDvl+MK2pHBm5+Wpm63mz4nA6qlUnl3gVIh4Uio+xRKlxt2
+        rPqwsDmicbkhtKVTfBYkaO8=
+X-Google-Smtp-Source: APXvYqwRj312AxC1AsWn+GCRLTRdsOaKxPeSq/oeWEPfklpdCFmdWj4pdh1dvnL3EyjsTHL/vk707A==
+X-Received: by 2002:adf:f405:: with SMTP id g5mr4098421wro.310.1555591719525;
+        Thu, 18 Apr 2019 05:48:39 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a187sm2775783wma.32.2019.04.18.05.48.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 05:48:38 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 14:48:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, hpa@zytor.com, peterz@infradead.org,
+        yuehaibing@huawei.com
+Cc:     linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:sched/core] sched/core: Make some functions static
+Message-ID: <20190418124836.GB104512@gmail.com>
+References: <20190322143153.14416-1-yuehaibing@huawei.com>
+ <tip-16e671afb70f28eb189136d1395c59dafecd270a@git.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tip-16e671afb70f28eb189136d1395c59dafecd270a@git.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add drive-strength-uA property support to allow drive strength in uA
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- drivers/pinctrl/pinconf-generic.c       | 2 ++
- include/linux/pinctrl/pinconf-generic.h | 3 +++
- 2 files changed, 5 insertions(+)
+* tip-bot for YueHaibing <tipbot@zytor.com> wrote:
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index b4f7f8a458ea..87393e9452b4 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -39,6 +39,7 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA", true),
-+	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH_UA, "output drive strength", "uA", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec", true),
- 	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
-@@ -167,6 +168,7 @@ static const struct pinconf_generic_params dt_params[] = {
- 	{ "drive-open-source", PIN_CONFIG_DRIVE_OPEN_SOURCE, 0 },
- 	{ "drive-push-pull", PIN_CONFIG_DRIVE_PUSH_PULL, 0 },
- 	{ "drive-strength", PIN_CONFIG_DRIVE_STRENGTH, 0 },
-+	{ "drive-strength-uA", PIN_CONFIG_DRIVE_STRENGTH_UA, 0 },
- 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
- 	{ "input-disable", PIN_CONFIG_INPUT_ENABLE, 0 },
- 	{ "input-enable", PIN_CONFIG_INPUT_ENABLE, 1 },
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 6c0680641108..72d06d6a3099 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -55,6 +55,8 @@
-  *	push-pull mode, the argument is ignored.
-  * @PIN_CONFIG_DRIVE_STRENGTH: the pin will sink or source at most the current
-  *	passed as argument. The argument is in mA.
-+ * @PIN_CONFIG_DRIVE_STRENGTH_UA: the pin will sink or source at most the current
-+ *	passed as argument. The argument is in uA.
-  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
-  *	which means it will wait for signals to settle when reading inputs. The
-  *	argument gives the debounce time in usecs. Setting the
-@@ -112,6 +114,7 @@ enum pin_config_param {
- 	PIN_CONFIG_DRIVE_OPEN_SOURCE,
- 	PIN_CONFIG_DRIVE_PUSH_PULL,
- 	PIN_CONFIG_DRIVE_STRENGTH,
-+	PIN_CONFIG_DRIVE_STRENGTH_UA,
- 	PIN_CONFIG_INPUT_DEBOUNCE,
- 	PIN_CONFIG_INPUT_ENABLE,
- 	PIN_CONFIG_INPUT_SCHMITT,
--- 
-2.17.1
+> Commit-ID:  16e671afb70f28eb189136d1395c59dafecd270a
+> Gitweb:     https://git.kernel.org/tip/16e671afb70f28eb189136d1395c59dafecd270a
+> Author:     YueHaibing <yuehaibing@huawei.com>
+> AuthorDate: Fri, 22 Mar 2019 22:31:53 +0800
+> Committer:  Ingo Molnar <mingo@kernel.org>
+> CommitDate: Thu, 18 Apr 2019 14:19:25 +0200
+> 
+> sched/core: Make some functions static
+> 
+> Fix these sparse warnings:
+> 
+>   kernel/sched/core.c:6576:11: warning: symbol 'max_cfs_quota_period' was not declared. Should it be static?
+>   kernel/sched/core.c:6577:11: warning: symbol 'min_cfs_quota_period' was not declared. Should it be static?
+>   kernel/sched/core.c:6657:5: warning: symbol 'tg_set_cfs_quota' was not declared. Should it be static?
+>   kernel/sched/core.c:6670:6: warning: symbol 'tg_get_cfs_quota' was not declared. Should it be static?
+>   kernel/sched/core.c:6683:5: warning: symbol 'tg_set_cfs_period' was not declared. Should it be static?
+>   kernel/sched/core.c:6693:6: warning: symbol 'tg_get_cfs_period' was not declared. Should it be static?
+>   kernel/sched/fair.c:2596:6: warning: symbol 'task_tick_numa' was not declared. Should it be static?
 
+So unless this is somehow version dependent or other changes interfered, 
+this patch wasn't tested very well:
+
+ kernel/sched/fair.o: In function `sched_cfs_period_timer':
+ fair.c:(.text+0x920c): undefined reference to `max_cfs_quota_period'
+ fair.c:(.text+0x9214): undefined reference to `max_cfs_quota_period'
+
+skipping it for now.
+
+Thanks,
+
+	Ingo
