@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C52EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE73C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F398218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6446206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610837;
-	bh=3IvzrkcnaIhMFPW0+8pwK74d7EmvxBEM4YgOYV0mEFo=;
+	s=default; t=1555610839;
+	bh=DA5xvt7z+gzGXESXo++qjpNuS6n4RrWdkbESB+z74cQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RjzowejkYmUqAwUWypg412/F3NuP4qGIyd+Mi/4POcOJ+J7woUiMkJx+Xg4gmIdJA
-	 eIL5EtOddQZoKxIBdJgJRqEIPFWUAzyNfcrwfkVmNTahGqXMjiXsbn5llvvxmhYz2N
-	 XI1IIcKcxivST3DoW/OsqB35cfVCur7howwueeqM=
+	b=JK4eUjNDAWMJs2acFm0FTB/mZX1zRxA7QmBHyxvpFqvXpue+E+yJuJBZR34vVTCOu
+	 rFip5qV5KmPZYY758viiOdV8GEwTItGIQEwfor/2ufSMVHHpu7l2xUkylphV8QYyid
+	 VO5rawGtnYDvNZ3sPHlPrafqI90dje5EgEzT2bjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388052AbfDRSHP (ORCPT
+        id S2391265AbfDRSHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391599AbfDRSHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:07:12 -0400
+        id S2391591AbfDRSHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:07:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26F6B218FF;
-        Thu, 18 Apr 2019 18:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE57B218FE;
+        Thu, 18 Apr 2019 18:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610831;
-        bh=3IvzrkcnaIhMFPW0+8pwK74d7EmvxBEM4YgOYV0mEFo=;
+        s=default; t=1555610834;
+        bh=DA5xvt7z+gzGXESXo++qjpNuS6n4RrWdkbESB+z74cQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L256HAKvBBt1W1dWjEqLa0wZthtu20ecK+0JDI2TPQKJ7Nno5AkoGFWDKdX+p3Jm4
-         z7CuMhKlrXdaPmv0HUhd9rMWFWRFzoLitAYu40UqbtyR5Ok6LgnM6i0yci1/7lSUJo
-         dCvo3Msp+N/NN3BhOVRqpQA63i4Y0rw64kJQCLIQ=
+        b=lwPD1QSHVnvhE31VgraopwlKTuvdIW7u+bSQEfeCZ4SUlFTjkEFci+MCKg+wVi/gQ
+         YCjZjDT1RSqiHG5wpGQlwtHZf9y+wSzynJqJrnyFwb4ckjgBVCRrwTECG/ydWkK2cT
+         +4uYxpT0RLq1QScQ+e+P8xc070ru8Ktez09LyYlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 70/92] include/linux/swap.h: use offsetof() instead of custom __swapoffset macro
-Date:   Thu, 18 Apr 2019 19:57:28 +0200
-Message-Id: <20190418160436.318760726@linuxfoundation.org>
+Subject: [PATCH 4.9 01/50] ARC: u-boot args: check that magic number is correct
+Date:   Thu, 18 Apr 2019 19:57:12 +0200
+Message-Id: <20190418160422.904029591@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
-References: <20190418160430.325165109@linuxfoundation.org>
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+References: <20190418160422.455656724@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,56 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a4046c06be50a4f01d435aa7fe57514818e6cc82 ]
+[ Upstream commit edb64bca50cd736c6894cc6081d5263c007ce005 ]
 
-Use offsetof() to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+In case of devboards we really often disable bootloader and load
+Linux image in memory via JTAG. Even if kernel tries to verify
+uboot_tag and uboot_arg there is sill a chance that we treat some
+garbage in registers as valid u-boot arguments in JTAG case.
+E.g. it is enough to have '1' in r0 to treat any value in r2 as
+a boot command line.
 
-  UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
-  member access within null pointer of type 'union swap_header'
-  CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
-  Call trace:
-   dump_backtrace+0x0/0x194
-   show_stack+0x20/0x2c
-   __dump_stack+0x20/0x28
-   dump_stack+0x70/0x94
-   ubsan_epilogue+0x14/0x44
-   ubsan_type_mismatch_common+0xf4/0xfc
-   __ubsan_handle_type_mismatch_v1+0x34/0x54
-   __se_sys_swapon+0x654/0x1084
-   __arm64_sys_swapon+0x1c/0x24
-   el0_svc_common+0xa8/0x150
-   el0_svc_compat_handler+0x2c/0x38
-   el0_svc_compat+0x8/0x18
+So check that magic number passed from u-boot is correct and drop
+u-boot arguments otherwise. That helps to reduce the possibility
+of using garbage as u-boot arguments in JTAG case.
 
-Link: http://lkml.kernel.org/r/20190312081902.223764-1-pihsun@chromium.org
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+We can safely check U-boot magic value (0x0) in linux passed via
+r1 register as U-boot pass it from the beginning. So there is no
+backward-compatibility issues.
+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swap.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arc/kernel/head.S  | 1 +
+ arch/arc/kernel/setup.c | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 4fd1ab9565ba..e643866912b7 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -155,9 +155,9 @@ struct swap_extent {
- /*
-  * Max bad pages in the new format..
-  */
--#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
- #define MAX_SWAP_BADPAGES \
--	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
-+	((offsetof(union swap_header, magic.magic) - \
-+	  offsetof(union swap_header, info.badpages)) / sizeof(int))
+diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
+index 1f945d0f40da..208bf2c9e7b0 100644
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -107,6 +107,7 @@ ENTRY(stext)
+ 	;    r2 = pointer to uboot provided cmdline or external DTB in mem
+ 	; These are handled later in handle_uboot_args()
+ 	st	r0, [@uboot_tag]
++	st      r1, [@uboot_magic]
+ 	st	r2, [@uboot_arg]
+ #endif
  
- enum {
- 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 9119bea503a7..9f96120eee6e 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -32,6 +32,7 @@ unsigned int intr_to_DE_cnt;
+ 
+ /* Part of U-boot ABI: see head.S */
+ int __initdata uboot_tag;
++int __initdata uboot_magic;
+ char __initdata *uboot_arg;
+ 
+ const struct machine_desc *machine_desc;
+@@ -400,6 +401,8 @@ static inline bool uboot_arg_invalid(unsigned long addr)
+ #define UBOOT_TAG_NONE		0
+ #define UBOOT_TAG_CMDLINE	1
+ #define UBOOT_TAG_DTB		2
++/* We always pass 0 as magic from U-boot */
++#define UBOOT_MAGIC_VALUE	0
+ 
+ void __init handle_uboot_args(void)
+ {
+@@ -415,6 +418,11 @@ void __init handle_uboot_args(void)
+ 		goto ignore_uboot_args;
+ 	}
+ 
++	if (uboot_magic != UBOOT_MAGIC_VALUE) {
++		pr_warn(IGNORE_ARGS "non zero uboot magic\n");
++		goto ignore_uboot_args;
++	}
++
+ 	if (uboot_tag != UBOOT_TAG_NONE &&
+             uboot_arg_invalid((unsigned long)uboot_arg)) {
+ 		pr_warn(IGNORE_ARGS "invalid uboot arg: '%px'\n", uboot_arg);
 -- 
 2.19.1
 
