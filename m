@@ -2,77 +2,201 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038F9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4682C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE8921871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A422C2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MwwctOBf"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="T6SH//ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388449AbfDRMkp (ORCPT
+        id S2388379AbfDRMl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:40:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:46020 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfDRMkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:40:45 -0400
-Received: from zn.tnic (p200300EC2F112E003868EF36058F9C84.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:3868:ef36:58f:9c84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F3DF11EC0380;
-        Thu, 18 Apr 2019 14:40:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555591244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=A/tlFZXrPGyk1/ajtcj9AEpnfcVu3SpUU/A9NTuHNdk=;
-        b=MwwctOBfcJ2PECzysA1+jPvueLwTMePZpD0sNt95MklC6BbiXNzU6mZ8VO5CKLaEDi0IxM
-        9KiAipPZo+hb4gLJ6AEecpdte/69Ggrf0bc9o2iIHudMukiVkLsAg49TxNx98RIXyJVMmU
-        4Ql1WDeqPJQ5QUGUjiBRSHwVXMP2Pp8=
-Date:   Thu, 18 Apr 2019 14:40:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
-        aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
-        mchehab@kernel.org, james.morse@arm.com, sachin.ghadi@sifive.com
-Subject: Re: [PATCH 1/3] RISC-V: Add DT documentation for SiFive L2 Cache
- Controller
-Message-ID: <20190418124042.GH27160@zn.tnic>
-References: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
- <1555328443-30874-2-git-send-email-yash.shah@sifive.com>
+        Thu, 18 Apr 2019 08:41:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55675 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfDRMl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 08:41:27 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3ICf5NI190534
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 18 Apr 2019 05:41:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3ICf5NI190534
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555591269;
+        bh=6OJ0bNksX9Qhw6vmZ+FIym5DHCb2o24skW/r+X2GbsI=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=T6SH//riICm6cTpTkxEgOZdSsqn7vP67T+fOGJ+bX/AFcfuedVh2usG/U2a/NfvZN
+         xfkVsxQWNGgSVQ5qjWuBn783w7m6xplbnvNHElV3JPRDWKGQTIP9sLiGVNM76k6OOF
+         DbgF/nvVuhB/NB9Fb1KBAqjInYzzpeeVlXT7zLSQVpCG5gLsMIq9sPMA4ihv75E5WW
+         UoLrJDa59kc+kfBUwnqcpVxvuvAGVlg87hD43iMdRpsKaiNBvLmMogOWHMMTTjD6OU
+         LljtlWUFm8siVuYX9H/2af+xvuv4zpDUmhpbPnaknmFT1JoC0RftAbv3j3e0YfkxDs
+         UJrzgRI7xl8Ag==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3ICewfE190527;
+        Thu, 18 Apr 2019 05:40:58 -0700
+Date:   Thu, 18 Apr 2019 05:40:58 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Chang-An Chen <tipbot@zytor.com>
+Message-ID: <tip-3f2552f7e9c5abef2775c53f7af66532f8bf65bc@git.kernel.org>
+Cc:     stanley.chu@mediatek.com, fweisbec@gmail.com, cminyard@mvista.com,
+        linux-mediatek@lists.infradead.org, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, chang-an.chen@mediatek.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        kuohong.wang@mediatek.com, freddy.hsin@mediatek.com,
+        john.stultz@linaro.org, matthias.bgg@gmail.com, hpa@zytor.com,
+        keescook@chromium.org
+Reply-To: john.stultz@linaro.org, matthias.bgg@gmail.com,
+          freddy.hsin@mediatek.com, hpa@zytor.com, keescook@chromium.org,
+          chang-an.chen@mediatek.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, linux-arm-kernel@lists.infradead.org,
+          kuohong.wang@mediatek.com, mingo@kernel.org, cminyard@mvista.com,
+          fweisbec@gmail.com, linux-mediatek@lists.infradead.org,
+          stanley.chu@mediatek.com
+In-Reply-To: <1553828349-8914-1-git-send-email-chang-an.chen@mediatek.com>
+References: <1553828349-8914-1-git-send-email-chang-an.chen@mediatek.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/urgent] timers/sched_clock: Prevent generic sched_clock
+ wrap caused by tick_freeze()
+Git-Commit-ID: 3f2552f7e9c5abef2775c53f7af66532f8bf65bc
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <1555328443-30874-2-git-send-email-yash.shah@sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:10:41PM +0530, Yash Shah wrote:
-> This patch adds device tree bindings for SiFive FU540 L2 cache controller
-> driver
+Commit-ID:  3f2552f7e9c5abef2775c53f7af66532f8bf65bc
+Gitweb:     https://git.kernel.org/tip/3f2552f7e9c5abef2775c53f7af66532f8bf65bc
+Author:     Chang-An Chen <chang-an.chen@mediatek.com>
+AuthorDate: Fri, 29 Mar 2019 10:59:09 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 18 Apr 2019 14:34:53 +0200
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+timers/sched_clock: Prevent generic sched_clock wrap caused by tick_freeze()
 
-Also, do
+tick_freeze() introduced by suspend-to-idle in commit 124cf9117c5f ("PM /
+sleep: Make it possible to quiesce timers during suspend-to-idle") uses
+timekeeping_suspend() instead of syscore_suspend() during
+suspend-to-idle. As a consequence generic sched_clock will keep going
+because sched_clock_suspend() and sched_clock_resume() are not invoked
+during suspend-to-idle which can result in a generic sched_clock wrap.
 
-$ git grep 'This patch' Documentation/process
+On a ARM system with suspend-to-idle enabled, sched_clock is registered
+as "56 bits at 13MHz, resolution 76ns, wraps every 4398046511101ns", which
+means the real wrapping duration is 8796093022202ns.
 
-for more details.
+[  134.551779] suspend-to-idle suspend (timekeeping_suspend())
+[ 1204.912239] suspend-to-idle resume (timekeeping_resume())
+......
+[ 1206.912239] suspend-to-idle suspend (timekeeping_suspend())
+[ 5880.502807] suspend-to-idle resume (timekeeping_resume())
+......
+[ 6000.403724] suspend-to-idle suspend (timekeeping_suspend())
+[ 8035.753167] suspend-to-idle resume  (timekeeping_resume())
+......
+[ 8795.786684] (2)[321:charger_thread]......
+[ 8795.788387] (2)[321:charger_thread]......
+[    0.057226] (0)[0:swapper/0]......
+[    0.061447] (2)[0:swapper/2]......
 
--- 
-Regards/Gruss,
-    Boris.
+sched_clock was not stopped during suspend-to-idle, and sched_clock_poll
+hrtimer was not expired because timekeeping_suspend() was invoked during
+suspend-to-idle. It makes sched_clock wrap at kernel time 8796s.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+To prevent this, invoke sched_clock_suspend() and sched_clock_resume() in
+tick_freeze() together with timekeeping_suspend() and timekeeping_resume().
+
+Fixes: 124cf9117c5f (PM / sleep: Make it possible to quiesce timers during suspend-to-idle)
+Signed-off-by: Chang-An Chen <chang-an.chen@mediatek.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Corey Minyard <cminyard@mvista.com>
+Cc: <linux-mediatek@lists.infradead.org>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: Stanley Chu <stanley.chu@mediatek.com>
+Cc: <kuohong.wang@mediatek.com>
+Cc: <freddy.hsin@mediatek.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1553828349-8914-1-git-send-email-chang-an.chen@mediatek.com
+---
+ kernel/time/sched_clock.c | 4 ++--
+ kernel/time/tick-common.c | 2 ++
+ kernel/time/timekeeping.h | 7 +++++++
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index 094b82ca95e5..930113b9799a 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -272,7 +272,7 @@ static u64 notrace suspended_sched_clock_read(void)
+ 	return cd.read_data[seq & 1].epoch_cyc;
+ }
+ 
+-static int sched_clock_suspend(void)
++int sched_clock_suspend(void)
+ {
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+@@ -283,7 +283,7 @@ static int sched_clock_suspend(void)
+ 	return 0;
+ }
+ 
+-static void sched_clock_resume(void)
++void sched_clock_resume(void)
+ {
+ 	struct clock_read_data *rd = &cd.read_data[0];
+ 
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 529143b4c8d2..df401463a191 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -487,6 +487,7 @@ void tick_freeze(void)
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), true);
+ 		system_state = SYSTEM_SUSPEND;
++		sched_clock_suspend();
+ 		timekeeping_suspend();
+ 	} else {
+ 		tick_suspend_local();
+@@ -510,6 +511,7 @@ void tick_unfreeze(void)
+ 
+ 	if (tick_freeze_depth == num_online_cpus()) {
+ 		timekeeping_resume();
++		sched_clock_resume();
+ 		system_state = SYSTEM_RUNNING;
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), false);
+diff --git a/kernel/time/timekeeping.h b/kernel/time/timekeeping.h
+index 7a9b4eb7a1d5..141ab3ab0354 100644
+--- a/kernel/time/timekeeping.h
++++ b/kernel/time/timekeeping.h
+@@ -14,6 +14,13 @@ extern u64 timekeeping_max_deferment(void);
+ extern void timekeeping_warp_clock(void);
+ extern int timekeeping_suspend(void);
+ extern void timekeeping_resume(void);
++#ifdef CONFIG_GENERIC_SCHED_CLOCK
++extern int sched_clock_suspend(void);
++extern void sched_clock_resume(void);
++#else
++static inline int sched_clock_suspend(void) { return 0; }
++static inline void sched_clock_resume(void) { }
++#endif
+ 
+ extern void do_timer(unsigned long ticks);
+ extern void update_wall_time(void);
