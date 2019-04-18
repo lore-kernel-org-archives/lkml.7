@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB535C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8261DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97715206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AADC2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbfDRJHS (ORCPT
+        id S2388492AbfDRJHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:07:18 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:33957 "EHLO
+        Thu, 18 Apr 2019 05:07:24 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33963 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388426AbfDRJHR (ORCPT
+        with ESMTP id S2388406AbfDRJHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 05:07:17 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH2zp-0001nn-CA; Thu, 18 Apr 2019 11:06:17 +0200
-Message-Id: <20190418084253.903603121@linutronix.de>
+        id 1hH307-0001sE-IN; Thu, 18 Apr 2019 11:06:35 +0200
+Message-Id: <20190418084254.639634107@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:28 +0200
+Date:   Thu, 18 Apr 2019 10:41:36 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
         David Rientjes <rientjes@google.com>,
         Christoph Lameter <cl@linux.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
         Mike Rapoport <rppt@linux.vnet.ibm.com>,
         Akinobu Mita <akinobu.mita@gmail.com>,
         iommu@lists.linux-foundation.org,
@@ -62,7 +62,8 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Daniel Vetter <daniel@ffwll.ch>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         linux-arch@vger.kernel.org
-Subject: [patch V2 09/29] mm/kasan: Simplify stacktrace handling
+Subject: [patch V2 17/29] lockdep: Remove unused trace argument from
+ print_circular_bug()
 References: <20190418084119.056416939@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,85 +72,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
-
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-mm@kvack.org
 ---
- mm/kasan/common.c |   30 ++++++++++++------------------
- mm/kasan/report.c |    7 ++++---
- 2 files changed, 16 insertions(+), 21 deletions(-)
+ kernel/locking/lockdep.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -48,34 +48,28 @@ static inline int in_irqentry_text(unsig
- 		 ptr < (unsigned long)&__softirqentry_text_end);
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1522,10 +1522,9 @@ static inline int class_equal(struct loc
  }
  
--static inline void filter_irq_stacks(struct stack_trace *trace)
-+static inline unsigned int filter_irq_stacks(unsigned long *entries,
-+					     unsigned int nr_entries)
+ static noinline int print_circular_bug(struct lock_list *this,
+-				struct lock_list *target,
+-				struct held_lock *check_src,
+-				struct held_lock *check_tgt,
+-				struct stack_trace *trace)
++				       struct lock_list *target,
++				       struct held_lock *check_src,
++				       struct held_lock *check_tgt)
  {
--	int i;
-+	unsigned int i;
- 
--	if (!trace->nr_entries)
--		return;
--	for (i = 0; i < trace->nr_entries; i++)
--		if (in_irqentry_text(trace->entries[i])) {
-+	for (i = 0; i < nr_entries; i++) {
-+		if (in_irqentry_text(entries[i])) {
- 			/* Include the irqentry function into the stack. */
--			trace->nr_entries = i + 1;
--			break;
-+			return i + 1;
+ 	struct task_struct *curr = current;
+ 	struct lock_list *parent;
+@@ -2206,7 +2205,7 @@ check_prev_add(struct task_struct *curr,
+ 			 */
+ 			save(trace);
  		}
-+	}
-+	return nr_entries;
- }
- 
- static inline depot_stack_handle_t save_stack(gfp_t flags)
- {
- 	unsigned long entries[KASAN_STACK_DEPTH];
--	struct stack_trace trace = {
--		.nr_entries = 0,
--		.entries = entries,
--		.max_entries = KASAN_STACK_DEPTH,
--		.skip = 0
--	};
-+	unsigned int nr_entries;
- 
--	save_stack_trace(&trace);
--	filter_irq_stacks(&trace);
--
--	return depot_save_stack(&trace, flags);
-+	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
-+	nr_entries = filter_irq_stacks(entries, nr_entries);
-+	return stack_depot_save(entries, nr_entries, flags);
- }
- 
- static inline void set_track(struct kasan_track *track, gfp_t flags)
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -100,10 +100,11 @@ static void print_track(struct kasan_tra
- {
- 	pr_err("%s by task %u:\n", prefix, track->pid);
- 	if (track->stack) {
--		struct stack_trace trace;
-+		unsigned long *entries;
-+		unsigned int nr_entries;
- 
--		depot_fetch_stack(track->stack, &trace);
--		print_stack_trace(&trace, 0);
-+		nr_entries = stack_depot_fetch(track->stack, &entries);
-+		stack_trace_print(entries, nr_entries, 0);
- 	} else {
- 		pr_err("(stack is not available)\n");
+-		return print_circular_bug(&this, target_entry, next, prev, trace);
++		return print_circular_bug(&this, target_entry, next, prev);
  	}
+ 	else if (unlikely(ret < 0))
+ 		return print_bfs_bug(ret);
 
 
