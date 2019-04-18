@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFDDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7853C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F4321872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD40218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610311;
-	bh=iOAR/jjnOTrW5Rk+msOHSS6OQhI/Ue1xT+DqPJeITNc=;
+	s=default; t=1555610320;
+	bh=Wp9HFVpCPvkH0jPAss366Yc/j16eP2Ww9+UJdbU3oOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9TIvrta80yJeJIcduQHLXeJPSWzkpg6UrcEGZ3AG1MKH6+Z5bax2X/B4spW3O6pL
-	 MXZNVhgZZosFb1i9Kanaa18hTR0BpufJOuES85rJmiNI4TxyetkHaA3gh9udoiav6E
-	 huSBHET0p4y+FE+CJXqIOEmxDWlesCX9VlFmcwak=
+	b=aU063ve7jQh2S7u8yyeIqdOF36Io8iCAak+3T7fV/deAqXMRI4Xj7kQmKlqnbazlC
+	 RqDpwOGnTNXE9a50xDuEieT9d2CEC07QGtU46toIboHzmWC4CQ+CZPJ2HNgXvrXveU
+	 NuA86D7mfqY7650k9NSoWVN5KP/FAylRlt9c+g70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389861AbfDRR6a (ORCPT
+        id S2389909AbfDRR6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52602 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389833AbfDRR62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:58:28 -0400
+        id S2389833AbfDRR6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:58:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB6D1206B6;
-        Thu, 18 Apr 2019 17:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AAFA217FA;
+        Thu, 18 Apr 2019 17:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610308;
-        bh=iOAR/jjnOTrW5Rk+msOHSS6OQhI/Ue1xT+DqPJeITNc=;
+        s=default; t=1555610310;
+        bh=Wp9HFVpCPvkH0jPAss366Yc/j16eP2Ww9+UJdbU3oOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8wohnHhJq1v9/BdFMSiNSphbvY+C/qIBW+fO6UP8teIbla1o/0yxcMhyolGLF5EF
-         iHrDFfqKwaoX5ub96jiSPn9wOek/zxOzCP/kutKhG00DmmJJHsGFUDmkeiAsMjkS2C
-         3zTfM102kOSRXeggIK+1jke+ULI+rRil9W6m8B6k=
+        b=ffQkXKbdSxt+vo2vYfl6A72/9joejEgDOPub3O1sVrJnTPaexTsFcaLCryGmY9eRD
+         Abr2aQPe77tZtG1qsPymW22L6oQdF+N3dK6Kr2HUvieGJfXJlj3YbP0rt4ZLAntQHW
+         iz25l/0eFnDGzuTrHKw/mCNikjmf8kfFujU1SD+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Dave Airlie <airlied@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/110] auxdisplay: hd44780: Fix memory leak on ->remove()
-Date:   Thu, 18 Apr 2019 19:56:00 +0200
-Message-Id: <20190418160438.448680622@linuxfoundation.org>
+Subject: [PATCH 4.19 012/110] drm/udl: use drm_gem_object_put_unlocked.
+Date:   Thu, 18 Apr 2019 19:56:01 +0200
+Message-Id: <20190418160438.571813202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -62,32 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41c8d0adf3c4df1867d98cee4a2c4531352a33ad ]
+[ Upstream commit 8f3b487685b2acf71b42bb30d68fd9271bec8695 ]
 
-We have to free on ->remove() the allocated resources on ->probe().
+When Daniel removed struct_mutex he didn't fix this call to the unlocked
+variant which is required since we no longer use struct mutex.
 
-Fixes: d47d88361fee ("auxdisplay: Add HD44780 Character LCD support")
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+This fixes a bunch of:
+WARNING: CPU: 4 PID: 1370 at drivers/gpu/drm/drm_gem.c:931 drm_gem_object_put+0x2b/0x30 [drm]
+Modules linked in: udl xt_CHECKSUM ipt_MASQUERADE tun bridge stp llc nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t>
+CPU: 4 PID: 1370 Comm: Xorg Not tainted 5.0.0+ #2
+
+backtraces when you plug in a udl device.
+
+Fixes: ae358dacd217 (drm/udl: Get rid of dev->struct_mutex usage)
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/auxdisplay/hd44780.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/udl/udl_gem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/auxdisplay/hd44780.c b/drivers/auxdisplay/hd44780.c
-index f1a42f0f1ded..df3da49ff9e8 100644
---- a/drivers/auxdisplay/hd44780.c
-+++ b/drivers/auxdisplay/hd44780.c
-@@ -299,6 +299,8 @@ static int hd44780_remove(struct platform_device *pdev)
- 	struct charlcd *lcd = platform_get_drvdata(pdev);
+diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
+index d5a23295dd80..bb7b58407039 100644
+--- a/drivers/gpu/drm/udl/udl_gem.c
++++ b/drivers/gpu/drm/udl/udl_gem.c
+@@ -224,7 +224,7 @@ int udl_gem_mmap(struct drm_file *file, struct drm_device *dev,
+ 	*offset = drm_vma_node_offset_addr(&gobj->base.vma_node);
  
- 	charlcd_unregister(lcd);
-+
-+	kfree(lcd);
- 	return 0;
- }
- 
+ out:
+-	drm_gem_object_put(&gobj->base);
++	drm_gem_object_put_unlocked(&gobj->base);
+ unlock:
+ 	mutex_unlock(&udl->gem_lock);
+ 	return ret;
 -- 
 2.19.1
 
