@@ -6,51 +6,43 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6526CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3471DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3380D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047C5206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388802AbfDRJKG (ORCPT
+        id S2388501AbfDRJKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:10:06 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:34065 "EHLO
+        Thu, 18 Apr 2019 05:10:38 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:33930 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388476AbfDRJHb (ORCPT
+        with ESMTP id S2388427AbfDRJHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:07:31 -0400
+        Thu, 18 Apr 2019 05:07:13 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH305-0001rb-3d; Thu, 18 Apr 2019 11:06:33 +0200
-Message-Id: <20190418084254.549410214@linutronix.de>
+        id 1hH2zr-0001oP-DR; Thu, 18 Apr 2019 11:06:19 +0200
+Message-Id: <20190418084253.991328385@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:35 +0200
+Date:   Thu, 18 Apr 2019 10:41:29 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        Alexander Potapenko <glider@google.com>, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
         David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Pekka Enberg <penberg@kernel.org>,
         Christoph Lameter <cl@linux.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
+        kasan-dev@googlegroups.com, Akinobu Mita <akinobu.mita@gmail.com>,
         iommu@lists.linux-foundation.org,
         Robin Murphy <robin.murphy@arm.com>,
         Christoph Hellwig <hch@lst.de>,
@@ -60,8 +52,16 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Josef Bacik <josef@toxicpanda.com>,
         linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
         Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>, linux-arch@vger.kernel.org
-Subject: [patch V2 16/29] drm: Simplify stacktrace handling
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [patch V2 10/29] mm/page_owner: Simplify stack trace handling
 References: <20190418084119.056416939@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -79,135 +79,158 @@ store anything in it. It overwrites the entries pointer in the stack_trace
 struct so it points to the depot storage.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: linux-mm@kvack.org
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- drivers/gpu/drm/drm_mm.c                |   22 +++++++---------------
- drivers/gpu/drm/i915/i915_vma.c         |   11 ++++-------
- drivers/gpu/drm/i915/intel_runtime_pm.c |   21 +++++++--------------
- 3 files changed, 18 insertions(+), 36 deletions(-)
+ mm/page_owner.c |   79 +++++++++++++++++++-------------------------------------
+ 1 file changed, 28 insertions(+), 51 deletions(-)
 
---- a/drivers/gpu/drm/drm_mm.c
-+++ b/drivers/gpu/drm/drm_mm.c
-@@ -106,22 +106,19 @@
- static noinline void save_stack(struct drm_mm_node *node)
+--- a/mm/page_owner.c
++++ b/mm/page_owner.c
+@@ -58,15 +58,10 @@ static bool need_page_owner(void)
+ static __always_inline depot_stack_handle_t create_dummy_stack(void)
  {
- 	unsigned long entries[STACKDEPTH];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = STACKDEPTH,
--		.skip = 1
--	};
-+	unsigned int n;
- 
--	save_stack_trace(&trace);
-+	n = stack_trace_save(entries, ARRAY_SIZE(entries), 1);
- 
- 	/* May be called under spinlock, so avoid sleeping */
--	node->stack = depot_save_stack(&trace, GFP_NOWAIT);
-+	node->stack = stack_depot_save(entries, n, GFP_NOWAIT);
- }
- 
- static void show_leaks(struct drm_mm *mm)
- {
- 	struct drm_mm_node *node;
--	unsigned long entries[STACKDEPTH];
-+	unsigned long *entries;
+ 	unsigned long entries[4];
+-	struct stack_trace dummy;
 +	unsigned int nr_entries;
- 	char *buf;
  
- 	buf = kmalloc(BUFSZ, GFP_KERNEL);
-@@ -129,19 +126,14 @@ static void show_leaks(struct drm_mm *mm
- 		return;
- 
- 	list_for_each_entry(node, drm_mm_nodes(mm), node_list) {
--		struct stack_trace trace = {
--			.entries = entries,
--			.max_entries = STACKDEPTH
--		};
+-	dummy.nr_entries = 0;
+-	dummy.max_entries = ARRAY_SIZE(entries);
+-	dummy.entries = &entries[0];
+-	dummy.skip = 0;
 -
- 		if (!node->stack) {
- 			DRM_ERROR("node [%08llx + %08llx]: unknown owner\n",
- 				  node->start, node->size);
- 			continue;
- 		}
+-	save_stack_trace(&dummy);
+-	return depot_save_stack(&dummy, GFP_KERNEL);
++	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
++	return stack_depot_save(entries, nr_entries, GFP_KERNEL);
+ }
  
--		depot_fetch_stack(node->stack, &trace);
--		snprint_stack_trace(buf, BUFSZ, &trace, 0);
-+		nr_entries = stack_depot_fetch(node->stack, &entries);
-+		stack_trace_snprint(buf, BUFSZ, entries, nr_entries, 0);
- 		DRM_ERROR("node [%08llx + %08llx]: inserted at\n%s",
- 			  node->start, node->size, buf);
+ static noinline void register_dummy_stack(void)
+@@ -120,46 +115,39 @@ void __reset_page_owner(struct page *pag
  	}
---- a/drivers/gpu/drm/i915/i915_vma.c
-+++ b/drivers/gpu/drm/i915/i915_vma.c
-@@ -36,11 +36,8 @@
+ }
  
- static void vma_print_allocator(struct i915_vma *vma, const char *reason)
+-static inline bool check_recursive_alloc(struct stack_trace *trace,
+-					unsigned long ip)
++static inline bool check_recursive_alloc(unsigned long *entries,
++					 unsigned int nr_entries,
++					 unsigned long ip)
  {
--	unsigned long entries[12];
+-	int i;
++	unsigned int i;
+ 
+-	if (!trace->nr_entries)
+-		return false;
+-
+-	for (i = 0; i < trace->nr_entries; i++) {
+-		if (trace->entries[i] == ip)
++	for (i = 0; i < nr_entries; i++) {
++		if (entries[i] == ip)
+ 			return true;
+ 	}
+-
+ 	return false;
+ }
+ 
+ static noinline depot_stack_handle_t save_stack(gfp_t flags)
+ {
+ 	unsigned long entries[PAGE_OWNER_STACK_DEPTH];
 -	struct stack_trace trace = {
+-		.nr_entries = 0,
 -		.entries = entries,
--		.max_entries = ARRAY_SIZE(entries),
+-		.max_entries = PAGE_OWNER_STACK_DEPTH,
+-		.skip = 2
 -	};
+ 	depot_stack_handle_t handle;
++	unsigned int nr_entries;
+ 
+-	save_stack_trace(&trace);
++	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 2);
+ 
+ 	/*
+-	 * We need to check recursion here because our request to stackdepot
+-	 * could trigger memory allocation to save new entry. New memory
+-	 * allocation would reach here and call depot_save_stack() again
+-	 * if we don't catch it. There is still not enough memory in stackdepot
+-	 * so it would try to allocate memory again and loop forever.
++	 * We need to check recursion here because our request to
++	 * stackdepot could trigger memory allocation to save new
++	 * entry. New memory allocation would reach here and call
++	 * stack_depot_save_entries() again if we don't catch it. There is
++	 * still not enough memory in stackdepot so it would try to
++	 * allocate memory again and loop forever.
+ 	 */
+-	if (check_recursive_alloc(&trace, _RET_IP_))
++	if (check_recursive_alloc(entries, nr_entries, _RET_IP_))
+ 		return dummy_handle;
+ 
+-	handle = depot_save_stack(&trace, flags);
++	handle = stack_depot_save(entries, nr_entries, flags);
+ 	if (!handle)
+ 		handle = failure_handle;
+ 
+@@ -337,16 +325,10 @@ print_page_owner(char __user *buf, size_
+ 		struct page *page, struct page_owner *page_owner,
+ 		depot_stack_handle_t handle)
+ {
+-	int ret;
+-	int pageblock_mt, page_mt;
++	int ret, pageblock_mt, page_mt;
 +	unsigned long *entries;
 +	unsigned int nr_entries;
- 	char buf[512];
+ 	char *kbuf;
+-	unsigned long entries[PAGE_OWNER_STACK_DEPTH];
+-	struct stack_trace trace = {
+-		.nr_entries = 0,
+-		.entries = entries,
+-		.max_entries = PAGE_OWNER_STACK_DEPTH,
+-		.skip = 0
+-	};
  
- 	if (!vma->node.stack) {
-@@ -49,8 +46,8 @@ static void vma_print_allocator(struct i
+ 	count = min_t(size_t, count, PAGE_SIZE);
+ 	kbuf = kmalloc(count, GFP_KERNEL);
+@@ -375,8 +357,8 @@ print_page_owner(char __user *buf, size_
+ 	if (ret >= count)
+ 		goto err;
+ 
+-	depot_fetch_stack(handle, &trace);
+-	ret += snprint_stack_trace(kbuf + ret, count - ret, &trace, 0);
++	nr_entries = stack_depot_fetch(handle, &entries);
++	ret += stack_trace_snprint(kbuf + ret, count - ret, entries, nr_entries, 0);
+ 	if (ret >= count)
+ 		goto err;
+ 
+@@ -407,14 +389,9 @@ void __dump_page_owner(struct page *page
+ {
+ 	struct page_ext *page_ext = lookup_page_ext(page);
+ 	struct page_owner *page_owner;
+-	unsigned long entries[PAGE_OWNER_STACK_DEPTH];
+-	struct stack_trace trace = {
+-		.nr_entries = 0,
+-		.entries = entries,
+-		.max_entries = PAGE_OWNER_STACK_DEPTH,
+-		.skip = 0
+-	};
+ 	depot_stack_handle_t handle;
++	unsigned long *entries;
++	unsigned int nr_entries;
+ 	gfp_t gfp_mask;
+ 	int mt;
+ 
+@@ -438,10 +415,10 @@ void __dump_page_owner(struct page *page
  		return;
  	}
  
--	depot_fetch_stack(vma->node.stack, &trace);
--	snprint_stack_trace(buf, sizeof(buf), &trace, 0);
-+	nr_entries = stack_depot_fetch(vma->node.stack, &entries);
-+	stack_trace_snprint(buf, sizeof(buf), entries, nr_entries, 0);
- 	DRM_DEBUG_DRIVER("vma.node [%08llx + %08llx] %s: inserted at %s\n",
- 			 vma->node.start, vma->node.size, reason, buf);
- }
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -60,27 +60,20 @@
- static noinline depot_stack_handle_t __save_depot_stack(void)
- {
- 	unsigned long entries[STACKDEPTH];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = ARRAY_SIZE(entries),
--		.skip = 1,
--	};
-+	unsigned int n;
+-	depot_fetch_stack(handle, &trace);
++	nr_entries = stack_depot_fetch(handle, &entries);
+ 	pr_alert("page allocated via order %u, migratetype %s, gfp_mask %#x(%pGg)\n",
+ 		 page_owner->order, migratetype_names[mt], gfp_mask, &gfp_mask);
+-	print_stack_trace(&trace, 0);
++	stack_trace_print(entries, nr_entries, 0);
  
--	save_stack_trace(&trace);
--	return depot_save_stack(&trace, GFP_NOWAIT | __GFP_NOWARN);
-+	n = stack_trace_save(entries, ARRAY_SIZE(entries), 1);
-+	return stack_depot_save(entries, n, GFP_NOWAIT | __GFP_NOWARN);
- }
- 
- static void __print_depot_stack(depot_stack_handle_t stack,
- 				char *buf, int sz, int indent)
- {
--	unsigned long entries[STACKDEPTH];
--	struct stack_trace trace = {
--		.entries = entries,
--		.max_entries = ARRAY_SIZE(entries),
--	};
-+	unsigned long *entries;
-+	unsigned int nr_entries;
- 
--	depot_fetch_stack(stack, &trace);
--	snprint_stack_trace(buf, sz, &trace, indent);
-+	nr_entries = stack_depot_fetch(stack, &entries);
-+	stack_trace_snprint(buf, sz, entries, nr_entries, indent);
- }
- 
- static void init_intel_runtime_pm_wakeref(struct drm_i915_private *i915)
+ 	if (page_owner->last_migrate_reason != -1)
+ 		pr_alert("page has been migrated, last migrate reason: %s\n",
 
 
