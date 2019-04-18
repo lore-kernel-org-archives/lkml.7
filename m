@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF108C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29148C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AE421871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BE221872
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610518;
-	bh=GbKyeYqQa3/GMO5nR3hTQHdxXOSkHWfd5ZRAzqUDK8I=;
+	s=default; t=1555610522;
+	bh=H900CJyRU/pRnbwwq8HuTpzWPWAE24EhkwYkbDFxS6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZF6jtJhPtPbzjeoj08jtGqlF3mro2MwX6c46TrSc9N7FCaIA5wazfnF0Okyuc+qu
-	 /muSa8GJsebtN++F7APaV4hFtUG1UXWOs4ojF9jxwXKN5yPjIUhcp32nAP0avF7E5+
-	 85S1ajkxk8A39pQiFSqiOvavl/7NuSkBcGA0Tl0Q=
+	b=sKa5Zd0oYXtiG5kdiInUWdobVCXIfAGyR4eQ2fJBIXpT9w2CbRRsUUqG1uLiSAYeh
+	 OoT/K9Bzbh4vHAuAEgpj1XBTHq7ViSv3aCOGFOc7bUKMpFQeJ3UyudedvTTJvS1Zit
+	 AYPQDWad84gB16SXIDHQCMTfX7PIZiuctOLrPPsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390656AbfDRSB5 (ORCPT
+        id S2390678AbfDRSCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390638AbfDRSBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:53 -0400
+        id S2390654AbfDRSB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8FC6206B6;
-        Thu, 18 Apr 2019 18:01:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07691206B6;
+        Thu, 18 Apr 2019 18:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610511;
-        bh=GbKyeYqQa3/GMO5nR3hTQHdxXOSkHWfd5ZRAzqUDK8I=;
+        s=default; t=1555610516;
+        bh=H900CJyRU/pRnbwwq8HuTpzWPWAE24EhkwYkbDFxS6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z9hUjwadhnKpNjsACbNBX8OC0SN6keJ3xfe/t19WnTaeDrw4W6d0clDSpHPF0ioEc
-         FrGUWC5VAgGZSYpHZESpTZh2NEn+5fQbLljU9Xu5asR/nqk5JixvKMXdHH7kudaPPK
-         j1UCdJmWGN/wQZYzySC5Z4G7Gr0krCJzDBiZTql0=
+        b=nrjo7HC0I6F89BKESmZy7n66KSh/8YIOGnJKOfDpjeDybmHy4jTu7QbN4mfRNKweU
+         9IQxM4kWQbMk8G0G7j1e2DvQd1DrZFrqdMO3JoamIkAXM4biyDgOMVv/hJmouPOmm+
+         0eXATn/ynmOyFsZdKPKIbC1fJCU49mh5QJCubl4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/110] netfilter: xt_cgroup: shrink size of v2 path
-Date:   Thu, 18 Apr 2019 19:56:50 +0200
-Message-Id: <20190418160444.248469124@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+e9aebef558e3ed673934@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 084/110] xfrm: destroy xfrm_state synchronously on net exit path
+Date:   Thu, 18 Apr 2019 19:57:13 +0200
+Message-Id: <20190418160446.030951397@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,156 +62,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0d704967f4a49cc2212350b3e4a8231f8b4283ed ]
+[ Upstream commit f75a2804da391571563c4b6b29e7797787332673 ]
 
-cgroup v2 path field is PATH_MAX which is too large, this is placing too
-much pressure on memory allocation for people with many rules doing
-cgroup v1 classid matching, side effects of this are bug reports like:
+xfrm_state_put() moves struct xfrm_state to the GC list
+and schedules the GC work to clean it up. On net exit call
+path, xfrm_state_flush() is called to clean up and
+xfrm_flush_gc() is called to wait for the GC work to complete
+before exit.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=200639
+However, this doesn't work because one of the ->destructor(),
+ipcomp_destroy(), schedules the same GC work again inside
+the GC work. It is hard to wait for such a nested async
+callback. This is also why syzbot still reports the following
+warning:
 
-This patch registers a new revision that shrinks the cgroup path to 512
-bytes, which is the same approach we follow in similar extensions that
-have a path field.
+ WARNING: CPU: 1 PID: 33 at net/ipv6/xfrm6_tunnel.c:351 xfrm6_tunnel_net_exit+0x2cb/0x500 net/ipv6/xfrm6_tunnel.c:351
+ ...
+  ops_exit_list.isra.0+0xb0/0x160 net/core/net_namespace.c:153
+  cleanup_net+0x51d/0xb10 net/core/net_namespace.c:551
+  process_one_work+0xd0c/0x1ce0 kernel/workqueue.c:2153
+  worker_thread+0x143/0x14a0 kernel/workqueue.c:2296
+  kthread+0x357/0x430 kernel/kthread.c:246
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Cc: Tejun Heo <tj@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Acked-by: Tejun Heo <tj@kernel.org>
+In fact, it is perfectly fine to bypass GC and destroy xfrm_state
+synchronously on net exit call path, because it is in process context
+and doesn't need a work struct to do any blocking work.
+
+This patch introduces xfrm_state_put_sync() which simply bypasses
+GC, and lets its callers to decide whether to use this synchronous
+version. On net exit path, xfrm_state_fini() and
+xfrm6_tunnel_net_exit() use it. And, as ipcomp_destroy() itself is
+blocking, it can use xfrm_state_put_sync() directly too.
+
+Also rename xfrm_state_gc_destroy() to ___xfrm_state_destroy() to
+reflect this change.
+
+Fixes: b48c05ab5d32 ("xfrm: Fix warning in xfrm6_tunnel_net_exit.")
+Reported-and-tested-by: syzbot+e9aebef558e3ed673934@syzkaller.appspotmail.com
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_cgroup.h | 16 ++++++
- net/netfilter/xt_cgroup.c                | 72 ++++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
+ include/net/xfrm.h      | 12 +++++++++---
+ net/ipv6/xfrm6_tunnel.c |  2 +-
+ net/key/af_key.c        |  2 +-
+ net/xfrm/xfrm_state.c   | 30 +++++++++++++++++++-----------
+ net/xfrm/xfrm_user.c    |  2 +-
+ 5 files changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/include/uapi/linux/netfilter/xt_cgroup.h b/include/uapi/linux/netfilter/xt_cgroup.h
-index e96dfa1b34f7..b74e370d6133 100644
---- a/include/uapi/linux/netfilter/xt_cgroup.h
-+++ b/include/uapi/linux/netfilter/xt_cgroup.h
-@@ -22,4 +22,20 @@ struct xt_cgroup_info_v1 {
- 	void		*priv __attribute__((aligned(8)));
- };
- 
-+#define XT_CGROUP_PATH_MAX	512
-+
-+struct xt_cgroup_info_v2 {
-+	__u8		has_path;
-+	__u8		has_classid;
-+	__u8		invert_path;
-+	__u8		invert_classid;
-+	union {
-+		char	path[XT_CGROUP_PATH_MAX];
-+		__u32	classid;
-+	};
-+
-+	/* kernel internal data */
-+	void		*priv __attribute__((aligned(8)));
-+};
-+
- #endif /* _UAPI_XT_CGROUP_H */
-diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
-index 5d92e1781980..5cb1ecb29ea4 100644
---- a/net/netfilter/xt_cgroup.c
-+++ b/net/netfilter/xt_cgroup.c
-@@ -68,6 +68,38 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
- 	return 0;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index da588def3c61..5e3daf53b3d1 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -850,7 +850,7 @@ static inline void xfrm_pols_put(struct xfrm_policy **pols, int npols)
+ 		xfrm_pol_put(pols[i]);
  }
  
-+static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
-+{
-+	struct xt_cgroup_info_v2 *info = par->matchinfo;
-+	struct cgroup *cgrp;
-+
-+	if ((info->invert_path & ~1) || (info->invert_classid & ~1))
-+		return -EINVAL;
-+
-+	if (!info->has_path && !info->has_classid) {
-+		pr_info("xt_cgroup: no path or classid specified\n");
-+		return -EINVAL;
-+	}
-+
-+	if (info->has_path && info->has_classid) {
-+		pr_info_ratelimited("path and classid specified\n");
-+		return -EINVAL;
-+	}
-+
-+	info->priv = NULL;
-+	if (info->has_path) {
-+		cgrp = cgroup_get_from_path(info->path);
-+		if (IS_ERR(cgrp)) {
-+			pr_info_ratelimited("invalid path, errno=%ld\n",
-+					    PTR_ERR(cgrp));
-+			return -EINVAL;
-+		}
-+		info->priv = cgrp;
-+	}
-+
-+	return 0;
-+}
-+
- static bool
- cgroup_mt_v0(const struct sk_buff *skb, struct xt_action_param *par)
+-void __xfrm_state_destroy(struct xfrm_state *);
++void __xfrm_state_destroy(struct xfrm_state *, bool);
+ 
+ static inline void __xfrm_state_put(struct xfrm_state *x)
  {
-@@ -99,6 +131,24 @@ static bool cgroup_mt_v1(const struct sk_buff *skb, struct xt_action_param *par)
- 			info->invert_classid;
- }
- 
-+static bool cgroup_mt_v2(const struct sk_buff *skb, struct xt_action_param *par)
-+{
-+	const struct xt_cgroup_info_v2 *info = par->matchinfo;
-+	struct sock_cgroup_data *skcd = &skb->sk->sk_cgrp_data;
-+	struct cgroup *ancestor = info->priv;
-+	struct sock *sk = skb->sk;
-+
-+	if (!sk || !sk_fullsock(sk) || !net_eq(xt_net(par), sock_net(sk)))
-+		return false;
-+
-+	if (ancestor)
-+		return cgroup_is_descendant(sock_cgroup_ptr(skcd), ancestor) ^
-+			info->invert_path;
-+	else
-+		return (info->classid == sock_cgroup_classid(skcd)) ^
-+			info->invert_classid;
-+}
-+
- static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
+@@ -860,7 +860,13 @@ static inline void __xfrm_state_put(struct xfrm_state *x)
+ static inline void xfrm_state_put(struct xfrm_state *x)
  {
- 	struct xt_cgroup_info_v1 *info = par->matchinfo;
-@@ -107,6 +157,14 @@ static void cgroup_mt_destroy_v1(const struct xt_mtdtor_param *par)
- 		cgroup_put(info->priv);
- }
- 
-+static void cgroup_mt_destroy_v2(const struct xt_mtdtor_param *par)
-+{
-+	struct xt_cgroup_info_v2 *info = par->matchinfo;
-+
-+	if (info->priv)
-+		cgroup_put(info->priv);
+ 	if (refcount_dec_and_test(&x->refcnt))
+-		__xfrm_state_destroy(x);
++		__xfrm_state_destroy(x, false);
 +}
 +
- static struct xt_match cgroup_mt_reg[] __read_mostly = {
- 	{
- 		.name		= "cgroup",
-@@ -134,6 +192,20 @@ static struct xt_match cgroup_mt_reg[] __read_mostly = {
- 				  (1 << NF_INET_POST_ROUTING) |
- 				  (1 << NF_INET_LOCAL_IN),
- 	},
-+	{
-+		.name		= "cgroup",
-+		.revision	= 2,
-+		.family		= NFPROTO_UNSPEC,
-+		.checkentry	= cgroup_mt_check_v2,
-+		.match		= cgroup_mt_v2,
-+		.matchsize	= sizeof(struct xt_cgroup_info_v2),
-+		.usersize	= offsetof(struct xt_cgroup_info_v2, priv),
-+		.destroy	= cgroup_mt_destroy_v2,
-+		.me		= THIS_MODULE,
-+		.hooks		= (1 << NF_INET_LOCAL_OUT) |
-+				  (1 << NF_INET_POST_ROUTING) |
-+				  (1 << NF_INET_LOCAL_IN),
-+	},
- };
++static inline void xfrm_state_put_sync(struct xfrm_state *x)
++{
++	if (refcount_dec_and_test(&x->refcnt))
++		__xfrm_state_destroy(x, true);
+ }
  
- static int __init cgroup_mt_init(void)
+ static inline void xfrm_state_hold(struct xfrm_state *x)
+@@ -1616,7 +1622,7 @@ struct xfrmk_spdinfo {
+ 
+ struct xfrm_state *xfrm_find_acq_byseq(struct net *net, u32 mark, u32 seq);
+ int xfrm_state_delete(struct xfrm_state *x);
+-int xfrm_state_flush(struct net *net, u8 proto, bool task_valid);
++int xfrm_state_flush(struct net *net, u8 proto, bool task_valid, bool sync);
+ int xfrm_dev_state_flush(struct net *net, struct net_device *dev, bool task_valid);
+ void xfrm_sad_getinfo(struct net *net, struct xfrmk_sadinfo *si);
+ void xfrm_spd_getinfo(struct net *net, struct xfrmk_spdinfo *si);
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index f5b4febeaa25..bc65db782bfb 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -344,8 +344,8 @@ static void __net_exit xfrm6_tunnel_net_exit(struct net *net)
+ 	struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
+ 	unsigned int i;
+ 
+-	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
+ 	xfrm_flush_gc();
++	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
+ 
+ 	for (i = 0; i < XFRM6_TUNNEL_SPI_BYADDR_HSIZE; i++)
+ 		WARN_ON_ONCE(!hlist_empty(&xfrm6_tn->spi_byaddr[i]));
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 7da629d59717..7d4bed955060 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -1773,7 +1773,7 @@ static int pfkey_flush(struct sock *sk, struct sk_buff *skb, const struct sadb_m
+ 	if (proto == 0)
+ 		return -EINVAL;
+ 
+-	err = xfrm_state_flush(net, proto, true);
++	err = xfrm_state_flush(net, proto, true, false);
+ 	err2 = unicast_flush_resp(sk, hdr);
+ 	if (err || err2) {
+ 		if (err == -ESRCH) /* empty table - go quietly */
+diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
+index cc0203efb584..3f729cd512af 100644
+--- a/net/xfrm/xfrm_state.c
++++ b/net/xfrm/xfrm_state.c
+@@ -432,7 +432,7 @@ void xfrm_state_free(struct xfrm_state *x)
+ }
+ EXPORT_SYMBOL(xfrm_state_free);
+ 
+-static void xfrm_state_gc_destroy(struct xfrm_state *x)
++static void ___xfrm_state_destroy(struct xfrm_state *x)
+ {
+ 	tasklet_hrtimer_cancel(&x->mtimer);
+ 	del_timer_sync(&x->rtimer);
+@@ -474,7 +474,7 @@ static void xfrm_state_gc_task(struct work_struct *work)
+ 	synchronize_rcu();
+ 
+ 	hlist_for_each_entry_safe(x, tmp, &gc_list, gclist)
+-		xfrm_state_gc_destroy(x);
++		___xfrm_state_destroy(x);
+ }
+ 
+ static enum hrtimer_restart xfrm_timer_handler(struct hrtimer *me)
+@@ -598,14 +598,19 @@ struct xfrm_state *xfrm_state_alloc(struct net *net)
+ }
+ EXPORT_SYMBOL(xfrm_state_alloc);
+ 
+-void __xfrm_state_destroy(struct xfrm_state *x)
++void __xfrm_state_destroy(struct xfrm_state *x, bool sync)
+ {
+ 	WARN_ON(x->km.state != XFRM_STATE_DEAD);
+ 
+-	spin_lock_bh(&xfrm_state_gc_lock);
+-	hlist_add_head(&x->gclist, &xfrm_state_gc_list);
+-	spin_unlock_bh(&xfrm_state_gc_lock);
+-	schedule_work(&xfrm_state_gc_work);
++	if (sync) {
++		synchronize_rcu();
++		___xfrm_state_destroy(x);
++	} else {
++		spin_lock_bh(&xfrm_state_gc_lock);
++		hlist_add_head(&x->gclist, &xfrm_state_gc_list);
++		spin_unlock_bh(&xfrm_state_gc_lock);
++		schedule_work(&xfrm_state_gc_work);
++	}
+ }
+ EXPORT_SYMBOL(__xfrm_state_destroy);
+ 
+@@ -708,7 +713,7 @@ xfrm_dev_state_flush_secctx_check(struct net *net, struct net_device *dev, bool
+ }
+ #endif
+ 
+-int xfrm_state_flush(struct net *net, u8 proto, bool task_valid)
++int xfrm_state_flush(struct net *net, u8 proto, bool task_valid, bool sync)
+ {
+ 	int i, err = 0, cnt = 0;
+ 
+@@ -730,7 +735,10 @@ int xfrm_state_flush(struct net *net, u8 proto, bool task_valid)
+ 				err = xfrm_state_delete(x);
+ 				xfrm_audit_state_delete(x, err ? 0 : 1,
+ 							task_valid);
+-				xfrm_state_put(x);
++				if (sync)
++					xfrm_state_put_sync(x);
++				else
++					xfrm_state_put(x);
+ 				if (!err)
+ 					cnt++;
+ 
+@@ -2217,7 +2225,7 @@ void xfrm_state_delete_tunnel(struct xfrm_state *x)
+ 		if (atomic_read(&t->tunnel_users) == 2)
+ 			xfrm_state_delete(t);
+ 		atomic_dec(&t->tunnel_users);
+-		xfrm_state_put(t);
++		xfrm_state_put_sync(t);
+ 		x->tunnel = NULL;
+ 	}
+ }
+@@ -2377,8 +2385,8 @@ void xfrm_state_fini(struct net *net)
+ 	unsigned int sz;
+ 
+ 	flush_work(&net->xfrm.state_hash_work);
+-	xfrm_state_flush(net, IPSEC_PROTO_ANY, false);
+ 	flush_work(&xfrm_state_gc_work);
++	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
+ 
+ 	WARN_ON(!list_empty(&net->xfrm.state_all));
+ 
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index ab557827aac0..7e4904b93004 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1932,7 +1932,7 @@ static int xfrm_flush_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	struct xfrm_usersa_flush *p = nlmsg_data(nlh);
+ 	int err;
+ 
+-	err = xfrm_state_flush(net, p->proto, true);
++	err = xfrm_state_flush(net, p->proto, true, false);
+ 	if (err) {
+ 		if (err == -ESRCH) /* empty table */
+ 			return 0;
 -- 
 2.19.1
 
