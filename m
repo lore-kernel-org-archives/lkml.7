@@ -2,110 +2,151 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2CCC10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 05:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19262C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CC0204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 05:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hHS69al3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BMG2PFXz"
+	by mail.kernel.org (Postfix) with ESMTP id D28C821850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbfDRF7l (ORCPT
+        id S2387951AbfDRGB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 01:59:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55386 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfDRF7l (ORCPT
+        Thu, 18 Apr 2019 02:01:29 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:37569 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfDRGB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 01:59:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 63568601B4; Thu, 18 Apr 2019 05:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555567180;
-        bh=jG9oarzwAH68Z2H+DhCc64yxzHV5Npqd56dQpVPYMMw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hHS69al3e0+GpT1bcHqWyGMizQCA+4eAnJIfrINj3nQ/5FU3gW7B8LRw0ZK2ITw/6
-         4kIVANXs9nEpG8RDPcs7qkmdX8KjLqU0w5u/B0pD2SBH33/K5Gu9UOihqq2uYX6qao
-         h90YOPJf5LT7VHNeegyJKdF9SYuXxDhEawi6Ou7E=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 41C80601B4;
-        Thu, 18 Apr 2019 05:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555567179;
-        bh=jG9oarzwAH68Z2H+DhCc64yxzHV5Npqd56dQpVPYMMw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BMG2PFXzZZjrB/Z2iRvxo62T9+zOz+Uoc5blzmWwaDlDfpQc/tp2X/kVPazIpjOXM
-         t0WQikWTJBFtQC6MP7eh9wR/fXQli/+08jmQB+S0KFa4bXhP/hq8jnVgQGyR/iEyQ6
-         zYpIvjSZ+ayF70Sq0WbEnBmYotDhqjuSrnUtGR58=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 41C80601B4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] scsi: qedi: fix spelling mistake "oflload" -> "offload"
-To:     Colin King <colin.king@canonical.com>,
-        QLogic-Storage-Upstream@cavium.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190417134304.10979-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <071b73b2-424d-0bb0-a663-c63ee0a94425@codeaurora.org>
-Date:   Thu, 18 Apr 2019 11:29:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 02:01:29 -0400
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.11] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id D2FD11C0008;
+        Thu, 18 Apr 2019 06:01:20 +0000 (UTC)
+Subject: Re: [PATCH v3 05/11] arm: Properly account for stack randomization
+ and stack guard gap
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-riscv@lists.infradead.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mips@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+References: <20190417052247.17809-1-alex@ghiti.fr>
+ <20190417052247.17809-6-alex@ghiti.fr>
+ <CAGXu5j+V_kJk-Lu=u82CrA291EPpgJtX951EKigprozXt7=ORA@mail.gmail.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <dabdc658-62b0-4854-f84f-9c4672fce842@ghiti.fr>
+Date:   Thu, 18 Apr 2019 02:01:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190417134304.10979-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAGXu5j+V_kJk-Lu=u82CrA291EPpgJtX951EKigprozXt7=ORA@mail.gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Language: sv-FI
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/18/19 1:26 AM, Kees Cook wrote:
+> On Wed, Apr 17, 2019 at 12:28 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>> This commit takes care of stack randomization and stack guard gap when
+>> computing mmap base address and checks if the task asked for randomization.
+>> This fixes the problem uncovered and not fixed for arm here:
+>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
+> Please use the official archive instead. This includes headers, linked
+> patches, etc:
+> https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
 
-On 4/17/2019 7:13 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There are a couple of spelling mistakes in some kernel alert messages.
-> Fix these.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Cheers,
--Mukesh
-> ---
->   drivers/scsi/qedi/qedi_iscsi.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+Ok, sorry about that, and thanks for the info.
+
+
 >
-> diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-> index 6d6d6013e35b..e4391ee2c27a 100644
-> --- a/drivers/scsi/qedi/qedi_iscsi.c
-> +++ b/drivers/scsi/qedi/qedi_iscsi.c
-> @@ -579,7 +579,7 @@ static int qedi_conn_start(struct iscsi_cls_conn *cls_conn)
->   	rval = qedi_iscsi_update_conn(qedi, qedi_conn);
->   	if (rval) {
->   		iscsi_conn_printk(KERN_ALERT, conn,
-> -				  "conn_start: FW oflload conn failed.\n");
-> +				  "conn_start: FW offload conn failed.\n");
->   		rval = -EINVAL;
->   		goto start_err;
->   	}
-> @@ -590,7 +590,7 @@ static int qedi_conn_start(struct iscsi_cls_conn *cls_conn)
->   	rval = iscsi_conn_start(cls_conn);
->   	if (rval) {
->   		iscsi_conn_printk(KERN_ALERT, conn,
-> -				  "iscsi_conn_start: FW oflload conn failed!!\n");
-> +				  "iscsi_conn_start: FW offload conn failed!!\n");
->   	}
->   
->   start_err:
+>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>> ---
+>>   arch/arm/mm/mmap.c | 14 ++++++++++++--
+>>   1 file changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+>> index f866870db749..bff3d00bda5b 100644
+>> --- a/arch/arm/mm/mmap.c
+>> +++ b/arch/arm/mm/mmap.c
+>> @@ -18,8 +18,9 @@
+>>           (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
+>>
+>>   /* gap between mmap and stack */
+>> -#define MIN_GAP (128*1024*1024UL)
+>> -#define MAX_GAP ((TASK_SIZE)/6*5)
+>> +#define MIN_GAP                (128*1024*1024UL)
+> Might as well fix this up as SIZE_128M
+
+
+I left the code as is because it gets removed in the next commit, I did not
+even correct the checkpatch warnings. But I can fix that in v4, since there
+will be a v4 :)
+
+
+>
+>> +#define MAX_GAP                ((TASK_SIZE)/6*5)
+>> +#define STACK_RND_MASK (0x7ff >> (PAGE_SHIFT - 12))
+> STACK_RND_MASK is already defined so you don't need to add it here, yes?
+
+
+At this point, I don't think arm has STACK_RND_MASK defined anywhere since
+the generic version is in mm/util.c.
+
+
+>
+>>   static int mmap_is_legacy(struct rlimit *rlim_stack)
+>>   {
+>> @@ -35,6 +36,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+>>   static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+>>   {
+>>          unsigned long gap = rlim_stack->rlim_cur;
+>> +       unsigned long pad = stack_guard_gap;
+>> +
+>> +       /* Account for stack randomization if necessary */
+>> +       if (current->flags & PF_RANDOMIZE)
+>> +               pad += (STACK_RND_MASK << PAGE_SHIFT);
+>> +
+>> +       /* Values close to RLIM_INFINITY can overflow. */
+>> +       if (gap + pad > gap)
+>> +               gap += pad;
+>>
+>>          if (gap < MIN_GAP)
+>>                  gap = MIN_GAP;
+>> --
+>> 2.20.1
+>>
+> But otherwise, yes:
+>
+> Acked-by: Kees Cook <keescook@chromium.org>
+
+
+Thanks !
+
+
+>
+> --
+> Kees Cook
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
