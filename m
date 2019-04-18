@@ -3,151 +3,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A854C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F3AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFD4206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEC7206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389306AbfDRO0T (ORCPT
+        id S2389333AbfDRO0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:26:19 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.111]:48124 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388299AbfDRO0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:26:18 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 3E86A29BE4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:26:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id H7zVhmP4590onH7zVhxE1A; Thu, 18 Apr 2019 09:26:17 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.103] (port=35882 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hH7zU-000QRC-Py; Thu, 18 Apr 2019 09:26:16 -0500
-Subject: Re: [PATCH v2] staging: greybus: power_supply: use struct_size()
- helper
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Rui Miguel Silva <rmfrfs@gmail.com>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20190417184440.GA6025@embeddedor>
- <20190418062750.GA28269@localhost>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <71ac80a9-6b1e-f652-392e-5e9fe82d9e82@embeddedor.com>
-Date:   Thu, 18 Apr 2019 09:26:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 10:26:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52728 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389121AbfDRO0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:26:38 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DAFEFFD6066CB0753C8F;
+        Thu, 18 Apr 2019 22:26:22 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Thu, 18 Apr 2019
+ 22:26:19 +0800
+Subject: Re: [PATCH v2 -next] sched/core: Make some functions static
+To:     Ingo Molnar <mingo@kernel.org>
+References: <20190322143153.14416-1-yuehaibing@huawei.com>
+ <20190418132937.36324-1-yuehaibing@huawei.com>
+ <20190418134031.GA59073@gmail.com>
+CC:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <5f7e511a-bd78-e442-1252-2e46c0224960@huawei.com>
+Date:   Thu, 18 Apr 2019 22:26:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190418062750.GA28269@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190418134031.GA59073@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.103
-X-Source-L: No
-X-Exim-ID: 1hH7zU-000QRC-Py
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.103]:35882
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/18/19 1:27 AM, Johan Hovold wrote:
-> On Wed, Apr 17, 2019 at 01:44:40PM -0500, Gustavo A. R. Silva wrote:
->> Make use of the struct_size() helper instead of an open-coded version
->> in order to avoid any potential type mistakes, in particular in the
->> context in which this code is being used.
->>
->> So, replace code of the following form:
->>
->> sizeof(*resp) + props_count * sizeof(struct gb_power_supply_props_desc)
->>
->> with:
->>
->> struct_size(resp, props, props_count)
->>
->> This code was detected with the help of Coccinelle.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->> Changes in v2:
->>  - Rebase on top of 47830c1127ef ("staging: greybus: power_supply: fix prop-descriptor request size")
+On 2019/4/18 21:40, Ingo Molnar wrote:
 > 
-> Thanks for rebasing.
+> * Yue Haibing <yuehaibing@huawei.com> wrote:
 > 
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fix sparse warnings:
+>>
+>> kernel/sched/core.c:6524:11: warning: symbol 'min_cfs_quota_period' was not declared. Should it be static?
+>> kernel/sched/core.c:6604:5: warning: symbol 'tg_set_cfs_quota' was not declared. Should it be static?
+>> kernel/sched/core.c:6617:6: warning: symbol 'tg_get_cfs_quota' was not declared. Should it be static?
+>> kernel/sched/core.c:6630:5: warning: symbol 'tg_set_cfs_period' was not declared. Should it be static?
+>> kernel/sched/core.c:6640:6: warning: symbol 'tg_get_cfs_period' was not declared. Should it be static?
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Could you please also use the updated commit message I edited for v1, 
+> instead of just reverting to the old one?
 
-Glad to help. :)
+Sorry, I do not notice that, fix it now.
 
-> Reviewed-by: Johan Hovold <johan@kernel.org>
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
 > 
 
-Thanks
---
-Gustavo
