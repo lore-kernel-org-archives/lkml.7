@@ -2,94 +2,136 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A19DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06794C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D832083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IuxWKeZd"
+	by mail.kernel.org (Postfix) with ESMTP id CC2092083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389485AbfDRPmu (ORCPT
+        id S2389529AbfDRPni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:42:50 -0400
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:36440 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387519AbfDRPmu (ORCPT
+        Thu, 18 Apr 2019 11:43:38 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:36803 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRPni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:42:50 -0400
-Received: by mail-ot1-f51.google.com with SMTP id o74so2089073ota.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fGBp8E9sWY2g1vA1BwsDvb6YIZTbEwMwQ8ExTOjqap0=;
-        b=IuxWKeZdDeALJ3RVuyXqq949K7Ut5Fu1+cOgStxBLkbDhOqShMQtIq1aLshqdXfsdi
-         1KGf9yk8FmDxjNqaHOnYo2wWFMgzKYbFLSwoq4m4ZcMc1Z4SLACqK4n+AaqT3MWN+NnH
-         4XiOU749N1w3V3kqvVNLTJvKAwVSk5Gk6c7UI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fGBp8E9sWY2g1vA1BwsDvb6YIZTbEwMwQ8ExTOjqap0=;
-        b=arRsHEtkCKSACVwTmbTTTja08sk6UcFlvo/wNGzEzPUELoVfYDJVi1eld2rOZhdZXH
-         sNKtySDFovDHmBrlzysVCKw2Llu+HUtsAuEITPCh68vlm4q9A+VQQ79tNnX/DJBj1YEL
-         p3/6qV7Ejsuujlg0toUKyQLGlXSQlKJQBXA3wnOXKmflTQPb1jQztefu9/AaBJcK7jiC
-         9/UTBUVIbueNzQZ+C3xF0ke+5kCxJL3RulKy1MClrZUL6tEDqs+1aJhfklPIS2j8wyy7
-         F8xHfZHFUPsggln5ytZwH8Y1Iw97pJqn0XImfofmFxka4jv0wVVse0F6dGn7iEoAeAoN
-         E/3g==
-X-Gm-Message-State: APjAAAXEEMhwie+it3ITl40/RYx6W2NV9/THDl2d8Yf8UwWxPmYiVgG5
-        GuhTnONPgnUeFFXaWchKQJBAcp55SZ0=
-X-Google-Smtp-Source: APXvYqwycmOR6gwjx7XxMplfhV+TFmzem0ccqFcQ6zRzjOGGCP9FSxzBz2CspC9rfWHR4cZ8oFbxvw==
-X-Received: by 2002:a9d:61d6:: with SMTP id h22mr56301306otk.251.1555602169435;
-        Thu, 18 Apr 2019 08:42:49 -0700 (PDT)
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
-        by smtp.gmail.com with ESMTPSA id z2sm1139096ota.56.2019.04.18.08.42.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 08:42:48 -0700 (PDT)
-Received: by mail-ot1-f52.google.com with SMTP id s24so2048284otk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 08:42:48 -0700 (PDT)
-X-Received: by 2002:a05:6830:1497:: with SMTP id s23mr56835378otq.236.1555602167808;
- Thu, 18 Apr 2019 08:42:47 -0700 (PDT)
+        Thu, 18 Apr 2019 11:43:38 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hH9Bh-0004nI-GJ; Thu, 18 Apr 2019 17:42:57 +0200
+Date:   Thu, 18 Apr 2019 17:42:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        linux-arch@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: Re: [patch V2 28/29] stacktrace: Provide common infrastructure
+In-Reply-To: <20190418145201.mjzyqbmkjcghqzex@treble>
+Message-ID: <alpine.DEB.2.21.1904181734200.3174@nanos.tec.linutronix.de>
+References: <20190418084119.056416939@linutronix.de> <20190418084255.652003111@linutronix.de> <20190418145201.mjzyqbmkjcghqzex@treble>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190417012048.87977-1-ncrews@chromium.org>
-In-Reply-To: <20190417012048.87977-1-ncrews@chromium.org>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Thu, 18 Apr 2019 09:42:36 -0600
-X-Gmail-Original-Message-ID: <CAHX4x8483=65JVKRoZn9RadmoCp0VObLCH6BZO6dFT28B_r0ew@mail.gmail.com>
-Message-ID: <CAHX4x8483=65JVKRoZn9RadmoCp0VObLCH6BZO6dFT28B_r0ew@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] platform/chrome: wilco_ec: Add Boot on AC support
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Daniel Erat <derat@google.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Simon Glass <sjg@chromium.org>, bartfab@chromium.org,
-        Oleh Lamzin <lamzin@google.com>,
-        Jason Wong <jchwong@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's one error that Guenter just found...
+On Thu, 18 Apr 2019, Josh Poimboeuf wrote:
 
-> +
-> +int wilco_ec_add_sysfs(struct wilco_ec_device *ec)
-> +{
-> +       return sysfs_create_group(&ec->dev->kobj, &wilco_dev_attr_group);
-> +}
-> +
-> +void wilco_ec_remove_sysfs(struct wilco_ec_device *ec)
-> +{
-> +       sysfs_create_group(&ec->dev->kobj, &wilco_dev_attr_group);
+> On Thu, Apr 18, 2019 at 10:41:47AM +0200, Thomas Gleixner wrote:
+> > All architectures which support stacktrace carry duplicated code and
+> > do the stack storage and filtering at the architecture side.
+> > 
+> > Provide a consolidated interface with a callback function for consuming the
+> > stack entries provided by the architecture specific stack walker. This
+> > removes lots of duplicated code and allows to implement better filtering
+> > than 'skip number of entries' in the future without touching any
+> > architecture specific code.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: linux-arch@vger.kernel.org
+> 
+> This is a step in the right direction, especially if it allows us to get
+> rid of the 'skip' stuff.  But I'm not crazy about the callbacks.
+> 
+> Another idea I had (but never got a chance to work on) was to extend the
+> x86 unwind interface to all arches.  So instead of the callbacks, each
+> arch would implement something like this API:
+> 
+> 
+> struct unwind_state state;
+> 
+> void unwind_start(struct unwind_state *state, struct task_struct *task,
+> 		  struct pt_regs *regs, unsigned long *first_frame);
+> 
+> bool unwind_next_frame(struct unwind_state *state);
+> 
+> inline bool unwind_done(struct unwind_state *state);
+> 
+> 
+> Not only would it avoid the callbacks (which is a nice benefit already),
+> it would also allow the interfaces to be used outside of the
+> stack_trace_*() interfaces.  That would come in handy in cases like the
+> ftrace stack tracer code, which needs more than the stack_trace_*() API
+> can give.
 
-Should be sysfs_remove_group()
+I surely thought about that, but after staring at all incarnations of
+arch/*/stacktrace.c I just gave up.
+
+Aside of that quite some archs already have callback based unwinders
+because they use them for more than stacktracing and just have a single
+implementation of that loop.
+
+I'm fine either way. We can start with x86 and then let archs convert over
+their stuff, but I wouldn't hold my breath that this will be completed in
+the forseeable future.
+
+> Of course, this may be more work than what you thought you signed up for
+> ;-)
+
+I did not sign up for anything. I tripped over that mess by accident and me
+being me hated it strong enough to give it at least an initial steam blast.
+
+Thanks,
+
+	tglx
+	
