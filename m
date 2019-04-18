@@ -2,117 +2,144 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF00EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889F6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1A720643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I91MKNLL"
+	by mail.kernel.org (Postfix) with ESMTP id 5AF0C20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555612261;
+	bh=vDK0ST5UsrNVHEtKozfQxW2teLfUphqn1036ggwKH2w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jAovllEb8fsJkgwUaQiAOVngwXTSt8Fc2BkhH72/qC6AETlINYONTXaBkBVV16OSv
+	 GWhcuki/35UqW58ZtS4EsIzMtmw6Zpfqcv8BD2VU5cAnVWzOU34LXAszHhUAAi4X1J
+	 1sqEWWCxw9PI0OHc3P1S71BBeKmUT5BLYn+jjAR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390757AbfDRSav (ORCPT
+        id S2390538AbfDRSBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:30:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36508 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390149AbfDRSat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:30:49 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u17so2360714lfi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BDrH2xghiWsDzu64JGgq5KXMa51VeOg5C+1Bge4S8qU=;
-        b=I91MKNLLyTOdb9kCQ6nrk/7QWGjWrF/5oH3P8fLqYdS4dRUjU17U5ZhPv6yrlinCeE
-         up4eQrrfAgh/gXlQaKcgLFhMjbnAJ8SNJ+tfCQ4pQwwF3vd1MmNKVizotb/GUtVGuZ89
-         yUFErUEIBKFwWRqhG+9U0rK+GYtzkyBJY0FHrayTeHmdXgX+PcMHZOD/xKNKzjpB/kwQ
-         XZSNIuuAL7XM5w7LVjfGHevB3YrZoHkzYCK0WYX0TSqsoGHSTi0G1NHMnpps9lUvGto9
-         6ZlGzRjsu80nPeCrdqVFxiKdGlsM2N/XAAtSrev4tvifctc47cC3z8vwT615isud8PNj
-         hGew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=BDrH2xghiWsDzu64JGgq5KXMa51VeOg5C+1Bge4S8qU=;
-        b=BO4oWdE/0KfL/QSejQEd1fqkMfH1tAIEIRyNEFedluJl6vZJ+p/+EEErDBUr7Yf/N7
-         tfRZerO+47uG0VN/96t5wvsCDY15a2b2DpXhFYw70DEgS73lmqyohI3Fr+riPaWWzKOO
-         wUaiudvK7cgHiH6V/+LpQPk4WD+xhG4WyMcxe0BZGrElvqx8NRFjGIXfwAdZEClSQdub
-         zSK3Fbw1BV4moJj7qV4PG76r3lqUTL2dIyUOhbHzLsaRjR9KhQVIK8oEaoxMf8C3srPc
-         wlNHEpwct6p6KjKTciWFA3qNMuY4DE7vX872fKrI6dsEEP+opHllo96KlC+Igazj2uXD
-         Lz9g==
-X-Gm-Message-State: APjAAAWOjpgySXWgCgJ+co5+m8Vq/h7V3vFqyXJ8G3du0TW3o3D77gRF
-        UEll1VhFWcJn8aaoO7yZV+SX5Q==
-X-Google-Smtp-Source: APXvYqwIcovas9Ysm1mVpyjhfx8EgOQTC1rEopmvlMcL+8QtpMl1zkxq2zScpsO8sYHGpdUeejC5rA==
-X-Received: by 2002:a19:3845:: with SMTP id d5mr18719428lfj.77.1555612247557;
-        Thu, 18 Apr 2019 11:30:47 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id n23sm603574lfh.86.2019.04.18.11.30.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 11:30:46 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 21:30:44 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        ilias.apalodimas@linaro.org, hawk@kernel.org,
-        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        aniel@iogearbox.net, John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [RFC PATCH 3/3] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190418183043.GD27879@khorivan>
-Mail-Followup-To: Jakub Kicinski <jakub.kicinski@netronome.com>,
-        grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        ilias.apalodimas@linaro.org, hawk@kernel.org,
-        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        aniel@iogearbox.net, John Fastabend <john.fastabend@gmail.com>
-References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
- <20190417174942.11811-4-ivan.khoronzhuk@linaro.org>
- <CAJpBn1y0odvL97-kP5yzKC+tN=fx178nxigfBfDwXhRhPRvDuQ@mail.gmail.com>
- <20190418094008.GB27879@khorivan>
- <20190418104111.559a0e74@cakuba.netronome.com>
+        Thu, 18 Apr 2019 14:01:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390528AbfDRSBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A71217FA;
+        Thu, 18 Apr 2019 18:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555610477;
+        bh=vDK0ST5UsrNVHEtKozfQxW2teLfUphqn1036ggwKH2w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uGAqtyxzJRBxJ6wssWd2VxiFLMSWfMR8QeAtnAfiJp3pj4gnZmI05bw+9QD75FEVg
+         siCP9tpDU4Qkc1YXu9dRHfLA45o7btpAVoXX6G0MPSViyT7cLZiF8crehi2F2oasTo
+         rbVdsgsi3cPgLrp9lCRYqslpKEI7ECrlrNISKZJs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 076/110] net: stmmac: Set OWN bit for jumbo frames
+Date:   Thu, 18 Apr 2019 19:57:05 +0200
+Message-Id: <20190418160445.404269790@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
+References: <20190418160437.484158340@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190418104111.559a0e74@cakuba.netronome.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:41:11AM -0700, Jakub Kicinski wrote:
->On Thu, 18 Apr 2019 12:40:10 +0300, Ivan Khoronzhuk wrote:
->> >work?  The stack's TX ring has a lock, and can be used from any CPU,
->> >while XDP TX rings are per-PCU, no?
->> Yes and no.
->> am572 has more queues then CPU num, How I can choose tx queue not based on CPU
->> num? It's always shared and has to have lock, and cpdma is done in this way.
->
->Oh, I see, you already have another lock.
->
->> Here another thing bothering me, I send it to queue 0 always, instead of
->> taking cpu num. Not sure about this, but I expect to have some tx queue
->> not bind to cpu and didn't find a way it can be changed dynamically in
->> redirect.
->
->Not sure I understand :)
+[ Upstream commit 487e2e22ab7968f2c0c82f37b5ca5883efd1a354 ]
 
-I mean, is there a capability to choose tx queue while XDP_REDIRECT or XDP_TX.
+Ping with Jumbo packet does not reply and get a watchdog timeout
 
-From what I've seen it's taken by:
-qidx = smp_processor_id();
+[   46.059616] ------------[ cut here ]------------
+[   46.064268] NETDEV WATCHDOG: eth0 (socfpga-dwmac): transmit queue 0 timed out
+[   46.071471] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:461 dev_watchdog+0x2cc/0x2d8
+[   46.079708] Modules linked in:
+[   46.082761] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.18.0-00115-gc262be665854-dirty #264
+[   46.091082] Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+[   46.096377] pstate: 20000005 (nzCv daif -PAN -UAO)
+[   46.101152] pc : dev_watchdog+0x2cc/0x2d8
+[   46.105149] lr : dev_watchdog+0x2cc/0x2d8
+[   46.109144] sp : ffff00000800bd80
+[   46.112447] x29: ffff00000800bd80 x28: ffff80007a9b4940
+[   46.117744] x27: 00000000ffffffff x26: ffff80007aa183b0
+[   46.123040] x25: 0000000000000001 x24: 0000000000000140
+[   46.128336] x23: ffff80007aa1839c x22: ffff80007aa17fb0
+[   46.133632] x21: ffff80007aa18000 x20: ffff0000091a7000
+[   46.138927] x19: 0000000000000000 x18: ffffffffffffffff
+[   46.144223] x17: 0000000000000000 x16: 0000000000000000
+[   46.149519] x15: ffff0000091a96c8 x14: 07740775076f0720
+[   46.154814] x13: 07640765076d0769 x12: 0774072007300720
+[   46.160110] x11: 0765077507650775 x10: 0771072007740769
+[   46.165406] x9 : 076d0773076e0761 x8 : 077207740720073a
+[   46.170702] x7 : 072907630761076d x6 : ffff80007ff9a0c0
+[   46.175997] x5 : ffff80007ff9a0c0 x4 : 0000000000000002
+[   46.181293] x3 : 0000000000000000 x2 : ffff0000091ac180
+[   46.186589] x1 : e6a742ebe628e800 x0 : 0000000000000000
+[   46.191885] Call trace:
+[   46.194326]  dev_watchdog+0x2cc/0x2d8
+[   46.197980]  call_timer_fn+0x20/0x78
+[   46.201544]  expire_timers+0xa4/0xb0
+[   46.205108]  run_timer_softirq+0xe4/0x198
+[   46.209107]  __do_softirq+0x114/0x210
+[   46.212760]  irq_exit+0xd0/0xd8
+[   46.215895]  __handle_domain_irq+0x60/0xb0
+[   46.219977]  gic_handle_irq+0x58/0xa8
+[   46.223628]  el1_irq+0xb0/0x128
+[   46.226761]  arch_cpu_idle+0x10/0x18
+[   46.230326]  do_idle+0x1d4/0x288
+[   46.233544]  cpu_startup_entry+0x24/0x28
+[   46.237457]  secondary_start_kernel+0x17c/0x1c0
+[   46.241971] ---[ end trace 57048cd1372cd828 ]---
 
-What if I need to send classified traffic to hw queue 4 for instance...
+Inspection of queue showed Jumbo packets were not sent out.
+The ring Jumbo packet function needs to set the OWN bit so
+the packet is sent.
 
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/ring_mode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+index afed0f0f4027..c0c75c111abb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
++++ b/drivers/net/ethernet/stmicro/stmmac/ring_mode.c
+@@ -59,7 +59,7 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
+ 
+ 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
+ 		stmmac_prepare_tx_desc(priv, desc, 1, bmax, csum,
+-				STMMAC_RING_MODE, 0, false, skb->len);
++				STMMAC_RING_MODE, 1, false, skb->len);
+ 		tx_q->tx_skbuff[entry] = NULL;
+ 		entry = STMMAC_GET_ENTRY(entry, DMA_TX_SIZE);
+ 
+@@ -91,7 +91,7 @@ static int jumbo_frm(void *p, struct sk_buff *skb, int csum)
+ 		tx_q->tx_skbuff_dma[entry].is_jumbo = true;
+ 		desc->des3 = cpu_to_le32(des2 + BUF_SIZE_4KiB);
+ 		stmmac_prepare_tx_desc(priv, desc, 1, nopaged_len, csum,
+-				STMMAC_RING_MODE, 0, true, skb->len);
++				STMMAC_RING_MODE, 1, true, skb->len);
+ 	}
+ 
+ 	tx_q->cur_tx = entry;
 -- 
-Regards,
-Ivan Khoronzhuk
+2.19.1
+
+
+
