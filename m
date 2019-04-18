@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8DBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB10C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9134206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D013206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388783AbfDRJJr (ORCPT
+        id S2388788AbfDRJJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:09:47 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:34075 "EHLO
+        Thu, 18 Apr 2019 05:09:59 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34070 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388426AbfDRJHd (ORCPT
+        with ESMTP id S2388519AbfDRJHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:07:33 -0400
+        Thu, 18 Apr 2019 05:07:32 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH30P-0001xS-En; Thu, 18 Apr 2019 11:06:53 +0200
-Message-Id: <20190418084255.364915116@linutronix.de>
+        id 1hH2zt-0001ox-KZ; Thu, 18 Apr 2019 11:06:21 +0200
+Message-Id: <20190418084254.082820685@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:44 +0200
+Date:   Thu, 18 Apr 2019 10:41:30 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Alexander Potapenko <glider@google.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
@@ -43,7 +44,6 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
         kasan-dev@googlegroups.com,
         Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
         iommu@lists.linux-foundation.org,
         Robin Murphy <robin.murphy@arm.com>,
         Christoph Hellwig <hch@lst.de>,
@@ -62,7 +62,7 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Daniel Vetter <daniel@ffwll.ch>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         linux-arch@vger.kernel.org
-Subject: [patch V2 25/29] livepatch: Simplify stack trace retrieval
+Subject: [patch V2 11/29] fault-inject: Simplify stacktrace retrieval
 References: <20190418084119.056416939@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,70 +71,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
+Replace the indirection through struct stack_trace with an invocation of
+the storage array based interface.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- kernel/livepatch/transition.c |   22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ lib/fault-inject.c |   12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
---- a/kernel/livepatch/transition.c
-+++ b/kernel/livepatch/transition.c
-@@ -202,15 +202,15 @@ void klp_update_patch_state(struct task_
-  * Determine whether the given stack trace includes any references to a
-  * to-be-patched or to-be-unpatched function.
-  */
--static int klp_check_stack_func(struct klp_func *func,
--				struct stack_trace *trace)
-+static int klp_check_stack_func(struct klp_func *func, unsigned long *entries,
-+				unsigned int nr_entries)
- {
- 	unsigned long func_addr, func_size, address;
- 	struct klp_ops *ops;
- 	int i;
+--- a/lib/fault-inject.c
++++ b/lib/fault-inject.c
+@@ -65,22 +65,16 @@ static bool fail_task(struct fault_attr
  
--	for (i = 0; i < trace->nr_entries; i++) {
--		address = trace->entries[i];
-+	for (i = 0; i < nr_entries; i++) {
-+		address = entries[i];
- 
- 		if (klp_target_state == KLP_UNPATCHED) {
- 			 /*
-@@ -254,29 +254,25 @@ static int klp_check_stack_func(struct k
- static int klp_check_stack(struct task_struct *task, char *err_buf)
+ static bool fail_stacktrace(struct fault_attr *attr)
  {
- 	static unsigned long entries[MAX_STACK_ENTRIES];
 -	struct stack_trace trace;
- 	struct klp_object *obj;
- 	struct klp_func *func;
--	int ret;
-+	int ret, nr_entries;
+ 	int depth = attr->stacktrace_depth;
+ 	unsigned long entries[MAX_STACK_TRACE_DEPTH];
+-	int n;
++	int n, nr_entries;
+ 	bool found = (attr->require_start == 0 && attr->require_end == ULONG_MAX);
  
--	trace.skip = 0;
+ 	if (depth == 0)
+ 		return found;
+ 
 -	trace.nr_entries = 0;
--	trace.max_entries = MAX_STACK_ENTRIES;
 -	trace.entries = entries;
--	ret = save_stack_trace_tsk_reliable(task, &trace);
-+	ret = stack_trace_save_tsk_reliable(task, entries, ARRAY_SIZE(entries));
- 	WARN_ON_ONCE(ret == -ENOSYS);
--	if (ret) {
-+	if (ret < 0) {
- 		snprintf(err_buf, STACK_ERR_BUF_SIZE,
- 			 "%s: %s:%d has an unreliable stack\n",
- 			 __func__, task->comm, task->pid);
- 		return ret;
- 	}
-+	nr_entries = ret;
- 
- 	klp_for_each_object(klp_transition_patch, obj) {
- 		if (!obj->patched)
- 			continue;
- 		klp_for_each_func(obj, func) {
--			ret = klp_check_stack_func(func, &trace);
-+			ret = klp_check_stack_func(func, entries, nr_entries);
- 			if (ret) {
- 				snprintf(err_buf, STACK_ERR_BUF_SIZE,
- 					 "%s: %s:%d is sleeping on function %s\n",
+-	trace.max_entries = depth;
+-	trace.skip = 1;
+-
+-	save_stack_trace(&trace);
+-	for (n = 0; n < trace.nr_entries; n++) {
++	nr_entries = stack_trace_save(entries, depth, 1);
++	for (n = 0; n < nr_entries; n++) {
+ 		if (attr->reject_start <= entries[n] &&
+ 			       entries[n] < attr->reject_end)
+ 			return false;
 
 
