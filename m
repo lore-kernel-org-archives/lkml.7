@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CC1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B4BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB2220652
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B727B20652
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611133;
-	bh=diuli6c/gXbJ7F9lwZOpqf6lsjEt1/ejLbWwUEvtDtg=;
+	s=default; t=1555611135;
+	bh=jwarXQ2rAaD+Lul8YZOEmkG7/qgB9YOYlc5Fd8EKVTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PbgYL/jKzWEVbAHpXNeBNK1Kz0eYO3XDYPhPcVzbRsWSdsywBfNfXIFegmwhP8huI
-	 mqMVRrv7D5w15yFtdBOhd2RzvOfTbWl+KbaQyR2weAcKDkBvaWXwSZQfGExZ6Wzf7+
-	 AxLzBonA+DsBqEZXeZWQPbdvHolNAyk90UQBhFoA=
+	b=ioneLa9pahmkZZ/B5seAz+9x+wPBmDgV4vusxSYjZDBAmIOPY0huGFIbtkAj2uFfF
+	 nSJQYfKgB+1FBLq9COkXRM3svH/uWqnEjm1UPE3zMTpTgg7nBiIUh4wNTscGuk7oMg
+	 tpTmILLOaasX0NDpGp8Gs9sxqfq8xtiB4k0KkSzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404025AbfDRSMM (ORCPT
+        id S2391983AbfDRSMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44588 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391983AbfDRSMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:10 -0400
+        id S2404023AbfDRSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:12:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 231D520652;
-        Thu, 18 Apr 2019 18:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C853B20675;
+        Thu, 18 Apr 2019 18:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611128;
-        bh=diuli6c/gXbJ7F9lwZOpqf6lsjEt1/ejLbWwUEvtDtg=;
+        s=default; t=1555611131;
+        bh=jwarXQ2rAaD+Lul8YZOEmkG7/qgB9YOYlc5Fd8EKVTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJTeknjy4Jhw3fXAPNuN5JZPJzS3TXWRTpL299Mtue8ekAeCou1OeGWAjn7TIXT1f
-         Jx1iOTnNhh462A97JiJS06kRDE2RqY8FK+97JFIHPURZeu2tO83P0pvL4ZbOtVnSvj
-         V11TzCTGtaaKVimtX2TOi2jyMalSVUuGsHyzSpq4=
+        b=aNVZZ9QzjT9Nn7HkX4yvLWloyug3ryAQKN6PSW5I1QtDvJbk9fZ9I5Vq2TQaPFoQW
+         H4V5cbNT0uVMlc4zu3B2ONPCQrsUtV+cuwWJ0g8BLFZxhh/43OPWgw5kSKcteY3tlO
+         99/PgGEDKtwCXLxBki5NETJjN6xAfADgJVdMjMC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maurizio Lombardi <mlombard@redhat.com>,
-        Chris Leech <cleech@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Xiaoli Feng <fengxiaoli0714@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 26/93] scsi: iscsi: flush running unbind operations when removing a session
-Date:   Thu, 18 Apr 2019 19:57:04 +0200
-Message-Id: <20190418160439.482415964@linuxfoundation.org>
+Subject: [PATCH 5.0 63/93] cifs: fix that return -EINVAL when do dedupe operation
+Date:   Thu, 18 Apr 2019 19:57:41 +0200
+Message-Id: <20190418160443.795009817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -61,69 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 165aa2bfb42904b1bec4bf2fa257c8c603c14a06 ]
+[ Upstream commit b073a08016a10f01dfb0d0b6c7fa89da0d544963 ]
 
-In some cases, the iscsi_remove_session() function is called while an
-unbind_work operation is still running.  This may cause a situation where
-sysfs objects are removed in an incorrect order, triggering a kernel
-warning.
+dedupe_file_range operations is combiled into remap_file_range.
+But it's always skipped for dedupe operations in function
+cifs_remap_file_range.
 
-[  605.249442] ------------[ cut here ]------------
-[  605.259180] sysfs group 'power' not found for kobject 'target2:0:0'
-[  605.321371] WARNING: CPU: 1 PID: 26794 at fs/sysfs/group.c:235 sysfs_remove_group+0x76/0x80
-[  605.341266] Modules linked in: dm_service_time target_core_user target_core_pscsi target_core_file target_core_iblock iscsi_target_mod target_core_mod nls_utf8 isofs ppdev bochs_drm nfit ttm libnvdimm drm_kms_helper syscopyarea sysfillrect sysimgblt joydev pcspkr fb_sys_fops drm i2c_piix4 sg parport_pc parport xfs libcrc32c dm_multipath sr_mod sd_mod cdrom ata_generic 8021q garp mrp ata_piix stp crct10dif_pclmul crc32_pclmul llc libata crc32c_intel virtio_net net_failover ghash_clmulni_intel serio_raw failover sunrpc dm_mirror dm_region_hash dm_log dm_mod be2iscsi bnx2i cnic uio cxgb4i cxgb4 libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi
-[  605.627479] CPU: 1 PID: 26794 Comm: kworker/u32:2 Not tainted 4.18.0-60.el8.x86_64 #1
-[  605.721401] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-[  605.823651] Workqueue: scsi_wq_2 __iscsi_unbind_session [scsi_transport_iscsi]
-[  605.830940] RIP: 0010:sysfs_remove_group+0x76/0x80
-[  605.922907] Code: 48 89 df 5b 5d 41 5c e9 38 c4 ff ff 48 89 df e8 e0 bf ff ff eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 38 73 cb a7 e8 24 77 d7 ff <0f> 0b 5b 5d 41 5c c3 0f 1f 00 0f 1f 44 00 00 41 56 41 55 41 54 55
-[  606.122304] RSP: 0018:ffffbadcc8d1bda8 EFLAGS: 00010286
-[  606.218492] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  606.326381] RDX: ffff98bdfe85eb40 RSI: ffff98bdfe856818 RDI: ffff98bdfe856818
-[  606.514498] RBP: ffffffffa7ab73e0 R08: 0000000000000268 R09: 0000000000000007
-[  606.529469] R10: 0000000000000000 R11: ffffffffa860d9ad R12: ffff98bdf978e838
-[  606.630535] R13: ffff98bdc2cd4010 R14: ffff98bdc2cd3ff0 R15: ffff98bdc2cd4000
-[  606.824707] FS:  0000000000000000(0000) GS:ffff98bdfe840000(0000) knlGS:0000000000000000
-[  607.018333] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  607.117844] CR2: 00007f84b78ac024 CR3: 000000002c00a003 CR4: 00000000003606e0
-[  607.117844] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  607.420926] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  607.524236] Call Trace:
-[  607.530591]  device_del+0x56/0x350
-[  607.624393]  ? ata_tlink_match+0x30/0x30 [libata]
-[  607.727805]  ? attribute_container_device_trigger+0xb4/0xf0
-[  607.829911]  scsi_target_reap_ref_release+0x39/0x50
-[  607.928572]  scsi_remove_target+0x1a2/0x1d0
-[  608.017350]  __iscsi_unbind_session+0xb3/0x160 [scsi_transport_iscsi]
-[  608.117435]  process_one_work+0x1a7/0x360
-[  608.132917]  worker_thread+0x30/0x390
-[  608.222900]  ? pwq_unbound_release_workfn+0xd0/0xd0
-[  608.323989]  kthread+0x112/0x130
-[  608.418318]  ? kthread_bind+0x30/0x30
-[  608.513821]  ret_from_fork+0x35/0x40
-[  608.613909] ---[ end trace 0b98c310c8a6138c ]---
+Example to test:
+Before this patch:
+  # dd if=/dev/zero of=cifs/file bs=1M count=1
+  # xfs_io -c "dedupe cifs/file 4k 64k 4k" cifs/file
+  XFS_IOC_FILE_EXTENT_SAME: Invalid argument
 
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Acked-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+After this patch:
+  # dd if=/dev/zero of=cifs/file bs=1M count=1
+  # xfs_io -c "dedupe cifs/file 4k 64k 4k" cifs/file
+  XFS_IOC_FILE_EXTENT_SAME: Operation not supported
+
+Influence for xfstests:
+generic/091
+generic/112
+generic/127
+generic/263
+These tests report this error "do_copy_range:: Invalid
+argument" instead of "FIDEDUPERANGE: Invalid argument".
+Because there are still two bugs cause these test failed.
+https://bugzilla.kernel.org/show_bug.cgi?id=202935
+https://bugzilla.kernel.org/show_bug.cgi?id=202785
+
+Signed-off-by: Xiaoli Feng <fengxiaoli0714@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/cifs/cifsfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 0508831d6fb9..0a82e93566dc 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2200,6 +2200,8 @@ void iscsi_remove_session(struct iscsi_cls_session *session)
- 	scsi_target_unblock(&session->dev, SDEV_TRANSPORT_OFFLINE);
- 	/* flush running scans then delete devices */
- 	flush_work(&session->scan_work);
-+	/* flush running unbind operations */
-+	flush_work(&session->unbind_work);
- 	__iscsi_unbind_session(&session->unbind_work);
+diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+index 07cad54b84f1..e8e125acd712 100644
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -1010,7 +1010,7 @@ static loff_t cifs_remap_file_range(struct file *src_file, loff_t off,
+ 	unsigned int xid;
+ 	int rc;
  
- 	/* hw iscsi may not have removed all connections from session */
+-	if (remap_flags & ~REMAP_FILE_ADVISORY)
++	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
+ 		return -EINVAL;
+ 
+ 	cifs_dbg(FYI, "clone range\n");
 -- 
 2.19.1
 
