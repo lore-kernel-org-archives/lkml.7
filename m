@@ -2,99 +2,113 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BD9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED67CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1617820674
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:49:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iJ8/0xu0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZGByBbwZ"
+	by mail.kernel.org (Postfix) with ESMTP id C96FE20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389233AbfDRNta (ORCPT
+        id S2389131AbfDRNu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:49:30 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33522 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388073AbfDRNt3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:49:29 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0AD39607CA; Thu, 18 Apr 2019 13:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555595369;
-        bh=45Y6N+S7OaB9LhOtPy3nchhklMezWadHzyiI6mL38pg=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=iJ8/0xu0OhpjQauMRD1myRMkvAFtMgzMKyPWIE6tHOrBttL7W4sFuMfXQB6zyJvav
-         U7D6oM0HpH2ZBjKtQZyd9jpGKDFHcpvXbEXO4w+34DujD05K1bJjSe4lpyW1pUvyce
-         0w8Vc52xLaZac8XVPJ1eYDpirh6S9QyvlsRAsxXQ=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E4B1E602A7;
-        Thu, 18 Apr 2019 13:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555595368;
-        bh=45Y6N+S7OaB9LhOtPy3nchhklMezWadHzyiI6mL38pg=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=ZGByBbwZ5zOXZPTpF53ZsV11me581YNEYMamDq3y14y/3FB9bxdm3Apw7Zq2UrAhs
-         5BvMuXL54ZbfA77/JpHaS7S9kqQrnB/yCO5PjDK4WtD0p2F3grqPzKS8QdL807CvYF
-         6CPgyPh33tzXQ6TU909vENa3x7qjjHCOo06lkSv8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E4B1E602A7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ihab Zhaika <ihab.zhaika@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: Re: linux-next: manual merge of the wireless-drivers-next tree with the wireless-drivers tree
-References: <20190415120853.39e0e46a@canb.auug.org.au>
-Date:   Thu, 18 Apr 2019 16:49:24 +0300
-In-Reply-To: <20190415120853.39e0e46a@canb.auug.org.au> (Stephen Rothwell's
-        message of "Mon, 15 Apr 2019 12:08:53 +1000")
-Message-ID: <87k1fr2zkr.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 18 Apr 2019 09:50:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46238 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731317AbfDRNuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:50:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A41E2B6A0;
+        Thu, 18 Apr 2019 13:50:54 +0000 (UTC)
+From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
+        arunks@codeaurora.org, brgl@bgdev.pl, geert+renesas@glider.be,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mguzik@redhat.com, mkoutny@suse.com, rppt@linux.ibm.com,
+        vbabka@suse.cz, Laurent Dufour <ldufour@linux.ibm.com>
+Subject: [PATCH] prctl_set_mm: downgrade mmap_sem to read lock
+Date:   Thu, 18 Apr 2019 15:50:39 +0200
+Message-Id: <20190418135039.19987-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190417145548.GN5878@dhcp22.suse.cz>
+References: <20190417145548.GN5878@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+I learnt, it's, alas, too late to drop the non PRCTL_SET_MM_MAP calls
+[1], so at least downgrade the write acquisition of mmap_sem as in the
+patch below (that should be stacked on the previous one or squashed).
 
-> Today's linux-next merge of the wireless-drivers-next tree got a
-> conflict in:
->
->   drivers/net/wireless/intel/iwlwifi/pcie/drv.c
->
-> between commits:
->
->   0d5bad14226a ("iwlwifi: rename structs to fit the new names")
->   972d8e137779 ("iwlwifi: add new 0x2723/0x2080 card for 22000")
->
-> from the wireless-drivers tree and commit:
->
->   ef8a913766cd ("iwlwifi: remove misconfigured pci ids from 22260 series")
->
-> from the wireless-drivers-next tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+Cyrill, you mentioned lock changes in [1] but the link seems empty. Is
+it supposed to be [2]? That could be an alternative to this patch after
+some refreshments and clarifications.
 
-Thanks, I'll let Dave know about this when he pulls w-d-next.
 
+[1] https://lore.kernel.org/lkml/20190417165632.GC3040@uranus.lan/
+[2] https://lore.kernel.org/lkml/20180507075606.870903028@gmail.com/
+
+========
+
+Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect
+arg_start|end and env_start|end in mm_struct") we use arg_lock for
+boundaries modifications. Synchronize prctl_set_mm with this lock and
+keep mmap_sem for reading only (analogous to what we already do in
+prctl_set_mm_map).
+
+Also, save few cycles by looking up VMA only after performing basic
+arguments validation.
+
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ kernel/sys.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 12df0e5434b8..bbce0f26d707 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2125,8 +2125,12 @@ static int prctl_set_mm(int opt, unsigned long addr,
+ 
+ 	error = -EINVAL;
+ 
+-	down_write(&mm->mmap_sem);
+-	vma = find_vma(mm, addr);
++	/*
++	 * arg_lock protects concurent updates of arg boundaries, we need mmap_sem for
++	 * a) concurrent sys_brk, b) finding VMA for addr validation.
++	 */
++	down_read(&mm->mmap_sem);
++	spin_lock(&mm->arg_lock);
+ 
+ 	prctl_map.start_code	= mm->start_code;
+ 	prctl_map.end_code	= mm->end_code;
+@@ -2185,6 +2189,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
+ 	if (error)
+ 		goto out;
+ 
++	vma = find_vma(mm, addr);
+ 	switch (opt) {
+ 	/*
+ 	 * If command line arguments and environment
+@@ -2218,7 +2223,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
+ 
+ 	error = 0;
+ out:
+-	up_write(&mm->mmap_sem);
++	spin_unlock(&mm->arg_lock);
++	up_read(&mm->mmap_sem);
+ 	return error;
+ }
+ 
 -- 
-Kalle Valo
+2.16.4
+
