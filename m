@@ -2,52 +2,58 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAA7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFF9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7264A214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC6F218A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611190;
-	bh=5ZmvG3bRoN2B0+9M9bgfjB4bPga69aRBeLvRE+VuVDI=;
+	s=default; t=1555611196;
+	bh=h+5O/Nj2+F30LtAibjlcItlXsw8dS7f1cTxCDQvc+b8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfSOpktf41bqQecmAWVkMHvlvbivUW3jYI6Ln791qFzvHFNt2eF9FOdGyUhqW+R3K
-	 Yvp1ObtkiGVLezYepHgGSXPYPY+1pxbvFVsT2OQ8TD6TKdy7ZCsDQnUF7RVgxeBaSn
-	 hT0ZH4zBMpkNdhi8/8ryy2RRx9TcVlUIEVX832zE=
+	b=p8hnXd5sEqPEWMp/IcpEfp6A44ov5J4wsn40jxoUr72abLZq9TCUJ8BvJL5ewYOFI
+	 KIWIGIETOTJH6bFA7q70lWqYMCFfvLqHVzoivWSMzNMP+5Oo6BrokDtPFBV1+fSx25
+	 hqfO4EDXgVW9sFlwtq+/bdVxwp2JROMJsjevPAqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392013AbfDRSNJ (ORCPT
+        id S2404211AbfDRSNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45724 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391819AbfDRSNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:13:05 -0400
+        id S2392015AbfDRSNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:13:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85FD1206B6;
-        Thu, 18 Apr 2019 18:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 371082186A;
+        Thu, 18 Apr 2019 18:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611184;
-        bh=5ZmvG3bRoN2B0+9M9bgfjB4bPga69aRBeLvRE+VuVDI=;
+        s=default; t=1555611191;
+        bh=h+5O/Nj2+F30LtAibjlcItlXsw8dS7f1cTxCDQvc+b8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lC75xoGcmc0xcCdJK9MVAVv6xJuyJCBRNUJZJaG6MviWt3VQ1AWDiyUDDgY2C7J3y
-         ONuzZ8bN+2NFp/P+TZZMJCPMkub000oRVCRKvOq+nWHzu31KbpuB5xLg012RKg4NsZ
-         J7ErVczY6ZMXr6hFc3hexuW1Een5cTgFhlPqBeOE=
+        b=D22X+UzS9WbTYbunSnJi6QBZKNP+4nzweXJH0gRCzwXPHLSWpmu+nybabct0hHM9d
+         UYRfPEUb+i/RvhBjM2ywJf4y0UXc7blKi/wHEuNU1SC1Xptw4oNm64TvaqBbUekdk2
+         K+42XNifuhwAzuRnyjaN8V0JBfzCbyNfcQVyts8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 90/93] f2fs: fix to add refcount once page is tagged PG_private
-Date:   Thu, 18 Apr 2019 19:58:08 +0200
-Message-Id: <20190418160445.835859903@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fb731ca573367b7f6564@syzkaller.appspotmail.com,
+        syzbot+a13e5ead792d6df37818@syzkaller.appspotmail.com,
+        syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 92/93] bpf: fix use after free in bpf_evict_inode
+Date:   Thu, 18 Apr 2019 19:58:10 +0200
+Message-Id: <20190418160445.998105285@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -60,208 +66,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 240a59156d9bcfabceddb66be449e7b32fb5dc4a ]
+[ Upstream commit 1da6c4d9140cb7c13e87667dc4e1488d6c8fc10f ]
 
-As Gao Xiang reported in bugzilla:
+syzkaller was able to generate the following UAF in bpf:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=202749
+  BUG: KASAN: use-after-free in lookup_last fs/namei.c:2269 [inline]
+  BUG: KASAN: use-after-free in path_lookupat.isra.43+0x9f8/0xc00 fs/namei.c:2318
+  Read of size 1 at addr ffff8801c4865c47 by task syz-executor2/9423
 
-f2fs may skip pageout() due to incorrect page reference count.
+  CPU: 0 PID: 9423 Comm: syz-executor2 Not tainted 4.20.0-rc1-next-20181109+
+  #110
+  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+  Google 01/01/2011
+  Call Trace:
+    __dump_stack lib/dump_stack.c:77 [inline]
+    dump_stack+0x244/0x39d lib/dump_stack.c:113
+    print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
+    kasan_report_error mm/kasan/report.c:354 [inline]
+    kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
+    __asan_report_load1_noabort+0x14/0x20 mm/kasan/report.c:430
+    lookup_last fs/namei.c:2269 [inline]
+    path_lookupat.isra.43+0x9f8/0xc00 fs/namei.c:2318
+    filename_lookup+0x26a/0x520 fs/namei.c:2348
+    user_path_at_empty+0x40/0x50 fs/namei.c:2608
+    user_path include/linux/namei.h:62 [inline]
+    do_mount+0x180/0x1ff0 fs/namespace.c:2980
+    ksys_mount+0x12d/0x140 fs/namespace.c:3258
+    __do_sys_mount fs/namespace.c:3272 [inline]
+    __se_sys_mount fs/namespace.c:3269 [inline]
+    __x64_sys_mount+0xbe/0x150 fs/namespace.c:3269
+    do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x457569
+  Code: fd b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+  48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+  ff 0f 83 cb b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+  RSP: 002b:00007fde6ed96c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000457569
+  RDX: 0000000020000040 RSI: 0000000020000000 RDI: 0000000000000000
+  RBP: 000000000072bf00 R08: 0000000020000340 R09: 0000000000000000
+  R10: 0000000000200000 R11: 0000000000000246 R12: 00007fde6ed976d4
+  R13: 00000000004c2c24 R14: 00000000004d4990 R15: 00000000ffffffff
 
-The problem here is that MM defined the rule [1] very clearly that
-once page was set with PG_private flag, we should increment the
-refcount in that page, also main flows like pageout(), migrate_page()
-will assume there is one additional page reference count if
-page_has_private() returns true.
+  Allocated by task 9424:
+    save_stack+0x43/0xd0 mm/kasan/kasan.c:448
+    set_track mm/kasan/kasan.c:460 [inline]
+    kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
+    __do_kmalloc mm/slab.c:3722 [inline]
+    __kmalloc_track_caller+0x157/0x760 mm/slab.c:3737
+    kstrdup+0x39/0x70 mm/util.c:49
+    bpf_symlink+0x26/0x140 kernel/bpf/inode.c:356
+    vfs_symlink+0x37a/0x5d0 fs/namei.c:4127
+    do_symlinkat+0x242/0x2d0 fs/namei.c:4154
+    __do_sys_symlink fs/namei.c:4173 [inline]
+    __se_sys_symlink fs/namei.c:4171 [inline]
+    __x64_sys_symlink+0x59/0x80 fs/namei.c:4171
+    do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+    entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-But currently, f2fs won't add/del refcount when changing PG_private
-flag. Anyway, f2fs should follow MM's rule to make MM's related flows
-running as expected.
+  Freed by task 9425:
+    save_stack+0x43/0xd0 mm/kasan/kasan.c:448
+    set_track mm/kasan/kasan.c:460 [inline]
+    __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
+    kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
+    __cache_free mm/slab.c:3498 [inline]
+    kfree+0xcf/0x230 mm/slab.c:3817
+    bpf_evict_inode+0x11f/0x150 kernel/bpf/inode.c:565
+    evict+0x4b9/0x980 fs/inode.c:558
+    iput_final fs/inode.c:1550 [inline]
+    iput+0x674/0xa90 fs/inode.c:1576
+    do_unlinkat+0x733/0xa30 fs/namei.c:4069
+    __do_sys_unlink fs/namei.c:4110 [inline]
+    __se_sys_unlink fs/namei.c:4108 [inline]
+    __x64_sys_unlink+0x42/0x50 fs/namei.c:4108
+    do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+    entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-[1] https://lore.kernel.org/lkml/2b19b3c4-2bc4-15fa-15cc-27a13e5c7af1@aol.com/
+In this scenario path lookup under RCU is racing with the final
+unlink in case of symlinks. As Linus puts it in his analysis:
 
-Reported-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  [...] We actually RCU-delay the inode freeing itself, but
+  when we do the final iput(), the "evict()" function is called
+  synchronously. Now, the simple fix would seem to just RCU-delay
+  the kfree() of the symlink data in bpf_evict_inode(). Maybe
+  that's the right thing to do. [...]
+
+Al suggested to piggy-back on the ->destroy_inode() callback in
+order to implement RCU deferral there which can then kfree() the
+inode->i_link eventually right before putting inode back into
+inode cache. By reusing free_inode_nonrcu() from there we can
+avoid the need for our own inode cache and just reuse generic
+one as we currently do.
+
+And in-fact on top of all this we should just get rid of the
+bpf_evict_inode() entirely. This means truncate_inode_pages_final()
+and clear_inode() will then simply be called by the fs core via
+evict(). Dropping the reference should really only be done when
+inode is unhashed and nothing reachable anymore, so it's better
+also moved into the final ->destroy_inode() callback.
+
+Fixes: 0f98621bef5d ("bpf, inode: add support for symlinks and fix mtime/ctime")
+Reported-by: syzbot+fb731ca573367b7f6564@syzkaller.appspotmail.com
+Reported-by: syzbot+a13e5ead792d6df37818@syzkaller.appspotmail.com
+Reported-by: syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Analyzed-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+Link: https://lore.kernel.org/lkml/0000000000006946d2057bbd0eef@google.com/T/
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/f2fs/checkpoint.c |  4 ++--
- fs/f2fs/data.c       | 21 ++++++++-------------
- fs/f2fs/dir.c        |  2 +-
- fs/f2fs/f2fs.h       | 21 +++++++++++++++++++++
- fs/f2fs/node.c       |  2 +-
- fs/f2fs/segment.c    |  9 +++------
- 6 files changed, 36 insertions(+), 23 deletions(-)
+ kernel/bpf/inode.c |   32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index ccccf0ce2f06..7743fa83b895 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -406,7 +406,7 @@ static int f2fs_set_meta_page_dirty(struct page *page)
- 	if (!PageDirty(page)) {
- 		__set_page_dirty_nobuffers(page);
- 		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_META);
--		SetPagePrivate(page);
-+		f2fs_set_page_private(page, 0);
- 		f2fs_trace_pid(page);
- 		return 1;
- 	}
-@@ -957,7 +957,7 @@ void f2fs_update_dirty_page(struct inode *inode, struct page *page)
- 	inode_inc_dirty_pages(inode);
- 	spin_unlock(&sbi->inode_lock[type]);
- 
--	SetPagePrivate(page);
-+	f2fs_set_page_private(page, 0);
- 	f2fs_trace_pid(page);
+--- a/kernel/bpf/inode.c
++++ b/kernel/bpf/inode.c
+@@ -554,19 +554,6 @@ struct bpf_prog *bpf_prog_get_type_path(
  }
+ EXPORT_SYMBOL(bpf_prog_get_type_path);
  
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index f91d8630c9a2..c99aab23efea 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2711,8 +2711,7 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
- 	if (IS_ATOMIC_WRITTEN_PAGE(page))
- 		return f2fs_drop_inmem_page(inode, page);
- 
--	set_page_private(page, 0);
--	ClearPagePrivate(page);
-+	f2fs_clear_page_private(page);
- }
- 
- int f2fs_release_page(struct page *page, gfp_t wait)
-@@ -2726,8 +2725,7 @@ int f2fs_release_page(struct page *page, gfp_t wait)
- 		return 0;
- 
- 	clear_cold_data(page);
--	set_page_private(page, 0);
--	ClearPagePrivate(page);
-+	f2fs_clear_page_private(page);
- 	return 1;
- }
- 
-@@ -2795,12 +2793,8 @@ int f2fs_migrate_page(struct address_space *mapping,
- 			return -EAGAIN;
- 	}
- 
--	/*
--	 * A reference is expected if PagePrivate set when move mapping,
--	 * however F2FS breaks this for maintaining dirty page counts when
--	 * truncating pages. So here adjusting the 'extra_count' make it work.
--	 */
--	extra_count = (atomic_written ? 1 : 0) - page_has_private(page);
-+	/* one extra reference was held for atomic_write page */
-+	extra_count = atomic_written ? 1 : 0;
- 	rc = migrate_page_move_mapping(mapping, newpage,
- 				page, mode, extra_count);
- 	if (rc != MIGRATEPAGE_SUCCESS) {
-@@ -2821,9 +2815,10 @@ int f2fs_migrate_page(struct address_space *mapping,
- 		get_page(newpage);
- 	}
- 
--	if (PagePrivate(page))
--		SetPagePrivate(newpage);
--	set_page_private(newpage, page_private(page));
-+	if (PagePrivate(page)) {
-+		f2fs_set_page_private(newpage, page_private(page));
-+		f2fs_clear_page_private(page);
-+	}
- 
- 	if (mode != MIGRATE_SYNC_NO_COPY)
- 		migrate_page_copy(newpage, page);
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index 50d0d36280fa..99a6063c2327 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -728,7 +728,7 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
- 		!f2fs_truncate_hole(dir, page->index, page->index + 1)) {
- 		f2fs_clear_page_cache_dirty_tag(page);
- 		clear_page_dirty_for_io(page);
--		ClearPagePrivate(page);
-+		f2fs_clear_page_private(page);
- 		ClearPageUptodate(page);
- 		clear_cold_data(page);
- 		inode_dec_dirty_pages(dir);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 279bc00489cc..6d9186a6528c 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2825,6 +2825,27 @@ static inline bool is_valid_data_blkaddr(struct f2fs_sb_info *sbi,
- 	return true;
- }
- 
-+static inline void f2fs_set_page_private(struct page *page,
-+						unsigned long data)
-+{
-+	if (PagePrivate(page))
-+		return;
-+
-+	get_page(page);
-+	SetPagePrivate(page);
-+	set_page_private(page, data);
-+}
-+
-+static inline void f2fs_clear_page_private(struct page *page)
-+{
-+	if (!PagePrivate(page))
-+		return;
-+
-+	set_page_private(page, 0);
-+	ClearPagePrivate(page);
-+	f2fs_put_page(page, 0);
-+}
-+
+-static void bpf_evict_inode(struct inode *inode)
+-{
+-	enum bpf_type type;
+-
+-	truncate_inode_pages_final(&inode->i_data);
+-	clear_inode(inode);
+-
+-	if (S_ISLNK(inode->i_mode))
+-		kfree(inode->i_link);
+-	if (!bpf_inode_type(inode, &type))
+-		bpf_any_put(inode->i_private, type);
+-}
+-
  /*
-  * file.c
+  * Display the mount options in /proc/mounts.
   */
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index f6ff84e29749..3f99ab288695 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1961,7 +1961,7 @@ static int f2fs_set_node_page_dirty(struct page *page)
- 	if (!PageDirty(page)) {
- 		__set_page_dirty_nobuffers(page);
- 		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_NODES);
--		SetPagePrivate(page);
-+		f2fs_set_page_private(page, 0);
- 		f2fs_trace_pid(page);
- 		return 1;
- 	}
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index e1b1d390b329..b6c8b0696ef6 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -191,8 +191,7 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
+@@ -579,11 +566,28 @@ static int bpf_show_options(struct seq_f
+ 	return 0;
+ }
  
- 	f2fs_trace_pid(page);
++static void bpf_destroy_inode_deferred(struct rcu_head *head)
++{
++	struct inode *inode = container_of(head, struct inode, i_rcu);
++	enum bpf_type type;
++
++	if (S_ISLNK(inode->i_mode))
++		kfree(inode->i_link);
++	if (!bpf_inode_type(inode, &type))
++		bpf_any_put(inode->i_private, type);
++	free_inode_nonrcu(inode);
++}
++
++static void bpf_destroy_inode(struct inode *inode)
++{
++	call_rcu(&inode->i_rcu, bpf_destroy_inode_deferred);
++}
++
+ static const struct super_operations bpf_super_ops = {
+ 	.statfs		= simple_statfs,
+ 	.drop_inode	= generic_delete_inode,
+ 	.show_options	= bpf_show_options,
+-	.evict_inode	= bpf_evict_inode,
++	.destroy_inode	= bpf_destroy_inode,
+ };
  
--	set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
--	SetPagePrivate(page);
-+	f2fs_set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
- 
- 	new = f2fs_kmem_cache_alloc(inmem_entry_slab, GFP_NOFS);
- 
-@@ -280,8 +279,7 @@ static int __revoke_inmem_pages(struct inode *inode,
- 			ClearPageUptodate(page);
- 			clear_cold_data(page);
- 		}
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
-+		f2fs_clear_page_private(page);
- 		f2fs_put_page(page, 1);
- 
- 		list_del(&cur->list);
-@@ -370,8 +368,7 @@ void f2fs_drop_inmem_page(struct inode *inode, struct page *page)
- 	kmem_cache_free(inmem_entry_slab, cur);
- 
- 	ClearPageUptodate(page);
--	set_page_private(page, 0);
--	ClearPagePrivate(page);
-+	f2fs_clear_page_private(page);
- 	f2fs_put_page(page, 0);
- 
- 	trace_f2fs_commit_inmem_page(page, INMEM_INVALIDATE);
--- 
-2.19.1
-
+ enum {
 
 
