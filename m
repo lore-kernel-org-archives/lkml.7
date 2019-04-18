@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D77C282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083E1C282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193C021850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8942183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g+JqrgM6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IxvwAG/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387850AbfDRAPI (ORCPT
+        id S2387865AbfDRAPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 20:15:08 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43604 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387815AbfDRAPD (ORCPT
+        Wed, 17 Apr 2019 20:15:18 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34993 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387705AbfDRAO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 20:15:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so257008plp.10
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:15:03 -0700 (PDT)
+        Wed, 17 Apr 2019 20:14:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g8so311327pgf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9dHCbPnlI9BSQxis0+totmB/WamSdFGOvfhVYVfhROQ=;
-        b=g+JqrgM6CtbjdujZ4bhx4uBddKF+4SRVyOciP5srObjxxh8KDMl19YmZbkZRq9D6ro
-         /oQuSYOpqFTsQE5PzmeCMGPnnB5FLYBf00CWcGLWBi2Ml0xUlmRHTB/JAtskaKWlNo5g
-         dQmAwOypdXgrccYfyYUTb/Z2JAOT2ZOBU3IHI=
+        bh=FEymG5YLHbrDDzFxo52pdSm6cWs0XYbMN/p1plON6hw=;
+        b=IxvwAG/FD+h3vReXVkO8WN6TgoWmn5hmjEDHCWUqYGymihVRS6a5o1mVUT3QNKxtUS
+         s8WcGVHZle2CbosV4XoPgSRF+m5tBlUbQOt2yAkreM99lgKyKUsc0Fkuy3JlX/HFQ/4d
+         bdAJoUwFWOoAEIZttOkK4YpGJT2cIkcGbSuHs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9dHCbPnlI9BSQxis0+totmB/WamSdFGOvfhVYVfhROQ=;
-        b=Ru6Y39GXJb2m1SS1QSjMIAcZRhi7uRmHOOA9xOEKSTWP5+shpQZg9Y6++nkdeCR1wb
-         MbNx27TBelBE3RGA+lFeuV/osztPtuypCefJA9/IHnT2o7QLmY6ju1Jdg87WIPkdMmHW
-         LywAnM7QV30mxM4i4twnjG5O3+3p4GttzZW+di6O+5Y8vwms2zobWV7B9cKTlNK0xTT5
-         oSKL/j9THt0BpYBD9om3efNDTbDnx4f9U1tAC3ULa2yRkIhqFBLG971QHl7p3d4SF+On
-         SkRMD7tukm0z0mb6RnnIcqRljxHur9zxHnw0FXrkUFfi97gPANC1LYcj07M3DyT8xwkJ
-         fCLw==
-X-Gm-Message-State: APjAAAXecuhyEHMNwRDSX1HDPZh+su1542p64FlNSrHRgnZeKRIO1DwY
-        3kebEhfjQUscHPpWh1/ootzTXg==
-X-Google-Smtp-Source: APXvYqxWk5e1kbmfttQMLubOoAO7jJexKAOokKqYIE8CqxPpp93l2fjdF31N53x3ArHo1fS2mksl/Q==
-X-Received: by 2002:a17:902:2aeb:: with SMTP id j98mr25482240plb.38.1555546503259;
-        Wed, 17 Apr 2019 17:15:03 -0700 (PDT)
+        bh=FEymG5YLHbrDDzFxo52pdSm6cWs0XYbMN/p1plON6hw=;
+        b=BIE7QzCALim3G6qwU4rI8j9YWzwzKlj3KaX69w8sUrDYTqjetEtZzejatbf3rZDVJn
+         k2kj34fg22Z7cMNvUkYEtcbtvdjC3UXlEthoTtbFoX9UsG85h/rDKkfss23goFXJPnpR
+         XbsByUrqOQ2X/6K2uyPYXhXynLNanNEigPy5Kp/lApbFv4YjjIXQgue1j71bo3vucDDp
+         +WJ9DJEb4YQmB4zEVyP02+cdqjE7Rv7dg6imxyFMjoTMT2jyzqX2vNDBukNbT6qNXdgF
+         AcXFA4DOCfyLv5UrI+M5YBtqe/+VP7OgpVUxSeu0tEnP0d2IFoSU9nqhlfMtqzxBcj6X
+         zNSw==
+X-Gm-Message-State: APjAAAXVO08Xgn7c1aZuLFhcy/HARP4brNzyHqOw8owKnPjSfDZoEPgR
+        XS/gUODuzobUmyJLHwg9On/WwA==
+X-Google-Smtp-Source: APXvYqzyMQB6DofPsR3ROmeLa7d3NvmAdljo4RKmr1talzLCVFturW2bHncz7YNf+WhFu2sdhPQ5/g==
+X-Received: by 2002:a62:aa06:: with SMTP id e6mr2953350pff.254.1555546499283;
+        Wed, 17 Apr 2019 17:14:59 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id q5sm447668pff.97.2019.04.17.17.15.02
+        by smtp.gmail.com with ESMTPSA id q5sm447668pff.97.2019.04.17.17.14.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 17:15:02 -0700 (PDT)
+        Wed, 17 Apr 2019 17:14:58 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Minas Harutyunyan <hminas@synopsys.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de
@@ -67,13 +67,16 @@ Cc:     Alan Stern <stern@rowland.harvard.edu>,
         dinguyen@opensource.altera.com,
         Elaine Zhang <zhangqing@rock-chips.com>,
         Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 5/5] ARM: dts: rockchip: Allow wakeup from rk3288-veyron's dwc2 USB ports
-Date:   Wed, 17 Apr 2019 17:13:56 -0700
-Message-Id: <20190418001356.124334-6-dianders@chromium.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jon Flatley <jflat@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH v2 2/5] USB: Export usb_wakeup_enabled_descendants()
+Date:   Wed, 17 Apr 2019 17:13:53 -0700
+Message-Id: <20190418001356.124334-3-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 In-Reply-To: <20190418001356.124334-1-dianders@chromium.org>
 References: <20190418001356.124334-1-dianders@chromium.org>
@@ -84,48 +87,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to be able to wake from USB if a device is plugged in that
-wants remote wakeup.  Enable it on both dwc2 controllers.
-
-NOTE: this is added specifically to veyron and not to rk3288 in
-general since it's not known whether all rk3288 boards are designed to
-support USB wakeup.  It is plausible that some boards could shut down
-important rails in S3.
-
-Also note that currently wakeup doesn't seem to happen unless you use
-the "deep" suspend mode (where SDRAM is turned off).  Presumably the
-shallow suspend mode is gating some sort of clock that's important but
-I couldn't easily figure out how to get it working.
+In (e583d9d USB: global suspend and remote wakeup don't mix) we
+introduced wakeup_enabled_descendants() as a static function.  We'd
+like to use this function in USB controller drivers to know if we
+should keep the controller on during suspend time, since doing so has
+a power impact.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+For relevant prior discussion of this idea, see:
 
-Changes in v2:
-- rk3288-veyron dts patch new for v2.
+https://lkml.kernel.org/r/1436207224-21849-4-git-send-email-dianders@chromium.org
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+If I'm reading all the responses correctly folks were of the opinion
+that this patch is still the right way to go.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 1252522392c7..1d8bfed7830c 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -424,6 +424,7 @@
+Changes in v2: None
+
+ drivers/usb/core/hub.c  | 7 ++++---
+ include/linux/usb/hcd.h | 5 +++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 8d4631c81b9f..5e8f3fa7ae5a 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3174,13 +3174,14 @@ static int usb_disable_remote_wakeup(struct usb_device *udev)
+ }
  
- &usb_host1 {
- 	status = "okay";
-+	snps,need-phy-for-wake;
- };
+ /* Count of wakeup-enabled devices at or below udev */
+-static unsigned wakeup_enabled_descendants(struct usb_device *udev)
++unsigned usb_wakeup_enabled_descendants(struct usb_device *udev)
+ {
+ 	struct usb_hub *hub = usb_hub_to_struct_hub(udev);
  
- &usb_otg {
-@@ -432,6 +433,7 @@
- 	assigned-clocks = <&cru SCLK_USBPHY480M_SRC>;
- 	assigned-clock-parents = <&usbphy0>;
- 	dr_mode = "host";
-+	snps,need-phy-for-wake;
- };
+ 	return udev->do_remote_wakeup +
+ 			(hub ? hub->wakeup_enabled_descendants : 0);
+ }
++EXPORT_SYMBOL_GPL(usb_wakeup_enabled_descendants);
  
- &vopb {
+ /*
+  * usb_port_suspend - suspend a usb device's upstream port
+@@ -3282,7 +3283,7 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
+ 	 * Therefore we will turn on the suspend feature if udev or any of its
+ 	 * descendants is enabled for remote wakeup.
+ 	 */
+-	else if (PMSG_IS_AUTO(msg) || wakeup_enabled_descendants(udev) > 0)
++	else if (PMSG_IS_AUTO(msg) || usb_wakeup_enabled_descendants(udev) > 0)
+ 		status = set_port_feature(hub->hdev, port1,
+ 				USB_PORT_FEAT_SUSPEND);
+ 	else {
+@@ -3687,7 +3688,7 @@ static int hub_suspend(struct usb_interface *intf, pm_message_t msg)
+ 		}
+ 		if (udev)
+ 			hub->wakeup_enabled_descendants +=
+-					wakeup_enabled_descendants(udev);
++					usb_wakeup_enabled_descendants(udev);
+ 	}
+ 
+ 	if (hdev->do_remote_wakeup && hub->quirk_check_port_auto_suspend) {
+diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+index 695931b03684..ed4fbbd1b35f 100644
+--- a/include/linux/usb/hcd.h
++++ b/include/linux/usb/hcd.h
+@@ -652,11 +652,16 @@ extern wait_queue_head_t usb_kill_urb_queue;
+ #define usb_endpoint_out(ep_dir)	(!((ep_dir) & USB_DIR_IN))
+ 
+ #ifdef CONFIG_PM
++extern unsigned usb_wakeup_enabled_descendants(struct usb_device *udev);
+ extern void usb_root_hub_lost_power(struct usb_device *rhdev);
+ extern int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg);
+ extern int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg);
+ extern void usb_hcd_resume_root_hub(struct usb_hcd *hcd);
+ #else
++static inline unsigned usb_wakeup_enabled_descendants(struct usb_device *udev)
++{
++	return 0;
++}
+ static inline void usb_hcd_resume_root_hub(struct usb_hcd *hcd)
+ {
+ 	return;
 -- 
 2.21.0.593.g511ec345e18-goog
 
