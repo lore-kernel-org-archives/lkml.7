@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3BDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BC9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D128920643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155E520643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612213;
-	bh=2B7WEXNUQiFETZRN6SGBNeT5lvglUMdmZJmO+wzNi28=;
+	s=default; t=1555612231;
+	bh=NJVMOhv4wCdR0d/L7REQHEZ+miC5O1lCn6EKCjVw5nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VM4oZw8nLw4JYwhs7HVsNYAAeJXho4UGJiqHpzJaN6Hr9DSABZGiWbSJhNdXb8wTq
-	 C9VLl+0JTQL6FRDEFj/aPGjRC0Xu6w2x0rCMs7R0E8SkGTTIFDUHiHviJ9EkTsLuG4
-	 VskLLYSJacpnTszO8qQE4CeIaXerghgKSK9XED8Y=
+	b=WK3BPixHS0F4YJ4HrCFPi//+RJbv5J4691W9lWUuChevSgRDKhttqGcfZEYLGamrL
+	 kRQsSbz/qKXqc/i+2ddQhv7slQIeRuDPiIu+lqaFQrSqv8wEwgzp4Gys7GL14UgQDb
+	 HnGUwU4JhcFPBurKVnSV7wb/fQQszh9C6kHKWBj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390667AbfDRSB7 (ORCPT
+        id S2390791AbfDRSaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57830 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390646AbfDRSBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:54 -0400
+        id S2390604AbfDRSBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E4C4217FA;
-        Thu, 18 Apr 2019 18:01:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0458217FA;
+        Thu, 18 Apr 2019 18:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610514;
-        bh=2B7WEXNUQiFETZRN6SGBNeT5lvglUMdmZJmO+wzNi28=;
+        s=default; t=1555610501;
+        bh=NJVMOhv4wCdR0d/L7REQHEZ+miC5O1lCn6EKCjVw5nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTdvpnDxeTAOR2UzAJkivDgnju3hVrUlFCFKJKYKAV82sJ7R/lylnKUYpJ0SX/BnM
-         JswMWWeR8i92z0XH9Z20iWcFDi7iqusxupK70dmbAQx2H11wxHQ3N0Nz2afDI1ZPoj
-         UhN0vr0qfREjZxirHm5VYeXYsR8kKc34FyZaX8ns=
+        b=lrqu7WPQxws4kgRymf7BoKb6xnOsfvwqSc5Mi1PW1Vx4FzLtKweoqTwe3nxSHTKXu
+         dykir1ekBw972W0cmerIMda3CttcEl/pxlJsosG21J9Ep/9fxGM50mhn4VrOKhMokv
+         ah7IBzthRaw6evWpdlHF6zDRFeihgycPNOfVIzUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/110] ext4: prohibit fstrim in norecovery mode
-Date:   Thu, 18 Apr 2019 19:56:41 +0200
-Message-Id: <20190418160443.661595822@linuxfoundation.org>
+        stable@vger.kernel.org, Gertjan Halkes <gertjan@google.com>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 057/110] 9p: do not trust pdu content for stat item size
+Date:   Thu, 18 Apr 2019 19:56:46 +0200
+Message-Id: <20190418160443.977426830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -60,38 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
+[ Upstream commit 2803cf4379ed252894f046cb8812a48db35294e3 ]
 
-The ext4 fstrim implementation uses the block bitmaps to find free space
-that can be discarded.  If we haven't replayed the journal, the bitmaps
-will be stale and we absolutely *cannot* use stale metadata to zap the
-underlying storage.
+v9fs_dir_readdir() could deadloop if a struct was sent with a size set
+to -2
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: http://lkml.kernel.org/r/1536134432-11997-1-git-send-email-asmadeus@codewreck.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88021
+Signed-off-by: Gertjan Halkes <gertjan@google.com>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ioctl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/9p/vfs_dir.c   | 8 +++-----
+ net/9p/protocol.c | 3 ++-
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index 2e76fb55d94a..5f24fdc140ad 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -999,6 +999,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (!blk_queue_discard(q))
- 			return -EOPNOTSUPP;
+diff --git a/fs/9p/vfs_dir.c b/fs/9p/vfs_dir.c
+index 48db9a9f13f9..cb6c4031af55 100644
+--- a/fs/9p/vfs_dir.c
++++ b/fs/9p/vfs_dir.c
+@@ -105,7 +105,6 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 	int err = 0;
+ 	struct p9_fid *fid;
+ 	int buflen;
+-	int reclen = 0;
+ 	struct p9_rdir *rdir;
+ 	struct kvec kvec;
  
-+		/*
-+		 * We haven't replayed the journal, so we cannot use our
-+		 * block-bitmap-guided storage zapping commands.
-+		 */
-+		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
-+			return -EROFS;
-+
- 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
- 		    sizeof(range)))
- 			return -EFAULT;
+@@ -138,11 +137,10 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 		while (rdir->head < rdir->tail) {
+ 			err = p9stat_read(fid->clnt, rdir->buf + rdir->head,
+ 					  rdir->tail - rdir->head, &st);
+-			if (err) {
++			if (err <= 0) {
+ 				p9_debug(P9_DEBUG_VFS, "returned %d\n", err);
+ 				return -EIO;
+ 			}
+-			reclen = st.size+2;
+ 
+ 			over = !dir_emit(ctx, st.name, strlen(st.name),
+ 					 v9fs_qid2ino(&st.qid), dt_type(&st));
+@@ -150,8 +148,8 @@ static int v9fs_dir_readdir(struct file *file, struct dir_context *ctx)
+ 			if (over)
+ 				return 0;
+ 
+-			rdir->head += reclen;
+-			ctx->pos += reclen;
++			rdir->head += err;
++			ctx->pos += err;
+ 		}
+ 	}
+ }
+diff --git a/net/9p/protocol.c b/net/9p/protocol.c
+index ee32bbf12675..b4d80c533f89 100644
+--- a/net/9p/protocol.c
++++ b/net/9p/protocol.c
+@@ -571,9 +571,10 @@ int p9stat_read(struct p9_client *clnt, char *buf, int len, struct p9_wstat *st)
+ 	if (ret) {
+ 		p9_debug(P9_DEBUG_9P, "<<< p9stat_read failed: %d\n", ret);
+ 		trace_9p_protocol_dump(clnt, &fake_pdu);
++		return ret;
+ 	}
+ 
+-	return ret;
++	return fake_pdu.offset;
+ }
+ EXPORT_SYMBOL(p9stat_read);
+ 
 -- 
 2.19.1
 
