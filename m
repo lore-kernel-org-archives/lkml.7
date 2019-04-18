@@ -2,96 +2,116 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B71C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAD9C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35B02183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11FD2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 07:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JlMxKBLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbfDRHp4 (ORCPT
+        id S2388125AbfDRHuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 03:45:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60286 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726873AbfDRHpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 03:45:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 82858AD49;
-        Thu, 18 Apr 2019 07:45:54 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 09:45:52 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, ying.huang@intel.com
-Subject: Re: [PATCH v2] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190418074552.x7bl7tr76dui64f5@pathway.suse.cz>
-References: <20190410153718.22905-1-feng.tang@intel.com>
- <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
- <20190417064844.ppyqxcx2mgek5455@shbuild888>
- <20190417091832.z252cvcf4ktxeamv@pathway.suse.cz>
- <20190417094614.GB4260@jagdpanzerIV>
- <20190417105010.GA8492@jagdpanzerIV>
- <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
- <20190417151817.xsun2k7cxff5rknn@shbuild888>
- <20190418000014.GA2059@jagdpanzerIV>
+        Thu, 18 Apr 2019 03:50:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43503 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfDRHuh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 03:50:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so798029pgu.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 00:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1+u7DKJJDYH4Nv31VWy+05JzeHtfYaxqUK6Ky58Kb+o=;
+        b=JlMxKBLMdN5Q35ZfymHUS0hQqCDXg8FEI2v7sxeO4UB8u8fM5lDI8S3GTnGBLL2rZt
+         YAWfUUzHkp5Qb4D52ytlW6ByOSshgU5uPnRAJVZdVaPIlkF6AaahpVz3f8yeMogLwjZN
+         OBRG17mhEdCIoTOAaq1IoSCWFTZwoZvfDul6c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1+u7DKJJDYH4Nv31VWy+05JzeHtfYaxqUK6Ky58Kb+o=;
+        b=MNsrPSnywrxJRpHB0ZQeidY6lGs132rYAttqHbOEnYvqAU0rrQ0CppgblN9SxJOGbx
+         38+S+gA8ZxEB9SWuhkbQ/xZXSnyDOMNeDi7VwEeeYzxsOdV9c+S+MwOVHcgvwSUV11Sb
+         tM6KrJvBzGNl2hQRgVXBbYtXZbgzbdLFcOztL0udVAyl6Os/NjGNIqswEjDjNfHwGvSO
+         khPBe63YdRsIkj2DQg4kwKOGXAGYJJeYz9NSstochUD8zEgXcX/H8gmZeaE8ZnDFglLv
+         IviG+mdwh14BvCFOhVaUUI8Mvgy3Ma2UTTS7eyuQFePxNli23XzHR1UV3biVbyVqtQIl
+         rTzA==
+X-Gm-Message-State: APjAAAV1Xba3dz+vOS2AYXRZEmIXhH+j4w9XNW6XFGr/i04ne3//8h3x
+        zvdZuSQy3zIJYB91JBphrZ/HmA==
+X-Google-Smtp-Source: APXvYqy8Oz8kwJAS3Eyqk92l46Cdl3Hrm+Q926EELDNeREiPhTbQBlyCW/xZ3jfo5Low9RzCZLhMaQ==
+X-Received: by 2002:a63:2157:: with SMTP id s23mr4221987pgm.436.1555573836094;
+        Thu, 18 Apr 2019 00:50:36 -0700 (PDT)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id i24sm1870830pfo.85.2019.04.18.00.50.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 00:50:35 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] wireless: Use offsetof instead of custom macro.
+Date:   Thu, 18 Apr 2019 15:50:14 +0800
+Message-Id: <20190418075016.252988-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190418000014.GA2059@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-04-18 09:00:14, Sergey Senozhatsky wrote:
-> I think that PANIC_PRINT_ALL_PRINTK_MSG is a debugging option; a quite
-> specific one. So people who ask the kernel to PANIC_PRINT_ALL_PRINTK_MSG
-> they know what they are doing, and we probably will not cofuse anyone.
-> After all, we don't print any headers when we ftrace_dump() or imitate
-> sysrq via sysrq_timer_list_show(), or for any other panic_print_sys_info()
-> printouts. So it's OK to just do the simple thing for
-> PANIC_PRINT_ALL_PRINTK_MSG.
+Use offsetof to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
 
-The following functions are currently called from panic_print_sys_info():
+==================================================================
+UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
+member access within null pointer of type 'struct iw_point'
+CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
+Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
+Call trace:
+ dump_backtrace+0x0/0x194
+ show_stack+0x20/0x2c
+ __dump_stack+0x20/0x28
+ dump_stack+0x70/0x94
+ ubsan_epilogue+0x14/0x44
+ ubsan_type_mismatch_common+0xf4/0xfc
+ __ubsan_handle_type_mismatch_v1+0x34/0x54
+ wireless_send_event+0x3cc/0x470
+ ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
+ __cfg80211_scan_done+0x28/0x34 [cfg80211]
+ process_one_work+0x170/0x35c
+ worker_thread+0x254/0x380
+ kthread+0x13c/0x158
+ ret_from_fork+0x10/0x18
+===================================================================
 
-+ show_state():
-	printk(KERN_INFO
-		"  task                        PC stack   pid father\n");
-+ show_mem():
-	printk("Mem-Info:\n");
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+---
+ include/uapi/linux/wireless.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-+ sysrq_timer_list_show()
-	no global header; but each section can be easily distinguished
-	because there are several static strings that explains the
-	content
+diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
+index 86eca3208b6b..f259cca5cc2b 100644
+--- a/include/uapi/linux/wireless.h
++++ b/include/uapi/linux/wireless.h
+@@ -1090,8 +1090,7 @@ struct iw_event {
+ /* iw_point events are special. First, the payload (extra data) come at
+  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+  * we omit the pointer, so start at an offset. */
+-#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+-			  (char *) NULL)
++#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+ #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+ 			 IW_EV_POINT_OFF)
+ 
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-+ debug_show_all_locks()
-	pr_warn("\nShowing all locks held in the system:\n");
-
-+ ftrace_dump():
-	printk(KERN_TRACE "Dumping ftrace buffer:\n");
-
-
-The person that enabled the debugging option might know what it did
-when it process the log the very same day. It might be less clear
-for others reading the log.
-
-Also it still might be convenient to find the beginning easily.
-Or it might help to orientate when several test runs
-(over night test) are squashed in a single file. I see
-such logs pretty often.
-
-That said, I do not resist on it.
-
-Best Regards,
-Petr
