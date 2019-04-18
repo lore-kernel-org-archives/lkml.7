@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D59C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247D520643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A88217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612020;
-	bh=3e9iaK1NdEqCCMOCMT6b7kwJCt0ejbGbBUhp04VCO6k=;
+	s=default; t=1555612029;
+	bh=knZ6utUagg4dxcdEvlxLaM20sxni76C8fY/RxYivpb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b/9/c/4oKbUn2W5Hmc/JXOScjXJ8r2yu7Q0SZsYxDiK4SxiJVypLSE+ggvo2zUWiC
-	 qMLxN4zWgHHEgjwaYNOYYOHjjhbkQWXTnHcBmRuKs+3YPcva44mKanOw6i04hAQTGv
-	 /IUF8bJ/4XhJPEKMMN2QVI8BeOBcS+WvYJibLN+c=
+	b=DWibSEDv6PjEGmFveCkIDLZvZvvRae5ADZp/HLT2YuWELZHKw0kOmkoBVFtZcI2SR
+	 Avm/CSDTibhDLAmRPj0Sbe1PJdRKIYns+kmFn/ruXMpOXgsQw7weUZgzsud0mlwEnj
+	 40QOd8MOy3ePJwNsI/aE+6CLb3t/UXMq7ZmRAW80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390258AbfDRS06 (ORCPT
+        id S2391096AbfDRSEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33442 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390728AbfDRSE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:04:28 -0400
+        id S2390281AbfDRSEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:04:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0366A206B6;
-        Thu, 18 Apr 2019 18:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1761206B6;
+        Thu, 18 Apr 2019 18:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610667;
-        bh=3e9iaK1NdEqCCMOCMT6b7kwJCt0ejbGbBUhp04VCO6k=;
+        s=default; t=1555610654;
+        bh=knZ6utUagg4dxcdEvlxLaM20sxni76C8fY/RxYivpb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcE7gNXq2qKVhPI6C2iD+nFW05Ms4hVJxfLuiZwjweLHVZzia4WOrNkrWFBSxbcMH
-         S+WHNOqBeSNHhG0GBXkLWTVPOWwcZE5/sYQW0o65aqpxC3KUvYclI05jzxQbzadtDb
-         RP5yR17DQ7OwOTNpHtWwtB+dt8zZXvEttAV6F6uA=
+        b=awat9W6Rp4MzxxQUcbb4h0FZmmKUYDTR2APmPFsDctAGlYQ1kf3n9i6AEceiG2MBl
+         /1YXKuUdPTgByBA7jh1nJEp7pOMEo25+QJeyG5Yv+iUkkoXcCG4fEy6uGyC+bqxPGV
+         OeRAymoTlzFB7UiXl/el9ZlTwcWCo+m1Q/nObdro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/92] ALSA: sb8: add a check for request_region
-Date:   Thu, 18 Apr 2019 19:56:25 +0200
-Message-Id: <20190418160431.079921193@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Whitehead <tedheadster@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 32/92] x86/cpu/cyrix: Use correct macros for Cyrix calls on Geode processors
+Date:   Thu, 18 Apr 2019 19:56:50 +0200
+Message-Id: <20190418160433.230825346@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -59,33 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dcd0feac9bab901d5739de51b3f69840851f8919 ]
+[ Upstream commit 18fb053f9b827bd98cfc64f2a35df8ab19745a1d ]
 
-In case request_region fails, the fix returns an error code to
-avoid NULL pointer dereference.
+There are comments in processor-cyrix.h advising you to _not_ make calls
+using the deprecated macros in this style:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x80);
+
+This is because it expands the macro into a non-functioning calling
+sequence. The calling order must be:
+
+  outb(CX86_CCR2, 0x22);
+  inb(0x23);
+
+>From the comments:
+
+ * When using the old macros a line like
+ *   setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+ * gets expanded to:
+ *  do {
+ *    outb((CX86_CCR2), 0x22);
+ *    outb((({
+ *        outb((CX86_CCR2), 0x22);
+ *        inb(0x23);
+ *    }) | 0x88), 0x23);
+ *  } while (0);
+
+The new macros fix this problem, so use them instead. Tested on an
+actual Geode processor.
+
+Signed-off-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: luto@kernel.org
+Link: https://lkml.kernel.org/r/1552596361-8967-2-git-send-email-tedheadster@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/sb/sb8.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/cpu/cyrix.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/isa/sb/sb8.c b/sound/isa/sb/sb8.c
-index d77dcba276b5..1eb8b61a185b 100644
---- a/sound/isa/sb/sb8.c
-+++ b/sound/isa/sb/sb8.c
-@@ -111,6 +111,10 @@ static int snd_sb8_probe(struct device *pdev, unsigned int dev)
+diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
+index 8949b7ae6d92..fa61c870ada9 100644
+--- a/arch/x86/kernel/cpu/cyrix.c
++++ b/arch/x86/kernel/cpu/cyrix.c
+@@ -124,7 +124,7 @@ static void set_cx86_reorder(void)
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10); /* enable MAPEN */
  
- 	/* block the 0x388 port to avoid PnP conflicts */
- 	acard->fm_res = request_region(0x388, 4, "SoundBlaster FM");
-+	if (!acard->fm_res) {
-+		err = -EBUSY;
-+		goto _err;
-+	}
+ 	/* Load/Store Serialize to mem access disable (=reorder it) */
+-	setCx86_old(CX86_PCR0, getCx86_old(CX86_PCR0) & ~0x80);
++	setCx86(CX86_PCR0, getCx86(CX86_PCR0) & ~0x80);
+ 	/* set load/store serialize from 1GB to 4GB */
+ 	ccr3 |= 0xe0;
+ 	setCx86(CX86_CCR3, ccr3);
+@@ -135,11 +135,11 @@ static void set_cx86_memwb(void)
+ 	pr_info("Enable Memory-Write-back mode on Cyrix/NSC processor.\n");
  
- 	if (port[dev] != SNDRV_AUTO_PORT) {
- 		if ((err = snd_sbdsp_create(card, port[dev], irq[dev],
+ 	/* CCR2 bit 2: unlock NW bit */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) & ~0x04);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) & ~0x04);
+ 	/* set 'Not Write-through' */
+ 	write_cr0(read_cr0() | X86_CR0_NW);
+ 	/* CCR2 bit 2: lock NW bit and set WT1 */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x14);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x14);
+ }
+ 
+ /*
+@@ -153,14 +153,14 @@ static void geode_configure(void)
+ 	local_irq_save(flags);
+ 
+ 	/* Suspend on halt power saving and enable #SUSP pin */
+-	setCx86_old(CX86_CCR2, getCx86_old(CX86_CCR2) | 0x88);
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+ 
+ 	ccr3 = getCx86(CX86_CCR3);
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);	/* enable MAPEN */
+ 
+ 
+ 	/* FPU fast, DTE cache, Mem bypass */
+-	setCx86_old(CX86_CCR4, getCx86_old(CX86_CCR4) | 0x38);
++	setCx86(CX86_CCR4, getCx86(CX86_CCR4) | 0x38);
+ 	setCx86(CX86_CCR3, ccr3);			/* disable MAPEN */
+ 
+ 	set_cx86_memwb();
+@@ -296,7 +296,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
+ 		/* GXm supports extended cpuid levels 'ala' AMD */
+ 		if (c->cpuid_level == 2) {
+ 			/* Enable cxMMX extensions (GX1 Datasheet 54) */
+-			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7) | 1);
++			setCx86(CX86_CCR7, getCx86(CX86_CCR7) | 1);
+ 
+ 			/*
+ 			 * GXm : 0x30 ... 0x5f GXm  datasheet 51
+@@ -319,7 +319,7 @@ static void init_cyrix(struct cpuinfo_x86 *c)
+ 		if (dir1 > 7) {
+ 			dir0_msn++;  /* M II */
+ 			/* Enable MMX extensions (App note 108) */
+-			setCx86_old(CX86_CCR7, getCx86_old(CX86_CCR7)|1);
++			setCx86(CX86_CCR7, getCx86(CX86_CCR7)|1);
+ 		} else {
+ 			/* A 6x86MX - it has the bug. */
+ 			set_cpu_bug(c, X86_BUG_COMA);
 -- 
 2.19.1
 
