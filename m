@@ -2,54 +2,58 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0335CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632FBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B761F21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30DB32186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610353;
-	bh=ZObmM1XzK+zWcXPLL2bsqkgrYt+3yMH/6KbpDD5u7Y4=;
+	s=default; t=1555610356;
+	bh=nrOlhG2v4YJvxzsRXJD0auaE9cTWOLcP3KFifeZ2Jtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqeQuNo1p+FCg2hmHdopt0y02KOEYIOZ8DPIuWaIUaSpolTya/P6IiEA3zFXtDZm9
-	 k4bxC9w5Fk5I94+jnezslRCeMhDMXuw7oWmw1SF8oXaewjEyz00vzW74bKezEW7f5j
-	 OYcKnQAVRYshpbXtLD1vS75rSdHGGNm/wY053GJk=
+	b=I4uD5rKLNQcSijLQrp7Bu8BCmDHSBOmsedWlzrZ4PnIo6dQkGnbk/VJnWOGx6w0Fu
+	 zqvMOzReLZXrp65p04D17rfNmIYx61m5DvXrtxLxzNK5fCHX6HgdWfCyMRkgaj1mQn
+	 lhaxAUeOPloR+up8dKb9T5sNUAayr9C+uqPQbQZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390072AbfDRR7M (ORCPT
+        id S2390085AbfDRR7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390042AbfDRR7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:07 -0400
+        id S2390073AbfDRR7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8675F218A6;
-        Thu, 18 Apr 2019 17:59:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84496217FA;
+        Thu, 18 Apr 2019 17:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610347;
-        bh=ZObmM1XzK+zWcXPLL2bsqkgrYt+3yMH/6KbpDD5u7Y4=;
+        s=default; t=1555610352;
+        bh=nrOlhG2v4YJvxzsRXJD0auaE9cTWOLcP3KFifeZ2Jtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HjE29EYFItMvhgqE5rfrpW4jEaQSDFDHq0yJR4tIvl+C6feUE7wDQXC9QzYiHMmSK
-         Ajeh35DKZ/hZf3BjcVqFXT1fkYse4b0QdyddAz2kGbvXjD/SwwCBiELVeAcjSArLod
-         G0fCpR3bqBU9+UcDLKikcdH52/MSdMrbk1Cs7yWQ=
+        b=iTK52WB1KwR7gMzjLwWrvpbytp0h3XK7ZmJwFyCvYTZP5DVeIKIPRlluFID/XOZ7n
+         lYn4Jgf4jteDFX0bzVwBU8Bf/62ANCbtK9GsUUJt6jDftaSIJxjrL9B+qSCOBwfm/9
+         UsCnwGXF5DqsNeFaLAiDZWL15G4LT3ZPuKk+X+4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marian Mihailescu <mihailescu2m@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 018/110] thermal: samsung: Fix incorrect check after code merge
-Date:   Thu, 18 Apr 2019 19:56:07 +0200
-Message-Id: <20190418160439.168967773@linuxfoundation.org>
+Subject: [PATCH 4.19 028/110] perf list: Dont forget to drop the reference to the allocated thread_map
+Date:   Thu, 18 Apr 2019 19:56:17 +0200
+Message-Id: <20190418160440.914181115@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -62,39 +66,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b5236cc5d086dd3ddd01113ee9255421aab9fab ]
+[ Upstream commit 39df730b09774bd860e39ea208a48d15078236cb ]
 
-Merge commit 19785cf93b6c ("Merge branch 'linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal")
-broke the code introduced by commit ffe6e16f14fa ("thermal: exynos: Reduce
-severity of too early temperature read"). Restore the original code from
-the mentioned commit to finally fix the warning message during boot:
+Detected via gcc's ASan:
 
-thermal thermal_zone0: failed to read out thermal zone (-22)
+  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
+    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
+    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
+    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
+    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
+   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
+   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
+   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
+   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
+   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
-Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 19785cf93b6c ("Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal")
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
+Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/samsung/exynos_tmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index 48eef552cba4..fc9399d9c082 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -666,7 +666,7 @@ static int exynos_get_temp(void *p, int *temp)
- 	struct exynos_tmu_data *data = p;
- 	int value, ret = 0;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index ebb18a9bc460..85977cebf87c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2263,6 +2263,7 @@ static bool is_event_supported(u8 type, unsigned config)
+ 		perf_evsel__delete(evsel);
+ 	}
  
--	if (!data || !data->tmu_read || !data->enabled)
-+	if (!data || !data->tmu_read)
- 		return -EINVAL;
- 	else if (!data->enabled)
- 		/*
++	thread_map__put(tmap);
+ 	return ret;
+ }
+ 
 -- 
 2.19.1
 
