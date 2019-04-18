@@ -2,134 +2,90 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F1FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF7FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DB12183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B819A206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389054AbfDROxl (ORCPT
+        id S2389096AbfDROyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388301AbfDROxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:53:40 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35831206B6;
-        Thu, 18 Apr 2019 14:53:36 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 10:53:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [patch V2 21/29] tracing: Use percpu stack trace buffer more
- intelligently
-Message-ID: <20190418105334.5093528d@gandalf.local.home>
-In-Reply-To: <20190418084254.999521114@linutronix.de>
-References: <20190418084119.056416939@linutronix.de>
-        <20190418084254.999521114@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 18 Apr 2019 10:54:15 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:47925 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388161AbfDROyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:54:15 -0400
+Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7A1BE200011;
+        Thu, 18 Apr 2019 14:54:10 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 16:54:10 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v2 2/2] arm64: dts: allwinner: a64-amarula-relic: Add
+ OV5640 camera node
+Message-ID: <20190418145410.nm6c3jjwo6xw5mm5@flea>
+References: <20190418135232.9368-1-jagan@amarulasolutions.com>
+ <20190418135232.9368-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ahboa3r6xa7npauw"
+Content-Disposition: inline
+In-Reply-To: <20190418135232.9368-2-jagan@amarulasolutions.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 10:41:40 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> The per cpu stack trace buffer usage pattern is odd at best. The buffer has
-> place for 512 stack trace entries on 64-bit and 1024 on 32-bit. When
-> interrupts or exceptions nest after the per cpu buffer was acquired the
-> stacktrace length is hardcoded to 8 entries. 512/1024 stack trace entries
-> in kernel stacks are unrealistic so the buffer is a complete waste.
-> 
-> Split the buffer into chunks of 64 stack entries which is plenty. This
-> allows nesting contexts (interrupts, exceptions) to utilize the cpu buffer
-> for stack retrieval and avoids the fixed length allocation along with the
-> conditional execution pathes.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace.c |   77 +++++++++++++++++++++++++--------------------------
->  1 file changed, 39 insertions(+), 38 deletions(-)
-> 
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -2749,12 +2749,21 @@ trace_function(struct trace_array *tr,
->  
->  #ifdef CONFIG_STACKTRACE
->  
-> -#define FTRACE_STACK_MAX_ENTRIES (PAGE_SIZE / sizeof(unsigned long))
-> +/* 64 entries for kernel stacks are plenty */
-> +#define FTRACE_KSTACK_ENTRIES	64
-> +
->  struct ftrace_stack {
-> -	unsigned long		calls[FTRACE_STACK_MAX_ENTRIES];
-> +	unsigned long		calls[FTRACE_KSTACK_ENTRIES];
->  };
->  
-> -static DEFINE_PER_CPU(struct ftrace_stack, ftrace_stack);
-> +/* This allows 8 level nesting which is plenty */
+--ahboa3r6xa7npauw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Can we make this 4 level nesting and increase the size? (I can see us
-going more than 64 deep, kernel developers never cease to amaze me ;-)
-That's all we need:
+On Thu, Apr 18, 2019 at 07:22:32PM +0530, Jagan Teki wrote:
+> Amarula A64-Relic board by default bound with OV5640 camera,
+> so add support for it with below pin information.
+>
+> - PE13, PE12 via i2c-gpio bitbanging
+> - CLK_CSI_MCLK as external clock
+> - PE1 as external clock pin muxing
+> - ALDO1 as AVDD supply
+> - DLDO3 as DOVDD supply
+> - ELDO3 as DVDD supply
+> - PE14 gpio for reset pin
+> - PE15 gpio for powerdown pin
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
- Context: Normal, softirq, irq, NMI
+Applied both, thanks
 
-Is there any other way to nest?
+Maxime
 
--- Steve
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> +#define FTRACE_KSTACK_NESTING	(PAGE_SIZE / sizeof(struct ftrace_stack))
-> +
-> +struct ftrace_stacks {
-> +	struct ftrace_stack	stacks[FTRACE_KSTACK_NESTING];
-> +};
-> +
-> +static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
->  static DEFINE_PER_CPU(int, ftrace_stack_reserve);
->  
-> 
+--ahboa3r6xa7npauw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLiPkgAKCRDj7w1vZxhR
+xensAQCOVagcgDSylkXif/UTqSfpo76tHC/BFay1hla0hEqCgAEAlkdGi50wQWz5
+KmvDP48t64pcmSV5rDir06szRQ8ICAM=
+=Kvur
+-----END PGP SIGNATURE-----
+
+--ahboa3r6xa7npauw--
