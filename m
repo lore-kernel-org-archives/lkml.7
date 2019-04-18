@@ -2,125 +2,84 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26137C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D5FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6702183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EBC2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388537AbfDRLB4 (ORCPT
+        id S2388624AbfDRLEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:01:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36734 "EHLO mx1.suse.de"
+        Thu, 18 Apr 2019 07:04:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36994 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727807AbfDRLB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:01:56 -0400
+        id S1728074AbfDRLEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 07:04:00 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E1DAFB01F;
-        Thu, 18 Apr 2019 11:01:53 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 13:01:52 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, ying.huang@intel.com
-Subject: Re: [PATCH v2] panic: add an option to replay all the printk message
- in buffer
-Message-ID: <20190418110152.szhc3rebqzgzrhjh@pathway.suse.cz>
-References: <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
- <20190417064844.ppyqxcx2mgek5455@shbuild888>
- <20190417091832.z252cvcf4ktxeamv@pathway.suse.cz>
- <20190417094614.GB4260@jagdpanzerIV>
- <20190417105010.GA8492@jagdpanzerIV>
- <20190417122458.mhl3orevzha7sp6h@pathway.suse.cz>
- <20190417151817.xsun2k7cxff5rknn@shbuild888>
- <20190418000014.GA2059@jagdpanzerIV>
- <20190418074552.x7bl7tr76dui64f5@pathway.suse.cz>
- <20190418090044.wqpc7wooboamvl6t@shbuild888>
+        by mx1.suse.de (Postfix) with ESMTP id 3BC43B01F;
+        Thu, 18 Apr 2019 11:03:59 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 65A431E15AE; Thu, 18 Apr 2019 13:03:56 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 13:03:56 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Khazhismel Kumykov <khazhy@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+2b74da47f048a5046135@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xfs@vger.kernel.org
+Subject: Re: WARNING in notify_change
+Message-ID: <20190418110356.GC28541@quack2.suse.cz>
+References: <94eb2c0ce3aa7551d30569658325@google.com>
+ <96c750b3-fcb0-3d7f-45eb-45459078ef83@I-love.SAKURA.ne.jp>
+ <CACGdZYLPLF40cUK+-aZ6O4vOR1YLvHzLJ70SFneKJ7KOXwBOug@mail.gmail.com>
+ <20190415235428.GS2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190418090044.wqpc7wooboamvl6t@shbuild888>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190415235428.GS2217@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-04-18 17:00:44, Feng Tang wrote:
-> Hi Petr,
+On Tue 16-04-19 00:54:28, Al Viro wrote:
+> On Mon, Apr 15, 2019 at 04:20:17PM -0700, Khazhismel Kumykov wrote:
+> > I was able to reproduce this by setting security.capability xattr on a
+> > blockdev file, then writing to it - when writing to the blockdev we
+> > never lock the inode, so when we clear the capability we hit this
+> > lockdep warning.
+> > 
+> > Is the issue here that we can set this xattr in the first place so we
+> > have to clear it at all? Or should we really be locking the inode for
+> > blockdevs after all? I'm not too familiar, but my gut says former
 > 
-> On Thu, Apr 18, 2019 at 09:45:52AM +0200, Petr Mladek wrote:
-> > On Thu 2019-04-18 09:00:14, Sergey Senozhatsky wrote:
-> > > I think that PANIC_PRINT_ALL_PRINTK_MSG is a debugging option; a quite
-> > > specific one. So people who ask the kernel to PANIC_PRINT_ALL_PRINTK_MSG
-> > > they know what they are doing, and we probably will not cofuse anyone.
-> > > After all, we don't print any headers when we ftrace_dump() or imitate
-> > > sysrq via sysrq_timer_list_show(), or for any other panic_print_sys_info()
-> > > printouts. So it's OK to just do the simple thing for
-> > > PANIC_PRINT_ALL_PRINTK_MSG.
-> > 
-> > The following functions are currently called from panic_print_sys_info():
-> > 
-> > + show_state():
-> > 	printk(KERN_INFO
-> > 		"  task                        PC stack   pid father\n");
-> > + show_mem():
-> > 	printk("Mem-Info:\n");
-> > 
-> > + sysrq_timer_list_show()
-> > 	no global header; but each section can be easily distinguished
-> > 	because there are several static strings that explains the
-> > 	content
-> > 
-> > + debug_show_all_locks()
-> > 	pr_warn("\nShowing all locks held in the system:\n");
-> > 
-> > + ftrace_dump():
-> > 	printk(KERN_TRACE "Dumping ftrace buffer:\n");
-> > 
-> > 
-> > The person that enabled the debugging option might know what it did
-> > when it process the log the very same day. It might be less clear
-> > for others reading the log.
-> > 
-> > Also it still might be convenient to find the beginning easily.
-> > Or it might help to orientate when several test runs
-> > (over night test) are squashed in a single file. I see
-> > such logs pretty often.
+> More interesting question is, WTF do we even touch that thing for
+> bdev?  The thing is, mknod will cheerfully create any number of
+> different filesystem objects, all giving access to the same block
+> device.  Which of them should have that xattr removed?  It makes
+> no sense whatsoever; moreover, who *cares* about caps for block
+> device in the first place?
 > 
-> Thanks for checking all the info. For the note, how about adding
-> something like this inside panic_print_sys_info()?
-> 
-> 	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG) {
-> 		printk("\nprintk: will replay all the messages in buffer:\n");
-> 		console_flush_on_panic(CONSOLE_FLUSH_ALL);
-> 	}
+> And if we did, what of another way to modify the block device?
+> You know, mount it read-write...
 
-This will store the message at the end of the buffer. It will repeat
-the message once again when replaying the log. I personally think
-that it is worse than printing nothing.
+Yes, Alexander Lochman has sent a patch to silence this warning back in
+February [1] by just bailing out from file_remove_privs() for non-regular
+files.  But so far you've ignored that patch... Will you pick it up please?
 
+								Honza
 
-> If you are all fine with it, I'll go post a v3, thanks,
+[1] https://lore.kernel.org/lkml/cbdc8071-de76-bb0a-6890-15ef21023a70@tu-dortmund.de
 
-I suggest to wait few days. We might get opinion from someone
-else...
-
-Then sent whatever approach makes most sense to you. In fact, you
-are the 3rd person in this triangle. I believe that we will
-respect it. Last many mails are just a bike shedding.
-
-Just one thing. Please, use "replay" in the function or parameter
-name. The effect of console_flush_on_panic(CONSOLE_FLUSH_ALL)
-is really hard to guess from the name.
-
-Best Regards,
-Petr
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
