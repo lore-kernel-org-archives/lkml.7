@@ -2,150 +2,237 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E1AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6A0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BF82083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ha7C/oP9"
+	by mail.kernel.org (Postfix) with ESMTP id 5659C2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388321AbfDRIyO (ORCPT
+        id S2388331AbfDRIzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:54:14 -0400
-Received: from mail-eopbgr60059.outbound.protection.outlook.com ([40.107.6.59]:26434
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726873AbfDRIyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:54:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ftedEL5YcIyd6GVzZ0adl1YQDvgiExdlIw9IcP5GXbQ=;
- b=Ha7C/oP9Pu57Zqsq0UolnmM9oKxuohQOpuo9tHbx7AxKSLuyaY95IT+jOz+hXda3/Js447On5M05uNPktA6bcwksAuE4URAu+uWe9WOPHdP/GQD9JWDdUoPZyUUCtVV8yYovPTPLW3LCD8+FAoTB3KT1uSVWQligO9pxYp4n0cc=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4943.eurprd04.prod.outlook.com (20.177.49.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Thu, 18 Apr 2019 08:54:07 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1792.022; Thu, 18 Apr 2019
- 08:54:07 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Angus Ainslie <angus.ainslie@puri.sm>,
-        "angus@akkea.ca" <angus@akkea.ca>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 2/3] dmaengine: imx-sdma: Only check ratio on parts
- that support 1:1
-Thread-Topic: [PATCH v2 2/3] dmaengine: imx-sdma: Only check ratio on parts
- that support 1:1
-Thread-Index: AQHU5kMf8SHxIesVX0ekA25GcdTQ3KZBulEA
-Date:   Thu, 18 Apr 2019 08:54:07 +0000
-Message-ID: <1555577278.24617.6.camel@nxp.com>
-References: <20190328133828.20999-1-angus@akkea.ca>
-         <20190329152130.18411-1-angus@akkea.ca>
-         <20190329152130.18411-3-angus@akkea.ca>
-In-Reply-To: <20190329152130.18411-3-angus@akkea.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 77fe0424-7e9b-4001-6031-08d6c3db6aee
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB4943;
-x-ms-traffictypediagnostic: VI1PR04MB4943:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <VI1PR04MB4943E36FD9EE5DFE0B6303E289260@VI1PR04MB4943.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0011612A55
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(346002)(39860400002)(136003)(199004)(189003)(25786009)(3846002)(6116002)(5660300002)(54906003)(7416002)(50226002)(103116003)(99286004)(476003)(316002)(486006)(36756003)(110136005)(66066001)(11346002)(446003)(71190400001)(71200400001)(6512007)(53936002)(4326008)(6246003)(229853002)(14454004)(8936002)(14444005)(478600001)(256004)(81166006)(97736004)(6486002)(2616005)(81156014)(2501003)(8676002)(305945005)(53546011)(2906002)(86362001)(6506007)(186003)(6436002)(68736007)(102836004)(76176011)(7736002)(26005)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4943;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LGWHVPtTRnt6Sxa9PEe83RmmS4fEdTGkbizkuvbBCJGNTkYf+HvBYOqsPwIyRZcbvOCfK0GjiCp5dSbMnxk8p1DRrNU7H/Eu6xn/JB2+mLlMFZrSQzzjnDu4LH9wi2J8L9bMyoRcpPfj0vfxbpOeqb8AsRiBtJrUs/ZdswdLhcv1ObiQEaTU1Pd8SRxxPbdb3Sxwk1/KYikVj6n6X4pilm4m61qnwwtoEBlxYAohVswYseWOBFCEFuqYoMOYYEVbRw35IHrfuJI7vOXtVDOepQoQh1Xix7/njXkS/9AyS71NtcZs3w/Wp2hKlylhfH+xop9hj+agFVzP1EmrFccOuWI3K56TlJ+zWY59rd/9dHver+3BbQpwVCkuq7vE7MCZRz0NOn2HKn8eFehBNmiv/I8lCnvLAgBJ2huRpTYCqGE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <180C68F3FABDB24BB48245062CAFE008@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 18 Apr 2019 04:55:01 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37563 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfDRIzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:55:00 -0400
+X-Originating-IP: 90.88.160.238
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 1BC5240007;
+        Thu, 18 Apr 2019 08:54:54 +0000 (UTC)
+Message-ID: <522d6a7734a29df47fe11f5f6311b49e14dabae0.camel@bootlin.com>
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Eric Anholt <eric@anholt.net>, Rob Clark <robdclark@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Date:   Thu, 18 Apr 2019 10:54:54 +0200
+In-Reply-To: <20190418081816.GO13337@phenom.ffwll.local>
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+         <20190418081816.GO13337@phenom.ffwll.local>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77fe0424-7e9b-4001-6031-08d6c3db6aee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 08:54:07.7754
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4943
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWNrZWQtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCk9uIDIwMTktMDMtMjkg
-YXQgMTU6MjEgKzAwMDAsIEFuZ3VzIEFpbnNsaWUgKFB1cmlzbSkgd3JvdGU6DQo+IE9uIGlteDht
-cSBCMCBjaGlwLCBBSEIvU0RNQSBjbG9jayByYXRpbyAyOjEgY2FuJ3QgYmUgc3VwcG9ydGVkLA0K
-PiBzaW5jZSBTRE1BIGNsb2NrIHJhdGlvIGhhcyB0byBiZSBpbmNyZWFzZWQgdG8gMjUwTWh6LCBB
-SEIgY2FuJ3QgcmVhY2gNCj4gdG8gNTAwTWh6LCBzbyB1c2UgMToxIGluc3RlYWQuDQo+IA0KPiBU
-byBsaW1pdCB0aGlzIGNoYW5nZSB0byB0aGUgaW14OG1xIGZvciBub3cgdGhpcyBwYXRjaCBhbHNv
-IGFkZHMgYW4NCj4gaW04bXEtc2RtYSBjb21wYXRpYmxlIHN0cmluZy4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IEFuZ3VzIEFpbnNsaWUgKFB1cmlzbSkgPGFuZ3VzQGFra2VhLmNhPg0KPiAtLS0NCj4g
-wqBkcml2ZXJzL2RtYS9pbXgtc2RtYS5jIHwgMTUgKysrKysrKysrKysrKystDQo+IMKgMSBmaWxl
-IGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jIGIvZHJpdmVycy9kbWEvaW14LXNkbWEuYw0KPiBp
-bmRleCA1ZjNjMTM3OGI5MGUuLjk5ZDlmNDMxYWUyYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9k
-bWEvaW14LXNkbWEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jDQo+IEBAIC00MTks
-NiArNDE5LDcgQEAgc3RydWN0IHNkbWFfZHJpdmVyX2RhdGEgew0KPiDCoAlpbnQgY2huZW5ibDA7
-DQo+IMKgCWludCBudW1fZXZlbnRzOw0KPiDCoAlzdHJ1Y3Qgc2RtYV9zY3JpcHRfc3RhcnRfYWRk
-cnMJKnNjcmlwdF9hZGRyczsNCj4gKwlib29sIGNoZWNrX3JhdGlvOw0KPiDCoH07DQo+IMKgDQo+
-IMKgc3RydWN0IHNkbWFfZW5naW5lIHsNCj4gQEAgLTU1Nyw2ICs1NTgsMTMgQEAgc3RhdGljIHN0
-cnVjdCBzZG1hX2RyaXZlcl9kYXRhIHNkbWFfaW14N2QgPSB7DQo+IMKgCS5zY3JpcHRfYWRkcnMg
-PSAmc2RtYV9zY3JpcHRfaW14N2QsDQo+IMKgfTsNCj4gwqANCj4gK3N0YXRpYyBzdHJ1Y3Qgc2Rt
-YV9kcml2ZXJfZGF0YSBzZG1hX2lteDhtcSA9IHsNCj4gKwkuY2huZW5ibDAgPSBTRE1BX0NITkVO
-QkwwX0lNWDM1LA0KPiArCS5udW1fZXZlbnRzID0gNDgsDQo+ICsJLnNjcmlwdF9hZGRycyA9ICZz
-ZG1hX3NjcmlwdF9pbXg3ZCwNCj4gKwkuY2hlY2tfcmF0aW8gPSAxLA0KPiArfTsNCj4gKw0KPiDC
-oHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlX2lkIHNkbWFfZGV2dHlwZXNbXSA9
-IHsNCj4gwqAJew0KPiDCoAkJLm5hbWUgPSAiaW14MjUtc2RtYSIsDQo+IEBAIC01NzksNiArNTg3
-LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2VfaWQNCj4gc2RtYV9kZXZ0
-eXBlc1tdID0gew0KPiDCoAl9LCB7DQo+IMKgCQkubmFtZSA9ICJpbXg3ZC1zZG1hIiwNCj4gwqAJ
-CS5kcml2ZXJfZGF0YSA9ICh1bnNpZ25lZCBsb25nKSZzZG1hX2lteDdkLA0KPiArCX0sIHsNCj4g
-KwkJLm5hbWUgPSAiaW14OG1xLXNkbWEiLA0KPiArCQkuZHJpdmVyX2RhdGEgPSAodW5zaWduZWQg
-bG9uZykmc2RtYV9pbXg4bXEsDQo+IMKgCX0sIHsNCj4gwqAJCS8qIHNlbnRpbmVsICovDQo+IMKg
-CX0NCj4gQEAgLTU5Myw2ICs2MDQsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBzZG1hX2R0X2lkc1tdID0NCj4gew0KPiDCoAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXgzMS1z
-ZG1hIiwgLmRhdGEgPSAmc2RtYV9pbXgzMSwgfSwNCj4gwqAJeyAuY29tcGF0aWJsZSA9ICJmc2ws
-aW14MjUtc2RtYSIsIC5kYXRhID0gJnNkbWFfaW14MjUsIH0sDQo+IMKgCXsgLmNvbXBhdGlibGUg
-PSAiZnNsLGlteDdkLXNkbWEiLCAuZGF0YSA9ICZzZG1hX2lteDdkLCB9LA0KPiArCXsgLmNvbXBh
-dGlibGUgPSAiZnNsLGlteDhtcS1zZG1hIiwgLmRhdGEgPSAmc2RtYV9pbXg4bXEsIH0sDQo+IMKg
-CXsgLyogc2VudGluZWwgKi8gfQ0KPiDCoH07DQo+IMKgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
-c2RtYV9kdF9pZHMpOw0KPiBAQCAtMTg1Miw3ICsxODY0LDggQEAgc3RhdGljIGludCBzZG1hX2lu
-aXQoc3RydWN0IHNkbWFfZW5naW5lICpzZG1hKQ0KPiDCoAlpZiAocmV0KQ0KPiDCoAkJZ290byBk
-aXNhYmxlX2Nsa19pcGc7DQo+IMKgDQo+IC0JaWYgKGNsa19nZXRfcmF0ZShzZG1hLT5jbGtfYWhi
-KSA9PSBjbGtfZ2V0X3JhdGUoc2RtYS0NCj4gPmNsa19pcGcpKQ0KPiArCWlmIChzZG1hLT5kcnZk
-YXRhLT5jaGVja19yYXRpbyAmJg0KPiArCcKgwqDCoMKgKGNsa19nZXRfcmF0ZShzZG1hLT5jbGtf
-YWhiKSA9PSBjbGtfZ2V0X3JhdGUoc2RtYS0NCj4gPmNsa19pcGcpKSkNCj4gwqAJCXNkbWEtPmNs
-a19yYXRpbyA9IDE7DQo+IMKgDQo+IMKgCS8qIEJlIHN1cmUgU0RNQSBoYXMgbm90IHN0YXJ0ZWQg
-eWV0ICov
+Hi Daniel,
+
+On Thu, 2019-04-18 at 10:18 +0200, Daniel Vetter wrote:
+> On Wed, Apr 17, 2019 at 08:10:15PM +0200, Paul Kocialkowski wrote:
+> > Hi Nicolas,
+> > 
+> > I'm detaching this thread from our V4L2 stateless decoding spec since
+> > it has drifted off and would certainly be interesting to DRM folks as
+> > well!
+> > 
+> > For context: I was initially talking about writing up support for the
+> > Allwinner 2D engine as a DRM render driver, where I'd like to be able
+> > to batch jobs that affect the same destination buffer to only signal
+> > the out fence once when the batch is done. We have a similar issue in
+> > v4l2 where we'd like the destination buffer for a set of requests (each
+> > covering one H264 slice) to be marked as done once the set was decoded.
+> > 
+> > Le mercredi 17 avril 2019 à 12:22 -0400, Nicolas Dufresne a écrit :
+> > > > > > Interestingly, I'm experiencing the exact same problem dealing with a
+> > > > > > 2D graphics blitter that has limited ouput scaling abilities which
+> > > > > > imply handlnig a large scaling operation as multiple clipped smaller
+> > > > > > scaling operations. The issue is basically that multiple jobs have to
+> > > > > > be submitted to complete a single frame and relying on an indication
+> > > > > > from the destination buffer (such as a fence) doesn't work to indicate
+> > > > > > that all the operations were completed, since we get the indication at
+> > > > > > each step instead of at the end of the batch.
+> > > > > 
+> > > > > That looks similar to the IMX.6 IPU m2m driver. It splits the image in
+> > > > > tiles of 1024x1024 and process each tile separately. This driver has
+> > > > > been around for a long time, so I guess they have a solution to that.
+> > > > > They don't need requests, because there is nothing to be bundled with
+> > > > > the input image. I know that Renesas folks have started working on a
+> > > > > de-interlacer. Again, this kind of driver may process and reuse input
+> > > > > buffers for motion compensation, but I don't think they need special
+> > > > > userspace API for that.
+> > > > 
+> > > > Thanks for the reference! I hope it's not a blitter that was
+> > > > contributed as a V4L2 driver instead of DRM, as it probably would be
+> > > > more useful in DRM (but that's way beside the point).
+> > > 
+> > > DRM does not offer a generic and discoverable interface for these
+> > > accelerators. Note that these drivers have most of the time started as
+> > > DRM driver and their DRM side where dropped. That was the case for
+> > > Exynos drivers at least.
+> > 
+> > Heh, sadly I'm aware of how things turn out most of the time. The thing
+> > is that DRM expects drivers to implement their own interface. That's
+> > fine for passing BOs with GPU bitstream and textures, but not so much
+> > for dealing with framebuffer-based operations where the streaming and
+> > buffer interface that v4l2 has is a good fit.
+> > 
+> > There's also the fact that the 2D pipeline is fixed-function and highly
+> > hardware-specific, so we need driver-specific job descriptions to
+> > really make the most of it. That's where v4l2 is not much of a good fit
+> > for complex 2D pipelines either. Most 2D engines can take multiple
+> > inputs and blit them together in various ways, which is too far from
+> > what v4l2 deals with. So we can have fixed single-buffer pipelines with
+> > at best CSC and scaling, but not much more with v4l2 really.
+> > 
+> > I don't think it would be too much work to bring an interface to DRM in
+> > order to describe render framebuffers (we only have display
+> > framebuffers so far), with a simple queuing interface for scheduling
+> > driver-specific jobs, which could be grouped together to only signal
+> > the out fences when every buffer of the batch was done being rendered.
+> > This last point would allow handling cases where userapce need to
+> > perform multiple operations to carry out the single operation that it
+> > needs to do. In the case of my 2D blitter, that would be scaling above
+> > a 1024x1024 destination, which could be required to scaling a video
+> > buffer up to a 1920x1080 display. With that, we can e.g. page flip the
+> > 2D engine destination buffer and be certain that scaling will be fully
+> > done when the fence is signaled.
+> > 
+> > There's also the userspace problem: DRM render has mesa to back it in
+> > userspace and provide a generic API for other programes. For 2D
+> > engines, we don't have much to hold on to. Cairo has a DRM render
+> > interface that supports a few DRM render drivers where there is either
+> > a 2D pipeline or where pre-built shaders are used to implement a 2D
+> > pipeline, and that's about it as far as I know.
+> > 
+> > There's also the possibility of writing up a drm-render DDX to handle
+> > these 2D blitters that can make things a lot faster when running a
+> > desktop environment. As for wayland, well, I don't really know what to
+> > think. I was under the impression that it relies on GL for 2D
+> > operations, but am really not sure how true that actually is.
+> 
+> Just fyi in case you folks aren't aware, I typed up a blog a while ago
+> about why drm doesn't have a 2d submit api:
+> 
+> https://blog.ffwll.ch/2018/08/no-2d-in-drm.html
+
+I definitely share the observation that each 2D engine has its own kind
+of pipeline, which is close to impossible to describe in a generic way
+while exposing all the possible features of the pipeline.
+
+I thought about this some more yesterday and I see a few areas that
+could however be made generic:
+* GEM allocation for framebuffers (with a unified ioctl);
+* framebuffer management, (that's only in KMS for now and we need
+pretty much the same thing here);
+* some queuing mechanism, either for standalone submissions or groups
+of them.
+
+So I started thinking about writing up a "DRM GFX" API which would
+provide this, instead of implementing it in my 2D blitter driver.
+There's a chance I'll submit a proposal of that along with my driver.
+
+I am convinced the job submit ioctl needs to remain driver-specific to
+properly describe the pipeline though.
+
+> > > The thing is that DRM is great if you do immediate display stuff, while
+> > > V4L2 is nice if you do streaming, where you expect filling queued, and
+> > > popping buffers from queues.
+> > > 
+> > > In the end, this is just an interface, nothing prevents you from making
+> > > an internal driver (like the Meson Canvas) and simply letting multiple
+> > > sub-system expose it. Specially that some of these IP will often
+> > > support both signal and memory processing, so they equally fit into a
+> > > media controller ISP, a v4l2 m2m or a DRM driver.
+> > 
+> > Having base drivers that can hook to both v4l2 m2m and DRM would
+> > definitely be awesome. Maybe we could have some common internal
+> > synchronization logic to make writing these drivers easier.
+> 
+> We have, it's called dma_fence. Ties into dma_bufs using
+> reservation_objecsts.
+
+That's not what I meant: I'm talking about exposing the 2D engine
+capabilities through both DRM and V4L2 M2M, where the V4L2 M2M driver
+would be an internal client to DRM. So it's about using the same
+hardware with both APIs concurrently.
+
+And while at it, we could allow detaching display pipeline elements
+that have intermediary writeback and exposing them as 2D engines
+through the same API (which would return busy when the block is used
+for the video pipeline).
+
+> > It would be cool if both could be used concurrently and not just return
+> > -EBUSY when the device is used with the other subsystem.
+> 
+> We live in this world already :-) I think there's even patches (or merged
+> already) to add fences to v4l, for Android.
+> 
+> > Anyway, that's my 2 cents about the situation and what we can do to
+> > improve it. I'm definitely interested in tackling these items, but it
+> > may take some time before we get there. Not to mention we need to
+> > rework media/v4l2 for per-slice decoding support ;)
+> > 
+> > > Another driver you might want to look is Rockchip RGA driver (which is
+> > > a multi function IP, including blitting).
+> > 
+> > Yep, I've aware of it as well. There's also vivante which exposes 2D
+> > cores but I'm really not sure whether any function is actually
+> > implemented. 
+> > 
+> > OMAP4 and OMAP5 have a 2D engine that seems to be vivante as well from
+> > what I could find out, but it seems to only have blobs for bltsville
+> > and no significant docs.
+> 
+> Yeah that's the usual approach for drm 2d drivers: You have a bespoke
+> driver in userspace. Usually that means an X driver, but there's been talk
+> to pimp the hwc interface to make that _the_ 2d accel interface. There's
+> also fbdev ... *shudder*.
+> 
+> All of these options are geared towards ultimately displaying stuff on
+> screens, not pure m2m 2d accel.
+
+I think it would be good to have a specific library to translate
+between "standard" 2d ops (porter-duff blending and such) to driver-
+specific setup submit ioctls. Could be called "libdrm-gfx" and used by
+an associated DDX (as well as any other program that needs 2D ops
+acceleration).
+
+Cheers,
+
+Paul
+
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
