@@ -2,151 +2,201 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864E0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE9AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57716214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7854F214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VyMHjTIv"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="MfU9AJa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389931AbfDRS6I (ORCPT
+        id S2390007AbfDRS6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:58:08 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45466 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfDRS6H (ORCPT
+        Thu, 18 Apr 2019 14:58:19 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39403 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389901AbfDRS6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:58:07 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y84so2394993oia.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:58:07 -0700 (PDT)
+        Thu, 18 Apr 2019 14:58:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a96so1577996pla.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JuO+mETd7p+nBl+ISNr5AXSeFCMtbtyi+NcvmZSSpJk=;
-        b=VyMHjTIvvFhUx8ve5O2dXCvRG1QNBzaweZBGJUtggcGhLpctkb9MIHLEHMJitAhBGb
-         x8t8PFPMfyQz0GuSlqGTIrYOSZGKhr2aVQOuV+1aI8qQYL5v8BctO0IS0cwrFjzKnibN
-         9TNjohu52WQbqGMfDIOQPPD9EfTYQ8zXeI58XxLAmXRsb4PCO8aeU1VcGXRmEzCrA2Jv
-         3E2LmxoeQLRrsTgLrWVfG1J+sNuZ+gvOWaMIBLnh7CFe2B7YT1Wm3bUdO9OLE/6Ic3QN
-         u9D23v98bbEyPBiB0XBY6QfGJwDT+UCcJjIQPSs5Y7rCxyUVtg5C9fwnEMNKWNj0NFpU
-         k8uA==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=Rls8ZXKxpitLdToJVhs5aQI6eogfraGi8L51K73vZHA=;
+        b=MfU9AJa0duArcFo2+QYl8UPFXdYay3Rc1DAlk633euOpRQos/H2Qsq8hI9EHE0VglA
+         l3lJzLNDZseM4FhVy+SjIJow8umIWXKZfKWSe+B/13SayWTmuivmwKEHIOFQd1yLkPCh
+         d0axKanB3162FWykYa48SdDp9Oo982oGwQz//7yRu/0ny1j+dY1oUTW8Tsmyj9NGB4Kr
+         +MXj6AUB8Qts7YFGyvOe0AU5DPwcFh/5C3QZMDFqarBOoMDaL72tVjlnHRT172BKo6I/
+         lpXDf4aU4cbrZZ5HW/IsBD0Gu1lkBL9BxDPv+K4tWSOC8F6+GFyTiNHRznNuWH0EHqz/
+         +e6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JuO+mETd7p+nBl+ISNr5AXSeFCMtbtyi+NcvmZSSpJk=;
-        b=LcM02xi70d8ARh3DiRzOpqm90hMbdMVD8xjjkHU2Y8gRsiDLKsd8i/FvXhjYAgXh63
-         iuIcok5B/5CfH7fLg4Mm5vUa1joSsZdNKC9ZSO1UhnKvPdDSz/exiMhKbfDgyM0wsdR6
-         1u/kv0PFzwhCE4q/smTCFVMsTN3QUhgb1LcpJVF+5znApvy/7Tz1dsby7V0HClgpd7Hp
-         3a8QzgxPYS0VkOARhVbYpHYjezMKGBoQ6oRcfrZOrk4NNppsOi/9H1dCDC02jWcWF/mF
-         iJWia/U1vmnwfqlNBQtEUpGq80FgwuqwRdTT5LVC5QC1KvoIzZOc0hPYzFtijCfntV4K
-         BvXQ==
-X-Gm-Message-State: APjAAAWSiNzw6zibB0mAjvsyNrXM+6fH6/7kvQe9dpZuUee/D4uMtwpu
-        Nhz+w+oDSn9NobuC/SKirGKTXy0jrQvpNIYmjVNcrg==
-X-Google-Smtp-Source: APXvYqy6cM/03mVmFhmJGDKhomZk2V5jsnvwCjMrNMfZGG1otnS6jWqg8a/TDAOFQyG6MZbnVgtB4Fg5GfwNrx2nQgI=
-X-Received: by 2002:aca:510d:: with SMTP id f13mr3032154oib.174.1555613886573;
- Thu, 18 Apr 2019 11:58:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com> <CAGLj2rELsr0PUgu41uZX_TKCpT-Q00X+cvgBhJ-U7RU3EBo5tA@mail.gmail.com>
-In-Reply-To: <CAGLj2rELsr0PUgu41uZX_TKCpT-Q00X+cvgBhJ-U7RU3EBo5tA@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Thu, 18 Apr 2019 11:57:54 -0700
-Message-ID: <CAKOZueu=5aNf+oDFBM56TbqZwKpB6q1y81V1cbL+k4DTyV53+A@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=Rls8ZXKxpitLdToJVhs5aQI6eogfraGi8L51K73vZHA=;
+        b=dU8nvD+p1E2QO8SDriiiQBAhguSCKaZfKxIEZNKgaurgw/jvgPrSk5URC7s/JCLzuA
+         AKLi1ApngAERg8utI/RkA2DxvzkSSJwjQnhZ+znjgMUUwgp/9tl6OZk8p/tNNAtAhi4h
+         j8GqYOpcsuLZ5Jv7QMAuWHLIlT14VoaDvaNyooZQrzx1L63rt1+O//L7jBmocVQ5qHxg
+         NgKHdNt8oa3v2RylKA1YvC0lUemdHNoUblqOyVFKVMOnAIakbiuKCcf4tUMnHYEgt0oy
+         VvMGY1VBTgwVNth1GwhwVIXsFxypP4FjLzkIuspMdLv1dCNQ6r4lTeEuS0ZOJKfiO7HR
+         ixPg==
+X-Gm-Message-State: APjAAAUQ+qRWJPjISNUCVg3EqqfEP3StNb+DMy/VSDmTaUgKWXKUz91A
+        sM+hgEe2wARDYgTziPGZ2d0JCQ==
+X-Google-Smtp-Source: APXvYqzX8/1l6sox8PUa5IqTovbL1mZTLZLDYQpGPrG8X1cAjahdf+PnEQIsTOk7eecHLzVgnAafIw==
+X-Received: by 2002:a17:902:581:: with SMTP id f1mr55594044plf.304.1555613897955;
+        Thu, 18 Apr 2019 11:58:17 -0700 (PDT)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id u5sm4225156pfm.121.2019.04.18.11.58.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 11:58:17 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <9BD0C782-5967-4DCB-9D01-E5BCC73E653C@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_E3FEA83A-9256-40CD-B4F8-E3FF6FED0F48";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v4 4/7] block: introduce write-hint to stream-id
+ conversion
+Date:   Thu, 18 Apr 2019 12:58:14 -0600
+In-Reply-To: <20190418140603.GL28541@quack2.suse.cz>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, prakash.v@samsung.com
+To:     Jan Kara <jack@suse.cz>
+References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
+ <CGME20190417175358epcas1p41a0a4e349dfe0a70bdcc244161c71604@epcas1p4.samsung.com>
+ <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
+ <20190418140603.GL28541@quack2.suse.cz>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:44 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
->
-> On Tue, Apr 16, 2019 at 8:21 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> > > On 04/11, Joel Fernandes (Google) wrote:
-> > > >
-> > > > +static unsigned int proc_tgid_base_poll(struct file *file, struct poll_table_struct *pts)
-> > > > +{
-> > > > +   int poll_flags = 0;
-> > > > +   struct task_struct *task;
-> > > > +   struct pid *pid;
-> > > > +
-> > > > +   task = get_proc_task(file->f_path.dentry->d_inode);
-> > > > +
-> > > > +   WARN_ON_ONCE(task && !thread_group_leader(task));
-> > > > +
-> > > > +   /*
-> > > > +    * tasklist_lock must be held because to avoid racing with
-> > > > +    * changes in exit_state and wake up. Basically to avoid:
-> > > > +    *
-> > > > +    * P0: read exit_state = 0
-> > > > +    * P1: write exit_state = EXIT_DEAD
-> > > > +    * P1: Do a wake up - wq is empty, so do nothing
-> > > > +    * P0: Queue for polling - wait forever.
-> > > > +    */
-> > > > +   read_lock(&tasklist_lock);
-> > > > +   if (!task)
-> > > > +           poll_flags = POLLIN | POLLRDNORM | POLLERR;
-> > > > +   else if (task->exit_state == EXIT_DEAD)
-> > > > +           poll_flags = POLLIN | POLLRDNORM;
-> > > > +   else if (task->exit_state == EXIT_ZOMBIE && thread_group_empty(task))
-> > > > +           poll_flags = POLLIN | POLLRDNORM;
-> > > > +
-> > > > +   if (!poll_flags) {
-> > > > +           pid = proc_pid(file->f_path.dentry->d_inode);
-> > > > +           poll_wait(file, &pid->wait_pidfd, pts);
-> > > > +   }
-> > >
-> > > can't understand...
-> > >
-> > > Could you explain when it should return POLLIN? When the whole process exits?
-> >
-> > It returns POLLIN when the task is dead or doesn't exist anymore, or when it
-> > is in a zombie state and there's no other thread in the thread group.
-> >
->
-> Would using something other than POLLIN be an option (maybe POLLPRI)?
-> The convention is to use it to indicate readability on the descriptor,
-> and also possibly POLLHUP instead of POLLERR (the latter is less of a
-> problem, but FreeBSD also does the same, so it'd help with some
-> consistency for libraries wanting to use this, which aren't interested
-> in other sub states).
 
-Existing event loop libraries generally support checking only for
-readability and writability. Not setting POLLIN would make these FDs
-more difficult to use with existing event loop libraries. What
-advantage would compensate for this difficulty?
+--Apple-Mail=_E3FEA83A-9256-40CD-B4F8-E3FF6FED0F48
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
+
+On Apr 18, 2019, at 8:06 AM, Jan Kara <jack@suse.cz> wrote:
+>=20
+> On Wed 17-04-19 23:20:03, Kanchan Joshi wrote:
+>> This patch moves write-hint-to-stream-id conversion in block-layer.
+>> Earlier this was done by driver (nvme). Current conversion is of the
+>> form "streamid =3D write-hint - 1", for both user and kernel streams.
+>> Conversion takes stream limit (maintained in request queue) into
+>> account. Write-hints beyond the exposed limit turn to 0.
+>> A new field 'streamid' has been added in request. While 'write-hint'
+>> field continues to exist. It keeps original value passed from upper
+>> layer, and used during merging checks.
+>>=20
+>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>> ---
+>> block/blk-core.c       | 20 ++++++++++++++++++++
+>> include/linux/blkdev.h |  1 +
+>> 2 files changed, 21 insertions(+)
+>>=20
+>> diff --git a/block/blk-core.c b/block/blk-core.c
+>> index a55389b..712e6b7 100644
+>> --- a/block/blk-core.c
+>> +++ b/block/blk-core.c
+>> @@ -730,6 +730,25 @@ bool blk_attempt_plug_merge(struct request_queue =
+*q, struct bio *bio,
+>> 	return false;
+>> }
+>>=20
+>> +enum rw_hint blk_write_hint_to_streamid(struct request *req,
+>> +				        struct bio *bio)
+>> +{
+>> +	enum rw_hint streamid, nr_streams;
+>> +	struct request_queue *q =3D req->q;
+>> +	nr_streams =3D q->limits.nr_streams;
+>> +
+>> +	streamid =3D bio->bi_write_hint;
+>> +	if (!nr_streams || streamid =3D=3D WRITE_LIFE_NOT_SET ||
+>> +	    streamid =3D=3D WRITE_LIFE_NONE)
+>> +		streamid =3D 0;
+>> +	else {
+>> +		--streamid;
+>> +		if(streamid > nr_streams)
+>> +			streamid =3D 0;
+>> +	}
+>> +	return streamid;
+>> +}
+>> +
+>=20
+> Someone told me that stream ids are potentially persistent on the =
+storage
+> so it isn't great to change the id for the same thing e.g. if we add
+> another user hint. So maybe we should allocate kernel hints from top =
+as
+> Dave Chinner suggested? I.e., something like the following mapping =
+function:
+>=20
+> 	if (streamid <=3D BLK_MAX_USER_HINTS) {
+> 		streamid--;
+> 		if (streamid > nr_streams)
+> 			streamid =3D 0;
+> 	} else {
+> 		/* Kernel hints get allocated from top */
+> 		streamid -=3D WRITE_LIFE_KERN_MIN;
+> 		if (streamid > nr_streams - BLK_MAX_USER_HINTS)
+> 			streamid =3D 0;
+> 		else
+> 			streamid =3D nr_streams - streamid - 1;
+> 	}
+>=20
+> what do you think?
+
+Dave has expressed this sentiment several times, and I agree.  We don't
+want the filesystem hint values/mapping to change over time, or it will
+conflict with data that was written with the previous hints (e.g. if
+data was written with a "short lifetime" hint suddenly changes to be
+grouped with a "long lifetime" hint).  This is easily avoided with some
+simple changes now, but harder to fix after this patch has landed.
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_E3FEA83A-9256-40CD-B4F8-E3FF6FED0F48
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAly4yMcACgkQcqXauRfM
+H+D0PRAAqc1IZBlPSc3z+RpgV6C85m4l3Yd3cAYdG+R0kOOUx23t/z/vT9Sb0Qgr
+mohRguY/t1dzZ9Kmu/XPYpuMVX2VNnymVjldxVVea7V0NYuEb7qDzMvPKrGr1tIR
+rHh4vrrx+Riq+4K6TqjfgsJI6hdjIhCTU37VcCcAW9/3tHOTHPpYuhcvSpIzAGxc
+60Zm+btRFcrx0wKRd/F0x9D1tbv0LKXJlaC3bD6OquZ0QbM8Z4TncHkl4NjwG7IN
+iNJOOoYJKm623G3aJMLyPlXnJ5KCTgr9Swy4fiJDQOqtFb1oU0Jd2/1+gIXSmIVD
+sZ+72FId74kf5Iu3Upr9tFtRdFs/IkUVVJVKDOmpeTO0FJXVkIgejpKwhJTzhWE8
+E50OkTAgEg11+6VfI072rhudkK5FbXZ3ACVnJp+htOdLiT6etlyYEfpE35l+mUhE
+XJ2TavOJi9P+SQ3VSsSpEXzNBDfho838ZkwaH43LdmBIWeZCdymf2FHS3DJ9mDOi
+ihGr0DQGQAqLwbgD+zjNI9dCXoTiGp4+SDA0CcfwNPc6j8CPtFpguCmrQu/FJTRF
+GjXBTeu07u+kw0Nh0B3nDbieS87ObR8XOqGtvQHCC0sOkIfr78KnKahgICXsqAna
+Mo9d9G6Iq6nW/oY4fgk2ZVFgL+ubMJX0h2ho4I9MxtdonFabeTk=
+=vct3
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_E3FEA83A-9256-40CD-B4F8-E3FF6FED0F48--
