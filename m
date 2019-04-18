@@ -2,79 +2,136 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0C6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BF7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C21D2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08552183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388882AbfDRLxb (ORCPT
+        id S2388885AbfDRLyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:53:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46218 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727807AbfDRLxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:53:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 65D40AEBC;
-        Thu, 18 Apr 2019 11:53:29 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id B2B091E15AE; Thu, 18 Apr 2019 13:53:26 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 13:53:26 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Khazhismel Kumykov <khazhy@google.com>
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ext4: add cond_resched() to ext4_mb_init_backend()
-Message-ID: <20190418115326.GE28541@quack2.suse.cz>
-References: <20190416025934.115252-1-khazhy@google.com>
+        Thu, 18 Apr 2019 07:54:06 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:35705 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfDRLyG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 07:54:06 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hH5bc-000615-N4; Thu, 18 Apr 2019 13:53:28 +0200
+Date:   Thu, 18 Apr 2019 13:53:26 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: Re: [patch V2 09/29] mm/kasan: Simplify stacktrace handling
+In-Reply-To: <5b77992a-52b6-807e-f77d-9cf3e648c71f@virtuozzo.com>
+Message-ID: <alpine.DEB.2.21.1904181350080.3174@nanos.tec.linutronix.de>
+References: <20190418084119.056416939@linutronix.de> <20190418084253.903603121@linutronix.de> <5b77992a-52b6-807e-f77d-9cf3e648c71f@virtuozzo.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416025934.115252-1-khazhy@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 15-04-19 19:59:34, Khazhismel Kumykov wrote:
-> on non-preempt kernels for filesystems with large number of groups we
-> may take a long time (>50 ticks) initializing all the groups.
+On Thu, 18 Apr 2019, Andrey Ryabinin wrote:
+> On 4/18/19 11:41 AM, Thomas Gleixner wrote:
+> > Replace the indirection through struct stack_trace by using the storage
+> > array based interfaces.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Acked-by: Dmitry Vyukov <dvyukov@google.com>
+> > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> > Cc: Alexander Potapenko <glider@google.com>
+> > Cc: kasan-dev@googlegroups.com
+> > Cc: linux-mm@kvack.org
 > 
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-
-Thanks for the patch. I'm not opposed to this but I'm just wondering: Has
-this caused any real issues to you? Or how have you come across this
-particular loop? Because I'd think we have more similar loops in ext4
-codebase...
-
-								Honza
-
-> ---
->  fs/ext4/mballoc.c | 1 +
->  1 file changed, 1 insertion(+)
+> Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
 > 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 8ef5f12bbee2..c89f497ccf50 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -2490,6 +2490,7 @@ static int ext4_mb_init_backend(struct super_block *sb)
->  	sbi->s_buddy_cache->i_ino = EXT4_BAD_INO;
->  	EXT4_I(sbi->s_buddy_cache)->i_disksize = 0;
->  	for (i = 0; i < ngroups; i++) {
-> +		cond_resched();
->  		desc = ext4_get_group_desc(sb, i, NULL);
->  		if (desc == NULL) {
->  			ext4_msg(sb, KERN_ERR, "can't read descriptor %u", i);
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
+> >  
+> >  static inline depot_stack_handle_t save_stack(gfp_t flags)
+> >  {
+> >  	unsigned long entries[KASAN_STACK_DEPTH];
+> > -	struct stack_trace trace = {
+> > -		.nr_entries = 0,
+> > -		.entries = entries,
+> > -		.max_entries = KASAN_STACK_DEPTH,
+> > -		.skip = 0
+> > -	};
+> > +	unsigned int nr_entries;
+> >  
+> > -	save_stack_trace(&trace);
+> > -	filter_irq_stacks(&trace);
+> > -
+> > -	return depot_save_stack(&trace, flags);
+> > +	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
+> > +	nr_entries = filter_irq_stacks(entries, nr_entries);
+> > +	return stack_depot_save(entries, nr_entries, flags);
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Suggestion for further improvement:
+> 
+> stack_trace_save() shouldn't unwind beyond irq entry point so we wouldn't
+> need filter_irq_stacks().  Probably all call sites doesn't care about
+> random stack above irq entry point, so it doesn't make sense to spend
+> resources on unwinding non-irq stack from interrupt first an filtering
+> out it later.
+
+There are users which care about the full trace.
+
+Once we have cleaned up the whole architeture side, we can add core side
+filtering which allows to
+
+   1) replace the 'skip number of entries at the beginning
+
+   2) stop the trace when it reaches a certain point
+
+Right now, I don't want to change any of this until the whole mess is
+consolidated.
+
+Thanks,
+
+	tglx
+
+
+
