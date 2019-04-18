@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BF1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8863AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66752218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D5921907
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610366;
-	bh=lOUif2utH4T/eMe+zNP0ouODHiJKyVbBWH7L1ibkU6Y=;
+	s=default; t=1555610369;
+	bh=wGFd2h0FKX0jgrfIdcgFhRdr7Y8EZ3Y0uNMS3uhwKMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W06pKrF2Gx9SC3eyR/e2gRbT72oP6AgK8Yl5YGAwP8MKtPbbwOytksbZLgmo2Lb9X
-	 qo7tcM5YyaaIvDmx21kczsP7FfjkQ+0/xR+rUP7UHvBtYOvmgsgSEaOiBr3AM7A0UR
-	 mftwswT/bmo5e45n4cQt+5OZx1p7TPjTXMkfiyoE=
+	b=pMmUGRIpkIdWzaQT7wVeHGrTAdinzHdghOOnwcMKLcy8updTMaC4VTROMu7yGvNG+
+	 cPd9rwkJQxk6BMi2Og2+4dMVTc6pcNEIyfZVyEtB0nOqEG7npxHhCVQVUpoW+SMeWl
+	 3eJWl+yMafDqznkasR/wjS2HxHXu97R502ZQL9Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390128AbfDRR7Z (ORCPT
+        id S2390140AbfDRR72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:59:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390094AbfDRR7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:17 -0400
+        id S2390112AbfDRR7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E81F218CD;
-        Thu, 18 Apr 2019 17:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587FA218EA;
+        Thu, 18 Apr 2019 17:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610357;
-        bh=lOUif2utH4T/eMe+zNP0ouODHiJKyVbBWH7L1ibkU6Y=;
+        s=default; t=1555610361;
+        bh=wGFd2h0FKX0jgrfIdcgFhRdr7Y8EZ3Y0uNMS3uhwKMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G513OiqU5x2jh+zmtvrBbgBYB9ar88XVIRU8HzLamXo8GeXW58yuDnCpY5C7fsnOw
-         2rKIpjmFA8dzRqiBGnjd5nJFjKPUKMbYG27qFFAoE+GWFg75mX059ZJY0cNZLoSBU3
-         wZRk0l8alDukJCNBHo+Dc0icHV54zwX5h2ATYsFE=
+        b=hMqhKMMslGqEQDTyePjrrm6oBSqajGYoPN0GH7bxJp2yZB9ASXVzBf5oXd1T2Ahbz
+         +QK2q5XBfclLtqnRfXJMRFt2WPZETKQ/jZQy8y4hnuaoF/xSNMDBe86dhu36V9lBj+
+         WTGB3kmXdInHmHs5GoF2+RwrRJzD90+q7IzfMKvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,12 +49,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Taeung Song <treeze.taeung@gmail.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/110] perf config: Fix a memory leak in collect_config()
-Date:   Thu, 18 Apr 2019 19:56:19 +0200
-Message-Id: <20190418160441.152038845@linuxfoundation.org>
+Subject: [PATCH 4.19 032/110] perf top: Fix error handling in cmd_top()
+Date:   Thu, 18 Apr 2019 19:56:21 +0200
+Message-Id: <20190418160441.466623355@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -67,22 +66,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 54569ba4b06d5baedae4614bde33a25a191473ba ]
+[ Upstream commit 70c819e4bf1c5f492768b399d898d458ccdad2b6 ]
 
-Detected with gcc's ASan:
-
-  Direct leak of 66 byte(s) in 5 object(s) allocated from:
-      #0 0x7ff3b1f32070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x560c8761034d in collect_config util/config.c:597
-      #2 0x560c8760d9cb in get_value util/config.c:169
-      #3 0x560c8760dfd7 in perf_parse_file util/config.c:285
-      #4 0x560c8760e0d2 in perf_config_from_file util/config.c:476
-      #5 0x560c876108fd in perf_config_set__init util/config.c:661
-      #6 0x560c87610c72 in perf_config_set__new util/config.c:709
-      #7 0x560c87610d2f in perf_config__init util/config.c:718
-      #8 0x560c87610e5d in perf_config util/config.c:730
-      #9 0x560c875ddea0 in main /home/changbin/work/linux/tools/perf/perf.c:442
-      #10 0x7ff3afb8609a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+We should go to the cleanup path, to avoid leaks, detected using gcc's
+ASan.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -91,32 +78,29 @@ Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Fixes: 20105ca1240c ("perf config: Introduce perf_config_set class")
-Link: http://lkml.kernel.org/r/20190316080556.3075-6-changbin.du@gmail.com
+Link: http://lkml.kernel.org/r/20190316080556.3075-9-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/config.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/builtin-top.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 5ac157056cdf..9bb742accfa5 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -628,11 +628,10 @@ static int collect_config(const char *var, const char *value,
- 	}
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index d21d8751e749..33eefc33e0ea 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1491,8 +1491,9 @@ int cmd_top(int argc, const char **argv)
+ 	annotation_config__init();
  
- 	ret = set_value(item, value);
--	return ret;
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
+-	if (symbol__init(NULL) < 0)
+-		return -1;
++	status = symbol__init(NULL);
++	if (status < 0)
++		goto out_delete_evlist;
  
- out_free:
- 	free(key);
--	return -1;
-+	return ret;
- }
+ 	sort__setup_elide(stdout);
  
- int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
 -- 
 2.19.1
 
