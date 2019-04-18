@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632FBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D92C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DB32186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72F3218FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610356;
-	bh=nrOlhG2v4YJvxzsRXJD0auaE9cTWOLcP3KFifeZ2Jtw=;
+	s=default; t=1555610358;
+	bh=t84mk2uvm9CYBHnqAqMRgWYXWoa1fE1pfCmitohWuzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4uD5rKLNQcSijLQrp7Bu8BCmDHSBOmsedWlzrZ4PnIo6dQkGnbk/VJnWOGx6w0Fu
-	 zqvMOzReLZXrp65p04D17rfNmIYx61m5DvXrtxLxzNK5fCHX6HgdWfCyMRkgaj1mQn
-	 lhaxAUeOPloR+up8dKb9T5sNUAayr9C+uqPQbQZw=
+	b=WNcJeQIck0vHWwl4rKEMMkeUw2mWJo/S/Gy2h/VXi/UDmJYZQT9QzLSJ29rC5aw6r
+	 9AnRkWRgWY/jTT5VqxUWIG2Wc6y8uTgrfO3Npi7odFa+EZyKEiCkr/Ytp431bLZIKg
+	 cd+aydpTBzHZXXIXaKzSaWptbwbhuyJ4MlOQ6lC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390085AbfDRR7O (ORCPT
+        id S2390101AbfDRR7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:59:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53762 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbfDRR7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:12 -0400
+        id S2390073AbfDRR7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84496217FA;
-        Thu, 18 Apr 2019 17:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26E8B218A6;
+        Thu, 18 Apr 2019 17:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610352;
-        bh=nrOlhG2v4YJvxzsRXJD0auaE9cTWOLcP3KFifeZ2Jtw=;
+        s=default; t=1555610354;
+        bh=t84mk2uvm9CYBHnqAqMRgWYXWoa1fE1pfCmitohWuzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iTK52WB1KwR7gMzjLwWrvpbytp0h3XK7ZmJwFyCvYTZP5DVeIKIPRlluFID/XOZ7n
-         lYn4Jgf4jteDFX0bzVwBU8Bf/62ANCbtK9GsUUJt6jDftaSIJxjrL9B+qSCOBwfm/9
-         UsCnwGXF5DqsNeFaLAiDZWL15G4LT3ZPuKk+X+4c=
+        b=xLOwwn6HkYjaSkQnOTslTDcEH1ibjLz/OozTZD9WZPvWoc0WaYdr5UfRqMV8xkD/5
+         RKa38VunKAZUXIVoSyzrpcnOZagC7meO8UUBsjWBLYCBuSpprqcvD4PUU8v/MxqzRQ
+         Xu+sBO01kmF6g1U8VmmBYD6IF2PcdSxt48vu41YY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,14 +46,15 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
+        Milian Wolff <milian.wolff@kdab.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/110] perf list: Dont forget to drop the reference to the allocated thread_map
-Date:   Thu, 18 Apr 2019 19:56:17 +0200
-Message-Id: <20190418160440.914181115@linuxfoundation.org>
+Subject: [PATCH 4.19 029/110] perf config: Fix an error in the config template documentation
+Date:   Thu, 18 Apr 2019 19:56:18 +0200
+Message-Id: <20190418160441.050947189@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -66,51 +67,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 39df730b09774bd860e39ea208a48d15078236cb ]
+[ Upstream commit 9b40dff7ba3caaf0d1919f98e136fa3400bd34aa ]
 
-Detected via gcc's ASan:
-
-  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
-   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
-   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
-   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
-   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+The option 'sort-order' should be 'sort_order'.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Milian Wolff <milian.wolff@kdab.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
-Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Fixes: 893c5c798be9 ("perf config: Show default report configuration in example and docs")
+Link: http://lkml.kernel.org/r/20190316080556.3075-5-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/Documentation/perf-config.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index ebb18a9bc460..85977cebf87c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2263,6 +2263,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 32f4a898e3f2..05c10eb56a0c 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -114,7 +114,7 @@ Given a $HOME/.perfconfig like this:
  
-+	thread_map__put(tmap);
- 	return ret;
- }
- 
+ 	[report]
+ 		# Defaults
+-		sort-order = comm,dso,symbol
++		sort_order = comm,dso,symbol
+ 		percent-limit = 0
+ 		queue-size = 0
+ 		children = true
 -- 
 2.19.1
 
