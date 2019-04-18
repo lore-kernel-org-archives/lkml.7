@@ -2,102 +2,87 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4827AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2803DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219552183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013712183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388404AbfDRJOF (ORCPT
+        id S2388000AbfDRJPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:14:05 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43915 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388346AbfDRJOE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:14:04 -0400
-X-Originating-IP: 90.88.160.238
-Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2ADDEFF813;
-        Thu, 18 Apr 2019 09:13:58 +0000 (UTC)
-Message-ID: <03187f79f37fdb45f3a774e200e21a29167776a8.camel@bootlin.com>
-Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Eric Anholt <eric@anholt.net>, Rob Clark <robdclark@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Date:   Thu, 18 Apr 2019 11:13:57 +0200
-In-Reply-To: <CAAFQd5Bou1abM4QMPFHqEcJnqGW7F1rZdAoLGmjZnVQTPh4WSw@mail.gmail.com>
-References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
-         <20190418081816.GO13337@phenom.ffwll.local>
-         <522d6a7734a29df47fe11f5f6311b49e14dabae0.camel@bootlin.com>
-         <CAAFQd5Bou1abM4QMPFHqEcJnqGW7F1rZdAoLGmjZnVQTPh4WSw@mail.gmail.com>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Thu, 18 Apr 2019 05:15:04 -0400
+Received: from lizzard.sbs.de ([194.138.37.39]:41553 "EHLO lizzard.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfDRJPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:15:04 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id x3I9F06Q004363
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Apr 2019 11:15:00 +0200
+Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x3I9F086009977;
+        Thu, 18 Apr 2019 11:15:00 +0200
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Su Bao Cheng <baocheng.su@siemens.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH] mfd: intel_quark_i2c_gpio: Adjust IOT2000 matching
+Message-ID: <06b89c06-462a-788e-20f9-aa71ac1507b4@siemens.com>
+Date:   Thu, 18 Apr 2019 11:14:59 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Su Bao Cheng <baocheng.su@siemens.com>
 
-On Thu, 2019-04-18 at 18:09 +0900, Tomasz Figa wrote:
-> On Thu, Apr 18, 2019 at 5:55 PM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> > Hi Daniel,
-> > 
-> > On Thu, 2019-04-18 at 10:18 +0200, Daniel Vetter wrote:
-> > > On Wed, Apr 17, 2019 at 08:10:15PM +0200, Paul Kocialkowski wrote:
-> > > > Hi Nicolas,
-> > > > 
-> > > > I'm detaching this thread from our V4L2 stateless decoding spec since
-> > > > it has drifted off and would certainly be interesting to DRM folks as
-> > > > well!
-> > > > 
-> > > > For context: I was initially talking about writing up support for the
-> > > > Allwinner 2D engine as a DRM render driver, where I'd like to be able
-> > > > to batch jobs that affect the same destination buffer to only signal
-> > > > the out fence once when the batch is done. We have a similar issue in
-> > > > v4l2 where we'd like the destination buffer for a set of requests (each
-> > > > covering one H264 slice) to be marked as done once the set was decoded.
-> > > > 
-> 
-> Out of curiosity, what area did you find a 2D blitter useful for?
+Since there are more IOT2040 variants with identical hardware but
+different asset tags, the asset tag matching should be adjusted to
+support them.
 
-The initial motivation is to bring up a DDX with that for platforms
-that have 2D engines but no free software GPU drivers yet.
+For the board name "SIMATIC IOT2000", currently there are 2 types of
+hardware, IOT2020 and IOT2040. Both are identical regarding the
+intel_quark_i2c_gpio. In the future there will be no other devices with
+the "SIMATIC IOT2000" DMI board name but different hardware. So remove
+the asset tag matching from this driver.
 
-I also have a personal project in the works where I'd like to implement
-accelerated UI rendering in 2D. The idea is to avoid using GL entirely.
+Signed-off-by: Su Bao Cheng <baocheng.su@siemens.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
+ drivers/mfd/intel_quark_i2c_gpio.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-That last point is in part because I have a GPU-less device that I want
-to get going with mainline: http://linux-sunxi.org/F60_Action_Camera
-
-Cheers,
-
-Paul
-
+diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
+index 5bddb84cfc1f..11adbf77960d 100644
+--- a/drivers/mfd/intel_quark_i2c_gpio.c
++++ b/drivers/mfd/intel_quark_i2c_gpio.c
+@@ -74,16 +74,6 @@ static const struct dmi_system_id dmi_platform_info[] = {
+ 	{
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
+-			DMI_EXACT_MATCH(DMI_BOARD_ASSET_TAG,
+-					"6ES7647-0AA00-0YA2"),
+-		},
+-		.driver_data = (void *)400000,
+-	},
+-	{
+-		.matches = {
+-			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SIMATIC IOT2000"),
+-			DMI_EXACT_MATCH(DMI_BOARD_ASSET_TAG,
+-					"6ES7647-0AA00-1YA2"),
+ 		},
+ 		.driver_data = (void *)400000,
+ 	},
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
+2.16.4
