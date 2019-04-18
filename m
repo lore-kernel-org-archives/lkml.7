@@ -2,84 +2,133 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6942CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A892214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370BB20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ktsdaFbH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404034AbfDRSPG (ORCPT
+        id S2392143AbfDRSPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:15:06 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38900 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391146AbfDRSPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:15:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BC7F80D;
-        Thu, 18 Apr 2019 11:15:04 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE7893F5AF;
-        Thu, 18 Apr 2019 11:15:02 -0700 (PDT)
-Subject: Re: [PATCH 12/21] dma-iommu: factor atomic pool allocations into
- helpers
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190327080448.5500-1-hch@lst.de>
- <20190327080448.5500-13-hch@lst.de>
- <b3f80a11-1504-e8f9-4438-92bcd5f3df7f@arm.com> <20190410061157.GA5278@lst.de>
- <20190417063358.GA24139@lst.de>
- <83615173-a8b4-e0eb-bac3-1a58d61ea4ef@arm.com>
- <20190418163512.GA25347@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <228ee57a-d7b2-48e0-a34e-81d5fba0a090@arm.com>
-Date:   Thu, 18 Apr 2019 19:15:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 14:15:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45696 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391950AbfDRSPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:15:12 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e5so2448512otk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cNvcYTnY3+vvHUTxTkoLoLivaNOP88tmLELkxGdG9NU=;
+        b=ktsdaFbHHTTd3R9uOez0tgfH91piu1Xl5DlUQg9AdDFLkPBDJI5BaCJt8wdik0yC9L
+         dH1VUAIEKpMOG3eMgmYm1jbHjjxODglk6p70vY9qXowThleT7Q0gQUDAJS9MA3j7Y9lF
+         v8ZxpajT9Rk0mPmn47Onvt24QMYIumY0g4+EJAIXZlXQcKxDlrzTO/b2iH+eG5vkZQVH
+         ouopY1EtaMEeFiq04GySGtlZKge2N6IsV7o1pM7Je/rREB1BqCRPzbORKPO8w/0MElm/
+         Opf6d01RSEY9uEf/J9C9GZzgTb2wZrkTq4GMtT+Dl+3EhN2pMqMJwWjbjUxgrKq+DhMm
+         CmXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cNvcYTnY3+vvHUTxTkoLoLivaNOP88tmLELkxGdG9NU=;
+        b=Iref8mMcd4Aon2Eskos0qLmkR426ctdkG0McEcqUTMnOYHsKQ3z/fTBTKrsJs33P6I
+         5hpyWMLcu1aQDAYPfDMaQRWqTAYEQolIiDFJf26yFr8XiAPObJqgQ0mPaXOs7X/S8qRX
+         VaS45Nw+ZCAvEdna/EwWyKQVMclBE3qd+kih+6eaIRgVB7kCRnrRsILQGL78JE3/b9Qh
+         0k2T2Px1AEtPhNoR74awI2oSIOa3wvH+mChPIg+rZjy+Y8Hx7wJK+OaOtX8QzGuKQL8l
+         CntB2EcIu1casmnIsGKVtJaqO+YlQLkwo1PncLMhPUh+wiK3eEkQjj3vbiIpXDQCVGG+
+         PEQw==
+X-Gm-Message-State: APjAAAXC/W+oVZJrM5jFGHzB4bt36uImben0fOYUTpm5eE2sZvIPiA6Q
+        RR0DZtICnAvujGspHYTE3g8zdPhs/3iyu6Qr/SqLmQ==
+X-Google-Smtp-Source: APXvYqw+Y0/Df9bqsKP+vBWmJnbCdRcBlSHVgj/brP9uo3QhMkPjrQhjEhP/44UfrxTt+scRqmIZz03SqgCzRGRlQNI=
+X-Received: by 2002:a05:6830:15d4:: with SMTP id j20mr4679415otr.367.1555611312059;
+ Thu, 18 Apr 2019 11:15:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190418163512.GA25347@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
+ <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
+ <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com> <20190418161833.GA22970@infradead.org>
+In-Reply-To: <20190418161833.GA22970@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 18 Apr 2019 11:14:59 -0700
+Message-ID: <CAPcyv4jPOF_+R6U17J_+88+X8LC-LSPCugA6gbKxuphuuFB2gg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/04/2019 17:35, Christoph Hellwig wrote:
-> On Thu, Apr 18, 2019 at 04:06:56PM +0100, Robin Murphy wrote:
->> OK, I'm still looking at mmap and get_sgtable, but for now I've pushed out
->> a partial branch that consolidates alloc and free in a way which makes
->> sense to me:
->>
->>    git://linux-arm.org/linux-rm  dma/rework
->>
->> Please let me know what you think.
-> 
->  From a very high level POV this looks ok, but sometimes a bit to
-> convoluted to me.  The major issue why I went with the version I posted
-> is that I can cleanly ifdef out the remap code in just a few sections.
-> In this version it is spread out a lot more, and the use of IS_ENABLED
-> means that we'd need a lot more stubs for functionality that won't
-> ever be called but needs to be compilable.
+On Thu, Apr 18, 2019 at 9:18 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Apr 18, 2019 at 09:05:05AM -0700, Dan Williams wrote:
+> > > > I'd either add a comment about avoiding retpoline overhead here or just
+> > > > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
+> > > > get confused by the code.
+> > >
+> > > Isn't this premature optimization?  I really don't like adding things
+> > > like this without some numbers to show it's worth it.
+> >
+> > I don't think it's premature given this optimization technique is
+> > already being deployed elsewhere, see:
+> >
+> > https://lwn.net/Articles/774347/
+>
+> For one this one was backed by numbers, and second after feedback
+> from Linux we switched to the NULL pointer check instead.
 
-OK, for some reason I'd convinced myself that mmap and get_sgtable would 
-need changes to properly handle the new non-remapped CMA case - not sure 
-how I reached that conclusion. On inspection they do appear to be broken 
-for the non-coherent atomic case, but AFAICS that's been so forever...
+Ok I should have noticed the switch to NULL pointer check. However,
+the question still stands do we want everyone to run numbers to
+justify this optimization, or make it a new common kernel coding
+practice to do:
 
-Still, I've worked in the vm_map_pages() stuff pending in MM and given 
-them the same treatment to finish the picture. Both x86_64_defconfig and 
-i386_defconfig do indeed compile and link fine as I expected, so I 
-really would like to understand the concern around #ifdefs better.
+    if (!object->op)
+        generic_op(object);
+    else
+        object->op(object);
 
-Robin.
+...in hot paths? I agree with not doing premature optimization in
+principle, but this hack is minimally intrusive from a readability
+perspective similar to likely()/unlikely() usage which also don't come
+with numbers on a per patch basis.
