@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADEFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9894EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73627218A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADF5217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610493;
-	bh=sV8mWTo9p8NJ4Nl1Fo3Q/V8wy/rpFhRJqa+ARGfU3pI=;
+	s=default; t=1555610498;
+	bh=xCinaS7hrhc6Te9qtERzQ5MPLCpqQgYLMjgcN/z7z9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqghEGKPsU5HVFRLILv7Y8+S6zyeeook7JDYfohh2PSkqUxVX3tjVgxNsEevf58yM
-	 YC1tjYDOc7lIFSAJTKNDTXZ0saEUQSMdZ14G46YFjV6uxVZNwKXyy4IGbtdZhw+MSr
-	 E3ngV0CG28U66auXVwHztbull92gWLZfv3quoOZk=
+	b=md3YsogtiE7ZLFliG3Znt/QXtBh3YN+GUmMU05RkdntxJ0MUCoYX8UXaVCeMmEiiJ
+	 9a/nrOi8cb/s9I2If2Nc/2NtW3LTVuFjbcA495l7mi8ZqrdYcncORDhI66RasLrOKO
+	 egU4tjx4cjndV4UC38Jneb9fMVxtXE5e2tECN1Z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390580AbfDRSBc (ORCPT
+        id S2389964AbfDRSBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57128 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390564AbfDRSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:01:29 -0400
+        id S2390184AbfDRSBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:01:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99948217FA;
-        Thu, 18 Apr 2019 18:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF25C206B6;
+        Thu, 18 Apr 2019 18:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610488;
-        bh=sV8mWTo9p8NJ4Nl1Fo3Q/V8wy/rpFhRJqa+ARGfU3pI=;
+        s=default; t=1555610493;
+        bh=xCinaS7hrhc6Te9qtERzQ5MPLCpqQgYLMjgcN/z7z9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xelz9GJF/32SkwQ2LrLM4c98B1D1nLnczvNEAvU91Tp7YaT9XW/bUGOffXTCBkoPN
-         /RsIIUz3QpuIu0nWCxIms99nxO0XuPFlA/Gqe4fY9Mi2Osm9GflBnt28EQ0yZXXHaQ
-         +XE7qAS3rMpkmM8fh2RxKFmkj5IHZZgut7tFtP/g=
+        b=rpm1mXUL+heB3xka3fTNTu5K0Nx99a4xuhmDzPsN4fcCoV3fw/F3tqUjuYRfF1Mab
+         2ahRd1sIJoddxjfvHGpEVacdlF04YchW1IXYHE0+VDXaTFGY9juRCpw79tUiTpo7mE
+         NIQAPxi4N0l1M0o0EZX+zRsaE6DlFyKTfSVOUeCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trigger Huang <Trigger.Huang@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/110] drm/ttm: Fix bo_global and mem_global kfree error
-Date:   Thu, 18 Apr 2019 19:57:09 +0200
-Message-Id: <20190418160445.699482284@linuxfoundation.org>
+Subject: [PATCH 4.19 055/110] rsi: improve kernel thread handling to fix kernel panic
+Date:   Thu, 18 Apr 2019 19:56:44 +0200
+Message-Id: <20190418160443.850166453@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -61,93 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30f33126feca0fe16df9e9302ffc28a953e2eb37 ]
+[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
 
-ttm_bo_glob and ttm_mem_glob are defined as structure instance, while
-not allocated by kzalloc, so kfree should not be invoked to release
-them anymore. Otherwise, it will cause the following kernel BUG when
-unloading amdgpu module
+While running regressions, observed below kernel panic when sdio disconnect
+called. This is because of, kthread_stop() is taking care of
+wait_for_completion() by default. When wait_for_completion triggered
+in kthread_stop and as it was done already, giving kernel panic.
+Hence, removing redundant wait_for_completion() from rsi_kill_thread().
 
-[   48.419294] kernel BUG at /build/linux-5s7Xkn/linux-4.15.0/mm/slub.c:3894!
-[   48.419352] invalid opcode: 0000 [#1] SMP PTI
-[   48.419387] Modules linked in: amdgpu(OE-) amdchash(OE) amdttm(OE) amd_sched(OE) amdkcl(OE) amd_iommu_v2 drm_kms_helper drm i2c_algo_bit fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hda_codec_generic snd_hda_intel snd_hda_codec snd_hda_core snd_hwdep kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi pcbc snd_seq snd_seq_device snd_timer aesni_intel snd soundcore joydev aes_x86_64 crypto_simd glue_helper cryptd input_leds mac_hid serio_raw binfmt_misc nfsd auth_rpcgss nfs_acl lockd grace sunrpc sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4 8139too psmouse i2c_piix4 8139cp mii floppy pata_acpi
-[   48.419782] CPU: 1 PID: 1281 Comm: modprobe Tainted: G           OE    4.15.0-20-generic #21-Ubuntu
-[   48.419838] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[   48.419901] RIP: 0010:kfree+0x137/0x180
-[   48.419934] RSP: 0018:ffffb02101273bf8 EFLAGS: 00010246
-[   48.419974] RAX: ffffeee1418ad7e0 RBX: ffffffffc075f100 RCX: ffff8fed7fca7ed0
-[   48.420025] RDX: 0000000000000000 RSI: 000000000003440e RDI: 0000000022400000
-[   48.420073] RBP: ffffb02101273c10 R08: 0000000000000010 R09: ffff8fed7ffd3680
-[   48.420121] R10: ffffeee1418ad7c0 R11: ffff8fed7ffd3000 R12: ffffffffc075e2c0
-[   48.420169] R13: ffffffffc074ec10 R14: ffff8fed73063900 R15: ffff8fed737428e8
-[   48.420216] FS:  00007fdc912ec540(0000) GS:ffff8fed7fc80000(0000) knlGS:0000000000000000
-[   48.420267] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   48.420308] CR2: 000055fa40c30060 CR3: 000000023470a006 CR4: 00000000003606e0
-[   48.420358] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   48.420405] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   48.420452] Call Trace:
-[   48.420485]  ttm_bo_global_kobj_release+0x20/0x30 [amdttm]
-[   48.420528]  kobject_release+0x6a/0x180
-[   48.420562]  kobject_put+0x28/0x50
-[   48.420595]  ttm_bo_global_release+0x36/0x50 [amdttm]
-[   48.420636]  amdttm_bo_device_release+0x119/0x180 [amdttm]
-[   48.420678]  ? amdttm_bo_clean_mm+0xa6/0xf0 [amdttm]
-[   48.420760]  amdgpu_ttm_fini+0xc9/0x180 [amdgpu]
-[   48.420821]  amdgpu_bo_fini+0x12/0x40 [amdgpu]
-[   48.420889]  gmc_v9_0_sw_fini+0x40/0x50 [amdgpu]
-[   48.420947]  amdgpu_device_fini+0x36f/0x4c0 [amdgpu]
-[   48.421007]  amdgpu_driver_unload_kms+0xb4/0x150 [amdgpu]
-[   48.421058]  drm_dev_unregister+0x46/0xf0 [drm]
-[   48.421102]  drm_dev_unplug+0x12/0x70 [drm]
+... skipping ...
+BUG: unable to handle kernel NULL pointer dereference at           (null)
+IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
+PGD 0
+Oops: 0002 [#1] SMP
+CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
+Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
+Stack:
+ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
+ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
+ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
+Call Trace:
+[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
+[<ffffffff810a484b>] kthread_stop+0x10b/0x110
+[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
+[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
+[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
+[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
+[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
+[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
+[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
+[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
+[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
+[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
+[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
 
-Signed-off-by: Trigger Huang <Trigger.Huang@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo.c     | 1 -
- drivers/gpu/drm/ttm/ttm_memory.c | 9 ---------
- 2 files changed, 10 deletions(-)
+ drivers/net/wireless/rsi/rsi_common.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-index 7c484729f9b2..268f5a3b3122 100644
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -1445,7 +1445,6 @@ static void ttm_bo_global_kobj_release(struct kobject *kobj)
- 		container_of(kobj, struct ttm_bo_global, kobj);
+diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
+index d9ff3b8be86e..60f1f286b030 100644
+--- a/drivers/net/wireless/rsi/rsi_common.h
++++ b/drivers/net/wireless/rsi/rsi_common.h
+@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
+ 	atomic_inc(&handle->thread_done);
+ 	rsi_set_event(&handle->event);
  
- 	__free_page(glob->dummy_read_page);
--	kfree(glob);
+-	wait_for_completion(&handle->completion);
+ 	return kthread_stop(handle->task);
  }
  
- void ttm_bo_global_release(struct drm_global_reference *ref)
-diff --git a/drivers/gpu/drm/ttm/ttm_memory.c b/drivers/gpu/drm/ttm/ttm_memory.c
-index 450387c92b63..df73d5ff84a8 100644
---- a/drivers/gpu/drm/ttm/ttm_memory.c
-+++ b/drivers/gpu/drm/ttm/ttm_memory.c
-@@ -216,14 +216,6 @@ static ssize_t ttm_mem_global_store(struct kobject *kobj,
- 	return size;
- }
- 
--static void ttm_mem_global_kobj_release(struct kobject *kobj)
--{
--	struct ttm_mem_global *glob =
--		container_of(kobj, struct ttm_mem_global, kobj);
--
--	kfree(glob);
--}
--
- static struct attribute *ttm_mem_global_attrs[] = {
- 	&ttm_mem_global_lower_mem_limit,
- 	NULL
-@@ -235,7 +227,6 @@ static const struct sysfs_ops ttm_mem_global_ops = {
- };
- 
- static struct kobj_type ttm_mem_glob_kobj_type = {
--	.release = &ttm_mem_global_kobj_release,
- 	.sysfs_ops = &ttm_mem_global_ops,
- 	.default_attrs = ttm_mem_global_attrs,
- };
 -- 
 2.19.1
 
