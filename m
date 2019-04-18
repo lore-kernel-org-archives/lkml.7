@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1D3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9D0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC0921871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF828206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610983;
-	bh=nogilSUF5E56CMWrVKlOeHpIEupOKB/TMUJXYz1NinQ=;
+	s=default; t=1555610987;
+	bh=dnlOL0GRo6NlzBvMP6fKrj3f9Z2S385NBRAMpJJvTUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mDNyM67TFhHs91Q1IMSu8eoUIyIs5bNd1KBqUPamATZ9Jf7dtxRn5Af9a5y9VVbNo
-	 Hi1EQEUfe+rRHxpKluv1qcukKc99m21YZbBYPfdZVXa1zV0dlcESZStwcj1SUNINnM
-	 pP2DZxogy+vaOJYyNLx17QTRDoo72yN5036mhYBQ=
+	b=Z5z0HRaNW5Ax1jW3Uqfa7FSTvv4Y7c72K7fn1aBGgTaNl9Cd1wNgKTlQJA5wCwoe8
+	 UPCbFeyQlOnMOuxSKRE2Baf5LHYClLeA2vK1VkaW4VTuuTCeI8DAsr3+yTWwkdRO/K
+	 Mjl5oaDCRVTgHIDh/fNU5b1gLWiODFXHPdkFX8qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391637AbfDRSJm (ORCPT
+        id S2391888AbfDRSJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391431AbfDRSJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:37 -0400
+        id S2391431AbfDRSJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:09:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16CE21872;
-        Thu, 18 Apr 2019 18:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153CE2186A;
+        Thu, 18 Apr 2019 18:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610977;
-        bh=nogilSUF5E56CMWrVKlOeHpIEupOKB/TMUJXYz1NinQ=;
+        s=default; t=1555610982;
+        bh=dnlOL0GRo6NlzBvMP6fKrj3f9Z2S385NBRAMpJJvTUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxoFHAPR2w9gMW7gSXeDzbutc1z+bd5gi51oWlxJPA01cDttGs4/THAGbZtAF+APM
-         dAG3/RLfCaMaFeCO0bfXrmgS9GpLAhEEK/hHdYZRETepgPDGypNaKFsYFso1vO5Tcl
-         FxcCJ56TO3ZCEGanxh6jE9tGOWLowPV8o3JtSCCI=
+        b=nvJLQyBSLwOKROTjFuDWtI9TDiOZFRjNixJ7frcVglcvxy7RPVsfjt2Q+akj9v35B
+         rlynrNgpswAjtSSZOGOlDvwEgsTesT4u0KzYLmOP4UKvpwgBb8YRva6Zrq7g6qYY8h
+         SeOEWA12WoxNE3z9SkIbE735t8JXIBXXxOWgUd/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 12/93] auxdisplay: hd44780: Fix memory leak on ->remove()
-Date:   Thu, 18 Apr 2019 19:56:50 +0200
-Message-Id: <20190418160438.125756125@linuxfoundation.org>
+Subject: [PATCH 5.0 14/93] IB/mlx4: Fix race condition between catas error reset and aliasguid flows
+Date:   Thu, 18 Apr 2019 19:56:52 +0200
+Message-Id: <20190418160438.287488237@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -62,32 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41c8d0adf3c4df1867d98cee4a2c4531352a33ad ]
+[ Upstream commit 587443e7773e150ae29e643ee8f41a1eed226565 ]
 
-We have to free on ->remove() the allocated resources on ->probe().
+Code review revealed a race condition which could allow the catas error
+flow to interrupt the alias guid query post mechanism at random points.
+Thiis is fixed by doing cancel_delayed_work_sync() instead of
+cancel_delayed_work() during the alias guid mechanism destroy flow.
 
-Fixes: d47d88361fee ("auxdisplay: Add HD44780 Character LCD support")
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/auxdisplay/hd44780.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/auxdisplay/hd44780.c b/drivers/auxdisplay/hd44780.c
-index 9ad93ea42fdc..3cde351fb5c9 100644
---- a/drivers/auxdisplay/hd44780.c
-+++ b/drivers/auxdisplay/hd44780.c
-@@ -280,6 +280,8 @@ static int hd44780_remove(struct platform_device *pdev)
- 	struct charlcd *lcd = platform_get_drvdata(pdev);
+diff --git a/drivers/infiniband/hw/mlx4/alias_GUID.c b/drivers/infiniband/hw/mlx4/alias_GUID.c
+index 782499abcd98..2a0b59a4b6eb 100644
+--- a/drivers/infiniband/hw/mlx4/alias_GUID.c
++++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
+@@ -804,8 +804,8 @@ void mlx4_ib_destroy_alias_guid_service(struct mlx4_ib_dev *dev)
+ 	unsigned long flags;
  
- 	charlcd_unregister(lcd);
-+
-+	kfree(lcd);
- 	return 0;
- }
- 
+ 	for (i = 0 ; i < dev->num_ports; i++) {
+-		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
+ 		det = &sriov->alias_guid.ports_guid[i];
++		cancel_delayed_work_sync(&det->alias_guid_work);
+ 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
+ 		while (!list_empty(&det->cb_list)) {
+ 			cb_ctx = list_entry(det->cb_list.next,
 -- 
 2.19.1
 
