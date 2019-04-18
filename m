@@ -2,76 +2,101 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDCEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8DDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726362064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966CB2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:19:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ibDjBEJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389745AbfDRROC (ORCPT
+        id S2389516AbfDRRS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:14:02 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:36960 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733192AbfDRROB (ORCPT
+        Thu, 18 Apr 2019 13:18:59 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43760 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388388AbfDRRS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:14:01 -0400
-Received: by mail-it1-f200.google.com with SMTP id q203so2878090itb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:14:01 -0700 (PDT)
+        Thu, 18 Apr 2019 13:18:59 -0400
+Received: by mail-lf1-f67.google.com with SMTP id i68so2202279lfi.10;
+        Thu, 18 Apr 2019 10:18:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xc/f8vECQFaC8JXGdTkPXt+eIGV4swHZrmQI5L4lnbU=;
+        b=ibDjBEJwhiZyaERJyZ8GUW38qlXI+a+Z7pHqimSPWX0wUXVIhc+CSos7tK1+3Qnc21
+         LlqfdgrcQqMp6nk721MIdSuKT/p797Rn8PgB2HiRoKkaq+8T7H1UZlVkUAsY83PJ6Ify
+         wkDZ1OFSMU5SprMPIEHkhHY9z3YI72zv20jTXuNJf99qT31TldK/DII0Nm+RvswHZfRF
+         es49j0uqTx0cX04eVTaY4EsDkO7DJERAUcExvLrlaa8L+N6GipOyk4tcbTr5L0Qp5n89
+         zT54CDb5/yJAFgaxA4HVZOkdCUP0HDJeZRO33SQDxMjeJMr4hhw/uAlOZ1Tqfd+Ic5HG
+         oRoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=J2Ggu4EQi+uAKKKobFQcaVNuDnKuw7AvPd4iYVmNZgI=;
-        b=nv4b4hD92EW0rRFc9jh/8DcR80YN6+EYZddCjHLqzNpXcpa67XSJKwhjV4LzxFlQ24
-         DITTpPbyShSfa/MaAUsON8oB+w3A5xj+RlBru88EWNYPO9oTolS4SkQFgKRYbIn2QXgb
-         sOs5qJCRMKNEeCThDs3AbmGIHC48f2Cz0JIWeM/Yt2UvJiQNuLFaBYGDYj/MikQKZZG2
-         TUG1OfR2wFn6AxrZHVsM4Gq+OzgaKO8x0yDTpjAyz8fSuEgV0VbGQSUjE+M+HOaJSyZC
-         eKw5Rf1cuxVlXVBkH0AoJsJtacGETVKjzE/yLhF1mdzfw2IQpotj/6ZaFLi9d4/rS0CQ
-         UJPg==
-X-Gm-Message-State: APjAAAWo8LIYL2iIXnbiPVmwTHn3t61jROLNbry1w4Z8CEMKQjq2bjEg
-        pInleVuaNaNs37xly/5HAw5gtz48u4ooutvcIp/vvtwgo/mq
-X-Google-Smtp-Source: APXvYqx0hx5HiFiwwAonNVXHLc+ntFx9eNBFkzfmhoTmHaaKNIJl946TXql3UKJPUtS6PNGHXJ4BtMrEflCTL2CGfu5z3uwLT+XB
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xc/f8vECQFaC8JXGdTkPXt+eIGV4swHZrmQI5L4lnbU=;
+        b=NlT8DfNZj8CojTNCRU+0V2IOCUANXGy+wXp+XBP5/kcb8HSn7XYwPdE6s5R7cTOMsy
+         kB4PGpOL3AT8kSn9y2XL7REqywmHmHv9ZWzWv18n87aK/wPV6f2tQNvvp55CAgLEyeqw
+         gZr38ETvFfjm9OoLt6RdckKu3sd45ibBiTxSbfqSLZWDxN/fgb6USRtoc+CPdqiTTozc
+         U6NakYA4aCPcUr0gUGIL0Szl6/Vi1T0EHNDh/dlBJ186wWVuOcot4nc0XZe3Snb54Qj6
+         7JIKMaL+I0sYZWxlWFudIdjQkVLWQYG42o/MOns0XtbB3VpJC1yZveqCmpg9cHBTD8tM
+         zDwQ==
+X-Gm-Message-State: APjAAAXa+fphqijnP0xfSGFtMI8fIQV/pHJn68Jd8eZMyYAOFGnLbzsI
+        RjB8cSG60eUCleMPV8ta5yI=
+X-Google-Smtp-Source: APXvYqxgXAwQD//9MI0qkQ9U7P317vLDoJDqRdtOTK8EwZRsAqWPRGSSoEynYBvQP/kM4UlHm2G7gA==
+X-Received: by 2002:ac2:4214:: with SMTP id y20mr18059174lfh.75.1555607936964;
+        Thu, 18 Apr 2019 10:18:56 -0700 (PDT)
+Received: from [192.168.1.19] (bfw35.neoplus.adsl.tpnet.pl. [83.28.60.35])
+        by smtp.gmail.com with ESMTPSA id l13sm511477ljj.96.2019.04.18.10.18.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 10:18:56 -0700 (PDT)
+Subject: Re: [PATCH v4 11/26] dt-bindings: lp8860: Add function and color
+ properties
+To:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-12-jacek.anaszewski@gmail.com>
+ <f942fe13-c38e-0cde-2991-ed67f2249e9f@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <5e6fd5c8-77f9-ebd8-b91d-fa6f6664c445@gmail.com>
+Date:   Thu, 18 Apr 2019 19:18:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a5d:84cc:: with SMTP id z12mr4997105ior.305.1555607640961;
- Thu, 18 Apr 2019 10:14:00 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 10:14:00 -0700
-In-Reply-To: <00000000000091becf0586d104c6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d97b380586d1205f@google.com>
-Subject: Re: general protection fault in fanotify_handle_event
-From:   syzbot <syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com>
-To:     amir73il@gmail.com, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <f942fe13-c38e-0cde-2991-ed67f2249e9f@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 4/18/19 2:28 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 4/17/19 3:54 PM, Jacek Anaszewski wrote:
+>> Refer to new "function" and "color" properties and mark "label"
+>> as deprecated.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+> 
+> I gave reviewed-by for DT docs and tested-by for code for the TI parts affected.
 
-commit 77115225acc67d9ac4b15f04dd138006b9cd1ef2
-Author: Amir Goldstein <amir73il@gmail.com>
-Date:   Thu Jan 10 17:04:37 2019 +0000
+I know, but still there is change in one struct property name
+in the patches.
 
-     fanotify: cache fsid in fsnotify_mark_connector
+I take your ack as granted then.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1627632d200000
-start commit:   3f018f4a Add linux-next specific files for 20190418
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1527632d200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1127632d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=faa7bdc352fc157e
-dashboard link: https://syzkaller.appspot.com/bug?extid=15927486a4f1bfcbaf91
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=155543d3200000
-
-Reported-by: syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com
-Fixes: 77115225acc6 ("fanotify: cache fsid in fsnotify_mark_connector")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Best regards,
+Jacek Anaszewski
