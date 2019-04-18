@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0019BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82E5C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA88218A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886BF217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610384;
-	bh=AcHtwJZLIP5ZxBGvwr0IP7u79ECIX+JnBeYDJZZPisI=;
+	s=default; t=1555610389;
+	bh=Y7CGsYJxBxRuOgDHHUseqWqqQPVywHCix9nRlMpzOrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b4sdqwT3ahI3RHi404VPDFOmeprr/L6TH5sU/+7iOkpDNp7VI3qSqq07LnkQZTzzW
-	 jSqsK8F03iMV/HOdg0svlCgoSN53djotg3jHBP8uSoBFOpPr15gB4Xvj0ilfSE3Yn4
-	 B9TOAvJbO0YJJpIyeIadC1VT0/OQbn0gBEip9mN0=
+	b=ayu+yTJF2bHOC2kzhGtFd+OD6oI3d+LXVne9Cnw4e0/7mVgNs8+z8GnTygsba6dHm
+	 MvB24CxpXYXrhafk2DTcFXDsDS34+v6m4nTBfPxYYkS/yPdJzfMhaKoyHt8swHhiMM
+	 bhSxG0PPCMxtDn56AQLLq+EPdYilrsaQs/pMJ6m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390206AbfDRR7o (ORCPT
+        id S2390218AbfDRR7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54592 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390187AbfDRR7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:39 -0400
+        id S2390187AbfDRR7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B814C217FA;
-        Thu, 18 Apr 2019 17:59:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0D3A21872;
+        Thu, 18 Apr 2019 17:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610379;
-        bh=AcHtwJZLIP5ZxBGvwr0IP7u79ECIX+JnBeYDJZZPisI=;
+        s=default; t=1555610384;
+        bh=Y7CGsYJxBxRuOgDHHUseqWqqQPVywHCix9nRlMpzOrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+/oBdWdSrWx0+xndhLtsLvW4VezFYc95j/JpHbJNb9ON5Fwd53NYZBOflKAoIaGa
-         4NBgEih/CvGAIHRaNpDFaGqQkShJD42mGfTVKKhcbZH+wbCv1qYIujTDaSnozjZOvu
-         7bQnoRJAdWPlOEaQhRwB+gSWQExwDdFaLqk8Ed0w=
+        b=CapW9kxom+fh/IPOKTIEl0cLm7sal0odrqQjHQnrE4OLfFWbe+JdcV0kbKBIEMNkI
+         2sZQCs5ENZxPb8jJ/kokDaiZuexEMcitMtdVDp6JdYHgrhNmi47vejajPo70FBBlDT
+         UJQ5b6VGwt/Lni60gEsj9Sc6d1z6ESsRPgwtBI08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/110] ACPI / utils: Drop reference in test for device presence
-Date:   Thu, 18 Apr 2019 19:56:27 +0200
-Message-Id: <20190418160442.289954925@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <jbacik@fb.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 040/110] blk-iolatency: #include "blk.h"
+Date:   Thu, 18 Apr 2019 19:56:29 +0200
+Message-Id: <20190418160442.780004344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -62,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 54e3aca84e571559915998aa6cc05e5ac37c043b ]
+[ Upstream commit 373e915cd8e84544609eced57a44fbc084f8d60f ]
 
-When commit 8661423eea1a ("ACPI / utils: Add new acpi_dev_present
-helper") introduced acpi_dev_present(), it missed the fact that
-bus_find_device() took a reference on the device found by it and
-the callers of acpi_dev_present() don't drop that reference.
+This patch avoids that the following warning is reported when building
+with W=1:
 
-Drop the reference on the device in acpi_dev_present().
+block/blk-iolatency.c:734:5: warning: no previous prototype for 'blk_iolatency_init' [-Wmissing-prototypes]
 
-Fixes: 8661423eea1a ("ACPI / utils: Add new acpi_dev_present helper")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Josef Bacik <jbacik@fb.com>
+Fixes: d70675121546 ("block: introduce blk-iolatency io controller") # v4.19
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/utils.c | 1 +
+ block/blk-iolatency.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
-index 78db97687f26..c4b06cc075f9 100644
---- a/drivers/acpi/utils.c
-+++ b/drivers/acpi/utils.c
-@@ -800,6 +800,7 @@ bool acpi_dev_present(const char *hid, const char *uid, s64 hrv)
- 	match.hrv = hrv;
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index b154e057ca67..6b8396ccb5c4 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -75,6 +75,7 @@
+ #include <linux/blk-mq.h>
+ #include "blk-rq-qos.h"
+ #include "blk-stat.h"
++#include "blk.h"
  
- 	dev = bus_find_device(&acpi_bus_type, NULL, &match, acpi_dev_match_cb);
-+	put_device(dev);
- 	return !!dev;
- }
- EXPORT_SYMBOL(acpi_dev_present);
+ #define DEFAULT_SCALE_COOKIE 1000000U
+ 
 -- 
 2.19.1
 
