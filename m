@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D87C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C116C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D0D20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC222064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611615;
-	bh=enDm9DSGVbgNOn0jycobpnpQJHYUrgKINHppKNcBUdw=;
+	s=default; t=1555611634;
+	bh=HCcaOXthsoXLGltvkYc6PgPl3u3rQseNWOQE314GKLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wt5F6O0qpKjQKJ5w+G+jnuv7Ir1F/cKVVZSe+wgFcMRevkajrQWzZiB2vpm/DfvBt
-	 hkBZuM2TWdK4b29uQVhUnjyrZpqsqkTLZ8Biv223qcUEPmT2vVE2OIVTNV5wbWaHVO
-	 vKR3qRNUG70yIg5569JQHkjjkvDofvzknozL1hw4=
+	b=Nj6I//gd82hdj+VTuVkHP5jyaAyjqvYQfk01RvuCSCOEE4muSZ3fzbh1YyfYp6xZn
+	 gy1f8NoWW1zJSrfN0fJ6+kwvOQZbziuixGAQjnlMQCk5TUYUwfASp0Y+gwQVcLGe9N
+	 bOP97Jt3UEhmMtMHPYt3+dOGVUsWsiFU4UBCsaYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391957AbfDRSUO (ORCPT
+        id S2403897AbfDRSUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:20:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390749AbfDRSIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:08:54 -0400
+        id S2403879AbfDRSIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:08:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409A1218A6;
-        Thu, 18 Apr 2019 18:08:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C1B2186A;
+        Thu, 18 Apr 2019 18:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610933;
-        bh=enDm9DSGVbgNOn0jycobpnpQJHYUrgKINHppKNcBUdw=;
+        s=default; t=1555610918;
+        bh=HCcaOXthsoXLGltvkYc6PgPl3u3rQseNWOQE314GKLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NAUw+Y+wDGE26QW66Yx7xqDHvmpxVRFJDAS/Ws3dt1gJctx2Pev88KSopRqJAS0Wi
-         RtBJ+hNTs0UYTyfJdaq58d6qndiQ5G4JsRwzsuarpjGafzfeZEMZiSnoLxxG6+BInI
-         P/t5wOKnJcgb/9+xfcnw13X4bdVlSxXFIG/ZBT3Q=
+        b=wyctsGJxZur4LEQiQv20rLoNfYahawE29DKbKCjni2pyAlOe8W/x7vdmo92J9iQvN
+         O+/dMHy3zipGyRqTHQp+1XvHzZpWEW5JujmBSS2Z6QhmYEYibnAKm+TuyA0aUjMckV
+         7YHRNZqSoIE64Pq1zrKK8kWcHg2IIfn+LY97WP6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Siarhei Volkau <lis8215@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 46/50] lib/div64.c: off by one in shift
-Date:   Thu, 18 Apr 2019 19:57:57 +0200
-Message-Id: <20190418160427.993452191@linuxfoundation.org>
+        stable@vger.kernel.org, Julia Cartwright <julia@ni.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 41/50] iommu/dmar: Fix buffer overflow during PCI bus notification
+Date:   Thu, 18 Apr 2019 19:57:52 +0200
+Message-Id: <20190418160427.463606376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
 References: <20190418160422.455656724@linuxfoundation.org>
@@ -63,50 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cdc94a37493135e355dfc0b0e086d84e3eadb50d ]
+[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
 
-fls counts bits starting from 1 to 32 (returns 0 for zero argument).  If
-we add 1 we shift right one bit more and loose precision from divisor,
-what cause function incorect results with some numbers.
+Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
+device path") changed the type of the path data, however, the change in
+path type was not reflected in size calculations.  Update to use the
+correct type and prevent a buffer overflow.
 
-Corrected code was tested in user-space, see bugzilla:
-   https://bugzilla.kernel.org/show_bug.cgi?id=202391
+This bug manifests in systems with deep PCI hierarchies, and can lead to
+an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
+or can lead to overflow of slab-allocated data.
 
-Link: http://lkml.kernel.org/r/1548686944-11891-1-git-send-email-sgruszka@redhat.com
-Fixes: 658716d19f8f ("div64_u64(): improve precision on 32bit platforms")
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Reported-by: Siarhei Volkau <lis8215@gmail.com>
-Tested-by: Siarhei Volkau <lis8215@gmail.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
+   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
+   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
+   Call Trace:
+    ? dump_stack+0x46/0x59
+    ? print_address_description+0x1df/0x290
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? kasan_report+0x256/0x340
+    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? dmar_dev_scope_init+0x424/0x48f
+    ? __down_write_common+0x1ec/0x230
+    ? dmar_dev_scope_init+0x48f/0x48f
+    ? dmar_free_unused_resources+0x109/0x109
+    ? cpumask_next+0x16/0x20
+    ? __kmem_cache_create+0x392/0x430
+    ? kmem_cache_create+0x135/0x2f0
+    ? e820__memblock_setup+0xb0/0xb0
+    ? intel_iommu_init+0x170/0x1848
+    ? _raw_spin_unlock_irqrestore+0x32/0x60
+    ? migrate_enable+0x27a/0x5b0
+    ? sched_setattr+0x20/0x20
+    ? migrate_disable+0x1fc/0x380
+    ? task_rq_lock+0x170/0x170
+    ? try_to_run_init_process+0x40/0x40
+    ? locks_remove_file+0x85/0x2f0
+    ? dev_prepare_static_identity_mapping+0x78/0x78
+    ? rt_spin_unlock+0x39/0x50
+    ? lockref_put_or_lock+0x2a/0x40
+    ? dput+0x128/0x2f0
+    ? __rcu_read_unlock+0x66/0x80
+    ? __fput+0x250/0x300
+    ? __rcu_read_lock+0x1b/0x30
+    ? mntput_no_expire+0x38/0x290
+    ? e820__memblock_setup+0xb0/0xb0
+    ? pci_iommu_init+0x25/0x63
+    ? pci_iommu_init+0x25/0x63
+    ? do_one_initcall+0x7e/0x1c0
+    ? initcall_blacklisted+0x120/0x120
+    ? kernel_init_freeable+0x27b/0x307
+    ? rest_init+0xd0/0xd0
+    ? kernel_init+0xf/0x120
+    ? rest_init+0xd0/0xd0
+    ? ret_from_fork+0x1f/0x40
+   The buggy address belongs to the variable:
+    dmar_pci_notify_info_buf+0x40/0x60
+
+Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
+Signed-off-by: Julia Cartwright <julia@ni.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/div64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/div64.c b/lib/div64.c
-index 7f345259c32f..c1c1a4c36dd5 100644
---- a/lib/div64.c
-+++ b/lib/div64.c
-@@ -102,7 +102,7 @@ u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
- 		quot = div_u64_rem(dividend, divisor, &rem32);
- 		*remainder = rem32;
- 	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 63110fbbb410..d51734e0c350 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -143,7 +143,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
+ 		for (tmp = dev; tmp; tmp = tmp->bus->self)
+ 			level++;
  
- 		if (quot != 0)
-@@ -140,7 +140,7 @@ u64 div64_u64(u64 dividend, u64 divisor)
- 	if (high == 0) {
- 		quot = div_u64(dividend, divisor);
+-	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
++	size = sizeof(*info) + level * sizeof(info->path[0]);
+ 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
+ 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
  	} else {
--		int n = 1 + fls(high);
-+		int n = fls(high);
- 		quot = div_u64(dividend >> n, divisor >> n);
- 
- 		if (quot != 0)
 -- 
 2.19.1
 
