@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66281C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF57C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C496214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E64214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbfDRGlc (ORCPT
+        id S2388170AbfDRGlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 18 Apr 2019 02:41:32 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.130]:49501 "EHLO
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.129]:33642 "EHLO
         mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729497AbfDRGlb (ORCPT
+        by vger.kernel.org with ESMTP id S1730682AbfDRGlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 02:41:31 -0400
 Received: from [46.226.53.50] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-c.eu-west-1.aws.symcld.net id 86/8E-23848-81C18BC5; Thu, 18 Apr 2019 06:41:28 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleJIrShJLcpLzFFi42I5+OG9rq6EzI4
-  Yg0M3mSymPnzCZjH/yDlWi6bvq5ktvl3pYLK4vGsOm8XS6xeZLFr3HmF3YPdYM28No8fOWXfZ
-  PTat6mTz+LxJLoAlijUzLym/IoE1Y8LJZ2wF/ZwVy+69ZW1gnM/RxcjFISSwllFiVec01i5GT
-  iCnQuLbkkOMIDavQLrE0kfzweKcAq4Sj25dg6pxkfj86ARYDZuAicSmI3uAbA4OFgFViRNvmU
-  BMYYF4iZM7ikAqRASyJe4uO8kOsopZYAujxK4NE9kgxgtKnJz5hAXEZhaQkDj44gUzxHg9ie7
-  J88BWSQjYS0x/f5UZwtaXePl1IxOEbSjxfdY3FgjbXGLmnztQNdYS1z/MYpvAKDQLyYpZSFYs
-  YGRaxWieVJSZnlGSm5iZo2toYKBraGika2RgpGtuqZdYpZusl1qqW55aXKJrqJdYXqxXXJmbn
-  JOil5dasokRGCspBaf8dzA+70o/xCjJwaQkylsiuiNGiC8pP6UyI7E4I76oNCe1+BCjDAeHkg
-  RvtxRQTrAoNT21Ii0zBxi1MGkJDh4lEd55IGne4oLE3OLMdIjUKUZjjoPfH85l5phx/9lcZiG
-  WvPy8VClx3s0gpQIgpRmleXCDYMnkEqOslDAvIwMDgxBPQWpRbmYJqvwrRnEORiVh3kMgU3gy
-  80rg9r0COoUJ6JQpOqtBTilJREhJNTCG8FqcilN3CpJrUVadNqWsLu7t3VPSRrM+sX+ZzTTbJ
-  vPt8bOcvH6aAh0/X01k+rWv97eU1ktjX/X16zVFTp3Qf5L8ulaxw+H/W2GTRz/NnzTyr8/ctM
-  puUcviZZ5vZs2YtfYhv5CW+f7ybZJeOyMCPcz+39ri9XzbQZ5/XIZJGw6rrcsvq5mtxFKckWi
-  oxVxUnAgARFE86CEDAAA=
+        by server-1.bemta.az-c.eu-west-1.aws.symcld.net id 10/16-25548-81C18BC5; Thu, 18 Apr 2019 06:41:28 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleJIrShJLcpLzFFi42I5+OG9rq6EzI4
+  Yg++P+CymPnzCZjH/yDlWi6bvq5ktvl3pYLK4vGsOm8XS6xeZLFr3HmF3YPdYM28No8fOWXfZ
+  PTat6mTz+LxJLoAlijUzLym/IoE14//9yUwF7VIV0371szQwLhTpYuTiEBJYyyixqnMaaxcjJ
+  5BTIfFt/kw2EJtXIF2i/etJJhCbU8BV4tGta1A1LhKfH51gBLHZBEwkNh3ZA2azCKhKvPz2jQ
+  XEFhYIlpi7pQ2sXkQgW+LuspPsIMuYBbYwSuzaMBFqgaDEyZlPwBqYBSQkDr54wQyxQE+ie/I
+  8sGYJAXuJ6e+vMkPY+hIvv25kgrANJb7PglgmIWAuMfPPHagaa4nrH2axTWAUmoVkxSwkKxYw
+  Mq1itEgqykzPKMlNzMzRNTQw0DU0NNI1AtMWeolVusl6qaW65anFJbqGeonlxXrFlbnJOSl6e
+  aklmxiBEZNScKJsB+O0FemHGCU5mJREeUtEd8QI8SXlp1RmJBZnxBeV5qQWH2KU4eBQkuA9KA
+  2UEyxKTU+tSMvMAcYuTFqCg0dJhHeeFFCat7ggMbc4Mx0idYpRl+PewedzmYVY8vLzUqXEeTe
+  DFAmAFGWU5sGNgKWRS4yyUsK8jAwMDEI8BalFuZklqPKvGMU5GJWEeQ+BTOHJzCuB2/QK6Agm
+  oCOm6KwGOaIkESEl1cBYM9Pc6/bzB9asBt8/PmAw+N3HKZr9ZMHl3lretUJxOnPC5dPPq3m2K
+  p+/oeH526JuWrC3ityUuet3mB6YUTTvq3DW5qaTIsaTPT23n/pmWN83L/33hym54RlR208yxs
+  pd2qYxYa7Pf3HPA04STwNkmXSOWJS/Pxhb92rZehmrFxlzVbje3dJVYinOSDTUYi4qTgQAzFh
+  2KR4DAAA=
 X-Env-Sender: eric.jeong.opensource@diasemi.com
-X-Msg-Ref: server-19.tower-302.messagelabs.com!1555569687!6616895!2
+X-Msg-Ref: server-19.tower-302.messagelabs.com!1555569687!6616895!3
 X-Originating-IP: [193.240.239.45]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.31.5; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 28263 invoked from network); 18 Apr 2019 06:41:28 -0000
+Received: (qmail 28281 invoked from network); 18 Apr 2019 06:41:28 -0000
 Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
   by server-19.tower-302.messagelabs.com with AES128-SHA256 encrypted SMTP; 18 Apr 2019 06:41:28 -0000
 Received: from krsrvapps-01.diasemi.com (10.95.17.50) by
  NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
  14.3.408.0; Thu, 18 Apr 2019 08:41:26 +0200
 Received: by krsrvapps-01.diasemi.com (Postfix, from userid 22095)      id
- BD6DD5F7FB; Thu, 18 Apr 2019 15:41:24 +0900 (KST)
-Message-ID: <878724615d6edf4d1d8960fd4aa9058aaedab026.1555567784.git.eric.jeong.opensource@diasemi.com>
+ C16FC5F7FE; Thu, 18 Apr 2019 15:41:24 +0900 (KST)
+Message-ID: <bbf407bfb94fb10e61a8e6aabbbde62395db3034.1555567784.git.eric.jeong.opensource@diasemi.com>
 In-Reply-To: <cover.1555567784.git.eric.jeong.opensource@diasemi.com>
 References: <cover.1555567784.git.eric.jeong.opensource@diasemi.com>
 From:   Eric Jeong <eric.jeong.opensource@diasemi.com>
-Date:   Thu, 18 Apr 2019 15:09:43 +0900
-Subject: [PATCH V2 1/3] MAINTAINERS: slg51000 updates to the Dialog
- Semiconductor search terms
+Date:   Thu, 18 Apr 2019 15:09:44 +0900
+Subject: [PATCH V2 2/3] dt-bindings: regulator: add document bindings for
+ slg51000
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -79,38 +79,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-This patch adds the slg51000 bindings doc and driver to the Dialog
-Semiconductor support list.
+Add device tree binding information for slg51000 regulator driver.
+Example bindings for SLG51000 are added.
 
 Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
 
 ---
+This patch applies against linux-next and next-20190417
+
 v2: No changes.
 
 
- MAINTAINERS |    2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/regulator/slg51000.txt     |   88 ++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/slg51000.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 349e5d8..ae6b6f9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4632,6 +4632,7 @@ F:	Documentation/devicetree/bindings/mfd/da90*.txt
- F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
- F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
- F:	Documentation/devicetree/bindings/regulator/da92*.txt
-+F:	Documentation/devicetree/bindings/regulator/slg51000.txt
- F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
- F:	Documentation/devicetree/bindings/sound/da[79]*.txt
- F:	drivers/gpio/gpio-da90??.c
-@@ -4647,6 +4648,7 @@ F:	drivers/power/supply/da9052-battery.c
- F:	drivers/power/supply/da91??-*.c
- F:	drivers/regulator/da903x.c
- F:	drivers/regulator/da9???-regulator.[ch]
-+F:	drivers/regulator/slg51000-regulator.[ch]
- F:	drivers/thermal/da90??-thermal.c
- F:	drivers/rtc/rtc-da90??.c
- F:	drivers/video/backlight/da90??_bl.c
+diff --git a/Documentation/devicetree/bindings/regulator/slg51000.txt b/Documentation/devicetree/bindings/regulator/slg51000.txt
+new file mode 100644
+index 0000000..aa0733e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -0,0 +1,88 @@
++* Dialog Semiconductor SLG51000 Voltage Regulator
++
++Required properties:
++- compatible : Should be "dlg,slg51000" for SLG51000
++- reg : Specifies the I2C slave address.
++- xxx-supply: Input voltage supply regulator for ldo3 to ldo7.
++  These entries are required if regulators are enabled for a device.
++  An absence of these properties can cause the regulator registration to fail.
++  If some of input supply is powered through battery or always-on supply then
++  also it is required to have these parameters with proper node handle of always
++  on power supply.
++    vin3-supply: Input supply for ldo3
++    vin4-supply: Input supply for ldo4
++    vin5-supply: Input supply for ldo5
++    vin6-supply: Input supply for ldo6
++    vin7-supply: Input supply for ldo7
++
++Optional properties:
++- interrupt-parent : Specifies the reference to the interrupt controller.
++- interrupts : IRQ line information.
++- dlg,cs-gpios : Specify a valid GPIO for chip select
++
++Sub-nodes:
++- regulators : This node defines the settings for the regulators.
++  The content of the sub-node is defined by the standard binding
++  for regulators; see regulator.txt.
++
++  The SLG51000 regulators are bound using their names listed below:
++    ldo1
++    ldo2
++    ldo3
++    ldo4
++    ldo5
++    ldo6
++    ldo7
++
++Optional properties for regulators:
++- enable-gpios : Specify a valid GPIO for platform control of the regulator.
++
++Example:
++	pmic: slg51000@75 {
++		compatible = "dlg,slg51000";
++		reg = <0x75>;
++
++		regulators {
++			ldo1 {
++			        regulator-name = "ldo1";
++			        regulator-min-microvolt = <2400000>;
++			        regulator-max-microvolt = <3300000>;
++			};
++
++			ldo2 {
++			        regulator-name = "ldo2";
++			        regulator-min-microvolt = <2400000>;
++			        regulator-max-microvolt = <3300000>;
++			};
++
++			ldo3 {
++			        regulator-name = "ldo3";
++			        regulator-min-microvolt = <1200000>;
++			        regulator-max-microvolt = <3750000>;
++			};
++
++			ldo4 {
++			        regulator-name = "ldo4";
++			        regulator-min-microvolt = <1200000>;
++			        regulator-max-microvolt = <3750000>;
++			};
++
++			ldo5 {
++			        regulator-name = "ldo5";
++			        regulator-min-microvolt = <500000>;
++			        regulator-max-microvolt = <1200000>;
++			};
++
++			ldo6 {
++			        regulator-name = "ldo6";
++			        regulator-min-microvolt = <500000>;
++			        regulator-max-microvolt = <1200000>;
++			};
++
++			ldo7 {
++			        regulator-name = "ldo7";
++			        regulator-min-microvolt = <1200000>;
++			        regulator-max-microvolt = <3750000>;
++			};
++		};
++	};
 -- 
 end-of-patch for PATCH V2
 
