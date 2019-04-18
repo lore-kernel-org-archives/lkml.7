@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033F0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A1DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4EA218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3398206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611051;
-	bh=4SMogTcUUiflbvjek8tthCX9GQyV2hMYu9fnvWjPiyY=;
+	s=default; t=1555611055;
+	bh=VqlPx26gYG/Kz7tJvElCH3R3HKtZqAYIL8cnZmXJpbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LIG2iy93GnI+v6C+oR+u6HCLUbeJlI1rWHGn1xMTvmISJM6+HbgYhgWjm8mLhK/K3
-	 2Nzayf5cPjBAXgGT2rcmNVVgJEp5DYueel+2COshXundDohUWcQEUnIbeLMx1dhyc4
-	 lmBaUlo5yq+IgsjeKNiyQIaJfkgjTtOpRYHHqlUQ=
+	b=lZ1MTO43eCz6rnNSBuuEbgKOq+Pj2PjFv2A1qkMA6STFRFqA84Nz8y4dz3dxOZVy7
+	 kVWKG6DbInCBRVdQ3N+IRfsUUeEq0Mf2YycuOhgxAtrGodnjsfQhsDwUw6g4kgl0Hv
+	 ygSqR1TwbJkyN7eM3rriNt4AuJhUMGykIFeEiDHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403859AbfDRSKt (ORCPT
+        id S2404195AbfDRSKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:10:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404164AbfDRSKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:44 -0400
+        id S2403870AbfDRSKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B6721871;
-        Thu, 18 Apr 2019 18:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4055B218AE;
+        Thu, 18 Apr 2019 18:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611043;
-        bh=4SMogTcUUiflbvjek8tthCX9GQyV2hMYu9fnvWjPiyY=;
+        s=default; t=1555611048;
+        bh=VqlPx26gYG/Kz7tJvElCH3R3HKtZqAYIL8cnZmXJpbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EJPhE4jR8NXz9msPYsLQMrklkORNIjUrAGFfsh3tvy+PZhS1vRcoEZ9q8kwdTQ77O
-         2GQvy/aMRTc2T5x/bkA8bMaTqfod3bYDbYhx1qoW6HkvxyTaw1JFZtH6Nlt4Lzcerr
-         R+jrUurJ3qs7ztAyI/GR3CHjQ8QvzfaEJJ8Cb26A=
+        b=rl52wMDPP35GqcVX87rs1ct2nH4FDZ3qhYweJb17Vzjshcd/JqvCpW3NkLQoBd58m
+         UYuHLT22km83vtnHScJfkQ23DWmN6kdJ7IxDYq9+vqspUpAbr912YwETN+wSKmhwmm
+         hEK8OHG9rHHk/J0fNXyVGplRfN7/HF57i6GMAdzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,15 +46,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 38/93] perf build-id: Fix memory leak in print_sdt_events()
-Date:   Thu, 18 Apr 2019 19:57:16 +0200
-Message-Id: <20190418160441.115021756@linuxfoundation.org>
+Subject: [PATCH 5.0 40/93] perf top: Fix error handling in cmd_top()
+Date:   Thu, 18 Apr 2019 19:57:18 +0200
+Message-Id: <20190418160441.470647906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -67,63 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8bde8516893da5a5fdf06121f74d11b52ab92df5 ]
+[ Upstream commit 70c819e4bf1c5f492768b399d898d458ccdad2b6 ]
 
-Detected with gcc's ASan:
-
-  Direct leak of 4356 byte(s) in 120 object(s) allocated from:
-      #0 0x7ff1a2b5a070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x55719aef4814 in build_id_cache__origname util/build-id.c:215
-      #2 0x55719af649b6 in print_sdt_events util/parse-events.c:2339
-      #3 0x55719af66272 in print_events util/parse-events.c:2542
-      #4 0x55719ad1ecaa in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-      #5 0x55719aec745d in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #6 0x55719aec7d1a in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #7 0x55719aec8184 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #8 0x55719aeca41a in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #9 0x7ff1a07ae09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+We should go to the cleanup path, to avoid leaks, detected using gcc's
+ASan.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 40218daea1db ("perf list: Show SDT and pre-cached events")
-Link: http://lkml.kernel.org/r/20190316080556.3075-7-changbin.du@gmail.com
+Link: http://lkml.kernel.org/r/20190316080556.3075-9-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/build-id.c     | 1 +
- tools/perf/util/parse-events.c | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/builtin-top.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 04b1d53e4bf9..1d352621bd48 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -183,6 +183,7 @@ char *build_id_cache__linkname(const char *sbuild_id, char *bf, size_t size)
- 	return bf;
- }
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 9b215007924b..369a3daca1eb 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1622,8 +1622,9 @@ int cmd_top(int argc, const char **argv)
+ 	annotation_config__init();
  
-+/* The caller is responsible to free the returned buffer. */
- char *build_id_cache__origname(const char *sbuild_id)
- {
- 	char *linkname;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 9afd0d2beef5..03860313313c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2342,6 +2342,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
- 				printf("  %-50s [%s]\n", buf, "SDT event");
- 				free(buf);
- 			}
-+			free(path);
- 		} else
- 			printf("  %-50s [%s]\n", nd->s, "SDT event");
- 		if (nd2) {
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
+-	if (symbol__init(NULL) < 0)
+-		return -1;
++	status = symbol__init(NULL);
++	if (status < 0)
++		goto out_delete_evlist;
+ 
+ 	sort__setup_elide(stdout);
+ 
 -- 
 2.19.1
 
