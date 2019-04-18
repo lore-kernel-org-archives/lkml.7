@@ -2,105 +2,117 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A43C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F29C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738042087F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555627249;
-	bh=YxHaJ+QZW/DEQVe9hRwt+at2rvp/ryoBPlAmgbd1TuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DXA7UFB4xRzaB6WGNGpvbFkXyAFCICTAKgUWGIM6WlG2QWtG08cR89LtAL840vHN4
-	 fSOR5HQ8+jcbaqKjwuX08SS6VA1hxybZin0svJRUOS87nXbqEDeyvg14t0xnad7yMr
-	 MxHBD3Lp/mMz+UjBJJBmpBnyv32v0X1cGauK0RNs=
+	by mail.kernel.org (Postfix) with ESMTP id 16D7920693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 22:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfDRWks (ORCPT
+        id S1726289AbfDRWo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 18:40:48 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:33338 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfDRWkr (ORCPT
+        Thu, 18 Apr 2019 18:44:59 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39427 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbfDRWo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 18:40:47 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id E2FC519E1;
-        Thu, 18 Apr 2019 22:40:46 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 15:40:45 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v3] proc/sysctl: add shared variables for range check
-Message-Id: <20190418154045.2ad0bd50e73a6e71c0fac768@linux-foundation.org>
-In-Reply-To: <20190417131531.9525-1-mcroce@redhat.com>
-References: <20190417131531.9525-1-mcroce@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Thu, 18 Apr 2019 18:44:58 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hHFlT-0000Hv-O2; Fri, 19 Apr 2019 00:44:19 +0200
+Date:   Fri, 19 Apr 2019 00:44:17 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: Re: [patch V2 01/29] tracing: Cleanup stack trace code
+In-Reply-To: <20190418181938.2e2a9a04@gandalf.local.home>
+Message-ID: <alpine.DEB.2.21.1904190040510.3174@nanos.tec.linutronix.de>
+References: <20190418084119.056416939@linutronix.de>        <20190418084253.142712304@linutronix.de> <20190418181938.2e2a9a04@gandalf.local.home>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 15:15:31 +0200 Matteo Croce <mcroce@redhat.com> wrote:
-
-> In the sysctl code the proc_dointvec_minmax() function is often used to
-> validate the user supplied value between an allowed range. This function
-> uses the extra1 and extra2 members from struct ctl_table as minimum and
-> maximum allowed value.
+On Thu, 18 Apr 2019, Steven Rostedt wrote:
+> On Thu, 18 Apr 2019 10:41:20 +0200
+> Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> On sysctl handler declaration, in every source file there are some readonly
-> variables containing just an integer which address is assigned to the
-> extra1 and extra2 members, so the sysctl range is enforced.
+> > @@ -412,23 +404,20 @@ stack_trace_sysctl(struct ctl_table *tab
+> >  		   void __user *buffer, size_t *lenp,
+> >  		   loff_t *ppos)
+> >  {
+> > -	int ret;
+> > +	int ret, was_enabled;
 > 
-> The special values 0, 1 and INT_MAX are very often used as range boundary,
-> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
-> different source files:
+> One small nit. Could this be:
 > 
->     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
->     245
+> 	int was_enabled;
+> 	int ret;
 > 
-> This patch adds three const variables for the most commonly used values,
-> and use them instead of creating a local one for every object file.
+> I prefer only joining variables that are related on the same line.
+> Makes it look cleaner IMO.
+
+If you wish so. To me it's waste of screen space :)
+
+> >  
+> >  	mutex_lock(&stack_sysctl_mutex);
+> > +	was_enabled = !!stack_tracer_enabled;
+> >  
 > 
-> ...
->
-> --- a/arch/s390/appldata/appldata_base.c
-> +++ b/arch/s390/appldata/appldata_base.c
-> @@ -220,15 +220,13 @@ appldata_timer_handler(struct ctl_table *ctl, int write,
->  			   void __user *buffer, size_t *lenp, loff_t *ppos)
->  {
->  	int timer_active = appldata_timer_active;
-> -	int zero = 0;
-> -	int one = 1;
->  	int rc;
->  	struct ctl_table ctl_entry = {
->  		.procname	= ctl->procname,
->  		.data		= &timer_active,
->  		.maxlen		= sizeof(int),
-> -		.extra1		= &zero,
-> -		.extra2		= &one,
-> +		.extra1		= (void *)&sysctl_zero,
-> +		.extra2		= (void *)&sysctl_one,
->  	};
+> Bah, not sure why I didn't do it this way to begin with. I think I
+> copied something else that couldn't do it this way for some reason and
+> didn't put any brain power behind the copy. :-/ But that was back in
+> 2008 so I blame it on being "young and stupid" ;-)
 
-Still not liking the casts :(
+The young part is gone for sure :)
 
-Did we decide whether making extra1&2 const void*'s was feasible?
+> Other then the above nit and removing the unneeded +1 in max_entries:
 
-I'm wondering if it would be better to do
+s/+1/-1/
 
-extern const int sysctl_zero;
-/* comment goes here */
-#define SYSCTL_ZERO ((void *)&sysctl_zero)
+Thanks,
 
-and then use SYSCTL_ZERO everywhere.  That centralizes the ugliness and
-makes it easier to switch over if/when extra1&2 are constified.
-
-But it's all a bit sad and lame :( 
+	tglx
