@@ -2,93 +2,79 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7E4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F22CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5846A217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C94B217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 11:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388866AbfDRL20 (ORCPT
+        id S2388814AbfDRL3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 07:28:26 -0400
-Received: from foss.arm.com ([217.140.101.70]:59892 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388535AbfDRL20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 07:28:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7550480D;
-        Thu, 18 Apr 2019 04:28:25 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 772D63F59C;
-        Thu, 18 Apr 2019 04:28:23 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 12:28:18 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Boyang Zhou <zhouby_cn@126.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, haozhu@nudt.edu.cn,
-        linux@dominikbrodowski.net, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        arnd@arndb.de, viro@zeniv.linux.org.uk, akpm@linux-foundation.org
-Subject: Re: [PATCH] The patch solves =?utf-8?Q?the?=
- =?utf-8?Q?_type_error__of_the_parameter_=E2=80=9Coff?= =?utf-8?B?4oCd?= in
- syscall mmap on the ARM64 platform.
-Message-ID: <20190418112818.GA31923@lakrids.cambridge.arm.com>
-References: <1555504525-17962-1-git-send-email-zhouby_cn@126.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1555504525-17962-1-git-send-email-zhouby_cn@126.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Thu, 18 Apr 2019 07:29:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42558 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728074AbfDRL3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 07:29:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ABCCFAE60;
+        Thu, 18 Apr 2019 11:29:46 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH] livepatch: Convert error about unsupported reliable stacktrace into a warning
+Date:   Thu, 18 Apr 2019 13:29:36 +0200
+Message-Id: <20190418112936.13295-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding linux-arch and relevant folk]
+The commit d0807da78e11d46f ("livepatch: Remove immediate feature") caused
+that any livepatch was refused when reliable stacktraces were not supported
+on the given architecture.
 
-On Wed, Apr 17, 2019 at 08:35:25PM +0800, Boyang Zhou wrote:
-> The error information is that “offset value too large for defined data type”.
-> Reason:
-> On the X86 platform, the data type of “off" is unsigned long; but on the ARM64 platform, the data type is defined as off_t, and off_t is by type long instead of unsigned long.
-> When the off right shifts in the function “sys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT)"on ARM64, high address of off is filled with sign bit 1instead of 0.
-> In our case, we mmap GPU doorbell on both platform. On the x86 platform, the value of off is f009c00000000000, after shift the value becomes f009c00000000; while on the ARM64, the value of off changes from ed35c00000000000 to fffed35c00000000. This value is treated as unsigned long in later functions. So it is too big for off and the error happened.
-> We have tested the patchs in Huawei ARM64 server with a couples of AMD GPUs.
+The limitation is too strong. User space processes are safely migrated
+even when entering or leaving the kernel. Kthreads transition would
+need to get forced. But it is safe when:
 
-It looks like the generic mmap uses unsigned long, as do sparc and x86.
+   + The livepatch does not change the semantic of the code.
+   + Callbacks do not depend on a safely finished transition.
 
-However, arm64, microblase, powerpc and riscv all use off_t.
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/livepatch/core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Should those all be using unsigned long? If so, that seems like it
-should be a treewide cleanup.
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index eb0ee10a1981..14f33ab6c583 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -1003,11 +1003,10 @@ int klp_enable_patch(struct klp_patch *patch)
+ 		return -ENODEV;
+ 
+ 	if (!klp_have_reliable_stack()) {
+-		pr_err("This architecture doesn't have support for the livepatch consistency model.\n");
+-		return -EOPNOTSUPP;
++		pr_warn("This architecture doesn't have support for the livepatch consistency model.\n");
++		pr_warn("The livepatch transition may never complete.\n");
+ 	}
+ 
+-
+ 	mutex_lock(&klp_mutex);
+ 
+ 	ret = klp_init_patch_early(patch);
+-- 
+2.16.4
 
-Similar applies to pgoff for mmap2.
-
-Thanks,
-Mark.
-
-> 
-> Signed-off-by: Boyang Zhou <zhouby_cn@126.com>
-> ---
->  arch/arm64/kernel/sys.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-> index b44065f..6f91e81 100644
-> --- a/arch/arm64/kernel/sys.c
-> +++ b/arch/arm64/kernel/sys.c
-> @@ -31,7 +31,7 @@
->  
->  SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
->  		unsigned long, prot, unsigned long, flags,
-> -		unsigned long, fd, off_t, off)
-> +		unsigned long, fd, unsigned long, off)
->  {
->  	if (offset_in_page(off) != 0)
->  		return -EINVAL;
-> -- 
-> 2.7.4
-> 
