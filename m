@@ -2,58 +2,54 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFE7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A089DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27354218CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AD1218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610562;
-	bh=f2h+GFBI0xzS4I50C/hXuKOWs4LICBTtphFSSmyyuTM=;
+	s=default; t=1555610565;
+	bh=4hGNxzcFmBJluvLlOhgi5yAixVmolzW5Xa0IA3Pq6i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t022n71AKsTTdDrNU9zBDhWrZ1uQ4mrzDhZ6XupHx5gN5clEzUx5Ivy+YTDs6GCdo
-	 N7K0ypJIe/QI86haZ27UvN8IFmVX5RonFSw2x1igZlVVKx6sgClaqOuNEkG0UeiRX4
-	 Q3nL3k8vYEMJX/eDG2777DMy6u30YhmOjvK7auF4=
+	b=ZxjBAIES7cuIFzF6myCFoKBUDOc+hwgjcrVU4S5MT5xDXaTf3sktX0BQN+L/8btb4
+	 AIeuk6P3AhY+X6NT4cz30Mae2WQgFdrTlhht/0djjcTEkonY2HxCFreEU5CCWkhq8+
+	 MTMP3l3+obvlcIWgNRueVZaOhNB2O+hz55AjRzAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390787AbfDRSCk (ORCPT
+        id S2390402AbfDRSCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390770AbfDRSCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:36 -0400
+        id S2390786AbfDRSCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103A921871;
-        Thu, 18 Apr 2019 18:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62058218A1;
+        Thu, 18 Apr 2019 18:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610554;
-        bh=f2h+GFBI0xzS4I50C/hXuKOWs4LICBTtphFSSmyyuTM=;
+        s=default; t=1555610559;
+        bh=4hGNxzcFmBJluvLlOhgi5yAixVmolzW5Xa0IA3Pq6i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/YSIZA8AKZWg478ixpfCH4e8++LQ/ZL49XGmGFx8Y3D/gY9o93mKJJV8ad9pbMWL
-         S1R0BHvTad1wXbauYfHhyafOIkbaTc6RUPzFju9/shSLuBTcLl9hyBXxH8rVsfBY7C
-         MLhDJcyGHDBtgYh/a1OWRfqisqh+1dLDgLHjXbfc=
+        b=AK+dOu2lzwqwpv6tKLj+XvyJ6O7ibPf9mpFEFGXJPw30dJnoQHJ4J4mlhgtyV6NAa
+         /5ieovu+OcYG393r4Ns4N1vbIqwmufq3YDdR1WFYK7WC2Tug41vbFMHYN4Wmrl0i2R
+         eryAl6vCKyHZqgaOmXkp5X3JbrDb8XDG66weAarI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+fb731ca573367b7f6564@syzkaller.appspotmail.com,
-        syzbot+a13e5ead792d6df37818@syzkaller.appspotmail.com,
-        syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 106/110] bpf: fix use after free in bpf_evict_inode
-Date:   Thu, 18 Apr 2019 19:57:35 +0200
-Message-Id: <20190418160447.588749851@linuxfoundation.org>
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Alex Estrin <alex.estrin@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 108/110] IB/hfi1: Failed to drain send queue when QP is put into error state
+Date:   Thu, 18 Apr 2019 19:57:37 +0200
+Message-Id: <20190418160447.737038054@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -66,177 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1da6c4d9140cb7c13e87667dc4e1488d6c8fc10f ]
+From: Kaike Wan <kaike.wan@intel.com>
 
-syzkaller was able to generate the following UAF in bpf:
+commit 662d66466637862ef955f7f6e78a286d8cf0ebef upstream.
 
-  BUG: KASAN: use-after-free in lookup_last fs/namei.c:2269 [inline]
-  BUG: KASAN: use-after-free in path_lookupat.isra.43+0x9f8/0xc00 fs/namei.c:2318
-  Read of size 1 at addr ffff8801c4865c47 by task syz-executor2/9423
+When a QP is put into error state, all pending requests in the send work
+queue should be drained. The following sequence of events could lead to a
+failure, causing a request to hang:
 
-  CPU: 0 PID: 9423 Comm: syz-executor2 Not tainted 4.20.0-rc1-next-20181109+
-  #110
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-  Google 01/01/2011
-  Call Trace:
-    __dump_stack lib/dump_stack.c:77 [inline]
-    dump_stack+0x244/0x39d lib/dump_stack.c:113
-    print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
-    kasan_report_error mm/kasan/report.c:354 [inline]
-    kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
-    __asan_report_load1_noabort+0x14/0x20 mm/kasan/report.c:430
-    lookup_last fs/namei.c:2269 [inline]
-    path_lookupat.isra.43+0x9f8/0xc00 fs/namei.c:2318
-    filename_lookup+0x26a/0x520 fs/namei.c:2348
-    user_path_at_empty+0x40/0x50 fs/namei.c:2608
-    user_path include/linux/namei.h:62 [inline]
-    do_mount+0x180/0x1ff0 fs/namespace.c:2980
-    ksys_mount+0x12d/0x140 fs/namespace.c:3258
-    __do_sys_mount fs/namespace.c:3272 [inline]
-    __se_sys_mount fs/namespace.c:3269 [inline]
-    __x64_sys_mount+0xbe/0x150 fs/namespace.c:3269
-    do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x457569
-  Code: fd b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-  48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-  ff 0f 83 cb b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-  RSP: 002b:00007fde6ed96c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000457569
-  RDX: 0000000020000040 RSI: 0000000020000000 RDI: 0000000000000000
-  RBP: 000000000072bf00 R08: 0000000020000340 R09: 0000000000000000
-  R10: 0000000000200000 R11: 0000000000000246 R12: 00007fde6ed976d4
-  R13: 00000000004c2c24 R14: 00000000004d4990 R15: 00000000ffffffff
+(1) The QP builds a packet and tries to send through SDMA engine.
+    However, PIO engine is still busy. Consequently, this packet is put on
+    the QP's tx list and the QP is put on the PIO waiting list. The field
+    qp->s_flags is set with HFI1_S_WAIT_PIO_DRAIN;
 
-  Allocated by task 9424:
-    save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-    set_track mm/kasan/kasan.c:460 [inline]
-    kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
-    __do_kmalloc mm/slab.c:3722 [inline]
-    __kmalloc_track_caller+0x157/0x760 mm/slab.c:3737
-    kstrdup+0x39/0x70 mm/util.c:49
-    bpf_symlink+0x26/0x140 kernel/bpf/inode.c:356
-    vfs_symlink+0x37a/0x5d0 fs/namei.c:4127
-    do_symlinkat+0x242/0x2d0 fs/namei.c:4154
-    __do_sys_symlink fs/namei.c:4173 [inline]
-    __se_sys_symlink fs/namei.c:4171 [inline]
-    __x64_sys_symlink+0x59/0x80 fs/namei.c:4171
-    do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+(2) The QP is put into error state by the user application and
+    notify_error_qp() is called, which removes the QP from the PIO waiting
+    list and the packet from the QP's tx list. In addition, qp->s_flags is
+    cleared of RVT_S_ANY_WAIT_IO bits, which does not include
+    HFI1_S_WAIT_PIO_DRAIN bit;
 
-  Freed by task 9425:
-    save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-    set_track mm/kasan/kasan.c:460 [inline]
-    __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
-    kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
-    __cache_free mm/slab.c:3498 [inline]
-    kfree+0xcf/0x230 mm/slab.c:3817
-    bpf_evict_inode+0x11f/0x150 kernel/bpf/inode.c:565
-    evict+0x4b9/0x980 fs/inode.c:558
-    iput_final fs/inode.c:1550 [inline]
-    iput+0x674/0xa90 fs/inode.c:1576
-    do_unlinkat+0x733/0xa30 fs/namei.c:4069
-    __do_sys_unlink fs/namei.c:4110 [inline]
-    __se_sys_unlink fs/namei.c:4108 [inline]
-    __x64_sys_unlink+0x42/0x50 fs/namei.c:4108
-    do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+(3) The hfi1_schdule_send() function is called to drain the QP's send
+    queue. Subsequently, hfi1_do_send() is called. Since the flag bit
+    HFI1_S_WAIT_PIO_DRAIN is set in qp->s_flags, hfi1_send_ok() fails.  As
+    a result, hfi1_do_send() bails out without draining any request from
+    the send queue;
 
-In this scenario path lookup under RCU is racing with the final
-unlink in case of symlinks. As Linus puts it in his analysis:
+(4) The PIO engine completes the sending and tries to wake up any QP on
+    its waiting list. But the QP has been removed from the PIO waiting
+    list and therefore is kept in sleep forever.
 
-  [...] We actually RCU-delay the inode freeing itself, but
-  when we do the final iput(), the "evict()" function is called
-  synchronously. Now, the simple fix would seem to just RCU-delay
-  the kfree() of the symlink data in bpf_evict_inode(). Maybe
-  that's the right thing to do. [...]
+The fix is to clear qp->s_flags of HFI1_S_ANY_WAIT_IO bits in step (2).
+HFI1_S_ANY_WAIT_IO includes RVT_S_ANY_WAIT_IO and HFI1_S_WAIT_PIO_DRAIN.
 
-Al suggested to piggy-back on the ->destroy_inode() callback in
-order to implement RCU deferral there which can then kfree() the
-inode->i_link eventually right before putting inode back into
-inode cache. By reusing free_inode_nonrcu() from there we can
-avoid the need for our own inode cache and just reuse generic
-one as we currently do.
+Fixes: 2e2ba09e48b7 ("IB/rdmavt, IB/hfi1: Create device dependent s_flags")
+Cc: <stable@vger.kernel.org> # 4.19.x+
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Alex Estrin <alex.estrin@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-And in-fact on top of all this we should just get rid of the
-bpf_evict_inode() entirely. This means truncate_inode_pages_final()
-and clear_inode() will then simply be called by the fs core via
-evict(). Dropping the reference should really only be done when
-inode is unhashed and nothing reachable anymore, so it's better
-also moved into the final ->destroy_inode() callback.
 
-Fixes: 0f98621bef5d ("bpf, inode: add support for symlinks and fix mtime/ctime")
-Reported-by: syzbot+fb731ca573367b7f6564@syzkaller.appspotmail.com
-Reported-by: syzbot+a13e5ead792d6df37818@syzkaller.appspotmail.com
-Reported-by: syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Analyzed-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
-Link: https://lore.kernel.org/lkml/0000000000006946d2057bbd0eef@google.com/T/
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- kernel/bpf/inode.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/hfi1/qp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index 2ada5e21dfa6..4a8f390a2b82 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -554,19 +554,6 @@ struct bpf_prog *bpf_prog_get_type_path(const char *name, enum bpf_prog_type typ
- }
- EXPORT_SYMBOL(bpf_prog_get_type_path);
- 
--static void bpf_evict_inode(struct inode *inode)
--{
--	enum bpf_type type;
--
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
--
--	if (S_ISLNK(inode->i_mode))
--		kfree(inode->i_link);
--	if (!bpf_inode_type(inode, &type))
--		bpf_any_put(inode->i_private, type);
--}
--
- /*
-  * Display the mount options in /proc/mounts.
-  */
-@@ -579,11 +566,28 @@ static int bpf_show_options(struct seq_file *m, struct dentry *root)
- 	return 0;
- }
- 
-+static void bpf_destroy_inode_deferred(struct rcu_head *head)
-+{
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
-+	enum bpf_type type;
-+
-+	if (S_ISLNK(inode->i_mode))
-+		kfree(inode->i_link);
-+	if (!bpf_inode_type(inode, &type))
-+		bpf_any_put(inode->i_private, type);
-+	free_inode_nonrcu(inode);
-+}
-+
-+static void bpf_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, bpf_destroy_inode_deferred);
-+}
-+
- static const struct super_operations bpf_super_ops = {
- 	.statfs		= simple_statfs,
- 	.drop_inode	= generic_delete_inode,
- 	.show_options	= bpf_show_options,
--	.evict_inode	= bpf_evict_inode,
-+	.destroy_inode	= bpf_destroy_inode,
- };
- 
- enum {
--- 
-2.19.1
-
+--- a/drivers/infiniband/hw/hfi1/qp.c
++++ b/drivers/infiniband/hw/hfi1/qp.c
+@@ -784,7 +784,7 @@ void notify_error_qp(struct rvt_qp *qp)
+ 		write_seqlock(lock);
+ 		if (!list_empty(&priv->s_iowait.list) &&
+ 		    !(qp->s_flags & RVT_S_BUSY)) {
+-			qp->s_flags &= ~RVT_S_ANY_WAIT_IO;
++			qp->s_flags &= ~HFI1_S_ANY_WAIT_IO;
+ 			list_del_init(&priv->s_iowait.list);
+ 			priv->s_iowait.lock = NULL;
+ 			rvt_put_qp(qp);
 
 
