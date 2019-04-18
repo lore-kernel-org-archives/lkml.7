@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F22C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D57206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2615A21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611182;
-	bh=+h4lgpY+l1qQr/JlzD4bm+Ct6ycPXUYCkERUSUk+iOc=;
+	s=default; t=1555611187;
+	bh=5baeiWPity8RZOHQWtYXZdv2SBsImonly71ywxIiovA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rGd+/aPWRa9DXCflerHF8sOvhY4E7XUTcYgfkW7BRvjhf7BbRKYWnYZ58HoAOt0q3
-	 bFxc4q6eaBtLndJsgRoop6N5zxy1SdC1U5ev72+/5KeDwE1O51vaADLhuOrIvlzIMX
-	 vqUa153FYgC9X4t0ynCZndkdLR653T9nhOwjuoXw=
+	b=lr9RaDCTyXPsT6CJdvwEh8fae2BrHbDvW74EKVtVKt/1MA+0i6JxfX0Zd3IAwswyH
+	 gjY0V8Siz2r6I690zfgqvhXcE7VX3Im53EQssyoncTSE27S/oedKpZTGnETXHi1CDy
+	 2O7SB6Jl9JERgi5z4ZHq9fRak2tgHEaqBAQS8m5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391575AbfDRSNB (ORCPT
+        id S2391879AbfDRSNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:13:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45570 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403906AbfDRSM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:12:57 -0400
+        id S2390416AbfDRSNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:13:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA09A21871;
-        Thu, 18 Apr 2019 18:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D232F214DA;
+        Thu, 18 Apr 2019 18:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611176;
-        bh=+h4lgpY+l1qQr/JlzD4bm+Ct6ycPXUYCkERUSUk+iOc=;
+        s=default; t=1555611181;
+        bh=5baeiWPity8RZOHQWtYXZdv2SBsImonly71ywxIiovA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EjB7lKc+VUUwlIA/AlXvpOLnX4OGorC2nCuuQGhvp4Fk7YvZPCGLEA9313+AvMgNF
-         1neEUKVwuFwxnGvUt1Swe4na0VFTVeeoaYuBlOKbkApJ8OgLqDOjaObU24pq4+i2y8
-         eDNZffvfxmRrH4qpscYvLRCmjvCJhzbtaflxAd9Y=
+        b=b72Waq6Yw6+EZMrnKTEHNECggc80sjodRmMTFQrt8aVianamOoKF+hT8JD1HuUFUL
+         ILe2a+FpGlNROv3/NG6zNZMHdOs5T04FaDiGeavkIdgIeZp+mAktSK4RaYowJ7b/ta
+         RzL6dz9b/gGtqssegEjMUcXRgQOuY3omkQbKm/Gk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jiqun Li <jiqun.li@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 87/93] rxrpc: Fix client call connect/disconnect race
-Date:   Thu, 18 Apr 2019 19:58:05 +0200
-Message-Id: <20190418160445.618718697@linuxfoundation.org>
+Subject: [PATCH 5.0 89/93] f2fs: fix to use kvfree instead of kzfree
+Date:   Thu, 18 Apr 2019 19:58:07 +0200
+Message-Id: <20190418160445.763852636@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -61,147 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 930c9f9125c85b5134b3e711bc252ecc094708e3 ]
+[ Upstream commit 2a6a7e722e7a78d774ce02b847c5b183a3ff2672 ]
 
-rxrpc_disconnect_client_call() reads the call's connection ID protocol
-value (call->cid) as part of that function's variable declarations.  This
-is bad because it's not inside the locked section and so may race with
-someone granting use of the channel to the call.
+As Jiqun Li reported in bugzilla:
 
-This manifests as an assertion failure (see below) where the call in the
-presumed channel (0 because call->cid wasn't set when we read it) doesn't
-match the call attached to the channel we were actually granted (if 1, 2 or
-3).
+https://bugzilla.kernel.org/show_bug.cgi?id=202747
 
-Fix this by moving the read and dependent calculations inside of the
-channel_lock section.  Also, only set the channel number and pointer
-variables if cid is not zero (ie. unset).
+System can panic due to using wrong allocate/free function pair
+in xattr interface:
+- use kvmalloc to allocate memory
+- use kzfree to free memory
 
-This problem can be induced by injecting an occasional error in
-rxrpc_wait_for_channel() before the call to schedule().
+Let's fix to use kvfree instead of kzfree, BTW, we are safe to
+get rid of kzfree, since there is no such confidential data stored
+as xattr, we don't need to zero it before free memory.
 
-Make two further changes also:
-
- (1) Add a trace for wait failure in rxrpc_connect_call().
-
- (2) Drop channel_lock before BUG'ing in the case of the assertion failure.
-
-The failure causes a trace akin to the following:
-
-rxrpc: Assertion failed - 18446612685268945920(0xffff8880beab8c00) == 18446612685268621312(0xffff8880bea69800) is false
-------------[ cut here ]------------
-kernel BUG at net/rxrpc/conn_client.c:824!
-...
-RIP: 0010:rxrpc_disconnect_client_call+0x2bf/0x99d
-...
-Call Trace:
- rxrpc_connect_call+0x902/0x9b3
- ? wake_up_q+0x54/0x54
- rxrpc_new_client_call+0x3a0/0x751
- ? rxrpc_kernel_begin_call+0x141/0x1bc
- ? afs_alloc_call+0x1b5/0x1b5
- rxrpc_kernel_begin_call+0x141/0x1bc
- afs_make_call+0x20c/0x525
- ? afs_alloc_call+0x1b5/0x1b5
- ? __lock_is_held+0x40/0x71
- ? lockdep_init_map+0xaf/0x193
- ? lockdep_init_map+0xaf/0x193
- ? __lock_is_held+0x40/0x71
- ? yfs_fs_fetch_data+0x33b/0x34a
- yfs_fs_fetch_data+0x33b/0x34a
- afs_fetch_data+0xdc/0x3b7
- afs_read_dir+0x52d/0x97f
- afs_dir_iterate+0xa0/0x661
- ? iterate_dir+0x63/0x141
- iterate_dir+0xa2/0x141
- ksys_getdents64+0x9f/0x11b
- ? filldir+0x111/0x111
- ? do_syscall_64+0x3e/0x1a0
- __x64_sys_getdents64+0x16/0x19
- do_syscall_64+0x7d/0x1a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 45025bceef17 ("rxrpc: Improve management and caching of client connection objects")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed")
+Reported-by: Jiqun Li <jiqun.li@unisoc.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  2 ++
- net/rxrpc/conn_client.c      | 20 +++++++++++++++-----
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ fs/f2fs/xattr.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 5b50fe4906d2..7b60fd186cfe 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -76,6 +76,7 @@ enum rxrpc_client_trace {
- 	rxrpc_client_chan_disconnect,
- 	rxrpc_client_chan_pass,
- 	rxrpc_client_chan_unstarted,
-+	rxrpc_client_chan_wait_failed,
- 	rxrpc_client_cleanup,
- 	rxrpc_client_count,
- 	rxrpc_client_discard,
-@@ -276,6 +277,7 @@ enum rxrpc_tx_point {
- 	EM(rxrpc_client_chan_disconnect,	"ChDisc") \
- 	EM(rxrpc_client_chan_pass,		"ChPass") \
- 	EM(rxrpc_client_chan_unstarted,		"ChUnst") \
-+	EM(rxrpc_client_chan_wait_failed,	"ChWtFl") \
- 	EM(rxrpc_client_cleanup,		"Clean ") \
- 	EM(rxrpc_client_count,			"Count ") \
- 	EM(rxrpc_client_discard,		"Discar") \
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index 5cf6d9f4761d..83797b3949e2 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -704,6 +704,7 @@ int rxrpc_connect_call(struct rxrpc_sock *rx,
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index 73b92985198b..6b6fe6431a64 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -347,7 +347,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 	*base_addr = txattr_addr;
+ 	return 0;
+ out:
+-	kzfree(txattr_addr);
++	kvfree(txattr_addr);
+ 	return err;
+ }
  
- 	ret = rxrpc_wait_for_channel(call, gfp);
- 	if (ret < 0) {
-+		trace_rxrpc_client(call->conn, ret, rxrpc_client_chan_wait_failed);
- 		rxrpc_disconnect_client_call(call);
- 		goto out;
+@@ -390,7 +390,7 @@ static int read_all_xattrs(struct inode *inode, struct page *ipage,
+ 	*base_addr = txattr_addr;
+ 	return 0;
+ fail:
+-	kzfree(txattr_addr);
++	kvfree(txattr_addr);
+ 	return err;
+ }
+ 
+@@ -517,7 +517,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
  	}
-@@ -774,16 +775,22 @@ static void rxrpc_set_client_reap_timer(struct rxrpc_net *rxnet)
-  */
- void rxrpc_disconnect_client_call(struct rxrpc_call *call)
- {
--	unsigned int channel = call->cid & RXRPC_CHANNELMASK;
- 	struct rxrpc_connection *conn = call->conn;
--	struct rxrpc_channel *chan = &conn->channels[channel];
-+	struct rxrpc_channel *chan = NULL;
- 	struct rxrpc_net *rxnet = conn->params.local->rxnet;
-+	unsigned int channel = -1;
-+	u32 cid;
+ 	error = size;
+ out:
+-	kzfree(base_addr);
++	kvfree(base_addr);
+ 	return error;
+ }
  
-+	spin_lock(&conn->channel_lock);
-+
-+	cid = call->cid;
-+	if (cid) {
-+		channel = cid & RXRPC_CHANNELMASK;
-+		chan = &conn->channels[channel];
-+	}
- 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
- 	call->conn = NULL;
- 
--	spin_lock(&conn->channel_lock);
--
- 	/* Calls that have never actually been assigned a channel can simply be
- 	 * discarded.  If the conn didn't get used either, it will follow
- 	 * immediately unless someone else grabs it in the meantime.
-@@ -807,7 +814,10 @@ void rxrpc_disconnect_client_call(struct rxrpc_call *call)
- 		goto out;
+@@ -563,7 +563,7 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
  	}
+ 	error = buffer_size - rest;
+ cleanup:
+-	kzfree(base_addr);
++	kvfree(base_addr);
+ 	return error;
+ }
  
--	ASSERTCMP(rcu_access_pointer(chan->call), ==, call);
-+	if (rcu_access_pointer(chan->call) != call) {
-+		spin_unlock(&conn->channel_lock);
-+		BUG();
-+	}
+@@ -694,7 +694,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 	if (!error && S_ISDIR(inode->i_mode))
+ 		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
+ exit:
+-	kzfree(base_addr);
++	kvfree(base_addr);
+ 	return error;
+ }
  
- 	/* If a client call was exposed to the world, we save the result for
- 	 * retransmission.
 -- 
 2.19.1
 
