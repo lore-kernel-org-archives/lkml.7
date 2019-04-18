@@ -2,79 +2,79 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD22BC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1CC282DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736A2217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEF4217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbfDRCRv (ORCPT
+        id S2387903AbfDRCTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 22:17:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6640 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729189AbfDRCRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 22:17:50 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6AEFC95D5B0A47E8B65E;
-        Thu, 18 Apr 2019 10:17:47 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Thu, 18 Apr 2019
- 10:17:40 +0800
-Subject: Re: [PATCH] ipvs:set sock send/receive buffer correctly
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <wensong@linux-vs.org>,
-        <horms@verge.net.au>, <ja@ssi.bg>, <pablo@netfilter.org>,
-        <kadlec@blackhole.kfki.hu>, <fw@strlen.de>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <lvs-devel@vger.kernel.org>,
-        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>, <liujie165@huawei.com>
-References: <501e5522-1d69-7c67-a1bc-fd8502d3b5d1@huawei.com>
- <60c11e72-99eb-fcde-e130-a35ecdc1d2d1@gmail.com>
- <bbfcccf4-626b-1029-62a6-a82b79edacbb@huawei.com>
- <a8ed41f3-1576-cbf6-907a-f501b3df189e@gmail.com>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <99e42cf0-bb45-cc88-a6f6-aff1098745dd@huawei.com>
-Date:   Thu, 18 Apr 2019 10:17:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 17 Apr 2019 22:19:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36184 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729189AbfDRCTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 22:19:17 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 931513073AFE;
+        Thu, 18 Apr 2019 02:19:17 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 674B65D9CC;
+        Thu, 18 Apr 2019 02:19:09 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 10:19:04 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
+ BIO_MAX_PAGES
+Message-ID: <20190418021903.GB9520@ming.t460p>
+References: <20190417115207.30202-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <a8ed41f3-1576-cbf6-907a-f501b3df189e@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417115207.30202-1-pbonzini@redhat.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Apr 2019 02:19:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paolo,
 
+On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
+> Because bio_kmalloc uses inline iovecs, the limit on the number of entries
+> is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
+> in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
+> to report a DMA overrun.
 
-On 2019/4/18 10:02, Eric Dumazet wrote:
-> 
-> 
-> On 04/17/2019 06:45 PM, linmiaohe wrote:
->>
-> 
->> In fact, I just implemented this function with reference to
->> sock_setsockopt(). When val * 2 overflow, we will set the
->> buffer as SOCK_MIN_SNDBUF, just as sock_setsockopt() do.
->>
-> 
-> I do not think so.
-> 
-> Please check latest linux kernel, not some old version.
-> 
-> commit 4057765f2dee79cb92f9067909477303360be8d3    sock: consistent handling of extreme SO_SNDBUF/SO_RCVBUF values
-> 
-> .
-> 
+BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
+can't hold all user space request, new bio will be allocated and appended
+to the passthrough request if queue limits aren't reached.
 
-Thank you for your patience, you are right. My version is not the newest.
-I will update my patch according to the newest version. Thanks again.
+So I understand SG_IO request shouldn't be truncated because of
+BIO_MAX_PAGES, or could you explain it in a bit detail or provide
+a reproducer?
 
+> 
+> Note that if the argument to iov_iter_npages were changed to UIO_MAXIOV,
+> we would still truncate SG_IO requests beyond UIO_MAXIOV pages.  Changing
+> it to UIO_MAXIOV + 1 instead ensures that bio_kmalloc notices that the
+> request is too big and blocks it.
+
+We should pass UIO_MAXIOV instead of UIO_MAXIOV + 1, otherwise bio_kmalloc()
+will fail. Otherwise, the patch looks fine, but shouldn't be a fix if my
+above analysis is correct.
+
+Thanks,
+Ming
