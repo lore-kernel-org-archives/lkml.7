@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69D1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F25C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98A92186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AD521905
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611120;
-	bh=Ncp2/h1kQzdBhWbJQxxcy4It+rI93OTMLtf1GZTw62A=;
+	s=default; t=1555611122;
+	bh=PbWwUvTQB9iI+c8RDgvb0c8UcjH3eYuNVaN7tdJzttU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kr2OcLp8vZ5gzyOihhH1FYN7t0jTsvZauSdMmZXPc46vMy7oRi0oDii1QMvaYK+kh
-	 KiHDK/64vAhVazpvGXKgISf5ToewjAzUS7tQYZ56mYO4jhSne2tlWYO8wVyQz5IeJB
-	 RInEQGZV8zpiiPNQZF7jgoBcb2dsCnY236/r9ePM=
+	b=IJapAaFW0ufMZEWfyPBmVJy7Gpd53Su90hjGNZNAIILY+3Gez5o1kvlzgHGxpfPb7
+	 2nwvycMUSxULOYKmRTZzz4M1T9DaI4NoAwdkRchB8pwlHRzdm9L8Iack8uSnusyMod
+	 K4pNA69JIB/UX9Rl4ZCxJnkwsI0Kkubihnxp14iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403855AbfDRSL7 (ORCPT
+        id S2390996AbfDRSMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44246 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403960AbfDRSL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:11:56 -0400
+        id S2403979AbfDRSL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:11:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1F5206B6;
-        Thu, 18 Apr 2019 18:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB51820675;
+        Thu, 18 Apr 2019 18:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611115;
-        bh=Ncp2/h1kQzdBhWbJQxxcy4It+rI93OTMLtf1GZTw62A=;
+        s=default; t=1555611118;
+        bh=PbWwUvTQB9iI+c8RDgvb0c8UcjH3eYuNVaN7tdJzttU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSgMTnVjz0Y9DCSv61MJEDurnqIDv+GBdyladsngnKwcAwrnut3vUivCTffuCL9SE
-         DyykpKKWuOifIGuJ967mkY4jsliRAE1E6azRZjD1rOUlJZD1s5rJfHhjDp65DghK7z
-         SNhhwhUITHBqJFtIMqNHNmHPHYETfhOPue1uFUtI=
+        b=SNfLCLKcV+m9Ig2MuDfPXtj99cmmy+Vn9Bkohyb8E9SQuNK9P3SiB/esOA860Jv2w
+         1NqEwPPxDeQ8cGWjikIZsDovuKh4XExx/Orvhtk49XSK55cBFRB12AnC7m/vjTRu7W
+         ac4MhGrql/PLhE9V06t9qK4SSq81fV+wUBiJANJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 31/93] scsi: core: Also call destroy_rcu_head() for passthrough requests
-Date:   Thu, 18 Apr 2019 19:57:09 +0200
-Message-Id: <20190418160440.135727816@linuxfoundation.org>
+Subject: [PATCH 5.0 32/93] scsi: qla2xxx: Fix NULL pointer crash due to stale CPUID
+Date:   Thu, 18 Apr 2019 19:57:10 +0200
+Message-Id: <20190418160440.357895863@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -64,48 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db983f6eef57a9d78af79bc32389b7e60eb3c47d ]
+[ Upstream commit ac444b4f0ace05d7c4c99f6b1e5b0cae0852f025 ]
 
-cmd->rcu is initialized by scsi_initialize_rq(). For passthrough
-requests, blk_get_request() calls scsi_initialize_rq(). For filesystem
-requests, scsi_init_command() calls scsi_initialize_rq(). Make sure
-that destroy_rcu_head() is called for passthrough requests.
+This patch fixes crash due to NULL pointer derefrence because CPU pointer
+is not set and used by driver.  Instead, driver is passes CPU as tag via
+ha->isp_ops->{lun_reset|target_reset}
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ewan D. Milne <emilne@redhat.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Reported-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+[   30.160780] qla2xxx [0000:a0:00.1]-8038:9: Cable is unplugged...
+[   69.984045] qla2xxx [0000:a0:00.0]-8009:8: DEVICE RESET ISSUED nexus=8:0:0 cmd=00000000b0d62f46.
+[   69.992849] BUG: unable to handle kernel NULL pointer dereference at 0000000000000040
+[   70.000680] PGD 0 P4D 0
+[   70.003232] Oops: 0000 [#1] SMP PTI
+[   70.006727] CPU: 2 PID: 6714 Comm: sg_reset Kdump: loaded Not tainted 4.18.0-67.el8.x86_64 #1
+[   70.015258] Hardware name: NEC Express5800/T110j [N8100-2758Y]/MX32-PH0-NJ, BIOS F11 02/13/2019
+[   70.024016] RIP: 0010:blk_mq_rq_cpu+0x9/0x10
+[   70.028315] Code: 01 58 01 00 00 48 83 c0 28 48 3d 80 02 00 00 75 ab c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48
+ 8b 47 08 <8b> 40 40 c3 0f 1f 00 0f 1f 44 00 00 48 83 ec 10 48 c7 c6 20 6e 7c
+[   70.047087] RSP: 0018:ffff99a481487d58 EFLAGS: 00010246
+[   70.052322] RAX: 0000000000000000 RBX: ffffffffc041b08b RCX: 0000000000000000
+[   70.059466] RDX: 0000000000000000 RSI: ffff8d10b6b16898 RDI: ffff8d10b341e400
+[   70.066615] RBP: ffffffffc03a6bd0 R08: 0000000000000415 R09: 0000000000aaaaaa
+[   70.073765] R10: 0000000000000001 R11: 0000000000000001 R12: ffff8d10b341e528
+[   70.080914] R13: ffff8d10aadefc00 R14: ffff8d0f64efa998 R15: ffff8d0f64efa000
+[   70.088083] FS:  00007f90a201e540(0000) GS:ffff8d10b6b00000(0000) knlGS:0000000000000000
+[   70.096188] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   70.101959] CR2: 0000000000000040 CR3: 0000000268886005 CR4: 00000000003606e0
+[   70.109127] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   70.116277] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   70.123425] Call Trace:
+[   70.125896]  __qla2xxx_eh_generic_reset+0xb1/0x220 [qla2xxx]
+[   70.131572]  scsi_ioctl_reset+0x1f5/0x2a0
+[   70.135600]  scsi_ioctl+0x18e/0x397
+[   70.139099]  ? sd_ioctl+0x7c/0x100 [sd_mod]
+[   70.143287]  blkdev_ioctl+0x32b/0x9f0
+[   70.146954]  ? __check_object_size+0xa3/0x181
+[   70.151323]  block_ioctl+0x39/0x40
+[   70.154735]  do_vfs_ioctl+0xa4/0x630
+[   70.158322]  ? syscall_trace_enter+0x1d3/0x2c0
+[   70.162769]  ksys_ioctl+0x60/0x90
+[   70.166104]  __x64_sys_ioctl+0x16/0x20
+[   70.169859]  do_syscall_64+0x5b/0x1b0
+[   70.173532]  entry_SYSCALL_64_after_hwframe+0x65/0xca
+[   70.178587] RIP: 0033:0x7f90a1b3445b
+[   70.182183] Code: 0f 1e fa 48 8b 05 2d aa 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00
+ 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d fd a9 2c 00 f7 d8 64 89 01 48
+[   70.200956] RSP: 002b:00007fffdca88b68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[   70.208535] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f90a1b3445b
+[   70.215684] RDX: 00007fffdca88b84 RSI: 0000000000002284 RDI: 0000000000000003
+[   70.222833] RBP: 00007fffdca88ca8 R08: 00007fffdca88b84 R09: 0000000000000000
+[   70.229981] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fffdca88b84
+[   70.237131] R13: 0000000000000000 R14: 000055ab09b0bd28 R15: 0000000000000000
+[   70.244284] Modules linked in: nft_chain_route_ipv4 xt_CHECKSUM nft_chain_nat_ipv4 ipt_MASQUERADE nf_nat_ipv4 nf_nat nf_conntrack_ipv4
+ nf_defrag_ipv4 xt_conntrack nf_conntrack libcrc32c ipt_REJECT nf_reject_ipv4 nft_counter nft_compat tun bridge stp llc nf_tables nfnetli
+nk devlink sunrpc vfat fat intel_rapl intel_pmc_core x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm wmi_bmof iTCO_wdt iTCO_
+vendor_support irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_ssif intel_cstate intel_uncore intel_rapl_perf ipmi_si jo
+ydev pcspkr ipmi_devintf sg wmi ipmi_msghandler video acpi_power_meter acpi_pad mei_me i2c_i801 mei ip_tables ext4 mbcache jbd2 sr_mod cd
+rom sd_mod qla2xxx ast i2c_algo_bit drm_kms_helper nvme_fc syscopyarea sysfillrect uas sysimgblt fb_sys_fops nvme_fabrics ttm
+[   70.314805]  usb_storage nvme_core crc32c_intel scsi_transport_fc ahci drm libahci tg3 libata megaraid_sas pinctrl_cannonlake pinctrl_
+intel
+[   70.327335] CR2: 0000000000000040
+
+Fixes: 9cf2bab630765 ("block: kill request ->cpu member")
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_lib.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 5a6e8e12701a..655ad26106e4 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -598,9 +598,16 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
- 	if (!blk_rq_is_scsi(req)) {
- 		WARN_ON_ONCE(!(cmd->flags & SCMD_INITIALIZED));
- 		cmd->flags &= ~SCMD_INITIALIZED;
--		destroy_rcu_head(&cmd->rcu);
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 7e35ce2162d0..503fda4e7e8e 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1459,7 +1459,7 @@ __qla2xxx_eh_generic_reset(char *name, enum nexus_wait_type type,
+ 		goto eh_reset_failed;
  	}
- 
-+	/*
-+	 * Calling rcu_barrier() is not necessary here because the
-+	 * SCSI error handler guarantees that the function called by
-+	 * call_rcu() has been called before scsi_end_request() is
-+	 * called.
-+	 */
-+	destroy_rcu_head(&cmd->rcu);
-+
- 	/*
- 	 * In the MQ case the command gets freed by __blk_mq_end_request,
- 	 * so we have to do all cleanup that depends on it earlier.
+ 	err = 2;
+-	if (do_reset(fcport, cmd->device->lun, blk_mq_rq_cpu(cmd->request) + 1)
++	if (do_reset(fcport, cmd->device->lun, 1)
+ 		!= QLA_SUCCESS) {
+ 		ql_log(ql_log_warn, vha, 0x800c,
+ 		    "do_reset failed for cmd=%p.\n", cmd);
 -- 
 2.19.1
 
