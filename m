@@ -2,93 +2,82 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51927C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693E2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1930E21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mlghnc4z"
+	by mail.kernel.org (Postfix) with ESMTP id 33966217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555597945;
+	bh=7ZnyJ+RvVn3rwxpMf7xuiPzJ974WarE73HnwEWe3FNo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iB36oJ4YujvIJ6HohkMRAn+ZDiqa5Ic2rJEpkQpjBncIRolIIHnyRm5zLRlp2axHY
+	 iT58vtlsemMZz9HDaBxNsUERq0W+S+VGSYeV3UhIQtyLnzMFfKPgzGPiXz93oRypTk
+	 f+xHpgZnpnFbzdDLBzic9G4PEDvR8enZoLtCNPrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389315AbfDRObK (ORCPT
+        id S2389367AbfDROcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:31:10 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40740 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388097AbfDRObJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:31:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=J1Rd8CJHOriTctJ+pY5mSELh59zsKZpvgRGWgzuNSlc=; b=mlghnc4zMJtXMOVGws2LWViNE
-        wpdDlSyMTckeE2JlRdzDcVhbgK4WjXsiT939yYUV6IG4CQSwMnYR2kpXodB7O5Uf194cF1j52CQuD
-        m2FDKU3xnIXfET0uc8ZzzMOSSacWioU22sqNSmehshicFLe0+IrAD2QVAn4unoByKR5eHhzsnwoA1
-        6TIlDw9I1eE/9mz4LXaHevGymwsJGpf4B7VEwPXQoGN7pebxq8mfIuCVP3h5xGj7HhNpBEY/XZGyC
-        pGMu5mZwUxmOYilXz8MBnPL2vMJmLRKkubUQycocx/vlR74eZBdVn9MeSor7T9XxpeGH4LfAhPH47
-        tQZXmgQ0w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hH843-0002wY-TL; Thu, 18 Apr 2019 14:31:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9FF5329B9B7B7; Thu, 18 Apr 2019 16:30:58 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 16:30:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
- negative
-Message-ID: <20190418143058.GD12232@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-15-longman@redhat.com>
- <20190418135151.GB12232@hirez.programming.kicks-ass.net>
- <d931916b-41f5-f12d-8c38-0cccbc00a301@redhat.com>
+        Thu, 18 Apr 2019 10:32:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388097AbfDROcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:32:23 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D87A2217FA
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 14:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555597943;
+        bh=7ZnyJ+RvVn3rwxpMf7xuiPzJ974WarE73HnwEWe3FNo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q3pHpBTbYJsr5CyUkF8egGBAT5I6sDBV6HunRe32BRpSb3bv7JZxUwaGom1lAhpdW
+         4fTLBwk1E2yOAwW9gDOQVGITQ9ZeebSz/K7yxRJGMUoMbbGC7Mv3AGY3FTq5jYUMIL
+         jKFq7L07wfiEjBoJ2npjIlMq/JyLVAqnG+d9N/PY=
+Received: by mail-qt1-f182.google.com with SMTP id d13so2376919qth.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:32:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAUmsh9xWHy0efcvTa6ZUQ8go4EKpeNW7XZZpSFUORU6zRlNiNyh
+        p9pHfWgy0QvaY3ZDmk+P50vm9Mlznlz/WYZkJQ==
+X-Google-Smtp-Source: APXvYqzLEgUKvPTxTFZj6RDRnoIpuKPaES5XIbuLEFe11LT+WSCQufJFT4dYyHr+eooJQxZP9WVJSnzxt87gF8RdD0w=
+X-Received: by 2002:a0c:d4d5:: with SMTP id y21mr938607qvh.106.1555597942154;
+ Thu, 18 Apr 2019 07:32:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d931916b-41f5-f12d-8c38-0cccbc00a301@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190416150051.34092-1-yuehaibing@huawei.com>
+In-Reply-To: <20190416150051.34092-1-yuehaibing@huawei.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 18 Apr 2019 09:32:10 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+nXQXKKLPEwXppPwkQwx4o+83nV2dJO9MQO2ARkkosUA@mail.gmail.com>
+Message-ID: <CAL_Jsq+nXQXKKLPEwXppPwkQwx4o+83nV2dJO9MQO2ARkkosUA@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/panfrost: Make panfrost_gem_free_object() static
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:08:28AM -0400, Waiman Long wrote:
-> On 04/18/2019 09:51 AM, Peter Zijlstra wrote:
-> > On Sat, Apr 13, 2019 at 01:22:57PM -0400, Waiman Long wrote:
-> >>  inline void __down_read(struct rw_semaphore *sem)
-> >>  {
-> >> +	long count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
-> >> +						   &sem->count);
-> >> +
-> >> +	if (unlikely(count & RWSEM_READ_FAILED_MASK)) {
-> >> +		rwsem_down_read_failed(sem, count);
-> >>  		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
-> >>  	} else {
-> >>  		rwsem_set_reader_owned(sem);
-> > *groan*, that is not provably correct. It is entirely possible to get
-> > enough fetch_add()s piled on top of one another to overflow regardless.
-> >
-> > Unlikely, yes, impossible, no.
-> >
-> > This makes me nervious as heck, I really don't want to ever have to
-> > debug something like that :-(
-> 
-> The number of fetch_add() that can pile up is limited by the number of
-> CPUs available in the system.
+On Tue, Apr 16, 2019 at 10:01 AM Yue Haibing <yuehaibing@huawei.com> wrote:
+>
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Fix sparse warning:
+>
+> drivers/gpu/drm/panfrost/panfrost_gem.c:17:6:
+>  warning: symbol 'panfrost_gem_free_object' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Uhhn, no. There is no preempt_disable() anywhere here. So even UP can
-overflow if it has enough tasks.
+Applied, thanks.
