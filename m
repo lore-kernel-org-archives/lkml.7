@@ -2,130 +2,175 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC84C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A1C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168192184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6047421850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388119AbfDRGWJ (ORCPT
+        id S2388131AbfDRGWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:22:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58984 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbfDRGWI (ORCPT
+        Thu, 18 Apr 2019 02:22:36 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40699 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730308AbfDRGWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:22:08 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.40])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1hH0Qt-00065n-9J; Thu, 18 Apr 2019 06:22:03 +0000
-Subject: Re: [PATCH] nvme: determine the number of IO queues
-To:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, keith.busch@intel.com, axboe@fb.com
-References: <1555510379-20199-1-git-send-email-aaron.ma@canonical.com>
- <a2f0a97e14b884dc1183db9cbdd6f4b520000ce3.camel@redhat.com>
- <096935354b16662eb481aeda1f48001ba489463c.camel@redhat.com>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <e79703d5-3502-6519-a497-71b2b2a8768f@canonical.com>
-Date:   Thu, 18 Apr 2019 14:21:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 02:22:35 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 13757E0004;
+        Thu, 18 Apr 2019 06:22:29 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 08:22:29 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+Message-ID: <20190418062229.eyog4i62eg4pr6uf@flea>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+ <20190417154121.GJ13337@phenom.ffwll.local>
 MIME-Version: 1.0
-In-Reply-To: <096935354b16662eb481aeda1f48001ba489463c.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417154121.GJ13337@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/19 1:33 AM, Maxim Levitsky wrote:
-> On Wed, 2019-04-17 at 20:32 +0300, Maxim Levitsky wrote:
->> On Wed, 2019-04-17 at 22:12 +0800, Aaron Ma wrote:
->>> Some controllers support limited IO queues, when over set
->>> the number, it will return invalid field error.
->>> Then NVME will be removed by driver.
->>>
->>> Find the max number of IO queues that controller supports.
->>> When it still got invalid result, set 1 IO queue at least to
->>> bring NVME online.
->> To be honest a spec compliant device should not need this.
->> The spec states:
->>
->> "Number of I/O Completion Queues Requested (NCQR): Indicates the number of I/O
->> Completion
->> Queues requested by software. This number does not include the Admin
->> Completion
->> Queue. A
->> minimum of one queue shall be requested, reflecting that the minimum support
->> is
->> for one I/O
->> Completion Queue. This is a 0’s based value. The maximum value that may be
->> specified is 65,534
->> (i.e., 65,535 I/O Completion Queues). If the value specified is 65,535, the
->> controller should return
->> an error of Invalid Field in Command."
->>
->>
->> This implies that you can ask for any value and the controller must not
->> respond
->> with an error, but rather indicate how many queues it supports.
->>
->> Maybe its better to add a quirk for the broken device, which needs this?
+Hi Daniel,
 
-Adding quirk only makes the code more complicated.
-This patch doesn't change the default behavior.
-Only handle the NVME error code.
+On Wed, Apr 17, 2019 at 05:41:21PM +0200, Daniel Vetter wrote:
+> On Wed, Apr 17, 2019 at 09:54:26AM +0200, Maxime Ripard wrote:
+> > Hi,
+> >
+> > DRM comes with an extensive format support to retrieve the various
+> > parameters associated with a given format (such as the subsampling, or the
+> > bits per pixel), as well as some helpers and utilities to ease the driver
+> > development.
+> >
+> > v4l2, on the other side, doesn't provide such facilities, leaving each
+> > driver reimplement a subset of the formats parameters for the one supported
+> > by that particular driver. This leads to a lot of duplication and
+> > boilerplate code in the v4l2 drivers.
+> >
+> > This series tries to address this by moving the DRM format API into lib and
+> > turning it into a more generic API. In order to do this, we've needed to do
+> > some preliminary changes on the DRM drivers, then moved the API and finally
+> > converted a v4l2 driver to give an example of how such library could be
+> > used.
+> >
+> > Let me know what you think,
+> > Maxime
+> >
+> > Changes from RFC:
+> >   - Rebased on next
+> >   - Fixed the various formats mapping
+> >   - Added tags
+> >   - Did most of the formats functions as inline functions
+> >   - Used a consistent prefix for all the utilities functions
+> >   - Fixed the compilation breakages, and did a run of allmodconfig for arm,
+> >     arm64 and x86_64
+> >   - Fixed out of array bounds warnings in the image_format_info_block_*
+> >     functions
+> >   - Added License and copyright headers on missing files
+> >
+> > Maxime Ripard (20):
+> >   drm: Remove users of drm_format_num_planes
+> >   drm: Remove users of drm_format_(horz|vert)_chroma_subsampling
+> >   drm/fourcc: Pass the format_info pointer to drm_format_plane_cpp
+> >   drm/fourcc: Pass the format_info pointer to drm_format_plane_width/height
+> >   drm: Replace instances of drm_format_info by drm_get_format_info
+> >   lib: Add video format information library
+> >   drm/fb: Move from drm_format_info to image_format_info
+> >   drm/malidp: Convert to generic image format library
+> >   drm/client: Convert to generic image format library
+> >   drm/exynos: Convert to generic image format library
+> >   drm/i915: Convert to generic image format library
+> >   drm/ipuv3: Convert to generic image format library
+> >   drm/msm: Convert to generic image format library
+> >   drm/omap: Convert to generic image format library
+> >   drm/rockchip: Convert to generic image format library
+> >   drm/tegra: Convert to generic image format library
+> >   drm/fourcc: Remove old DRM format API
+> >   lib: image-formats: Add v4l2 formats support
+> >   lib: image-formats: Add more functions
+> >   media: sun6i: Convert to the image format API
+>
+> In the interest of making myself unpopular: Why move this out of drm?
+>
+> We do have a bunch of other such shared helpers already (mostly in
+> drivers/video) for dt videomode and hdmi infoframes, and I'm not super
+> sure that's going better than keeping it maintained in drm.
+>
+> Plus the uapi is already that you include drm_fourcc.h to get at these,
+> dropping the drm prefix isn't going to help I think.
+>
+> Of course we'd need to make it a separate drm_formats.ko (so that v4l can
+> use it without dragging in all of drm), and we need to add some fields for
+> converting to v4l fourcc codes (which are different). But that should be
+> all possible. And I don't think the drm_ prefix in v4l code is a problem,
+> it's actually a feature: It makes it really clear that these are the drm
+> fourcc codes, as allocated in drm_fourcc.h, plus their modifiers, and all
+> that. That allocation authority is also already baked into various khr/ext
+> standards, too.
 
-Yes the IO queues number is 0's based, but driver would return error and
-remove the nvme device as dead.
+The way I see it, there's a fundamental difference between the UAPI
+and the kernel. I don't suggest we change anything about the UAPI: the
+drm formats should keep their prefix, drm_fourcc.h can remain that
+authority, it's all fine.
 
-So set it as 1 at least the NVME can be probed properly.
+Internally however, the long term goal is to share the fourcc's
+between DRM and V4L2 for the same formats. It basically means that of
+course v4l2 should be using the DRM fourcc when a format exists in DRM
+and not v4l2, but also that DRM should use v4l2 fourcc when the format
+exists in v4l2 but not DRM, and that is far more likely, given the
+already extensive v4l2 formats support.
 
-Regards,
-Aaron
+And given how the current state is a mess in this regard, I'm not too
+optimistic about keeping the formats in their relevant frameworks.
 
-> I forgot to add the relevant paragraph:
-> 
-> "Note: The value allocated may be smaller or larger than the number of queues
-> requested, often in virtualized
-> implementations. The controller may not have as many queues to allocate as are
-> requested. Alternatively,
-> the controller may have an allocation unit of queues (e.g. power of two) and may
-> supply more queues to
-> host software to satisfy its allocation unit."
-> 
-> 
-> Best regards,
-> 	Maxim Levitsky
-> 
+Having a shared library, governed by both, will make this far easier,
+since it will be easy to discover the formats that are already
+supported by the other subsystem.
+
+If we want to keep the current library in DRM, we have two options
+then:
+
+  - Support all the v4l2 formats in the DRM library, which is
+    essentially what I'm doing in the last patches. However, that
+    would require to have the v4l2 developpers also reviewing stuff
+    there. And given how busy they are, I cannot really see how that
+    would work.
+
+  - Develop the same library from within v4l2. That is really a poor
+    solution, since the information would be greatly duplicated
+    between the two, and in terms of maintainance, code, and binary
+    size that would be duplicated too.
+
+Having it shared allows to easily share, and discover formats from the
+other subsystem, and to have a single, unique place where this is
+centralized.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
