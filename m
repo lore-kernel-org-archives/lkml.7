@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFC3C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D415C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D09120821
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C904214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K9Sn5ca6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dqCViXMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388766AbfDRK2O (ORCPT
+        id S2388707AbfDRK2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 06:28:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43206 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388690AbfDRK2J (ORCPT
+        Thu, 18 Apr 2019 06:28:08 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39138 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388301AbfDRK2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 06:28:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f18so1448938lja.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 03:28:07 -0700 (PDT)
+        Thu, 18 Apr 2019 06:28:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l7so1469530ljg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 03:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wafwrLwOuLKydkAOyUifP9IzxQmxoflkxenKIZVDVeM=;
-        b=K9Sn5ca6TLeYDzKn/bN0TDe+nBCMyuOLBWUuArQo7+dzpUKJpvn2vC/VHvLutr05HY
-         jRRNPoWivQlbL/nj01AJEJxNa7KKC7mKk5VBoI2GH1i0Dkmyp065vuviSSdxEWPSEb1p
-         FSlMikftkKCT4Wf2/u7AIPrWhj3FNe+CUXvvnYQdRbVhIt3gRVotEnbHjwT0o0xpb02j
-         iYFLKdVcNVc9w07qzKTzTVJSrHgwGOcD0lj+Z9VOR+PxqmbhiPAG+2rvvcyWmB4847PA
-         u5jTfl35ZCmk5DxVBm/itv5LnmOIFEpQOB2jD9VC0KoURpTWIms4TuJJfE6XYSv+plo/
-         gZIA==
+        bh=b4/z3HQphjEsvzH3BgLLETGidZtveaIsWYroUmoxADE=;
+        b=dqCViXMVuDoEwPYSCRyR3gFK2YRd4ueBMYYsoKTDZBk8/sNQkdFgQyT1ulkoSxCdGD
+         iAhP8JNaZwj2TCmXl4f7ZzxEBDd92pX2a3LfqUSWUStUGvg2OeFOK61rFvWTIAyj626k
+         rIrTAHEyRISdxXMPD4TfZNgc9IfKh1Yw6kYNGVf7DZKue9bcPUal+pbuBTdioRI5UYzQ
+         g2s6uRAlhuMFHEZy5QD79ISiwzLfRgqYfdl5sPwWyty5j7YnpeEl9aTv2FrzmZav7vqB
+         B8UbnnltODguhp/+BwLPZyxW6LL/Kai69tJ4yKtrwHIGTv7TVRk6kdHzYn+nmUzxnAVO
+         gZWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wafwrLwOuLKydkAOyUifP9IzxQmxoflkxenKIZVDVeM=;
-        b=RHdYF2xIcC3j2iIHjAVKKCB7cJX7TdoOcKNTOeEuROPcQbVRVLxdmeuXo5LMtX1wD8
-         svkxohe+C6pCkFCsixFM7kWwlqqSrttc44SUpQtn4XyEK36zExM6aF7b6GIfiV6NsUt8
-         y6ycYgXW9rIBdk86FbkscdcJKVhag71wti6S1Vd/oK8/NA+DlMCtjl/szHSlqbnDlYo8
-         krbpXzWZN2B6QwXVaf9Fl4//j+UQrUfT2n0M9fHZfh2y0D5DYBDn0t/3jvaTnh17ZXyo
-         qmV60mdhqYyVqjWy2kUa11oauwajiQVhahA0RlOEShEZa5OjVuMlxq6iYLBaDv4Ectk8
-         Vv7w==
-X-Gm-Message-State: APjAAAWTlM3u3CVZl0mKPVROpXRdZ5XKHy67WIw7mj9LkEF16n4Y21Oa
-        52f4Fq4k67CcIXZEwqpTlBpgLw==
-X-Google-Smtp-Source: APXvYqx8DZQj9MIb9HjHiAJTg3ChuW8LvgA8jYMtqeuoPHn2n+vFcwnvvMiE9fHrTl1DCQzJpnEXyw==
-X-Received: by 2002:a2e:3207:: with SMTP id y7mr133196ljy.117.1555583287085;
-        Thu, 18 Apr 2019 03:28:07 -0700 (PDT)
+        bh=b4/z3HQphjEsvzH3BgLLETGidZtveaIsWYroUmoxADE=;
+        b=adgiZ5HPk2nmsjO5kmJHAIjTe3svCQ/7jOdOSsQJYmvf+BL+UToIDRtwm5vix5qvNY
+         z6OVLHZf9eNcYstpS360JvtY30AaNheYVnjyoM2HLvKCGFdPdqpuA+S2H9TDGDmsAYWD
+         dqEsk4CVCWlczoX5mNfLx0KpOk1+WKExg2qTo1uJjsdZ72O/3VFYxUWx7sPXhkQyK6fh
+         Ie1vE27pm8mSz/X9qy382cgkhqPai4t3NLuiNioUES3oHNxoEgYOj5KBG3e3Opqz4jpm
+         2trGiaEl8NkXaVrf9GdWr7++iaz7J+G2RwWjQORLm7rSxQIqIa9NVIiPcAchI3Rva8Qs
+         kG+w==
+X-Gm-Message-State: APjAAAWmVr9MAzfVqRZ32sAbBaFm2d6PxpjkPJ6NecSIt+NI4d52MH8B
+        bCelnf3D2k6WD4TP88zveL7MzQ==
+X-Google-Smtp-Source: APXvYqyP2XTwEGKrSJgjpvfp4q5+IvD+SZE8dUmwojxp2fDrWNFrJxnGtyOuJAGcHcPBpX8n/+BePA==
+X-Received: by 2002:a2e:810d:: with SMTP id d13mr37663132ljg.93.1555583284116;
+        Thu, 18 Apr 2019 03:28:04 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id l13sm320409ljj.96.2019.04.18.03.28.05
+        by smtp.gmail.com with ESMTPSA id l13sm320409ljj.96.2019.04.18.03.28.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 03:28:06 -0700 (PDT)
+        Thu, 18 Apr 2019 03:28:03 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
@@ -65,9 +65,9 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Niklas Cassel <niklas.cassel@linaro.org>,
         Kevin Hilman <khilman@kernel.org>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] PM / Domains: Enable genpd_dev_pm_attach_by_id|name() for single PM domain
-Date:   Thu, 18 Apr 2019 12:27:57 +0200
-Message-Id: <20190418102757.1246-4-ulf.hansson@linaro.org>
+Subject: [PATCH 1/3] PM / Domains: Don't kfree() the virtual device in the error path
+Date:   Thu, 18 Apr 2019 12:27:55 +0200
+Message-Id: <20190418102757.1246-2-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190418102757.1246-1-ulf.hansson@linaro.org>
 References: <20190418102757.1246-1-ulf.hansson@linaro.org>
@@ -76,39 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a call to dev_pm_domain_attach() succeeds to attach a device to its
-single PM domain, the important point is to prevent following calls to
-dev_pm_domain_attach_by_name|id() to fail. This is managed by checking the
-dev->pm_domain pointer and then return -EEXIST, rather than continue
-calling genpd_dev_pm_attach_by_id|name().
+It's not correct to call kfree(dev) when device_register(dev) has failed.
+Fix this by calling put_device(dev) instead.
 
-For this reason, let's enable genpd_dev_pm_attach_by_id|name() to be used
-for also single PM domains. This simplifies for future users to solely make
-use of dev_pm_domain_attach_by_id|name() rather than having to combine it
-with dev_pm_domain_attach().
-
+Fixes: 3c095f32a92b ("PM / Domains: Add support for multi PM domains per device to genpd")
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/base/power/domain.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/base/power/domain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 801f31c87d16..1b026704a8fc 100644
+index ecac03dcc9b2..7fec69aebf46 100644
 --- a/drivers/base/power/domain.c
 +++ b/drivers/base/power/domain.c
-@@ -2512,10 +2512,10 @@ struct device *genpd_dev_pm_attach_by_id(struct device *dev,
- 	if (!dev->of_node)
- 		return NULL;
+@@ -2528,7 +2528,7 @@ struct device *genpd_dev_pm_attach_by_id(struct device *dev,
  
--	/* Deal only with devices using multiple PM domains. */
-+	/* Verify that the index is within a valid range. */
- 	num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
- 						 "#power-domain-cells");
--	if (num_domains < 2 || index >= num_domains)
-+	if (index >= num_domains)
- 		return NULL;
+ 	ret = device_register(virt_dev);
+ 	if (ret) {
+-		kfree(virt_dev);
++		put_device(virt_dev);
+ 		return ERR_PTR(ret);
+ 	}
  
- 	/* Allocate and register device on the genpd bus. */
 -- 
 2.17.1
 
