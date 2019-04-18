@@ -2,114 +2,81 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31C8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72060C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF51C214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AB8214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jdxTh2zw"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yZXtmKjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388615AbfDRJif (ORCPT
+        id S2388479AbfDRJjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:38:35 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41760 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733049AbfDRJiP (ORCPT
+        Thu, 18 Apr 2019 05:39:32 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:36071 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbfDRJjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:38:15 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3I9bP6r020923;
-        Thu, 18 Apr 2019 11:37:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=S+jXHzqJzO8dYDC4B9p830YLJ4bHofW7wA0ryRXwhPw=;
- b=jdxTh2zw8M/uLYuzj2aKQKAW8obz6lzepVb1JE6L6i5DqbladiABTfoFwPIHU1TkrUGk
- 12UjiEc/rVDqmpIkifpMW5Of9s3u0o2hBoJ0PdAYueQZBV+RY6hb8pCbPGJcx1Yu19w8
- 7ctoZ2FvVAF2ZGihkkOql89daSyC0JnktarAS2mgD81/dJ+lKMUPLbH5qTKa8tXld/vy
- Pf1rFypLehpWkfhNPOy6vonjhSUy+l7M7KBhJjrAKY53c689ybPUwHSS47c2fylHvaul
- X8GS0MdFLtwvwH0JlXI6F+/8n0cskzuilRppTsAA5MoOdmONll+9z+wtBVyhkQdCVuLS Pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ru6nh4yck-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 18 Apr 2019 11:37:58 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DA29331;
-        Thu, 18 Apr 2019 09:37:57 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A9669159F;
-        Thu, 18 Apr 2019 09:37:57 +0000 (GMT)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 18 Apr 2019 11:37:57
- +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <thierry.reding@gmail.com>
-CC:     <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <tduszyns@gmail.com>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
-        <fabrice.gasnier@st.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [RESEND PATCH v5 1/3] dt-bindings: pwm-stm32-lp: document pinctrl sleep state
-Date:   Thu, 18 Apr 2019 11:37:45 +0200
-Message-ID: <1555580267-29299-2-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
-References: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-18_05:,,
- signatures=0
+        Thu, 18 Apr 2019 05:39:32 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x3I9d4A5017651;
+        Thu, 18 Apr 2019 18:39:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3I9d4A5017651
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555580344;
+        bh=4ZkeAxX/fVLeD4HpbfnoFTyudDVq6PKwmbFelUetoWs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yZXtmKjGd+/KwpXOvPkNSasdPO92ZULXenyOw21ifA4V2UyPRBlt5RcLrcrVnGCuA
+         8/ycVcPqOupwblU8TQqNLpgTj5QZr7ee5YfAsswzkFGharPMIuuV525SBAS9fOYkXm
+         0uG9bSBPolYzkQrvPLnCapCShb1qyacW52RJ7IE4CsYBKPVfqWeWzs/aS5y0IWvRh8
+         Yw1uBoxAHlNGnQBLMBIS0SIZmnu1Kf5LX+GTZVVJg88XhdYyv/Ph5oFTAyUy6FfUdp
+         o/c72L5QBZcwq081tjcdBjD1F1RaMTSui7T9jqvIydqlQ4UUHtJLES1btdghW38ZPD
+         EISj2M+uLsQUQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nickhu <nickhu@andestech.com>
+Subject: [PATCH v2] nds32: remove unused generic-y += cmpxchg-local.h
+Date:   Thu, 18 Apr 2019 18:38:56 +0900
+Message-Id: <20190418093856.17852-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for pinctrl sleep state on STM32 LPTimer PWM.
+NDS32 is the only architecture that creates <asm/cmpxchg-local.h>,
+which is not included by anyone.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-index bd23302..6521bc4 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
-@@ -11,8 +11,10 @@ Required parameters:
- 			bindings defined in pwm.txt.
- 
- Optional properties:
--- pinctrl-names: 	Set to "default".
--- pinctrl-0: 		Phandle pointing to pin configuration node for PWM.
-+- pinctrl-names: 	Set to "default". An additional "sleep" state can be
-+			defined to set pins in sleep state when in low power.
-+- pinctrl-n: 		Phandle(s) pointing to pin configuration node for PWM,
-+			respectively for "default" and "sleep" states.
- 
- Example:
- 	timer@40002400 {
-@@ -21,7 +23,8 @@ Example:
- 		pwm {
- 			compatible = "st,stm32-pwm-lp";
- 			#pwm-cells = <3>;
--			pinctrl-names = "default";
-+			pinctrl-names = "default", "sleep";
- 			pinctrl-0 = <&lppwm1_pins>;
-+			pinctrl-1 = <&lppwm1_sleep_pins>;
- 		};
- 	};
+Changes in v2:
+  - Fix a typo in commit log
+
+ arch/nds32/include/asm/Kbuild | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/nds32/include/asm/Kbuild b/arch/nds32/include/asm/Kbuild
+index 64ceff7ab99b..e8dbfbf8cc69 100644
+--- a/arch/nds32/include/asm/Kbuild
++++ b/arch/nds32/include/asm/Kbuild
+@@ -6,7 +6,6 @@ generic-y += bugs.h
+ generic-y += checksum.h
+ generic-y += clkdev.h
+ generic-y += cmpxchg.h
+-generic-y += cmpxchg-local.h
+ generic-y += compat.h
+ generic-y += cputime.h
+ generic-y += device.h
 -- 
-2.7.4
+2.17.1
 
