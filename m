@@ -2,185 +2,212 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30729C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A9EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0024120651
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE8220651
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389468AbfDRPOm (ORCPT
+        id S2389484AbfDRPPg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:14:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43244 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRPOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:14:42 -0400
-Received: by mail-lf1-f66.google.com with SMTP id i68so1909892lfi.10;
-        Thu, 18 Apr 2019 08:14:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ja2XnzNSnNoq3rGy2qbSA/3XbMrlUk2CB7PPcq7e1xc=;
-        b=s17nwBS4/9P9n0JWOXhTI+JJB34UxE5ls/JwCE16cniZy4AHvKK1vsSDXZ4pZeQJ3c
-         1BjRhNAW+X6TMj3mqkbs6n2FrO/JSZ/fNGOfrXGjazw8XWh1MaToUupm7iFVcPSXlkyo
-         rHHvkobnqFIrtDU5nHeWgGzAmlr5rYy20dSOZ078Y+s82/cDPcha+ZMLBFjmJdwwBGYI
-         kx+wXhrMAU6TvWB4xjnl/IzVFX34oPDeQPL1pGWAzTI35JUVNkdijumV4Xae8l+6taQW
-         kPYuxMPSJOvCvri5gRWoDRaj04cdth0svzgA4AjSgz175Lty6Fxl0z/r44QKzpcMfPRk
-         k4XQ==
-X-Gm-Message-State: APjAAAXWoBJ3LOvWimXextsw3TPR9hG0Wk9jRG0rGS6NmpptJuTBx1wQ
-        kdc0hMeYRCIl3V/Q9Nrh0PMdfBDYZvMVO4tGA7Y=
-X-Google-Smtp-Source: APXvYqzAWSvBwPwdd2fdHbbzvrUmPpoG7/iU4XeTf48ZpCNE9KilkiuIFov0aDPcv+0oVaMhM86BivjgAWDks9siczU=
-X-Received: by 2002:ac2:420b:: with SMTP id y11mr53081771lfh.104.1555600479501;
- Thu, 18 Apr 2019 08:14:39 -0700 (PDT)
+        Thu, 18 Apr 2019 11:15:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38374 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731317AbfDRPPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:15:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E7167307E059;
+        Thu, 18 Apr 2019 15:15:34 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B20695D9C5;
+        Thu, 18 Apr 2019 15:15:33 +0000 (UTC)
+Subject: Re: [PATCH v4 12/16] locking/rwsem: Enable time-based spinning on
+ reader-owned rwsem
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-13-longman@redhat.com>
+ <20190418130611.GK4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <52aee7c3-b8aa-a617-c1f2-34bc99c72474@redhat.com>
+Date:   Thu, 18 Apr 2019 11:15:33 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190416202013.4034148-1-arnd@arndb.de> <20190416202013.4034148-3-arnd@arndb.de>
- <20190417211303.GU2217@ZenIV.linux.org.uk> <CAK8P3a1tiRew6uqegUXsKbNQG7=sPVFMY3yXf0M7OjJdkxM=_g@mail.gmail.com>
- <20190417235300.GB2217@ZenIV.linux.org.uk>
-In-Reply-To: <20190417235300.GB2217@ZenIV.linux.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 18 Apr 2019 17:14:21 +0200
-Message-ID: <CAK8P3a06NdTDVpDn-KWmdc4_562Ge=hYe2Zw39mx5s0FP+KD6Q@mail.gmail.com>
-Subject: Re: [PATCH v3 02/26] compat_ioctl: move simple ppp command handling
- into driver
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Ostrowski <mostrows@earthlink.net>,
-        Dmitry Kozlov <xeb@mail.ru>,
-        James Chapman <jchapman@katalix.com>,
-        linux-ppp@vger.kernel.org, Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190418130611.GK4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 18 Apr 2019 15:15:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 1:53 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Apr 18, 2019 at 12:03:07AM +0200, Arnd Bergmann wrote:
-> > On Wed, Apr 17, 2019 at 11:13 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > >
-> > > On Tue, Apr 16, 2019 at 10:19:40PM +0200, Arnd Bergmann wrote:
-> > > > diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-> > > > index c708400fff4a..04252c3492ee 100644
-_ptr(arg) to ppp_ioctl() and be done with that
-> > > }
-> > >
-> > > with BPF-related bits (both compat and native) taken to e.g. net/core/bpf-ppp.c,
-> > > picked by both generic and isdn?  IDGI...
-> >
-> > I was trying to unify the native and compat code paths as much
-> > as possible here. Handling the four PPPIO*32 commands in
-> > compat_ppp_ioctl would either require duplicating large chunks
-> > of ppp_ioctl, or keeping the extra compat_alloc_user_space()
-> > copy from the existing implementation.
-> >
-> > I'll try to come up with a different way to structure the patches.
+On 04/18/2019 09:06 AM, Peter Zijlstra wrote:
+> So I really dislike time based spinning, and we've always rejected it
+> before.
 >
-> Huh?  Instead of
->         case PPPIOCSCOMPRESS:
->                 err = ppp_set_compress(ppp, arg);
->                 break;
-> in native, have
->         struct ppp_option_data data;
-> ...
->         case PPPIOCSCOMPRESS:
->                 if (copy_from_user(&data, argp, sizeof(data)))
->                         err = -EFAULT;
->                 else
->                         err = ppp_set_compress(ppp, &data);
->                 break;
+> On Sat, Apr 13, 2019 at 01:22:55PM -0400, Waiman Long wrote:
+>
+>> +static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
+>> +{
+>> +	long count = atomic_long_read(&sem->count);
+>> +	int reader_cnt = atomic_long_read(&sem->count) >> RWSEM_READER_SHIFT;
+>> +
+>> +	if (reader_cnt > 30)
+>> +		reader_cnt = 30;
+>> +	return sched_clock() + ((count & RWSEM_FLAG_WAITERS)
+>> +		? 10 * NSEC_PER_USEC + reader_cnt * NSEC_PER_USEC/2
+>> +		: 25 * NSEC_PER_USEC);
+>> +}
+> Urgh, why do you _have_ to write unreadable code :-(
 
-Right, I ended up with something similar before I saw your message.
+I guess my code writing style is less readable to others. I will try to
+write simpler code that will be more readable in the future :-)
 
-> in native and similar in compat, with get_bpf_ppp() replaced
-> with call of compat_get_bpf_ppp() and ioctl numbers obviously
-> adjusted.  All there is to it...  Helpers obviously shared
-> with isdn and yes, all crap gone from fs/compat_ioctl.c...
+>
+> static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
+> {
+> 	long count = atomic_long_read(&sem->count);
+> 	u64 delta = 25 * NSEC_PER_USEC;
+>
+> 	if (count & RWSEM_FLAG_WAITERS) {
+> 		int readers = count >> RWSEM_READER_SHIFT;
+>
+> 		if (readers > 30)
+> 			readers = 30;
+>
+> 		delta = (20 + readers) * NSEC_PER_USEC / 2;
+> 	}
+>
+> 	return sched_clock() + delta;
+> }
+>
+> I don't get it though; the number of current read-owners is independent
+> of WAITERS, while the hold time does correspond to it.
+>
+> So why do we have that WAITERS check in there?
 
-I would still leave the ISDN side alone, aside from adding
-the 64-bit time_t support.
+It is not a waiter check, it is checking the number of readers that are
+holding the lock. My thinking was that in the wakeup process done by
+__rwsem_mark_wake(), the wakeup is done one-by-one. So the more readers
+you have, the more time it takes for the last reader to actually wake up
+and run its critical section. That is the main reason for that logic.
 
-> Why would you want to duplicate large chunks of anything?
-> The above is not even compile-tested, but...  I can put
-> together a patch if you wish.  Or am I missing something
-> here?
+>
+>> @@ -616,6 +678,35 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
+>>  		if (taken)
+>>  			break;
+>>  
+>> +		/*
+>> +		 * Time-based reader-owned rwsem optimistic spinning
+>> +		 */
+> This relies on rwsem_spin_on_owner() not actually spinning for
+> read-owned.
+>
 
-I expected that the ppp_compat_ioctl() function would end up
-fairly complex, to duplicate the logic before the switch()/case.
+Yes, because there is no task structure to spin on.
 
-What I have now is
+>> +		if (wlock && (owner_state == OWNER_READER)) {
+>> +			/*
+>> +			 * Initialize rspin_threshold when the owner
+>> +			 * state changes from non-reader to reader.
+>> +			 */
+>> +			if (prev_owner_state != OWNER_READER) {
+>> +				if (!is_rwsem_spinnable(sem))
+>> +					break;
+>> +				rspin_threshold = rwsem_rspin_threshold(sem);
+>> +				loop = 0;
+>> +			}
+> This seems fragile, why not to the rspin_threshold thing _once_ at the
+> start of this function?
+>
+> This way it can be reset.
 
-static long ppp_compat_ioctl(struct file *file, unsigned int cmd,
-unsigned long arg)
-{
-        struct ppp_file *pf;
-        struct ppp *ppp;
-        int err = -ENOIOCTLCMD;
-        struct ppp_option_data32 data32;
-        struct ppp_option_data data;
-        void __user *argp = compat_ptr(arg);
+You can have a situation as follows:
 
-        mutex_lock(&ppp_mutex);
+Lock owner: R [W] R
 
-        pf = file->private_data;
-        if (!pf || pf->kind != INTERFACE)
-                goto out;
+So a writer comes in and get the lock before the spinner. You can then
+actually spin on that writer. After that a reader come in and steal the
+lock, the code above will allows us to reset the timeout period for the
+new reader phase.
 
-        ppp = PF_TO_PPP(pf);
-        switch (cmd) {
-        case PPPIOCSCOMPRESS32:
-                if (copy_from_user(&data32, argp, sizeof(data32))) {
-                        err = -EFAULT;
-                        goto out;
-                }
+>> +			/*
+>> +			 * Check time threshold every 16 iterations to
+>> +			 * avoid calling sched_clock() too frequently.
+>> +			 * This will make the actual spinning time a
+>> +			 * bit more than that specified in the threshold.
+>> +			 */
+>> +			else if (!(++loop & 0xf) &&
+>> +				 (sched_clock() > rspin_threshold)) {
+> Why is calling sched_clock() lots a problem?
 
-                data.ptr = compat_ptr(data32.ptr);
-                data.length = data32.length;
-                data.transmit = data32.transmit;
+Actually I am more concern about the latency introduced by the
+sched_clock() call. BTW, I haven't done any measurement myself. Do you
+know how much cost the sched_clock() call is?
 
-                err = ppp_set_compress(ppp, &data);
-                break;
+If the cost is relatively high, the average latency period after the
+lock is free and the spinner is ready to do a trylock will increase.
 
-#ifdef CONFIG_PPP_FILTER
-        case PPPIOCSPASS32:
-                err = compat_get_sock_fprog(&uprog, argp);
-                if (err)
-                        break;
-                err = ppp_set_filter(ppp, &uprog, &ppp->pass_filter);
-                break;
+Cheers,
+Longman
 
-        case PPPIOCSACTIVE32:
-                err = compat_get_sock_fprog(&uprog, argp);
-                if (err)
-                        break;
-                err = ppp_set_filter(ppp, &uprog, &ppp->active_filter);
-                break;
-#endif /* CONFIG_PPP_FILTER */
-
-        default:
-                break;
-        }
-
-out:
-        mutex_unlock(&ppp_mutex);
-
-        if (err == -ENOIOCTLCMD)
-                err = ppp_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
-
-        return err;
-}
-
-Which doesn't look nearly as bad as I had feared, but still is
-a larger change to the existing code than what I had before,
-so there is a bigger risk that I screwed up somewhere new.
-
-       Arnd
