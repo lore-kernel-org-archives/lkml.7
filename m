@@ -2,132 +2,133 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B4DC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD8CC282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A42D2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318462183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG3VtRXX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyvDfTTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387680AbfDRAzi (ORCPT
+        id S2387755AbfDRA4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 20:55:38 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46099 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729446AbfDRAzi (ORCPT
+        Wed, 17 Apr 2019 20:56:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45426 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfDRA43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 20:55:38 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x188so263811oia.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:55:37 -0700 (PDT)
+        Wed, 17 Apr 2019 20:56:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y3so327931pgk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:56:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AV64GvdS0YzPBsOlzyDEAVi9ue4MjVTIDqGNkDwC9Io=;
-        b=FG3VtRXXvVmeoCr8SriXFcdTfidzpRciVS+Fgb2ZffXESpMWl65i57FK1Ua7x9JhGv
-         wI9DO85Haax7WSJUAPP6uI/ZhMZhr3iZm4eyu7MTpged/PuPGgDHebfhCdZOX9b91kB3
-         rvKLQSN944b5eJyHyIUfj+HqVwZ4ojl9yNxxzqElSUYtdv+ZxYIyCdB1vxmR2wpzxGAJ
-         4S31IunJogi+1Jt7DvDpRypEek2awsnRHsEfi9HYjp2aCSAOkZwsT6t4EPcXsgmjXYwX
-         qMUeC9bT7sApRnEuEMeS0GCoQ6vkVH7sKkhjCorpDn6wZDGFtR3728+mMQudRg2KyvAr
-         Q+IA==
+        h=from:to:cc:subject:date:message-id;
+        bh=NCTHDha1xM/aVhgZQjb426tHN47IE4D29YS6s+8P+hI=;
+        b=lyvDfTTaK38CqH1AhVyLFO5T4uwMdNwEKxMXlLK6Lpa3f85mFo4McQeMf8zqhAOhXR
+         bzNV3fMbnmQTCPuPsop6W2MbELV/HdTm6TOmNhicM5OpKt617ir9uMXZrm/aeE6mqS5L
+         oklQjol5CW+xUvNOci0gOlMPa9X3RKaSzvTkVFmkzQY2lWFnqOHn7FxqyQ4Oj0HuraTQ
+         48vTGo0JB5aRwV8wjJ5WwkcKvyQZo37HI+uoUGXoZC5IMnUw4yLuM3/v1Buyc4F0Eh3a
+         1Y12KICsKkRC1RIdvDEd91/cvpPoYk6CmhGJol4zWVvuRNpJbKCSRXH/I9FAtZxQkgki
+         GyZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AV64GvdS0YzPBsOlzyDEAVi9ue4MjVTIDqGNkDwC9Io=;
-        b=iTUHmyWFW/4k5vZoK+rwIQXRDLbQNvUyFACJpkKlvUwFIqh7HV7AEeBk2P69FBQW0A
-         pbSEk7zCh4zGuul33DvCUEcC/eb4kv3QBDYhkRPGcQ8R07aNn3hIn7Bn0iE3/ouSPyvq
-         LmWk0+fTNggEXkMgYaI3wtuRMbe4/jf9+bwLgZw3TM58PjZjzoEfeNdYm8USE4gK8eSk
-         Rl4KovBXSazvmxhvX1RtEX9KSezCBnOVh3A8RpAaCqlHM+On+Ez8f7fGznz8FtxYjc09
-         agPGyE2vWk6ZBJBcMbsNsiJ6wvDId1Oi1L5J6XNykSM4QjV94HpvkCwRourV8KE+csW8
-         9+gw==
-X-Gm-Message-State: APjAAAV8gQt/BdH2eEHce1eD/Qo7K2oTPS/Ah0m55Ku2yNd2ih5C/XH5
-        l97ha4wb3TSaRsbwWQlwiI73uDpju9ZAFg==
-X-Google-Smtp-Source: APXvYqxfBIJiWSYCGdTzElnBv4SwJaGwvkb9RLLlVtVf6lubRjCTt7rHrEseIa24zlUTF5t3LF6PNw==
-X-Received: by 2002:aca:3b43:: with SMTP id i64mr249945oia.121.1555548937062;
-        Wed, 17 Apr 2019 17:55:37 -0700 (PDT)
-Received: from madhuleo ([2605:6000:1023:606d:9d55:3ae5:fad7:6d16])
-        by smtp.gmail.com with ESMTPSA id h8sm201864oti.64.2019.04.17.17.55.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 17:55:36 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 19:55:33 -0500
-From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     johan@kernel.org, elder@kernel.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Staging: greybus: Cleanup in greybus driver
-Message-ID: <20190418005532.GA3421@madhuleo>
-References: <20190416221318.21161-1-madhumithabiw@gmail.com>
- <20190417062518.GA23076@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417062518.GA23076@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NCTHDha1xM/aVhgZQjb426tHN47IE4D29YS6s+8P+hI=;
+        b=c+rnl7lCEihCm2tRmBoDliRR8ubiuFDMRJn1BWRRvfW1sRNVhVPisCmpd0qjzDmYN/
+         MMk0UXp62WmZJcRgVI7PMFx73pDXeQTz7lkITkwl/Ng6GURiuHjTI4toKnKhLFKVpp4S
+         JDbAbiAetQY/XQSzHXRuWfbVW2pmS+VSsTcf1kIC4vWB3TGnLf7bn0vu8nYhxPYDnZiB
+         GeOUPNLUMkZPsRFUwH+aoQUsiU14xnO358FXEddna5GcVX2pajzl/pN1Tat2M4104h6D
+         KGli/6xINKuxGWlFLnhr6poghXgVbs1oIXlVavK8ff695NZ40s6AuUlv38lDc+PxWO/X
+         S86Q==
+X-Gm-Message-State: APjAAAWCHcmgG0yRI0H7N6qM475OfSU1M/7Q2fUz5aSIIAdIllkKwvYK
+        cJeSm6pfd/y+Uc2lpAaMdVo=
+X-Google-Smtp-Source: APXvYqwzKcJWAZA8gk9S1Rf9zj2fXvswUwesJyaWKSO+DGtnzhnROt1yEAC+FUIf//a2bzMHhUBTCA==
+X-Received: by 2002:a63:4e10:: with SMTP id c16mr85610316pgb.302.1555548989107;
+        Wed, 17 Apr 2019 17:56:29 -0700 (PDT)
+Received: from pcliush.allwinnertech.com ([223.197.233.48])
+        by smtp.gmail.com with ESMTPSA id p14sm535622pfa.26.2019.04.17.17.56.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Apr 2019 17:56:28 -0700 (PDT)
+From:   damon <liush.damon@gmail.com>
+To:     palmer@sifive.com
+Cc:     aou@eecs.berkeley.edu, anup.patel@wdc.com, liush.damon@gmail.com,
+        rppt@linux.ibm.com, sorear2@gmail.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] RISC-V: redefine PTRS_PER_PGD/PTRS_PER_PMD/PTRS_PER_PTE
+Date:   Thu, 18 Apr 2019 08:56:15 +0800
+Message-Id: <1555548975-7011-1-git-send-email-liush.damon@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17  :25, Greg KH wrote:
-> On Tue, Apr 16, 2019 at 05:13:18PM -0500, Madhumitha Prabakaran wrote:
-> > Fix a blank line after structure declarations. Also, convert
-> > macros into inline functions in order to maintain Linux kernel
-> > coding style based on which the inline function is
-> > preferable over the macro.
-> > 
-> > Blank line fixes are suggested by checkpatch.pl
-> > 
-> > Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
-> > 
-> > Changes in v2:
-> > - To maintain consistency in driver greybus, all the instances of macro
-> > with container_of are fixed in a single patch.
-> > ---
-> >  drivers/staging/greybus/bundle.h    |  6 +++++-
-> >  drivers/staging/greybus/control.h   |  6 +++++-
-> >  drivers/staging/greybus/gbphy.h     | 12 ++++++++++--
-> >  drivers/staging/greybus/greybus.h   |  6 +++++-
-> >  drivers/staging/greybus/hd.h        |  6 +++++-
-> >  drivers/staging/greybus/interface.h |  6 +++++-
-> >  drivers/staging/greybus/module.h    |  6 +++++-
-> >  drivers/staging/greybus/svc.h       |  6 +++++-
-> >  8 files changed, 45 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/staging/greybus/bundle.h b/drivers/staging/greybus/bundle.h
-> > index 8734d2055657..84956eedb1c4 100644
-> > --- a/drivers/staging/greybus/bundle.h
-> > +++ b/drivers/staging/greybus/bundle.h
-> > @@ -31,7 +31,11 @@ struct gb_bundle {
-> >  
-> >  	struct list_head	links;	/* interface->bundles */
-> >  };
-> > -#define to_gb_bundle(d) container_of(d, struct gb_bundle, dev)
-> > +
-> > +static inline struct gb_bundle *to_gb_bundle(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_bundle, dev);
-> > +}
-> 
-> Why are we changing this to an inline function?  The #define is fine,
-> and how we "normally" do this type of container_of conversion.
-> 
-> I understand the objection of the "no blank line", but this was the
-> "original" style that we used to create these #defines from the very
-> beginning of the driver model work a decade ago.  Changing that
-> muscle-memory is going to be hard for some of us.  Look at
-> drivers/base/base.h for other examples of this.
+Use the number of addresses to define the relevant macros.
 
-Thanks for explaining it.
+Signed-off-by: damon <liush.damon@gmail.com>
+---
+ arch/riscv/include/asm/pgtable-32.h | 2 ++
+ arch/riscv/include/asm/pgtable-64.h | 3 ++-
+ arch/riscv/include/asm/pgtable.h    | 4 ++--
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-> 
-> thanks,
-> 
-> greg k-h
+diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
+index d61974b7..93607f6 100644
+--- a/arch/riscv/include/asm/pgtable-32.h
++++ b/arch/riscv/include/asm/pgtable-32.h
+@@ -17,8 +17,10 @@
+ #include <asm-generic/pgtable-nopmd.h>
+ #include <linux/const.h>
+ 
++#define MAX_USER_VA_BITS	32
+ /* Size of region mapped by a page global directory */
+ #define PGDIR_SHIFT     22
++#define PMD_SHIFT       PGDIR_SHIFT
+ #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+ #define PGDIR_MASK      (~(PGDIR_SIZE - 1))
+ 
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index 7aa0ea9..a56d4d0 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/const.h>
+ 
++#define MAX_USER_VA_BITS	39
+ #define PGDIR_SHIFT     30
+ /* Size of region mapped by a page global directory */
+ #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+@@ -34,7 +35,7 @@
+ #define pmd_val(x)      ((x).pmd)
+ #define __pmd(x)        ((pmd_t) { (x) })
+ 
+-#define PTRS_PER_PMD    (PAGE_SIZE / sizeof(pmd_t))
++#define PTRS_PER_PMD    (1 << (PGDIR_SHIFT - PMD_SHIFT))
+ 
+ static inline int pud_present(pud_t pud)
+ {
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 1141364..d9cb3c8 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -33,9 +33,9 @@
+ #endif /* CONFIG_64BIT */
+ 
+ /* Number of entries in the page global directory */
+-#define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
++#define PTRS_PER_PGD (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
+ /* Number of entries in the page table */
+-#define PTRS_PER_PTE    (PAGE_SIZE / sizeof(pte_t))
++#define PTRS_PER_PTE   (1 << (PMD_SHIFT - PAGE_SHIFT))
+ 
+ /* Number of PGD entries that a user-mode program can use */
+ #define USER_PTRS_PER_PGD   (TASK_SIZE / PGDIR_SIZE)
+-- 
+1.9.1
+
