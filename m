@@ -2,131 +2,128 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802B4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F212C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4916B20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8F020693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 16:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ID9y5FEA"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ATWDxkO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389552AbfDRQCF (ORCPT
+        id S2389615AbfDRQFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 12:02:05 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34599 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbfDRQCE (ORCPT
+        Thu, 18 Apr 2019 12:05:19 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43175 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388401AbfDRQFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 12:02:04 -0400
-Received: by mail-vs1-f67.google.com with SMTP id t78so1448978vsc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:02:04 -0700 (PDT)
+        Thu, 18 Apr 2019 12:05:18 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t81so1997695oig.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:05:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wZfr0dfYVyVMEvcvS40jmVaisVuMSGO4nxRrWwy98wU=;
-        b=ID9y5FEA4pwe/H0FEThOAFig//4eVQNDyf30JX/Npl7oEnVxVg9qQaWmNb7JavlVz/
-         hYWLb83L/gjCSZG0v7Eoc3L1f+JnkCUL8ItGORSAIwWLNdfgMdI2nC6gGOebJagXraKv
-         kYEpdqHqK8moEA0q7fMvAmCWKM2OePFyboU8M=
+        bh=9656FNKKp4cUVga3XUcreKMqWUBjOMnkCExkfsBvcE0=;
+        b=ATWDxkO+EzohN5YWedA5OnfOl7z0C5wosAmTrDF5hxxtYtjNdCK/9PHgnZhYETJJ8t
+         vacr+rHkJxxNGOmeI1vTif1Vl4SIwdCSz21szdtTalMtQ8a/1Obxe+VdKwZnY8xrFtd+
+         ciBIJxCm9FZlAQVPiOTKZr8Xdghbnp/hQTXS/ucudKTmB79U11kjETh4fqNlfW3T1gK0
+         Zu87he2RHQTC+AM19urSAzmn3PITVUqT2oXHTybHWlpO7u1bFfMxyXZLHVTzCvZ6mXjc
+         bD19cp4gsnL0R2s/7Y3bFqcAI2a5/xvDNGJEJYE3ed3iSmhC+ui2TozfrYHnQqDdah3m
+         ZD3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wZfr0dfYVyVMEvcvS40jmVaisVuMSGO4nxRrWwy98wU=;
-        b=kkAiZ57p6piLlfYT8g/Q8/rSnqa7lXN6CNy4zGIHP82h32f2fb85Vp3KCH7kG2A+l+
-         ztF+Jwc8+jE92rkvc8CP8qxC73GNgrsqxRUaHFbghqMxPOp0Kr0iU+bcbhs4XYwqKwNP
-         /eyu11hNoh3ClJuzIsLSmzybpPzHOyj55/gBdA/CLJTipYHP9tmzaklfvcKRV/B09lLB
-         vZPMY6RGP2RECZFHojMM5KKSGdnSmWbPza82msxisDuF/et6w+knbSdyqqoJO+do0PLO
-         /HlUlG5sgpkBwqICKmIjiqOMDtf/CS3u7FDh4eVlp95069AQSsEbSu/mFVNfEOPgAr47
-         W5mw==
-X-Gm-Message-State: APjAAAWe78yn7WS+UGTW674DGXVXWDOxsMH89v0hfQE/shdQWsPA+/C9
-        up0vto2uxoW7MRn8z4c8Ceygl72+J3o=
-X-Google-Smtp-Source: APXvYqxQFT3j2MZfK5qZpskS0DcjiX6lOShTTnkYfzAbS4BoezOVkuDP144/n8KcoFX5PXcvFgKtJw==
-X-Received: by 2002:a67:ec8a:: with SMTP id h10mr54632475vsp.126.1555603323535;
-        Thu, 18 Apr 2019 09:02:03 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id m23sm2526065vsl.24.2019.04.18.09.02.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 09:02:03 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id o10so1417733vsp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 09:02:03 -0700 (PDT)
-X-Received: by 2002:a67:bc01:: with SMTP id t1mr52844206vsn.149.1555602901359;
- Thu, 18 Apr 2019 08:55:01 -0700 (PDT)
+        bh=9656FNKKp4cUVga3XUcreKMqWUBjOMnkCExkfsBvcE0=;
+        b=LHB2KID4fap4CzArrZAg4iRsHW62QSKKO2vaVSeHiOi3lNvD2cRvT1hK3ckzW6Wn2F
+         2WbOMnpkzggB1Y4SV3HwqJ31D1+J+q0HSjVROxjkq6SsyhZpjxPDNhoeEAFjamV4EWaB
+         UpAWnKgJc6le0H//S+hMaWEFNuVM+g7Scc1xmaNqtLimluyONLmqR7sFlE8dylkjKwGo
+         m+JBcVnIOMELsxA8ISnbt3dcsDood5ALjFcqtEe/y097GQ2H1YdHOrvROhYjXj6XTpBw
+         OVXX4U/PzwLf8ck4B+Kgq5HGatLHo/ngq5hb02BhIP6TONJ+hJVchUA5/ipYrWKXRAr5
+         vjrw==
+X-Gm-Message-State: APjAAAV0gbEOUCGeN5mJH0/iA/0BaxWcTzMeXgwgdaB8cKWpRJEx+xtH
+        I08ytagJ9ap+Q/vkwmF3vN+syiOqyFxikKeJFfsZiw==
+X-Google-Smtp-Source: APXvYqzTGVz9ejtUV0liyJEyYqaIHrUyuHEbCYPG5pgMNrA7E3qjZWVF7XUM3SvNiTSOlLSiE2pi4l5w04d9dnUuvxA=
+X-Received: by 2002:aca:ed88:: with SMTP id l130mr2422676oih.70.1555603517276;
+ Thu, 18 Apr 2019 09:05:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190418001356.124334-1-dianders@chromium.org> <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
-In-Reply-To: <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 18 Apr 2019 08:54:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XDLqcdq_BypUYsJHKX+DY0VWvCACYgZiHeG8E3Dbwxcw@mail.gmail.com>
-Message-ID: <CAD=FV=XDLqcdq_BypUYsJHKX+DY0VWvCACYgZiHeG8E3Dbwxcw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend; enable for rk3288-veyron
-To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "amstan@chromium.org" <amstan@chromium.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        William Wu <william.wu@rock-chips.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Randy Li <ayaka@soulik.info>,
-        "zyw@rock-chips.com" <zyw@rock-chips.com>,
-        "mka@chromium.org" <mka@chromium.org>,
-        "ryandcase@chromium.org" <ryandcase@chromium.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        "jwerner@chromium.org" <jwerner@chromium.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
+ <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
+ <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 18 Apr 2019 09:05:05 -0700
+Message-ID: <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Pankaj Gupta <pagupta@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 12, 2019 at 6:12 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>
+> Jan Kara <jack@suse.cz> writes:
+>
+> > On Thu 11-04-19 07:51:48, Dan Williams wrote:
+> >> On Tue, Apr 9, 2019 at 9:09 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+> >> > +       } else {
+> >> > +               if (nd_region->flush(nd_region))
+> >> > +                       rc = -EIO;
+> >>
+> >> Given the common case wants to be fast and synchronous I think we
+> >> should try to avoid retpoline overhead by default. So something like
+> >> this:
+> >>
+> >> if (nd_region->flush == generic_nvdimm_flush)
+> >>     rc = generic_nvdimm_flush(...);
+> >
+> > I'd either add a comment about avoiding retpoline overhead here or just
+> > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
+> > get confused by the code.
+>
+> Isn't this premature optimization?  I really don't like adding things
+> like this without some numbers to show it's worth it.
 
-On Thu, Apr 18, 2019 at 5:41 AM Minas Harutyunyan
-<Minas.Harutyunyan@synopsys.com> wrote:
-> Did you consider/reviewed patch series from Artur Petrosyan "[PATCH
-> 00/14] usb: dwc2: Fix and improve power saving modes" (submitted on
-> April 12) which fixing partial power down and hibernation flows for both
-> modes: host and device?
-> I suspect that this both patch series can be in conflict.
+I don't think it's premature given this optimization technique is
+already being deployed elsewhere, see:
 
-No, I wasn't aware of them.  I'd like to try them out, but it looks
-like it's currently impossible because they're not archived anywhere
-that I can find.
-
-1. LKML wasn't copied, so I can't find them on lore.kernel.org.  It is
-suggested to CC LKML on all patches.
-
-2. The Linux USB patchwork only has the cover letter plus the first 6
-patches.  See <https://patchwork.kernel.org/cover/10898333/>
-
-3. Searching my own archives I only see the cover letter plus the
-first 6 patches.
-
-Maybe you have some other pointer to how I can retrieve them?  I guess
-I could try the first 6 patches without the later 8 but I'd rather get
-the whole set...
-
-
--Doug
+https://lwn.net/Articles/774347/
