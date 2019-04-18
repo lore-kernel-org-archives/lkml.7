@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324D5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3096C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0396A206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48BD20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611002;
-	bh=HxNiS0QVnACuyE+F6kOxO2zBW7BOtZS4lkTy8/CtQa8=;
+	s=default; t=1555611007;
+	bh=8obVZ6zgTm4HnTVKk2fQksn2w/Y16Nk5VNPqioju6eY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6LzYDjpyuqlPtVsgyEHtlp29od9ApCYbp3VLvKbbtu2ASs5REYcEg+sAnZ/Tq6Ul
-	 3H6THIU2hQislcSqI0At4K0kKQ//gGFpvU6FfA+o7xRa1NoEox+Gk4saFG7EsvPCoW
-	 GhjPZkdb0dgtVcGwo4wMaF69bxmnp249TPW5CtYY=
+	b=2ipZc6LK+EsP86oUMQoNmzJBY3JbJXO92o+cUqR7Jx9X/k2LajW4W8rfd/obiQuS+
+	 AMHqRn4d9paTlb4WgRuRwoKApRTxI+HlT2V89PVK1895LVDSLTP8cEX6CcePjFBwWN
+	 PEWQZ5rlPaPbjk7uXPFhx9jg+2RVnOcWFxjSt/ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404056AbfDRSKA (ORCPT
+        id S2404067AbfDRSKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403986AbfDRSJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:09:58 -0400
+        id S2404055AbfDRSKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2742186A;
-        Thu, 18 Apr 2019 18:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1CC120675;
+        Thu, 18 Apr 2019 18:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610997;
-        bh=HxNiS0QVnACuyE+F6kOxO2zBW7BOtZS4lkTy8/CtQa8=;
+        s=default; t=1555611000;
+        bh=8obVZ6zgTm4HnTVKk2fQksn2w/Y16Nk5VNPqioju6eY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtDGw7DVDmWHlTNcAwXeA1XdunK/t2J/OIAEGoHPhJwvo0GvR0z59UJHknAtT7C5R
-         ggddDN931d+mUJW/md1HwkzQwJfyxF/svSm0qWDMtAZxWdyyJKuPcxZWvRre569/f5
-         +xIO7VAX8VgD6vSB+TdB9g0zag10o4LCpXl4S8aI=
+        b=ycrvoSP53HEJ7MjTnIFpW29bQ0eevzo2c/xw98F2rY+DlUlrjkhN+SaJ1MrwsaV9o
+         /ohWrtehitm7PxocdXLtxGK5WpgOJ5aJA2Bv8EKEi3sfHD8QJ1cvPFcw+RZgX6tpQ1
+         SEERgh2/67Fv3pZNkKkF391XIwcqQhJWDB+Tvjfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 02/93] arc: hsdk_defconfig: Enable CONFIG_BLK_DEV_RAM
-Date:   Thu, 18 Apr 2019 19:56:40 +0200
-Message-Id: <20190418160437.002226769@linuxfoundation.org>
+Subject: [PATCH 5.0 20/93] thermal/intel_powerclamp: fix __percpu declaration of worker_data
+Date:   Thu, 18 Apr 2019 19:56:58 +0200
+Message-Id: <20190418160438.824963069@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -61,34 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0728aeb7ead99a9b0dac2f3c92b3752b4e02ff97 ]
+[ Upstream commit aa36e3616532f82a920b5ebf4e059fbafae63d88 ]
 
-We have now a HSDK device in our kernelci lab, but kernel builded via
-the hsdk_defconfig lacks ramfs supports, so it cannot boot kernelci jobs
-yet.
+This variable is declared as:
+	static struct powerclamp_worker_data * __percpu worker_data;
+In other words, a percpu pointer to struct ...
 
-So this patch enable CONFIG_BLK_DEV_RAM in hsdk_defconfig.
+But this variable not used like so but as a pointer to a percpu
+struct powerclamp_worker_data.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+So fix the declaration as:
+	static struct powerclamp_worker_data __percpu *worker_data;
+
+This also quiets Sparse's warnings from __verify_pcpu_ptr(), like:
+  494:49: warning: incorrect type in initializer (different address spaces)
+  494:49:    expected void const [noderef] <asn:3> *__vpp_verify
+  494:49:    got struct powerclamp_worker_data *
+
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/configs/hsdk_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/intel/intel_powerclamp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 87b23b7fb781..aefcf7a4e17a 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -8,6 +8,7 @@ CONFIG_NAMESPACES=y
- # CONFIG_UTS_NS is not set
- # CONFIG_PID_NS is not set
- CONFIG_BLK_DEV_INITRD=y
-+CONFIG_BLK_DEV_RAM=y
- CONFIG_EMBEDDED=y
- CONFIG_PERF_EVENTS=y
- # CONFIG_VM_EVENT_COUNTERS is not set
+diff --git a/drivers/thermal/intel/intel_powerclamp.c b/drivers/thermal/intel/intel_powerclamp.c
+index 7571f7c2e7c9..b12ecd436e23 100644
+--- a/drivers/thermal/intel/intel_powerclamp.c
++++ b/drivers/thermal/intel/intel_powerclamp.c
+@@ -101,7 +101,7 @@ struct powerclamp_worker_data {
+ 	bool clamping;
+ };
+ 
+-static struct powerclamp_worker_data * __percpu worker_data;
++static struct powerclamp_worker_data __percpu *worker_data;
+ static struct thermal_cooling_device *cooling_dev;
+ static unsigned long *cpu_clamping_mask;  /* bit map for tracking per cpu
+ 					   * clamping kthread worker
 -- 
 2.19.1
 
