@@ -2,99 +2,123 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF636C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE07C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3BC217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:18:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oloqSQV1"
+	by mail.kernel.org (Postfix) with ESMTP id 05C05217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555593654;
+	bh=tB6W23DqVoY0ovjvn+gfIFqrcvOuFPUUX6EhZ2Swf2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PlUGmN4IUHTzfNo2RxTGOszuf8BtGD7Sjr9WX2Yuf8a5uEKyeGoM+iZ7Q9t9XdtUW
+	 MdZ6n0V7RrEygq3vv3+kJ+EYS+hOKrxI5DouLbqSOPJ7QcIZi3tNGNmcIPZmz/HFVC
+	 5tXnUwQ+EmchSA8rs+C/baG8ItSoBWc4fMuNoPCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389089AbfDRNSs (ORCPT
+        id S2389011AbfDRNUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:18:48 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37653 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388253AbfDRNSr (ORCPT
+        Thu, 18 Apr 2019 09:20:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33744 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfDRNUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:18:47 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c16so1672692otn.4;
-        Thu, 18 Apr 2019 06:18:47 -0700 (PDT)
+        Thu, 18 Apr 2019 09:20:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k1so1780371wrw.0;
+        Thu, 18 Apr 2019 06:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YmRLwwulNSmiQ7YqZfm/rSlRZBFV/TKnGZPEzI+AGpo=;
-        b=oloqSQV11CRs849x7iwLVtrscASGRrTPOPPryHv1IPLfambPgLyUuIJqvI/ca8xPuP
-         qUV6Uq/Hml6snG/ulcL4O7l+jZhYHxlaiPT4wB8x6fVgkyS1NiSjL3oxdMkX16pOVp6K
-         GI7NeVBfegYI1Cjp4xM/vkByWYfp8s7iBOtdKRedmXtDobGnkiqO/U/2AfJoMpAGWmrZ
-         4oUODLUOtR9wdwaQa1M8je88l9KnvouzMCkPnU5Yi3qPhJ6NHk0BIW89axwXc0YT5hd2
-         LlSAZIuaKTIeRj0X5E+DjV/CwE3xHs1DQH46TS0uhl4pZ5rusHFMSPm6R6fo2Esrw/v/
-         XN0A==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XQCHoAAFT5Z9bDRSYOBbJEBinvShFFVBSkUMOBYi/Tc=;
+        b=OBVI3mxBq7hJJ7GMq63UZAs5eDSNSQHVMQhmsRcAzOUlEvQybBl1shmYvk0PdKKK5/
+         0AT3aJ9peUWu6DDE2+uo/dmc7PEUAwXzlwkLRi6iJQAHlOzIPupYPzVxLR6BgJ1aoE8/
+         PaA7Uf6uU6WdoZEbRyIT6Bl8wnNCRk7UlthLWf1af5Bs/hdbglOXeyfrugNoRNZbu+ve
+         K6oedra3Ss9p/ADCD3fv4vNKJ1x2sNjXk8UGfrCFuaZT7pQkl/USfphp6YQaSoQn1qZZ
+         OJjlYQjkhJvXBlSdRxhmEm7YT/CUd/7rFK/KQcjGeGoFbZTeIJoWsQ6fLUy7H1fnUd8s
+         b6mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YmRLwwulNSmiQ7YqZfm/rSlRZBFV/TKnGZPEzI+AGpo=;
-        b=hQo9Km9+So5+DuUxUruP8QBHnJ9XDGP8MA0fKO41XNqEEJKT8OaBz56BilGe5w1bPv
-         rz5ZHzK1/G8IRAibTDesn4UlZRF1XANWEuIk3zps7E/B/JMyt447tdaIcDSa3Z5iCGk8
-         xFQIXE5xqYXdfIheO4VrbY5vhGonpuFISzaVNyFVi0Vpzx3spEtrLTswWGVljx8U6xVd
-         +w6WGBHSOK4R3Ot/Kpg0rx4JNW07AL0Y+qXDP+iWtxtQimtQm4rjR27IA6JNwLeWjIic
-         M9GE1yh/BDfO3MWOR1CriJajKMdA7fco3Ll7vCF8Id9C+iNofibkJUQcc161rhkMOca2
-         H1Kw==
-X-Gm-Message-State: APjAAAVQY8g+9tEj/EKio1K6tIsjm+pIX7DR2Hf3HI28qnFW0Ogx+7Tl
-        c2nHTZFMzT30yBWOXGCJKRyXtUZ5cO+xZ2ZABDg=
-X-Google-Smtp-Source: APXvYqyX5QLsU3pbj+6nkbiTuKPZCtejBr1tKmbuy0REPwJz+MaK09GRPPZpPsIOarvVsG//kU90Mb/hrtYvv8vxHZw=
-X-Received: by 2002:a9d:6318:: with SMTP id q24mr57602153otk.95.1555593527015;
- Thu, 18 Apr 2019 06:18:47 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XQCHoAAFT5Z9bDRSYOBbJEBinvShFFVBSkUMOBYi/Tc=;
+        b=HyAedJ13BSndJyNGMfLKRQ35i4vThDLmzI3hShhbYtODM/y/VId9Kt9S22Y0acdgQ8
+         n4ii6hTWqXEbmR5bLiMYB5V4ulQa9fGzkY4arMvxhAsb1xmZK/0mASRwxmZBoo+XEH9L
+         Qhr8qOwzc/jg+w2Yxh3z8ysyUeKShRMcPFoBYBi+EVYmPUsmRwlN+tTJJPmYhkRcN4as
+         DUX+Z9/7d1Ok51P7/I1foRT2T/dKWcnnSvhKFZMrgEr2gXeooYRh81X/hgDXv9CHpzfE
+         aWCmxJp88yuOrrjzl4SqfyNKbWd5DgbCFJbXXlmRntbO2mzlJpMDUD/hm8tfWv0quQiZ
+         3epA==
+X-Gm-Message-State: APjAAAUBXnIn3sfLDDOVXwY6OkmT5h2hykRKX/nOhWUTWFcxRZEX1BrC
+        P1qc0nUQiLwzTn9jrrndrEQ=
+X-Google-Smtp-Source: APXvYqzJ/ySJ+z0VjPKhlTQyMQFU1iuU9BCAPDw4iU0TqindWFDaAlZ0lD4Q/VA3V2aWhbWS1mn+aA==
+X-Received: by 2002:a05:6000:1111:: with SMTP id z17mr282634wrw.103.1555593650693;
+        Thu, 18 Apr 2019 06:20:50 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id r18sm3417736wme.18.2019.04.18.06.20.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 06:20:49 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 15:20:47 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        x86@kernel.org, linux-mtd@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Dave Hansen <dave@sr71.net>,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] compiler: allow all arches to enable
+ CONFIG_OPTIMIZE_INLINING
+Message-ID: <20190418132047.GA21430@gmail.com>
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-References: <20190416155618.1369-1-TheSven73@gmail.com> <20190416155618.1369-4-TheSven73@gmail.com>
- <2caf5f92-164a-3723-e2ef-42e4045d2ec3@metux.net> <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
- <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net> <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
- <3103f45a-facf-89a3-8a36-84507c570909@metux.net> <CAGngYiXd34hTriDsKvhOWogaF0uLfVbUn5BzJc3cUnZcWpFXAg@mail.gmail.com>
- <c1c84e6b-99db-672e-4062-9129d5e89d10@metux.net>
-In-Reply-To: <c1c84e6b-99db-672e-4062-9129d5e89d10@metux.net>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 18 Apr 2019 09:18:36 -0400
-Message-ID: <CAGngYiX+VF=p1riYdC2ce=Vz0ig-2YR-TbeyL=XDh2gXn_Rp_Q@mail.gmail.com>
-Subject: Re: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 4:21 AM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> So, that input line is *always* hardwired to the regulator ?Okay, that's
-> a different situation.
->
 
-Yes, it's always hardwired to the CAN regulator by production / assembly.
+* Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-So it looks as if regulator is the closest suitable abstraction. I
-suggest we stick
-with it until and unless someone has a better suggestion.
+> Commit 60a3cdd06394 ("x86: add optimized inlining") introduced
+> CONFIG_OPTIMIZE_INLINING, but it has been available only for x86.
+> 
+> The idea is obviously arch-agnostic although we need some code fixups.
+> This commit moves the config entry from arch/x86/Kconfig.debug to
+> lib/Kconfig.debug so that all architectures (except MIPS for now) can
+> benefit from it.
+> 
+> At this moment, I added "depends on !MIPS" because fixing 0day bot reports
+> for MIPS was complex to me.
+> 
+> I tested this patch on my arm/arm64 boards.
+> 
+> This can make a huge difference in kernel image size especially when
+> CONFIG_OPTIMIZE_FOR_SIZE is enabled.
+> 
+> For example, I got 3.5% smaller arm64 kernel image for v5.1-rc1.
+> 
+>   dec       file
+>   18983424  arch/arm64/boot/Image.before
+>   18321920  arch/arm64/boot/Image.after
+> 
+> This also slightly improves the "Kernel hacking" Kconfig menu.
+> Commit e61aca5158a8 ("Merge branch 'kconfig-diet' from Dave Hansen')
+> mentioned this config option would be a good fit in the "compiler option"
+> menu. I did so.
+
+No objections against moving it from x86 code to generic code.
+
+Thanks,
+
+	Ingo
