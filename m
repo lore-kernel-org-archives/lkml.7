@@ -2,159 +2,119 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065D0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABADC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4EA214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DBD21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="NXKztfCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388485AbfDRJgN (ORCPT
+        id S2388490AbfDRJge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:36:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52320 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388323AbfDRJgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:36:13 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 60FFA3001A70;
-        Thu, 18 Apr 2019 09:36:12 +0000 (UTC)
-Received: from [10.36.112.46] (ovpn-112-46.ams2.redhat.com [10.36.112.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EF3185C206;
-        Thu, 18 Apr 2019 09:36:05 +0000 (UTC)
-Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
- BIO_MAX_PAGES
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-References: <20190417115207.30202-1-pbonzini@redhat.com>
- <20190418021903.GB9520@ming.t460p>
- <1950505c-c1ff-3a99-bf4d-319ae1be381b@redhat.com>
- <20190418092918.GB15834@ming.t460p>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <1cb6a060-79ee-c665-5a68-4f173ff03416@redhat.com>
-Date:   Thu, 18 Apr 2019 11:36:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 05:36:34 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35184 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388044AbfDRJge (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:36:34 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y67so1261180ede.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 02:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RUWum+Va8Z//jAipbx3o13SVsAv8KB7rFp2TRt5t/Rk=;
+        b=NXKztfCOd+fSDtYoQU4LaNKH1DHMz1g4gjQzMKGYNYydsfBFvXQprtejqnEnHHWozb
+         CMd6gjnvuks+QCuYwswWjoB8aeGsWR7ekrDUwHSMTcTqNqzVSIjttJl0Gtb1uppfwTd7
+         NoD3NECnl5rnr7LfU7KQaJtHcgMTZ10pARYGjwzBG/aIQeMSdV0kXNM3XDSXMaZH8t33
+         8gXk+YFniNWR8t7pvumroZPUXzbmEI29fNoLVwSuA5eYmk+7M0AmG2q893mvYR/Gjsa2
+         HtkGEJZBHGTkwirfAPS73hY5BF0pDHeokRR/spU902DbN7/w6xZyqsd8uj5B6R+cu/xB
+         E/CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RUWum+Va8Z//jAipbx3o13SVsAv8KB7rFp2TRt5t/Rk=;
+        b=NpucbfmmHQzWUsW3IMtJjs0n4eWhq+bCumRBJGrkLK5dukfm6uNdZQJKa35omfihto
+         XCewrpGWWr+JPS/nL/NPX/XWO/QHWKHcpPDAtbw/Bfk1lM3kO2YqW+fRhk520ZUPmgxU
+         Ez1WtS/G0RZcwlgR+7ucbNd0osUzxzTS2VeVxlyXmpXcGBAi2rG0cNMO4qW0bgPQ7pl7
+         LYCknnCiLBu2N5CTlO2NiW98r6xFsfyk4msq/EVS2GHA5/cg6B4YhZHYD5MYD17RIhwd
+         8rvza9NTDIIUVG5ljJDp490mSKIv+kzTb6e9kHbJVWMfA8hVFN+P/NROvhmLslXNzBxY
+         EzaA==
+X-Gm-Message-State: APjAAAWLYJLwLv9pvKQUZgfeX/iyTW38PvvJmTTG7GrZBHQuU30J+dUB
+        6IRcQ8Y+ndvXN4vTrKzcJ7S3Vg==
+X-Google-Smtp-Source: APXvYqwPPEGctDAmToWSMGLAevSWwbrCqU+Xxdc7DcxOzpI59beah5B5o6Mt4CKANjYas/+0ICbc0g==
+X-Received: by 2002:a50:f5a2:: with SMTP id u31mr24357976edm.166.1555580192182;
+        Thu, 18 Apr 2019 02:36:32 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id j18sm379039edj.92.2019.04.18.02.36.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Apr 2019 02:36:31 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 11:36:30 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        tglx@linutronix.de, mtk.manpages@gmail.com,
+        akpm@linux-foundation.org, cyphar@cyphar.com,
+        joel@joelfernandes.org, dancol@google.com
+Subject: Re: [PATCH v1 2/4] clone: add CLONE_PIDFD
+Message-ID: <20190418093629.6fshxhambc2zzjdk@brauner.io>
+References: <20190416170233.10208-1-christian@brauner.io>
+ <20190416170233.10208-3-christian@brauner.io>
+ <20190417142253.GH32622@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190418092918.GB15834@ming.t460p>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 18 Apr 2019 09:36:12 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20190417142253.GH32622@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/04/19 11:29, Ming Lei wrote:
-> On Thu, Apr 18, 2019 at 10:42:21AM +0200, Paolo Bonzini wrote:
->> On 18/04/19 04:19, Ming Lei wrote:
->>> Hi Paolo,
->>>
->>> On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
->>>> Because bio_kmalloc uses inline iovecs, the limit on the number of entries
->>>> is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
->>>> in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
->>>> to report a DMA overrun.
->>>
->>> BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
->>> can't hold all user space request, new bio will be allocated and appended
->>> to the passthrough request if queue limits aren't reached.
->>
->> Stupid question: where?  I don't see any place starting at
->> blk_rq_map_user_iov (and then __blk_rq_map_user_iov->bio_map_user_iov)
->> that would allocate a second bio.  The only bio_kmalloc in that path is
->> the one I'm patching.
+On Wed, Apr 17, 2019 at 04:22:54PM +0200, Oleg Nesterov wrote:
+> On 04/16, Christian Brauner wrote:
+> >
+> > +	if (clone_flags & CLONE_PIDFD) {
+> > +		retval = pidfd_create(pid, &pidfdf);
+> > +		if (retval < 0)
+> > +			goto bad_fork_free_pid;
+> > +		pidfd = retval;
+> > +	}
 > 
-> Each bio is created inside __blk_rq_map_user_iov() which is run inside
-> a loop, and the created bio is added to request via blk_rq_append_bio(),
-> see the following code:
+> ...
+> 
+> > +	if (clone_flags & CLONE_PIDFD) {
+> > +		fd_install(pidfd, pidfdf);
+> > +		put_user(pidfd, parent_tidptr);
+> 
+> put_user() can fail, I don't think this error should be silently ignored,
+> this can lead to the hard-to-trigger/debug problems.
+> 
+> Why can't we do put_user-with-check along with pidfd_create() above?
 
-Uff, I can't read apparently. :(  This is the commit that introduced it:
+I've moved put_user() right were pidfd_create() is called but I think
+then it makes sense to change pidfd_create() to also do the fd_install()
+such that the following sequence creates the pidfd, installs it, and
+calls put_user() and calls ksys_close() on error. Any objections Oleg?
 
-    commit 4d6af73d9e43f78651a43ee4c5ad221107ac8365
-    Author: Christoph Hellwig <hch@lst.de>
-    Date:   Wed Mar 2 18:07:14 2016 +0100
++       if (clone_flags & CLONE_PIDFD) {
++               retval = pidfd_create(pid);
++               if (retval < 0)
++                       goto bad_fork_free_pid;
++
++               pidfd = retval;
++               retval = put_user(pidfd, parent_tidptr);
++               if (retval)
++                       goto bad_fork_put_pidfd;
++       }
 
-    block: support large requests in blk_rq_map_user_iov
-    
-    This patch adds support for larger requests in blk_rq_map_user_iov by
-    allowing it to build multiple bios for a request.  This functionality
-    used to exist for the non-vectored blk_rq_map_user in the past, and
-    this patch reuses the existing functionality for it on the unmap side,
-    which stuck around.  Thanks to the iov_iter API supporting multiple
-    bios is fairly trivial, as we can just iterate the iov until we've
-    consumed the whole iov_iter.
-    
-    Signed-off-by: Christoph Hellwig <hch@lst.de>
-    Reported-by: Jeff Lien <Jeff.Lien@hgst.com>
-    Tested-by: Jeff Lien <Jeff.Lien@hgst.com>
-    Reviewed-by: Keith Busch <keith.busch@intel.com>
-    Signed-off-by: Jens Axboe <axboe@fb.com>
-
-Paolo
+Christian
