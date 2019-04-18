@@ -2,96 +2,104 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A21C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B683C2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808BF2183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 12:48:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Kwi7D6/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388992AbfDRMp0 (ORCPT
+        id S2388405AbfDRMsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 08:45:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43032 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfDRMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 08:45:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 83FA681129;
-        Thu, 18 Apr 2019 12:45:25 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CC6519C65;
-        Thu, 18 Apr 2019 12:45:11 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        osalvador@suse.de
-Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20190417150331.90219ca42a1c0db8632d0fd5@linux-foundation.org>
-        <CAPcyv4hB47NJrVi1sm+7msL+6dJNhBD10BJbtLPZRcK2JK6+pg@mail.gmail.com>
-        <CAPcyv4iW=xhhUQbg0bt=xCgVaR_jUvATeLxSoCfvzG5gTEAX6A@mail.gmail.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Thu, 18 Apr 2019 08:45:10 -0400
-In-Reply-To: <CAPcyv4iW=xhhUQbg0bt=xCgVaR_jUvATeLxSoCfvzG5gTEAX6A@mail.gmail.com>
-        (Dan Williams's message of "Wed, 17 Apr 2019 19:09:12 -0700")
-Message-ID: <x49lg07eb3d.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 18 Apr 2019 12:45:26 +0000 (UTC)
+        Thu, 18 Apr 2019 08:48:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42135 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfDRMsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 08:48:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g3so2817734wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 05:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=zCoFO+U6J6V4upBBcgRbShJ9mBRp671ZMCkEN4roMmc=;
+        b=Kwi7D6/7UCuK21K17QZqCdwlWSBCXkwz6XCwmCXGiRakEUBWbpffLd5GIPa8TOTnZe
+         HJPjRXeizM+cNiyc9YSx3MH5G+uDrNhLsl1yyn782+uLQuPBx9YDYXmpkqrxT0b5/H+A
+         qOhI08DFFa9e0FKEyG4jcGCXR/QGfHbhzyiFUJmVB6slQFapECurO3ytG8xtP5Jrr1Gc
+         awb672/ItMblTTvml5CpIIx/pzWbMv1gaaSHbku85/uHSC4etip6hPW55RfxgkDBxlZ7
+         edvkyz5woRH5rm4ybvQz8SPGT0LNFwJZr+viCZQBe8RFeKIggWClUhzssEmwRpCzzDu9
+         CgxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zCoFO+U6J6V4upBBcgRbShJ9mBRp671ZMCkEN4roMmc=;
+        b=SfPU0cju/O1ecCU0DSJ8S9xWSZVQAJ2mweKjQF5D+b0q67b8lcKcZNpTNbvBLGw7jk
+         lEKPqiIdMVQMM9ha25VHAhJ/1leBFyY81eSbr/qmLiOnrHaDc4HOk1oCPSxb2fIf1dcZ
+         7tGIk3UQ5mAWHX0wTH60+xiHXBhEJEo0YnRgXZBk/8rLBIWeegWIdZLH7ksneDhvVN0f
+         wU0cUIT0Ti+UlMyDObxM87jF+8vWgiag80Ryk4y+CXSLnlqIUFTC9BOMzRnoc9OWwAfl
+         jCpAK1prZG6GxzjethavTNmFB5QI/1pSpEb8erN2k8VjEm2eRfS2zpmXP2QgpW67DLJo
+         H6hg==
+X-Gm-Message-State: APjAAAU033PLoSARKLZ6zxxX5/jXQVh/jC+OEpArRgZEXETlvCDUShmJ
+        aJnPxzHVnQcnSGgBDACjvteliQ==
+X-Google-Smtp-Source: APXvYqyBP9KpAvFTbFL4x8mrUe5kZzQ7GbeQs9drJWsz2j2Ip14m6nem990Rc1mGTMLzIzntsc8QdQ==
+X-Received: by 2002:adf:e703:: with SMTP id c3mr7659644wrm.98.1555591680673;
+        Thu, 18 Apr 2019 05:48:00 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q17sm1256823wrw.70.2019.04.18.05.47.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 05:47:59 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4]  Add drive-strength in Meson pinctrl driver
+Date:   Thu, 18 Apr 2019 14:47:54 +0200
+Message-Id: <20190418124758.24022-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
 
->> On Wed, Apr 17, 2019 at 3:59 PM Dan Williams <dan.j.williams@intel.com> wrote:
->>
->> On Wed, Apr 17, 2019 at 3:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->> >
->> > On Wed, 17 Apr 2019 11:38:55 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
->> >
->> > > The memory hotplug section is an arbitrary / convenient unit for memory
->> > > hotplug. 'Section-size' units have bled into the user interface
->> > > ('memblock' sysfs) and can not be changed without breaking existing
->> > > userspace. The section-size constraint, while mostly benign for typical
->> > > memory hotplug, has and continues to wreak havoc with 'device-memory'
->> > > use cases, persistent memory (pmem) in particular. Recall that pmem uses
->> > > devm_memremap_pages(), and subsequently arch_add_memory(), to allocate a
->> > > 'struct page' memmap for pmem. However, it does not use the 'bottom
->> > > half' of memory hotplug, i.e. never marks pmem pages online and never
->> > > exposes the userspace memblock interface for pmem. This leaves an
->> > > opening to redress the section-size constraint.
->> >
->> > v6 and we're not showing any review activity.  Who would be suitable
->> > people to help out here?
->>
->> There was quite a bit of review of the cover letter from Michal and
->> David, but you're right the details not so much as of yet. I'd like to
->> call out other people where I can reciprocate with some review of my
->> own. Oscar's altmap work looks like a good candidate for that.
->
-> I'm also hoping Jeff can give a tested-by for the customer scenarios
-> that fall over with the current implementation.
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-uA". The change to do so
+would be minimal and could be benefit to other platforms later on.
 
-Sure.  I'll also have a look over the patches.
+Cheers
+Guillaume
 
--Jeff
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
+
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+
+Guillaume La Roque (4):
+  dt-bindings: pinctrl: add a 'drive-strength-uA' property
+  pinctrl: generic: add new 'drive-strength-uA' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-uA property
+  pinctrl: meson: add support of drive-strength-uA
+
+ .../bindings/pinctrl/meson,pinctrl.txt        |   3 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 166 ++++++++++++++----
+ drivers/pinctrl/meson/pinctrl-meson.h         |  20 ++-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 174 insertions(+), 59 deletions(-)
+
+-- 
+2.17.1
+
