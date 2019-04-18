@@ -2,64 +2,61 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23585C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8743C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C222186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DFC2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555644893;
-	bh=esYqxcyWBII7VicI57GYCPW0UZenWkjmNmm7xcQXqLE=;
+	s=default; t=1555644896;
+	bh=LYmZYhMZULHGsrIGjrMQukvqyGHoBiuvoPz0HPPw97k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LqNtuogrc43oit77ZjIzCS8MRNmVHmkWNrmyQabXDQWxCgLimQBZoCUCI4zjFxnYH
-	 uNpTI6dg4HsYq0XML48UUsDq8GUzJdeMjXKlyJsYnkuHciaOOGsPRS7PncGr4AV+DR
-	 0VMsAv1Koh8qk+q0KilGXpaP3yf481wuXJdGANWI=
+	b=Cm3F2PYGtP1inyfLy92Ysz0koK0VEVAQvSO/CLGaTvAMcUSESyxPmxmQMAqKq++fe
+	 AiqUWU6gXEXK54kBv/WTWVOHVomYpSRzQWcGHPRbm0HfAxOAauOLowZVW0foren5pt
+	 kcIT0EvHHC3ux0oxJGXF4eNezt40dlyc6pkVr/Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfDSDev (ORCPT
+        id S1727275AbfDSDev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 18 Apr 2019 23:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:51388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbfDSDet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727205AbfDSDet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Apr 2019 23:34:49 -0400
 Received: from earth.universe (dyndsl-091-248-050-217.ewe-ip-backbone.de [91.248.50.217])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 645FA2171F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 67DC6217FA;
         Fri, 19 Apr 2019 03:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1555644888;
-        bh=esYqxcyWBII7VicI57GYCPW0UZenWkjmNmm7xcQXqLE=;
+        bh=LYmZYhMZULHGsrIGjrMQukvqyGHoBiuvoPz0HPPw97k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ebwaTntv9OHOFruI1Ejb2MyL6OEgeHvL+hC0us6Asa3dYV8tETd3eFS80BxiFByV1
-         1eYAW68K6GizlKZ5kw7dgx9Pm6deX5MzEu/lhpxVkRolb57xlJnHXZ7TVL9K1rwoL6
-         L1MEacrI2RfpWY5F7+hfwej/7hKABmrDNnFs+sZQ=
+        b=JI/mgTzdWFGzxFHGyst00mgujTx89cfbEOVTUW2oxr10asLIdpfC8FyjBpF4YMiMK
+         JndHup2NhYFDzNg1qSw+8CBiMfHt0vd+IT8PeNFf5hp0POxW3YzTQGkNUhnBk4nvJW
+         iDs24JRWwRLlkVl7vV36BNJM02SseVbBNOhcifcA=
 Received: by earth.universe (Postfix, from userid 1000)
-        id E255C3C08D8; Thu, 18 Apr 2019 21:47:03 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 21:47:03 +0200
+        id 55E853C0984; Thu, 18 Apr 2019 22:20:00 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 22:20:00 +0200
 From:   Sebastian Reichel <sre@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Darren Hart <dvhart@infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/4] dt-bindings: power: supply: Add docs for Ingenic
- JZ47xx SoCs battery.
-Message-ID: <20190418194703.ft5rycsrzz3fyxxb@earth.universe>
-References: <20190323172809.14407-1-contact@artur-rojek.eu>
- <20190323172809.14407-3-contact@artur-rojek.eu>
- <20190324153018.2e4011c9@archlinux>
+        Mark Rutland <mark.rutland@arm.com>, x86@kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] Add support for XO 1.75 to OLPC battery driver
+Message-ID: <20190418202000.hcojhcf2f47te44u@earth.universe>
+References: <20190418144655.18758-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jlupxtszm5xqgv3k"
+        protocol="application/pgp-signature"; boundary="jx6vzhc64gitrwmn"
 Content-Disposition: inline
-In-Reply-To: <20190324153018.2e4011c9@archlinux>
+In-Reply-To: <20190418144655.18758-1-lkundrak@v3.sk>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,100 +64,95 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jlupxtszm5xqgv3k
+--jx6vzhc64gitrwmn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sun, Mar 24, 2019 at 03:30:18PM +0000, Jonathan Cameron wrote:
-> On Sat, 23 Mar 2019 18:28:08 +0100
-> Artur Rojek <contact@artur-rojek.eu> wrote:
+On Thu, Apr 18, 2019 at 04:46:45PM +0200, Lubomir Rintel wrote:
+> This patch set modifies the OLPC battery driver so that it could eventual=
+ly
+> be used on an Arm-based OLPC XO 1.75 machine.
 >=20
-> > Add documentation for the ingenic-battery driver, used on JZ47xx SoCs.
-> >=20
-> > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Looks fine to me.
+> Compared to the previous version, it addresses review comments for the
+> x86 platform parts from Thomas Gleixner. Details in individual patches'
+> change logs.
 >=20
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> I've failed to version the previous iteration of the set that should've
+> been "v6" for the change logs to make sense. Sorry for that.
+>=20
+> Thank you,
+> Lubo
 
-Thanks, queued.
+I queued up the complete patchset via an immutable branch based on
+v5.1-rc1. X86 maintainers can pull this signed immutable branch as
+required. Thanks for the patches,
 
 -- Sebastian
 
->=20
-> > ---
-> >=20
-> > Changes:
-> >=20
-> > v2: no change
-> >=20
-> >  .../bindings/power/supply/ingenic,battery.txt | 31 +++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/supply/inge=
-nic,battery.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,bat=
-tery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.t=
-xt
-> > new file mode 100644
-> > index 000000000000..66430bf73815
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> > @@ -0,0 +1,31 @@
-> > +* Ingenic JZ47xx battery bindings
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: Must be "ingenic,jz4740-battery".
-> > +- io-channels: phandle and IIO specifier pair to the IIO device.
-> > +  Format described in iio-bindings.txt.
-> > +- monitored-battery: phandle to a "simple-battery" compatible node.
-> > +
-> > +The "monitored-battery" property must be a phandle to a node using the=
- format
-> > +described in battery.txt, with the following properties being required:
-> > +
-> > +- voltage-min-design-microvolt: Drained battery voltage.
-> > +- voltage-max-design-microvolt: Fully charged battery voltage.
-> > +
-> > +Example:
-> > +
-> > +#include <dt-bindings/iio/adc/ingenic,adc.h>
-> > +
-> > +simple_battery: battery {
-> > +	compatible =3D "simple-battery";
-> > +	voltage-min-design-microvolt =3D <3600000>;
-> > +	voltage-max-design-microvolt =3D <4200000>;
-> > +};
-> > +
-> > +ingenic_battery {
-> > +	compatible =3D "ingenic,jz4740-battery";
-> > +	io-channels =3D <&adc INGENIC_ADC_BATTERY>;
-> > +	io-channel-names =3D "battery";
-> > +	monitored-battery =3D <&simple_battery>;
-> > +};
->=20
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
---jlupxtszm5xqgv3k
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git =
+tags/psy-olpc-1.75-battery-signed
+
+for you to fetch changes up to 31e220877981d0005d0c4a76f68027a73131212b:
+
+  power: supply: olpc_battery: Have the framework register sysfs files for =
+us (2019-04-18 21:55:04 +0200)
+
+----------------------------------------------------------------
+Immutable branch between x86 and power-supply for OLPC
+
+This immutable branch contains the changes required for OLPC
+1.75 battery, which touches x86 and power-supply and is based
+on v5.1-rc1.
+
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+----------------------------------------------------------------
+Lubomir Rintel (10):
+      dt-bindings: olpc_battery: Add XO-1.5 battery
+      x86/platform/olpc: Don't split string literals when fixing up the DT
+      x86/platform/olpc: Trivial code move in DT fixup
+      x86/platform/olpc: Use a correct version when making up a battery node
+      power: supply: olpc_battery: Use DT to get battery version
+      power: supply: olpc_battery: Move priv data to a struct
+      power: supply: olpc_battery: Use devm_power_supply_register()
+      power: supply: olpc_battery: Avoid using platform_info
+      power: supply: olpc_battery: Add OLPC XO 1.75 support
+      power: supply: olpc_battery: Have the framework register sysfs files =
+for us
+
+ .../bindings/power/supply/olpc_battery.txt         |   2 +-
+ arch/x86/platform/olpc/olpc_dt.c                   | 101 ++++++++----
+ drivers/power/supply/olpc_battery.c                | 169 +++++++++++++----=
+----
+ 3 files changed, 177 insertions(+), 95 deletions(-)
+
+--jx6vzhc64gitrwmn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly41DcACgkQ2O7X88g7
-+prxuQ//dogDbAB6g0ZRjyPjplt7z1BFvF8WcW561216oY8bwMlXn8kw/tzWFD7O
-4g1iuFFbdVbySVuEccFdzzdGbjx71+nWvVVy5ucC5mr/W5NGMdnFGzWf74uEUbga
-p6UYg+lizs4SAVfJEiCreZQAS0qdbF2IPgs39Wnov6PXra87L/H+0USKIDwZZqUb
-cnmQl7TF19w7JDgNNp5j8nPELRtqrRhq00liIS155LBiUGUYjufiot0oCDe58Z/K
-MYtxl1suUcKRLLj8f3CjMFJKSkL9XbE0gGnVtwJBIiDAwqahYtmmbzHDjxroiHm2
-jzbm05EtTXWBKxze4D9o9RTaTbyjY1wTzyvaM0x9S+PxocOaXGqiLaFGcHTONBDz
-SnuczqxylpVLmOYHWLb7ByB8muY++kuFFkOZvcp60aEl9+9nQyaNF48sOOh9+aPB
-MyjcjVBOxES5JYIYhFglW4WFRuy8XR3KuUaKLz/DWy+F8/tpQOvR60BSSiMuZ5tM
-CW/RqV9J9d6Lc6Ect4EnFtZuEOwdHzuUiDGj7hS3Q6YWwIjzma5RMQjDZdH5SGKW
-D6eJIgXJBC+9FXtl9EdCxxDI+yKf7Igsp0rOSxfXkD5w12zCYNEnGhLqnXCCf+x3
-QKUOHIFWTwVkH8gKZ75Jg8nDy/jdIDrStMopvWTgHFB6suO1peA=
-=iubX
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly42+wACgkQ2O7X88g7
++pqEIw/+IH19WGdKSJX8Ybr2LDUp56np4dT3S5GM0EFoxiC8hmpFtMKIBw5kdI2l
+KoBQhsDJTwDnrycuDsFs4eNYZXw+qoNktW4bHNJe6Hdr0C3k77ITT86Y1QwZGH60
+HD/E9brMn5HBBRi1/0YUCkRJa3Iy2nzr+hk8RE/gynHOXywqqmbRA+QCtG4P52Xf
+0azBVaPT163+ioWB4K0P1JeVoGVz583+C9ZfWP683CfuZhLZ2zoLPWCl4hwTpgcJ
+mWoX4jrALIvu8DJZslpg2vKFVqomWg1IMD/OXkDBKo7y/9/LKdb+qCRfFmwNPJQ/
+D0xrhaCeCZeO/t5yMoI/pWRQMPU0TBreXYhydlL59L0mKgH8f1n99lqzDDn9+Vgv
+vEVSIy9RrSmQ4tPcN3JnWw+MlzCqn8lB1xGWbXH2qlRP+hOZWAX5RQNh5t8KeBEk
+vH1FzOSiMxBDgnHG4vHhjcwOf3UmD5ZlUuaIadN5KUIpC1ie126vqsutuQ7IzkmG
+47oxKGsZxtK3ilJe1Pu/MKwQAQD1uTXkEMPeZ6D2ONJebgGbmSnvdZ05puusLwFH
+PYhHFwf2cY+gydMZ5ONM1Rs3FNDsYOt/tOyHXYq/aZqh+d/DXMv5USm6XrLYKyKp
+np8bpoUNdiyeoKQ0RQ1dyAw3qC2Z9s8Sz25IPpls7iNtayjJQB4=
+=sV9a
 -----END PGP SIGNATURE-----
 
---jlupxtszm5xqgv3k--
+--jx6vzhc64gitrwmn--
