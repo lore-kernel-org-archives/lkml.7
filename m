@@ -2,28 +2,28 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82619C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F89C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB59205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CD520674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389002AbfDRPLf (ORCPT
+        id S2389413AbfDRPLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:11:35 -0400
-Received: from mail2.sp2max.com.br ([138.185.4.9]:44932 "EHLO
+        Thu, 18 Apr 2019 11:11:44 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:44958 "EHLO
         mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731317AbfDRPLe (ORCPT
+        with ESMTP id S2388070AbfDRPLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:11:34 -0400
+        Thu, 18 Apr 2019 11:11:43 -0400
 Received: from pgsop.sopnet.com.ar (unknown [179.40.38.12])
         (Authenticated sender: pablo@fliagreco.com.ar)
-        by mail2.sp2max.com.br (Postfix) with ESMTPA id E66C37B05FF;
-        Thu, 18 Apr 2019 12:11:29 -0300 (-03)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id C8FEF7B05FF;
+        Thu, 18 Apr 2019 12:11:33 -0300 (-03)
 From:   Pablo Greco <pgreco@centosproject.org>
 To:     linux-sunxi@googlegroups.com
 Cc:     Pablo Greco <pgreco@centosproject.org>,
@@ -32,12 +32,14 @@ Cc:     Pablo Greco <pgreco@centosproject.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/7] ARM: dts: sun8i: v40 Rewrite BPi M2 Berry DTS based on BPi M2 Ultra
-Date:   Thu, 18 Apr 2019 12:11:15 -0300
-Message-Id: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+Subject: [PATCH v4 4/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Fix WiFi regulator definitions
+Date:   Thu, 18 Apr 2019 12:11:19 -0300
+Message-Id: <1555600282-9405-5-git-send-email-pgreco@centosproject.org>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
 X-SP2Max-MailScanner-Information: Please contact the ISP for more information
-X-SP2Max-MailScanner-ID: E66C37B05FF.A461E
+X-SP2Max-MailScanner-ID: C8FEF7B05FF.A5F25
 X-SP2Max-MailScanner: Sem Virus encontrado
 X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
         escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
@@ -48,47 +50,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BPi M2 Berry is a trimmed down version of the BPi M2 Ultra, completely
-software compatible.
+Just like was done for the bananapi-m2-ultra, add the second wifi/bt
+regulator and mark both as always-on.
 
-Changes include:
-- 2GiB -> 1GiB
-- no eMMC
-- no onboard microphone
-- no IR
-- no blue LED
-- no charging (and power jack to USB)
-- dropped USB2 and connect USB1 to a 4-port HUB.
+Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+---
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Changes in v4:
-- Went back to v2
-- Added GPIO pin-bank regulators (both m2-ultra and m2-berry)
-
-Changes in v3:
-- Removed "Sort device node dereferences" (already applied)
-- Added basic pio node
-- Tied GMAC regulators to the pio (both m2-ultra and m2-berry)
-
-Changes in v2:
-- Split into smaller patches
-
-Pablo Greco (7):
-  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable GMAC ethernet
-    controller
-  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable HDMI output
-  ARM: dts: sun8i: v40: bananapi-m2-berry: Enable AHCI
-  ARM: dts: sun8i: v40: bananapi-m2-berry: Fix WiFi regulator
-    definitions
-  ARM: dts: sun8i: v40: bananapi-m2-berry: Add Bluetooth device node
-  ARM: dts: sun8i: v40: bananapi-m2-berry: Add GPIO pin-bank regulator  
-      supplies
-  ARM: dts: sun8i: r40: bananapi-m2-ultra: Add GPIO pin-bank regulator  
-      supplies
-
- arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts |   6 ++
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 124 ++++++++++++++++++++++
- 2 files changed, 130 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index c37c7ab..78f4a1a 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -225,12 +225,27 @@
+ 	regulator-name = "vcc-wifi-io";
+ };
+ 
++/*
++ * Our WiFi chip needs both DLDO2 and DLDO3 to be powered at the same
++ * time, with the two being in sync, to be able to meet maximum power
++ * consumption during transmits. Since this is not really supported
++ * right now, just use the two as always on, and we will fix it later.
++ */
++
+ &reg_dldo2 {
++	regulator-always-on;
+ 	regulator-min-microvolt = <3300000>;
+ 	regulator-max-microvolt = <3300000>;
+ 	regulator-name = "vcc-wifi";
+ };
+ 
++&reg_dldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi-2";
++};
++
+ &reg_dldo4 {
+ 	regulator-min-microvolt = <2500000>;
+ 	regulator-max-microvolt = <2500000>;
 -- 
 1.8.3.1
 
