@@ -2,303 +2,156 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B32C282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE075C282DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BD7217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 00:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nALspakr"
+	by mail.kernel.org (Postfix) with ESMTP id C2913217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 01:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387748AbfDRA64 (ORCPT
+        id S2387783AbfDRBAV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 20:58:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43527 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfDRA64 (ORCPT
+        Wed, 17 Apr 2019 21:00:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729331AbfDRBAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 20:58:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t81so280408oig.10
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 17:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zJVtqbFtGMW3px95wLhMRMCyD52FxUuXyeDzZfmutmk=;
-        b=nALspakrfo5dYHk9SgxepMvTOzrGDgggctxaqxLuuewezMNMrDTUttpKEiOV8BsCEN
-         diCfXhXweO9a4INQUtyxwjf82wB8rJM37NXv1nxG5zQQ9Zm/Io/J6RMEAA7n0zzy5JvP
-         3blR/gwGZjU1WZ0ekgQuQ26robsahmcHva4cpP1aj064A9l5DFavsve9iJq96A2Mzl0/
-         Pyw+w8nUXgNvM0miUGPV0SIhhwh0G3mFNqCwAFh/M5UM1MVNb/uZ9w6cDKGo2mgZckht
-         Bzm7dodVvGMPdrXMetfV0Tyrr9lwFET6JVBwl4xZXCc0NEkmx83quBE10vQnslDIPkDu
-         gFCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zJVtqbFtGMW3px95wLhMRMCyD52FxUuXyeDzZfmutmk=;
-        b=TuysM0C4o7O1WbveGVoqK4yo8lFgjaRyu2uNuVcJM7u715iJMfAb5tuzFoo5MGa+rp
-         VoZ/+xn/zEB/Lu9R0MmBuX2EjJHqmLfrvMY6LTlS2h6GH1Xu1LAuA9iX8EjI0L5udRyN
-         K9ob5I9xgsvdllPSeKzvlaSjV26XK8vV3mVoGmJeg5ELAA9a2JtM9yd9XczKmdnvBrxZ
-         xRFAcT3Q0dosnfV7/QOXr1BrtGbV+MM3jsGkCC+du78tELVbQzjc7uMSRs23Dk00tI/Y
-         cJF1Ze8WDSp5fvU1b6j1QxMKq1jjWYFY+glpjzrf1Z7n9kKknORwV7e6O+BAeNNTZb9g
-         7DzQ==
-X-Gm-Message-State: APjAAAVDntdq8fbxxjVQ/2pjBMRUzxrOJcqTpjfwc87+a75gF3zlExHY
-        4AHKHCtsA76xcE+dwBuiugo=
-X-Google-Smtp-Source: APXvYqwC+rknuySfFufao5xdGd7D3ihIbgS80uc1npWckFhLUCiNi92sem/V1fMLBBJ8IRdsjLrGUQ==
-X-Received: by 2002:aca:5986:: with SMTP id n128mr264301oib.2.1555549135430;
-        Wed, 17 Apr 2019 17:58:55 -0700 (PDT)
-Received: from madhuleo ([2605:6000:1023:606d:9d55:3ae5:fad7:6d16])
-        by smtp.gmail.com with ESMTPSA id f3sm309925oih.38.2019.04.17.17.58.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 17:58:54 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 19:58:52 -0500
-From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
-To:     Alex Elder <elder@linaro.org>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [greybus-dev] [PATCH v2] Staging: greybus: Cleanup in greybus
- driver
-Message-ID: <20190418005851.GB3421@madhuleo>
-References: <20190416221318.21161-1-madhumithabiw@gmail.com>
- <b7ed0505-0ebf-98af-7beb-08b0709cc5fd@linaro.org>
+        Wed, 17 Apr 2019 21:00:21 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3I0xB79087148
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 21:00:19 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rx8xfx6ue-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 21:00:19 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Thu, 18 Apr 2019 02:00:18 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Apr 2019 02:00:16 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3I10F8R18350122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Apr 2019 01:00:15 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AFE4FAE06B;
+        Thu, 18 Apr 2019 01:00:15 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 075FBAE05F;
+        Thu, 18 Apr 2019 01:00:14 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.230.182])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 18 Apr 2019 01:00:13 +0000 (GMT)
+References: <20190311193517.23756-1-bauerman@linux.ibm.com> <87bm1dfog4.fsf@morokweng.localdomain> <1555389147.okxbj1prw2.astroid@bobo.none>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3] powerpc/pseries: Only wait for dying CPU after call to rtas_stop_self()
+In-reply-to: <1555389147.okxbj1prw2.astroid@bobo.none>
+Date:   Wed, 17 Apr 2019 22:00:09 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7ed0505-0ebf-98af-7beb-08b0709cc5fd@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19041801-0052-0000-0000-000003ADC89F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010947; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01190610; UDB=6.00623914; IPR=6.00971408;
+ MB=3.00026491; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-18 01:00:17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041801-0053-0000-0000-0000608A4696
+Message-Id: <87r2a0jffq.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-17_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=982 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904180004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17  :41, Alex Elder wrote:
-> On 4/16/19 5:13 PM, Madhumitha Prabakaran wrote:
-> > Fix a blank line after structure declarations. Also, convert
-> > macros into inline functions in order to maintain Linux kernel
-> > coding style based on which the inline function is
-> > preferable over the macro.
-> 
-> Madhumitha, here is my explanation for why *not* to convert these
-> container_of() macros to inline functions.  It's not just because
-> "we do this all over the kernel."  The reason is that it actually
-> does not improve the code.
-> 
-> Inline functions are often better than macros because they are
-> explicit about types, allowing the compiler to tell you if you
-> are passing parameters of the right type, and possibly assigning
-> results to objects of the right type.
+
+Hello Nick,
+
+Thank you very much for reviewing this patch!
+
+Nicholas Piggin <npiggin@gmail.com> writes:
+
+> Thiago Jung Bauermann's on April 11, 2019 9:08 am:
+>>
+>> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+>>
+>>> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+>>> index 97feb6e79f1a..ac6dc35ab829 100644
+>>> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
+>>> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+>>> @@ -214,13 +214,22 @@ static void pseries_cpu_die(unsigned int cpu)
+>>>  			msleep(1);
+>>>  		}
+>>>  	} else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
+>>> +		/*
+>>> +		 * If the current state is not offline yet, it means that the
+>>> +		 * dying CPU (which is either in pseries_mach_cpu_die() or in
+>>> +		 * the process of getting there) didn't have a chance yet to
+>>> +		 * call rtas_stop_self() and therefore it's too early to query
+>>> +		 * if the CPU is stopped.
+>>> +		 */
+>>> +		spin_event_timeout(get_cpu_current_state(cpu) == CPU_STATE_OFFLINE,
+>>> +				   100000, 100);
+>
+> If the CPU state does not go to offline here, you should give up and
+> return online, right? Otherwise I think query-cpu-stopped-state can
+> get confused by CPUs in idle and you get a false positive.
+
+Can it get confused? My impression from reading the definition for
+query-cpu-stopped-state in the PAPR is that it will simply return a
+CPU_status value of 2 in that case, meaning that "the processor thread
+is not in the RTAS stopped state", but I don't know much about this.
+
+> That race can still happen, we would really need a sequence count check
+> over current CPU state to ensure we got a race-free qcss value, but at
+> least a check here should make the race implausible to hit.
+
+Actually, since rtas_stop_self() panics if the processor fails to stop
+and also since callers of pseries_cpu_die()¹ already assume that it is
+going to succeed in stopping the CPU (given that the function returns
+void and can't signal an error), a more straightforward way of
+eliminating the race is to simply do this:
+
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index 97feb6e79f1a..2331a609f48f 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -215,7 +215,7 @@ static void pseries_cpu_die(unsigned int cpu)
+                }
+        } else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
+
+-               for (tries = 0; tries < 25; tries++) {
++               while (true) {
+                        cpu_status = smp_query_cpu_stopped(pcpu);
+                        if (cpu_status == QCSS_STOPPED ||
+                            cpu_status == QCSS_HARDWARE_ERROR)
 
 
-This makes more sense now.
+What do you think?
 
-> 
-> Here is the definition of the container_of() macro in <linux/kernel.h>:
-> 
-> #define container_of(ptr, type, member) ({                      \
->         const typeof(((type *)0)->member) * __mptr = (ptr);     \
->         (type *)((char *)__mptr - offsetof(type, member)); })
-> 
-> You see that ptr is explicitly assigned to a local variable
-> of the type of the member field, so the compiler is able to
-> check that assignment.  And the return value is similarly
-> cast to the type of the containing structure, so the type
-> compatibility of the assignment can also be checked.  It is
-> assumed that where this macro is used, the caller knows it
-> is passing an appropriate address.
-> 
-> There is another thing about this particular definition make
-> it just as good as an inline function.  A macro expansion can
-> result in one of its parameters being used more than once, and
-> that allows those parameters to be *evaluated* more than once
-> in a single statement, which can produce incorrect code.
-> 
-> This macro is defined using the "statement expression"
-> extension to C--where a compound statement is enclosed in
-> parentheses--({ ... }).  This allows a local variable to be
-> used in the macro expansion, which avoids any reuse of the
-> macro parameters which might cause side-effects.
-> 
-> So anyway, I don't think there is any benefit to replacing
-> macros like this that do container_of() with inline functions.
-> 
-> 					-Alex
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-Thanks for taking time to explain it in detailed way.
+¹ dlpar_offline_cpu() and takedown_cpu() in generic code
 
-> 
-> > Blank line fixes are suggested by checkpatch.pl
-> > 
-> > Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
-> > 
-> > Changes in v2:
-> > - To maintain consistency in driver greybus, all the instances of macro
-> > with container_of are fixed in a single patch.
-> > ---
-> >  drivers/staging/greybus/bundle.h    |  6 +++++-
-> >  drivers/staging/greybus/control.h   |  6 +++++-
-> >  drivers/staging/greybus/gbphy.h     | 12 ++++++++++--
-> >  drivers/staging/greybus/greybus.h   |  6 +++++-
-> >  drivers/staging/greybus/hd.h        |  6 +++++-
-> >  drivers/staging/greybus/interface.h |  6 +++++-
-> >  drivers/staging/greybus/module.h    |  6 +++++-
-> >  drivers/staging/greybus/svc.h       |  6 +++++-
-> >  8 files changed, 45 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/staging/greybus/bundle.h b/drivers/staging/greybus/bundle.h
-> > index 8734d2055657..84956eedb1c4 100644
-> > --- a/drivers/staging/greybus/bundle.h
-> > +++ b/drivers/staging/greybus/bundle.h
-> > @@ -31,7 +31,11 @@ struct gb_bundle {
-> >  
-> >  	struct list_head	links;	/* interface->bundles */
-> >  };
-> > -#define to_gb_bundle(d) container_of(d, struct gb_bundle, dev)
-> > +
-> > +static inline struct gb_bundle *to_gb_bundle(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_bundle, dev);
-> > +}
-> >  
-> >  /* Greybus "private" definitions" */
-> >  struct gb_bundle *gb_bundle_create(struct gb_interface *intf, u8 bundle_id,
-> > diff --git a/drivers/staging/greybus/control.h b/drivers/staging/greybus/control.h
-> > index 3a29ec05f631..a681ef74e7fe 100644
-> > --- a/drivers/staging/greybus/control.h
-> > +++ b/drivers/staging/greybus/control.h
-> > @@ -24,7 +24,11 @@ struct gb_control {
-> >  	char *vendor_string;
-> >  	char *product_string;
-> >  };
-> > -#define to_gb_control(d) container_of(d, struct gb_control, dev)
-> > +
-> > +static inline struct gb_control *to_gb_control(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_control, dev);
-> > +}
-> >  
-> >  struct gb_control *gb_control_create(struct gb_interface *intf);
-> >  int gb_control_enable(struct gb_control *control);
-> > diff --git a/drivers/staging/greybus/gbphy.h b/drivers/staging/greybus/gbphy.h
-> > index 99463489d7d6..20307f6dfcb9 100644
-> > --- a/drivers/staging/greybus/gbphy.h
-> > +++ b/drivers/staging/greybus/gbphy.h
-> > @@ -15,7 +15,11 @@ struct gbphy_device {
-> >  	struct list_head list;
-> >  	struct device dev;
-> >  };
-> > -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
-> > +
-> > +static inline struct gbphy_device *to_gbphy_dev(struct device *d)
-> > +{
-> > +	return container_of(d, struct gbphy_device, dev);
-> > +}
-> >  
-> >  static inline void *gb_gbphy_get_data(struct gbphy_device *gdev)
-> >  {
-> > @@ -43,7 +47,11 @@ struct gbphy_driver {
-> >  
-> >  	struct device_driver driver;
-> >  };
-> > -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
-> > +
-> > +static inline struct gbphy_driver *to_gbphy_driver(struct device_driver *d)
-> > +{
-> > +	return container_of(d, struct gbphy_driver, driver);
-> > +}
-> >  
-> >  int gb_gbphy_register_driver(struct gbphy_driver *driver,
-> >  			     struct module *owner, const char *mod_name);
-> > diff --git a/drivers/staging/greybus/greybus.h b/drivers/staging/greybus/greybus.h
-> > index d03ddb7c9df0..a82d5002b4d5 100644
-> > --- a/drivers/staging/greybus/greybus.h
-> > +++ b/drivers/staging/greybus/greybus.h
-> > @@ -64,7 +64,11 @@ struct greybus_driver {
-> >  
-> >  	struct device_driver driver;
-> >  };
-> > -#define to_greybus_driver(d) container_of(d, struct greybus_driver, driver)
-> > +
-> > +static inline struct greybus_driver *to_greybus_driver(struct device_driver *d)
-> > +{
-> > +	return container_of(d, struct greybus_driver, driver);
-> > +}
-> >  
-> >  static inline void greybus_set_drvdata(struct gb_bundle *bundle, void *data)
-> >  {
-> > diff --git a/drivers/staging/greybus/hd.h b/drivers/staging/greybus/hd.h
-> > index 6cf024a20a58..de7c49d05266 100644
-> > --- a/drivers/staging/greybus/hd.h
-> > +++ b/drivers/staging/greybus/hd.h
-> > @@ -57,7 +57,11 @@ struct gb_host_device {
-> >  	/* Private data for the host driver */
-> >  	unsigned long hd_priv[0] __aligned(sizeof(s64));
-> >  };
-> > -#define to_gb_host_device(d) container_of(d, struct gb_host_device, dev)
-> > +
-> > +static inline struct gb_host_device *to_gb_host_device(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_host_device, dev);
-> > +}
-> >  
-> >  int gb_hd_cport_reserve(struct gb_host_device *hd, u16 cport_id);
-> >  void gb_hd_cport_release_reserved(struct gb_host_device *hd, u16 cport_id);
-> > diff --git a/drivers/staging/greybus/interface.h b/drivers/staging/greybus/interface.h
-> > index 1c00c5bb3ec9..f86c0d596dbe 100644
-> > --- a/drivers/staging/greybus/interface.h
-> > +++ b/drivers/staging/greybus/interface.h
-> > @@ -63,7 +63,11 @@ struct gb_interface {
-> >  	struct work_struct mode_switch_work;
-> >  	struct completion mode_switch_completion;
-> >  };
-> > -#define to_gb_interface(d) container_of(d, struct gb_interface, dev)
-> > +
-> > +static inline struct gb_interface *to_gb_interface(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_interface, dev);
-> > +}
-> >  
-> >  struct gb_interface *gb_interface_create(struct gb_module *module,
-> >  					 u8 interface_id);
-> > diff --git a/drivers/staging/greybus/module.h b/drivers/staging/greybus/module.h
-> > index b1ebcc6636db..c427b788b677 100644
-> > --- a/drivers/staging/greybus/module.h
-> > +++ b/drivers/staging/greybus/module.h
-> > @@ -22,7 +22,11 @@ struct gb_module {
-> >  
-> >  	struct gb_interface *interfaces[0];
-> >  };
-> > -#define to_gb_module(d) container_of(d, struct gb_module, dev)
-> > +
-> > +static inline struct gb_module *to_gb_module(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_module, dev);
-> > +}
-> >  
-> >  struct gb_module *gb_module_create(struct gb_host_device *hd, u8 module_id,
-> >  				   size_t num_interfaces);
-> > diff --git a/drivers/staging/greybus/svc.h b/drivers/staging/greybus/svc.h
-> > index ad01783bac9c..4e35ac9ed0ff 100644
-> > --- a/drivers/staging/greybus/svc.h
-> > +++ b/drivers/staging/greybus/svc.h
-> > @@ -52,7 +52,11 @@ struct gb_svc {
-> >  	struct dentry *debugfs_dentry;
-> >  	struct svc_debugfs_pwrmon_rail *pwrmon_rails;
-> >  };
-> > -#define to_gb_svc(d) container_of(d, struct gb_svc, dev)
-> > +
-> > +static inline struct gb_svc *to_gb_svc(struct device *d)
-> > +{
-> > +	return container_of(d, struct gb_svc, dev);
-> > +}
-> >  
-> >  struct gb_svc *gb_svc_create(struct gb_host_device *hd);
-> >  int gb_svc_add(struct gb_svc *svc);
-> > 
-> 
