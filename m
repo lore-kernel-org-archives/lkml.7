@@ -2,100 +2,84 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E21C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64803C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C7F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555599907;
-	bh=QNWy/JFKVSVqS1Oiax7CsW2ogEfydBHU6GygayAYzRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B/IwD9ImLsyZzfVGGQy5B5TdKpNcjujP/pUrm9emLoTjW6G7WW4UlHWqxLWr89vBs
-	 /WRsJ0drxVEq8B380gVa4CcXwDEJ7OjO4PXqLounsyZaPYM5xyChywwpVEXMiHJUwS
-	 trnRYeNdruE8IDeH5QqtZggiS61WP7O+PMurChI0=
+	by mail.kernel.org (Postfix) with ESMTP id 386E720674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 15:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389425AbfDRPFG (ORCPT
+        id S2389135AbfDRPHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 11:05:06 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38817 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388535AbfDRPFG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 11:05:06 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e80so1980972ote.5;
-        Thu, 18 Apr 2019 08:05:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V7yyMZqesOuFe8KRex8C/Gjge0wo8uE6UhNgDAxEDPE=;
-        b=LofknGEgkhur7S2lN/pBPrKc/HjkhPqtTKMHH1UIHYN+lnrl1jG3N0TkTmt/lfSVkf
-         FkoTlzEvSyvKW3sN99jZ0k4vy3kLJg6C3QZe3YnIZza+yarLdqBxMrEhPQQGCCvUG/+9
-         lDPsnCyAQBw35C5VUF0EEHunDZYbsSSDyIy6XGJyM6iPVdbKZay8mTitScg76JLXbuOo
-         l5+jW+pv3XjWp7sKwLLR0YmWDMvmkErfhQ1x1SP/dkGRs79w/rSPBUI2TScZo7DjaoPd
-         a1bDq1SXjW+J6sD5ODJ3Hpl0zK9EZgBcF3D+WL/jvujL4q3LqGEABc3PcgWM66CqcnW3
-         MYSA==
-X-Gm-Message-State: APjAAAXLFcNglcS/b1CFSN0Vx4H92x2qZk+oJT3fOZoOIHdRv3C6uGiu
-        xASKpUr/POjakUGpiXPnFw==
-X-Google-Smtp-Source: APXvYqxnX+SqxhzuN9Z90GAVvPB8qzwCECqAfFNDBupi9NMvpguaaL7AqBs0B+hBaW3bOhvztohAcA==
-X-Received: by 2002:a05:6830:153:: with SMTP id j19mr53931748otp.248.1555599905277;
-        Thu, 18 Apr 2019 08:05:05 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u11sm841311otb.66.2019.04.18.08.05.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 08:05:04 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 10:05:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, m.felsch@pengutronix.de,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Guo Ren <guoren@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 2/3] dt-bindings: Add an entry for Purism SPC
-Message-ID: <20190418150503.GB32345@bogus>
-References: <20190417165514.18689-1-angus@akkea.ca>
- <20190417165514.18689-3-angus@akkea.ca>
+        Thu, 18 Apr 2019 11:07:00 -0400
+Received: from foss.arm.com ([217.140.101.70]:35120 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388457AbfDRPHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 11:07:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E06515AB;
+        Thu, 18 Apr 2019 08:06:59 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 458363F5AF;
+        Thu, 18 Apr 2019 08:06:58 -0700 (PDT)
+Subject: Re: [PATCH 12/21] dma-iommu: factor atomic pool allocations into
+ helpers
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190327080448.5500-1-hch@lst.de>
+ <20190327080448.5500-13-hch@lst.de>
+ <b3f80a11-1504-e8f9-4438-92bcd5f3df7f@arm.com> <20190410061157.GA5278@lst.de>
+ <20190417063358.GA24139@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <83615173-a8b4-e0eb-bac3-1a58d61ea4ef@arm.com>
+Date:   Thu, 18 Apr 2019 16:06:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417165514.18689-3-angus@akkea.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190417063358.GA24139@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 09:55:13AM -0700, Angus Ainslie (Purism) wrote:
-> Add an entry for Purism, SPC
+On 17/04/2019 07:33, Christoph Hellwig wrote:
+> On Wed, Apr 10, 2019 at 08:11:57AM +0200, Christoph Hellwig wrote:
+>> On Tue, Apr 09, 2019 at 06:59:32PM +0100, Robin Murphy wrote:
+>>> On 27/03/2019 08:04, Christoph Hellwig wrote:
+>>>> This keeps the code together and will simplify compiling the code
+>>>> out on architectures that are always dma coherent.
+>>>
+>>> And this is where things take a turn in the direction I just can't get on
+>>> with - I'm looking at the final result and the twisty maze of little
+>>> disjoint helpers all overlapping each other in functionality is really
+>>> difficult to follow. And I would *much* rather have things rely on
+>>> compile-time constant optimisation than spend the future having to fix the
+>>> #ifdefed parts for arm64 whenever x86-centric changes fail to test them.
+>>
+>> Can you draft up a patch on top of my series to show me what you
+>> want?  I can take care of finishing it up and moving the changes
+>> into the right patches in the series.
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Any chance to make some progress on this?  Or at least a better
+> description of what you want?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+OK, I'm still looking at mmap and get_sgtable, but for now I've pushed 
+out a partial branch that consolidates alloc and free in a way which 
+makes sense to me:
+
+   git://linux-arm.org/linux-rm  dma/rework
+
+Please let me know what you think.
+
+Robin.
