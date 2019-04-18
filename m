@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC11EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95222C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941CD217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 677272186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610529;
-	bh=C5OwFAdraY+7TfWGCJvCDGEsvQrMSQ9BhZpt1IQhFvs=;
+	s=default; t=1555610532;
+	bh=sfpjg2hSG6JaJNn1J3X2ihkVqkRPSQCekahtCyS4czQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rpJxaaY09nHw8oAbG3GcLyQhp9l1M6McJ+FBeCfmNE6IWqwYduU0E4pD+YaliL7hv
-	 M9CzqxS8fadgnSmDVP6uNUbK+B5mIWRRdiA20lkxuXdzCGk+/8sXfCArQM8IyePS7T
-	 GZgnH11wK8mrMfpN+UQ86WiMISSplhNOQYHpuCgM=
+	b=kzJKxtvl2DdG5jsqJk7Ac3zdyvWohoGbRh7Hep819lbqVz34pkH0/i9fjMhVJfOW1
+	 HG4iPf4Pz/7e9qOLYkHPOXwSEvKgR+s8sGuvR50VRTaWiY0SeKVeoiQZEoHveWrqiN
+	 a3jLMezp5W/CPGZ7W2jSfehg7dErD5wsERsLcAIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390698AbfDRSCI (ORCPT
+        id S2390709AbfDRSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390686AbfDRSCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:02:04 -0400
+        id S2390693AbfDRSCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:02:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 429F0217FA;
-        Thu, 18 Apr 2019 18:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C683C21871;
+        Thu, 18 Apr 2019 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610523;
-        bh=C5OwFAdraY+7TfWGCJvCDGEsvQrMSQ9BhZpt1IQhFvs=;
+        s=default; t=1555610526;
+        bh=sfpjg2hSG6JaJNn1J3X2ihkVqkRPSQCekahtCyS4czQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sk8No9vhXdIxB31ZZ+Ly2t8x+HcLUgeNLD8uJr+Ituhov7rfKufUk2gJqiiL/nwYU
-         7qA7VQuRvT7rriO7AmwwnGdJmiFDv4WraK1qmLNrdOHYRkem95YqDOX9SCfv5itya5
-         UOmq3jRMtIoEYPTjVL+Zh4ibQ0+YTF1nZqIqWjlY=
+        b=vLNdLHcVEEzDmwtuMyppAajt5Tjti8rLdMkcCSpSLMvS3PL3J6sKRBeAASgRwEC5K
+         6+KQ9SP+WIpOibi5m85aQLUVDq6OI8kccjtJaiHoATmD0S1GS29cP3hGvYuOkllsWL
+         Ooxk4ilqO+qDRA/dPTL99Mg75ROfbP13n2qlZFog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ortwin=20Gl=C3=BCck?= <odi@odi.ch>,
-        Francisco Cribari <cribari@gmail.com>,
-        Balazs Varga <balazs4web@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/110] Revert "ACPI / EC: Remove old CLEAR_ON_RESUME quirk"
-Date:   Thu, 18 Apr 2019 19:57:24 +0200
-Message-Id: <20190418160446.791679066@linuxfoundation.org>
+Subject: [PATCH 4.19 096/110] coresight: cpu-debug: Support for CA73 CPUs
+Date:   Thu, 18 Apr 2019 19:57:25 +0200
+Message-Id: <20190418160446.860807899@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -64,127 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b6a3e1475b0220378ad32bdf4d8692f058b1fc03 ]
+[ Upstream commit a0f890aba2be33377f4eb24e13633c4a76a68f38 ]
 
-On some Samsung hardware, it is necessary to clear events accumulated by
-the EC during sleep. These ECs stop reporting GPEs until they are manually
-polled, if too many events are accumulated.
-Thus the CLEAR_ON_RESUME quirk is introduced to send EC query commands
-unconditionally after resume to clear all the EC query events on those
-platforms.
+This patch is to add the AMBA device ID for CA73 CPU, so that CPU debug
+module can be initialized successfully when a SoC contain CA73 CPUs.
 
-Later, commit 4c237371f290 ("ACPI / EC: Remove old CLEAR_ON_RESUME quirk")
-removes the CLEAR_ON_RESUME quirk because we thought the new EC IRQ
-polling logic should handle this case.
+This patch has been verified on 96boards Hikey960.
 
-Now it has been proved that the EC IRQ Polling logic does not fix the
-issue actually because we got regression report on these Samsung
-platforms after removing the quirk.
-
-Thus revert commit 4c237371f290 ("ACPI / EC: Remove old CLEAR_ON_RESUME
-quirk") to introduce back the Samsung quirk in this patch.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=44161
-Tested-by: Ortwin Glück <odi@odi.ch>
-Tested-by: Francisco Cribari <cribari@gmail.com>
-Tested-by: Balazs Varga <balazs4web@gmail.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/ec.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/hwtracing/coresight/coresight-cpu-debug.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index 9d66a47d32fb..49e16f009095 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -194,6 +194,7 @@ static struct workqueue_struct *ec_query_wq;
- static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
- static int EC_FLAGS_CORRECT_ECDT; /* Needs ECDT port address correction */
- static int EC_FLAGS_IGNORE_DSDT_GPE; /* Needs ECDT GPE as correction setting */
-+static int EC_FLAGS_CLEAR_ON_RESUME; /* Needs acpi_ec_clear() on boot/resume */
- 
- /* --------------------------------------------------------------------------
-  *                           Logging/Debugging
-@@ -499,6 +500,26 @@ static inline void __acpi_ec_disable_event(struct acpi_ec *ec)
- 		ec_log_drv("event blocked");
- }
- 
-+/*
-+ * Process _Q events that might have accumulated in the EC.
-+ * Run with locked ec mutex.
-+ */
-+static void acpi_ec_clear(struct acpi_ec *ec)
-+{
-+	int i, status;
-+	u8 value = 0;
-+
-+	for (i = 0; i < ACPI_EC_CLEAR_MAX; i++) {
-+		status = acpi_ec_query(ec, &value);
-+		if (status || !value)
-+			break;
-+	}
-+	if (unlikely(i == ACPI_EC_CLEAR_MAX))
-+		pr_warn("Warning: Maximum of %d stale EC events cleared\n", i);
-+	else
-+		pr_info("%d stale EC events cleared\n", i);
-+}
-+
- static void acpi_ec_enable_event(struct acpi_ec *ec)
- {
- 	unsigned long flags;
-@@ -507,6 +528,10 @@ static void acpi_ec_enable_event(struct acpi_ec *ec)
- 	if (acpi_ec_started(ec))
- 		__acpi_ec_enable_event(ec);
- 	spin_unlock_irqrestore(&ec->lock, flags);
-+
-+	/* Drain additional events if hardware requires that */
-+	if (EC_FLAGS_CLEAR_ON_RESUME)
-+		acpi_ec_clear(ec);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -1820,6 +1845,31 @@ static int ec_flag_query_handshake(const struct dmi_system_id *id)
- }
- #endif
- 
-+/*
-+ * On some hardware it is necessary to clear events accumulated by the EC during
-+ * sleep. These ECs stop reporting GPEs until they are manually polled, if too
-+ * many events are accumulated. (e.g. Samsung Series 5/9 notebooks)
-+ *
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=44161
-+ *
-+ * Ideally, the EC should also be instructed NOT to accumulate events during
-+ * sleep (which Windows seems to do somehow), but the interface to control this
-+ * behaviour is not known at this time.
-+ *
-+ * Models known to be affected are Samsung 530Uxx/535Uxx/540Uxx/550Pxx/900Xxx,
-+ * however it is very likely that other Samsung models are affected.
-+ *
-+ * On systems which don't accumulate _Q events during sleep, this extra check
-+ * should be harmless.
-+ */
-+static int ec_clear_on_resume(const struct dmi_system_id *id)
-+{
-+	pr_debug("Detected system needing EC poll on resume.\n");
-+	EC_FLAGS_CLEAR_ON_RESUME = 1;
-+	ec_event_clearing = ACPI_EC_EVT_TIMING_STATUS;
-+	return 0;
-+}
-+
- /*
-  * Some ECDTs contain wrong register addresses.
-  * MSI MS-171F
-@@ -1869,6 +1919,9 @@ static const struct dmi_system_id ec_dmi_table[] __initconst = {
- 	ec_honor_ecdt_gpe, "ASUS X580VD", {
- 	DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 	DMI_MATCH(DMI_PRODUCT_NAME, "X580VD"),}, NULL},
-+	{
-+	ec_clear_on_resume, "Samsung hardware", {
-+	DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD.")}, NULL},
- 	{},
+diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+index 45b2460f3166..e8819d750938 100644
+--- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
++++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+@@ -668,6 +668,10 @@ static const struct amba_id debug_ids[] = {
+ 		.id	= 0x000bbd08,
+ 		.mask	= 0x000fffff,
+ 	},
++	{       /* Debug for Cortex-A73 */
++		.id	= 0x000bbd09,
++		.mask	= 0x000fffff,
++	},
+ 	{ 0, 0 },
  };
  
 -- 
