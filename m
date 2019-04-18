@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FADC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D2FC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937D421871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849F920675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611207;
-	bh=xF0TOWc7e2J8vc50T1ggSAbby129Zq08vr5bk8ecc7A=;
+	s=default; t=1555611211;
+	bh=EbRltLgt24jtA3OsQnBzek7YLCLP46q2X5ONOuX8KQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afzrCN7crLuFK9/gXzUw81RqDZ3bakb3z8cDIoGJRyIRJCbdl3yeGmZI8syhoGvWG
-	 n/iFC0Vhk55sW+gcN2WEQZZilevL9Pi1QbSS3ErvxOiXdPCQPSuuH/a1Fn/GyPEGm9
-	 R3yQuL4/4o7ShZIjvjOB42Wu1NHAIac8bXTt/21E=
+	b=Y/UsWqMWytOmIIGEUCKqIm8DPMQLPNBddiFXwA7qGrDOL8Y0MFNrL9/zeH6txQnK2
+	 V2PYYmG/HeKE1h23ISzvYSnINwntXrOruNWpeOGW/LiNOQ7R2+uILSL8UDkWGeUk+y
+	 q1PPXlC6rShY4odf0rEyNhU0Mz23Z66Mvoqk/KPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404440AbfDRSNZ (ORCPT
+        id S2404452AbfDRSNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404420AbfDRSNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:13:21 -0400
+        id S2404072AbfDRSN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:13:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7FB121872;
-        Thu, 18 Apr 2019 18:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE2EB20652;
+        Thu, 18 Apr 2019 18:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611200;
-        bh=xF0TOWc7e2J8vc50T1ggSAbby129Zq08vr5bk8ecc7A=;
+        s=default; t=1555611206;
+        bh=EbRltLgt24jtA3OsQnBzek7YLCLP46q2X5ONOuX8KQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PPQzCyrnLwUKrllm94L23Mgq9bVMJ72z5POoEqASfSGC474MwjiakU7SVvn8ceFN6
-         NnqDnnKeVeyWlyDeTn/lsbHN8y/DvyEgvOJOhShEH9GDWhZ3iFh2TvHQPy6BOn2jj2
-         L7mZzrGrQVzEoXidq+BA6XpcOu5XueAGoyBQAR0U=
+        b=Et7C2O3LXIbLlU3DKDRjZiKh8S6Wg4B4rBYw0AH1RbIq4N2MNBjLgWnBPIa/gLxmw
+         o+lY1hBPbUVs3wUuYqtOo6nseDERUhMgcKSf+cSDCf6ureRCDj0vGLWPOK0ZgSzm6x
+         3grbDNhHDG6gzedotIBAYQsBSIoVcI8Ah7HkxF8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Xiangliang Yu <Xiangliang.Yu@amd.com>,
+        Wentao Lou <Wentao.Lou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 68/93] lkdtm: Print real addresses
-Date:   Thu, 18 Apr 2019 19:57:46 +0200
-Message-Id: <20190418160444.145327991@linuxfoundation.org>
+Subject: [PATCH 5.0 70/93] drm/amdgpu: psp_ring_destroy cause psp->km_ring.ring_mem NULL
+Date:   Thu, 18 Apr 2019 19:57:48 +0200
+Message-Id: <20190418160444.295980911@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -60,113 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c411157a42f122051ae3469bee0b5cabe89e139 ]
+[ Upstream commit 14d20ec7f31ef96a2e7dcf7880b13dde1d473b56 ]
 
-Today, when doing a lkdtm test before the readiness of the
-random generator, (ptrval) is printed instead of the address
-at which it perform the fault:
+psp_ring_destroy inside psp_load_fw cause psp->km_ring.ring_mem NULL.
+Call Trace occurred when psp_cmd_submit.
+should be psp_ring_stop instead.
 
-[ 1597.337030] lkdtm: Performing direct entry EXEC_USERSPACE
-[ 1597.337142] lkdtm: attempting ok execution at (ptrval)
-[ 1597.337398] lkdtm: attempting bad execution at (ptrval)
-[ 1597.337460] kernel tried to execute user page (77858000) -exploit attempt? (uid: 0)
-[ 1597.344769] Unable to handle kernel paging request for instruction fetch
-[ 1597.351392] Faulting instruction address: 0x77858000
-[ 1597.356312] Oops: Kernel access of bad area, sig: 11 [#1]
-
-If the lkdtm test is done later on, it prints an hashed address.
-
-In both cases this is pointless. The purpose of the test is to
-ensure the kernel generates an Oops at the expected address,
-so real addresses needs to be printed. This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Xiangliang Yu <Xiangliang.Yu@amd.com>
+Signed-off-by: Wentao Lou <Wentao.Lou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/lkdtm/perms.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/lkdtm/perms.c b/drivers/misc/lkdtm/perms.c
-index 53b85c9d16b8..fa54add6375a 100644
---- a/drivers/misc/lkdtm/perms.c
-+++ b/drivers/misc/lkdtm/perms.c
-@@ -47,7 +47,7 @@ static noinline void execute_location(void *dst, bool write)
- {
- 	void (*func)(void) = dst;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+index 3a9b48b227ac..a7208ca0bfe3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+@@ -546,7 +546,7 @@ static int psp_load_fw(struct amdgpu_device *adev)
+ 	struct psp_context *psp = &adev->psp;
  
--	pr_info("attempting ok execution at %p\n", do_nothing);
-+	pr_info("attempting ok execution at %px\n", do_nothing);
- 	do_nothing();
- 
- 	if (write == CODE_WRITE) {
-@@ -55,7 +55,7 @@ static noinline void execute_location(void *dst, bool write)
- 		flush_icache_range((unsigned long)dst,
- 				   (unsigned long)dst + EXEC_SIZE);
- 	}
--	pr_info("attempting bad execution at %p\n", func);
-+	pr_info("attempting bad execution at %px\n", func);
- 	func();
- }
- 
-@@ -66,14 +66,14 @@ static void execute_user_location(void *dst)
- 	/* Intentionally crossing kernel/user memory boundary. */
- 	void (*func)(void) = dst;
- 
--	pr_info("attempting ok execution at %p\n", do_nothing);
-+	pr_info("attempting ok execution at %px\n", do_nothing);
- 	do_nothing();
- 
- 	copied = access_process_vm(current, (unsigned long)dst, do_nothing,
- 				   EXEC_SIZE, FOLL_WRITE);
- 	if (copied < EXEC_SIZE)
- 		return;
--	pr_info("attempting bad execution at %p\n", func);
-+	pr_info("attempting bad execution at %px\n", func);
- 	func();
- }
- 
-@@ -82,7 +82,7 @@ void lkdtm_WRITE_RO(void)
- 	/* Explicitly cast away "const" for the test. */
- 	unsigned long *ptr = (unsigned long *)&rodata;
- 
--	pr_info("attempting bad rodata write at %p\n", ptr);
-+	pr_info("attempting bad rodata write at %px\n", ptr);
- 	*ptr ^= 0xabcd1234;
- }
- 
-@@ -100,7 +100,7 @@ void lkdtm_WRITE_RO_AFTER_INIT(void)
- 		return;
+ 	if (amdgpu_sriov_vf(adev) && adev->in_gpu_reset) {
+-		psp_ring_destroy(psp, PSP_RING_TYPE__KM);
++		psp_ring_stop(psp, PSP_RING_TYPE__KM); /* should not destroy ring, only stop */
+ 		goto skip_memalloc;
  	}
  
--	pr_info("attempting bad ro_after_init write at %p\n", ptr);
-+	pr_info("attempting bad ro_after_init write at %px\n", ptr);
- 	*ptr ^= 0xabcd1234;
- }
- 
-@@ -112,7 +112,7 @@ void lkdtm_WRITE_KERN(void)
- 	size = (unsigned long)do_overwritten - (unsigned long)do_nothing;
- 	ptr = (unsigned char *)do_overwritten;
- 
--	pr_info("attempting bad %zu byte write at %p\n", size, ptr);
-+	pr_info("attempting bad %zu byte write at %px\n", size, ptr);
- 	memcpy(ptr, (unsigned char *)do_nothing, size);
- 	flush_icache_range((unsigned long)ptr, (unsigned long)(ptr + size));
- 
-@@ -185,11 +185,11 @@ void lkdtm_ACCESS_USERSPACE(void)
- 
- 	ptr = (unsigned long *)user_addr;
- 
--	pr_info("attempting bad read at %p\n", ptr);
-+	pr_info("attempting bad read at %px\n", ptr);
- 	tmp = *ptr;
- 	tmp += 0xc0dec0de;
- 
--	pr_info("attempting bad write at %p\n", ptr);
-+	pr_info("attempting bad write at %px\n", ptr);
- 	*ptr = tmp;
- 
- 	vm_munmap(user_addr, PAGE_SIZE);
 -- 
 2.19.1
 
