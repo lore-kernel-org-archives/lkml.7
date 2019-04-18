@@ -2,104 +2,212 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB68C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC89B206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:00:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TE15QQH+"
+	by mail.kernel.org (Postfix) with ESMTP id 97464206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388342AbfDRJA6 (ORCPT
+        id S2388349AbfDRJB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:00:58 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37518 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388195AbfDRJA6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:00:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yvS0k5aM27hlPF/X/NetOX/zP2CDvscIx40HsGn0V+g=; b=TE15QQH+J0bGEX9gYX0sejNVR
-        C0dXnrNLV38tAzN+2yfZMAGyjEJhVl7PZPp6qzSGJOq+Hi8CE7UKty8nnYx4gM2xe25WwbYmnHG6I
-        WYYbxfEpbw76RIgE0DjTXwqA10Tf4qNM0MF7HjwXq1vTiIHatLhO/+cHoyWpa4QXQAvFXcaxuyBkW
-        XVu+CXbaCQv4af7lx+fMBJgF9cEewa8eptdeVhy98Extp8Nuyveo/vpi0YAWlIqAzfdXu702VHW8c
-        I7tqOBWc/hZcVpTapNvp6dEqQTnTeFLlGup5QYrB50G3IdUxJGZmpOez8/cRKoT0Y46YGkABqSFNP
-        bNd1TJj0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hH2uX-0000kz-1R; Thu, 18 Apr 2019 09:00:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C509029B98541; Thu, 18 Apr 2019 11:00:47 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 11:00:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
-Message-ID: <20190418090047.GX12232@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-12-longman@redhat.com>
- <20190417135841.GI4038@hirez.programming.kicks-ass.net>
- <8683197e-4eec-b89b-df44-3b61088944af@redhat.com>
+        Thu, 18 Apr 2019 05:01:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12722 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728074AbfDRJB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 05:01:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Apr 2019 02:01:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,365,1549958400"; 
+   d="scan'208";a="162677577"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Apr 2019 02:01:27 -0700
+Received: from [10.125.252.181] (abudanko-mobl.ccr.corp.intel.com [10.125.252.181])
+        by linux.intel.com (Postfix) with ESMTP id B55705800BD;
+        Thu, 18 Apr 2019 02:01:25 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v1] perf record: collect user registers set jointly with
+ dwarf stacks
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
+ <20190417073952.GF17024@krava> <20190417143542.GA5246@kernel.org>
+ <20190417144002.GB2705@krava>
+ <60FB78F1-BC48-4172-9669-DD3846F1F0E0@kernel.org>
+ <d68cd29b-16fe-7117-b2f4-720c72d6c146@linux.intel.com>
+ <20190417184704.GE5246@kernel.org>
+Organization: Intel Corp.
+Message-ID: <74eee58d-f3d8-5e48-c4e5-928c6431c74f@linux.intel.com>
+Date:   Thu, 18 Apr 2019 12:01:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8683197e-4eec-b89b-df44-3b61088944af@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190417184704.GE5246@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 01:45:10PM -0400, Waiman Long wrote:
-> On 04/17/2019 09:58 AM, Peter Zijlstra wrote:
-> > On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
-> >> +/*
-> >> + * Try to acquire read lock before the reader is put on wait queue.
-> >> + * Lock acquisition isn't allowed if the rwsem is locked or a writer handoff
-> >> + * is ongoing.
-> >> + */
-> >> +static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
-> >> +{
-> >> +	long count = atomic_long_read(&sem->count);
-> >> +
-> >> +	if (RWSEM_COUNT_WLOCKED_OR_HANDOFF(count))
-> >> +		return false;
-> >> +
-> >> +	count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS, &sem->count);
-> >> +	if (!RWSEM_COUNT_WLOCKED_OR_HANDOFF(count)) {
-> >> +		rwsem_set_reader_owned(sem);
-> >> +		lockevent_inc(rwsem_opt_rlock);
-> >> +		return true;
-> >> +	}
-> >> +
-> >> +	/* Back out the change */
-> >> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
-> >> +	return false;
-> >> +}
-> > Doesn't a cmpxchg 'loop' make more sense here?
+On 17.04.2019 21:47, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Apr 17, 2019 at 08:45:08PM +0300, Alexey Budankov escreveu:
+>> Hi Arnaldo,
+>>
+>> On 17.04.2019 18:48, Arnaldo Carvalho de Melo wrote:
+>>> On April 17, 2019 11:40:02 AM GMT-03:00, Jiri Olsa <jolsa@redhat.com> wrote:
+>>>> On Wed, Apr 17, 2019 at 11:35:42AM -0300, Arnaldo Carvalho de Melo
+>>>> wrote:
+>>>>> Em Wed, Apr 17, 2019 at 09:39:52AM +0200, Jiri Olsa escreveu:
+>>>>>> On Mon, Apr 15, 2019 at 06:36:13PM +0300, Alexey Budankov wrote:
+>>>>>>>
+>>>>>>> When dwarf stacks are collected jointly with user specified
+>>>> register
+>>>>>>> set using --user-regs option like below the full register context
+>>>> is
+>>>>>>> still captured on a sample:
+>>>>>>>
+>>>>>>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP
+>>>> -- matrix.gcc.g.O3
+>>>>>>>
+>>>>>>>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002):
+>>>> 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+>>>>>>>   ... FP chain: nr:0
+>>>>>>>   ... user regs: mask 0xff0fff ABI 64-bit
+>>>>>>>   .... AX    0x53b
+>>>>>>>   .... BX    0x7ffedbdd3cc0
+>>>>>>>   .... CX    0xffffffff
+>>>>>>>   .... DX    0x33d3a
+>>>>>>>   .... SI    0x7f09b74c38d0
+>>>>>>>   .... DI    0x0
+>>>>>>>   .... BP    0x401260
+>>>>>>>   .... SP    0x7ffedbdd3cc0
+>>>>>>>   .... IP    0x401236
+>>>>>>>   .... FLAGS 0x20a
+>>>>>>>   .... CS    0x33
+>>>>>>>   .... SS    0x2b
+>>>>>>>   .... R8    0x7f09b74c3800
+>>>>>>>   .... R9    0x7f09b74c2da0
+>>>>>>>   .... R10   0xfffffffffffff3ce
+>>>>>>>   .... R11   0x246
+>>>>>>>   .... R12   0x401070
+>>>>>>>   .... R13   0x7ffedbdd5db0
+>>>>>>>   .... R14   0x0
+>>>>>>>   .... R15   0x0
+>>>>>>>   ... ustack: size 1024, offset 0xe0
+>>>>>>>    . data_src: 0x5080021
+>>>>>>>    ... thread: stack_test2.g.O:23828
+>>>>>>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+>>>>>>>
+>>>>>>> After applying the change suggested in the patch the sample data
+>>>> contain
+>>>>>>> only user specified register values:
+>>>>>>>
+>>>>>>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP
+>>>> -- matrix.gcc.g.03
+>>>>>>>
+>>>>>>>   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002):
+>>>> 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
+>>>>>>>   ... FP chain: nr:0
+>>>>>>>   ... user regs: mask 0x1c0 ABI 64-bit
+>>>>>>>   .... BP    0x401260
+>>>>>>>   .... SP    0x7ffd3d85cc20
+>>>>>>>   .... IP    0x401236
+>>>>>>>   ... ustack: size 1024, offset 0x58
+>>>>>>>    . data_src: 0x5080021
+>>>>>>>    ... thread: stack_test2.g.O:23839
+>>>>>>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+>>>>>>>
+>>>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>>>>
+>>>>>> Acked-by: Jiri Olsa <jolsa@kernel.org>
+>>>>>
+>>>>> So, there are registers that are needed to do the DWARF unwinding,
+>>>>> right? But at the same time, if the user says only some are needed,
+>>>> he
+>>>>> better know what they're doing and ask for at least the registers
+>>>> needed
+>>>>> for the unwinding process to be successfull, right?
+>>>>
+>>>> yep, that's how understand that
+>>>
+>>> So we need to document that, stating that specifying a set of registers together with requesting DWARF callchains may break things.
+>>
+>> Do you mean break callchains if omitting IP,SP,BP? 
+>> For example like this: 
+>> $ perf record -g --call-graph dwarf,1024 --user-regs=AX,BX,CX -- matrix.gcc.g.O3
 > 
-> Not really. A cmpxchg loop will have one more correctible failure mode -
-> a new reader acquire the lock or a reader owner does an unlock. Failures
-> caused by the setting of the handoff bit or writer acquiring the lock
-> are the same for both cases. I don't see any advantage in using cmpxchg
-> loop.
+> Right, i.e. if you don't use --user-regs, then a set of registers will
+> be asked for by --call-graph dwarf, right? If you use both and specify a
 
-It depends on how many failures vs successes you have. I was expecting
-failure to be the most common case, and then you go from 2 atomics to 1.
+Right. Full register set is collected.
 
+> subset that doesn't have some of the asked for --call-graph dwarf, what
+> happens?
 
+It reports corrupted trace:
+./perf record -g --call-graph dwarf,1024 --user-regs=IP -- ./stack_test2.2048.g.O3
+in foo() ...
+in bar() ...
+done
+[ perf record: Woken up 254 times to write data ]
+[ perf record: Captured and wrote 63.341 MB perf.data (59286 samples) ]
+[root@nntvtune39 stacks]# ./perf report -D > log.txt
+unwind: can't read reg 7
+0x835c0 [0x8]: failed to process type: 68
+Error:
+failed to process sample
+
+./perf record -g --call-graph dwarf,1024 --user-regs=SP -- ./stack_test2.2048.g.O3
+in foo() ...
+in bar() ...
+done
+[ perf record: Woken up 256 times to write data ]
+[ perf record: Captured and wrote 63.863 MB perf.data (59773 samples) ]
+[root@nntvtune39 stacks]# ./perf report -D > log.txt
+0x83180 [0x8]: failed to process type: 68
+Error:
+failed to process sample
+
+./perf record -g --call-graph dwarf,1024 --user-regs=IP,SP -- ./stack_test2.2048.g.O3
+in foo() ...
+in bar() ...
+done
+[ perf record: Woken up 258 times to write data ]
+[ perf record: Captured and wrote 64.301 MB perf.data (59757 samples) ]
+[root@nntvtune39 stacks]# ./perf report -D > log.txt
+unwind: can't read reg 6
+
+./perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- ./stack_test2.2048.g.O3
+in foo() ...
+in bar() ...
+done
+[ perf record: Woken up 259 times to write data ]
+[ perf record: Captured and wrote 64.737 MB perf.data (59739 samples) ]
+[root@nntvtune39 stacks]# ./perf report -D > log.txt
+
+It looks like some dwarf set IP,SP,BP has to be collected anyways
+and the set has to be consolidated with the registers specified 
+using --user-regs option:
+
+-g call-graph dwarf,K				all_regs
+-g call-graph dwarf,K --user-regs=user_regs	dwarf_regs | user_regs
+--user-regs=user_regs				user_regs
+
+~Alexey
+
+> 
+> - Arnaldo
+> 
