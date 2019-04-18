@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29581C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE6CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A6C217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3052064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612380;
-	bh=j6TqMVgjFtOAJb6ukAQxbmY2WalOjaTfILrGTA7UkpI=;
+	s=default; t=1555612397;
+	bh=dbBJMBPyUcLTUgwech/cEH49z1YSP856x8tpZmDgDkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eBAj3vFCERyd0BELDcogXAxOUySbeTxTfh3nTMllFTO4c0FkQrhCh59Oztv70kYCz
-	 cQCl4FTZE9RjsE+I0/emLnQvWSIDOG8RQUdbxqD78rG/6cCqWU1BQz5zXb7YKvcg70
-	 5pYFcp8AvZoBtJwT3VIomt5jTU3MFS48k/qdsH+o=
+	b=WcPHd+6x0Fcs/4pi8TuUekkWZiyn64A8vKcMdRFhPigu0hmWToCmQWiip0oZewgFg
+	 qkWBZXbX5X/ZSC1PYeqJXGk5MFi4Ma2w62m6ztlAPbvR8WbOeHg1nn9BHRmyV3JtTt
+	 ittBv1phbhKyS93uYlKdY72mboOMOqHBRfbdYuJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390477AbfDRSc6 (ORCPT
+        id S2390561AbfDRSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54968 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389831AbfDRR75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:57 -0400
+        id S2390173AbfDRR7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:59:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73DC2206B6;
-        Thu, 18 Apr 2019 17:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DDFE217FA;
+        Thu, 18 Apr 2019 17:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610396;
-        bh=j6TqMVgjFtOAJb6ukAQxbmY2WalOjaTfILrGTA7UkpI=;
+        s=default; t=1555610381;
+        bh=dbBJMBPyUcLTUgwech/cEH49z1YSP856x8tpZmDgDkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHov5Q58G55IE9A3uG4ObEh4wP8Q72vhvdQYnqCrWsGMJIiPm3mNRY0toG31VN1qF
-         5CZlvK8HWXRSq2kdCYM9dieZyjcCvmZYS9iEQpAlQRg7umDZ9rpTFT/puANbFZpUdC
-         AmOLyEkLggCFH7+KZlJ+ETnQq15i9iK2qwXHaEuM=
+        b=Vv1khjdLvPjJ+B4uJ4PLc5WsUSvWegE1dUX4aItHfIFV9dKrQzAQ+PFOqm89lAiIj
+         /2FzjEngwmfQF5yyqzsMNrdLZrJimsikJhUJUOOwsIBs3tCdNvyRyy6aTFVhJyasYz
+         ZkEjLY0Mss2YW83VgyKmhTjCUisUJIGVwritqC90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>, pakki001@umn.edu,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org
-Subject: [PATCH 4.19 045/110] x86/hyperv: Prevent potential NULL pointer dereference
-Date:   Thu, 18 Apr 2019 19:56:34 +0200
-Message-Id: <20190418160443.128732247@linuxfoundation.org>
+        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 039/110] PM / Domains: Avoid a potential deadlock
+Date:   Thu, 18 Apr 2019 19:56:28 +0200
+Message-Id: <20190418160442.527589559@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -66,51 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 534c89c22e26b183d838294f0937ee092c82ad3a ]
+[ Upstream commit 2071ac985d37efe496782c34318dbead93beb02f ]
 
-The page allocation in hv_cpu_init() can fail, but the code does not
-have a check for that.
+Lockdep warns that prepare_lock and genpd->mlock can cause a deadlock
+the deadlock scenario is like following:
+First thread is probing cs2000
+cs2000_probe()
+  clk_register()
+    __clk_core_init()
+      clk_prepare_lock()                            ----> acquires prepare_lock
+        cs2000_recalc_rate()
+          i2c_smbus_read_byte_data()
+            rcar_i2c_master_xfer()
+              dma_request_chan()
+                rcar_dmac_of_xlate()
+                  rcar_dmac_alloc_chan_resources()
+                    pm_runtime_get_sync()
+                      __pm_runtime_resume()
+                        rpm_resume()
+                          rpm_callback()
+                            genpd_runtime_resume()   ----> acquires genpd->mlock
 
-Add a check and return -ENOMEM when the allocation fails.
+Second thread is attaching any device to the same PM domain
+genpd_add_device()
+  genpd_lock()                                       ----> acquires genpd->mlock
+    cpg_mssr_attach_dev()
+      of_clk_get_from_provider()
+        __of_clk_get_from_provider()
+          __clk_create_clk()
+            clk_prepare_lock()                       ----> acquires prepare_lock
 
-[ tglx: Massaged changelog ]
+Since currently no PM provider access genpd's critical section
+in .attach_dev, and .detach_dev callbacks, so there is no need to protect
+these two callbacks with genpd->mlock.
+This patch avoids a potential deadlock by moving out .attach_dev and .detach_dev
+from genpd->mlock, so that genpd->mlock won't be held when prepare_lock is acquired
+in .attach_dev and .detach_dev
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Acked-by: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: pakki001@umn.edu
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-hyperv@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190314054651.1315-1-kjlu@umn.edu
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/hv_init.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/base/power/domain.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 87abd5145cc9..3fb855155286 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -101,9 +101,13 @@ static int hv_cpu_init(unsigned int cpu)
- 	u64 msr_vp_index;
- 	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
- 	void **input_arg;
-+	struct page *pg;
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 4b5714199490..bf5be0bfaf77 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -1388,12 +1388,12 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
+ 	if (IS_ERR(gpd_data))
+ 		return PTR_ERR(gpd_data);
  
- 	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
--	*input_arg = page_address(alloc_page(GFP_KERNEL));
-+	pg = alloc_page(GFP_KERNEL);
-+	if (unlikely(!pg))
-+		return -ENOMEM;
-+	*input_arg = page_address(pg);
+-	genpd_lock(genpd);
+-
+ 	ret = genpd->attach_dev ? genpd->attach_dev(genpd, dev) : 0;
+ 	if (ret)
+ 		goto out;
  
- 	hv_get_vp_index(msr_vp_index);
++	genpd_lock(genpd);
++
+ 	dev_pm_domain_set(dev, &genpd->domain);
  
+ 	genpd->device_count++;
+@@ -1401,9 +1401,8 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
+ 
+ 	list_add_tail(&gpd_data->base.list_node, &genpd->dev_list);
+ 
+- out:
+ 	genpd_unlock(genpd);
+-
++ out:
+ 	if (ret)
+ 		genpd_free_dev_data(dev, gpd_data);
+ 	else
+@@ -1452,15 +1451,15 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
+ 	genpd->device_count--;
+ 	genpd->max_off_time_changed = true;
+ 
+-	if (genpd->detach_dev)
+-		genpd->detach_dev(genpd, dev);
+-
+ 	dev_pm_domain_set(dev, NULL);
+ 
+ 	list_del_init(&pdd->list_node);
+ 
+ 	genpd_unlock(genpd);
+ 
++	if (genpd->detach_dev)
++		genpd->detach_dev(genpd, dev);
++
+ 	genpd_free_dev_data(dev, gpd_data);
+ 
+ 	return 0;
 -- 
 2.19.1
 
