@@ -2,52 +2,54 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2D4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C52EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FDB206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F398218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610833;
-	bh=cmqXPQJXxvTCRuC2Nqr0FsEmX7kmCJ3YIjWZ23rz1aw=;
+	s=default; t=1555610837;
+	bh=3IvzrkcnaIhMFPW0+8pwK74d7EmvxBEM4YgOYV0mEFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TXZ9mzPSsGZOds8pPDurv6Ua9a2NH7IsxchmX1ed4jU8FHe0y7eiSjXCmNt9ylMw5
-	 fVjxE20XKcgT2yMRKRI6M/lsYyYiwycejqC85XfDvE1fjUFPMZOo09/xW9uvIkTIus
-	 rWa7gZVYuEB+cAj18u6CWvYeyy9HU59GNDyUikdI=
+	b=RjzowejkYmUqAwUWypg412/F3NuP4qGIyd+Mi/4POcOJ+J7woUiMkJx+Xg4gmIdJA
+	 eIL5EtOddQZoKxIBdJgJRqEIPFWUAzyNfcrwfkVmNTahGqXMjiXsbn5llvvxmhYz2N
+	 XI1IIcKcxivST3DoW/OsqB35cfVCur7howwueeqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390594AbfDRSHM (ORCPT
+        id S2388052AbfDRSHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37314 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391591AbfDRSHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:07:09 -0400
+        id S2391599AbfDRSHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:07:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B88218DA;
-        Thu, 18 Apr 2019 18:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26F6B218FF;
+        Thu, 18 Apr 2019 18:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610828;
-        bh=cmqXPQJXxvTCRuC2Nqr0FsEmX7kmCJ3YIjWZ23rz1aw=;
+        s=default; t=1555610831;
+        bh=3IvzrkcnaIhMFPW0+8pwK74d7EmvxBEM4YgOYV0mEFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kv3SM8W/liVE1Gvr/xgZiAE91cJEV3mfLfGAiL5iCDNU7bzIxsK4P+r8Srm7n4Wdt
-         UIaeJJl4nosaOPg69NsycDNciiqPrVAV5cTVxh2DF97AlzEwBVQmyOVajDmWnJya8g
-         zjQW1r0IAausrAkwWfyTTNBNn23VKAuNgIsJpVu0=
+        b=L256HAKvBBt1W1dWjEqLa0wZthtu20ecK+0JDI2TPQKJ7Nno5AkoGFWDKdX+p3Jm4
+         z7CuMhKlrXdaPmv0HUhd9rMWFWRFzoLitAYu40UqbtyR5Ok6LgnM6i0yci1/7lSUJo
+         dCvo3Msp+N/NN3BhOVRqpQA63i4Y0rw64kJQCLIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Balbir Singh <sblbir@amzn.com>
-Subject: [PATCH 4.14 79/92] bpf: enable access to ax register also from verifier rewrite
-Date:   Thu, 18 Apr 2019 19:57:37 +0200
-Message-Id: <20190418160437.341757519@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 70/92] include/linux/swap.h: use offsetof() instead of custom __swapoffset macro
+Date:   Thu, 18 Apr 2019 19:57:28 +0200
+Message-Id: <20190418160436.318760726@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -60,75 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+[ Upstream commit a4046c06be50a4f01d435aa7fe57514818e6cc82 ]
 
-commit 9b73bfdd08e73231d6a90ae6db4b46b3fbf56c30 upstream.
+Use offsetof() to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
 
-Right now we are using BPF ax register in JIT for constant blinding as
-well as in interpreter as temporary variable. Verifier will not be able
-to use it simply because its use will get overridden from the former in
-bpf_jit_blind_insn(). However, it can be made to work in that blinding
-will be skipped if there is prior use in either source or destination
-register on the instruction. Taking constraints of ax into account, the
-verifier is then open to use it in rewrites under some constraints. Note,
-ax register already has mappings in every eBPF JIT.
+  UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
+  member access within null pointer of type 'union swap_header'
+  CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
+  Call trace:
+   dump_backtrace+0x0/0x194
+   show_stack+0x20/0x2c
+   __dump_stack+0x20/0x28
+   dump_stack+0x70/0x94
+   ubsan_epilogue+0x14/0x44
+   ubsan_type_mismatch_common+0xf4/0xfc
+   __ubsan_handle_type_mismatch_v1+0x34/0x54
+   __se_sys_swapon+0x654/0x1084
+   __arm64_sys_swapon+0x1c/0x24
+   el0_svc_common+0xa8/0x150
+   el0_svc_compat_handler+0x2c/0x38
+   el0_svc_compat+0x8/0x18
 
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-[backported to 4.14 sblbir]
-Signed-off-by: Balbir Singh <sblbir@amzn.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/20190312081902.223764-1-pihsun@chromium.org
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/filter.h |    7 +------
- kernel/bpf/core.c      |   20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+), 6 deletions(-)
+ include/linux/swap.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -46,12 +46,7 @@ struct bpf_prog_aux;
- #define BPF_REG_X	BPF_REG_7
- #define BPF_REG_TMP	BPF_REG_8
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 4fd1ab9565ba..e643866912b7 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -155,9 +155,9 @@ struct swap_extent {
+ /*
+  * Max bad pages in the new format..
+  */
+-#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
+ #define MAX_SWAP_BADPAGES \
+-	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
++	((offsetof(union swap_header, magic.magic) - \
++	  offsetof(union swap_header, info.badpages)) / sizeof(int))
  
--/* Kernel hidden auxiliary/helper register for hardening step.
-- * Only used by eBPF JITs. It's nothing more than a temporary
-- * register that JITs use internally, only that here it's part
-- * of eBPF instructions that have been rewritten for blinding
-- * constants. See JIT pre-step in bpf_jit_blind_constants().
-- */
-+/* Kernel hidden auxiliary/helper register. */
- #define BPF_REG_AX		MAX_BPF_REG
- #define MAX_BPF_EXT_REG		(MAX_BPF_REG + 1)
- #define MAX_BPF_JIT_REG		MAX_BPF_EXT_REG
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -553,6 +553,26 @@ static int bpf_jit_blind_insn(const stru
- 	BUILD_BUG_ON(BPF_REG_AX  + 1 != MAX_BPF_JIT_REG);
- 	BUILD_BUG_ON(MAX_BPF_REG + 1 != MAX_BPF_JIT_REG);
- 
-+	/* Constraints on AX register:
-+	 *
-+	 * AX register is inaccessible from user space. It is mapped in
-+	 * all JITs, and used here for constant blinding rewrites. It is
-+	 * typically "stateless" meaning its contents are only valid within
-+	 * the executed instruction, but not across several instructions.
-+	 * There are a few exceptions however which are further detailed
-+	 * below.
-+	 *
-+	 * Constant blinding is only used by JITs, not in the interpreter.
-+	 * The interpreter uses AX in some occasions as a local temporary
-+	 * register e.g. in DIV or MOD instructions.
-+	 *
-+	 * In restricted circumstances, the verifier can also use the AX
-+	 * register for rewrites as long as they do not interfere with
-+	 * the above cases!
-+	 */
-+	if (from->dst_reg == BPF_REG_AX || from->src_reg == BPF_REG_AX)
-+		goto out;
-+
- 	if (from->imm == 0 &&
- 	    (from->code == (BPF_ALU   | BPF_MOV | BPF_K) ||
- 	     from->code == (BPF_ALU64 | BPF_MOV | BPF_K))) {
+ enum {
+ 	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
+-- 
+2.19.1
+
 
 
