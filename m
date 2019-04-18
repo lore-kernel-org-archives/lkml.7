@@ -2,268 +2,101 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FE1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83716C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEBC206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56910206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388759AbfDRJI1 (ORCPT
+        id S2388770AbfDRJIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:08:27 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:34187 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388736AbfDRJIY (ORCPT
+        Thu, 18 Apr 2019 05:08:44 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:36159 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388394AbfDRJIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:08:24 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH30Z-00021L-Q0; Thu, 18 Apr 2019 11:07:04 +0200
-Message-Id: <20190418084255.740246383@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:48 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        linux-arch@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [patch V2 29/29] x86/stacktrace: Use common infrastructure
-References: <20190418084119.056416939@linutronix.de>
+        Thu, 18 Apr 2019 05:08:16 -0400
+X-UUID: 595c95a974654552a558d74eab67a375-20190418
+X-UUID: 595c95a974654552a558d74eab67a375-20190418
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1589109885; Thu, 18 Apr 2019 17:08:05 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 18 Apr 2019 17:08:04 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 18 Apr 2019 17:08:04 +0800
+From:   <sean.wang@mediatek.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <ulf.hansson@linaro.org>, <linux-bluetooth@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v1 2/4] Bluetooth: btmtksdio: Add a bit definition for CHLPCR
+Date:   Thu, 18 Apr 2019 17:08:00 +0800
+Message-ID: <59a2a29ece89c13ffc2c7cd32432c1731906f447.1555577565.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1555577565.git.sean.wang@mediatek.com>
+References: <cover.1555577565.git.sean.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the stack_trace_save*() functions with the new arch_stack_walk()
-interfaces.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arch@vger.kernel.org
+Add a register bit definition about CHLPCR bit 8 because the bit is quite
+different in the meaning between reading and writing that bit.
+
+The patch adds a definition particularly for the bit read to avoid the
+confusion about using write definition to read the bit.
+
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- arch/x86/Kconfig             |    1 
- arch/x86/kernel/stacktrace.c |  116 +++++++------------------------------------
- 2 files changed, 20 insertions(+), 97 deletions(-)
+ drivers/bluetooth/btmtksdio.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -74,6 +74,7 @@ config X86
- 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_MIGHT_HAVE_PC_SERIO
-+	select ARCH_STACKWALK
- 	select ARCH_SUPPORTS_ACPI
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -12,75 +12,31 @@
- #include <asm/stacktrace.h>
- #include <asm/unwind.h>
+diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
+index 681e3e34977e..9c123a9de673 100644
+--- a/drivers/bluetooth/btmtksdio.c
++++ b/drivers/bluetooth/btmtksdio.c
+@@ -56,7 +56,8 @@ static const struct sdio_device_id btmtksdio_table[] = {
+ #define MTK_REG_CHLPCR		0x4	/* W1S */
+ #define C_INT_EN_SET		BIT(0)
+ #define C_INT_EN_CLR		BIT(1)
+-#define C_FW_OWN_REQ_SET	BIT(8)
++#define C_FW_OWN_REQ_SET	BIT(8)  /* For write */
++#define C_COM_DRV_OWN		BIT(8)  /* For read */
+ #define C_FW_OWN_REQ_CLR	BIT(9)
  
--static int save_stack_address(struct stack_trace *trace, unsigned long addr,
--			      bool nosched)
--{
--	if (nosched && in_sched_functions(addr))
--		return 0;
--
--	if (trace->skip > 0) {
--		trace->skip--;
--		return 0;
--	}
--
--	if (trace->nr_entries >= trace->max_entries)
--		return -1;
--
--	trace->entries[trace->nr_entries++] = addr;
--	return 0;
--}
--
--static void noinline __save_stack_trace(struct stack_trace *trace,
--			       struct task_struct *task, struct pt_regs *regs,
--			       bool nosched)
-+void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+		     struct task_struct *task, struct pt_regs *regs)
- {
- 	struct unwind_state state;
- 	unsigned long addr;
+ #define MTK_REG_CSDIOCSR	0x8
+@@ -526,7 +527,7 @@ static int btmtksdio_open(struct hci_dev *hdev)
+ 		goto err_disable_func;
  
--	if (regs)
--		save_stack_address(trace, regs->ip, nosched);
-+	if (regs && !consume_entry(cookie, regs->ip, false))
-+		return;
+ 	err = readx_poll_timeout(btmtksdio_drv_own_query, bdev, status,
+-				 status & C_FW_OWN_REQ_SET, 2000, 1000000);
++				 status & C_COM_DRV_OWN, 2000, 1000000);
+ 	if (err < 0) {
+ 		bt_dev_err(bdev->hdev, "Cannot get ownership from device");
+ 		goto err_disable_func;
+@@ -606,7 +607,7 @@ static int btmtksdio_close(struct hci_dev *hdev)
+ 	sdio_writel(bdev->func, C_FW_OWN_REQ_SET, MTK_REG_CHLPCR, NULL);
  
- 	for (unwind_start(&state, task, regs, NULL); !unwind_done(&state);
- 	     unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
--		if (!addr || save_stack_address(trace, addr, nosched))
-+		if (!addr || !consume_entry(cookie, addr, false))
- 			break;
- 	}
- }
+ 	err = readx_poll_timeout(btmtksdio_drv_own_query, bdev, status,
+-				 !(status & C_FW_OWN_REQ_SET), 2000, 1000000);
++				 !(status & C_COM_DRV_OWN), 2000, 1000000);
+ 	if (err < 0)
+ 		bt_dev_err(bdev->hdev, "Cannot return ownership to device");
  
- /*
-- * Save stack-backtrace addresses into a stack_trace buffer.
-+ * This function returns an error if it detects any unreliable features of the
-+ * stack.  Otherwise it guarantees that the stack trace is reliable.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is inactive.
-  */
--void save_stack_trace(struct stack_trace *trace)
--{
--	trace->skip++;
--	__save_stack_trace(trace, current, NULL, false);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace);
--
--void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
--{
--	__save_stack_trace(trace, current, regs, false);
--}
--
--void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
--{
--	if (!try_get_task_stack(tsk))
--		return;
--
--	if (tsk == current)
--		trace->skip++;
--	__save_stack_trace(trace, tsk, NULL, true);
--
--	put_task_stack(tsk);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
--
--#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
--
--static int __always_inline
--__save_stack_trace_reliable(struct stack_trace *trace,
--			    struct task_struct *task)
-+int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
-+			     void *cookie, struct task_struct *task)
- {
- 	struct unwind_state state;
- 	struct pt_regs *regs;
-@@ -117,7 +73,7 @@ static int __always_inline
- 		if (!addr)
- 			return -EINVAL;
- 
--		if (save_stack_address(trace, addr, false))
-+		if (!consume_entry(cookie, addr, false))
- 			return -EINVAL;
- 	}
- 
-@@ -132,32 +88,6 @@ static int __always_inline
- 	return 0;
- }
- 
--/*
-- * This function returns an error if it detects any unreliable features of the
-- * stack.  Otherwise it guarantees that the stack trace is reliable.
-- *
-- * If the task is not 'current', the caller *must* ensure the task is inactive.
-- */
--int save_stack_trace_tsk_reliable(struct task_struct *tsk,
--				  struct stack_trace *trace)
--{
--	int ret;
--
--	/*
--	 * If the task doesn't have a stack (e.g., a zombie), the stack is
--	 * "reliably" empty.
--	 */
--	if (!try_get_task_stack(tsk))
--		return 0;
--
--	ret = __save_stack_trace_reliable(trace, tsk);
--
--	put_task_stack(tsk);
--
--	return ret;
--}
--#endif /* CONFIG_HAVE_RELIABLE_STACKTRACE */
--
- /* Userspace stacktrace - based on kernel/trace/trace_sysprof.c */
- 
- struct stack_frame_user {
-@@ -182,15 +112,15 @@ copy_stack_frame(const void __user *fp,
- 	return ret;
- }
- 
--static inline void __save_stack_trace_user(struct stack_trace *trace)
-+void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-+			  const struct pt_regs *regs)
- {
--	const struct pt_regs *regs = task_pt_regs(current);
- 	const void __user *fp = (const void __user *)regs->bp;
- 
--	if (trace->nr_entries < trace->max_entries)
--		trace->entries[trace->nr_entries++] = regs->ip;
-+	if (!consume_entry(cookie, regs->ip, false))
-+		return;
- 
--	while (trace->nr_entries < trace->max_entries) {
-+	while (1) {
- 		struct stack_frame_user frame;
- 
- 		frame.next_fp = NULL;
-@@ -200,8 +130,8 @@ static inline void __save_stack_trace_us
- 		if ((unsigned long)fp < regs->sp)
- 			break;
- 		if (frame.ret_addr) {
--			trace->entries[trace->nr_entries++] =
--				frame.ret_addr;
-+			if (!consume_entry(cookie, frame.ret_addr, false))
-+				return;
- 		}
- 		if (fp == frame.next_fp)
- 			break;
-@@ -209,11 +139,3 @@ static inline void __save_stack_trace_us
- 	}
- }
- 
--void save_stack_trace_user(struct stack_trace *trace)
--{
--	/*
--	 * Trace user stack if we are not a kernel thread
--	 */
--	if (current->mm)
--		__save_stack_trace_user(trace);
--}
-
+-- 
+2.18.0
 
