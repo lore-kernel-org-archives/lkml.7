@@ -2,167 +2,94 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73888C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC41C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E95214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E49214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388065AbfDRGZN (ORCPT
+        id S2388092AbfDRGZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:25:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59029 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbfDRGZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:25:11 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.40])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1hH0Tn-0006Gf-Q7; Thu, 18 Apr 2019 06:25:04 +0000
-Subject: Re: [PATCH] nvme: determine the number of IO queues
-To:     "Edmund Nadolski (Microsoft)" <edmund.f.nadolski@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        keith.busch@intel.com, axboe@fb.com
-References: <1555510379-20199-1-git-send-email-aaron.ma@canonical.com>
- <08ac5733-596b-598d-c821-f1aa2dc32650@gmail.com>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <2024829f-4b8f-7f83-d861-da009cd75edb@canonical.com>
-Date:   Thu, 18 Apr 2019 14:24:58 +0800
+        Thu, 18 Apr 2019 02:25:40 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16089 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbfDRGZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 02:25:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 23:25:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,364,1549958400"; 
+   d="scan'208";a="151841923"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga002.jf.intel.com with ESMTP; 17 Apr 2019 23:25:34 -0700
+Subject: Re: [PATCH v1 0/4] Add tracing for SDHCI register access
+To:     Raul Rangel <rrangel@chromium.org>
+Cc:     linux-trace-devel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        djkurtz@chromium.org, zwisler@chromium.org,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Liming Sun <lsun@mellanox.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Prabu Thangamuthu <Prabu.T@synopsys.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20190411220822.81845-1-rrangel@chromium.org>
+ <7b77ebcb-b42b-2d14-f5f1-b37e07b88469@intel.com>
+ <20190412145012.GA101407@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <bd3a1df1-5ac4-e23c-35a3-78361a5c356e@intel.com>
+Date:   Thu, 18 Apr 2019 09:24:16 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <08ac5733-596b-598d-c821-f1aa2dc32650@gmail.com>
+In-Reply-To: <20190412145012.GA101407@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/19 5:30 AM, Edmund Nadolski (Microsoft) wrote:
-> On 4/17/19 7:12 AM, Aaron Ma wrote:
->> Some controllers support limited IO queues, when over set
->> the number, it will return invalid field error.
->> Then NVME will be removed by driver.
+On 12/04/19 5:50 PM, Raul Rangel wrote:
+> On Fri, Apr 12, 2019 at 09:26:44AM +0300, Adrian Hunter wrote:
+>> On 12/04/19 1:08 AM, Raul E Rangel wrote:
+>>> I was debugging a SDHC hardware bug and got tired of having to
+>>> translate the register values by hand. This patch set makes it so all
+>>> SDHC register read and write operations can be traced and easily read by
+>>> a human.
 >>
->> Find the max number of IO queues that controller supports.
->> When it still got invalid result, set 1 IO queue at least to
->> bring NVME online.
->>
->> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
->> ---
->>   drivers/nvme/host/core.c | 29 ++++++++++++++++++-----------
->>   1 file changed, 18 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->> index 2c43e12b70af..fb7f05c310c8 100644
->> --- a/drivers/nvme/host/core.c
->> +++ b/drivers/nvme/host/core.c
->> @@ -1134,14 +1134,24 @@ static int nvme_set_features(struct nvme_ctrl
->> *dev, unsigned fid, unsigned dword
->>     int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count)
->>   {
->> -    u32 q_count = (*count - 1) | ((*count - 1) << 16);
->> +    u32 q_count;
->>       u32 result;
->> -    int status, nr_io_queues;
->> -
->> -    status = nvme_set_features(ctrl, NVME_FEAT_NUM_QUEUES, q_count,
->> NULL, 0,
->> -            &result);
->> -    if (status < 0)
->> -        return status;
->> +    int status = -1;
->> +    int nr_io_queues;
->> +    int try_count;
->> +
->> +    for (try_count = *count; try_count > 0; try_count--) {
->> +        q_count = (try_count - 1) | ((try_count - 1) << 16);
-> 
-> A macro here might help readability.
+>> While this might be useful for people unfamiliar with SDHCI, I am not sure
+>> it should be in the upstream kernel.
+> Can you help me understand your hesitation? Would you prefer removing the
+> pretty printing? Or would you prefer not having any trace events at all?
 
-Will add in V2.
+It is just cost/benefit.  I am not sure the cost of maintaining it is worth
+the benefit of having it upstream.
 
+> The xhci driver has a bunch of pretty print trace events that make it
+> invaluable when debugging.
+> https://github.com/torvalds/linux/blob/d7563ca5bfca53398e100eb74345c5d3ef06bf9d/drivers/usb/host/xhci.h#L2160
 > 
->> +        status = nvme_set_features(ctrl, NVME_FEAT_NUM_QUEUES,
->> +                q_count, NULL, 0, &result);
->> +        if (status < 0)
->> +            return status;
->> +        else if (status == 0) {
-> 
-> else following return is not needed.
+>> Also, it doesn't seem ideal for every
+>> driver to add its own plumbing for such a feature.
+> What do you mean by every driver having to add it's own plumbing? Any
+> driver that uses sdhci_readX or sdhci_writeX get the functionality for
+> free.
 
- *      0: successful read
- *      > 0: NVMe error status code
- *      < 0: Linux errno error code
-
-3 conditions should be taken care.
-status > 0 will be handled after loop.
-
-else is needed.
-
-> 
-> 
->> +            nr_io_queues = min(result & 0xffff, result >> 16) + 1;
-> 
-> Likewise, a macro as above.
-
-Will add in V2.
-
-> 
-> 
-> Ed
-> 
->> +            *count = min(try_count, nr_io_queues);
->> +            break;
->> +        }
->> +    }
->>         /*
->>        * Degraded controllers might return an error when setting the
->> queue
->> @@ -1150,10 +1160,7 @@ int nvme_set_queue_count(struct nvme_ctrl
->> *ctrl, int *count)
->>        */
->>       if (status > 0) {
->>           dev_err(ctrl->device, "Could not set queue count (%d)\n",
->> status);
->> -        *count = 0;
->> -    } else {
->> -        nr_io_queues = min(result & 0xffff, result >> 16) + 1;
->> -        *count = min(*count, nr_io_queues);
->> +        *count = 1;
->>       }
->>         return 0;
->>
-> 
+I/O memory mappings are recorded for devices. e.g. /proc/iomem so it could
+be possible to add tracing for all I/O memory accesses via readx/writex etc,
+configurable / filterable by device id.
