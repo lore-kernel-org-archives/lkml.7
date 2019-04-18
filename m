@@ -2,199 +2,107 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32495C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A991FC282DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017D3206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA45206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555631313;
+	bh=0BYxge2vHiinJrCTJtR2FiPW4myDFCQ17XL1+bP3YXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FokRKuhd41jdhoXGIvA7M/dNChNGO1p4ynI80Z6bGOvpxN6HfmZXg2BLE9tvBJNR6
+	 AQ6YFq3ERnYrTzvy/zlAW9FPdyiuAvtqtmym57dw6RS/kTdL4BgMGgHrdF+ZSCQ0NT
+	 Rp7I7BoH5CnqTbI0Kz4epozexkvufMQ9lkeNTDCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfDRXq4 (ORCPT
+        id S1726717AbfDRXsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 19:46:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41480 "EHLO mx1.redhat.com"
+        Thu, 18 Apr 2019 19:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfDRXqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 19:46:54 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725917AbfDRXsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 19:48:31 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECEDFC06645C;
-        Thu, 18 Apr 2019 23:46:53 +0000 (UTC)
-Received: from llong.com (ovpn-120-92.rdu2.redhat.com [10.10.120.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 64E615D70D;
-        Thu, 18 Apr 2019 23:46:52 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v5 01/18] locking/rwsem: Make owner available even if !CONFIG_RWSEM_SPIN_ON_OWNER
-Date:   Thu, 18 Apr 2019 19:46:11 -0400
-Message-Id: <20190418234628.3675-2-longman@redhat.com>
-In-Reply-To: <20190418234628.3675-1-longman@redhat.com>
-References: <20190418234628.3675-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Apr 2019 23:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57DAE2171F;
+        Thu, 18 Apr 2019 23:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555631310;
+        bh=0BYxge2vHiinJrCTJtR2FiPW4myDFCQ17XL1+bP3YXU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c6uc45bHDbhcK0g052RfmkGM6XiHY0UASZ3UzJLylH7m/T90yErzvBRt4Yvj/z5UR
+         V/WvbquJhzkKgEelY+1ROGTjzb7EibKqJ8WxN+b3oc52+KNcsQj/Hl5RqVNf+Ag967
+         NmZyJVXnJePilIQgJVinTLnnU1atmSESp0fPfcZM=
+Date:   Thu, 18 Apr 2019 18:48:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+Message-ID: <20190418234828.GG126710@google.com>
+References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The owner field in the rw_semaphore structure is used primarily for
-optimistic spinning. However, identifying the rwsem owner can also be
-helpful in debugging as well as tracing locking related issues when
-analyzing crash dump. The owner field may also store state information
-that can be important to the operation of the rwsem.
+[+cc Scott]
 
-So the owner field is now made a permanent member of the rw_semaphore
-structure irrespective of CONFIG_RWSEM_SPIN_ON_OWNER.
+On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
+> Few SOCs have limitation that their PCIe host can't allow few inbound
+> address ranges. Allowed inbound address ranges are listed in dma-ranges
+> DT property and this address ranges are required to do IOVA mapping.
+> Remaining address ranges have to be reserved in IOVA mapping.
+> 
+> PCIe Host driver of those SOCs has to list resource entries of allowed
+> address ranges given in dma-ranges DT property in sorted order. This
+> sorted list of resources will be processed and reserve IOVA address for
+> inaccessible address holes while initializing IOMMU domain.
+> 
+> This patch set is based on Linux-5.0-rc2.
+> 
+> Changes from v3:
+>   - Addressed Robin Murphy review comments.
+>     - pcie-iproc: parse dma-ranges and make sorted resource list.
+>     - dma-iommu: process list and reserve gaps between entries
+> 
+> Changes from v2:
+>   - Patch set rebased to Linux-5.0-rc2
+> 
+> Changes from v1:
+>   - Addressed Oza review comments.
+> 
+> Srinath Mannam (3):
+>   PCI: Add dma_ranges window list
+>   iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+>   PCI: iproc: Add sorted dma ranges resource entries to host bridge
+> 
+>  drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
+>  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+>  drivers/pci/probe.c                 |  3 +++
+>  include/linux/pci.h                 |  1 +
+>  4 files changed, 66 insertions(+), 1 deletion(-)
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- include/linux/rwsem.h       |  9 +++++----
- kernel/locking/rwsem-xadd.c |  2 +-
- kernel/locking/rwsem.h      | 23 -----------------------
- lib/Kconfig.debug           |  8 ++++----
- 4 files changed, 10 insertions(+), 32 deletions(-)
+To make progress on this, I think we need an ack from Joerg for the
+dma-iommu.c part, an ack from Ray or Scott for the pcie-iproc.c part,
+and an ack from Robin for the thing as a whole.
 
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 2ea18a3def04..148983e21d47 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -34,12 +34,12 @@
-  */
- struct rw_semaphore {
- 	atomic_long_t count;
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
- 	/*
--	 * Write owner. Used as a speculative check to see
--	 * if the owner is running on the cpu.
-+	 * Write owner or one of the read owners. Can be used as a
-+	 * speculative check to see if the owner is running on the cpu.
- 	 */
- 	struct task_struct *owner;
-+#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
- 	struct optimistic_spin_queue osq; /* spinner MCS lock */
- #endif
- 	raw_spinlock_t wait_lock;
-@@ -73,13 +73,14 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
- #endif
- 
- #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
--#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED, .owner = NULL
-+#define __RWSEM_OPT_INIT(lockname) , .osq = OSQ_LOCK_UNLOCKED
- #else
- #define __RWSEM_OPT_INIT(lockname)
- #endif
- 
- #define __RWSEM_INITIALIZER(name)				\
- 	{ __RWSEM_INIT_COUNT(name),				\
-+	  .owner = NULL,					\
- 	  .wait_list = LIST_HEAD_INIT((name).wait_list),	\
- 	  .wait_lock = __RAW_SPIN_LOCK_UNLOCKED(name.wait_lock)	\
- 	  __RWSEM_OPT_INIT(name)				\
-diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index 6b3ee9948bf1..7fd4f1de794a 100644
---- a/kernel/locking/rwsem-xadd.c
-+++ b/kernel/locking/rwsem-xadd.c
-@@ -86,8 +86,8 @@ void __init_rwsem(struct rw_semaphore *sem, const char *name,
- 	atomic_long_set(&sem->count, RWSEM_UNLOCKED_VALUE);
- 	raw_spin_lock_init(&sem->wait_lock);
- 	INIT_LIST_HEAD(&sem->wait_list);
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
- 	sem->owner = NULL;
-+#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
- 	osq_lock_init(&sem->osq);
- #endif
- }
-diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
-index 64877f5294e3..eb9c8534299b 100644
---- a/kernel/locking/rwsem.h
-+++ b/kernel/locking/rwsem.h
-@@ -61,7 +61,6 @@
- #define RWSEM_ACTIVE_READ_BIAS		RWSEM_ACTIVE_BIAS
- #define RWSEM_ACTIVE_WRITE_BIAS		(RWSEM_WAITING_BIAS + RWSEM_ACTIVE_BIAS)
- 
--#ifdef CONFIG_RWSEM_SPIN_ON_OWNER
- /*
-  * All writes to owner are protected by WRITE_ONCE() to make sure that
-  * store tearing can't happen as optimistic spinners may read and use
-@@ -126,7 +125,6 @@ static inline bool rwsem_has_anonymous_owner(struct task_struct *owner)
-  * real owner or one of the real owners. The only exception is when the
-  * unlock is done by up_read_non_owner().
-  */
--#define rwsem_clear_reader_owned rwsem_clear_reader_owned
- static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
- {
- 	unsigned long val = (unsigned long)current | RWSEM_READER_OWNED
-@@ -135,28 +133,7 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
- 		cmpxchg_relaxed((unsigned long *)&sem->owner, val,
- 				RWSEM_READER_OWNED | RWSEM_ANONYMOUSLY_OWNED);
- }
--#endif
--
- #else
--static inline void rwsem_set_owner(struct rw_semaphore *sem)
--{
--}
--
--static inline void rwsem_clear_owner(struct rw_semaphore *sem)
--{
--}
--
--static inline void __rwsem_set_reader_owned(struct rw_semaphore *sem,
--					   struct task_struct *owner)
--{
--}
--
--static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
--{
--}
--#endif
--
--#ifndef rwsem_clear_reader_owned
- static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
- {
- }
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 0d9e81779e37..2047f3884540 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1067,7 +1067,7 @@ config PROVE_LOCKING
- 	select DEBUG_SPINLOCK
- 	select DEBUG_MUTEXES
- 	select DEBUG_RT_MUTEXES if RT_MUTEXES
--	select DEBUG_RWSEMS if RWSEM_SPIN_ON_OWNER
-+	select DEBUG_RWSEMS
- 	select DEBUG_WW_MUTEX_SLOWPATH
- 	select DEBUG_LOCK_ALLOC
- 	select TRACE_IRQFLAGS
-@@ -1171,10 +1171,10 @@ config DEBUG_WW_MUTEX_SLOWPATH
- 
- config DEBUG_RWSEMS
- 	bool "RW Semaphore debugging: basic checks"
--	depends on DEBUG_KERNEL && RWSEM_SPIN_ON_OWNER
-+	depends on DEBUG_KERNEL
- 	help
--	  This debugging feature allows mismatched rw semaphore locks and unlocks
--	  to be detected and reported.
-+	  This debugging feature allows mismatched rw semaphore locks
-+	  and unlocks to be detected and reported.
- 
- config DEBUG_LOCK_ALLOC
- 	bool "Lock debugging: detect incorrect freeing of live locks"
--- 
-2.18.1
+Then I would say Lorenzo should take a look and merge if he approves, since
+pcie-iproc.c contains the most changes.
 
+Bjorn
