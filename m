@@ -6,59 +6,57 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC5DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C62C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8C52183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681CF217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555597978;
-	bh=CkPZOYqUDp14rSOXDgklNUzDl96Ldze1qzapztU8hgo=;
+	s=default; t=1555597997;
+	bh=ZScN0yIxa2Ca7nIYThWONBmva+Cc2sxs/8AL8/sx31E=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u+zdMagz4xHP/uwmIi3f56Bs42XlJ+RFErjUQSk7nPgp3rXbhHhTRl1PfB7aU3Ujt
-	 Ru+NuAhgkippJjoO0PPN4UAlgmKVhjKzd/6h9FyoOnYvzi2posAj3cobIhENFgroyF
-	 16rZx3cGaRKxxBYMtRthPfJnaLOXeEfDnDMVCQxk=
+	b=UyciV58UGBvBRR4AY/tGtcLw9SENseV1aQMTEtxb5t3Dg5LIBF0a3dIL8nyzpTAeQ
+	 P+D2FmkskXdPVbjysRlN1CqzL2Q4+8PLSX/EnMj4flA5dcftqEaxv/mE7IvoL/ZL42
+	 akMYQWtLrD4Rj2wnQgYTIEHzzMCGwHOokAaq7Plw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389369AbfDROc5 (ORCPT
+        id S2389387AbfDROdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:32:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35806 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 10:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388097AbfDROc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:32:56 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        id S2388097AbfDROdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:33:15 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD27A21479
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 14:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C78C421479
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 14:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555597975;
-        bh=CkPZOYqUDp14rSOXDgklNUzDl96Ldze1qzapztU8hgo=;
+        s=default; t=1555597994;
+        bh=ZScN0yIxa2Ca7nIYThWONBmva+Cc2sxs/8AL8/sx31E=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hn9Lkl80PRY10b5FWPqFkthf36sJl7pJIS3DAXnIp6LRMz9Wat0EIc6cHI8oGnCL/
-         NUQKJTJo/tDYahEbDvMsgsCbk0//oFwWY477VDWFJBZg1sxA3D2+dqiINlDZFfpkvI
-         pDtFlwxCX/ETL1hr/qCBgxR72L7a18q2nEvLz50Q=
-Received: by mail-qt1-f179.google.com with SMTP id k2so2394898qtm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:32:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAVNxmCEEIydyxHoSbTLo7mVvrSTxxBpwtfhFx8pEC0U0hIMf9Ia
-        Cdaev9nUHO08JXxGVg5K4thSmhJd08kWDhZ4IA==
-X-Google-Smtp-Source: APXvYqwwEQ4iQws7A2Rvq1wH85+VjZMESrPoYYvdrU/izAhmQrvigXOrAnl3lS2UoVQvraJ4agPBxZz7PtCuoNiALnY=
-X-Received: by 2002:ac8:7647:: with SMTP id i7mr72198284qtr.38.1555597975053;
- Thu, 18 Apr 2019 07:32:55 -0700 (PDT)
+        b=p4u/VbM6uHsAznb+2asMPq4Z4I113mfwo3VYzhWrPuq21TbDekkbwav2bY8/Inn/z
+         2i7NzNkJLr2V1gVuVB1H9/sLmQR32Yo3WEFJ5+hNPWKUjO+MDWwiCUTBG9ZrmxBsSv
+         kVGGaLiAheq9jTgFpYuXt7ezEDmL75vgLdYH3sc4=
+Received: by mail-qt1-f173.google.com with SMTP id z16so2384674qtn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:33:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAVyYKNicv9zZeT9Qw/lPza2lPRWN0mEM73xdDDIEDamvLz+v8sh
+        sGjujD7Z9Rw36xKeAgSWjivpERO6tSnUFWA+Cw==
+X-Google-Smtp-Source: APXvYqzPZaLxAg2XRYcfLeg1/S7T4bQUBJDYXDFzw6ryhSmc1U6zGGYk0rdFHbHWzJi5rPZ4/AjeP1FbvN8XMbf6ivQ=
+X-Received: by 2002:ac8:30bc:: with SMTP id v57mr77866639qta.26.1555597994095;
+ Thu, 18 Apr 2019 07:33:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190416150051.34092-1-yuehaibing@huawei.com> <7c9d75dd-ec67-4491-ca0c-79743211f308@arm.com>
-In-Reply-To: <7c9d75dd-ec67-4491-ca0c-79743211f308@arm.com>
+References: <20190418084305.45021-1-tomeu.vizoso@collabora.com>
+In-Reply-To: <20190418084305.45021-1-tomeu.vizoso@collabora.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 18 Apr 2019 09:32:44 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+5R3WWk-CmagO9=HE2nqPyGoHJ9aankYWh2ZOSO+k=eA@mail.gmail.com>
-Message-ID: <CAL_Jsq+5R3WWk-CmagO9=HE2nqPyGoHJ9aankYWh2ZOSO+k=eA@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/panfrost: Make panfrost_gem_free_object() static
-To:     Steven Price <steven.price@arm.com>
-Cc:     Yue Haibing <yuehaibing@huawei.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+Date:   Thu, 18 Apr 2019 09:33:02 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKJmhrYYQ-WANKk9haMoEyED6NmtPqMq9v+5ocOzEwicg@mail.gmail.com>
+Message-ID: <CAL_JsqKJmhrYYQ-WANKk9haMoEyED6NmtPqMq9v+5ocOzEwicg@mail.gmail.com>
+Subject: Re: [PATCH] drm/panfrost: Prevent concurrent resets
+To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,42 +64,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 9:51 AM Steven Price <steven.price@arm.com> wrote:
+On Thu, Apr 18, 2019 at 3:43 AM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
 >
-> On 16/04/2019 16:00, Yue Haibing wrote:
-> > From: YueHaibing <yuehaibing@huawei.com>
-> >
-> > Fix sparse warning:
-> >
-> > drivers/gpu/drm/panfrost/panfrost_gem.c:17:6:
-> >  warning: symbol 'panfrost_gem_free_object' was not declared. Should it be static?
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> If a job times out in slot 0 while a reset is performed because a job
+> timed out in slot 1, the drm-sched core can get into a deadlock.
 >
-> Reviewed-by: Steven Price <steven.price@arm.com>
->
-> Although while we're fixing sparse warnings, there's a few more in Panfrost:
->
-> -----8<-------
-> From 8aaf778262744cfbebb9b7f274ead9ba600526b0 Mon Sep 17 00:00:00 2001
-> From: Steven Price <steven.price@arm.com>
-> Date: Wed, 17 Apr 2019 15:47:49 +0100
-> Subject: [PATCH] drm/panfrost: Add missing include
->
-> Fix sparse warnings:
-> drivers/gpu/drm/panfrost/panfrost_devfreq.c:133:5:
->  warning: symbol 'panfrost_devfreq_init' was not declared. Should it be static?
-> drivers/gpu/drm/panfrost/panfrost_devfreq.c:168:6:
->  warning: symbol 'panfrost_devfreq_resume' was not declared. Should it be static?
-> drivers/gpu/drm/panfrost/panfrost_devfreq.c:182:6:
->  warning: symbol 'panfrost_devfreq_suspend' was not declared. Should it be static?
-> drivers/gpu/drm/panfrost/panfrost_devfreq.c:212:6:
->  warning: symbol 'panfrost_devfreq_record_transition' was not declared. Should it be static?
->
-> Signed-off-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 > ---
->  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 1 +
+>  drivers/gpu/drm/panfrost/panfrost_device.h | 1 +
+>  drivers/gpu/drm/panfrost/panfrost_job.c    | 4 ++++
+>  3 files changed, 6 insertions(+)
 
 Applied, thanks.
