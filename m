@@ -2,332 +2,104 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F35C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADBAC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38222183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3782184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 09:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555578410;
+	bh=3HIKo4TJ7arFeFGllVQWH4Zy1kee7tJAEJfaQEc9lqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aKjRZa9BXsn+raYp++DFOkxdGtQ/H1SQCUOT6Ah+i7kjiUR+NsOcClj2XD+g1IRmY
+	 krrv1RWUSkoDGF9NqnGYVMpN68xFxX9ykhIfj7IyqisvNJQPyOymW/j1VYRmII35EU
+	 5/sE/K/VG4Xh6lA4PPnOBG2tnRWnmdY15bwSspjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388334AbfDRJGn (ORCPT
+        id S2388363AbfDRJGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 05:06:43 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:33576 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfDRJGn (ORCPT
+        Thu, 18 Apr 2019 05:06:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51752 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfDRJGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 05:06:43 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hH2zb-0001m0-4R; Thu, 18 Apr 2019 11:06:03 +0200
-Message-Id: <20190418084253.234868907@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 18 Apr 2019 10:41:21 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [patch V2 02/29] stacktrace: Provide helpers for common stack trace
- operations
-References: <20190418084119.056416939@linutronix.de>
+        Thu, 18 Apr 2019 05:06:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3HIKo4TJ7arFeFGllVQWH4Zy1kee7tJAEJfaQEc9lqA=; b=t25R1zLCLQQLYZao47Wzvqc6P
+        9q+MdBj3J0gRPa4hYzj6fh09E//7i+IuahGCg877ktcKJUsHvaLIlto3y3MpO9JwN7GIKj6aDi5AZ
+        ZeT8syzGoVxzVX8FMWJkB9pmaOly+/cGtUTQUvy+8Kaoh9tst9dNq0VKefPpw6kyS3tLU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hH30B-00013G-Es; Thu, 18 Apr 2019 09:06:39 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 63DC11126DA9; Thu, 18 Apr 2019 10:06:38 +0100 (BST)
+Date:   Thu, 18 Apr 2019 10:06:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_esai: Add pm runtime function
+Message-ID: <20190418090638.GA6702@sirena.org.uk>
+References: <1555558152-32196-1-git-send-email-shengjiu.wang@nxp.com>
+ <20190418090011.GA4028@Asurada>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Disposition: inline
+In-Reply-To: <20190418090011.GA4028@Asurada>
+X-Cookie: A watched clock never boils.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All operations with stack traces are based on struct stack_trace. That's a
-horrible construct as the struct is a kitchen sink for input and
-output. Quite some usage sites embed it into their own data structures
-which creates weird indirections.
 
-There is absolutely no point in doing so. For all use cases a storage array
-and the number of valid stack trace entries in the array is sufficient.
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Provide helper functions which avoid the struct stack_trace indirection so
-the usage sites can be cleaned up.
+On Thu, Apr 18, 2019 at 02:00:12AM -0700, Nicolin Chen wrote:
+> On Thu, Apr 18, 2019 at 03:29:09AM +0000, S.j. Wang wrote:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/linux/stacktrace.h |   27 +++++++
- kernel/stacktrace.c        |  160 ++++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 172 insertions(+), 15 deletions(-)
+> > In imx8 when systerm enter suspend state, the power of subsystem will
+> > be off, the clock enable state will be lost and register configuration
 
---- a/include/linux/stacktrace.h
-+++ b/include/linux/stacktrace.h
-@@ -3,11 +3,26 @@
- #define __LINUX_STACKTRACE_H
- 
- #include <linux/types.h>
-+#include <asm/errno.h>
- 
- struct task_struct;
- struct pt_regs;
- 
- #ifdef CONFIG_STACKTRACE
-+void stack_trace_print(unsigned long *trace, unsigned int nr_entries,
-+		       int spaces);
-+int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
-+			unsigned int nr_entries, int spaces);
-+unsigned int stack_trace_save(unsigned long *store, unsigned int size,
-+			      unsigned int skipnr);
-+unsigned int stack_trace_save_tsk(struct task_struct *task,
-+				  unsigned long *store, unsigned int size,
-+				  unsigned int skipnr);
-+unsigned int stack_trace_save_regs(struct pt_regs *regs, unsigned long *store,
-+				   unsigned int size, unsigned int skipnr);
-+unsigned int stack_trace_save_user(unsigned long *store, unsigned int size);
-+
-+/* Internal interfaces. Do not use in generic code */
- struct stack_trace {
- 	unsigned int nr_entries, max_entries;
- 	unsigned long *entries;
-@@ -41,4 +56,16 @@ extern void save_stack_trace_user(struct
- # define save_stack_trace_tsk_reliable(tsk, trace)	({ -ENOSYS; })
- #endif /* CONFIG_STACKTRACE */
- 
-+#if defined(CONFIG_STACKTRACE) && defined(CONFIG_HAVE_RELIABLE_STACKTRACE)
-+int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
-+				  unsigned int size);
-+#else
-+static inline int stack_trace_save_tsk_reliable(struct task_struct *tsk,
-+						unsigned long *store,
-+						unsigned int size)
-+{
-+	return -ENOSYS;
-+}
-+#endif
-+
- #endif /* __LINUX_STACKTRACE_H */
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -11,35 +11,52 @@
- #include <linux/kallsyms.h>
- #include <linux/stacktrace.h>
- 
--void print_stack_trace(struct stack_trace *trace, int spaces)
-+/**
-+ * stack_trace_print - Print the entries in the stack trace
-+ * @entries:	Pointer to storage array
-+ * @nr_entries:	Number of entries in the storage array
-+ * @spaces:	Number of leading spaces to print
-+ */
-+void stack_trace_print(unsigned long *entries, unsigned int nr_entries,
-+		       int spaces)
- {
--	int i;
-+	unsigned int i;
- 
--	if (WARN_ON(!trace->entries))
-+	if (WARN_ON(!entries))
- 		return;
- 
--	for (i = 0; i < trace->nr_entries; i++)
--		printk("%*c%pS\n", 1 + spaces, ' ', (void *)trace->entries[i]);
-+	for (i = 0; i < nr_entries; i++)
-+		printk("%*c%pS\n", 1 + spaces, ' ', (void *)entries[i]);
-+}
-+EXPORT_SYMBOL_GPL(stack_trace_print);
-+
-+void print_stack_trace(struct stack_trace *trace, int spaces)
-+{
-+	stack_trace_print(trace->entries, trace->nr_entries, spaces);
- }
- EXPORT_SYMBOL_GPL(print_stack_trace);
- 
--int snprint_stack_trace(char *buf, size_t size,
--			struct stack_trace *trace, int spaces)
-+/**
-+ * stack_trace_snprint - Print the entries in the stack trace into a buffer
-+ * @buf:	Pointer to the print buffer
-+ * @size:	Size of the print buffer
-+ * @entries:	Pointer to storage array
-+ * @nr_entries:	Number of entries in the storage array
-+ * @spaces:	Number of leading spaces to print
-+ */
-+int stack_trace_snprint(char *buf, size_t size, unsigned long *entries,
-+			unsigned int nr_entries, int spaces)
- {
--	int i;
--	int generated;
--	int total = 0;
-+	unsigned int generated, i, total = 0;
- 
--	if (WARN_ON(!trace->entries))
-+	if (WARN_ON(!entries))
- 		return 0;
- 
--	for (i = 0; i < trace->nr_entries; i++) {
-+	for (i = 0; i < nr_entries; i++) {
- 		generated = snprintf(buf, size, "%*c%pS\n", 1 + spaces, ' ',
--				     (void *)trace->entries[i]);
-+				     (void *)entries[i]);
- 
- 		total += generated;
--
--		/* Assume that generated isn't a negative number */
- 		if (generated >= size) {
- 			buf += size;
- 			size = 0;
-@@ -51,6 +68,14 @@ int snprint_stack_trace(char *buf, size_
- 
- 	return total;
- }
-+EXPORT_SYMBOL_GPL(stack_trace_snprint);
-+
-+int snprint_stack_trace(char *buf, size_t size,
-+			struct stack_trace *trace, int spaces)
-+{
-+	return stack_trace_snprint(buf, size, trace->entries,
-+				   trace->nr_entries, spaces);
-+}
- EXPORT_SYMBOL_GPL(snprint_stack_trace);
- 
- /*
-@@ -77,3 +102,108 @@ save_stack_trace_tsk_reliable(struct tas
- 	WARN_ONCE(1, KERN_INFO "save_stack_tsk_reliable() not implemented yet.\n");
- 	return -ENOSYS;
- }
-+
-+/**
-+ * stack_trace_save - Save a stack trace into a storage array
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ */
-+unsigned int stack_trace_save(unsigned long *store, unsigned int size,
-+			      unsigned int skipnr)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+		.skip		= skipnr + 1,
-+	};
-+
-+	save_stack_trace(&trace);
-+	return trace.nr_entries;
-+}
-+EXPORT_SYMBOL_GPL(stack_trace_save);
-+
-+/**
-+ * stack_trace_save_tsk - Save a task stack trace into a storage array
-+ * @task:	The task to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ */
-+unsigned int stack_trace_save_tsk(struct task_struct *task,
-+				  unsigned long *store, unsigned int size,
-+				  unsigned int skipnr)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+		.skip		= skipnr + 1,
-+	};
-+
-+	save_stack_trace_tsk(task, &trace);
-+	return trace.nr_entries;
-+}
-+
-+/**
-+ * stack_trace_save_regs - Save a stack trace based on pt_regs into a storage array
-+ * @regs:	Pointer to pt_regs to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ * @skipnr:	Number of entries to skip at the start of the stack trace
-+ */
-+unsigned int stack_trace_save_regs(struct pt_regs *regs, unsigned long *store,
-+				   unsigned int size, unsigned int skipnr)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+		.skip		= skipnr,
-+	};
-+
-+	save_stack_trace_regs(regs, &trace);
-+	return trace.nr_entries;
-+}
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+/**
-+ * stack_trace_save_tsk_reliable - Save task stack with verification
-+ * @tsk:	Pointer to the task to examine
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ *
-+ * Returns:	An error if it detects any unreliable features of the
-+ *		stack. Otherwise it guarantees that the stack trace is
-+ *		reliable and returns the number of entries stored.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is inactive.
-+ */
-+int stack_trace_save_tsk_reliable(struct task_struct *tsk, unsigned long *store,
-+				  unsigned int size)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+	};
-+	int ret = save_stack_trace_tsk_reliable(tsk, &trace);
-+
-+	return ret ? ret : trace.nr_entries;
-+}
-+#endif
-+
-+#ifdef CONFIG_USER_STACKTRACE_SUPPORT
-+/**
-+ * stack_trace_save_user - Save a user space stack trace into a storage array
-+ * @store:	Pointer to storage array
-+ * @size:	Size of the storage array
-+ */
-+unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
-+{
-+	struct stack_trace trace = {
-+		.entries	= store,
-+		.max_entries	= size,
-+	};
-+
-+	save_stack_trace_user(&trace);
-+	return trace.nr_entries;
-+}
-+#endif /* CONFIG_USER_STACKTRACE_SUPPORT */
+> Just for curiosity, we had similar situation on imx6sx, so we
+> added suspend/resume with regcache. Why will the clock enable
+> state be lost too? Does CCM on imx8 (might not be called CCM
+> though) have any difference? What about clock rate settings?
 
+That sounds like a bug somewhere else - I'd expect that after resume the
+clocking would be restored to the state it was in before suspend.
 
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly4PhsACgkQJNaLcl1U
+h9D0+Qf/Qb3ZB7++N4KWIotelaGoJliU91cFGeVtbV14n7Hb9xPZ3PzNlZBY9iYN
+zhzzBdDCqWV5btb21LZ8lCcFicsKQTJieKm6Ufjrnr7SJ/9pjoOuV4JnDZ6aFucA
+1krwDMkcK/ZD4Dj+favuOXRQUQ892A1Km2dp1ihRlQTIVIRyubA/7F3PQdr8ZjQl
+8sLhALAl7K5u5ylLUX9SItPTJSQeVxb7V+JaHCrmVpsYP1oSu3I77DHvHPKLNK7p
+JJe0CvyDco+KWEJ4VXnZVt/hkEyT8tvhlmAX37A+NxYxjyXdHQZYVNOn83FuWPo7
+f2Krw/3Jy9Th/DZfw4A0/wLL+dMzDA==
+=OW6D
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
