@@ -2,92 +2,88 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE83FC282DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D38AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783D0217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LJi/FK0L"
+	by mail.kernel.org (Postfix) with ESMTP id 2ABE22184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387879AbfDRC1p (ORCPT
+        id S2387898AbfDRCaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 22:27:45 -0400
-Received: from m50-133.163.com ([123.125.50.133]:38356 "EHLO m50-133.163.com"
+        Wed, 17 Apr 2019 22:30:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33851 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732737AbfDRC1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 22:27:45 -0400
-X-Greylist: delayed 67632 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Apr 2019 22:27:44 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=zscNWNAMEkTr/yZYJU
-        HcLfcz+HpT7tjzhOzHdHWJQs0=; b=LJi/FK0Li6pTVZPxeVBV0OLLjGmpoDbCW/
-        x2kwECJQxpDQE5eIEUlXIEv42OhXDRYYp3O2OGDTxQjzXBeMmOBueR/v9Wrkaljb
-        uX/FP/1ZYw9OOpr0ITh4AaZ1r11RdG47cYq7unCXezl24VFitRF1/IO3x4sxjGF7
-        Vl4UreibI=
-Received: from bp.localdomain (unknown [218.106.182.174])
-        by smtp3 (Coremail) with SMTP id DdGowAAXuliH4LdcUVtOAA--.117S3;
-        Thu, 18 Apr 2019 10:27:21 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: EDAC: Fix memory leak in creating CSROW object
-Date:   Thu, 18 Apr 2019 10:27:18 +0800
-Message-Id: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: DdGowAAXuliH4LdcUVtOAA--.117S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrurWUZFWxCrWxWw47XF15CFg_yoWktFX_Ga
-        4UXF17Wrs7KFyxKw47Cw4fZryIqFs09rZ7JFZ2gFyfCan8Zw1DZ3yvgrsxAr48Wa17ur98
-        Jr95JayUAF1UCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbj-e3UUUUU==
-X-Originating-IP: [218.106.182.174]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBZwmaclett8XX4wAAs6
+        id S1732737AbfDRCaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 22:30:21 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A4846C057F4C;
+        Thu, 18 Apr 2019 02:30:20 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDFB219C58;
+        Thu, 18 Apr 2019 02:30:10 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 10:30:06 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
+ BIO_MAX_PAGES
+Message-ID: <20190418023004.GC9520@ming.t460p>
+References: <20190417115207.30202-1-pbonzini@redhat.com>
+ <20190418021903.GB9520@ming.t460p>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418021903.GB9520@ming.t460p>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 18 Apr 2019 02:30:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function that creates a CSROW object, the object is not released
-when failing to add the device to device hierarchy. This may result in a
-memory leak bug.
+On Thu, Apr 18, 2019 at 10:19:04AM +0800, Ming Lei wrote:
+> Hi Paolo,
+> 
+> On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
+> > Because bio_kmalloc uses inline iovecs, the limit on the number of entries
+> > is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
+> > in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
+> > to report a DMA overrun.
+> 
+> BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
+> can't hold all user space request, new bio will be allocated and appended
+> to the passthrough request if queue limits aren't reached.
+> 
+> So I understand SG_IO request shouldn't be truncated because of
+> BIO_MAX_PAGES, or could you explain it in a bit detail or provide
+> a reproducer?
+> 
+> > 
+> > Note that if the argument to iov_iter_npages were changed to UIO_MAXIOV,
+> > we would still truncate SG_IO requests beyond UIO_MAXIOV pages.  Changing
+> > it to UIO_MAXIOV + 1 instead ensures that bio_kmalloc notices that the
+> > request is too big and blocks it.
+> 
+> We should pass UIO_MAXIOV instead of UIO_MAXIOV + 1, otherwise bio_kmalloc()
+> will fail. Otherwise, the patch looks fine, but shouldn't be a fix if my
+> above analysis is correct.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/edac/edac_mc_sysfs.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Also we have enabled multipage bvec for passthough IO[1], we shouldn't
+need to allocate so big max io vectors any more, and actually the reasonable
+number is (PAGE_SIZE - sizeof(struct bio)) / sizeof(struct bio_vec), then we
+can avoid to stress mm for high order allocation.
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 4641746..2dafb08 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -404,6 +404,7 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
- static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 				    struct csrow_info *csrow, int index)
- {
-+	int err;
- 	csrow->dev.type = &csrow_attr_type;
- 	csrow->dev.groups = csrow_dev_groups;
- 	device_initialize(&csrow->dev);
-@@ -415,7 +416,10 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 	edac_dbg(0, "creating (virtual) csrow node %s\n",
- 		 dev_name(&csrow->dev));
- 
--	return device_add(&csrow->dev);
-+	err = device_add(&csrow->dev);
-+	if (err)
-+		put_device(&csrow->dev);
-+	return err;
- }
- 
- /* Create a CSROW object under specifed edac_mc_device */
--- 
-2.7.4
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.2/block&id=489fbbcb51d0249569d863f9220de69cb31f1922
 
-
+Thanks,
+Ming
