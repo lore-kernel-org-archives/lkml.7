@@ -2,154 +2,143 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4625EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED5D217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 147BA206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SVcgtSBL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlY0oAkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389779AbfDRRxr (ORCPT
+        id S2389747AbfDRR5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:53:47 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:42528 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388716AbfDRRxq (ORCPT
+        Thu, 18 Apr 2019 13:57:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37215 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388301AbfDRR5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:53:46 -0400
-Received: by mail-vs1-f65.google.com with SMTP id f15so1619125vsk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:53:46 -0700 (PDT)
+        Thu, 18 Apr 2019 13:57:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so1541158pgc.4;
+        Thu, 18 Apr 2019 10:57:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+aCB51wSzBRb+g6w79GERBDmxHkdK0m0brStvsO0x24=;
-        b=SVcgtSBLmc2xM0J5DquLhMFb3hyfz4jZTgTJA9db/Q8DtxuxUWeCly6ndSd7MftMTo
-         QSxPEAq4uZJkuDwesNVjJGjqmFdzN6buw4++xszB5VkqtCrdrpX9PieeYFgpI96cXT45
-         KXQIMoPCG8r/4kLJ+982MtD6FxhXq+tNQPbV781ZYkeXwRkVr0ysQEwRPekTwrcD5x07
-         SG5s+UWiaynVqfgkx5W66M0NiitSqBM7uZmj/7Dhv6noOVotqh8WVRNN+ThVMo065w6T
-         ljotwg4tXAZEcg+fOmJM3yf8jBBMUVSb1ZU/FGvZVS62zlKzO3C3t/uYTBoME2J/VhkP
-         YkFg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M84pVHi7QUoGbkpTQqGc/KjlrR1jeH2e5lPBKjhZDPk=;
+        b=mlY0oAkzq0+MVQFSgkGQhAjwKSgeRsRSBghWqkCn1MtnC+Gvl4FKgHzfJ0Ie8Lo5kP
+         rPjKirrf8OAaFomqCOXoFB1SjHNxJo5v27Ko0zEBQ8OqkV5vjFqHIcup/8w2IQvSLUqn
+         KHgVtebB3PtHkOVZFZEP3IftK2Wn44fDFA63pm5Ss4wW8Pv/GjoF/OxsQFsT1pGXiWsJ
+         VMab1ep0K4joWPdH/G8y0JmGiAE9h0d9+/36HXg1DQN3I1wtIjBiEA0UuN2PRwpAycKX
+         Qz4xy6SiipLbGR0vbAsd8jIPvL8JzGFe8rI6SbwvYUTyVjrFnDzfizzP7Jhv/ZZ7huZn
+         LJCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+aCB51wSzBRb+g6w79GERBDmxHkdK0m0brStvsO0x24=;
-        b=lg4ZSI8beqgPrJDT1wSqpu9hs/X6E++ujitXmersWAInDROOiGZcXAt2Ea6/airxpr
-         kbMo/NLBtPuCHn3LTdXk6H0iDqIKbZIOMLuzikKCiPUuomPLsjpAoLfuTzQjkbSaYEHh
-         TXASNxbStoWl0rSWPVFl/CUrSdC/oBzOKDagPnROP4FVRa16IWtwJEYPiSQ7UW6avUJA
-         tcmdRqYWCkKCgeIqYvT/GoWFIsoACGP/LJuSG7vX2gzAuGVXS/5BJbg93m4/Kd6Q4RVa
-         Gu36ZsVOPj9k1iLogRWxWVbmiJPLRTq0/n3NhL0NWDrJhfGErr8dLo8nVd9A+vlDopT1
-         FhoQ==
-X-Gm-Message-State: APjAAAXkNRPQl6ybP1oE6/bJmr1sjw+YJQMToE6i55msJxVRD6Y4VBLU
-        mkBv8Wc1fZw9t5lUnKUHR453Cximf38Zo3fq+F+b5Q==
-X-Google-Smtp-Source: APXvYqzHYvVcAcOQAwnRLj6YgPyJZ7DIOcssgUOygTW1U3l1rCQmKILucHf0R9Ig/AIM9bDZMr/6LQyMo2j+hWPp2EU=
-X-Received: by 2002:a05:6102:18d:: with SMTP id r13mr55413741vsq.171.1555610025262;
- Thu, 18 Apr 2019 10:53:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=M84pVHi7QUoGbkpTQqGc/KjlrR1jeH2e5lPBKjhZDPk=;
+        b=CS9TCXp3O2g2F3UVKt1ZFT4InQ3Phh7HYH3IQwnL4BsaAK/U+m7OHPKkXHnxH4EBTk
+         osc/nKOJ6H2I0qfB7t04hExw6yoaHUOOxqdJ0UGAx2lI8/ltHzlFwurOgYC04ak+GlNn
+         2nL5i9umemtQ5BBGwS2nXmS7OEQJRDSWeQB4Yy2thp3ZoxeqJPN/ihm/G9RiaxoCT7Mt
+         1ntB4Yyfz9SSJvAmKcLPPF7L2la0RYT70RWBj8+roHIvJYISpSb+DnwmTRqoGwDZQ8JV
+         Xn1KbRYMbtar0t/u98DP4vx/GW5LAaEKCY7YuzyYIWVPE8jOH4TdLBgLy/g1o3Ifx6Ff
+         fOQg==
+X-Gm-Message-State: APjAAAUrjjafwPa2m8LYNn9u+29XDM62+X2EOkOroohccHIl8QYCPl4A
+        BDy00AxcUgFVXRdL9sK7rv4EQmE8
+X-Google-Smtp-Source: APXvYqzeX/oOZWVYA+z9tKNjjftxnjlJD/UWK52ceDxL28IGA8FFrHsxtJyzT3Z1MizQ3goeKOPU5Q==
+X-Received: by 2002:a63:30c5:: with SMTP id w188mr89134996pgw.76.1555610239907;
+        Thu, 18 Apr 2019 10:57:19 -0700 (PDT)
+Received: from udknight.localhost ([59.57.228.71])
+        by smtp.gmail.com with ESMTPSA id l19sm3502465pff.1.2019.04.18.10.57.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 10:57:19 -0700 (PDT)
+Received: from udknight.localhost (localhost [127.0.0.1])
+        by udknight.localhost (8.14.9/8.14.4) with ESMTP id x3IHxla1004504;
+        Fri, 19 Apr 2019 01:59:47 +0800
+Received: (from root@localhost)
+        by localhost.localdomain (8.14.9/8.14.9/Submit) id x3IHBjrL020471;
+        Fri, 19 Apr 2019 01:11:45 +0800
+Date:   Fri, 19 Apr 2019 01:11:44 +0800
+From:   Wang YanQing <udknight@gmail.com>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] selftests/bpf: fix compile errors with older glibc
+Message-ID: <20190418171144.GA4210@udknight-ThinkPad-E550>
+Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
+        Yonghong Song <yhs@fb.com>, "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190417174839.GA16679@udknight>
+ <ecd56ebd-d19f-8834-9373-088ad7c9a725@fb.com>
 MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
-In-Reply-To: <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Thu, 18 Apr 2019 10:53:33 -0700
-Message-ID: <CAKOZues8mnjvUUopNoeXcDezXKscQLNAgCgodqUno_Z39kV7Dw@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecd56ebd-d19f-8834-9373-088ad7c9a725@fb.com>
+User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:26 AM Christian Brauner <christian@brauner.io> wrote:
->
-> On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> >> On 04/16, Joel Fernandes wrote:
-> >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> >> > >
-> >> > > Could you explain when it should return POLLIN? When the whole
-> >process exits?
-> >> >
-> >> > It returns POLLIN when the task is dead or doesn't exist anymore,
-> >or when it
-> >> > is in a zombie state and there's no other thread in the thread
-> >group.
-> >>
-> >> IOW, when the whole thread group exits, so it can't be used to
-> >monitor sub-threads.
-> >>
-> >> just in case... speaking of this patch it doesn't modify
-> >proc_tid_base_operations,
-> >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
-> >going to use
-> >> the anonymous file returned by CLONE_PIDFD ?
-> >
-> >I don't think procfs works that way. /proc/sub-thread-tid has
-> >proc_tgid_base_operations despite not being a thread group leader.
+On Thu, Apr 18, 2019 at 05:09:53AM +0000, Yonghong Song wrote:
+> 
+> 
+> On 4/17/19 10:48 AM, Wang YanQing wrote:
+> > The older glibc (for example, 2.23) doesn't handle __UAPI_DEF_*
+> > in libc-compat.h properly, and it bring below compile errors:
+> 
+> I have an even old glibc 2.17 and it still works. Not sure
+> why it failed here. Could you explain more?
 
-Huh. That seems very weird. Is that too late to change now? It feels like a bug.
+We will meet these errors with the combination of some versions of kernel headers and
+some versions of glibc headers.
 
-> >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
-> >be hit trivially, and then the code will misbehave.
-> >
-> >@Joel: I think you'll have to either rewrite this to explicitly bail
-> >out if you're dealing with a thread group leader
+After some research on the git history of glibc and kernel, I find the reason behind
+the scene is a little complex:
+There are some same definitions between glibc's netinet/in.h and kernel's linux/in6.h,
+IPPROTO_HOPOPTS, etc.
+These same definitions willn't bring trouble when we include both of them if kernel and
+glibc coordinates with each other well, but the reality is the coordination is poor and
+unsynchronous in history.
 
-If you're _not_ dealing with a leader, right?
+Kernel and glibc uses guard macros to detect whether need to export their definitions,
+linux/in6.h includes libc-compat.h which will check the guard macro, _NETINET_IN_H, and
+netinet/in.h includes bits/in.h which will check the guard macro, _UAPI_LINUX_IN6_H
+(glibc-2.19~821 6c82a2f8d7c8e21e39237225c819f182ae438db3 "Coordinate IPv6 definitions for Linux and glibc"),
 
-> , or make the code
-> >work for threads, too.
-> The latter case probably being preferred if this API is supposed to be useable for thread management in userspace.
+the problem is in the installation process of kernel headers, the "_UAPI" in _UAPI_LINUX_IN6_H
+in linux/in6.h will be stripped due to commit 56c176c9cac9
+("UAPI: strip the _UAPI prefix from header guards during header installation").
 
-IMHO, focusing on the thread group case for now might be best. We can
-always support thread management in future work.
+The good news is the glibc fix this the trouble by checking the guard macro, _LINUX_IN6_H, too.
+(glibc c9bd40daaee18cf1d9824e4a7ebaebe321e0a5a8 "Bug 20214: Fix linux/in6.h and netinet/in.h sync.").
 
-Besides: I'm not sure that we need kernel support for thread
-monitoring. Can't libc provide a pollable FD for a thread internally?
-libc can always run code just before thread exit, and it can wake a
-signalfd at that point. Directly terminating individual threads
-without going through userland is something that breaks the process
-anyway: it's legal and normal to SIGKILL a process a whole, but if an
-individual thread terminates without going through libc, the process
-is likely going to be fatally broken anyway. (What if it's holding the
-heap lock?)
+My environment still have this trouble:
+lsb_release -a:
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 16.04.6 LTS
+Release:	16.04
+Codename:	xenial
 
-I know that in some tools want to wait for termination of individual
-threads in an external monitored process, but couldn't these tools
-cooperate with libc to get these per-thread eventfds?
+dpkg -l | grep libc-dev:
+ii  libc-dev-bin              2.23-0ubuntu11           amd64        GNU C Library: Development binaries
+ii  linux-libc-dev:amd64      4.4.0-145.171            amd64        Linux Kernel Headers for development.
 
-Is there a use case I'm missing?
+
+I will send out the v2 which I will change some words in changelog.
+
+Thanks for review.
