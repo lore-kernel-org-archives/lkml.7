@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E4CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1551BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13F220675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E1A2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611486;
-	bh=Z3RKATeyvQXF6q1qjBrNIOPYSWaSOx/6o1/iTqLf31c=;
+	s=default; t=1555611491;
+	bh=UdxiVDvMFmBeTmM+vgE8HwkVGAklLJt6uXUlB4MvxCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qq8BmPLuQH5a9bzpAyXKtXhwK287XF4x1/Lsh4DCih8gKqfjjUlmm1MzjrXnL4iyJ
-	 NIqfQ/9KLHiFS+7Ngn5ir8Kbgs1r9InSDm0wJZjCDDrXK7jvgbtu+Ex4xxbZnUxBJc
-	 snlmEcEJwHwxhXTRcO3RMw0opSNSQ6nf0mPwKekE=
+	b=AbK9lWFrv/9DvT5cvuAFTy/wbckqlaZm/Xessecv1qTbJ6WFgp09IvjHhcrGoVgb/
+	 +n/HcVRkCcDc3rhHXwO+azt80t7N+30kHf0+r1EGYSja2XmSjBxuRN86Yo2/FVHdvn
+	 q04Mn3nYKydX0FGG0L6fyJhcfMNPpH7Ep1UjibnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404325AbfDRSSE (ORCPT
+        id S2404176AbfDRSKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:18:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42798 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404189AbfDRSKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:52 -0400
+        id S2404153AbfDRSKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55FE218D3;
-        Thu, 18 Apr 2019 18:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B6E21872;
+        Thu, 18 Apr 2019 18:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611051;
-        bh=Z3RKATeyvQXF6q1qjBrNIOPYSWaSOx/6o1/iTqLf31c=;
+        s=default; t=1555611041;
+        bh=UdxiVDvMFmBeTmM+vgE8HwkVGAklLJt6uXUlB4MvxCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W6aYYATuAAV72gVIZ4cFi5xBN1An9lIVz4shIYUdPF2XcdrPStOQ6EEY4UgNLOVN7
-         7Q1Y6O1Sg+YN3q9GbS8XVAUJOQb/VE97S7FjVqdaT7mJgSytLsYg40fZTmqr0++pAn
-         /MHh0RIGs9twWE4vHU4wzAnjt8OMe0LSxv/x+Uvs=
+        b=SJCI37h5pDFAbO/vl8xTjjm7ZwaHL3Wws68JRLS+URp3PRERJsoCyV4ro5g64zXKc
+         6LKywrxA4HzyaeSlXXhlltn8+0DwhiIfAUUQa4eyvOL1RhEv89xmvZAyh7z8rYm4lJ
+         FluUrtmkiu/CdWPDyxIKGQAW6BjTFqwsLF66SMiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,15 +46,15 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Krister Johansen <kjlx@templeofstupid.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Taeung Song <treeze.taeung@gmail.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 41/93] perf hist: Add missing map__put() in error case
-Date:   Thu, 18 Apr 2019 19:57:19 +0200
-Message-Id: <20190418160441.597435475@linuxfoundation.org>
+Subject: [PATCH 5.0 37/93] perf config: Fix a memory leak in collect_config()
+Date:   Thu, 18 Apr 2019 19:57:15 +0200
+Message-Id: <20190418160440.977001823@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -67,45 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb6186aeffda4d27e56066c79e9579e7831541d3 ]
+[ Upstream commit 54569ba4b06d5baedae4614bde33a25a191473ba ]
 
-We need to map__put() before returning from failure of
-sample__resolve_callchain().
+Detected with gcc's ASan:
 
-Detected with gcc's ASan.
+  Direct leak of 66 byte(s) in 5 object(s) allocated from:
+      #0 0x7ff3b1f32070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
+      #1 0x560c8761034d in collect_config util/config.c:597
+      #2 0x560c8760d9cb in get_value util/config.c:169
+      #3 0x560c8760dfd7 in perf_parse_file util/config.c:285
+      #4 0x560c8760e0d2 in perf_config_from_file util/config.c:476
+      #5 0x560c876108fd in perf_config_set__init util/config.c:661
+      #6 0x560c87610c72 in perf_config_set__new util/config.c:709
+      #7 0x560c87610d2f in perf_config__init util/config.c:718
+      #8 0x560c87610e5d in perf_config util/config.c:730
+      #9 0x560c875ddea0 in main /home/changbin/work/linux/tools/perf/perf.c:442
+      #10 0x7ff3afb8609a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 9c68ae98c6f7 ("perf callchain: Reference count maps")
-Link: http://lkml.kernel.org/r/20190316080556.3075-10-changbin.du@gmail.com
+Cc: Taeung Song <treeze.taeung@gmail.com>
+Fixes: 20105ca1240c ("perf config: Introduce perf_config_set class")
+Link: http://lkml.kernel.org/r/20190316080556.3075-6-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/hist.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/config.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 8aad8330e392..e416e76f5600 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1048,8 +1048,10 @@ int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 1ea8f898f1a1..9ecdbd5986b3 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -632,11 +632,10 @@ static int collect_config(const char *var, const char *value,
+ 	}
  
- 	err = sample__resolve_callchain(iter->sample, &callchain_cursor, &iter->parent,
- 					iter->evsel, al, max_stack_depth);
--	if (err)
-+	if (err) {
-+		map__put(alm);
- 		return err;
-+	}
+ 	ret = set_value(item, value);
+-	return ret;
  
- 	err = iter->ops->prepare_entry(iter, al);
- 	if (err)
+ out_free:
+ 	free(key);
+-	return -1;
++	return ret;
+ }
+ 
+ int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
 -- 
 2.19.1
 
