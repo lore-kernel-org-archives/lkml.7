@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D17C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBD1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C6C2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBE920643
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555612446;
-	bh=2lyiCBU9FjYFYsa2mPpwZ6W58qOtlZI8IJkQGr0g5Gg=;
+	s=default; t=1555612459;
+	bh=r2KqU+t+RKCCImE3Q6NolhQaJsHdP3GGWW10/oVwdsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S04P0lDP//HvTLC7Vanr6iZ70litAzTNlJnm6anQwJjWWfEecuHQjkY71G621e1Mn
-	 FOq+FDRcX4glcAXDdobJfsO/kJ4rJriX2XjIySiJSaPCKEDFk+vp4oncrqNAQCC9ff
-	 /i7c/ZJqUUpTKeVbua0Kw34tzAVh28E4CxWIAvOA=
+	b=SaOMLqiaasHKh9WT/dO6fWfch9+OGyiNuRVqXsMsL5InIb351gmmalXAckcvkj8FW
+	 PT2/7a2bgFPJt3Yct3GEv3pCSQ3YRT5vELfvTgwptKIDjqIFs70YSJpsvStKQlnlJW
+	 NCBkNCWiwZpMm9VfRWpJz33WCQj9GbE9SoMkA6+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390049AbfDRR7J (ORCPT
+        id S2389980AbfDRR6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 13:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390014AbfDRR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:58:59 -0400
+        id S2389958AbfDRR6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 13:58:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AEA217FA;
-        Thu, 18 Apr 2019 17:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A5F4217FA;
+        Thu, 18 Apr 2019 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610339;
-        bh=2lyiCBU9FjYFYsa2mPpwZ6W58qOtlZI8IJkQGr0g5Gg=;
+        s=default; t=1555610329;
+        bh=r2KqU+t+RKCCImE3Q6NolhQaJsHdP3GGWW10/oVwdsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2YUU0ntLuyuG4GCg7ZvaWtDUDUXDZhLve0X6d+U/ja0DOtKwp+W8Si6YNoTnGOcC
-         HrmkTBijD4eyz12iVO6dhYft5ezhob0Yq+LCZ3xLejTUXv2HbUiU/FkpP3OGWz/8tE
-         0ByWgI2UopduPAba6bA/kogrbg7SO82EAK5OVZr0=
+        b=kl09xBFGyr6gL1QiXKH+U0NdveTpk33p6qSi44GTMVpLcAbUjF4MHT+UTgAP7ndMj
+         8LI3kax4VNcIQZSXlXQQKRWSRzGjS3I9eI0OuvQKCA8NRXVv8SPAxoMVLamCj1pWfB
+         sBGADnzwouvTMH0mrvvhKADHA0c2cyAAKOkvH64U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/110] ext4: report real fs size after failed resize
-Date:   Thu, 18 Apr 2019 19:55:57 +0200
-Message-Id: <20190418160438.217446887@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 004/110] perf/core: Restore mmap record type correctly
+Date:   Thu, 18 Apr 2019 19:55:53 +0200
+Message-Id: <20190418160437.900878628@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -59,40 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6c7328400e0488f7d49e19e02290ba343b6811b2 ]
+[ Upstream commit d9c1bb2f6a2157b38e8eb63af437cb22701d31ee ]
 
-Currently when the file system resize using ext4_resize_fs() fails it
-will report into log that "resized filesystem to <requested block
-count>".  However this may not be true in the case of failure.  Use the
-current block count as returned by ext4_blocks_count() to report the
-block count.
+On mmap(), perf_events generates a RECORD_MMAP record and then checks
+which events are interested in this record. There are currently 2
+versions of mmap records: RECORD_MMAP and RECORD_MMAP2. MMAP2 is larger.
+The event configuration controls which version the user level tool
+accepts.
 
-Additionally, report a warning that "error occurred during file system
-resize"
+If the event->attr.mmap2=1 field then MMAP2 record is returned.  The
+perf_event_mmap_output() takes care of this. It checks attr->mmap2 and
+corrects the record fields before putting it in the sampling buffer of
+the event.  At the end the function restores the modified MMAP record
+fields.
 
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+The problem is that the function restores the size but not the type.
+Thus, if a subsequent event only accepts MMAP type, then it would
+instead receive an MMAP2 record with a size of MMAP record.
+
+This patch fixes the problem by restoring the record type on exit.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Fixes: 13d7a2410fa6 ("perf: Add attr->mmap2 attribute to an event")
+Link: http://lkml.kernel.org/r/20190307185233.225521-1-eranian@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/resize.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/events/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
-index 90061c3d048b..e7ae26e36c9c 100644
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -2080,6 +2080,10 @@ int ext4_resize_fs(struct super_block *sb, ext4_fsblk_t n_blocks_count)
- 		free_flex_gd(flex_gd);
- 	if (resize_inode != NULL)
- 		iput(resize_inode);
--	ext4_msg(sb, KERN_INFO, "resized filesystem to %llu", n_blocks_count);
-+	if (err)
-+		ext4_warning(sb, "error (%d) occurred during "
-+			     "file system resize", err);
-+	ext4_msg(sb, KERN_INFO, "resized filesystem to %llu",
-+		 ext4_blocks_count(es));
- 	return err;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index aa996a0854b9..87bd96399d1c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7178,6 +7178,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+ 	struct perf_output_handle handle;
+ 	struct perf_sample_data sample;
+ 	int size = mmap_event->event_id.header.size;
++	u32 type = mmap_event->event_id.header.type;
+ 	int ret;
+ 
+ 	if (!perf_event_mmap_match(event, data))
+@@ -7221,6 +7222,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+ 	perf_output_end(&handle);
+ out:
+ 	mmap_event->event_id.header.size = size;
++	mmap_event->event_id.header.type = type;
  }
+ 
+ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
 -- 
 2.19.1
 
