@@ -2,120 +2,231 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AA9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B92AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D7B214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IVo+aFRO"
+	by mail.kernel.org (Postfix) with ESMTP id D5165214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 20:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389823AbfDRUqK (ORCPT
+        id S2389865AbfDRUvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 16:46:10 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34108 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732981AbfDRUqK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 16:46:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w16so4579223wrl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 13:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=wficahtGGlEvfoZUHHveXjxRdIRK8DDrer2LkRlm6jU=;
-        b=IVo+aFROZrxIuP0WLvA34sdd6tNipnqxs3zx06XiCOpH0m0LbJUIEyZSzwXYSa3IMf
-         qa3P3kafPr232RfPWjYg4SMfFVoXAR3bkcSjyao58DruuxwCAwXMPI4N7b+NYfgH0Ca6
-         DfCRkMtxzmRJ4Byo4NlFi7YhEucESYNLQKIIu09xkubJDIUz1BGyX2VEZClw73oa3SXD
-         SM3Y1TIfOagsHyPzHrPrw8Wf6p5Opn+Xy1cL8JuHIzVd+4pgvesO1+orLeTPtr89VS78
-         Lu67/Mw6az0BkHDwt6NHvPVqH7L+Q6D3LgXmMZR3LowoU9afb1axY6omlel9PUztTwMk
-         010w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=wficahtGGlEvfoZUHHveXjxRdIRK8DDrer2LkRlm6jU=;
-        b=mPAN6vJzC06oV0S+iPj8zghg6Yans625Q2aPRRGMKVNLtFYoTdflrdPERxs3fe2I0B
-         w7Zy7/E3UuIVfl/lQS7ZDd3zyiH5Pa3w27PAnlcEc3zgrlYJk/xtXgv/eeCl/QGdwRAw
-         9lQVVJBh0IOV5pGrA6okwK4QffeRc+HDgLpDQ6UVzOeQ1W9aWJpnaJkF76rV0SphrX7m
-         lZyxS5n2DBCJ/uFu1p6MgGX0uYVk53TPg3F5VG7gcxyzC/vPEVLk3AyzNSjFEX9nBuh8
-         b5YXbfHbngsc3P1nYznvkhfJ/FOaeNqDb9j1P6KMURIoLypCUspFAEuWw9dq55vFss/9
-         yuKg==
-X-Gm-Message-State: APjAAAVK5GLvTZp8DAx+S7bLSC3G5VWVFFDPFui0G0UerF8oPVfCuk3B
-        J4s/xG1JeQRI1enDVQx6JvYxfg==
-X-Google-Smtp-Source: APXvYqyolIXXdwhRp4JJIvpOF5SlWArEQ2SZdjo8yhlqX7BQTkGpmPbd/dbtOXvPFzsim6faWixC+w==
-X-Received: by 2002:adf:fc47:: with SMTP id e7mr141013wrs.100.1555620368407;
-        Thu, 18 Apr 2019 13:46:08 -0700 (PDT)
-Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id l19sm4744601wrf.35.2019.04.18.13.46.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Apr 2019 13:46:07 -0700 (PDT)
-Message-ID: <8316d7875bf0479e91cc11ce5fbf3b2e21f92a2c.camel@baylibre.com>
-Subject: Re: [PATCH 5/7] mmc: meson-gx: avoid clock glitch when switching to
- DDR modes
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 18 Apr 2019 22:46:05 +0200
-In-Reply-To: <CAFBinCCAbMpWYY6-W+909Q=jLpweC2F6ED6CVf6zVGrRiA1hxg@mail.gmail.com>
-References: <20190417204355.469-1-jbrunet@baylibre.com>
-         <20190417204355.469-6-jbrunet@baylibre.com>
-         <CAFBinCCAbMpWYY6-W+909Q=jLpweC2F6ED6CVf6zVGrRiA1hxg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 18 Apr 2019 16:51:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54546 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728531AbfDRUvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 16:51:24 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 78C61C04AC4B;
+        Thu, 18 Apr 2019 20:51:23 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1926419C58;
+        Thu, 18 Apr 2019 20:51:16 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 16:51:15 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 14/28] userfaultfd: wp: handle COW properly for uffd-wp
+Message-ID: <20190418202558.GK3288@redhat.com>
+References: <20190320020642.4000-1-peterx@redhat.com>
+ <20190320020642.4000-15-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190320020642.4000-15-peterx@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Apr 2019 20:51:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-18 at 22:16 +0200, Martin Blumenstingl wrote:
-> Hi Jerome,
+On Wed, Mar 20, 2019 at 10:06:28AM +0800, Peter Xu wrote:
+> This allows uffd-wp to support write-protected pages for COW.
 > 
-> On Wed, Apr 17, 2019 at 10:44 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > Activating DDR in the Amlogic mmc controller, among other things, will
-> > divide the output clock by 2. So by activating it with clock on, we are
-> > creating a glitch on the output.
-> > 
-> > Instead, let's deal with DDR when the clock output is off, when setting
-> > the clock.
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> it seems that this patch breaks SD card on my Khadas VIM and Khadas VIM2.
-
-The error I see in your logs is with eMMC and hs200, not SD card.
-
-Either way, There is something I don't really get. eMMC should not go through
-any DDR mode to reach HS200 (which is an SDR mode), neither should SD to reach
-HS.
-
-All this does is flipping the DDR bit (when necessary) when clock if off for
-the mmc device, avoiding a glitch on clk line. 
-
-This patch should not make any difference for SDR only setup, Maybe I missed
-something, but I don't see how it could make anything different for SDR only.
-
-I (repeatedly) tested both vim1 and vim2, without seeing this issue, so I can't
-debug this. I'll need more detail to progress, something does not make sense here.
-
-> I used git bisect within this series to find that issue.
-> applying your .dts patches on top doesn't fix it
+> For example, the uffd write-protected PTE could also be write-protected
+> by other usages like COW or zero pages.  When that happens, we can't
+> simply set the write bit in the PTE since otherwise it'll change the
+> content of every single reference to the page.  Instead, we should do
+> the COW first if necessary, then handle the uffd-wp fault.
 > 
-> two boot logs attached:
-> * kvim-broken.txt has patches 1-5 (= including this patch) applied
-> * kvim-working.txt has only patches 1-4 (= excluding this patch) applied
+> To correctly copy the page, we'll also need to carry over the
+> _PAGE_UFFD_WP bit if it was set in the original PTE.
 > 
+> For huge PMDs, we just simply split the huge PMDs where we want to
+> resolve an uffd-wp page fault always.  That matches what we do with
+> general huge PMD write protections.  In that way, we resolved the huge
+> PMD copy-on-write issue into PTE copy-on-write.
 > 
-> Regards
-> Martin
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+
+This one has a bug see below.
 
 
+> ---
+>  mm/memory.c   |  5 +++-
+>  mm/mprotect.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 65 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e7a4b9650225..b8a4c0bab461 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2291,7 +2291,10 @@ vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  		}
+>  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+>  		entry = mk_pte(new_page, vma->vm_page_prot);
+> -		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> +		if (pte_uffd_wp(vmf->orig_pte))
+> +			entry = pte_mkuffd_wp(entry);
+> +		else
+> +			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+>  		/*
+>  		 * Clear the pte entry and flush it first, before updating the
+>  		 * pte with the new entry. This will avoid a race condition
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index 9d4433044c21..855dddb07ff2 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -73,18 +73,18 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+>  	flush_tlb_batched_pending(vma->vm_mm);
+>  	arch_enter_lazy_mmu_mode();
+>  	do {
+> +retry_pte:
+>  		oldpte = *pte;
+>  		if (pte_present(oldpte)) {
+>  			pte_t ptent;
+>  			bool preserve_write = prot_numa && pte_write(oldpte);
+> +			struct page *page;
+>  
+>  			/*
+>  			 * Avoid trapping faults against the zero or KSM
+>  			 * pages. See similar comment in change_huge_pmd.
+>  			 */
+>  			if (prot_numa) {
+> -				struct page *page;
+> -
+>  				page = vm_normal_page(vma, addr, oldpte);
+>  				if (!page || PageKsm(page))
+>  					continue;
+> @@ -114,6 +114,54 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+>  					continue;
+>  			}
+>  
+> +			/*
+> +			 * Detect whether we'll need to COW before
+> +			 * resolving an uffd-wp fault.  Note that this
+> +			 * includes detection of the zero page (where
+> +			 * page==NULL)
+> +			 */
+> +			if (uffd_wp_resolve) {
+> +				/* If the fault is resolved already, skip */
+> +				if (!pte_uffd_wp(*pte))
+> +					continue;
+> +				page = vm_normal_page(vma, addr, oldpte);
+> +				if (!page || page_mapcount(page) > 1) {
+> +					struct vm_fault vmf = {
+> +						.vma = vma,
+> +						.address = addr & PAGE_MASK,
+> +						.page = page,
+> +						.orig_pte = oldpte,
+> +						.pmd = pmd,
+> +						/* pte and ptl not needed */
+> +					};
+> +					vm_fault_t ret;
+> +
+> +					if (page)
+> +						get_page(page);
+> +					arch_leave_lazy_mmu_mode();
+> +					pte_unmap_unlock(pte, ptl);
+> +					ret = wp_page_copy(&vmf);
+> +					/* PTE is changed, or OOM */
+> +					if (ret == 0)
+> +						/* It's done by others */
+> +						continue;
+
+This is wrong if ret == 0 you still need to remap the pte before
+continuing as otherwise you will go to next pte without the page
+table lock for the directory. So 0 case must be handled after
+arch_enter_lazy_mmu_mode() below.
+
+Sorry i should have catch that in previous review.
+
+
+> +					else if (WARN_ON(ret != VM_FAULT_WRITE))
+> +						return pages;
+> +					pte = pte_offset_map_lock(vma->vm_mm,
+> +								  pmd, addr,
+> +								  &ptl);
+> +					arch_enter_lazy_mmu_mode();
+> +					if (!pte_present(*pte))
+> +						/*
+> +						 * This PTE could have been
+> +						 * modified after COW
+> +						 * before we have taken the
+> +						 * lock; retry this PTE
+> +						 */
+> +						goto retry_pte;
+> +				}
+> +			}
+> +
+>  			ptent = ptep_modify_prot_start(mm, addr, pte);
+>  			ptent = pte_modify(ptent, newprot);
+>  			if (preserve_write)
+
+>  	unsigned long pages = 0;
+>  	unsigned long nr_huge_updates = 0;
+>  	struct mmu_notifier_range range;
+> +	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
+>  
+>  	range.start = 0;
+>  
+> @@ -202,7 +251,16 @@ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+>  		}
+>  
+>  		if (is_swap_pmd(*pmd) || pmd_trans_huge(*pmd) || pmd_devmap(*pmd)) {
+> -			if (next - addr != HPAGE_PMD_SIZE) {
+> +			/*
+> +			 * When resolving an userfaultfd write
+> +			 * protection fault, it's not easy to identify
+> +			 * whether a THP is shared with others and
+> +			 * whether we'll need to do copy-on-write, so
+> +			 * just split it always for now to simply the
+> +			 * procedure.  And that's the policy too for
+> +			 * general THP write-protect in af9e4d5f2de2.
+> +			 */
+> +			if (next - addr != HPAGE_PMD_SIZE || uffd_wp_resolve) {
+
+Just a nit pick can you please add () to next - addr ie:
+if ((next - addr) != HPAGE_PMD_SIZE || uffd_wp_resolve) {
+
+I know it is not needed but each time i bump into this i
+have to scratch my head for second to remember the operator
+rules :)
+
+>  				__split_huge_pmd(vma, pmd, addr, false, NULL);
+>  			} else {
+>  				int nr_ptes = change_huge_pmd(vma, pmd, addr,
+> -- 
+> 2.17.1
+> 
