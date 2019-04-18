@@ -2,116 +2,156 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACDEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE262083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191BE2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389259AbfDROGJ (ORCPT
+        id S2389286AbfDROGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:06:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49434 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388392AbfDROGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:06:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 96984AF1C;
-        Thu, 18 Apr 2019 14:06:06 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8DC201E15AE; Thu, 18 Apr 2019 16:06:03 +0200 (CEST)
-Date:   Thu, 18 Apr 2019 16:06:03 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, prakash.v@samsung.com
-Subject: Re: [PATCH v4 4/7] block: introduce write-hint to stream-id
- conversion
-Message-ID: <20190418140603.GL28541@quack2.suse.cz>
-References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
- <CGME20190417175358epcas1p41a0a4e349dfe0a70bdcc244161c71604@epcas1p4.samsung.com>
- <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
+        Thu, 18 Apr 2019 10:06:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55792 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388392AbfDROGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:06:17 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 18BEE70D6C;
+        Thu, 18 Apr 2019 14:06:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BBD2C19C58;
+        Thu, 18 Apr 2019 14:06:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 1/6] vfs,
+ coda: Fix the lack of locking in FID replacement inode rehashing
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        codalist@coda.cs.cmu.edu, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-ext4@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 18 Apr 2019 15:06:07 +0100
+Message-ID: <155559636704.21702.4538723150377303298.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
+References: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 18 Apr 2019 14:06:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-04-19 23:20:03, Kanchan Joshi wrote:
-> This patch moves write-hint-to-stream-id conversion in block-layer.
-> Earlier this was done by driver (nvme). Current conversion is of the
-> form "streamid = write-hint - 1", for both user and kernel streams.
-> Conversion takes stream limit (maintained in request queue) into
-> account. Write-hints beyond the exposed limit turn to 0.
-> A new field 'streamid' has been added in request. While 'write-hint'
-> field continues to exist. It keeps original value passed from upper
-> layer, and used during merging checks.
-> 
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> ---
->  block/blk-core.c       | 20 ++++++++++++++++++++
->  include/linux/blkdev.h |  1 +
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index a55389b..712e6b7 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -730,6 +730,25 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
->  	return false;
->  }
->  
-> +enum rw_hint blk_write_hint_to_streamid(struct request *req,
-> +				        struct bio *bio)
-> +{
-> +	enum rw_hint streamid, nr_streams;
-> +	struct request_queue *q = req->q;
-> +	nr_streams = q->limits.nr_streams;
-> +
-> +	streamid = bio->bi_write_hint;
-> +	if (!nr_streams || streamid == WRITE_LIFE_NOT_SET ||
-> +	    streamid == WRITE_LIFE_NONE)
-> +		streamid = 0;
-> +	else {
-> +		--streamid;
-> +		if(streamid > nr_streams)
-> +			streamid = 0;
-> +	}
-> +	return streamid;
-> +}
-> +
+When coda attempts to recover from disconnected operation, there exists the
+possibility of an file created during disconnected operation not being
+creatable on the server with the same file identifier (FID).  In such a
+case, coda_replace_fid() has to rehash the inode and move it between chains
+- but, as the comment notes, this really needs some locking.
 
-Someone told me that stream ids are potentially persistent on the storage
-so it isn't great to change the id for the same thing e.g. if we add
-another user hint. So maybe we should allocate kernel hints from top as
-Dave Chinner suggested? I.e., something like the following mapping function:
+Fix this by moving the core part of the code to fs/inode.c and providing it
+with a set() function akin to iget5().  We can then take the inode cache
+lock whilst performing the move.
 
-	if (streamid <= BLK_MAX_USER_HINTS) {
-		streamid--;
-		if (streamid > nr_streams)
-			streamid = 0;
-	} else {
-		/* Kernel hints get allocated from top */
-		streamid -= WRITE_LIFE_KERN_MIN;
-		if (streamid > nr_streams - BLK_MAX_USER_HINTS)
-			streamid = 0;
-		else
-			streamid = nr_streams - streamid - 1;
-	}
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jan Harkes <jaharkes@cs.cmu.edu>
+cc: coda@cs.cmu.edu
+cc: codalist@coda.cs.cmu.edu
+---
 
-what do you think?
+ fs/coda/cnode.c    |   11 +++++++++++
+ fs/inode.c         |   23 +++++++++++++++++++++++
+ include/linux/fs.h |    3 +++
+ 3 files changed, 37 insertions(+)
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+diff --git a/fs/coda/cnode.c b/fs/coda/cnode.c
+index 845b5a66952a..ab6ba6e00674 100644
+--- a/fs/coda/cnode.c
++++ b/fs/coda/cnode.c
+@@ -107,6 +107,15 @@ struct inode *coda_cnode_make(struct CodaFid *fid, struct super_block *sb)
+ }
+ 
+ 
++static void coda_reset_inode(struct inode *inode, unsigned long hash, void *data)
++{
++	struct CodaFid *fid = (struct CodaFid *)data;
++	struct coda_inode_info *cii = ITOC(inode);
++
++	cii->c_fid = *fid;
++	inode->i_ino = hash;
++}
++
+ /* Although we treat Coda file identifiers as immutable, there is one
+  * special case for files created during a disconnection where they may
+  * not be globally unique. When an identifier collision is detected we
+@@ -123,6 +132,8 @@ void coda_replace_fid(struct inode *inode, struct CodaFid *oldfid,
+ 	
+ 	BUG_ON(!coda_fideq(&cii->c_fid, oldfid));
+ 
++	rehash_inode(inode, hash, coda_reset_inode, newfid);
++	
+ 	/* replace fid and rehash inode */
+ 	/* XXX we probably need to hold some lock here! */
+ 	remove_inode_hash(inode);
+diff --git a/fs/inode.c b/fs/inode.c
+index e9d97add2b36..00bb48ca3642 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -501,6 +501,29 @@ void __remove_inode_hash(struct inode *inode)
+ }
+ EXPORT_SYMBOL(__remove_inode_hash);
+ 
++/**
++ * rehash_inode - Relabel and rehash an inode
++ * @inode: Inode to rehash
++ * @hashval: New hash value (usually inode number) to get
++ * @reset: Callback used to relabel the inode
++ * @data: Opaque data pointer to pass to @reset
++ */
++void rehash_inode(struct inode *inode, unsigned long hashval,
++		  void (*reset)(struct inode *inode, unsigned long hashval, void *data),
++		  void *data)
++{
++	struct hlist_head *b = inode_hashtable + hash(inode->i_sb, hashval);
++
++	spin_lock(&inode_hash_lock);
++	spin_lock(&inode->i_lock);
++	hlist_del_init(&inode->i_hash);
++	reset(inode, hashval, data);
++	hlist_add_head(&inode->i_hash, b);
++	spin_unlock(&inode->i_lock);
++	spin_unlock(&inode_hash_lock);
++}
++EXPORT_SYMBOL(rehash_inode);
++
+ void clear_inode(struct inode *inode)
+ {
+ 	/*
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 744908e0bdec..654edbb93199 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3020,6 +3020,9 @@ static inline void remove_inode_hash(struct inode *inode)
+ 		__remove_inode_hash(inode);
+ }
+ 
++extern void rehash_inode(struct inode *, unsigned long,
++			 void (*reset)(struct inode *, unsigned long, void *), void *);
++
+ extern void inode_sb_list_add(struct inode *inode);
+ 
+ #ifdef CONFIG_BLOCK
+
