@@ -2,271 +2,152 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB162C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD21217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555592995;
-	bh=HXoUA18AINaiUplZZ1qFXpFCyd1ni8gkSQLf8c/CoOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sftVnPodQduP/Ax6juVg79pp6yc6qDZSEVnXsW9Siv+QAkCD9nReQpkK2cEQHekXm
-	 BpBbjHksPoBZsQj11K6IzowoLWbMXcNBROsFJhGoyyAnJZSgNBJSvogV++1DFqPLQq
-	 HOBGEXsjgzRDh5Cox/cSfHGH3+FXx1bUY5immiJo=
+	by mail.kernel.org (Postfix) with ESMTP id 8B8D120674
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 13:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOuRcBar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbfDRNJy (ORCPT
+        id S2389000AbfDRNKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 09:09:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbfDRNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 09:09:54 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BF8320674;
-        Thu, 18 Apr 2019 13:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555592992;
-        bh=HXoUA18AINaiUplZZ1qFXpFCyd1ni8gkSQLf8c/CoOY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u2i/y8RxoQKSeahqgBwP3TaMjfAMwfhfXIcwMym8AySTANwAwNZerTj9gGXxWFtBi
-         78BzW2b1L2OvaY94DnIVFdtS1wwqBQwA/ry/i5qSiAO6myA2HyvIUXpzttRvpoEMrc
-         EPTGIIWeA6ntXfvLVkhb12FBSWLCFo0IfTqBDVT0=
-Date:   Thu, 18 Apr 2019 08:09:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     wesleywesley <wesleyshenggit@sina.com>
-Cc:     kurt.schwemmer@microsemi.com, logang@deltatee.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wesley Sheng - A31233 <Wesley.Sheng@microchip.com>,
-        Kelvin Cao - A31060 <Kelvin.Cao@microchip.com>
-Subject: Re: [PATCH v2 1/2] switchtec: Fix false maximum supported PCIe
- function number issue
-Message-ID: <20190418130950.GY126710@google.com>
-References: <1555339302-31829-1-git-send-email-wesley.sheng@microchip.com>
- <1555339302-31829-2-git-send-email-wesley.sheng@microchip.com>
- <20190417224858.GW126710@google.com>
- <20190418165621.GA5272@sina.com>
+        Thu, 18 Apr 2019 09:10:54 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:38840 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731317AbfDRNKy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 09:10:54 -0400
+Received: by mail-it1-f193.google.com with SMTP id f22so3191861ita.3;
+        Thu, 18 Apr 2019 06:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vpMXmxZ2vidC1+tTzRGYY69K2E9XDn3rrfvzVtfRwSI=;
+        b=UOuRcBaryWGqKy1Amo79/HRja2K8upQS6GpxUQXj95ktImC3xngw8ghozDWG9KHAF0
+         xaxk720mQNtT6I13X+GPGij0LHH2zBNYug+mcW65vKfP7iw8S2etJQdc1HdYw0ykXrUB
+         hB59LKb0puark+pTn30TD22HKwGROaklNHHgwgHuysaPwlKlehEHSYWTiWXyihIIaf45
+         9VLJChbPbrK2iBbBua9RZA7xEDR5PUHGJuy/JarYzZtAH2m/t9BOjnYpHbT+mUJ4gERw
+         tXG93MQ1bywPzsmzZWzxWTBnO++dAwE7FKqlL4jXF/QAmfEWNWbBXxXs2KgoJh6kKyvT
+         0E2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vpMXmxZ2vidC1+tTzRGYY69K2E9XDn3rrfvzVtfRwSI=;
+        b=kD0AG5YjKULb/SMNPWLO+LFpZgBbgEN2F4OtdBEsY3Jg5LiL6wSR9Jiydn6BmmJgYY
+         iMSVVe8axSAb+8/BtFkMJuwuZPFOgYyQG9jsickaeaMDl5S3cMDCnmOk/hoeY49dWaDQ
+         dckPLBZSQ1NdSGPbIBW/awYDxBif8doN3Nh6Yg2k5KqNXPB3/HXr7pZnIw9St8DI13J2
+         wkcErRDYSyEkaiBJKXLoUDltRKlpkQVRaTbUXiTFg2LMF8/t/Tph9Eeq+V1d0Ag26Poj
+         yx7AKxECqk6Lug+k25hN2433mZrsAlGUhy0Nxul1Lk1rn/Ip8lgoKSWuZSwTW/YSIk4Q
+         HhUw==
+X-Gm-Message-State: APjAAAXERavuoB9RdW8cVbhZ++OBSaNM9HrRe9z7/UU0SNEMNCwuT9NW
+        ipo/ATxWAtlaQFyhjhLYra4g6Oq9mvcoIdvmc3Q=
+X-Google-Smtp-Source: APXvYqwWn8/uJUXYr2KdgDuuMPXwiwyS7yMD+LyNLKyxWb5eInfrTH9+C2C0PNC6hiWopix9GUDftsg9ZPSR/z5fzcI=
+X-Received: by 2002:a24:6c54:: with SMTP id w81mr3193193itb.78.1555593053302;
+ Thu, 18 Apr 2019 06:10:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190418165621.GA5272@sina.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190416155209.24216-1-tiny.windzz@gmail.com> <20190416155209.24216-3-tiny.windzz@gmail.com>
+ <20190417083000.cwzvhlpbxqoifosw@flea>
+In-Reply-To: <20190417083000.cwzvhlpbxqoifosw@flea>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 18 Apr 2019 21:10:25 +0800
+Message-ID: <CAEExFWvmpnJ8EyvAejVtvBQHdVVGFhpSn7zCMmx1BSre-gt+Ug@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 12:56:21AM +0800, wesleywesley wrote:
-> On Wed, Apr 17, 2019 at 05:48:58PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Apr 15, 2019 at 10:41:41PM +0800, Wesley Sheng wrote:
-> > > The hardware supports up to 255 PFFs and the driver only supports 48, so
-> > > this patch updates the driver to support them all. To be backward
-> > > compatible, a new ioctl and corresponding data structure are created,
-> > > while keep the deprecated one.
-> > 
-> > The commit log needs to include some kind of detail about what "PFF"
-> > is.  Logan provided the following, which looks like a good starting
-> > point:
-> > 
-> >   PFF is really a concept internal to the Switchtec device. It stands
-> >   for PCIe Function Framework. Essentially, there is a bank of
-> >   registers for every PCIe Function (aka endpoint) in the switch. When
-> >   I originally wrote the driver, I assumed incorrectly there would
-> >   only ever be one PFF per port and the maximum number of ports for
-> >   Switchtec parts is 48. In fact, the hardware supports up to 255 and
-> >   there are typically two PFFs per upstream port (one for the port
-> >   itself and one for the management endpoint).
-> > 
-> > I had a couple minor questions below that aren't exactly related to
-> > this patch.  If you did decide to address them (in a separate patch,
-> > of course), you could expand the commit log for this patch with the
-> > PFF info.  If the questions below don't need anything, I can
-> > incorporate something about PFF myself.
-> 
-> Hi, Bjorn,
-> 
-> See my comments below your questions.
-> They are good catches, but I think it is not a bug we should fix it urgently.
-> What about take it as an improvement of code, and we will submit it in the
-> next upstream session. Before that, we would like to test with this change.
+On Wed, Apr 17, 2019 at 4:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Apr 16, 2019 at 11:52:09AM -0400, Yangtao Li wrote:
+> > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > frequency value based on the speedbin blown in the efuse combination.
+> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > provide the OPP framework with required information.
+> > This is used to determine the voltage and frequency value for each
+> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
+> >
+> > The "allwinner,sun50i-h6-operating-points" DT extends the
+> > "operating-points-v2"
+> > with following parameters:
+> > - nvmem-cells (NVMEM area containig the speedbin information)
+> > - opp-microvolt-<name>: voltage in micro Volts.
+> >   At runtime, the platform can pick a <name> and matching
+> >   opp-microvolt-<name> property.
+> >                       HW:             <name>:
+> >                       sun50iw-h6      speed0 speed1 speed2
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ++++++++++++++++++
+> >  1 file changed, 167 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> > new file mode 100644
+> > index 000000000000..3cb39c6caec3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> > @@ -0,0 +1,167 @@
+> > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+> > +===================================
+> > +
+> > +For some SoCs, the CPU frequency subset and voltage value of each OPP
+> > +varies based on the silicon variant in use. Allwinner Process Voltage
+> > +Scaling Tables defines the voltage and frequency value based on the
+> > +speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
+> > +reads the efuse value from the SoC to provide the OPP framework with
+> > +required information.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +In 'cpus' nodes:
+> > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+> > +
+> > +In 'operating-points-v2' table:
+> > +- compatible: Should be
+> > +     - 'allwinner,sun50i-h6-operating-points'.
+> > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+> > +             efuse registers that has information about the speedbin
+> > +             that is used to select the right frequency/voltage value
+> > +             pair. Please refer the for nvmem-cells bindings
+> > +             Documentation/devicetree/bindings/nvmem/nvmem.txt and
+> > +             also examples below.
+> > +
+> > +In every OPP node:
+> > +- opp-microvolt-<name>: Voltage in micro Volts.
+> > +                     At runtime, the platform can pick a <name> and
+> > +                     matching opp-microvolt-<name> property.
+> > +                     [See: opp.txt]
+> > +                     HW:             <name>:
+> > +                     sun50iw-h6      speed0 speed1 speed2
+>
+> There's a typo here (and in your commit log), it should be sun50i-h6
+> instead of sun50iw-h6
+>
+> Once fixed:
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Another has been sent.
 
-Totally agreed, I'll merge the current stuff today and we can get on with
-this.
-
-> > > ---
-> > >  drivers/pci/switch/switchtec.c       | 39 +++++++++++++++++++++++++-----------
-> > >  include/linux/switchtec.h            |  2 +-
-> > >  include/uapi/linux/switchtec_ioctl.h | 13 +++++++++++-
-> > >  3 files changed, 40 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-> > > index e22766c..7df9a69 100644
-> > > --- a/drivers/pci/switch/switchtec.c
-> > > +++ b/drivers/pci/switch/switchtec.c
-> > > @@ -658,19 +658,25 @@ static int ioctl_flash_part_info(struct switchtec_dev *stdev,
-> > >  
-> > >  static int ioctl_event_summary(struct switchtec_dev *stdev,
-> > >  	struct switchtec_user *stuser,
-> > > -	struct switchtec_ioctl_event_summary __user *usum)
-> > > +	struct switchtec_ioctl_event_summary __user *usum,
-> > > +	size_t size)
-> > >  {
-> > > -	struct switchtec_ioctl_event_summary s = {0};
-> > > +	struct switchtec_ioctl_event_summary *s;
-> > >  	int i;
-> > >  	u32 reg;
-> > > +	int ret = 0;
-> > >  
-> > > -	s.global = ioread32(&stdev->mmio_sw_event->global_summary);
-> > > -	s.part_bitmap = ioread32(&stdev->mmio_sw_event->part_event_bitmap);
-> > > -	s.local_part = ioread32(&stdev->mmio_part_cfg->part_event_summary);
-> > > +	s = kzalloc(sizeof(*s), GFP_KERNEL);
-> > > +	if (!s)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	s->global = ioread32(&stdev->mmio_sw_event->global_summary);
-> > > +	s->part_bitmap = ioread32(&stdev->mmio_sw_event->part_event_bitmap);
-> > > +	s->local_part = ioread32(&stdev->mmio_part_cfg->part_event_summary);
-> > >  
-> > >  	for (i = 0; i < stdev->partition_count; i++) {
-> > >  		reg = ioread32(&stdev->mmio_part_cfg_all[i].part_event_summary);
-> > > -		s.part[i] = reg;
-> > > +		s->part[i] = reg;
-> > >  	}
-> > >  
-> > >  	for (i = 0; i < SWITCHTEC_MAX_PFF_CSR; i++) {
-> > 
-> > Should this be "i < stdev->pff_csr_count", as in
-> > check_link_state_events(), enable_link_state_events() and
-> > mask_all_events()?  If so, I assume the read and check of vendor_id
-> > would be unnecessary?
-> 
-> Yes, I think it is a good catch.
-> Once the configuration file of Switchtec is choosed, the logical ports bound to 
-> USPs/DSPs physical port, unbound logical ports, and vEPs (NT/Management/NT only),
-> their corresponding PFF's index are fixed and the total number are invariable.
-> > 
-> > The last loop in init_pff() currently checks against
-> > SWITCHTEC_MAX_PFF_CSR:
-> > 
-> >         for (i = 0; i < ARRAY_SIZE(pcfg->dsp_pff_inst_id); i++) {
-> >                 reg = ioread32(&pcfg->dsp_pff_inst_id[i]);
-> >                 if (reg < SWITCHTEC_MAX_PFF_CSR)
-> >                         stdev->pff_local[reg] = 1;
-> >         }
-> > 
-> > Should it check "reg < stdev->pff_csr_count" instead?  It looks like
-> > mask_all_events(), the only reader of pff_local[], only looks up to
-> > pff_csr_count anyway.
-> > 
-> Yes, I agree.
-> Actually, all the SWITCHTEC_MAX_PFF_CSR in init_pff() could be replaced by it.
-> > > @@ -679,15 +685,19 @@ static int ioctl_event_summary(struct switchtec_dev *stdev,
-> > >  			break;
-> > >  
-> > >  		reg = ioread32(&stdev->mmio_pff_csr[i].pff_event_summary);
-> > > -		s.pff[i] = reg;
-> > > +		s->pff[i] = reg;
-> > >  	}
-> > >  
-> > > -	if (copy_to_user(usum, &s, sizeof(s)))
-> > > -		return -EFAULT;
-> > > +	if (copy_to_user(usum, s, size)) {
-> > > +		ret = -EFAULT;
-> > > +		goto error_case;
-> > > +	}
-> > >  
-> > >  	stuser->event_cnt = atomic_read(&stdev->event_cnt);
-> > >  
-> > > -	return 0;
-> > > +error_case:
-> > > +	kfree(s);
-> > > +	return ret;
-> > >  }
-> > >  
-> > >  static u32 __iomem *global_ev_reg(struct switchtec_dev *stdev,
-> > > @@ -977,8 +987,9 @@ static long switchtec_dev_ioctl(struct file *filp, unsigned int cmd,
-> > >  	case SWITCHTEC_IOCTL_FLASH_PART_INFO:
-> > >  		rc = ioctl_flash_part_info(stdev, argp);
-> > >  		break;
-> > > -	case SWITCHTEC_IOCTL_EVENT_SUMMARY:
-> > > -		rc = ioctl_event_summary(stdev, stuser, argp);
-> > > +	case SWITCHTEC_IOCTL_EVENT_SUMMARY_LEGACY:
-> > > +		rc = ioctl_event_summary(stdev, stuser, argp,
-> > > +					 sizeof(struct switchtec_ioctl_event_summary_legacy));
-> > >  		break;
-> > >  	case SWITCHTEC_IOCTL_EVENT_CTL:
-> > >  		rc = ioctl_event_ctl(stdev, argp);
-> > > @@ -989,6 +1000,10 @@ static long switchtec_dev_ioctl(struct file *filp, unsigned int cmd,
-> > >  	case SWITCHTEC_IOCTL_PORT_TO_PFF:
-> > >  		rc = ioctl_port_to_pff(stdev, argp);
-> > >  		break;
-> > > +	case SWITCHTEC_IOCTL_EVENT_SUMMARY:
-> > > +		rc = ioctl_event_summary(stdev, stuser, argp,
-> > > +					 sizeof(struct switchtec_ioctl_event_summary));
-> > > +		break;
-> > >  	default:
-> > >  		rc = -ENOTTY;
-> > >  		break;
-> > > diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
-> > > index 52a079b..0cfc34a 100644
-> > > --- a/include/linux/switchtec.h
-> > > +++ b/include/linux/switchtec.h
-> > > @@ -20,7 +20,7 @@
-> > >  #include <linux/cdev.h>
-> > >  
-> > >  #define SWITCHTEC_MRPC_PAYLOAD_SIZE 1024
-> > > -#define SWITCHTEC_MAX_PFF_CSR 48
-> > > +#define SWITCHTEC_MAX_PFF_CSR 255
-> > >  
-> > >  #define SWITCHTEC_EVENT_OCCURRED BIT(0)
-> > >  #define SWITCHTEC_EVENT_CLEAR    BIT(0)
-> > > diff --git a/include/uapi/linux/switchtec_ioctl.h b/include/uapi/linux/switchtec_ioctl.h
-> > > index 4f4daf8..c912b5a 100644
-> > > --- a/include/uapi/linux/switchtec_ioctl.h
-> > > +++ b/include/uapi/linux/switchtec_ioctl.h
-> > > @@ -50,7 +50,7 @@ struct switchtec_ioctl_flash_part_info {
-> > >  	__u32 active;
-> > >  };
-> > >  
-> > > -struct switchtec_ioctl_event_summary {
-> > > +struct switchtec_ioctl_event_summary_legacy {
-> > >  	__u64 global;
-> > >  	__u64 part_bitmap;
-> > >  	__u32 local_part;
-> > > @@ -59,6 +59,15 @@ struct switchtec_ioctl_event_summary {
-> > >  	__u32 pff[48];
-> > >  };
-> > >  
-> > > +struct switchtec_ioctl_event_summary {
-> > > +	__u64 global;
-> > > +	__u64 part_bitmap;
-> > > +	__u32 local_part;
-> > > +	__u32 padding;
-> > > +	__u32 part[48];
-> > > +	__u32 pff[255];
-> > > +};
-> > > +
-> > >  #define SWITCHTEC_IOCTL_EVENT_STACK_ERROR		0
-> > >  #define SWITCHTEC_IOCTL_EVENT_PPU_ERROR			1
-> > >  #define SWITCHTEC_IOCTL_EVENT_ISP_ERROR			2
-> > > @@ -127,6 +136,8 @@ struct switchtec_ioctl_pff_port {
-> > >  	_IOWR('W', 0x41, struct switchtec_ioctl_flash_part_info)
-> > >  #define SWITCHTEC_IOCTL_EVENT_SUMMARY \
-> > >  	_IOR('W', 0x42, struct switchtec_ioctl_event_summary)
-> > > +#define SWITCHTEC_IOCTL_EVENT_SUMMARY_LEGACY \
-> > > +	_IOR('W', 0x42, struct switchtec_ioctl_event_summary_legacy)
-> > >  #define SWITCHTEC_IOCTL_EVENT_CTL \
-> > >  	_IOWR('W', 0x43, struct switchtec_ioctl_event_ctl)
-> > >  #define SWITCHTEC_IOCTL_PFF_TO_PORT \
-> > > -- 
-> > > 2.7.4
-> > > 
-> > 
-> 
+Regards,
+Yangtao
