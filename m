@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F647C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405D4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3082721872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1257F21904
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610605;
-	bh=j3pVMqzDq7XnP2iyLz/eRYs301p+pk5iyQOdszhJm+g=;
+	s=default; t=1555610608;
+	bh=njTQZqlGVbGxU4CXh7Pye5ZQC0RdeXZifKC3Xry3Lj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClJaS4/hL3M61367FfXtnceSCjcbTineavRTe00QKO681yPdII8C9xtwmOJRJa5AO
-	 hDoi/FBIMmTgyn8RCswfYNLbZBk9/fUrkMvuO/SJaf/tZ5+X0nt7A0MRJzcPy9z4WL
-	 ut1pDsLh8uCAn7aBb9gM5VHdR/R6A5D62pMfZO6Y=
+	b=krShXQ0KH5tgaIok1b7GiJ9T6OPNM8P6hBZcgipdYqNyZ61lJaUGAXj58soFOQDXu
+	 riC4GvCaS+QWW6gOGeqQf5lvoXouse1GbKkxSq56gUX1UPN+YlcWEE+mO50J5i2Hag
+	 PnwXAbIWc639luSjXgToK/WESmTsKYQ8ebWIwpeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390917AbfDRSDY (ORCPT
+        id S2390925AbfDRSD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390903AbfDRSDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:03:18 -0400
+        id S2390170AbfDRSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:03:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEFF9217FA;
-        Thu, 18 Apr 2019 18:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C072217FA;
+        Thu, 18 Apr 2019 18:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610598;
-        bh=j3pVMqzDq7XnP2iyLz/eRYs301p+pk5iyQOdszhJm+g=;
+        s=default; t=1555610600;
+        bh=njTQZqlGVbGxU4CXh7Pye5ZQC0RdeXZifKC3Xry3Lj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U8pJkvBWTicNr3TnYT6g1bYifJL8lln1CNv4txHvx/fFzCudo9kV9pbjOvIRra3fD
-         mqjkXfpeHnyrjuFr8VltnvSHOd/nc40GZyY33ewT/017PifhmXwqJ4SGsQ3lMEbmfz
-         BAcsjheFBCmQLIsdQrjHAAb2P/BgD5yZ7Dhki3qI=
+        b=uGyIp+xHef6nPwwaZw+nArGcMDRnOHTW8BZOWlHGggtbtwB1dEnfwj/Igox/D0vNU
+         IWW8b3ddF3lh0VPMFiXyivDMwghnyCBjDm2mhyXlNQNESPPQtFna/nutcke8x+wDO+
+         ZxYmvgPvQ28wLn8JK8Hsadl/Lc5HrnobagqX6Oe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
         Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/92] thermal/intel_powerclamp: fix __percpu declaration of worker_data
-Date:   Thu, 18 Apr 2019 19:56:30 +0200
-Message-Id: <20190418160431.455727033@linuxfoundation.org>
+Subject: [PATCH 4.14 13/92] thermal: bcm2835: Fix crash in bcm2835_thermal_debugfs
+Date:   Thu, 18 Apr 2019 19:56:31 +0200
+Message-Id: <20190418160431.531864834@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
 References: <20190418160430.325165109@linuxfoundation.org>
@@ -62,44 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa36e3616532f82a920b5ebf4e059fbafae63d88 ]
+[ Upstream commit 35122495a8c6683e863acf7b05a7036b2be64c7a ]
 
-This variable is declared as:
-	static struct powerclamp_worker_data * __percpu worker_data;
-In other words, a percpu pointer to struct ...
+"cat /sys/kernel/debug/bcm2835_thermal/regset" causes a NULL pointer
+dereference in bcm2835_thermal_debugfs. The driver makes use of the
+implementation details of the thermal framework to retrieve a pointer
+to its private data from a struct thermal_zone_device, and gets it
+wrong - leading to the crash. Instead, store its private data as the
+drvdata and retrieve the thermal_zone_device pointer from it.
 
-But this variable not used like so but as a pointer to a percpu
-struct powerclamp_worker_data.
+Fixes: bcb7dd9ef206 ("thermal: bcm2835: add thermal driver for bcm2835 SoC")
 
-So fix the declaration as:
-	static struct powerclamp_worker_data __percpu *worker_data;
-
-This also quiets Sparse's warnings from __verify_pcpu_ptr(), like:
-  494:49: warning: incorrect type in initializer (different address spaces)
-  494:49:    expected void const [noderef] <asn:3> *__vpp_verify
-  494:49:    got struct powerclamp_worker_data *
-
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/intel_powerclamp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/broadcom/bcm2835_thermal.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/intel_powerclamp.c b/drivers/thermal/intel_powerclamp.c
-index d718cd179ddb..45d9840491bd 100644
---- a/drivers/thermal/intel_powerclamp.c
-+++ b/drivers/thermal/intel_powerclamp.c
-@@ -101,7 +101,7 @@ struct powerclamp_worker_data {
- 	bool clamping;
- };
+diff --git a/drivers/thermal/broadcom/bcm2835_thermal.c b/drivers/thermal/broadcom/bcm2835_thermal.c
+index 24b006a95142..8646fb7425f2 100644
+--- a/drivers/thermal/broadcom/bcm2835_thermal.c
++++ b/drivers/thermal/broadcom/bcm2835_thermal.c
+@@ -128,8 +128,7 @@ static const struct debugfs_reg32 bcm2835_thermal_regs[] = {
  
--static struct powerclamp_worker_data * __percpu worker_data;
-+static struct powerclamp_worker_data __percpu *worker_data;
- static struct thermal_cooling_device *cooling_dev;
- static unsigned long *cpu_clamping_mask;  /* bit map for tracking per cpu
- 					   * clamping kthread worker
+ static void bcm2835_thermal_debugfs(struct platform_device *pdev)
+ {
+-	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
+-	struct bcm2835_thermal_data *data = tz->devdata;
++	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
+ 	struct debugfs_regset32 *regset;
+ 
+ 	data->debugfsdir = debugfs_create_dir("bcm2835_thermal", NULL);
+@@ -275,7 +274,7 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
+ 
+ 	data->tz = tz;
+ 
+-	platform_set_drvdata(pdev, tz);
++	platform_set_drvdata(pdev, data);
+ 
+ 	/*
+ 	 * Thermal_zone doesn't enable hwmon as default,
+@@ -299,8 +298,8 @@ static int bcm2835_thermal_probe(struct platform_device *pdev)
+ 
+ static int bcm2835_thermal_remove(struct platform_device *pdev)
+ {
+-	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
+-	struct bcm2835_thermal_data *data = tz->devdata;
++	struct bcm2835_thermal_data *data = platform_get_drvdata(pdev);
++	struct thermal_zone_device *tz = data->tz;
+ 
+ 	debugfs_remove_recursive(data->debugfsdir);
+ 	thermal_zone_of_sensor_unregister(&pdev->dev, tz);
 -- 
 2.19.1
 
