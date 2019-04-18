@@ -2,133 +2,127 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6942CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0EEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370BB20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ktsdaFbH"
+	by mail.kernel.org (Postfix) with ESMTP id 1FCB2218A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555611325;
+	bh=Qjhxc18v309AJTyEdDE1sMJn6DSoEUOl+PO/FDPkik0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T1uOuWQM7E8q2z71Anf16NsQH/Hyl1VJjQaDoEwr5uS/SqBKZr2Y75hvQt4S+TVWe
+	 AD9uA6QLWmlw9Sd+I99e5jSD1ghdE6GRGVJTeJ4vADXIy8TP+FDLhVIIURkobvv35m
+	 7OQomawcwYD0dE9FUBWNt39yDBGfZP68kPV78W1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392143AbfDRSPT (ORCPT
+        id S2392072AbfDRSOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:15:19 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45696 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391950AbfDRSPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:15:12 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e5so2448512otk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 11:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cNvcYTnY3+vvHUTxTkoLoLivaNOP88tmLELkxGdG9NU=;
-        b=ktsdaFbHHTTd3R9uOez0tgfH91piu1Xl5DlUQg9AdDFLkPBDJI5BaCJt8wdik0yC9L
-         dH1VUAIEKpMOG3eMgmYm1jbHjjxODglk6p70vY9qXowThleT7Q0gQUDAJS9MA3j7Y9lF
-         v8ZxpajT9Rk0mPmn47Onvt24QMYIumY0g4+EJAIXZlXQcKxDlrzTO/b2iH+eG5vkZQVH
-         ouopY1EtaMEeFiq04GySGtlZKge2N6IsV7o1pM7Je/rREB1BqCRPzbORKPO8w/0MElm/
-         Opf6d01RSEY9uEf/J9C9GZzgTb2wZrkTq4GMtT+Dl+3EhN2pMqMJwWjbjUxgrKq+DhMm
-         CmXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cNvcYTnY3+vvHUTxTkoLoLivaNOP88tmLELkxGdG9NU=;
-        b=Iref8mMcd4Aon2Eskos0qLmkR426ctdkG0McEcqUTMnOYHsKQ3z/fTBTKrsJs33P6I
-         5hpyWMLcu1aQDAYPfDMaQRWqTAYEQolIiDFJf26yFr8XiAPObJqgQ0mPaXOs7X/S8qRX
-         VaS45Nw+ZCAvEdna/EwWyKQVMclBE3qd+kih+6eaIRgVB7kCRnrRsILQGL78JE3/b9Qh
-         0k2T2Px1AEtPhNoR74awI2oSIOa3wvH+mChPIg+rZjy+Y8Hx7wJK+OaOtX8QzGuKQL8l
-         CntB2EcIu1casmnIsGKVtJaqO+YlQLkwo1PncLMhPUh+wiK3eEkQjj3vbiIpXDQCVGG+
-         PEQw==
-X-Gm-Message-State: APjAAAXC/W+oVZJrM5jFGHzB4bt36uImben0fOYUTpm5eE2sZvIPiA6Q
-        RR0DZtICnAvujGspHYTE3g8zdPhs/3iyu6Qr/SqLmQ==
-X-Google-Smtp-Source: APXvYqw+Y0/Df9bqsKP+vBWmJnbCdRcBlSHVgj/brP9uo3QhMkPjrQhjEhP/44UfrxTt+scRqmIZz03SqgCzRGRlQNI=
-X-Received: by 2002:a05:6830:15d4:: with SMTP id j20mr4679415otr.367.1555611312059;
- Thu, 18 Apr 2019 11:15:12 -0700 (PDT)
+        Thu, 18 Apr 2019 14:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391716AbfDRSOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:14:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 138E7214DA;
+        Thu, 18 Apr 2019 18:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555611292;
+        bh=Qjhxc18v309AJTyEdDE1sMJn6DSoEUOl+PO/FDPkik0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vSq40lMQmoX3feg3FoRJdZ9NcrdQfPBupeclm04UtPjeVhuDPeE1VceiO7WOIxAHx
+         ZbLDwwxZ7U1YMVYHhA/9qFkm91SRa4+ML5e5flp+JsxoprdhuOHRqZ+bt05eRtiwH2
+         118WoEen1Ag6TbYVBrbjozIFsJ+iVQoY3OTky+us=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Hsin-Yi, Wang" <hsinyi@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 093/110] drm/panel: panel-innolux: set display off in innolux_panel_unprepare
+Date:   Thu, 18 Apr 2019 19:57:22 +0200
+Message-Id: <20190418160446.652436596@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
+References: <20190418160437.484158340@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
- <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
- <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
- <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com> <20190418161833.GA22970@infradead.org>
-In-Reply-To: <20190418161833.GA22970@infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 18 Apr 2019 11:14:59 -0700
-Message-ID: <CAPcyv4jPOF_+R6U17J_+88+X8LC-LSPCugA6gbKxuphuuFB2gg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jeff Moyer <jmoyer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 9:18 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Apr 18, 2019 at 09:05:05AM -0700, Dan Williams wrote:
-> > > > I'd either add a comment about avoiding retpoline overhead here or just
-> > > > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
-> > > > get confused by the code.
-> > >
-> > > Isn't this premature optimization?  I really don't like adding things
-> > > like this without some numbers to show it's worth it.
-> >
-> > I don't think it's premature given this optimization technique is
-> > already being deployed elsewhere, see:
-> >
-> > https://lwn.net/Articles/774347/
->
-> For one this one was backed by numbers, and second after feedback
-> from Linux we switched to the NULL pointer check instead.
+[ Upstream commit 46f3ceaffa81e846677bca8668e0ad40e643cffd ]
 
-Ok I should have noticed the switch to NULL pointer check. However,
-the question still stands do we want everyone to run numbers to
-justify this optimization, or make it a new common kernel coding
-practice to do:
+Move mipi_dsi_dcs_set_display_off() from innolux_panel_disable()
+to innolux_panel_unprepare(), so they are consistent with
+innolux_panel_enable() and innolux_panel_prepare().
 
-    if (!object->op)
-        generic_op(object);
-    else
-        object->op(object);
+This also fixes some mode check and irq timeout issue in MTK dsi code.
 
-...in hot paths? I agree with not doing premature optimization in
-principle, but this hack is minimally intrusive from a readability
-perspective similar to likely()/unlikely() usage which also don't come
-with numbers on a per patch basis.
+Since some dsi code (e.g. mtk_dsi) have following call trace:
+1. drm_panel_disable(), which calls innolux_panel_disable()
+2. switch to cmd mode
+3. drm_panel_unprepare(), which calls innolux_panel_unprepare()
+
+However, mtk_dsi needs to be in cmd mode to be able to send commands
+(e.g. mipi_dsi_dcs_set_display_off() and mipi_dsi_dcs_enter_sleep_mode()),
+so we need these functions to be called after the switch to cmd mode happens,
+i.e. in innolux_panel_unprepare.
+
+Signed-off-by: Hsin-Yi, Wang <hsinyi@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190109065922.231753-1-hsinyi@chromium.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/panel/panel-innolux-p079zca.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-innolux-p079zca.c b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+index 72edb334d997..88c7d035ace6 100644
+--- a/drivers/gpu/drm/panel/panel-innolux-p079zca.c
++++ b/drivers/gpu/drm/panel/panel-innolux-p079zca.c
+@@ -70,18 +70,12 @@ static inline struct innolux_panel *to_innolux_panel(struct drm_panel *panel)
+ static int innolux_panel_disable(struct drm_panel *panel)
+ {
+ 	struct innolux_panel *innolux = to_innolux_panel(panel);
+-	int err;
+ 
+ 	if (!innolux->enabled)
+ 		return 0;
+ 
+ 	backlight_disable(innolux->backlight);
+ 
+-	err = mipi_dsi_dcs_set_display_off(innolux->link);
+-	if (err < 0)
+-		DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
+-			      err);
+-
+ 	innolux->enabled = false;
+ 
+ 	return 0;
+@@ -95,6 +89,11 @@ static int innolux_panel_unprepare(struct drm_panel *panel)
+ 	if (!innolux->prepared)
+ 		return 0;
+ 
++	err = mipi_dsi_dcs_set_display_off(innolux->link);
++	if (err < 0)
++		DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
++			      err);
++
+ 	err = mipi_dsi_dcs_enter_sleep_mode(innolux->link);
+ 	if (err < 0) {
+ 		DRM_DEV_ERROR(panel->dev, "failed to enter sleep mode: %d\n",
+-- 
+2.19.1
+
+
+
