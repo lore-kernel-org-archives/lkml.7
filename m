@@ -2,140 +2,250 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E552C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717D2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFF22171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555630966;
-	bh=JEAOgYJlOvZdMdVyDXHifM67i+2PUhKtJ1YzNTJp9lo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cE6Xy9GfGgrISIhXMmw8NOdDC31EV0FwRs9rBjHe5NdQYs+FrUMRjA8rQ22hU1P53
-	 iqM7WYjal5FxPviGs1vQ1BNu5WPgiKNmw0XlNFSch7ZDrqy5OjwXp40UfPUKd8xK9T
-	 BACvHPrWxomCcwHC5buTlLvfuhho9ikjOVNx3hJo=
+	by mail.kernel.org (Postfix) with ESMTP id 2D88F206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfDRXmp (ORCPT
+        id S1726296AbfDRXqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 19:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34446 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 19:46:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46566 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfDRXmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 19:42:44 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725855AbfDRXqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 19:46:53 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4953920675;
-        Thu, 18 Apr 2019 23:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555630963;
-        bh=JEAOgYJlOvZdMdVyDXHifM67i+2PUhKtJ1YzNTJp9lo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E/qBST9ORsR60kh4OyKwZYSNPLU1KtkPCKOL2msKqvW3FvPnRVcysWhpIFE8F4jnK
-         Bcc1w4IWiGv3jVOdq+RBcREQuURZ/9F+kvZtdPtL8nCOrd5kkKoTpYUdzS2ZZgkRyq
-         Og5o5Esmo8zurb+diXzEdBOfP6V4B5PxeOi4MEZs=
-Date:   Thu, 18 Apr 2019 18:42:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
-Message-ID: <20190418234241.GF126710@google.com>
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
- <20190412223409.GB126710@google.com>
- <CABe79T7h9t_Obmo3+B0MHgLZ4ff9GxpBBBLGtSf0C=zmLrWVBQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABe79T7h9t_Obmo3+B0MHgLZ4ff9GxpBBBLGtSf0C=zmLrWVBQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3CF9E3098544;
+        Thu, 18 Apr 2019 23:46:52 +0000 (UTC)
+Received: from llong.com (ovpn-120-92.rdu2.redhat.com [10.10.120.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DD795D707;
+        Thu, 18 Apr 2019 23:46:48 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v5 00/18] locking/rwsem: Rwsem rearchitecture part 2
+Date:   Thu, 18 Apr 2019 19:46:10 -0400
+Message-Id: <20190418234628.3675-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 18 Apr 2019 23:46:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 05:28:36PM +0530, Srinath Mannam wrote:
-> On Sat, Apr 13, 2019 at 4:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
-> > > Few SOCs have limitation that their PCIe host can't allow few inbound
-> > > address ranges. Allowed inbound address ranges are listed in dma-ranges
-> > > DT property and this address ranges are required to do IOVA mapping.
-> > > Remaining address ranges have to be reserved in IOVA mapping.
->
-> > If I understand correctly, devices below these PCIe host bridges can
-> > DMA only to the listed address ranges, and you prevent devices from
-> > doing DMA to the holes between the listed ranges by reserving the
-> > holes in dma-iommu.
->
-> Yes, devices below these PCIe host bridges can DMA only to the listed
-> address ranges,
-> and this patch prevents to allocate DMA(IOVA) addresses in the holes
-> of listed ranges.
->
-> > Apparently there's something that makes sure driver dma_map_*() always
-> > goes through dma-iommu?  I traced as far as seeing that dma-iommu
-> > depends on CONFIG_IOMMU_DMA, and that arm64 selects CONFIG_IOMMU_DMA
-> > if CONFIG_IOMMU_SUPPORT, but then the trail got cold.  I didn't see
-> > what selects CONFIG_IOMMU_SUPPORT.
->
-> IOMMU_SUPPORT depends on MMU.
+ v5:
+  - Drop v4 patch 1 as it is merged into tip's locking/core branch.
+  - Integrate the 2 followup patches into the series. The first
+    follow-up patch is broken into 2 pieces. The first piece comes in
+    before the "Enable readers spinning on writer" and the 2nd piece
+    is merged into the "Enable time-based spinning on reader-owned
+    rwsem" patch. The 2nd followup patch is added after that.
+  - Add a new patch to make all wake_up_q() calls after dropping
+    wait_lock as suggested by PeterZ.
+  - Incorporate numerouos suggestions by PeterZ and Davidlohr.
 
-Yes, I see that IOMMU_SUPPORT depends on MMU (in
-drivers/iommu/Kconfig).  But that doesn't *select* IOMMU_SUPPORT; it
-only means you *can't* select it unless MMU has already been selected.
+ v4:
+  - Fix the missing initialization bug with !CONFIG_RWSEM_SPIN_ON_OWNER
+    in patch 2.
+  - Move the "Remove rwsem_wake() wakeup optimization" patch before
+    the "Implement a new locking scheme" patch.
+  - Add two new patches to merge the relevant content of rwsem.h and
+    rwsem-xadd.c into rwsem.c as suggested by PeterZ.
+  - Refactor the lock handoff patch to make all setting and clearing
+    of the handoff bit serialized by wait_lock to ensure correctness.
+  - Adapt the rest of the patches to the new code base.
 
-I think you only get dma-iommu if you choose to select IOMMU_SUPPORT
-via menuconfig or whatever, and the current config rules allow you to
-turn that off.  Maybe that's OK, I dunno.  If you do turn it off, I
-guess we'll ignore the holes in "dma-ranges" and devices will be able
-to DMA to the holes.
+ v3:
+  - Add 2 more patches in front to fix build and testing issues found.
+    Patch 1 can actually be merged on top of the patch "locking/rwsem:
+    Enhance DEBUG_RWSEMS_WARN_ON() macro" in part 1.
+  - Change the handoff patch (now patch 4) to set handoff bit immediately
+    after wakeup for RT writers. The timeout limit is also tightened to
+    4ms.
+  - There is no code changes in other patches other than resolving conflicts
+    with patches 1, 2 and 4.
 
-> > This does look like what Robin suggested, as far as I can tell.
-> > Hopefully he'll take a look and give his reviewed-by.  Thanks for
-> > persevering!
-> Thank you.
-> 
-> Regards,
-> Srinath.
-> >
-> > > PCIe Host driver of those SOCs has to list resource entries of allowed
-> > > address ranges given in dma-ranges DT property in sorted order. This
-> > > sorted list of resources will be processed and reserve IOVA address for
-> > > inaccessible address holes while initializing IOMMU domain.
-> > >
-> > > This patch set is based on Linux-5.0-rc2.
-> > >
-> > > Changes from v3:
-> > >   - Addressed Robin Murphy review comments.
-> > >     - pcie-iproc: parse dma-ranges and make sorted resource list.
-> > >     - dma-iommu: process list and reserve gaps between entries
-> > >
-> > > Changes from v2:
-> > >   - Patch set rebased to Linux-5.0-rc2
-> > >
-> > > Changes from v1:
-> > >   - Addressed Oza review comments.
-> > >
-> > > Srinath Mannam (3):
-> > >   PCI: Add dma_ranges window list
-> > >   iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-> > >   PCI: iproc: Add sorted dma ranges resource entries to host bridge
-> > >
-> > >  drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
-> > >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
-> > >  drivers/pci/probe.c                 |  3 +++
-> > >  include/linux/pci.h                 |  1 +
-> > >  4 files changed, 66 insertions(+), 1 deletion(-)
-> > >
-> > > --
-> > > 2.7.4
-> > >
+ v2:
+  - Move the negative reader count checking patch (patch 12->10)
+    forward to before the merge owner to count patch as suggested by
+    Linus & expand the comment.
+  - Change the reader-owned rwsem spinning from count based to time
+    based to have better control of the max time allowed.
+
+This is part 2 of a 3-part (0/1/2) series to rearchitect the internal
+operation of rwsem. Both part 0 and part 1 are merged into tip.
+
+This patchset revamps the current rwsem-xadd implementation to make
+it saner and easier to work with. It also implements the following 3
+new features:
+
+ 1) Waiter lock handoff
+ 2) Reader optimistic spinning with adapative disabling
+ 3) Store write-lock owner in the atomic count (x86-64 only for now)
+
+Waiter lock handoff is similar to the mechanism currently in the mutex
+code. This ensures that lock starvation won't happen.
+
+Reader optimistic spinning enables readers to acquire the lock more
+quickly.  So workloads that use a mix of readers and writers should
+see an increase in performance as long as the reader critical sections
+are short. For those workloads that have long reader critical sections
+reader optimistic spinning may hurt performance, so an adaptive disabling
+mechanism is also implemented to disable it when reader-owned lock
+spinning timeouts happen.
+
+Finally, storing the write-lock owner into the count will allow
+optimistic spinners to get to the lock holder's task structure more
+quickly and eliminating the timing gap where the write lock is acquired
+but the owner isn't known yet. This is important for RT tasks where
+spinning on a lock with an unknown owner is not allowed.
+
+Because of the fact that multiple readers can share the same lock,
+there is a natural preference for readers when measuring in term of
+locking throughput as more readers are likely to get into the locking
+fast path than the writers. With waiter lock handoff, we are not going
+to starve the writers.
+
+On a 1-socket 22-core 44-thread Skylake system with 22 reader and writer
+locking threads, the min/mean/max locking operations done in a 5-second
+testing window before the patchset were:
+
+  22 readers, Iterations Min/Mean/Max = 38,193/38,194/38,194
+  22 writers, Iterations Min/Mean/Max = 104,663/162,133/261,370
+
+After the patchset, they became:
+
+  22 readers, Iterations Min/Mean/Max = 520,981/560,847/631,603
+  22 writers, Iterations Min/Mean/Max = 230,567/241,565/276,940
+
+So it was much fairer to readers.
+
+Patch 1 makes owner a permanent member of the rw_semaphore structure and
+set it irrespective of CONFIG_RWSEM_SPIN_ON_OWNER.
+
+Patch 2 removes rwsem_wake() wakeup optimization as it doesn't work
+with lock handoff.
+
+Patch 3 implements a new rwsem locking scheme similar to what qrwlock
+is current doing. Write lock is done by atomic_cmpxchg() while read
+lock is still being done by atomic_add().
+
+Patch 4 merges the content of rwsem.h and rwsem-xadd.c into rwsem.c just
+like the mutex. The rwsem-xadd.c is removed and a bare-bone rwsem.h is
+left for internal function declaration needed by percpu-rwsem.c.
+
+Patch 5 optimizes the merged rwsem.c file to generate smaller object
+file and performs other miscellaneous code cleanups.
+
+Patch 6 makes rwsem_spin_on_owner() returns owner state.
+
+Patch 7 implments lock handoff to prevent lock starvation. It is expected
+that throughput will be lower on workloads with highly contended rwsems
+for better fairness.
+
+Patch 8 makes sure that all wake_up_q() calls happened after dropping
+the wait_lock.
+
+Patch 9 makes RT task's handling of NULL owner more optimal.
+
+Patch 10 makes reader wakeup to wake up almost all the readers in the
+wait queue instead of just those in the front.
+
+Patch 11 renames the RWSEM_ANONYMOUSLY_OWNED bit to RWSEM_NONSPINNABLE.
+
+Patch 12 enables reader to spin on a writer-owned rwsem.
+
+Patch 13 enables a writer to spin on a reader-owned rwsem for at most
+25us and extends the RWSEM_NONSPINNABLE bit to 2 separate ones - one
+for readers and one for writers.
+
+Patch 14 implements the adaptive disabling of reader optimistic spinning
+when the reader-owned rwsem spinning timeouts happen.
+
+Patch 15 adds some new rwsem owner access helper functions.
+
+Patch 16 handles the case of too many readers by reserving the sign
+bit to designate that a reader lock attempt will fail and the locking
+reader will be put to sleep. This will ensure that we will not overflow
+the reader count.
+
+Patch 17 merges the write-lock owner task pointer into the count.
+Only 64-bit count has enough space to provide a reasonable number of
+bits for reader count. This is for x86-64 only for the time being.
+
+Patch 18 eliminates redundant computation of the merged owner-count.
+
+With a locking microbenchmark running on 5.1 based kernel, the total
+locking rates (in kops/s) on a 1-socket Skylake system with equal numbers
+of readers and writers (mixed) before and after this patchset were:
+
+   # of Threads   Before Patch      After Patch
+   ------------   ------------      -----------
+        2            1,566             4,750
+        4            1,191             3,972
+        8              825             3,871
+       16              744             3,405
+       32              691             3,243
+       44              672             3,217
+
+On workloads where the rwsem reader critical section is relatively long
+(longer than the spinning period), optimistic of writer on reader-owned
+rwsem may not be that helpful. In fact, the performance may regress
+in some cases like the will-it-sclae page_fault1 microbenchmark. This
+is likely due to the fact that larger reader groups where the readers
+acquire the lock together are broken into smaller ones. So more work
+will be needed to better tune the rwsem code to that kind of workload.
+
+Waiman Long (18):
+  locking/rwsem: Make owner available even if
+    !CONFIG_RWSEM_SPIN_ON_OWNER
+  locking/rwsem: Remove rwsem_wake() wakeup optimization
+  locking/rwsem: Implement a new locking scheme
+  locking/rwsem: Merge rwsem.h and rwsem-xadd.c into rwsem.c
+  locking/rwsem: Code cleanup after files merging
+  locking/rwsem: Make rwsem_spin_on_owner() return owner state
+  locking/rwsem: Implement lock handoff to prevent lock starvation
+  locking/rwsem: Always release wait_lock before waking up tasks
+  locking/rwsem: More optimal RT task handling of null owner
+  locking/rwsem: Wake up almost all readers in wait queue
+  locking/rwsem: Clarify usage of owner's nonspinaable bit
+  locking/rwsem: Enable readers spinning on writer
+  locking/rwsem: Enable time-based spinning on reader-owned rwsem
+  locking/rwsem: Adaptive disabling of reader optimistic spinning
+  locking/rwsem: Add more rwsem owner access helpers
+  locking/rwsem: Guard against making count negative
+  locking/rwsem: Merge owner into count on x86-64
+  locking/rwsem: Remove redundant computation of writer lock word
+
+ arch/x86/Kconfig                  |    6 +
+ include/linux/rwsem.h             |   11 +-
+ include/linux/sched/wake_q.h      |    5 +
+ kernel/Kconfig.locks              |   12 +
+ kernel/locking/Makefile           |    2 +-
+ kernel/locking/lock_events_list.h |   11 +-
+ kernel/locking/rwsem-xadd.c       |  729 --------------
+ kernel/locking/rwsem.c            | 1473 ++++++++++++++++++++++++++++-
+ kernel/locking/rwsem.h            |  306 +-----
+ lib/Kconfig.debug                 |    8 +-
+ 10 files changed, 1493 insertions(+), 1070 deletions(-)
+ delete mode 100644 kernel/locking/rwsem-xadd.c
+
+-- 
+2.18.1
+
