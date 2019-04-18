@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A24C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ECEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5396E20652
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECDA21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555611025;
-	bh=XtkRlcktCWQ8+EOLffFMgO1nRouaL51g2wov3tbRxNM=;
+	s=default; t=1555611029;
+	bh=B5wjE0fDvV7Yv2yh3z7E95r+xY00wV1XeD52730xahs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUzz7H8ybP0T7d3zvUdHEhIBj5yE9jiNoDd6tQOI0zVOvMFaongD/sVP4uqdY1ipO
-	 hiVxkVoYXYyd28EAx2s1ZwRt3Iptw9+PGxtX246lz01ODiTbBigksd+wn9FS12CG0h
-	 Z/KxPzP2c5DlkLQnRcJ8ctotPXNc26eKFP5aaMD0=
+	b=eF8zrHL6XxOCayeQVY9wzBbksYu8m6S86o1eD5Cm5kO78odxbwl+40ajsn4He5i34
+	 7o2XRqlS9HazTCQJDdouwrVG6dVFZrJjfSfTffJ+btdI5yOSjSrOBnQtcTsHg8BrL6
+	 lyOw/o58Ge13M/nFNaPF6Yfy3dyzSjr8wo97jwjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404123AbfDRSKY (ORCPT
+        id S2391574AbfDRSK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42080 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404106AbfDRSKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 14:10:21 -0400
+        id S2404119AbfDRSKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:10:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A93120652;
-        Thu, 18 Apr 2019 18:10:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E66A20675;
+        Thu, 18 Apr 2019 18:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555611020;
-        bh=XtkRlcktCWQ8+EOLffFMgO1nRouaL51g2wov3tbRxNM=;
+        s=default; t=1555611023;
+        bh=B5wjE0fDvV7Yv2yh3z7E95r+xY00wV1XeD52730xahs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O0WB0YM88nV4e+xva5FAJX+8A8G5S+Hh+suD5tKqHVodfO4DGxZnUNb0KcrRtU2vi
-         Xf81LrnWa7yA80VdzYNYzcayycjzXPvP5L94S2DvH7EGxf2O3nx12TNGqg8Tf8YrAN
-         rlA/a2fEpqYBk6gACFuysI8Krjau/OR5+WUq1Vcc=
+        b=k1+1tWcPpiuIoIYvLihnuGo03iXd8ovJZA/oei21XMHQyC3lw66bBdp8QgGoCWA2J
+         VbLfpeu++skkKY/2XNXX2Mz9k3ofAU+I3j/iMo/owPEY2cmP6rC0MZxP5BJH/jKf9V
+         Pz3rP+Fyh52yFOn3phbVMMcp/7Z3MhowufOQ1J/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Eric Bohlman <ericbohlman@gmail.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Paul Burton <paul.burton@mips.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 05/93] perf data: Dont store auxtrace index for directory data file
-Date:   Thu, 18 Apr 2019 19:56:43 +0200
-Message-Id: <20190418160437.573320142@linuxfoundation.org>
+Subject: [PATCH 5.0 06/93] mips: bcm47xx: Enable USB power on Netgear WNDR3400v2
+Date:   Thu, 18 Apr 2019 19:56:44 +0200
+Message-Id: <20190418160437.684867203@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
 References: <20190418160436.781762249@linuxfoundation.org>
@@ -67,41 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd3dd8dd8ff62374d90cb3f2e54b8c94106c7810 ]
+[ Upstream commit cdb8faa00e3fcdd0ad10add743516d616dc7d38e ]
 
-We can't store the auxtrace index when we store into multiple files,
-because we keep only offset for it, not the file.
+Eric has reported on OpenWrt's bug tracking system[1], that he's not
+able to use USB devices on his WNDR3400v2 device after the boot, until
+he turns on GPIO #21 manually through sysfs.
 
-The auxtrace data will be processed correctly in the 'pipe' mode.
+1. https://bugs.openwrt.org/index.php?do=details&task_id=2170
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190308134745.5057-3-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
+Reported-by: Eric Bohlman <ericbohlman@gmail.com>
+Tested-by: Eric Bohlman <ericbohlman@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/bcm47xx/workarounds.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 882285fb9f64..3fd154f1701b 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -386,7 +386,7 @@ static int record__process_auxtrace(struct perf_tool *tool,
- 	size_t padding;
- 	u8 pad[8] = {0};
- 
--	if (!perf_data__is_pipe(data)) {
-+	if (!perf_data__is_pipe(data) && !perf_data__is_dir(data)) {
- 		off_t file_offset;
- 		int fd = perf_data__fd(data);
- 		int err;
+diff --git a/arch/mips/bcm47xx/workarounds.c b/arch/mips/bcm47xx/workarounds.c
+index 46eddbec8d9f..0ab95dd431b3 100644
+--- a/arch/mips/bcm47xx/workarounds.c
++++ b/arch/mips/bcm47xx/workarounds.c
+@@ -24,6 +24,7 @@ void __init bcm47xx_workarounds(void)
+ 	case BCM47XX_BOARD_NETGEAR_WNR3500L:
+ 		bcm47xx_workarounds_enable_usb_power(12);
+ 		break;
++	case BCM47XX_BOARD_NETGEAR_WNDR3400V2:
+ 	case BCM47XX_BOARD_NETGEAR_WNDR3400_V3:
+ 		bcm47xx_workarounds_enable_usb_power(21);
+ 		break;
 -- 
 2.19.1
 
