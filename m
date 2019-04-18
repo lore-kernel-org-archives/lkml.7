@@ -2,183 +2,140 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D03C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8694EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C510E214C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxWxkJAU"
+	by mail.kernel.org (Postfix) with ESMTP id 4E043214C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 19:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555614920;
+	bh=yF0ASliWFGOqtTNFNd9ApfMVJnOQNOqpPdAJCnRMduQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WXMX1p1jR4hbWAyM8exemqy2duwIUQRpx6XWeWkdTPn9y164P4ab7rDrJ9g7cPLP/
+	 jxO3boV3nKa1Q76BVH0aw0sWsat8oC++kHiVogRlJgYafPovTmCPBwskJZA0cTsK/G
+	 EQ8eaiMdC9BNuhwB5ZfOBTVZEwSXJvcE/8P1smBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389862AbfDRTMz (ORCPT
+        id S2389832AbfDRTPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 15:12:55 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:41057 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfDRTMz (ORCPT
+        Thu, 18 Apr 2019 15:15:19 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38245 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfDRTPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 15:12:55 -0400
-Received: by mail-ua1-f67.google.com with SMTP id l22so1108128uao.8;
-        Thu, 18 Apr 2019 12:12:54 -0700 (PDT)
+        Thu, 18 Apr 2019 15:15:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v1so2439832lfg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:15:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rpL0d8MjwshzMxV+gjiSBZ6YvAWKpJ7Ot+t/hjN16F4=;
-        b=SxWxkJAUzXF3+QtsVZ5VaCdmb38xyUf2Y92pZFu8WoQINdzAe6B0B5wugVHCwbe6If
-         kubQ/KXjo/z95zbzM6gPtfCOs9o5XuUYDnL5xtPYfvCYnDvGavYgtphGOgBqDQH8E+C0
-         17OmuKqezJgEVQmzaV3AUkxaccwIGHT02AAz2afeibTUnpI4y3LMP2IQzXZLiMtaPor4
-         gtmiiF8/MI6nHbZmJAmDlf/aZbTIurUci1WK2TgFwU1J9/87DqUEEu6mKlwL2SsJjQfR
-         93FxiaIOvjZu3u/5TqD+/ONrzt/sJq/WmP367G/su8hgJJgSz9AhtfiCcuMmiUgd7PzX
-         LiFQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WjkwEC2X7f81mf9W5bTPXnbaAR/cw3xla7sDK1DJ93w=;
+        b=F93MvXeFPx4zJosWUg3P8P/z7oNIbI6Qc31xGEhP9uUkp8ZZXigB717fkcgW2iZm7x
+         yAf2QBmvG1U+saXwrvJhAYl5DQs3BzgDa9DlCw8Y6qbenblzJVlE/GGzUnnVPwPeojnT
+         4Bs6Eg5kV9rpCyc2NrUBw4hFQl/7filqMQWfM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rpL0d8MjwshzMxV+gjiSBZ6YvAWKpJ7Ot+t/hjN16F4=;
-        b=HPItyMtrqqC/z/mAx/3tOvW/TcIPbORXGlAzLx84KrKigpxKlzhM0pjw+2YNAuu2Qe
-         TErnQreZMeNcm/8lORErm7fzC44k2r5ZZx6C2JILKUcbYfs2EBDLZyh3Y8i2/j3a4BcX
-         pY99pfVszqTcO1j0deYbWPVjaJKC9CwuIwbZ+NU/B7Nzomv/TZ92R8mS60uGIQPxTATX
-         J715F8kLfYBpJl+zGQHI57ovZDj8+0L1Dqiz6z6Tmillg0pahzKLSqyubK82ew592wma
-         kIuZfLGZLf3EgTnsPHreqt8inBuJ8odN0/bzL8Qls8ps2UA+R0WLt2Ctavynl+W4kj+X
-         MiGg==
-X-Gm-Message-State: APjAAAX2xlMpO5egSPmU4U0hGwkyBYUmKwWtgsdt493+gnSQKHXYuDE+
-        jfKsEH4dXcDGAzpve4r9wwbb8qBB
-X-Google-Smtp-Source: APXvYqxfWK875QXBv+MhcG6VV2ijofQpwp1K6wT1G7sJkwGu8IeEh2S0eomMdIdF8/kxGPwAYaUR8g==
-X-Received: by 2002:ab0:2692:: with SMTP id t18mr24216339uao.106.1555614773906;
-        Thu, 18 Apr 2019 12:12:53 -0700 (PDT)
-Received: from vps.qemfd.net (vps.qemfd.net. [173.230.130.29])
-        by smtp.gmail.com with ESMTPSA id r3sm2252962vkr.18.2019.04.18.12.12.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 12:12:53 -0700 (PDT)
-Received: from schwarzgerat.orthanc (unknown [10.88.0.2])
-        by vps.qemfd.net (Postfix) with ESMTP id F196A2B805;
-        Thu, 18 Apr 2019 15:12:52 -0400 (EDT)
-Received: by schwarzgerat.orthanc (Postfix, from userid 1000)
-        id D647C260119; Thu, 18 Apr 2019 15:12:52 -0400 (EDT)
-Date:   Thu, 18 Apr 2019 15:12:52 -0400
-From:   Nick Black <dankamongmen@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Simon Horman <horms@verge.net.au>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cpupower: correct spelling of interval
-Message-ID: <20190418191252.GA19135@schwarzgerat.orthanc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WjkwEC2X7f81mf9W5bTPXnbaAR/cw3xla7sDK1DJ93w=;
+        b=CpjRNJogAtAmfySgIJynjA3cXfzuOSkzgziph+aA25x7o08DL3JQ+g8J0eeQDzBrHw
+         W7+qbkxhAGptV5nMzqGKfEvEG6Ntk4hSyVIbMG0NoarqYuXXG784bxHFXZur33PtcdT1
+         mKdbjSEStHbZtwJjyujbBmBnRQexk/NIZq7oboK2c2g/oXp3PsoyfYC/cOtuC1pQZjYd
+         bQGsY/Of87fO8Nq5VrtEX+VfYKJ/In4JEclglUsaXJ0kEiucpd8grwbGTS/Fa20UEYv0
+         7T+wFa9sSFTqrxGAQBVv+NDfytCT0n5FfqZ9gc1Vf4qAZ7JRwtQNyN1ujpEUCIrr/Mxs
+         J/jA==
+X-Gm-Message-State: APjAAAV8Wff3AqXbV8ploBO0qbVd/G1uET9B4KlDRcURAupUanE0MQpK
+        rff5r+WIV1ht4YcCcv+G/xH+vhbzT2s=
+X-Google-Smtp-Source: APXvYqw8BO81rK9TCLSShHBKsywji0aOsVTtFufRS5wVkCaBwnq3ENus2JEZiFRHA0LnK7dpGZElAg==
+X-Received: by 2002:ac2:48bb:: with SMTP id u27mr264855lfg.17.1555614916143;
+        Thu, 18 Apr 2019 12:15:16 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id k2sm607233lfb.62.2019.04.18.12.15.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 12:15:15 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id l7so2834923ljg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 12:15:14 -0700 (PDT)
+X-Received: by 2002:a2e:22c4:: with SMTP id i187mr51112790lji.94.1555614914550;
+ Thu, 18 Apr 2019 12:15:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
+ <CAGLj2rELsr0PUgu41uZX_TKCpT-Q00X+cvgBhJ-U7RU3EBo5tA@mail.gmail.com> <CAKOZueu=5aNf+oDFBM56TbqZwKpB6q1y81V1cbL+k4DTyV53+A@mail.gmail.com>
+In-Reply-To: <CAKOZueu=5aNf+oDFBM56TbqZwKpB6q1y81V1cbL+k4DTyV53+A@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 18 Apr 2019 12:14:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi79KTxCYZgMZNapULR-ratPiZVt+fgh=DhgtYR_gYPAA@mail.gmail.com>
+Message-ID: <CAHk-=wi79KTxCYZgMZNapULR-ratPiZVt+fgh=DhgtYR_gYPAA@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Android Kernel Team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up multiple instances of "intervall" to correct
-"interval" (all save one Italian instance).
+On Thu, Apr 18, 2019 at 11:58 AM Daniel Colascione <dancol@google.com> wrote:
+>
+> On Thu, Apr 18, 2019 at 11:44 AM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
+> >
+> > Would using something other than POLLIN be an option (maybe POLLPRI)?
+> > The convention is to use it to indicate readability on the descriptor,
+> > and also possibly POLLHUP instead of POLLERR (the latter is less of a
+> > problem, but FreeBSD also does the same, so it'd help with some
+> > consistency for libraries wanting to use this, which aren't interested
+> > in other sub states).
+>
+> Existing event loop libraries generally support checking only for
+> readability and writability. Not setting POLLIN would make these FDs
+> more difficult to use with existing event loop libraries. What
+> advantage would compensate for this difficulty?
 
-Signed-off-by: Nick Black <dankamongmen@gmail.com>
----
- tools/power/cpupower/man/cpupower-monitor.1 | 2 +-
- tools/power/cpupower/po/cs.po               | 2 +-
- tools/power/cpupower/po/de.po               | 2 +-
- tools/power/cpupower/po/fr.po               | 2 +-
- tools/power/cpupower/po/it.po               | 2 +-
- tools/power/cpupower/po/pt.po               | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+Right.
 
-diff --git a/tools/power/cpupower/man/cpupower-monitor.1 b/tools/power/cpupower/man/cpupower-monitor.1
-index 914cbb9d9cd0..70a56476f4b0 100644
---- a/tools/power/cpupower/man/cpupower-monitor.1
-+++ b/tools/power/cpupower/man/cpupower-monitor.1
-@@ -61,7 +61,7 @@ Only display specific monitors. Use the monitor string(s) provided by \-l option
- .PP
- \-i seconds
- .RS 4
--Measure intervall.
-+Measure interval.
- .RE
- .PP
- \-c
-diff --git a/tools/power/cpupower/po/cs.po b/tools/power/cpupower/po/cs.po
-index cb22c45c5069..bfc7e1702ec9 100644
---- a/tools/power/cpupower/po/cs.po
-+++ b/tools/power/cpupower/po/cs.po
-@@ -98,7 +98,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/de.po b/tools/power/cpupower/po/de.po
-index 840c17cc450a..70887bb8ba95 100644
---- a/tools/power/cpupower/po/de.po
-+++ b/tools/power/cpupower/po/de.po
-@@ -95,7 +95,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/fr.po b/tools/power/cpupower/po/fr.po
-index b46ca2548f86..b6e505b34e4a 100644
---- a/tools/power/cpupower/po/fr.po
-+++ b/tools/power/cpupower/po/fr.po
-@@ -95,7 +95,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/it.po b/tools/power/cpupower/po/it.po
-index f80c4ddb9bda..a1deeb52c9e0 100644
---- a/tools/power/cpupower/po/it.po
-+++ b/tools/power/cpupower/po/it.po
-@@ -95,7 +95,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/pt.po b/tools/power/cpupower/po/pt.po
-index 990f5267ffe8..902186585bb9 100644
---- a/tools/power/cpupower/po/pt.po
-+++ b/tools/power/cpupower/po/pt.po
-@@ -93,7 +93,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
--- 
-2.20.1
+Usually you'd set POLLIN in _addition_ to any other more specialized poll flag.
 
+For example, when a socket has shut down the read side, we do
 
--- 
-nick black -=- https://www.nick-black.com
-to make an apple pie from scratch,
-you need first invent a universe.
+        if (sk->sk_shutdown & RCV_SHUTDOWN)
+                mask |= EPOLLRDHUP | EPOLLIN | EPOLLRDNORM;
+
+because while it's true that EPOLLRDHUP is the most _specific_ poll
+bit, it's _also_ true that a read shutdown means that the read() will
+return immediately.
+
+So generally a HUP condition should mean that POLLIN and POLLOUT also
+get set. Not because there's any actual _data_ to be read, but simply
+because the read will not block.
+
+                   Linus
