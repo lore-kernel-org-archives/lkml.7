@@ -2,160 +2,108 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995D3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7792BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A858217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463A42183E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 10:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="h2wL38Wj";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="covDdKVM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7qDTuXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388648AbfDRKxF (ORCPT
+        id S2388675AbfDRK5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 06:53:05 -0400
-Received: from mail18.wdc04.mandrillapp.com ([205.201.139.18]:3074 "EHLO
-        mail18.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728074AbfDRKxE (ORCPT
+        Thu, 18 Apr 2019 06:57:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41451 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388304AbfDRK5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 06:53:04 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Apr 2019 06:53:03 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=s2hRcSwFUvQsNR/yGPxb1QZbHGTF/4YJ2/Jzco8Y2IU=;
- b=h2wL38Wj/vbTbVnKs7SNDJhgetoe/PD2/axicqFX8M8//i/utI4wpT9TQZkjgoXeGJJy8vl4Pnx/
-   Fzgrm8VxWD9f6AWunwayiVOc3YKd++nvBZO/iQzgifD/lKPc4lV67crLtlpvjNmmhAP4GhkNWExt
-   smFC8bZweviNe6H5JCU=
-Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hn1bgu1jvmg9 for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 10:38:02 +0000 (envelope-from <bounce-md_31050260.5cb8538a.v1-22d2631124244dbd867ef9d80c919dc7@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555583882; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=s2hRcSwFUvQsNR/yGPxb1QZbHGTF/4YJ2/Jzco8Y2IU=; 
- b=covDdKVM5fbeH1FhZlGk6sJNeQS6OLg1YV2hbO0CFA6xNJPBj72nwT0yqY4ym/ySmZSuxY
- UQsvf893OIwTqB1BjjVPmUawoBcuS0vqIZFBaykOHWCuH3UVfh9P9HjpWxfG2NMFsnhme2l1
- Zcr7u2r8ZLIAoVHgQks+nHXPKjV68=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Received: from [87.98.221.171] by mandrillapp.com id 22d2631124244dbd867ef9d80c919dc7; Thu, 18 Apr 2019 10:38:02 +0000
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        <kbuild-all@01.org>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Message-Id: <20190418103755.GA14294@deco.navytux.spb.ru>
-References: <alpine.DEB.2.21.1904131849350.2536@hadrien> <20190417215420.GV126710@google.com> <alpine.DEB.2.21.1904180728420.8144@hadrien>
-In-Reply-To: <alpine.DEB.2.21.1904180728420.8144@hadrien>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.22d2631124244dbd867ef9d80c919dc7
-X-Mandrill-User: md_31050260
-Date:   Thu, 18 Apr 2019 10:38:02 +0000
+        Thu, 18 Apr 2019 06:57:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so2411266wrq.8;
+        Thu, 18 Apr 2019 03:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=reply-to:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Lbj+1gpirf5WRLjhJzE/ZuN1+1rn3LsnABrKVg8Fs0s=;
+        b=A7qDTuXBmI2gH8mOHPhhZMQccX1Gl36azN/DgvtlpFDAD2YG/bqYarmJBBIhTVYRnG
+         mEtHpYETJKRqGWCYAgj1loRBBOjoMPKThm8y3AoDC4ixo/chlOc2seYKpg2HVs3lB/cX
+         UWZa8v/jNvyfDnT4mGcDD87YIAQWkpIslSL2hDlp29qLuQGBxU0X0oDGth0gvnqh620l
+         0z/rB4rXJa/bIahqp+ugtLQZVFvHXw6FYg1RMn+0NmNvvN8cOrpjaG4ubCAxwimfIKDA
+         nOT6aWiePc2SacREFxujEvlhCOd8zMA4ZAwwXAqhBXl8NrKkYWm6SKusgisg+3/AidJ/
+         nkUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Lbj+1gpirf5WRLjhJzE/ZuN1+1rn3LsnABrKVg8Fs0s=;
+        b=Jnf68TYlNf8eqcYMQcydSK6g3wr7xiHGwLs3GiG2Yzwh3+lXtACaS8QqiXHFrjBMAh
+         Nytp5m8H8JwgFwnXEDeMtJWvZLt3pewZMTardEfvHkRLpmPQoJ/d8bwJedKxzg1bkset
+         CvpTTrdxad9fSDiL2RDQSggKXvAIay4ET5XRlTUZ2ZzpSG2zdhLYgzEuCOTFFAEr6J/F
+         maWmG8C7voCzUdHvpCoQlxvxhA/GvbbsJGrUHDkQRTw3OpmG5XHVTuUnNrgIdRrfhx3U
+         3ddzSvaMCIlHsMbpnZOYZ6mtQTq6TNkrCSc+PYgdJqVaoGlWNqACm5PwUKNDjfBvocEx
+         YhEw==
+X-Gm-Message-State: APjAAAXWm/E30qZ61tB58vHeQpW7fu1QJUyQpnbkmjt49OwIjxlWqEhu
+        MnBKkepr0O6jwEbQ4hrPY9Q=
+X-Google-Smtp-Source: APXvYqzJIudDxUQcJCFjEZVe9C2DzZwiz2ZbqXuaMPr+FEhg67/WEh9SXJFKfva+SnqrGotkghP0cQ==
+X-Received: by 2002:a5d:68cf:: with SMTP id p15mr40066484wrw.301.1555585066704;
+        Thu, 18 Apr 2019 03:57:46 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id z63sm1954512wme.30.2019.04.18.03.57.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 03:57:46 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: dynamic DMA-buf sharing between devices
+To:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+References: <20190416183841.1577-1-christian.koenig@amd.com>
+ <20190418091315.GU13337@phenom.ffwll.local>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <7cc155fc-1582-9a80-283a-f9e7c84b120d@gmail.com>
+Date:   Thu, 18 Apr 2019 12:57:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190418091315.GU13337@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 07:31:02AM +0200, Julia Lawall wrote:
-> 
-> 
-> On Wed, 17 Apr 2019, Bjorn Helgaas wrote:
-> 
-> > On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
-> > > Hello,
-> > >
-> > > Kirill will explain about this issue.
-> > >
-> > > julia
-> > >
-> > > ---------- Forwarded message ----------
-> > > Date: Sat, 13 Apr 2019 11:22:51 +0800
-> > > From: kbuild test robot <lkp@intel.com>
-> > > To: kbuild@01.org
-> > > Cc: Julia Lawall <julia.lawall@lip6.fr>
-> > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-> > >
-> > > CC: kbuild-all@01.org
-> > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> > > CC: Logan Gunthorpe <logang@deltatee.com>
-> > > CC: Bjorn Helgaas <helgaas@kernel.org>
-> > > CC: linux-pci@vger.kernel.org
-> > > CC: linux-kernel@vger.kernel.org
-> > >
-> > > From: kbuild test robot <lkp@intel.com>
-> > >
-> > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-> > >
-> > > Generated by: scripts/coccinelle/api/stream_open.cocci
-> > >
-> > > Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
-> > > Signed-off-by: kbuild test robot <lkp@intel.com>
-> >
-> > Based on Kirill's subsequent email saying this is already queued to
-> > the merge window, I assume I need to do nothing here.
-> >
-> > I think a signed-off-by from a robot, i.e., not from a real person, is
-> > meaningless, and I don't think I would personally accept it.  It's
-> > certainly OK to indicate that a patch was auto-generated, but I think
-> > a real person still needs to take responsibility for it.
-> >
-> > Documentation/process/submitting-patches.rst says it must contain a
-> > real name (no pseudonyms or anonymous contributions), and I don't
-> > think a robot fits in the spirit of that.
-> >
-> > I see that
-> > https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?id=8a29a3bae2a2
-> > (mentioned below) does have a good signed-off-by from Sebastian, but
-> > that's not *this* patch, so I don't know what's what.
-> 
-> Normally, for these robot generated patches, when I approve them, I put my
-> own sign off, but under the robot one, since the robot has put a From
-> line.  In this case, I handed the problem off to Kirill, so I didn't do
-> that.  I agree that it would be good for Kirill to sign off on it.
+Am 18.04.19 um 11:13 schrieb Daniel Vetter:
+> On Tue, Apr 16, 2019 at 08:38:29PM +0200, Christian König wrote:
+>> Hi everybody,
+>>
+>> core idea in this patch set is that DMA-buf importers can now provide an optional invalidate callback. Using this callback and the reservation object exporters can now avoid pinning DMA-buf memory for a long time while sharing it between devices.
+>>
+>> I've already send out an older version roughly a year ago, but didn't had time to further look into cleaning this up.
+>>
+>> The last time a major problem was that we would had to fix up all drivers implementing DMA-buf at once.
+>>
+>> Now I avoid this by allowing mappings to be cached in the DMA-buf attachment and so driver can optionally move over to the new interface one by one.
+>>
+>> This is also a prerequisite to my patchset enabling sharing of device memory with DMA-buf.
+> Ok, with the discussions and thinking I think this design is solid and
+> should work out. Bunch of api and documentation polishing still to do, to
+> make sure we have really clear semantics and as little room as possible
+> for misunderstanding - refactoring a mess in dma-buf is a lot more tricky
+> than just ttm, there's a lot more users.
 
-Just for the reference: I have put my signature on the mass converstion
-patch as well as ack's that were received:
+Yeah, I'm pretty aware of that after changing all the users of the map 
+API to use a structure for the parameters.
 
-https://lab.nexedi.com/kirr/linux/commit/edaeb4101860
+Well at least it's not UAPI :)
 
-I plan to refresh that patch and post it to mainline when merge-window opens.
+Christian
 
-Appologize if I missed something. I'm not a kernel developer and don't
-have much know-how in this land.
+> -Daniel
 
-Kirill
-
-
-> > > ---
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-> > > head:   794c294ae4483c240429c25a0d18e272e92c94de
-> > > commit: 8a29a3bae2a2dfb0116cd8791d9700515d6e765e [154/311] pci/switchtec: Don't use completion's wait queue
-> > > :::::: branch date: 7 hours ago
-> > > :::::: commit date: 7 hours ago
-> > >
-> > > Please take the patch only if it's a positive warning. Thanks!
-> > >
-> > >  switchtec.c |    2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > --- a/drivers/pci/switch/switchtec.c
-> > > +++ b/drivers/pci/switch/switchtec.c
-> > > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
-> > >  		return PTR_ERR(stuser);
-> > >
-> > >  	filp->private_data = stuser;
-> > > -	nonseekable_open(inode, filp);
-> > > +	stream_open(inode, filp);
-> > >
-> > >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
