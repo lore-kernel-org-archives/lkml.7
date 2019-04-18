@@ -2,136 +2,121 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5B9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6983FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BE1217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41131206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389261AbfDROv5 (ORCPT
+        id S2389355AbfDROwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:51:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733192AbfDROv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:51:57 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7FD7968810277CDD1E9D;
-        Thu, 18 Apr 2019 22:51:33 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Thu, 18 Apr 2019
- 22:51:23 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v3 -next] sched/core: Make some functions static
-Date:   Thu, 18 Apr 2019 22:47:13 +0800
-Message-ID: <20190418144713.34332-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190322143153.14416-1-yuehaibing@huawei.com>
-References: <20190322143153.14416-1-yuehaibing@huawei.com>
+        Thu, 18 Apr 2019 10:52:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60865 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733192AbfDROwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:52:15 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C39BB3078AD9;
+        Thu, 18 Apr 2019 14:52:13 +0000 (UTC)
+Received: from treble (ovpn-124-190.rdu2.redhat.com [10.10.124.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 518AE1001DC0;
+        Thu, 18 Apr 2019 14:52:03 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 09:52:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        linux-arch@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: Re: [patch V2 28/29] stacktrace: Provide common infrastructure
+Message-ID: <20190418145201.mjzyqbmkjcghqzex@treble>
+References: <20190418084119.056416939@linutronix.de>
+ <20190418084255.652003111@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190418084255.652003111@linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 18 Apr 2019 14:52:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Thu, Apr 18, 2019 at 10:41:47AM +0200, Thomas Gleixner wrote:
+> All architectures which support stacktrace carry duplicated code and
+> do the stack storage and filtering at the architecture side.
+> 
+> Provide a consolidated interface with a callback function for consuming the
+> stack entries provided by the architecture specific stack walker. This
+> removes lots of duplicated code and allows to implement better filtering
+> than 'skip number of entries' in the future without touching any
+> architecture specific code.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-arch@vger.kernel.org
 
-Fix these sparse warnings:
+This is a step in the right direction, especially if it allows us to get
+rid of the 'skip' stuff.  But I'm not crazy about the callbacks.
 
-  kernel/sched/core.c:6577:11: warning: symbol 'min_cfs_quota_period' was not declared. Should it be static?
-  kernel/sched/core.c:6657:5: warning: symbol 'tg_set_cfs_quota' was not declared. Should it be static?
-  kernel/sched/core.c:6670:6: warning: symbol 'tg_get_cfs_quota' was not declared. Should it be static?
-  kernel/sched/core.c:6683:5: warning: symbol 'tg_set_cfs_period' was not declared. Should it be static?
-  kernel/sched/core.c:6693:6: warning: symbol 'tg_get_cfs_period' was not declared. Should it be static?
-  kernel/sched/fair.c:2596:6: warning: symbol 'task_tick_numa' was not declared. Should it be static?
+Another idea I had (but never got a chance to work on) was to extend the
+x86 unwind interface to all arches.  So instead of the callbacks, each
+arch would implement something like this API:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190322143153.14416-1-yuehaibing@huawei.com
----
-v2: do not make max_cfs_quota_period static, which has be used in kernel/sched/fair.c
-v3: fix commit log
----
- kernel/sched/core.c | 10 +++++-----
- kernel/sched/fair.c |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f9e9117..226d68c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6521,7 +6521,7 @@ static u64 cpu_shares_read_u64(struct cgroup_subsys_state *css,
- static DEFINE_MUTEX(cfs_constraints_mutex);
- 
- const u64 max_cfs_quota_period = 1 * NSEC_PER_SEC; /* 1s */
--const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
-+static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
- 
- static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
- 
-@@ -6601,7 +6601,7 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
- 	return ret;
- }
- 
--int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
-+static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
- {
- 	u64 quota, period;
- 
-@@ -6614,7 +6614,7 @@ int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
- 	return tg_set_cfs_bandwidth(tg, period, quota);
- }
- 
--long tg_get_cfs_quota(struct task_group *tg)
-+static long tg_get_cfs_quota(struct task_group *tg)
- {
- 	u64 quota_us;
- 
-@@ -6627,7 +6627,7 @@ long tg_get_cfs_quota(struct task_group *tg)
- 	return quota_us;
- }
- 
--int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
-+static int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
- {
- 	u64 quota, period;
- 
-@@ -6637,7 +6637,7 @@ int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
- 	return tg_set_cfs_bandwidth(tg, period, quota);
- }
- 
--long tg_get_cfs_period(struct task_group *tg)
-+static long tg_get_cfs_period(struct task_group *tg)
- {
- 	u64 cfs_period_us;
- 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 99731a5..4275eb0 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2593,7 +2593,7 @@ void task_numa_work(struct callback_head *work)
- /*
-  * Drive the periodic memory faults..
-  */
--void task_tick_numa(struct rq *rq, struct task_struct *curr)
-+static void task_tick_numa(struct rq *rq, struct task_struct *curr)
- {
- 	struct callback_head *work = &curr->numa_work;
- 	u64 period, now;
+struct unwind_state state;
+
+void unwind_start(struct unwind_state *state, struct task_struct *task,
+		  struct pt_regs *regs, unsigned long *first_frame);
+
+bool unwind_next_frame(struct unwind_state *state);
+
+inline bool unwind_done(struct unwind_state *state);
+
+
+Not only would it avoid the callbacks (which is a nice benefit already),
+it would also allow the interfaces to be used outside of the
+stack_trace_*() interfaces.  That would come in handy in cases like the
+ftrace stack tracer code, which needs more than the stack_trace_*() API
+can give.
+
+Of course, this may be more work than what you thought you signed up for
+;-)
+
 -- 
-2.7.4
-
-
+Josh
