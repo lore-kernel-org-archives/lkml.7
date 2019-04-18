@@ -2,167 +2,88 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FA2C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB64C10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D278C20835
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FD720835
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="dYp4PJHF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jueuVe51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388296AbfDRIi1 (ORCPT
+        id S2388292AbfDRIjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:38:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37291 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfDRIi0 (ORCPT
+        Thu, 18 Apr 2019 04:39:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46158 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbfDRIjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:38:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 8so790393pfr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 01:38:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2J/G+YDKHjKA1qZqXV86pFjVgW4CG2JHv9U1E6Kr4M0=;
-        b=dYp4PJHFMRhFBebveYpeCkeKD0eK41MQ+C3YRUmi2sNi6wvWxgOe98/Pfme5KfDy8E
-         RuUS/LawrPQ5mJAiDY7MWp3tA7zaxYGuYLpH/0ieumBHQh+F47gKmxkr2DsfA+xVr8+/
-         1py7tPoQ2sOP+tFEtf/hysxGJ3R2+1+4waQ90=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2J/G+YDKHjKA1qZqXV86pFjVgW4CG2JHv9U1E6Kr4M0=;
-        b=VIas5/8VBVZzq3ge69zWHjtHvbXsTHFpTBPN3qUWn9hu76mBK7neVZzCQotr4ec+ff
-         R3w84SKMF3tIFQqcqJAeC68tjRTdpU2OVyuWSZj0iV9NEHSKA6uK2y4JdDtaFcL+FCJk
-         jNCDkn1ZXxPg0J8/0egm9zf4qLYV5L7+qhw47syxZZNCn4Htb5E5RR39XUa22z1b8qUO
-         yKgyp/8iMMoJA8TgmtNSbWoJLy9qwraoLKzSewQ8Lcsgkvkad0yP8msZ6eQKUvp/BKRS
-         fDZLMav8AMB6snLd7iSznv8O41Ji8s28xW8cyMQ6XoLXWc7CHrOtGm72QgVFbrv9Zp33
-         taVg==
-X-Gm-Message-State: APjAAAX6d6Hb6joEse9XpqXg9yX/FSDksbjo3z92EtBT4sZrznYscLlI
-        7ZG+dnYkHcxxrLCXz9eW31/74w==
-X-Google-Smtp-Source: APXvYqxLl5V7JjefPrMtRmYWVdlUNTFgdCy3NBRjDuiu2oYoLWBgewKgjk1fj86ZTdglY6PO/s90rw==
-X-Received: by 2002:a62:62c3:: with SMTP id w186mr62368274pfb.73.1555576705545;
-        Thu, 18 Apr 2019 01:38:25 -0700 (PDT)
-Received: from localhost.localdomain ([115.97.185.144])
-        by smtp.gmail.com with ESMTPSA id o81sm2075917pfa.156.2019.04.18.01.38.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 01:38:24 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 2/2] arm64: dts: allwinner: a64-amarula-relic: Add OV5640 camera node
-Date:   Thu, 18 Apr 2019 14:08:13 +0530
-Message-Id: <20190418083813.11776-2-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190418083813.11776-1-jagan@amarulasolutions.com>
-References: <20190418083813.11776-1-jagan@amarulasolutions.com>
+        Thu, 18 Apr 2019 04:39:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GCH1Ie2FAiR4E7TcUxYt/w1UZeaMOIeWYYWNM0/YfYU=; b=jueuVe51fnF+TXNKdSIgpiotF
+        +B/eo1pVYrOrCEpvIIUoBdjvZZJT+IBREPInUXNbZSWTr7hcZNKCrptodrIoe2cY3lMu9/lYs1h0I
+        bVouDP8q8NhZ9gamvzH52zQQK5ViWZLlhlH274rhzd9lYGxutbOKAkeUy9lt3yBlYxci56cP19Gxv
+        kLw5mv95ZBSSb504JoofH0/iCoy4zLYXxgCNGv17FGfzx93TUx3F7jR7iWThQYDMi7Cv1wj4xrAHH
+        b39+mmr1Lrhy/c4VHcqj/lyZA7nItEXi6xe+r9TWRRAGjeULRZFsiWWoYVl4QjVv5zRw97cW5l2MN
+        eDEE4J14A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hH2a5-00047p-Dc; Thu, 18 Apr 2019 08:39:41 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C34A029B98550; Thu, 18 Apr 2019 10:39:39 +0200 (CEST)
+Date:   Thu, 18 Apr 2019 10:39:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 08/16] locking/rwsem: Make rwsem_spin_on_owner()
+ return owner state
+Message-ID: <20190418083939.GU12232@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-9-longman@redhat.com>
+ <20190417124101.GE4038@hirez.programming.kicks-ass.net>
+ <20190417124759.GT14281@hirez.programming.kicks-ass.net>
+ <e9e3c08c-a153-ad38-059e-98b1b212e11f@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9e3c08c-a153-ad38-059e-98b1b212e11f@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amarula A64-Relic board by default bound with OV5640 camera,
-so add support for it with below pin information.
+On Wed, Apr 17, 2019 at 02:29:02PM -0400, Waiman Long wrote:
+> On 04/17/2019 08:47 AM, Peter Zijlstra wrote:
+> >>
+> >> enum owner_state {
+> >> 	OWNER_NULL		= 1 << 0,
+> >> 	OWNER_WRITER		= 1 << 1,
+> >> 	OWNER_READER		= 1 << 2,
+> >> 	OWNER_NONSPINNABLE	= 1 << 3,
+> >> };
+> >> #define OWNER_SPINNABLE		(OWNER_NULL | OWNER_WRITER)
+> > Hmm, we should not spin on OWNER_NULL. Or at least not mixed in with the
+> > patch that changes the shape of all this. That should go in the RT
+> > thingy patch, which comes after this.
+> 
+> We do spin on OWNER_NULL right now, not in rwsem_spin_on_owner() but in
+> the main rwsem_optimistic_spin() function.
+> 
+> RT task will quit if owner is NULL.
 
-- PE13, PE12 via i2c-gpio bitbanging
-- CLK_CSI_MCLK as external clock
-- PE1 as external clock pin muxing
-- ALDO1 as AVDD supply
-- DLDO3 as DOVDD supply
-- ELDO3 as DVDD supply
-- PE14 gpio for reset pin
-- PE15 gpio for powerdown pin
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-
- .../allwinner/sun50i-a64-amarula-relic.dts    | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 3819ce396073..56c76b712e3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -22,6 +22,41 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	i2c-csi {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&pio 4 13 GPIO_ACTIVE_HIGH>; /* CSI-SDA: PE13 */
-+		scl-gpios = <&pio 4 12 GPIO_ACTIVE_HIGH>; /* CSI-SCK: PE12 */
-+		i2c-gpio,delay-us = <5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ov5640: camera@3c {
-+			compatible = "ovti,ov5640";
-+			reg = <0x3c>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&csi_mclk_pin>;
-+			clocks = <&ccu CLK_CSI_MCLK>;
-+			clock-names = "xclk";
-+
-+			AVDD-supply = <&reg_aldo1>;
-+			DOVDD-supply = <&reg_dldo3>;
-+			DVDD-supply = <&reg_eldo3>;
-+			reset-gpios = <&pio 4 14 GPIO_ACTIVE_LOW>; /* CSI-RST-R: PE14 */
-+			powerdown-gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* CSI-STBY-R: PE15 */
-+
-+			port {
-+				ov5640_ep: endpoint {
-+					remote-endpoint = <&csi_ep>;
-+					bus-width = <8>;
-+					hsync-active = <1>; /* Active high */
-+					vsync-active = <0>; /* Active low */
-+					data-active = <1>;  /* Active high */
-+					pclk-sample = <1>;  /* Rising */
-+				};
-+			};
-+		};
-+	};
-+
- 	wifi_pwrseq: wifi-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&rtc 1>;
-@@ -30,6 +65,24 @@
- 	};
- };
- 
-+&csi {
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		csi_ep: endpoint {
-+			remote-endpoint = <&ov5640_ep>;
-+			bus-width = <8>;
-+			hsync-active = <1>; /* Active high */
-+			vsync-active = <0>; /* Active low */
-+			data-active = <1>;  /* Active high */
-+			pclk-sample = <1>;  /* Rising */
-+		};
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
--- 
-2.18.0.321.gffc6fa0e3
-
+Yeah, I figured it out eventually :-)
