@@ -3,65 +3,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45EC10F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAAE214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B37214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 06:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387920AbfDRGPG (ORCPT
+        id S2388020AbfDRGQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 02:15:06 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:60359 "EHLO
+        Thu, 18 Apr 2019 02:16:37 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:60380 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfDRGPF (ORCPT
+        with ESMTP id S1725773AbfDRGQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 02:15:05 -0400
+        Thu, 18 Apr 2019 02:16:37 -0400
 Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hH0Jt-0006T4-RM; Thu, 18 Apr 2019 08:14:50 +0200
-Date:   Thu, 18 Apr 2019 08:14:48 +0200 (CEST)
+        id 1hH0LP-0006WB-E6; Thu, 18 Apr 2019 08:16:23 +0200
+Date:   Thu, 18 Apr 2019 08:16:22 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Nadav Amit <nadav.amit@gmail.com>, Ingo Molnar <mingo@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>, juergh@gmail.com,
-        Tycho Andersen <tycho@tycho.ws>, jsteckli@amazon.de,
-        Kees Cook <keescook@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
-        Tyler Hicks <tyhicks@canonical.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Jon Masters <jcm@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-In-Reply-To: <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1904180811570.3174@nanos.tec.linutronix.de>
-References: <cover.1554248001.git.khalid.aziz@oracle.com> <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com> <20190417161042.GA43453@gmail.com> <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com> <20190417170918.GA68678@gmail.com>
- <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com> <20190417172632.GA95485@gmail.com> <063753CC-5D83-4789-B594-019048DE22D9@gmail.com> <alpine.DEB.2.21.1904172317460.3174@nanos.tec.linutronix.de> <CAHk-=wgBMg9P-nYQR2pS0XwVdikPCBqLsMFqR9nk=wSmAd4_5g@mail.gmail.com>
- <alpine.DEB.2.21.1904180129000.3174@nanos.tec.linutronix.de> <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v7 18/21] x86/clearcpuid: Support feature flag string in
+ kernel option clearcpuid
+In-Reply-To: <20190417234728.GA18776@romley-ivt3.sc.intel.com>
+Message-ID: <alpine.DEB.2.21.1904180815120.3174@nanos.tec.linutronix.de>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com> <1555536851-17462-19-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1904180106400.3174@nanos.tec.linutronix.de> <20190417234728.GA18776@romley-ivt3.sc.intel.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -73,50 +57,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Linus Torvalds wrote:
-> On Wed, Apr 17, 2019 at 4:42 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > On Wed, 17 Apr 2019, Linus Torvalds wrote:
-> > > With SMEP, user space pages are always NX.
-> >
-> > We talk past each other. The user space page in the ring3 valid virtual
-> > address space (non negative) is of course protected by SMEP.
-> >
-> > The attack utilizes the kernel linear mapping of the physical
-> > memory. I.e. user space address 0x43210 has a kernel equivalent at
-> > 0xfxxxxxxxxxx. So if the attack manages to trick the kernel to that valid
-> > kernel address and that is mapped X --> game over. SMEP does not help
-> > there.
+On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> On Thu, Apr 18, 2019 at 01:19:41AM +0200, Thomas Gleixner wrote:
+> > On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> > 
+> > > The kernel option clearcpuid currently only takes feature bit which
+> > > can be changed from kernel to kernel.
+> > > 
+> > > Extend clearcpuid to use cap flag string, which is defined in
+> > > x86_cap_flags[] and won't be changed from kernel to kernel.
+> > > And user can easily get the cap flag string from /proc/cpuinfo.
+> > 
+> > If your machine dies because init triggers #AC then please explain how that
+> > easily can be read from /proc/cpuinfo and how the sysadmin can figure out
+> > what the heck he needs to write on the kernel command line.
+> > 
+> > The whole 'clearcpuid' thing should have never been merged. It's a pure
+> > testing/debugging thing. And no, we are not going to proliferate it and
+> > extend it for dubious value. Quite the contrary, we should simply rip it
+> > out.
 > 
-> Oh, agreed.
-> 
-> But that would simply be a kernel bug. We should only map kernel pages
-> executable when we have kernel code in them, and we should certainly
-> not allow those pages to be mapped writably in user space.
-> 
-> That kind of "executable in kernel, writable in user" would be a
-> horrendous and major bug.
-> 
-> So i think it's a non-issue.
+> So I can remove the four 'clearcpuid' related patches 0018-0021 in the next
+> version, right?
 
-Pretty much.
-
-> > From the top of my head I'd say this is a non issue as those kernel address
-> > space mappings _should_ be NX, but we got bitten by _should_ in the past:)
-> 
-> I do agree that bugs can happen, obviously, and we might have missed something.
->
-> But in the context of XPFO, I would argue (*very* strongly) that the
-> likelihood of the above kind of bug is absolutely *miniscule* compared
-> to the likelihood that we'd have something wrong in the software
-> implementation of XPFO.
-> 
-> So if the argument is "we might have bugs in software", then I think
-> that's an argument _against_ XPFO rather than for it.
-
-No argument from my side. We better spend time to make sure that a bogus
-kernel side X mapping is caught, like we catch other things.
+Yes please. They are unrelated to this problem and 'noac' is way more admin
+friendly than that.
 
 Thanks,
 
 	tglx
-
