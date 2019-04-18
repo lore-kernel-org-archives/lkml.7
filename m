@@ -6,36 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF365C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DEE217FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931732171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 17:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389761AbfDRRBF (ORCPT
+        id S2389575AbfDRRDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 13:01:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44686 "EHLO
+        Thu, 18 Apr 2019 13:03:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44734 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388299AbfDRRBD (ORCPT
+        with ESMTP id S1731317AbfDRRDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:01:03 -0400
+        Thu, 18 Apr 2019 13:03:53 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1hHAPA-0004Wa-I8; Thu, 18 Apr 2019 17:00:56 +0000
+        id 1hHARy-0004nu-UO; Thu, 18 Apr 2019 17:03:51 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
+To:     Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: connlabels: fix spelling mistake "trackling" -> "tracking"
-Date:   Thu, 18 Apr 2019 18:00:56 +0100
-Message-Id: <20190418170056.22486-1-colin.king@canonical.com>
+Subject: [PATCH] firestream: fix spelling mistake "tramsitted" -> "transmitted"
+Date:   Thu, 18 Apr 2019 18:03:50 +0100
+Message-Id: <20190418170350.23247-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -47,25 +43,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-There is a spelling mistake in the module description. Fix this.
+There is a spelling mistake in a debug message. Fix it.
 
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- net/netfilter/xt_connlabel.c | 2 +-
+ drivers/atm/firestream.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/xt_connlabel.c b/net/netfilter/xt_connlabel.c
-index 4fa4efd24353..893374ac3758 100644
---- a/net/netfilter/xt_connlabel.c
-+++ b/net/netfilter/xt_connlabel.c
-@@ -15,7 +15,7 @@
+diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
+index 11e1663bdc4d..b2c06da4f62e 100644
+--- a/drivers/atm/firestream.c
++++ b/drivers/atm/firestream.c
+@@ -1646,7 +1646,7 @@ static irqreturn_t fs_irq (int irq, void *dev_id)
+ 	}
  
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Florian Westphal <fw@strlen.de>");
--MODULE_DESCRIPTION("Xtables: add/match connection trackling labels");
-+MODULE_DESCRIPTION("Xtables: add/match connection tracking labels");
- MODULE_ALIAS("ipt_connlabel");
- MODULE_ALIAS("ip6t_connlabel");
+ 	if (status & ISR_TBRQ_W) {
+-		fs_dprintk (FS_DEBUG_IRQ, "Data tramsitted!\n");
++		fs_dprintk (FS_DEBUG_IRQ, "Data transmitted!\n");
+ 		process_txdone_queue (dev, &dev->tx_relq);
+ 	}
  
 -- 
 2.20.1
