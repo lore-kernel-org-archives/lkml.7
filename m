@@ -2,131 +2,134 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E287DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C873C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26782183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555596912;
-	bh=jJDW45+DQjquXSK43lkBLQZHZtz7RZyo5LYoKHgrwYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qHeACieN8gaUse0QQVpUtR488ub/LusbOMBQCCjXQy/pKs4LC6ViWPLENi0kepaac
-	 SW0K+z0a/2BLn+l1htCGbfsd7KZmQe44ZuleEqPqRqkNoQ05Gkl2ifPCUjaVPyqcWe
-	 HPZupAoGmbGOEo+LHGHhTm2WH5b3Oipvm6FRJ+G8=
+	by mail.kernel.org (Postfix) with ESMTP id 2B24B20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Dedyquf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389181AbfDROPK (ORCPT
+        id S2389235AbfDROPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:15:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51194 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388346AbfDROPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:15:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D8DD0B16E;
-        Thu, 18 Apr 2019 14:15:08 +0000 (UTC)
+        Thu, 18 Apr 2019 10:15:19 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41435 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388097AbfDROPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:15:18 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 64so1817128otb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=OpcwINqCHiCizXEC5PYTe8NNATg22kIzx73i7H3Mtyk=;
+        b=Dedyquf6jjev9r77yLhWq5E2JW3SaaOuKMaaWaJTV88uEPQbsKSyUwJ8uA4PGo7OME
+         8X6c5seXW1q3Apu4cFRj507XLWXIFO2zYvowPgUYfaL4MiplGVm5B1ENHS+wUuO4JRhx
+         SQTCvM7lUT+sKrSvI3fAB5l/5m1YSDqMPNOI0QHKUMKZMvNAoGu1HtDZS+nugXAlQz40
+         BohyOU4mWzZfaDLoP1nW69D45IB+7TcFGqLF5/DWAswq5yzTnup9u7AC7Ta9AF71Kinn
+         PDDj060f0qiQ0ZTiYieiJCCCc+X5ByfZtntvI0OBkihdr33Qkm2ZSFbjr6zodCkS6dGd
+         lHKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=OpcwINqCHiCizXEC5PYTe8NNATg22kIzx73i7H3Mtyk=;
+        b=TVV1UKzCXvkqLVkeMfIFRPN7vQsrPJQVdMsPA2fRCGLWcTq9PgGAcZ93j0zlbfSVMb
+         +qm4pdw5MNNri2C8fy5dEXJaxz2QcqieHKeyEH5g3nY5A8CCu+hTmlTdWJHgkiho9Hf/
+         Qf8Cg56bVRdOxcSEpwXhI48dmf2W1FFRMhfZiniKqoSvRUKPQQYqCm1hwH0ALBFLo32j
+         rimWO85hVyLD3AttVTtbTexL5pfDvpiT37OBzKHeHas2+89nle3WuHyq4D8g8wlZqqW+
+         LH8fo23Qg0WCBjWsxDQMxxFr69Qsq2PPLODVoq4JkfwnJEYyDnX5puhaZW8As3CiqIjH
+         9bIQ==
+X-Gm-Message-State: APjAAAVKdQgPeZtp/PLPWLpPHZM//ltBPkgydtMjk/kCMreWblBvjllg
+        ZOFNIl35+PoEQ67tHn3mZGeBCQ==
+X-Google-Smtp-Source: APXvYqyiYx8USkgdShxGgxee9Uftr7pRpLVumFsj143x2+qomDClYy63zKJ2KvDs749xqlCFJ8U8qQ==
+X-Received: by 2002:a9d:3983:: with SMTP id y3mr59020744otb.32.1555596918013;
+        Thu, 18 Apr 2019 07:15:18 -0700 (PDT)
+Received: from [26.82.237.254] ([172.56.7.76])
+        by smtp.gmail.com with ESMTPSA id m21sm852393otj.48.2019.04.18.07.15.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 07:15:17 -0700 (PDT)
 Date:   Thu, 18 Apr 2019 16:15:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>, akpm@linux-foundation.org,
-        arunks@codeaurora.org, brgl@bgdev.pl, geert+renesas@glider.be,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mguzik@redhat.com, rppt@linux.ibm.com, vbabka@suse.cz,
-        Laurent Dufour <ldufour@linux.ibm.com>
-Subject: Re: [PATCH] prctl_set_mm: downgrade mmap_sem to read lock
-Message-ID: <20190418141507.GO6567@dhcp22.suse.cz>
-References: <20190417145548.GN5878@dhcp22.suse.cz>
- <20190418135039.19987-1-mkoutny@suse.com>
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190418141019.GD13701@redhat.com>
+References: <20190418101841.4476-1-christian@brauner.io> <20190418101841.4476-3-christian@brauner.io> <20190418131206.GB13701@redhat.com> <20190418132822.untjt7erfvbbiz7a@brauner.io> <20190418141019.GD13701@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190418135039.19987-1-mkoutny@suse.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/5] clone: add CLONE_PIDFD
+To:     Oleg Nesterov <oleg@redhat.com>
+CC:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        tglx@linutronix.de, mtk.manpages@gmail.com,
+        akpm@linux-foundation.org, cyphar@cyphar.com,
+        joel@joelfernandes.org, dancol@google.com
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <A186BAC7-898A-4860-921D-1E2B638E8D52@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 18-04-19 15:50:39, Michal Koutny wrote:
-> I learnt, it's, alas, too late to drop the non PRCTL_SET_MM_MAP calls
-> [1], so at least downgrade the write acquisition of mmap_sem as in the
-> patch below (that should be stacked on the previous one or squashed).
-> 
-> Cyrill, you mentioned lock changes in [1] but the link seems empty. Is
-> it supposed to be [2]? That could be an alternative to this patch after
-> some refreshments and clarifications.
-> 
-> 
-> [1] https://lore.kernel.org/lkml/20190417165632.GC3040@uranus.lan/
-> [2] https://lore.kernel.org/lkml/20180507075606.870903028@gmail.com/
-> 
-> ========
-> 
-> Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect
-> arg_start|end and env_start|end in mm_struct") we use arg_lock for
-> boundaries modifications. Synchronize prctl_set_mm with this lock and
-> keep mmap_sem for reading only (analogous to what we already do in
-> prctl_set_mm_map).
-> 
-> Also, save few cycles by looking up VMA only after performing basic
-> arguments validation.
-> 
-> Signed-off-by: Michal Koutný <mkoutny@suse.com>
+On April 18, 2019 4:10:20 PM GMT+02:00, Oleg Nesterov <oleg@redhat=2Ecom> w=
+rote:
+>On 04/18, Christian Brauner wrote:
+>>
+>> On Thu, Apr 18, 2019 at 03:12:07PM +0200, Oleg Nesterov wrote:
+>> > Should we allow CLONE_THREAD | CLONE_PIDFD ?
+>>
+>> I think so, yes=2E I have thought about this=2E
+>
+>OK, I won't insist=2E But let me explain why did I ask=2E
+>
+>> Yes, due to CLONE_FILES |
+>> CLONE_VM you'd necessarily hand the pidfd to the child but threads
+>are
+>> no security boundary in the first place=2E
+>
+>No, no, I am not not worried about security=2E CLONE_PARENT | CLONE_PIDFD
+>looks more problematic to me, but I see nothing dangerous
+>security-wise=2E=2E
+>
+>I agree that CLONE_THREAD | CLONE_PIDFD may be usefule, but I am not
+>sure
+>we should allow this from the very begining, until we have a "real"
+>use-case=2E
+>
+>IIUC, we are going to make it pollable soon=2E OK, but
+>proc_tgid_base_poll()
+>(which should be turned into pidfd_poll) simply can't work if
+>pid_task() is
+>not a group leader=2E poll(pidfd) will hang forever if pidfd was created
+>by
+>CLONE_THREAD | CLONE_PIDFD=2E
+>
+>Sure, we can (should?) improve pidfd_poll() but this will need more
+>nasty
+>changes in the core kernel code=2E Do we really need/want this? Right now
+>it
+>is not clear to me=2E Instead, we can simply disallow
+>CLONE_THREAD|CLONE_PIDFD
+>until we decide that yes, we want to poll sub-threads=2E
 
-Looks good to me. Please send both patches in one series once you get a
-review feedback from other people.
+If you think that makes the polling work simpler for Joel then for sure=2E
+And yes, I have argued for "disable until someone needs it" often before s=
+o I can't really argue the other way around here=2E :)
+I'll send an updated version soon=2E
 
-> ---
->  kernel/sys.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index 12df0e5434b8..bbce0f26d707 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -2125,8 +2125,12 @@ static int prctl_set_mm(int opt, unsigned long addr,
->  
->  	error = -EINVAL;
->  
-> -	down_write(&mm->mmap_sem);
-> -	vma = find_vma(mm, addr);
-> +	/*
-> +	 * arg_lock protects concurent updates of arg boundaries, we need mmap_sem for
-> +	 * a) concurrent sys_brk, b) finding VMA for addr validation.
-> +	 */
-> +	down_read(&mm->mmap_sem);
-> +	spin_lock(&mm->arg_lock);
->  
->  	prctl_map.start_code	= mm->start_code;
->  	prctl_map.end_code	= mm->end_code;
-> @@ -2185,6 +2189,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
->  	if (error)
->  		goto out;
->  
-> +	vma = find_vma(mm, addr);
->  	switch (opt) {
->  	/*
->  	 * If command line arguments and environment
-> @@ -2218,7 +2223,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
->  
->  	error = 0;
->  out:
-> -	up_write(&mm->mmap_sem);
-> +	spin_unlock(&mm->arg_lock);
-> +	up_read(&mm->mmap_sem);
->  	return error;
->  }
->  
-> -- 
-> 2.16.4
+Christian
 
--- 
-Michal Hocko
-SUSE Labs
+>
+>But again, I am fine with CLONE_THREAD | CLONE_PIDFD=2E
+>
+>Oleg=2E
+
