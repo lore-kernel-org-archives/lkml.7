@@ -2,260 +2,161 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8A1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94975C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2876C2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582A12184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 08:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="B82lOyt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388248AbfDRIsW (ORCPT
+        id S2388288AbfDRIux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 04:48:22 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57682 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733049AbfDRIsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 04:48:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C46B15AB;
-        Thu, 18 Apr 2019 01:48:21 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18B1E3F68F;
-        Thu, 18 Apr 2019 01:48:16 -0700 (PDT)
-Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth for
- guest
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
- <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
- <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
- <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
- <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
- <20190417145255.GB3567@e103592.cambridge.arm.com>
- <a04c6bfd-fd6a-8ff9-a66a-3391af53afb5@arm.com>
- <20190417172010.GE3567@e103592.cambridge.arm.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <bec616ee-2765-4243-2108-84f3230c6aa0@arm.com>
-Date:   Thu, 18 Apr 2019 09:48:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190417172010.GE3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 18 Apr 2019 04:50:53 -0400
+Received: from mail-eopbgr00060.outbound.protection.outlook.com ([40.107.0.60]:26607
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728074AbfDRIux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 04:50:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oDH8Gs9gOI6Nt3wZaAXnUE98uF9FNVdZ2DMPgSDXiJk=;
+ b=B82lOyt4rFgDQuakCtiMFvTVE1f5JHMwBMa+V1Xy/OKEkGyCruAldKQ90uzpCgK/QIsqNUZeOWTzrFcmWSavTZwZ7vt0DBlXb1mfBBN3OnwFNa0q2ycK8NpE+lOmQC0dPcIwZuSNvfiKY4PsvchKvMlcgxx33tdNj5klh2mCgao=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6717.eurprd04.prod.outlook.com (20.179.235.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Thu, 18 Apr 2019 08:50:49 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1813.013; Thu, 18 Apr 2019
+ 08:50:49 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Topic: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Index: AdT1wt4f0LfTMAkAQai/jI2p7SWJLw==
+Date:   Thu, 18 Apr 2019 08:50:48 +0000
+Message-ID: <VE1PR04MB647965FEAF3506E1775397AEE3260@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 081fec1e-0255-40e5-2686-08d6c3daf470
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6717;
+x-ms-traffictypediagnostic: VE1PR04MB6717:
+x-microsoft-antispam-prvs: <VE1PR04MB67175017C40BB87EA0F3CFB3E3260@VE1PR04MB6717.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0011612A55
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(376002)(346002)(396003)(189003)(199004)(51444003)(55016002)(9686003)(53936002)(68736007)(1411001)(476003)(486006)(186003)(6916009)(97736004)(54906003)(99286004)(7696005)(6436002)(316002)(2906002)(3846002)(6116002)(33656002)(86362001)(102836004)(6506007)(26005)(81166006)(8936002)(81156014)(8676002)(229853002)(4326008)(5660300002)(66066001)(52536014)(305945005)(14444005)(74316002)(478600001)(25786009)(7736002)(14454004)(256004)(71200400001)(71190400001)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6717;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LZOk+NPwfNw5giji0Rstr12bzxoDrqDfFRE2vHjppUSx4llq/zsim0YpkhMthMRmVFR5qbvLGutHhS6HlZH+8FKAJecxww5hb62uQ71N+guf8MxNQl95LJw0js385uDf2on0toMsHVtmsSf5YGYl7JwDaXIssorwho9yz25n6RBPXTH76lUFMqkhz4JQihLjspmEX5FiU24S6mB46T/BqQUJfBMMD95aep1ZetFWRsq1pFzl0TQ4oea59X+ASm4ayK2WUlufrxqtocRyHBYyH+xA5NRK8YUzgt9toJ+pxZm4KzB8OF8aR4dkMcQi2cjUgG5+4MSfV3LIHcZWWObAK1ap0YxZWDEFEZygopykccNfRuM9StZvjHnhAHX+pzC/7hamHU7ub+v72kNE0C4yZjipMobH9XI78MetiibYEwU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 081fec1e-0255-40e5-2686-08d6c3daf470
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2019 08:50:48.9570
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6717
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2019 18:20, Dave Martin wrote:
-> On Wed, Apr 17, 2019 at 04:54:32PM +0100, Marc Zyngier wrote:
->> On 17/04/2019 15:52, Dave Martin wrote:
->>> On Wed, Apr 17, 2019 at 03:19:11PM +0100, Marc Zyngier wrote:
->>>> On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
->>>>> Hi,
->>>>>
->>>>> On 4/17/19 2:05 PM, Marc Zyngier wrote:
->>>>>> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
->>>>>>> A per vcpu flag is added to check if pointer authentication is
->>>>>>> enabled for the vcpu or not. This flag may be enabled according to
->>>>>>> the necessary user policies and host capabilities.
->>>>>>>
->>>>>>> This patch also adds a helper to check the flag.
->>>>>>>
->>>>>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
->>>>>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
->>>>>>> Cc: kvmarm@lists.cs.columbia.edu
->>>>>>> ---
->>>>>>>
->>>>>>> Changes since v8:
->>>>>>> * Added a new per vcpu flag which will store Pointer Authentication enable
->>>>>>>    status instead of checking them again. [Dave Martin]
->>>>>>>
->>>>>>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
->>>>>>>   1 file changed, 4 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->>>>>>> index 9d57cf8..31dbc7c 100644
->>>>>>> --- a/arch/arm64/include/asm/kvm_host.h
->>>>>>> +++ b/arch/arm64/include/asm/kvm_host.h
->>>>>>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
->>>>>>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
->>>>>>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
->>>>>>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
->>>>>>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
->>>>>>>   
->>>>>>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
->>>>>>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
->>>>>>>   
->>>>>>> +#define vcpu_has_ptrauth(vcpu)	\
->>>>>>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
->>>>>>> +
->>>>>>
->>>>>> Just as for SVE, please first check that the system has PTRAUTH.
->>>>>> Something like:
->>>>>>
->>>>>> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
->>>>>> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
->>>>>
->>>>> In the subsequent patches, vcpu->arch.flags is only set to 
->>>>> KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
->>>>> matches such as system_supports_address_auth(), 
->>>>> system_supports_generic_auth() so doing them again is repetitive in my view.
->>>>
->>>> It isn't the setting of the flag I care about, but the check of that
->>>> flag. Checking a flag for a feature that cannot be used on the running
->>>> system should have a zero cost, which isn't the case here.
->>>>
->>>> Granted, the impact should be minimal and it looks like it mostly happen
->>>> on the slow path, but at the very least it would be consistent. So even
->>>> if you don't buy my argument about efficiency, please change it in the
->>>> name of consistency.
->>>
->>> One of the annoyances here is there is no single static key for ptrauth.
->>>
->>> I'm assuming we don't want to check both static keys (for address and
->>> generic auth) on hot paths.
->>
->> They both just branches, so I don't see why not. Of course, for people
->> using a lesser compiler (gcc 4.8 or clang), things will suck. But they
->> got it coming anyway.
-> 
-> I seem to recall Christoffer expressing concerns about this at some
-> point: even unconditional branches branches to a fixed address are not
-> free (or even correctly predicted).
+Hi
 
-Certainly not free, but likely less expensive than a load followed by a
-conditional branch. And actually, this is not a comparison against a branch,
-but against a nop.
+>=20
+>=20
+> On Thu, Apr 18, 2019 at 02:37:03AM +0000, S.j. Wang wrote:
+> > > Here:
+> > > > +     /* Does not support cases: Tsout > 8.125 * Tsin */
+> > > > +     if (inrate * 8 > 65 * outrate)
+>=20
+> Though it might not matter any more (see my last comments), it should be
+> "inrate > 8.125 * outrate" in the comments.
+>=20
+> > > > +             return -EINVAL;
+> > > And here:
+> > > > +     ret =3D fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_p=
+roc);
+> > > > +     if (ret) {
+> > > > +             pair_err("No supported pre-processing options\n");
+> > > > +             return ret;
+> > > > +     }
+> > >
+> > > Instead of a general message, I was thinking of a more specific one
+> > > by telling users that the ratio between the two rates isn't
+> > > supported -- something similar to what I suggested previously:
+> > >
+> > >         pair_err("Does not support %d (input) > 8.125 * %d (output)\n=
+",
+> > >                  outrate, inrate);
+> > >
+>=20
+> > In fsl_asrc_sel_proc,  we can't call the pair_err for there is no
+> > struct fsl_asrc_pair *pair in the argument. Do you think we need to
+> > add this argument?
+>=20
+> I's thinking of adding it to the top of fsl_asrc_config_pair() as a part =
+of
+> inrate-outrate-validation, however, I found that actually we already have=
+ a
+> similar check in the early routine:
+>         if ((outrate > 8000 && outrate < 30000) &&
+>             (outrate/inrate > 24 || inrate/outrate > 8)) {
+>                 pair_err("exceed supported ratio range [1/24, 8] for \
+>                          inrate/outrate: %d/%d\n", inrate, outrate);
+>                 return -EINVAL;
+>         }
+>=20
+> And this is according to IMX6DQRM:
+>     Limited support for the case when output sampling rates is
+>     between 8kHz and 30kHz. The limitation is the supported ratio
+>     (Fsin/Fsout) range as between 1/24 to 8
+>=20
+> This should cover your 8.125 condition already, even if having an outrate
+> range between [8KHz, 30KHz] check, since an outrate above 30KHz will not
+> have an inrate bigger than 8.125 times of it, given the maximum input rat=
+e
+> is 192KHz.
+>=20
+> So I think that we can just drop that 8.125 condition from your change an=
+d
+> there's no need to error out any more.
+>=20
+No, if outrate=3D8kHz,  inrate > 88.2kHz, these cases are not supported.=20
+This is not covered by
 
-> I don't think any compiler can elide static key checks of merge them
-> together.
+        if ((outrate > 8000 && outrate < 30000) &&
+            (outrate/inrate > 24 || inrate/outrate > 8)) {
 
-It is not about eliding them, it is about having a cheap fast path.
-
-Compiling this:
-
-bool kvm_hack_test_static_key(struct kvm_vcpu *vcpu)
-{
-	return ((system_supports_address_auth() ||
-		 system_supports_generic_auth()) &&
-		vcpu->arch.flags & (1 << 6));
-
-}
-
-I get:
-
-[...]
-ffff0000100db5c8:       1400000c        b       ffff0000100db5f8 <kvm_hack_test_static_key+0x48>
-ffff0000100db5cc:       d503201f        nop
-ffff0000100db5d0:       14000012        b       ffff0000100db618 <kvm_hack_test_static_key+0x68>
-ffff0000100db5d4:       d503201f        nop
-ffff0000100db5d8:       14000014        b       ffff0000100db628 <kvm_hack_test_static_key+0x78>
-ffff0000100db5dc:       d503201f        nop
-ffff0000100db5e0:       14000017        b       ffff0000100db63c <kvm_hack_test_static_key+0x8c>
-ffff0000100db5e4:       d503201f        nop
-ffff0000100db5e8:       52800000        mov     w0, #0x0                        // #0
-ffff0000100db5ec:       f9400bf3        ldr     x19, [sp, #16]
-ffff0000100db5f0:       a8c27bfd        ldp     x29, x30, [sp], #32
-ffff0000100db5f4:       d65f03c0        ret
-ffff0000100db5f8:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
-ffff0000100db5fc:       f942a400        ldr     x0, [x0, #1352]
-ffff0000100db600:       b637fe80        tbz     x0, #38, ffff0000100db5d0 <kvm_hack_test_static_key+0x20>
-ffff0000100db604:       f9441660        ldr     x0, [x19, #2088]
-ffff0000100db608:       f9400bf3        ldr     x19, [sp, #16]
-ffff0000100db60c:       53061800        ubfx    w0, w0, #6, #1
-ffff0000100db610:       a8c27bfd        ldp     x29, x30, [sp], #32
-ffff0000100db614:       d65f03c0        ret
-ffff0000100db618:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
-ffff0000100db61c:       f942a400        ldr     x0, [x0, #1352]
-ffff0000100db620:       b73fff20        tbnz    x0, #39, ffff0000100db604 <kvm_hack_test_static_key+0x54>
-ffff0000100db624:       17ffffed        b       ffff0000100db5d8 <kvm_hack_test_static_key+0x28>
-ffff0000100db628:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
-ffff0000100db62c:       f942a400        ldr     x0, [x0, #1352]
-ffff0000100db630:       b747fea0        tbnz    x0, #40, ffff0000100db604 <kvm_hack_test_static_key+0x54>
-ffff0000100db634:       14000002        b       ffff0000100db63c <kvm_hack_test_static_key+0x8c>
-ffff0000100db638:       17ffffeb        b       ffff0000100db5e4 <kvm_hack_test_static_key+0x34>
-ffff0000100db63c:       b000ac40        adrp    x0, ffff000011664000 <reset_devices>
-ffff0000100db640:       f942a400        ldr     x0, [x0, #1352]
-ffff0000100db644:       b74ffe00        tbnz    x0, #41, ffff0000100db604 <kvm_hack_test_static_key+0x54>
-ffff0000100db648:       52800000        mov     w0, #0x0                        // #0
-ffff0000100db64c:       17ffffe8        b       ffff0000100db5ec <kvm_hack_test_static_key+0x3c>
-
-Once the initial 4 branches that are there to deal with the pre static 
-keys checks are nop-ed, everything is controlled by the remaining 4
-nops which are turned into branches to ffff0000100db604 if any of the 
-conditions become true.
-
-Which is exactly what we want: a fall through to returning zero without
-doing anything else.
-
-Thanks,
-
-	M.
-
-> Maybe I am misremembering.
-> 
-> Cheers
-> ---Dave
-> 
-
-
--- 
-Jazz is not dead. It just smells funny...
+> However, we do need a patch to fix a potential rounding issue:
+> -           (outrate/inrate > 24 || inrate/outrate > 8)) {
+> +           (outrate > 24 * inrate || inrate > 8 * outrate)) {
+>=20
+> Should fix the missing whitespace also. And it will be needed to send to
+> stable kernel too. Will you help submit a change?
+>=20
+> Thanks
