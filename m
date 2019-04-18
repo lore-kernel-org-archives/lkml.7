@@ -2,129 +2,133 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED22C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5E3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840192171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D69F2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 23:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUvVKmob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfDRX4G convert rfc822-to-8bit (ORCPT
+        id S1726480AbfDRX6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 19:56:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33994 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfDRX4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 19:56:05 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2CDED3082E3F;
-        Thu, 18 Apr 2019 23:56:05 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-92.rdu2.redhat.com [10.10.120.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB16A60BE2;
-        Thu, 18 Apr 2019 23:56:03 +0000 (UTC)
-Subject: Re: [PATCH v5 00/18] locking/rwsem: Rwsem rearchitecture part 2
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190418234628.3675-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <8f1adff7-3bd4-7d35-1a0d-698662bfa2b8@redhat.com>
-Date:   Thu, 18 Apr 2019 19:56:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 18 Apr 2019 19:58:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34763 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfDRX6f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 19:58:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y6so1876220plt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 16:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sU+dkTNcZ80jwL9xre61U9X22J/tQZYN7nSc1/Vcvro=;
+        b=HUvVKmob5OgyCcuwu5O4fZ3mIHu4eosFjS1HKsRAKz7acPgKp0YDYY5Fh4MtRdeUBn
+         bWL082LVXjvcFcJoeNZC1x0CQ9G6DthHPqkr50GHlHHhJzzM+jZtnfrFu/7pNSavwAEY
+         TAshiDI9Gpnttsrknb4Qbs4QSefBgLXEMHLZtZYR6fOu/3koC017CY/WrjKZlLtEYsa/
+         Y/FMRv+UoO5jNVYAO0eHS0zS8vyGKsLNuRtU2pknNHi8qCY8MW6sLScZzjS6F6Zi/Xj8
+         A4P0eqNB33ZmMxwg6gKVXUE+ZhdkL1p9ZblXsWC6nraE7To8K3B2FgH0UxXHniTgB0kT
+         M88g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sU+dkTNcZ80jwL9xre61U9X22J/tQZYN7nSc1/Vcvro=;
+        b=Cc2nm2nwuo5AuamubP+kHR7fTUpmRRPEEDaNZdMrfFHJIwZaGregpfwLUzrjAG4AOh
+         xLxjsT5gC225bNvJkKJUq5XlIzZd4OnjqVP6wlT+nW/TkC+q5jS1DnUspBFaDllDJH2S
+         Ms24qXMhANfnTlFjj6TCL2ChxFECiLNqY2aTsUH07m6wsFcaFoo3Vr5VoxZSLEDYjx8b
+         k9s26Xkf7YH7eSICImQErVijDY+fmbIowARWvYDhe+/xvCyB9HUGHglNWzhvI3XfBXTg
+         W+lfeIJsNVXFkLzTZNgN1cgG54Q/VsBJOJ1Q1d3kosv9VqKs8AGjZtRYm1LRzOc/x09g
+         Ehnw==
+X-Gm-Message-State: APjAAAXAktzWtlXcFGN0322XhyutQiP4VFLKK+mLWIqm2g1hDQwQcfNu
+        AqU5C+YqeL05aZX7YV7ISIzie41i/zpsGjiSeikKHd+h
+X-Google-Smtp-Source: APXvYqyv6SLkzPGBIrOTjNaCDgjNxG+NsJGonueL5M5UEbTEW92jcV4Lh7ERKhjZw2w6VrYrT/YXCXMMo0sLnXk1mPk=
+X-Received: by 2002:a17:902:f094:: with SMTP id go20mr478615plb.159.1555631914576;
+ Thu, 18 Apr 2019 16:58:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190418234628.3675-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 18 Apr 2019 23:56:05 +0000 (UTC)
+References: <20190418220229.32133-1-tony.luck@intel.com> <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
+ <20190418232910.GR27160@zn.tnic>
+In-Reply-To: <20190418232910.GR27160@zn.tnic>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 18 Apr 2019 16:58:22 -0700
+Message-ID: <CAM_iQpVWvg-U6hzKsCPXdObiwKJhQ=BkGDDeP+p671cCWK7QFA@mail.gmail.com>
+Subject: Re: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/18/2019 07:46 PM, Waiman Long wrote:
->  v5:
->   - Drop v4 patch 1 as it is merged into tip's locking/core branch.
->   - Integrate the 2 followup patches into the series. The first
->     follow-up patch is broken into 2 pieces. The first piece comes in
->     before the "Enable readers spinning on writer" and the 2nd piece
->     is merged into the "Enable time-based spinning on reader-owned
->     rwsem" patch. The 2nd followup patch is added after that.
->   - Add a new patch to make all wake_up_q() calls after dropping
->     wait_lock as suggested by PeterZ.
->   - Incorporate numerouos suggestions by PeterZ and Davidlohr.
+On Thu, Apr 18, 2019 at 4:29 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Thu, Apr 18, 2019 at 03:51:07PM -0700, Cong Wang wrote:
+> > On Thu, Apr 18, 2019 at 3:02 PM Tony Luck <tony.luck@intel.com> wrote:
+> > >
+> > > Useful when running error injection tests that want to
+> > > see all of the MCi_(STATUS|ADDR|MISC) data via /dev/mcelog.
+> > >
+> > > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> >
+> > We saw the same problem, CONFIG_RAS hijacks all the
+> > correctable memory errors, which leaves mcelog "broken"
+> > silently. I know it is arguable, but until we can switch from
+> > mcelog to rasdaemon, mcelog should still work as before.
+>
+> It is "arguable" because this is not how the CEC is supposed to be used.
 
-This patchset is still being reviewed by Peter . The purpose of this
-series is mainly to sync up the version that Peter has and the ones that
-I am working on incorporating his feedback. Further changes may still be
-needed.
+No, it is all about whether we should break users' expectation.
 
-I run an overall performance test on this new patchset and present the
-data in this cover letter. However, I haven't run performance tests for
-individual patches. So the performance data listed in some of the
-patches may be stale.
+>
+> If you want to collect errors with mcelog, you don't use the CEC at all.
+> And there's ras=cec_disable for that or you simply don't enable it in
+> your .config.
+>
+> As Tony says in the commit message, the enable should be used only for
+> injection tests. Which is where that thing should only be used for -
+> debugging the CEC itself.
 
-Cheers,
-Longman
+This doesn't sounds like a valid reason for us to break users'
+expectation.
+
+Prior to CONFIG_RAS, mcelog just works fine for users (at least Intel
+users). Suddenly after enabling CONFIG_RAS in kernel, mcelog will
+no longer receive any correctable memory errors _silently_. What's
+more, we don't even have rasdaemon running in our system, so there is
+no consumer of RAS CEC, these errors just simply disappear from
+users' expected place.
+
+I know CONFIG_RAS is new feature supposed to replace MCELOG,
+but they can co-exist in kernel config, which means mcelog should
+continue to work as before until it gets fully replaced.
+
+Even the following PoC change could make this situation better,
+because with this change when we enable CONFIG_RAS,mcelog
+will break _loudly_ rather than just silently, users will notice mcelog
+is no longer supported and will look for its alternative choice.
+
+diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
+index b834ff555188..f2e2b75fffbe 100644
+--- a/drivers/ras/Kconfig
++++ b/drivers/ras/Kconfig
+@@ -1,5 +1,6 @@
+ menuconfig RAS
+        bool "Reliability, Availability and Serviceability (RAS) features"
++       depends on !X86_MCELOG_LEGACY
+        help
+          Reliability, availability and serviceability (RAS) is a computer
+          hardware engineering term. Computers designed with higher levels
 
 
+Just my 2 cents.
 
+Thanks.
