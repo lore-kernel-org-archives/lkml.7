@@ -2,418 +2,159 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2BBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC98C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F712083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC4F2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 14:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="aSzsIZeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389482AbfDROHJ (ORCPT
+        id S2389211AbfDROH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 10:07:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52508 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389344AbfDROGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 10:06:31 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C2E43094501;
-        Thu, 18 Apr 2019 14:06:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EFA65D9CC;
-        Thu, 18 Apr 2019 14:06:28 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 3/6] vfs: Allow searching of the icache under RCU
- conditions
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-ext4@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 18 Apr 2019 15:06:24 +0100
-Message-ID: <155559638482.21702.10652831752816092947.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
-References: <155559635133.21702.4737487773869377967.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 18 Apr 2019 10:07:58 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:33719 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388369AbfDROH6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 10:07:58 -0400
+Received: by mail-yb1-f196.google.com with SMTP id i10so895580ybk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 07:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6Rhcg8fa2hBMufpf8gDXTuEh6jV1AGJyMm+dHB6jlq4=;
+        b=aSzsIZeC2VCOYFaY/wDpDMvbLd8r1hoayYjR2/SqvBGA8Ul2ndJltAlR14AdRgqOLk
+         gDV+BjgrR4+ujUR6Fj4Tk8gavjnKDwGjSH6e6sjuK16ofjDlNdbG5prlG4QrrtPiBc5b
+         74Ub+tncarcPLNCMWo63r7yRdHeAew29F1hKSWxKlkZDynzt1h/SFqTXvIzPFkm1C8Qh
+         bN/H05IsYlL2MhNswYE0ckoRiOafbLGdny4ap76ssH1JqXKIGZ7SmkH6sGQDbVmIMlSR
+         Zyelji2JtsUq1SGrKUsOXSVu3KHTkXoXIJyDPK3TEe8GthHb5BePgRJGLY/cXWylxBRS
+         7qoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6Rhcg8fa2hBMufpf8gDXTuEh6jV1AGJyMm+dHB6jlq4=;
+        b=FJKWvrSU1iJ0/KB8M2R3UmgfPToLIMUZe2k5CS/MVVWSeJ0NEAEHLAnrCZIuyKGPC3
+         f+Bgrti497YXGLq5PQXPcQZMpDLgFE/7piNfDaQyUwyqbF9+warqyX0lbra153ik6cCx
+         9NTB/0mH3lOWIN219+Tw/qXIQ5Ou5TW8xT7IBozcBFYotl3ac96GcRGIO+UqC5kjdVpo
+         flagB7GpCbOiMS19ODpsqnJO6l3yThXN0bY1PhYJtEv1CBUrJ/I6Zce+N64d5SRaitG5
+         FrY2IWBO48cwEoS3vmEN41P2BZ35z+3KHH1e98l+gGCcdrdIh/HpXedqr0MOJ0yFeVVY
+         UvdA==
+X-Gm-Message-State: APjAAAWipAOgba6hf6D0Tpzw62S05dNKELR8AqG1QGLV0sn4qA6inIY5
+        /P8NQ4uYPemNLLF/gsfNB52G/Iu1ldV15w==
+X-Google-Smtp-Source: APXvYqxxPbJ9F6pQeenxM7SyFc9brEmgdWi3MEvQtFrXDNHG+26n28pyskFC+3p52HEbpuMH0DjNUw==
+X-Received: by 2002:a25:d7c1:: with SMTP id o184mr29496615ybg.147.1555596477100;
+        Thu, 18 Apr 2019 07:07:57 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:180::e445])
+        by smtp.gmail.com with ESMTPSA id 74sm746578ywe.81.2019.04.18.07.07.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 07:07:56 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 10:07:54 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     Pan Bian <bianpan2016@163.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [V2] btrfs: drop inode reference count on error path
+Message-ID: <20190418140749.h57y5kqz4s47sbuo@macbook-pro-91.dhcp.thefacebook.com>
+References: <1555585576-31045-1-git-send-email-bianpan2016@163.com>
+ <ac36d111-547e-a76a-149e-a7ad603d7dfd@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 18 Apr 2019 14:06:30 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac36d111-547e-a76a-149e-a7ad603d7dfd@suse.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow searching of the inode cache under RCU conditions - but with a
-footnote that this is redone under lock under certain conditions.
+On Thu, Apr 18, 2019 at 03:50:00PM +0300, Nikolay Borisov wrote:
+> 
+> 
+> On 18.04.19 г. 14:06 ч., Pan Bian wrote:
+> > The reference count of inode is incremented by ihold. It should be
+> > dropped if not used. However, the reference count is not dropped if
+> > error occurs during updating the inode or deleting orphan items. This
+> > patch fixes the bug.
+> > 
+> > Signed-off-by: Pan Bian <bianpan2016@163.com>
+> > ---
+> > V2: move ihold just before device_initialize to make code clearer
+> > ---
+> >  fs/btrfs/inode.c | 54 +++++++++++++++++++++++++-----------------------------
+> >  1 file changed, 25 insertions(+), 29 deletions(-)
+> > 
+> > diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> > index 82fdda8..d6630df 100644
+> > --- a/fs/btrfs/inode.c
+> > +++ b/fs/btrfs/inode.c
+> > @@ -6579,7 +6579,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+> >  	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+> >  	u64 index;
+> >  	int err;
+> > -	int drop_inode = 0;
+> > +	int log_mode;
+> >  
+> >  	/* do not allow sys_link's with other subvols of the same device */
+> >  	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
+> > @@ -6616,41 +6616,37 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+> >  	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
+> >  			1, index);
+> >  
+> > -	if (err) {
+> > -		drop_inode = 1;
+> > -	} else {
+> > -		struct dentry *parent = dentry->d_parent;
+> > -		int ret;
+> > +	if (err)
+> > +		goto err_link;
+> >  
+> > -		err = btrfs_update_inode(trans, root, inode);
+> > +	err = btrfs_update_inode(trans, root, inode);
+> > +	if (err)
+> > +		goto err_link;
+> > +	if (inode->i_nlink == 1) {
+> > +		/*
+> > +		 * If new hard link count is 1, it's a file created
+> > +		 * with open(2) O_TMPFILE flag.
+> > +		 */
+> > +		err = btrfs_orphan_del(trans, BTRFS_I(inode));
+> >  		if (err)
+> > -			goto fail;
+> > -		if (inode->i_nlink == 1) {
+> > -			/*
+> > -			 * If new hard link count is 1, it's a file created
+> > -			 * with open(2) O_TMPFILE flag.
+> > -			 */
+> > -			err = btrfs_orphan_del(trans, BTRFS_I(inode));
+> > -			if (err)
+> > -				goto fail;
+> > -		}
+> > -		BTRFS_I(inode)->last_link_trans = trans->transid;
+> > -		d_instantiate(dentry, inode);
+> > -		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
+> > -					 true, NULL);
+> > -		if (ret == BTRFS_NEED_TRANS_COMMIT) {
+> > -			err = btrfs_commit_transaction(trans);
+> > -			trans = NULL;
+> > -		}
+> > +			goto err_link;
+> > +	}
+> > +	BTRFS_I(inode)->last_link_trans = trans->transid;
+> > +	ihold(inode);
 
-The following changes are made:
+Where is the iput for this ihold?
 
- (1) Use hlist_add_head_rcu() and hlist_del_init_rcu() to add and remove
-     an inode to/from a bucket.
-
- (2) In rehash_inode(), called by Coda to change the identifying parameters
-     on an inode during resolution of disconnected operation, lock
-     inode_hash_lock with write_seqlock(), which takes the spinlock and
-     bumps the sequence counter.
-
- (3) Provide __find_inode_rcu() and __find_inode_by_ino rcu() which do an
-     RCU-safe crawl through a hash bucket.
-
- (4) Provide find_inode_rcu() and find_inode_by_ino_rcu() which do a
-     read_seqbegin_or_lock() conditional lock-loop on inode_hash_lock to
-     cover searching the icache.  Normally this will work without needing
-     to retry, but in case (4), where an inode may be moved between lists,
-     we need to retry with the lock held.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/inode.c         |  202 +++++++++++++++++++++++++++++++++++++++++++++-------
- include/linux/fs.h |    3 +
- 2 files changed, 176 insertions(+), 29 deletions(-)
-
-diff --git a/fs/inode.c b/fs/inode.c
-index cc2b08d82618..bec8fec3470a 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -479,7 +479,7 @@ void __insert_inode_hash(struct inode *inode, unsigned long hashval)
- 
- 	read_seqlock_excl(&inode_hash_lock);
- 	spin_lock(&inode->i_lock);
--	hlist_add_head(&inode->i_hash, b);
-+	hlist_add_head_rcu(&inode->i_hash, b);
- 	spin_unlock(&inode->i_lock);
- 	read_sequnlock_excl(&inode_hash_lock);
- }
-@@ -495,7 +495,7 @@ void __remove_inode_hash(struct inode *inode)
- {
- 	read_seqlock_excl(&inode_hash_lock);
- 	spin_lock(&inode->i_lock);
--	hlist_del_init(&inode->i_hash);
-+	hlist_del_init_rcu(&inode->i_hash);
- 	spin_unlock(&inode->i_lock);
- 	read_sequnlock_excl(&inode_hash_lock);
- }
-@@ -507,6 +507,11 @@ EXPORT_SYMBOL(__remove_inode_hash);
-  * @hashval: New hash value (usually inode number) to get
-  * @reset: Callback used to relabel the inode
-  * @data: Opaque data pointer to pass to @reset
-+ *
-+ * Reinsert the inode into the hash, potentially moving it between queues - but
-+ * we have to be aware that someone might be trawling either list under the RCU
-+ * readlock whilst we do so; to deal with this, we bump the seq counter in the
-+ * hashtable lock.
-  */
- void rehash_inode(struct inode *inode, unsigned long hashval,
- 		  void (*reset)(struct inode *inode, unsigned long hashval, void *data),
-@@ -516,9 +521,11 @@ void rehash_inode(struct inode *inode, unsigned long hashval,
- 
- 	write_seqlock(&inode_hash_lock);
- 	spin_lock(&inode->i_lock);
--	hlist_del_init(&inode->i_hash);
-+
-+	hlist_del_init_rcu(&inode->i_hash);
- 	reset(inode, hashval, data);
--	hlist_add_head(&inode->i_hash, b);
-+	hlist_add_head_rcu(&inode->i_hash, b);
-+
- 	spin_unlock(&inode->i_lock);
- 	write_sequnlock(&inode_hash_lock);
- }
-@@ -806,8 +813,31 @@ long prune_icache_sb(struct super_block *sb, struct shrink_control *sc)
- }
- 
- static void __wait_on_freeing_inode(struct inode *inode);
-+
- /*
-- * Called with the inode lock held.
-+ * Find an inode.  Can be called with either the RCU read lock or the
-+ * inode cache lock held.  No check is made as to the validity of the
-+ * inode found.
-+ */
-+static struct inode *__find_inode_rcu(struct super_block *sb,
-+				      struct hlist_head *head,
-+				      int (*test)(struct inode *, void *),
-+				      void *data)
-+{
-+	struct inode *inode;
-+
-+	hlist_for_each_entry_rcu(inode, head, i_hash) {
-+		if (inode->i_sb == sb &&
-+		    test(inode, data))
-+			return inode;
-+	}
-+
-+	return NULL;
-+}
-+
-+/*
-+ * Called with the inode hash lock held.  Waits until dying inodes are freed,
-+ * dropping the inode hash lock temporarily to do so.
-  */
- static struct inode *find_inode(struct super_block *sb,
- 				struct hlist_head *head,
-@@ -817,11 +847,8 @@ static struct inode *find_inode(struct super_block *sb,
- 	struct inode *inode = NULL;
- 
- repeat:
--	hlist_for_each_entry(inode, head, i_hash) {
--		if (inode->i_sb != sb)
--			continue;
--		if (!test(inode, data))
--			continue;
-+	inode = __find_inode_rcu(sb, head, test, data);
-+	if (inode) {
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
- 			__wait_on_freeing_inode(inode);
-@@ -838,6 +865,26 @@ static struct inode *find_inode(struct super_block *sb,
- 	return NULL;
- }
- 
-+/*
-+ * Find an inode by inode number.  Can be called with either the RCU
-+ * read lock or the inode cache lock held.  No check is made as to the
-+ * validity of the inode found.
-+ */
-+static struct inode *__find_inode_by_ino_rcu(struct super_block *sb,
-+					     struct hlist_head *head,
-+					     unsigned long ino)
-+{
-+	struct inode *inode;
-+
-+	hlist_for_each_entry_rcu(inode, head, i_hash) {
-+		if (inode->i_ino == ino &&
-+		    inode->i_sb == sb)
-+			return inode;
-+	}
-+
-+	return NULL;
-+}
-+
- /*
-  * find_inode_fast is the fast path version of find_inode, see the comment at
-  * iget_locked for details.
-@@ -848,11 +895,8 @@ static struct inode *find_inode_fast(struct super_block *sb,
- 	struct inode *inode = NULL;
- 
- repeat:
--	hlist_for_each_entry(inode, head, i_hash) {
--		if (inode->i_ino != ino)
--			continue;
--		if (inode->i_sb != sb)
--			continue;
-+	inode = __find_inode_by_ino_rcu(sb, head, ino);
-+	if (inode) {
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
- 			__wait_on_freeing_inode(inode);
-@@ -1105,7 +1149,7 @@ struct inode *inode_insert5(struct inode *inode, unsigned long hashval,
- 	 */
- 	spin_lock(&inode->i_lock);
- 	inode->i_state |= I_NEW;
--	hlist_add_head(&inode->i_hash, head);
-+	hlist_add_head_rcu(&inode->i_hash, head);
- 	spin_unlock(&inode->i_lock);
- 	if (!creating)
- 		inode_sb_list_add(inode);
-@@ -1243,15 +1287,9 @@ static int test_inode_iunique(struct super_block *sb, unsigned long ino)
- 	struct inode *inode;
- 
- 	read_seqlock_excl(&inode_hash_lock);
--	hlist_for_each_entry(inode, b, i_hash) {
--		if (inode->i_ino == ino && inode->i_sb == sb) {
--			read_sequnlock_excl(&inode_hash_lock);
--			return 0;
--		}
--	}
-+	inode = __find_inode_by_ino_rcu(sb, b, ino);
- 	read_sequnlock_excl(&inode_hash_lock);
--
--	return 1;
-+	return inode ? 0 : 1;
- }
- 
- /**
-@@ -1323,6 +1361,7 @@ EXPORT_SYMBOL(igrab);
-  *
-  * Note: I_NEW is not waited upon so you have to be very careful what you do
-  * with the returned inode.  You probably should be using ilookup5() instead.
-+ * It may still sleep waiting for I_FREE and I_WILL_FREE, however.
-  *
-  * Note2: @test is called with the inode_hash_lock held, so can't sleep.
-  */
-@@ -1454,6 +1493,106 @@ struct inode *find_inode_nowait(struct super_block *sb,
- }
- EXPORT_SYMBOL(find_inode_nowait);
- 
-+/**
-+ * find_inode_rcu - find an inode in the inode cache
-+ * @sb:		Super block of file system to search
-+ * @hashval:	Key to hash
-+ * @test:	Function to test match on an inode
-+ * @data:	Data for test function
-+ *
-+ * Search for the inode specified by @hashval and @data in the inode cache,
-+ * where the helper function @test will return 0 if the inode does not match
-+ * and 1 if it does.  The @test function must be responsible for taking the
-+ * i_lock spin_lock and checking i_state for an inode being freed or being
-+ * initialized.
-+ *
-+ * If successful, this will return the inode for which the @test function
-+ * returned 1 and NULL otherwise.
-+ *
-+ * The @test function is not permitted to take a ref on any inode presented
-+ * unless the caller is holding the inode hashtable lock.  It is also not
-+ * permitted to sleep, since it may be called with the RCU read lock held.
-+ *
-+ * The caller must hold either the RCU read lock or the inode hashtable lock.
-+ */
-+struct inode *find_inode_rcu(struct super_block *sb, unsigned long hashval,
-+			     int (*test)(struct inode *, void *), void *data)
-+{
-+	struct hlist_head *head = inode_hashtable + hash(sb, hashval);
-+	struct inode *inode;
-+	unsigned int seq = 0;
-+
-+	WARN_ON(lockdep_is_held(&inode_hash_lock.lock));
-+	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
-+			 "suspicious find_inode_rcu() usage");
-+
-+	do {
-+		read_seqbegin_or_lock(&inode_hash_lock, &seq);
-+
-+		hlist_for_each_entry_rcu(inode, head, i_hash) {
-+			if (inode->i_sb == sb &&
-+			    !(READ_ONCE(inode->i_state) & (I_FREEING | I_WILL_FREE)) &&
-+			    test(inode, data))
-+				goto done;
-+		}
-+	} while (need_seqretry(&inode_hash_lock, seq));
-+
-+	inode = NULL;
-+done:
-+	done_seqretry(&inode_hash_lock, seq);
-+	return inode;
-+}
-+EXPORT_SYMBOL(find_inode_rcu);
-+
-+/**
-+ * find_inode_by_ino_rcu - Find an inode in the inode cache
-+ * @sb:		Super block of file system to search
-+ * @ino:	The inode number to match
-+ *
-+ * Search for the inode specified by @hashval and @data in the inode cache,
-+ * where the helper function @test will return 0 if the inode does not match
-+ * and 1 if it does.  The @test function must be responsible for taking the
-+ * i_lock spin_lock and checking i_state for an inode being freed or being
-+ * initialized.
-+ *
-+ * If successful, this will return the inode for which the @test function
-+ * returned 1 and NULL otherwise.
-+ *
-+ * The @test function is not permitted to take a ref on any inode presented
-+ * unless the caller is holding the inode hashtable lock.  It is also not
-+ * permitted to sleep, since it may be called with the RCU read lock held.
-+ *
-+ * The caller must hold either the RCU read lock or the inode hashtable lock.
-+ */
-+struct inode *find_inode_by_ino_rcu(struct super_block *sb,
-+				    unsigned long ino)
-+{
-+	struct hlist_head *head = inode_hashtable + hash(sb, ino);
-+	struct inode *inode;
-+	unsigned int seq = 0;
-+
-+	WARN_ON(lockdep_is_held(&inode_hash_lock.lock));
-+	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
-+			 "suspicious find_inode_by_ino_rcu() usage");
-+
-+	do {
-+		read_seqbegin_or_lock(&inode_hash_lock, &seq);
-+
-+		hlist_for_each_entry_rcu(inode, head, i_hash) {
-+			if (inode->i_ino == ino &&
-+			    inode->i_sb == sb &&
-+			    !(READ_ONCE(inode->i_state) & (I_FREEING | I_WILL_FREE)))
-+				goto done;
-+		}
-+	} while (need_seqretry(&inode_hash_lock, seq));
-+
-+	inode = NULL;
-+done:
-+	done_seqretry(&inode_hash_lock, seq);
-+	return inode;
-+}
-+EXPORT_SYMBOL(find_inode_by_ino_rcu);
-+
- int insert_inode_locked(struct inode *inode)
- {
- 	struct super_block *sb = inode->i_sb;
-@@ -1478,7 +1617,7 @@ int insert_inode_locked(struct inode *inode)
- 		if (likely(!old)) {
- 			spin_lock(&inode->i_lock);
- 			inode->i_state |= I_NEW | I_CREATING;
--			hlist_add_head(&inode->i_hash, head);
-+			hlist_add_head_rcu(&inode->i_hash, head);
- 			spin_unlock(&inode->i_lock);
- 			read_sequnlock_excl(&inode_hash_lock);
- 			return 0;
-@@ -1538,6 +1677,7 @@ static void iput_final(struct inode *inode)
- {
- 	struct super_block *sb = inode->i_sb;
- 	const struct super_operations *op = inode->i_sb->s_op;
-+	unsigned long state;
- 	int drop;
- 
- 	WARN_ON(inode->i_state & I_NEW);
-@@ -1553,16 +1693,20 @@ static void iput_final(struct inode *inode)
- 		return;
- 	}
- 
-+	state = READ_ONCE(inode->i_state);
- 	if (!drop) {
--		inode->i_state |= I_WILL_FREE;
-+		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
- 		spin_unlock(&inode->i_lock);
-+
- 		write_inode_now(inode, 1);
-+
- 		spin_lock(&inode->i_lock);
--		WARN_ON(inode->i_state & I_NEW);
--		inode->i_state &= ~I_WILL_FREE;
-+		state = READ_ONCE(inode->i_state);
-+		WARN_ON(state & I_NEW);
-+		state &= ~I_WILL_FREE;
- 	}
- 
--	inode->i_state |= I_FREEING;
-+	WRITE_ONCE(inode->i_state, state | I_FREEING);
- 	if (!list_empty(&inode->i_lru))
- 		inode_lru_list_del(inode);
- 	spin_unlock(&inode->i_lock);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 654edbb93199..bc7b0d1356a9 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2985,6 +2985,9 @@ extern struct inode *find_inode_nowait(struct super_block *,
- 				       int (*match)(struct inode *,
- 						    unsigned long, void *),
- 				       void *data);
-+extern struct inode *find_inode_rcu(struct super_block *, unsigned long,
-+				    int (*)(struct inode *, void *), void *);
-+extern struct inode *find_inode_by_ino_rcu(struct super_block *, unsigned long);
- extern int insert_inode_locked4(struct inode *, unsigned long, int (*test)(struct inode *, void *), void *);
- extern int insert_inode_locked(struct inode *);
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-
+Josef
