@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50C8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D101DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810D521872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96460217FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 18:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555610401;
-	bh=nXrPoiob8K/GTjGE7ZHosIJcSDy5jVo44HHyn3c6Xuo=;
+	s=default; t=1555610406;
+	bh=PmwoMh9RUbpSe9xHYs0oNfhiAZANcCE6qudcSyMuG2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MUxiMGEoltOIVNw+4Dv3xNUP/DI3ySEr+paUbHmGkTW8+h+6PwbGxh/yIFLWjxMwj
-	 kpp63kXpxDqUypj/IlGws3D3ze/mNBVtCa6p7yw1FShj6D/rzoN/VeKNWMkuOEO+AQ
-	 URdu7gTB/drAD0dZAana2/KalOXaK/F1FRgHpbMU=
+	b=2oYMS6qcLmpi6a5ZF7jIWQ+syirQO58jePdzljhNt8Ji0BezM2Td2D5eSNPbo7/9C
+	 A+gp7dZSJwKRR4dkXfm7/6V+9XVcjISsiNe8aC7XZOT3JjI4RgbzL6wY3miAahLSMc
+	 wU9IO9JF8o5DV06mLJ5BsqylS29eqYPNDxlIQ6sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389881AbfDRSAA (ORCPT
+        id S2390284AbfDRSAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 14:00:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54920 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 14:00:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390239AbfDRR7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 13:59:55 -0400
+        id S2390262AbfDRSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 14:00:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E45E221871;
-        Thu, 18 Apr 2019 17:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972CC218AE;
+        Thu, 18 Apr 2019 18:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555610394;
-        bh=nXrPoiob8K/GTjGE7ZHosIJcSDy5jVo44HHyn3c6Xuo=;
+        s=default; t=1555610402;
+        bh=PmwoMh9RUbpSe9xHYs0oNfhiAZANcCE6qudcSyMuG2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7We2ZTOnD7xjhLIgQnrIDkAG4JSp8/xlpjpubnjellp4rjp87Ff8dG1ecgPyegwo
-         Cg9034m9RuVs3dg6Q/87Q9hSkwjCX8eAQpQobn77YYkTwd5LYme5cLuuIe9YatqEqE
-         fRaCke+VYkWgpcZuKzQB9leKke2bPfnQX3vzTEgI=
+        b=Rq1vTcgBTNft56v8QmU8dYZPMfzF1hEOlP5dB+2r2tiKuBen+Fh0UmU+Ew/fQ0QJX
+         bs/FjkOOWsmfLVveQp3Kq0rtbGJN+Vaok6WcIdprywDBIgsn3eprKlH2Upi3M/yHJM
+         cIZd9QdOBbyqV7p76d0Ig+84gH7TBO2ejBOmYZcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, kjlu@umn.edu,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Roland Dreier <roland@purestorage.com>,
+        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
+        Nisha Aram <nisha.aram@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 044/110] x86/hpet: Prevent potential NULL pointer dereference
-Date:   Thu, 18 Apr 2019 19:56:33 +0200
-Message-Id: <20190418160443.050925476@linuxfoundation.org>
+Subject: [PATCH 4.19 020/110] thermal/int340x_thermal: Add additional UUIDs
+Date:   Thu, 18 Apr 2019 19:56:09 +0200
+Message-Id: <20190418160439.570024059@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
 References: <20190418160437.484158340@linuxfoundation.org>
@@ -66,41 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e84f116afca3719c9d0a1a78b47b48f75fd5724 ]
+[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
 
-hpet_virt_address may be NULL when ioremap_nocache fail, but the code lacks
-a check.
+Add more supported DPTF policies than the driver currently exposes.
 
-Add a check to prevent NULL pointer dereference.
-
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: kjlu@umn.edu
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Roland Dreier <roland@purestorage.com>
-Link: https://lkml.kernel.org/r/20190319021958.17275-1-pakki001@umn.edu
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Cc: Nisha Aram <nisha.aram@intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/hpet.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index b0acb22e5a46..1e3f1f140ffb 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -909,6 +909,8 @@ int __init hpet_enable(void)
- 		return 0;
+diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
+index e26b01c05e82..51c9097eaf7a 100644
+--- a/drivers/thermal/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
+@@ -22,6 +22,13 @@ enum int3400_thermal_uuid {
+ 	INT3400_THERMAL_PASSIVE_1,
+ 	INT3400_THERMAL_ACTIVE,
+ 	INT3400_THERMAL_CRITICAL,
++	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
++	INT3400_THERMAL_EMERGENCY_CALL_MODE,
++	INT3400_THERMAL_PASSIVE_2,
++	INT3400_THERMAL_POWER_BOSS,
++	INT3400_THERMAL_VIRTUAL_SENSOR,
++	INT3400_THERMAL_COOLING_MODE,
++	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
+ 	INT3400_THERMAL_MAXIMUM_UUID,
+ };
  
- 	hpet_set_mapping();
-+	if (!hpet_virt_address)
-+		return 0;
+@@ -29,6 +36,13 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
+ 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
+ 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
+ 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
++	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
++	"5349962F-71E6-431D-9AE8-0A635B710AEE",
++	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
++	"F5A35014-C209-46A4-993A-EB56DE7530A1",
++	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
++	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
++	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
+ };
  
- 	/*
- 	 * Read the period and check for a sane value:
+ struct int3400_thermal_priv {
 -- 
 2.19.1
 
