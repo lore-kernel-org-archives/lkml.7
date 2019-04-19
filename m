@@ -2,108 +2,111 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409EDC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F5C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E3121479
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A0D21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctBA88xk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjTNY/B6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfDSTcP (ORCPT
+        id S1727946AbfDSTco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:32:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45545 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727684AbfDSTcN (ORCPT
+        Fri, 19 Apr 2019 15:32:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42991 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfDSTcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:32:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y3so3032857pgk.12;
-        Fri, 19 Apr 2019 12:32:13 -0700 (PDT)
+        Fri, 19 Apr 2019 15:32:43 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w25so2936851pfi.9;
+        Fri, 19 Apr 2019 12:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bgOYNUsB0wPyvHZ3hNvXxT87/HJMQO14ngzODsNYyHU=;
-        b=ctBA88xkzwIFuLJdC8ZpinWF8eML+6NG+lKFJKXXWwX0kxg6PtHVW2i1MAysqm5e4q
-         TlESTou9lOQ1KR8qN/Q00Nn+f9iDTQrXJLI5Z5chkd9N75rzI6Lu4NZs+GjnG+fRsQ+x
-         BRro+FOA3oivCFvn12aSsL+yjM4YCeCeUS8CFp+f8IZtbeyVDn0NMqNIWpH3XwJaBOsd
-         O2TMFxhTsVZA4sr+sDvQuhNC9DbHY5E2YezA4qEMOxtree8i0OWlvqLTrC/LBwVnOPVK
-         kOGpuXbW8Gf2psYI38tomQlpGhYDSvTsqM7tK+bRkfTkbabvRgdeKotBzy6ndS087neH
-         sLvA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Opmc57fy+M6CMn85wO5GVzdSn9MSV8hVuhSL868U+yY=;
+        b=hjTNY/B65Cca8jZ0d6efgsSYEw1p5a5xCwxZU7j3wjXMwlJcvKs7Rf7AvPxMY9EESV
+         lZc9qJzsoJ+rugbZGFDREf/MnHS+Oeag6p8hLD6ZTial3L7ThBbPDGG47qIJTJ4OM6bC
+         YHLRTwwmFB6B4Jm4wJIh+rOxxZ0L90HIP5md/+mhIDIk4Dk/wiFdT3sBhYqWyz+/taZh
+         uIpTfcCxpgzacA81f1rllALMMnrxBUVVf25rVxfxj2sbfoSPq1KyIX9KAQEX6Cu5gaop
+         nwlZdr9YcB9lpQ34gaduqRghEPPp2e2W1esc+Vs7Xjf6rkuBpVKBc1vbdk7MNMUqCNR6
+         eGsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bgOYNUsB0wPyvHZ3hNvXxT87/HJMQO14ngzODsNYyHU=;
-        b=Fk15pWV2EoSJ0ELHGKQAWMoFZkum92wD9ZuanrG/hq5s/Bh08b3PedahuJ1sj7ipOv
-         wA3WLMMx4i6MMp4XdOL9csE8HoyfyEtq370ypdRQptOGPsTa38EIHmKN5XY11jvpBE5U
-         2QWdl57p5S3MixLBOZYLTIn9EPfftGe+9t/Ao6uc28BpsohBq5e5mKG1uiRuuig0cnYJ
-         Zq+7Emzap5x4SGVzSZjKXwtlkV+ApU7U++tha90wvy8MjB39L8umtdf+fxN8NRxBovej
-         Quv/Qnrb625R33i6g5TQd/dHNBJdxdpiL5GCrPs+iBE7miUYbSLA3f9LuN7zqN6UcBEB
-         nhkg==
-X-Gm-Message-State: APjAAAUAakNE2sPeb0VyJyQB/oUm2V5iHHQFxUFqmzNfoXSuz8J6glqZ
-        0Jsb0/DMkww93p8PcTjvf37rwluk
-X-Google-Smtp-Source: APXvYqzRK6SW3IkGdjdvVUmM2z3ES1iiCYsNP2Ai0dtLcY1LrRC23mhbP+S8BpDrfb9m09eHwbPavw==
-X-Received: by 2002:aa7:81d0:: with SMTP id c16mr3932994pfn.132.1555681021746;
-        Fri, 19 Apr 2019 06:37:01 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id w3sm8802501pfn.179.2019.04.19.06.36.59
+        bh=Opmc57fy+M6CMn85wO5GVzdSn9MSV8hVuhSL868U+yY=;
+        b=EIIXvmYRjucd7lSa0EKp78hwMaw5DfE03yPZTlnFDcW2o+a4jknHtePUEah2dgzbVo
+         Z3XJ5t5PxnGfeiSt70fD3Cra5XLkzNvcfWayYR73z+ksqx5uzRTLAgZyfVQ1fPw7ar+W
+         94y/whl1CXSzgVntGyaoHZNHnMreL/B7JHOcA/tI3GdpjtC7KKaSJFc3lzFvrIpqVJB6
+         oz0gSCZfEs6jNoarGS5dAFZCy/qxHSkNkq0+a9ckH6BYpqvZV4LSWeV3z27qkNESWIuQ
+         3Ss7ON0LpCTpUHF+wjwa2+wc3/Mb64cfWwoMCbzsYE7JX2mBRl0t55iGuHLRWXSoDVuW
+         I9rg==
+X-Gm-Message-State: APjAAAV9yQpC+mJhipof5maRjEnKAHIE/XiR524pHLc67/92enDvtGnG
+        wCXsa2ObYa3KuAdB9apbtnL5KhHTdn/KiQ==
+X-Google-Smtp-Source: APXvYqyGiCWg7OGG1tA7wDwKM7SRJsi4DTOHa1VVBFCV/MYLUhpfATPz5EYoFKYuhxol9Lnh59zVMQ==
+X-Received: by 2002:a63:3281:: with SMTP id y123mr2734240pgy.272.1555663574072;
+        Fri, 19 Apr 2019 01:46:14 -0700 (PDT)
+Received: from localhost.localdomain ([132.237.175.246])
+        by smtp.gmail.com with ESMTPSA id y3sm4688740pge.7.2019.04.19.01.46.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 06:37:00 -0700 (PDT)
-Subject: Re: [PATCH 1/4] net/skbuff: don't waste memory reserves
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Willem de Bruijn <willemb@google.com>,
-        Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190418180524.23489-1-aryabinin@virtuozzo.com>
- <791f4f23-d931-4ac8-4e60-3ffe46c4ece2@gmail.com>
- <c2c270d9-29c0-b993-84c5-4c994608f7c8@virtuozzo.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <299e5bb3-665b-2d3c-fa4c-75466c4a51bf@gmail.com>
-Date:   Fri, 19 Apr 2019 06:36:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 19 Apr 2019 01:46:13 -0700 (PDT)
+From:   crag0715@gmail.com
+To:     linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, hayeswang@realtek.com,
+        mario_limonciello@dell.com, crag0715@gmail.com,
+        "Crag.Wang" <crag.wang@dell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Glass <sjg@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Grant Grundler <grundler@chromium.org>,
+        David Chen <david.chen7@dell.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Charles Hyde <charles.hyde@dell.corp-partner.google.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 1/1] r8152: sync sa_family with the media type of network device
+Date:   Fri, 19 Apr 2019 16:45:46 +0800
+Message-Id: <20190419084547.26220-1-crag0715@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <c2c270d9-29c0-b993-84c5-4c994608f7c8@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Crag.Wang" <crag.wang@dell.com>
 
+Without this patch the socket address family sporadically gets wrong
+value ends up the dev_set_mac_address() fails to set the desired MAC
+address.
 
-On 04/19/2019 06:17 AM, Andrey Ryabinin wrote:
-> 
-> 
-> On 4/18/19 9:55 PM, Eric Dumazet wrote:
+Change-Id: Ib48a303730bee81667a2859be32e48cc8a66f277
+Signed-off-by: Crag.Wang <crag.wang@dell.com>
+---
+ drivers/net/usb/r8152.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
->> Are you targeting net or net-next tree ?
->>
-> 
-> I think it's up to Dave to decide where the patches should go. They apply cleanly on both trees.
-> The last two patches just minor cleanups so they are definitely net-next material.
-> 
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 4c63b40d5e00..41fb39ce69c9 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -1225,6 +1225,8 @@ static int determine_ethernet_addr(struct r8152 *tp, struct sockaddr *sa)
+ 	struct net_device *dev = tp->netdev;
+ 	int ret;
+ 
++	sa->sa_family = dev->type;
++
+ 	if (tp->version == RTL_VER_01) {
+ 		ret = pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
+ 	} else {
+-- 
+2.20.1
 
-Not at all, please carefully read 
-
-Documentation/networking/netdev-FAQ.rst
-
-Q: How do I indicate which tree (net vs. net-next) my patch should be in?
-
-You need to split your patches in two series, not assume that David will manually do
-the manual work for you.
-
-Thank you
