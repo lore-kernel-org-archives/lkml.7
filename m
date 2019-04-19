@@ -2,104 +2,152 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151C6C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A8EC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C348C20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555701428;
-	bh=bsRNP6NvDhIFN7DBpQOgDPLNIYrfNgtQ3V/EoaNP+Y4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=OEdDUhQpYpLpRmmc7WdpQSruCwHdT5WEs8RdzHd3MI09byYhtNoIbuZFFFEHExQ5T
-	 0+Co5JYNWsimHSyjLjtkzMMtrLTlpRHe1DDUq8ksobNBApVGbwxIH4WhExWR9bzYNb
-	 D6CX5dLJNNjVwD9LS5gi8XhKIqJJasyIu5/Sf1ic=
+	by mail.kernel.org (Postfix) with ESMTP id E44BD204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:18:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tRFstsV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfDSTRH (ORCPT
+        id S1728061AbfDSTSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfDSTRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:17:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BBEA204FD;
-        Fri, 19 Apr 2019 19:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555701426;
-        bh=bsRNP6NvDhIFN7DBpQOgDPLNIYrfNgtQ3V/EoaNP+Y4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2B/S3vElBU/3u1rxWI+MR2XJBlCKBTovyngUb6penW0DqewG1QSO526Q1I3MOytHT
-         fnEdTMZwR0kmZYuLvV9yv4p5+DIOz8N969IyacSDDvdaXZSUUur+gxKrg2+ONXdbh0
-         wYEgfWkmkh9ppBzjVCHeVc8W+LGZjb7Lw8HLMHZk=
-Date:   Fri, 19 Apr 2019 21:17:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [GIT PULL] TTY/Serial fixes for 5.1-rc6
-Message-ID: <20190419191703.GA4077@kroah.com>
+        Fri, 19 Apr 2019 15:18:24 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39575 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfDSTSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:18:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i17so2931216pfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=htQo5ULp1r9WrGxwNnWzafOVFDLMMLJb0v1Sl5g4wrQ=;
+        b=tRFstsV7JsxedOaa21pVSKpbOigtWYRXdjXt0XpHtU1RqL6aHuTepaEbN/vMhlAcuS
+         NrjfX1pres/nyK8PozNEdIsGw3Mgjt31Y1EorPozX5ej++FB+Kbf3YDjkPlyZeLVeq8x
+         5xaEp0HruLP/wAXFJFVvqSxt54ROSP/Yr1h8xKCCcX6vBi+NbRJMdSTcstU6TmViqliF
+         5jS6I624KEkZ/DYFWC8f1E7EcFO+nCZ5GC24hn7EpO1+Njqp5d2u6QrCeypUuBYmlXxl
+         CleR7/E0P0gGw5TiOUxUSRRredgPXZkCRiTboZnMXTD9wmXZF8CqnlnYrw7sii1ud23L
+         FpJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=htQo5ULp1r9WrGxwNnWzafOVFDLMMLJb0v1Sl5g4wrQ=;
+        b=Q8N2qvVd5iXy7y9IMsbJ3dQXIsoXo4yuBZZ9fIeEoIwXy/5EIRvmEU7wHOdMh6H4Hj
+         JvCOJnEKH3l8QiLDjUfMc9GPEIbVfQDKKoivF0ASlxD153/1+6H/EpBrI82XQ7nIdgv+
+         fIcoDJuk9Dty6h7T096SLdVuKMpGoGuPYjxuxhBOX5g83K6V4aM4gRzFKyrswodjNflP
+         0MrSdjRd/OsqLDvdBw+UCzP4bnfzxG5IFBr1MsaX8uygcHQUjC+mbsNvAGWZIGDHi5Vx
+         jT7xhSq4+voLgIl1o5VLJV1W6ax5xZqMDOKHWv4Urr9S9/q4mL6/30n7cROwC7ujal8d
+         1d+w==
+X-Gm-Message-State: APjAAAVroe56AVMX3x0g31NS6dmXrvykew82173A8poOmFndWl1ZZzEH
+        QI03qBwdyDTIYW2krRD/Yo1xhA==
+X-Google-Smtp-Source: APXvYqxjBAA4uqPIpSyZfwreiIjZo/1gxP8H/bj4leRVysHhL45uquM7Adx4dbrM7zqyU0bXnt9DtA==
+X-Received: by 2002:a63:f40d:: with SMTP id g13mr5551465pgi.345.1555701503422;
+        Fri, 19 Apr 2019 12:18:23 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:6d49:9ddc:13aa:21c9])
+        by smtp.googlemail.com with ESMTPSA id g73sm8119521pfd.185.2019.04.19.12.18.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 12:18:22 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Atish Patra <atish.patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial\@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
+In-Reply-To: <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
+References: <20190413020111.23400-1-paul.walmsley@sifive.com> <7hmukmew5j.fsf@baylibre.com> <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
+Date:   Fri, 19 Apr 2019 12:18:21 -0700
+Message-ID: <7h5zr9dcsi.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+Atish Patra <atish.patra@wdc.com> writes:
 
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+> On 4/18/19 4:22 PM, Kevin Hilman wrote:
+>> Hi Paul,
+>> 
+>> Paul Walmsley <paul.walmsley@sifive.com> writes:
+>> 
+>>> This series adds a serial driver, with console support, for the
+>>> UART IP block present on the SiFive FU540 SoC.  The programming
+>>> model is straightforward, but unique.
+>>>
+>>> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
+>>> open-source FSBL (with appropriate patches to the DT data).
+>>>
+>>> This fifth version fixes a bug in the set_termios handler,
+>>> found by Andreas Schwab <schwab@suse.de>.
+>>>
+>>> The patches in this series can also be found, with the PRCI patches,
+>>> DT patches, and DT prerequisite patch, at:
+>>>
+>>> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
+>> 
+>> I tried this branch, and it doesn't boot on my unleashed board.
+>> 
+>> Here's the boot log when I pass the DT built from your branch via
+>> u-boot: https://termbin.com/rfp3.
+>> 
+>
+> Unfortunately, that won't work. The current DT modifications by OpenSBI.
+>
+> 1. Change hart status to "masked" from "okay".
+> 2. M-mode interrupt masking in PLIC node.
+> 3. Add a chosen node for serial access in U-Boot.
+>
+> You can ignore 3 for your use case. However, if you pass a dtb built 
+> from source code, that will have hart0 enabled and M-mode interrupts 
+> enabled in DT.
 
-are available in the Git repository at:
+Hmm, so what you're saying is there not currently any way to pass a DT
+built from source using OpenSBI + mainline u-boot?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.1-rc6
+As a short-term workaround, is there a way to make these changes from
+the u-boot command-line after loading a DTB built from source into
+memory?  If so, I could at least script that part.
 
-for you to fetch changes up to c53051128bb0e8754e13345d782ca69e5e1ce36d:
 
-  sc16is7xx: put err_spi and err_i2c into correct #ifdef (2019-04-19 14:09:23 +0200)
+> Not sure if we should do these DT modifications in U-Boot as well.
 
-----------------------------------------------------------------
-TTY/Serial fixes for 5.1-rc6
+I guess so (and I'd be happy to test the patch.)
 
-Here are 5 small fixes for some tty/serial/vt issues that have been
-reported.
+Either that, or the upstream DTs (or code) should have those features to
+the right settings.
 
-The vt one has been around for a while, it is good to finally get that
-resolved.  The others fix a build warning that showed up in 5.1-rc1, and
-resolve a problem in the sh-sci driver.
+Speaking of which, I tried to patch the DT from Paul's recent series[1]
+to make the necessary changes.  I can see where to change cpu0 from
+"okay" to "masked", but I'm not so sure how to make the PLIC change.
 
-Note, the second patch for build warning fix for the sc16is7xx driver
-was just applied to the tree, as it resolves a problem with the previous
-patch to try to solve the issue.  It has not shown up in linux-next yet,
-unlike all of the other patches, but it has passed 0-day testing and
-everyone seems to agree that it is correct.
+I was hoping to be able to review/test Paul's DT patches, but now I'm a
+bit confused as to how to do that.
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> I also noticed that your kernel is booting only 1 hart.
+> Just FYI: RISC-V SMP for U-Boot patches are merged in master. So you 
+> should be able to boot all cpus. You can ingore FU540_ENABLED_HART_MASK 
+> in OpenSBI build as well.
 
-----------------------------------------------------------------
-Geert Uytterhoeven (2):
-      serial: sh-sci: Fix HSCIF RX sampling point calculation
-      serial: sh-sci: Fix HSCIF RX sampling point adjustment
+Ah, nice.
 
-Guoqing Jiang (2):
-      sc16is7xx: move label 'err_spi' to correct section
-      sc16is7xx: put err_spi and err_i2c into correct #ifdef
+I've just updated to u-boot master branch with SMP enabled, and build a
+new openSBI (also from master branch) with u-boot payload. Using your
+v5.1-rc4_unleashed branch, I see 4 CPUs booting:
+https://termbin.com/kg13
 
-Mikulas Patocka (1):
-      vt: fix cursor when clearing the screen
+Thanks,
 
- drivers/tty/serial/sc16is7xx.c | 4 +++-
- drivers/tty/serial/sh-sci.c    | 6 ++++--
- drivers/tty/vt/vt.c            | 3 ++-
- 3 files changed, 9 insertions(+), 4 deletions(-)
+Kevin
+
+[1] https://lore.kernel.org/lkml/20190413020111.23400-1-paul.walmsley@sifive.com/T/#m77daa2857b76ec7cbca0672ad03ae286f61ca0e6
