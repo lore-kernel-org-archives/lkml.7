@@ -2,162 +2,312 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1688C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE7C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAF720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872BB20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="fFHu3Xu5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmNVyqKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfDSSzP (ORCPT
+        id S1728527AbfDSSzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:55:15 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:48878 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728579AbfDSSzF (ORCPT
+        Fri, 19 Apr 2019 14:55:42 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39591 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726172AbfDSSzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:55:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by chill.innovation.ch (Postfix) with ESMTP id 80B4C640143;
-        Fri, 19 Apr 2019 01:19:35 -0700 (PDT)
-X-Virus-Scanned: amavisd-new at 
-Received: from chill.innovation.ch ([127.0.0.1])
-        by localhost (chill.innovation.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id nqPfu8HP1u-B; Fri, 19 Apr 2019 01:19:33 -0700 (PDT)
-From:   =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 5DBD0640133
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1555661973;
-        bh=Gv1xgHW+RE56+HzqhEhxQY+ro1F8Hy2d5+/lEBcnuM0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFHu3Xu5VxtY4IlGKjA7HnmuonPvk0k94NHyRHtHX3F6zTWbPcRsLeKU8VRyotJWl
-         R4IiE3Wl9eIbP4S36N+Cv/I9HksRlm3G8IO+Dfnku9tVQnAaOQ6joZt3CrOi/r/5Ut
-         M1CjDwB4GBbd0SWCdeM7mQEKFkndlnu1Qyd2LBJxkq/MxKbhSS+KL8wEOH9xsk8t36
-         odun5oqgYGbh6gLUMW2bJkUqllY2OisxYBg6lmhvNZM60/Dk+N7nH0u4NiYWKAdcaV
-         0Q6y1/zp8NTnTw1DGUSXgjt/+3dvWCSD/Y2mbJEH3WwHRPscHtRcUxkwVAgIPLhz8t
-         wAzJ3e25OkMKQ==
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/2] drm/bridge: sil_sii8620: make remote control optional.
-Date:   Fri, 19 Apr 2019 01:19:25 -0700
-Message-Id: <20190419081926.13567-2-ronald@innovation.ch>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190419081926.13567-1-ronald@innovation.ch>
-References: <20190419081926.13567-1-ronald@innovation.ch>
+        Fri, 19 Apr 2019 14:55:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j9so7921977wrn.6;
+        Fri, 19 Apr 2019 11:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:cc:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=I3dd98omRXec5fhk5/RnYCCTGikhhFY2HueNh1URl4w=;
+        b=RmNVyqKV+YOwTpRkAQjSBZXx8RDltuVS78IIPGOhYDbi1MxMGphL/iOlAiDwQFW7ct
+         +Qc2y7uRcc0Y1qQncaDkTa1GjjYJ25D81Sop0e9jhPLuvYAnxz2jQt/BSzmWykBeyoC2
+         Mha1Qi3fx+TC4xQVLKEDs6NMgvROigiV+Ux/czhBgppm81mQNTa28g3Cm3e5oLRJVdN0
+         Cf7i5kB2MGO3ZFwzigdJrgGjhby0BuubJhSsz94cULM1uCzq3QfYLCNZxNyXHI/F7zC7
+         M/iCzKDPtmOq7IW7MxaVg36S7sTsE2XboFdCKug+OcG3KZZ+E3snxt8Kt+SatDnyC+aT
+         PxGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I3dd98omRXec5fhk5/RnYCCTGikhhFY2HueNh1URl4w=;
+        b=rc3IM+OBRXa+3B5rURx8x18ckQj3lDtIHWYw/ZhobERQ3JjZ5DUADRQa0PxrhzhsJI
+         EOwOsRLlxWDeEIdMomR4Y9wdDp5HrZDfvOWnG9Bxovw6nsotOG2Itn/ONS/gPeeOsgfW
+         dTP03vBJ5JwZsrfBtDnmgaPJK+TfUojqUVACuUr7ph8KUqnNoytptbeXjVbQa/e0dgRK
+         WRmf4THuEwAcyszQnDYriLoTpg3SblPtytC4QzI6TBlMZLKNYTN5kZGAASDqVM6oo0M0
+         vxsBXAj5OaZaRP822DH4yiAAMCYCQUKZN65b2dYRgva+EzFW3p5+X2L3Y8Hsm/Mw4Wnn
+         wf9Q==
+X-Gm-Message-State: APjAAAWdwd7N7ORKjZVENSLLbO2jiEAu2EVduXn+J78vRIF6Hj84BBlj
+        oHDk8E5gaacprMfQIXSBqbTCKpdtxw0=
+X-Google-Smtp-Source: APXvYqzA+Hdc1G3g+9brljf2582Z4HHUnhSfzdIc1i/Au4kF8SIasjUMSoShPc3H1Gl0syLldLUChg==
+X-Received: by 2002:adf:cd83:: with SMTP id q3mr2230532wrj.228.1555668734131;
+        Fri, 19 Apr 2019 03:12:14 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id o6sm5786455wre.60.2019.04.19.03.12.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 03:12:13 -0700 (PDT)
+Subject: [PATCH v3 07/11] platform/x86: asus-wmi: Organize code into sections
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Message-ID: <9a4351a5-ab04-2ebb-9961-1c50dda9800d@gmail.com>
+Date:   Fri, 19 Apr 2019 12:12:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
-of RC_CORE) changed the driver to select both RC_CORE and INPUT.
-However, this causes problems with other drivers, in particular an input
-driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
-commit):
+The driver has grown pretty big and will grow more, which makes it hard to
+navigate and understand. Add uniform comments to the code and ensure that
+it is sorted into logical sections.
 
-  drivers/clk/Kconfig:9:error: recursive dependency detected!
-  drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
-  drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
-  drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
-  drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
-  drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
-  drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
-  drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
-  drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
-
-According to the docs and general consensus, select should only be used
-for non user-visible symbols, but both RC_CORE and INPUT are
-user-visible. Furthermore almost all other references to INPUT
-throughout the kernel config are depends, not selects. For this reason
-the first part of this change reverts commit d6abe6df706c.
-
-In order to address the original reason for commit d6abe6df706c, namely
-that not all boards use the remote controller functionality and hence
-should not need have to deal with RC_CORE, the second part of this
-change now makes the remote control support in the driver optional and
-contingent on RC_CORE being defined. And with this the hard dependency
-on INPUT also goes away as that is only needed if RC_CORE is defined
-(which in turn already depends on INPUT).
-
-CC: Inki Dae <inki.dae@samsung.com>
-CC: Andrzej Hajda <a.hajda@samsung.com>
-CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
 ---
- drivers/gpu/drm/bridge/Kconfig       |  3 +--
- drivers/gpu/drm/bridge/sil-sii8620.c | 10 +++++++---
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 94 ++++++++++++++++-----------------
+ 1 file changed, 46 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 2fee47b0d50b..9cf07105b73a 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -85,8 +85,7 @@ config DRM_SIL_SII8620
- 	depends on OF
- 	select DRM_KMS_HELPER
- 	imply EXTCON
--	select INPUT
--	select RC_CORE
-+	imply RC_CORE
- 	help
- 	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index f782dac4cbe7..e69e55635afb 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -193,6 +193,8 @@ struct asus_wmi {
+ 	struct asus_wmi_driver *driver;
+ };
  
-diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
-index a6e8f4591e63..cff3131aae6c 100644
---- a/drivers/gpu/drm/bridge/sil-sii8620.c
-+++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-@@ -1763,10 +1763,8 @@ static bool sii8620_rcp_consume(struct sii8620 *ctx, u8 scancode)
- 
- 	scancode &= MHL_RCP_KEY_ID_MASK;
- 
--	if (!ctx->rc_dev) {
--		dev_dbg(ctx->dev, "RCP input device not initialized\n");
-+	if (!IS_ENABLED(CONFIG_RC_CORE) || !ctx->rc_dev)
- 		return false;
--	}
- 
- 	if (pressed)
- 		rc_keydown(ctx->rc_dev, RC_PROTO_CEC, scancode, 0);
-@@ -2103,6 +2101,9 @@ static void sii8620_init_rcp_input_dev(struct sii8620 *ctx)
- 	struct rc_dev *rc_dev;
- 	int ret;
- 
-+	if (!IS_ENABLED(CONFIG_RC_CORE))
-+		return;
++/* Input **********************************************************************/
 +
- 	rc_dev = rc_allocate_device(RC_DRIVER_SCANCODE);
- 	if (!rc_dev) {
- 		dev_err(ctx->dev, "Failed to allocate RC device\n");
-@@ -2217,6 +2218,9 @@ static void sii8620_detach(struct drm_bridge *bridge)
+ static int asus_wmi_input_init(struct asus_wmi *asus)
  {
- 	struct sii8620 *ctx = bridge_to_sii8620(bridge);
- 
-+	if (!IS_ENABLED(CONFIG_RC_CORE))
-+		return;
-+
- 	rc_unregister_device(ctx->rc_dev);
+ 	int err;
+@@ -230,6 +232,8 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+ 	asus->inputdev = NULL;
  }
  
++/* WMI ************************************************************************/
++
+ static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
+ 		u32 arg2, u32 *retval)
+ {
+@@ -248,7 +252,7 @@ static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
+ 				     &input, &output);
+ 
+ 	if (ACPI_FAILURE(status))
+-		goto exit;
++		return -EIO;
+ 
+ 	obj = (union acpi_object *)output.pointer;
+ 	if (obj && obj->type == ACPI_TYPE_INTEGER)
+@@ -259,10 +263,6 @@ static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
+ 
+ 	kfree(obj);
+ 
+-exit:
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+-
+ 	if (tmp == ASUS_WMI_UNSUPPORTED_METHOD)
+ 		return -ENODEV;
+ 
+@@ -346,9 +346,8 @@ static int asus_wmi_get_devstate_simple(struct asus_wmi *asus, u32 dev_id)
+ 					  ASUS_WMI_DSTS_STATUS_BIT);
+ }
+ 
+-/*
+- * LEDs
+- */
++/* LEDs ***********************************************************************/
++
+ /*
+  * These functions actually update the LED's, and are called from a
+  * workqueue. By doing this as separate work rather than when the LED
+@@ -658,6 +657,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 	return rv;
+ }
+ 
++/* RF *************************************************************************/
+ 
+ /*
+  * PCI hotplug (for wlan rfkill)
+@@ -1080,6 +1080,8 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ 	return result;
+ }
+ 
++/* Quirks *********************************************************************/
++
+ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
+ {
+ 	struct pci_dev *xhci_pdev;
+@@ -1112,9 +1114,8 @@ static void asus_wmi_set_als(void)
+ 	asus_wmi_set_devstate(ASUS_WMI_DEVID_ALS_ENABLE, 1, NULL);
+ }
+ 
+-/*
+- * Hwmon device
+- */
++/* Hwmon device ***************************************************************/
++
+ static int asus_hwmon_agfn_fan_speed_read(struct asus_wmi *asus, int fan,
+ 					  int *speed)
+ {
+@@ -1390,7 +1391,6 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 	else if (attr == &dev_attr_temp1_input.attr)
+ 		dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
+ 
+-
+ 	if (attr == &dev_attr_fan1_input.attr
+ 	    || attr == &dev_attr_fan1_label.attr
+ 	    || attr == &dev_attr_pwm1.attr
+@@ -1453,9 +1453,27 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
+ 	return 0;
+ }
+ 
+-/*
+- * Backlight
+- */
++static int asus_wmi_fan_init(struct asus_wmi *asus)
++{
++	int status;
++
++	asus->asus_hwmon_pwm = -1;
++	asus->asus_hwmon_num_fans = -1;
++	asus->asus_hwmon_fan_manual_mode = false;
++
++	status = asus_hwmon_get_fan_number(asus, &asus->asus_hwmon_num_fans);
++	if (status) {
++		asus->asus_hwmon_num_fans = 0;
++		pr_warn("Could not determine number of fans: %d\n", status);
++		return -ENXIO;
++	}
++
++	pr_info("Number of fans: %d\n", asus->asus_hwmon_num_fans);
++	return 0;
++}
++
++/* Backlight ******************************************************************/
++
+ static int read_backlight_power(struct asus_wmi *asus)
+ {
+ 	int ret;
+@@ -1637,6 +1655,8 @@ static int is_display_toggle(int code)
+ 	return 0;
+ }
+ 
++/* WMI events *****************************************************************/
++
+ static int asus_wmi_get_next_event(u32 value)
+ {
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+@@ -1762,9 +1782,8 @@ static int asus_wmi_notify_queue_flush(struct asus_wmi *asus)
+ 	return -EIO;
+ }
+ 
+-/*
+- * Sys helpers
+- */
++/* Sysfs **********************************************************************/
++
+ static int parse_arg(const char *buf, unsigned long count, int *val)
+ {
+ 	if (!count)
+@@ -1903,9 +1922,8 @@ static int asus_wmi_sysfs_init(struct platform_device *device)
+ 	return sysfs_create_group(&device->dev.kobj, &platform_attribute_group);
+ }
+ 
+-/*
+- * Platform device
+- */
++/* Platform device ************************************************************/
++
+ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ {
+ 	int rv;
+@@ -1990,9 +2008,8 @@ static void asus_wmi_platform_exit(struct asus_wmi *asus)
+ 	asus_wmi_sysfs_exit(asus->platform_device);
+ }
+ 
+-/*
+- * debugfs
+- */
++/* debugfs ********************************************************************/
++
+ struct asus_wmi_debugfs_node {
+ 	struct asus_wmi *asus;
+ 	char *name;
+@@ -2139,28 +2156,8 @@ static int asus_wmi_debugfs_init(struct asus_wmi *asus)
+ 	return -ENOMEM;
+ }
+ 
+-static int asus_wmi_fan_init(struct asus_wmi *asus)
+-{
+-	int status;
+-
+-	asus->asus_hwmon_pwm = -1;
+-	asus->asus_hwmon_num_fans = -1;
+-	asus->asus_hwmon_fan_manual_mode = false;
+-
+-	status = asus_hwmon_get_fan_number(asus, &asus->asus_hwmon_num_fans);
+-	if (status) {
+-		asus->asus_hwmon_num_fans = 0;
+-		pr_warn("Could not determine number of fans: %d\n", status);
+-		return -ENXIO;
+-	}
+-
+-	pr_info("Number of fans: %d\n", asus->asus_hwmon_num_fans);
+-	return 0;
+-}
++/* Init / exit ****************************************************************/
+ 
+-/*
+- * WMI Driver
+- */
+ static int asus_wmi_add(struct platform_device *pdev)
+ {
+ 	struct platform_driver *pdrv = to_platform_driver(pdev->dev.driver);
+@@ -2288,9 +2285,8 @@ static int asus_wmi_remove(struct platform_device *device)
+ 	return 0;
+ }
+ 
+-/*
+- * Platform driver - hibernate/resume callbacks
+- */
++/* Platform driver - hibernate/resume callbacks *******************************/
++
+ static int asus_hotk_thaw(struct device *device)
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(device);
+@@ -2362,6 +2358,8 @@ static const struct dev_pm_ops asus_pm_ops = {
+ 	.resume = asus_hotk_resume,
+ };
+ 
++/* Registration ***************************************************************/
++
+ static int asus_wmi_probe(struct platform_device *pdev)
+ {
+ 	struct platform_driver *pdrv = to_platform_driver(pdev->dev.driver);
 -- 
-2.20.1
+2.17.1
 
