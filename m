@@ -2,320 +2,132 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B48C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F42C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B18C204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA3C204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OCxyJwb3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhPbXeAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfDSSjj (ORCPT
+        id S1727426AbfDSSjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:39:39 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44808 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfDSSji (ORCPT
+        Fri, 19 Apr 2019 14:39:53 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:36192 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfDSSjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:39:38 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i13so5013148edf.11
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:39:37 -0700 (PDT)
+        Fri, 19 Apr 2019 14:39:52 -0400
+Received: by mail-yb1-f194.google.com with SMTP id e76so2322949ybc.3;
+        Fri, 19 Apr 2019 11:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=u4FGDTGgoDAs1dv77V6bsPcEIfWMPgrtvDaygo75UPE=;
-        b=OCxyJwb3V9tWrOQq093WUFOxs0f705/bBT9K+Nw1S5+gYPl3nT36KXTSVt8aUcUSqv
-         6Spxdd+GQVtuCn79mgC/3BSBN+NJ53SlSwrF2QDj/umNGZ97r3CfbttyOPpp3PXLhcDR
-         JUaq15qWNJkYET+3OASC9IEBsC1QceKoV8v552SOM6P3UZbwC8a8slclt7enQmYDJ9fj
-         q9k09Zw9tQU/DGoQrUweSW1Cw/gCLrJ6aunPiCtX1wUeTM6MzbIC+E9YtObCTzYhhIu2
-         pDbiS226xBS7PYYaahi4KKpG8PC9lGocHFrymMk3fyqQbUZlduL5lDsXVB+xIv+fwpqf
-         nJVA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=heT2Fiu4i5olnWvQfzuhWUCvK7pfdqNTELrz3cur6Vk=;
+        b=GhPbXeAOwhAEB/9KGJplG/h/JbxDFzQMgy5qndFrfiqD+pHxO/JnQ3XM1vq/7arYlF
+         K3zDNPRdMsZcjIeRKzThdC8pP/Un+kLGZtDp6846K6WQlzY20t56aQbr8rzKiX4r88AR
+         MOIsFFv2ES35R9W+McWYMtc4tG4hasIOb8SfBYpBThxFnMPXeay6aMbHMPnrlmPH/3mS
+         ZI25cZRKvXOKi2xxwx4RCIZsCqe5CPsdV1I/wWGuXn2tVaYIVW5tOqyUks5pabvQXHbg
+         2u4cnUED4o4hft6IG7M84EAtsbr9g+aBjknp+o4HRez5UCOKgttDAdQXBBEm1InKmpPA
+         v5ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=u4FGDTGgoDAs1dv77V6bsPcEIfWMPgrtvDaygo75UPE=;
-        b=kAvM325BSQBT5mlSC7iR9oQVcVwyhgllcRF0hZpH1Q6ZMoxitE1H/9KKHSf0eZMHhT
-         uHrIAa0HyttKPAyXrFKhVnmApZnVoIedRwKMHLJCqiJ/9qh+ldvuroN2/kkXNald/w5a
-         uNvDveAW0uOpuNTQ5uWtzI4hR8wIiI0qiP3q9N4HPLWeH/731XHaSWl6u0Y9ITwN/sru
-         ZbV03YwKQ6HVHBbfHXX/BRUfCePGPBNy1nC3qPRI/wE+5QlScYNasc2lPGz2d/3dwDNN
-         0EC5OsYsrCJHMgpVY2hxyCRBA/PpIOAZTVfaQ2/OtHjaN/hokUA0caThsOlF0QwzAwAe
-         rByw==
-X-Gm-Message-State: APjAAAU/pMgFTbiPGZsY/4MG/gE+jNiIy5XN2Jwyp/OfjBfEJg9FGIMv
-        8Ik3XisXu3TYYuaVNJ7nc5JUt+HLJNa70jIlPQ8r1Q==
-X-Google-Smtp-Source: APXvYqyVCUpdJdb4pQnLt8WFwTiRagwiYIPZt3NFc7mzg2LFdWWT9W/541utO3d40leyVKP7wMVMqw5p6Rht+NDD4gE=
-X-Received: by 2002:a17:906:af6d:: with SMTP id os13mr2606020ejb.222.1555695038909;
- Fri, 19 Apr 2019 10:30:38 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=heT2Fiu4i5olnWvQfzuhWUCvK7pfdqNTELrz3cur6Vk=;
+        b=jJWA/SuH+loGJZe55vVkcEznSpDhgUwUgS9LWUdR5pOjI+7jCCzBYJvnXSmBDpvB09
+         dQCbZyzv01RpynXe9K2T3Flu2tE73Jk4nA3Qd79GQioNryd/calvbW1cAcuhrSzBYU1H
+         F96Vi/0b2FkXveUIelqty6AUiTrhDnXA93IIaff1SK4xckLQ7Als+RgFya4qGTw+CeRg
+         VImfuakGCXyE9TOMMCO7g+4eYjP0/xA048EcTHG8d8aURHG7pcwejBKbYqcdTggwFCVp
+         StQvVgXDakLcg/5OjEShkNEk/t7Knl3pm7o5+QVHUXAHaClQ/jB7cFKHX/djeyKR15w2
+         LHzg==
+X-Gm-Message-State: APjAAAWymx+nkJkTDgq3Uwb1/ZKzkz5yUq/5oP+jEfbjM7Bs56eC7mXA
+        5X8dhV18m98wZYhmWJorMjtEhVOjshB0YmKGmnRbTmb8
+X-Google-Smtp-Source: APXvYqwQE6u5kucbo7rlQ7VC5EseV1ZNo3zjvTRTbsUCG9hUYJhFPlqXQglxP0ZCiC+icSDE46/NOCWt6ywkavIE8Ac=
+X-Received: by 2002:a5b:64a:: with SMTP id o10mr1673373ybq.32.1555660386981;
+ Fri, 19 Apr 2019 00:53:06 -0700 (PDT)
 MIME-Version: 1.0
-From:   Eric Hankland <ehankland@google.com>
-Date:   Fri, 19 Apr 2019 10:30:27 -0700
-Message-ID: <CAOyeoRVZEf_dppPYoX4HiwibSfmeh3WMVX5w3T6=xhbEg66CGQ@mail.gmail.com>
-Subject: [PATCH RFC] KVM: x86: Add a mechanism for restricting guest PMU
- access to a set of whitelisted events
-To:     kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
-        linux-kernel@vger.kernel.org
+References: <0000000000007dedf00576dd53eb@google.com> <000000000000c51f7505850b5f3e@google.com>
+ <CAOQ4uxgUNDTWvFzFJR_OENBZ_hYtwLGHem_yUd406hr7f5QX+g@mail.gmail.com> <CACT4Y+bXB06ZAdvwsdgsNvscOUBemH7C_G-ojKirGVeGefCWpQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+bXB06ZAdvwsdgsNvscOUBemH7C_G-ojKirGVeGefCWpQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 19 Apr 2019 10:52:55 +0300
+Message-ID: <CAOQ4uxhm_gShPC_gbRePGoq5xTU3m_cvJ5fosxpyX=aXA5AmCw@mail.gmail.com>
+Subject: Re: possible deadlock in acct_pin_kill
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some events can provide a guest with information about other guests or the host
- (e.g. L3 cache stats); providing the capability to restrict access to
-a "safe" set
- of events would limit the potential for the PMU to be used in any side channel
- attacks. This change introduces a new vcpu ioctl that sets an event whitelist.
-If the guest attempts to program a counter for any unwhitelisted event,
-the kernel counter won't be created, so any RDPMC/RDMSR will
-show 0 instances of that event.
+On Thu, Mar 28, 2019 at 10:23 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, Mar 27, 2019 at 8:16 AM Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > On Wed, Mar 27, 2019 at 5:53 AM syzbot
+> > <syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com> wrote:
+> > >
+> > > syzbot has bisected this bug to:
+> > >
+> > > commit e950564b97fd0f541b02eb207685d0746f5ecf29
+> > > Author: Miklos Szeredi <mszeredi@redhat.com>
+> > > Date:   Tue Jul 24 13:01:55 2018 +0000
+> > >
+> > >      vfs: don't evict uninitialized inode
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12123143200000
+> > > start commit:   da5322e6 Merge tag 'selinux-pr-20181115' of git://git.kern..
+> > > git tree:       upstream
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=11123143200000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=16123143200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=d86f24333880b605
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=2a73a6ea9507b7112141
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12298533400000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ff545d400000
+> > >
+> > > Reported-by: syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com
+> > > Fixes: e950564b97fd ("vfs: don't evict uninitialized inode")
+> > >
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> >
+> > The repro seems fine for catching the subject bug, but I can't get it
+> > to reproduce on my system. I have written a simpler reliable repro.
+> > Its in the commit message of the patch to test below:
+> >
+> > #syz test: https://github.com/amir73il/linux.git acct_pin_kill_deadlock
+> >
+> > I have been pinging Al about the fix above for a while, but no response:
+> >
+> > https://marc.info/?l=linux-fsdevel&m=155119096826039&w=2
+>
+> I would ping it as well, but I can't find it in my inbox. Is it on LKML?
+>
 
-Signed-off-by: Eric Hankland <ehankland@google.com>
----
+No. it's scope is linux-fsdevel.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9407aade9416..49c9e5b9d96f 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -472,6 +472,7 @@ struct kvm_pmu {
-        struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
-        struct irq_work irq_work;
-        u64 reprogram_pmi;
-+       struct kvm_pmu_whitelist *whitelist;
- };
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 30955c88a8cf..a9ae5298fe93 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -238,6 +238,13 @@ struct kvm_cpuid2 {
-        struct kvm_cpuid_entry2 entries[0];
- };
+Anyway, this fix by Al is in linux-next now:
 
-+/* for KVM_SET_PMU_WHITELIST */
-+struct kvm_pmu_whitelist {
-+       __u64 event_mask;
-+       __u16 num_events;
-+       __u64 events[0];
-+};
-+
- /* for KVM_GET_PIT and KVM_SET_PIT */
- struct kvm_pit_channel_state {
-        __u32 count; /* can be 65536 */
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 026db42a86c3..7b1da21b219f 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -101,6 +101,9 @@ static void pmc_reprogram_counter(struct kvm_pmc
-*pmc, u32 type,
-                                  bool exclude_kernel, bool intr,
-                                  bool in_tx, bool in_tx_cp)
- {
-+       struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-+       int  i;
-+       u64 event_config;
-        struct perf_event *event;
-        struct perf_event_attr attr = {
-                .type = type,
-@@ -127,6 +130,19 @@ static void pmc_reprogram_counter(struct kvm_pmc
-*pmc, u32 type,
-                attr.config |= HSW_IN_TX_CHECKPOINTED;
-        }
+#syz fix: acct_on(): don't mess with freeze protection
 
-+       if (pmu->whitelist) {
-+               event_config = attr.config;
-+               if (type == PERF_TYPE_HARDWARE)
-+                       event_config = kvm_x86_ops->pmu_ops->get_event_code(
-+                               attr.config);
-+               event_config &= pmu->whitelist->event_mask;
-+               for (i = 0; i < pmu->whitelist->num_events; i++)
-+                       if (event_config == pmu->whitelist->events[i])
-+                               break;
-+               if (i == pmu->whitelist->num_events)
-+                       return;
-+       }
-+
-        event = perf_event_create_kernel_counter(&attr, -1, current,
-                                                 intr ? kvm_perf_overflow_intr :
-                                                 kvm_perf_overflow, pmc);
-@@ -244,6 +260,39 @@ int kvm_pmu_is_valid_msr_idx(struct kvm_vcpu
-*vcpu, unsigned idx)
-        return kvm_x86_ops->pmu_ops->is_valid_msr_idx(vcpu, idx);
- }
-
-+int kvm_vcpu_ioctl_set_pmu_whitelist(struct kvm_vcpu *vcpu,
-+                                    struct kvm_pmu_whitelist __user *whtlst)
-+{
-+       struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+       struct kvm_pmu_whitelist *old = pmu->whitelist;
-+       struct kvm_pmu_whitelist *new = NULL;
-+       struct kvm_pmu_whitelist tmp;
-+       int r;
-+       size_t size;
-+
-+       r = -EFAULT;
-+       if (copy_from_user(&tmp, whtlst, sizeof(struct kvm_pmu_whitelist)))
-+               goto err;
-+
-+       size = sizeof(tmp) + sizeof(tmp.events[0]) * tmp.num_events;
-+       new = kvzalloc(size, GFP_KERNEL_ACCOUNT);
-+       r = -ENOMEM;
-+       if (!new)
-+               goto err;
-+
-+       r = -EFAULT;
-+       if (copy_from_user(new, whtlst, size))
-+               goto err;
-+
-+       pmu->whitelist = new;
-+
-+       kvfree(old);
-+       return 0;
-+err:
-+       kvfree(new);
-+       return r;
-+}
-+
- int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- {
-        bool fast_mode = idx & (1u << 31);
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index f8f5da947afe..067b80f1bc32 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -23,6 +23,7 @@ struct kvm_pmu_ops {
-        unsigned (*find_arch_event)(struct kvm_pmu *pmu, u8 event_select,
-                                    u8 unit_mask);
-        unsigned (*find_fixed_event)(int idx);
-+       u64 (*get_event_code)(unsigned event_type);
-        bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
-        struct kvm_pmc *(*pmc_idx_to_pmc)(struct kvm_pmu *pmu, int pmc_idx);
-        struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx);
-@@ -116,6 +117,8 @@ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
-
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
- void kvm_pmu_handle_event(struct kvm_vcpu *vcpu);
-+int kvm_vcpu_ioctl_set_pmu_whitelist(struct kvm_vcpu *vcpu,
-+                                    struct kvm_pmu_whitelist __user *whtlst);
- int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned pmc, u64 *data);
- int kvm_pmu_is_valid_msr_idx(struct kvm_vcpu *vcpu, unsigned idx);
- bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr);
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index cd944435dfbd..414729c7508c 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -48,6 +48,21 @@ static unsigned amd_find_arch_event(struct kvm_pmu *pmu,
-        return amd_event_mapping[i].event_type;
- }
-
-+static u64 amd_get_event_code(unsigned event_type)
-+{
-+       int i;
-+       u64 event_code = 0;
-+
-+       for (i = 0; i < ARRAY_SIZE(amd_event_mapping); i++)
-+               if (amd_event_mapping[i].event_type == event_type) {
-+                       event_code = amd_event_mapping[i].eventsel |
-+                               ((u64)amd_event_mapping[i].unit_mask << 8);
-+                       break;
-+               }
-+
-+       return event_code;
-+}
-+
- /* return PERF_COUNT_HW_MAX as AMD doesn't have fixed events */
- static unsigned amd_find_fixed_event(int idx)
- {
-@@ -192,6 +207,7 @@ static void amd_pmu_reset(struct kvm_vcpu *vcpu)
- struct kvm_pmu_ops amd_pmu_ops = {
-        .find_arch_event = amd_find_arch_event,
-        .find_fixed_event = amd_find_fixed_event,
-+       .get_event_code = amd_get_event_code,
-        .pmc_is_enabled = amd_pmc_is_enabled,
-        .pmc_idx_to_pmc = amd_pmc_idx_to_pmc,
-        .msr_idx_to_pmc = amd_msr_idx_to_pmc,
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index b18c28592986..8d37068a122e 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -67,6 +67,21 @@ static void global_ctrl_changed(struct kvm_pmu
-*pmu, u64 data)
-                reprogram_counter(pmu, bit);
- }
-
-+static u64 intel_get_event_code(unsigned event_type)
-+{
-+       int i;
-+       u64 event_code = 0;
-+
-+       for (i = 0; i < ARRAY_SIZE(intel_arch_events); i++)
-+               if (intel_arch_events[i].event_type == event_type) {
-+                       event_code = intel_arch_events[i].eventsel |
-+                               ((u64)intel_arch_events[i].unit_mask << 8);
-+                       break;
-+               }
-+
-+       return event_code;
-+}
-+
- static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
-                                      u8 event_select,
-                                      u8 unit_mask)
-@@ -352,6 +367,7 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
-
- struct kvm_pmu_ops intel_pmu_ops = {
-        .find_arch_event = intel_find_arch_event,
-+       .get_event_code = intel_get_event_code,
-        .find_fixed_event = intel_find_fixed_event,
-        .pmc_is_enabled = intel_pmc_is_enabled,
-        .pmc_idx_to_pmc = intel_pmc_idx_to_pmc,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5ef809fa9c45..dd6d165ae138 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3077,6 +3077,7 @@ int kvm_vm_ioctl_check_extension(struct kvm
-*kvm, long ext)
-        int r = 0;
-
-        switch (ext) {
-+       case KVM_CAP_PMU_WHITELIST:
-        case KVM_CAP_IRQCHIP:
-        case KVM_CAP_HLT:
-        case KVM_CAP_MMU_SHADOW_CACHE_CONTROL:
-@@ -4463,6 +4464,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
-                r = kvm_x86_ops->set_ple(vcpu, &ple);
-                break;
-        }
-+       case KVM_SET_PMU_WHITELIST: {
-+               struct kvm_pmu_whitelist __user *whitelist = argp;
-+
-+               r = kvm_vcpu_ioctl_set_pmu_whitelist(vcpu, whitelist);
-+               goto out;
-+       }
-        default:
-                r = -EINVAL;
-        }
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 59fee7246f75..d4f00a76a608 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1090,6 +1090,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PPC_GET_CPU_CHAR 151
- #define KVM_CAP_S390_BPB 152
- #define KVM_CAP_GET_MSR_FEATURES 153
-+#define KVM_CAP_PMU_WHITELIST 154
- #define KVM_CAP_MSR_PLATFORM_INFO 159
- #define KVM_CAP_EXCEPTION_PAYLOAD 164
-
-@@ -1603,6 +1604,8 @@ struct kvm_s390_ucas_mapping {
- #define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
- /* Memory Encryption Commands */
- #define KVM_MEMORY_ENCRYPT_OP      _IOWR(KVMIO, 0xba, unsigned long)
-+/* Available with KVM_CAP_PMU_WHITELIST */
-+#define KVM_SET_PMU_WHITELIST       _IOW(KVMIO, 0xbb, struct kvm_pmu_whitelist)
-
- struct kvm_enc_region {
-        __u64 addr;
+Thanks,
+Amir.
