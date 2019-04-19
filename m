@@ -2,147 +2,184 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E61CC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF626C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADD720645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8454E21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="dSxlCpbL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gEoeke4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfDST2x (ORCPT
+        id S1727530AbfDST3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:28:53 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33555 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfDST2x (ORCPT
+        Fri, 19 Apr 2019 15:29:36 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:52928 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDST3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:28:53 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j11so4691111lfm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f8awkoFgJo+7sK0/t71k/qt5Gg5gyX9rXy3SAgYCU+U=;
-        b=dSxlCpbLirYkjVORpxe+f+H6+6jho/uixN8Rws9Ju2GRfPAgh4P3cSj45wsYrHpGdd
-         t3ElM5Z4PShUQJtPAQLTOoFw4OAdKyRdoWQgVUFkA4i2x+EHXAukvaRbs01lT2absiwt
-         30YE4MRhtZTOsmrLfW4alm/lIypUsLQdZNo6RqtnVIaOi3aNRXZAYZmN+LKxqnBWpryA
-         XNAQJAyCazdJO1XUVj0ZXkMqKf+bm8GNmUC3f3H9+nCoFR42tyDSA0K2csZ6cwTw4t7+
-         Yfk09FCamdjkN+Zmr25Jgi90G++8EIKITP9uDuWJl9wuZE4zTFUAjc5iQYA/W4b1uoE4
-         Ii2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f8awkoFgJo+7sK0/t71k/qt5Gg5gyX9rXy3SAgYCU+U=;
-        b=LrYOiO1XDS4ruWhdPRXim4quAHSgL+H/2YwZahUrsqgpKHSaBqNta3WlkJVtg9Mkt9
-         7HrWGkAwkanQSf8Tb+7hk4iHOBCd+dZR1LBfi2Z4KxNTGrRxLVdoISoNWfOkXT1VIdCH
-         MJjpdHuZKRclAy6nsLyejHamszVndyEZRn9RatFY68wrDnzLtXtShDlUU5BC/BOMTL5m
-         9PYDppIGrjBaUFJ6yPqluE9B6tEHKD+u3pB/6DLiNFDYgMh4nYvD+CMstx0GhcFDyiJH
-         rdbDHJD00mYc+uhGxWSs8hxhVMG0kcFyqfWUHt2YWzmI1X0fu1+6pi/uP2rQvYmULiuc
-         NU2A==
-X-Gm-Message-State: APjAAAVywPkO7KRVjQun9PbUUy3GD3BHw99woxymxkgoFGROg7TEq4fy
-        5o2Rme9AMhR1k6//rjuGYzxhmdRcFSlvBRIWPMaY
-X-Google-Smtp-Source: APXvYqzBJqbVUnf0fY0jaEzpCdPCVacMyfip+5rGxzp4JLaXM+UOIkL3UXFqlLikP6OgQcV4L4M5RVNsMxr37VBeTs8=
-X-Received: by 2002:a19:2814:: with SMTP id o20mr3081918lfo.117.1555702130446;
- Fri, 19 Apr 2019 12:28:50 -0700 (PDT)
+        Fri, 19 Apr 2019 15:29:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1555702175; x=1587238175;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=A+7h5WbTxEYTGjfoEubh+u73kHoj9ynkG6MnblQmpP4=;
+  b=gEoeke4vkV19ClMO4xu5LH1wrQZZGhrIVMZVEKBuBHXPTfiyiMEyFOv1
+   GEcYEsmj/R0AvPsKls/oEgfhy4P2S3uQ1jgm7zF+6X68DLlYIXiTA/epx
+   R/3+UoJ99rlc3mHiQh29EFrAZqpLLlklE1IX6LupFP2m+sjktk4xIVfPF
+   H9g8hrqeAl7qOKroda0VoYDz94vq2G/3jT9JjKEi/8jjx3rXPPE1U7lTY
+   iReMlnGdmZvt2zGk3DAm0QXg0ARukyKoExg8hJbHJre6I3eRhTa7Idt6M
+   ctJZidQrjsos8mzyFxsTrJAOTEQ+fguDLrFHlXnkg8BjXZbJMrKJMUhjB
+   w==;
+X-IronPort-AV: E=Sophos;i="5.60,371,1549900800"; 
+   d="scan'208";a="212156732"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2019 03:29:34 +0800
+IronPort-SDR: Vw2xOaMWS6rdR443v/0aHCPO6ZQ3aU9eYNIIVe9Gvg3uC4FiPD3zfCfpHahQpMwTOGLK6Xnc1o
+ 2eXoZ39tAlJIgcztgRZh5L4vyHVkirBVIv8iqy3imRYK9yrYnPAiiRDTG8ecCdE1BkubpZyLpQ
+ +aWDENj8YElKEjYarSRAu5Nbq8WD0lvQyZTwPhVJWOBgqh1HDbcbisKqtCLWXJhfbbW7MtOZo1
+ ICKM9EnMiWMyGLxPAHLAofYjkaRXhZS0pHWjs28oluyHesqMxbI15FU2izf6E7cyvl5ekVBclQ
+ DXDafeY5+bX2clqZnQELUz+z
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP; 19 Apr 2019 12:06:14 -0700
+IronPort-SDR: 6LU24F7zEw6o0ER6ll9wtyVM/KuKY0PPYLt5iD21lXXc0Dl+j+QK2O7Jz9xWQmSm6iGRqrgHHL
+ tgl9C8yU/ML2cD/Cg44+Cxzl+Ut113gQx079gemju7YbfAv7wiG5hVa7lZxH3l5HwFUTkWg/4i
+ 6MWUDnpnwby0vJTjyZudP/58raJb5RsxerpiqzUq1KJWbYIHqocwMOlcK6BHEIkY+jmdRwCY3o
+ Hkin8yYUux70pH8lCYFZZlxNUCEJr4O1sk0EaWsSoQkHxKfIWrTY2cMNV9hUmuVxaS29tgFNj0
+ yrQ=
+Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
+  by uls-op-cesaip02.wdc.com with ESMTP; 19 Apr 2019 12:29:35 -0700
+Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver for
+ the SiFive FU540 UART
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+References: <20190413020111.23400-1-paul.walmsley@sifive.com>
+ <7hmukmew5j.fsf@baylibre.com> <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
+ <7h5zr9dcsi.fsf@baylibre.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <f2bb876c-2b44-663b-ea06-d849f721fb6c@wdc.com>
+Date:   Fri, 19 Apr 2019 12:29:33 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1555686587-13866-1-git-send-email-wang6495@umn.edu>
-In-Reply-To: <1555686587-13866-1-git-send-email-wang6495@umn.edu>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 19 Apr 2019 15:28:39 -0400
-Message-ID: <CAHC9VhQNGiw_+KhZPC7DhzS83u3gi+Ch1AKCeZitsFg=98gUDA@mail.gmail.com>
-Subject: Re: [PATCH v2] audit: fix a memory leak bug
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Eric Paris <eparis@redhat.com>,
-        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7h5zr9dcsi.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 11:10 AM Wenwen Wang <wang6495@umn.edu> wrote:
->
-> In audit_rule_change(), audit_data_to_entry() is firstly invoked to
-> translate the payload data to the kernel's rule representation. In
-> audit_data_to_entry(), depending on the audit field type, an audit tree may
-> be created in audit_make_tree(), which eventually invokes kmalloc() to
-> allocate the tree.  Since this tree is a temporary tree, it will be then
-> freed in the following execution, e.g., audit_add_rule() if the message
-> type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
-> AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
-> AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
-> temporary tree is not freed.
->
-> To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
-> or AUDIT_DEL_RULE.
->
-> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-> ---
->  kernel/auditfilter.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
+On 4/19/19 12:18 PM, Kevin Hilman wrote:
+> Atish Patra <atish.patra@wdc.com> writes:
+> 
+>> On 4/18/19 4:22 PM, Kevin Hilman wrote:
+>>> Hi Paul,
+>>>
+>>> Paul Walmsley <paul.walmsley@sifive.com> writes:
+>>>
+>>>> This series adds a serial driver, with console support, for the
+>>>> UART IP block present on the SiFive FU540 SoC.  The programming
+>>>> model is straightforward, but unique.
+>>>>
+>>>> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
+>>>> open-source FSBL (with appropriate patches to the DT data).
+>>>>
+>>>> This fifth version fixes a bug in the set_termios handler,
+>>>> found by Andreas Schwab <schwab@suse.de>.
+>>>>
+>>>> The patches in this series can also be found, with the PRCI patches,
+>>>> DT patches, and DT prerequisite patch, at:
+>>>>
+>>>> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
+>>>
+>>> I tried this branch, and it doesn't boot on my unleashed board.
+>>>
+>>> Here's the boot log when I pass the DT built from your branch via
+>>> u-boot: https://termbin.com/rfp3.
+>>>
+>>
+>> Unfortunately, that won't work. The current DT modifications by OpenSBI.
+>>
+>> 1. Change hart status to "masked" from "okay".
+>> 2. M-mode interrupt masking in PLIC node.
+>> 3. Add a chosen node for serial access in U-Boot.
+>>
+>> You can ignore 3 for your use case. However, if you pass a dtb built
+>> from source code, that will have hart0 enabled and M-mode interrupts
+>> enabled in DT.
+> 
+> Hmm, so what you're saying is there not currently any way to pass a DT
+> built from source using OpenSBI + mainline u-boot?
+> 
 
-This looks good, it just needs some minor vertical whitespace fixes (see below).
+OpenSBI can accept DT built from source with following build option.
 
-> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-> index 63f8b3f..923b858 100644
-> --- a/kernel/auditfilter.c
-> +++ b/kernel/auditfilter.c
-> @@ -1114,22 +1114,28 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
->         int err = 0;
->         struct audit_entry *entry;
->
-> -       entry = audit_data_to_entry(data, datasz);
-> -       if (IS_ERR(entry))
-> -               return PTR_ERR(entry);
-> -
->         switch (type) {
->         case AUDIT_ADD_RULE:
-> +               entry = audit_data_to_entry(data, datasz);
-> +               if (IS_ERR(entry))
-> +                       return PTR_ERR(entry);
-> +
+FW_PAYLOAD_FDT="<unleashed>.dtb"
 
-I realize you are taking the blank line from the code above, but we
-probably don't need it here.
+More documentation:
+https://github.com/riscv/opensbi/blob/master/docs/firmware/fw_payload.md
 
->                 err = audit_add_rule(entry);
->                 audit_log_rule_change("add_rule", &entry->rule, !err);
->                 break;
-> +
+> As a short-term workaround, is there a way to make these changes from
+> the u-boot command-line after loading a DTB built from source into
+> memory?  If so, I could at least script that part.
+> 
+> 
+>> Not sure if we should do these DT modifications in U-Boot as well.
+> 
+> I guess so (and I'd be happy to test the patch.)
+> 
+> Either that, or the upstream DTs (or code) should have those features to
+> the right settings.
+> 
+> Speaking of which, I tried to patch the DT from Paul's recent series[1]
+> to make the necessary changes.  I can see where to change cpu0 from
+> "okay" to "masked", but I'm not so sure how to make the PLIC change.
+> 
 
-Definitely do not add this blank line.
+Here is the code snippet of how OpenSBI modifies the DT.
 
->         case AUDIT_DEL_RULE:
-> +               entry = audit_data_to_entry(data, datasz);
-> +               if (IS_ERR(entry))
-> +                       return PTR_ERR(entry);
-> +
->                 err = audit_del_rule(entry);
->                 audit_log_rule_change("remove_rule", &entry->rule, !err);
->                 break;
-> +
+https://github.com/riscv/opensbi/blob/master/platform/sifive/fu540/platform.c#L53
 
-Same here.
+If you just want to use custom built DTB, you can use OpenSBI build 
+option instead of scripting these.
 
->         default:
-> -               err = -EINVAL;
->                 WARN_ON(1);
-> +               return -EINVAL;
->         }
->
->         if (err || type == AUDIT_DEL_RULE) {
-> --
-> 2.7.4
+We don't want OpenSBI to keep modifying the DT forever. But we have to 
+do it until there is a better solution available.
 
--- 
-paul moore
-www.paul-moore.com
+> I was hoping to be able to review/test Paul's DT patches, but now I'm a
+> bit confused as to how to do that.
+> 
+>> I also noticed that your kernel is booting only 1 hart.
+>> Just FYI: RISC-V SMP for U-Boot patches are merged in master. So you
+>> should be able to boot all cpus. You can ingore FU540_ENABLED_HART_MASK
+>> in OpenSBI build as well.
+> 
+> Ah, nice.
+> 
+> I've just updated to u-boot master branch with SMP enabled, and build a
+> new openSBI (also from master branch) with u-boot payload. Using your
+> v5.1-rc4_unleashed branch, I see 4 CPUs booting:
+> https://termbin.com/kg13
+> 
+
+Great.
+
+Regards,
+Atish
+> Thanks,
+> 
+> Kevin
+> 
+> [1] https://lore.kernel.org/lkml/20190413020111.23400-1-paul.walmsley@sifive.com/T/#m77daa2857b76ec7cbca0672ad03ae286f61ca0e6
+> 
+
