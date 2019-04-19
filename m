@@ -2,211 +2,148 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACF1C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA7FC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23EB521736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB38A2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="f0FSmr18"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXcVghTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfDSW7E (ORCPT
+        id S1726928AbfDSW7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 18:59:04 -0400
-Received: from mail-eopbgr770059.outbound.protection.outlook.com ([40.107.77.59]:40865
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfDSW7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 18:59:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VT8nZW5dos+3pCPX64wfw4xqA1GLqtfELwI5iKGog4Y=;
- b=f0FSmr182U+9tM81YTdO4ODxXxcBaQSVDab1MXeesv0DmIjoPEZqHwN2hr1mwjdKJdt5WwioIvonZO3u7IDLdp4Ani05UOcq9JLfZ2NTcqS5eqzuqJgng6cgPa+H2TWCsi2tkmfXHZeFe23bNEEO/R1B/8Wxj1/skzrsvUuj/q8=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4504.namprd05.prod.outlook.com (52.135.203.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.6; Fri, 19 Apr 2019 22:58:53 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::4140:b8f2:8e3:f5fd]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::4140:b8f2:8e3:f5fd%4]) with mapi id 15.20.1813.011; Fri, 19 Apr 2019
- 22:58:53 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Wang <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        Julien Freche <jfreche@vmware.com>
-Subject: Re: [PATCH v2 1/4] mm/balloon_compaction: list interfaces
-Thread-Topic: [PATCH v2 1/4] mm/balloon_compaction: list interfaces
-Thread-Index: AQHU5L/fQHqTTJNOzkOghmdzHIOs1aZELwsAgAAHcICAAAPQAIAAAx8A
-Date:   Fri, 19 Apr 2019 22:58:53 +0000
-Message-ID: <8FA36729-9174-409D-ADA6-CD50331866E4@vmware.com>
-References: <20190328010718.2248-1-namit@vmware.com>
- <20190328010718.2248-2-namit@vmware.com>
- <20190419174452-mutt-send-email-mst@kernel.org>
- <B2DD0CC3-DA8D-408C-986F-130B4B00A892@vmware.com>
- <20190419183802-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190419183802-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12a8f4fb-316f-4846-2202-08d6c51a9889
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4504;
-x-ms-traffictypediagnostic: BYAPR05MB4504:
-x-ms-exchange-purlcount: 1
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR05MB45044245C84FEC727C612787D0270@BYAPR05MB4504.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0012E6D357
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(366004)(39860400002)(346002)(189003)(199004)(66556008)(54906003)(6306002)(316002)(305945005)(966005)(2616005)(446003)(6512007)(186003)(11346002)(36756003)(14454004)(476003)(97736004)(8676002)(4326008)(64756008)(68736007)(66946007)(66446008)(478600001)(6436002)(6916009)(229853002)(486006)(6486002)(107886003)(14444005)(102836004)(7736002)(53546011)(66066001)(81166006)(3846002)(83716004)(6116002)(256004)(26005)(6246003)(73956011)(99286004)(8936002)(25786009)(86362001)(33656002)(6506007)(93886005)(76176011)(2906002)(53936002)(71200400001)(82746002)(5660300002)(81156014)(71190400001)(76116006)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4504;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WS3k3+i3W44dfviJz3Zu5zIH8VGe39HQOka7r+8X2QdKjbHeIXB6LnwXWKA2XfgjzCmtMqKcii1LV35ifreX6VLmiBXbEdlCU6kS9rnSyM31l2ZQMvynY4SL/Yu0vYKwB4HlI9GsqM+z/F2ilZd8kCWxGLIaDSjMhrSXUvqSh1DfLUdVd9YAFyNlWNL+oArdwOaZhQNJHsqAJ5XfIoVNU2mrWEFbJUuWjZva5+UVo/xMbLEu7d+32XVTQAOECBMCyDNDfe7KeWnwyKm5v0cHjvE8Ww6Q1sUMjZjN4PysrvHrjUKMjFWRykCS2jC1esEXPLvGYYPaYlpqbqh4wYPlnZ96QDL9crZc513PXWDykIQHaGx2WNJmKgH52fmi1DGvZ1fwMO1c1ISqrIojcOpyMC8kQSPvK6Barl5rCuXMXDQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <53FB3F53A3B0FA418D5DE7D5E126D154@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 19 Apr 2019 18:59:42 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37312 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfDSW7m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 18:59:42 -0400
+Received: by mail-it1-f196.google.com with SMTP id u65so10350863itc.2;
+        Fri, 19 Apr 2019 15:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vnMl9QufHWeKqWpHvzndv041maEwiL/0hMQzJUIU77I=;
+        b=SXcVghTSx0kLE9c4ECxgKHFj5/E+7jIPziyBsgbfsKjOfksLfiXNK0A2Y2MbLGnEUT
+         f1FqPc8DoPeYsbPaTLtLDJD5LcATY2qg2uuCuMxOBTdBL+G0UFpRfWgCNXwB8HbhT9OE
+         d1kUPjoFUKtaihte7ZE1KN1BP2MFjh/Ma6bxmq+bA8XYe7hPqU3UtLx7n34craL/KSfP
+         i9ZuVqIuArlThbaRhc2kYgTPBg/QI6TigWk3X0H4zAlark/sUC6GQ3d/tcymXoQK1iiu
+         7CoXqgBEFoFNnG/WPgNMAPZYjwXKjdbmwh27PBdSqpMRTvI6YxkfvKaRaLL+er4770rN
+         9uaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vnMl9QufHWeKqWpHvzndv041maEwiL/0hMQzJUIU77I=;
+        b=g1NL4hPZnHKqF0Aq5wmwrGgQ/L6Nq6OMFSJaaPE2IuLNem/a2vmxunfXLSUlvAWFk3
+         EQtbEPQF7uXEoAZ2jjyiM63b9fSelCC901Ar9QXbdd82CZ4mm9LSQbhU5MTeHENC08LN
+         vovLzpngPF/AyoMmzOdKIubcjqOsQ26P9z1gln9ZZhGn+Qlmt8xPydkU1FGueai9Fe5i
+         vq6EJXi+RY4WB8nV+tiMwvfIAwIgoaNAb8yujZoXdUxSDE4URTfwayx/Li9fsgQQGH1X
+         0dlsFuGHnBWTTc0qf5Mc0glfqcSu8bczdnE+U+WRSsKfBaM6oiqdDt/zK7QrvXNK8gLZ
+         X6Uw==
+X-Gm-Message-State: APjAAAUmn3AhQHAmMajf/qCb2WWBF0ffpU1yWxBZdNP4ayireEh0M/Ne
+        gTX9l+FkTTBzBRZ9B+isGfheSlfcm5VWyR7RriU=
+X-Google-Smtp-Source: APXvYqzzgRScKNCXkpIywakET3E0qZieSINPLp92ypxW3WH1QnZKa/QZ1z0X6NK0EAMxpdFb42k3pJlJnDvUbhDdYMs=
+X-Received: by 2002:a24:4210:: with SMTP id i16mr4696113itb.37.1555714781085;
+ Fri, 19 Apr 2019 15:59:41 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12a8f4fb-316f-4846-2202-08d6c51a9889
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 22:58:53.6267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4504
+References: <20190418155652.22181-1-alban@kinvolk.io> <CAH3MdRUMavDst+KssmV=EtwQTudq12ZvXhiP-qiBb+24R8vpGA@mail.gmail.com>
+ <CADZs7q6XahoWDKWu90xEais_kJ1rKekcXWd2Lh+WyvKiJCtG1w@mail.gmail.com>
+In-Reply-To: <CADZs7q6XahoWDKWu90xEais_kJ1rKekcXWd2Lh+WyvKiJCtG1w@mail.gmail.com>
+From:   Y Song <ys114321@gmail.com>
+Date:   Fri, 19 Apr 2019 15:59:04 -0700
+Message-ID: <CAH3MdRUiXrVwHKHb-XuQffrDAEZHovjxCvRtQ69J-=_L=FX2Ng@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/3] bpf: sock ops: add netns ino and dev in
+ bpf context
+To:     Alban Crequy <alban@kinvolk.io>
+Cc:     Alban Crequy <alban.crequy@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBBcHIgMTksIDIwMTksIGF0IDM6NDcgUE0sIE1pY2hhZWwgUy4gVHNpcmtpbiA8bXN0QHJl
-ZGhhdC5jb20+IHdyb3RlOg0KPiANCj4gT24gRnJpLCBBcHIgMTksIDIwMTkgYXQgMTA6MzQ6MDRQ
-TSArMDAwMCwgTmFkYXYgQW1pdCB3cm90ZToNCj4+PiBPbiBBcHIgMTksIDIwMTksIGF0IDM6MDcg
-UE0sIE1pY2hhZWwgUy4gVHNpcmtpbiA8bXN0QHJlZGhhdC5jb20+IHdyb3RlOg0KPj4+IA0KPj4+
-IE9uIFRodSwgTWFyIDI4LCAyMDE5IGF0IDAxOjA3OjE1QU0gKzAwMDAsIE5hZGF2IEFtaXQgd3Jv
-dGU6DQo+Pj4+IEludHJvZHVjZSBpbnRlcmZhY2VzIGZvciBiYWxsb29uaW5nIGVucXVldWVpbmcg
-YW5kIGRlcXVldWVpbmcgb2YgYSBsaXN0DQo+Pj4+IG9mIHBhZ2VzLiBUaGVzZSBpbnRlcmZhY2Vz
-IHJlZHVjZSB0aGUgb3ZlcmhlYWQgb2Ygc3RvcmluZyBhbmQgcmVzdG9yaW5nDQo+Pj4+IElSUXMg
-YnkgYmF0Y2hpbmcgdGhlIG9wZXJhdGlvbnMuIEluIGFkZGl0aW9uIHRoZXkgZG8gbm90IHBhbmlj
-IGlmIHRoZQ0KPj4+PiBsaXN0IG9mIHBhZ2VzIGlzIGVtcHR5Lg0KPj4+PiANCj4+Pj4gQ2M6ICJN
-aWNoYWVsIFMuIFRzaXJraW4iIDxtc3RAcmVkaGF0LmNvbT4NCj4+Pj4gQ2M6IEphc29uIFdhbmcg
-PGphc293YW5nQHJlZGhhdC5jb20+DQo+Pj4+IENjOiBsaW51eC1tbUBrdmFjay5vcmcNCj4+Pj4g
-Q2M6IHZpcnR1YWxpemF0aW9uQGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnDQo+Pj4+IFJldmll
-d2VkLWJ5OiBYYXZpZXIgRGVndWlsbGFyZCA8eGRlZ3VpbGxhcmRAdm13YXJlLmNvbT4NCj4+Pj4g
-U2lnbmVkLW9mZi1ieTogTmFkYXYgQW1pdCA8bmFtaXRAdm13YXJlLmNvbT4NCj4+Pj4gLS0tDQo+
-Pj4+IGluY2x1ZGUvbGludXgvYmFsbG9vbl9jb21wYWN0aW9uLmggfCAgIDQgKw0KPj4+PiBtbS9i
-YWxsb29uX2NvbXBhY3Rpb24uYyAgICAgICAgICAgIHwgMTQ1ICsrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLS0tDQo+Pj4+IDIgZmlsZXMgY2hhbmdlZCwgMTExIGluc2VydGlvbnMoKyksIDM4IGRl
-bGV0aW9ucygtKQ0KPj4+PiANCj4+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvYmFsbG9v
-bl9jb21wYWN0aW9uLmggYi9pbmNsdWRlL2xpbnV4L2JhbGxvb25fY29tcGFjdGlvbi5oDQo+Pj4+
-IGluZGV4IGYxMTFjNzgwZWYxZC4uMWRhNzllZGFkYjY5IDEwMDY0NA0KPj4+PiAtLS0gYS9pbmNs
-dWRlL2xpbnV4L2JhbGxvb25fY29tcGFjdGlvbi5oDQo+Pj4+ICsrKyBiL2luY2x1ZGUvbGludXgv
-YmFsbG9vbl9jb21wYWN0aW9uLmgNCj4+Pj4gQEAgLTY0LDYgKzY0LDEwIEBAIGV4dGVybiBzdHJ1
-Y3QgcGFnZSAqYmFsbG9vbl9wYWdlX2FsbG9jKHZvaWQpOw0KPj4+PiBleHRlcm4gdm9pZCBiYWxs
-b29uX3BhZ2VfZW5xdWV1ZShzdHJ1Y3QgYmFsbG9vbl9kZXZfaW5mbyAqYl9kZXZfaW5mbywNCj4+
-Pj4gCQkJCSBzdHJ1Y3QgcGFnZSAqcGFnZSk7DQo+Pj4+IGV4dGVybiBzdHJ1Y3QgcGFnZSAqYmFs
-bG9vbl9wYWdlX2RlcXVldWUoc3RydWN0IGJhbGxvb25fZGV2X2luZm8gKmJfZGV2X2luZm8pOw0K
-Pj4+PiArZXh0ZXJuIHNpemVfdCBiYWxsb29uX3BhZ2VfbGlzdF9lbnF1ZXVlKHN0cnVjdCBiYWxs
-b29uX2Rldl9pbmZvICpiX2Rldl9pbmZvLA0KPj4+PiArCQkJCSAgICAgIHN0cnVjdCBsaXN0X2hl
-YWQgKnBhZ2VzKTsNCj4+Pj4gK2V4dGVybiBzaXplX3QgYmFsbG9vbl9wYWdlX2xpc3RfZGVxdWV1
-ZShzdHJ1Y3QgYmFsbG9vbl9kZXZfaW5mbyAqYl9kZXZfaW5mbywNCj4+Pj4gKwkJCQkgICAgIHN0
-cnVjdCBsaXN0X2hlYWQgKnBhZ2VzLCBpbnQgbl9yZXFfcGFnZXMpOw0KPj4+IA0KPj4+IFdoeSBz
-aXplX3QgSSB3b25kZXI/IEl0IGNhbiBuZXZlciBiZSA+IG5fcmVxX3BhZ2VzIHdoaWNoIGlzIGlu
-dC4NCj4+PiBDYWxsZXJzIGFsc28gc2VlbSB0byBhc3N1bWUgaW50Lg0KPj4gDQo+PiBPbmx5IGJl
-Y2F1c2Ugb24gdGhlIHByZXZpb3VzIGl0ZXJhdGlvbg0KPj4gKCBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxOS8yLzYvOTEyICkgeW91IHNhaWQ6DQo+PiANCj4+PiBBcmUgd2Ugc3VyZSB0aGlzIGlu
-dCBuZXZlciBvdmVyZmxvd3M/IFdoeSBub3QganVzdCB1c2UgdTY0DQo+Pj4gb3Igc2l6ZV90IHN0
-cmFpZ2h0IGF3YXk/DQo+IA0KPiBBbmQgdGhlIGFuc3dlciBpcyBiZWNhdXNlIG5fcmVxX3BhZ2Vz
-IGlzIGFuIGludCB0b28/DQo+IA0KPj4gSSBhbSBvayBlaXRoZXIgd2F5LCBidXQgcGxlYXNlIGJl
-IGNvbnNpc3RlbnQuDQo+IA0KPiBJIGd1ZXNzIG5fcmVxX3BhZ2VzIHNob3VsZCBiZSBzaXplX3Qg
-dG9vIHRoZW4/DQoNClllcy4gSSB3aWxsIGNoYW5nZSBpdC4NCg0KPiANCj4+Pj4gc3RhdGljIGlu
-bGluZSB2b2lkIGJhbGxvb25fZGV2aW5mb19pbml0KHN0cnVjdCBiYWxsb29uX2Rldl9pbmZvICpi
-YWxsb29uKQ0KPj4+PiB7DQo+Pj4gDQo+Pj4gDQo+Pj4+IGRpZmYgLS1naXQgYS9tbS9iYWxsb29u
-X2NvbXBhY3Rpb24uYyBiL21tL2JhbGxvb25fY29tcGFjdGlvbi5jDQo+Pj4+IGluZGV4IGVmODU4
-ZDU0N2UyZC4uODhkNWQ5YTAxMDcyIDEwMDY0NA0KPj4+PiAtLS0gYS9tbS9iYWxsb29uX2NvbXBh
-Y3Rpb24uYw0KPj4+PiArKysgYi9tbS9iYWxsb29uX2NvbXBhY3Rpb24uYw0KPj4+PiBAQCAtMTAs
-NiArMTAsMTA2IEBADQo+Pj4+ICNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4NCj4+Pj4gI2luY2x1
-ZGUgPGxpbnV4L2JhbGxvb25fY29tcGFjdGlvbi5oPg0KPj4+PiANCj4+Pj4gK3N0YXRpYyBpbnQg
-YmFsbG9vbl9wYWdlX2VucXVldWVfb25lKHN0cnVjdCBiYWxsb29uX2Rldl9pbmZvICpiX2Rldl9p
-bmZvLA0KPj4+PiArCQkJCSAgICAgc3RydWN0IHBhZ2UgKnBhZ2UpDQo+Pj4+ICt7DQo+Pj4+ICsJ
-LyoNCj4+Pj4gKwkgKiBCbG9jayBvdGhlcnMgZnJvbSBhY2Nlc3NpbmcgdGhlICdwYWdlJyB3aGVu
-IHdlIGdldCBhcm91bmQgdG8NCj4+Pj4gKwkgKiBlc3RhYmxpc2hpbmcgYWRkaXRpb25hbCByZWZl
-cmVuY2VzLiBXZSBzaG91bGQgYmUgdGhlIG9ubHkgb25lDQo+Pj4+ICsJICogaG9sZGluZyBhIHJl
-ZmVyZW5jZSB0byB0aGUgJ3BhZ2UnIGF0IHRoaXMgcG9pbnQuDQo+Pj4+ICsJICovDQo+Pj4+ICsJ
-aWYgKCF0cnlsb2NrX3BhZ2UocGFnZSkpIHsNCj4+Pj4gKwkJV0FSTl9PTkNFKDEsICJiYWxsb29u
-IGluZmxhdGlvbiBmYWlsZWQgdG8gZW5xdWV1ZSBwYWdlXG4iKTsNCj4+Pj4gKwkJcmV0dXJuIC1F
-RkFVTFQ7DQo+Pj4gDQo+Pj4gTG9va3MgbGlrZSBhbGwgY2FsbGVycyBidWcgb24gYSBmYWlsdXJl
-LiBTbyBsZXQncyBqdXN0IGRvIGl0IGhlcmUsDQo+Pj4gYW5kIHRoZW4gbWFrZSB0aGlzIHZvaWQ/
-DQo+PiANCj4+IEFzIHlvdSBub3RlZCBiZWxvdywgYWN0dWFsbHkgYmFsbG9vbl9wYWdlX2xpc3Rf
-ZW5xdWV1ZSgpIGRvZXMgbm90IGRvDQo+PiBhbnl0aGluZyB3aGVuIGFuIGVycm9yIG9jY3Vycy4g
-SSByZWFsbHkgcHJlZmVyIHRvIGF2b2lkIGFkZGluZyBCVUdfT04oKSAtIA0KPj4gSSBhbHdheXMg
-Z2V0IHB1c2hlZCBiYWNrIG9uIHN1Y2ggdGhpbmdzLiBZZXMsIHRoaXMgbWlnaHQgbGVhZCB0byBt
-ZW1vcnkNCj4+IGxlYWssIGJ1dCB0aGVyZSBpcyBubyByZWFzb24gdG8gY3Jhc2ggdGhlIHN5c3Rl
-bS4NCj4gDQo+IE5lZWQgdG8gYXVkaXQgY2FsbGVycyB0byBtYWtlIHN1cmUgdGhleSBkb24ndCBt
-aXNiZWhhdmUgaW4gd29yc2Ugd2F5cy4NCj4gDQo+IEkgdGhpbmsgaW4gdGhpcyBjYXNlIHRoaXMg
-aW5kaWNhdGVzIHRoYXQgc29tZW9uZSBpcyB1c2luZyB0aGUgcGFnZSBzbyBpZg0KPiBvbmUga2Vl
-cHMgZ29pbmcgYW5kIGFkZHMgaXQgaW50byBiYWxsb29uIHRoaXMgd2lsbCBsZWFkIHRvIGNvcnJ1
-cHRpb24gZG93biB0aGUgcm9hZC4NCj4gDQo+IElmIHlvdSBjYW4gY2hhbmdlIHRoZSBjYWxsZXIg
-Y29kZSBzdWNoIHRoYXQgaXQncyBqdXN0IGEgbGVhaywNCj4gdGhlbiBhIHdhcm5pbmcgaXMgbW9y
-ZSBhcHByb3ByaWF0ZS4gT3IgZXZlbiBkbyBub3Qgd2FybiBhdCBhbGwuDQoNClllcywgeW91IGFy
-ZSByaWdodCAoYW5kIEkgd2FzIHdyb25nKSAtIHRoaXMgaXMgaW5kZWVkIG11Y2ggbW9yZSB0aGFu
-IGENCm1lbW9yeSBsZWFrLiBJ4oCZbGwgc2VlIGlmIGl0IGlzIGVhc3kgdG8gaGFuZGxlIHRoaXMg
-Y2FzZSAoSSBhbSBub3Qgc3VyZSksIGJ1dA0KSSB0aGluayB0aGUgd2FybmluZyBzaG91bGQgc3Rh
-eS4NCg0KPj4+PiArCX0NCj4+Pj4gKwlsaXN0X2RlbCgmcGFnZS0+bHJ1KTsNCj4+Pj4gKwliYWxs
-b29uX3BhZ2VfaW5zZXJ0KGJfZGV2X2luZm8sIHBhZ2UpOw0KPj4+PiArCXVubG9ja19wYWdlKHBh
-Z2UpOw0KPj4+PiArCV9fY291bnRfdm1fZXZlbnQoQkFMTE9PTl9JTkZMQVRFKTsNCj4+Pj4gKwly
-ZXR1cm4gMDsNCj4+Pj4gK30NCj4+Pj4gKw0KPj4+PiArLyoqDQo+Pj4+ICsgKiBiYWxsb29uX3Bh
-Z2VfbGlzdF9lbnF1ZXVlKCkgLSBpbnNlcnRzIGEgbGlzdCBvZiBwYWdlcyBpbnRvIHRoZSBiYWxs
-b29uIHBhZ2UNCj4+Pj4gKyAqCQkJCSBsaXN0Lg0KPj4+PiArICogQGJfZGV2X2luZm86IGJhbGxv
-b24gZGV2aWNlIGRlc2NyaXB0b3Igd2hlcmUgd2Ugd2lsbCBpbnNlcnQgYSBuZXcgcGFnZSB0bw0K
-Pj4+PiArICogQHBhZ2VzOiBwYWdlcyB0byBlbnF1ZXVlIC0gYWxsb2NhdGVkIHVzaW5nIGJhbGxv
-b25fcGFnZV9hbGxvYy4NCj4+Pj4gKyAqDQo+Pj4+ICsgKiBEcml2ZXIgbXVzdCBjYWxsIGl0IHRv
-IHByb3Blcmx5IGVucXVldWUgYSBiYWxsb29uIHBhZ2VzIGJlZm9yZSBkZWZpbml0aXZlbHkNCj4+
-Pj4gKyAqIHJlbW92aW5nIGl0IGZyb20gdGhlIGd1ZXN0IHN5c3RlbS4NCj4+PiANCj4+PiBBIGJ1
-bmNoIG9mIGdyYW1tYXIgZXJyb3IgaGVyZS4gUGxzIGZpeCBmb3IgY2xhcmlmeS4NCj4+PiBBbHNv
-IC0gZG9jdW1lbnQgdGhhdCBub3RoaW5nIG11c3QgbG9jayB0aGUgcGFnZXM/IE1vcmUgYXNzdW1w
-dGlvbnM/DQo+Pj4gV2hhdCBpcyAiaXQiIGluIHRoaXMgY29udGV4dD8gQWxsIHBhZ2VzPyBBbmQg
-d2hhdCBkb2VzIHJlbW92aW5nIGZyb20NCj4+PiBndWVzdCBtZWFuPyBSZWFsbHkgYWRkaW5nIHRv
-IHRoZSBiYWxsb29uPw0KPj4gDQo+PiBJIHByZXR0eSBtdWNoIGNvcHktcGFzdGVkIHRoaXMgZGVz
-Y3JpcHRpb24gZnJvbSBiYWxsb29uX3BhZ2VfZW5xdWV1ZSgpLiBJDQo+PiBzZWUgdGhhdCB5b3Ug
-ZWRpdGVkIHRoaXMgbWVzc2FnZSBpbiB0aGUgcGFzdCBhdCBsZWFzdCBjb3VwbGUgb2YgdGltZXMg
-KGUuZy4sDQo+PiBjN2NkZmYwZTg2NDcxIOKAnHZpcnRpb19iYWxsb29uOiBmaXggZGVhZGxvY2sg
-b24gT09N4oCdKSBhbmQgbGVmdCBpdCBhcyBpcy4NCj4+IA0KPj4gU28gbWF5YmUgYWxsIG9mIHRo
-ZSBjb21tZW50cyBpbiB0aGlzIGZpbGUgbmVlZCBhIHJld29yaywgYnV0IEkgZG9u4oCZdCB0aGlu
-aw0KPj4gdGhpcyBwYXRjaC1zZXQgbmVlZHMgdG8gZG8gaXQuDQo+IA0KPiBJIHNlZS4NCj4gVGhh
-dCBvbmUgZGVhbHQgd2l0aCBvbmUgcGFnZSBzbyAiaXQiIHdhcyB0aGUgcGFnZS4gVGhpcyBvbmUg
-ZGVhbHMgd2l0aA0KPiBtYW55IHBhZ2VzIHNvIHlvdSBjYW4ndCBqdXN0IGNvcHkgaXQgb3ZlciB3
-aXRob3V0IGNoYW5nZXMuDQo+IE1ha2VzIGl0IGxvb2sgbGlrZSAiaXQiIHJlZmVycyB0byBkcml2
-ZXIgb3IgZ3Vlc3QuDQoNCkkgd2lsbCBmaXgg4oCcaXTigJ0uIDstKQ0KDQo+IA0KPj4+PiArICoN
-Cj4+Pj4gKyAqIFJldHVybjogbnVtYmVyIG9mIHBhZ2VzIHRoYXQgd2VyZSBlbnF1ZXVlZC4NCj4+
-Pj4gKyAqLw0KPj4+PiArc2l6ZV90IGJhbGxvb25fcGFnZV9saXN0X2VucXVldWUoc3RydWN0IGJh
-bGxvb25fZGV2X2luZm8gKmJfZGV2X2luZm8sDQo+Pj4+ICsJCQkgICAgICAgc3RydWN0IGxpc3Rf
-aGVhZCAqcGFnZXMpDQo+Pj4+ICt7DQo+Pj4+ICsJc3RydWN0IHBhZ2UgKnBhZ2UsICp0bXA7DQo+
-Pj4+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4+Pj4gKwlzaXplX3Qgbl9wYWdlcyA9IDA7DQo+
-Pj4+ICsNCj4+Pj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmYl9kZXZfaW5mby0+cGFnZXNfbG9jaywg
-ZmxhZ3MpOw0KPj4+PiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShwYWdlLCB0bXAsIHBhZ2Vz
-LCBscnUpIHsNCj4+Pj4gKwkJYmFsbG9vbl9wYWdlX2VucXVldWVfb25lKGJfZGV2X2luZm8sIHBh
-Z2UpOw0KPj4+IA0KPj4+IERvIHdlIHdhbnQgdG8gZG8gc29tZXRoaW5nIGFib3V0IGFuIGVycm9y
-IGhlcmU/DQo+PiANCj4+IEhtbeKApiBUaGlzIGlzIHJlYWxseSBzb21ldGhpbmcgdGhhdCBzaG91
-bGQgbmV2ZXIgaGFwcGVuLCBidXQgSSBzdGlsbCBwcmVmZXINCj4+IHRvIGF2b2lkIEJVR19PTigp
-LCBhcyBJIHNhaWQgYmVmb3JlLiBJIHdpbGwganVzdCBub3QgY291bnQgdGhlIHBhZ2UuDQo+IA0K
-PiBDYWxsZXJzIGNhbiBCVUcgdGhlbiBpZiB0aGV5IHdhbnQuIFRoYXQgaXMgZmluZSBidXQgeW91
-IHRoZW4NCj4gbmVlZCB0byBjaGFuZ2UgdGhlIGNhbGxlcnMgdG8gZG8gaXQuDQoNCk9rLCBJ4oCZ
-bGwgcGF5IG1vcmUgYXR0ZW50aW9uIHRoaXMgdGltZS4gVGhhbmtzIQ0KDQo=
+On Fri, Apr 19, 2019 at 4:51 AM Alban Crequy <alban@kinvolk.io> wrote:
+>
+> On Thu, Apr 18, 2019 at 11:31 PM Y Song <ys114321@gmail.com> wrote:
+> >
+> > On Thu, Apr 18, 2019 at 8:58 AM Alban Crequy <alban.crequy@gmail.com> wrote:
+> > >
+> > > From: Alban Crequy <alban@kinvolk.io>
+> > >
+> > > sockops programs can now access the network namespace inode and device
+> > > via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be useful
+> > > to apply different policies on different network namespaces.
+> > >
+> > > In the unlikely case where network namespaces are not compiled in
+> > > (CONFIG_NET_NS=n), the verifier will not allow access to ->netns_*.
+> > >
+> > > The generated BPF bytecode for netns_ino is loading the correct inode
+> > > number at the time of execution.
+> > >
+> > > However, the generated BPF bytecode for netns_dev is loading an
+> > > immediate value determined at BPF-load-time by looking at the initial
+> > > network namespace. In practice, this works because all netns currently
+> > > use the same virtual device. If this was to change, this code would need
+> > > to be updated too.
+> > >
+> > > Signed-off-by: Alban Crequy <alban@kinvolk.io>
+> > >
+> > > ---
+> > >
+> > > Changes since v1:
+> > > - add netns_dev (review from Alexei)
+> > > ---
+> > >  include/uapi/linux/bpf.h |  2 ++
+> > >  net/core/filter.c        | 70 ++++++++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 72 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > > index eaf2d3284248..f4f841dde42c 100644
+> > > --- a/include/uapi/linux/bpf.h
+> > > +++ b/include/uapi/linux/bpf.h
+> > > @@ -3213,6 +3213,8 @@ struct bpf_sock_ops {
+> > >         __u32 sk_txhash;
+> > >         __u64 bytes_received;
+> > >         __u64 bytes_acked;
+> > > +       __u64 netns_dev;
+> > > +       __u64 netns_ino;
+> >
+> > Maybe we can define netns_dev as __u32?
+> >    __u64 netns_ino;
+> >    __u32 netns_dev;
+> >
+> > There is a hole at the end which can be used if the next
+> > field to be added in the future is a __u32.
+> >
+> > From
+> > static inline u32 new_encode_dev(dev_t dev)
+> > {
+> >         unsigned major = MAJOR(dev);
+> >         unsigned minor = MINOR(dev);
+> >         return (minor & 0xff) | (major << 8) | ((minor & ~0xff) << 12);
+> > }
+> >
+> > device num is encoded in a u32.
+>
+> I could do that but there are already two occurrences of "__u64
+> netns_dev" in bpf.h:
+> - struct bpf_prog_info
+> - struct bpf_map_info
+>
+> Should I keep it a u64 for consistency with the rest of bpf.h, or
+> change it to u32?
+
+Agreed. We probably should keep it to be __u64 to be consistent with others.
