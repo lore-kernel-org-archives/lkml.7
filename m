@@ -2,148 +2,155 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA7DC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE38C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A892820449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fFLqmtkA"
+	by mail.kernel.org (Postfix) with ESMTP id 853F620449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfDSSfk (ORCPT
+        id S1728386AbfDSSfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:35:40 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34437 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbfDSSfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:35:30 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIZ6kl384298
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 11:35:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIZ6kl384298
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555698907;
-        bh=7MjFG3QUXv0LHu6g2igBo7gKxAHXiNkNlQwkrcZRKEc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=fFLqmtkA35jrRmE5Tpileu8Q/xYcBFiQyq1kZgG4sLuNfwJw5xvdCIdPw5+RICCTI
-         rKwndckGraTj179tHYcbCR3WjtBtNB38y2YtDqs++H8j179Lm10ej8wuXc1gKqquEU
-         1QGxk1fTPsQYcwGjoySuWxRlNe4LWIbKPunVEYPQdIqYWMQEXGPgWrbChDp1bVtCO2
-         bOGP+V+R33eqKnS2GyaryU1PqhK5biBgWIoDhPd3d/MICIh0MP1RQEYA+Zp00v++pG
-         Q5ib4bwLSq2+cbGlwkVTc3VXWOolObnRRcDM9011qXPWTh5jMHV93RHgXLLi3W01E3
-         IGh2LJ5jg2NJg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIZ55K384293;
-        Fri, 19 Apr 2019 11:35:05 -0700
-Date:   Fri, 19 Apr 2019 11:35:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sean Christopherson <tipbot@zytor.com>
-Message-ID: <tip-f28b11a2abd9cf5535baa03e28fc63ad0e14f52a@git.kernel.org>
-Cc:     dave.hansen@linux.intel.com, riel@surriel.com,
-        torvalds@linux-foundation.org, sean.j.christopherson@intel.com,
-        luto@kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, hpa@zytor.com, yu-cheng.yu@intel.com,
-        tglx@linutronix.de, bp@alien8.de, mingo@kernel.org
-Reply-To: bp@alien8.de, mingo@kernel.org, tglx@linutronix.de,
-          yu-cheng.yu@intel.com, hpa@zytor.com, peterz@infradead.org,
-          luto@kernel.org, linux-kernel@vger.kernel.org,
-          sean.j.christopherson@intel.com, torvalds@linux-foundation.org,
-          riel@surriel.com, dave.hansen@linux.intel.com
-In-Reply-To: <20181221213657.27628-2-sean.j.christopherson@intel.com>
-References: <20181221213657.27628-2-sean.j.christopherson@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/fault: Reword initial BUG message for unhandled
- page faults
-Git-Commit-ID: f28b11a2abd9cf5535baa03e28fc63ad0e14f52a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 19 Apr 2019 14:35:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56178 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728145AbfDSSfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:35:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B35F7308402F;
+        Fri, 19 Apr 2019 15:00:33 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 166F960BE2;
+        Fri, 19 Apr 2019 15:00:31 +0000 (UTC)
+Subject: Re: [PATCH v5 00/18] locking/rwsem: Rwsem rearchitecture part 2
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190418234628.3675-1-longman@redhat.com>
+ <8f1adff7-3bd4-7d35-1a0d-698662bfa2b8@redhat.com>
+ <20190419075055.GA6795@gmail.com> <20190419124944.GA44010@gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <c06c9fd4-629a-3488-31ff-9f0f148364a4@redhat.com>
+Date:   Fri, 19 Apr 2019 11:00:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190419124944.GA44010@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 19 Apr 2019 15:00:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f28b11a2abd9cf5535baa03e28fc63ad0e14f52a
-Gitweb:     https://git.kernel.org/tip/f28b11a2abd9cf5535baa03e28fc63ad0e14f52a
-Author:     Sean Christopherson <sean.j.christopherson@intel.com>
-AuthorDate: Fri, 21 Dec 2018 13:36:56 -0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 19:31:15 +0200
+On 04/19/2019 08:49 AM, Ingo Molnar wrote:
+> * Ingo Molnar <mingo@kernel.org> wrote:
+>
+>> * Waiman Long <longman@redhat.com> wrote:
+>>
+>>> On 04/18/2019 07:46 PM, Waiman Long wrote:
+>>>>  v5:
+>>>>   - Drop v4 patch 1 as it is merged into tip's locking/core branch.
+>>>>   - Integrate the 2 followup patches into the series. The first
+>>>>     follow-up patch is broken into 2 pieces. The first piece comes in
+>>>>     before the "Enable readers spinning on writer" and the 2nd piece
+>>>>     is merged into the "Enable time-based spinning on reader-owned
+>>>>     rwsem" patch. The 2nd followup patch is added after that.
+>>>>   - Add a new patch to make all wake_up_q() calls after dropping
+>>>>     wait_lock as suggested by PeterZ.
+>>>>   - Incorporate numerouos suggestions by PeterZ and Davidlohr.
+>>> This patchset is still being reviewed by Peter . The purpose of this
+>>> series is mainly to sync up the version that Peter has and the ones that
+>>> I am working on incorporating his feedback. Further changes may still be
+>>> needed.
+>>>
+>>> I run an overall performance test on this new patchset and present the
+>>> data in this cover letter. However, I haven't run performance tests for
+>>> individual patches. So the performance data listed in some of the
+>>> patches may be stale.
+>> Just for those who'd like to follow the scope of changes, find below the 
+>> v4->v5 interdiff. v5 is now included in tip:WIP.locking/core, and also 
+>> merged into tip:master. (But not propagated towards linux-next yet.)
+> Hm, I'm experiencing early boot hangs with v5, on defconfig-ish x86-64 
+> kernels:
+>
+> [    0.153940] rcu: Hierarchical RCU implementation.
+> [    0.154289] rcu: 	RCU restricting CPUs from NR_CPUS=128 to nr_cpu_ids=17.
+> [    0.154829] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+> [    0.155390] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=17
+>
+>
+> I bisected it back to the v5 version of this patch:
+>
+>   2fd5f60fa4c3: locking/rwsem: Merge owner into count on x86-64
+>
+> I'm moving -tip back to -v4 meanwhile.
+>
+> Thanks,
+>
+> 	Ingo
 
-x86/fault: Reword initial BUG message for unhandled page faults
+Sorry about that. Will look into that problem.
 
-Reword the NULL pointer dereference case to simply state that a NULL
-pointer was dereferenced, i.e. drop "unable to handle" as that implies
-that there are instances where the kernel actual does handle NULL
-pointer dereferences, which is not true barring funky exception fixup.
+-Longman
 
-For the non-NULL case, replace "kernel paging request" with "page fault"
-as the kernel can technically oops on faults that originated in user
-code.  Dropping "kernel" also allows future patches to provide detailed
-information on where the fault occurred, e.g. user vs. kernel, without
-conflicting with the initial BUG message.
-
-In both cases, replace "at address=" with wording more appropriate to
-the oops, as "at" may be interpreted as stating that the address is the
-RIP of the instruction that faulted.
-
-Last, and probably least, further qualify the NULL-pointer path by
-checking that the fault actually originated in kernel code.  It's
-technically possible for userspace to map address 0, and not printing
-a super specific message is the least of our worries if the kernel does
-manage to oops on an actual NULL pointer dereference from userspace.
-
-Before:
-    BUG: unable to handle kernel NULL pointer dereference at ffffbeef00000000
-    BUG: unable to handle kernel paging request at ffffbeef00000000
-
-After:
-    BUG: kernel NULL pointer dereference, address = 0000000000000008
-    BUG: unable to handle page fault for address = ffffbeef00000000
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Link: http://lkml.kernel.org/r/20181221213657.27628-2-sean.j.christopherson@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/mm/fault.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 667f1da36208..df2c5cdef5c4 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -644,9 +644,12 @@ show_fault_oops(struct pt_regs *regs, unsigned long error_code, unsigned long ad
- 				from_kuid(&init_user_ns, current_uid()));
- 	}
- 
--	pr_alert("BUG: unable to handle kernel %s at %px\n",
--		 address < PAGE_SIZE ? "NULL pointer dereference" : "paging request",
--		 (void *)address);
-+	if (address < PAGE_SIZE && !user_mode(regs))
-+		pr_alert("BUG: kernel NULL pointer dereference, address = %px\n",
-+			(void *)address);
-+	else
-+		pr_alert("BUG: unable to handle page fault for address = %px\n",
-+			(void *)address);
- 
- 	err_txt[0] = 0;
- 
