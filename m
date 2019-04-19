@@ -2,108 +2,110 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE389C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8ECC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC8E20821
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1811E2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6CqbbCZ"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Url4Yik5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfDSU6v (ORCPT
+        id S1727725AbfDSU7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:58:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46377 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfDSU6u (ORCPT
+        Fri, 19 Apr 2019 16:59:05 -0400
+Received: from mail.efficios.com ([167.114.142.138]:52494 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfDSU7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:58:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s24so5186045otk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=N1W8LuisafzPG22GTbbXaTDt59BPFMJ1rINmkc7NvLM=;
-        b=D6CqbbCZ296hgBHOniva9HLqHUXJ095kL3fh96HTHVpcc+lMeXrGc9R+KdS6vqNgpN
-         ynZJCQVk1ZXBmt5djxkWV3jbR+FbZ1TIgq+nJHMnDnncqd9F/2kW9U5spWQJPrkqdwdn
-         DgO/wEWzQKgqL+h5BzfmtSPhGoukCc2K4rytQNYJWGwUYdEyNEs8VyMuYZYlQqDjMSZt
-         PCgGtj7BqH0QwdGeHmVXf9/6rMWLDznLkE5WSfp5gXwFqUK2xP599bVrrws7KJmqtlNw
-         GJ7pMYivKbld5RjohgzMXI1b9yTVVr3y0ssiqHcKvCvEceN8yBhb1xbAnBtwQzaNJZvO
-         hZ9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=N1W8LuisafzPG22GTbbXaTDt59BPFMJ1rINmkc7NvLM=;
-        b=M4aagvsxHf14F3ZoXfTU8eWj4PdPRfrUWSafxJkaJ8O5Jl5c3tyw4vVPaVz8kXHKmv
-         kxCUIKTrvr1iSo7Aht/sNhYPMOUg91ERfeyoRjgPd0oTPa+CvV15EJO6OyTCwRb0DM3K
-         QN0Jeux2kxyRNABqYQGT0LkgVVbvTuF6eUDxIOcrQqgYn93R+Vt9HGXypoNtSPlY0KBd
-         mrWpemxSpaNjdr80xouZ9iUDti5xzAdGk58Uht81jXxZLSohvjo7B6RI1dP7mhPlKhbP
-         YvufzSAMVBj/SSwbjRlfHmFs/YbQwgcC7/qXPR2myYf+irJZ+7sIpExqPLPZosMtSlLZ
-         vpLQ==
-X-Gm-Message-State: APjAAAVIV27RYc+OIm0pVP7CxJ/aljZWPrBD6pOAjg8vhFIpTtJPwpU7
-        Igh0vJO4CPPoxwfit+B8AHs=
-X-Google-Smtp-Source: APXvYqx2PKSaxFqomLVzIGW5T2N1vY1DFaFZt/d2fnTXrHQjI2ZXSZhXWCdVhHLM3qePdy7cwd+6GA==
-X-Received: by 2002:a9d:3f05:: with SMTP id m5mr3555236otc.59.1555707529919;
-        Fri, 19 Apr 2019 13:58:49 -0700 (PDT)
-Received: from madhuleo ([2605:6000:1023:606d:151b:11be:d797:d50])
-        by smtp.gmail.com with ESMTPSA id q25sm2211897otl.60.2019.04.19.13.58.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 13:58:49 -0700 (PDT)
-From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
-Subject: [PATCH] Staging: rtl8723bs: core: Replace return types
-Date:   Fri, 19 Apr 2019 15:58:45 -0500
-Message-Id: <20190419205845.586-1-madhumithabiw@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 19 Apr 2019 16:59:04 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B4602B1F7A;
+        Fri, 19 Apr 2019 16:59:02 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 7_oVTEbGot9U; Fri, 19 Apr 2019 16:59:02 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 38716B1F77;
+        Fri, 19 Apr 2019 16:59:02 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 38716B1F77
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555707542;
+        bh=QabJ/YC/LKiPQbCTiMhkOIEHrQcIVR8s1lMctjcDh6Q=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Url4Yik5RfvVfzEs109NMmZT37ijLb8Qi6pdiIHPQ0T8c0KNT4yIBuhEUWx5OLZwn
+         4SVS8gcHhuSqanvzUBCkuI3ekcFKHy3qpXO0mKGW25OQHtS2Z94seAo2rHj3qb0m3H
+         CVPQ+u2FS3/9nlYliOsHF8rJTs845fKFlHsLJX9cB7PSpqP1C4csMCd0hbKljGqOnt
+         S54WihSe5+wD6C2LyFSKFrv2aRZkLC9SA4qbwxu/601M4CCLqR7PufWXePrgOtlIxm
+         28Q5c9LX8+lrpzzbNHxBGG4kFxWaTrrxPJ/mFRoKwzhHD3KFXyC3Arr26BSrA1M31A
+         y7p7F0xHAkcwA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id MMZS_4jG5WdG; Fri, 19 Apr 2019 16:59:02 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 13393B1F69;
+        Fri, 19 Apr 2019 16:59:02 -0400 (EDT)
+Date:   Fri, 19 Apr 2019 16:59:01 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>
+Message-ID: <1136505826.203.1555707541777.JavaMail.zimbra@efficios.com>
+In-Reply-To: <cfcbace7-363d-e45e-11da-8efb200783b7@kernel.org>
+References: <20190305194755.2602-1-mathieu.desnoyers@efficios.com> <1444419838.71.1555677682502.JavaMail.zimbra@efficios.com> <1266612341.87.1555678507226.JavaMail.zimbra@efficios.com> <614774674.134.1555681346941.JavaMail.zimbra@efficios.com> <1863599735.141.1555681723685.JavaMail.zimbra@efficios.com> <6ba0796c-8a96-f797-265c-37bfb9b4bb71@kernel.org> <580328197.148.1555684824260.JavaMail.zimbra@efficios.com> <cfcbace7-363d-e45e-11da-8efb200783b7@kernel.org>
+Subject: Re: [PATCH for 5.1 3/3] rseq/selftests: Adapt number of threads to
+ the number of detected cpus
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: Adapt number of threads to the number of detected cpus
+Thread-Index: YAfWAh+GAzq5aLOBJFEB8cRAPFCeSg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unwanted assignments and replace return types.
+----- On Apr 19, 2019, at 2:57 PM, shuah shuah@kernel.org wrote:
+[...]
+> Should I drop this patch that is currently in linux-kseltest next? Just
+> confirming if your new patch is supposed to be applied on top of this
+> one or not?
 
-Issue suggested by Coccinelle.
+We should keep this patch in linux-kselftest next. The fix applies on top
+of it.
 
-Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_sta_mgt.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+Thanks,
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c b/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c
-index b9d36db762a9..2474fa6fb49b 100644
---- a/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c
-@@ -204,8 +204,7 @@ struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, u8 *hwaddr)
- 	if (list_empty(&pfree_sta_queue->queue)) {
- 		/* spin_unlock_bh(&(pfree_sta_queue->lock)); */
- 		spin_unlock_bh(&(pstapriv->sta_hash_lock));
--		psta = NULL;
--		return psta;
-+		return NULL;
- 	} else {
- 		psta = LIST_CONTAINOR(get_next(&pfree_sta_queue->queue), struct sta_info, list);
- 
-@@ -586,12 +585,10 @@ u32 rtw_init_bcmc_stainfo(struct adapter *padapter)
- 
- struct sta_info *rtw_get_bcmc_stainfo(struct adapter *padapter)
- {
--	struct sta_info *psta;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
- 
--	psta = rtw_get_stainfo(pstapriv, bc_addr);
--	return psta;
-+	return rtw_get_stainfo(pstapriv, bc_addr);
- }
- 
- u8 rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr)
+Mathieu
+
+
 -- 
-2.17.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
