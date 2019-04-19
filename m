@@ -2,181 +2,129 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7619C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF1BC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DED920645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A124F20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTlHwJPH"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="asUVADWY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfDST1T (ORCPT
+        id S1727409AbfDST12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:27:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33352 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfDST1T (ORCPT
+        Fri, 19 Apr 2019 15:27:28 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38912 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfDST11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:27:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k19so3053524pgh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:27:18 -0700 (PDT)
+        Fri, 19 Apr 2019 15:27:27 -0400
+Received: by mail-lf1-f68.google.com with SMTP id d12so4681754lfk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=q4ev4tBKzNk0Wx8NQiQCpkJyhJH7yxAqrD0u4YHahME=;
-        b=jTlHwJPHkFHrUpfyCQqENGYX5TRtaS4oikjNQslyr6MkhuJdTLAgjPRrGi4qFQl9AK
-         5eNCodaEpuy/qyVmB6E1JLbuaYY6GaBFL68Vs5UISzF35e8uy8RsiowZG3+d6s6l3+yx
-         HtfH32zzbmEw2dwtwezRH9TCFKKNnq2GzVYUzsC3YFb7AW7rIz7VYHs7npyBwxww3G+C
-         lXZGcZ4UrrPDHl2cZDZS2j889qg/2tHR/aTOYRZWDeVPbYaUn0hG9y6UWzRLLD3Z7RLV
-         oDFkDigHTEK2pDDLoWAoEgm6ciwYBA5l9CK3NEFuEVOjopg1Pg5gsaNbTpVJV8bIxVhy
-         fAzA==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sUNkOJM5qQtNldmZZQggNGfurY1I1f4x5vigVCXTz5M=;
+        b=asUVADWY1w/KJmvk3KMptj3GHBzRs/1x148BANaxwxjkyMSdwMhNhtFeZUQSoAzFlt
+         PinC8ym4WsV3RSD7j6cw+f/vwC7jv2iohDUYgEWc0XfgEshit3qTQj3S830qlxs7YNDv
+         uewDFfCZf8QxgXVychr4LWxSw4GJ4cfW7EIT7fQl9HmhWKgtDCt/3fUipb8STmZNOIDb
+         OBe+UPHtv2AnTXQ49p9VrEU+HqluA5dPs6oJw5iDOTCJaz1R2V/XbcmlwKiVrK6warbB
+         HYd6FNgLcrydrmmAdhOyLE/qy/0AOEz+lffTleVl7NlPxaVuYL3EUf/NNRUs+6jp2yaV
+         RvTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=q4ev4tBKzNk0Wx8NQiQCpkJyhJH7yxAqrD0u4YHahME=;
-        b=SAm2vNkYbSPo+CcaJUwlcQQJOCsfvVupHWGQ5gSJX7bp+pXU7y41aa+0IF8EWtCEKG
-         E5qnsIeXwsVhLr1sta3v7LmPq9CUJH0Ytu1zqb6aekg65funB4ugT0JBknEPNbYcDgBt
-         rwriB1gKQlse9DtM2u0I7nSrR0XRrap1npaLIt6HqHZT5gajX/81rcqZG2C4Hi5JcNrt
-         lsfWivy+sQwUQLLesoZMyK9CjeP80tz9xD16lCIc45HhdF2jk2v1rS4J9FVh7LmPAn/B
-         RQHkVsO0qK/J990B2z/RqJDKmrH3NgHfXrn8dN/VDNH0eYuueIEZBEzWw129SUcnPKtE
-         O8Fg==
-X-Gm-Message-State: APjAAAUesthH3XHN8gVY6Eet+rQ8B15DNqwFFkyGxsWzZH9zQemwtDxa
-        WkVu9Bud7BP0p36RHIfQdKcr0hZyUrQ=
-X-Google-Smtp-Source: APXvYqzO3JB3DGslw05z0WyE3TCv3eQq2sLdhBbE+ijJzE8nqHqmvP7T8xUlFXDzqf4b8jsZYa6FZg==
-X-Received: by 2002:a63:2262:: with SMTP id t34mr3486081pgm.202.1555674775700;
-        Fri, 19 Apr 2019 04:52:55 -0700 (PDT)
-Received: from bhanu-VirtualBox.danlawtech.com ([183.82.102.247])
-        by smtp.gmail.com with ESMTPSA id j20sm6091228pfn.84.2019.04.19.04.52.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 04:52:55 -0700 (PDT)
-From:   Bhanusree Pola <bhanusreemahesh@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH v3] Staging: rtl8723bs: Avoid typedefs for structure
-Date:   Fri, 19 Apr 2019 17:22:14 +0530
-Message-Id: <1555674734-20502-1-git-send-email-bhanusreemahesh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sUNkOJM5qQtNldmZZQggNGfurY1I1f4x5vigVCXTz5M=;
+        b=pYtu65zB+DbsBTrt0JqRm9pJln0nK8BhKZLo4su2a1CyjSmIzFzvVXBh8W4hybkZEN
+         wvnHlEim8/IMpMq0u09rdndYCmoTrJ7w95OXqLD5yz2KgB1sf1iZsE2D7k+KFia+oSwp
+         AR1dbkqkz7t47XtMKtB6HZTtHdYa01Nbyflj0vCj/xSChq3dWcmUSXxYchPJDlkiypT7
+         WIMXqDZxXVq88OjWTkCu5rsrXPTu4OBy7YWuF6IXOgh3zRVJ1Gz7JpKngABpj/T6p+4O
+         tP7Kut8KK1uR+t783rLLwExhtDnrkr+FWenrtOhjsBKdQV8Ty7Jp2QtIXs2mFrIA6pBl
+         cw4A==
+X-Gm-Message-State: APjAAAXx5+Ax0BKr6ZnhhGVxdIOvcoEL+SLVzIv8764PGh4oPNC96Sx2
+        lLi1y/UsOS067z4U/egbKFWbwGMNk/lVHWYqgZSSzSOHsg==
+X-Google-Smtp-Source: APXvYqw0//3w9hhdaegDxBJ6hccf6Q5Sh4sn4DOwxGN3dliwNYTV3AbmbJlw2zyCh6FgTPUZQJkZPh6tP/i3GAATOOQ=
+X-Received: by 2002:a19:6b0d:: with SMTP id d13mr2241991lfa.79.1555680305311;
+ Fri, 19 Apr 2019 06:25:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
+ <20190415134331.GC22204@redhat.com> <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
+ <20190415150520.GA13257@redhat.com> <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
+ <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
+ <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com> <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
+ <20190417145711.GI32622@redhat.com> <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
+ <20190417162723.GK32622@redhat.com> <CAHC9VhT_nk1jmrTj3W=F+1gP1vU3iZsZ=UGOCwdiBLbUsOc9=w@mail.gmail.com>
+ <0ca3f4cf-5c64-2fc0-1885-9dbcca2f4b47@schaufler-ca.com> <5CB7E5D4.2060703@huawei.com>
+ <CAHC9VhQkrR+m9_dYLg4VG-26TdUnf8XFjbmuVQ70YCOp6DhN_g@mail.gmail.com> <5CB933C4.7000300@huawei.com>
+In-Reply-To: <5CB933C4.7000300@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 19 Apr 2019 09:24:54 -0400
+Message-ID: <CAHC9VhTdJ6uUOjyxrk=+iOkKe=VN+N9DMPtV=OchAY34x95g=w@mail.gmail.com>
+Subject: Re: kernel BUG at kernel/cred.c:434!
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Oleg Nesterov <oleg@redhat.com>, john.johansen@canonical.com,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SELinux <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid typedefs for structure types to maintain kernel coding style.
-Remove typedefs for _ODM_Phy_Dbg_Info and _ODM_Mac_Status_Info_.
-This part is done by the following semantic patch:
+On Thu, Apr 18, 2019 at 10:42 PM Yang Yingliang
+<yangyingliang@huawei.com> wrote:
+> On 2019/4/19 10:04, Paul Moore wrote:
+> > On Wed, Apr 17, 2019 at 10:50 PM Yang Yingliang
+> > <yangyingliang@huawei.com> wrote:
+> >> On 2019/4/18 8:24, Casey Schaufler wrote:
+> >>> On 4/17/2019 4:39 PM, Paul Moore wrote:
+> >>>> Since it looks like all three LSMs which implement the setprocattr
+> >>>> hook are vulnerable I'm open to the idea that proc_pid_attr_write() is
+> >>>> a better choice for the cred != read_cred check, but I would want to
+> >>>> make sure John and Casey are okay with that.
+> >>>>
+> >>>> John?
+> >>>>
+> >>>> Casey?
+> >>> I'm fine with the change going into proc_pid_attr_write().
+> >> The cred != real_cred checking is not enough.
+> >>
+> >> Consider this situation, when doing override, cred, real_cred and
+> >> new_cred are all same:
+> >>
+> >> after override_creds()    cred == real_cred == new1_cred
+> > I'm sorry, you've lost me.  After override_creds() returns
+> > current->cred and current->real_cred are not going to be the same,
+> > yes?
+>
+> It's possible the new  cred is equal to current->real_cred and
+> current->cred,
+> so after overrides_creds(), they have the same value.
 
-<smpl>
-@r1@
-identifier i;
-type t;
-@@
-typedef struct i {
-...
-}t;
+Both task_struct.cred and task_struct.real_cred are pointer values,
+assuming that one uses prepare_creds() to allocate/initialize a new
+cred struct for use with override_creds() then the newly created cred
+should never be equal to task_struct.real_cred.  Am I missing
+something, or are you thinking of something else?
 
-@r2@
-type r1.t;
-identifier v;
-@@
-t v;
-
-@script:python match@
-i << r1.i;
-x;
-@@
-coccinelle.x = i;
-
-@r4@
-identifier match.x;
-type r1.t;
-@@
-- typedef struct x
-+ struct x
-{ ... }
-- t
-;
-
-@r5@
-type r1.t;
-identifier r2.v, match.x;
-@@
-- t v;
-+ struct x v;
-</smpl>
-
-Change Structure name _ODM_Phy_Dbg_Info and _ODM_Mac_Status_Info_ to maintain Linux kernel Coding Style.
-Replace occurences of ODM_PHY_DBG_INFO_T to odm_phy_dbg_info and ODM_MAC_INFO to odm_mac_status_info.
-
-Signed-off-by: Bhanusree Pola <bhanusreemahesh@gmail.com>
----
-v2:
- Changed the occurence of (ODM_MAC_INFO *) to (struct odm_mac_status_info *) in the commented code
-v3:
- Included the correct patch
- drivers/staging/rtl8723bs/hal/odm.c |  2 +-
- drivers/staging/rtl8723bs/hal/odm.h | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/hal/odm.c b/drivers/staging/rtl8723bs/hal/odm.c
-index 7de5161..9db9f17 100644
---- a/drivers/staging/rtl8723bs/hal/odm.c
-+++ b/drivers/staging/rtl8723bs/hal/odm.c
-@@ -691,7 +691,7 @@ void ODM_CmnInfoHook(PDM_ODM_T pDM_Odm, ODM_CMNINFO_E CmnInfo, void *pValue)
- 	/* break; */
- 
- 	/* case ODM_CMNINFO_MAC_STATUS: */
--	/* pDM_Odm->pMacInfo = (ODM_MAC_INFO *)pValue; */
-+	/* pDM_Odm->pMacInfo = (struct odm_mac_status_info *)pValue; */
- 	/* break; */
- 	/* To remove the compiler warning, must add an empty default statement to handle the other values. */
- 	default:
-diff --git a/drivers/staging/rtl8723bs/hal/odm.h b/drivers/staging/rtl8723bs/hal/odm.h
-index 23ab160..9f9259c 100644
---- a/drivers/staging/rtl8723bs/hal/odm.h
-+++ b/drivers/staging/rtl8723bs/hal/odm.h
-@@ -261,7 +261,7 @@ struct odm_packet_info {
- 	bool is_beacon;
- };
- 
--typedef struct _ODM_Phy_Dbg_Info_ {
-+struct odm_phy_dbg_info {
- 	/* ODM Write, debug info */
- 	s8 RxSNRdB[4];
- 	u32 NumQryPhyStatus;
-@@ -271,11 +271,11 @@ typedef struct _ODM_Phy_Dbg_Info_ {
- 	/* Others */
- 	s32 RxEVM[4];
- 
--} ODM_PHY_DBG_INFO_T;
-+};
- 
--typedef struct _ODM_Mac_Status_Info_ {
-+struct odm_mac_status_info {
- 	u8 test;
--} ODM_MAC_INFO;
-+};
- 
- typedef enum tag_Dynamic_ODM_Support_Ability_Type {
- 	/*  BB Team */
-@@ -1092,11 +1092,11 @@ typedef  struct DM_Out_Source_Dynamic_Mechanism_Structure {
- 	/*  Define ........... */
- 
- 	/*  Latest packet phy info (ODM write) */
--	ODM_PHY_DBG_INFO_T PhyDbgInfo;
-+	struct odm_phy_dbg_info PhyDbgInfo;
- 	/* PHY_INFO_88E		PhyInfo; */
- 
- 	/*  Latest packet phy info (ODM write) */
--	ODM_MAC_INFO *pMacInfo;
-+	struct odm_mac_status_info *pMacInfo;
- 	/* MAC_INFO_88E		MacInfo; */
- 
- 	/*  Different Team independt structure?? */
 -- 
-2.7.4
-
+paul moore
+www.paul-moore.com
