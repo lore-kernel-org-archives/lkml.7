@@ -2,145 +2,87 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED4BC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD47C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9DC20449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FDD20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698717;
-	bh=J99gtRrJI/sxcUDI9VlJ1PuPq+LCWVlFaN+rk+m4zTo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EuMZlrq9QRVWqx67JQuZEk3tCEaJAmj1dGlX/OZ0rU5IsqTKs1iwztSMPBaH689ot
-	 wl1jsig/1+zjKcB8ztwDj0EC/UsKZSWzzXOFEDzGwWA7TcRkDkfeld1BCKhLjPXWB9
-	 p+cn4hvcDKll6TQ6VQNRu5RUEYGiW4PuqDtQarHk=
+	s=default; t=1555698726;
+	bh=+3MCTwdWw5c6rXVxCKBn8p5OSb2Kx/KJ7WrMR9gfXg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qKdmEBYcEI5xH600WjwxYp++kxbsHcPruUbylwRxW2XjnwQn+Tfn+VhplJUE7c5TF
+	 DbOZC4NEfsLoQPfYQwkFlwTH1OHZ/DCkkmurVdQ5F8NkocJTp2i9gyMyqVssqf2G4f
+	 0yGdnhDiCXX4w2F9LBuaIXUBL1f/w9VTHmIQOBHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfDSSbg (ORCPT
+        id S1727950AbfDSScF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:32:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727827AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 14:29:17 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD359222DD
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 15:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7616222AE;
+        Fri, 19 Apr 2019 13:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555687659;
-        bh=J99gtRrJI/sxcUDI9VlJ1PuPq+LCWVlFaN+rk+m4zTo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JT/dgZk3rOO5n7351+3P3Z75wCkW4+pDfvuRf2y+ZvwTp1Ci//z0B8R98N7KctZ2r
-         LwjkJJvE3kqnNiuKUMx2wX7wFImJ36bK4paw/QitG+/sjZz2l5/VjPWbiFcmECwmer
-         5q/C6BBomFNha5w9c4incg9nkLu8LQ3DMUMQ6gsI=
-Received: by mail-wm1-f52.google.com with SMTP id z11so6652462wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:27:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAVDTJrUahRf20f4rkxqwBqiGWMPcD8+LUlAb6fzrh46+fIHgxhF
-        jcAwbLqnm8ho4ngSnGylZCiLM3USgqa12RDNb2yq3Q==
-X-Google-Smtp-Source: APXvYqwI3uOAyu8SJANJhLDlXWc7HzYIiBKPeh6iojSffO9u82u2RIzp8cFLlCbu2W5uAeQNPaxb7J3Sl1r5rUat1FQ=
-X-Received: by 2002:a1c:eb18:: with SMTP id j24mr3240691wmh.32.1555687658136;
- Fri, 19 Apr 2019 08:27:38 -0700 (PDT)
+        s=default; t=1555680751;
+        bh=+3MCTwdWw5c6rXVxCKBn8p5OSb2Kx/KJ7WrMR9gfXg0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ru6q5BuvRuJEYc0Lt/wzKh77J/z20FBCSRgghM1i4Z1WF+lTixU3gNL6yfWjDzO1m
+         XvAjixFxOPhteMdTJhPLk9L8C7lX8sxe2VWTx6ARNLMRCvQoPuLcxKtHttpqc8e9nI
+         mHkKyadnu6dKwEDkxGjx2ENy55J8AL4SCMgnDBpg=
+Date:   Fri, 19 Apr 2019 09:32:29 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     nobuhiro1.iwamatsu@toshiba.co.jp
+Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
+        rdunlap@infradead.org, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5.0 19/93] paride/pcd: cleanup queues when detection fails
+Message-ID: <20190419133229.GD17719@sasha-vm>
+References: <20190418160436.781762249@linuxfoundation.org>
+ <20190418160438.746819159@linuxfoundation.org>
+ <TYAPR01MB418948D3F208E92CB2C6B32692270@TYAPR01MB4189.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190418171059.GA20819@wind.enjellic.com> <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
- <20190419141732.GA2269@wind.enjellic.com>
-In-Reply-To: <20190419141732.GA2269@wind.enjellic.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 19 Apr 2019 08:27:26 -0700
-X-Gmail-Original-Message-ID: <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
-Message-ID: <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        nhorman@redhat.com, npmccallum@redhat.com,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB418948D3F208E92CB2C6B32692270@TYAPR01MB4189.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Apr 19, 2019, at 7:17 AM, Dr. Greg <greg@enjellic.com> wrote:
+On Fri, Apr 19, 2019 at 07:13:07AM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
+>Hi,
 >
-> On Thu, Apr 18, 2019 at 11:01:00AM -0700, Dave Hansen wrote:
+>> [ Upstream commit 81b74ac68c28fddb3589ad5d4d5e587baf4bb781 ]
+>>
+>> The driver allocates queues for all the units it potentially
+>> supports. But if we fail to detect any drives, then we fail
+>> loading the module without cleaning up those queues. This is
+>> now evident with the switch to blk-mq, though the bug has
+>> been there forever as far as I can tell.
+>>
+>> Also fix cleanup through regular module exit.
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>This commit causes a new problem. And the commit that made the fix
+>is f0d1762554014ce0ae347b9f0d088f2c157c8c72.
+>I think this commit needs to be applied together.
 
-> "The value of Intel SGX is to execute code in a protected enclave;
-> however, Intel SGX does not guarantee that the code executed in the
-> enclave is from a trusted source.  In all cases, we recommend
-> utilizing programs, files, apps and plugins from trusted sources,"
-> Intel said.
+Queued up this fix, thanks!
 
-Linux *has* mechanisms to enforce the provenance of code, and they
-have nothing to do with SGX.  Off the top of my head, there=E2=80=99s IMA,
-SELinux (depending on policy), and dm-verity.
-
-So it seems to me that our bases are already pretty well covered. I
-see two cases where some additional protection for SGX might make
-sense:
-
-1. You care more about the provenance of enclaves than the provenance
-of normal code.  (=E2=80=9CYou=E2=80=9D is the platform owner, not a remote=
- party
-verifying SGX quotes.=E2=80=9D) There are any number of solutions that coul=
-d
-work here, and not all of them involve crypto.
-
-2. You care about the case where the kernel is compromised.  In this
-case, nothing that's been discussed helps much on an FLC system, and
-even the pre-LC systems aren't a whole lot better given the lack of
-init token revocation.
-
-But I think we may be missing a much bigger issue that does need
-consideration before the driver gets merged.  We're all focusing on
-*additional* SGX protections, but I'm not even sure we have the SGX
-protections up to snuff with the rest of the system.  There are many,
-many Linux systems that enforce a policy that *all* executable text
-needs to come from a verified source.  On these systems, you can't
-mmap some writable memory, write to it, and then change it to
-executable.  (Obviously, JITs either don't work or need special
-permissions on these systems.)
-
-Unless I'm missing it, the current SGX API is entirely incompatible
-with this model -- the host process supplies text *bytes* to the
-kernel, and the kernel merrily loads those bytes into executable
-enclave memory.  Whoops!
-
-I think we may need to change the API so that enclaves are loaded from
-a file where the contents of the file are in some appropriate format.
-(The file should, at least, contain MRENCLAVE, but various antivirus
-tools would much prefer if the actual enclave contents were in the
-file.)  It's not entirely clear that the enclave text and data need to
-be in the file, since they're covered by the hash.)  Then, to start an
-enclave, you pass an fd to the file to the SGX driver, and the SGX
-driver parses out the relevant data initializes the enclave.  Before
-this happens, the driver could call into IMA and LSM hooks, and the
-driver would also verify that the file didn't come from a noexec
-filesystem.
-
-I suppose another approach would be to treat SGX the same way that
-ld.so is treated, mostly by requiring that the buffers passed to the
-driver that contain text be marked executable.  This seems quite a bit
-weakter to me.
-
-What do you all think?
+--
+Thanks,
+Sasha
