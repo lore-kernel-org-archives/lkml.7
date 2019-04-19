@@ -2,102 +2,176 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D05EC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF260C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613B320449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F4E20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698958;
-	bh=UXSAuXtBKtiyp6wd0QD5G7QbrsNlC+cikHNtloM+vQE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SK0pfLQlVdcPe8uvE7ZaQZ0hkd59vCsvks+gyl90TSVOL7k860RyPv8XFNWRNuMKz
-	 8Q1+hWWqryBTXe6Uayt2S0oyqlN5Em6Y6d1NaFJgXvycIib5owc2plQtL6iuCvavxd
-	 L+norL48HXIITOgreFCv4TbnksZKqjKW2ug4Vxrs=
+	s=default; t=1555698965;
+	bh=GGJGLZaY7YRaS/R/VIkpOwcPmU/mXnQqTpK4G0cmjzM=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=OfzK6OdK1cQuwDmvZ2lcWbAGKxmtPb8lUZ1QuX4O6V3b9rn432hqKTAWgniN0bTVX
+	 ubCnzlksz8lf3P7clfssaFzCea8Chpc8iynGNhsE02sThNfqx54X8HdoPaJLhD30N5
+	 ebA/h5CPQyznlbJe0Y0MqBhKQu/+FgIHRyYmRrqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfDSSf5 (ORCPT
+        id S1728398AbfDSSgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:36:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbfDSS3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727437AbfDSS3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 14:29:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE572195D;
-        Fri, 19 Apr 2019 12:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 913F7222B0;
+        Fri, 19 Apr 2019 13:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555677044;
-        bh=UXSAuXtBKtiyp6wd0QD5G7QbrsNlC+cikHNtloM+vQE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CxeayGzL/hjJoc17FnlK7+php3magpR8igmHKtZV3XqQ8IjWSosCS81lzovRthDaT
-         agjmHE1V4j9exUlveX7iYflddfFSSg3PfjVFvXeZzb4EddUt/iVkmrQanZKIFnnjO0
-         LyZmDKBSnpRzu+hxnHBcAMY5Pur5l29svNk+HtcM=
-Date:   Fri, 19 Apr 2019 14:30:42 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.1-rc6
-Message-ID: <20190419123042.GA4761@kroah.com>
+        s=default; t=1555680918;
+        bh=GGJGLZaY7YRaS/R/VIkpOwcPmU/mXnQqTpK4G0cmjzM=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=LlecedajqQxOHeskZKrjgGMCxOh+EwZ3EP4sj4OFc5WniMI9WT5p5WlW1LXXgyOZ2
+         YtKD2n5Yr4OiFJvDAHPhMvSGIwjDWU5GiZJsQeLhEI3fuiHAtSjJUJMINnTBm2yS5z
+         Zrj47RrzIy0SV//Q7MCg3jT4ZxTDiJtDhGWoapsY=
+Date:   Fri, 19 Apr 2019 09:35:17 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 5.0 39/93] perf top: Delete the evlist before
+ perf_session, fixing heap-use-after-free issue
+Message-ID: <20190419133517.GE17719@sasha-vm>
+References: <20190418160436.781762249@linuxfoundation.org>
+ <20190418160441.339477070@linuxfoundation.org>
+ <20190418193143.aq2i7g2upngge7e6@xps.therub.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190418193143.aq2i7g2upngge7e6@xps.therub.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+On Thu, Apr 18, 2019 at 02:31:43PM -0500, Dan Rue wrote:
+>On Thu, Apr 18, 2019 at 07:57:17PM +0200, Greg Kroah-Hartman wrote:
+>> [ Upstream commit 0dba9e4be95b59e77060645ca8e37ca3231061f5 ]
+>>
+>> The evlist should be destroyed before the perf session.
+>>
+>> Detected with gcc's ASan:
+>>
+>>   =================================================================
+>>   ==27350==ERROR: AddressSanitizer: heap-use-after-free on address 0x62b000002e38 at pc 0x5611da276999 bp 0x7ffce8f1d1a0 sp 0x7ffce8f1d190
+>>   WRITE of size 8 at 0x62b000002e38 thread T0
+>>       #0 0x5611da276998 in __list_del /home/work/linux/tools/include/linux/list.h:89
+>>       #1 0x5611da276d4a in __list_del_entry /home/work/linux/tools/include/linux/list.h:102
+>>       #2 0x5611da276e77 in list_del_init /home/work/linux/tools/include/linux/list.h:145
+>>       #3 0x5611da2781cd in thread__put util/thread.c:130
+>>       #4 0x5611da2cc0a8 in __thread__zput util/thread.h:68
+>>       #5 0x5611da2d2dcb in hist_entry__delete util/hist.c:1148
+>>       #6 0x5611da2cdf91 in hists__delete_entry util/hist.c:337
+>>       #7 0x5611da2ce19e in hists__delete_entries util/hist.c:365
+>>       #8 0x5611da2db2ab in hists__delete_all_entries util/hist.c:2639
+>>       #9 0x5611da2db325 in hists_evsel__exit util/hist.c:2651
+>>       #10 0x5611da1c5352 in perf_evsel__exit util/evsel.c:1304
+>>       #11 0x5611da1c5390 in perf_evsel__delete util/evsel.c:1309
+>>       #12 0x5611da1b35f0 in perf_evlist__purge util/evlist.c:124
+>>       #13 0x5611da1b38e2 in perf_evlist__delete util/evlist.c:148
+>>       #14 0x5611da069781 in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1645
+>>       #15 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+>>       #16 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+>>       #17 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+>>       #18 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+>>       #19 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+>>       #20 0x5611d9ff35c9 in _start (/home/work/linux/tools/perf/perf+0x3e95c9)
+>>
+>>   0x62b000002e38 is located 11320 bytes inside of 27448-byte region [0x62b000000200,0x62b000006d38)
+>>   freed by thread T0 here:
+>>       #0 0x7fdccb04ab70 in free (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedb70)
+>>       #1 0x5611da260df4 in perf_session__delete util/session.c:201
+>>       #2 0x5611da063de5 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1300
+>>       #3 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+>>       #4 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+>>       #5 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+>>       #6 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+>>       #7 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+>>       #8 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+>>
+>>   previously allocated by thread T0 here:
+>>       #0 0x7fdccb04b138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+>>       #1 0x5611da26010c in zalloc util/util.h:23
+>>       #2 0x5611da260824 in perf_session__new util/session.c:118
+>>       #3 0x5611da0633a6 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1192
+>>       #4 0x5611da06973c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+>>       #5 0x5611da17d038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+>>       #6 0x5611da17d577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+>>       #7 0x5611da17d97b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+>>       #8 0x5611da17e0e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+>>       #9 0x7fdcc970f09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+>>
+>>   SUMMARY: AddressSanitizer: heap-use-after-free /home/work/linux/tools/include/linux/list.h:89 in __list_del
+>>   Shadow bytes around the buggy address:
+>>     0x0c567fff8570: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff8580: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff8590: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff85a0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff85b0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>   =>0x0c567fff85c0: fd fd fd fd fd fd fd[fd]fd fd fd fd fd fd fd fd
+>>     0x0c567fff85d0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff85e0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff85f0: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff8600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>     0x0c567fff8610: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
+>>   Shadow byte legend (one shadow byte represents 8 application bytes):
+>>     Addressable:           00
+>>     Partially addressable: 01 02 03 04 05 06 07
+>>     Heap left redzone:       fa
+>>     Freed heap region:       fd
+>>     Stack left redzone:      f1
+>>     Stack mid redzone:       f2
+>>     Stack right redzone:     f3
+>>     Stack after return:      f5
+>>     Stack use after scope:   f8
+>>     Global redzone:          f9
+>>     Global init order:       f6
+>>     Poisoned by user:        f7
+>>     Container overflow:      fc
+>>     Array cookie:            ac
+>>     Intra object redzone:    bb
+>>     ASan internal:           fe
+>>     Left alloca redzone:     ca
+>>     Right alloca redzone:    cb
+>>   ==27350==ABORTING
+>
+>I'm seeing the following build error as a result of this patch being
+>backported to 5.0:
+>
+>    builtin-top.c: In function ‘__cmd_top’:
+>    builtin-top.c:1241:3: error: label ‘out_delete’ used but not defined
+>       goto out_delete;
+>       ^~~~
+>      CC       builtin-script.o
+>
+>Dropping this patch from 5.0 (along with ad59b96f965a ("perf data: Don't store
+>auxtrace index for directory data file") does fix the perf build.
 
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+Now dropped, thanks again!
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.1-rc6
-
-for you to fetch changes up to bb0925b283fe558fa9530c9d0b6158e9b6c9dfa6:
-
-  Merge tag 'extcon-fixes-for-5.1-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon into char-misc-linus (2019-04-16 12:46:09 +0200)
-
-----------------------------------------------------------------
-char/misc fixes for 5.1-rc6
-
-Here are 4 small misc driver fixes for 5.1-rc6.
-
-Nothing major at all, they fix up a Kconfig issues, a SPDX invalid
-license tag, and 2 tiny bugfixes.
-
-All have been in linux-next for a while with no reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      extcon: ptn5150: fix COMPILE_TEST dependencies
-
-Bo YU (1):
-      misc: fastrpc: add checked value for dma_set_mask
-
-Greg Kroah-Hartman (2):
-      Merge tag 'misc-habanalabs-fixes-2019-04-01' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus
-      Merge tag 'extcon-fixes-for-5.1-rc4' of git://git.kernel.org/.../chanwoo/extcon into char-misc-linus
-
-Oded Gabbay (1):
-      habanalabs: remove low credit limit of DMA #0
-
-Thomas Gleixner (1):
-      drivers: power: supply: goldfish_battery: Fix bogus SPDX identifier
-
- drivers/extcon/Kconfig                  | 2 +-
- drivers/misc/fastrpc.c                  | 7 ++++++-
- drivers/misc/habanalabs/goya/goya.c     | 9 ++++-----
- drivers/power/supply/goldfish_battery.c | 2 +-
- 4 files changed, 12 insertions(+), 8 deletions(-)
+--
+Thanks,
+Sasha
