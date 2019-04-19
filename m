@@ -2,118 +2,105 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9494CC282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4FAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6319B20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A4920643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1oHo0r9"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="kCuG+Oek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfDSTEm (ORCPT
+        id S1729202AbfDSTDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:04:42 -0400
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:41022 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbfDSTEj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:04:39 -0400
-Received: by mail-pl1-f180.google.com with SMTP id d1so2972486plj.8;
-        Fri, 19 Apr 2019 12:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=3kKrgDx6p2/hDPCEa9tDMKLuCUU6fRQv9eTEmPdhp28=;
-        b=o1oHo0r9qYAwSFf+1xJ4tzUzE78oR7SPpN8soWSbzX5tXNoxMvwUOthYqBWnobZbQY
-         gUxHaG/S+wnvV6LhIYY0qo92kQfdyBaBWfdOOMnOKCg26rrDoiGW3p+irMjKiT7cd0PB
-         M95Y7B7nEGIVdlmk4RQzTlv2JgvAaIl4WG+w8Ug3OCVpVpxqvv/LaaBkAnpZQ0mvm9w7
-         +AfwNNmJUO7pk37/CffmUuIr2W7q87wBEjXbyLqPnNUkulunCC/y7laf+6lwA/u+oEiC
-         qs8Jqa65TDe+7oJGCQ7Z5Q6gXzyEb6SpvrQDfgYAgxw/kc7mjageDhul82CTvKiZzLy4
-         XncQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3kKrgDx6p2/hDPCEa9tDMKLuCUU6fRQv9eTEmPdhp28=;
-        b=d+9yS7tb4Fd0Bb+DkSmlmYDfeGeVU0a9qaSnPoHhJM/LcSqzsKTdeKxeezw6AaUVfH
-         Lqiq8NU2eKS5g8zoYTU8onfNpOZqqeFs3ELeTx6j+Tb4ilF19ZoXItbgsXoGZ8HazI8W
-         l6uiRuIoJ3UajGn2IzcTxU/8+7euldwgKKXmhUQPRDyeGCkMRQB9FzESiQY19baqNbdi
-         uObsS8XLSWXS/bJHTLSmxk5qSup5AF8gDFVwJ60NO9ctfDK2MkApiyK5H2WRIsCsL7Xx
-         lSLCJUbRhdro3Qxn9TF0TujbaFICTLNQHYcZiNL+B0RBR3IC66Sb1/CLOwzk/Yot2LkO
-         qXdA==
-X-Gm-Message-State: APjAAAUtWpodhEKNszVF02E1nqwYudVhfo7dMOt3QYCL4BQdcJyyNWd8
-        RFL6vh5vosVilRjSYkpR7kOTCQCC+tQ=
-X-Google-Smtp-Source: APXvYqyXm0f+pD//CSmJA1jXiRPYSXxBkgrN0isFq0AMhwdRbEEFYOO4FZNUgrb26auw+VaMoAFPgg==
-X-Received: by 2002:a17:902:2beb:: with SMTP id l98mr2263077plb.331.1555659124659;
-        Fri, 19 Apr 2019 00:32:04 -0700 (PDT)
-Received: from localhost ([61.199.190.18])
-        by smtp.gmail.com with ESMTPSA id v3sm891284pgr.28.2019.04.19.00.32.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 00:32:03 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 07:31:57 +0000
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.1-rc5
-Message-ID: <20190419073157.epllrynbv5ww4a7r@penguin>
+        Fri, 19 Apr 2019 15:03:54 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729111AbfDSTDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:03:50 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JG43J0335992
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 19 Apr 2019 09:04:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JG43J0335992
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555689844;
+        bh=fcIO2T55ipKOMm70Wmw1vjd/SlINBs4aCU9qn7nFX38=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=kCuG+OekGzQ/L0WZLM5KOv3jhhm/bHpvHpIC4RmSblkT5wxCDKvoOW6ez/zJ+cqgt
+         NYusgwGomV3hT6I3eqz9x99GVT8dSxFYG5fUkcwDeTEodpggnWzvQoEdqD6PoeDI0v
+         ksiHrLvOXYWljx9MnOZ+oiMhTNw5XAq5hEsZTWkJVNaIv5np7mJM1Rv54U20wLoXA1
+         M1wdwyNC3apKCCoAZ5bo1i+0OCgzmFxzTVgSdv8eCARatyHZfGJ1w22cenFtZd1Hv6
+         6b0SS8n4+SJRcK5x3Y2g0LP/00He29AnKQookceKJXkskrRRpEwpNnyTyx97A9vxB2
+         0c4wC+C2OzmpQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JG43kA335942;
+        Fri, 19 Apr 2019 09:04:03 -0700
+Date:   Fri, 19 Apr 2019 09:04:03 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-02143c2931c3c0faf088c5859a10de6c2b4f2d96@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
+        ak@linux.intel.com, yi.y.sun@linux.intel.com, hpa@zytor.com
+Reply-To: ak@linux.intel.com, linux-kernel@vger.kernel.org,
+          yi.y.sun@linux.intel.com, tglx@linutronix.de, mingo@kernel.org,
+          hpa@zytor.com
+In-Reply-To: <20190330004743.29541-6-andi@firstfloor.org>
+References: <20190330004743.29541-6-andi@firstfloor.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/platform] x86/hyperv: Make hv_vcpu_is_preempted() visible
+Git-Commit-ID: 02143c2931c3c0faf088c5859a10de6c2b4f2d96
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Commit-ID:  02143c2931c3c0faf088c5859a10de6c2b4f2d96
+Gitweb:     https://git.kernel.org/tip/02143c2931c3c0faf088c5859a10de6c2b4f2d96
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Fri, 29 Mar 2019 17:47:40 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 19 Apr 2019 17:58:57 +0200
 
-Please pull from:
+x86/hyperv: Make hv_vcpu_is_preempted() visible
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+This function is referrenced from assembler, so it needs to be marked
+visible for LTO.
 
-to receive updates for the input subsystem. You will get:
+Fixes: 3a025de64bf8 ("x86/hyperv: Enable PV qspinlock for Hyper-V")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Yi Sun <yi.y.sun@linux.intel.com>
+Cc: kys@microsoft.com
+Cc: haiyangz@microsoft.com
+Link: https://lkml.kernel.org/r/20190330004743.29541-6-andi@firstfloor.org
 
-- several new key mappings for HID
+---
+ arch/x86/hyperv/hv_spinlock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- a host of new ACPI IDs used to identify Elan touchpads in Lenovo
-  laptops
-
-Changelog:
----------
-
-Anson Huang (1):
-      Input: snvs_pwrkey - initialize necessary driver data before enabling IRQ
-
-Dmitry Torokhov (7):
-      Input: document meanings of KEY_SCREEN and KEY_ZOOM
-      [media] doc-rst: switch to new names for Full Screen/Aspect keys
-      HID: input: fix mapping of aspect ratio key
-      HID: input: add mapping for Expose/Overview key
-      HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
-      HID: input: add mapping for "Full Screen" key
-      HID: input: add mapping for "Toggle Display" key
-
-KT Liao (1):
-      Input: elan_i2c - add hardware ID for multiple Lenovo laptops
-
-Diffstat:
---------
-
- Documentation/media/uapi/rc/rc-tables.rst |  4 ++--
- drivers/hid/hid-input.c                   | 17 ++++++++++++++++-
- drivers/input/keyboard/snvs_pwrkey.c      |  6 +++---
- drivers/input/mouse/elan_i2c_core.c       | 25 +++++++++++++++++++++++++
- include/uapi/linux/input-event-codes.h    |  6 ++++--
- 5 files changed, 50 insertions(+), 8 deletions(-)
-
-Thanks.
-
-
--- 
-Dmitry
+diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+index a861b0456b1a..07f21a06392f 100644
+--- a/arch/x86/hyperv/hv_spinlock.c
++++ b/arch/x86/hyperv/hv_spinlock.c
+@@ -56,7 +56,7 @@ static void hv_qlock_wait(u8 *byte, u8 val)
+ /*
+  * Hyper-V does not support this so far.
+  */
+-bool hv_vcpu_is_preempted(int vcpu)
++__visible bool hv_vcpu_is_preempted(int vcpu)
+ {
+ 	return false;
+ }
