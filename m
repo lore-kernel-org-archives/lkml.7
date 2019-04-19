@@ -6,32 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F380EC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FF8C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE305222E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2B9222E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfDSSQz (ORCPT
+        id S1727230AbfDSSRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:16:55 -0400
-Received: from sauhun.de ([88.99.104.3]:50570 "EHLO pokefinder.org"
+        Fri, 19 Apr 2019 14:17:03 -0400
+Received: from sauhun.de ([88.99.104.3]:50598 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfDSSQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726385AbfDSSQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 14:16:18 -0400
 Received: from localhost (p5486CC46.dip0.t-ipconnect.de [84.134.204.70])
-        by pokefinder.org (Postfix) with ESMTPSA id 434E42E35C8;
-        Fri, 19 Apr 2019 20:16:17 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id AC9822E35C7;
+        Fri, 19 Apr 2019 20:16:16 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-watchdog@vger.kernel.org
 Cc:     linux-renesas-soc@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 15/16] watchdog: xen_wdt: drop warning after calling watchdog_init_timeout
-Date:   Fri, 19 Apr 2019 20:16:00 +0200
-Message-Id: <20190419181601.7412-16-wsa+renesas@sang-engineering.com>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 14/16] watchdog: stm32_iwdg: drop warning after calling watchdog_init_timeout
+Date:   Fri, 19 Apr 2019 20:15:59 +0200
+Message-Id: <20190419181601.7412-15-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190419181601.7412-1-wsa+renesas@sang-engineering.com>
 References: <20190419181601.7412-1-wsa+renesas@sang-engineering.com>
@@ -45,24 +48,26 @@ The core will print out details now.
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/watchdog/xen_wdt.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/watchdog/stm32_iwdg.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/watchdog/xen_wdt.c b/drivers/watchdog/xen_wdt.c
-index f1c016d015b3..d54da2e0f2e1 100644
---- a/drivers/watchdog/xen_wdt.c
-+++ b/drivers/watchdog/xen_wdt.c
-@@ -135,9 +135,7 @@ static int xen_wdt_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
+diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+index 309563e002b8..50ce762bddb2 100644
+--- a/drivers/watchdog/stm32_iwdg.c
++++ b/drivers/watchdog/stm32_iwdg.c
+@@ -235,11 +235,7 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
  
--	if (watchdog_init_timeout(&xen_wdt_dev, timeout, NULL))
--		dev_info(&pdev->dev, "timeout value invalid, using %d\n",
--			xen_wdt_dev.timeout);
-+	watchdog_init_timeout(&xen_wdt_dev, timeout, NULL);
- 	watchdog_set_nowayout(&xen_wdt_dev, nowayout);
- 	watchdog_stop_on_reboot(&xen_wdt_dev);
- 	watchdog_stop_on_unregister(&xen_wdt_dev);
+ 	watchdog_set_drvdata(wdd, wdt);
+ 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+-
+-	ret = watchdog_init_timeout(wdd, 0, &pdev->dev);
+-	if (ret)
+-		dev_warn(&pdev->dev,
+-			 "unable to set timeout value, using default\n");
++	watchdog_init_timeout(wdd, 0, &pdev->dev);
+ 
+ 	ret = watchdog_register_device(wdd);
+ 	if (ret) {
 -- 
 2.11.0
 
