@@ -2,126 +2,86 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42074C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2BEC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03B0217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636BA217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Vh4McX3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfDSAkB (ORCPT
+        id S1726626AbfDSApX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 20:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
+        Thu, 18 Apr 2019 20:45:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44226 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfDSAkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 20:40:00 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725948AbfDSApX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 20:45:23 -0400
+Received: from zn.tnic (p200300EC2F112E00C9E732E76EE3BD2F.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:c9e7:32e7:6ee3:bd2f])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E6C2171F;
-        Fri, 19 Apr 2019 00:39:56 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 20:39:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [patch V2 01/29] tracing: Cleanup stack trace code
-Message-ID: <20190418203954.631914cb@oasis.local.home>
-In-Reply-To: <alpine.DEB.2.21.1904190040510.3174@nanos.tec.linutronix.de>
-References: <20190418084119.056416939@linutronix.de>
-        <20190418084253.142712304@linutronix.de>
-        <20190418181938.2e2a9a04@gandalf.local.home>
-        <alpine.DEB.2.21.1904190040510.3174@nanos.tec.linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C4A961EC0104;
+        Fri, 19 Apr 2019 02:45:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555634721;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=B7TKCB1OFmsr7NkJTn8+NmAwe312DePuJSu/N+DUWxo=;
+        b=Vh4McX3m4glVjnUI3lCOaV2pdc+PabbFN6qWUdyYyAxBtE51Cf50G8+3Srylagz2JScmif
+        yQE0q6EOynnSTNQsO7wJ9Pl9+EzoEGk7TwtBiP59sMJvFvLs7Jpx/wyQKjkWW+qtoeF8kg
+        mMD9R/JgoTgwJg8RVKOXbnCnOW7lG2A=
+Date:   Fri, 19 Apr 2019 02:45:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     PanBian <bianpan2016@163.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: EDAC: Fix memory leak in creating CSROW object
+Message-ID: <20190419004516.GC559@zn.tnic>
+References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
+ <20190418172548.GL27160@zn.tnic>
+ <20190419003536.GA57795@bianpan2016@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190419003536.GA57795@bianpan2016@163.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 00:44:17 +0200 (CEST)
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Fri, Apr 19, 2019 at 08:35:36AM +0800, PanBian wrote:
+> Yes, I see that. Because the loop start with (--i), there is no put
+> operation for the device that fails to create. So, I think we cannot
+> rule out the possibility of memory leak.
 
-> On Thu, 18 Apr 2019, Steven Rostedt wrote:
-> > On Thu, 18 Apr 2019 10:41:20 +0200
-> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> >   
-> > > @@ -412,23 +404,20 @@ stack_trace_sysctl(struct ctl_table *tab
-> > >  		   void __user *buffer, size_t *lenp,
-> > >  		   loff_t *ppos)
-> > >  {
-> > > -	int ret;
-> > > +	int ret, was_enabled;  
-> > 
-> > One small nit. Could this be:
-> > 
-> > 	int was_enabled;
-> > 	int ret;
-> > 
-> > I prefer only joining variables that are related on the same line.
-> > Makes it look cleaner IMO.  
-> 
-> If you wish so. To me it's waste of screen space :)
+Ok, so this is not something you trigger - you're basically staring at
+the code?
 
-At least you didn't say it helps the compiler ;-)
+Well, there's something else questionable in that code which I asked
+Greg about today but we didn't finish that conversation, let me CC him.
 
-> 
-> > >  
-> > >  	mutex_lock(&stack_sysctl_mutex);
-> > > +	was_enabled = !!stack_tracer_enabled;
-> > >    
-> > 
-> > Bah, not sure why I didn't do it this way to begin with. I think I
-> > copied something else that couldn't do it this way for some reason and
-> > didn't put any brain power behind the copy. :-/ But that was back in
-> > 2008 so I blame it on being "young and stupid" ;-)  
-> 
-> The young part is gone for sure :)
+So AFAIU, devices for which device_add() has returned success,
+should be removed with their counterpart device_del().
+edac_create_csrow_objects(), however, does put_device() on those in the
+"unwinding" loop.
 
-I purposely set you up for that response.
+And for the case where device_add() fails, you should do put_device() to
+it. I.e., what you're saying.
 
-> 
-> > Other then the above nit and removing the unneeded +1 in max_entries:  
-> 
-> s/+1/-1/
+So I think we need to figure what needs to be done when before fixing
+this properly.
 
-That was an ode to G+
+Greg?
 
--- Steve
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
