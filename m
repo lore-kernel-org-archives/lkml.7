@@ -2,111 +2,93 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF1C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 04:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8543C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743A220854
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 04:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC79222E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:15:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fsRZQCT1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h0oDQPYR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pJVXOLwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbfDSEDT (ORCPT
+        id S1725869AbfDSSPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 00:03:19 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55114 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbfDSEDS (ORCPT
+        Fri, 19 Apr 2019 14:15:38 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36990 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfDSSPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 00:03:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 139386156F; Fri, 19 Apr 2019 04:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555646597;
-        bh=PuPRDCs/gwkZtcIesXyz9fFaesQfwN078XRAdIlT+As=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=fsRZQCT1GfjsLR4KeFvYvctb+KzAJnXCcy+ICvBmnTzLGGwIwBRLmaO3DJcxppDi3
-         AA6YXt8KM0RjXCtWD4vJ7HmbN77emrS+ZiGtu3yJdvIr1uMyiVh5ji0Nw3l7+FRX52
-         5Bg3NpcPpESYFrIMoEtyXQaLiNOOQlvzgh3MtqME=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45F4C614B5;
-        Fri, 19 Apr 2019 04:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555646596;
-        bh=PuPRDCs/gwkZtcIesXyz9fFaesQfwN078XRAdIlT+As=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=h0oDQPYRDqqZaqxa3B36FGdXtkuWW/NbQDcvbpJ4N1E3lgPJlFRNc2IBNXpbykv8S
-         PR2D4f7/Mrv58bmR67KbMBz0XXVUiKEFhxV9NE44RjLQmA4NmbPvvytg48BVuatzt2
-         pNkBXJv22Zc4LsLBfAxtqsZAsdu3oGrerb7GaJzM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 45F4C614B5
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        "open list\:ARM\/Rockchip SoC..." 
-        <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        "\<netdev\@vger.kernel.org\>" <netdev@vger.kernel.org>,
-        Xinming Hu <huxinming820@gmail.com>
-Subject: Re: [PATCH] mwifiex: Make resume actually do something useful again on SDIO cards
-References: <20190404040106.40519-1-dianders@chromium.org>
-        <874l7egxdj.fsf@codeaurora.org>
-        <CA+ASDXNfOUmMEWYwts8PuiDaEjuoPK+tZ0BhDSSte5u5toydkA@mail.gmail.com>
-        <87ef6hruno.fsf@kamboji.qca.qualcomm.com>
-        <CAD=FV=WgTUgMg-r2ZJ6rKOiv5Lw_m-EX6c0it6znA9v8AO+z_A@mail.gmail.com>
-Date:   Fri, 19 Apr 2019 07:03:11 +0300
-In-Reply-To: <CAD=FV=WgTUgMg-r2ZJ6rKOiv5Lw_m-EX6c0it6znA9v8AO+z_A@mail.gmail.com>
-        (Doug Anderson's message of "Thu, 18 Apr 2019 09:31:51 -0700")
-Message-ID: <87k1fq1w1s.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 19 Apr 2019 14:15:38 -0400
+Received: by mail-yw1-f67.google.com with SMTP id w66so2154601ywd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jDnN7xYuu1VBUKudqASvz1g5pzbRI3PK9c75wOnApTA=;
+        b=pJVXOLwcTV3RzVu+pObedJ4qJe4aSqH4L5NasYqdFiKvUju/IlqJGydPqDSfG4mEgt
+         kxSWWyZmkEBlsQMDJ9o2e4/W+/eX7kZMc/PEDRYcRmtxXi4aBv9t+L8xSjUwNN6uaJb2
+         a+LClMsVxinVCy+b2wjeoa25rxIbQkXz8g63XRhsysxfXp2SZT+9aJDHrVo/zwSzjc3h
+         8GafA6Quf0aOhA7cf5bi+Yg3PpbeUBY5uPExenR8gRPV1pvCHJCQCKTqOvk89nHuCmto
+         sBa5yKwwQtkUMxyzNRluyvq3R3HEfYr5vXdU6OwaQAvpA9GwEBqxfY6fITzx2X1eaBZr
+         2mVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jDnN7xYuu1VBUKudqASvz1g5pzbRI3PK9c75wOnApTA=;
+        b=YZQlDaNp/UgVrAQVbmq0rKKnXYU/xiB55A5KDzPJRZOSNoRh2WUb1LMGxDNLu/vhLi
+         M3HrJ4sCCzqmVf6+PhMK1wqdp2ye6FkHdxTWNnN7kO5qMJUkjkuoC0zjRTm4oXuhAGBp
+         UZvYjfQvIpM2jWVGj6pAb8OdMfAovlOSX44/G6TcUQsJEaZXGiwHebxvmbTdWF3X13XE
+         KBoIEiQsOz5Lhw8crwHk792dId0ZRM35p/vmIkVbLszTE3hjdZcCia8L5SglLDlOe4w/
+         B1QK/IcW9BkK2DuyB+PbktvMidvJlGI+VExEPEFuTKryysRCO0RrFPsZKoh6OsV+pwkG
+         tWPQ==
+X-Gm-Message-State: APjAAAUTW9sAtEyrHDuRi9YwG9bL/wUyvUVcVvD+pA36od8duxeyD4Sq
+        7pcKSnyKpZvvNa0THprFI9IW1mRyD5IS9s8MODTiVg==
+X-Google-Smtp-Source: APXvYqx0NiOYxBuijiFYCW1J/mRblpnrmj7EDisrwNEpLer18ohGoXxAnW8/wjUnx72ZR97hIZeZ5Xt7E/OcPauBD+A=
+X-Received: by 2002:a0d:f346:: with SMTP id c67mr3714898ywf.37.1555691283825;
+ Fri, 19 Apr 2019 09:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190418180524.23489-1-aryabinin@virtuozzo.com>
+ <791f4f23-d931-4ac8-4e60-3ffe46c4ece2@gmail.com> <c2c270d9-29c0-b993-84c5-4c994608f7c8@virtuozzo.com>
+ <a80606cf-3076-b01d-0442-ccff3c462276@gmail.com> <6651d0b9-4ddf-ef6d-6f53-e1290b7aeeee@virtuozzo.com>
+In-Reply-To: <6651d0b9-4ddf-ef6d-6f53-e1290b7aeeee@virtuozzo.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 19 Apr 2019 09:27:52 -0700
+Message-ID: <CANn89iLSnEtCiqQbPkQXLwkvebd_PPCLJsH2tbwp7Py99FS2UA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] net/skbuff: don't waste memory reserves
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Willem de Bruijn <willemb@google.com>,
+        Florian Westphal <fw@strlen.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doug Anderson <dianders@chromium.org> writes:
-
-> On Thu, Apr 4, 2019 at 8:35 PM Kalle Valo <kvalo@codeaurora.org> wrote:
->>
->> Brian Norris <briannorris@chromium.org> writes:
->>
->> > On Wed, Apr 3, 2019 at 10:20 PM Kalle Valo <kvalo@codeaurora.org> wrote:
->> >> Douglas Anderson <dianders@chromium.org> writes:
->> >> > Fixes: fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent
->> >> > adapter status variables")
->> >> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> >>
->> >> I'm planning to queue this for 5.1.
+On Fri, Apr 19, 2019 at 9:24 AM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
 >
-> Do you know when you plan to queue this?  I don't see the patch in
-> Linus's tree nor in linux-next.  Just want to make sure it didn't get
-> forgotten...
+>
+> But why that failed allocation is such a problem?
+>
+> 1. sk_memalloc_socks() false
+> 2. NIC driver tries to allocate pages and fails
 
-It's on my queue and not forgotten:
+The NIC then is unable to receive any frames.
 
-https://patchwork.kernel.org/patch/10884883/
+We need to be able to populate the RX ring buffer, before NIC can
+actually be started.
 
-Due to various reasons I'm really struggling with patches right now,
-sorry about that, but I'm slowly catching up. I should be able to apply
-this within a week.
-
--- 
-Kalle Valo
+Basically you are saying : We need to allocate memory only _after_
+frame has been received by the NIC.
+I am saying : We need to allocate memory so that the NIC can put a
+future frame in it.
