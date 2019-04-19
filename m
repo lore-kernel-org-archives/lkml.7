@@ -2,122 +2,373 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B02C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ABAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95B6217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE2E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555701156;
+	bh=8s/XEr2PFDkv1yvGhVRJT++i5v6cppzQicwQWNxNm2w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yyn5hLnqoUijpdTPW1EJFIMZlhuvrrqhUOHF8kQHLoOU62L42N2PEnyoKHAGInDsI
+	 pyLl5eOdoD2zMNu9/A7pI6P4XUQrKf+EagwsCWYJHLpk17aFf3cjtzKq5m0dy9buqe
+	 BAbUDyj7RIVgK0QW9iZfw/+Vb1Veewg/oSgyshc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfDSTMZ (ORCPT
+        id S1729523AbfDSTMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:12:25 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62827 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfDSTMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:12:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 09:39:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,370,1549958400"; 
-   d="scan'208";a="224980089"
-Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
-  by orsmga001.jf.intel.com with ESMTP; 19 Apr 2019 09:39:03 -0700
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190418171059.GA20819@wind.enjellic.com>
- <d79261c0-f2ae-0ed8-96b6-fb4d1677e3dc@intel.com>
- <20190419162450.GA2615@wind.enjellic.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <088e39dc-025a-1dea-4f26-239d5c059d6a@intel.com>
-Date:   Fri, 19 Apr 2019 09:39:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 15:12:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36412 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbfDSTMc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:12:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a15so3475032wrw.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=nAgdjGuZSCG92Lwm/XCaXb+k4k+fq+wHi5WoVqh+rKk=;
+        b=GfwOWfCHp11HV/MjFHCboSRL3Yqhx+uluJjI1cOcTy0Ne/xxC0fXDjR4A712qSabog
+         LQv09tfcBdb2PFmvBT9PGf5voN9vHEG6W6i1OYApBACUfPqJj1fpNFNJYGEAygsZ1nLd
+         AwXeCsxJuevE6U5nXahS/9IsNsbouviG81RqKnxleXVdotioLxpxElX15jBaRWmegwrZ
+         VWqH74OBpMYzpB6b4vWF+G6NQ/WUcXhH82dcjHqrtg8qFkyWyp5NUcG5UbAIb6wX76om
+         HPa2WRUYPJ+MJ+Ob6flt8N5lkD2SeNYQ6zefUiPIgKdvxEDM9SBANv3AqmWumFjU8jYk
+         pHQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=nAgdjGuZSCG92Lwm/XCaXb+k4k+fq+wHi5WoVqh+rKk=;
+        b=HrSqcXlqVr0tMx31iMVfS6UtHI3wNxdEMLGMs2Jo9plOuQ5rmw7pR2vU4T9HHG8oK+
+         a4tgapbf8RvuJMjLfCSR36lUT1PhCwUszfxoNWa5R6D7RJjQy3tGLaLEwoLU/bA7uLl2
+         k+T3V5tXmsGksSM1G5ntc+DXwasTsimi+BoiAWzhX2LMgGXr+245Xd9ba0cfU//JWzy0
+         Jee664kPj4bf4l8TuYe/JqBAhGbY2FRBKMEFKLoBNkIuqERvo/Qf9ZDw3wVRRB5MkaPE
+         HYz+OMwxAhaLQN0DuDxAqkdQMsp70nXxKRpu8dhlsJDTdIKb9abau10Gd1p4iidmveV9
+         Vylg==
+X-Gm-Message-State: APjAAAVaQvq/CxX0OAfP6nAwGudoBQtBLtmMYys5sXx63KPEhY1t4r6j
+        3K7ttekXJoASia8lKBBNTixqIdid
+X-Google-Smtp-Source: APXvYqypyYuEzXHYfA5Cbd+D3YT7M5foZcKx7gMMargge+x/gLKR10psuK2CrUpIkrBNwvFXM0y6/g==
+X-Received: by 2002:adf:ea81:: with SMTP id s1mr2242668wrm.277.1555668520856;
+        Fri, 19 Apr 2019 03:08:40 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id s18sm4801382wmc.41.2019.04.19.03.08.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 03:08:39 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 12:08:37 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Slavomir Kaslev <kaslevs@vmware.com>
+Subject: [PATCH] compiler.h, tracing: Remove CONFIG_PROFILE_ALL_BRANCHES
+Message-ID: <20190419100837.GA19406@gmail.com>
+References: <20190307120317.GD32477@hirez.programming.kicks-ass.net>
+ <20190307125526.GB32534@hirez.programming.kicks-ass.net>
+ <20190307131312.GC32534@hirez.programming.kicks-ass.net>
+ <20190307164705.qbu4ytdfdmsighas@treble>
+ <CAHk-=wgfvwn1L7BduXA02rZdDnKGb8ebzm4C--QcfVF+gjHAvQ@mail.gmail.com>
+ <20190307171709.dap5hfeof4yo3nsc@treble>
+ <20190307173810.GI32477@hirez.programming.kicks-ass.net>
+ <CAHk-=wi_vuD9fKk36=_DNG9=+S9rbTRu2FTFe9tECunC8oOtfg@mail.gmail.com>
+ <20190307131841.3b5d9e00@oasis.local.home>
+ <20190310131620.GL2482@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190419162450.GA2615@wind.enjellic.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190310131620.GL2482@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 9:24 AM, Dr. Greg wrote:
->> Companies ideally shouldn't be getting their customers hooked on
->> out-of-tree ABIs and customers should consume out-of-tree ABIs
->> *expecting* them to break in the future.
-> At the risk of being indelicate, it was your company that hooked the
-> SGX development community on out-of-tree driver ABI's and software.
 
-I would encourage anyone who has been impacted by this to communicate
-that back to the folks at Intel from whom they received the out-of-tree
-code about the impact.
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-> Is there going to be an OEM mandated requirement, enforced by Intel
-> licensing, that all SGX capable platforms will implement Flexible
-> Launch Control?
-Heck if I know.  I don't think LKML is a great place to discuss Intel
-licensing requirements.
+> On Thu, Mar 07, 2019 at 01:18:41PM -0500, Steven Rostedt wrote:
+> > On Thu, 7 Mar 2019 09:45:35 -0800
+> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > 
+> > > On Thu, Mar 7, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > Also; it seems to me that something PT, or maybe even simply:
+> > > >
+> > > >   perf -e branches -e branch-misses
+> > > >
+> > > > would get you similar or sufficient information.  
+> 
+> > I currently have one of my engineers looking at the data and may be
+> > sending patches soon. It's basically an entry level way to get into
+> > kernel development. Note, no patch will be sent just because of the
+> > data from the profiling. The task is to look at and understand the
+> > code, and see if it can be optimized (with likely/unlikely or flow
+> > changes). It's a way to get a better understanding of the kernel in
+> > various locations. It is by no means "profiler said this, lets change
+> > it." All changes must be rational, and make sense. The profiler is only
+> > used to help find those places.
+> 
+> Can't you just have those same engineers look at perf data? This seems
+> like a very expensive and convoluted way of getting something.
 
-What I *do* know is that when builds a platform without Flexible Launch
-Control, Linux does not support SGX on that platform.  I guess that
-could be spelled out in some documentation explicitly, if it isn't already.
+So since no-one offered objections to using perf branch profiling instead 
+(which method allows so much more than CONFIG_PROFILE_ALL_BRANCHES: such 
+as profiling glibc and other user-space, or allowing to branch-profile 
+the kernel is an uninstrumented form not distorted by 
+CONFIG_PROFILE_ALL_BRANCHES code generation artifacts), lemme propose the 
+attached patch to remove if-tracing.
+
+If the CONFIG_PROFILE_ALL_BRANCHES=y feature is required for anyone it 
+can still be reverted privately or maintained out of tree - no need to 
+burden the mainline kernel with this.
+
+I've build tested this and it Looks Perfect Here™.
+
+Thanks,
+
+	Ingo
+
+=============================>
+From 3f689ed8a1555aabead90e015a47aefddd2a4e25 Mon Sep 17 00:00:00 2001
+From: Ingo Molnar <mingo@kernel.org>
+Date: Fri, 19 Apr 2019 11:42:43 +0200
+Subject: [PATCH] compiler.h, tracing: Remove CONFIG_PROFILE_ALL_BRANCHES
+
+Redefining 'if' in compiler.h was a hideously wonderful hack back in 2008 when
+we merged it via:
+
+  2bcd521a684c: ("trace: profile all if conditionals")
+
+Meanwhile the 'wonderful' novelty part wore off a bit in that decade, and 
+what remained is the 'hideous', mostly. ;-)
+
+Meanwhile #2: we also merged perf and hardware branch tracing 
+capabilities (branch-miss events, but also BTS and aux hw tracing),
+which can collect similar data and so much more:
+
+  $ perf -e branches -e branch-misses
+
+So let's remove this constant source of headaches for good. Anyone truly 
+interested in this feature can revert this commit and/or maintain it out 
+of tree - but the upstream pain isn't really worth it.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/asm-generic/vmlinux.lds.h           | 11 +----
+ include/linux/compiler.h                    | 24 -----------
+ kernel/trace/Kconfig                        | 17 --------
+ kernel/trace/trace_branch.c                 | 66 -----------------------------
+ tools/perf/tests/bpf-script-test-prologue.c |  9 ----
+ 5 files changed, 1 insertion(+), 126 deletions(-)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index f8f6f04c4453..9c477b2136c2 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -126,14 +126,6 @@
+ #define LIKELY_PROFILE()
+ #endif
+ 
+-#ifdef CONFIG_PROFILE_ALL_BRANCHES
+-#define BRANCH_PROFILE()	__start_branch_profile = .;		\
+-				KEEP(*(_ftrace_branch))			\
+-				__stop_branch_profile = .;
+-#else
+-#define BRANCH_PROFILE()
+-#endif
+-
+ #ifdef CONFIG_KPROBES
+ #define KPROBE_BLACKLIST()	. = ALIGN(8);				      \
+ 				__start_kprobe_blacklist = .;		      \
+@@ -266,8 +258,7 @@
+ 	__start___verbose = .;						\
+ 	KEEP(*(__verbose))                                              \
+ 	__stop___verbose = .;						\
+-	LIKELY_PROFILE()		       				\
+-	BRANCH_PROFILE()						\
++	LIKELY_PROFILE()						\
+ 	TRACE_PRINTKS()							\
+ 	BPF_RAW_TP()							\
+ 	TRACEPOINT_STR()
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index d58aa0db05f9..c63105451c6a 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -48,30 +48,6 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ #  define unlikely(x)	(__branch_check__(x, 0, __builtin_constant_p(x)))
+ # endif
+ 
+-#ifdef CONFIG_PROFILE_ALL_BRANCHES
+-/*
+- * "Define 'is'", Bill Clinton
+- * "Define 'if'", Steven Rostedt
+- */
+-#define if(cond, ...) __trace_if( (cond , ## __VA_ARGS__) )
+-#define __trace_if(cond) \
+-	if (__builtin_constant_p(!!(cond)) ? !!(cond) :			\
+-	({								\
+-		int ______r;						\
+-		static struct ftrace_branch_data			\
+-			__aligned(4)					\
+-			__section("_ftrace_branch")			\
+-			______f = {					\
+-				.func = __func__,			\
+-				.file = __FILE__,			\
+-				.line = __LINE__,			\
+-			};						\
+-		______r = !!(cond);					\
+-		______r ? ______f.miss_hit[1]++ : ______f.miss_hit[0]++;\
+-		______r;						\
+-	}))
+-#endif /* CONFIG_PROFILE_ALL_BRANCHES */
+-
+ #else
+ # define likely(x)	__builtin_expect(!!(x), 1)
+ # define unlikely(x)	__builtin_expect(!!(x), 0)
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 8bd1d6d001d7..169c34e0f16d 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -366,23 +366,6 @@ config PROFILE_ANNOTATED_BRANCHES
+ 
+ 	  Note: this will add a significant overhead; only turn this
+ 	  on if you need to profile the system's use of these macros.
+-
+-config PROFILE_ALL_BRANCHES
+-	bool "Profile all if conditionals" if !FORTIFY_SOURCE
+-	select TRACE_BRANCH_PROFILING
+-	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+-	help
+-	  This tracer profiles all branch conditions. Every if ()
+-	  taken in the kernel is recorded whether it hit or miss.
+-	  The results will be displayed in:
+-
+-	  /sys/kernel/debug/tracing/trace_stat/branch_all
+-
+-	  This option also enables the likely/unlikely profiler.
+-
+-	  This configuration, when enabled, will impose a great overhead
+-	  on the system. This should only be enabled when the system
+-	  is to be analyzed in much detail.
+ endchoice
+ 
+ config TRACING_BRANCHES
+diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
+index 3ea65cdff30d..be75301a9963 100644
+--- a/kernel/trace/trace_branch.c
++++ b/kernel/trace/trace_branch.c
+@@ -387,69 +387,3 @@ __init static int init_annotated_branch_stats(void)
+ 	return 0;
+ }
+ fs_initcall(init_annotated_branch_stats);
+-
+-#ifdef CONFIG_PROFILE_ALL_BRANCHES
+-
+-extern unsigned long __start_branch_profile[];
+-extern unsigned long __stop_branch_profile[];
+-
+-static int all_branch_stat_headers(struct seq_file *m)
+-{
+-	seq_puts(m, "   miss      hit    % "
+-		    "       Function                "
+-		    "  File              Line\n"
+-		    " ------- ---------  - "
+-		    "       --------                "
+-		    "  ----              ----\n");
+-	return 0;
+-}
+-
+-static void *all_branch_stat_start(struct tracer_stat *trace)
+-{
+-	return __start_branch_profile;
+-}
+-
+-static void *
+-all_branch_stat_next(void *v, int idx)
+-{
+-	struct ftrace_branch_data *p = v;
+-
+-	++p;
+-
+-	if ((void *)p >= (void *)__stop_branch_profile)
+-		return NULL;
+-
+-	return p;
+-}
+-
+-static int all_branch_stat_show(struct seq_file *m, void *v)
+-{
+-	struct ftrace_branch_data *p = v;
+-	const char *f;
+-
+-	f = branch_stat_process_file(p);
+-	return branch_stat_show_normal(m, p, f);
+-}
+-
+-static struct tracer_stat all_branch_stats = {
+-	.name = "branch_all",
+-	.stat_start = all_branch_stat_start,
+-	.stat_next = all_branch_stat_next,
+-	.stat_headers = all_branch_stat_headers,
+-	.stat_show = all_branch_stat_show
+-};
+-
+-__init static int all_annotated_branch_stats(void)
+-{
+-	int ret;
+-
+-	ret = register_stat_tracer(&all_branch_stats);
+-	if (!ret) {
+-		printk(KERN_WARNING "Warning: could not register "
+-				    "all branches stats\n");
+-		return 1;
+-	}
+-	return 0;
+-}
+-fs_initcall(all_annotated_branch_stats);
+-#endif /* CONFIG_PROFILE_ALL_BRANCHES */
+diff --git a/tools/perf/tests/bpf-script-test-prologue.c b/tools/perf/tests/bpf-script-test-prologue.c
+index 43f1e16486f4..1f048bd89b0d 100644
+--- a/tools/perf/tests/bpf-script-test-prologue.c
++++ b/tools/perf/tests/bpf-script-test-prologue.c
+@@ -10,15 +10,6 @@
+ 
+ #include <uapi/linux/fs.h>
+ 
+-/*
+- * If CONFIG_PROFILE_ALL_BRANCHES is selected,
+- * 'if' is redefined after include kernel header.
+- * Recover 'if' for BPF object code.
+- */
+-#ifdef if
+-# undef if
+-#endif
+-
+ #define FMODE_READ		0x1
+ #define FMODE_WRITE		0x2
+ 
