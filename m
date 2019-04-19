@@ -2,78 +2,256 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169CDC282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A4EC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8233222CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C34222D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfDSS0w (ORCPT
+        id S1727605AbfDSS1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:26:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9990 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfDSS0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:26:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 09:51:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,370,1549958400"; 
-   d="scan'208";a="137202297"
-Received: from alison-desk.jf.intel.com ([10.54.74.53])
-  by orsmga006.jf.intel.com with ESMTP; 19 Apr 2019 09:51:39 -0700
-Date:   Fri, 19 Apr 2019 09:54:35 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robert Moore <robert.moore@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] acpi/hmat: Update acpi_hmat_type enum with
- ACPI_HMAT_TYPE_PROXIMITY
-Message-ID: <20190419165435.GA2284@alison-desk.jf.intel.com>
-References: <20190417181310.27613-1-alison.schofield@intel.com>
- <20190418145640.GA7659@localhost.localdomain>
- <CAJZ5v0g1EZbzr6BJhVBVb8JZGnVQg2Sz8NHtz_0Ji9R_58wMbA@mail.gmail.com>
+        Fri, 19 Apr 2019 14:27:13 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:52251 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfDSS1M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:27:12 -0400
+Received: by mail-it1-f197.google.com with SMTP id 73so6216946itl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:27:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=SjY449fhMaQ7ERvE3A+f6DfzGfay+dUg6pdjzIryT+s=;
+        b=ONIAm+jUK7ZVmO54Hj7+R92tM3rMmri61VpDFScBttgxmIx1PBjgrzUhovnh2R7c2+
+         wGiPVMCNDYRckKgibZzLhpcCmtfJKSynT4u9dKWmALq9z805bXBCv1CFcYOb7G81mJFF
+         xiAibYwz/WEGX/n7seiPtI3GWc0OpEXQFCh9NOzTUmjPmKWRtLbP18KbQEBtGB99DZ5z
+         8kj3/ZbXxV6gC20gP6lSxdDd/ky7S0Azv4tt+KW/QWoi0HKOTxMg45cFyMBflGqQpz5b
+         6D0wozSZ6xb8E7oXWFbNv5prN67p29dXZRUFYdJMLofWMSQ+S2lHb0q8a7GSgej4GKBW
+         odIQ==
+X-Gm-Message-State: APjAAAXfxRW8V9jpNjCmgAWFOxk42K+sZd4alDrAffxwlpE0OgJnSRiV
+        Eg6zN18sJAGUNA+67bpI1zbeYgzI9O/gO1dMGvSZH8EQtHZF
+X-Google-Smtp-Source: APXvYqwnkK1AqehEgQWQ8sef2VtIx+ZRTnz1SJhosMj/bO2/3xwzzqWLL9kt96w95OGBcNka086G6KqOEQQIpi9bDi86+M8g93ZD
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0g1EZbzr6BJhVBVb8JZGnVQg2Sz8NHtz_0Ji9R_58wMbA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a6b:db19:: with SMTP id t25mr1554070ioc.140.1555651864760;
+ Thu, 18 Apr 2019 22:31:04 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 22:31:04 -0700
+In-Reply-To: <00000000000044cbf80576baaecd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cb1d0d0586db6c4c@google.com>
+Subject: Re: possible deadlock in path_openat
+From:   syzbot <syzbot+a55ccfc8a853d3cff213@syzkaller.appspotmail.com>
+To:     amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 05:07:12PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Apr 18, 2019 at 5:02 PM Keith Busch <keith.busch@intel.com> wrote:
-> >
-> > On Wed, Apr 17, 2019 at 11:13:10AM -0700, Alison Schofield wrote:
-> > > ACPI 6.3 changed the subtable "Memory Subsystem Address Range Structure"
-> > > to "Memory Proximity Domain Attributes Structure".
-> > >
-> > > Updating and renaming of the structure was included in commit:
-> > > ACPICA: ACPI 6.3: HMAT updates (9a8d961f1ef835b0d338fbe13da03cb424e87ae5)
-> >
-> > I was not really happy with that HMAT update. Platforms implementing
-> > 6.2's HMAT continue to exist even if 6.3 isn't backward compatible. We
-> > just lost the original subtable definition.
-> 
-> Well, that's true, sadly, but the question is what to do in the kernel.
-> 
-> Definitely, the 6.3 format needs to be supported, but if the 6.2 ships
-> anywhere in practice, that will need to be supported too.
+syzbot has found a reproducer for the following crash on:
 
-So, what's the usual practice when ACPI tables are updated?
-Do we define separate 6.2 and 6.3 versions of this subtable and let
-the kernel figure out which one its looking at?
+HEAD commit:    6d906f99 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10917b8f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a55ccfc8a853d3cff213
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101767b7200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c15013200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a55ccfc8a853d3cff213@syzkaller.appspotmail.com
+
+overlayfs: workdir and upperdir must reside under the same mount
+======================================================
+WARNING: possible circular locking dependency detected
+5.1.0-rc5+ #74 Not tainted
+------------------------------------------------------
+syz-executor949/9348 is trying to acquire lock:
+000000005d993096 (&ovl_i_mutex_dir_key[depth]#2){++++}, at:  
+inode_lock_shared include/linux/fs.h:782 [inline]
+000000005d993096 (&ovl_i_mutex_dir_key[depth]#2){++++}, at: do_last  
+fs/namei.c:3321 [inline]
+000000005d993096 (&ovl_i_mutex_dir_key[depth]#2){++++}, at:  
+path_openat+0x1e98/0x46e0 fs/namei.c:3533
+
+but task is already holding lock:
+00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at: prepare_bprm_creds  
+fs/exec.c:1407 [inline]
+00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at:  
+__do_execve_file.isra.0+0x376/0x23f0 fs/exec.c:1750
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #4 (&sig->cred_guard_mutex){+.+.}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1102
+        do_io_accounting+0x1f4/0x830 fs/proc/base.c:2740
+        proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2789
+        proc_single_show+0xf6/0x170 fs/proc/base.c:744
+        seq_read+0x4db/0x1130 fs/seq_file.c:229
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_loop_readv_writev fs/read_write.c:688 [inline]
+        do_iter_read+0x4a9/0x660 fs/read_write.c:922
+        vfs_readv+0xf0/0x160 fs/read_write.c:984
+        kernel_readv fs/splice.c:358 [inline]
+        default_file_splice_read+0x475/0x890 fs/splice.c:413
+        do_splice_to+0x12a/0x190 fs/splice.c:876
+        splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
+        do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
+        do_sendfile+0x597/0xd00 fs/read_write.c:1443
+        __do_sys_sendfile64 fs/read_write.c:1504 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1490 [inline]
+        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1490
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #3 (&p->lock){+.+.}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+        seq_read+0x71/0x1130 fs/seq_file.c:161
+        proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_loop_readv_writev fs/read_write.c:688 [inline]
+        do_iter_read+0x4a9/0x660 fs/read_write.c:922
+        vfs_readv+0xf0/0x160 fs/read_write.c:984
+        kernel_readv fs/splice.c:358 [inline]
+        default_file_splice_read+0x475/0x890 fs/splice.c:413
+        do_splice_to+0x12a/0x190 fs/splice.c:876
+        do_splice+0x110b/0x1420 fs/splice.c:1183
+        __do_sys_splice fs/splice.c:1424 [inline]
+        __se_sys_splice fs/splice.c:1404 [inline]
+        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1404
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #2 (&pipe->mutex/1){+.+.}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+        pipe_lock_nested fs/pipe.c:62 [inline]
+        pipe_lock+0x6e/0x80 fs/pipe.c:70
+        iter_file_splice_write+0x18b/0xbe0 fs/splice.c:696
+        do_splice_from fs/splice.c:847 [inline]
+        do_splice+0x70a/0x1420 fs/splice.c:1154
+        __do_sys_splice fs/splice.c:1424 [inline]
+        __se_sys_splice fs/splice.c:1404 [inline]
+        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1404
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (sb_writers#6){.+.+}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        percpu_down_read include/linux/percpu-rwsem.h:36 [inline]
+        __sb_start_write+0x20b/0x360 fs/super.c:1613
+        sb_start_write include/linux/fs.h:1621 [inline]
+        mnt_want_write+0x3f/0xc0 fs/namespace.c:358
+        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:24
+        ovl_do_remove+0xe9/0xd70 fs/overlayfs/dir.c:840
+        ovl_rmdir+0x1b/0x20 fs/overlayfs/dir.c:890
+        vfs_rmdir fs/namei.c:3878 [inline]
+        vfs_rmdir+0x19c/0x470 fs/namei.c:3857
+        do_rmdir+0x39e/0x420 fs/namei.c:3939
+        __do_sys_rmdir fs/namei.c:3957 [inline]
+        __se_sys_rmdir fs/namei.c:3955 [inline]
+        __x64_sys_rmdir+0x36/0x40 fs/namei.c:3955
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&ovl_i_mutex_dir_key[depth]#2){++++}:
+        check_prevs_add kernel/locking/lockdep.c:2333 [inline]
+        validate_chain kernel/locking/lockdep.c:2714 [inline]
+        __lock_acquire+0x239c/0x3fb0 kernel/locking/lockdep.c:3701
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+        down_read+0x3b/0x90 kernel/locking/rwsem.c:24
+        inode_lock_shared include/linux/fs.h:782 [inline]
+        do_last fs/namei.c:3321 [inline]
+        path_openat+0x1e98/0x46e0 fs/namei.c:3533
+        do_filp_open+0x1a1/0x280 fs/namei.c:3563
+        do_open_execat+0x137/0x690 fs/exec.c:856
+        __do_execve_file.isra.0+0x178d/0x23f0 fs/exec.c:1758
+        do_execveat_common fs/exec.c:1865 [inline]
+        do_execve fs/exec.c:1882 [inline]
+        __do_sys_execve fs/exec.c:1958 [inline]
+        __se_sys_execve fs/exec.c:1953 [inline]
+        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
+        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+   &ovl_i_mutex_dir_key[depth]#2 --> &p->lock --> &sig->cred_guard_mutex
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&sig->cred_guard_mutex);
+                                lock(&p->lock);
+                                lock(&sig->cred_guard_mutex);
+   lock(&ovl_i_mutex_dir_key[depth]#2);
+
+  *** DEADLOCK ***
+
+1 lock held by syz-executor949/9348:
+  #0: 00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at:  
+prepare_bprm_creds fs/exec.c:1407 [inline]
+  #0: 00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at:  
+__do_execve_file.isra.0+0x376/0x23f0 fs/exec.c:1750
+
+stack backtrace:
+CPU: 1 PID: 9348 Comm: syz-executor949 Not tainted 5.1.0-rc5+ #74
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.isra.0.cold+0x1cc/0x28f kernel/locking/lockdep.c:1571
+  check_prev_add.constprop.0+0xf11/0x23c0 kernel/locking/lockdep.c:2220
+  check_prevs_add kernel/locking/lockdep.c:2333 [inline]
+  validate_chain kernel/locking/lockdep.c:2714 [inline]
+  __lock_acquire+0x239c/0x3fb0 kernel/locking/lockdep.c:3701
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
+  down_read+0x3b/0x90 kernel/locking/rwsem.c:24
+  inode_lock_shared include/linux/fs.h:782 [inline]
+  do_last fs/namei.c:3321 [inline]
+  path_openat+0x1e98/0x46e0 fs/namei.c:3533
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_open_execat+0x137/0x690 fs/exec.c:856
+  __do_execve_file.isra.0+0x178d/0x23f0 fs/exec.c:1758
+  do_execveat_common fs/exec.c:1865 [inline]
+  do_execve fs/exec.c:1882 [inline]
+  __do_sys_execve fs/exec.c:1958 [inline]
+  __se_sys_execve fs/exec.c:1953 [inline]
+  __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x447169
+Code: e8 4c bb 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 bb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fe4c6a6bdb8 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
+RAX: ffffffffffffffda RBX: 00000000006dcc68 RCX: 0000000000447169
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000000
+RBP: 00000000006dcc60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc6c
+R13: 00007ffd5a5cb62f R14: 00007fe4c6a6c9c0 R15: 0000000000000000
 
