@@ -2,109 +2,92 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84201C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C2C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F1221736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2329921479
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BUN0SnKw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tkSMhpou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbfDSTaU (ORCPT
+        id S1727982AbfDSTa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:30:20 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11950 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbfDSTaT (ORCPT
+        Fri, 19 Apr 2019 15:30:56 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52654 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfDSTa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:30:19 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cb99e230000>; Fri, 19 Apr 2019 03:08:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 19 Apr 2019 03:08:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 19 Apr 2019 03:08:57 -0700
-Received: from [10.26.11.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Apr
- 2019 10:08:53 +0000
-Subject: Re: [PATCH 5.0 00/93] 5.0.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190418160436.781762249@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <34d2263a-8c63-7859-e73a-52cd11d926b5@nvidia.com>
-Date:   Fri, 19 Apr 2019 11:08:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 19 Apr 2019 15:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HeRWp3SbhYmoU91Lf8c1z2p2ddTb4bDbJKsU2tWCahE=; b=tkSMhpoum3YIfOBi7tKJVq9Yx
+        UMuKJJUDWogZqua/oD58ODAPZIns9EArjYEoll3EBvu3a4aONaOnIdLDsIhfNRcrHCoC7BIokfxFY
+        ZkoSgDs5IJS6Bk0yZUK2qTP4FIo9RYWAXiq/CLhT1RnQnweIdPjbcswLvoBcrsupCpga2XNUXQQey
+        VpGBgUnXIB9eQA+XQ9wjGzRsSVLb1uByAfkR4TJqVCH1nd9b12r5Te6e0mdk7LxxgRGel2f52Netj
+        gI4Q9j3VO7udHGgAkDDAES8q3p5XRjxm1QhnXTCPIcwKCkO89RDPP5jA4bKEYm0X6cBcLye24hSr4
+        l+ik22GoA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hHONZ-0004Rd-GR; Fri, 19 Apr 2019 07:56:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7A61329B52926; Fri, 19 Apr 2019 09:56:10 +0200 (CEST)
+Date:   Fri, 19 Apr 2019 09:56:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 12/16] locking/rwsem: Enable time-based spinning on
+ reader-owned rwsem
+Message-ID: <20190419075610.GN4038@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-13-longman@redhat.com>
+ <20190418130611.GK4038@hirez.programming.kicks-ass.net>
+ <52aee7c3-b8aa-a617-c1f2-34bc99c72474@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555668515; bh=o+YkyI5isCkoBn5+pbH8Fl3um6hIxUW6THA32BmOc2s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BUN0SnKwyeQEl4E1BUK+YtvYx6okWZxarTcKHIRrXFlNm8TWUZdojMoeJe5Dx5SPC
-         BkqHqUdDN3EhZ35N6gU1iHuwb4tHaIJDELwV0E2Yt5zDaMXarXGupSvr5sOhn+lW6D
-         gpnvMs9WsCKO2F2tIRxrib+DCOq7KCz/vOfhs4otqycfn3le2n+Ce5cZ3H1tu+Q+Ee
-         u6QIit4zjwoUXRdHYR0oPdgguuTFPXP0ZKEDd6yzvcPrFa4jbNL12/I5hcJag8g3lG
-         AFBXgzAYYJ2MLHzCpJFodPRnHnOeNzAFl1+aWwXNK25tt+SNISForD/xEOiMEXYtAG
-         noBUoDGeRvhGg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52aee7c3-b8aa-a617-c1f2-34bc99c72474@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 18, 2019 at 11:15:33AM -0400, Waiman Long wrote:
+> On 04/18/2019 09:06 AM, Peter Zijlstra wrote:
 
-On 18/04/2019 18:56, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.9 release.
-> There are 93 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> >> +			/*
+> >> +			 * Check time threshold every 16 iterations to
+> >> +			 * avoid calling sched_clock() too frequently.
+> >> +			 * This will make the actual spinning time a
+> >> +			 * bit more than that specified in the threshold.
+> >> +			 */
+> >> +			else if (!(++loop & 0xf) &&
+> >> +				 (sched_clock() > rspin_threshold)) {
+> > Why is calling sched_clock() lots a problem?
 > 
-> Responses should be made by Sat Apr 20 16:03:33 UTC 2019.
-> Anything received after that time might be too late.
+> Actually I am more concern about the latency introduced by the
+> sched_clock() call. BTW, I haven't done any measurement myself. Do you
+> know how much cost the sched_clock() call is?
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> If the cost is relatively high, the average latency period after the
+> lock is free and the spinner is ready to do a trylock will increase.
 
-All tests are passing for Tegra ...
+Totally depends on the arch or course :/ For 'sane' x86 it is: RDTSC,
+MUL; SHRD; SHR; ADD, which is plenty fast.
 
-Test results for stable-v5.0:
-    11 builds:  11 pass, 0 fail
-    22 boots:   22 pass, 0 fail
-    32 tests:   32 pass, 0 fail
-
-Linux version:  5.0.9-rc1-g68497c6
-Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+I know we have poll loops with sched_clock/local_clock in them, I just
+can't seem to find any atm.
