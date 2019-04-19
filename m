@@ -2,118 +2,111 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10298C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E922C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33F7222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D140222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeQY8qwS"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oudVdW/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfDSSWu (ORCPT
+        id S1727634AbfDSSW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:22:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44368 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727580AbfDSSWq (ORCPT
+        Fri, 19 Apr 2019 14:22:56 -0400
+Received: from condef-09.nifty.com ([202.248.20.74]:54152 "EHLO
+        condef-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfDSSWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:22:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y13so2871133pfm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Mwip4xZezPK38BfWEq5HR+HyqGo66D590Ox/hie+rI0=;
-        b=SeQY8qwSDlpnGOISH0mOfevIBeUOKABdZwGg58V61jewHL90Zin0piuB9cXNkucHYB
-         NjyqKWIGD8TOXK4SBfQKo//dTl5Mzrmcyex9yTzA3zlgfV7zJPF3adCqL1xLjyrDRTvQ
-         RoiMuNuDmU6tvUDSmsYO4cXoDvGObu9Vg2QTTzbH9UlK8iyDtYSe4NCur9F/7kSR5C9T
-         emJnwjm5lspYnxE9H0fk6P8AcD/iUT0VQpuBXRRULrhgdduJOsRT9KQAmBiiYem47GmO
-         Fl5WvY9lp/tjOvgc261fc/K2Hlao5xws8CHm8wJgn4vhInVhYYKKAS3MWENqay3Q2KhQ
-         t9iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mwip4xZezPK38BfWEq5HR+HyqGo66D590Ox/hie+rI0=;
-        b=HjEnkwKKsQ1FLoLLrEt+On+00DD3NvmKu5oOnvQPoiZmEAsbK/4dPsZldQsNDG+nQk
-         oJbatxvO4tq45HZ/uIA6zMH2nPqT+1VsivClEfw4Rx0J01Y3yX9330fI6wXuQOEBQ6iu
-         Bh3LT0eRN4FhiI1jABt8aO5ghOOaItYtrJutjmFgq14Z4FAq0rbAX2lFfxse4m5jREe1
-         8qm0gGyCpBGtVEiwO1+VjvGtk3mjsOy91W8uphws2dvYQGLg604qCRex6F5uZWP/aLws
-         RkP9aYJFNlETTXHf0ayK2R6zaogZ0O5An+pLTT0MAACeI2452XhtYWRbT84urH1Y9CTz
-         Vbsw==
-X-Gm-Message-State: APjAAAWy3k4bPein1MHGYCNm0F3JHcVRnZ/fmDDSoiEwxQ5IOcVnKbew
-        cepyr0RuP0cCwWGvTJMWXYQ=
-X-Google-Smtp-Source: APXvYqzZB8yVOx4IzLDEk4pmvt9DS1y2/Fdc1TFsCUfUddB0JE2Q5EkxCjILiX4x3A/yUhrzhwUJ6g==
-X-Received: by 2002:a62:ee0a:: with SMTP id e10mr5392640pfi.6.1555698165677;
-        Fri, 19 Apr 2019 11:22:45 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id i15sm7397966pfd.162.2019.04.19.11.22.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 11:22:45 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 11:22:42 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 2/3] ASoC: fsl_asrc: replace the process_option table
- with function
-Message-ID: <20190419182241.GB1136@Asurada-Nvidia.nvidia.com>
-References: <cover.1555669068.git.shengjiu.wang@nxp.com>
- <0f7a6907c73e110c797b478fedaba2fc47b5e994.1555669068.git.shengjiu.wang@nxp.com>
+        Fri, 19 Apr 2019 14:22:52 -0400
+Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-09.nifty.com with ESMTP id x3J9nQSm030507;
+        Fri, 19 Apr 2019 18:49:26 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x3J9mDiQ012304;
+        Fri, 19 Apr 2019 18:48:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3J9mDiQ012304
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555667302;
+        bh=i5XCWis3VrTykYK/RrX/WLSMvw74LO5onG7SxOwG69A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oudVdW/dFWq56OuDzP6kKUzuEWhB1LghoeXto+rXOPNib4DV9Uy/SJlJzj1AbmWfp
+         mevr0XhyqB2vZq4Cz+Z1v2JvWwOv56OiugvEABew3D+o/TOnkAQFO0IulE/o2RPA/B
+         +sTZx4hUEh4VtZpZbGYRBLePR5ICQudFoYOaeslkPILaHXz1Ak62JsBLFHuo6nXW+A
+         HdImamYXzb7Yk06Xdrpl/c4BLwIZGHF/XfL1anllWbvNDOtJizhoIHVpekzfvHeQsK
+         kLoe+3N8CTYNLyxpT4B5He8gmcUsZrbdL7Q+2LWqM5b83Cr/r8gBn0MoV7tumFH5RV
+         2DmcgtWPSyNuw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 05/11] mtd: rawnand: vf610_nfc: add initializer to avoid -Wmaybe-uninitialized
+Date:   Fri, 19 Apr 2019 18:47:48 +0900
+Message-Id: <20190419094754.24667-6-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+References: <20190419094754.24667-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f7a6907c73e110c797b478fedaba2fc47b5e994.1555669068.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 10:23:53AM +0000, S.j. Wang wrote:
+This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+place. We need to eliminate potential issues beforehand.
 
-> @@ -289,6 +318,12 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
->  		return -EINVAL;
->  	}
->  
-> +	ret = fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc);
+Kbuild test robot has never reported -Wmaybe-uninitialized warning
+for this probably because vf610_nfc_run() is inlined by the x86
+compiler's inlining heuristic.
 
-Since the function always return 0, I am thinking of treating
-this function as a lookup function, and then moving this call
-right before the register settings -- as we have already made
-sure that both inrate and outrate are supported.
+If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
+and vf610_nfc_run() is not inlined, the following warning is reported:
 
-> +	if (ret) {
-> +		pair_err("No supported pre-processing options\n");
-> +		return ret;
-> +	}
+drivers/mtd/nand/raw/vf610_nfc.c: In function ‘vf610_nfc_cmd’:
+drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: ‘offset’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            nfc->regs + NFC_MAIN_AREA(0) + offset,
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            trfr_sz, !nfc->data_access);
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-And probably no longer need this error-out. If there's a new
-limitation related to this function, I believe we can add it
-to the rate validation section as we are doing now -- better
-to have rate validation code at one place.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> @@ -380,8 +415,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
->  	/* Apply configurations for pre- and post-processing */
+Changes in v2:
+  - split into a separate patch
 
-Here:
--  	/* Apply configurations for pre- and post-processing */
-+  	/* Select and apply configurations for pre- and post-processing */
-+	fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc);
->  	regmap_update_bits(asrc_priv->regmap, REG_ASRCFG,
->  			   ASRCFG_PREMODi_MASK(index) |	ASRCFG_POSTMODi_MASK(index),
-> -			   ASRCFG_PREMOD(index, process_option[in][out][0]) |
-> -			   ASRCFG_POSTMOD(index, process_option[in][out][1]));
-> +			   ASRCFG_PREMOD(index, pre_proc) |
-> +			   ASRCFG_POSTMOD(index, post_proc));
+ drivers/mtd/nand/raw/vf610_nfc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
+index a662ca1970e5..19792d725ec2 100644
+--- a/drivers/mtd/nand/raw/vf610_nfc.c
++++ b/drivers/mtd/nand/raw/vf610_nfc.c
+@@ -364,7 +364,7 @@ static int vf610_nfc_cmd(struct nand_chip *chip,
+ {
+ 	const struct nand_op_instr *instr;
+ 	struct vf610_nfc *nfc = chip_to_nfc(chip);
+-	int op_id = -1, trfr_sz = 0, offset;
++	int op_id = -1, trfr_sz = 0, offset = 0;
+ 	u32 col = 0, row = 0, cmd1 = 0, cmd2 = 0, code = 0;
+ 	bool force8bit = false;
+ 
+-- 
+2.17.1
+
