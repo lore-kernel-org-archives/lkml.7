@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201BAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6B5C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1542064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9A820645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DoaGhE8J"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ngRIF2F3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfDSTEC (ORCPT
+        id S1729278AbfDSTEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:04:02 -0400
+        Fri, 19 Apr 2019 15:04:05 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbfDSTD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:58 -0400
+        id S1729199AbfDSTEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:04:02 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCHkgA265387
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCqv31276491
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 05:17:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCHkgA265387
+        Fri, 19 Apr 2019 05:52:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCqv31276491
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555676267;
-        bh=3lHQyr7OY8VigoK/YL4cHC83L/bIkpKWAHB8JQwF76A=;
+        s=2019041745; t=1555678378;
+        bh=vnbo52Q2DcFJonafJv5y+MfClGGxsBvqLUyG1XiWUeY=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=DoaGhE8JiY1m11SUSsmJvaYEaFaWq4Wp5Uo+7C/3vA1uygfQgCLul1YJwNv4FxEDu
-         XV+LW81sbNYU/nQGoZ2xdroiSD3xxWgtBjvwoX+S8hGjFtcSNVqKkn7dl4DCv0j6wu
-         ZYS63zlPJyqAJxmHGbvj5sKaUbaOY5yJ09+yZmMIVjX+QjeskOj69QW4R6gSIZ1e/n
-         5KYzXMyNIU28v4gmhsI3hKX5yxo2MZkkxsI8JMPiOVowkNyYvnbELJgLysA31x1N6O
-         nv08Xu06v5E5zCcI6o0roO/Q0qSMWjtK0xwfcIzna/Br7hw4dJ6JeWtQqJ6ZRIHixw
-         wi0LrqiMiTSqQ==
+        b=ngRIF2F3twp3AVGmiwrAofKorUSDs5k7flfzbw6joZMIXYjn68jUgP4AHASN7AMSG
+         86uEEAD0ASs4FH3OLZe+Cg2Gr4E+Dt6WsxVszth7bmCyNiM3hxppcayg4WA90pA9/i
+         efs5PtdKc+EOy1dW0aTjSi+O6pspbmtPA7Aw0x5ieFY1li8Yk6+g9nTdgoil64LTwH
+         QLeRs8tN1afSYbrvhVVBAXqHQTiDTVFJPCUKKIFpH8ezgMnPWXgpWwVWL3eTZIPLgP
+         xEDWQOVzyrLQ3n1lm5/hPvTNBzv5QYHwc19/yDKECJOG0Li1UqbT3ebKKgXWt0wk46
+         I8qY+cJH9K0jQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCHj9S265384;
-        Fri, 19 Apr 2019 05:17:45 -0700
-Date:   Fri, 19 Apr 2019 05:17:45 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCqtiZ276488;
+        Fri, 19 Apr 2019 05:52:55 -0700
+Date:   Fri, 19 Apr 2019 05:52:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Konstantin Khlebnikov <tipbot@zytor.com>
-Message-ID: <tip-1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8@git.kernel.org>
-Cc:     hpa@zytor.com, a.p.zijlstra@chello.nl, peterz@infradead.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        torvalds@linux-foundation.org, khlebnikov@yandex-team.ru
-Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, khlebnikov@yandex-team.ru, hpa@zytor.com,
-          a.p.zijlstra@chello.nl, tglx@linutronix.de, peterz@infradead.org
-In-Reply-To: <155125502079.293431.3947497929372138600.stgit@buzz>
-References: <155125502079.293431.3947497929372138600.stgit@buzz>
+From:   tip-bot for Masami Hiramatsu <tipbot@zytor.com>
+Message-ID: <tip-3ff9c075cc767b3060bdac12da72fc94dd7da1b8@git.kernel.org>
+Cc:     hpa@zytor.com, rostedt@goodmis.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, righi.andrea@gmail.com,
+        mathieu.desnoyers@efficios.com, torvalds@linux-foundation.org,
+        peterz@infradead.org, mhiramat@kernel.org, tglx@linutronix.de
+Reply-To: torvalds@linux-foundation.org, mathieu.desnoyers@efficios.com,
+          tglx@linutronix.de, peterz@infradead.org, mhiramat@kernel.org,
+          rostedt@goodmis.org, hpa@zytor.com, righi.andrea@gmail.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <155094059185.6137.15527904013362842072.stgit@devbox>
+References: <155094059185.6137.15527904013362842072.stgit@devbox>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/core: Check quota and period overflow at
- usec to nsec conversion
-Git-Commit-ID: 1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8
+Subject: [tip:perf/urgent] x86/kprobes: Verify stack frame on kretprobe
+Git-Commit-ID: 3ff9c075cc767b3060bdac12da72fc94dd7da1b8
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,61 +70,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8
-Gitweb:     https://git.kernel.org/tip/1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8
-Author:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-AuthorDate: Wed, 27 Feb 2019 11:10:20 +0300
+Commit-ID:  3ff9c075cc767b3060bdac12da72fc94dd7da1b8
+Gitweb:     https://git.kernel.org/tip/3ff9c075cc767b3060bdac12da72fc94dd7da1b8
+Author:     Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate: Sun, 24 Feb 2019 01:49:52 +0900
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 13:42:10 +0200
+CommitDate: Fri, 19 Apr 2019 14:26:05 +0200
 
-sched/core: Check quota and period overflow at usec to nsec conversion
+x86/kprobes: Verify stack frame on kretprobe
 
-Large values could overflow u64 and pass following sanity checks.
+Verify the stack frame pointer on kretprobe trampoline handler,
+If the stack frame pointer does not match, it skips the wrong
+entry and tries to find correct one.
 
- # echo 18446744073750000 > cpu.cfs_period_us
- # cat cpu.cfs_period_us
- 40448
+This can happen if user puts the kretprobe on the function
+which can be used in the path of ftrace user-function call.
+Such functions should not be probed, so this adds a warning
+message that reports which function should be blacklisted.
 
- # echo 18446744073750000 > cpu.cfs_quota_us
- # cat cpu.cfs_quota_us
- 40448
-
-After this patch they will fail with -EINVAL.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125502079.293431.3947497929372138600.stgit@buzz
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kprobes/core.c | 26 ++++++++++++++++++++++++++
+ include/linux/kprobes.h        |  1 +
+ 2 files changed, 27 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 685b1541ce51..de8ab411826c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6611,8 +6611,10 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
- 	period = ktime_to_ns(tg->cfs_bandwidth.period);
- 	if (cfs_quota_us < 0)
- 		quota = RUNTIME_INF;
--	else
-+	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
- 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
-+	else
-+		return -EINVAL;
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index a034cb808e7e..18fbe9be2d68 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -569,6 +569,7 @@ void arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
+ 	unsigned long *sara = stack_addr(regs);
  
- 	return tg_set_cfs_bandwidth(tg, period, quota);
- }
-@@ -6634,6 +6636,9 @@ static int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
- {
- 	u64 quota, period;
+ 	ri->ret_addr = (kprobe_opcode_t *) *sara;
++	ri->fp = sara;
  
-+	if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
-+		return -EINVAL;
-+
- 	period = (u64)cfs_period_us * NSEC_PER_USEC;
- 	quota = tg->cfs_bandwidth.quota;
+ 	/* Replace the return addr with trampoline addr */
+ 	*sara = (unsigned long) &kretprobe_trampoline;
+@@ -759,15 +760,21 @@ static __used void *trampoline_handler(struct pt_regs *regs)
+ 	unsigned long flags, orig_ret_address = 0;
+ 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
+ 	kprobe_opcode_t *correct_ret_addr = NULL;
++	void *frame_pointer;
++	bool skipped = false;
+ 
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+ #ifdef CONFIG_X86_64
+ 	regs->cs = __KERNEL_CS;
++	/* On x86-64, we use pt_regs->sp for return address holder. */
++	frame_pointer = &regs->sp;
+ #else
+ 	regs->cs = __KERNEL_CS | get_kernel_rpl();
+ 	regs->gs = 0;
++	/* On x86-32, we use pt_regs->flags for return address holder. */
++	frame_pointer = &regs->flags;
+ #endif
+ 	regs->ip = trampoline_address;
+ 	regs->orig_ax = ~0UL;
+@@ -789,8 +796,25 @@ static __used void *trampoline_handler(struct pt_regs *regs)
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		/*
++		 * Return probes must be pushed on this hash list correct
++		 * order (same as return order) so that it can be poped
++		 * correctly. However, if we find it is pushed it incorrect
++		 * order, this means we find a function which should not be
++		 * probed, because the wrong order entry is pushed on the
++		 * path of processing other kretprobe itself.
++		 */
++		if (ri->fp != frame_pointer) {
++			if (!skipped)
++				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
++			skipped = true;
++			continue;
++		}
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (skipped)
++			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
++				ri->rp->kp.addr);
+ 
+ 		if (orig_ret_address != trampoline_address)
+ 			/*
+@@ -808,6 +832,8 @@ static __used void *trampoline_handler(struct pt_regs *regs)
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		if (ri->fp != frame_pointer)
++			continue;
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 201f0f2683f2..9a897256e481 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -173,6 +173,7 @@ struct kretprobe_instance {
+ 	struct kretprobe *rp;
+ 	kprobe_opcode_t *ret_addr;
+ 	struct task_struct *task;
++	void *fp;
+ 	char data[0];
+ };
  
