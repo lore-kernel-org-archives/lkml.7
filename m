@@ -2,187 +2,143 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E05C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33A5C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7943120693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D50D2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KvSUr3dZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfDSTI7 (ORCPT
+        id S1729801AbfDSTJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:08:59 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:41308 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729470AbfDSTIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:08:53 -0400
-Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 7A49D3A41CA
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:52:30 +0000 (UTC)
-X-Originating-IP: 90.88.160.238
-Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 36F7BFF810;
-        Fri, 19 Apr 2019 08:52:28 +0000 (UTC)
-Message-ID: <8417895942db33dcf7c63b67a4db2786638df79b.camel@bootlin.com>
-Subject: Re: [PATCH 4/4] drm/v3d: Fix and extend MMU error handling.
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        david.emett@broadcom.com, thomas.spurden@broadcom.com
-Date:   Fri, 19 Apr 2019 10:52:28 +0200
-In-Reply-To: <20190419001014.23579-4-eric@anholt.net>
-References: <20190419001014.23579-1-eric@anholt.net>
-         <20190419001014.23579-4-eric@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Fri, 19 Apr 2019 15:09:04 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42186 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727924AbfDSTJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:09:02 -0400
+Received: from zn.tnic (p200300EC2F112E0081C1838BC39E212C.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:81c1:838b:c39e:212c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 261A21EC0513;
+        Fri, 19 Apr 2019 16:19:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555683598;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eOp/ySOqHIMhpte/mJe3u1Zx4rYSYksGeMB7N2WQHHk=;
+        b=KvSUr3dZjOYEW2cN7Z7qdy1pvJR4XtfLReq6g0Mpo/ceNzhES0cByjesayV3ajJm8IQLsl
+        gc0ul2nUCYDTShPum8+7PY3yANpcrLg5Lul9sM9vN3i70sQuyNUx6m/euxFXQp503333CC
+        He51Jt9MdDESEfOK2c4PtnceiCcCUG8=
+Date:   Fri, 19 Apr 2019 16:19:52 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kairui Song <kasong@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, indou.takao@jp.fujitsu.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        msys.mizuma@gmail.com, Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH] x86/boot: Disable RSDP parsing temporarily
+Message-ID: <20190419141952.GE10324@zn.tnic>
+References: <20190419101733.GA10324@zn.tnic>
+ <20190419105014.GE11060@MiWiFi-R3L-srv>
+ <CACPcB9fwvxmVcD4ttP8p9X0=J+Oev9RUrgNzuu6LZFQCZ7AS1w@mail.gmail.com>
+ <20190419113413.GC10324@zn.tnic>
+ <CACPcB9emLPEWCvpdExGvD_S_b3RWrrgK2uCx07HZjj5yUh6Y_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACPcB9emLPEWCvpdExGvD_S_b3RWrrgK2uCx07HZjj5yUh6Y_g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Ok,
 
-On Thu, 2019-04-18 at 17:10 -0700, Eric Anholt wrote:
-> We were setting the wrong flags to enable PTI errors, so we were
-> seeing reads to invalid PTEs show up as write errors.  Also, we
-> weren't turning on the interrupts.  The AXI IDs we were dumping
-> included the outstanding write number and so they looked basically
-> random.  And the VIO_ADDR decoding was based on the MMU VA_WIDTH for
-> the first platform I worked on and was wrong on others.  In short,
-> this was a thorough mess from early HW enabling.
-> 
-> Tested on V3D 4.1 and 4.2 with intentional L2T, CLE, PTB, and TLB
-> faults.
+thinking about this more, we believe it is too late in the release cycle
+to keep experimenting so the only thing left to do is the below.
 
-Didn't check the docs but looks sane too!
+This should bring the situation back to what it was before, at 5.0
+times, and we'll have plenty of time now to address and properly fix all
+the outstanding issues.
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+From: Borislav Petkov <bp@suse.de>
 
-Cheers,
+The original intention to move RDSP parsing very early, before KASLR
+does its ranges selection, was to accommodate movable memory regions
+machines (CONFIG_MEMORY_HOTREMOVE) to still be able to do memory
+hotplug.
 
-Paul
+However, that broke kexec'ing a kernel on EFI machines because depending
+on where the EFI systab was mapped, on at least one machine it isn't
+present in the kexec mapping of the second kernel, leading to a triple
+fault in the early code.
 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  drivers/gpu/drm/v3d/v3d_drv.c  |  1 +
->  drivers/gpu/drm/v3d/v3d_drv.h  |  2 ++
->  drivers/gpu/drm/v3d/v3d_irq.c  | 31 +++++++++++++++++++++++++++----
->  drivers/gpu/drm/v3d/v3d_mmu.c  |  7 +++++--
->  drivers/gpu/drm/v3d/v3d_regs.h |  3 ++-
->  5 files changed, 37 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-> index 7ab36192e6bc..9ce2e4ef6c2a 100644
-> --- a/drivers/gpu/drm/v3d/v3d_drv.c
-> +++ b/drivers/gpu/drm/v3d/v3d_drv.c
-> @@ -494,6 +494,7 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
->  	mmu_debug = V3D_READ(V3D_MMU_DEBUG_INFO);
->  	dev->coherent_dma_mask =
->  		DMA_BIT_MASK(30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_PA_WIDTH));
-> +	v3d->va_width = 30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_VA_WIDTH);
->  
->  	ident1 = V3D_READ(V3D_HUB_IDENT1);
->  	v3d->ver = (V3D_GET_FIELD(ident1, V3D_HUB_IDENT1_TVER) * 10 +
-> diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
-> index 6d31a6a5a08e..64682923018d 100644
-> --- a/drivers/gpu/drm/v3d/v3d_drv.h
-> +++ b/drivers/gpu/drm/v3d/v3d_drv.h
-> @@ -63,6 +63,8 @@ struct v3d_dev {
->  	 */
->  	void *mmu_scratch;
->  	dma_addr_t mmu_scratch_paddr;
-> +	/* virtual address bits from V3D to the MMU. */
-> +	int va_width;
->  
->  	/* Number of V3D cores. */
->  	u32 cores;
-> diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
-> index fac3c542860b..268d8a889ac5 100644
-> --- a/drivers/gpu/drm/v3d/v3d_irq.c
-> +++ b/drivers/gpu/drm/v3d/v3d_irq.c
-> @@ -162,10 +162,33 @@ v3d_hub_irq(int irq, void *arg)
->  		      V3D_HUB_INT_MMU_PTI |
->  		      V3D_HUB_INT_MMU_CAP)) {
->  		u32 axi_id = V3D_READ(V3D_MMU_VIO_ID);
-> -		u64 vio_addr = (u64)V3D_READ(V3D_MMU_VIO_ADDR) << 8;
-> -
-> -		dev_err(v3d->dev, "MMU error from client %d at 0x%08llx%s%s%s\n",
-> -			axi_id, (long long)vio_addr,
-> +		u64 vio_addr = ((u64)V3D_READ(V3D_MMU_VIO_ADDR) <<
-> +				(v3d->va_width - 32));
-> +		static const char *const v3d41_axi_ids[] = {
-> +			"L2T",
-> +			"PTB",
-> +			"PSE",
-> +			"TLB",
-> +			"CLE",
-> +			"TFU",
-> +			"MMU",
-> +			"GMP",
-> +		};
-> +		const char *client = "?";
-> +
-> +		V3D_WRITE(V3D_MMU_CTL,
-> +			  V3D_READ(V3D_MMU_CTL) & (V3D_MMU_CTL_CAP_EXCEEDED |
-> +						   V3D_MMU_CTL_PT_INVALID |
-> +						   V3D_MMU_CTL_WRITE_VIOLATION));
-> +
-> +		if (v3d->ver >= 41) {
-> +			axi_id = axi_id >> 5;
-> +			if (axi_id < ARRAY_SIZE(v3d41_axi_ids))
-> +				client = v3d41_axi_ids[axi_id];
-> +		}
-> +
-> +		dev_err(v3d->dev, "MMU error from client %s (%d) at 0x%llx%s%s%s\n",
-> +			client, axi_id, (long long)vio_addr,
->  			((intsts & V3D_HUB_INT_MMU_WRV) ?
->  			 ", write violation" : ""),
->  			((intsts & V3D_HUB_INT_MMU_PTI) ?
-> diff --git a/drivers/gpu/drm/v3d/v3d_mmu.c b/drivers/gpu/drm/v3d/v3d_mmu.c
-> index 7a21f1787ab1..395e81d97163 100644
-> --- a/drivers/gpu/drm/v3d/v3d_mmu.c
-> +++ b/drivers/gpu/drm/v3d/v3d_mmu.c
-> @@ -69,10 +69,13 @@ int v3d_mmu_set_page_table(struct v3d_dev *v3d)
->  	V3D_WRITE(V3D_MMU_PT_PA_BASE, v3d->pt_paddr >> V3D_MMU_PAGE_SHIFT);
->  	V3D_WRITE(V3D_MMU_CTL,
->  		  V3D_MMU_CTL_ENABLE |
-> -		  V3D_MMU_CTL_PT_INVALID |
-> +		  V3D_MMU_CTL_PT_INVALID_ENABLE |
->  		  V3D_MMU_CTL_PT_INVALID_ABORT |
-> +		  V3D_MMU_CTL_PT_INVALID_INT |
->  		  V3D_MMU_CTL_WRITE_VIOLATION_ABORT |
-> -		  V3D_MMU_CTL_CAP_EXCEEDED_ABORT);
-> +		  V3D_MMU_CTL_WRITE_VIOLATION_INT |
-> +		  V3D_MMU_CTL_CAP_EXCEEDED_ABORT |
-> +		  V3D_MMU_CTL_CAP_EXCEEDED_INT);
->  	V3D_WRITE(V3D_MMU_ILLEGAL_ADDR,
->  		  (v3d->mmu_scratch_paddr >> V3D_MMU_PAGE_SHIFT) |
->  		  V3D_MMU_ILLEGAL_ADDR_ENABLE);
-> diff --git a/drivers/gpu/drm/v3d/v3d_regs.h b/drivers/gpu/drm/v3d/v3d_regs.h
-> index eda1e289976f..9bcb57781d31 100644
-> --- a/drivers/gpu/drm/v3d/v3d_regs.h
-> +++ b/drivers/gpu/drm/v3d/v3d_regs.h
-> @@ -152,7 +152,8 @@
->  # define V3D_MMU_CTL_PT_INVALID_ABORT                  BIT(19)
->  # define V3D_MMU_CTL_PT_INVALID_INT                    BIT(18)
->  # define V3D_MMU_CTL_PT_INVALID_EXCEPTION              BIT(17)
-> -# define V3D_MMU_CTL_WRITE_VIOLATION                   BIT(16)
-> +# define V3D_MMU_CTL_PT_INVALID_ENABLE                 BIT(16)
-> +# define V3D_MMU_CTL_WRITE_VIOLATION                   BIT(12)
->  # define V3D_MMU_CTL_WRITE_VIOLATION_ABORT             BIT(11)
->  # define V3D_MMU_CTL_WRITE_VIOLATION_INT               BIT(10)
->  # define V3D_MMU_CTL_WRITE_VIOLATION_EXCEPTION         BIT(9)
+Fixing this properly requires significantly involved surgery and we
+cannot allow ourselves to do that, that close to the merge window.
+
+So disable the RSDP parsing code temporarily until it is fixed properly
+in the next release cycle.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: indou.takao@jp.fujitsu.com
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: kasong@redhat.com
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: msys.mizuma@gmail.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+---
+ arch/x86/boot/compressed/misc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index c0d6c560df69..5a237e8dbf8d 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -352,7 +352,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+ 
+ 	/* Save RSDP address for later use. */
+-	boot_params->acpi_rsdp_addr = get_rsdp_addr();
++	/* boot_params->acpi_rsdp_addr = get_rsdp_addr(); */
+ 
+ 	sanitize_boot_params(boot_params);
+ 
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.21.0
 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
