@@ -2,96 +2,96 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709BCC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A46C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3798B20821
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4C520693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dkLpU809"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZW2Pzxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfDSTTx (ORCPT
+        id S1727619AbfDSTUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:19:53 -0400
-Received: from mout.gmx.net ([212.227.15.18]:38343 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727366AbfDSTTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:19:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1555701589;
-        bh=GmNNCdHbkeV6zf8uwKLg/xSRBB4uJcYIZU7MFYK2afw=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=dkLpU809Sg0uChEbM/8PkhzYIuVxaMqPMUVKAjaU6+YHyLWBCRE5IBABRrhuKotu1
-         QN29z5FeG8WllIl1Xu2v9g9uYO/0G0yv7P7tFozDGRfdMW1Tp09cDuwkZD3o4kAx/K
-         tqVb1H5K6bAoIEJxHFYXipuWVTcuRrgTdB4fHA4A=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([218.18.229.179]) by mail.gmx.com
- (mrgmx001 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 0M3RVA-1gzpRI1MA4-00r0XG; Fri, 19 Apr 2019 07:46:41 +0200
-From:   Chengguang Xu <cgxu519@gmx.com>
-To:     jack@suse.com
-Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>
-Subject: [PATCH] quota: fix wrong indentation
-Date:   Fri, 19 Apr 2019 13:46:01 +0800
-Message-Id: <20190419054601.23752-1-cgxu519@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 19 Apr 2019 15:20:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43331 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfDSTUl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:20:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c8so2926389pfd.10;
+        Fri, 19 Apr 2019 12:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0+GTSRc5QS5xYz3P51GSNvPGbm50JnV2PO3FdjsNEL4=;
+        b=UZW2PzxblIu4P8D6YlvzK3HdkJ9HTDeuqIIyrHT/hZC3f70ZyLjgytq+duFwYeEvyP
+         NSUfOmt8VxpzfNlIrQawMpjxiYxLUua07e2lPkNOneEg6E5oMLuN2rsy8WJStm69OhxZ
+         4ioNcsvroaPLA1tIarQeVpteYxadsyNDcN15lofVPn8hOH46LWefrxjLxT+gRh6UMcZP
+         OGoHVSyady3JOjVYc9eGZ8sWWbw1ivilQBSqybUT5UEZiCYYBOINNsbtdaqG38uoThEd
+         fisL5E31fnDPaWiERztpAUxyHUNTzbK0hxTrcP0H77NkghQpPkhF5Z4gGtF6f7+2YooH
+         h2oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0+GTSRc5QS5xYz3P51GSNvPGbm50JnV2PO3FdjsNEL4=;
+        b=i3WF3BON+8BQG4QXmKD/MfcR/iW02cCEy8yQmpyJjavw7MJe5b0nxAPIanffOonf8o
+         mECpGzgBk1HHg2gg5QuYmw45ZTxILEOG1VeJO8XWvpQJ3H+p8vMDoFUA9Atv+8+WJU87
+         Gv8l/g9IDOyqTRgIVAmr0iU83XXX7v1OId2Qzch1/LxLKo4w8Weoq+N0NPw8pbNnsVII
+         DEkpE9nmRoMSI91Atl7OWUGPod/dlVjqlRwEDU8khdPp1QO7DwlEgm8ok+0k1zs49+j/
+         vYYr9O6UFLzOgb5yghrypJk1iS9fSdNuGjSfWUjpTzfXR0vnwwPbhOkNsax3k+ag947a
+         xrJg==
+X-Gm-Message-State: APjAAAX2Jwz32E4DBWZb5zMmb5KSHqBwNxNKWBduMmEK+Ay6V9hDUNlw
+        fS+H7fRID0RuXkX5SuLseqdAk9DV
+X-Google-Smtp-Source: APXvYqwsh5clo7jqNQ7FOpOj21GFYprTCoLjOoj7tRMGybiF2nWXNJNNXz1u9T3xry2i5TPZzcSOCA==
+X-Received: by 2002:aa7:9294:: with SMTP id j20mr3290825pfa.64.1555670558406;
+        Fri, 19 Apr 2019 03:42:38 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y23sm5934688pfn.25.2019.04.19.03.42.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 03:42:37 -0700 (PDT)
+Subject: Re: [PATCH 4.19 000/110] 4.19.36-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190418160437.484158340@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <548a30e9-742c-fdac-95da-5589b4fecb00@roeck-us.net>
+Date:   Fri, 19 Apr 2019 03:42:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mVtvSSF0rN2zTbXxsHfodvbd7Oy16JhECRItuhQI6IlO3Rr5Z++
- IHOnXraRy4uNL3N9hz5dZ0VOd7LTUy4yECRVeb8S1vVnMG6jkvviFWRrerOLEceZfz3IG+1
- 2y8AHPZg/0V1UhrzRk6cI/Zny2R/C72XN0BswV1cGXg+UOs0Rg/tKhrd1B1ek2lhs/qkfcW
- ZIZPwGnpbPTXMKPYGelbA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Q5LOzcGC2xs=:LZmkhYE4OAsvT4CvO4gw3N
- SHqF3gpl1uT81WAQprIXQNePn2owjm0MInxEoKq0fUnyegiog437EJwVPDUIn4qdfEOuRibCB
- wTT9ezCd+T7nSxaBIeXpNoHVt8mrvuu0T5yobQtmosgAN0f3AghbKSCviYMvA78XrcBijRfUi
- rmq0r4K8mmOFk5RuWAdDy8qTIK5Ek50Zr4+Vu/In6Ri5WnlpwpTtyxIvAD+i36769jeISx2Z7
- nSVyU0qcALODS9XsiuSrKvcWNqEz0UBaayi0Sro8fhXnpazX6dRSELduKkSZNaQfTZ37mTLyK
- nd8pnPS2jCJz90ICZyU+R91GL8ifsACNdnppRcZFwoVH/bSfjTXyRJHBcVLPSSU4SnX/CpECy
- s6Z9Bb7Qr6QJIIqDfNi09Nbtelagfz2PElKY2wHV4wUwo8VRGkJTWBJd82sDRNbBZxQv9uU6M
- MuZ1v0Eq+OoeSuPqVyy71L4Nc77q3lxkRd7TxHwmrnh81M/wbxx5iEt+sBgupRwYB39hU4xzS
- qRoWuIpVj8F2/UjT2D3BNyJsbrBjyycsAPOJOkkVgPqDenuMmRkYEzt/bhLoWlOBMRsXaiVE+
- 2XdkgS01zG9PPSlUG6q6VQM8TgwvtBoeEicMlxFnVy0z5n5z31L5xavWNVGis5R1hJtZhrp0w
- /mJJ8VkmZlwZto/KJL27jaBeGqhMWbiSQaikhR+doRK2ia7KXXdYh0h2j9EFplWe7OebQpbXA
- M71vh2TOYAfqAS9JJIUybqoT8akjqsWekb3D2/kevtovBhQxU1T3rZVFYqE19QDNb5+q9DGaL
- fDxb7mWJYtXWVQBAB6ek8x8Bn5qILfihQMoB/quPts4XnyAmoGfYSq/VfCf6bhMlHWtUNXIqd
- oMsEn5dD1LDUw35txzncBBgmnFtPlwNq8+aCBZLiwUxMRQk0APO1aas1F+6eJC
+In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to check return code only when calling ->read_dqblk(),
-so fix it properly.
+On 4/18/19 10:55 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.36 release.
+> There are 110 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat Apr 20 16:03:29 UTC 2019.
+> Anything received after that time might be too late.
+> 
 
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-=2D--
- fs/quota/dquot.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Affects perf builds in v4.19.y, v5.0.y:
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index fc20e06c56ba..934b8f3f9e57 100644
-=2D-- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -424,10 +424,11 @@ int dquot_acquire(struct dquot *dquot)
- 	struct quota_info *dqopt =3D sb_dqopt(dquot->dq_sb);
+builtin-record.c: In function ‘record__process_auxtrace’:
+builtin-record.c:181:36: error: implicit declaration of function ‘perf_data__is_dir’; did you mean ‘perf_data__is_pipe’?
 
- 	mutex_lock(&dquot->dq_lock);
--	if (!test_bit(DQ_READ_B, &dquot->dq_flags))
-+	if (!test_bit(DQ_READ_B, &dquot->dq_flags)) {
- 		ret =3D dqopt->ops[dquot->dq_id.type]->read_dqblk(dquot);
--	if (ret < 0)
--		goto out_iolock;
-+		if (ret < 0)
-+			goto out_iolock;
-+	}
- 	/* Make sure flags update is visible after dquot has been filled */
- 	smp_mb__before_atomic();
- 	set_bit(DQ_READ_B, &dquot->dq_flags);
-=2D-
-2.20.1
-
+Guenter
