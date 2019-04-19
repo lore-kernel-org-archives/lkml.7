@@ -4,379 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B137C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F48CC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C1F204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4772C20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="X6ZN7Nqq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPrqSJds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfDSTvQ (ORCPT
+        id S1727451AbfDSTwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:51:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41341 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfDSTvQ (ORCPT
+        Fri, 19 Apr 2019 15:52:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55209 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfDSTwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:51:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c12so1884504wrt.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:51:14 -0700 (PDT)
+        Fri, 19 Apr 2019 15:52:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c1so7209979wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xga5yom/DC21NuUDM7nC9HWZ81z/rfo85qDyOEC11Bs=;
-        b=X6ZN7NqqoCTsInQUWycTKCCaohVuImMiSox/9/kq5Z7gZlnDbFE5+impk59pt/mE2p
-         Bq2/wRQ0koNymtsV27aW82tQBs3aRJMreJWQv8mKVGlXFS7tCuSQAYPOLX84PmLfIF8I
-         m18nFRpvqrc1/J1GH0+IHB233Uob0dgX1YCXNqvMfHrUB4QM4q9YgSSlyuuojvEljTN+
-         k775UgmV5psLhx4u9JamgpgZ4ivBkzfM0LLBWC36PF1hlAV2GC/isNcJC/wFhUJ2cvdU
-         B3uODzm0TPwzW0TOX/kGzHI1hf3bL2eETD4Ic5HpkCKzQ37Cbi8V4PVaW3w0+tgD9wJP
-         1s9A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WzKNBO96cllaDZYht9HJ/bZN1iAt8AGESvlKduBe/SY=;
+        b=LPrqSJdsTkO4xoeE7tsRT9wJQ8vByFXhhcpzha3M5PSlCR8/lBvMlCASU/cxecMkOh
+         UmFaTRf/tnUhmnaIihVY9vMB9PcnuDpeX2Y+FPOqYNPArv4bp6D7EVdqQPRFBBa8r94+
+         SQIihJIa0qIUl64U38mxzRgWgStXMVg6pefv0iSnuP3UtiW7TfYeyZvMeBwwSgx39IjW
+         EYBobw9GPsizSMd0kLOGcvl86MV4M06iYNLRnjKZ18xxGyNl2tc0RYu+q9Go6/LNKgBr
+         MhC03aUgHHuJlBVTa83tKyZxK5cHaDI8JEISC2qUyKvF/c2OLTJa9hVM/MpNMFT8KENE
+         Dc2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xga5yom/DC21NuUDM7nC9HWZ81z/rfo85qDyOEC11Bs=;
-        b=ROU6BfyYViOdy8gZF1YTOI0mBNIqPRinSle+Yhe4h3i7PvixFEGhbgFtL0VX/nmCFU
-         FwB4Z7KA92dcDOKflQdpeyTw+/1PPC8YHEG4SR9Ll0Op+Tol4ZkjUkZNwboXs1/rqnfp
-         uOs8HogMLNLOqY9RYzCG8MvWOjOqafB9tqYC/HFuUk1Phc11XnO44XXFqXbLkY4+HKST
-         Ux4o6M/LRLgX1diB91KGeDhKrJ10ZeOI5PlqB7iABLYiu0m5L/oVGcCxYZ69q08SLtMU
-         E0BfkK0RHY+dGpXXth8q3hUPujg0KX7sIggls01tE1nCU7+OuSDQlntthvkX12coy1T5
-         T9xw==
-X-Gm-Message-State: APjAAAVXtq7KoxnZH7SCvQXZKLfKCUUzxpZOfYLmwdu5V4qFnmQf9ez2
-        IR+pgSPT3KRUjtQzBJsZK7Q2z1rL2efrvg==
-X-Google-Smtp-Source: APXvYqz8zmpzRZPG00qK9bUvgfZrjrs9g+lbIDGog+WMSiZKHIMLM+YXAGkbkpaiSr1zUojQph3iuw==
-X-Received: by 2002:adf:c788:: with SMTP id l8mr2745610wrg.143.1555675766563;
-        Fri, 19 Apr 2019 05:09:26 -0700 (PDT)
-Received: from localhost.localdomain ([185.197.132.10])
-        by smtp.gmail.com with ESMTPSA id f128sm6464574wme.28.2019.04.19.05.09.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 05:09:26 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, oleg@redhat.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org,
-        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jann@thejh.net>
-Subject: [PATCH v3 2/4] clone: add CLONE_PIDFD
-Date:   Fri, 19 Apr 2019 14:09:02 +0200
-Message-Id: <20190419120904.27502-3-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190419120904.27502-1-christian@brauner.io>
-References: <20190419120904.27502-1-christian@brauner.io>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+         :references;
+        bh=WzKNBO96cllaDZYht9HJ/bZN1iAt8AGESvlKduBe/SY=;
+        b=ZOLU0iFYJwNo+Hp02sTqieEPeNtZnP9LFmc4/Rxv4KU2XrajYzJxCO/YKwb/T3FAsi
+         lEZNbNtDoBl9ReQOJMPCIWoVhejORZT4yR2+jC62RfFHtAY3LOSR5exk63Du5sQ5bjCu
+         vrAF0rup8WUAe0D8h0AUmG2M3/tX3jKNNZU4EtDncgHyZy4MZtTJIw+j50FMT8QbdHXp
+         78hqImuH8/mhF9bqbS8yB+qivO6TetQdrilKI0dpajOwafnUMNwjTQQaY7SbZXBJR0Dv
+         W6SsYUmA8brAybwiGfzCZs4GYOmPQybXN6/95A+3igeDWUaYrPkWhtQ7peNqdVfYVDZU
+         Y52Q==
+X-Gm-Message-State: APjAAAXaphtktmOv3XvGjgzj6tEGIuHW7fh4MQx8YT1ONLyo3V7H+wt3
+        eD4MJRg5w1dpcXtjkS4/IbfFHFNLZhM=
+X-Google-Smtp-Source: APXvYqywtRrgku0AqUVMt1yhhNoxlXj19ieN/Bb41Np801RohrxLkAt2YF/xqgf+ErRr+uw5SHwVQQ==
+X-Received: by 2002:a1c:4187:: with SMTP id o129mr1735083wma.57.1555662909576;
+        Fri, 19 Apr 2019 01:35:09 -0700 (PDT)
+Received: from localhost.localdomain (cpc89244-aztw30-2-0-cust4998.18-1.cable.virginm.net. [86.31.179.135])
+        by smtp.gmail.com with ESMTPSA id t76sm5700147wmt.8.2019.04.19.01.35.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 19 Apr 2019 01:35:08 -0700 (PDT)
+From:   Peter Griffin <peter.griffin@linaro.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        john.stultz@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org,
+        yuq825@gmail.com
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, lima@lists.freedesktop.org
+Subject: [PATCH v2 5/6] dt-bindings: reset: hisilicon: Add ao reset controller
+Date:   Fri, 19 Apr 2019 09:33:00 +0100
+Message-Id: <1555662781-22570-6-git-send-email-peter.griffin@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
+References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset makes it possible to retrieve pid file descriptors at
-process creation time by introducing the new flag CLONE_PIDFD to the
-clone() system call.  Linus originally suggested to implement this as a
-new flag to clone() instead of making it a separate system call.  As
-spotted by Linus, there is exactly one bit for clone() left.
+This is required to bring Mali450 gpu out of reset.
 
-CLONE_PIDFD creates file descriptors based on the anonymous inode
-implementation in the kernel that will also be used to implement the new
-mount api.  They serve as a simple opaque handle on pids.  Logically,
-this makes it possible to interpret a pidfd differently, narrowing or
-widening the scope of various operations (e.g. signal sending).  Thus, a
-pidfd cannot just refer to a tgid, but also a tid, or in theory - given
-appropriate flag arguments in relevant syscalls - a process group or
-session. A pidfd does not represent a privilege.  This does not imply it
-cannot ever be that way but for now this is not the case.
-
-A pidfd comes with additional information in fdinfo if the kernel supports
-procfs.  The fdinfo file contains the pid of the process in the callers
-pid namespace in the same format as the procfs status file, i.e. "Pid:\t%d".
-
-As suggested by Oleg, with CLONE_PIDFD the pidfd is returned in the
-parent_tidptr argument of clone.  This has the advantage that we can
-give back the associated pid and the pidfd at the same time.
-
-To remove worries about missing metadata access this patchset comes with
-a sample program that illustrates how a combination of CLONE_PIDFD, and
-pidfd_send_signal() can be used to gain race-free access to process
-metadata through /proc/<pid>.  The sample program can easily be
-translated into a helper that would be suitable for inclusion in libc so
-that users don't have to worry about writing it themselves.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Co-developed-by: Jann Horn <jann@thejh.net>
-Signed-off-by: Jann Horn <jann@thejh.net>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Howells <dhowells@redhat.com>
-Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-/* changelog */
-v1:
-- Oleg Nesterov <oleg@redhat.com>:
-  - return pidfd in parent_tidptr argument of clone
-    This way we can return the pid and the pidfd at the same time to the
-    caller and can also start pid file descriptor numbering at 0 as is
-    customary for file descriptors.
-- Christian Brauner <christian@brauner.io>:
-  - update comments to reflect changes based on Oleg's idea
-v2:
-- Oleg Nesterov <oleg@redhat.com>:
-  - move put_user() before clone()'s point of no return so we can handle
-    put_user() errors
-- Christian Brauner <christian@brauner.io>:
-  - change pidfd_create() to also fd_install()
-    With Oleg's change it makes sense to do the fd_install() right before
-    the moved put_user().
-v3:
-- Oleg Nesterov <oleg@redhat.com>:
-  - block CLONE_PIDFD with CLONE_THREAD until someone really needs this
-    feature
-  - ensure that parent_tidptr is pristine so we can use with CLONE_PIDFD
-    for additional features
-- Christian Brauner <christian@brauner.io>:
-  - return EFAULT on get_user() error, EINVAL on non-zero value
-    Oleg had originally sketched a piece of code that returned EINVAL when
-    get_user() fails. However, it is clearer for userspace if EFAULT is
-    returned when get_user() fails and EINVAL when the retrieved value is
-    not 0.
----
- include/linux/pid.h        |   2 +
- include/uapi/linux/sched.h |   1 +
- kernel/fork.c              | 108 +++++++++++++++++++++++++++++++++++--
- 3 files changed, 107 insertions(+), 4 deletions(-)
+ include/dt-bindings/reset/hisi,hi6220-resets.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index b6f4ba16065a..3c8ef5a199ca 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -66,6 +66,8 @@ struct pid
+diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
+index e7c362a8..63aff7d 100644
+--- a/include/dt-bindings/reset/hisi,hi6220-resets.h
++++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
+@@ -73,4 +73,11 @@
+ #define MEDIA_MMU                       6
+ #define MEDIA_XG2RAM1                   7
  
- extern struct pid init_struct_pid;
- 
-+extern const struct file_operations pidfd_fops;
++#define AO_G3D                          1
++#define AO_CODECISP                     2
++#define AO_MCPU                         4
++#define AO_BBPHARQMEM                   5
++#define AO_HIFI                         8
++#define AO_ACPUSCUL2C                   12
 +
- static inline struct pid *get_pid(struct pid *pid)
- {
- 	if (pid)
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index 22627f80063e..ed4ee170bee2 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -10,6 +10,7 @@
- #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
- #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
- #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
-+#define CLONE_PIDFD	0x00001000	/* set if a pidfd should be placed in parent */
- #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
- #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
- #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 9dcd18aa210b..5525837ed80e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -11,6 +11,7 @@
-  * management can be a bitch. See 'mm/memory.c': 'copy_page_range()'
-  */
- 
-+#include <linux/anon_inodes.h>
- #include <linux/slab.h>
- #include <linux/sched/autogroup.h>
- #include <linux/sched/mm.h>
-@@ -21,8 +22,10 @@
- #include <linux/sched/task.h>
- #include <linux/sched/task_stack.h>
- #include <linux/sched/cputime.h>
-+#include <linux/seq_file.h>
- #include <linux/rtmutex.h>
- #include <linux/init.h>
-+#include <linux/fsnotify.h>
- #include <linux/unistd.h>
- #include <linux/module.h>
- #include <linux/vmalloc.h>
-@@ -1662,6 +1665,58 @@ static inline void rcu_copy_process(struct task_struct *p)
- #endif /* #ifdef CONFIG_TASKS_RCU */
- }
- 
-+static int pidfd_release(struct inode *inode, struct file *file)
-+{
-+	struct pid *pid = file->private_data;
-+
-+	file->private_data = NULL;
-+	put_pid(pid);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PROC_FS
-+static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
-+{
-+	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
-+	struct pid *pid = f->private_data;
-+
-+	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
-+	seq_putc(m, '\n');
-+}
-+#endif
-+
-+const struct file_operations pidfd_fops = {
-+	.release = pidfd_release,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = pidfd_show_fdinfo,
-+#endif
-+};
-+
-+/**
-+ * pidfd_create() - Create a new pid file descriptor.
-+ *
-+ * @pid:  struct pid that the pidfd will reference
-+ *
-+ * This creates a new pid file descriptor with the O_CLOEXEC flag set.
-+ *
-+ * Note, that this function can only be called after the fd table has
-+ * been unshared to avoid leaking the pidfd to the new process.
-+ *
-+ * Return: On success, a cloexec pidfd is returned.
-+ *         On error, a negative errno number will be returned.
-+ */
-+static int pidfd_create(struct pid *pid)
-+{
-+	int fd;
-+
-+	fd = anon_inode_getfd("pidfd", &pidfd_fops, get_pid(pid),
-+			      O_RDWR | O_CLOEXEC);
-+	if (fd < 0)
-+		put_pid(pid);
-+
-+	return fd;
-+}
-+
- /*
-  * This creates a new process as a copy of the old one,
-  * but does not actually start it yet.
-@@ -1674,13 +1729,14 @@ static __latent_entropy struct task_struct *copy_process(
- 					unsigned long clone_flags,
- 					unsigned long stack_start,
- 					unsigned long stack_size,
-+					int __user *parent_tidptr,
- 					int __user *child_tidptr,
- 					struct pid *pid,
- 					int trace,
- 					unsigned long tls,
- 					int node)
- {
--	int retval;
-+	int pidfd = -1, retval;
- 	struct task_struct *p;
- 	struct multiprocess_signals delayed;
- 
-@@ -1730,6 +1786,31 @@ static __latent_entropy struct task_struct *copy_process(
- 			return ERR_PTR(-EINVAL);
- 	}
- 
-+	if (clone_flags & CLONE_PIDFD) {
-+		int reserved;
-+
-+		/*
-+		 * - CLONE_PARENT_SETTID is useless for pidfds and also
-+		 *   parent_tidptr is used to return pidfds.
-+		 * - CLONE_DETACHED is blocked so that we can potentially
-+		 *   reuse it later for CLONE_PIDFD.
-+		 * - CLONE_THREAD is blocked until someone really needs it.
-+		 */
-+		if (clone_flags &
-+		    (CLONE_DETACHED | CLONE_PARENT_SETTID | CLONE_THREAD))
-+			return ERR_PTR(-EINVAL);
-+
-+		/*
-+		 * Verify that parent_tidptr is sane so we can potentially
-+		 * reuse it later.
-+		 */
-+		if (get_user(reserved, parent_tidptr))
-+			return ERR_PTR(-EFAULT);
-+
-+		if (reserved != 0)
-+			return ERR_PTR(-EINVAL);
-+	}
-+
- 	/*
- 	 * Force any signals received before this point to be delivered
- 	 * before the fork happens.  Collect up signals sent to multiple
-@@ -1936,6 +2017,22 @@ static __latent_entropy struct task_struct *copy_process(
- 		}
- 	}
- 
-+	/*
-+	 * This has to happen after we've potentially unshared the file
-+	 * descriptor table (so that the pidfd doesn't leak into the child
-+	 * if the fd table isn't shared).
-+	 */
-+	if (clone_flags & CLONE_PIDFD) {
-+		retval = pidfd_create(pid);
-+		if (retval < 0)
-+			goto bad_fork_free_pid;
-+
-+		pidfd = retval;
-+		retval = put_user(pidfd, parent_tidptr);
-+		if (retval)
-+			goto bad_fork_put_pidfd;
-+	}
-+
- #ifdef CONFIG_BLOCK
- 	p->plug = NULL;
- #endif
-@@ -1996,7 +2093,7 @@ static __latent_entropy struct task_struct *copy_process(
- 	 */
- 	retval = cgroup_can_fork(p);
- 	if (retval)
--		goto bad_fork_free_pid;
-+		goto bad_fork_put_pidfd;
- 
- 	/*
- 	 * From this point on we must avoid any synchronous user-space
-@@ -2111,6 +2208,9 @@ static __latent_entropy struct task_struct *copy_process(
- 	spin_unlock(&current->sighand->siglock);
- 	write_unlock_irq(&tasklist_lock);
- 	cgroup_cancel_fork(p);
-+bad_fork_put_pidfd:
-+	if (clone_flags & CLONE_PIDFD)
-+		ksys_close(pidfd);
- bad_fork_free_pid:
- 	cgroup_threadgroup_change_end(current);
- 	if (pid != &init_struct_pid)
-@@ -2176,7 +2276,7 @@ static inline void init_idle_pids(struct task_struct *idle)
- struct task_struct *fork_idle(int cpu)
- {
- 	struct task_struct *task;
--	task = copy_process(CLONE_VM, 0, 0, NULL, &init_struct_pid, 0, 0,
-+	task = copy_process(CLONE_VM, 0, 0, NULL, NULL, &init_struct_pid, 0, 0,
- 			    cpu_to_node(cpu));
- 	if (!IS_ERR(task)) {
- 		init_idle_pids(task);
-@@ -2223,7 +2323,7 @@ long _do_fork(unsigned long clone_flags,
- 			trace = 0;
- 	}
- 
--	p = copy_process(clone_flags, stack_start, stack_size,
-+	p = copy_process(clone_flags, stack_start, stack_size, parent_tidptr,
- 			 child_tidptr, NULL, trace, tls, NUMA_NO_NODE);
- 	add_latent_entropy();
- 
+ #endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
 -- 
-2.21.0
+2.7.4
 
