@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C9C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC292C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6039D20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932D020643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pwG/ClYy"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YM5f8UsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfDSTEb (ORCPT
+        id S1728931AbfDSTEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:04:31 -0400
+        Fri, 19 Apr 2019 15:04:39 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729248AbfDSTEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:04:00 -0400
+        id S1727563AbfDSTD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:03:56 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCsTv9276779
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCGB0r265309
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 05:54:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCsTv9276779
+        Fri, 19 Apr 2019 05:16:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCGB0r265309
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555678469;
-        bh=Iqaor1cbvLtRWJMnWDJmRtYIP+w7qS/RRzkzMK/1D+E=;
+        s=2019041745; t=1555676172;
+        bh=7hiolzGf487F26cDIqDSUbik3LIDPjXaDCcXWL4cAFc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=pwG/ClYyIxs09sUGJekfggTWuM3yNnrQghXevMa5OdHqW6geGTs+xS96vDx9tUEPs
-         kHSwzxh9Y9VWdiJjsPc64GTENvVAq/4gUu/fKE2IHCBDv1VISNC8kYcEm+NbvnTYLg
-         V1KTSlGySKsbBGEcuAhbxPwquJWfq6LFHCiog7WhFBrF0RlRJ76Qt1csKgZZJCgFwx
-         Y+j3ovmm9IuVK8Y8FN19s6h/iEB2ZhMDwsgqx79qLMp39LMn/1F5G2LKATrlhFTSs2
-         6UvPzamN68ogTZ1K9nElsCxFRw4sUcgpE4O1Su4Ood1ewv1AW2RRchcoYNFxhvKMd0
-         bmELSo/Y3LPPg==
+        b=YM5f8UsKxey39KErg5bh8d5+VgKWBEQTDjvN2FvUTY4AygVmZrS/R3M9XjCO1mdFX
+         KVhQul0YZ+TxuHHu5YdJcmG3DaAGEeUByCkjgzcnJ/R9apMouOTIPW12So8XrLLANx
+         gdpjfkgQhLG8UZCc602Mgo8gzwZD8PKFdGkvgHpa0LzHREGHb4D/JUVBDz5kN3k46K
+         01bTQyu0g9iPVefXobCCKRv8WlwF3nkGLL3S3aPlHg+tUiwqZlYsFw18sJ6l7Db7Tz
+         GAPNe/Vw8OiqLNKw4PUSUpdj1lS1odWR/RvnJvUgiEyA0JLHawK9BJARrlMIMmFNpD
+         dTkK0F8rS+rFQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCsSok276776;
-        Fri, 19 Apr 2019 05:54:28 -0700
-Date:   Fri, 19 Apr 2019 05:54:28 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCG92B265306;
+        Fri, 19 Apr 2019 05:16:09 -0700
+Date:   Fri, 19 Apr 2019 05:16:09 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Masami Hiramatsu <tipbot@zytor.com>
-Message-ID: <tip-b191fa96ea6dc00d331dcc28c1f7db5e075693a0@git.kernel.org>
-Cc:     mhiramat@kernel.org, mingo@kernel.org, peterz@infradead.org,
-        mathieu.desnoyers@efficios.com, torvalds@linux-foundation.org,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, righi.andrea@gmail.com, hpa@zytor.com
-Reply-To: hpa@zytor.com, righi.andrea@gmail.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-          torvalds@linux-foundation.org, mingo@kernel.org,
-          mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-          peterz@infradead.org
-In-Reply-To: <155094064889.6137.972160690963039.stgit@devbox>
-References: <155094064889.6137.972160690963039.stgit@devbox>
+From:   tip-bot for Konstantin Khlebnikov <tipbot@zytor.com>
+Message-ID: <tip-1a010e29cfa00fee2888fd2fd4983f848cbafb58@git.kernel.org>
+Cc:     peterz@infradead.org, a.p.zijlstra@chello.nl, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, khlebnikov@yandex-team.ru,
+        mingo@kernel.org, torvalds@linux-foundation.org, tglx@linutronix.de
+Reply-To: mingo@kernel.org, torvalds@linux-foundation.org,
+          tglx@linutronix.de, a.p.zijlstra@chello.nl, peterz@infradead.org,
+          hpa@zytor.com, linux-kernel@vger.kernel.org,
+          khlebnikov@yandex-team.ru
+In-Reply-To: <155125501739.293431.5252197504404771496.stgit@buzz>
+References: <155125501739.293431.5252197504404771496.stgit@buzz>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] x86/kprobes: Avoid kretprobe recursion bug
-Git-Commit-ID: b191fa96ea6dc00d331dcc28c1f7db5e075693a0
+Subject: [tip:sched/core] sched/rt: Check integer overflow at usec to nsec
+ conversion
+Git-Commit-ID: 1a010e29cfa00fee2888fd2fd4983f848cbafb58
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,110 +70,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b191fa96ea6dc00d331dcc28c1f7db5e075693a0
-Gitweb:     https://git.kernel.org/tip/b191fa96ea6dc00d331dcc28c1f7db5e075693a0
-Author:     Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate: Sun, 24 Feb 2019 01:50:49 +0900
+Commit-ID:  1a010e29cfa00fee2888fd2fd4983f848cbafb58
+Gitweb:     https://git.kernel.org/tip/1a010e29cfa00fee2888fd2fd4983f848cbafb58
+Author:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+AuthorDate: Wed, 27 Feb 2019 11:10:17 +0300
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 14:26:07 +0200
+CommitDate: Fri, 19 Apr 2019 13:42:09 +0200
 
-x86/kprobes: Avoid kretprobe recursion bug
+sched/rt: Check integer overflow at usec to nsec conversion
 
-Avoid kretprobe recursion loop bg by setting a dummy
-kprobes to current_kprobe per-CPU variable.
+Example of unhandled overflows:
 
-This bug has been introduced with the asm-coded trampoline
-code, since previously it used another kprobe for hooking
-the function return placeholder (which only has a nop) and
-trampoline handler was called from that kprobe.
+ # echo 18446744073709651 > cpu.rt_runtime_us
+ # cat cpu.rt_runtime_us
+ 99
 
-This revives the old lost kprobe again.
+ # echo 18446744073709900 > cpu.rt_period_us
+ # cat cpu.rt_period_us
+ 348
 
-With this fix, we don't see deadlock anymore.
+After this patch they will fail with -EINVAL.
 
-And you can see that all inner-called kretprobe are skipped.
-
-  event_1                                  235               0
-  event_2                                19375           19612
-
-The 1st column is recorded count and the 2nd is missed count.
-Above shows (event_1 rec) + (event_2 rec) ~= (event_2 missed)
-(some difference are here because the counter is racy)
-
-Reported-by: Andrea Righi <righi.andrea@gmail.com>
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
-Link: http://lkml.kernel.org/r/155094064889.6137.972160690963039.stgit@devbox
+Link: http://lkml.kernel.org/r/155125501739.293431.5252197504404771496.stgit@buzz
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/kprobes/core.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ kernel/sched/rt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 18fbe9be2d68..fed46ddb1eef 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -749,11 +749,16 @@ asm(
- NOKPROBE_SYMBOL(kretprobe_trampoline);
- STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 90fa23d36565..1e6b909dca36 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2555,6 +2555,8 @@ int sched_group_set_rt_runtime(struct task_group *tg, long rt_runtime_us)
+ 	rt_runtime = (u64)rt_runtime_us * NSEC_PER_USEC;
+ 	if (rt_runtime_us < 0)
+ 		rt_runtime = RUNTIME_INF;
++	else if ((u64)rt_runtime_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
  
-+static struct kprobe kretprobe_kprobe = {
-+	.addr = (void *)kretprobe_trampoline,
-+};
-+
- /*
-  * Called from kretprobe_trampoline
-  */
- static __used void *trampoline_handler(struct pt_regs *regs)
+ 	return tg_set_rt_bandwidth(tg, rt_period, rt_runtime);
+ }
+@@ -2575,6 +2577,9 @@ int sched_group_set_rt_period(struct task_group *tg, u64 rt_period_us)
  {
-+	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
- 	struct hlist_node *tmp;
-@@ -763,6 +768,17 @@ static __used void *trampoline_handler(struct pt_regs *regs)
- 	void *frame_pointer;
- 	bool skipped = false;
+ 	u64 rt_runtime, rt_period;
  
-+	preempt_disable();
++	if (rt_period_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
 +
-+	/*
-+	 * Set a dummy kprobe for avoiding kretprobe recursion.
-+	 * Since kretprobe never run in kprobe handler, kprobe must not
-+	 * be running at this point.
-+	 */
-+	kcb = get_kprobe_ctlblk();
-+	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-+	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
-@@ -838,10 +854,9 @@ static __used void *trampoline_handler(struct pt_regs *regs)
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
- 			__this_cpu_write(current_kprobe, &ri->rp->kp);
--			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
- 			ri->ret_addr = correct_ret_addr;
- 			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, NULL);
-+			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
- 		}
+ 	rt_period = rt_period_us * NSEC_PER_USEC;
+ 	rt_runtime = tg->rt_bandwidth.rt_runtime;
  
- 		recycle_rp_inst(ri, &empty_rp);
-@@ -857,6 +872,9 @@ static __used void *trampoline_handler(struct pt_regs *regs)
- 
- 	kretprobe_hash_unlock(current, &flags);
- 
-+	__this_cpu_write(current_kprobe, NULL);
-+	preempt_enable();
-+
- 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
- 		hlist_del(&ri->hlist);
- 		kfree(ri);
