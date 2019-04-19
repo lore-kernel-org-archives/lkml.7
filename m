@@ -2,187 +2,243 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E8AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BCFC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D04E20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGEbQhHc"
+	by mail.kernel.org (Postfix) with ESMTP id E58AB20821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfDSTYM (ORCPT
+        id S1727843AbfDSTYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:24:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35176 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfDSTYL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:24:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o12so4673758wrn.2;
-        Fri, 19 Apr 2019 12:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=nbmr2w5/0wlcA5OCIjXqH8b8jg348eXwm/j8E2b8gwc=;
-        b=VGEbQhHcqcHmqC/N8ddol3NVQo48qPjGNaykxHoA4RKKNNRzsTAzYsZyWbH4mHTPI3
-         xrcv9qJ/UNrwNYLszIr9UbGFcJK9XY+OGm2GZN4kc5zHrzg9DpoHVB+RH0gp8ggvxHY7
-         BIG8SkaukMJGT1xaI5WcWDkcClN4XQ2ZnAWmJa5ZDVHCr7VDDKGiKZmlDLUgfVtBzSfI
-         pn9n7hP90sbBE3cYYFZ8+YBDduHJ6L58PdLeEwL9bwkb0z1buKUFpNfnpgbVpIaeUhOJ
-         mv3pHHkYc5BO/2ESoD5RBSqmP9U38G4FH2ei5bRsV2frkL+UVVf21dguFsLh3w5Wafrg
-         QY9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nbmr2w5/0wlcA5OCIjXqH8b8jg348eXwm/j8E2b8gwc=;
-        b=A8ODlamfvjgZiGe2pcfN9rDo7BeUIirkOpQtX2hOUJdH2sQwGGtuoKuHBUrr+BRRh2
-         7nQGQqcoEw7OU/o8DwbY9S2vJMGGemJdw7HMq6XR662h5HHNGuIxlx0jBEVG+8t8ugrW
-         wYaLcaUhvFPYBVzDaE8HJKjxYzgwbtD/lEPy/tnk4V3BwvrlXZha5kjXkJDPGVHv4ezG
-         pFfwZqgzBzPMiWSGtA4Nufia/KuDT6khC+azBOYLIlvVkOZoIGzA1ZNfKhrx8sNCbhr9
-         KulTFlSJ20qIs+qFDTqRSlywmlZ5UehmD6JfcR/IW2MZTjrnY+Vb3aAT5PQr1Vn1+BHH
-         FhtA==
-X-Gm-Message-State: APjAAAVfOJfaLSOG8mLm9wkFV5E3VZ/+TPx1E4dnsBzFZZM0Ktx14Hry
-        xTngmwRFchjGI1yfEF+LXuGtUfvnCuI=
-X-Google-Smtp-Source: APXvYqxTeIkY6HrtLXqdLaB04RltJhEunJXx+hreNyqXWksrxaf1qtJS2B5bSfRSkQ4zBxxnz3r2rQ==
-X-Received: by 2002:adf:ed90:: with SMTP id c16mr2292654wro.74.1555668770298;
-        Fri, 19 Apr 2019 03:12:50 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id j3sm5710118wre.51.2019.04.19.03.12.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 03:12:49 -0700 (PDT)
-Subject: [PATCH v3 08/11] platform/x86: asus-wmi: Enhance detection of thermal
- data
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
-Message-ID: <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
-Date:   Fri, 19 Apr 2019 12:12:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 15:24:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44178 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbfDSTYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:24:21 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C65830BA369;
+        Fri, 19 Apr 2019 06:27:04 +0000 (UTC)
+Received: from xz-x1 (ovpn-12-224.pek2.redhat.com [10.72.12.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 673C41001DCF;
+        Fri, 19 Apr 2019 06:26:55 +0000 (UTC)
+Date:   Fri, 19 Apr 2019 14:26:50 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 14/28] userfaultfd: wp: handle COW properly for uffd-wp
+Message-ID: <20190419062650.GF13323@xz-x1>
+References: <20190320020642.4000-1-peterx@redhat.com>
+ <20190320020642.4000-15-peterx@redhat.com>
+ <20190418202558.GK3288@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Disposition: inline
+In-Reply-To: <20190418202558.GK3288@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 19 Apr 2019 06:27:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The obviously wrong value 1 for temperature device ID in this driver is
-returned by at least some devices, including TUF Gaming series laptops,
-instead of 0 as expected previously. Observable effect is that a
-temp1_input in hwmon reads temperature near absolute zero.
+On Thu, Apr 18, 2019 at 04:51:15PM -0400, Jerome Glisse wrote:
+> On Wed, Mar 20, 2019 at 10:06:28AM +0800, Peter Xu wrote:
+> > This allows uffd-wp to support write-protected pages for COW.
+> > 
+> > For example, the uffd write-protected PTE could also be write-protected
+> > by other usages like COW or zero pages.  When that happens, we can't
+> > simply set the write bit in the PTE since otherwise it'll change the
+> > content of every single reference to the page.  Instead, we should do
+> > the COW first if necessary, then handle the uffd-wp fault.
+> > 
+> > To correctly copy the page, we'll also need to carry over the
+> > _PAGE_UFFD_WP bit if it was set in the original PTE.
+> > 
+> > For huge PMDs, we just simply split the huge PMDs where we want to
+> > resolve an uffd-wp page fault always.  That matches what we do with
+> > general huge PMD write protections.  In that way, we resolved the huge
+> > PMD copy-on-write issue into PTE copy-on-write.
+> > 
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> 
+> This one has a bug see below.
+> 
+> 
+> > ---
+> >  mm/memory.c   |  5 +++-
+> >  mm/mprotect.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++---
+> >  2 files changed, 65 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index e7a4b9650225..b8a4c0bab461 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -2291,7 +2291,10 @@ vm_fault_t wp_page_copy(struct vm_fault *vmf)
+> >  		}
+> >  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+> >  		entry = mk_pte(new_page, vma->vm_page_prot);
+> > -		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> > +		if (pte_uffd_wp(vmf->orig_pte))
+> > +			entry = pte_mkuffd_wp(entry);
+> > +		else
+> > +			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+> >  		/*
+> >  		 * Clear the pte entry and flush it first, before updating the
+> >  		 * pte with the new entry. This will avoid a race condition
+> > diff --git a/mm/mprotect.c b/mm/mprotect.c
+> > index 9d4433044c21..855dddb07ff2 100644
+> > --- a/mm/mprotect.c
+> > +++ b/mm/mprotect.c
+> > @@ -73,18 +73,18 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+> >  	flush_tlb_batched_pending(vma->vm_mm);
+> >  	arch_enter_lazy_mmu_mode();
+> >  	do {
+> > +retry_pte:
+> >  		oldpte = *pte;
+> >  		if (pte_present(oldpte)) {
+> >  			pte_t ptent;
+> >  			bool preserve_write = prot_numa && pte_write(oldpte);
+> > +			struct page *page;
+> >  
+> >  			/*
+> >  			 * Avoid trapping faults against the zero or KSM
+> >  			 * pages. See similar comment in change_huge_pmd.
+> >  			 */
+> >  			if (prot_numa) {
+> > -				struct page *page;
+> > -
+> >  				page = vm_normal_page(vma, addr, oldpte);
+> >  				if (!page || PageKsm(page))
+> >  					continue;
+> > @@ -114,6 +114,54 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+> >  					continue;
+> >  			}
+> >  
+> > +			/*
+> > +			 * Detect whether we'll need to COW before
+> > +			 * resolving an uffd-wp fault.  Note that this
+> > +			 * includes detection of the zero page (where
+> > +			 * page==NULL)
+> > +			 */
+> > +			if (uffd_wp_resolve) {
+> > +				/* If the fault is resolved already, skip */
+> > +				if (!pte_uffd_wp(*pte))
+> > +					continue;
+> > +				page = vm_normal_page(vma, addr, oldpte);
+> > +				if (!page || page_mapcount(page) > 1) {
+> > +					struct vm_fault vmf = {
+> > +						.vma = vma,
+> > +						.address = addr & PAGE_MASK,
+> > +						.page = page,
+> > +						.orig_pte = oldpte,
+> > +						.pmd = pmd,
+> > +						/* pte and ptl not needed */
+> > +					};
+> > +					vm_fault_t ret;
+> > +
+> > +					if (page)
+> > +						get_page(page);
+> > +					arch_leave_lazy_mmu_mode();
+> > +					pte_unmap_unlock(pte, ptl);
+> > +					ret = wp_page_copy(&vmf);
+> > +					/* PTE is changed, or OOM */
+> > +					if (ret == 0)
+> > +						/* It's done by others */
+> > +						continue;
+> 
+> This is wrong if ret == 0 you still need to remap the pte before
+> continuing as otherwise you will go to next pte without the page
+> table lock for the directory. So 0 case must be handled after
+> arch_enter_lazy_mmu_mode() below.
+> 
+> Sorry i should have catch that in previous review.
 
-* Consider 0.1 K an erroneous value in addition to 0 K.
-* Refactor detection of thermal input availability to a separate function.
+My fault to not have noticed it since the very beginning... thanks for
+spotting that.
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 45 ++++++++++++++++++++++++++++-----
- 1 file changed, 38 insertions(+), 7 deletions(-)
+I'm squashing below changes into the patch:
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e69e55635afb..1b8272374660 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -178,6 +178,7 @@ struct asus_wmi {
- 	struct asus_rfkill gps;
- 	struct asus_rfkill uwb;
- 
-+	bool asus_hwmon_thermal_available;
- 	bool asus_hwmon_fan_manual_mode;
- 	int asus_hwmon_num_fans;
- 	int asus_hwmon_pwm;
-@@ -1375,6 +1376,32 @@ static struct attribute *hwmon_attributes[] = {
- 	NULL
- };
- 
-+static int asus_hwmon_check_thermal_available(struct asus_wmi *asus)
-+{
-+	u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
-+	int err;
-+
-+	asus->asus_hwmon_thermal_available = false;
-+	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_THERMAL_CTRL, &value);
-+
-+	if (err < 0) {
-+		if (err == -ENODEV)
-+			return 0;
-+
-+		return err;
-+	}
-+
-+	/*
-+	 * If the temperature value in deci-Kelvin is near the absolute
-+	 * zero temperature, something is clearly wrong.
-+	 */
-+	if (!value || value == 1)
-+		return 0;
-+
-+	asus->asus_hwmon_thermal_available = true;
-+	return 0;
-+}
-+
- static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 					  struct attribute *attr, int idx)
- {
-@@ -1388,8 +1415,6 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 
- 	if (attr == &dev_attr_pwm1.attr)
- 		dev_id = ASUS_WMI_DEVID_FAN_CTRL;
--	else if (attr == &dev_attr_temp1_input.attr)
--		dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
- 
- 	if (attr == &dev_attr_fan1_input.attr
- 	    || attr == &dev_attr_fan1_label.attr
-@@ -1414,15 +1439,13 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 		 * - reverved bits are non-zero
- 		 * - sfun and presence bit are not set
- 		 */
--		if (value == ASUS_WMI_UNSUPPORTED_METHOD || value & 0xFFF80000
-+		if (value == ASUS_WMI_UNSUPPORTED_METHOD || (value & 0xFFF80000)
- 		    || (!asus->sfun && !(value & ASUS_WMI_DSTS_PRESENCE_BIT)))
- 			ok = false;
- 		else
- 			ok = fan_attr <= asus->asus_hwmon_num_fans;
--	} else if (dev_id == ASUS_WMI_DEVID_THERMAL_CTRL) {
--		/* If value is zero, something is clearly wrong */
--		if (!value)
--			ok = false;
-+	} else if (attr == &dev_attr_temp1_input.attr) {
-+		ok = asus->asus_hwmon_thermal_available;
- 	} else if (fan_attr <= asus->asus_hwmon_num_fans && fan_attr != -1) {
- 		ok = true;
- 	} else {
-@@ -1469,6 +1492,14 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
- 	}
- 
- 	pr_info("Number of fans: %d\n", asus->asus_hwmon_num_fans);
-+
-+	status = asus_hwmon_check_thermal_available(asus);
-+	if (status) {
-+		pr_warn("Could not check if thermal available: %d\n", status);
-+		return -ENXIO;
-+	}
-+
-+	pr_info("Thermal available: %d\n", asus->asus_hwmon_thermal_available);
- 	return 0;
- }
- 
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 3cddfd6627b8..13d493b836bb 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -141,22 +141,19 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+                                        arch_leave_lazy_mmu_mode();
+                                        pte_unmap_unlock(pte, ptl);
+                                        ret = wp_page_copy(&vmf);
+-                                       /* PTE is changed, or OOM */
+-                                       if (ret == 0)
+-                                               /* It's done by others */
+-                                               continue;
+-                                       else if (WARN_ON(ret != VM_FAULT_WRITE))
++                                       if (ret != VM_FAULT_WRITE && ret != 0)
++                                               /* Probably OOM */
+                                                return pages;
+                                        pte = pte_offset_map_lock(vma->vm_mm,
+                                                                  pmd, addr,
+                                                                  &ptl);
+                                        arch_enter_lazy_mmu_mode();
+-                                       if (!pte_present(*pte))
++                                       if (ret == 0 || !pte_present(*pte))
+                                                /*
+                                                 * This PTE could have been
+-                                                * modified after COW
+-                                                * before we have taken the
+-                                                * lock; retry this PTE
++                                                * modified during or after
++                                                * COW before take the lock;
++                                                * retry.
+                                                 */
+                                                goto retry_pte;
+                                }
+
+[...]
+
+> >  		if (is_swap_pmd(*pmd) || pmd_trans_huge(*pmd) || pmd_devmap(*pmd)) {
+> > -			if (next - addr != HPAGE_PMD_SIZE) {
+> > +			/*
+> > +			 * When resolving an userfaultfd write
+> > +			 * protection fault, it's not easy to identify
+> > +			 * whether a THP is shared with others and
+> > +			 * whether we'll need to do copy-on-write, so
+> > +			 * just split it always for now to simply the
+> > +			 * procedure.  And that's the policy too for
+> > +			 * general THP write-protect in af9e4d5f2de2.
+> > +			 */
+> > +			if (next - addr != HPAGE_PMD_SIZE || uffd_wp_resolve) {
+> 
+> Just a nit pick can you please add () to next - addr ie:
+> if ((next - addr) != HPAGE_PMD_SIZE || uffd_wp_resolve) {
+> 
+> I know it is not needed but each time i bump into this i
+> have to scratch my head for second to remember the operator
+> rules :)
+
+Sure, as usual. :) And I tend to agree it's a good habit.  It's just
+me that always forgot about it.
+
+Thanks,
+
 -- 
-2.17.1
-
+Peter Xu
