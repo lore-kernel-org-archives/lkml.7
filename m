@@ -4,84 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2BEC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65B1C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636BA217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B470D21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Vh4McX3m"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="FEukazJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfDSApX (ORCPT
+        id S1727114AbfDSAxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 20:45:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44226 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfDSApX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 20:45:23 -0400
-Received: from zn.tnic (p200300EC2F112E00C9E732E76EE3BD2F.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:c9e7:32e7:6ee3:bd2f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C4A961EC0104;
-        Fri, 19 Apr 2019 02:45:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555634721;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=B7TKCB1OFmsr7NkJTn8+NmAwe312DePuJSu/N+DUWxo=;
-        b=Vh4McX3m4glVjnUI3lCOaV2pdc+PabbFN6qWUdyYyAxBtE51Cf50G8+3Srylagz2JScmif
-        yQE0q6EOynnSTNQsO7wJ9Pl9+EzoEGk7TwtBiP59sMJvFvLs7Jpx/wyQKjkWW+qtoeF8kg
-        mMD9R/JgoTgwJg8RVKOXbnCnOW7lG2A=
-Date:   Fri, 19 Apr 2019 02:45:16 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     PanBian <bianpan2016@163.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: EDAC: Fix memory leak in creating CSROW object
-Message-ID: <20190419004516.GC559@zn.tnic>
-References: <1555554438-103953-1-git-send-email-bianpan2016@163.com>
- <20190418172548.GL27160@zn.tnic>
- <20190419003536.GA57795@bianpan2016@163.com>
+        Thu, 18 Apr 2019 20:53:13 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:35494 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfDSAxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 20:53:13 -0400
+Received: by mail-wr1-f45.google.com with SMTP id o12so1778045wrn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 17:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=reMWGe81hoF/vvuKJ+4JQR1H9FwkqoUMbxtyhkxE3S0=;
+        b=FEukazJtq1ezJQKm8043WwgrXJchb8r533cJT8INdSG5rUbIp/iRWsJeFXsNdWcRDb
+         +5xjj7QpGOzCZxHXP/1NFI7DyTFKWvKif1Lz7ri51ZLlYN4pgYLBKSf0nVw230qrXuvw
+         /PcVVkv2HER6X81+bj8lTkLhKbYxo2UiAWkOw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=reMWGe81hoF/vvuKJ+4JQR1H9FwkqoUMbxtyhkxE3S0=;
+        b=I0aiXLs2a4NBS14IkJBiX7WzmhNcHFZUCPSLJMnUWbGE/NBbtXMQk+1Zf2jYOn3wTC
+         tLKdlQtrEp8+5K+w3r2eCzbPKFR8Pw/K3uDa9lkUseA7o2Bm2AM8ROMtL4FXVm4ygSMR
+         aq1Za4V3nCXwBxeTThBYIurgUbg7xbXb8pbLKzfLsy77f36BHmHkhqnWlgdxN/EIc+ux
+         6e7BY3bxQ/IOEADML1lnNXWSU17PlohrvaL+U5xW7A8YMVzZ1rYXFEUz3fgw3BFBTord
+         lmM+9hWU4Nyjj6DjNy227rz7G8MMNk040MTzkQzXIJelcCFXbujsjk+Gx9jgY2mzLh43
+         ZWQA==
+X-Gm-Message-State: APjAAAXpIaNUZxv3zvo7/qHC67nqhfb0+p11Rb+ANxSepwSC8OctG+97
+        WemlRQTXVWJ34INOSUVMt9HBbA==
+X-Google-Smtp-Source: APXvYqz+bn7neBqKpQ+uSH0YkOp8QirPDi3Lx0YKgi5AdaluyXWlf3iIelLjui4lPo6Sh5yuIC3//Q==
+X-Received: by 2002:a5d:5712:: with SMTP id a18mr669268wrv.219.1555635191545;
+        Thu, 18 Apr 2019 17:53:11 -0700 (PDT)
+Received: from andrea ([89.22.71.151])
+        by smtp.gmail.com with ESMTPSA id v190sm4259614wme.18.2019.04.18.17.53.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 17:53:10 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 02:53:02 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Daniel Kroening <kroening@cs.ox.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Adding plain accesses and detecting data races in the LKMM
+Message-ID: <20190419005302.GA5311@andrea>
+References: <20190418125412.GA10817@andrea>
+ <Pine.LNX.4.44L0.1904181324420.1303-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190419003536.GA57795@bianpan2016@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <Pine.LNX.4.44L0.1904181324420.1303-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 08:35:36AM +0800, PanBian wrote:
-> Yes, I see that. Because the loop start with (--i), there is no put
-> operation for the device that fails to create. So, I think we cannot
-> rule out the possibility of memory leak.
+> Are you saying that on x86, atomic_inc() acts as a full memory barrier 
+> but not as a compiler barrier, and vice versa for 
+> smp_mb__after_atomic()?  Or that neither atomic_inc() nor 
+> smp_mb__after_atomic() implements a full memory barrier?
 
-Ok, so this is not something you trigger - you're basically staring at
-the code?
+I'd say the former; AFAICT, these boil down to:
 
-Well, there's something else questionable in that code which I asked
-Greg about today but we didn't finish that conversation, let me CC him.
+  https://elixir.bootlin.com/linux/v5.1-rc5/source/arch/x86/include/asm/atomic.h#L95
+  https://elixir.bootlin.com/linux/v5.1-rc5/source/arch/x86/include/asm/barrier.h#L84
 
-So AFAIU, devices for which device_add() has returned success,
-should be removed with their counterpart device_del().
-edac_create_csrow_objects(), however, does put_device() on those in the
-"unwinding" loop.
-
-And for the case where device_add() fails, you should do put_device() to
-it. I.e., what you're saying.
-
-So I think we need to figure what needs to be done when before fixing
-this properly.
-
-Greg?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+  Andrea
