@@ -2,289 +2,148 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16378C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15609C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B566B2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="eqi1+l2S"
+	by mail.kernel.org (Postfix) with ESMTP id DD1662171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfDSVsr (ORCPT
+        id S1727719AbfDSVuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:48:47 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39272 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbfDSVsr (ORCPT
+        Fri, 19 Apr 2019 17:50:08 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:40967 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfDSVuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:48:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l7so5644397ljg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bpx7Ednr9WbHXwXu86bDtbdVd7n62j5KZsmWYSnqAzw=;
-        b=eqi1+l2Sg5Nspy6K7rQIY+Vr3SCpUmc2Ma1pKigi+DvqRKzcqIRS6yH/47wVcsX9DL
-         07YpTirvXFIYFqYCxGlwK/NQNUTpBdRU1YeuGqcdpcEhd1UA+C8ofsEzuvp+8KTPG7Zw
-         AUTfVX6b8Q8lNk7b9L7V8QhMkrTK0MT8wzA6pyGDkyoXgBt2esVKQlymkKtyK/AS0xjd
-         /K4kbwHspmsP3Lz6ble0D2k8Oh6dItBuw2Oem3Lr/ajLE5hahIiOAbntIqir7waYmZX7
-         eH83ZgaOmdC0HJiEsFxf1HVYUVD7Pb5TioDUGlKHn/fICuGvG4CZ2a89HFKZ2uS83Hdo
-         SXrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bpx7Ednr9WbHXwXu86bDtbdVd7n62j5KZsmWYSnqAzw=;
-        b=SA4b10QZikAf6RJ6PU/3U3KT7DL4mBZXC/4LDBNlsdDq4YIe2ikn68AhdPaDAyjtMY
-         BGB5VSCS+uwH2tajpFKO/dqEzeNmP6d1WsKIbPPoXLmxBTqlEua8Qp2p7d+fvxUr8+Dm
-         Hle2AZss69OByvH0ThmCbZ7PAWFZ6WzAhrIPztjUHZtCRbXbxkscnyzzJVnz2JnGYOvK
-         uy8knreHWkRjhJJ+d0nB2Z3ZvX7UH2e2z+8xgFo1JozC1vQC7JqKrxGpHaMHgdAsL9XC
-         Ae/5ih8TKHTQQ6ZuU+LtPu0zLirOopAaxYBIxjsw5oJ7Kd9L6aHQzUKywVsm90JPn6r0
-         fTBQ==
-X-Gm-Message-State: APjAAAUhKoz1v0ujiXPZK8a5oJY3lhStujBW11ngDr9q56m22pMzO/ge
-        mumMXroeNHRMPoABh8zoSdSMYdTK400U19jYjUbZFw==
-X-Google-Smtp-Source: APXvYqzwyiZQms+JrEsPd5ySts9Bisu62ScZ0pUx2yq+4ZWtYsSZ/h+27a3spYNXXTRS/wgIkkNp222RRpnzKSI0RE0=
-X-Received: by 2002:a2e:7f13:: with SMTP id a19mr3399307ljd.35.1555710524069;
- Fri, 19 Apr 2019 14:48:44 -0700 (PDT)
+        Fri, 19 Apr 2019 17:50:08 -0400
+Received: from [192.168.1.164] ([37.4.249.100]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MBUuP-1h7TQv0yY3-00Cz70; Fri, 19 Apr 2019 23:49:50 +0200
+Subject: Re: [PATCH] Staging: vc04_services: Cleanup in ctrl_set_bitrate()
+To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>, eric@anholt.net,
+        gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20190419212321.7325-1-madhumithabiw@gmail.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <2d48664a-eb36-4fcc-7bc5-b1b480dbce9a@i2se.com>
+Date:   Fri, 19 Apr 2019 23:49:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io> <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io> <20190419194902.GE251571@google.com>
- <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
- <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com> <CAKOZueuBTwyrLtpVQaoTAgjGSgeHY7392sKv5uAYdy4XKNHKHQ@mail.gmail.com>
-In-Reply-To: <CAKOZueuBTwyrLtpVQaoTAgjGSgeHY7392sKv5uAYdy4XKNHKHQ@mail.gmail.com>
-From:   Christian Brauner <christian@brauner.io>
-Date:   Fri, 19 Apr 2019 23:48:33 +0200
-Message-ID: <CAHrFyr6f_CUP__818e1u6TaHd-XpWY6NOxri4yzzR6rNY5rk_w@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190419212321.7325-1-madhumithabiw@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:X7GVbpZeg6xHEvo9dwFMGWrzQ1nzrxaJosD6YyVtVZNvg5uAitG
+ LYFuu8NZG7HNHLKMtRxKcE21f2GEgohpIXzyN7GU6B+HsviCbpf20SCy02+Lnq+Rm9fEIJZ
+ l1hFGQiSASoWh4BAaVKjfo2qytCF4WQoopsgHCCcj5jx0kedtgO6fU/kymNRQoZ+bfMk2eh
+ 7Rd46DcThOvMkWUxXTl0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CYimwQ28WDM=:U4/tNwKiv6GI6LCVUvOesx
+ GFcX88jNMBfkectoX+aVSnFDzdBvqvvcUVI56sfZ+GdZB4FTC7sEH0clmqVP4kDlL+G18qahR
+ k0Opivq0CjkFUiABpGSiMbYoZHSCvRQlL8ty5gCN697LaMuTdhxnYRYb2n/kRE7bUHv/NnAgJ
+ 8rHoYEEKUrvspb0K5P/TocJUyG9Qlft94b1Kld/a8BPRVN7rYtYP/xtdKBIN97FXaUB7Vc91Q
+ 8ShmU4+LESvTbv/ABdbo+au55U4cCurEa5hgunjfFw8dRDoy+Z9aNkBUKpRvoNiV5HTfvb57F
+ +FYxcDPQy+FtQrtDn+2u5pdaEBJwMMKpG4xQ76xFTJtPYwHvTw+tyLFAULryG0bfqUy7bmkf9
+ j/xlyyhO3hdeswYGwfunu7Zij0UtYAqTEOsCbvL6+Idm8OKXQBu+AfRMu0NkKKwSKrk5/OdPW
+ 59go8r54aYENlY+R9s49QW8WjJ6a9Ajzd0XgYdzAeTrw7l8d+9+ID5SCGytTR4amzoWqAPYbp
+ 9YFoVBew9t46xGubQuJLr513imbCBGAIsCNks2uqMTh4miGencBYb+AmNwvVnKwXOU+I++m88
+ 1lNllm6V8SYStaBZhEDrREYXyQLIN8Jm2lQ6+rTcmWYirqZ3nUA5AGcOLQVDcu7xEL3N3Z15P
+ hd+NODE1MyFKNe23i0QaJXrGp8gj1MnMPcCQVI+318x5NUzdIdEMGlzBIsLzq+3cQ7OBFmYUu
+ iQ0d1mQerYJAfcOh920oRLRZQTusWw8OUypjWGYj3cn66pTgg5b1mmSz9QM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 11:21 PM Daniel Colascione <dancol@google.com> wrote:
+Hi Madhumitha,
+
+Am 19.04.19 um 23:23 schrieb Madhumitha Prabakaran:
+> Remove unnecessary variable and replace return type.
 >
-> On Fri, Apr 19, 2019 at 1:57 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > On Fri, Apr 19, 2019 at 10:34 PM Daniel Colascione <dancol@google.com> wrote:
-> > >
-> > > On Fri, Apr 19, 2019 at 12:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > >
-> > > > On Fri, Apr 19, 2019 at 09:18:59PM +0200, Christian Brauner wrote:
-> > > > > On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
-> > > > > > On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
-> > > > > > > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> > > > > > > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > > > > > >> On 04/16, Joel Fernandes wrote:
-> > > > > > > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> > > > > > > >> > >
-> > > > > > > >> > > Could you explain when it should return POLLIN? When the whole
-> > > > > > > >process exits?
-> > > > > > > >> >
-> > > > > > > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
-> > > > > > > >or when it
-> > > > > > > >> > is in a zombie state and there's no other thread in the thread
-> > > > > > > >group.
-> > > > > > > >>
-> > > > > > > >> IOW, when the whole thread group exits, so it can't be used to
-> > > > > > > >monitor sub-threads.
-> > > > > > > >>
-> > > > > > > >> just in case... speaking of this patch it doesn't modify
-> > > > > > > >proc_tid_base_operations,
-> > > > > > > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
-> > > > > > > >going to use
-> > > > > > > >> the anonymous file returned by CLONE_PIDFD ?
-> > > > > > > >
-> > > > > > > >I don't think procfs works that way. /proc/sub-thread-tid has
-> > > > > > > >proc_tgid_base_operations despite not being a thread group leader.
-> > > > > > > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
-> > > > > > > >be hit trivially, and then the code will misbehave.
-> > > > > > > >
-> > > > > > > >@Joel: I think you'll have to either rewrite this to explicitly bail
-> > > > > > > >out if you're dealing with a thread group leader, or make the code
-> > > > > > > >work for threads, too.
-> > > > > > >
-> > > > > > > The latter case probably being preferred if this API is supposed to be
-> > > > > > > useable for thread management in userspace.
-> > > > > >
-> > > > > > At the moment, we are not planning to use this for sub-thread management. I
-> > > > > > am reworking this patch to only work on clone(2) pidfds which makes the above
-> > > > >
-> > > > > Indeed and agreed.
-> > > > >
-> > > > > > discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
-> > > > > > patches, CLONE_THREAD with pidfd is not supported.
-> > > > >
-> > > > > Yes. We have no one asking for it right now and we can easily add this
-> > > > > later.
-> > > > >
-> > > > > Admittedly I haven't gotten around to reviewing the patches here yet
-> > > > > completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
-> > > > > on process exit which I think is nice as well. How about returning
-> > > > > POLLIN | POLLHUP on process exit?
-> > > > > We already do things like this. For example, when you proxy between
-> > > > > ttys. If the process that you're reading data from has exited and closed
-> > > > > it's end you still can't usually simply exit because it might have still
-> > > > > buffered data that you want to read.  The way one can deal with this
-> > > > > from  userspace is that you can observe a (POLLHUP | POLLIN) event and
-> > > > > you keep on reading until you only observe a POLLHUP without a POLLIN
-> > > > > event at which point you know you have read
-> > > > > all data.
-> > > > > I like the semantics for pidfds as well as it would indicate:
-> > > > > - POLLHUP -> process has exited
-> > > > > - POLLIN  -> information can be read
-> > > >
-> > > > Actually I think a bit different about this, in my opinion the pidfd should
-> > > > always be readable (we would store the exit status somewhere in the future
-> > > > which would be readable, even after task_struct is dead). So I was thinking
-> > > > we always return EPOLLIN.  If process has not exited, then it blocks.
-> > >
-> > > ITYM that a pidfd polls as readable *once a task exits* and stays
-> > > readable forever. Before a task exit, a poll on a pidfd should *not*
-> > > yield POLLIN and reading that pidfd should *not* complete immediately.
-> > > There's no way that, having observed POLLIN on a pidfd, you should
-> > > ever then *not* see POLLIN on that pidfd in the future --- it's a
-> > > one-way transition from not-ready-to-get-exit-status to
-> > > ready-to-get-exit-status.
-> >
-> > What do you consider interesting state transitions? A listener on a pidfd
-> > in epoll_wait() might be interested if the process execs for example.
-> > That's a very valid use-case for e.g. systemd.
+> Issue suggested by Coccinelle.
 >
-> Sure, but systemd is specialized.
-
-So is Android and we're not designing an interface for Android but for
-all of userspace.
-I hope this is clear. Service managers are quite important and systemd
-is the largest one
-and they can make good use of this feature.
-
+> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+> ---
+>  drivers/staging/vc04_services/bcm2835-camera/controls.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 >
-> There are two broad classes of programs that care about process exit
-> status: 1) those that just want to do something and wait for it to
-> complete, and 2) programs that want to perform detailed monitoring of
-> processes and intervention in their state. #1 is overwhelmingly more
-> common. The basic pidfd feature should take care of case #1 only, as
-> wait*() in file descriptor form. I definitely don't think we should be
-> complicating the interface and making it more error-prone (see below)
-> for the sake of that rare program that cares about non-exit
-> notification conditions. You're proposing a complicated combination of
-> poll bit flags that most users (the ones who just wait to wait for
-> processes) don't care about and that risk making the facility hard to
-> use with existing event loops, which generally recognize readability
-> and writability as the only properties that are worth monitoring.
+> diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+> index e39ab5fae724..f87fa7f61db3 100644
+> --- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
+> +++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+> @@ -607,18 +607,13 @@ static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
+>  			    struct v4l2_ctrl *ctrl,
+>  			    const struct bm2835_mmal_v4l2_ctrl *mmal_ctrl)
+>  {
+> -	int ret;
+>  	struct vchiq_mmal_port *encoder_out;
+>  
+>  	dev->capture.encode_bitrate = ctrl->val;
+>  
+>  	encoder_out = &dev->component[MMAL_COMPONENT_VIDEO_ENCODE]->output[0];
+>  
+> -	ret = vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
+> -					    mmal_ctrl->mmal_id,
+> -					    &ctrl->val, sizeof(ctrl->val));
+> -	ret = 0;
+> -	return ret;
+> +	return 0;
 
-That whole pargraph is about dismissing a range of valid use-cases based on
-assumptions such as "way more common" and
-even argues that service managers are special cases and therefore not
-really worth considering. I would like to be more open to other use cases.
+i don't understand why we can remove here the function call.
 
->
-> > We can't use EPOLLIN for that too otherwise you'd need to to waitid(_WNOHANG)
-> > to check whether an exit status can be read which is not nice and then you
-> > multiplex different meanings on the same bit.
-> > I would prefer if the exit status can only be read from the parent which is
-> > clean and the least complicated semantics, i.e. Linus waitid() idea.
->
-> Exit status information should be *at least* as broadly available
-> through pidfds as it is through the last field of /proc/pid/stat
-> today, and probably more broadly. I've been saying for six months now
-> that we need to talk about *who* should have access to exit status
-> information. We haven't had that conversation yet. My preference is to
+Stefan
 
-> just make exit status information globally available, as FreeBSD seems
-> to do. I think it would be broadly useful for something like pkill to
-
-From the pdfork() FreeBSD manpage:
-"poll(2) and select(2) allow waiting for process state transitions;
-currently only POLLHUP is defined, and will be raised when the process dies.
-Process state transitions can also be monitored using kqueue(2) filter
-EVFILT_PROCDESC; currently only NOTE_EXIT is implemented."
-
-> wait for processes to exit and to retrieve their exit information.
->
-> Speaking of pkill: AIUI, in your current patch set, one can get a
-> pidfd *only* via clone. Joel indicated that he believes poll(2)
-> shouldn't be supported on procfs pidfds. Is that your thinking as
-> well? If that's the case, then we're in a state where non-parents
-
-Yes, it is.
-
-> can't wait for process exit, and providing this facility is an
-> important goal of the whole project.
-
-That's your goal.
-
->
-> > EPOLLIN on a pidfd could very well mean that data can be read via
-> > a read() on the pidfd *other* than the exit status. The read could e.g.
-> > give you a lean struct that indicates the type of state transition: NOTIFY_EXIT,
-> > NOTIFY_EXEC, etc.. This way we are not bound to a specific poll event indicating
-> > a specific state.
-> > Though there's a case to be made that EPOLLHUP could indicate process exit
-> > and EPOLLIN a state change + read().
->
-> And do you imagine making read() destructive? Does that read() then
-> reset the POLLIN state? You're essentially proposing that a pidfd
-> provide an "event stream" interface, delivering notifications packets
-> that indicate state changes like "process exited" or "process stopped"
-> or "process execed". While this sort of interface is powerful and has
-> some nice properties that tools like debuggers and daemon monitors
-> might want to use, I think it's too complicated and error prone for
-
-That's an assumption again.
-
-> the overwhelmingly common case of wanting to monitor process lifetime.
-
-Again where is this assumption backed up? systemd is a valid example where
-they care about this, various container managers are another one, and FreeBSD
-already does this.
-
-> I'd much rather pidfd provide a simple one-state-transition
-> level-triggered (not edge-triggered, as your suggestion implies)
-> facility. If we want to let sophisticated programs read a stream of
-> notification packets indicating changes in process state, we can
-> provide that as a separate interface in future work.
->
-> I like Linus' idea of just making waitid(2) (not waitpid(2), as I
-> mistakenly mentioned earlier) on a pidfd act *exactly* like a
-> waitid(2) on the corresponding process and making POLLIN just mean
-> "waitid will succeed". It's a nice simple model that's easy to reason
-> about and that makes it easy to port existing code to pidfds.
->
-> I am very much against signaling additional information on basic
-> pidfds using non-POLLIN poll flags.
+>  }
+>  
+>  static int ctrl_set_bitrate_mode(struct bm2835_mmal_dev *dev,
