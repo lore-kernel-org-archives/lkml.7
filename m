@@ -2,136 +2,164 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C53C282E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FA7C282E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F00B208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A754C217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TN+lD0Yx"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="KD5N5gnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfDSVOm (ORCPT
+        id S1727499AbfDSVPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:14:42 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:38827 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726172AbfDSVOl (ORCPT
+        Fri, 19 Apr 2019 17:15:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36996 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfDSVPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:14:41 -0400
-Received: by mail-yb1-f195.google.com with SMTP id w206so2436498ybg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:14:41 -0700 (PDT)
+        Fri, 19 Apr 2019 17:15:13 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w23so3092290ply.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ep33f62HX3AzUBDcVwFjTp0Z/qGrzWSSxgy6irC3Dwc=;
-        b=TN+lD0YxK8/Z39tQFNeng7o7MdFoxCJhCMdqBA3VkWcQCiVs/XYz7qebhQCkvh98UL
-         QYtk4dk9C4miikKW7ebUyVThbhx3xOBfed7dosNc80MVG1HOVIEDJwbCgFx4BBOxXmuZ
-         9BJC9skhYCCPRcDFlVoAk1wWJi5QPd3x7bV9nZrQOdhbYWEdfxh+qFEzSbhjh2zcF+Qk
-         nEUxMY1lIEric7Sr22cPqLby1FKEYg8H2b/hKJaehzG2Bhsi5DI8SaX8kUlMXuKmwFZp
-         2fucI4cAXY9cXKu/jqmNdiuJqUHmBHXRYYAbiFf+Wwhsg2U7d7P+0QNi3h2mwT28yPuy
-         9j6Q==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WYpiZfRbbseRjJyVApEiFDNq4Hmmd0sUbCvSRw0KoEY=;
+        b=KD5N5gnuj0qJHhdNK14Ng0i18NnELyUBJN4d20cMkiMehCQ+Ih8IiW57Sm7Ma3iHt2
+         aep4wMeMz830Jd9n5XP8Pwb2AFKNZLF9bOZQIIZ6+fvZeqI65GZr4ou52YIzx0BgM7aA
+         EhwV9wzl4lSWZrQSnEbz+46KKuAPsX4P223NxIkRLGhs735a4uVFL2moqhptyZB91/ka
+         DEChuzJjoG033BJRhCCFAUYJr7tkKAsHaadZ59QBn6wSQttqM4zFSihCNLx4T2bl3ufn
+         DW2/YWIfoEZkM7b4qrjhQkOFbwP1uGCLGv8/J8NiLp6HfksDeEkM+Yoc/6dF7Hzn848R
+         7rsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ep33f62HX3AzUBDcVwFjTp0Z/qGrzWSSxgy6irC3Dwc=;
-        b=UKiatOk8Lxl8OAqOF71UV3G7Z0f+HS80il6/Wo4L5GOShD58YjoFQjc5qK6tDXfz9G
-         7+kC8A76h8wmFP1GcKFUHCsAx3aVA7aqp4T2GD4Ofg9gWfleomN/2bLkBvDcjsdy7xaS
-         b7mmv3hmRzE5zLh68XqvUSJCiNHtDiVYwMA629q7ugflYEifQqyYv6zJWDtl65Ze7S80
-         0rCzfR1QrT0yumaOHXTWDuKDHWTUzYSKG6r4G65qYKVfRMn0XBd6Glu/WRcUyc8PnthE
-         RzYBw+0t3o8zBuqDG8Fns+WZL/fUb5opI3nwIrEEpcj+Nz7Xo893CIs9qiMIf+zL6N2X
-         Ik7w==
-X-Gm-Message-State: APjAAAXw2HWVwiyvhz4v6O7AdVApyPwdGkWCTVCGdP0RmiclP4cxgJEx
-        PtpYMBXXo6308zOM+pkqN8dpBpsx+h4UG/H9Ca/IVw==
-X-Google-Smtp-Source: APXvYqwP8W9joct14TvJoGQu1QeSZbbs3jHQ7fURiorHFky435pvPWJhgSP+s96y780vcjdoFGt8mEO4Ajd7ZHl7V9g=
-X-Received: by 2002:a25:4147:: with SMTP id o68mr5056203yba.148.1555708480546;
- Fri, 19 Apr 2019 14:14:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190418214224.61900-1-shakeelb@google.com> <20190419200733.GB31878@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190419200733.GB31878@tower.DHCP.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 19 Apr 2019 14:14:29 -0700
-Message-ID: <CALvZod4N7XJ5Zxd-0pO0_tpnnmGHyY=6PMVcvCg49virdp=6SA@mail.gmail.com>
-Subject: Re: [PATCH] memcg: refill_stock for kmem uncharging too
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WYpiZfRbbseRjJyVApEiFDNq4Hmmd0sUbCvSRw0KoEY=;
+        b=LxtbwuB6HuQxGLuC3XRzt5NVufBNmJyJVCUAgQgEQGoYvHb2bn7uaWmSeK0MkaPygR
+         YthT2Q5s2H4VGT1HOGA1TGbK4BMmKq9O3JB/SBcuNqXP0+yjBGWcG2Z+dIulM6WEw97Q
+         5ooDrXQE2W5bAg1rjQHBdsH5ZW1UC8xknHriHFwNHarlvkEjZMqDq9iRUFlIQjMhkCFj
+         uBhY81Hy3iVH0IgAKCaF38l0Ab94bNm6Pt5B7mX+J6I7T8RoyDF/sbv+unqRZkunQOqE
+         0aNIB0a7+teA6pPMmlGbO812hKAbNqtdT9Exoh4TxoV49XXpibNaZHoKI6gNRyPRvA/0
+         Ux/A==
+X-Gm-Message-State: APjAAAWyYL67ttBCsgIeMLh62A1IlK6szJG9RZJB+Ot6q81OqI71dc4l
+        Z6Or4miVypRQzMl9i0nXbwNOPpl/sN4=
+X-Google-Smtp-Source: APXvYqx9toyhlJBTk/JwaJrOSdFz4el5eOfSPdi0RxJEEgV0RIKMcyp9tim3/YhMmB1lOkfr1NCrNQ==
+X-Received: by 2002:a17:902:b713:: with SMTP id d19mr6155722pls.54.1555708512862;
+        Fri, 19 Apr 2019 14:15:12 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b006:440c:5c39:392b:af18:8032? ([2600:1010:b006:440c:5c39:392b:af18:8032])
+        by smtp.gmail.com with ESMTPSA id u62sm8636613pfa.124.2019.04.19.14.15.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 14:15:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
+Date:   Fri, 19 Apr 2019 14:15:08 -0700
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190418171059.GA20819@wind.enjellic.com> <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com> <20190419141732.GA2269@wind.enjellic.com> <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com> <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com> <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de> <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de> <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
+To:     Jethro Beekman <jethro@fortanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 1:07 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Thu, Apr 18, 2019 at 02:42:24PM -0700, Shakeel Butt wrote:
-> > The commit 475d0487a2ad ("mm: memcontrol: use per-cpu stocks for socket
-> > memory uncharging") added refill_stock() for skmem uncharging path to
-> > optimize workloads having high network traffic. Do the same for the kmem
-> > uncharging as well. However bypass the refill for offlined memcgs to not
-> > cause zombie apocalypse.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
->
-> Hello, Shakeel!
->
-> > ---
-> >  mm/memcontrol.c | 17 ++++++++---------
-> >  1 file changed, 8 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 2535e54e7989..7b8de091f572 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -178,6 +178,7 @@ struct mem_cgroup_event {
-> >
-> >  static void mem_cgroup_threshold(struct mem_cgroup *memcg);
-> >  static void mem_cgroup_oom_notify(struct mem_cgroup *memcg);
-> > +static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages);
-> >
-> >  /* Stuffs for move charges at task migration. */
-> >  /*
-> > @@ -2097,10 +2098,7 @@ static void drain_stock(struct memcg_stock_pcp *stock)
-> >       struct mem_cgroup *old = stock->cached;
-> >
-> >       if (stock->nr_pages) {
-> > -             page_counter_uncharge(&old->memory, stock->nr_pages);
-> > -             if (do_memsw_account())
-> > -                     page_counter_uncharge(&old->memsw, stock->nr_pages);
-> > -             css_put_many(&old->css, stock->nr_pages);
-> > +             cancel_charge(old, stock->nr_pages);
-> >               stock->nr_pages = 0;
-> >       }
-> >       stock->cached = NULL;
-> > @@ -2133,6 +2131,11 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-> >       struct memcg_stock_pcp *stock;
-> >       unsigned long flags;
-> >
-> > +     if (unlikely(!mem_cgroup_online(memcg))) {
-> > +             cancel_charge(memcg, nr_pages);
-> > +             return;
-> > +     }
->
-> I'm slightly concerned about this part. Do we really need it?
-> The number of "zombies" which we can pin is limited by the number of CPUs,
-> and it will drop fast if there is any load on the machine.
->
-> If we skip offline memcgs, it can slow down charging/uncharging of skmem,
-> which might be a problem, if the socket is in active use by an other cgroup.
-> Honestly, I'd drop this part.
->
 
-Sure, I will wait for comments from others and then send the v2 without this.
 
-Shakeel
+
+
+> On Apr 19, 2019, at 1:54 PM, Jethro Beekman <jethro@fortanix.com> wrote:
+>=20
+>> On 2019-04-19 13:50, Thomas Gleixner wrote:
+>>> On Fri, 19 Apr 2019, Jethro Beekman wrote:
+>>>> On 2019-04-19 13:39, Thomas Gleixner wrote:
+>>>>> On Fri, 19 Apr 2019, Jethro Beekman wrote:
+>>>>>=20
+>>>>>> On 2019-04-19 08:27, Andy Lutomirski wrote:
+>>>>>> There are many,
+>>>>>> many Linux systems that enforce a policy that *all* executable text
+>>>>>> needs to come from a verified source.  On these systems, you can't
+>>>>>> mmap some writable memory, write to it, and then change it to
+>>>>>> executable.
+>>>>>=20
+>>>>> How is this implemented on those systems? AFAIK there's no kernel conf=
+ig
+>>>>> option that changes the semantics of mmap as you describe.
+>>>>=20
+>>>> That has nothing to do with mmap() semantics. You mmap() writeable memo=
+ry
+>>>> and then you change the permissions via mprotect(). mprotect() calls in=
+to
+>>>> LSM and depending on policy and security model this will reject the
+>>>> request.
+>>>>=20
+>>>> Andy was pointing out that the SGX ioctl bypasses the LSM mechanics whi=
+ch
+>>>> is obviously a bad thing.
+>>>=20
+>>> We could modify the driver such that when you call ioctl EADD, the page
+>>> table permissions need to be the PAGEINFO.SECINFO.FLAGS | PROT_WRITE,
+>>> otherwise you get EPERM or so. After EADD, if you want, you can restrict=
+
+>>> the page table permissions again using mprotect but the page table
+>>> permissions don't really matter for SGX.
+>>=20
+>> And the point of that is? That you still can cirumvent LSM for feeding
+>> executable code into SGX.
+>=20
+> How? LSM would see that you're trying to map a page RWX so you can do
+> your ioctl?
+
+With plain mmap() + mprotect(), the LSM will prevent you from making memory t=
+hat *was* writable executable.  This is by design and SELinux supports it.  I=
+ don=E2=80=99t remember the name of the associated SELinux permission off th=
+e top of my head.
+
+If we start enforcing equivalent rules on SGX, then the current API will sim=
+ply not allow enclaves to be loaded =E2=80=94 no matter how you slice it, lo=
+ading an enclave with the current API is indistinguishable from making arbit=
+rary data executable.
+
+Put another way, you can compile your enclave, ship it as a file, and get it=
+ appropriately verified (by LSM attribute, IMA, dm-verity, whatever) and run=
+ it, but, with the current API, the kernel has no way of knowing that the us=
+erspace enclave loader is actually reading it from the file in question.
+
+So I think we need to work on the API.
+
+>=20
+>> No, we are not making special cases and exceptions for SGX.
+>=20
+> Maybe I didn't express myself clearly? I don't think I was suggesting
+> anything like that.
+>=20
+> --
+> Jethro Beekman | Fortanix
