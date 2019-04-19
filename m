@@ -2,126 +2,110 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C3AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34E9C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53229222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804F2222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCvw4Vlg"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OKc4G/Sl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfDSSU1 (ORCPT
+        id S1726272AbfDSSUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:20:27 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46286 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfDSSUU (ORCPT
+        Fri, 19 Apr 2019 14:20:25 -0400
+Received: from condef-05.nifty.com ([202.248.20.70]:51348 "EHLO
+        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbfDSSUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:20:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s24so4919835otk.13;
-        Fri, 19 Apr 2019 11:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ipjuS9qwCBATwNCfiYQ7UMxrBp0CW7IGZyik2RLkA8k=;
-        b=BCvw4Vlg+myPyQWBJ2S3QoHoQcZKQVipkBr29A0k8XZovUaQSdNFIbceNqG82T02CQ
-         KEC+jflXwJqTev+PKU4uJrmlHB/VSKdv42J/kXoQDVkKYl8nM14rUMcoiCp9Eev3Lvvt
-         Rq60STu0ds5xhk/B+nJgGJe+3WI/RgSgkt8m3rzjJC7yOg6Gc1Y/D3Pp9bSG0xeDXil4
-         24admgq16mUBdqzqaYjpQkE03jqAB8LKbvZnY7o0hwArtHc5U+Ib6UTaE0Myiyi+Ez4B
-         7dWe1+zJSzNUk32+Ik4CBOkCXMHHy5W3Z9e6HQY+uPOV19vt+KmD9R5ORsGiYGnGlFV7
-         Lq+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ipjuS9qwCBATwNCfiYQ7UMxrBp0CW7IGZyik2RLkA8k=;
-        b=L2FHZZhRTEn1VUHBBhmQXpmb5qSPYcMdCLKOvpDl6k2yepSk6m2RLup9q4aMcdariP
-         uiO3pgxK0LQqHGgrMMaE12ggzdCBtkziCIMFrjOX0BrOHaE6xkvuY9rMWaWLz0AI8uQR
-         kwZD6LY3429/LfsYPh3ptHknoaXjMAQf86Rk9k9HwLBUw31ZeCGqN74Uvt5H4Fo4JsZO
-         ltqwx81OeXHqAC9/yjDHk6D1yvt4XhLFqan1rxsFV0SuYdXr4yZJeLVDE4lW+NgzVu3F
-         DXd99b8kRUlMDbQxFhv+7mjoWnAgPFJe7wwk8ZiAVoUHwGIbmKmOqcCppmZ5XUDPzmXD
-         9cNg==
-X-Gm-Message-State: APjAAAViuHCa7U8tsIzfkdrzo3ObrWOo05EvJGuLicGScW0TWqqaYRhA
-        8YCW6vdhMwyJW66piApwDMVIYLtTKV8=
-X-Google-Smtp-Source: APXvYqzZ8xyGTM3ZMXaIL3XSTamVAkCAEfCVf7lu1O9Ot6N30o43UgnFX8RvXrV7bMbRKOsacZGq3g==
-X-Received: by 2002:a9d:19cd:: with SMTP id k71mr2433184otk.267.1555687368735;
-        Fri, 19 Apr 2019 08:22:48 -0700 (PDT)
-Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id y9sm1981723otk.20.2019.04.19.08.22.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 08:22:47 -0700 (PDT)
-From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
-To:     bhelgaas@google.com
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] PCI: pciehp: Do not turn off slot if presence comes up after link
-Date:   Fri, 19 Apr 2019 10:22:22 -0500
-Message-Id: <20190419152238.12251-1-mr.nuke.me@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190419000148.GI126710@google.com>
-References: <20190419000148.GI126710@google.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 19 Apr 2019 14:20:21 -0400
+Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-05.nifty.com with ESMTP id x3J9nQRD007627;
+        Fri, 19 Apr 2019 18:49:26 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x3J9mDiO012304;
+        Fri, 19 Apr 2019 18:48:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3J9mDiO012304
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555667299;
+        bh=eBbK5bqyHyYLvrp0h+N2R8GVzQgJi3T0h1j8WWECYuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OKc4G/SlCAf7HykNHZVlamSTNz1No39oMgc65nQjRDTm1rJqcc1jfITtM8UkGJeeU
+         qObhbfjNVkPa4IwDzwkf26u4nAU3hKpzI+J6tQu3ZZdflpufZc02ms3G7P1pYc0JGU
+         U7qK6j+UkZyyoUraiWV1lZJhK0+XIeylH+Mn3c3m1E09QsodghVCaNWl1cuXrgNz8b
+         5DldkJUE5/wxVWeRLc8etHsv7i3LuWfHrI9fqz+Y0tsYIthnhw01Jh2NIdTZmBrMN+
+         7s8scZU2FDjhEEnGTf3RMaDna+3ZzgRUv3OjtWHIVq8LHNa1hTWHTHXXab/BDM1FmT
+         yllXWqWf+S/IQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 03/11] MIPS: mark mult_sh_align_mod() as __always_inline
+Date:   Fri, 19 Apr 2019 18:47:46 +0900
+Message-Id: <20190419094754.24667-4-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+References: <20190419094754.24667-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the old PCIe spec, PDS would always have to come up with
-or before DLLLA. For various reasons, not all OEMs followed this
-requirement. As a result, in PCIe 4.0(*), there is a new way to disable
-in-band presence reporting, such that PDS always reports the status of
-the out-of-band presence (if implemented).
+This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+place. We need to eliminate potential issues beforehand.
 
-For us, this means it is legal to get a Card Present event after the
-link is active, and the driver was loaded. This causes an erroneous
-removal of the device driver, followed by immediate re-probing.
+If it is enabled for mips, the following error is reported:
 
-In a fully PCIe-compliant world, we could leave inband presence
-enabled and not require any software changes. However, certain OEMs
-simply disable inband presence without implementing the requisite
-query and control bits. I present two solutions to resolve this.
+arch/mips/kernel/cpu-bugs64.c: In function 'mult_sh_align_mod.constprop':
+arch/mips/kernel/cpu-bugs64.c:33:2: error: asm operand 1 probably doesn't match constraints [-Werror]
+  asm volatile(
+  ^~~
+arch/mips/kernel/cpu-bugs64.c:33:2: error: asm operand 1 probably doesn't match constraints [-Werror]
+  asm volatile(
+  ^~~
+arch/mips/kernel/cpu-bugs64.c:33:2: error: impossible constraint in 'asm'
+  asm volatile(
+  ^~~
+arch/mips/kernel/cpu-bugs64.c:33:2: error: impossible constraint in 'asm'
+  asm volatile(
+  ^~~
 
-The first and last patch in the series are required. Of the remaining
-two, only one is required to complete the series. Since we don't yet have
-a go/no-go on which method to use, both solutions are included:
- - 2/4: Try to wait for PDS _before_ loading the driver
- - 3/4: Load as usual, and recognize the delayed PDS event as such
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-(*) ECN was approved in Nov 2018, and is normative spec text. A lot of
-the leaked PCIe 4.0 specs do not have this change.
+Changes in v2:
+  - split into a separate patch
 
-Changes since v2:
- * Dropped [RFC] from title
- * Addressed style issue found by Lukas
+ arch/mips/kernel/cpu-bugs64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Alexandru Gagniuc (4):
-  PCI: hotplug: Add support for disabling in-band presence
-  PCI: pciehp: Do not turn off slot if presence comes up after link
-  PCI: hotplug: Wait for PDS when in-band presence is disabled
-  PCI: hotplug: Add quirk For Dell nvme pcie switches
-
- drivers/pci/hotplug/pciehp.h      |  1 +
- drivers/pci/hotplug/pciehp_ctrl.c | 24 ++++++++++++++
- drivers/pci/hotplug/pciehp_hpc.c  | 52 ++++++++++++++++++++++++++++++-
- include/linux/pci.h               |  1 +
- include/uapi/linux/pci_regs.h     |  2 ++
- 5 files changed, 79 insertions(+), 1 deletion(-)
-
+diff --git a/arch/mips/kernel/cpu-bugs64.c b/arch/mips/kernel/cpu-bugs64.c
+index bada74af7641..c04b97aace4a 100644
+--- a/arch/mips/kernel/cpu-bugs64.c
++++ b/arch/mips/kernel/cpu-bugs64.c
+@@ -42,8 +42,8 @@ static inline void align_mod(const int align, const int mod)
+ 		: "n"(align), "n"(mod));
+ }
+ 
+-static inline void mult_sh_align_mod(long *v1, long *v2, long *w,
+-				     const int align, const int mod)
++static __always_inline void mult_sh_align_mod(long *v1, long *v2, long *w,
++					      const int align, const int mod)
+ {
+ 	unsigned long flags;
+ 	int m1, m2;
 -- 
-2.20.1
+2.17.1
 
