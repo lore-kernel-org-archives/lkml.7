@@ -2,125 +2,97 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDD4C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59F9C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B85A205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9377C205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSHSNKKL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNzieVOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfDSS6X (ORCPT
+        id S1728606AbfDSS6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:58:23 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46139 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbfDSS6W (ORCPT
+        Fri, 19 Apr 2019 14:58:32 -0400
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:35520 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727517AbfDSS6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:58:22 -0400
-Received: by mail-yw1-f66.google.com with SMTP id u3so1707496ywa.13;
-        Fri, 19 Apr 2019 11:58:21 -0700 (PDT)
+        Fri, 19 Apr 2019 14:58:32 -0400
+Received: by mail-pl1-f171.google.com with SMTP id w24so2982451plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:58:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4khKcbPHbyYmHxfaGSQOC6E3MogU3rXvT1zdzGYqzyQ=;
-        b=GSHSNKKLkKCvhgOu+BiCf5EWjajcbAZACGOUVS7wVUI3xuW/zap6QkBSpO62OJXgmc
-         xmj8u/L6zLZ51n3S+HCOxXSXB3M/lgVyR9puo5iaAP39xoQSkQc5nXj/05fp0viQxMQa
-         0Z/JBcVPJLihLBY6O1Eee5o1iIJLZNTe4Fft+FxUoWSxgkfcR9lCxZ16HqS9NSBytOCl
-         zjoNMY7xn1muS3HTGdnF/bH9b3Bq/QCuXBMuigH00bXIvPBKpOYzb9x8INmKPKM3sKBl
-         vUoqFzBKAM+RkE1mrGbreoKLJVf51iPoWrl4uQacKrflTSxArr4XK/X6dXUQrqr+9mz9
-         Kjdg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/smgrwNL9Ro4smy+pIRIb1DughZuGs785pN/B2Zi9BQ=;
+        b=jNzieVOpsTV/9e0hZwK9DaR8wPUHEAhheEjR8bvSNIV1mBeCWXLK0sx6WOPCvq8DWP
+         7sj0IGesfW/sksf7f/GLHpr1J+wxGYumpEmMSEwUMQ1LyMUL2myckX/Obb18iUqX4tyP
+         nnlNvp1owxRFMGQ1tepIGYli2ITfGe1ZMBBmsCulDUlfMA0FZ75KUoYZWVJjrTDJlc9u
+         WuHcEPNXvWjjJAV74KkUdSfEJDLI8YjXrFtYejL5P2aofCB/hFaGPpyINL21YJk9zymJ
+         Vnt+OojkY3BZKcdXWRcUdG6yrXZ3srjeWHJXCewgDo8KfcA9pTHSd4oWw3sic+PwFUus
+         lgrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4khKcbPHbyYmHxfaGSQOC6E3MogU3rXvT1zdzGYqzyQ=;
-        b=EoFakf3s0RUP9kuNNXlYruS2U/+mjDKY/eoGhydKNaG7sKSTPt8HuwT/73LQUTWspN
-         krfm83Cv3QpeEwhD/yLW4omPxbAAgLmdyX323qSLhCcZVmUrt/071XZs2TnB91AB8Evl
-         jZnUJWuOFMzowM5pHtnj3gKUnMmf+15DEfWJSFP4rV4wUPVN6FvbAj4F5aQUjJokEHYz
-         ynclXULtDa5LGox38RUbQGRvsZqnPVfnM1vdJN2e+NcGA9F4+P96AErzzf2es+EJq666
-         Z/YiEWh9157FYv1xmQdQwyjZG5cvvsG/A1jnAH4vuHjcZsd9eCdt3sPsv+uzZJy1BBsm
-         dc+g==
-X-Gm-Message-State: APjAAAW9rRQibYnxyc7K4KsTOm3+Npv4aM+tJCwFLRHzUG8cHF9MVdlG
-        ic1ZklsVi7C2RgwOKerk76qikfnta0QHKk29TA0=
-X-Google-Smtp-Source: APXvYqzVfO+vGXk3ZRougbn36Kj+DVAb/BCfsdmd3SiG88iGBrpQXJxiytkAYc2BBwgmGU1v+2E0Otd0ba0NR0+UWdI=
-X-Received: by 2002:a81:a6c5:: with SMTP id d188mr4406292ywh.46.1555700301010;
- Fri, 19 Apr 2019 11:58:21 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/smgrwNL9Ro4smy+pIRIb1DughZuGs785pN/B2Zi9BQ=;
+        b=Azs9jmcKbyqxygggPwhMhboElu65kCULEZy3j01hu6zMwJOezhemgyh7+izdgEugGB
+         Bx2F1V8utaBAVvLuBvggb6Yk/C4FCpSRizulyvulu3vS8NaNmUnPh++YIyjhBtTT6YKY
+         EWaBRdFUZ3VP0LNbUDRg+BllvXa2YVOfD1Q1NIDrXM8Jdl3DfjER+reT0744Cso7FfnD
+         H0OMAOr79FlVPPyHiKBgfM4JpxCy1dWT4BcJQ2deMVK2WP/JUb+AAsilR5el2xJHkWe5
+         J5A0b09tQO6fqycYTXJ7yuBRhlKphmUX9AArvm/cmr5PiCIrNeaWQZ9/wxRKLRCgoOYc
+         9SGA==
+X-Gm-Message-State: APjAAAVDKpevo0gs49H1Lih5cI900/SWcO/rlvCeC6MnfK/mfX3xyB9H
+        6hQRINEPaEM5RShqlwgiRPJPPn+t
+X-Google-Smtp-Source: APXvYqxu0AYyKOqFHsRy6w/hRtcq1zY7cUnWr526D4YGfCmPxmglbud6ng9MVob2RfA2Kskvi/X4+Q==
+X-Received: by 2002:a17:902:8a8b:: with SMTP id p11mr3236687plo.227.1555673723814;
+        Fri, 19 Apr 2019 04:35:23 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id k9sm5553457pga.22.2019.04.19.04.35.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 04:35:22 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 19 Apr 2019 21:33:26 +0900
+To:     yamada.masahiro@socionext.com
+Cc:     sergey.senozhatsky.work@gmail.com, linux-kernel@vger.kernel.org,
+        sergey.senozhatsky@gmail.com
+Subject: Re: [next] kbuild: use $(srctree) instead of KBUILD_SRC to check
+ out-of-tree build
+Message-ID: <20190419123326.GA476@tigerII.localdomain>
+References: <20190419083339.GA8504@jagdpanzerIV>
+ <43c5127830dd44e0817c2aa1906fe515@SOC-EX01V.e01.socionext.com>
 MIME-Version: 1.0
-References: <20190411154534.25563-1-peron.clem@gmail.com> <20190411154534.25563-3-peron.clem@gmail.com>
-In-Reply-To: <20190411154534.25563-3-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 19 Apr 2019 21:00:42 +0200
-Message-ID: <CAJiuCcc2CrEBQEoon9p=pitrjqoy6tzOSjhjBY3=oXNCHdiZ5A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: h6: add r_watchog node
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43c5127830dd44e0817c2aa1906fe515@SOC-EX01V.e01.socionext.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On (04/19/19 08:59), yamada.masahiro@socionext.com wrote:
+> > It seems that commit a9a49c2ad9b9b8 (linux-next) breaks ./scripts/tags.sh
+> > on my system. It scans, basically, my entire drive now (including the
+> > root partition):
+> > 
+> > $ ./scripts/tags.sh tags
+> 
+> I did not know this script is run directly
+> because I expected people were using 'make tags'.
 
-On Thu, 11 Apr 2019 at 17:34, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Allwinner H6 has a r_watchdog similar to A64.
->
-> Declare it in the device-tree.
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index 5c2f5451227b..66dc684a378e 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -622,6 +622,13 @@
->                         #reset-cells =3D <1>;
->                 };
->
-> +               r_watchdog: watchdog@7020400 {
-> +                       compatible =3D "allwinner,sun50i-a64-wdt",
-> +                                    "allwinner,sun6i-a31-wdt";
-> +                       reg =3D <0x07020400 0x20>;
-> +                       interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
+:) I always run it directly, didn't even know there was 'make tags'
 
-I have set the same compatible as A64 because regarding the User
-Manual they have exactly the same memory mapping.
-However we don't know really if it's the same IP version, maybe there
-will be an errata one day.
-So I would like to know if it's better to define the h6-wdt also
-  compatible =3D  "allwinner,sun50i-h6-wdt", "allwinner,sun50i-a64-wdt",
-                                 "allwinner,sun6i-a31-wdt";
+> It is easy to fix, though.
 
-I would say Yes, but with this logic we would have to had a new
-compatible each time there is a  new SoC.
+Works fine.
 
-Thanks,
-Clement
+Tested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-> +
->                 r_intc: interrupt-controller@7021000 {
->                         compatible =3D "allwinner,sun50i-h6-r-intc",
->                                      "allwinner,sun6i-a31-r-intc";
-> --
-> 2.17.1
->
+	-ss
