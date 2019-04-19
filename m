@@ -2,390 +2,187 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C016AC282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E05C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C8920645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:08:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="a9LjY2Gp"
+	by mail.kernel.org (Postfix) with ESMTP id 7943120693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfDSTI4 (ORCPT
+        id S1729783AbfDSTI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:08:56 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38523 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbfDSTIy (ORCPT
+        Fri, 19 Apr 2019 15:08:59 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:41308 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbfDSTIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:08:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w15so7289926wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9+cZyn0aiJ4QNXWPT3DTr+vUc40+QQKBMepH+j8cOt8=;
-        b=a9LjY2GpaZ8xAkxsorYOAWht6VLR2Fo7STTt2H7L5AAV5i5nZAjAdcKSdgJUr2zdzU
-         gO6IdfMS+A1xIDGKKMwxYW7c5p6V9PiEoHfB/TKdjYWyCpZ8x+rUpWVDKFLJLetxEbCa
-         cvGkS+Bc/Syyt6rdel6y07j0YPuAFfNThikEQsOrYN6XDVPiW8gc9qtS9Ml4nN2rtyL1
-         zYJAaw+lfCOcbdTCo9SWn6N3C1j7h2pGmfJWF67Ss2L0/y8Ums+MmI7fNhszk0HmnRkl
-         CCIarIwKZWN+JL8h+9Ee9aDsTZMgfX8MY0AVWZbZshD8vtw+aQLKkiwiidfqUbVBjTzj
-         4+bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9+cZyn0aiJ4QNXWPT3DTr+vUc40+QQKBMepH+j8cOt8=;
-        b=GYNJewI7V2mLK+wUTD0DLTCe9kG7aGQR06/vrV29R8DTlmEEYX59QCi+HNeGiwzq09
-         +Mt08nvzEgqlpC2UFe8kKfO+Xvl63coFPFlmgMlr5jVRoDgjfCaXeCfMFoKAMcAkNk8L
-         cZPCpQBNlQwhjJEfG2UBXnf/naEJ14FOYzNzfpA3upggvoYv42YIxE75VXnNGQJOUSrf
-         tPmypEIWsP9WdwJ1hD6CxDo5VgDuDIyH7Intc8ki/a31A+lvamLxLm2VZkIOqKfcd57x
-         kFYmev+f08oMDtiYsUCSum0oBPRKOCkZWMyoo7G3gQIcxORRJxYq/Q0LucDcGFrPiF4o
-         XWGQ==
-X-Gm-Message-State: APjAAAUCWtBiKRpCufe6ThYnypWdC712T9OV0Ist6vmiR7aHAtGeFOyK
-        rBgC/t7G2od7hq/JjWtn7pca6A==
-X-Google-Smtp-Source: APXvYqzwzhAzAEZB5n/R6Ql6/S3Cyf6apJpY8nWLv8E/XzatRI4VEFaQMEoJ3DxRiscIJFHMkmurKQ==
-X-Received: by 2002:a7b:cc91:: with SMTP id p17mr2518172wma.38.1555675764554;
-        Fri, 19 Apr 2019 05:09:24 -0700 (PDT)
-Received: from localhost.localdomain ([185.197.132.10])
-        by smtp.gmail.com with ESMTPSA id f128sm6464574wme.28.2019.04.19.05.09.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 05:09:23 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, oleg@redhat.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org,
-        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v3 1/4] Make anon_inodes unconditional
-Date:   Fri, 19 Apr 2019 14:09:01 +0200
-Message-Id: <20190419120904.27502-2-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190419120904.27502-1-christian@brauner.io>
-References: <20190419120904.27502-1-christian@brauner.io>
+        Fri, 19 Apr 2019 15:08:53 -0400
+Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 7A49D3A41CA
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:52:30 +0000 (UTC)
+X-Originating-IP: 90.88.160.238
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 36F7BFF810;
+        Fri, 19 Apr 2019 08:52:28 +0000 (UTC)
+Message-ID: <8417895942db33dcf7c63b67a4db2786638df79b.camel@bootlin.com>
+Subject: Re: [PATCH 4/4] drm/v3d: Fix and extend MMU error handling.
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        david.emett@broadcom.com, thomas.spurden@broadcom.com
+Date:   Fri, 19 Apr 2019 10:52:28 +0200
+In-Reply-To: <20190419001014.23579-4-eric@anholt.net>
+References: <20190419001014.23579-1-eric@anholt.net>
+         <20190419001014.23579-4-eric@anholt.net>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+Hi,
 
-Make the anon_inodes facility unconditional so that it can be used by core
-VFS code and pidfd code.
+On Thu, 2019-04-18 at 17:10 -0700, Eric Anholt wrote:
+> We were setting the wrong flags to enable PTI errors, so we were
+> seeing reads to invalid PTEs show up as write errors.  Also, we
+> weren't turning on the interrupts.  The AXI IDs we were dumping
+> included the outstanding write number and so they looked basically
+> random.  And the VIO_ADDR decoding was based on the MMU VA_WIDTH for
+> the first platform I worked on and was wrong on others.  In short,
+> this was a thorough mess from early HW enabling.
+> 
+> Tested on V3D 4.1 and 4.2 with intentional L2T, CLE, PTB, and TLB
+> faults.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[christian@brauner.io: adapt commit message to mention pidfds]
-Signed-off-by: Christian Brauner <christian@brauner.io>
----
-/* changelog */
-v1: patch unchanged
-v2: patch unchanged
-v3: patch unchanged
----
- arch/arm/kvm/Kconfig       |  1 -
- arch/arm64/kvm/Kconfig     |  1 -
- arch/mips/kvm/Kconfig      |  1 -
- arch/powerpc/kvm/Kconfig   |  1 -
- arch/s390/kvm/Kconfig      |  1 -
- arch/x86/Kconfig           |  1 -
- arch/x86/kvm/Kconfig       |  1 -
- drivers/base/Kconfig       |  1 -
- drivers/char/tpm/Kconfig   |  1 -
- drivers/dma-buf/Kconfig    |  1 -
- drivers/gpio/Kconfig       |  1 -
- drivers/iio/Kconfig        |  1 -
- drivers/infiniband/Kconfig |  1 -
- drivers/vfio/Kconfig       |  1 -
- fs/Makefile                |  2 +-
- fs/notify/fanotify/Kconfig |  1 -
- fs/notify/inotify/Kconfig  |  1 -
- init/Kconfig               | 10 ----------
- 18 files changed, 1 insertion(+), 27 deletions(-)
+Didn't check the docs but looks sane too!
 
-diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
-index 3f5320f46de2..f591026347a5 100644
---- a/arch/arm/kvm/Kconfig
-+++ b/arch/arm/kvm/Kconfig
-@@ -22,7 +22,6 @@ config KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
- 	depends on MMU && OF
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select ARM_GIC
- 	select ARM_GIC_V3
- 	select ARM_GIC_V3_ITS
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index a3f85624313e..a67121d419a2 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -23,7 +23,6 @@ config KVM
- 	depends on OF
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
- 	select KVM_MMIO
-diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
-index 4528bc9c3cb1..eac25aef21e0 100644
---- a/arch/mips/kvm/Kconfig
-+++ b/arch/mips/kvm/Kconfig
-@@ -21,7 +21,6 @@ config KVM
- 	depends on MIPS_FP_SUPPORT
- 	select EXPORT_UASM
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select KVM_MMIO
-diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
-index bfdde04e4905..f53997a8ca62 100644
---- a/arch/powerpc/kvm/Kconfig
-+++ b/arch/powerpc/kvm/Kconfig
-@@ -20,7 +20,6 @@ if VIRTUALIZATION
- config KVM
- 	bool
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_EVENTFD
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select SRCU
-diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-index 767453faacfc..1816ee48eadd 100644
---- a/arch/s390/kvm/Kconfig
-+++ b/arch/s390/kvm/Kconfig
-@@ -21,7 +21,6 @@ config KVM
- 	prompt "Kernel-based Virtual Machine (KVM) support"
- 	depends on HAVE_KVM
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select HAVE_KVM_EVENTFD
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5ad92419be19..7a70fb58b2d0 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -44,7 +44,6 @@ config X86
- 	#
- 	select ACPI_LEGACY_TABLES_LOOKUP	if ACPI
- 	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
--	select ANON_INODES
- 	select ARCH_32BIT_OFF_T			if X86_32
- 	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_CLOCKSOURCE_INIT
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 72fa955f4a15..fc042419e670 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -27,7 +27,6 @@ config KVM
- 	depends on X86_LOCAL_APIC
- 	select PREEMPT_NOTIFIERS
- 	select MMU_NOTIFIER
--	select ANON_INODES
- 	select HAVE_KVM_IRQCHIP
- 	select HAVE_KVM_IRQFD
- 	select IRQ_BYPASS_MANAGER
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 059700ea3521..03f067da12ee 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -174,7 +174,6 @@ source "drivers/base/regmap/Kconfig"
- config DMA_SHARED_BUFFER
- 	bool
- 	default n
--	select ANON_INODES
- 	select IRQ_WORK
- 	help
- 	  This option enables the framework for buffer-sharing between
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 536e55d3919f..f3e4bc490cf0 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -157,7 +157,6 @@ config TCG_CRB
- config TCG_VTPM_PROXY
- 	tristate "VTPM Proxy Interface"
- 	depends on TCG_TPM
--	select ANON_INODES
- 	---help---
- 	  This driver proxies for an emulated TPM (vTPM) running in userspace.
- 	  A device /dev/vtpmx is provided that creates a device pair
-diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-index 2e5a0faa2cb1..3fc9c2efc583 100644
---- a/drivers/dma-buf/Kconfig
-+++ b/drivers/dma-buf/Kconfig
-@@ -3,7 +3,6 @@ menu "DMABUF options"
- config SYNC_FILE
- 	bool "Explicit Synchronization Framework"
- 	default n
--	select ANON_INODES
- 	select DMA_SHARED_BUFFER
- 	---help---
- 	  The Sync File Framework adds explicit syncronization via
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526a771f..0f91600c27ae 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -12,7 +12,6 @@ config ARCH_HAVE_CUSTOM_GPIO_H
- 
- menuconfig GPIOLIB
- 	bool "GPIO Support"
--	select ANON_INODES
- 	help
- 	  This enables GPIO support through the generic GPIO library.
- 	  You only need to enable this, if you also want to enable
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index d08aeb41cd07..1dec0fecb6ef 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -4,7 +4,6 @@
- 
- menuconfig IIO
- 	tristate "Industrial I/O support"
--	select ANON_INODES
- 	help
- 	  The industrial I/O subsystem provides a unified framework for
- 	  drivers for many different types of embedded sensors using a
-diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
-index a1fb840de45d..d318bab25860 100644
---- a/drivers/infiniband/Kconfig
-+++ b/drivers/infiniband/Kconfig
-@@ -25,7 +25,6 @@ config INFINIBAND_USER_MAD
- 
- config INFINIBAND_USER_ACCESS
- 	tristate "InfiniBand userspace access (verbs and CM)"
--	select ANON_INODES
- 	depends on MMU
- 	---help---
- 	  Userspace InfiniBand access support.  This enables the
-diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-index 9de5ed38da83..3798d77d131c 100644
---- a/drivers/vfio/Kconfig
-+++ b/drivers/vfio/Kconfig
-@@ -22,7 +22,6 @@ menuconfig VFIO
- 	tristate "VFIO Non-Privileged userspace driver framework"
- 	depends on IOMMU_API
- 	select VFIO_IOMMU_TYPE1 if (X86 || S390 || ARM || ARM64)
--	select ANON_INODES
- 	help
- 	  VFIO provides a framework for secure userspace device drivers.
- 	  See Documentation/vfio.txt for more details.
-diff --git a/fs/Makefile b/fs/Makefile
-index 427fec226fae..35945f8139e6 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -25,7 +25,7 @@ obj-$(CONFIG_PROC_FS) += proc_namespace.o
- 
- obj-y				+= notify/
- obj-$(CONFIG_EPOLL)		+= eventpoll.o
--obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
-+obj-y				+= anon_inodes.o
- obj-$(CONFIG_SIGNALFD)		+= signalfd.o
- obj-$(CONFIG_TIMERFD)		+= timerfd.o
- obj-$(CONFIG_EVENTFD)		+= eventfd.o
-diff --git a/fs/notify/fanotify/Kconfig b/fs/notify/fanotify/Kconfig
-index 735bfb2e9190..521dc91d2cb5 100644
---- a/fs/notify/fanotify/Kconfig
-+++ b/fs/notify/fanotify/Kconfig
-@@ -1,7 +1,6 @@
- config FANOTIFY
- 	bool "Filesystem wide access notification"
- 	select FSNOTIFY
--	select ANON_INODES
- 	select EXPORTFS
- 	default n
- 	---help---
-diff --git a/fs/notify/inotify/Kconfig b/fs/notify/inotify/Kconfig
-index b981fc0c8379..0161c74e76e2 100644
---- a/fs/notify/inotify/Kconfig
-+++ b/fs/notify/inotify/Kconfig
-@@ -1,6 +1,5 @@
- config INOTIFY_USER
- 	bool "Inotify support for userspace"
--	select ANON_INODES
- 	select FSNOTIFY
- 	default y
- 	---help---
-diff --git a/init/Kconfig b/init/Kconfig
-index 4592bf7997c0..be8f97e37a76 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1171,9 +1171,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
- config SYSCTL
- 	bool
- 
--config ANON_INODES
--	bool
--
- config HAVE_UID16
- 	bool
- 
-@@ -1378,14 +1375,12 @@ config HAVE_FUTEX_CMPXCHG
- config EPOLL
- 	bool "Enable eventpoll support" if EXPERT
- 	default y
--	select ANON_INODES
- 	help
- 	  Disabling this option will cause the kernel to be built without
- 	  support for epoll family of system calls.
- 
- config SIGNALFD
- 	bool "Enable signalfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the signalfd() system call that allows to receive signals
-@@ -1395,7 +1390,6 @@ config SIGNALFD
- 
- config TIMERFD
- 	bool "Enable timerfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the timerfd() system call that allows to receive timer
-@@ -1405,7 +1399,6 @@ config TIMERFD
- 
- config EVENTFD
- 	bool "Enable eventfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the eventfd() system call that allows to receive both
-@@ -1516,7 +1509,6 @@ config KALLSYMS_BASE_RELATIVE
- # syscall, maps, verifier
- config BPF_SYSCALL
- 	bool "Enable bpf() system call"
--	select ANON_INODES
- 	select BPF
- 	select IRQ_WORK
- 	default n
-@@ -1533,7 +1525,6 @@ config BPF_JIT_ALWAYS_ON
- 
- config USERFAULTFD
- 	bool "Enable userfaultfd() system call"
--	select ANON_INODES
- 	depends on MMU
- 	help
- 	  Enable the userfaultfd() system call that allows to intercept and
-@@ -1600,7 +1591,6 @@ config PERF_EVENTS
- 	bool "Kernel performance events and counters"
- 	default y if PROFILING
- 	depends on HAVE_PERF_EVENTS
--	select ANON_INODES
- 	select IRQ_WORK
- 	select SRCU
- 	help
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Cheers,
+
+Paul
+
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>  drivers/gpu/drm/v3d/v3d_drv.c  |  1 +
+>  drivers/gpu/drm/v3d/v3d_drv.h  |  2 ++
+>  drivers/gpu/drm/v3d/v3d_irq.c  | 31 +++++++++++++++++++++++++++----
+>  drivers/gpu/drm/v3d/v3d_mmu.c  |  7 +++++--
+>  drivers/gpu/drm/v3d/v3d_regs.h |  3 ++-
+>  5 files changed, 37 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
+> index 7ab36192e6bc..9ce2e4ef6c2a 100644
+> --- a/drivers/gpu/drm/v3d/v3d_drv.c
+> +++ b/drivers/gpu/drm/v3d/v3d_drv.c
+> @@ -494,6 +494,7 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
+>  	mmu_debug = V3D_READ(V3D_MMU_DEBUG_INFO);
+>  	dev->coherent_dma_mask =
+>  		DMA_BIT_MASK(30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_PA_WIDTH));
+> +	v3d->va_width = 30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_VA_WIDTH);
+>  
+>  	ident1 = V3D_READ(V3D_HUB_IDENT1);
+>  	v3d->ver = (V3D_GET_FIELD(ident1, V3D_HUB_IDENT1_TVER) * 10 +
+> diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
+> index 6d31a6a5a08e..64682923018d 100644
+> --- a/drivers/gpu/drm/v3d/v3d_drv.h
+> +++ b/drivers/gpu/drm/v3d/v3d_drv.h
+> @@ -63,6 +63,8 @@ struct v3d_dev {
+>  	 */
+>  	void *mmu_scratch;
+>  	dma_addr_t mmu_scratch_paddr;
+> +	/* virtual address bits from V3D to the MMU. */
+> +	int va_width;
+>  
+>  	/* Number of V3D cores. */
+>  	u32 cores;
+> diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
+> index fac3c542860b..268d8a889ac5 100644
+> --- a/drivers/gpu/drm/v3d/v3d_irq.c
+> +++ b/drivers/gpu/drm/v3d/v3d_irq.c
+> @@ -162,10 +162,33 @@ v3d_hub_irq(int irq, void *arg)
+>  		      V3D_HUB_INT_MMU_PTI |
+>  		      V3D_HUB_INT_MMU_CAP)) {
+>  		u32 axi_id = V3D_READ(V3D_MMU_VIO_ID);
+> -		u64 vio_addr = (u64)V3D_READ(V3D_MMU_VIO_ADDR) << 8;
+> -
+> -		dev_err(v3d->dev, "MMU error from client %d at 0x%08llx%s%s%s\n",
+> -			axi_id, (long long)vio_addr,
+> +		u64 vio_addr = ((u64)V3D_READ(V3D_MMU_VIO_ADDR) <<
+> +				(v3d->va_width - 32));
+> +		static const char *const v3d41_axi_ids[] = {
+> +			"L2T",
+> +			"PTB",
+> +			"PSE",
+> +			"TLB",
+> +			"CLE",
+> +			"TFU",
+> +			"MMU",
+> +			"GMP",
+> +		};
+> +		const char *client = "?";
+> +
+> +		V3D_WRITE(V3D_MMU_CTL,
+> +			  V3D_READ(V3D_MMU_CTL) & (V3D_MMU_CTL_CAP_EXCEEDED |
+> +						   V3D_MMU_CTL_PT_INVALID |
+> +						   V3D_MMU_CTL_WRITE_VIOLATION));
+> +
+> +		if (v3d->ver >= 41) {
+> +			axi_id = axi_id >> 5;
+> +			if (axi_id < ARRAY_SIZE(v3d41_axi_ids))
+> +				client = v3d41_axi_ids[axi_id];
+> +		}
+> +
+> +		dev_err(v3d->dev, "MMU error from client %s (%d) at 0x%llx%s%s%s\n",
+> +			client, axi_id, (long long)vio_addr,
+>  			((intsts & V3D_HUB_INT_MMU_WRV) ?
+>  			 ", write violation" : ""),
+>  			((intsts & V3D_HUB_INT_MMU_PTI) ?
+> diff --git a/drivers/gpu/drm/v3d/v3d_mmu.c b/drivers/gpu/drm/v3d/v3d_mmu.c
+> index 7a21f1787ab1..395e81d97163 100644
+> --- a/drivers/gpu/drm/v3d/v3d_mmu.c
+> +++ b/drivers/gpu/drm/v3d/v3d_mmu.c
+> @@ -69,10 +69,13 @@ int v3d_mmu_set_page_table(struct v3d_dev *v3d)
+>  	V3D_WRITE(V3D_MMU_PT_PA_BASE, v3d->pt_paddr >> V3D_MMU_PAGE_SHIFT);
+>  	V3D_WRITE(V3D_MMU_CTL,
+>  		  V3D_MMU_CTL_ENABLE |
+> -		  V3D_MMU_CTL_PT_INVALID |
+> +		  V3D_MMU_CTL_PT_INVALID_ENABLE |
+>  		  V3D_MMU_CTL_PT_INVALID_ABORT |
+> +		  V3D_MMU_CTL_PT_INVALID_INT |
+>  		  V3D_MMU_CTL_WRITE_VIOLATION_ABORT |
+> -		  V3D_MMU_CTL_CAP_EXCEEDED_ABORT);
+> +		  V3D_MMU_CTL_WRITE_VIOLATION_INT |
+> +		  V3D_MMU_CTL_CAP_EXCEEDED_ABORT |
+> +		  V3D_MMU_CTL_CAP_EXCEEDED_INT);
+>  	V3D_WRITE(V3D_MMU_ILLEGAL_ADDR,
+>  		  (v3d->mmu_scratch_paddr >> V3D_MMU_PAGE_SHIFT) |
+>  		  V3D_MMU_ILLEGAL_ADDR_ENABLE);
+> diff --git a/drivers/gpu/drm/v3d/v3d_regs.h b/drivers/gpu/drm/v3d/v3d_regs.h
+> index eda1e289976f..9bcb57781d31 100644
+> --- a/drivers/gpu/drm/v3d/v3d_regs.h
+> +++ b/drivers/gpu/drm/v3d/v3d_regs.h
+> @@ -152,7 +152,8 @@
+>  # define V3D_MMU_CTL_PT_INVALID_ABORT                  BIT(19)
+>  # define V3D_MMU_CTL_PT_INVALID_INT                    BIT(18)
+>  # define V3D_MMU_CTL_PT_INVALID_EXCEPTION              BIT(17)
+> -# define V3D_MMU_CTL_WRITE_VIOLATION                   BIT(16)
+> +# define V3D_MMU_CTL_PT_INVALID_ENABLE                 BIT(16)
+> +# define V3D_MMU_CTL_WRITE_VIOLATION                   BIT(12)
+>  # define V3D_MMU_CTL_WRITE_VIOLATION_ABORT             BIT(11)
+>  # define V3D_MMU_CTL_WRITE_VIOLATION_INT               BIT(10)
+>  # define V3D_MMU_CTL_WRITE_VIOLATION_EXCEPTION         BIT(9)
 -- 
-2.21.0
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
