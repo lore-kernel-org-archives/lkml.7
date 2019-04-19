@@ -2,592 +2,81 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DB7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D3CC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D050222CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D222F222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICphFjJ4"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="v8+q2DrJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfDSSXj (ORCPT
+        id S1727908AbfDSSX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:23:39 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35348 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbfDSSXi (ORCPT
+        Fri, 19 Apr 2019 14:23:58 -0400
+Received: from condef-10.nifty.com ([202.248.20.75]:46213 "EHLO
+        condef-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbfDSSXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:23:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y197so7194528wmd.0;
-        Fri, 19 Apr 2019 11:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=P+G/cM1XMdFmr7nxXY8x7jLLrqykm5jiI0k+mkReemo=;
-        b=ICphFjJ4rPYMTZ5aMn+G0o00FRP64fYiKNxU2uUcPMI01eR7dYlrsnhoqYedI2jnsJ
-         MCMiShLnRtGuG9Qn8BBN80xOOVL15efRdcczRWw+JUumCn7WsDaZ0Uw+uyWWUi/eM/tu
-         C76+VMSOWdd31AcBpoaV2AuWkMlvrkRGJC6C8zhC6qFKIQU+m41StFjCJODO0xl82ekH
-         X/fCdOdj4aIDYK7edqqrFYP9BtNiwf3VZTlX/L5nSFHpoHjDmXr2mPXj0UEwGo8cj5+Q
-         qN/RLmI1ylMxyhxQQatCkWJrigCoN3BKan5eY0Pi2Auj/cc1XBuodErHSezqyi0IG5id
-         sTiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P+G/cM1XMdFmr7nxXY8x7jLLrqykm5jiI0k+mkReemo=;
-        b=lz1IhOFMJ6IcEhUoEv/x8dyepaaOQQIkFUL+RfnVh8uES/A2RZpKCqxvFTFCrx6QUs
-         9W+J/CqwU1Ssw9p9X6MM0uIy85p2Xj/HT4aefpp+fUeT1hbQSdb/FQFuDG0vVzKXbvk0
-         rmpfXnUtKIzXhRGzfvCEuc15AOJ72DyPXLqAp3hIbkaKgfeqCC5trl88VtSvfnyVGNz8
-         0XF/nqED8pnkyJqQTRiYqI0ZUNUBx9jzHzykPqw2ZWQa8Kvr4wgTQTkN3SaKEZLjNfdL
-         OrudO59Tw4UbnDmfi8JTj/39aALKP32A3nK4IwlquJBmNAkt/ylMpOJvTUu8FD5ShYiP
-         sPKg==
-X-Gm-Message-State: APjAAAWXcg9WvhB0vBxs10QtNye3iy8CzX/XYSwT4M2aeMq7L6daEasZ
-        qluQ/uh0uJOGlJVT95uqOjxf9Z5GFUc=
-X-Google-Smtp-Source: APXvYqyN+qOIGiVXQS+Y8h1VqEqzcxF+rwcnV3nPDMhH4JbPGYhJwhwnC7XRXiHUgrgtLgghZDfjHw==
-X-Received: by 2002:a1c:6587:: with SMTP id z129mr2070015wmb.84.1555668872696;
-        Fri, 19 Apr 2019 03:14:32 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id t17sm3345222wrr.26.2019.04.19.03.14.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 03:14:32 -0700 (PDT)
-Subject: [PATCH v3 09/11] platform/x86: asus-wmi: Control RGB keyboard
- backlight
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
-Message-ID: <c953b43b-6186-77e9-54b1-b1cd1d7d1eb6@gmail.com>
-Date:   Fri, 19 Apr 2019 12:14:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 19 Apr 2019 14:23:54 -0400
+X-Greylist: delayed 408 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Apr 2019 14:23:53 EDT
+Received: from conuserg-12.nifty.com ([10.126.8.75])by condef-10.nifty.com with ESMTP id x3J5IK41026097;
+        Fri, 19 Apr 2019 14:18:20 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x3J5HXEU018278;
+        Fri, 19 Apr 2019 14:17:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x3J5HXEU018278
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555651054;
+        bh=hjC8BvtT+4tqs15iB8UW6C5JqDkO9HtBOxFweQyd4Y0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=v8+q2DrJ7yWiFFyqsE/DeebgJ1OvhyFakopqaSK2tarojcglHM90VaF0OE33scsNu
+         HHLnH48yRS9/U/MDAGJ6xvMDMPoCCR0FGEgGkfs8l5XUWIVAJMnRnU5plimjOpofhG
+         tBxG+4pQUK/jZm4Xi2NOjbyOF0IHBib2aD+fK9WgLq7XIDz8f2Nwc6oGD1/p+vPFSr
+         icU8rYvambdK4oHzTfolR7Qekq32YwsHvJPSPkj/ufpOAZozFuReZrEucNxccSrKKp
+         2TcLKr8irKpGxKiUKNefPvtuAy7y/J7neclAK2uaE+pvl1a6giZGtyn7xeC9p46y/w
+         n3zi/0LckjjGw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>
+Subject: [PATCH] net/mlx5e: remove meaningless CFLAGS_tracepoint.o
+Date:   Fri, 19 Apr 2019 14:17:31 +0900
+Message-Id: <20190419051731.15111-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WMI exposes two methods for controlling RGB keyboard backlight, which
-allows controlling:
-* RGB components in range 00 - ff,
-* Switch between 4 effects,
-* Switch between 3 effect speed modes,
-* Separately enable the backlight on boot, in the awake state (after driver
-  load), in sleep mode, and probably in something called shutdown mode (no
-  observable effects of enabling it are known so far).
+CFLAGS_tracepoint.o specifies CFLAGS for compiling tracepoint.c but
+it does not exist under drivers/net/ethernet/mellanox/mlx5/core/.
 
-The configuration should be written to several sysfs parameter buffers
-which are then written via WMI by writing either 1 or 2 to the "kbbl_set"
-parameter. When reading the buffers the last written value is returned.
+CFLAGS_tracepoint.o is unused.
 
-If the 2 is written to "kbbl_set", the parameters will be reset on reboot
-(temporary mode), 1 is permanent mode, parameters are retained.
-
-The calls use new 3-dword input buffer method call.
-
-The functionality is only enabled if corresponding DSTS methods return
-exact valid values.
-
-The following script demonstrates usage:
-
-echo Red [00 - ff]
-echo 33 > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_red
-echo Green [00 - ff]
-echo ff > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_green
-echo Blue [00 - ff]
-echo 0 > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_blue
-echo Mode: 0 - static color, 1 - breathing, 2 - color cycle, 3 - strobing
-echo 0 > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_mode
-echo Speed for modes 1 and 2: 0 - slow, 1 - medium, 2 - fast
-echo 0 > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_speed
-echo Enable: 02 - on boot, before module load, 08 - awake, 20 - sleep,
-echo 2a or ff to set all
-echo 2a > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_flags
-echo Save: 1 - permanently, 2 - temporarily, reset after reboot
-echo 1 > /sys/devices/platform/asus-nb-wmi/kbbl/kbbl_set
-
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- .../ABI/testing/sysfs-platform-asus-wmi       |  61 ++++
- drivers/platform/x86/asus-wmi.c               | 331 ++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h    |   2 +
- 3 files changed, 394 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 019e1e29370e..1cc54d5e3e10 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -36,3 +36,64 @@ KernelVersion:	3.5
- Contact:	"AceLan Kao" <acelan.kao@canonical.com>
- Description:
- 		Resume on lid open. 1 means on, 0 means off.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_red
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		RGB keyboard backlight red component: 00 .. ff.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_green
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		RGB keyboard backlight green component: 00 .. ff.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_blue
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		RGB keyboard backlight blue component: 00 .. ff.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_mode
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		RGB keyboard backlight mode:
-+			* 0 - static color,
-+			* 1 - breathing,
-+			* 2 - color cycle,
-+			* 3 - strobing.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_speed
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		RGB keyboard backlight speed for modes 1 and 2:
-+			* 0 - slow,
-+			* 1 - medium,
-+			* 2 - fast.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_flags
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		RGB keyboard backlight enable flags (2a to enable everything), OR of:
-+			* 02 - on boot (until module load),
-+			* 08 - awake,
-+			* 20 - sleep.
-+
-+What:		/sys/devices/platform/<platform>/kbbl/kbbl_set
-+Date:		Apr 2019
-+KernelVersion:	5.1
-+Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
-+Description:
-+		Write changed RGB keyboard backlight parameters:
-+			* 1 - permanently,
-+			* 2 - temporarily.
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 1b8272374660..0a32079336d8 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -148,6 +148,21 @@ struct asus_rfkill {
- 	u32 dev_id;
- };
+ drivers/net/ethernet/mellanox/mlx5/core/Makefile | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+index 1a16f6d73cbc..fa12c2ca9fc5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+@@ -57,5 +57,3 @@ mlx5_core-$(CONFIG_MLX5_EN_IPSEC) += en_accel/ipsec.o en_accel/ipsec_rxtx.o \
+ 				     en_accel/ipsec_stats.o
  
-+struct asus_kbbl_rgb {
-+	u8 kbbl_red;
-+	u8 kbbl_green;
-+	u8 kbbl_blue;
-+	u8 kbbl_mode;
-+	u8 kbbl_speed;
-+
-+	u8 kbbl_set_red;
-+	u8 kbbl_set_green;
-+	u8 kbbl_set_blue;
-+	u8 kbbl_set_mode;
-+	u8 kbbl_set_speed;
-+	u8 kbbl_set_flags;
-+};
-+
- struct asus_wmi {
- 	int dsts_id;
- 	int spec;
-@@ -183,6 +198,9 @@ struct asus_wmi {
- 	int asus_hwmon_num_fans;
- 	int asus_hwmon_pwm;
- 
-+	bool kbbl_rgb_available;
-+	struct asus_kbbl_rgb kbbl_rgb;
-+
- 	struct hotplug_slot hotplug_slot;
- 	struct mutex hotplug_lock;
- 	struct mutex wmi_lock;
-@@ -658,6 +676,312 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 	return rv;
- }
- 
-+/* RGB keyboard backlight *****************************************************/
-+
-+static ssize_t show_u8(u8 value, char *buf)
-+{
-+	return scnprintf(buf, PAGE_SIZE, "%02x\n", value);
-+}
-+
-+static ssize_t store_u8(u8 *value, const char *buf, int count)
-+{
-+	int err;
-+	u8 result;
-+
-+	err = kstrtou8(buf, 16, &result);
-+	if (err < 0) {
-+		pr_warn("Trying to store invalid value\n");
-+		return err;
-+	}
-+
-+	*value = result;
-+
-+	return count;
-+}
-+
-+static ssize_t kbbl_red_show(struct device *dev, struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return show_u8(asus->kbbl_rgb.kbbl_red, buf);
-+}
-+
-+static ssize_t kbbl_red_store(struct device *dev, struct device_attribute *attr,
-+		const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return store_u8(&asus->kbbl_rgb.kbbl_set_red, buf, count);
-+}
-+
-+static ssize_t kbbl_green_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return show_u8(asus->kbbl_rgb.kbbl_green, buf);
-+}
-+
-+static ssize_t kbbl_green_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return store_u8(&asus->kbbl_rgb.kbbl_set_green, buf, count);
-+}
-+
-+static ssize_t kbbl_blue_show(struct device *dev, struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return show_u8(asus->kbbl_rgb.kbbl_blue, buf);
-+}
-+
-+static ssize_t kbbl_blue_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return store_u8(&asus->kbbl_rgb.kbbl_set_blue, buf, count);
-+}
-+
-+static ssize_t kbbl_mode_show(struct device *dev, struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return show_u8(asus->kbbl_rgb.kbbl_mode, buf);
-+}
-+
-+static ssize_t kbbl_mode_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return store_u8(&asus->kbbl_rgb.kbbl_set_mode, buf, count);
-+}
-+
-+static ssize_t kbbl_speed_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return show_u8(asus->kbbl_rgb.kbbl_speed, buf);
-+}
-+
-+static ssize_t kbbl_speed_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return store_u8(&asus->kbbl_rgb.kbbl_set_speed, buf, count);
-+}
-+
-+static ssize_t kbbl_flags_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return show_u8(asus->kbbl_rgb.kbbl_set_flags, buf);
-+}
-+
-+static ssize_t kbbl_flags_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return store_u8(&asus->kbbl_rgb.kbbl_set_flags, buf, count);
-+}
-+
-+static ssize_t kbbl_set_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	return scnprintf(buf, PAGE_SIZE,
-+			"Write to configure RGB keyboard backlight\n");
-+}
-+
-+static int kbbl_rgb_write(struct asus_wmi *asus, int persistent)
-+{
-+	int err;
-+	u32 retval;
-+	u8 speed_byte;
-+	u8 mode_byte;
-+	u8 speed;
-+	u8 mode;
-+
-+	speed = asus->kbbl_rgb.kbbl_set_speed;
-+	switch (speed) {
-+	case 0:
-+	default:
-+		speed_byte = 0xe1; // slow
-+		speed = 0;
-+		break;
-+	case 1:
-+		speed_byte = 0xeb; // medium
-+		break;
-+	case 2:
-+		speed_byte = 0xf5; // fast
-+		break;
-+	}
-+
-+	mode = asus->kbbl_rgb.kbbl_set_mode;
-+	switch (mode) {
-+	case 0:
-+	default:
-+		mode_byte = 0x00; // static color
-+		mode = 0;
-+		break;
-+	case 1:
-+		mode_byte = 0x01; // breathing
-+		break;
-+	case 2:
-+		mode_byte = 0x02; // color cycle
-+		break;
-+	case 3:
-+		mode_byte = 0x0a; // strobing
-+		break;
-+	}
-+
-+	err = asus_wmi_evaluate_method_3dw(ASUS_WMI_METHODID_DEVS,
-+		ASUS_WMI_DEVID_KBD_RGB,
-+		(persistent ? 0xb4 : 0xb3) |
-+		(mode_byte << 8) |
-+		(asus->kbbl_rgb.kbbl_set_red << 16) |
-+		(asus->kbbl_rgb.kbbl_set_green << 24),
-+		(asus->kbbl_rgb.kbbl_set_blue) |
-+		(speed_byte << 8), &retval);
-+	if (err) {
-+		pr_warn("RGB keyboard device 1, write error: %d\n", err);
-+		return err;
-+	}
-+
-+	if (retval != 1) {
-+		pr_warn("RGB keyboard device 1, write error (retval): %x\n",
-+				retval);
-+		return -EIO;
-+	}
-+
-+	err = asus_wmi_evaluate_method_3dw(ASUS_WMI_METHODID_DEVS,
-+		ASUS_WMI_DEVID_KBD_RGB2,
-+		(0xbd) |
-+		(asus->kbbl_rgb.kbbl_set_flags << 16) |
-+		(persistent ? 0x0100 : 0x0000), 0, &retval);
-+	if (err) {
-+		pr_warn("RGB keyboard device 2, write error: %d\n", err);
-+		return err;
-+	}
-+
-+	if (retval != 1) {
-+		pr_warn("RGB keyboard device 2, write error (retval): %x\n",
-+				retval);
-+		return -EIO;
-+	}
-+
-+	asus->kbbl_rgb.kbbl_red = asus->kbbl_rgb.kbbl_set_red;
-+	asus->kbbl_rgb.kbbl_green = asus->kbbl_rgb.kbbl_set_green;
-+	asus->kbbl_rgb.kbbl_blue = asus->kbbl_rgb.kbbl_set_blue;
-+	asus->kbbl_rgb.kbbl_mode = mode;
-+	asus->kbbl_rgb.kbbl_speed = speed;
-+
-+	return 0;
-+}
-+
-+static ssize_t kbbl_set_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	u8 value;
-+	struct asus_wmi *asus;
-+	int result;
-+
-+	asus = dev_get_drvdata(dev);
-+	result = store_u8(&value, buf, count);
-+	if (result < 0)
-+		return result;
-+
-+	if (value == 1)
-+		kbbl_rgb_write(asus, 1);
-+	else if (value == 2)
-+		kbbl_rgb_write(asus, 0);
-+
-+	return count;
-+}
-+
-+/* RGB values: 00 .. ff */
-+static DEVICE_ATTR_RW(kbbl_red);
-+static DEVICE_ATTR_RW(kbbl_green);
-+static DEVICE_ATTR_RW(kbbl_blue);
-+
-+/*
-+ * Color modes: 0 - static color, 1 - breathing, 2 - color cycle, 3 - strobing
-+ */
-+static DEVICE_ATTR_RW(kbbl_mode);
-+
-+/* Speed for modes 1 and 2: 0 - slow, 1 - medium, 2 - fast */
-+static DEVICE_ATTR_RW(kbbl_speed);
-+
-+/*
-+ * Enable: 02 - on boot (until module load) | 08 - awake | 20 - sleep
-+ * (2a or ff to enable everything)
-+ *
-+ * Logically 80 would be shutdown, but no visible effects of this option
-+ * were observed so far
-+ */
-+static DEVICE_ATTR_RW(kbbl_flags);
-+
-+/* Write data: 1 - permanently, 2 - temporarily (reset after reboot) */
-+static DEVICE_ATTR_RW(kbbl_set);
-+
-+static struct attribute *rgbkb_sysfs_attributes[] = {
-+	&dev_attr_kbbl_red.attr,
-+	&dev_attr_kbbl_green.attr,
-+	&dev_attr_kbbl_blue.attr,
-+	&dev_attr_kbbl_mode.attr,
-+	&dev_attr_kbbl_speed.attr,
-+	&dev_attr_kbbl_flags.attr,
-+	&dev_attr_kbbl_set.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group kbbl_attribute_group = {
-+	.name = "kbbl",
-+	.attrs = rgbkb_sysfs_attributes
-+};
-+
-+static int kbbl_rgb_init(struct asus_wmi *asus)
-+{
-+	int err;
-+
-+	err = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_RGB);
-+	if (err) {
-+		if (err == -ENODEV)
-+			return 0;
-+		else
-+			return err;
-+	}
-+
-+	err = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_KBD_RGB2);
-+	if (err) {
-+		if (err == -ENODEV)
-+			return 0;
-+		else
-+			return err;
-+	}
-+
-+	asus->kbbl_rgb_available = true;
-+	return sysfs_create_group(&asus->platform_device->dev.kobj,
-+			&kbbl_attribute_group);
-+}
-+
-+static void kbbl_rgb_exit(struct asus_wmi *asus)
-+{
-+	if (asus->kbbl_rgb_available) {
-+		sysfs_remove_group(&asus->platform_device->dev.kobj,
-+				&kbbl_attribute_group);
-+	}
-+}
-+
- /* RF *************************************************************************/
- 
- /*
-@@ -2230,6 +2554,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_leds;
- 
-+	err = kbbl_rgb_init(asus);
-+	if (err)
-+		goto fail_rgbkb;
-+
- 	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_WLAN, &result);
- 	if (result & (ASUS_WMI_DSTS_PRESENCE_BIT | ASUS_WMI_DSTS_USER_BIT))
- 		asus->driver->wlan_ctrl_by_user = 1;
-@@ -2287,6 +2615,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- fail_backlight:
- 	asus_wmi_rfkill_exit(asus);
- fail_rfkill:
-+	kbbl_rgb_exit(asus);
-+fail_rgbkb:
- 	asus_wmi_led_exit(asus);
- fail_leds:
- fail_hwmon:
-@@ -2307,6 +2637,7 @@ static int asus_wmi_remove(struct platform_device *device)
- 	asus_wmi_backlight_exit(asus);
- 	asus_wmi_input_exit(asus);
- 	asus_wmi_led_exit(asus);
-+	kbbl_rgb_exit(asus);
- 	asus_wmi_rfkill_exit(asus);
- 	asus_wmi_debugfs_exit(asus);
- 	asus_wmi_platform_exit(asus);
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index a5fe7e68944b..c8c6e939e196 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -57,6 +57,8 @@
- #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
- #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
- #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
-+#define ASUS_WMI_DEVID_KBD_RGB		0x00100056
-+#define ASUS_WMI_DEVID_KBD_RGB2		0x00100057
- 
- /* Misc */
- #define ASUS_WMI_DEVID_CAMERA		0x00060013
+ mlx5_core-$(CONFIG_MLX5_EN_TLS) += en_accel/tls.o en_accel/tls_rxtx.o en_accel/tls_stats.o
+-
+-CFLAGS_tracepoint.o := -I$(src)
 -- 
 2.17.1
 
