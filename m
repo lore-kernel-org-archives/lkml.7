@@ -2,125 +2,97 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB02C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD3BC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3DA21736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6593D20854
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Da+oTkgf";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Da+oTkgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfDSDxC (ORCPT
+        id S1727269AbfDSD6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 23:53:02 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:60306 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbfDSDxC (ORCPT
+        Thu, 18 Apr 2019 23:58:04 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52940 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfDSD6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 23:53:02 -0400
-Received: from [10.28.18.125] (10.28.18.125) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 19 Apr
- 2019 11:52:52 +0800
-Subject: Re: [PATCH 4/4] mtd: rawnand: meson: only initialize the RB
- completion once
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     <linux-amlogic@lists.infradead.org>,
-        <linux-mtd@lists.infradead.org>, <richard@nod.at>,
-        <miquel.raynal@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>, <marek.vasut@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <computersforpeace@gmail.com>,
-        <dwmw2@infradead.org>, <bbrezillon@kernel.org>,
-        <jianxin.pan@amlogic.com>
-References: <20190411220056.19109-1-martin.blumenstingl@googlemail.com>
- <20190411220056.19109-5-martin.blumenstingl@googlemail.com>
- <bd1900db-7ca1-a6e5-39f9-db54e0b570dd@amlogic.com>
- <CAFBinCB9Z_H4wX3_g2hVL-XnS6Oq-KtPHa4Z1ws79FGp5jCapQ@mail.gmail.com>
-From:   Liang Yang <liang.yang@amlogic.com>
-Message-ID: <8ff232c3-f325-5b91-4de1-a39e63939df2@amlogic.com>
-Date:   Fri, 19 Apr 2019 11:52:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 18 Apr 2019 23:58:03 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CDEDE6155F; Fri, 19 Apr 2019 03:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555646282;
+        bh=UtWtGxKnDEBCQM/OriVcWGoTGXu5gIGvFN1B194Eyqo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Da+oTkgfmaUcJGtptDCB2Vqq+1La0w6xvRWWxGpr02H5Te8UNBRBm8OyZMIDeSxH4
+         L6N0h8nWvSKVxgUOQ+Mg479T3xle8S7madgCJT7Nm9In40XWEAQVpd+utI7djSFqPn
+         hG8/vPoPzdi27+loG2jtVcbiXGl9Ti2cTTrJFXnE=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 361CF6141D;
+        Fri, 19 Apr 2019 03:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555646282;
+        bh=UtWtGxKnDEBCQM/OriVcWGoTGXu5gIGvFN1B194Eyqo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Da+oTkgfmaUcJGtptDCB2Vqq+1La0w6xvRWWxGpr02H5Te8UNBRBm8OyZMIDeSxH4
+         L6N0h8nWvSKVxgUOQ+Mg479T3xle8S7madgCJT7Nm9In40XWEAQVpd+utI7djSFqPn
+         hG8/vPoPzdi27+loG2jtVcbiXGl9Ti2cTTrJFXnE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 361CF6141D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: pull-request: wireless-drivers-next 2019-04-18
+References: <87sguf2zmj.fsf@kamboji.qca.qualcomm.com>
+        <20190418.111444.1325343486196462539.davem@davemloft.net>
+Date:   Fri, 19 Apr 2019 06:57:58 +0300
+In-Reply-To: <20190418.111444.1325343486196462539.davem@davemloft.net> (David
+        Miller's message of "Thu, 18 Apr 2019 11:14:44 -0700 (PDT)")
+Message-ID: <87o9521wah.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCB9Z_H4wX3_g2hVL-XnS6Oq-KtPHa4Z1ws79FGp5jCapQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.18.125]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+David Miller <davem@davemloft.net> writes:
 
-On 2019/4/19 3:44, Martin Blumenstingl wrote:
-> Hi Liang,
-> 
-> On Mon, Apr 15, 2019 at 8:04 AM Liang Yang <liang.yang@amlogic.com> wrote:
->>
->>
->> On 2019/4/12 6:00, Martin Blumenstingl wrote:
->>> Documentation/scheduler/completion.txt states:
->>>     Calling init_completion() on the same completion object twice is
->>>     most likely a bug as it re-initializes the queue to an empty queue and
->>>     enqueued tasks could get "lost" - use reinit_completion() in that case,
->>>     but be aware of other races.
->>>
->>> Initialize nfc->completion in meson_nfc_probe using init_completion and
->>> change the call in meson_nfc_queue_rb to reinit_completion so the logic
->>> matches what the documentation suggests.
->>>
->>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->>> ---
->>>    drivers/mtd/nand/raw/meson_nand.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson_nand.c
->>> index 57cc4bd3f665..ea57ddcec41e 100644
->>> --- a/drivers/mtd/nand/raw/meson_nand.c
->>> +++ b/drivers/mtd/nand/raw/meson_nand.c
->>> @@ -400,7 +400,7 @@ static int meson_nfc_queue_rb(struct meson_nfc *nfc, int timeout_ms)
->>>        cfg |= NFC_RB_IRQ_EN;
->>>        writel(cfg, nfc->reg_base + NFC_REG_CFG);
->>>
->>> -     init_completion(&nfc->completion);
->>> +     reinit_completion(&nfc->completion);
->> Tested-by:Liang Yang <liang.yang@amlogic.com>
->> Acked-by: Liang Yang <liang.yang@amlogic.com>
-> thank you for reviewing and testing my patches!
-> 
-> [...]
->> Tested-by:Liang Yang <liang.yang@amlogic.com>
->> Acked-by: Liang Yang <liang.yang@amlogic.com>
-> please consider the following note for future code-reviews:
-> most maintainers take the patch from patchwork and apply it to their git tree.
-> however, patchwork is not smart enough to detect when the same
-> Tested-by/Acked-by is sent multiple times.
-> this results in the same Tested-by/Acked-by being listed multiple
-> times in the final commit: [0]
-> 
-> what I do instead is to reply with one set of Tested-by/Acked-by
-> (below the author's Signed-off-by) which is then valid for the whole
-> patch.
-> There's no problem to have Tested-by and Acked-by at the same time,
-> the issue only shows up if you send Acked-by (or any other tag) for
-> the same patch multiple times.
-> 
-Thanks. Well, I known about it now.
+> From: Kalle Valo <kvalo@codeaurora.org>
+> Date: Thu, 18 Apr 2019 16:48:20 +0300
+>
+>> here's a pull request to net-next for v5.2, more info below. But do note
+>> that this time we have two trivial conflicts in iwlwifi, here are
+>> Stephen's example resolutions:
+>> 
+>> https://lkml.kernel.org/r/20190415120133.40c0f343@canb.auug.org.au
+>> 
+>> https://lkml.kernel.org/r/20190415120853.39e0e46a@canb.auug.org.au
+>> 
+>> The only change to Stephen's resolution I recommend is to have in drv.c
+>> an empty line between group 0x2723 and group 0x1a56, but that's just
+>> cosmetic anyway so it doesn't matter really in the end.
+>> 
+>> As always, please do let me know if there any problems.
+>
+> Pulled, please double check my work.
 
-> 
-> Have a great day!
-> Regards,
-> Martin
-> 
-> 
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git/commit/?h=nand/next&id=39e01956e2f70ff9f0e97db1a69c9847aa1d5d8b
-> 
-> .
-> 
+I checked, your resolution is identical to my test resolution which I
+made before sending you the pull request. Next time I'll push my
+resolution to my tree so that you can immediately compare them.
+
+Thanks!
+
+-- 
+Kalle Valo
