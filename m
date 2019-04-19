@@ -2,125 +2,181 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A34C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA65C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88605217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="CFLnajm7"
+	by mail.kernel.org (Postfix) with ESMTP id B6E3021736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfDSCFK (ORCPT
+        id S1727181AbfDSCSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 22:05:10 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35189 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfDSCFJ (ORCPT
+        Thu, 18 Apr 2019 22:18:02 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39244 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfDSCSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 22:05:09 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j20so3036532lfh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 19:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Zpp0a7FzYxL9MMqDWJLVdMOOMWYFYTfF+jVXBn6TGw=;
-        b=CFLnajm7/r0p+aniggaeKCoBr8CFWpvvUVzviE/3RHyJC+nDSO9wsq15ZrdmPeBjdo
-         oYogQLrMaJMgTPs7N6FkhYdPnzKrJShRWFsvaVHem5jkwiJSsV5n6GZQA/yKwcq/IaFn
-         BJtbaxBOaeI0aSBLXMSzparNtDegUvDNfndA1FlRrjnTQWrCfNXLGekEBFHO1/0kQw7b
-         cdV1AfdxAmNsQ+DEgNLyKr4/D75cQXgoyhwtiNr532dD9IyRST1OfE1wX4PfY2uKR0fr
-         lED7GAfj401MAJvdsqgXnlCMGZbnEuKIE1Vk/co6TzABB/NV/sJJ5B0jTIk9mN8XAsTH
-         ju4A==
+        Thu, 18 Apr 2019 22:18:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id e13so3455325ioq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 19:18:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4Zpp0a7FzYxL9MMqDWJLVdMOOMWYFYTfF+jVXBn6TGw=;
-        b=stmHEoqpeMA3DaDNZ0b0dnb2y3MfgWVFMMBzbPpZD39YO5+CvT1z9kciDU7ER0/fZ2
-         3SoW3BYtdzPMYrP25RyZR4Z88xm5sjnbAtTO93Mc1A61SpCWcDzORofWz2KNUPQ5AYTx
-         Ub6ZWpimaF62AvjGq7qsifmQambKgKWpS/oq577EPTkn7ciyZdeCAftoZxfb2IcXcEb3
-         ShZL3SWSYtkjwMy1EnxzsUNRxb+NLm7b/akmqmDr8wG9CSNA5XNTJAw8cU8bYEMl1c9N
-         MAWipDLzCRriMvRAk/3x9j6+FMcfpwqArZKIo3D7CGNCRV9GRMA2lGVCx2ll35DtYg84
-         ox9A==
-X-Gm-Message-State: APjAAAX5T3gOJzr2rLUdmLP06mmXfFlApCdFVqlvNWhq8k8Z8nN3Lnxu
-        6HSxGX9+d3DRlb4mps57+9GXgglNeo1XglEM5KQ7
-X-Google-Smtp-Source: APXvYqzzuCFOodQvZfk8YYXzyZdHccX91bZ8AO1HzOKZO83z1IfqIro5Y/wvGOiosvOTVhcSK06wQ+8TsbI7Wkk905o=
-X-Received: by 2002:a19:f50f:: with SMTP id j15mr695903lfb.135.1555639507016;
- Thu, 18 Apr 2019 19:05:07 -0700 (PDT)
+        bh=bwBZzd//g9QMXA36h/ZVXcmw48M67202LeN6NFSg5P4=;
+        b=M/LgXH2sV87grFCD0WzLVAwckYlaP+WRe9Ok4elU8APTyDuK5gz+8aRNJOSMEdMy4v
+         CL/0xcuQoUoVaJCKHlcvKONvdDp+NR9C261Z4F4mNEdnWDPMqAnf6W8MR1W7RLbxUtst
+         v7SaxgC+qW2p4tzSWimt9HIZT3Q5j2rryYPd2PsS9ZZFIXsRB77ffIb7YPH299IsrjpI
+         KQodFEZqM20fixYyUYDs72BXSUOzCFA2d8lFYnFYDWo5cNrZgXK9bmQSPw1tYOaG2Lu7
+         noGeBSfL2Dj+86YGTx+vG44ynQhjjMfA6FSKt3wSi1nSGy+QcNw0gZnAcvhWfmEM4mVY
+         Wf2A==
+X-Gm-Message-State: APjAAAWkM2mMm0Pvm4SFXZCYvYyM7rrr6I+Ms5mnsmt0lxI13gLkF2JF
+        vOfSps5Kyc6ON2jRCiKQN5jtWUrU7yFEbWqanrseoQ==
+X-Google-Smtp-Source: APXvYqwqhpzP0TlV/VgDhm3zeOdiqq2pQFN6Y/Ztz7sdLaLUJIGTZANfGVkQT10/XVPl4IbFLAqNJHBJ40vEVrBtgUg=
+X-Received: by 2002:a5d:8757:: with SMTP id k23mr1257858iol.68.1555640280294;
+ Thu, 18 Apr 2019 19:18:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <20190415134331.GC22204@redhat.com> <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
- <20190415150520.GA13257@redhat.com> <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
- <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com> <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
- <20190417145711.GI32622@redhat.com> <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
- <20190417162723.GK32622@redhat.com> <CAHC9VhT_nk1jmrTj3W=F+1gP1vU3iZsZ=UGOCwdiBLbUsOc9=w@mail.gmail.com>
- <0ca3f4cf-5c64-2fc0-1885-9dbcca2f4b47@schaufler-ca.com> <5CB7E5D4.2060703@huawei.com>
-In-Reply-To: <5CB7E5D4.2060703@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 18 Apr 2019 22:04:55 -0400
-Message-ID: <CAHC9VhQkrR+m9_dYLg4VG-26TdUnf8XFjbmuVQ70YCOp6DhN_g@mail.gmail.com>
-Subject: Re: kernel BUG at kernel/cred.c:434!
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Oleg Nesterov <oleg@redhat.com>, john.johansen@canonical.com,
-        "chengjian (D)" <cj.chengjian@huawei.com>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
+References: <20190418160730.11901-1-kasong@redhat.com> <20190419005821.ttlpav7gviaed7am@treble>
+In-Reply-To: <20190419005821.ttlpav7gviaed7am@treble>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 19 Apr 2019 10:17:49 +0800
+Message-ID: <CACPcB9fsYqs+xaj6w6ExKdpi-Pk4RqiD5HxTyURpee_arYQANg@mail.gmail.com>
+Subject: Re: [RFC PATCH v3] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 10:50 PM Yang Yingliang
-<yangyingliang@huawei.com> wrote:
-> On 2019/4/18 8:24, Casey Schaufler wrote:
-> > On 4/17/2019 4:39 PM, Paul Moore wrote:
-> >>
-> >> Since it looks like all three LSMs which implement the setprocattr
-> >> hook are vulnerable I'm open to the idea that proc_pid_attr_write() is
-> >> a better choice for the cred != read_cred check, but I would want to
-> >> make sure John and Casey are okay with that.
-> >>
-> >> John?
-> >>
-> >> Casey?
-> >
-> > I'm fine with the change going into proc_pid_attr_write().
+On Fri, Apr 19, 2019 at 8:58 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> The cred != real_cred checking is not enough.
+> I still don't like using regs->bp because it results in different code
+> paths for FP and ORC.  In the FP case, the regs are treated like real
+> regs even though they're fake.
 >
-> Consider this situation, when doing override, cred, real_cred and
-> new_cred are all same:
->
-> after override_creds()    cred == real_cred == new1_cred
+> Something like the below would be much simpler.  Would this work?  I don't
+> know if any other code relies on the fake regs->bp or regs->sp.
 
-I'm sorry, you've lost me.  After override_creds() returns
-current->cred and current->real_cred are not going to be the same,
-yes?
+Works perfectly. My only concern is that FP path used to work very
+well, not sure it's a good idea to change it, and this may bring some
+extra overhead for FP path.
 
-> after prepare_creds()     new2_cred
-> after commit_creds()     becasue the check is false, so cred ==
-> real_cred == new2_cred
-> after revert_creds()        cred == new1_cred, real_cred == new2_cred
 >
-> It will cause cred != real_cred finally.
+> (BTW, tomorrow is a US holiday so I may not be very responsive until
+> Monday.)
+>
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index de1a924a4914..f315425d8468 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2382,6 +2382,15 @@ void arch_perf_update_userpage(struct perf_event *event,
+>         cyc2ns_read_end();
+>  }
+>
+> +/*
+> + * Determine whether the regs were taken from an irq/exception handler rather
+> + * than from perf_arch_fetch_caller_regs().
+> + */
+> +static bool perf_hw_regs(struct pt_regs *regs)
+> +{
+> +       return regs->flags & X86_EFLAGS_FIXED;
+> +}
+> +
+>  void
+>  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+>  {
+> @@ -2393,11 +2402,15 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+>                 return;
+>         }
+>
+> -       if (perf_callchain_store(entry, regs->ip))
+> -               return;
+> +       if (perf_hw_regs(regs)) {
+> +               if (perf_callchain_store(entry, regs->ip))
+> +                       return;
+> +               unwind_start(&state, current, regs, NULL);
+> +       } else {
+> +               unwind_start(&state, current, NULL, (void *)regs->sp);
+> +       }
+>
+> -       for (unwind_start(&state, current, regs, NULL); !unwind_done(&state);
+> -            unwind_next_frame(&state)) {
+> +       for (; !unwind_done(&state); unwind_next_frame(&state)) {
+>                 addr = unwind_get_return_address(&state);
+>                 if (!addr || perf_callchain_store(entry, addr))
+>                         return;
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+> index 04768a3a5454..1392d5e6e8d6 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -308,14 +308,9 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
+>   */
+>  #define perf_arch_fetch_caller_regs(regs, __ip)                {       \
+>         (regs)->ip = (__ip);                                    \
+> -       (regs)->bp = caller_frame_pointer();                    \
+> +       (regs)->sp = (unsigned long)__builtin_frame_address(0); \
+>         (regs)->cs = __KERNEL_CS;                               \
+>         regs->flags = 0;                                        \
+> -       asm volatile(                                           \
+> -               _ASM_MOV "%%"_ASM_SP ", %0\n"                   \
+> -               : "=m" ((regs)->sp)                             \
+> -               :: "memory"                                     \
+> -       );                                                      \
+>  }
+>
+>  struct perf_guest_switch_msr {
+> diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
+> index d6d758a187b6..a8d0cdf48616 100644
+> --- a/arch/x86/include/asm/stacktrace.h
+> +++ b/arch/x86/include/asm/stacktrace.h
+> @@ -100,19 +100,6 @@ struct stack_frame_ia32 {
+>      u32 return_address;
+>  };
+>
+> -static inline unsigned long caller_frame_pointer(void)
+> -{
+> -       struct stack_frame *frame;
+> -
+> -       frame = __builtin_frame_address(0);
+> -
+> -#ifdef CONFIG_FRAME_POINTER
+> -       frame = frame->next_frame;
+> -#endif
+> -
+> -       return (unsigned long)frame;
+> -}
+> -
+>  void show_opcodes(struct pt_regs *regs, const char *loglvl);
+>  void show_ip(struct pt_regs *regs, const char *loglvl);
+>  #endif /* _ASM_X86_STACKTRACE_H */
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index f3864e1c5569..0f560069aeec 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1062,7 +1062,7 @@ static inline void perf_arch_fetch_caller_regs(struct pt_regs *regs, unsigned lo
+>   * the nth caller. We only need a few of the regs:
+>   * - ip for PERF_SAMPLE_IP
+>   * - cs for user_mode() tests
+> - * - bp for callchains
+> + * - sp for callchains
+>   * - eflags, for future purposes, just in case
+>   */
+>  static inline void perf_fetch_caller_regs(struct pt_regs *regs)
 
 -- 
-paul moore
-www.paul-moore.com
+Best Regards,
+Kairui Song
