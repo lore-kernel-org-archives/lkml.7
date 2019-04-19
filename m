@@ -2,115 +2,248 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30451C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E630C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DDD20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3029E2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeYzNFZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfDSTFU (ORCPT
+        id S1729448AbfDSTF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:05:20 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:57216 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbfDSTFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:05:18 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 6C1654D67A;
-        Fri, 19 Apr 2019 15:39:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id 58oG05-c-REi; Fri, 19 Apr 2019 15:39:32 +0200 (CEST)
-Date:   Fri, 19 Apr 2019 23:39:18 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Oleg Nesterov <oleg@redhat.com>, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, jannh@google.com, dhowells@redhat.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org,
-        joel@joelfernandes.org, dancol@google.com
-Subject: Re: [PATCH v2 2/5] clone: add CLONE_PIDFD
-Message-ID: <20190419133918.7uedlqgc6cvt7fjt@yavin>
-References: <20190418101841.4476-1-christian@brauner.io>
- <20190418101841.4476-3-christian@brauner.io>
- <20190418131206.GB13701@redhat.com>
- <20190418132822.untjt7erfvbbiz7a@brauner.io>
+        Fri, 19 Apr 2019 15:05:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34334 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728666AbfDSTFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:05:23 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r186so9508029wmf.1;
+        Fri, 19 Apr 2019 12:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BJohAaoXGzpnYmzQ88UijR4q+bxIpnP/97TK8bfiKzU=;
+        b=BeYzNFZSsrydipZ3BnVjjUqffgNCdp/n1wwBiSCO+5UGWEaSaFMTwSZQwpHUmD0K/C
+         ByTJe+2HMrE3nQqY6UkwYCYT0pNhVJZOUwAlsacZh9QV7gf0u62vHPbYBqkPVQjZb5+T
+         fBzTQTH57jWAuWkh3SM6xSm1UJucJr0ZKJtwl/rUQ01MXK1eNT8zNgVazjP20/yeofAi
+         BgPzRb1Hn+lYHW5OUoKHdjFUQL62vRo3+fz4TRmFZFkQrW0eGZ4L9OHIJf72zN5P0+hA
+         LFVMioQaHx3B/JBZsYVyCEIvEHKWbkzCOgehItNCoZ9LInPshaj/6IkXqgNZB9TPBUBR
+         Q+gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BJohAaoXGzpnYmzQ88UijR4q+bxIpnP/97TK8bfiKzU=;
+        b=c4GtJeT+1lD2MPZmiea4sMPf6kqR2DT1a+g2CZ2rI+HbBzp8eiOkvxkF3yTUsdoXAN
+         Hl2fPQjcRNm87Liv2aPtxHxHke/T2mZOKRWxuecG/ZoTpx8AzvR6e8ww+KrUlB1qL3dG
+         gea0zuK4G73LuZ9Hc0mkJxzy6CD1N1/5ReAowae+FQuc7iEV/If3dRG6vg3eiGSd/VE7
+         JNJG/fYyzK/zhweRZsZFrYd9FepIgTesepDL+42pbEr5vWSlL2y74bSiJYijgah7seLR
+         4dGj8ghb64DWC0kjd116/bleJLuxMtHOJ/KI5uIIjGGjxWGAz9QbJq15QeryGgaPd7yr
+         Wa0w==
+X-Gm-Message-State: APjAAAWkcWJPsCaYKbVNHt14LVN2P+zG7kvx/2YC6cJug/xX+dQAf2pI
+        m1OZtjDZsgTM5HPhmttHkN51lLcAluW9ElCn0OXl8ZX9gOhgMg==
+X-Google-Smtp-Source: APXvYqxcpYIPRcZx/Pq8V/EsXrjbqoNb8F9nY5gnNvNtRECGr6P3gXfXgGGEexb3Qrd/fB9mLgwCI4hLWBiMzBEUw20=
+X-Received: by 2002:a1c:804c:: with SMTP id b73mr3473003wmd.116.1555700721530;
+ Fri, 19 Apr 2019 12:05:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vpeoutzg3boqufdk"
-Content-Disposition: inline
-In-Reply-To: <20190418132822.untjt7erfvbbiz7a@brauner.io>
+References: <20190416183841.1577-1-christian.koenig@amd.com> <20190416183841.1577-6-christian.koenig@amd.com>
+In-Reply-To: <20190416183841.1577-6-christian.koenig@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 19 Apr 2019 15:05:09 -0400
+Message-ID: <CADnq5_OFh0UDvMkt+yTKBLjysuTmB==Lug-=d04E_eUHPn1ENQ@mail.gmail.com>
+Subject: Re: [PATCH 05/12] dma-buf: add explicit buffer pinning
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 16, 2019 at 2:39 PM Christian K=C3=B6nig
+<ckoenig.leichtzumerken@gmail.com> wrote:
+>
+> Add optional explicit pinning callbacks instead of implicitly assume the
+> exporter pins the buffer when a mapping is created.
+>
+> Signed-off-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> ---
+>  drivers/dma-buf/dma-buf.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/dma-buf.h   | 37 +++++++++++++++++++++++++++++++------
+>  2 files changed, 70 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index a3738fab3927..f23ff8355505 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -630,6 +630,41 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct d=
+ma_buf_attachment *attach)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_buf_detach);
+>
+> +/**
+> + * dma_buf_pin - Lock down the DMA-buf
+> + *
+> + * @dmabuf:    [in]    DMA-buf to lock down.
+> + *
+> + * Returns:
+> + * 0 on success, negative error code on failure.
+> + */
+> +int dma_buf_pin(struct dma_buf *dmabuf)
+> +{
+> +       int ret =3D 0;
+> +
+> +       reservation_object_assert_held(dmabuf->resv);
+> +
+> +       if (dmabuf->ops->pin)
+> +               ret =3D dmabuf->ops->pin(dmabuf);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dma_buf_pin);
+> +
+> +/**
+> + * dma_buf_unpin - Remove lock from DMA-buf
+> + *
+> + * @dmabuf:    [in]    DMA-buf to unlock.
+> + */
+> +void dma_buf_unpin(struct dma_buf *dmabuf)
+> +{
+> +       reservation_object_assert_held(dmabuf->resv);
+> +
+> +       if (dmabuf->ops->unpin)
+> +               dmabuf->ops->unpin(dmabuf);
+> +}
+> +EXPORT_SYMBOL_GPL(dma_buf_unpin);
+> +
+>  /**
+>   * dma_buf_map_attachment_locked - Maps the buffer into _device_ address=
+ space
+>   * with the reservation lock held. Is a wrapper for map_dma_buf() of the
+> @@ -666,6 +701,8 @@ dma_buf_map_attachment_locked(struct dma_buf_attachme=
+nt *attach,
+>          */
+>         if (attach->invalidate)
+>                 list_del(&attach->node);
+> +       else
+> +               dma_buf_pin(attach->dmabuf);
+>         sg_table =3D attach->dmabuf->ops->map_dma_buf(attach, direction);
+>         if (attach->invalidate)
+>                 list_add(&attach->node, &attach->dmabuf->attachments);
+> @@ -735,6 +772,8 @@ void dma_buf_unmap_attachment_locked(struct dma_buf_a=
+ttachment *attach,
+>
+>         attach->dmabuf->ops->unmap_dma_buf(attach, sg_table,
+>                                                 direction);
+> +       if (!attach->invalidate)
+> +               dma_buf_unpin(attach->dmabuf);
+>  }
+>  EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment_locked);
+>
+> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> index ece4638359a8..a615b74e5894 100644
+> --- a/include/linux/dma-buf.h
+> +++ b/include/linux/dma-buf.h
+> @@ -100,14 +100,40 @@ struct dma_buf_ops {
+>          */
+>         void (*detach)(struct dma_buf *, struct dma_buf_attachment *);
+>
+> +       /**
+> +        * @pin_dma_buf:
+> +        *
+> +        * This is called by dma_buf_pin and lets the exporter know that =
+an
+> +        * importer assumes that the DMA-buf can't be invalidated any mor=
+e.
+> +        *
+> +        * This is called with the dmabuf->resv object locked.
+> +        *
+> +        * This callback is optional.
+> +        *
+> +        * Returns:
+> +        *
+> +        * 0 on success, negative error code on failure.
+> +        */
+> +       int (*pin)(struct dma_buf *);
+> +
+> +       /**
+> +        * @unpin_dma_buf:
+> +        *
+> +        * This is called by dma_buf_unpin and lets the exporter know tha=
+t an
+> +       * importer doesn't need to the DMA-buf to stay were it is any mor=
+e.
 
---vpeoutzg3boqufdk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This should read:
+* importer doesn't need the DMA-buf to stay were it is anymore.
 
-On 2019-04-18, Christian Brauner <christian@brauner.io> wrote:
-> > Why O_CLOEXEC? I am just curious, I do not really care.
->=20
-> I think that having the file descriptor O_CLOEXEC by default is a good
-> security measure in general. Most of the time you do not want to pass a
-> file descriptor through exec() (apart from 0,1,2) and it is usually more
-> of an issue when you accidently do it then when you accidently don't. So
-> if users really care about passing a pidfd they should do so by removing
-> the O_CLOEXEC flag explicitly.
-> (New file descriptors should probably all default to that but that's just
-> my opinion.)
-> Another thing is that for a pidfds it makes even more sense to have them
-> cloexec by default. You don't want to *unintentionally* leak an fd that
-> can be used to operate on a process.
-
-There is another factor as well -- if you want to set O_CLOEXEC in a
-multi-threaded process you can't be sure that another thread didn't fork
-in between you getting the fd_install'd and the userspace process
-setting O_CLOEXEC (leading to the fd leaking outside the current
-process). This is why a lot of syscalls have a way to get an O_CLOEXEC
-fd from the outset.
-
-So I'm +1 on doing O_CLOEXEC by default -- you can always disable it
-safely but enabling it safely isn't so simple (and I don't think it
-makes much sense to add the mechanism to pass PIDFD_CLOEXEC as well,
-given how tight the flags are getting).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---vpeoutzg3boqufdk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAly5z4YACgkQSnvnv3De
-m58UxRAAgcnnb4NwtWMB9j9vrcjC5M89nkbun9n1RzZA2iKOiguktbzuFqgI3A7F
-+M1vvVsOGP5oNDGDXiSX9klXhY+nMQazNBJx0vB0CEQAVY2nL3l+qy0XEEjlgyZ4
-/VbXsEI6/SaYKUmDIHmQPKq0QCjC69s5L0O7R1bsnoH5YUVk6m7RNBAMxQ+EZ/Fn
-BhV0WAiBsjOk6fM12RpbWFeEV5cg9UB4OI+75S1zpirhVsMo1d0xtDwD/2dEfrAl
-undKn+rDuhh5/ULP76drQ9XWnB24F9qiqvx2/H8vrCLYY8vOmhanC1Xii2HaXKPQ
-8ggaFeDY3/rO6h2TIXNzW6d5bj8ezveiOtMngVaIeAXCi0se13iCYcRzVjPHGwBw
-/V+NaHktML75wazFadXkMp0rlyWr6ua6lClnCz8TN2cEonHHRJQKIz4rr+JedqQh
-rl9svBSn7kP+6A0H6ch1s2Lx+dcSMIBA05HFM9S8RoKUn3i0OM8DZzkikcctGwid
-Dc2HASNmm3lCWg030Fdym+p4Ndzl1Dr9IFCLV/Zwso8rsbaFGoY4nMa1TLUmbS+w
-7cmgFd+imZrlcbrTTUvVsYBGPZ5G9EYbIefO/PqVlARxK7aa3urQFj4pjyKTodUI
-1Ou6fi1anhOAp1JOkxlXIdrLfB5RvoxcH3sUKizN33QjBT/zIzU=
-=enJD
------END PGP SIGNATURE-----
-
---vpeoutzg3boqufdk--
+> +        *
+> +        * This is called with the dmabuf->resv object locked.
+> +        *
+> +        * This callback is optional.
+> +        */
+> +       void (*unpin)(struct dma_buf *);
+> +
+>         /**
+>          * @map_dma_buf:
+>          *
+>          * This is called by dma_buf_map_attachment() and is used to map =
+a
+>          * shared &dma_buf into device address space, and it is mandatory=
+. It
+> -        * can only be called if @attach has been called successfully. Th=
+is
+> -        * essentially pins the DMA buffer into place, and it cannot be m=
+oved
+> -        * any more
+> +        * can only be called if @attach has been called successfully.
+>          *
+>          * This call may sleep, e.g. when the backing storage first needs=
+ to be
+>          * allocated, or moved to a location suitable for all currently a=
+ttached
+> @@ -148,9 +174,6 @@ struct dma_buf_ops {
+>          *
+>          * This is called by dma_buf_unmap_attachment() and should unmap =
+and
+>          * release the &sg_table allocated in @map_dma_buf, and it is man=
+datory.
+> -        * It should also unpin the backing storage if this is the last m=
+apping
+> -        * of the DMA buffer, it the exporter supports backing storage
+> -        * migration.
+>          *
+>          * This is always called with the dmabuf->resv object locked when
+>          * no_sgt_cache is true.
+> @@ -442,6 +465,8 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags);
+>  struct dma_buf *dma_buf_get(int fd);
+>  void dma_buf_put(struct dma_buf *dmabuf);
+>
+> +int dma_buf_pin(struct dma_buf *dmabuf);
+> +void dma_buf_unpin(struct dma_buf *dmabuf);
+>  struct sg_table *dma_buf_map_attachment_locked(struct dma_buf_attachment=
+ *,
+>                                                enum dma_data_direction);
+>  struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *,
+> --
+> 2.17.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
