@@ -2,256 +2,191 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_12_24,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A4EC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C00AC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C34222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C5E20652
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Co7L5Tk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfDSS1N (ORCPT
+        id S1727600AbfDSS1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:27:13 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:52251 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfDSS1M (ORCPT
+        Fri, 19 Apr 2019 14:27:33 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33479 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfDSS1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:27:12 -0400
-Received: by mail-it1-f197.google.com with SMTP id 73so6216946itl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:27:12 -0700 (PDT)
+        Fri, 19 Apr 2019 14:27:32 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j11so4601430lfm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kFcT1c77kBxvyzUNV0e2oilejLrc2MbtTnq3TlMVUeE=;
+        b=Co7L5Tk1lOE1kvYTDJV2IGqOGGB1NIwltPU5KGdLvofTWT3aA/bNjglmAlz/CSAHVS
+         kkfEat94o/CTUVYnh3bkSPJujfFdc2MKgd0y5GzJIZKa1LQhG2xAWyofF0tFGXAuGg0z
+         NaMLjx9t8H+VBwF2sggG9mkg2p3cnxkqpIzUQsEaa43n5Ses7aZrscMFsHfDeWs5gYeb
+         PB0fjQk/txg460rAtjJ1402drtsnENiSFMk6L/9b1n/IV4y2Li4srdeeeH5GErMDgwaz
+         LjKPBuaUVFnIEybnKtwAkyF1lvQZtyZkXZrNlN6vXuWy3M1v8y/mWhEkLyXz6vVPYl4f
+         IHgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=SjY449fhMaQ7ERvE3A+f6DfzGfay+dUg6pdjzIryT+s=;
-        b=ONIAm+jUK7ZVmO54Hj7+R92tM3rMmri61VpDFScBttgxmIx1PBjgrzUhovnh2R7c2+
-         wGiPVMCNDYRckKgibZzLhpcCmtfJKSynT4u9dKWmALq9z805bXBCv1CFcYOb7G81mJFF
-         xiAibYwz/WEGX/n7seiPtI3GWc0OpEXQFCh9NOzTUmjPmKWRtLbP18KbQEBtGB99DZ5z
-         8kj3/ZbXxV6gC20gP6lSxdDd/ky7S0Azv4tt+KW/QWoi0HKOTxMg45cFyMBflGqQpz5b
-         6D0wozSZ6xb8E7oXWFbNv5prN67p29dXZRUFYdJMLofWMSQ+S2lHb0q8a7GSgej4GKBW
-         odIQ==
-X-Gm-Message-State: APjAAAXfxRW8V9jpNjCmgAWFOxk42K+sZd4alDrAffxwlpE0OgJnSRiV
-        Eg6zN18sJAGUNA+67bpI1zbeYgzI9O/gO1dMGvSZH8EQtHZF
-X-Google-Smtp-Source: APXvYqwnkK1AqehEgQWQ8sef2VtIx+ZRTnz1SJhosMj/bO2/3xwzzqWLL9kt96w95OGBcNka086G6KqOEQQIpi9bDi86+M8g93ZD
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kFcT1c77kBxvyzUNV0e2oilejLrc2MbtTnq3TlMVUeE=;
+        b=g0YVX3c0T9PkMj+UvwbRlffYguSX4hbU3ASZIxDHpRHLhyneuUTOWUW9n9YUKgwFjV
+         Wtq3T91bBf4gRhAkij1923T47kWRcCjYA0lxrK/lq0GiI2drbmE51PgIfbvMY4AM3/QR
+         3UAgzR5lhkR/Orz2DH49ynRq8P5sw+HsJO8I7i3aCJhddQNsHOZOiUW20vXTnsU+3zWv
+         EVSQB5L3m09XH/AexlEf882eeXKIoUj/nMcsaXJULA0LLgUWNTeEP44sVICm4v95ugc8
+         UZS1jhtl2nFFgh3nbokp50Y2IoIskOHUvMBlaqOMAq+KkcKqfo6b+GBsj4w6IhsvJM1b
+         X8lw==
+X-Gm-Message-State: APjAAAW2v3H+AqGQFe7UNNHLWQOL/mVLQ+GJEQCqAa+szEtJ+Vz0qKNs
+        rKcuOkOpymebOOzng60wTakXVN9RODyNOwyQkNX+mi7N/yQ=
+X-Google-Smtp-Source: APXvYqyS6OwkL/sPb2+F8k1XjT2yPRip02CGNcsRSSGl8xIPlrsJQbOJu4sXoaCrTCn5y9KR0rW0XOB0QDMyD2F/52s=
+X-Received: by 2002:ac2:4285:: with SMTP id m5mr1312395lfh.103.1555657330155;
+ Fri, 19 Apr 2019 00:02:10 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:db19:: with SMTP id t25mr1554070ioc.140.1555651864760;
- Thu, 18 Apr 2019 22:31:04 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 22:31:04 -0700
-In-Reply-To: <00000000000044cbf80576baaecd@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cb1d0d0586db6c4c@google.com>
-Subject: Re: possible deadlock in path_openat
-From:   syzbot <syzbot+a55ccfc8a853d3cff213@syzkaller.appspotmail.com>
-To:     amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        miklos@szeredi.hu, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190418160422.455656724@linuxfoundation.org>
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 19 Apr 2019 12:31:59 +0530
+Message-ID: <CA+G9fYvTh30_+8Px5m4VCZ_QpzKK3SS7HfcioA28Obv_8Ts_oA@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/50] 4.9.170-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Thu, 18 Apr 2019 at 23:38, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.170 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat Apr 20 16:03:22 UTC 2019.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.170-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-HEAD commit:    6d906f99 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10917b8f200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
-dashboard link: https://syzkaller.appspot.com/bug?extid=a55ccfc8a853d3cff213
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101767b7200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c15013200000
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a55ccfc8a853d3cff213@syzkaller.appspotmail.com
+Summary
+------------------------------------------------------------------------
 
-overlayfs: workdir and upperdir must reside under the same mount
-======================================================
-WARNING: possible circular locking dependency detected
-5.1.0-rc5+ #74 Not tainted
-------------------------------------------------------
-syz-executor949/9348 is trying to acquire lock:
-000000005d993096 (&ovl_i_mutex_dir_key[depth]#2){++++}, at:  
-inode_lock_shared include/linux/fs.h:782 [inline]
-000000005d993096 (&ovl_i_mutex_dir_key[depth]#2){++++}, at: do_last  
-fs/namei.c:3321 [inline]
-000000005d993096 (&ovl_i_mutex_dir_key[depth]#2){++++}, at:  
-path_openat+0x1e98/0x46e0 fs/namei.c:3533
-
-but task is already holding lock:
-00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at: prepare_bprm_creds  
-fs/exec.c:1407 [inline]
-00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at:  
-__do_execve_file.isra.0+0x376/0x23f0 fs/exec.c:1750
-
-which lock already depends on the new lock.
+kernel: 4.9.170-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 0f6275bacb077add96e4270048916397f74645e6
+git describe: v4.9.168-129-g0f6275bacb07
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.168-129-g0f6275bacb07
 
 
-the existing dependency chain (in reverse order) is:
+No regressions (compared to build v4.9.168)
 
--> #4 (&sig->cred_guard_mutex){+.+.}:
-        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
-        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
-        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1102
-        do_io_accounting+0x1f4/0x830 fs/proc/base.c:2740
-        proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2789
-        proc_single_show+0xf6/0x170 fs/proc/base.c:744
-        seq_read+0x4db/0x1130 fs/seq_file.c:229
-        do_loop_readv_writev fs/read_write.c:701 [inline]
-        do_loop_readv_writev fs/read_write.c:688 [inline]
-        do_iter_read+0x4a9/0x660 fs/read_write.c:922
-        vfs_readv+0xf0/0x160 fs/read_write.c:984
-        kernel_readv fs/splice.c:358 [inline]
-        default_file_splice_read+0x475/0x890 fs/splice.c:413
-        do_splice_to+0x12a/0x190 fs/splice.c:876
-        splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
-        do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
-        do_sendfile+0x597/0xd00 fs/read_write.c:1443
-        __do_sys_sendfile64 fs/read_write.c:1504 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1490 [inline]
-        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1490
-        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+No fixes (compared to build v4.9.168)
 
--> #3 (&p->lock){+.+.}:
-        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
-        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
-        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-        seq_read+0x71/0x1130 fs/seq_file.c:161
-        proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
-        do_loop_readv_writev fs/read_write.c:701 [inline]
-        do_loop_readv_writev fs/read_write.c:688 [inline]
-        do_iter_read+0x4a9/0x660 fs/read_write.c:922
-        vfs_readv+0xf0/0x160 fs/read_write.c:984
-        kernel_readv fs/splice.c:358 [inline]
-        default_file_splice_read+0x475/0x890 fs/splice.c:413
-        do_splice_to+0x12a/0x190 fs/splice.c:876
-        do_splice+0x110b/0x1420 fs/splice.c:1183
-        __do_sys_splice fs/splice.c:1424 [inline]
-        __se_sys_splice fs/splice.c:1404 [inline]
-        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1404
-        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Ran 22741 total tests in the following environments and test suites.
 
--> #2 (&pipe->mutex/1){+.+.}:
-        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
-        __mutex_lock+0xf7/0x1310 kernel/locking/mutex.c:1072
-        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-        pipe_lock_nested fs/pipe.c:62 [inline]
-        pipe_lock+0x6e/0x80 fs/pipe.c:70
-        iter_file_splice_write+0x18b/0xbe0 fs/splice.c:696
-        do_splice_from fs/splice.c:847 [inline]
-        do_splice+0x70a/0x1420 fs/splice.c:1154
-        __do_sys_splice fs/splice.c:1424 [inline]
-        __se_sys_splice fs/splice.c:1404 [inline]
-        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1404
-        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
--> #1 (sb_writers#6){.+.+}:
-        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-        percpu_down_read include/linux/percpu-rwsem.h:36 [inline]
-        __sb_start_write+0x20b/0x360 fs/super.c:1613
-        sb_start_write include/linux/fs.h:1621 [inline]
-        mnt_want_write+0x3f/0xc0 fs/namespace.c:358
-        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:24
-        ovl_do_remove+0xe9/0xd70 fs/overlayfs/dir.c:840
-        ovl_rmdir+0x1b/0x20 fs/overlayfs/dir.c:890
-        vfs_rmdir fs/namei.c:3878 [inline]
-        vfs_rmdir+0x19c/0x470 fs/namei.c:3857
-        do_rmdir+0x39e/0x420 fs/namei.c:3939
-        __do_sys_rmdir fs/namei.c:3957 [inline]
-        __se_sys_rmdir fs/namei.c:3955 [inline]
-        __x64_sys_rmdir+0x36/0x40 fs/namei.c:3955
-        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Test Suites
+-----------
+* boot
+* boot-lkft-ltp-syscalls-linux-4.9.y-540
+* boot-lkft-perf-linux-4.9.y-540
+* boot-lkft-v4l2-compliance-kvm-unit-tests-linux-4.9.y-540
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* boot-lkft-kselftests-linux-4.9.y-540
+* boot-lkft-libhugetlbfs-linux-4.9.y-540
+* boot-lkft-ltp-cap_bounds-cpuhotplug-fcntl-locktests-filecaps-fs_bind-fs_p=
+erms_simple-fsx-nptl-pty-securebits-linux-4.9.y-540
+* boot-lkft-ltp-containers-linux-4.9.y-540
+* boot-lkft-ltp-cve-linux-4.9.y-540
+* boot-lkft-ltp-fs-linux-4.9.y-540
+* boot-lkft-ltp-hugetlb-mm-linux-4.9.y-540
+* boot-lkft-ltp-io-dio-linux-4.9.y-540
+* boot-lkft-ltp-ipc-linux-4.9.y-540
+* boot-lkft-ltp-math-commands-linux-4.9.y-540
+* boot-lkft-ltp-open-posix-linux-4.9.y-540
+* boot-lkft-ltp-sched-linux-4.9.y-540
+* boot-lkft-ltp-timers-linux-4.9.y-540
+* ltp-open-posix-tests
+* boot-lkft-ssuite-linux-4.9.y-540
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
--> #0 (&ovl_i_mutex_dir_key[depth]#2){++++}:
-        check_prevs_add kernel/locking/lockdep.c:2333 [inline]
-        validate_chain kernel/locking/lockdep.c:2714 [inline]
-        __lock_acquire+0x239c/0x3fb0 kernel/locking/lockdep.c:3701
-        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-        down_read+0x3b/0x90 kernel/locking/rwsem.c:24
-        inode_lock_shared include/linux/fs.h:782 [inline]
-        do_last fs/namei.c:3321 [inline]
-        path_openat+0x1e98/0x46e0 fs/namei.c:3533
-        do_filp_open+0x1a1/0x280 fs/namei.c:3563
-        do_open_execat+0x137/0x690 fs/exec.c:856
-        __do_execve_file.isra.0+0x178d/0x23f0 fs/exec.c:1758
-        do_execveat_common fs/exec.c:1865 [inline]
-        do_execve fs/exec.c:1882 [inline]
-        __do_sys_execve fs/exec.c:1958 [inline]
-        __se_sys_execve fs/exec.c:1953 [inline]
-        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-        do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-   &ovl_i_mutex_dir_key[depth]#2 --> &p->lock --> &sig->cred_guard_mutex
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&sig->cred_guard_mutex);
-                                lock(&p->lock);
-                                lock(&sig->cred_guard_mutex);
-   lock(&ovl_i_mutex_dir_key[depth]#2);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor949/9348:
-  #0: 00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at:  
-prepare_bprm_creds fs/exec.c:1407 [inline]
-  #0: 00000000ef248b1d (&sig->cred_guard_mutex){+.+.}, at:  
-__do_execve_file.isra.0+0x376/0x23f0 fs/exec.c:1750
-
-stack backtrace:
-CPU: 1 PID: 9348 Comm: syz-executor949 Not tainted 5.1.0-rc5+ #74
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_circular_bug.isra.0.cold+0x1cc/0x28f kernel/locking/lockdep.c:1571
-  check_prev_add.constprop.0+0xf11/0x23c0 kernel/locking/lockdep.c:2220
-  check_prevs_add kernel/locking/lockdep.c:2333 [inline]
-  validate_chain kernel/locking/lockdep.c:2714 [inline]
-  __lock_acquire+0x239c/0x3fb0 kernel/locking/lockdep.c:3701
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-  down_read+0x3b/0x90 kernel/locking/rwsem.c:24
-  inode_lock_shared include/linux/fs.h:782 [inline]
-  do_last fs/namei.c:3321 [inline]
-  path_openat+0x1e98/0x46e0 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_open_execat+0x137/0x690 fs/exec.c:856
-  __do_execve_file.isra.0+0x178d/0x23f0 fs/exec.c:1758
-  do_execveat_common fs/exec.c:1865 [inline]
-  do_execve fs/exec.c:1882 [inline]
-  __do_sys_execve fs/exec.c:1958 [inline]
-  __se_sys_execve fs/exec.c:1953 [inline]
-  __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x447169
-Code: e8 4c bb 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 bb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe4c6a6bdb8 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
-RAX: ffffffffffffffda RBX: 00000000006dcc68 RCX: 0000000000447169
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000000
-RBP: 00000000006dcc60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc6c
-R13: 00007ffd5a5cb62f R14: 00007fe4c6a6c9c0 R15: 0000000000000000
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
