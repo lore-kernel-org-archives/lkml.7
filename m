@@ -2,155 +2,102 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE38C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D05EC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853F620449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613B320449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555698958;
+	bh=UXSAuXtBKtiyp6wd0QD5G7QbrsNlC+cikHNtloM+vQE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=SK0pfLQlVdcPe8uvE7ZaQZ0hkd59vCsvks+gyl90TSVOL7k860RyPv8XFNWRNuMKz
+	 8Q1+hWWqryBTXe6Uayt2S0oyqlN5Em6Y6d1NaFJgXvycIib5owc2plQtL6iuCvavxd
+	 L+norL48HXIITOgreFCv4TbnksZKqjKW2ug4Vxrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfDSSfo (ORCPT
+        id S1728393AbfDSSf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:35:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56178 "EHLO mx1.redhat.com"
+        Fri, 19 Apr 2019 14:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbfDSSfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:35:41 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727484AbfDSS3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:29:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B35F7308402F;
-        Fri, 19 Apr 2019 15:00:33 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 166F960BE2;
-        Fri, 19 Apr 2019 15:00:31 +0000 (UTC)
-Subject: Re: [PATCH v5 00/18] locking/rwsem: Rwsem rearchitecture part 2
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190418234628.3675-1-longman@redhat.com>
- <8f1adff7-3bd4-7d35-1a0d-698662bfa2b8@redhat.com>
- <20190419075055.GA6795@gmail.com> <20190419124944.GA44010@gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <c06c9fd4-629a-3488-31ff-9f0f148364a4@redhat.com>
-Date:   Fri, 19 Apr 2019 11:00:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE572195D;
+        Fri, 19 Apr 2019 12:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555677044;
+        bh=UXSAuXtBKtiyp6wd0QD5G7QbrsNlC+cikHNtloM+vQE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CxeayGzL/hjJoc17FnlK7+php3magpR8igmHKtZV3XqQ8IjWSosCS81lzovRthDaT
+         agjmHE1V4j9exUlveX7iYflddfFSSg3PfjVFvXeZzb4EddUt/iVkmrQanZKIFnnjO0
+         LyZmDKBSnpRzu+hxnHBcAMY5Pur5l29svNk+HtcM=
+Date:   Fri, 19 Apr 2019 14:30:42 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Char/Misc driver fixes for 5.1-rc6
+Message-ID: <20190419123042.GA4761@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190419124944.GA44010@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 19 Apr 2019 15:00:33 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/19/2019 08:49 AM, Ingo Molnar wrote:
-> * Ingo Molnar <mingo@kernel.org> wrote:
->
->> * Waiman Long <longman@redhat.com> wrote:
->>
->>> On 04/18/2019 07:46 PM, Waiman Long wrote:
->>>>  v5:
->>>>   - Drop v4 patch 1 as it is merged into tip's locking/core branch.
->>>>   - Integrate the 2 followup patches into the series. The first
->>>>     follow-up patch is broken into 2 pieces. The first piece comes in
->>>>     before the "Enable readers spinning on writer" and the 2nd piece
->>>>     is merged into the "Enable time-based spinning on reader-owned
->>>>     rwsem" patch. The 2nd followup patch is added after that.
->>>>   - Add a new patch to make all wake_up_q() calls after dropping
->>>>     wait_lock as suggested by PeterZ.
->>>>   - Incorporate numerouos suggestions by PeterZ and Davidlohr.
->>> This patchset is still being reviewed by Peter . The purpose of this
->>> series is mainly to sync up the version that Peter has and the ones that
->>> I am working on incorporating his feedback. Further changes may still be
->>> needed.
->>>
->>> I run an overall performance test on this new patchset and present the
->>> data in this cover letter. However, I haven't run performance tests for
->>> individual patches. So the performance data listed in some of the
->>> patches may be stale.
->> Just for those who'd like to follow the scope of changes, find below the 
->> v4->v5 interdiff. v5 is now included in tip:WIP.locking/core, and also 
->> merged into tip:master. (But not propagated towards linux-next yet.)
-> Hm, I'm experiencing early boot hangs with v5, on defconfig-ish x86-64 
-> kernels:
->
-> [    0.153940] rcu: Hierarchical RCU implementation.
-> [    0.154289] rcu: 	RCU restricting CPUs from NR_CPUS=128 to nr_cpu_ids=17.
-> [    0.154829] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
-> [    0.155390] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=17
->
->
-> I bisected it back to the v5 version of this patch:
->
->   2fd5f60fa4c3: locking/rwsem: Merge owner into count on x86-64
->
-> I'm moving -tip back to -v4 meanwhile.
->
-> Thanks,
->
-> 	Ingo
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
-Sorry about that. Will look into that problem.
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
 
--Longman
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.1-rc6
+
+for you to fetch changes up to bb0925b283fe558fa9530c9d0b6158e9b6c9dfa6:
+
+  Merge tag 'extcon-fixes-for-5.1-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon into char-misc-linus (2019-04-16 12:46:09 +0200)
+
+----------------------------------------------------------------
+char/misc fixes for 5.1-rc6
+
+Here are 4 small misc driver fixes for 5.1-rc6.
+
+Nothing major at all, they fix up a Kconfig issues, a SPDX invalid
+license tag, and 2 tiny bugfixes.
+
+All have been in linux-next for a while with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      extcon: ptn5150: fix COMPILE_TEST dependencies
+
+Bo YU (1):
+      misc: fastrpc: add checked value for dma_set_mask
+
+Greg Kroah-Hartman (2):
+      Merge tag 'misc-habanalabs-fixes-2019-04-01' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus
+      Merge tag 'extcon-fixes-for-5.1-rc4' of git://git.kernel.org/.../chanwoo/extcon into char-misc-linus
+
+Oded Gabbay (1):
+      habanalabs: remove low credit limit of DMA #0
+
+Thomas Gleixner (1):
+      drivers: power: supply: goldfish_battery: Fix bogus SPDX identifier
+
+ drivers/extcon/Kconfig                  | 2 +-
+ drivers/misc/fastrpc.c                  | 7 ++++++-
+ drivers/misc/habanalabs/goya/goya.c     | 9 ++++-----
+ drivers/power/supply/goldfish_battery.c | 2 +-
+ 4 files changed, 12 insertions(+), 8 deletions(-)
