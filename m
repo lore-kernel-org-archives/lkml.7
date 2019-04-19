@@ -2,115 +2,203 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDEFC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1A9C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03ABF204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4100C204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hqg6nfQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfDSSkV (ORCPT
+        id S1728438AbfDSSki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:40:21 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37285 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfDSSkU (ORCPT
+        Fri, 19 Apr 2019 14:40:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35147 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfDSSkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:40:20 -0400
-Received: by mail-it1-f196.google.com with SMTP id u65so9497165itc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:40:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h89jbsyKZFLdHfaOBCwQAn52VqoU6F6H0npqSz7mIhI=;
-        b=re0Tfl2xqJi9h0Uf13VqKR5IVuhmXHTDCTvUYyuETA4lf1csfnmDwoBKMYgcVl1Gh2
-         zSRuJy/8XUxnpQOVUbeSygzGE14iemFsgXcgPGGMfPSUSmpgkKtomJcCDF21eI7CBVhh
-         YKQVxJpvsjM9/zEvPzjZZtvsupVHKLpkiAP1pQ8H0NBhINVDEcSv2d4gBnZ4McVvNKAw
-         yE2PdIyBrlH+8VRQ1n3rfQlmZoaLBBKZYN+oD7cTd9H4RqNBdd5OqFx99gZu4Yf9+Y63
-         wvO/LJ96X5UQmoksCm1wzJ9mlEfBnkhkAX1wLuA6SzKJAD68VI8tiwHoTMKN3sUqBsXo
-         oeOA==
-X-Gm-Message-State: APjAAAVp8Sk84eLGmBb6wH5oMiiQL/Fr1EATI6cF1cZtAD7H7Cf2ua5K
-        dLfRjF3bDLuOZF4SG4L934IYqQ==
-X-Google-Smtp-Source: APXvYqyxB9ATaErq8VI0gfSGCwxDxUYLFmhbPWtElP+cGKDE6m/xtTGqQxWO0jBJTgf1/KcGc0Tpaw==
-X-Received: by 2002:a24:35d4:: with SMTP id k203mr3943021ita.89.1555699219243;
-        Fri, 19 Apr 2019 11:40:19 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id t67sm2708682ita.35.2019.04.19.11.40.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Apr 2019 11:40:18 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 12:40:13 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-devel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        djkurtz@chromium.org, zwisler@chromium.org,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Liming Sun <lsun@mellanox.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Prabu Thangamuthu <Prabu.T@synopsys.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v1 0/4] Add tracing for SDHCI register access
-Message-ID: <20190419184013.GA145226@google.com>
-References: <20190411220822.81845-1-rrangel@chromium.org>
- <7b77ebcb-b42b-2d14-f5f1-b37e07b88469@intel.com>
- <20190412145012.GA101407@google.com>
- <bd3a1df1-5ac4-e23c-35a3-78361a5c356e@intel.com>
+        Fri, 19 Apr 2019 14:40:37 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIdj2n385282
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 19 Apr 2019 11:39:45 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIdj2n385282
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555699186;
+        bh=F46fXeY9WyHzw0pM51C9KmQDpKbLci+JlazHARzhQzU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Hqg6nfQKSKS4iJY2tjZQOybeujdMDlGK2MyLhAkzr6r4376r9Yr+fNY5kpk8shwxe
+         riMARnBbVZ/dj3iACH1+Kd6xffuAubvC+4z39nmxzhrdrQBXmbUgeqWazc2WaZNxPE
+         y5x1U5MT0FjRqjx/rVnx05FCbI4wzkjYNUODHOKkCG6aMDtrSInla9IRd6ndletCBx
+         Y5ePH+dG88S0ZmqvfVD5u1Ehz6BzcJk3xDImXIBXGywF7Ge9++gGV6TkrohBei0G6x
+         Ww4+LkH8oGgV7nAr2zhInJJKY2k38G7SVlYkZ6TNX9I3UXE3XXmKGCntuKDjKwFcbf
+         heSg/+JUEn2nA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIdiiK385278;
+        Fri, 19 Apr 2019 11:39:44 -0700
+Date:   Fri, 19 Apr 2019 11:39:44 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
+Message-ID: <tip-6d2b0054d9a448d384264e003474219497e70bb9@git.kernel.org>
+Cc:     hpa@zytor.com, jolsa@redhat.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, bp@alien8.de, jpoimboe@redhat.com,
+        crecklin@redhat.com, williams@redhat.com, acme@redhat.com,
+        bristot@redhat.com, alexander.shishkin@linux.intel.com,
+        rostedt@goodmis.org, mingo@kernel.org, mhiramat@kernel.org,
+        tglx@linutronix.de, jkosina@suse.cz, mtosatti@redhat.com,
+        peterz@infradead.org, brgerst@gmail.com, swood@redhat.com,
+        jbaron@akamai.com, luto@kernel.org, gregkh@linuxfoundation.org,
+        dvlasenk@redhat.com
+Reply-To: peterz@infradead.org, swood@redhat.com, brgerst@gmail.com,
+          jbaron@akamai.com, dvlasenk@redhat.com,
+          gregkh@linuxfoundation.org, luto@kernel.org,
+          alexander.shishkin@linux.intel.com, rostedt@goodmis.org,
+          bristot@redhat.com, tglx@linutronix.de, mhiramat@kernel.org,
+          mingo@kernel.org, jkosina@suse.cz, mtosatti@redhat.com,
+          williams@redhat.com, acme@redhat.com, jolsa@redhat.com,
+          hpa@zytor.com, bp@alien8.de, linux-kernel@vger.kernel.org,
+          torvalds@linux-foundation.org, jpoimboe@redhat.com,
+          crecklin@redhat.com
+In-Reply-To: <67c326c50f8efa728d3040d3563f258949ff32c4.1545228276.git.bristot@redhat.com>
+References: <67c326c50f8efa728d3040d3563f258949ff32c4.1545228276.git.bristot@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/alternatives] x86/alternative: Split text_poke_bp() into
+ tree steps
+Git-Commit-ID: 6d2b0054d9a448d384264e003474219497e70bb9
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <bd3a1df1-5ac4-e23c-35a3-78361a5c356e@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 09:24:16AM +0300, Adrian Hunter wrote:
-> On 12/04/19 5:50 PM, Raul Rangel wrote:
-> > On Fri, Apr 12, 2019 at 09:26:44AM +0300, Adrian Hunter wrote:
-> >> On 12/04/19 1:08 AM, Raul E Rangel wrote:
-> >>> I was debugging a SDHC hardware bug and got tired of having to
-> >>> translate the register values by hand. This patch set makes it so all
-> >>> SDHC register read and write operations can be traced and easily read by
-> >>> a human.
-> >>
-> >> While this might be useful for people unfamiliar with SDHCI, I am not sure
-> >> it should be in the upstream kernel.
-> > Can you help me understand your hesitation? Would you prefer removing the
-> > pretty printing? Or would you prefer not having any trace events at all?
-> 
-> It is just cost/benefit.  I am not sure the cost of maintaining it is worth
-> the benefit of having it upstream.
-> 
-Steven,
-Since it seems this series won't be accepted upstream, would you still be
-open to accepting patches for trace_print_register? I can work on adding
-support to lib traceevent.
+Commit-ID:  6d2b0054d9a448d384264e003474219497e70bb9
+Gitweb:     https://git.kernel.org/tip/6d2b0054d9a448d384264e003474219497e70bb9
+Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
+AuthorDate: Fri, 21 Dec 2018 11:27:30 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 19 Apr 2019 19:37:34 +0200
 
-Thanks,
-Raul
-> > The xhci driver has a bunch of pretty print trace events that make it
-> > invaluable when debugging.
-> > https://github.com/torvalds/linux/blob/d7563ca5bfca53398e100eb74345c5d3ef06bf9d/drivers/usb/host/xhci.h#L2160
-> > 
-> >> Also, it doesn't seem ideal for every
-> >> driver to add its own plumbing for such a feature.
-> > What do you mean by every driver having to add it's own plumbing? Any
-> > driver that uses sdhci_readX or sdhci_writeX get the functionality for
-> > free.
-> 
-> I/O memory mappings are recorded for devices. e.g. /proc/iomem so it could
-> be possible to add tracing for all I/O memory accesses via readx/writex etc,
-> configurable / filterable by device id.
+x86/alternative: Split text_poke_bp() into tree steps
+
+text_poke_bp() updates instructions on live kernel on SMP in three steps:
+ 1) add a int3 trap to the address that will be patched
+ 2) update all but the first byte of the patched range
+ 3) replace the first byte (int3) by the first byte of
+
+This patch creates one function for each of these steps.
+
+Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Chris von Recklinghausen <crecklin@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Wood <swood@redhat.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/67c326c50f8efa728d3040d3563f258949ff32c4.1545228276.git.bristot@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/alternative.c | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 9a79c7808f9c..7fce844017f1 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -768,6 +768,29 @@ int poke_int3_handler(struct pt_regs *regs)
+ }
+ NOKPROBE_SYMBOL(poke_int3_handler);
+ 
++static void text_poke_bp_set_handler(void *addr, void *handler,
++				     unsigned char int3)
++{
++	bp_int3_handler = handler;
++	bp_int3_addr = (u8 *)addr + sizeof(int3);
++	text_poke(addr, &int3, sizeof(int3));
++}
++
++static void patch_all_but_first_byte(void *addr, const void *opcode,
++				     size_t len, unsigned char int3)
++{
++	/* patch all but the first byte */
++	text_poke((char *)addr + sizeof(int3),
++		  (const char *) opcode + sizeof(int3),
++		  len - sizeof(int3));
++}
++
++static void patch_first_byte(void *addr, const void *opcode, unsigned char int3)
++{
++	/* patch the first byte */
++	text_poke(addr, opcode, sizeof(int3));
++}
++
+ /**
+  * text_poke_bp() -- update instructions on live kernel on SMP
+  * @addr:	address to patch
+@@ -792,27 +815,21 @@ void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+ {
+ 	unsigned char int3 = 0xcc;
+ 
+-	bp_int3_handler = handler;
+-	bp_int3_addr = (u8 *)addr + sizeof(int3);
+-	bp_patching_in_progress = true;
+-
+ 	lockdep_assert_held(&text_mutex);
+ 
++	bp_patching_in_progress = true;
+ 	/*
+ 	 * Corresponding read barrier in int3 notifier for making sure the
+ 	 * in_progress and handler are correctly ordered wrt. patching.
+ 	 */
+ 	smp_wmb();
+ 
+-	text_poke(addr, &int3, sizeof(int3));
++	text_poke_bp_set_handler(addr, handler, int3);
+ 
+ 	on_each_cpu(do_sync_core, NULL, 1);
+ 
+ 	if (len - sizeof(int3) > 0) {
+-		/* patch all but the first byte */
+-		text_poke((char *)addr + sizeof(int3),
+-			  (const char *) opcode + sizeof(int3),
+-			  len - sizeof(int3));
++		patch_all_but_first_byte(addr, opcode, len, int3);
+ 		/*
+ 		 * According to Intel, this core syncing is very likely
+ 		 * not necessary and we'd be safe even without it. But
+@@ -821,8 +838,7 @@ void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+ 		on_each_cpu(do_sync_core, NULL, 1);
+ 	}
+ 
+-	/* patch the first byte */
+-	text_poke(addr, opcode, sizeof(int3));
++	patch_first_byte(addr, opcode, int3);
+ 
+ 	on_each_cpu(do_sync_core, NULL, 1);
+ 	/*
