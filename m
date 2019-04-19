@@ -2,100 +2,100 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7194C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910BFC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFB120449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5863C204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698692;
-	bh=Okr0FcJ2+exwj0VKB7RIylDI9kmdtXu/3QkheOWHXoc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OOIsAhv/J0tytnREFGzt0h+BucOjGCLQHFcfv5ApRloIPP9GtmPFjW8U7yIB09Fwx
-	 Vv7Fmq6fIUpGkU4nSHNHQsh8sB84cAAvQTtqQejK7ZFUkW8rxoqJWO5sEz/r5FXRNX
-	 xoiIOtFuMuQsQlJWxjtkYDmKfHmR4n/wp66foIgI=
+	s=default; t=1555698696;
+	bh=W3rK6NVqpOERRHajvvDevYluWZHMeEAi+aqbxcSi7Ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lNNKU2nhrLUyShlqGX6WkiZ5+x30FOqtocYVHGzLmwNQod2anQcvE5VMCVR2tPaih
+	 BnHCncALBuApQSyUgDt+IDixaHkCvVrx96U43Ld3n3AhPoOn+FEuJy0F64C3Y/re9c
+	 Q6Zih02KVZJYiJJcjEEj3QO8lpYlnpTCIpE9iyJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfDSSba (ORCPT
+        id S1727936AbfDSS3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:31:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbfDSS3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:18 -0400
-Received: from quaco.ghostprotocols.net (unknown [177.102.80.83])
+        id S1727259AbfDSS3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:29:15 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6D242192C;
-        Fri, 19 Apr 2019 12:30:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DB96222B5;
+        Fri, 19 Apr 2019 14:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555677052;
-        bh=Okr0FcJ2+exwj0VKB7RIylDI9kmdtXu/3QkheOWHXoc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lm2zIc+G6zlaB6oorAwqEca7l+XRTRADNUm61VreSrmYqGoFfKSAAsHKRoFNszPGD
-         KYvgktcfD7GTgFhlIUDNDkNTnGTh8AyWTG02jQUpxunTUXL/agrV8n3C64nIr3VQ6+
-         tbhHWEfFBiTG/cruVhHu3PRqEHdwWU8F+IBxlYGA=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/7] perf bpf: Return NULL when RB tree lookup fails in perf_env__find_bpf_prog_info()
-Date:   Fri, 19 Apr 2019 09:30:25 -0300
-Message-Id: <20190419123029.11328-4-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190419123029.11328-1-acme@kernel.org>
-References: <20190419123029.11328-1-acme@kernel.org>
+        s=default; t=1555683226;
+        bh=W3rK6NVqpOERRHajvvDevYluWZHMeEAi+aqbxcSi7Ow=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ObUQ/H/BYTzikfiRvyQOnd3R9BAnuEiriQa3A1NVwX+d4d1M509mwX/5uaL1oYydi
+         CRTZqa17iFqr9c1qeXoF+/Qb+3kcOQz7gSWAfY8rF3OzUgMEBLy2ai3/ENNhzcAxKn
+         6MICDg+lZi5F+nK7jB9BQvh9Cm9dIH78j/MKeg2Q=
+Date:   Fri, 19 Apr 2019 09:13:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 0/5] Fix PF/VF dependency issues
+Message-ID: <20190419141345.GD173520@google.com>
+References: <cover.1551907663.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1551907663.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Wed, Mar 06, 2019 at 02:11:13PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Current implementation of ATS, PASID, PRI does not handle the PF/VF
+> dependencies as defined in PCIe spec r4.0. Following patches
+> addresses this issue.
 
-We currently don't return NULL in case we don't find the
-bpf_prog_info_node, fixing that.
+Some of these patches probably fix issues, like making PASID work
+correctly on VFs.  But that needs to be made explicit in the commit
+logs.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: e4378f0cb90b ("perf bpf: Save bpf_prog_info in a rbtree in perf_env")
-Link: http://lkml.kernel.org/r/20190416134151.15282-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/env.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The current commit logs read more like "make XYZ follow the spec",
+and that's not really what we need to know.  The commit log needs to
+tell us why we need the change, not just what the spec says.
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index c6351b557bb0..34a363f2e71b 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -57,9 +57,11 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
- 		else if (prog_id > node->info_linear->info.id)
- 			n = n->rb_right;
- 		else
--			break;
-+			goto out;
- 	}
-+	node = NULL;
- 
-+out:
- 	up_read(&env->bpf_progs.lock);
- 	return node;
- }
--- 
-2.20.1
+For example, maybe VFs can't use PASID because Linux incorrectly tries
+to use the PASID capability on the VF when it should be using the
+capability on the PF.  The commit log should say that explicitly and
+also say what the current behavior is, e.g., does it cause IOMMU
+faults, does it cause data corruption, does some DMA mapping interface
+called by the VF driver fail when it shouldn't, etc?
 
+Bjorn
+
+> Kuppuswamy Sathyanarayanan (5):
+>   PCI/IOV: Add support to verify PF/VF spec compliance
+>   PCI/ATS: Fix PRI PF/VF dependency issues
+>   PCI/ATS: Fix PASID PF/VF dependency issues
+>   PCI/ATS: For PF/VF skip ATS initalization if spec check failed
+>   PCI/ATS: Fix ATS PF/VF dependency issues
+> 
+>  .../admin-guide/kernel-parameters.txt         |   2 +
+>  drivers/pci/ats.c                             | 129 ++++-
+>  drivers/pci/iov.c                             | 468 ++++++++++++++++++
+>  drivers/pci/pci.c                             |   2 +
+>  drivers/pci/pci.h                             |   6 +
+>  include/linux/pci.h                           |  33 +-
+>  include/uapi/linux/pci_regs.h                 |  15 +-
+>  7 files changed, 639 insertions(+), 16 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
