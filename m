@@ -2,121 +2,99 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BB8C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05974C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7FB9222CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98CE222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caOIYLew"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jiH6HICA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfDSSXb (ORCPT
+        id S1727844AbfDSSXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:23:31 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42575 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfDSSX3 (ORCPT
+        Fri, 19 Apr 2019 14:23:33 -0400
+Received: from condef-07.nifty.com ([202.248.20.72]:39435 "EHLO
+        condef-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727216AbfDSSXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:23:29 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w23so4570911lfc.9;
-        Fri, 19 Apr 2019 11:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=mRAge5Pmqaqc5fZ0NHqu5gKTW2B1I9IBJzxof3qVcIg=;
-        b=caOIYLewrzJO0tx1/p2iMgF7wSWM9NpTC/5/mjYtUwzbQgZHONS7KIVKSEKhVUbSrL
-         DWY+wem1NdyiPS97aDwsDtNeSfVWqCQ9E+6xnRXm+TPxW8cMxAcNPbRJgQH/7Ho/oPWM
-         ufyMKQhkHl0HanrOL9jrilMbs5VEEDH2wmr4Yk8bVZEd4hGy7MuTcJMqWRxDI8Ff+8WQ
-         YIK9Y2GNYs5Ea+r88JNXtL6NTYFgMGycXyeA85r403/DBFswslVQAGLzXx9D3Dz6zxHk
-         +yWDzhmsFdRAc6OUm7hr5RqxX3eLAok2osfQPep2Je/jdzkiVijJGYLVQwh5HfYrxtPp
-         BDQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=mRAge5Pmqaqc5fZ0NHqu5gKTW2B1I9IBJzxof3qVcIg=;
-        b=Lrg0liq0LDje8nhGTU7jdy95tKxVxd5xpscsnJ0aTo0vmvel/ymMBGDhemPNC3Nxyg
-         Vx/3t/bAGiFGnGdVcpjHiVdPdd/U4l6RCvqwfi8blvzC8lZI3TzOVztgTcx8n1d2Fwpa
-         DCrnAnLmfQTXAItikiWBqOK+RKo4B2Xn3oshczG3a1WoAbkCxgwfbhv3t1gvcrEydK3o
-         Ap2oteGCXgFgn5EyBPSqZWSGRhXQmR3LpncX965tmvF4m2y7aoZeGZhb/0Z7cJgoUGsv
-         rUNPGuyhkn2MlPCvFEhk2bKP3eqEevsFWONAnF75A48QqhUSONmWyEt1iZGuX5VLWvCx
-         95Ng==
-X-Gm-Message-State: APjAAAXFmf05+6gdf41XclNH5wKPtaqcGO4x7h5frTpty98ZI2fBSdsG
-        BWgABrnwCHztDawFe22rVfY+JNBXp5OYVdmYsX2s1Q==
-X-Google-Smtp-Source: APXvYqxrilCnuTySbmUdOUICSZcFng2tCWgPTQgGgRchTIx3ZTPRaH32HTbwlG4QHhUSpLfcq5ZsEuPGgaqRGAN0dt0=
-X-Received: by 2002:a19:a8c8:: with SMTP id r191mr2931043lfe.161.1555696435059;
- Fri, 19 Apr 2019 10:53:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
-In-Reply-To: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Date:   Fri, 19 Apr 2019 18:53:44 +0100
-Message-ID: <CACfOrNdEpC2vNgCOBXtrW-HjGHNG_6iLAFUCtVoZstGASPtcsA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
- Exynos542x SoCs
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 19 Apr 2019 14:23:31 -0400
+Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-07.nifty.com with ESMTP id x3J9nQPl028233;
+        Fri, 19 Apr 2019 18:49:26 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x3J9mDiU012304;
+        Fri, 19 Apr 2019 18:48:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3J9mDiU012304
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555667307;
+        bh=ZmcBGqsNIopkSvb/z9Yz7Nb+RmV19Ubtd5G31RF7cjs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jiH6HICApN78Kk5hFdRE9UlFB3DbHyO32Exybcj2tFMz2jpLTLwgX2JIw8K1qWK4T
+         E1O0Ew8v+k/nfXa5VI4SNERYU2iuWyUszoCaY8TIGwtXn/On+OQ6Cf6HlcF4EZFBOu
+         QDInHPQIydJH4bbzuu6Xa9Ps+zAFaqOuDnY00oHB3JgAOWUEXovFVa0xxzWMI/qUqh
+         9sOeDdWNiIdD62ji12XR1RvY2JL7XWAKfttdTlSoHNIoaNkVqvDLCzimUvF2iPf2Z9
+         j2/vL15IZ64QIadnS1igjZWzEXPL/nGG8jrU+NfUOpmpPCXsyZoz4Ce0wDf84uAPVx
+         cNXO0eCfrYgCg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 09/11] powerpc/mm/radix: mark __radix__flush_tlb_range_psize() as __always_inline
+Date:   Fri, 19 Apr 2019 18:47:52 +0900
+Message-Id: <20190419094754.24667-10-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+References: <20190419094754.24667-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+place. We need to eliminate potential issues beforehand.
 
-This patch can be dropped, as it needs more work.
+If it is enabled for powerpc, the following error is reported:
 
-In fact, the interrupts seems to be wrong. The interrupts suggested by
-Anand Moon gave the same following results.
+arch/powerpc/mm/tlb-radix.c: In function '__radix__flush_tlb_range_psize':
+arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't match constraints [-Werror]
+  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+  ^~~
+arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
 
-export CCI_DEV=CCI_400
-export OMP_NUM_THREADS=2
-sudo --preserve-env ./perf stat -a \
-  -e armv7_cortex_a7/config=0x11,name=a7_cycles/ \
-  -e armv7_cortex_a15/config=0x11,name=a15_cycles/ \
-  -e armv7_cortex_a7/config=0x19,name=a7_bus/ \
-  -e armv7_cortex_a15/config=0x19,name=a15_bus/ \
-  -e ${CCI_DEV}/config=0xff,name=cci400_cycles/ \
-  -e ${CCI_DEV}/config=0x0,name=cci400_si_rrq_hs_any/ \
-  -e ${CCI_DEV}/config=0xc,name=cci400_si_wrq_hs_any/ \
-  taskset -c 0,7 /home/user/cg.x.A 1
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-[..]
+Changes in v2:
+  - split into a separate patch
 
- Performance counter stats for 'system wide':
+ arch/powerpc/mm/tlb-radix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-     9,362,850,550      a7_cycles
-     1,682,125,760      a15_cycles
-        68,920,347      a7_bus
-        61,484,352      a15_bus
-     3,789,936,935      cci400_cycles
-                 0      cci400_si_rrq_hs_any
-                 0      cci400_si_wrq_hs_any
+diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+index 6a23b9ebd2a1..a2b2848f0ae3 100644
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -928,7 +928,7 @@ void radix__tlb_flush(struct mmu_gather *tlb)
+ 	tlb->need_flush_all = 0;
+ }
+ 
+-static inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
++static __always_inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
+ 				unsigned long start, unsigned long end,
+ 				int psize, bool also_pwc)
+ {
+-- 
+2.17.1
 
-       9.541340558 seconds time elapsed
-
-cg.x.A comes from NAS benchmark suite, compiled with fopenmp support, setup
-to run 2 threads and taskmapped to ran on both a7 and a15 clusters.
-a7_bus and a15_bus report main memory accesses.
-
-Only cci400_cycles seems to be correct. However, all pmcs from the master
-interface are reported as unsupported and all pmcs from the slave interface
-return 0, which is probably not correct.
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0470f/CJHICFBF.html
-
-Would it be possible that someone from Samsung provide the right
-interrupts values?
-Many thanks.
-
-Regards,
-Willy
