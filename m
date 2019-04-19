@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F985C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7191FC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC822064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC7620645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Fx4pjhec"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="L3EjChIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfDSTGd (ORCPT
+        id S1729608AbfDSTGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:06:33 -0400
+        Fri, 19 Apr 2019 15:06:40 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729470AbfDSTGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:06:23 -0400
+        id S1729239AbfDSTGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:06:22 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JAiSSi238311
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JAhmhv236701
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 03:44:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JAiSSi238311
+        Fri, 19 Apr 2019 03:43:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JAhmhv236701
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555670669;
-        bh=JinSCEjvJ0qCv6F7YwC7UTaq0RGuXmVuVbYLvFlmBOI=;
+        s=2019041745; t=1555670629;
+        bh=4R459gU3WfBGhvJB+jBso5J1ILgSpXhSaVVM7XigipA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Fx4pjhecthiIRTX6Gt/mLoLPbNJrVZ7bwacRC+LB3qIgb+k8aIUbYdDkwmmWUfDqR
-         J1Wpljzct9dkiJ6+Qym2Rqf6ED8qNQlNLwzgcfE1kZvfkwzDJbvNZ+Rqm25yTBsmWo
-         cQkW+hpWuCT1diOZw52LIbBjEUKP1op5iGJZbGHwMMVozGhfF6YoIld/wcdCbiDa9E
-         lxhUYDR0Rryhgha7qDK3JK05yON2zp2YhtDKwq5wRo83MarmEEeSEiCSnrNrb0aPrC
-         skbUyQqN0NI2tUinIR6fdz9j1ym10j8fpOQBIlYSgR9XqWN6CZZV0BQfSoQrm7j2uU
-         NEL3wbr8zG3wA==
+        b=L3EjChITixve5bm8l/3Vf1Yddg5qzLgLJJaM8GttoNUsyUk6qkzRALjZ2OBydOIuh
+         TlcTWLC5YWO6c6JXRrwjuI2zFGJghFYKiMEinPiP3GiloglWX8Nk3/Dlo9VBWcj/yo
+         ZcULs4dVv3ZohyPpoifRE1/tgjHohIXNd8HMYaGYfDxQ0OAB+kOlsAr2cCe6t2nNHN
+         8+VsBfniOMoYBSSHFm3MoW0hWo2FS81VivH6DsQWddFMgcN4VkFno/yUcrEZdqSP+r
+         CljCNYQOfafAVTxwDtAWgAbcuBVWxnSZrZgx0g9WPVNl3EC8YyBHZDiB0Fh7ZNmA9o
+         AEp16HMXEc81A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JAiR1x238308;
-        Fri, 19 Apr 2019 03:44:27 -0700
-Date:   Fri, 19 Apr 2019 03:44:27 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JAhlJZ236698;
+        Fri, 19 Apr 2019 03:43:47 -0700
+Date:   Fri, 19 Apr 2019 03:43:47 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Mathieu Desnoyers <tipbot@zytor.com>
-Message-ID: <tip-90083998312324599cb2a546020755cdc934de0f@git.kernel.org>
-Cc:     josh@joshtriplett.org, catalin.marinas@arm.com, joelaf@google.com,
-        paulmck@linux.vnet.ibm.com, hpa@zytor.com, mtk.manpages@gmail.com,
-        tglx@linutronix.de, mathieu.desnoyers@efficios.com, bmaurer@fb.com,
-        rostedt@goodmis.org, davejwatson@fb.com, boqun.feng@gmail.com,
-        pjt@google.com, will.deacon@arm.com, torvalds@linux-foundation.org,
-        linux@arm.linux.org.uk, cl@linux.com, akpm@linux-foundation.org,
-        shuah@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        luto@amacapital.net, peterz@infradead.org
-Reply-To: mathieu.desnoyers@efficios.com, tglx@linutronix.de,
-          bmaurer@fb.com, josh@joshtriplett.org, catalin.marinas@arm.com,
-          joelaf@google.com, paulmck@linux.vnet.ibm.com, hpa@zytor.com,
-          mtk.manpages@gmail.com, akpm@linux-foundation.org, cl@linux.com,
-          linux-kernel@vger.kernel.org, shuah@kernel.org, mingo@kernel.org,
-          luto@amacapital.net, peterz@infradead.org, davejwatson@fb.com,
-          rostedt@goodmis.org, boqun.feng@gmail.com,
-          torvalds@linux-foundation.org, pjt@google.com,
-          will.deacon@arm.com, linux@arm.linux.org.uk
-In-Reply-To: <20190305194755.2602-4-mathieu.desnoyers@efficios.com>
-References: <20190305194755.2602-4-mathieu.desnoyers@efficios.com>
+Message-ID: <tip-83b0b15bcb0f700e7c1d070aae2e7841170a4c33@git.kernel.org>
+Cc:     linux@arm.linux.org.uk, mtk.manpages@gmail.com,
+        catalin.marinas@arm.com, boqun.feng@gmail.com, davejwatson@fb.com,
+        peterz@infradead.org, pjt@google.com, akpm@linux-foundation.org,
+        josh@joshtriplett.org, cl@linux.com, linux-kernel@vger.kernel.org,
+        will.deacon@arm.com, joelaf@google.com,
+        torvalds@linux-foundation.org, hpa@zytor.com,
+        mathieu.desnoyers@efficios.com, bmaurer@fb.com, tglx@linutronix.de,
+        rostedt@goodmis.org, paulmck@linux.vnet.ibm.com, mingo@kernel.org,
+        luto@amacapital.net
+Reply-To: josh@joshtriplett.org, cl@linux.com,
+          linux-kernel@vger.kernel.org, joelaf@google.com,
+          will.deacon@arm.com, pjt@google.com, akpm@linux-foundation.org,
+          boqun.feng@gmail.com, peterz@infradead.org, davejwatson@fb.com,
+          linux@arm.linux.org.uk, mtk.manpages@gmail.com,
+          catalin.marinas@arm.com, mingo@kernel.org, luto@amacapital.net,
+          bmaurer@fb.com, rostedt@goodmis.org, tglx@linutronix.de,
+          paulmck@linux.vnet.ibm.com, mathieu.desnoyers@efficios.com,
+          hpa@zytor.com, torvalds@linux-foundation.org
+In-Reply-To: <20190305194755.2602-3-mathieu.desnoyers@efficios.com>
+References: <20190305194755.2602-3-mathieu.desnoyers@efficios.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/rseq] rseq/selftests: Adapt number of threads to the
- number of detected cpus
-Git-Commit-ID: 90083998312324599cb2a546020755cdc934de0f
+Subject: [tip:core/rseq] rseq: Remove superfluous rseq_len from task_struct
+Git-Commit-ID: 83b0b15bcb0f700e7c1d070aae2e7841170a4c33
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -80,20 +80,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  90083998312324599cb2a546020755cdc934de0f
-Gitweb:     https://git.kernel.org/tip/90083998312324599cb2a546020755cdc934de0f
+Commit-ID:  83b0b15bcb0f700e7c1d070aae2e7841170a4c33
+Gitweb:     https://git.kernel.org/tip/83b0b15bcb0f700e7c1d070aae2e7841170a4c33
 Author:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-AuthorDate: Tue, 5 Mar 2019 14:47:55 -0500
+AuthorDate: Tue, 5 Mar 2019 14:47:54 -0500
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Fri, 19 Apr 2019 12:39:32 +0200
 
-rseq/selftests: Adapt number of threads to the number of detected cpus
+rseq: Remove superfluous rseq_len from task_struct
 
-On smaller systems, running a test with 200 threads can take a long
-time on machines with smaller number of CPUs.
+The rseq system call, when invoked with flags of "0" or
+"RSEQ_FLAG_UNREGISTER" values, expects the rseq_len parameter to
+be equal to sizeof(struct rseq), which is fixed-size and fixed-layout,
+specified in uapi linux/rseq.h.
 
-Detect the number of online cpus at test runtime, and multiply that
-by 6 to have 6 rseq threads per cpu preempting each other.
+Expecting a fixed size for rseq_len is a design choice that ensures
+multiple libraries and application defining __rseq_abi in the same
+process agree on its exact size.
+
+Considering that this size is and will always be the same value, there
+is no point in saving this value within task_struct rseq_len. Remove
+this field from task_struct.
+
+No change in functionality intended.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -104,6 +113,7 @@ Cc: Boqun Feng <boqun.feng@gmail.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Chris Lameter <cl@linux.com>
 Cc: Dave Watson <davejwatson@fb.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Joel Fernandes <joelaf@google.com>
 Cc: Josh Triplett <josh@joshtriplett.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
@@ -112,47 +122,85 @@ Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Paul Turner <pjt@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Shuah Khan <shuah@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: linux-api@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190305194755.2602-4-mathieu.desnoyers@efficios.com
+Link: http://lkml.kernel.org/r/20190305194755.2602-3-mathieu.desnoyers@efficios.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/testing/selftests/rseq/run_param_test.sh | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/sched.h | 4 ----
+ kernel/rseq.c         | 6 ++----
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/run_param_test.sh b/tools/testing/selftests/rseq/run_param_test.sh
-index 3acd6d75ff9f..e426304fd4a0 100755
---- a/tools/testing/selftests/rseq/run_param_test.sh
-+++ b/tools/testing/selftests/rseq/run_param_test.sh
-@@ -1,6 +1,8 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0+ or MIT
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 1549584a1538..50606a6e73d6 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1057,7 +1057,6 @@ struct task_struct {
  
-+NR_CPUS=`grep '^processor' /proc/cpuinfo | wc -l`
-+
- EXTRA_ARGS=${@}
- 
- OLDIFS="$IFS"
-@@ -28,15 +30,16 @@ IFS="$OLDIFS"
- 
- REPS=1000
- SLOW_REPS=100
-+NR_THREADS=$((6*${NR_CPUS}))
- 
- function do_tests()
+ #ifdef CONFIG_RSEQ
+ 	struct rseq __user *rseq;
+-	u32 rseq_len;
+ 	u32 rseq_sig;
+ 	/*
+ 	 * RmW on rseq_event_mask must be performed atomically
+@@ -1855,12 +1854,10 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
  {
- 	local i=0
- 	while [ "$i" -lt "${#TEST_LIST[@]}" ]; do
- 		echo "Running test ${TEST_NAME[$i]}"
--		./param_test ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} || exit 1
-+		./param_test ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@} ${EXTRA_ARGS} || exit 1
- 		echo "Running compare-twice test ${TEST_NAME[$i]}"
--		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} || exit 1
-+		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@} ${EXTRA_ARGS} || exit 1
- 		let "i++"
- 	done
+ 	if (clone_flags & CLONE_THREAD) {
+ 		t->rseq = NULL;
+-		t->rseq_len = 0;
+ 		t->rseq_sig = 0;
+ 		t->rseq_event_mask = 0;
+ 	} else {
+ 		t->rseq = current->rseq;
+-		t->rseq_len = current->rseq_len;
+ 		t->rseq_sig = current->rseq_sig;
+ 		t->rseq_event_mask = current->rseq_event_mask;
+ 	}
+@@ -1869,7 +1866,6 @@ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+ static inline void rseq_execve(struct task_struct *t)
+ {
+ 	t->rseq = NULL;
+-	t->rseq_len = 0;
+ 	t->rseq_sig = 0;
+ 	t->rseq_event_mask = 0;
  }
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index 849afe749131..9424ee90589e 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -313,7 +313,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		/* Unregister rseq for current thread. */
+ 		if (current->rseq != rseq || !current->rseq)
+ 			return -EINVAL;
+-		if (current->rseq_len != rseq_len)
++		if (rseq_len != sizeof(*rseq))
+ 			return -EINVAL;
+ 		if (current->rseq_sig != sig)
+ 			return -EPERM;
+@@ -321,7 +321,6 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		if (ret)
+ 			return ret;
+ 		current->rseq = NULL;
+-		current->rseq_len = 0;
+ 		current->rseq_sig = 0;
+ 		return 0;
+ 	}
+@@ -335,7 +334,7 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 		 * the provided address differs from the prior
+ 		 * one.
+ 		 */
+-		if (current->rseq != rseq || current->rseq_len != rseq_len)
++		if (current->rseq != rseq || rseq_len != sizeof(*rseq))
+ 			return -EINVAL;
+ 		if (current->rseq_sig != sig)
+ 			return -EPERM;
+@@ -353,7 +352,6 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 	if (!access_ok(rseq, rseq_len))
+ 		return -EFAULT;
+ 	current->rseq = rseq;
+-	current->rseq_len = rseq_len;
+ 	current->rseq_sig = sig;
+ 	/*
+ 	 * If rseq was previously inactive, and has just been
