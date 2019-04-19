@@ -2,111 +2,129 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFC7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88303C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2A520643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wdv7JA/P"
+	by mail.kernel.org (Postfix) with ESMTP id 5C53F20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfDSTDU (ORCPT
+        id S1729038AbfDSTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:03:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42412 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728999AbfDSTDM (ORCPT
+        Fri, 19 Apr 2019 15:03:24 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42077 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfDSTDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g3so7924094wrx.9;
-        Fri, 19 Apr 2019 12:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=D5OOA2KesAQE4cCxLou/+hQFW5UG2WDyvZfR5JDwzZ8=;
-        b=Wdv7JA/P/PvqD30VTsPVeHTZ99kGlcdLPHsamBmqU36Qfj9B25WWbfM9KHGVIkiNqn
-         JtiyGWch+0XpldJgdIRlpZTCWRhUTg/S3sndYJm1PZofEZ+RcTIb+9wYIOZtPBrPfqQq
-         ZbowP14LkHCeWT8r1ruNB0+XPG/4SmoH8Q71IMLIYHGWd0VY26QNbP98DRay4gCmfpgt
-         R5KPC5HCQjx/kZhzgWbzgwReM++iTnPR1Aun9gzvEh9twpZX5BP4qdiHRS/zg1CeP6F/
-         3pag1QISUUsxIgruBJKsboSLS4EbALC+MGjUVT+m6BxIwtGuNdf8coW30mwRFxgwgq1+
-         I9Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D5OOA2KesAQE4cCxLou/+hQFW5UG2WDyvZfR5JDwzZ8=;
-        b=qaPAPlPt9fxGQM+70KEI6tVpNLUSoCSISBvpuxKxh9tFEClXJBezc+gIPjMMQz7Vn7
-         PGhu7jF7Yt0eBRyPWMYQ87duR2antomZrN1N3aAXZ5qM/RMHJH3IkVUoYxt0mJr9Nm0G
-         fef8G9GjipywDW9r4Dwj2nKwvHd1t2jMU1mkOEU+R3fQJ4lTQBf1EqbO/S4NxprlOJoR
-         RiRDUkXDuwv4PZ6ccPmDJvc9cFquprJouyFSSK2kUMp6cVGxoxchqSUxRtKyAdM6/MzQ
-         crSyRa2Kt6rCSM1Hi3s7vxdpu/lLnxNREIAW/a8xbswPwS3QlOdhizpXoWo/zJMmbVKS
-         867g==
-X-Gm-Message-State: APjAAAVUPj2WmMFa7dmuNYpJmWY4N9ezeIFISLlKWwMQNUZRscbVtQMK
-        QVVZZ/DK9k/xERMIrg7UPrlBoVCu67I=
-X-Google-Smtp-Source: APXvYqw7UQCebd+9C2FW6+rrosqpCDixDfKZRM0dsvPXDnu1o1JrdkdP9ofhnUR/aN4x4NEp9xKTAQ==
-X-Received: by 2002:a5d:6a0b:: with SMTP id m11mr2265479wru.290.1555668225822;
-        Fri, 19 Apr 2019 03:03:45 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id t76sm6070105wmt.8.2019.04.19.03.03.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 03:03:45 -0700 (PDT)
-Subject: [PATCH v3 02/11] platform/x86: asus-wmi: Fix preserving keyboard
- backlight intensity on load
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
-Message-ID: <83ca4d6b-523a-5c89-1f0e-7103e5c5923b@gmail.com>
-Date:   Fri, 19 Apr 2019 12:03:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 15:03:23 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hHPKZ-0001fl-0i; Fri, 19 Apr 2019 10:57:11 +0200
+Date:   Fri, 19 Apr 2019 10:57:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Daniel Drake <drake@endlessm.com>
+cc:     Len Brown <lenb@kernel.org>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com,
+        rjw@rjwysocki.net, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: Detecting x86 LAPIC timer frequency from CPUID data
+In-Reply-To: <20190419083533.32388-1-drake@endlessm.com>
+Message-ID: <alpine.DEB.2.21.1904191042180.3174@nanos.tec.linutronix.de>
+References:  <20190419083533.32388-1-drake@endlessm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The error code and return value are mixed up. The intensity is always set
-to 0 on load as kbd_led_read returns either 0 or negative value. To
-reproduce set backlight to maximum, reload driver and try to increase it
-using keyboard hotkey, the intensity will drop as a result. Correct the
-implementation.
+On Fri, 19 Apr 2019, Daniel Drake wrote:
+> On Fri, Apr 19, 2019 at 6:30 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >    Time Stamp Counter/Core Crystal Clock Information (0x15):
+> >       TSC/clock ratio = 168/2
+> >       nominal core crystal clock = 0 Hz
+> >
+> >    Processor Frequency Information (0x16):
+> >       Core Base Frequency (MHz) = 0x834 (2100)
+> >       Core Maximum Frequency (MHz) = 0xed8 (3800)
+> >       Bus (Reference) Frequency (MHz) = 0x64 (100)
+> >
+> > Assuming that TSC and local APIC timer run from the same frequency on these
+> > modern machines.
+> >
+> >        2100MHz * 2 / 168 = 25MHz
+> >
+> > and disabling the tsc deadline timer tells me:
+> >
+> >   ..... calibration result: 24999
+> >
+> > Close enough.
+> 
+> I tested all the Intel SoC generations we have on hand. The assumption that
+> the core crystal clock feeds the APIC seems to be consistently true.
+> 
+> (Please note that all the following results are done with CONFIG_HZ=250,
+>  which is why the "calibration result" is 4x higher than HZ=1000 as used
+>  in previous mails)
+> 
+> In the easy case, the low cost platforms do not support CPUID.0x16 (so no
+> CPU frequency reporting), but they do tell us the core crystal clock, which
+> is consistent with the APIC calibration result:
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+...
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d865eb95054c..731ffd382426 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -590,8 +590,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 			goto error;
- 	}
+> And the 4 higher-end SoCs that we have available for testing all report
+> crystal clock 0Hz from CPUID 0x15, but by combining the CPUID.0x16 base
+> frequency with the CPUID.0x15 TSC/clock ratio, the crystal frequency can
+> be calculated as you describe, and it consistently matches the APIC timer
+> calibration result.
+
+...
+
+> Is this data convincing enough or should we additionally wait for some
+> comments from Intel?
+
+For me it's pretty convincing, but having some confirmation from Intel
+wouldn't be a bad thing.
  
--	led_val = kbd_led_read(asus, NULL, NULL);
--	if (led_val >= 0) {
-+	if (!kbd_led_read(asus, &led_val, NULL)) {
- 		asus->kbd_led_wk = led_val;
- 		asus->kbd_led.name = "asus::kbd_backlight";
- 		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
--- 
-2.17.1
+> I came up with the patch below. However, upon testing, I realised that, at
+> least for the platforms I have in hand, only the first hunk is really needed.
+> We don't need to use your magic calculation to find the crystal frequency
+> because Intel already told us! native_calibrate_tsc() already hardcodes the
+> crystal frequency for Kabylake, and Amber/Whiskey/Coffee also report the
+> 0x8e/0x9e Kabylake model codes.
 
+I'd rather replace these model checks with math. These tables are horrible
+to maintain.
+
+> Plus ApolloLake/GeminiLake do report the crystal frequency in CPUID.0x15
+> so that is covered too.
+
+> While looking around this code I also spotted something curious.
+> In calibrate_APIC_clock() for the case where lapic_timer_frequency has been
+> externally provided, we have:
+> 		lapic_clockevent.max_delta_ns =
+> 			clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
+> 		lapic_clockevent.max_delta_ticks = 0x7FFFFF;
+> 
+> But in the case where we calibrate, we have:
+> 	lapic_clockevent.max_delta_ns =
+> 		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
+> 	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
+> 
+> 0x7FFFFF vs 0x7FFFFFFF, is that intentional?
+
+I don't think so. Looks like a failed copy and paste. Cc'ed Jacob, he might
+know.
+
+Thanks,
+
+	tglx
