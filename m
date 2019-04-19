@@ -2,139 +2,212 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D490C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D51C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241BF222E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A88222E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sb2muPTk"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="n9P09UKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfDSSQk (ORCPT
+        id S1727088AbfDSSQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:16:40 -0400
-Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:52369
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Fri, 19 Apr 2019 14:16:43 -0400
+Received: from mail-eopbgr130042.outbound.protection.outlook.com ([40.107.13.42]:25694
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726762AbfDSSQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:16:39 -0400
+        id S1726762AbfDSSQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:16:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bdOMdNJmJGOVzzRDliZ13hYceqbBlu9X588oBQ/37Es=;
- b=sb2muPTk29AUFBD27Emi7Ons964JYJObjoEZ1DvRmbWMLjf7MV4IwcUIFGurqc6aW4Oe3YZfSuUHyHZ2w/WwvI2mx0r8E9zMVyhgVe2bqXnNMkhq8H8NM+9TKYr3hXz67muslkr6Ge+beLdpTieQvQDyHu/BLIdLVANcOqwRogI=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1PR04MB5919.eurprd04.prod.outlook.com (20.178.205.81) with Microsoft SMTP
+ bh=XqqEVie4tjXJmZgSE1QCEoxqGvZnqDhtbXv+iffTn3I=;
+ b=n9P09UKqCJ8SZOVehC80IPjZ+XZY5W0DeFW2rUGSl/2Y+DAfvgqHXDt2Pt99IgA9QL+rIqdto1Usmph/0wjVgy0BJjHC4c6g1z/hw9+DQAPqLFifdwpOyDzj9O5qPn58W3GoJaSxFj6qLvpxgAeyQ0JpZaStsJjCubpYwFWxFX8=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6656.eurprd04.prod.outlook.com (20.179.235.95) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Fri, 19 Apr 2019 13:41:39 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::5c9b:12cc:80f2:1f42]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::5c9b:12cc:80f2:1f42%3]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
- 13:41:39 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
-Thread-Topic: [PATCH 02/13] soc/fsl/bman: map FBPR area in the iommu
-Thread-Index: AQHU5je+GYAdWERgxkCiU6HsMs84n6YisRcAgCDsguA=
-Date:   Fri, 19 Apr 2019 13:41:38 +0000
-Message-ID: <VI1PR04MB5134C8A672CD99F521DBFE7EEC270@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20190329140014.8126-1-laurentiu.tudor@nxp.com>
- <20190329140014.8126-3-laurentiu.tudor@nxp.com>
- <b747c418-a495-56e0-c106-a8ec8e82ccb9@arm.com>
-In-Reply-To: <b747c418-a495-56e0-c106-a8ec8e82ccb9@arm.com>
+ 15.20.1813.14; Fri, 19 Apr 2019 11:01:22 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
+ 11:01:22 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [alsa-devel] [PATCH V2] ASoC: fsl_esai: Add pm runtime function
+Thread-Topic: [alsa-devel] [PATCH V2] ASoC: fsl_esai: Add pm runtime function
+Thread-Index: AdT2nwKH3TLvu6Y8ReyroQ8XH40rZA==
+Date:   Fri, 19 Apr 2019 11:01:21 +0000
+Message-ID: <VE1PR04MB6479A85982748088CC42901DE3270@VE1PR04MB6479.eurprd04.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [213.233.110.112]
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f1080e5-4da5-4fa6-733c-08d6c4ccbfd8
+x-ms-office365-filtering-correlation-id: 41dbeb4a-81e7-40ff-8fa9-08d6c4b65bbb
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5919;
-x-ms-traffictypediagnostic: VI1PR04MB5919:
-x-microsoft-antispam-prvs: <VI1PR04MB591919C806B5124532B976BFEC270@VI1PR04MB5919.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6656;
+x-ms-traffictypediagnostic: VE1PR04MB6656:
+x-microsoft-antispam-prvs: <VE1PR04MB665690802941C9D3B92B77DFE3270@VE1PR04MB6656.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0012E6D357
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(39860400002)(366004)(396003)(199004)(13464003)(189003)(55016002)(73956011)(66946007)(6246003)(52536014)(99286004)(66066001)(478600001)(2906002)(9686003)(97736004)(68736007)(44832011)(76176011)(86362001)(64756008)(76116006)(66446008)(53936002)(316002)(7696005)(54906003)(6116002)(110136005)(14454004)(6636002)(256004)(229853002)(476003)(6436002)(186003)(11346002)(74316002)(81156014)(4326008)(7736002)(305945005)(25786009)(26005)(71190400001)(33656002)(71200400001)(53546011)(486006)(6506007)(81166006)(8676002)(3846002)(102836004)(446003)(8936002)(66476007)(2501003)(5660300002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5919;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(136003)(346002)(189003)(199004)(6506007)(33656002)(66946007)(316002)(86362001)(54906003)(110136005)(97736004)(74316002)(66066001)(6436002)(14444005)(73956011)(256004)(55016002)(4326008)(7736002)(305945005)(186003)(102836004)(7696005)(478600001)(6116002)(476003)(9686003)(52536014)(2906002)(81156014)(2201001)(14454004)(8676002)(8936002)(81166006)(486006)(99286004)(53936002)(68736007)(3846002)(2501003)(71200400001)(71190400001)(5660300002)(66446008)(64756008)(25786009)(66476007)(66556008)(26005)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6656;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BeFY///qE+RmwKpRlRJcQbMDG6Ojm0ES1+M6FnlZDN7AFfwPqkRA68Yel4C5A2BZA38ZKAEfl1itecVa5l+X+os/AuRHbPYLy4ZGAxoUwRyCftMZOOmFpLLFo7yBfLSkHiI8puUkfAts9wEV92UfWF1RxW5MaBabJ5yZv/j9rI7GYMAn5aizHP+ZQTGA6ZKkstQwz8J6iXMVkT2Harme/xs49FxgfnffoYxNnsAmTL5Wc0WJahLAz7Y8rXrIoO6tNp7XOXRSwgoMRh+RX5jO57Q+5wbT31pp0pI1r5Rs91rZ4K0v2PlLJ3HN5rRT9XwITBffXN6+aZrZRbXS3TA5OFFuqf+mdvUv/kgn5bnLfi0dmt09sEwrT00SW+39HTDnRJbfJ+wSEv4TdLIinJMAhtrEpzA9DQxlzKbWvKjsPxk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: Y4IOf5pQ77u5hV6Lxr91203sfLq0Dgj481GoCJQuGsY/zRY+GM10cbH9qMNQnuKRCyTfXwbbt8qQRBM7CXm6BFW6sFMlLoFJCtHu9a+JxAQtgAxaX/FroJ7EJOsYCLPIBlRLszYvsKPan5mHe30EbIDnom6vWqIg4G67XL4kbtQxwyrVWUJdRn0sSymlf/ABV1xKPfhU3ho/LoTqtBL77cZIqYzxQXMiA8WYXzNMbItn8IMUPrl4A/xhpss/FFn46pm0FfZvWUXLNn1y5fK/T9neBFurVLVLH1F4GR4NGpsE63/G2xnOY83EV32ZnT9cTUZSuJM6P/2+whbvCMcx7u7rRVXCja0rrCecE/czT3okOgCBRUNWoQs5OO42pfC8Mdu7Bri/9p6zbwFLfkktUH/NbPWB+w0HLLhe+Vk2UDw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f1080e5-4da5-4fa6-733c-08d6c4ccbfd8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 13:41:38.8808
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41dbeb4a-81e7-40ff-8fa9-08d6c4b65bbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 11:01:22.0823
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5919
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iaW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4g
-TXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4NCj4gU2VudDogRnJpZGF5LCBNYXJjaCAyOSwg
-MjAxOSA0OjUxIFBNDQo+IA0KPiBPbiAyOS8wMy8yMDE5IDE0OjAwLCBsYXVyZW50aXUudHVkb3JA
-bnhwLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBMYXVyZW50aXUgVHVkb3IgPGxhdXJlbnRpdS50dWRv
-ckBueHAuY29tPg0KPiA+DQo+ID4gQWRkIGEgb25lLXRvLW9uZSBpb21tdSBtYXBwaW5nIGZvciBi
-bWFuIHByaXZhdGUgZGF0YSBtZW1vcnkgKEZCUFIpLg0KPiA+IFRoaXMgaXMgcmVxdWlyZWQgZm9y
-IEJNQU4gdG8gd29yayB3aXRob3V0IGZhdWx0cyBiZWhpbmQgYW4gaW9tbXUuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBMYXVyZW50aXUgVHVkb3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29tPg0K
-PiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5fY2Nzci5jIHwgMTEgKysr
-KysrKysrKysNCj4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspDQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+IGIvZHJp
-dmVycy9zb2MvZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+ID4gaW5kZXggN2MzY2M5NjgwNTNjLi5i
-MjA5Yzc5NTExYmIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5f
-Y2Nzci5jDQo+ID4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW5fY2Nzci5jDQo+ID4g
-QEAgLTI5LDYgKzI5LDcgQEANCj4gPiAgICAqLw0KPiA+DQo+ID4gICAjaW5jbHVkZSAiYm1hbl9w
-cml2LmgiDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pb21tdS5oPg0KPiA+DQo+ID4gICB1MTYgYm1h
-bl9pcF9yZXY7DQo+ID4gICBFWFBPUlRfU1lNQk9MKGJtYW5faXBfcmV2KTsNCj4gPiBAQCAtMTc4
-LDYgKzE3OSw3IEBAIHN0YXRpYyBpbnQgZnNsX2JtYW5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZQ0KPiAqcGRldikNCj4gPiAgIAlpbnQgcmV0LCBlcnJfaXJxOw0KPiA+ICAgCXN0cnVjdCBk
-ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gICAJc3RydWN0IGRldmljZV9ub2RlICpub2Rl
-ID0gZGV2LT5vZl9ub2RlOw0KPiA+ICsJc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluOw0KPiA+
-ICAgCXN0cnVjdCByZXNvdXJjZSAqcmVzOw0KPiA+ICAgCXUxNiBpZCwgYm1fcG9vbF9jbnQ7DQo+
-ID4gICAJdTggbWFqb3IsIG1pbm9yOw0KPiA+IEBAIC0yMjUsNiArMjI3LDE1IEBAIHN0YXRpYyBp
-bnQgZnNsX2JtYW5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4gPg0K
-PiA+ICAgCWRldl9kYmcoZGV2LCAiQWxsb2NhdGVkIEZCUFIgMHglbGx4IDB4JXp4XG4iLCBmYnBy
-X2EsIGZicHJfc3opOw0KPiA+DQo+ID4gKwkvKiBDcmVhdGUgYW4gMS10by0xIGlvbW11IG1hcHBp
-bmcgZm9yIEZCUFIgYXJlYSAqLw0KPiA+ICsJZG9tYWluID0gaW9tbXVfZ2V0X2RvbWFpbl9mb3Jf
-ZGV2KGRldik7DQo+IA0KPiBJZiB0aGF0J3MgZXhwZWN0ZWQgdG8gYmUgdGhlIGRlZmF1bHQgZG9t
-YWluIHRoYXQgeW91J3JlIGdyYWJiaW5nLCB0aGVuDQo+IHRoaXMgaXMgKmluY3JlZGlibHkqIGZy
-YWdpbGUuIFRoZXJlJ3Mgbm90aGluZyB0byBzdG9wIHRoZSBJT1ZBIHRoYXQgeW91DQo+IGZvcmNp
-Ymx5IG1hcCBmcm9tIGJlaW5nIGF1dG9tYXRpY2FsbHkgYWxsb2NhdGVkIGxhdGVyIGFuZCBjYXVz
-aW5nIHNvbWUNCj4gb3RoZXIgRE1BIG1hcHBpbmcgdG8gZmFpbCBub2lzaWx5IGFuZCB1bmV4cGVj
-dGVkbHkuIEZ1cnRoZXJtb3JlLCBoYXZlDQo+IHlvdSB0cmllZCB0aGlzIHdpdGggImlvbW11LnBh
-c3N0aHJvdWdoPTEiPw0KPiANCj4gVGhhdCBzYWlkLCBJIHJlYWxseSBkb24ndCB1bmRlcnN0YW5k
-IHdoYXQncyBnb2luZyBvbiBoZXJlIGFueXdheSA6Lw0KPiANCj4gQXMgZmFyIGFzIEkgY2FuIHRl
-bGwgZnJvbSBxYm1hbl9pbml0X3ByaXZhdGVfbWVtKCksIGZicHJfYSBjb21lcyBmcm9tDQo+IGRt
-YV9hbGxvY19jb2hlcmVudCgpIGFuZCB0aHVzIHdvdWxkIGFscmVhZHkgYmUgYSBtYXBwZWQgSU9W
-QSAtIGlzbid0DQo+IHRoaXMgdGhlIHN0dWZmIHRoYXQgUm95IGNvbnZlcnRlZCB0byBuaWNlbHkg
-dXNlIHNoYXJlZC1kbWEtcG9vbCByZWdpb25zDQo+IGEgd2hpbGUgYWdvPw0KPiANCg0KRmluYWxs
-eSBmb3VuZCBzb21lIHRpbWUgdG8gbG9vayBpbnRvIHRoaXMsIHNvcnJ5IGZvciB0aGUgZGVsYXku
-IEl0IHNlZW1zIHRoYXQgb24gdGhlIGNvZGUgcGF0aCB0YWtlbiBpbiBvdXIgY2FzZSAoZG1hX2Fs
-bG9jX2NvaGVyZW50KCkgLT4gZG1hX2FsbG9jX2F0dHJzKCkgLT4gZG1hX2FsbG9jX2Zyb21fZGV2
-X2NvaGVyZW50KCkgLT4gX19kbWFfYWxsb2NfZnJvbV9jb2hlcmVudCgpKSB0aGVyZSdzIG5vIGNh
-bGwgaW50byB0aGUgaW9tbXUgbGF5ZXIsIHRodXMgbm8gbWFwcGluZyBpbiB0aGUgc21tdS4gSSBw
-bGFuIHRvIGNvbWUgdXAgd2l0aCBhIFJGQyBwYXRjaCBlYXJseSBuZXh0IHdlZWsgc28gd2UgaGF2
-ZSBzb21ldGhpbmcgY29uY3JldGUgdG8gZGlzY3VzcyBvbi4NCg0KLS0tDQpCZXN0IFJlZ2FyZHMs
-IExhdXJlbnRpdQ0K
+
+Hi
+
+>=20
+>=20
+> Add pm runtime support and move clock handling there.
+> fsl_esai_suspend is replaced by pm_runtime_force_suspend.
+> fsl_esai_resume is replaced by pm_runtime_force_resume.
+>=20
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+> Changes in v2
+> -refine the commit comments.
+> -move regcache_mark_dirty to runtime suspend.
+>=20
+>  sound/soc/fsl/fsl_esai.c | 141 ++++++++++++++++++++++++++---------------=
+-----
+> -
+>  1 file changed, 77 insertions(+), 64 deletions(-)
+>=20
+> diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c index
+> bad0dfed6b68..10d2210c91ef 100644
+> --- a/sound/soc/fsl/fsl_esai.c
+> +++ b/sound/soc/fsl/fsl_esai.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/pm_runtime.h>
+>  #include <sound/dmaengine_pcm.h>
+>  #include <sound/pcm_params.h>
+>=20
+> @@ -466,30 +467,6 @@ static int fsl_esai_startup(struct
+> snd_pcm_substream *substream,
+>                             struct snd_soc_dai *dai)  {
+>         struct fsl_esai *esai_priv =3D snd_soc_dai_get_drvdata(dai);
+> -       int ret;
+> -
+> -       /*
+> -        * Some platforms might use the same bit to gate all three or two=
+ of
+> -        * clocks, so keep all clocks open/close at the same time for saf=
+ety
+> -        */
+> -       ret =3D clk_prepare_enable(esai_priv->coreclk);
+> -       if (ret)
+> -               return ret;
+> -       if (!IS_ERR(esai_priv->spbaclk)) {
+> -               ret =3D clk_prepare_enable(esai_priv->spbaclk);
+> -               if (ret)
+> -                       goto err_spbaclk;
+> -       }
+> -       if (!IS_ERR(esai_priv->extalclk)) {
+> -               ret =3D clk_prepare_enable(esai_priv->extalclk);
+> -               if (ret)
+> -                       goto err_extalck;
+> -       }
+> -       if (!IS_ERR(esai_priv->fsysclk)) {
+> -               ret =3D clk_prepare_enable(esai_priv->fsysclk);
+> -               if (ret)
+> -                       goto err_fsysclk;
+> -       }
+>=20
+>         if (!dai->active) {
+>                 /* Set synchronous mode */ @@ -506,16 +483,6 @@ static in=
+t
+> fsl_esai_startup(struct snd_pcm_substream *substream,
+>=20
+>         return 0;
+>=20
+> -err_fsysclk:
+> -       if (!IS_ERR(esai_priv->extalclk))
+> -               clk_disable_unprepare(esai_priv->extalclk);
+> -err_extalck:
+> -       if (!IS_ERR(esai_priv->spbaclk))
+> -               clk_disable_unprepare(esai_priv->spbaclk);
+> -err_spbaclk:
+> -       clk_disable_unprepare(esai_priv->coreclk);
+> -
+> -       return ret;
+>  }
+>=20
+>  static int fsl_esai_hw_params(struct snd_pcm_substream *substream, @@
+> -576,20 +543,6 @@ static int fsl_esai_hw_params(struct
+> snd_pcm_substream *substream,
+>         return 0;
+>  }
+>=20
+> -static void fsl_esai_shutdown(struct snd_pcm_substream *substream,
+> -                             struct snd_soc_dai *dai)
+> -{
+> -       struct fsl_esai *esai_priv =3D snd_soc_dai_get_drvdata(dai);
+> -
+> -       if (!IS_ERR(esai_priv->fsysclk))
+> -               clk_disable_unprepare(esai_priv->fsysclk);
+> -       if (!IS_ERR(esai_priv->extalclk))
+> -               clk_disable_unprepare(esai_priv->extalclk);
+> -       if (!IS_ERR(esai_priv->spbaclk))
+> -               clk_disable_unprepare(esai_priv->spbaclk);
+> -       clk_disable_unprepare(esai_priv->coreclk);
+> -}
+> -
+>  static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd=
+,
+>                             struct snd_soc_dai *dai)  { @@ -658,7 +611,6 =
+@@ static int
+> fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+>=20
+>  static const struct snd_soc_dai_ops fsl_esai_dai_ops =3D {
+>         .startup =3D fsl_esai_startup,
+> -       .shutdown =3D fsl_esai_shutdown,
+>         .trigger =3D fsl_esai_trigger,
+>         .hw_params =3D fsl_esai_hw_params,
+>         .set_sysclk =3D fsl_esai_set_dai_sysclk, @@ -947,6 +899,10 @@ sta=
+tic int
+> fsl_esai_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>=20
+> +       pm_runtime_enable(&pdev->dev);
+> +
+
+I just have a question, do I need to add pm_runtime_idle(&pdev->dev)?
+
+Best regards
+Wang shengjiu
