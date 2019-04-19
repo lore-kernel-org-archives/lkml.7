@@ -2,147 +2,108 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C7CC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B194DC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23175222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2JQf30n2"
+	by mail.kernel.org (Postfix) with ESMTP id 87561222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfDSSWb (ORCPT
+        id S1727344AbfDSSWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:22:31 -0400
-Received: from condef-10.nifty.com ([202.248.20.75]:44887 "EHLO
-        condef-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfDSSW2 (ORCPT
+        Fri, 19 Apr 2019 14:22:37 -0400
+Received: from smtprelay0054.hostedemail.com ([216.40.44.54]:56034 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727386AbfDSSWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:22:28 -0400
-Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-10.nifty.com with ESMTP id x3J9nQOg020059;
-        Fri, 19 Apr 2019 18:49:26 +0900
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x3J9mDiM012304;
-        Fri, 19 Apr 2019 18:48:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3J9mDiM012304
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555667296;
-        bh=xEQiTaRJoMiIIoSSR5uW02FG6OV+z3ajZxuyDMzswK8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JQf30n281jQB4d2J0PFa1uofVewZCgz9BKrQlNEnXrgFMBLbR2Zq1r6w+iBaLG45
-         t3nsjO2yy9K2rayA6kAG7W5QOZXT/QC/pn2nbYfF3OTOTfF8RmCuBd5yJ5z4STfAVR
-         S50CNHJXKGoZKrDOh8HkCZk629LOHn6U1lbZhC7JMhAyR3/Tr/rg3GcrCj9JDWjHAO
-         UiGSppMnUWU7gB7Bziv+abekGW5t79hjFO9/SOc6KfN1rVoLYaqIJni87B3Xd6Wk7W
-         H2/rg3c+1nge1l4Y9lbsm/7RvW65UIRkVG9T0d8qJA6UMAluoWZAQ17RYMK74wx8Rp
-         ffTOmV/uhafAw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
+        Fri, 19 Apr 2019 14:22:35 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id A37AC1802F6BE
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:14:49 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 70219837F27D;
+        Fri, 19 Apr 2019 11:14:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: juice57_468155df5e521
+X-Filterd-Recvd-Size: 2906
+Received: from XPS-9350 (unknown [162.249.177.49])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 19 Apr 2019 11:14:44 +0000 (UTC)
+Message-ID: <e5f29ca9b6067fff9ea68cb25e15906659cd51ad.camel@perches.com>
+Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in
+ kdb summary
+From:   Joe Perches <joe@perches.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 01/11] ARM: prevent tracing IPI_CPU_BACKTRACE
-Date:   Fri, 19 Apr 2019 18:47:44 +0900
-Message-Id: <20190419094754.24667-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190419094754.24667-1-yamada.masahiro@socionext.com>
-References: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Fri, 19 Apr 2019 04:14:27 -0700
+In-Reply-To: <CAK7LNAQe2uaVfKee1F6R4siVvUSCMgSaYAnUQfz8MS5PeFqpGA@mail.gmail.com>
+References: <20190323015227.245455-1-dianders@chromium.org>
+         <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com>
+         <20190416163034.3e642818ebf27ed6891c1981@linux-foundation.org>
+         <CAK7LNAR4Ty8835sfo4HSvBsMCsV65mY2HOajFSY2TOYurmkFdw@mail.gmail.com>
+         <20190418160651.40cb6a11186a6c6028e9d20d@linux-foundation.org>
+         <CAK7LNAQe2uaVfKee1F6R4siVvUSCMgSaYAnUQfz8MS5PeFqpGA@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 2019-04-19 at 12:28 +0900, Masahiro Yamada wrote:
+> Hi Joe,
+> 
+> Can you detect redundant Cc: by checkpatch?
+> 
+> Please see below in details.
+> Thanks.
 
-When function tracing for IPIs is enabled, we get a warning for an
-overflow of the ipi_types array with the IPI_CPU_BACKTRACE type
-as triggered by raise_nmi():
-
-arch/arm/kernel/smp.c: In function 'raise_nmi':
-arch/arm/kernel/smp.c:489:2: error: array subscript is above array bounds [-Werror=array-bounds]
-  trace_ipi_raise(target, ipi_types[ipinr]);
-
-This is a correct warning as we actually overflow the array here.
-
-This patch raise_nmi() to call __smp_cross_call() instead of
-smp_cross_call(), to avoid calling into ftrace. For clarification,
-I'm also adding a two new code comments describing how this one
-is special.
-
-The warning appears to have shown up after patch e7273ff49acf
-("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI"), which
-changed the number assignment from '15' to '8', but as far as I can
-tell has existed since the IPI tracepoints were first introduced.
-If we decide to backport this patch to stable kernels, we probably
-need to backport e7273ff49acf as well.
-
-Fixes: e7273ff49acf ("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI")
-Fixes: 365ec7b17327 ("ARM: add IPI tracepoints") # v3.17
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[yamada.masahiro@socionext.com: rebase on v5.0-rc1]
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Yes, but I'm not sure why it's useful or necessary.
+git send-email using some scripts elides duplicate email addresses
 ---
+ scripts/checkpatch.pl | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-This is a long-standing issue, and
-Arnd posted this patch two years ago:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/409393.html
-
-It is no longer applied, so I rebased it on top of the latest kernel.
-
-
-Changes in v2: None
-
- arch/arm/include/asm/hardirq.h | 1 +
- arch/arm/kernel/smp.c          | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/hardirq.h b/arch/arm/include/asm/hardirq.h
-index cba23eaa6072..7a88f160b1fb 100644
---- a/arch/arm/include/asm/hardirq.h
-+++ b/arch/arm/include/asm/hardirq.h
-@@ -6,6 +6,7 @@
- #include <linux/threads.h>
- #include <asm/irq.h>
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 1c421ac42b07..bedec83cb797 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2688,6 +2688,19 @@ sub process {
+ 				$signatures{$sig_nospace} = 1;
+ 			}
  
-+/* number of IPIS _not_ including IPI_CPU_BACKTRACE */
- #define NR_IPI	7
- 
- typedef struct {
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index facd4240ca02..c93fe0f256de 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -70,6 +70,10 @@ enum ipi_msg_type {
- 	IPI_CPU_STOP,
- 	IPI_IRQ_WORK,
- 	IPI_COMPLETION,
-+	/*
-+	 * CPU_BACKTRACE is special and not included in NR_IPI
-+	 * or tracable with trace_ipi_*
-+	 */
- 	IPI_CPU_BACKTRACE,
- 	/*
- 	 * SGI8-15 can be reserved by secure firmware, and thus may
-@@ -797,7 +801,7 @@ core_initcall(register_cpufreq_notifier);
- 
- static void raise_nmi(cpumask_t *mask)
- {
--	smp_cross_call(mask, IPI_CPU_BACKTRACE);
-+	__smp_cross_call(mask, IPI_CPU_BACKTRACE);
- }
- 
- void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
--- 
-2.17.1
++# Check for a cc: line with another signature -by: by the same author
++			if ($sig_nospace =~ /^cc:/) {
++				my $sig_email = substr($sig_nospace, 3);
++				foreach my $sig (sort keys %signatures) {
++					next if ($sig =~ /^cc:/);
++					$sig =~ s/^[^:]+://;
++					if ($sig eq $sig_email) {
++						WARN("BAD_SIGN_OFF",
++						     "Unnecessary CC: as there is another signature with the same name/email address\n" . $herecurr);
++					}
++				}
++			}
++
+ # Check Co-developed-by: immediately followed by Signed-off-by: with same name and email
+ 			if ($sign_off =~ /^co-developed-by:$/i) {
+ 				if ($email eq $author) {
+
 
