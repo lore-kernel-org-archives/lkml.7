@@ -2,124 +2,238 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6C7C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5675FC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5E320652
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698258;
-	bh=GpYFjL0iQTmYNM0ELrSlCQ8xNNxSLfGtMu5NsbQf9Qk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OlnVV09Ud3hh5DhttlU8+JtdlbFWtTSaByXYypiHCvem5bpybsnkYoKaGVWvbWjVs
-	 du2ndNpUOJESGtpzogDNKmuqshlbFNnfcKqYW3EVFvtz4rB/YvjcT0TU+8ongm2lzo
-	 So2OJ1CqBBSGtbqWMl5FD0mEZdsGkuNsmdDTZfdc=
+	by mail.kernel.org (Postfix) with ESMTP id 0DE2E20652
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="dRF2zy4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbfDSSYQ (ORCPT
+        id S1727927AbfDSSYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbfDSSYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:24:15 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE87C222DF;
-        Fri, 19 Apr 2019 17:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555696059;
-        bh=GpYFjL0iQTmYNM0ELrSlCQ8xNNxSLfGtMu5NsbQf9Qk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VYmJuTH76ZLta78Fu45xrIMMj69Dib9byBtg1Pld0pJR4i0Afghb1v6f0BNItxw5O
-         v7FJXhM8pwPPqFvxxVglrpxTDXeQG+RIWnnTF7Hmqst2bFcLvqcPop/BHeAX+U2x+U
-         yf4iA9FC0vOa8g30+lvmG27It9QvnzRGroeIvsVQ=
-Date:   Fri, 19 Apr 2019 12:47:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, kishon@ti.com, robh@kernel.org,
-        l.stach@pengutronix.de, andrew.smirnov@gmail.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: keystone: Fix build error while only
- CONFIG_PCI_KEYSTONE is set
-Message-ID: <20190419174735.GE173520@google.com>
-References: <20190419025855.40760-1-yuehaibing@huawei.com>
- <20190419133137.GA173520@google.com>
- <35486240-8c29-410d-e0f4-c87dc42fb668@huawei.com>
+        Fri, 19 Apr 2019 14:24:21 -0400
+Received: from mail-eopbgr60058.outbound.protection.outlook.com ([40.107.6.58]:37859
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727817AbfDSSYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:24:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eLSqz2YcLXD7eg+Wzs/7SHyHkUhVNoHGZO+RVYxmwf4=;
+ b=dRF2zy4+zMDxdc4JFQsiCp+1q0gzNayTLO1gIhxzlMRKJDJVm7cUaeP1df4K8t11SNgy2mzFmU3bunGSFhZ/2PzD1suszorH+r5atrF+Q0wUipXt1ixQoL+DYp9ABP1GRD7V5KMrSWs+RBIv1sCWE8YkYbMqv1+DvLT2gRBMZWI=
+Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
+ DB7PR08MB3387.eurprd08.prod.outlook.com (20.176.238.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Fri, 19 Apr 2019 07:58:34 +0000
+Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
+ ([fe80::899e:4160:166b:923a]) by DB7PR08MB3530.eurprd08.prod.outlook.com
+ ([fe80::899e:4160:166b:923a%3]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
+ 07:58:34 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH v1 2/2] drm/komeda: Adds limitation check for AFBC wide block
+ not support Rot90
+Thread-Topic: [PATCH v1 2/2] drm/komeda: Adds limitation check for AFBC wide
+ block not support Rot90
+Thread-Index: AQHU9oWwvWqkpNx6QEag3d00LHOkKA==
+Date:   Fri, 19 Apr 2019 07:58:34 +0000
+Message-ID: <1555660675-4903-3-git-send-email-lowry.li@arm.com>
+References: <1555660675-4903-1-git-send-email-lowry.li@arm.com>
+In-Reply-To: <1555660675-4903-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR03CA0073.apcprd03.prod.outlook.com
+ (2603:1096:203:72::13) To DB7PR08MB3530.eurprd08.prod.outlook.com
+ (2603:10a6:10:49::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 553823ac-c08c-494c-c59b-08d6c49cd256
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3387;
+x-ms-traffictypediagnostic: DB7PR08MB3387:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <DB7PR08MB338784DFDCBB5F4DBA0C23859F270@DB7PR08MB3387.eurprd08.prod.outlook.com>
+x-forefront-prvs: 0012E6D357
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(136003)(346002)(366004)(199004)(189003)(55236004)(71200400001)(68736007)(71190400001)(2616005)(53936002)(386003)(6506007)(86362001)(25786009)(14454004)(6636002)(2201001)(97736004)(256004)(486006)(7736002)(76176011)(52116002)(6486002)(4326008)(11346002)(305945005)(446003)(3846002)(6116002)(72206003)(8676002)(186003)(36756003)(81156014)(81166006)(5660300002)(110136005)(2906002)(6436002)(476003)(54906003)(26005)(316002)(2501003)(478600001)(50226002)(102836004)(66066001)(6512007)(99286004)(64756008)(66556008)(66476007)(73956011)(66946007)(66446008)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3387;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jpLbqYevofteROir3IxQ278glbBDeve3RHZ87V+dl/Wr4V0gKztXti3x8hJcWBH/jIV687xP/Ypi/x5vup8Fg3aFLfa6A/tWBMDXsmC6fP4+OYl4tYh83A/m63Dt2PnqiepG2ifs8RCYcSZs/hw0aDi/7qxVJNK4pzkbQKiK+MJSmudrxwyP0ZTXIvYgCrpDQ8fOuKvbnll7K/7EQTt6Af+ydeP4mzahVFnhtDTRFZBGzZ+RqqImssOUcTR8CvFAEyRE/DfNMWmM6TionXjVCLu7lMw5lLNgV/R+ShgF8gkybOXc6AUop4vhOtwi7BzqEoAvrxoIOwKkutsn6nfGPYJDkNE0p54AlBq2f1JiBmMujfgKyVxjKqNoNQ/JyTiGxwsgEfmGCGP2Wiv1bDHfQ5gdigAVPcg3Li1swKCxHI0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35486240-8c29-410d-e0f4-c87dc42fb668@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 553823ac-c08c-494c-c59b-08d6c49cd256
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 07:58:34.6260
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3387
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 09:46:39PM +0800, YueHaibing wrote:
-> On 2019/4/19 21:31, Bjorn Helgaas wrote:
-> > On Fri, Apr 19, 2019 at 10:58:55AM +0800, Yue Haibing wrote:
-> >> From: YueHaibing <yuehaibing@huawei.com>
-> >>
-> >> During randconfig builds, I occasionally run into an invalid configuration
-> >>
-> >> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_link_up':
-> >> pci-keystone.c:(.text+0x90): undefined reference to `__dw_pcie_read_dbi'
-> >> pci-keystone.c:(.text+0x90): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_read_dbi'
-> >> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_v3_65_scan_bus':
-> >> pci-keystone.c:(.text+0x4f0): undefined reference to `__dw_pcie_write_dbi'
-> >> pci-keystone.c:(.text+0x4f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_write_dbi'
-> >>
-> >> while CONFIG_PCI_KEYSTONE is selected but CONFIG_PCIE_DW
-> >> is not set, the building failed like this. This patch
-> >> selects PCIE_DW to fix it.
-> >>
-> >> Reported-by: Hulk Robot <hulkci@huawei.com>
-> >> Fixes: 5709114f0a97 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
-> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> >> ---
-> >>  drivers/pci/controller/dwc/Kconfig | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> >> index b450ad2..641fa0f 100644
-> >> --- a/drivers/pci/controller/dwc/Kconfig
-> >> +++ b/drivers/pci/controller/dwc/Kconfig
-> >> @@ -105,6 +105,7 @@ config PCIE_SPEAR13XX
-> >>  config PCI_KEYSTONE
-> >>  	bool "TI Keystone PCIe controller"
-> >>  	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
-> >> +	select PCIE_DW
-> > 
-> > What version are you building?  In v5.0, PCI_KEYSTONE already selects
-> > PCIE_DW_HOST:
-> > 
-> > $ git grep -A4 PCI_KEYSTONE v5.0:drivers/pci/controller/dwc/Kconfig | cat
-> > v5.0:drivers/pci/controller/dwc/Kconfig:config PCI_KEYSTONE
-> > v5.0:drivers/pci/controller/dwc/Kconfig-	bool "TI Keystone PCIe controller"
-> > v5.0:drivers/pci/controller/dwc/Kconfig-	depends on ARCH_KEYSTONE || (ARM && COMPILE_TEST)
-> > v5.0:drivers/pci/controller/dwc/Kconfig-	depends on PCI_MSI_IRQ_DOMAIN
-> > v5.0:drivers/pci/controller/dwc/Kconfig-	select PCIE_DW_HOST
-> > 08:30:42 ~/history (master)$
-> 
-> This patch based on linux-next:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=5709114f0a97
-
-Oh, yep, looks like this was broken by ad5ca801bd7e ("PCI: keystone:
-Add support for PCIe EP in AM654x Platforms"), which added
-PCI_KEYSTONE_HOST and PCI_KEYSTONE_EP.  Those select PCIE_DW_HOST and
-PCIE_DW_EP, respectively, which in turn select PCIE_DW.
-
-But I guess it's possible to enable PCI_KEYSTONE by itself without
-either PCI_KEYSTONE_HOST or PCI_KEYSTONE_EP.  I'm not sure what that
-would mean, but we would still try to build pci-keystone.o
-
-I'm hoping we can amend that commit before the merge window.
-
-Bjorn
+S29tZWRhIHNlcmllcyBoYXJkd2FyZSBkb2Vzbid0IHN1cHBvcnQgUm90OTAgZm9yIEFGQkMgd2lk
+ZSBibG9jay4gU28NCmFkZCBsaW1pdGF0aW9uIGNoZWNrIHRvIHJlamVjdCBpdCBpZiBzdWNoIGNv
+bmZpZ3VyYXRpb24gaGFzIGJlZW4gcG9zdGVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBMb3dyeSBMaSAo
+QXJtIFRlY2hub2xvZ3kgQ2hpbmEpIDxsb3dyeS5saUBhcm0uY29tPg0KLS0tDQogZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2Rldi5jICAgICAgIHwgMTUgKysrKysr
+KysrKysrKysrDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mb3JtYXRf
+Y2Fwcy5jICAgIHwgIDcgKysrKysrLQ0KIC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
+b21lZGFfZm9ybWF0X2NhcHMuaCAgICB8ICA4ICsrKysrKystDQogLi4uL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5jICAgIHwgMTggKysrKysrKysrLS0tLS0t
+LS0tDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5o
+ICAgIHwgIDUgKysrLS0NCiAuLi4vZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3Bp
+cGVsaW5lX3N0YXRlLmMgfCAgOCArKysrKysrLQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX3BsYW5lLmMgICAgICB8ICAyICstDQogNyBmaWxlcyBjaGFuZ2VkLCA0
+OCBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9kZXYuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9kZXYuYw0KaW5kZXggMzQ1MDZlZi4uOTYwM2Rl
+OSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3
+MV9kZXYuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcx
+X2Rldi5jDQpAQCAtNDk0LDExICs0OTQsMjYgQEAgc3RhdGljIGludCBkNzFfZW51bV9yZXNvdXJj
+ZXMoc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYpDQogCXtfX0hXX0lEKDYsIDcpLAkwLypEUk1fRk9S
+TUFUX1lVVjQyMF8xMEJJVCovLCAxLAlSSUNILAlSb3RfQUxMX0hfViwJTFlUX05NLCBBRkJfVEh9
+LA0KIH07DQogDQorc3RhdGljIGJvb2wgZDcxX2Zvcm1hdF9tb2Rfc3VwcG9ydGVkKGNvbnN0IHN0
+cnVjdCBrb21lZGFfZm9ybWF0X2NhcHMgKmNhcHMsDQorCQkJCSAgICAgdTMyIGxheWVyX3R5cGUs
+IHU2NCBtb2RpZmllciwgdTMyIHJvdCkNCit7DQorCXVpbnQ2NF90IGxheW91dCA9IG1vZGlmaWVy
+ICYgQUZCQ19GT1JNQVRfTU9EX0JMT0NLX1NJWkVfTUFTSzsNCisNCisJaWYgKChsYXlvdXQgPT0g
+QUZCQ19GT1JNQVRfTU9EX0JMT0NLX1NJWkVfMzJ4OCkgJiYNCisJICAgIGRybV9yb3RhdGlvbl85
+MF9vcl8yNzAocm90KSkgew0KKwkJRFJNX0RFQlVHX0FUT01JQygiRDcxIGRvZXNuJ3Qgc3VwcG9y
+dCBST1Q5MCBmb3IgV0ItQUZCQy5cbiIpOw0KKwkJcmV0dXJuIGZhbHNlOw0KKwl9DQorDQorCXJl
+dHVybiB0cnVlOw0KK30NCisNCiBzdGF0aWMgdm9pZCBkNzFfaW5pdF9mbXRfdGJsKHN0cnVjdCBr
+b21lZGFfZGV2ICptZGV2KQ0KIHsNCiAJc3RydWN0IGtvbWVkYV9mb3JtYXRfY2Fwc190YWJsZSAq
+dGFibGUgPSAmbWRldi0+Zm10X3RibDsNCiANCiAJdGFibGUtPmZvcm1hdF9jYXBzID0gZDcxX2Zv
+cm1hdF9jYXBzX3RhYmxlOw0KKwl0YWJsZS0+Zm9ybWF0X21vZF9zdXBwb3J0ZWQgPSBkNzFfZm9y
+bWF0X21vZF9zdXBwb3J0ZWQ7DQogCXRhYmxlLT5uX2Zvcm1hdHMgPSBBUlJBWV9TSVpFKGQ3MV9m
+b3JtYXRfY2Fwc190YWJsZSk7DQogfQ0KIA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9h
+cm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Zvcm1hdF9jYXBzLmMgYi9kcml2ZXJzL2dwdS9kcm0v
+YXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mb3JtYXRfY2Fwcy5jDQppbmRleCBiMjE5NTE0Li5j
+ZDRkOWY1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
+b21lZGFfZm9ybWF0X2NhcHMuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tv
+bWVkYS9rb21lZGFfZm9ybWF0X2NhcHMuYw0KQEAgLTc0LDcgKzc0LDggQEANCiB9Ow0KIA0KIGJv
+b2wga29tZWRhX2Zvcm1hdF9tb2Rfc3VwcG9ydGVkKHN0cnVjdCBrb21lZGFfZm9ybWF0X2NhcHNf
+dGFibGUgKnRhYmxlLA0KLQkJCQkgdTMyIGxheWVyX3R5cGUsIHUzMiBmb3VyY2MsIHU2NCBtb2Rp
+ZmllcikNCisJCQkJIHUzMiBsYXllcl90eXBlLCB1MzIgZm91cmNjLCB1NjQgbW9kaWZpZXIsDQor
+CQkJCSB1MzIgcm90KQ0KIHsNCiAJY29uc3Qgc3RydWN0IGtvbWVkYV9mb3JtYXRfY2FwcyAqY2Fw
+czsNCiANCkBAIC04NSw2ICs4NiwxMCBAQCBib29sIGtvbWVkYV9mb3JtYXRfbW9kX3N1cHBvcnRl
+ZChzdHJ1Y3Qga29tZWRhX2Zvcm1hdF9jYXBzX3RhYmxlICp0YWJsZSwNCiAJaWYgKCEoY2Fwcy0+
+c3VwcG9ydGVkX2xheWVyX3R5cGVzICYgbGF5ZXJfdHlwZSkpDQogCQlyZXR1cm4gZmFsc2U7DQog
+DQorCWlmICh0YWJsZS0+Zm9ybWF0X21vZF9zdXBwb3J0ZWQpDQorCQlyZXR1cm4gdGFibGUtPmZv
+cm1hdF9tb2Rfc3VwcG9ydGVkKGNhcHMsIGxheWVyX3R5cGUsIG1vZGlmaWVyLA0KKwkJCQkJCSAg
+IHJvdCk7DQorDQogCXJldHVybiB0cnVlOw0KIH0NCiANCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mb3JtYXRfY2Fwcy5oIGIvZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZm9ybWF0X2NhcHMuaA0KaW5kZXggOTZk
+ZTIyZS4uMzgxZTg3MyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9r
+b21lZGEva29tZWRhX2Zvcm1hdF9jYXBzLmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlz
+cGxheS9rb21lZGEva29tZWRhX2Zvcm1hdF9jYXBzLmgNCkBAIC03MSwxMCArNzEsMTUgQEAgc3Ry
+dWN0IGtvbWVkYV9mb3JtYXRfY2FwcyB7DQogICoNCiAgKiBAbl9mb3JtYXRzOiB0aGUgc2l6ZSBv
+ZiBmb3JtYXRfY2FwcyBsaXN0Lg0KICAqIEBmb3JtYXRfY2FwczogZm9ybWF0X2NhcHMgbGlzdC4N
+CisgKiBAZm9ybWF0X21vZF9zdXBwb3J0ZWQ6IE9wdGlvbmFsLiBTb21lIEhXIG1heSBoYXZlIHNw
+ZWNpYWwgcmVxdWlyZW1lbnRzIG9yDQorICogbGltaXRhdGlvbnMgd2hpY2ggY2FuIG5vdCBiZSBk
+ZXNjcmliZWQgYnkgZm9ybWF0X2NhcHMsIHRoaXMgZnVuYyBzdXBwbHkgSFcNCisgKiB0aGUgYWJp
+bGl0eSB0byBkbyB0aGUgZnVydGhlciBIVyBzcGVjaWZpYyBjaGVjay4NCiAgKi8NCiBzdHJ1Y3Qg
+a29tZWRhX2Zvcm1hdF9jYXBzX3RhYmxlIHsNCiAJdTMyIG5fZm9ybWF0czsNCiAJY29uc3Qgc3Ry
+dWN0IGtvbWVkYV9mb3JtYXRfY2FwcyAqZm9ybWF0X2NhcHM7DQorCWJvb2wgKCpmb3JtYXRfbW9k
+X3N1cHBvcnRlZCkoY29uc3Qgc3RydWN0IGtvbWVkYV9mb3JtYXRfY2FwcyAqY2FwcywNCisJCQkJ
+ICAgICB1MzIgbGF5ZXJfdHlwZSwgdTY0IG1vZGlmaWVyLCB1MzIgcm90KTsNCiB9Ow0KIA0KIGV4
+dGVybiB1NjQga29tZWRhX3N1cHBvcnRlZF9tb2RpZmllcnNbXTsNCkBAIC0xMDAsNiArMTA1LDcg
+QEAgdTMyICprb21lZGFfZ2V0X2xheWVyX2ZvdXJjY19saXN0KHN0cnVjdCBrb21lZGFfZm9ybWF0
+X2NhcHNfdGFibGUgKnRhYmxlLA0KIHZvaWQga29tZWRhX3B1dF9mb3VyY2NfbGlzdCh1MzIgKmZv
+dXJjY19saXN0KTsNCiANCiBib29sIGtvbWVkYV9mb3JtYXRfbW9kX3N1cHBvcnRlZChzdHJ1Y3Qg
+a29tZWRhX2Zvcm1hdF9jYXBzX3RhYmxlICp0YWJsZSwNCi0JCQkJIHUzMiBsYXllcl90eXBlLCB1
+MzIgZm91cmNjLCB1NjQgbW9kaWZpZXIpOw0KKwkJCQkgdTMyIGxheWVyX3R5cGUsIHUzMiBmb3Vy
+Y2MsIHU2NCBtb2RpZmllciwNCisJCQkJIHUzMiByb3QpOw0KIA0KICNlbmRpZg0KZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVy
+LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZl
+ci5jDQppbmRleCBmODQyYzg4Li5kNTgyMmEzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYw0KKysrIGIvZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYw0KQEAgLTIzOSwy
+MCArMjM5LDIwIEBAIHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKg0KIH0NCiANCiAvKiBpZiB0aGUg
+ZmIgY2FuIGJlIHN1cHBvcnRlZCBieSBhIHNwZWNpZmljIGxheWVyICovDQotYm9vbCBrb21lZGFf
+ZmJfaXNfbGF5ZXJfc3VwcG9ydGVkKHN0cnVjdCBrb21lZGFfZmIgKmtmYiwgdTMyIGxheWVyX3R5
+cGUpDQorYm9vbCBrb21lZGFfZmJfaXNfbGF5ZXJfc3VwcG9ydGVkKHN0cnVjdCBrb21lZGFfZmIg
+KmtmYiwgdTMyIGxheWVyX3R5cGUsDQorCQkJCSAgdTMyIHJvdCkNCiB7DQogCXN0cnVjdCBkcm1f
+ZnJhbWVidWZmZXIgKmZiID0gJmtmYi0+YmFzZTsNCiAJc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYg
+PSBmYi0+ZGV2LT5kZXZfcHJpdmF0ZTsNCi0JY29uc3Qgc3RydWN0IGtvbWVkYV9mb3JtYXRfY2Fw
+cyAqY2FwczsNCiAJdTMyIGZvdXJjYyA9IGZiLT5mb3JtYXQtPmZvcm1hdDsNCiAJdTY0IG1vZGlm
+aWVyID0gZmItPm1vZGlmaWVyOw0KKwlib29sIHN1cHBvcnRlZDsNCiANCi0JY2FwcyA9IGtvbWVk
+YV9nZXRfZm9ybWF0X2NhcHMoJm1kZXYtPmZtdF90YmwsIGZvdXJjYywgbW9kaWZpZXIpOw0KLQlp
+ZiAoIWNhcHMpDQotCQlyZXR1cm4gZmFsc2U7DQorCXN1cHBvcnRlZCA9IGtvbWVkYV9mb3JtYXRf
+bW9kX3N1cHBvcnRlZCgmbWRldi0+Zm10X3RibCwgbGF5ZXJfdHlwZSwNCisJCQkJCQlmb3VyY2Ms
+IG1vZGlmaWVyLCByb3QpOw0KKwlpZiAoIXN1cHBvcnRlZCkNCisJCURSTV9ERUJVR19BVE9NSUMo
+IkxheWVyIFRZUEU6ICVkIGRvZXNuJ3Qgc3VwcG9ydCBmYiBGTVQ6ICVzLlxuIiwNCisJCQlsYXll
+cl90eXBlLCBrb21lZGFfZ2V0X2Zvcm1hdF9uYW1lKGZvdXJjYywgbW9kaWZpZXIpKTsNCiANCi0J
+aWYgKCEoY2Fwcy0+c3VwcG9ydGVkX2xheWVyX3R5cGVzICYgbGF5ZXJfdHlwZSkpDQotCQlyZXR1
+cm4gZmFsc2U7DQotDQotCXJldHVybiB0cnVlOw0KKwlyZXR1cm4gc3VwcG9ydGVkOw0KIH0NCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFt
+ZWJ1ZmZlci5oIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJh
+bWVidWZmZXIuaA0KaW5kZXggZTNiYWIwZC4uNmNiYjJmNiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmgNCisrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmgNCkBA
+IC0zNSw5ICszNSwxMCBAQCBzdHJ1Y3Qga29tZWRhX2ZiIHsNCiANCiBzdHJ1Y3QgZHJtX2ZyYW1l
+YnVmZmVyICoNCiBrb21lZGFfZmJfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHN0cnVj
+dCBkcm1fZmlsZSAqZmlsZSwNCi0JCSBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfZmJfY21kMiAqbW9k
+ZV9jbWQpOw0KKwkJY29uc3Qgc3RydWN0IGRybV9tb2RlX2ZiX2NtZDIgKm1vZGVfY21kKTsNCiBk
+bWFfYWRkcl90DQoga29tZWRhX2ZiX2dldF9waXhlbF9hZGRyKHN0cnVjdCBrb21lZGFfZmIgKmtm
+YiwgaW50IHgsIGludCB5LCBpbnQgcGxhbmUpOw0KLWJvb2wga29tZWRhX2ZiX2lzX2xheWVyX3N1
+cHBvcnRlZChzdHJ1Y3Qga29tZWRhX2ZiICprZmIsIHUzMiBsYXllcl90eXBlKTsNCitib29sIGtv
+bWVkYV9mYl9pc19sYXllcl9zdXBwb3J0ZWQoc3RydWN0IGtvbWVkYV9mYiAqa2ZiLCB1MzIgbGF5
+ZXJfdHlwZSwNCisJCXUzMiByb3QpOw0KIA0KICNlbmRpZg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQpp
+bmRleCA4YzEzM2U0Li43MTFkYWRjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9k
+aXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYw0KKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYw0KQEAgLTI1Miw2
+ICsyNTIsMTEgQEAgc3RydWN0IGtvbWVkYV9waXBlbGluZV9zdGF0ZSAqDQogCQkgICAgICAgc3Ry
+dWN0IGtvbWVkYV9wbGFuZV9zdGF0ZSAqa3BsYW5lX3N0LA0KIAkJICAgICAgIHN0cnVjdCBrb21l
+ZGFfZGF0YV9mbG93X2NmZyAqZGZsb3cpDQogew0KKwlzdHJ1Y3Qga29tZWRhX2ZiICprZmIgPSB0
+b19rZmIoa3BsYW5lX3N0LT5iYXNlLmZiKTsNCisNCisJaWYgKCFrb21lZGFfZmJfaXNfbGF5ZXJf
+c3VwcG9ydGVkKGtmYiwgbGF5ZXItPmxheWVyX3R5cGUsIGRmbG93LT5yb3QpKQ0KKwkJcmV0dXJu
+IC1FSU5WQUw7DQorDQogCWlmICghaW5fcmFuZ2UoJmxheWVyLT5oc2l6ZV9pbiwgZGZsb3ctPmlu
+X3cpKSB7DQogCQlEUk1fREVCVUdfQVRPTUlDKCJzcmNfdzogJWQgaXMgb3V0IG9mIHJhbmdlLlxu
+IiwgZGZsb3ctPmluX3cpOw0KIAkJcmV0dXJuIC1FSU5WQUw7DQpAQCAtMzM3LDcgKzM0Miw4IEBA
+IHN0cnVjdCBrb21lZGFfcGlwZWxpbmVfc3RhdGUgKg0KIAlzdHJ1Y3Qga29tZWRhX2xheWVyX3N0
+YXRlICpzdDsNCiAJaW50IGk7DQogDQotCWlmICgha29tZWRhX2ZiX2lzX2xheWVyX3N1cHBvcnRl
+ZChrZmIsIHdiX2xheWVyLT5sYXllcl90eXBlKSkNCisJaWYgKCFrb21lZGFfZmJfaXNfbGF5ZXJf
+c3VwcG9ydGVkKGtmYiwgd2JfbGF5ZXItPmxheWVyX3R5cGUsDQorCQkJCQkgIGRmbG93LT5yb3Qp
+KQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogDQogCWNfc3QgPSBrb21lZGFfY29tcG9uZW50X2dldF9z
+dGF0ZV9hbmRfc2V0X3VzZXIoJndiX2xheWVyLT5iYXNlLA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMgYi9kcml2ZXJzL2dwdS9k
+cm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9wbGFuZS5jDQppbmRleCA1ZTViZmRiLi5hYWU2
+ZmU2IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
+ZGFfcGxhbmUuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
+ZGFfcGxhbmUuYw0KQEAgLTE3MCw3ICsxNzAsNyBAQCBzdGF0aWMgdm9pZCBrb21lZGFfcGxhbmVf
+cmVzZXQoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUpDQogCXUzMiBsYXllcl90eXBlID0ga3BsYW5l
+LT5sYXllci0+bGF5ZXJfdHlwZTsNCiANCiAJcmV0dXJuIGtvbWVkYV9mb3JtYXRfbW9kX3N1cHBv
+cnRlZCgmbWRldi0+Zm10X3RibCwgbGF5ZXJfdHlwZSwNCi0JCQkJCSAgIGZvcm1hdCwgbW9kaWZp
+ZXIpOw0KKwkJCQkJICAgZm9ybWF0LCBtb2RpZmllciwgMCk7DQogfQ0KIA0KIHN0YXRpYyBjb25z
+dCBzdHJ1Y3QgZHJtX3BsYW5lX2Z1bmNzIGtvbWVkYV9wbGFuZV9mdW5jcyA9IHsNCi0tIA0KMS45
+LjENCg0K
