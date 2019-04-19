@@ -2,127 +2,137 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAAEC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B68FC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1D4222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naIP3E07"
+	by mail.kernel.org (Postfix) with ESMTP id DFCB7222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555698094;
+	bh=Md63aeBiheZhPohAZD/a9qkpmLDP/KULEqF0gpQGBUY=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=l4vVMyhwoSSJOMn4yDZcXnSF7brQ+IjGKrWbH2qaJazHoyMbpqz7W3JtMov6AgAxV
+	 p6YtZP70wB8Am9+ovc8930khquitVGKT0PQxSMG9O3wBYTfQnJfrrbcAxkiu/l1y8f
+	 wtHQM9YFJeRIFbmYHJnGGHXoEXnaYVGarOHUh9sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfDSSVW (ORCPT
+        id S1727221AbfDSSUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:21:22 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46135 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbfDSSVT (ORCPT
+        Fri, 19 Apr 2019 14:20:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38528 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfDSSUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:21:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t17so7791863wrw.13;
-        Fri, 19 Apr 2019 11:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8sNxl0hEqODlC+hizSvqr3xUDHjjB8NZZkZymPPfOvY=;
-        b=naIP3E07hKz9hhJLONZLM7NzxQwVLhpVzVE0rbFHxxGq15ALwhLw6H7ABoX4JERvdX
-         nPx6ErSt54JKMABpMiNjJG11NXzCjG/1pGSwGOPHD0dHRVt2evWpIUbmTUK0146mNm1M
-         CDojXmqspVqiPZx6r0VSleUcw2nsacUN45VHmMcpL7cCstQTmvGETfAEs7yYhubFfea9
-         zfaX60KKiNxuKC0Yd1vrsxXr0Bu9cFxBZ3w477BNQkpydYazALvEuxq8QsulZ84cyynf
-         ZrilGYcNiWmFGJrLksDC1C54mjK0ysRtwZthtsIv4xgtsg2ujQehxeyEpOwjMxL2gB8R
-         KMkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8sNxl0hEqODlC+hizSvqr3xUDHjjB8NZZkZymPPfOvY=;
-        b=Mn8Db0XtIIPTWjb8vSBzhdjzY2Qw4eM1eQ2cMNdk4rm3BdP0UZ7vaGqFCVim8Akwd+
-         1ZdVnfgVQF/V6B35Ho6NE/CKiN9r6FRyo37B62MCmL3mwHtXp/4qm9ClL4XIjKAaCzC+
-         dwwVG2k8gQqODOVWq2N/uguJn7ce//baN6+TScHr2qI7MXPYTpjVDN/W86FRNAsmb+0K
-         oD5FuosXOW4Pm4PA7K4i4jWddBPxt+rxCNBVEPOqbNrpagPpi1jmXi+bKcDENnloNxY6
-         pVJeLYsV744qSooNIAJavIbiBQOotTpb6OVyMUezgwGQtqHj5R3ynQWWtcTgIeQgby1a
-         wQ1A==
-X-Gm-Message-State: APjAAAUf+aSHHjFzTabNxCeL/00wqY4Ha3r17MVGBEMW1HMO/SAo/fp0
-        AMu/fjoe8qWgYMndcXSpC+gH3I3m
-X-Google-Smtp-Source: APXvYqwh6gIi39S5w5C6TPjurD4+26bXvW/pWLM6lP5xIJizR5hUqlc8BiOjXGcQVwM/YYwkaO1ZVQ==
-X-Received: by 2002:a5d:4d42:: with SMTP id a2mr4134240wru.130.1555696630034;
-        Fri, 19 Apr 2019 10:57:10 -0700 (PDT)
-Received: from debian64.daheim (p4FD090B5.dip0.t-ipconnect.de. [79.208.144.181])
-        by smtp.gmail.com with ESMTPSA id c2sm4718719wrr.13.2019.04.19.10.57.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 10:57:08 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
-        by debian64.daheim with esmtp (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1hHXkr-0007gA-OV; Fri, 19 Apr 2019 19:56:59 +0200
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: p54: drop device reference count if fails to enable device
-Date:   Fri, 19 Apr 2019 19:56:47 +0200
-Message-ID: <4374745.djV02MS7NJ@debian64>
-In-Reply-To: <1555494083-130833-1-git-send-email-bianpan2016@163.com>
-References: <1555494083-130833-1-git-send-email-bianpan2016@163.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 19 Apr 2019 14:20:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=g0IjKnXDoyaYvs2Kqg0dnQ9FOItsHljHt9NUaT90KEk=; b=BQK5xK4fQfpR
+        ZfNiERdtXvJsLszxuvhVbM8YcCLE1IX/9MlKQRqVJwWD3zIbK3n+MCO9tSirFQ+UJ2NUqFmCwS1X9
+        fAeQFnjAaZHcoBM5u1Dh9p/TojPyAmYRuhN85dOS2SRBl7Kv/csRSFDumofW9VRiph4PRSap8Hh0+
+        reNxM=;
+Received: from 188.29.164.213.threembb.co.uk ([188.29.164.213] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hHW9m-00007O-Cj; Fri, 19 Apr 2019 16:14:30 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 22D70441D3E; Fri, 19 Apr 2019 17:14:24 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Wadim Egorov <w.egorov@phytec.de>,
+        Yunfan Zhang <yfzhang@marvell.com>
+Subject: Applied "regulator: fan53555: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190419005824.21533-2-axel.lin@ingics.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190419161424.22D70441D3E@finisterre.ee.mobilebroadband>
+Date:   Fri, 19 Apr 2019 17:14:24 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject should include a "[PATCH]" as per:
-https://www.kernel.org/doc/html/v4.15/process/submitting-patches.html#include-patch-in-the-subject
+The patch
 
-Nevertheless, patchwork picked it up.... so, you are probably fine.
+   regulator: fan53555: Switch to SPDX identifier
 
-https://patchwork.kernel.org/patch/10905039/
+has been applied to the regulator tree at
 
-On Wednesday, April 17, 2019 11:41:23 AM CEST Pan Bian wrote:
-> The function p54p_probe takes an extra reference count of the PCI
-> device. However, the extra reference count is not dropped when it fails
-> to enable the PCI device. This patch fixes the bug.
-> 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-Cc: stable@vger.kernel.org 
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
-> ---
->  drivers/net/wireless/intersil/p54/p54pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/intersil/p54/p54pci.c b/drivers/net/wireless/intersil/p54/p54pci.c
-> index 27a4906..57ad564 100644
-> --- a/drivers/net/wireless/intersil/p54/p54pci.c
-> +++ b/drivers/net/wireless/intersil/p54/p54pci.c
-> @@ -554,7 +554,7 @@ static int p54p_probe(struct pci_dev *pdev,
->  	err = pci_enable_device(pdev);
->  	if (err) {
->  		dev_err(&pdev->dev, "Cannot enable new PCI device\n");
-> -		return err;
-> +		goto err_put;
->  	}
->  
->  	mem_addr = pci_resource_start(pdev, 0);
-> @@ -639,6 +639,7 @@ static int p54p_probe(struct pci_dev *pdev,
->  	pci_release_regions(pdev);
->   err_disable_dev:
->  	pci_disable_device(pdev);
-> +err_put:
->  	pci_dev_put(pdev);
->  	return err;
->  }
-> 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From c9bab8f5a9655609491d4fa0c27e0fff357110ec Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Fri, 19 Apr 2019 08:58:24 +0800
+Subject: [PATCH] regulator: fan53555: Switch to SPDX identifier
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/fan53555.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
+index e2caf4173ab5..dbe477da4e55 100644
+--- a/drivers/regulator/fan53555.c
++++ b/drivers/regulator/fan53555.c
+@@ -1,17 +1,13 @@
+-/*
+- * FAN53555 Fairchild Digitally Programmable TinyBuck Regulator Driver.
+- *
+- * Supported Part Numbers:
+- * FAN53555UC00X/01X/03X/04X/05X
+- *
+- * Copyright (c) 2012 Marvell Technology Ltd.
+- * Yunfan Zhang <yfzhang@marvell.com>
+- *
+- * This package is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// FAN53555 Fairchild Digitally Programmable TinyBuck Regulator Driver.
++//
++// Supported Part Numbers:
++// FAN53555UC00X/01X/03X/04X/05X
++//
++// Copyright (c) 2012 Marvell Technology Ltd.
++// Yunfan Zhang <yfzhang@marvell.com>
++
+ #include <linux/module.h>
+ #include <linux/param.h>
+ #include <linux/err.h>
+-- 
+2.20.1
 
