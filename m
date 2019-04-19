@@ -2,92 +2,106 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E407AC282E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26923C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F3A205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D863D217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcYnCzeD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKYEkw68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfDSU1W (ORCPT
+        id S1726611AbfDSU16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:27:22 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41926 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfDSU1W (ORCPT
+        Fri, 19 Apr 2019 16:27:58 -0400
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:46909 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDSU16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:27:22 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d1so3043889plj.8;
-        Fri, 19 Apr 2019 13:27:22 -0700 (PDT)
+        Fri, 19 Apr 2019 16:27:58 -0400
+Received: by mail-pl1-f175.google.com with SMTP id o7so799483pll.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZJa9DDteyNFYDeRtsgsDX/MNzkgWGaFxN9Xza+wbv0o=;
-        b=NcYnCzeDxnv+ZFSOT9Da7hQdlgkG8b7xwWuxDRppRbVWqJFEmuKkHdd82OiiCLJOOY
-         x3a7ONMf+Dq6EUy32yIgy7zd9f16SczxL1MCwJRXA2BP1GH7qENyuJEWk4ToWuFApaUK
-         DI+Js7bpY4nvkXTTLg50S0/NclupX16Zb4F8e6hcCyiUQtZpops47H1y+pU9/H2nUph8
-         chCbexEiZuxb90vH+N8oLQAjtvKqDvP9ts99yqHCn08HOypa5pt0sc8RxpKkLyzffBj9
-         lwegzrgXY7KtUOLQycKXXUB6jaolIj0WCNywlxJsXcaabhJVNrXYm3Ci73bw7nwXz17+
-         MCNw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=8JkLXzmPOqLtZX8yX9rlnRg79Wg8uW1qURcd86gjSYM=;
+        b=nKYEkw68/rlpYgZYwd1IuVc0TyyWzSaEYcFhinuav2f/Okpypscx2o+ctujhT5Qj23
+         WPI8so2VD4TMO3XE6zbMCMQwiCEDN0W7eoQBfCtCnPd3/N1Gvev/MBQso2H5koJTNJkC
+         Bq7yoUAMqzoxb9E3KpRmcYiQodrqqM9nirmcNDp3eWRZFv4lubOPCL9CfX8ZabXh/Ftd
+         hGHBWXfgPM7GGiS/1ye8C0UwB52zEF1xPr+KUKE4/mpYphKgTvDQbnTZpBbIJFNiuU4/
+         BdYZYcESf/TjLE2QIdy90Am0LoW49EXTFDJHpqLwwbEpnvd/2EfkSv9+Bg1GJ0QMv6GK
+         onbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZJa9DDteyNFYDeRtsgsDX/MNzkgWGaFxN9Xza+wbv0o=;
-        b=UdX9MF5ysaby7YFdW15mPfD5NznKB4c8FTZrQUi5I5gRinUrdKMPRuLt/CgrHslVYs
-         X0YtIaV9Ivh/p9zedo/gH+r1N7RtA4d0TLFdE597WmB9tfLbfJpbdxtSoxBM3aM8r8LE
-         O1n6l97FxVmhr/+dhL5DjtfSSod2vOufTjV6DG2HV/I9/WHTtta+RxshGkilvevGsel1
-         +LSDZT9Zoeouv+X1gJswm9MAIKj4WvnL50slonUL7quraXNwj9+hK0AY56n7JAyiuWse
-         xnWRIycwG4qo9CZlkbDbxKeE0e8s8GXWLXRPwDG0y0tbWVdYalWlu1jfU/XlICsM3KNZ
-         XWQA==
-X-Gm-Message-State: APjAAAW8H/64rWbKKeINW3HuQ5IJ2jdkyl9YPOEkR/FRz56ct+z382tg
-        5xCOMD/++6FNuEdUBdv4TdlMRZtTY8Y=
-X-Google-Smtp-Source: APXvYqztdjD0Z6AzehC+nI2YgwZiAumg5bZPfqipPvy4BsRN8AV9QNaRX4Yf+OP3oml2HNChO83Wug==
-X-Received: by 2002:a17:902:e508:: with SMTP id ck8mr2335018plb.96.1555660101314;
-        Fri, 19 Apr 2019 00:48:21 -0700 (PDT)
-Received: from localhost ([61.199.190.18])
-        by smtp.gmail.com with ESMTPSA id e1sm5129503pfn.187.2019.04.19.00.48.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=8JkLXzmPOqLtZX8yX9rlnRg79Wg8uW1qURcd86gjSYM=;
+        b=nLHdPPE64dn0L8Qo3ipnoT1NJ+aGSvOWFMNKRgtpd4kuTh/YNMfMF6+eBbLCdTgDOQ
+         5OcE5WiJkn4sbnvmcoqYmcyWIUtDLRnJMGdvY2lUG/sWLIaHyy87WbVKsJXsmN5Sn1ue
+         RjZk6Fgu2nRDu3VcLC+tZFjl1/7LoxgXvkB+OJ9czq6AXuAup98mKCkbQ+PT2ayilTu0
+         mIXAmr+HcOZfAipipL9XkIJFjqo4xtEYG156YWB5sC1JRU6V1rcU6snCLq+zTaUjKC/a
+         sbjE6hcS1FtvzdsjEoFcBcAKXZxwTvqlOympIKW9n3rSNmPf6i2L1a7xEa5abCBkues/
+         fjCA==
+X-Gm-Message-State: APjAAAUiEsJnM/VBsTMDsX+vfMwEaZn5Oue0i6ZVHcbFhELj9hSscMQY
+        wdISjLEC7J2gYt/lSr/Hx2OfyrLE
+X-Google-Smtp-Source: APXvYqwgXIO/irQw/yARQpCl+MPPhGR4EiRhUy9rXYrtymKlj9ftLZsxEGn7vU+6Jrj+s2vJbTlDsQ==
+X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr2495565plp.294.1555662823056;
+        Fri, 19 Apr 2019 01:33:43 -0700 (PDT)
+Received: from localhost ([175.223.3.190])
+        by smtp.gmail.com with ESMTPSA id d129sm7248621pfa.142.2019.04.19.01.33.41
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 00:48:20 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 07:48:11 +0000
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH 3/4] input: keyboard: gpio_keys_polled: use gpio lookup
- table
-Message-ID: <20190419074811.7rkq3p6t7s56g4fo@penguin>
-References: <1555444645-15156-1-git-send-email-info@metux.net>
- <1555444645-15156-4-git-send-email-info@metux.net>
+        Fri, 19 Apr 2019 01:33:42 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 17:33:39 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [next] kbuild: use $(srctree) instead of KBUILD_SRC to check
+ out-of-tree build
+Message-ID: <20190419083339.GA8504@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1555444645-15156-4-git-send-email-info@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enrico,
+Hello Masahiro,
 
-On Tue, Apr 16, 2019 at 09:57:24PM +0200, Enrico Weigelt, metux IT consult wrote:
-> Support the recently introduced gpio lookup tables for
-> attaching to gpio lines. So, harcoded gpio numbers aren't
-> needed anymore.
+It seems that commit a9a49c2ad9b9b8 (linux-next) breaks ./scripts/tags.sh
+on my system. It scans, basically, my entire drive now (including the
+root partition):
 
-I would prefer if gpiod API could parse static board data/gpio lookup
-tables for child nodes, instead of adding this to gpio-keys. Now that
-Heikki Krogerus work on software nodes has landed I need to resurrect
-my patch to gpiolib.
+$ ./scripts/tags.sh tags
+find: ‘/arch/*.[chS]/’: No such file or directory
+find: ‘/include’: No such file or directory
+find: ‘/boot/lost+found’: Permission denied
+find: ‘/etc/pacman.d/gnupg/openpgp-revocs.d’: Permission denied
+find: ‘/etc/pacman.d/gnupg/private-keys-v1.d’: Permission denied
+find: ‘/etc/pacman.d/gnupg/crls.d’: Permission denied
+find: ‘/etc/polkit-1/rules.d’: Permission denied
+find: ‘/etc/sudoers.d’: Permission denied
+find: ‘/etc/audisp/plugins.d’: Permission denied
+find: ‘/home/lost+found’: Permission denied
+find: ‘/home/sk’: Permission denied
+find: ‘/lost+found’: Permission denied
+ctags: Warning: --extra option is obsolete; use --extras instead
+[..]
 
-Thanks.
 
--- 
-Dmitry
+With reverted a9a49c2ad9b9b8 tags scans kernel source tree only
+
+./scripts/tags.sh tags
+find: ‘arch/*.[chS]/’: No such file or directory
+ctags: Warning: --extra option is obsolete; use --extras instead
+[..]
+
+	-ss
