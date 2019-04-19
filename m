@@ -2,89 +2,135 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875AEC282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF33C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBBF20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8319720643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfDSS7k (ORCPT
+        id S1728733AbfDSS74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:59:40 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:36960 "EHLO
+        Fri, 19 Apr 2019 14:59:56 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:37286 "EHLO
         mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbfDSS7j (ORCPT
+        with ESMTP id S1727100AbfDSS74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:59:39 -0400
+        Fri, 19 Apr 2019 14:59:56 -0400
+X-Greylist: delayed 345 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Apr 2019 14:59:55 EDT
 Received: from relay10.mail.gandi.net (unknown [217.70.178.230])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id C6B953A7CBA;
-        Fri, 19 Apr 2019 08:25:06 +0000 (UTC)
-Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D384A240007;
-        Fri, 19 Apr 2019 08:25:05 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/6] rtc: ds2404: set range
-Date:   Fri, 19 Apr 2019 10:24:56 +0200
-Message-Id: <20190419082501.17549-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 957B53A9298;
+        Fri, 19 Apr 2019 07:22:57 +0000 (UTC)
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C128624000A;
+        Fri, 19 Apr 2019 07:22:52 +0000 (UTC)
+Message-ID: <011ad65faa3517b2dd51be4a03ad52bf72c93557.camel@bootlin.com>
+Subject: Re: [PATCH v3 1/2] media: v4l: Add definitions for the HEVC slice
+ format and controls
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Randy Li <ayaka@soulik.info>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Date:   Fri, 19 Apr 2019 09:22:51 +0200
+In-Reply-To: <32979080-a86f-01a4-a9e3-bcb970a85135@xs4all.nl>
+References: <20190214095309.19594-1-paul.kocialkowski@bootlin.com>
+         <20190214095309.19594-2-paul.kocialkowski@bootlin.com>
+         <32979080-a86f-01a4-a9e3-bcb970a85135@xs4all.nl>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The real-time clock is a 5-byte binary counter. It is incremented 256 times
-per second. The least significant byte is a count of fractional seconds.
-The upper four bytes are a count of seconds. The realtime clock can
-accumulate 136 years of seconds before rolling over.
+Hi,
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/rtc-ds2404.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+On Tue, 2019-04-02 at 13:51 +0200, Hans Verkuil wrote:
+> On 2/14/19 10:53 AM, Paul Kocialkowski wrote:
 
-diff --git a/drivers/rtc/rtc-ds2404.c b/drivers/rtc/rtc-ds2404.c
-index b886b6a5c178..7b36c09bed10 100644
---- a/drivers/rtc/rtc-ds2404.c
-+++ b/drivers/rtc/rtc-ds2404.c
-@@ -234,6 +234,10 @@ static int rtc_probe(struct platform_device *pdev)
- 
- 	chip->ops = &ds2404_gpio_ops;
- 
-+	chip->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(chip->rtc))
-+		return PTR_ERR(chip->rtc);
-+
- 	retval = chip->ops->map_io(chip, pdev, pdata);
- 	if (retval)
- 		goto err_chip;
-@@ -244,12 +248,12 @@ static int rtc_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, chip);
- 
--	chip->rtc = devm_rtc_device_register(&pdev->dev, "ds2404",
--					&ds2404_rtc_ops, THIS_MODULE);
--	if (IS_ERR(chip->rtc)) {
--		retval = PTR_ERR(chip->rtc);
-+	chip->rtc->ops = &ds2404_rtc_ops;
-+	chip->rtc->range_max = U32_MAX;
-+
-+	retval = rtc_register_device(chip->rtc);
-+	if (retval)
- 		goto err_io;
--	}
- 
- 	ds2404_enable_osc(&pdev->dev);
- 	return 0;
+[...]
+
+> > +.. c:type:: v4l2_hevc_dpb_entry
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table:: struct v4l2_hevc_dpb_entry
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - __u32
+> > +      - ``buffer_tag``
+> > +      - The V4L2 buffer tag that matches the associated reference picture.
+> 
+> This struct documentation is out of date with the actual struct!
+
+Woops, sorry about that. I'll make another pass on the structures vs
+docs before submitting the next version.
+
+> > +#define V4L2_HEVC_DPB_ENTRY_RPS_ST_CURR_BEFORE	0x01
+> > +#define V4L2_HEVC_DPB_ENTRY_RPS_ST_CURR_AFTER	0x02
+> > +#define V4L2_HEVC_DPB_ENTRY_RPS_LT_CURR		0x03
+> > +
+> > +#define V4L2_HEVC_DPB_ENTRIES_NUM_MAX		16
+> > +
+> > +struct v4l2_hevc_dpb_entry {
+> > +	__u64	timestamp;
+> 
+> I would call this 'reference_ts' rather than plain 'timestamp'.
+> Or at least some other name that reflects what the timestamp
+> refers to.
+
+Well, I think using "ts" instead of "timestamp" is much less explicit
+(I'm really not a big fan of abbreviations...).
+
+Also, this field is in the dpb entry structure and since a dpb entry
+describes a reference, I find it quite straightforward already without
+any added prefix. The prefix feels redundant with the name of the
+structure that holds the element.
+
+I think the same should apply for mpeg-2 and h.264.
+
+> > +	__u8	rps;
+> > +	__u8	field_pic;
+> > +	__u16	pic_order_cnt[2];
+> > +	__u8	padding[2];
+> 
+> padding fields here or elsewhere are not documented. Do you really
+> need them? What if you changed rps and field_pic to __u16 instead?
+> 
+> Padding fields are painful to maintain in my experience.
+
+I think we'll need to rework the controls to include flags and such in
+the not-too-distant future. So there will be an occasion to change it
+then (the same work also needs to be done for MPEG-2).
+
+If you prefer that we make the change now and later update it along
+with the controls, I can definitely do that too.
+
+Cheers,
+
+Paul
+
 -- 
-2.20.1
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
