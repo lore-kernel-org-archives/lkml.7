@@ -6,88 +6,86 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7929DC282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06744C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D652171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20FA21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1ZDK/4JL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jfK9Qs3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfDSTa5 (ORCPT
+        id S1728048AbfDSTbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:30:57 -0400
+        Fri, 19 Apr 2019 15:31:01 -0400
 Received: from merlin.infradead.org ([205.233.59.134]:52654 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfDSTa5 (ORCPT
+        with ESMTP id S1726331AbfDSTa6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:30:57 -0400
+        Fri, 19 Apr 2019 15:30:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6VWnVgCweh/i9J13ePCp1WXpskD7OICjHvPqGHw06p0=; b=1ZDK/4JL4PFJ7ECgMePxOadtU
-        3iO1VjKc1QJ3XtMihHAFP6phDWMBwxN2J5Sn5JdX/KgZ4WEDpsNuEJjjq2r0oJy7jqe3+Q56+a5S0
-        7VzTe4BOcHBHK7sGxPTNgcztZxz4N9Ms+Bqvfxq/hV7qa22+Yh73orjOn7ThwetWkTCH7n21uQzYS
-        4/uhUJ/uFnFz1+UV5t2LkbNoJ1SRnYDleHcjvFG2jhVaEFxSuBP1iBfZB9B/D1hipJGw7TG23SJyD
-        r8pIBywdaBJutJtSUtY3VQa+8c8uwzADZFTVDT7YvUXL8KN9Mv9T4fzdlNcRkNKxcolj+01tETHcG
-        i0ub7QG5Q==;
+         bh=EeK/UKGIlkcrqy9X052/pZ9M/vDBfGLns9hKVfQ8IQQ=; b=jfK9Qs3qnJDlHfY7Orm1Fyq3a
+        gb4IbW9elW1czyt1dp25Z02CHzCyRLRDGOUQD9Sh6ZBltx3Y/iFY1bfEkcTSLVyUaH0aN1r7qEMq7
+        IPUeglqHLzMEWszL2aj2mZLXy5EEDMgdyBoZKv7bt/cRLs1Yh4/lk+8zaCz3AF181P///tm/AXtyL
+        nUGR5udDJKK6taam8rUe3j6hsPhRCxQ9bwomXNORdHGi446XX6SMRBqwlFsRQ1HVXzYg+5gi/8rGZ
+        VGP6Mra0JlRQtOvihaTNnvuTf25XJRXyfk21CLtoSd7bUiJl+ky2ktiCJJksd2sT7cXy3GXh7mueQ
+        1vuLSvOKQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hHXoC-0006kP-UV; Fri, 19 Apr 2019 18:00:21 +0000
+        id 1hHTMR-0005n8-Ul; Fri, 19 Apr 2019 13:15:24 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D55C229BF0C04; Fri, 19 Apr 2019 20:00:17 +0200 (CEST)
-Date:   Fri, 19 Apr 2019 20:00:17 +0200
+        id 997EB29BF0BFE; Fri, 19 Apr 2019 15:15:22 +0200 (CEST)
+Date:   Fri, 19 Apr 2019 15:15:22 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
- by smp_mb__{before,after}_atomic()
-Message-ID: <20190419180017.GP4038@hirez.programming.kicks-ass.net>
-References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
+ negative
+Message-ID: <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-15-longman@redhat.com>
+ <20190418135151.GB12232@hirez.programming.kicks-ass.net>
+ <d931916b-41f5-f12d-8c38-0cccbc00a301@redhat.com>
+ <20190418144036.GE12232@hirez.programming.kicks-ass.net>
+ <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
+ <20190419102647.GP7905@worktop.programming.kicks-ass.net>
+ <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
+In-Reply-To: <20190419130304.GV14281@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 01:21:45PM -0400, Alan Stern wrote:
-> Index: usb-devel/Documentation/atomic_t.txt
-> ===================================================================
-> --- usb-devel.orig/Documentation/atomic_t.txt
-> +++ usb-devel/Documentation/atomic_t.txt
-> @@ -171,7 +171,10 @@ The barriers:
->    smp_mb__{before,after}_atomic()
->  
->  only apply to the RMW ops and can be used to augment/upgrade the ordering
-> -inherent to the used atomic op. These barriers provide a full smp_mb().
-> +inherent to the used atomic op. Unlike normal smp_mb() barriers, they order
-> +only the RMW op itself against the instructions preceding the
-> +smp_mb__before_atomic() or following the smp_mb__after_atomic(); they do
-> +not order instructions on the other side of the RMW op at all.
+On Fri, Apr 19, 2019 at 03:03:04PM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 19, 2019 at 02:02:07PM +0200, Peter Zijlstra wrote:
+> > On Fri, Apr 19, 2019 at 12:26:47PM +0200, Peter Zijlstra wrote:
+> > > I thought of a horrible horrible alternative:
+> > 
+> > Hurm, that's broken as heck. Let me try again.
+> 
+> So I can't make that scheme work, it all ends up wanting to have
+> cmpxchg().
+> 
+> Do we have a performance comparison somewhere of xadd vs cmpxchg
+> readers? I tried looking in the old threads, but I can't seem to locate
+> it.
+> 
+> We need new instructions :/ Or more clever than I can muster just now.
 
-Now it is I who is confused; what?
-
-	x = 1;
-	smp_mb__before_atomic();
-	atomic_add(1, &a);
-	y = 1;
-
-the stores to both x and y will be ordered as if an smp_mb() where
-there. There is no order between a and y otoh.
+In particular, an (unsigned) saturation arithmetic variant of XADD would
+be very nice to have at this point.
