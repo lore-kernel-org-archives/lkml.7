@@ -2,413 +2,160 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F1C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA26C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3AB222EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C50222EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxLxSIUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfDSSSH (ORCPT
+        id S1727465AbfDSSSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:18:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726134AbfDSSSD (ORCPT
+        Fri, 19 Apr 2019 14:18:13 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42107 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfDSSSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:18:03 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JFiXY0122215
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:46:17 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ryf6fvy7a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:46:16 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Fri, 19 Apr 2019 16:46:14 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 19 Apr 2019 16:46:05 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3JFk3LC50266340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Apr 2019 15:46:03 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83415A4051;
-        Fri, 19 Apr 2019 15:46:03 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC3F5A404D;
-        Fri, 19 Apr 2019 15:45:57 +0000 (GMT)
-Received: from [9.145.44.158] (unknown [9.145.44.158])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Apr 2019 15:45:57 +0000 (GMT)
-Subject: Re: [PATCH v12 09/31] mm: VMA sequence count
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-10-ldufour@linux.ibm.com>
- <20190418224857.GI11645@redhat.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Fri, 19 Apr 2019 17:45:57 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Fri, 19 Apr 2019 14:18:10 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w139so4520017oie.9;
+        Fri, 19 Apr 2019 11:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vd6QC5/kh1+k2njWGbBmVOB+Wb//gDgVPntsiNP/wHU=;
+        b=uxLxSIUPcUT7maJmNU2OlubOxwiXC5vvjb9k7HjpgLBBDVNMC/gk/AM7EdHkcwKYP0
+         5qDRvrxhT9+hniMPoHB0e4eZc5dR4WgqrlQ9cHpYy3kmEWuMFX96EBYg1cxFbw/Vnk57
+         YOVnEHlPxpVIM675XegQGNqqEHYywW4wCQa3oFieuyci43T+4IFzgQ5Kgo2LVqmlcQNU
+         hZ7610Jfx9G9q9sQ8bjMSSKr/r3juCsv97mkpwsAFln/hmdlgV2MW04t7b9LtbALPZ4h
+         z/nniWYxSUhgwNKiauMjPaUzXjmHrj8wRjLJhUBLX3K0W6v5vNg73T4d7ICsZ25zAm5t
+         E2mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vd6QC5/kh1+k2njWGbBmVOB+Wb//gDgVPntsiNP/wHU=;
+        b=HfHRDo4KnNzZKQTDkKW31X1EkPmQMmY5ld+g9LFxb3qa409XpxE7hAYi0p0fPOCpLx
+         2/UguFyBF6xfBsQ0TZdHfKCSG0DuDBiN/tAdnH7uMo+uVrtkO5lTn/u2Lbefp8haoukI
+         JHlY0iWaj1HP5A5KxicVSQFL9CIDKwHDs+3I0Om8xr68Lh/IzybEj0HxtK29tVmLMPXW
+         HNQ0hLJP1DMdhd0CFxkOzr2dgkv4E+WQo6y/AwQ84nSUhl0ofzn7JyOh0y5pABlv9kNn
+         RXE3flCtP9LL5zz6XlN7oh/q/QhiP0MV5d3xIHDeE/cMeVLVDDXPudSuLWvjaL9kCEG+
+         IBlA==
+X-Gm-Message-State: APjAAAXsOU3ogixbQlLc0nXuKQAQ8+gf0p8MG+cM+al0iJamCuwzB7yj
+        rB3PPGDOq2woCMEpmAKMlDdIvNWYn9M=
+X-Google-Smtp-Source: APXvYqxTs9S6QFx3ORJhQTczfnDLFv3JUp9cYjVp9VXMwTBYVCvlsOuNE8ewMSpDQBEMfbtIGmsk3g==
+X-Received: by 2002:aca:d595:: with SMTP id m143mr2139444oig.31.1555687380781;
+        Fri, 19 Apr 2019 08:23:00 -0700 (PDT)
+Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id y9sm1981723otk.20.2019.04.19.08.22.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 08:23:00 -0700 (PDT)
+From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
+To:     bhelgaas@google.com
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/4] PCI: hotplug: Add support for disabling in-band presence
+Date:   Fri, 19 Apr 2019 10:22:23 -0500
+Message-Id: <20190419152238.12251-2-mr.nuke.me@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190419152238.12251-1-mr.nuke.me@gmail.com>
+References: <20190419000148.GI126710@google.com>
+ <20190419152238.12251-1-mr.nuke.me@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190418224857.GI11645@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041915-0028-0000-0000-00000362ABA3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041915-0029-0000-0000-00002421EFDD
-Message-Id: <d217e71c-7d55-ce1a-6461-ce1de732fb57@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904190115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
+The presence detect state (PDS) is normally a logical or of in-band
+and out-of-band presence. In PCIe 4.0, there is the option to disable
+in-band presence so that the PDS bit always reflects the state of the
+out-of-band presence.
 
-Thanks a lot for reviewing this series.
+The recommendation of the PCIe spec is to disable in-band presence
+whenever supported.
 
-Le 19/04/2019 à 00:48, Jerome Glisse a écrit :
-> On Tue, Apr 16, 2019 at 03:45:00PM +0200, Laurent Dufour wrote:
->> From: Peter Zijlstra <peterz@infradead.org>
->>
->> Wrap the VMA modifications (vma_adjust/unmap_page_range) with sequence
->> counts such that we can easily test if a VMA is changed.
->>
->> The calls to vm_write_begin/end() in unmap_page_range() are
->> used to detect when a VMA is being unmap and thus that new page fault
->> should not be satisfied for this VMA. If the seqcount hasn't changed when
->> the page table are locked, this means we are safe to satisfy the page
->> fault.
->>
->> The flip side is that we cannot distinguish between a vma_adjust() and
->> the unmap_page_range() -- where with the former we could have
->> re-checked the vma bounds against the address.
->>
->> The VMA's sequence counter is also used to detect change to various VMA's
->> fields used during the page fault handling, such as:
->>   - vm_start, vm_end
->>   - vm_pgoff
->>   - vm_flags, vm_page_prot
->>   - vm_policy
-> 
-> ^ All above are under mmap write lock ?
+Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+---
+ drivers/pci/hotplug/pciehp.h     | 1 +
+ drivers/pci/hotplug/pciehp_hpc.c | 9 ++++++++-
+ include/uapi/linux/pci_regs.h    | 2 ++
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-Yes, changes are still made under the protection of the mmap_sem.
-
-> 
->>   - anon_vma
-> 
-> ^ This is either under mmap write lock or under page table lock
-> 
-> So my question is do we need the complexity of seqcount_t for this ?
-
-The sequence counter is used to detect write operation done while 
-readers (SPF handler) is running.
-
-The implementation is quite simple (here without the lockdep checks):
-
-static inline void raw_write_seqcount_begin(seqcount_t *s)
-{
-	s->sequence++;
-	smp_wmb();
-}
-
-I can't see why this is too complex here, would you elaborate on this ?
-
-> 
-> It seems that using regular int as counter and also relying on vm_flags
-> when vma is unmap should do the trick.
-
-vm_flags is not enough I guess an some operation are not impacting the 
-vm_flags at all (resizing for instance).
-Am I missing something ?
-
-> 
-> vma_delete(struct vm_area_struct *vma)
-> {
->      ...
->      /*
->       * Make sure the vma is mark as invalid ie neither read nor write
->       * so that speculative fault back off. A racing speculative fault
->       * will either see the flags as 0 or the new seqcount.
->       */
->      vma->vm_flags = 0;
->      smp_wmb();
->      vma->seqcount++;
->      ...
-> }
-
-Well I don't think we can safely clear the vm_flags this way when the 
-VMA is unmap, I think it is used later when cleaning is doen.
-
-Later in this series, the VMA deletion is managed when the VMA is 
-unlinked from the RB Tree. That is checked using the vm_rb field's 
-value, and managed using RCU.
-
-> Then:
-> speculative_fault_begin(struct vm_area_struct *vma,
->                          struct spec_vmf *spvmf)
-> {
->      ...
->      spvmf->seqcount = vma->seqcount;
->      smp_rmb();
->      spvmf->vm_flags = vma->vm_flags;
->      if (!spvmf->vm_flags) {
->          // Back off the vma is dying ...
->          ...
->      }
-> }
-> 
-> bool speculative_fault_commit(struct vm_area_struct *vma,
->                                struct spec_vmf *spvmf)
-> {
->      ...
->      seqcount = vma->seqcount;
->      smp_rmb();
->      vm_flags = vma->vm_flags;
-> 
->      if (spvmf->vm_flags != vm_flags || seqcount != spvmf->seqcount) {
->          // Something did change for the vma
->          return false;
->      }
->      return true;
-> }
-> 
-> This would also avoid the lockdep issue described below. But maybe what
-> i propose is stupid and i will see it after further reviewing thing.
-
-That's true that the lockdep is quite annoying here. But it is still 
-interesting to keep in the loop to avoid 2 subsequent 
-write_seqcount_begin() call being made in the same context (which would 
-lead to an even sequence counter value while write operation is in 
-progress). So I think this is still a good thing to have lockdep 
-available here.
-
-
-
-> 
-> Cheers,
-> Jérôme
-> 
-> 
->>
->> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>
->> [Port to 4.12 kernel]
->> [Build depends on CONFIG_SPECULATIVE_PAGE_FAULT]
->> [Introduce vm_write_* inline function depending on
->>   CONFIG_SPECULATIVE_PAGE_FAULT]
->> [Fix lock dependency between mapping->i_mmap_rwsem and vma->vm_sequence by
->>   using vm_raw_write* functions]
->> [Fix a lock dependency warning in mmap_region() when entering the error
->>   path]
->> [move sequence initialisation INIT_VMA()]
->> [Review the patch description about unmap_page_range()]
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->> ---
->>   include/linux/mm.h       | 44 ++++++++++++++++++++++++++++++++++++++++
->>   include/linux/mm_types.h |  3 +++
->>   mm/memory.c              |  2 ++
->>   mm/mmap.c                | 30 +++++++++++++++++++++++++++
->>   4 files changed, 79 insertions(+)
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 2ceb1d2869a6..906b9e06f18e 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -1410,6 +1410,9 @@ struct zap_details {
->>   static inline void INIT_VMA(struct vm_area_struct *vma)
->>   {
->>   	INIT_LIST_HEAD(&vma->anon_vma_chain);
->> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
->> +	seqcount_init(&vma->vm_sequence);
->> +#endif
->>   }
->>   
->>   struct page *_vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
->> @@ -1534,6 +1537,47 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
->>   	unmap_mapping_range(mapping, holebegin, holelen, 0);
->>   }
->>   
->> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
->> +static inline void vm_write_begin(struct vm_area_struct *vma)
->> +{
->> +	write_seqcount_begin(&vma->vm_sequence);
->> +}
->> +static inline void vm_write_begin_nested(struct vm_area_struct *vma,
->> +					 int subclass)
->> +{
->> +	write_seqcount_begin_nested(&vma->vm_sequence, subclass);
->> +}
->> +static inline void vm_write_end(struct vm_area_struct *vma)
->> +{
->> +	write_seqcount_end(&vma->vm_sequence);
->> +}
->> +static inline void vm_raw_write_begin(struct vm_area_struct *vma)
->> +{
->> +	raw_write_seqcount_begin(&vma->vm_sequence);
->> +}
->> +static inline void vm_raw_write_end(struct vm_area_struct *vma)
->> +{
->> +	raw_write_seqcount_end(&vma->vm_sequence);
->> +}
->> +#else
->> +static inline void vm_write_begin(struct vm_area_struct *vma)
->> +{
->> +}
->> +static inline void vm_write_begin_nested(struct vm_area_struct *vma,
->> +					 int subclass)
->> +{
->> +}
->> +static inline void vm_write_end(struct vm_area_struct *vma)
->> +{
->> +}
->> +static inline void vm_raw_write_begin(struct vm_area_struct *vma)
->> +{
->> +}
->> +static inline void vm_raw_write_end(struct vm_area_struct *vma)
->> +{
->> +}
->> +#endif /* CONFIG_SPECULATIVE_PAGE_FAULT */
->> +
->>   extern int access_process_vm(struct task_struct *tsk, unsigned long addr,
->>   		void *buf, int len, unsigned int gup_flags);
->>   extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
->> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->> index fd7d38ee2e33..e78f72eb2576 100644
->> --- a/include/linux/mm_types.h
->> +++ b/include/linux/mm_types.h
->> @@ -337,6 +337,9 @@ struct vm_area_struct {
->>   	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
->>   #endif
->>   	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
->> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
->> +	seqcount_t vm_sequence;
->> +#endif
->>   } __randomize_layout;
->>   
->>   struct core_thread {
->> diff --git a/mm/memory.c b/mm/memory.c
->> index d5bebca47d98..423fa8ea0569 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -1256,6 +1256,7 @@ void unmap_page_range(struct mmu_gather *tlb,
->>   	unsigned long next;
->>   
->>   	BUG_ON(addr >= end);
->> +	vm_write_begin(vma);
->>   	tlb_start_vma(tlb, vma);
->>   	pgd = pgd_offset(vma->vm_mm, addr);
->>   	do {
->> @@ -1265,6 +1266,7 @@ void unmap_page_range(struct mmu_gather *tlb,
->>   		next = zap_p4d_range(tlb, vma, pgd, addr, next, details);
->>   	} while (pgd++, addr = next, addr != end);
->>   	tlb_end_vma(tlb, vma);
->> +	vm_write_end(vma);
->>   }
->>   
->>   
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index 5ad3a3228d76..a4e4d52a5148 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -726,6 +726,30 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   	long adjust_next = 0;
->>   	int remove_next = 0;
->>   
->> +	/*
->> +	 * Why using vm_raw_write*() functions here to avoid lockdep's warning ?
->> +	 *
->> +	 * Locked is complaining about a theoretical lock dependency, involving
->> +	 * 3 locks:
->> +	 *   mapping->i_mmap_rwsem --> vma->vm_sequence --> fs_reclaim
->> +	 *
->> +	 * Here are the major path leading to this dependency :
->> +	 *  1. __vma_adjust() mmap_sem  -> vm_sequence -> i_mmap_rwsem
->> +	 *  2. move_vmap() mmap_sem -> vm_sequence -> fs_reclaim
->> +	 *  3. __alloc_pages_nodemask() fs_reclaim -> i_mmap_rwsem
->> +	 *  4. unmap_mapping_range() i_mmap_rwsem -> vm_sequence
->> +	 *
->> +	 * So there is no way to solve this easily, especially because in
->> +	 * unmap_mapping_range() the i_mmap_rwsem is grab while the impacted
->> +	 * VMAs are not yet known.
->> +	 * However, the way the vm_seq is used is guarantying that we will
->> +	 * never block on it since we just check for its value and never wait
->> +	 * for it to move, see vma_has_changed() and handle_speculative_fault().
->> +	 */
->> +	vm_raw_write_begin(vma);
->> +	if (next)
->> +		vm_raw_write_begin(next);
->> +
->>   	if (next && !insert) {
->>   		struct vm_area_struct *exporter = NULL, *importer = NULL;
->>   
->> @@ -950,6 +974,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   			 * "vma->vm_next" gap must be updated.
->>   			 */
->>   			next = vma->vm_next;
->> +			if (next)
->> +				vm_raw_write_begin(next);
->>   		} else {
->>   			/*
->>   			 * For the scope of the comment "next" and
->> @@ -996,6 +1022,10 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   	if (insert && file)
->>   		uprobe_mmap(insert);
->>   
->> +	if (next && next != vma)
->> +		vm_raw_write_end(next);
->> +	vm_raw_write_end(vma);
->> +
->>   	validate_mm(mm);
->>   
->>   	return 0;
->> -- 
->> 2.21.0
->>
-> 
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 506e1d923a1f..6f729ce4a7b9 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -98,6 +98,7 @@ struct controller {
+ 	struct pcie_device *pcie;
+ 
+ 	u32 slot_cap;				/* capabilities and quirks */
++	unsigned int inband_presence_disabled:1;
+ 
+ 	u16 slot_ctrl;				/* control register access */
+ 	struct mutex ctrl_lock;
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 6a2365cd794e..078d78a7437d 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -837,7 +837,7 @@ static inline void dbg_ctrl(struct controller *ctrl)
+ struct controller *pcie_init(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl;
+-	u32 slot_cap, link_cap;
++	u32 slot_cap, slot_cap2, link_cap;
+ 	u8 poweron;
+ 	struct pci_dev *pdev = dev->port;
+ 	struct pci_bus *subordinate = pdev->subordinate;
+@@ -895,6 +895,13 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 		FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
+ 		pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+ 
++	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
++	if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
++		pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
++				      PCI_EXP_SLTCTL_IBPD_DISABLE);
++		ctrl->inband_presence_disabled = 1;
++	}
++
+ 	/*
+ 	 * If empty slot's power status is on, turn power off.  The IRQ isn't
+ 	 * requested yet, so avoid triggering a notification with this command.
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 5c98133f2c94..c7afdc4c098c 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -597,6 +597,7 @@
+ #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
+ #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
+ #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
++#define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
+ #define PCI_EXP_SLTSTA		26	/* Slot Status */
+ #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
+ #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
+@@ -667,6 +668,7 @@
+ #define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+ #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+ #define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
++#define  PCI_EXP_SLTCAP2_IBPD	0x0001	/* In-band PD Disable Supported */
+ #define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
+ #define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
+ 
+-- 
+2.20.1
 
