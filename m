@@ -2,157 +2,209 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0CBC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBF7C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7521C204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HAgDZAaI"
+	by mail.kernel.org (Postfix) with ESMTP id E1952205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfDSSlf (ORCPT
+        id S1727825AbfDSSly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:41:35 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55637 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfDSSlf (ORCPT
+        Fri, 19 Apr 2019 14:41:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33446 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726179AbfDSSly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:41:35 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIeX5k385441
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 11:40:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIeX5k385441
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555699234;
-        bh=TH8ZMqlWAxP8nq3mVsbBmVtxoHcw7UwxFkagK7Ypcg8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=HAgDZAaIAMDkaSiEcGhmtCjcBdVYffG2lvKqfWeLGWmyiCk4NwSzHcYBfiGeUGjRj
-         O+uD6TYkneEoW1PrVftAy1Mc/Xo9eMoWH0r5xG6VKewLXe8JUcoP4mXF8lxhuXk4ZH
-         KHB2quoWBe06ncGdAR04aGNcMkQOr698kJS2DcEMW3Dk5J3HRXYALWnfM2lAuMSnkI
-         hOEwRRIfjdujAbBCvlzzDiaYW/H7oCzfkw/NWzmZffACATkBw42E+HlJ1osCGPc29S
-         AqM2n8lmyhv+YElTNdO2G2y1ZqAiuBRK2Rvfy/qxCPPiLSp5hi0SuZDYq6IijU93CD
-         CzeweVJ4W4AXQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIeXUi385438;
-        Fri, 19 Apr 2019 11:40:33 -0700
-Date:   Fri, 19 Apr 2019 11:40:33 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
-Message-ID: <tip-1ca3398278341e1db3568f2d9c015ee4f5ad0b56@git.kernel.org>
-Cc:     jkosina@suse.cz, acme@redhat.com, crecklin@redhat.com,
-        bristot@redhat.com, jolsa@redhat.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, swood@redhat.com, jbaron@akamai.com,
-        hpa@zytor.com, bp@alien8.de, dvlasenk@redhat.com,
-        rostedt@goodmis.org, luto@kernel.org, mhiramat@kernel.org,
-        alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org,
-        brgerst@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jpoimboe@redhat.com, williams@redhat.com, peterz@infradead.org,
-        mtosatti@redhat.com
-Reply-To: mhiramat@kernel.org, gregkh@linuxfoundation.org,
-          alexander.shishkin@linux.intel.com, luto@kernel.org,
-          hpa@zytor.com, bp@alien8.de, rostedt@goodmis.org,
-          dvlasenk@redhat.com, williams@redhat.com, jpoimboe@redhat.com,
-          peterz@infradead.org, mtosatti@redhat.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, brgerst@gmail.com, jkosina@suse.cz,
-          swood@redhat.com, jbaron@akamai.com, bristot@redhat.com,
-          jolsa@redhat.com, tglx@linutronix.de,
-          torvalds@linux-foundation.org, acme@redhat.com,
-          crecklin@redhat.com
-In-Reply-To: <7006ec86c40e5ec5d546dcd76ccc42d46079a963.1545228276.git.bristot@redhat.com>
-References: <7006ec86c40e5ec5d546dcd76ccc42d46079a963.1545228276.git.bristot@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/alternatives] jump_label: Sort entries of the same key by
- the code
-Git-Commit-ID: 1ca3398278341e1db3568f2d9c015ee4f5ad0b56
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 19 Apr 2019 14:41:54 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JCcv44125568
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:47:24 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ry9p7uq1t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:47:24 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 19 Apr 2019 13:47:24 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 19 Apr 2019 13:47:19 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3JClIGF37290004
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Apr 2019 12:47:19 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4201B2066;
+        Fri, 19 Apr 2019 12:47:18 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6812B205F;
+        Fri, 19 Apr 2019 12:47:18 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Apr 2019 12:47:18 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 2403B16C323B; Fri, 19 Apr 2019 05:47:20 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 05:47:20 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Daniel Kroening <kroening@cs.ox.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Adding plain accesses and detecting data races in the LKMM
+Reply-To: paulmck@linux.ibm.com
+References: <20190418125412.GA10817@andrea>
+ <Pine.LNX.4.44L0.1904181324420.1303-100000@iolanthe.rowland.org>
+ <20190419005302.GA5311@andrea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190419005302.GA5311@andrea>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19041912-0068-0000-0000-000003B776D2
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010955; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01191319; UDB=6.00624343; IPR=6.00972121;
+ MB=3.00026515; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-19 12:47:23
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041912-0069-0000-0000-00004837DD11
+Message-Id: <20190419124720.GU14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904190096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1ca3398278341e1db3568f2d9c015ee4f5ad0b56
-Gitweb:     https://git.kernel.org/tip/1ca3398278341e1db3568f2d9c015ee4f5ad0b56
-Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
-AuthorDate: Fri, 21 Dec 2018 11:27:31 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 19:37:34 +0200
+On Fri, Apr 19, 2019 at 02:53:02AM +0200, Andrea Parri wrote:
+> > Are you saying that on x86, atomic_inc() acts as a full memory barrier 
+> > but not as a compiler barrier, and vice versa for 
+> > smp_mb__after_atomic()?  Or that neither atomic_inc() nor 
+> > smp_mb__after_atomic() implements a full memory barrier?
+> 
+> I'd say the former; AFAICT, these boil down to:
+> 
+>   https://elixir.bootlin.com/linux/v5.1-rc5/source/arch/x86/include/asm/atomic.h#L95
+>   https://elixir.bootlin.com/linux/v5.1-rc5/source/arch/x86/include/asm/barrier.h#L84
 
-jump_label: Sort entries of the same key by the code
+OK, how about the following?
 
-In the batching mode, entries with the same key should also be sorted by the
-code, enabling a bsearch() of a code/addr when updating a key.
+							Thanx, Paul
 
-Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Chris von Recklinghausen <crecklin@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Wood <swood@redhat.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/7006ec86c40e5ec5d546dcd76ccc42d46079a963.1545228276.git.bristot@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/jump_label.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+------------------------------------------------------------------------
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 456c0d7cbb5b..53b7c85c0b09 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -36,12 +36,28 @@ static int jump_label_cmp(const void *a, const void *b)
- 	const struct jump_entry *jea = a;
- 	const struct jump_entry *jeb = b;
+commit 19d166dadc4e1bba4b248fb46d32ca4f2d10896b
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Fri Apr 19 05:20:30 2019 -0700
+
+    tools/memory-model: Make smp_mb__{before,after}_atomic() match x86
+    
+    Read-modify-write atomic operations that do not return values need not
+    provide any ordering guarantees, and this means that both the compiler
+    and the CPU are free to reorder accesses across things like atomic_inc()
+    and atomic_dec().  The stronger systems such as x86 allow the compiler
+    to do the reordering, but prevent the CPU from so doing, and these
+    systems implement smp_mb__{before,after}_atomic() as compiler barriers.
+    The weaker systems such as Power allow both the compiler and the CPU
+    to reorder accesses across things like atomic_inc() and atomic_dec(),
+    and implement smp_mb__{before,after}_atomic() as full memory barriers.
+    
+    This means that smp_mb__before_atomic() only orders the atomic operation
+    itself with accesses preceding the smp_mb__before_atomic(), and does
+    not necessarily provide any ordering whatsoever against accesses
+    folowing the atomic operation.  Similarly, smp_mb__after_atomic()
+    only orders the atomic operation itself with accesses following the
+    smp_mb__after_atomic(), and does not necessarily provide any ordering
+    whatsoever against accesses preceding the atomic operation.  Full ordering
+    therefore requires both an smp_mb__before_atomic() before the atomic
+    operation and an smp_mb__after_atomic() after the atomic operation.
+    
+    Therefore, linux-kernel.cat's current model of Before-atomic
+    and After-atomic is too strong, as it guarantees ordering of
+    accesses on the other side of the atomic operation from the
+    smp_mb__{before,after}_atomic().  This commit therefore weakens
+    the guarantee to match the semantics called out above.
+    
+    Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+    Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 169d938c0b53..e5b97c3e8e39 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -1888,7 +1888,37 @@ There are some more advanced barrier functions:
+ 	atomic_dec(&obj->ref_count);
  
-+	/*
-+	 * Entrires are sorted by key.
-+	 */
- 	if (jump_entry_key(jea) < jump_entry_key(jeb))
- 		return -1;
- 
- 	if (jump_entry_key(jea) > jump_entry_key(jeb))
- 		return 1;
- 
-+#ifdef HAVE_JUMP_LABEL_BATCH
-+	/*
-+	 * In the batching mode, entries should also be sorted by the code
-+	 * inside the already sorted list of entries, enabling a bsearch in
-+	 * the vector.
-+	 */
-+	if (jump_entry_code(jea) < jump_entry_code(jeb))
-+		return -1;
+      This makes sure that the death mark on the object is perceived to be set
+-     *before* the reference counter is decremented.
++     *before* the reference counter is decremented.  However, please note
++     that smp_mb__before_atomic()'s ordering guarantee does not necessarily
++     extend beyond the atomic operation.  For example:
 +
-+	if (jump_entry_code(jea) > jump_entry_code(jeb))
-+		return 1;
-+#endif
++	obj->dead = 1;
++	smp_mb__before_atomic();
++	atomic_dec(&obj->ref_count);
++	r1 = a;
 +
- 	return 0;
- }
++     Here the store to obj->dead is not guaranteed to be ordered with
++     with the load from a.  This reordering can happen on x86 as follows:
++     (1) The compiler can reorder the load from a to precede the
++     atomic_dec(), (2) Because x86 smp_mb__before_atomic() is only a
++     compiler barrier, the CPU can reorder the preceding store to
++     obj->dead with the later load from a.
++
++     This could be avoided by using READ_ONCE(), which would prevent the
++     compiler from reordering due to both atomic_dec() and READ_ONCE()
++     being volatile accesses, and is usually preferable for loads from
++     shared variables.  However, weakly ordered CPUs would still be
++     free to reorder the atomic_dec() with the load from a, so a more
++     readable option is to also use smp_mb__after_atomic() as follows:
++
++	WRITE_ONCE(obj->dead, 1);
++	smp_mb__before_atomic();
++	atomic_dec(&obj->ref_count);
++	smp_mb__after_atomic();
++	r1 = READ_ONCE(a);
++
++     This orders all three accesses against each other, and also makes
++     the intent quite clear.
  
+      See Documentation/atomic_{t,bitops}.txt for more information.
+ 
+diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
+index 8dcb37835b61..b6866f93abb8 100644
+--- a/tools/memory-model/linux-kernel.cat
++++ b/tools/memory-model/linux-kernel.cat
+@@ -28,8 +28,8 @@ include "lock.cat"
+ let rmb = [R \ Noreturn] ; fencerel(Rmb) ; [R \ Noreturn]
+ let wmb = [W] ; fencerel(Wmb) ; [W]
+ let mb = ([M] ; fencerel(Mb) ; [M]) |
+-	([M] ; fencerel(Before-atomic) ; [RMW] ; po? ; [M]) |
+-	([M] ; po? ; [RMW] ; fencerel(After-atomic) ; [M]) |
++	([M] ; fencerel(Before-atomic) ; [RMW]) |
++	([RMW] ; fencerel(After-atomic) ; [M]) |
+ 	([M] ; po? ; [LKW] ; fencerel(After-spinlock) ; [M]) |
+ 	([M] ; po ; [UL] ; (co | po) ; [LKW] ;
+ 		fencerel(After-unlock-lock) ; [M])
+
