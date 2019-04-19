@@ -2,108 +2,121 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560EBC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BB8C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D7F222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698209;
-	bh=9iNK0gwcUMYFeR0tIfG8ohfqV+rxApq+ECYCJiECHlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z/jsOQJxx9Vz+dIl8ynVvREmeTlbT91nEBIX3/T8A/i5Xu4g/nvkwRtSR3cUcZQ1n
-	 8baVUgUxlpogVCtGTQjgYXVVKRegXLp41VejTpnjvCdOrpJqLGhatgepZsz9INVya5
-	 ryptHY56F1ubfmnQWtsueWLta0YxPoc8Zu87A+Ds=
+	by mail.kernel.org (Postfix) with ESMTP id D7FB9222CC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caOIYLew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbfDSSX2 (ORCPT
+        id S1727330AbfDSSXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:23:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38528 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfDSSVm (ORCPT
+        Fri, 19 Apr 2019 14:23:31 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42575 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbfDSSX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:21:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L02lidpU1CWJs+5WvBdKuXF1cJhohg86bxgiBZZR0xU=; b=DgaVWyKzfGLpL8WTjq6xjbRJg
-        cXPNBN2oTgNzZvV1P49C16H285liahkHS0bGwxqAUgPW5VJsod3iigt/9PARyVtMHI7pXeHjICcCC
-        gWgyEuHIsjjR84JuKvRBjoWP6KWE2GF3FhtxyLathZ9ZCRmRlQtunkSnEdSJWTIP9RCvo=;
-Received: from 188.29.164.213.threembb.co.uk ([188.29.164.213] helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hHUrp-0008BF-Bc; Fri, 19 Apr 2019 14:51:53 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 62107441D3B; Fri, 19 Apr 2019 15:51:51 +0100 (BST)
-Date:   Fri, 19 Apr 2019 15:51:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
-        dwmw2@infradead.org, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, computersforpeace@gmal.com,
-        paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com,
-        liang.yang@amlogic.com, geert@linux-m68k.org,
-        devicetree@vger.kernel.org, marcel.ziswiler@toradex.com,
-        linux-mtd@lists.infradead.org, richard@nod.at,
-        miquel.raynal@bootlin.com, juliensu@mxic.com.tw,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 3/4] spi: Patch Macronix SPI controller driver
- according to MX25F0A MFD driver
-Message-ID: <20190419145151.GR2803@sirena.org.uk>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
- <1555320234-15802-4-git-send-email-masonccyang@mxic.com.tw>
+        Fri, 19 Apr 2019 14:23:29 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w23so4570911lfc.9;
+        Fri, 19 Apr 2019 11:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=mRAge5Pmqaqc5fZ0NHqu5gKTW2B1I9IBJzxof3qVcIg=;
+        b=caOIYLewrzJO0tx1/p2iMgF7wSWM9NpTC/5/mjYtUwzbQgZHONS7KIVKSEKhVUbSrL
+         DWY+wem1NdyiPS97aDwsDtNeSfVWqCQ9E+6xnRXm+TPxW8cMxAcNPbRJgQH/7Ho/oPWM
+         ufyMKQhkHl0HanrOL9jrilMbs5VEEDH2wmr4Yk8bVZEd4hGy7MuTcJMqWRxDI8Ff+8WQ
+         YIK9Y2GNYs5Ea+r88JNXtL6NTYFgMGycXyeA85r403/DBFswslVQAGLzXx9D3Dz6zxHk
+         +yWDzhmsFdRAc6OUm7hr5RqxX3eLAok2osfQPep2Je/jdzkiVijJGYLVQwh5HfYrxtPp
+         BDQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=mRAge5Pmqaqc5fZ0NHqu5gKTW2B1I9IBJzxof3qVcIg=;
+        b=Lrg0liq0LDje8nhGTU7jdy95tKxVxd5xpscsnJ0aTo0vmvel/ymMBGDhemPNC3Nxyg
+         Vx/3t/bAGiFGnGdVcpjHiVdPdd/U4l6RCvqwfi8blvzC8lZI3TzOVztgTcx8n1d2Fwpa
+         DCrnAnLmfQTXAItikiWBqOK+RKo4B2Xn3oshczG3a1WoAbkCxgwfbhv3t1gvcrEydK3o
+         Ap2oteGCXgFgn5EyBPSqZWSGRhXQmR3LpncX965tmvF4m2y7aoZeGZhb/0Z7cJgoUGsv
+         rUNPGuyhkn2MlPCvFEhk2bKP3eqEevsFWONAnF75A48QqhUSONmWyEt1iZGuX5VLWvCx
+         95Ng==
+X-Gm-Message-State: APjAAAXFmf05+6gdf41XclNH5wKPtaqcGO4x7h5frTpty98ZI2fBSdsG
+        BWgABrnwCHztDawFe22rVfY+JNBXp5OYVdmYsX2s1Q==
+X-Google-Smtp-Source: APXvYqxrilCnuTySbmUdOUICSZcFng2tCWgPTQgGgRchTIx3ZTPRaH32HTbwlG4QHhUSpLfcq5ZsEuPGgaqRGAN0dt0=
+X-Received: by 2002:a19:a8c8:: with SMTP id r191mr2931043lfe.161.1555696435059;
+ Fri, 19 Apr 2019 10:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IUSVF+LtaR4kWxuH"
-Content-Disposition: inline
-In-Reply-To: <1555320234-15802-4-git-send-email-masonccyang@mxic.com.tw>
-X-Cookie: Shah, shah!  Ayatollah you so!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
+In-Reply-To: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
+From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Date:   Fri, 19 Apr 2019 18:53:44 +0100
+Message-ID: <CACfOrNdEpC2vNgCOBXtrW-HjGHNG_6iLAFUCtVoZstGASPtcsA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
+ Exynos542x SoCs
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---IUSVF+LtaR4kWxuH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch can be dropped, as it needs more work.
 
-On Mon, Apr 15, 2019 at 05:23:53PM +0800, Mason Yang wrote:
-> Patch Macronix MX25F0A SPI controller driver according to it's MFD driver.
+In fact, the interrupts seems to be wrong. The interrupts suggested by
+Anand Moon gave the same following results.
 
-It'd be much better to describe what the above actually means - what
-changes have been made in the introduction of the MFD driver?  It does
-feel like there's not as much abstraction as I'd expect between the MFD
-and the child, there's a lot of peering into the parent and enabling and
-disabling individual clocks for example rather than either having this
-hidden behind a function or just having the clocks owned by the child
-driver.  The driver also isn't using the MFD interfaces to pass through
-the register subblocks for the IP - instead the child driver is peering
-straight into the MFD structure and looking at a variable in there.
+export CCI_DEV=CCI_400
+export OMP_NUM_THREADS=2
+sudo --preserve-env ./perf stat -a \
+  -e armv7_cortex_a7/config=0x11,name=a7_cycles/ \
+  -e armv7_cortex_a15/config=0x11,name=a15_cycles/ \
+  -e armv7_cortex_a7/config=0x19,name=a7_bus/ \
+  -e armv7_cortex_a15/config=0x19,name=a15_bus/ \
+  -e ${CCI_DEV}/config=0xff,name=cci400_cycles/ \
+  -e ${CCI_DEV}/config=0x0,name=cci400_si_rrq_hs_any/ \
+  -e ${CCI_DEV}/config=0xc,name=cci400_si_wrq_hs_any/ \
+  taskset -c 0,7 /home/user/cg.x.A 1
 
---IUSVF+LtaR4kWxuH
-Content-Type: application/pgp-signature; name="signature.asc"
+[..]
 
------BEGIN PGP SIGNATURE-----
+ Performance counter stats for 'system wide':
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly54IYACgkQJNaLcl1U
-h9D0PQf/erY3gZlhAvdcG9BNLPO9WNE8OrfW8W1e5MFQI3MEhJC9fi3BynwsbKtq
-oYO7n4IlWTIXmNDQdlZTdlGU2ybIAMGbUmRh0sP2UB5dh2nNnCTfzdOKdszWov18
-JFDl2+5xeyM5ensdZqRVNaXOP/j3eavC/1AOgDTlVummvycoxPH7AeDEg/+UTHrb
-blDrIxdutZnG+hGdmdoDBZdMsP/eWTS2FJ1t3bnU2AVnftWS/35E5NXpJG4o+gz+
-kb+NmEWgrDFoCOk03rq02pudfkdQawONL85giQwm5Apz4OcKeGRV7tIUjfVr0DxT
-9Rw+gkXFeqGyyD3rS25VYKnDsuXRCg==
-=WftF
------END PGP SIGNATURE-----
+     9,362,850,550      a7_cycles
+     1,682,125,760      a15_cycles
+        68,920,347      a7_bus
+        61,484,352      a15_bus
+     3,789,936,935      cci400_cycles
+                 0      cci400_si_rrq_hs_any
+                 0      cci400_si_wrq_hs_any
 
---IUSVF+LtaR4kWxuH--
+       9.541340558 seconds time elapsed
+
+cg.x.A comes from NAS benchmark suite, compiled with fopenmp support, setup
+to run 2 threads and taskmapped to ran on both a7 and a15 clusters.
+a7_bus and a15_bus report main memory accesses.
+
+Only cci400_cycles seems to be correct. However, all pmcs from the master
+interface are reported as unsupported and all pmcs from the slave interface
+return 0, which is probably not correct.
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0470f/CJHICFBF.html
+
+Would it be possible that someone from Samsung provide the right
+interrupts values?
+Many thanks.
+
+Regards,
+Willy
