@@ -2,171 +2,390 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EEEC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C016AC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C6620645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C8920645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="a9LjY2Gp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbfDSTIr convert rfc822-to-8bit (ORCPT
+        id S1729744AbfDSTI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:08:47 -0400
-Received: from mo-csw-fb1114.securemx.jp ([210.130.202.173]:51070 "EHLO
-        mo-csw-fb.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728830AbfDSTIp (ORCPT
+        Fri, 19 Apr 2019 15:08:56 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38523 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbfDSTIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:08:45 -0400
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1114) id x3J7Dx8c013632; Fri, 19 Apr 2019 16:13:59 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1114) id x3J7DmbI023090; Fri, 19 Apr 2019 16:13:48 +0900
-X-Iguazu-Qid: 2wHHotYFIamwaIlaaH
-X-Iguazu-QSIG: v=2; s=0; t=1555658028; q=2wHHotYFIamwaIlaaH; m=yWOvaXCXfz3oISZHCnM5/k5i9EdhP7QcrJ96Y6zp/2g=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1113) id x3J7DiOc023312;
-        Fri, 19 Apr 2019 16:13:47 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id x3J7DhYi000455;
-        Fri, 19 Apr 2019 16:13:43 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id x3J7DgAR001368;
-        Fri, 19 Apr 2019 16:13:42 +0900
-From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC:     <rdunlap@infradead.org>, <axboe@kernel.dk>, <sashal@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5.0 18/93] paride/pf: cleanup queues when detection fails
-Thread-Topic: [PATCH 5.0 18/93] paride/pf: cleanup queues when detection fails
-Thread-Index: AQHU9hH6d8kOxFEmAk6VY1v1ku2z46ZC5tIe
-Date:   Fri, 19 Apr 2019 07:13:40 +0000
-X-TSB-HOP: ON
-Message-ID: <TYAPR01MB4189C6A8BFFF81A47F6FE92792270@TYAPR01MB4189.jpnprd01.prod.outlook.com>
-References: <20190418160436.781762249@linuxfoundation.org>,<20190418160438.663257972@linuxfoundation.org>
-In-Reply-To: <20190418160438.663257972@linuxfoundation.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nobuhiro1.iwamatsu@toshiba.co.jp; 
-x-originating-ip: [103.91.184.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65bd461a-b9b9-4998-e94e-08d6c4968cb3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:TYAPR01MB2560;
-x-ms-traffictypediagnostic: TYAPR01MB2560:
-x-microsoft-antispam-prvs: <TYAPR01MB256079AE5B3AFC6C9CEAE9AE92270@TYAPR01MB2560.jpnprd01.prod.outlook.com>
-x-forefront-prvs: 0012E6D357
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(486006)(476003)(2906002)(11346002)(97736004)(99286004)(446003)(6436002)(316002)(74316002)(5660300002)(52536014)(3846002)(6116002)(33656002)(2501003)(74482002)(54906003)(229853002)(110136005)(55016002)(6246003)(81156014)(81166006)(8676002)(66066001)(25786009)(9686003)(53936002)(7736002)(305945005)(14454004)(7696005)(186003)(68736007)(26005)(6506007)(4326008)(102836004)(76176011)(8936002)(478600001)(46636005)(66476007)(14444005)(256004)(86362001)(71200400001)(71190400001)(66446008)(64756008)(66556008)(66946007)(73956011)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:TYAPR01MB2560;H:TYAPR01MB4189.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toshiba.co.jp does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dgLJ1Z8mDmphuERqIUW/NSEsRCLlwpYLj/AGv/WKXK+2g0Ar0oInItQx4kHy6x6ITiMJyWyguq24i7kxD22eYDYDKSk8DSUW//ndbVgwe7YVVBbT6v2IjYBxYLqun3dBEPV362Mhpp1mPY8Zq7TY97LKlG4epQvNLS87q6X2kPZEvEtYQuYk6bHWzXHz/1/X4PGIyZSei5J51YCzzkWSYBEIc/k0MkO1vES+sxWSqs3W5ay8SObBAcZWCXG8qxmltx+IiixJbmUcQx/IWv429aUsnrpnEfw0OKkNhkV+FwDvqORJWYAPW0eubsnDRKC6mCRA9u1a6DKScQ9Bw7xkqA+u9bCXWKFiyxu5qXBZgcSACB0UVAWL1JEByCztrCflyeEa8XcSy+kLJ32Xqk77pYl4dO/pNMd++7zTIfZU+WM=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
+        Fri, 19 Apr 2019 15:08:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w15so7289926wmc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9+cZyn0aiJ4QNXWPT3DTr+vUc40+QQKBMepH+j8cOt8=;
+        b=a9LjY2GpaZ8xAkxsorYOAWht6VLR2Fo7STTt2H7L5AAV5i5nZAjAdcKSdgJUr2zdzU
+         gO6IdfMS+A1xIDGKKMwxYW7c5p6V9PiEoHfB/TKdjYWyCpZ8x+rUpWVDKFLJLetxEbCa
+         cvGkS+Bc/Syyt6rdel6y07j0YPuAFfNThikEQsOrYN6XDVPiW8gc9qtS9Ml4nN2rtyL1
+         zYJAaw+lfCOcbdTCo9SWn6N3C1j7h2pGmfJWF67Ss2L0/y8Ums+MmI7fNhszk0HmnRkl
+         CCIarIwKZWN+JL8h+9Ee9aDsTZMgfX8MY0AVWZbZshD8vtw+aQLKkiwiidfqUbVBjTzj
+         4+bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9+cZyn0aiJ4QNXWPT3DTr+vUc40+QQKBMepH+j8cOt8=;
+        b=GYNJewI7V2mLK+wUTD0DLTCe9kG7aGQR06/vrV29R8DTlmEEYX59QCi+HNeGiwzq09
+         +Mt08nvzEgqlpC2UFe8kKfO+Xvl63coFPFlmgMlr5jVRoDgjfCaXeCfMFoKAMcAkNk8L
+         cZPCpQBNlQwhjJEfG2UBXnf/naEJ14FOYzNzfpA3upggvoYv42YIxE75VXnNGQJOUSrf
+         tPmypEIWsP9WdwJ1hD6CxDo5VgDuDIyH7Intc8ki/a31A+lvamLxLm2VZkIOqKfcd57x
+         kFYmev+f08oMDtiYsUCSum0oBPRKOCkZWMyoo7G3gQIcxORRJxYq/Q0LucDcGFrPiF4o
+         XWGQ==
+X-Gm-Message-State: APjAAAUCWtBiKRpCufe6ThYnypWdC712T9OV0Ist6vmiR7aHAtGeFOyK
+        rBgC/t7G2od7hq/JjWtn7pca6A==
+X-Google-Smtp-Source: APXvYqzwzhAzAEZB5n/R6Ql6/S3Cyf6apJpY8nWLv8E/XzatRI4VEFaQMEoJ3DxRiscIJFHMkmurKQ==
+X-Received: by 2002:a7b:cc91:: with SMTP id p17mr2518172wma.38.1555675764554;
+        Fri, 19 Apr 2019 05:09:24 -0700 (PDT)
+Received: from localhost.localdomain ([185.197.132.10])
+        by smtp.gmail.com with ESMTPSA id f128sm6464574wme.28.2019.04.19.05.09.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 05:09:23 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, oleg@redhat.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        mtk.manpages@gmail.com, akpm@linux-foundation.org,
+        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH v3 1/4] Make anon_inodes unconditional
+Date:   Fri, 19 Apr 2019 14:09:01 +0200
+Message-Id: <20190419120904.27502-2-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190419120904.27502-1-christian@brauner.io>
+References: <20190419120904.27502-1-christian@brauner.io>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65bd461a-b9b9-4998-e94e-08d6c4968cb3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 07:13:40.3042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2560
-MSSCP.TransferMailToMossAgent: 103
-X-OriginatorOrg: toshiba.co.jp
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: David Howells <dhowells@redhat.com>
 
-> [ Upstream commit 6ce59025f1182125e75c8d121daf44056b65dd1f ]
->
-> The driver allocates queues for all the units it potentially
-> supports. But if we fail to detect any drives, then we fail
-> loading the module without cleaning up those queues. This is
-> now evident with the switch to blk-mq, though the bug has
-> been there forever as far as I can tell.
->
-> Also fix cleanup through regular module exit.
->
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Make the anon_inodes facility unconditional so that it can be used by core
+VFS code and pidfd code.
 
-This commit causes a new problem. And the commit that made the fix
-is 58ccd2d31e502c37e108b285bf3d343eb00c235b.
-I think this commit needs to be applied together.
-
-Best regards,
-  Nobuhiro
-
-________________________________________
-差出人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> が Greg Kroah-Hartman <gregkh@linuxfoundation.org> の代理で送信
-送信日時: 2019年4月19日 2:56
-宛先: linux-kernel@vger.kernel.org
-CC: Greg Kroah-Hartman; stable@vger.kernel.org; Randy Dunlap; Jens Axboe; Sasha Levin
-件名: [PATCH 5.0 18/93] paride/pf: cleanup queues when detection fails
-
-[ Upstream commit 6ce59025f1182125e75c8d121daf44056b65dd1f ]
-
-The driver allocates queues for all the units it potentially
-supports. But if we fail to detect any drives, then we fail
-loading the module without cleaning up those queues. This is
-now evident with the switch to blk-mq, though the bug has
-been there forever as far as I can tell.
-
-Also fix cleanup through regular module exit.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+[christian@brauner.io: adapt commit message to mention pidfds]
+Signed-off-by: Christian Brauner <christian@brauner.io>
 ---
- drivers/block/paride/pf.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+/* changelog */
+v1: patch unchanged
+v2: patch unchanged
+v3: patch unchanged
+---
+ arch/arm/kvm/Kconfig       |  1 -
+ arch/arm64/kvm/Kconfig     |  1 -
+ arch/mips/kvm/Kconfig      |  1 -
+ arch/powerpc/kvm/Kconfig   |  1 -
+ arch/s390/kvm/Kconfig      |  1 -
+ arch/x86/Kconfig           |  1 -
+ arch/x86/kvm/Kconfig       |  1 -
+ drivers/base/Kconfig       |  1 -
+ drivers/char/tpm/Kconfig   |  1 -
+ drivers/dma-buf/Kconfig    |  1 -
+ drivers/gpio/Kconfig       |  1 -
+ drivers/iio/Kconfig        |  1 -
+ drivers/infiniband/Kconfig |  1 -
+ drivers/vfio/Kconfig       |  1 -
+ fs/Makefile                |  2 +-
+ fs/notify/fanotify/Kconfig |  1 -
+ fs/notify/inotify/Kconfig  |  1 -
+ init/Kconfig               | 10 ----------
+ 18 files changed, 1 insertion(+), 27 deletions(-)
 
-diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
-index e92e7a8eeeb2..103b617cdc31 100644
---- a/drivers/block/paride/pf.c
-+++ b/drivers/block/paride/pf.c
-@@ -761,8 +761,12 @@ static int pf_detect(void)
-                return 0;
-
-        printk("%s: No ATAPI disk detected\n", name);
--       for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
-+       for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-+               blk_cleanup_queue(pf->disk->queue);
-+               pf->disk->queue = NULL;
-+               blk_mq_free_tag_set(&pf->tag_set);
-                put_disk(pf->disk);
-+       }
-        pi_unregister_driver(par_drv);
-        return -1;
- }
-@@ -1047,13 +1051,15 @@ static void __exit pf_exit(void)
-        int unit;
-        unregister_blkdev(major, name);
-        for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
--               if (!pf->present)
--                       continue;
--               del_gendisk(pf->disk);
-+               if (pf->present)
-+                       del_gendisk(pf->disk);
-+
-                blk_cleanup_queue(pf->disk->queue);
-                blk_mq_free_tag_set(&pf->tag_set);
-                put_disk(pf->disk);
--               pi_release(pf->pi);
-+
-+               if (pf->present)
-+                       pi_release(pf->pi);
-        }
- }
-
---
-2.19.1
-
-
+diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
+index 3f5320f46de2..f591026347a5 100644
+--- a/arch/arm/kvm/Kconfig
++++ b/arch/arm/kvm/Kconfig
+@@ -22,7 +22,6 @@ config KVM
+ 	bool "Kernel-based Virtual Machine (KVM) support"
+ 	depends on MMU && OF
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select ARM_GIC
+ 	select ARM_GIC_V3
+ 	select ARM_GIC_V3_ITS
+diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+index a3f85624313e..a67121d419a2 100644
+--- a/arch/arm64/kvm/Kconfig
++++ b/arch/arm64/kvm/Kconfig
+@@ -23,7 +23,6 @@ config KVM
+ 	depends on OF
+ 	select MMU_NOTIFIER
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select HAVE_KVM_CPU_RELAX_INTERCEPT
+ 	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
+ 	select KVM_MMIO
+diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
+index 4528bc9c3cb1..eac25aef21e0 100644
+--- a/arch/mips/kvm/Kconfig
++++ b/arch/mips/kvm/Kconfig
+@@ -21,7 +21,6 @@ config KVM
+ 	depends on MIPS_FP_SUPPORT
+ 	select EXPORT_UASM
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select KVM_MMIO
+diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
+index bfdde04e4905..f53997a8ca62 100644
+--- a/arch/powerpc/kvm/Kconfig
++++ b/arch/powerpc/kvm/Kconfig
+@@ -20,7 +20,6 @@ if VIRTUALIZATION
+ config KVM
+ 	bool
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select HAVE_KVM_EVENTFD
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select SRCU
+diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
+index 767453faacfc..1816ee48eadd 100644
+--- a/arch/s390/kvm/Kconfig
++++ b/arch/s390/kvm/Kconfig
+@@ -21,7 +21,6 @@ config KVM
+ 	prompt "Kernel-based Virtual Machine (KVM) support"
+ 	depends on HAVE_KVM
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select HAVE_KVM_CPU_RELAX_INTERCEPT
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select HAVE_KVM_EVENTFD
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5ad92419be19..7a70fb58b2d0 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -44,7 +44,6 @@ config X86
+ 	#
+ 	select ACPI_LEGACY_TABLES_LOOKUP	if ACPI
+ 	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
+-	select ANON_INODES
+ 	select ARCH_32BIT_OFF_T			if X86_32
+ 	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_CLOCKSOURCE_INIT
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 72fa955f4a15..fc042419e670 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -27,7 +27,6 @@ config KVM
+ 	depends on X86_LOCAL_APIC
+ 	select PREEMPT_NOTIFIERS
+ 	select MMU_NOTIFIER
+-	select ANON_INODES
+ 	select HAVE_KVM_IRQCHIP
+ 	select HAVE_KVM_IRQFD
+ 	select IRQ_BYPASS_MANAGER
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index 059700ea3521..03f067da12ee 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -174,7 +174,6 @@ source "drivers/base/regmap/Kconfig"
+ config DMA_SHARED_BUFFER
+ 	bool
+ 	default n
+-	select ANON_INODES
+ 	select IRQ_WORK
+ 	help
+ 	  This option enables the framework for buffer-sharing between
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 536e55d3919f..f3e4bc490cf0 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -157,7 +157,6 @@ config TCG_CRB
+ config TCG_VTPM_PROXY
+ 	tristate "VTPM Proxy Interface"
+ 	depends on TCG_TPM
+-	select ANON_INODES
+ 	---help---
+ 	  This driver proxies for an emulated TPM (vTPM) running in userspace.
+ 	  A device /dev/vtpmx is provided that creates a device pair
+diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
+index 2e5a0faa2cb1..3fc9c2efc583 100644
+--- a/drivers/dma-buf/Kconfig
++++ b/drivers/dma-buf/Kconfig
+@@ -3,7 +3,6 @@ menu "DMABUF options"
+ config SYNC_FILE
+ 	bool "Explicit Synchronization Framework"
+ 	default n
+-	select ANON_INODES
+ 	select DMA_SHARED_BUFFER
+ 	---help---
+ 	  The Sync File Framework adds explicit syncronization via
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 3f50526a771f..0f91600c27ae 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -12,7 +12,6 @@ config ARCH_HAVE_CUSTOM_GPIO_H
+ 
+ menuconfig GPIOLIB
+ 	bool "GPIO Support"
+-	select ANON_INODES
+ 	help
+ 	  This enables GPIO support through the generic GPIO library.
+ 	  You only need to enable this, if you also want to enable
+diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+index d08aeb41cd07..1dec0fecb6ef 100644
+--- a/drivers/iio/Kconfig
++++ b/drivers/iio/Kconfig
+@@ -4,7 +4,6 @@
+ 
+ menuconfig IIO
+ 	tristate "Industrial I/O support"
+-	select ANON_INODES
+ 	help
+ 	  The industrial I/O subsystem provides a unified framework for
+ 	  drivers for many different types of embedded sensors using a
+diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
+index a1fb840de45d..d318bab25860 100644
+--- a/drivers/infiniband/Kconfig
++++ b/drivers/infiniband/Kconfig
+@@ -25,7 +25,6 @@ config INFINIBAND_USER_MAD
+ 
+ config INFINIBAND_USER_ACCESS
+ 	tristate "InfiniBand userspace access (verbs and CM)"
+-	select ANON_INODES
+ 	depends on MMU
+ 	---help---
+ 	  Userspace InfiniBand access support.  This enables the
+diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
+index 9de5ed38da83..3798d77d131c 100644
+--- a/drivers/vfio/Kconfig
++++ b/drivers/vfio/Kconfig
+@@ -22,7 +22,6 @@ menuconfig VFIO
+ 	tristate "VFIO Non-Privileged userspace driver framework"
+ 	depends on IOMMU_API
+ 	select VFIO_IOMMU_TYPE1 if (X86 || S390 || ARM || ARM64)
+-	select ANON_INODES
+ 	help
+ 	  VFIO provides a framework for secure userspace device drivers.
+ 	  See Documentation/vfio.txt for more details.
+diff --git a/fs/Makefile b/fs/Makefile
+index 427fec226fae..35945f8139e6 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -25,7 +25,7 @@ obj-$(CONFIG_PROC_FS) += proc_namespace.o
+ 
+ obj-y				+= notify/
+ obj-$(CONFIG_EPOLL)		+= eventpoll.o
+-obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
++obj-y				+= anon_inodes.o
+ obj-$(CONFIG_SIGNALFD)		+= signalfd.o
+ obj-$(CONFIG_TIMERFD)		+= timerfd.o
+ obj-$(CONFIG_EVENTFD)		+= eventfd.o
+diff --git a/fs/notify/fanotify/Kconfig b/fs/notify/fanotify/Kconfig
+index 735bfb2e9190..521dc91d2cb5 100644
+--- a/fs/notify/fanotify/Kconfig
++++ b/fs/notify/fanotify/Kconfig
+@@ -1,7 +1,6 @@
+ config FANOTIFY
+ 	bool "Filesystem wide access notification"
+ 	select FSNOTIFY
+-	select ANON_INODES
+ 	select EXPORTFS
+ 	default n
+ 	---help---
+diff --git a/fs/notify/inotify/Kconfig b/fs/notify/inotify/Kconfig
+index b981fc0c8379..0161c74e76e2 100644
+--- a/fs/notify/inotify/Kconfig
++++ b/fs/notify/inotify/Kconfig
+@@ -1,6 +1,5 @@
+ config INOTIFY_USER
+ 	bool "Inotify support for userspace"
+-	select ANON_INODES
+ 	select FSNOTIFY
+ 	default y
+ 	---help---
+diff --git a/init/Kconfig b/init/Kconfig
+index 4592bf7997c0..be8f97e37a76 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1171,9 +1171,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
+ config SYSCTL
+ 	bool
+ 
+-config ANON_INODES
+-	bool
+-
+ config HAVE_UID16
+ 	bool
+ 
+@@ -1378,14 +1375,12 @@ config HAVE_FUTEX_CMPXCHG
+ config EPOLL
+ 	bool "Enable eventpoll support" if EXPERT
+ 	default y
+-	select ANON_INODES
+ 	help
+ 	  Disabling this option will cause the kernel to be built without
+ 	  support for epoll family of system calls.
+ 
+ config SIGNALFD
+ 	bool "Enable signalfd() system call" if EXPERT
+-	select ANON_INODES
+ 	default y
+ 	help
+ 	  Enable the signalfd() system call that allows to receive signals
+@@ -1395,7 +1390,6 @@ config SIGNALFD
+ 
+ config TIMERFD
+ 	bool "Enable timerfd() system call" if EXPERT
+-	select ANON_INODES
+ 	default y
+ 	help
+ 	  Enable the timerfd() system call that allows to receive timer
+@@ -1405,7 +1399,6 @@ config TIMERFD
+ 
+ config EVENTFD
+ 	bool "Enable eventfd() system call" if EXPERT
+-	select ANON_INODES
+ 	default y
+ 	help
+ 	  Enable the eventfd() system call that allows to receive both
+@@ -1516,7 +1509,6 @@ config KALLSYMS_BASE_RELATIVE
+ # syscall, maps, verifier
+ config BPF_SYSCALL
+ 	bool "Enable bpf() system call"
+-	select ANON_INODES
+ 	select BPF
+ 	select IRQ_WORK
+ 	default n
+@@ -1533,7 +1525,6 @@ config BPF_JIT_ALWAYS_ON
+ 
+ config USERFAULTFD
+ 	bool "Enable userfaultfd() system call"
+-	select ANON_INODES
+ 	depends on MMU
+ 	help
+ 	  Enable the userfaultfd() system call that allows to intercept and
+@@ -1600,7 +1591,6 @@ config PERF_EVENTS
+ 	bool "Kernel performance events and counters"
+ 	default y if PROFILING
+ 	depends on HAVE_PERF_EVENTS
+-	select ANON_INODES
+ 	select IRQ_WORK
+ 	select SRCU
+ 	help
+-- 
+2.21.0
 
