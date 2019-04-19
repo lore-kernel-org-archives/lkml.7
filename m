@@ -2,116 +2,112 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2739EC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AEAC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE16A217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A782171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY5wHoCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfDSBQA (ORCPT
+        id S1727184AbfDSBvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 21:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfDSBP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 21:15:59 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD3F2171F;
-        Fri, 19 Apr 2019 01:15:58 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 21:15:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        "linux-trace-devel@vger.kernel.org" 
-        <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] tools/lib/traceevent: Remove hardcoded install paths from
- pkg-config file
-Message-ID: <20190418211556.5a12adc3@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 18 Apr 2019 21:51:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44177 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfDSBvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 21:51:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g12so1944253pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 18:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XvS3qKIr/Ejv+SveqCQaasuPf5uqSaB2yx4GMq+Ea/k=;
+        b=aY5wHoCXOrFEwMN8m5tYFFoADR3kabD68UXcjEbWXc0draBZofWXaa5nH9x+P09G09
+         ktJ7cWXcbpjTqg0BE0ni9e4jzDf3N0xZUOJE/iNzn3voDBhElVaOIFOczWa5Qx3Tw1Ak
+         7COcScue2G87O62m93A96OjeEI0ItiB17HYC4Hi9mS4ukf6FtbkChOr5ONBTrRtc8Cao
+         upe02pFPJI9FtQ8DoRbu/RDz6CGks+cFR6zDhmX2U/+E7XFvwU587K/y2atbBrtfH83q
+         k5fSCcJa+nr518I4bryoLH3uw13vo5TDc5xLMgCmVQkMD8dJpwMiqK0ugv6pdgkie5Jt
+         2kIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XvS3qKIr/Ejv+SveqCQaasuPf5uqSaB2yx4GMq+Ea/k=;
+        b=A3RCkA0cTuNT+UZgBbmzun1MbcSX3Cr82pFl1Liv/fqm01zSkHCk+I6ur/gAuOkIEl
+         BjEaje8p5JfjBW3QBSFwIFcZr1MNWpXW0D/d0i+1E5+hgE0az+1mAM8OOABNUJt7fdJy
+         YWscS4OTIYeQlm6HONGapQ5DoRYDYrKClrGST9+yYpUiTVinogKuQg5HKdZCyGIMmFB2
+         VSfvU8lW1w5kfAfRqddgmQEczgtQ1aRSS567ClfGh4Bxk8BywCnNx/kUHOYnCKVrGJ8u
+         58eEXp8PS9VBJFxXCtk7EDgSDXK1M/jmVnb8N8TYWTBeYbLmqHs0qzfu67RN18Y+BlzG
+         Moog==
+X-Gm-Message-State: APjAAAWXYjDL0OWhmOmbdY9rutFCkE27c6px+/eG7v6DJeL7YP9kBttB
+        fMJpQl81ycRfa6io+IyaY94=
+X-Google-Smtp-Source: APXvYqzVrFGT8/GqxXxXY7Cbx2ElMfFbQWidnmVNrfwF35nBvzarLpgV4QlTLCzNwHyy7J4e/9sYbg==
+X-Received: by 2002:a17:902:5ac4:: with SMTP id g4mr918619plm.261.1555638676725;
+        Thu, 18 Apr 2019 18:51:16 -0700 (PDT)
+Received: from localhost ([175.223.3.190])
+        by smtp.gmail.com with ESMTPSA id c3sm5065669pfg.88.2019.04.18.18.51.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 18:51:15 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 10:51:12 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] vsprintf: Prevent silent crashes and
+ consolidate error handling
+Message-ID: <20190419015112.GA18748@jagdpanzerIV>
+References: <20190417115350.20479-1-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417115350.20479-1-pmladek@suse.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (04/17/19 13:53), Petr Mladek wrote:
+> Crash in vsprintf() might be silent when it happens under logbuf_lock
+> in vprintk_emit(). This patch set prevents most of the crashes by probing
+> the address. The check is done only by %s and some %p* specifiers that need
+> to dereference the address.
+>
+> Only the first byte of the address is checked to keep it simple. It should
+> be enough to catch most problems.
+>
+> The check is explicitly done in each function that does the dereference.
+> It helps to avoid the questionable strchr() of affected specifiers. This
+> change motivated me to do some preparation patches that consolidated
+> the error handling and cleaned the code a bit.
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+The patch set looks OK to me.
 
-Install directories of header and library files are hardcoded in pkg-config
-templete file. They must be configurable, the Makefile should set them on the
-compilation / install stage.
+I got confused by 'pC?' error string, but once you start looking
+at it as a regex (? - zero or one occurrences) things look OK.
+Regex in dmesg/serial output might be something very new to people,
+stack traces, after all, is a rather common error reporting mechanism.
+So the previous "WARN_ON() + exact unrecognized fmt[N] char" was not
+totally awful or wrong (well, it was, before we introduced printk_safe()),
+but I don't have strong objections against that new regex thing.
 
-Link: http://lkml.kernel.org/r/20190329144546.5819-1-tstoyanov@vmware.com
+FWIW,
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/lib/traceevent/Makefile                  | 13 +++++++++----
- tools/lib/traceevent/libtraceevent.pc.template |  4 ++--
- 2 files changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 941761d9923d..34cf33a4f001 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -50,6 +50,9 @@ man_dir = $(prefix)/share/man
- man_dir_SQ = '$(subst ','\'',$(man_dir))'
- pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG) 		\
- 			--variable pc_path pkg-config | tr ":" " "))
-+includedir_relative = traceevent
-+includedir = $(prefix)/include/$(includedir_relative)
-+includedir_SQ = '$(subst ','\'',$(includedir))'
- 
- export man_dir man_dir_SQ INSTALL
- export DESTDIR DESTDIR_SQ
-@@ -279,6 +282,8 @@ define do_install_pkgconfig_file
- 		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
- 		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
- 		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
-+		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
-+		sed -i "s|HEADER_DIR|$(includedir)|g" ${PKG_CONFIG_FILE}; \
- 		$(call do_install,$(PKG_CONFIG_FILE),$(pkgconfig_dir),644); 	\
- 	else 									\
- 		(echo Failed to locate pkg-config directory) 1>&2;		\
-@@ -300,10 +305,10 @@ install_pkgconfig:
- 
- install_headers:
- 	$(call QUIET_INSTALL, headers) \
--		$(call do_install,event-parse.h,$(prefix)/include/traceevent,644); \
--		$(call do_install,event-utils.h,$(prefix)/include/traceevent,644); \
--		$(call do_install,trace-seq.h,$(prefix)/include/traceevent,644); \
--		$(call do_install,kbuffer.h,$(prefix)/include/traceevent,644)
-+		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
-+		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
-+		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
-+		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
- 
- install: install_lib
- 
-diff --git a/tools/lib/traceevent/libtraceevent.pc.template b/tools/lib/traceevent/libtraceevent.pc.template
-index 42e4d6cb6b9e..86384fcd57f1 100644
---- a/tools/lib/traceevent/libtraceevent.pc.template
-+++ b/tools/lib/traceevent/libtraceevent.pc.template
-@@ -1,6 +1,6 @@
- prefix=INSTALL_PREFIX
--libdir=${prefix}/lib64
--includedir=${prefix}/include/traceevent
-+libdir=LIB_DIR
-+includedir=HEADER_DIR
- 
- Name: libtraceevent
- URL: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
--- 
-2.20.1
-
+	-ss
