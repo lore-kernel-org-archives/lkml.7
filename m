@@ -2,60 +2,70 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6B6C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632BEC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6EF217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09865208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OPa8z4Y2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Workixur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfDSVUG (ORCPT
+        id S1727443AbfDSVVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:20:06 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34716 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfDSVUF (ORCPT
+        Fri, 19 Apr 2019 17:21:17 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44375 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfDSVVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:20:05 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y6so3109490plt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:20:04 -0700 (PDT)
+        Fri, 19 Apr 2019 17:21:17 -0400
+Received: by mail-vs1-f66.google.com with SMTP id j184so3413168vsd.11
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cfEecVnvamXFtWUlfFupVj/pT2q/fHA5qW/QsQJm3qM=;
-        b=OPa8z4Y2YvrsIBeX3WF5BQ4Rx5ch+6t4D91wa5a0Arsh3DktWDDQAg3V69RSxwh6O+
-         00SAFOldg0Z73/BgHD7qJudLGwyP4rP9RxL9yGaB26ds7uZfBdO7J87BnvSrnLMUQRnL
-         wW/7/2IOwbV+LVr++pOmK+DhMC0bHWrhzZyjk=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YD3ro3dBkJgXvaLFB2ikEjNFYEYkV6p1e8OY3sDeVCs=;
+        b=WorkixurkmyCuEP4N+0Kly9/LPit5nC/7TZkRR88eMhDaM2lGdRO3MB1Kfub9LQ6kW
+         qzdnDIcvIFf3fiXglAhDx2KRx2gKEjwmwzQ6oiNrFxxoDjcASDK3ZoqqnuzyQUR83lnE
+         RNPW7yoIkJXZE/wzgYZVOd3xdvfczITLTAb0uF4Ggf5fehhEGcyqJGG9YQk92nxLsfZL
+         C+OMVeswatA15+moJmG52pquHEwuJ6Fw+rLKX1c2AJvmdtFO2oDxr7dleKMKPND9HV9N
+         4HwqusppnWzYRCrAefIwk0uj94RtNMnyOJmwJzYeBBBgAOFqrtsRldwaBqs2X82SzxM5
+         7V6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cfEecVnvamXFtWUlfFupVj/pT2q/fHA5qW/QsQJm3qM=;
-        b=gdVRsfDj2ekldRLJes3XSjs3uJ5ZVmUc1jpbFmZAEDUSsqsN6xQKIUMNEsU69zGhnY
-         Ntx4ibp6dDLJRx0DowWK+wJeIP4dw02xNjXVApavO2d1K29CPIRATbHBxge9+nmRKrzy
-         ub61lX7xGF4fBRJPcIGwWU4TPuu4mJ7UrDG1lpUzZw4wA2VzCensuxAbWIguLCCPsgax
-         e0rq0ZfGAnBEfoHdfNQLSSQAfDvKhWmO8FkhJ4Vd2euxO7yXC5/zbK1amtZwQUswFdOE
-         jBK+bX8+rxkBCdbc5TlwlHtbO6GpCpETXJqDohwqT1zoNoZRX/CCxBpvikerce54CvkT
-         nVAQ==
-X-Gm-Message-State: APjAAAW/5U9ACUwpGGlstS6cNoQyIr3dUVC6uyM3gABmSg7O1N6HYEZp
-        rIplQUuh0XZlMObdgp52V4Q0HQ==
-X-Google-Smtp-Source: APXvYqy5gG+cdhXOYLjSgushpuV2mCFs+q3uhWMRlzkz4btJxsWrt0UEyG4nAfhyrQCOoCBMJRCCBw==
-X-Received: by 2002:a17:902:382:: with SMTP id d2mr6081557pld.253.1555708804522;
-        Fri, 19 Apr 2019 14:20:04 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id i15sm7764377pfr.8.2019.04.19.14.20.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 14:20:03 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 17:20:02 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YD3ro3dBkJgXvaLFB2ikEjNFYEYkV6p1e8OY3sDeVCs=;
+        b=mGAkK1nkh+1LkwABK48cWNAab2w1wsTNDlyJCoADPjjiZTNc++sKeD4UPEf9poY0FJ
+         CJ84Z0RwoMnRJUvcNwpnWRQuadDP5vRIl/K0sLse8RNd1roUqqweD0NQAP5FMiCXiL0v
+         I1jtjcMOXHKOkf2LF67jUwgPAwpOV4kFbLtmF476iy4US1EmofmpaBuGYgk6db0PHoWW
+         QiqPAv7dbXJ9CooWWqGcsSLZl/MMkM4xZMr+ZheyPKcOeUmtnOYJom9pS7wpD57L3mY3
+         Ph64wpn+ywUhGoZ0l7Hm8ih04qrZxNIeoOGqJ4sdi4FnMTTpo+P1kA/WT1bmizYjHcIG
+         Q5MA==
+X-Gm-Message-State: APjAAAUBQaC4dzbhSG6U+ZjAHi74mijJMVMjnOYYLG5Co/GZp8RGR2Ca
+        dzKnKHLEX74uGii+BwyLWnKmIZXHaGliAk438pfp8w==
+X-Google-Smtp-Source: APXvYqwrvsDIM4JnL1V0YYigFUmcIoqhzMEpDJhjraMf+lCXZ3sG2totRwADCT0MT4Dv31HHY1PDNu8nJ3uN/fRcnzU=
+X-Received: by 2002:a67:bc01:: with SMTP id t1mr3429898vsn.149.1555708875346;
+ Fri, 19 Apr 2019 14:21:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io> <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io> <20190419194902.GE251571@google.com>
+ <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com> <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
+In-Reply-To: <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Fri, 19 Apr 2019 14:21:03 -0700
+Message-ID: <CAKOZueuBTwyrLtpVQaoTAgjGSgeHY7392sKv5uAYdy4XKNHKHQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
 To:     Christian Brauner <christian@brauner.io>
-Cc:     Daniel Colascione <dancol@google.com>,
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
         Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
         Florian Weimer <fweimer@redhat.com>,
         kernel list <linux-kernel@vger.kernel.org>,
@@ -80,29 +90,14 @@ Cc:     Daniel Colascione <dancol@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         kernel-team <kernel-team@android.com>,
         Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-Message-ID: <20190419212002.GB44851@google.com>
-References: <20190416120430.GA15437@redhat.com>
- <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com>
- <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
- <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io>
- <20190419194902.GE251571@google.com>
- <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
- <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 10:57:11PM +0200, Christian Brauner wrote:
+On Fri, Apr 19, 2019 at 1:57 PM Christian Brauner <christian@brauner.io> wrote:
+>
 > On Fri, Apr 19, 2019 at 10:34 PM Daniel Colascione <dancol@google.com> wrote:
 > >
 > > On Fri, Apr 19, 2019 at 12:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
@@ -183,15 +178,49 @@ On Fri, Apr 19, 2019 at 10:57:11PM +0200, Christian Brauner wrote:
 > > ever then *not* see POLLIN on that pidfd in the future --- it's a
 > > one-way transition from not-ready-to-get-exit-status to
 > > ready-to-get-exit-status.
-> 
+>
 > What do you consider interesting state transitions? A listener on a pidfd
 > in epoll_wait() might be interested if the process execs for example.
 > That's a very valid use-case for e.g. systemd.
+
+Sure, but systemd is specialized.
+
+There are two broad classes of programs that care about process exit
+status: 1) those that just want to do something and wait for it to
+complete, and 2) programs that want to perform detailed monitoring of
+processes and intervention in their state. #1 is overwhelmingly more
+common. The basic pidfd feature should take care of case #1 only, as
+wait*() in file descriptor form. I definitely don't think we should be
+complicating the interface and making it more error-prone (see below)
+for the sake of that rare program that cares about non-exit
+notification conditions. You're proposing a complicated combination of
+poll bit flags that most users (the ones who just wait to wait for
+processes) don't care about and that risk making the facility hard to
+use with existing event loops, which generally recognize readability
+and writability as the only properties that are worth monitoring.
+
 > We can't use EPOLLIN for that too otherwise you'd need to to waitid(_WNOHANG)
 > to check whether an exit status can be read which is not nice and then you
 > multiplex different meanings on the same bit.
 > I would prefer if the exit status can only be read from the parent which is
 > clean and the least complicated semantics, i.e. Linus waitid() idea.
+
+Exit status information should be *at least* as broadly available
+through pidfds as it is through the last field of /proc/pid/stat
+today, and probably more broadly. I've been saying for six months now
+that we need to talk about *who* should have access to exit status
+information. We haven't had that conversation yet. My preference is to
+just make exit status information globally available, as FreeBSD seems
+to do. I think it would be broadly useful for something like pkill to
+wait for processes to exit and to retrieve their exit information.
+
+Speaking of pkill: AIUI, in your current patch set, one can get a
+pidfd *only* via clone. Joel indicated that he believes poll(2)
+shouldn't be supported on procfs pidfds. Is that your thinking as
+well? If that's the case, then we're in a state where non-parents
+can't wait for process exit, and providing this facility is an
+important goal of the whole project.
+
 > EPOLLIN on a pidfd could very well mean that data can be read via
 > a read() on the pidfd *other* than the exit status. The read could e.g.
 > give you a lean struct that indicates the type of state transition: NOTIFY_EXIT,
@@ -200,30 +229,25 @@ On Fri, Apr 19, 2019 at 10:57:11PM +0200, Christian Brauner wrote:
 > Though there's a case to be made that EPOLLHUP could indicate process exit
 > and EPOLLIN a state change + read().
 
-According to Linus, POLLHUP usually indicates that something is readable:
-https://lkml.org/lkml/2019/4/18/1181
-"So generally a HUP condition should mean that POLLIN and POLLOUT also
-get set. Not because there's any actual _data_ to be read, but simply
-because the read will not block."
+And do you imagine making read() destructive? Does that read() then
+reset the POLLIN state? You're essentially proposing that a pidfd
+provide an "event stream" interface, delivering notifications packets
+that indicate state changes like "process exited" or "process stopped"
+or "process execed". While this sort of interface is powerful and has
+some nice properties that tools like debuggers and daemon monitors
+might want to use, I think it's too complicated and error prone for
+the overwhelmingly common case of wanting to monitor process lifetime.
+I'd much rather pidfd provide a simple one-state-transition
+level-triggered (not edge-triggered, as your suggestion implies)
+facility. If we want to let sophisticated programs read a stream of
+notification packets indicating changes in process state, we can
+provide that as a separate interface in future work.
 
-I feel the future state changes such as for NOTIFY_EXEC can easily be
-implemented on top of this patch.
+I like Linus' idea of just making waitid(2) (not waitpid(2), as I
+mistakenly mentioned earlier) on a pidfd act *exactly* like a
+waitid(2) on the corresponding process and making POLLIN just mean
+"waitid will succeed". It's a nice simple model that's easy to reason
+about and that makes it easy to port existing code to pidfds.
 
-Just for the exit notification purposes, the states are:
-if process has exit_state == 0, block.
-if process is zombie/dead but not reaped, then return POLLIN
-if process is reaped, then return POLLIN | POLLHUP
-
-for the exec notification case, that could be implemnted along with this with
-something like:
-if process has exit_state == 0, or has not exec'd since poll was called, block.
-if process exec'd, then return POLLIN
-if process is zombie/dead but not reaped, then return POLLIN
-if process is reaped, then return POLLIN | POLLHUP
-
-Do you agree or did I miss something?
-
-thanks,
-
- - Joel
-
+I am very much against signaling additional information on basic
+pidfds using non-POLLIN poll flags.
