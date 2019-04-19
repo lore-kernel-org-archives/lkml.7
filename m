@@ -2,107 +2,174 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D49CC282E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A50C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9CF2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6A42171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:45:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DEmWHlp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfDSUo3 (ORCPT
+        id S1727325AbfDSUpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:44:29 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:33012 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726455AbfDSUo2 (ORCPT
+        Fri, 19 Apr 2019 16:45:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53790 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfDSUpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:44:28 -0400
-Received: (qmail 8904 invoked by uid 2102); 19 Apr 2019 16:44:27 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 19 Apr 2019 16:44:27 -0400
-Date:   Fri, 19 Apr 2019 16:44:27 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <rafael@kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in __dev_printk
-In-Reply-To: <00000000000029431d0586d10813@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904191640250.1406-100000@iolanthe.rowland.org>
+        Fri, 19 Apr 2019 16:45:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3JKTWBG074720;
+        Fri, 19 Apr 2019 20:44:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=BJcecETyWVwvoyBv1O0IswXJSKKY/HvHD+pqeK7LFps=;
+ b=DEmWHlp7j5aTkReUuQQWWaDlzVEfhwDetyaTRFpeUIPBcAu0R1PfmxYucGICW2b+c3Zv
+ oXpGnk/NZCl0hosTnVJMJ/yILwLI5FM6Ot3CA6AH7X7X1rOxmglaj3cb2+xebVgKbtdo
+ 2kHfZqaD0IlKimkioWtk39Ig58OszBMyuDzuevRoclNFV5tqAetqSjni3T7nmxLZsBZz
+ 3l/JQlXepe8IClPvVzjEGJn0/aMG6daNRBbX0oIDbPeD00FGwBj4Ih1XhZtorrEBJNyZ
+ 14rII8Cj8tDo4B2vFQZiqRqq3IRh2UsqDV67Bj/S610KGzGGmVFHJ1r/h8mwqzoJhbMc bw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ryjv90he2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Apr 2019 20:44:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3JKiXmI084931;
+        Fri, 19 Apr 2019 20:44:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2ryjus24xn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Apr 2019 20:44:51 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3JKimZi030778;
+        Fri, 19 Apr 2019 20:44:49 GMT
+Received: from monkey.oracle.com (/50.38.38.67)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 19 Apr 2019 13:44:48 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yufen Yu <yuyufen@huawei.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH] hugetlbfs: always use address space in inode for resv_map pointer
+Date:   Fri, 19 Apr 2019 13:44:35 -0700
+Message-Id: <20190419204435.16984-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190416065058.GB11561@dhcp22.suse.cz>
+References: <20190416065058.GB11561@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9232 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904190143
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9232 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904190143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019, syzbot wrote:
+Continuing discussion about commit 58b6e5e8f1ad ("hugetlbfs: fix memory
+leak for resv_map") brought up the issue that inode->i_mapping may not
+point to the address space embedded within the inode at inode eviction
+time.  The hugetlbfs truncate routine handles this by explicitly using
+inode->i_data.  However, code cleaning up the resv_map will still use
+the address space pointed to by inode->i_mapping.  Luckily, private_data
+is NULL for address spaces in all such cases today but, there is no
+guarantee this will continue.
 
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10adfe6b200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2eb9121678bdb36e6d57
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145cb7e3200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f8bd2d200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-> 
-> yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
-> usb 1-1: USB disconnect, device number 112
-> yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN PTI
-> CPU: 1 PID: 5402 Comm: udevd Not tainted 5.1.0-rc5-319617-gd34f951 #4
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> RIP: 0010:dev_name include/linux/device.h:1087 [inline]
-> RIP: 0010:__dev_printk+0x3f/0x215 drivers/base/core.c:3208
-> Code: 89 f5 53 e8 1e 24 1c fc 48 85 ed 0f 84 c9 01 00 00 e8 10 24 1c fc 48  
-> 8d 7d 50 b8 ff ff 37 00 48 89 fa 48 c1 e0 2a 48 c1 ea 03 <80> 3c 02 00 74  
-> 05 e8 31 39 53 fc 4c 8b 7d 50 4d 85 ff 75 28 e8 e3
-> RSP: 0018:ffff8880ad107930 EFLAGS: 00010002
-> RAX: dffffc0000000000 RBX: ffffed1015a20f2d RCX: 00000000ffffffed
-> RDX: 0000000000000010 RSI: ffffffff85559bf0 RDI: 0000000000000080
-> RBP: 0000000000000030 R08: ffff888091578000 R09: ffffed1015a24fc9
-> R10: ffffed1015a24fc8 R11: ffff8880ad127e47 R12: ffffffff8f031a00
-> R13: ffff8880ad107988 R14: 0000000000000000 R15: ffff88809b9b1600
-> FS:  00007fcff04907a0(0000) GS:ffff8880ad100000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fcff0496000 CR3: 0000000097678000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <IRQ>
->   _dev_err+0xdc/0x10e drivers/base/core.c:3251
->   yurex_interrupt.cold+0x12e/0x13d drivers/usb/misc/yurex.c:183
+Change all hugetlbfs code getting a resv_map pointer to explicitly get
+it from the address space embedded within the inode.  In addition, add
+more comments in the code to indicate why this is being done.
 
-The problem is that the device can be unregistered before the interrupt
-URB is killed.  I don't know if the patch below is the right way to fix 
-this, but it ought to do the job.
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+---
+ fs/hugetlbfs/inode.c | 11 +++++++++--
+ mm/hugetlb.c         | 19 ++++++++++++++++++-
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
-Alan Stern
-
-
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -314,6 +314,7 @@ static void yurex_disconnect(struct usb_
- 	usb_deregister_dev(interface, &yurex_class);
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 9285dd4f4b1c..cbc649cd1722 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -499,8 +499,15 @@ static void hugetlbfs_evict_inode(struct inode *inode)
+ 	struct resv_map *resv_map;
  
- 	/* prevent more I/O from starting */
-+	usb_poison_urb(dev->urb);
- 	mutex_lock(&dev->io_mutex);
- 	dev->interface = NULL;
- 	mutex_unlock(&dev->io_mutex);
+ 	remove_inode_hugepages(inode, 0, LLONG_MAX);
+-	resv_map = (struct resv_map *)inode->i_mapping->private_data;
+-	/* root inode doesn't have the resv_map, so we should check it */
++
++	/*
++	 * Get the resv_map from the address space embedded in the inode.
++	 * This is the address space which points to any resv_map allocated
++	 * at inode creation time.  If this is a device special inode,
++	 * i_mapping may not point to the original address space.
++	 */
++	resv_map = (struct resv_map *)(&inode->i_data)->private_data;
++	/* Only regular and link inodes have associated reserve maps */
+ 	if (resv_map)
+ 		resv_map_release(&resv_map->refs);
+ 	clear_inode(inode);
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 6cdc7b2d9100..b30e97b0ef37 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -740,7 +740,15 @@ void resv_map_release(struct kref *ref)
+ 
+ static inline struct resv_map *inode_resv_map(struct inode *inode)
+ {
+-	return inode->i_mapping->private_data;
++	/*
++	 * At inode evict time, i_mapping may not point to the original
++	 * address space within the inode.  This original address space
++	 * contains the pointer to the resv_map.  So, always use the
++	 * address space embedded within the inode.
++	 * The VERY common case is inode->mapping == &inode->i_data but,
++	 * this may not be true for device special inodes.
++	 */
++	return (struct resv_map *)(&inode->i_data)->private_data;
+ }
+ 
+ static struct resv_map *vma_resv_map(struct vm_area_struct *vma)
+@@ -4477,6 +4485,11 @@ int hugetlb_reserve_pages(struct inode *inode,
+ 	 * called to make the mapping read-write. Assume !vma is a shm mapping
+ 	 */
+ 	if (!vma || vma->vm_flags & VM_MAYSHARE) {
++		/*
++		 * resv_map can not be NULL as hugetlb_reserve_pages is only
++		 * called for inodes for which resv_maps were created (see
++		 * hugetlbfs_get_inode).
++		 */
+ 		resv_map = inode_resv_map(inode);
+ 
+ 		chg = region_chg(resv_map, from, to);
+@@ -4568,6 +4581,10 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
+ 	struct hugepage_subpool *spool = subpool_inode(inode);
+ 	long gbl_reserve;
+ 
++	/*
++	 * Since this routine can be called in the evict inode path for all
++	 * hugetlbfs inodes, resv_map could be NULL.
++	 */
+ 	if (resv_map) {
+ 		chg = region_del(resv_map, start, end);
+ 		/*
+-- 
+2.20.1
 
