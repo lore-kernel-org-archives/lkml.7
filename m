@@ -2,339 +2,231 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDB8C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907ACC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0131D214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430BD214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:58:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="dNi544Dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfDSA6Z (ORCPT
+        id S1727148AbfDSA6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 20:58:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58736 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfDSA6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 20:58:25 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABEC8301A639;
-        Fri, 19 Apr 2019 00:58:24 +0000 (UTC)
-Received: from treble (ovpn-124-190.rdu2.redhat.com [10.10.124.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52BBE60BE2;
-        Fri, 19 Apr 2019 00:58:23 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 19:58:21 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [RFC PATCH v3] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190419005821.ttlpav7gviaed7am@treble>
-References: <20190418160730.11901-1-kasong@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190418160730.11901-1-kasong@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 19 Apr 2019 00:58:24 +0000 (UTC)
+        Thu, 18 Apr 2019 20:58:39 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40227 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfDSA6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 20:58:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c207so1853120pfc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 17:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=UlLWtPT1KVnXFDWHWBqj7eHHX2QR1bJps7Vij/lVN18=;
+        b=dNi544DcluD68JN1rXbqvUNDBMNin+M4bdntuHEjvNeFhX+mgf9QD3U84R9kqDx9cq
+         mPjAuvz2qBCbUDBP6kAkn8Bs7fogffQkJ1N2lxhMC3fU0yN+HYmGA5bmZdtXlgVQ/ecc
+         snjlTiQBF8wxrKmsJ94PAfGqMKMaE6/lApRtIeyh0MBzb2Ea0JoZiy5iK1myfuyGrHzl
+         +FnAdVUN0fhmhO/l7jL1Bz6W/SBLHoBxrqfCNtgvbOdV1dwR2QQXjWM7dohDXU/J3icE
+         M5/Gs23/emaH6Z71peMQYTU4iSt8NoI1gpTxkr7e682PN5q9ETkh8ft7MK1Ep+a1Ex1x
+         W8Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UlLWtPT1KVnXFDWHWBqj7eHHX2QR1bJps7Vij/lVN18=;
+        b=SxvsO2+VMZnW5o/AuuAgdIU4QR+7e2eht66O3Ww86LDLAFf0YsDnvHETN1LSmtyfk7
+         TJdB3WOku8OaC89kjGWgeMOdWcvsileO7pEtG+/YGsrtuUHE+Ds7XH1nn2mUsmX6tN7o
+         D8Jl7za/3pHJF9QlBTwg2w7cEQGpYFu+oixIuLPrKe38nfiy8BMzUcqcoceget5T8Tub
+         +TvpjoJQ+E/8VUn9H1QIxyCSyM7kAB1bMmoBzYxCLT/UWauVzmrYGO7T2OLh41ZkBl+J
+         +X1xgm+adIzjxaAImmAC/arZzNgxOlTe/A/rXTOUDlsQGgeBE3h3I0jqAaKTpVCa51H6
+         Mpgw==
+X-Gm-Message-State: APjAAAV0kyQ5HqvNknlyaGNjKrX9BQgL8/tVVc1A/UKhoh61FDyyhapq
+        plr1eC0N0Qq+aAPRGPlAHPd8Ww==
+X-Google-Smtp-Source: APXvYqwWY/aAmHHtHRIp3JtqzsMkq6baV0OpWE3dW+P3qIP2YGzFGd2Mnf167m6MBC8kje6myNxu2Q==
+X-Received: by 2002:aa7:920b:: with SMTP id 11mr786297pfo.3.1555635517616;
+        Thu, 18 Apr 2019 17:58:37 -0700 (PDT)
+Received: from localhost.localdomain (36-239-215-67.dynamic-ip.hinet.net. [36.239.215.67])
+        by smtp.gmail.com with ESMTPSA id 6sm4209106pfj.95.2019.04.18.17.58.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Apr 2019 17:58:36 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wadim Egorov <w.egorov@phytec.de>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Yunfan Zhang <yfzhang@marvell.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH 1/2] regulator: fan53555: Clean up unneeded fields from struct fan53555_device_info
+Date:   Fri, 19 Apr 2019 08:58:23 +0800
+Message-Id: <20190419005824.21533-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 12:07:30PM -0400, Kairui Song wrote:
-> Currently perf callchain doesn't work well when sampling from trace
-> point, with ORC unwinder enabled and CONFIG_FRAME_POINTER disabled.
-> We'll get useless in kernel callchain like this:
-> 
-> perf  6429 [000]    22.498450:             kmem:mm_page_alloc: page=0x176a17 pfn=1534487 order=0 migratetype=0 gfp_flags=GFP_KERNEL
->     ffffffffbe23e32e __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
-> 	7efdf7f7d3e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
-> 	5651468729c1 [unknown] (/usr/bin/perf)
-> 	5651467ee82a main+0x69a (/usr/bin/perf)
-> 	7efdf7eaf413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
->     5541f689495641d7 [unknown] ([unknown])
-> 
-> The root cause is within a trace point perf will try to dump the
-> required caller's registers, but without CONFIG_FRAME_POINTER we
-> can't get caller's BP as the frame pointer, so current frame pointer
-> is returned instead. We get a invalid register combination which
-> confuse the unwinder and end the stacktrace early.
-> 
-> So in such case just don't try dump BP when doing partial register
-> dump. And just let the unwinder start directly when the register is
-> incapable of presenting a unwinding start point. Use SP as the skip
-> mark, skip all the frames until we meet the frame we want.
-> 
-> This make the callchain get the full kernel space stacktrace again:
-> 
-> perf  6503 [000]  1567.570191:             kmem:mm_page_alloc: page=0x16c904 pfn=1493252 order=0 migratetype=0 gfp_flags=GFP_KERNEL
->     ffffffffb523e2ae __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb52383bd __get_free_pages+0xd (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb52fd28a __pollwait+0x8a (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb521426f perf_poll+0x2f (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb52fe3e2 do_sys_poll+0x252 (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb52ff027 __x64_sys_poll+0x37 (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb500418b do_syscall_64+0x5b (/lib/modules/5.1.0-rc3+/build/vmlinux)
->     ffffffffb5a0008c entry_SYSCALL_64_after_hwframe+0x44 (/lib/modules/5.1.0-rc3+/build/vmlinux)
-> 	7f71e92d03e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
-> 	55a22960d9c1 [unknown] (/usr/bin/perf)
-> 	55a22958982a main+0x69a (/usr/bin/perf)
-> 	7f71e9202413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
->     5541f689495641d7 [unknown] ([unknown])
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> ---
-> 
-> Update from V2:
->   - Instead of looking at if BP is 0, use X86_EFLAGS_FIXED flag bit as
->     the indicator of where the pt_regs is valid for unwinding. As
->     suggested by Peter Zijlstra
->   - Update some comments accordingly.
-> 
-> Update from V1:
->   Get rid of a lot of unneccessary code and just don't dump a inaccurate
->   BP, and use SP as the marker for target frame.
-> 
->  arch/x86/events/core.c            | 24 +++++++++++++++++++++---
->  arch/x86/include/asm/perf_event.h |  5 +++++
->  arch/x86/include/asm/stacktrace.h |  9 +++++++--
->  include/linux/perf_event.h        |  6 +++---
->  4 files changed, 36 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index e2b1447192a8..e181e195fe5d 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2355,6 +2355,18 @@ void arch_perf_update_userpage(struct perf_event *event,
->  	cyc2ns_read_end();
->  }
->  
-> +static inline int
-> +valid_unwinding_registers(struct pt_regs *regs)
-> +{
-> +	/*
-> +	 * regs might be a fake one, it won't dump the flags reg,
-> +	 * and without frame pointer, it won't have a valid BP.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_FRAME_POINTER))
-> +		return 1;
-> +	return (regs->flags & PERF_EFLAGS_SNAP);
-> +}
-> +
->  void
->  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
->  {
-> @@ -2366,11 +2378,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->  		return;
->  	}
->  
-> -	if (perf_callchain_store(entry, regs->ip))
-> +	if (valid_unwinding_registers(regs)) {
-> +		if (perf_callchain_store(entry, regs->ip))
-> +			return;
-> +		unwind_start(&state, current, regs, NULL);
-> +	} else if (regs->sp) {
-> +		unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-> +	} else {
->  		return;
-> +	}
->  
-> -	for (unwind_start(&state, current, regs, NULL); !unwind_done(&state);
-> -	     unwind_next_frame(&state)) {
-> +	for (; !unwind_done(&state); unwind_next_frame(&state)) {
->  		addr = unwind_get_return_address(&state);
->  		if (!addr || perf_callchain_store(entry, addr))
->  			return;
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index 8bdf74902293..77c8519512ff 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -239,11 +239,16 @@ extern void perf_events_lapic_init(void);
->   * Abuse bits {3,5} of the cpu eflags register. These flags are otherwise
->   * unused and ABI specified to be 0, so nobody should care what we do with
->   * them.
-> + * And also leverage X86_EFLAGS_FIXED (bit 1). This bit is reserved as
-> + * always set.
->   *
-> + * SNAP  - flags is considered a real snapshot captured upon event
-> + *         is triggered.
->   * EXACT - the IP points to the exact instruction that triggered the
->   *         event (HW bugs exempt).
->   * VM    - original X86_VM_MASK; see set_linear_ip().
->   */
-> +#define PERF_EFLAGS_SNAP	X86_EFLAGS_FIXED
->  #define PERF_EFLAGS_EXACT	(1UL << 3)
->  #define PERF_EFLAGS_VM		(1UL << 5)
->  
-> diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-> index f335aad404a4..226077e20412 100644
-> --- a/arch/x86/include/asm/stacktrace.h
-> +++ b/arch/x86/include/asm/stacktrace.h
-> @@ -98,18 +98,23 @@ struct stack_frame_ia32 {
->      u32 return_address;
->  };
->  
-> +#ifdef CONFIG_FRAME_POINTER
->  static inline unsigned long caller_frame_pointer(void)
->  {
->  	struct stack_frame *frame;
->  
->  	frame = __builtin_frame_address(0);
->  
-> -#ifdef CONFIG_FRAME_POINTER
->  	frame = frame->next_frame;
-> -#endif
->  
->  	return (unsigned long)frame;
->  }
-> +#else
-> +static inline unsigned long caller_frame_pointer(void)
-> +{
-> +	return 0;
-> +}
-> +#endif
->  
->  void show_opcodes(struct pt_regs *regs, const char *loglvl);
->  void show_ip(struct pt_regs *regs, const char *loglvl);
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index e47ef764f613..07bcb1870220 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1055,11 +1055,11 @@ static inline void perf_arch_fetch_caller_regs(struct pt_regs *regs, unsigned lo
->  #endif
->  
->  /*
-> - * Take a snapshot of the regs. Skip ip and frame pointer to
-> - * the nth caller. We only need a few of the regs:
-> + * Take a partial snapshot of the caller's regs.
-> + * We only need a few of the regs:
->   * - ip for PERF_SAMPLE_IP
->   * - cs for user_mode() tests
-> - * - bp for callchains
-> + * - sp, bp for callchains
->   * - eflags, for future purposes, just in case
->   */
->  static inline void perf_fetch_caller_regs(struct pt_regs *regs)
+The *regmap and *rdev can be replaced by local variables.
+The slew_rate is no longer used since commit dd7e71fbeefe
+("regulator: fan53555: use set_ramp_delay to set the ramp up slew rate").
 
-I still don't like using regs->bp because it results in different code
-paths for FP and ORC.  In the FP case, the regs are treated like real
-regs even though they're fake.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/fan53555.c | 36 +++++++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
 
-Something like the below would be much simpler.  Would this work?  I don't
-know if any other code relies on the fake regs->bp or regs->sp.
-
-(BTW, tomorrow is a US holiday so I may not be very responsive until
-Monday.)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index de1a924a4914..f315425d8468 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2382,6 +2382,15 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	cyc2ns_read_end();
+diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
+index 771a06d1900d..e2caf4173ab5 100644
+--- a/drivers/regulator/fan53555.c
++++ b/drivers/regulator/fan53555.c
+@@ -91,10 +91,8 @@ enum {
+ 
+ struct fan53555_device_info {
+ 	enum fan53555_vendor vendor;
+-	struct regmap *regmap;
+ 	struct device *dev;
+ 	struct regulator_desc desc;
+-	struct regulator_dev *rdev;
+ 	struct regulator_init_data *regulator;
+ 	/* IC Type and Rev */
+ 	int chip_id;
+@@ -106,8 +104,6 @@ struct fan53555_device_info {
+ 	unsigned int vsel_min;
+ 	unsigned int vsel_step;
+ 	unsigned int vsel_count;
+-	/* Voltage slew rate limiting */
+-	unsigned int slew_rate;
+ 	/* Mode */
+ 	unsigned int mode_reg;
+ 	unsigned int mode_mask;
+@@ -125,7 +121,7 @@ static int fan53555_set_suspend_voltage(struct regulator_dev *rdev, int uV)
+ 	ret = regulator_map_voltage_linear(rdev, uV, uV);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = regmap_update_bits(di->regmap, di->sleep_reg,
++	ret = regmap_update_bits(rdev->regmap, di->sleep_reg,
+ 				 di->desc.vsel_mask, ret);
+ 	if (ret < 0)
+ 		return ret;
+@@ -140,7 +136,7 @@ static int fan53555_set_suspend_enable(struct regulator_dev *rdev)
+ {
+ 	struct fan53555_device_info *di = rdev_get_drvdata(rdev);
+ 
+-	return regmap_update_bits(di->regmap, di->sleep_reg,
++	return regmap_update_bits(rdev->regmap, di->sleep_reg,
+ 				  VSEL_BUCK_EN, VSEL_BUCK_EN);
  }
  
-+/*
-+ * Determine whether the regs were taken from an irq/exception handler rather
-+ * than from perf_arch_fetch_caller_regs().
-+ */
-+static bool perf_hw_regs(struct pt_regs *regs)
-+{
-+	return regs->flags & X86_EFLAGS_FIXED;
-+}
-+
- void
- perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+@@ -148,7 +144,7 @@ static int fan53555_set_suspend_disable(struct regulator_dev *rdev)
  {
-@@ -2393,11 +2402,15 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
+ 	struct fan53555_device_info *di = rdev_get_drvdata(rdev);
+ 
+-	return regmap_update_bits(di->regmap, di->sleep_reg,
++	return regmap_update_bits(rdev->regmap, di->sleep_reg,
+ 				  VSEL_BUCK_EN, 0);
+ }
+ 
+@@ -158,11 +154,11 @@ static int fan53555_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ 
+ 	switch (mode) {
+ 	case REGULATOR_MODE_FAST:
+-		regmap_update_bits(di->regmap, di->mode_reg,
++		regmap_update_bits(rdev->regmap, di->mode_reg,
+ 				   di->mode_mask, di->mode_mask);
+ 		break;
+ 	case REGULATOR_MODE_NORMAL:
+-		regmap_update_bits(di->regmap, di->vol_reg, di->mode_mask, 0);
++		regmap_update_bits(rdev->regmap, di->vol_reg, di->mode_mask, 0);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -176,7 +172,7 @@ static unsigned int fan53555_get_mode(struct regulator_dev *rdev)
+ 	unsigned int val;
+ 	int ret = 0;
+ 
+-	ret = regmap_read(di->regmap, di->mode_reg, &val);
++	ret = regmap_read(rdev->regmap, di->mode_reg, &val);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (val & di->mode_mask)
+@@ -213,7 +209,7 @@ static int fan53555_set_ramp(struct regulator_dev *rdev, int ramp)
+ 		return -EINVAL;
  	}
  
--	if (perf_callchain_store(entry, regs->ip))
--		return;
-+	if (perf_hw_regs(regs)) {
-+		if (perf_callchain_store(entry, regs->ip))
-+			return;
-+		unwind_start(&state, current, regs, NULL);
-+	} else {
-+		unwind_start(&state, current, NULL, (void *)regs->sp);
-+	}
- 
--	for (unwind_start(&state, current, regs, NULL); !unwind_done(&state);
--	     unwind_next_frame(&state)) {
-+	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
- 		if (!addr || perf_callchain_store(entry, addr))
- 			return;
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 04768a3a5454..1392d5e6e8d6 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -308,14 +308,9 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
-  */
- #define perf_arch_fetch_caller_regs(regs, __ip)		{	\
- 	(regs)->ip = (__ip);					\
--	(regs)->bp = caller_frame_pointer();			\
-+	(regs)->sp = (unsigned long)__builtin_frame_address(0);	\
- 	(regs)->cs = __KERNEL_CS;				\
- 	regs->flags = 0;					\
--	asm volatile(						\
--		_ASM_MOV "%%"_ASM_SP ", %0\n"			\
--		: "=m" ((regs)->sp)				\
--		:: "memory"					\
--	);							\
+-	return regmap_update_bits(di->regmap, FAN53555_CONTROL,
++	return regmap_update_bits(rdev->regmap, FAN53555_CONTROL,
+ 				  CTL_SLEW_MASK, regval << CTL_SLEW_SHIFT);
  }
  
- struct perf_guest_switch_msr {
-diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
-index d6d758a187b6..a8d0cdf48616 100644
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -100,19 +100,6 @@ struct stack_frame_ia32 {
-     u32 return_address;
- };
+@@ -396,6 +392,7 @@ static int fan53555_regulator_register(struct fan53555_device_info *di,
+ 			struct regulator_config *config)
+ {
+ 	struct regulator_desc *rdesc = &di->desc;
++	struct regulator_dev *rdev;
  
--static inline unsigned long caller_frame_pointer(void)
--{
--	struct stack_frame *frame;
--
--	frame = __builtin_frame_address(0);
--
--#ifdef CONFIG_FRAME_POINTER
--	frame = frame->next_frame;
--#endif
--
--	return (unsigned long)frame;
--}
--
- void show_opcodes(struct pt_regs *regs, const char *loglvl);
- void show_ip(struct pt_regs *regs, const char *loglvl);
- #endif /* _ASM_X86_STACKTRACE_H */
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index f3864e1c5569..0f560069aeec 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1062,7 +1062,7 @@ static inline void perf_arch_fetch_caller_regs(struct pt_regs *regs, unsigned lo
-  * the nth caller. We only need a few of the regs:
-  * - ip for PERF_SAMPLE_IP
-  * - cs for user_mode() tests
-- * - bp for callchains
-+ * - sp for callchains
-  * - eflags, for future purposes, just in case
-  */
- static inline void perf_fetch_caller_regs(struct pt_regs *regs)
+ 	rdesc->name = "fan53555-reg";
+ 	rdesc->supply_name = "vin";
+@@ -410,8 +407,8 @@ static int fan53555_regulator_register(struct fan53555_device_info *di,
+ 	rdesc->vsel_mask = di->vsel_count - 1;
+ 	rdesc->owner = THIS_MODULE;
+ 
+-	di->rdev = devm_regulator_register(di->dev, &di->desc, config);
+-	return PTR_ERR_OR_ZERO(di->rdev);
++	rdev = devm_regulator_register(di->dev, &di->desc, config);
++	return PTR_ERR_OR_ZERO(rdev);
+ }
+ 
+ static const struct regmap_config fan53555_regmap_config = {
+@@ -466,6 +463,7 @@ static int fan53555_regulator_probe(struct i2c_client *client,
+ 	struct fan53555_device_info *di;
+ 	struct fan53555_platform_data *pdata;
+ 	struct regulator_config config = { };
++	struct regmap *regmap;
+ 	unsigned int val;
+ 	int ret;
+ 
+@@ -502,22 +500,22 @@ static int fan53555_regulator_probe(struct i2c_client *client,
+ 		di->vendor = id->driver_data;
+ 	}
+ 
+-	di->regmap = devm_regmap_init_i2c(client, &fan53555_regmap_config);
+-	if (IS_ERR(di->regmap)) {
++	regmap = devm_regmap_init_i2c(client, &fan53555_regmap_config);
++	if (IS_ERR(regmap)) {
+ 		dev_err(&client->dev, "Failed to allocate regmap!\n");
+-		return PTR_ERR(di->regmap);
++		return PTR_ERR(regmap);
+ 	}
+ 	di->dev = &client->dev;
+ 	i2c_set_clientdata(client, di);
+ 	/* Get chip ID */
+-	ret = regmap_read(di->regmap, FAN53555_ID1, &val);
++	ret = regmap_read(regmap, FAN53555_ID1, &val);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "Failed to get chip ID!\n");
+ 		return ret;
+ 	}
+ 	di->chip_id = val & DIE_ID;
+ 	/* Get chip revision */
+-	ret = regmap_read(di->regmap, FAN53555_ID2, &val);
++	ret = regmap_read(regmap, FAN53555_ID2, &val);
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "Failed to get chip Rev!\n");
+ 		return ret;
+@@ -534,7 +532,7 @@ static int fan53555_regulator_probe(struct i2c_client *client,
+ 	/* Register regulator */
+ 	config.dev = di->dev;
+ 	config.init_data = di->regulator;
+-	config.regmap = di->regmap;
++	config.regmap = regmap;
+ 	config.driver_data = di;
+ 	config.of_node = np;
+ 
+-- 
+2.17.1
+
