@@ -7,55 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890CDC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F1C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F5820643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD4D20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BwxllDd1"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ru4x/qWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfDSTE5 (ORCPT
+        id S1727738AbfDSTDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:04:57 -0400
+        Fri, 19 Apr 2019 15:03:53 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbfDSTDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:54 -0400
+        id S1729083AbfDSTDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:03:48 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JFwknE334341
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JHSrnQ363196
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 08:58:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JFwknE334341
+        Fri, 19 Apr 2019 10:28:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JHSrnQ363196
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555689527;
-        bh=AAV3ry0AzgbUpVWD30jm1mnozefBAWDO5zImAOTMiTg=;
+        s=2019041745; t=1555694935;
+        bh=ctfbVfLvz/n7x0FJwS6+0WTxIFExYZ84TpbQW5OG+ig=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=BwxllDd1r58T3fxGM7ssCyIrJBiLcSeZHqbwN+OQcd3EsNGjWy+SUo1ZmmFER95Gc
-         2+znB5lpbHnRV9rdvvHnQMmze+XMy8Ys1DXeVzHMXc9YSqaQiuRF7Xaa1bPzNKzI2i
-         /c/ccCP1sxiumsoEl/RkHPywQXw6kNYsmUXRz8eNd3bPCa4TYaC8lENJWgMKNvsAqK
-         S0g8f4hxlnAc0pnqZ+bjsN0ziZ05UFf/iYORAIpaUp3kXzJ9qQj3jsWAAJn524voul
-         ySQTM5p0mz5asipkxzbbtBsyyF1aABwnzPLh2Ox8XDjryTR8S0ZlOI3KMmgNrfjs39
-         a+UgoZ6k7bq7w==
+        b=Ru4x/qWzzDHaq1XUjiHfYiXvzV2UmrHc88WnrIuRuViuphYpQjk6vTaRLLxIiFH7I
+         9EOQLHxPDqy+SzR734m2yuWNQgBbXHVEBv53KsYeFV7QYnS9bqMUJHjmchTDJyidae
+         wuWeGux5rRU5eOPz3R/bnrNtaSgFTAfuhZlWACHUpt3/dvbtwtRmLuuSvrgi7s70q/
+         8AId6SX0fjYMlXpyVNekC4UqqfbopmEcy0D+wEwyqlBNRjP22H2a2gWCxz3xvUke2A
+         2Pz97zjfcZmXbDpvlN1mAOCStXmSCdda/darBNpswewWxq9/GPbp/v0WON115rv90z
+         +r3QRlTXj/QpQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JFwk89334338;
-        Fri, 19 Apr 2019 08:58:46 -0700
-Date:   Fri, 19 Apr 2019 08:58:46 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JHSqMP363193;
+        Fri, 19 Apr 2019 10:28:52 -0700
+Date:   Fri, 19 Apr 2019 10:28:52 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-6ea26c21941cc313bc05f340019fe454900d21bd@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        tglx@linutronix.de, hpa@zytor.com, mhiramat@kernel.org,
-        mingo@kernel.org
-Reply-To: tglx@linutronix.de, ak@linux.intel.com,
-          linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-          mhiramat@kernel.org
-In-Reply-To: <20190330004743.29541-7-andi@firstfloor.org>
-References: <20190330004743.29541-7-andi@firstfloor.org>
+From:   tip-bot for YueHaibing <tipbot@zytor.com>
+Message-ID: <tip-28156d7678431312b463361b23a218a1b5645ba5@git.kernel.org>
+Cc:     tony.luck@intel.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
+        yazen.ghannam@amd.com, peterz@infradead.org,
+        vishal.l.verma@intel.com, yuehaibing@huawei.com, bp@alien8.de,
+        linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, bp@alien8.de,
+          yuehaibing@huawei.com, vishal.l.verma@intel.com,
+          peterz@infradead.org, yazen.ghannam@amd.com, hpa@zytor.com,
+          torvalds@linux-foundation.org, tglx@linutronix.de,
+          mingo@kernel.org, tony.luck@intel.com
+In-Reply-To: <1545981853-70877-1-git-send-email-yuehaibing@huawei.com>
+References: <1545981853-70877-1-git-send-email-yuehaibing@huawei.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/core] x86/kprobes: Make trampoline_handler() global and
- visible
-Git-Commit-ID: 6ea26c21941cc313bc05f340019fe454900d21bd
+Subject: [tip:ras/core] x86/mce: Fix debugfs_simple_attr.cocci warnings
+Git-Commit-ID: 28156d7678431312b463361b23a218a1b5645ba5
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,37 +72,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6ea26c21941cc313bc05f340019fe454900d21bd
-Gitweb:     https://git.kernel.org/tip/6ea26c21941cc313bc05f340019fe454900d21bd
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Fri, 29 Mar 2019 17:47:41 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 19 Apr 2019 17:55:30 +0200
+Commit-ID:  28156d7678431312b463361b23a218a1b5645ba5
+Gitweb:     https://git.kernel.org/tip/28156d7678431312b463361b23a218a1b5645ba5
+Author:     YueHaibing <yuehaibing@huawei.com>
+AuthorDate: Fri, 28 Dec 2018 07:24:13 +0000
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 19 Apr 2019 19:25:08 +0200
 
-x86/kprobes: Make trampoline_handler() global and visible
+x86/mce: Fix debugfs_simple_attr.cocci warnings
 
-This function is referenced from assembler, so in LTO
-it needs to be global and visible to not be optimized away.
+Use DEFINE_DEBUGFS_ATTRIBUTE() rather than DEFINE_SIMPLE_ATTRIBUTE()
+for debugfs files.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Link: https://lkml.kernel.org/r/20190330004743.29541-7-andi@firstfloor.org
+Semantic patch information:
 
+  Rationale: DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
+  imposes some significant overhead as compared to
+  DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
+
+Generated by: scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: kernel-janitors@vger.kernel.org
+Link: http://lkml.kernel.org/r/1545981853-70877-1-git-send-email-yuehaibing@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/kprobes/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mce/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index a034cb808e7e..a7b2a5c4d969 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -751,7 +751,7 @@ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
- /*
-  * Called from kretprobe_trampoline
-  */
--static __used void *trampoline_handler(struct pt_regs *regs)
-+__used __visible void *trampoline_handler(struct pt_regs *regs)
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 58925e7ccb27..3e081428117c 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -2429,8 +2429,8 @@ static int fake_panic_set(void *data, u64 val)
+ 	return 0;
+ }
+ 
+-DEFINE_SIMPLE_ATTRIBUTE(fake_panic_fops, fake_panic_get,
+-			fake_panic_set, "%llu\n");
++DEFINE_DEBUGFS_ATTRIBUTE(fake_panic_fops, fake_panic_get, fake_panic_set,
++			 "%llu\n");
+ 
+ static int __init mcheck_debugfs_init(void)
  {
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
+@@ -2439,8 +2439,8 @@ static int __init mcheck_debugfs_init(void)
+ 	dmce = mce_get_debugfs_dir();
+ 	if (!dmce)
+ 		return -ENOMEM;
+-	ffake_panic = debugfs_create_file("fake_panic", 0444, dmce, NULL,
+-					  &fake_panic_fops);
++	ffake_panic = debugfs_create_file_unsafe("fake_panic", 0444, dmce,
++						 NULL, &fake_panic_fops);
+ 	if (!ffake_panic)
+ 		return -ENOMEM;
+ 
