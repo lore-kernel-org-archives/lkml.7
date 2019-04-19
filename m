@@ -2,103 +2,187 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AB7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E8AC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5467020821
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D04E20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGEbQhHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfDSTXp (ORCPT
+        id S1727543AbfDSTYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:23:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34530 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfDSTXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:23:44 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63BE37DCC2;
-        Fri, 19 Apr 2019 15:45:39 +0000 (UTC)
-Received: from treble (ovpn-124-190.rdu2.redhat.com [10.10.124.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4617F600C7;
-        Fri, 19 Apr 2019 15:45:38 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 10:45:36 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [RFC PATCH v3] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190419154536.7n3pernnimblvtfe@treble>
-References: <20190418160730.11901-1-kasong@redhat.com>
- <20190419005821.ttlpav7gviaed7am@treble>
- <CACPcB9fsYqs+xaj6w6ExKdpi-Pk4RqiD5HxTyURpee_arYQANg@mail.gmail.com>
- <20190419094313.GO7905@worktop.programming.kicks-ass.net>
- <CACPcB9dKmH4oNR1fAwGndoPMiZsgfFve4g2_d26pYTByGrt75w@mail.gmail.com>
+        Fri, 19 Apr 2019 15:24:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35176 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfDSTYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:24:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id o12so4673758wrn.2;
+        Fri, 19 Apr 2019 12:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:cc:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=nbmr2w5/0wlcA5OCIjXqH8b8jg348eXwm/j8E2b8gwc=;
+        b=VGEbQhHcqcHmqC/N8ddol3NVQo48qPjGNaykxHoA4RKKNNRzsTAzYsZyWbH4mHTPI3
+         xrcv9qJ/UNrwNYLszIr9UbGFcJK9XY+OGm2GZN4kc5zHrzg9DpoHVB+RH0gp8ggvxHY7
+         BIG8SkaukMJGT1xaI5WcWDkcClN4XQ2ZnAWmJa5ZDVHCr7VDDKGiKZmlDLUgfVtBzSfI
+         pn9n7hP90sbBE3cYYFZ8+YBDduHJ6L58PdLeEwL9bwkb0z1buKUFpNfnpgbVpIaeUhOJ
+         mv3pHHkYc5BO/2ESoD5RBSqmP9U38G4FH2ei5bRsV2frkL+UVVf21dguFsLh3w5Wafrg
+         QY9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nbmr2w5/0wlcA5OCIjXqH8b8jg348eXwm/j8E2b8gwc=;
+        b=A8ODlamfvjgZiGe2pcfN9rDo7BeUIirkOpQtX2hOUJdH2sQwGGtuoKuHBUrr+BRRh2
+         7nQGQqcoEw7OU/o8DwbY9S2vJMGGemJdw7HMq6XR662h5HHNGuIxlx0jBEVG+8t8ugrW
+         wYaLcaUhvFPYBVzDaE8HJKjxYzgwbtD/lEPy/tnk4V3BwvrlXZha5kjXkJDPGVHv4ezG
+         pFfwZqgzBzPMiWSGtA4Nufia/KuDT6khC+azBOYLIlvVkOZoIGzA1ZNfKhrx8sNCbhr9
+         KulTFlSJ20qIs+qFDTqRSlywmlZ5UehmD6JfcR/IW2MZTjrnY+Vb3aAT5PQr1Vn1+BHH
+         FhtA==
+X-Gm-Message-State: APjAAAVfOJfaLSOG8mLm9wkFV5E3VZ/+TPx1E4dnsBzFZZM0Ktx14Hry
+        xTngmwRFchjGI1yfEF+LXuGtUfvnCuI=
+X-Google-Smtp-Source: APXvYqxTeIkY6HrtLXqdLaB04RltJhEunJXx+hreNyqXWksrxaf1qtJS2B5bSfRSkQ4zBxxnz3r2rQ==
+X-Received: by 2002:adf:ed90:: with SMTP id c16mr2292654wro.74.1555668770298;
+        Fri, 19 Apr 2019 03:12:50 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id j3sm5710118wre.51.2019.04.19.03.12.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 03:12:49 -0700 (PDT)
+Subject: [PATCH v3 08/11] platform/x86: asus-wmi: Enhance detection of thermal
+ data
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Message-ID: <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
+Date:   Fri, 19 Apr 2019 12:12:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACPcB9dKmH4oNR1fAwGndoPMiZsgfFve4g2_d26pYTByGrt75w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 19 Apr 2019 15:45:39 +0000 (UTC)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 07:47:18PM +0800, Kairui Song wrote:
-> On Fri, Apr 19, 2019 at 5:43 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Apr 19, 2019 at 10:17:49AM +0800, Kairui Song wrote:
-> > > On Fri, Apr 19, 2019 at 8:58 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > >
-> > > > I still don't like using regs->bp because it results in different code
-> > > > paths for FP and ORC.  In the FP case, the regs are treated like real
-> > > > regs even though they're fake.
-> > > >
-> > > > Something like the below would be much simpler.  Would this work?  I don't
-> > > > know if any other code relies on the fake regs->bp or regs->sp.
-> > >
-> > > Works perfectly. My only concern is that FP path used to work very
-> > > well, not sure it's a good idea to change it, and this may bring some
-> > > extra overhead for FP path.
-> >
-> > Given Josh wrote all that code, I'm fairly sure it is still OK :-)
-> >
-> > But also looking at the code in unwind_frame.c, __unwind_start() seems
-> > to pretty much do what the removed caller_frame_pointer() did (when
-> > .regs=NULL) but better.
-> >
-> 
-> OK, with FP we will also need to do a few more extra unwinding,
-> previously it start directly from the frame of the trace point, now
-> have to trace back to the trace point first.
-> If that's fine I could post another update (that will be pretty much
-> just copy&paste from the Josh's code he posted :P , is this OK?)
+The obviously wrong value 1 for temperature device ID in this driver is
+returned by at least some devices, including TUF Gaming series laptops,
+instead of 0 as expected previously. Observable effect is that a
+temp1_input in hwmon reads temperature near absolute zero.
 
-You're right that FP will need to unwind a few extra frames, but I doubt
-that will make much of a difference performance-wise.  I prefer the
-simpler approach.
+* Consider 0.1 K an erroneous value in addition to 0 K.
+* Refactor detection of thermal input availability to a separate function.
 
-If you use that patch for the next version then you can add
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 45 ++++++++++++++++++++++++++++-----
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-  Co-developed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-
-Thanks.
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index e69e55635afb..1b8272374660 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -178,6 +178,7 @@ struct asus_wmi {
+ 	struct asus_rfkill gps;
+ 	struct asus_rfkill uwb;
+ 
++	bool asus_hwmon_thermal_available;
+ 	bool asus_hwmon_fan_manual_mode;
+ 	int asus_hwmon_num_fans;
+ 	int asus_hwmon_pwm;
+@@ -1375,6 +1376,32 @@ static struct attribute *hwmon_attributes[] = {
+ 	NULL
+ };
+ 
++static int asus_hwmon_check_thermal_available(struct asus_wmi *asus)
++{
++	u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
++	int err;
++
++	asus->asus_hwmon_thermal_available = false;
++	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_THERMAL_CTRL, &value);
++
++	if (err < 0) {
++		if (err == -ENODEV)
++			return 0;
++
++		return err;
++	}
++
++	/*
++	 * If the temperature value in deci-Kelvin is near the absolute
++	 * zero temperature, something is clearly wrong.
++	 */
++	if (!value || value == 1)
++		return 0;
++
++	asus->asus_hwmon_thermal_available = true;
++	return 0;
++}
++
+ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 					  struct attribute *attr, int idx)
+ {
+@@ -1388,8 +1415,6 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 
+ 	if (attr == &dev_attr_pwm1.attr)
+ 		dev_id = ASUS_WMI_DEVID_FAN_CTRL;
+-	else if (attr == &dev_attr_temp1_input.attr)
+-		dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
+ 
+ 	if (attr == &dev_attr_fan1_input.attr
+ 	    || attr == &dev_attr_fan1_label.attr
+@@ -1414,15 +1439,13 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 		 * - reverved bits are non-zero
+ 		 * - sfun and presence bit are not set
+ 		 */
+-		if (value == ASUS_WMI_UNSUPPORTED_METHOD || value & 0xFFF80000
++		if (value == ASUS_WMI_UNSUPPORTED_METHOD || (value & 0xFFF80000)
+ 		    || (!asus->sfun && !(value & ASUS_WMI_DSTS_PRESENCE_BIT)))
+ 			ok = false;
+ 		else
+ 			ok = fan_attr <= asus->asus_hwmon_num_fans;
+-	} else if (dev_id == ASUS_WMI_DEVID_THERMAL_CTRL) {
+-		/* If value is zero, something is clearly wrong */
+-		if (!value)
+-			ok = false;
++	} else if (attr == &dev_attr_temp1_input.attr) {
++		ok = asus->asus_hwmon_thermal_available;
+ 	} else if (fan_attr <= asus->asus_hwmon_num_fans && fan_attr != -1) {
+ 		ok = true;
+ 	} else {
+@@ -1469,6 +1492,14 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
+ 	}
+ 
+ 	pr_info("Number of fans: %d\n", asus->asus_hwmon_num_fans);
++
++	status = asus_hwmon_check_thermal_available(asus);
++	if (status) {
++		pr_warn("Could not check if thermal available: %d\n", status);
++		return -ENXIO;
++	}
++
++	pr_info("Thermal available: %d\n", asus->asus_hwmon_thermal_available);
+ 	return 0;
+ }
+ 
 -- 
-Josh
+2.17.1
+
