@@ -2,110 +2,116 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4344FC282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085C8C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E166720821
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555707515;
-	bh=9wDVNpO8ngML+Fb8c/rFbSYWHToYHgwwLSYRw7EPNYM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PCgK3ORZeI4UywBYcmxYsip9FOVuL5bohvN0UnjE9u3m6oqAv4oy+X2cnY3BufFb2
-	 pI08mIABPF/Pi0vaKoJbPCr6U3wymNBurFhpaYCCaw/KaQF356DGzzb8NJ2FpsWUSP
-	 0JCHeyBXdxn+CTP6QNUIoGYjO3ZbQ/BVA5lSThzg=
+	by mail.kernel.org (Postfix) with ESMTP id D258120821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfDSU6d (ORCPT
+        id S1727590AbfDSU6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:58:33 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:33034 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfDSU6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:58:33 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id CBA772851;
-        Fri, 19 Apr 2019 20:58:31 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 13:58:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in
- kdb summary
-Message-Id: <20190419135830.0e3273e223fb83947e5adb0d@linux-foundation.org>
-In-Reply-To: <e5f29ca9b6067fff9ea68cb25e15906659cd51ad.camel@perches.com>
-References: <20190323015227.245455-1-dianders@chromium.org>
-        <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com>
-        <20190416163034.3e642818ebf27ed6891c1981@linux-foundation.org>
-        <CAK7LNAR4Ty8835sfo4HSvBsMCsV65mY2HOajFSY2TOYurmkFdw@mail.gmail.com>
-        <20190418160651.40cb6a11186a6c6028e9d20d@linux-foundation.org>
-        <CAK7LNAQe2uaVfKee1F6R4siVvUSCMgSaYAnUQfz8MS5PeFqpGA@mail.gmail.com>
-        <e5f29ca9b6067fff9ea68cb25e15906659cd51ad.camel@perches.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 19 Apr 2019 16:58:43 -0400
+Received: from relay.sw.ru ([185.231.240.75]:35560 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbfDSU6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:58:43 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hHTOT-0008G9-GU; Fri, 19 Apr 2019 16:17:29 +0300
+Subject: Re: [PATCH 1/4] net/skbuff: don't waste memory reserves
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Willem de Bruijn <willemb@google.com>,
+        Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20190418180524.23489-1-aryabinin@virtuozzo.com>
+ <791f4f23-d931-4ac8-4e60-3ffe46c4ece2@gmail.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <c2c270d9-29c0-b993-84c5-4c994608f7c8@virtuozzo.com>
+Date:   Fri, 19 Apr 2019 16:17:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <791f4f23-d931-4ac8-4e60-3ffe46c4ece2@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 04:14:27 -0700 Joe Perches <joe@perches.com> wrote:
 
-> On Fri, 2019-04-19 at 12:28 +0900, Masahiro Yamada wrote:
-> > Hi Joe,
-> > 
-> > Can you detect redundant Cc: by checkpatch?
-> > 
-> > Please see below in details.
-> > Thanks.
+
+On 4/18/19 9:55 PM, Eric Dumazet wrote:
 > 
-> Yes, but I'm not sure why it's useful or necessary.
-> git send-email using some scripts elides duplicate email addresses
+> 
+> On 04/18/2019 11:05 AM, Andrey Ryabinin wrote:
+>> In some workloads we have noticed packets being dropped by
+>> sk_filter_trim_cap() because the 'skb' was allocated from pfmemalloc
+>> reserves:
+>>
+>> 	/*
+>> 	 * If the skb was allocated from pfmemalloc reserves, only
+>> 	 * allow SOCK_MEMALLOC sockets to use it as this socket is
+>> 	 * helping free memory
+>> 	 */
+>> 	if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC)) {
+>> 		NET_INC_STATS(sock_net(sk), LINUX_MIB_PFMEMALLOCDROP);
+>> 		return -ENOMEM;
+>> 	}
+>>
+>> Memalloc sockets are used for stuff like swap over NBD or NFS
+>> and only memalloc sockets can process memalloc skbs. Since we
+>> don't have any memalloc sockets in our setups we shouldn't have
+>> memalloc skbs either. It simply doesn't make any sense to waste
+>> memory reserves on skb which will be dropped anyway.
+>>
+>> It appears that __dev_alloc_pages() unconditionally uses
+>> __GFP_MEMALLOC, so unless caller added __GFP_NOMEMALLOC, the
+>> __dev_alloc_pages() may dive into memory reserves.
+>> Later build_skb() or __skb_fill_page_desc() sets skb->pfmemalloc = 1
+>> so this skb always dropped by sk_filter_trim_cap().
+>>
+>> Instead of wasting memory reserves we simply shouldn't use them in the
+>> case of absence memalloc sockets in the system. Do this by adding
+>> the  __GFP_MEMALLOC only when such socket is present in the system.
+>>
+>> Fixes: 0614002bb5f7 ("netvm: propagate page->pfmemalloc from skb_alloc_page to skb")
+>> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+>> ---
+>>  include/linux/skbuff.h | 17 ++++++++++++++++-
+>>  include/net/sock.h     | 15 ---------------
+>>  2 files changed, 16 insertions(+), 16 deletions(-)
+>>
+> 
+> Hi Andrey
+> 
+> Are you targeting net or net-next tree ?
+> 
 
-Other (all?) MUAs will avoid addressing an email to a recipient more
-than once.  The issue here is redundant Cc: lines in the changelog.
+I think it's up to Dave to decide where the patches should go. They apply cleanly on both trees.
+The last two patches just minor cleanups so they are definitely net-next material.
 
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2688,6 +2688,19 @@ sub process {
->  				$signatures{$sig_nospace} = 1;
->  			}
->  
-> +# Check for a cc: line with another signature -by: by the same author
-> +			if ($sig_nospace =~ /^cc:/) {
-> +				my $sig_email = substr($sig_nospace, 3);
-> +				foreach my $sig (sort keys %signatures) {
-> +					next if ($sig =~ /^cc:/);
-> +					$sig =~ s/^[^:]+://;
-> +					if ($sig eq $sig_email) {
-> +						WARN("BAD_SIGN_OFF",
-> +						     "Unnecessary CC: as there is another signature with the same name/email address\n" . $herecurr);
-> +					}
-> +				}
-> +			}
-> +
->  # Check Co-developed-by: immediately followed by Signed-off-by: with same name and email
->  			if ($sign_off =~ /^co-developed-by:$/i) {
->  				if ($email eq $author) {
+> AFAIK, drivers allocate skbs way before a frame is actually received,
+> (at RX ring buffer initialization or refill)
+> 
+> So sk_memalloc_socks() might be false at that time, but true later.
+> 
 
-Thanks.  But my checkpatch.pl is different from yours.
+I don't see why that would be a problem. If refill failed because we didn't have
+access to reserves, then there going to be an another refill attempt, right?
+And the next refill attempt will be with access to the reserves if memalloc socket was created.
+We can't predict the future, so until the memalloc socket appeared we must assume that those
+RX ring buffers won't be used to reclaim memory (and that is actually true in 99% of cases).
 
-q:/usr/src/25> grep "immediately followed by" scripts/checkpatch.pl
-q:/usr/src/25> 
+
+
 
