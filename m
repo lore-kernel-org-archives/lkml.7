@@ -2,184 +2,108 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF626C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B7FC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8454E21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3EC21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gEoeke4v"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h1BrBBbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfDST3g (ORCPT
+        id S1727587AbfDST3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:29:36 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:52928 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDST3f (ORCPT
+        Fri, 19 Apr 2019 15:29:47 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11470 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDST3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:29:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555702175; x=1587238175;
-  h=subject:to:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=A+7h5WbTxEYTGjfoEubh+u73kHoj9ynkG6MnblQmpP4=;
-  b=gEoeke4vkV19ClMO4xu5LH1wrQZZGhrIVMZVEKBuBHXPTfiyiMEyFOv1
-   GEcYEsmj/R0AvPsKls/oEgfhy4P2S3uQ1jgm7zF+6X68DLlYIXiTA/epx
-   R/3+UoJ99rlc3mHiQh29EFrAZqpLLlklE1IX6LupFP2m+sjktk4xIVfPF
-   H9g8hrqeAl7qOKroda0VoYDz94vq2G/3jT9JjKEi/8jjx3rXPPE1U7lTY
-   iReMlnGdmZvt2zGk3DAm0QXg0ARukyKoExg8hJbHJre6I3eRhTa7Idt6M
-   ctJZidQrjsos8mzyFxsTrJAOTEQ+fguDLrFHlXnkg8BjXZbJMrKJMUhjB
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,371,1549900800"; 
-   d="scan'208";a="212156732"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2019 03:29:34 +0800
-IronPort-SDR: Vw2xOaMWS6rdR443v/0aHCPO6ZQ3aU9eYNIIVe9Gvg3uC4FiPD3zfCfpHahQpMwTOGLK6Xnc1o
- 2eXoZ39tAlJIgcztgRZh5L4vyHVkirBVIv8iqy3imRYK9yrYnPAiiRDTG8ecCdE1BkubpZyLpQ
- +aWDENj8YElKEjYarSRAu5Nbq8WD0lvQyZTwPhVJWOBgqh1HDbcbisKqtCLWXJhfbbW7MtOZo1
- ICKM9EnMiWMyGLxPAHLAofYjkaRXhZS0pHWjs28oluyHesqMxbI15FU2izf6E7cyvl5ekVBclQ
- DXDafeY5+bX2clqZnQELUz+z
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 19 Apr 2019 12:06:14 -0700
-IronPort-SDR: 6LU24F7zEw6o0ER6ll9wtyVM/KuKY0PPYLt5iD21lXXc0Dl+j+QK2O7Jz9xWQmSm6iGRqrgHHL
- tgl9C8yU/ML2cD/Cg44+Cxzl+Ut113gQx079gemju7YbfAv7wiG5hVa7lZxH3l5HwFUTkWg/4i
- 6MWUDnpnwby0vJTjyZudP/58raJb5RsxerpiqzUq1KJWbYIHqocwMOlcK6BHEIkY+jmdRwCY3o
- Hkin8yYUux70pH8lCYFZZlxNUCEJr4O1sk0EaWsSoQkHxKfIWrTY2cMNV9hUmuVxaS29tgFNj0
- yrQ=
-Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
-  by uls-op-cesaip02.wdc.com with ESMTP; 19 Apr 2019 12:29:35 -0700
-Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver for
- the SiFive FU540 UART
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-References: <20190413020111.23400-1-paul.walmsley@sifive.com>
- <7hmukmew5j.fsf@baylibre.com> <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
- <7h5zr9dcsi.fsf@baylibre.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <f2bb876c-2b44-663b-ea06-d849f721fb6c@wdc.com>
-Date:   Fri, 19 Apr 2019 12:29:33 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Fri, 19 Apr 2019 15:29:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb99e310001>; Fri, 19 Apr 2019 03:08:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 19 Apr 2019 03:08:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 19 Apr 2019 03:08:43 -0700
+Received: from [10.26.11.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 19 Apr
+ 2019 10:08:39 +0000
+Subject: Re: [PATCH 4.14 00/92] 4.14.113-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190418160430.325165109@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <63121a2d-054c-3e31-ec86-e0468807d4d5@nvidia.com>
+Date:   Fri, 19 Apr 2019 11:08:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <7h5zr9dcsi.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190418160430.325165109@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555668529; bh=1w8OHkAPqpHBmdMH7AG8Rv3ZqqDljPUOz7oMrcR6NAg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=h1BrBBbFMaonHY8gUgI1wIj8kT5xRAKR6gnZ/5DTcTYajbFuyX6xWXpHMoBduRJLw
+         jf6fHPgtijcmRyiWjWLDeMCM5bClXHwgF1GaVval56CP8R7HqnoJh8+/FoNSXaJJ9G
+         rgK3vqB8szJqxPq3Qoqd5Uygz5N9+L+fbzIPCtQAs+d0UroaMJjUd3gkWaayUq9Dyg
+         PYVAUMMOw2W7R3r3SVGzhsYykTQKxmJZGryjQ/zoRqHL6aPQdozVmPXDGVIY16mwJ3
+         URv0gzyuedkBPb3ja49ncFMH/jOH60TDUBQgmZEtalOl8Tgr38h/PczXrgeR2I0131
+         3gchyA1Wu5f+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 12:18 PM, Kevin Hilman wrote:
-> Atish Patra <atish.patra@wdc.com> writes:
-> 
->> On 4/18/19 4:22 PM, Kevin Hilman wrote:
->>> Hi Paul,
->>>
->>> Paul Walmsley <paul.walmsley@sifive.com> writes:
->>>
->>>> This series adds a serial driver, with console support, for the
->>>> UART IP block present on the SiFive FU540 SoC.  The programming
->>>> model is straightforward, but unique.
->>>>
->>>> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
->>>> open-source FSBL (with appropriate patches to the DT data).
->>>>
->>>> This fifth version fixes a bug in the set_termios handler,
->>>> found by Andreas Schwab <schwab@suse.de>.
->>>>
->>>> The patches in this series can also be found, with the PRCI patches,
->>>> DT patches, and DT prerequisite patch, at:
->>>>
->>>> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
->>>
->>> I tried this branch, and it doesn't boot on my unleashed board.
->>>
->>> Here's the boot log when I pass the DT built from your branch via
->>> u-boot: https://termbin.com/rfp3.
->>>
->>
->> Unfortunately, that won't work. The current DT modifications by OpenSBI.
->>
->> 1. Change hart status to "masked" from "okay".
->> 2. M-mode interrupt masking in PLIC node.
->> 3. Add a chosen node for serial access in U-Boot.
->>
->> You can ignore 3 for your use case. However, if you pass a dtb built
->> from source code, that will have hart0 enabled and M-mode interrupts
->> enabled in DT.
-> 
-> Hmm, so what you're saying is there not currently any way to pass a DT
-> built from source using OpenSBI + mainline u-boot?
-> 
 
-OpenSBI can accept DT built from source with following build option.
+On 18/04/2019 18:56, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.113 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat Apr 20 16:03:26 UTC 2019.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.113-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-FW_PAYLOAD_FDT="<unleashed>.dtb"
+All tests are passing for Tegra ...
 
-More documentation:
-https://github.com/riscv/opensbi/blob/master/docs/firmware/fw_payload.md
+Test results for stable-v4.14:
+    8 builds:   8 pass, 0 fail
+    16 boots:   16 pass, 0 fail
+    24 tests:   24 pass, 0 fail
 
-> As a short-term workaround, is there a way to make these changes from
-> the u-boot command-line after loading a DTB built from source into
-> memory?  If so, I could at least script that part.
-> 
-> 
->> Not sure if we should do these DT modifications in U-Boot as well.
-> 
-> I guess so (and I'd be happy to test the patch.)
-> 
-> Either that, or the upstream DTs (or code) should have those features to
-> the right settings.
-> 
-> Speaking of which, I tried to patch the DT from Paul's recent series[1]
-> to make the necessary changes.  I can see where to change cpu0 from
-> "okay" to "masked", but I'm not so sure how to make the PLIC change.
-> 
+Linux version:  4.14.113-rc1-g28a2bd5
+Boards tested:  tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-Here is the code snippet of how OpenSBI modifies the DT.
+Cheers
+Jon
 
-https://github.com/riscv/opensbi/blob/master/platform/sifive/fu540/platform.c#L53
-
-If you just want to use custom built DTB, you can use OpenSBI build 
-option instead of scripting these.
-
-We don't want OpenSBI to keep modifying the DT forever. But we have to 
-do it until there is a better solution available.
-
-> I was hoping to be able to review/test Paul's DT patches, but now I'm a
-> bit confused as to how to do that.
-> 
->> I also noticed that your kernel is booting only 1 hart.
->> Just FYI: RISC-V SMP for U-Boot patches are merged in master. So you
->> should be able to boot all cpus. You can ingore FU540_ENABLED_HART_MASK
->> in OpenSBI build as well.
-> 
-> Ah, nice.
-> 
-> I've just updated to u-boot master branch with SMP enabled, and build a
-> new openSBI (also from master branch) with u-boot payload. Using your
-> v5.1-rc4_unleashed branch, I see 4 CPUs booting:
-> https://termbin.com/kg13
-> 
-
-Great.
-
-Regards,
-Atish
-> Thanks,
-> 
-> Kevin
-> 
-> [1] https://lore.kernel.org/lkml/20190413020111.23400-1-paul.walmsley@sifive.com/T/#m77daa2857b76ec7cbca0672ad03ae286f61ca0e6
-> 
-
+-- 
+nvpublic
