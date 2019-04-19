@@ -2,56 +2,66 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D21C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BF2C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3912171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMPM8cWY"
+	by mail.kernel.org (Postfix) with ESMTP id 44200217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555717097;
+	bh=fwD6W5q497qhpOWm5wsr2z9tFyr326imalozMvrt/l4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nLG8xrqxbuspDSf0Q3mdZBr01Jh5mMGtmw4dg95O13ez6JZouwlKxRb+NEkdw03GG
+	 kIurkUwew66aFagsR6f9crH8erIQc3+S2kVWG3CN9h1SbtI8VFPtQYUt/bSj5g7enV
+	 pTfSZl8n02GZau8vCdpO2eaCZhP+zKUUXbOeVZcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfDSXgj (ORCPT
+        id S1727398AbfDSXiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 19:36:39 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:35079 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfDSXgi (ORCPT
+        Fri, 19 Apr 2019 19:38:16 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46929 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfDSXiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 19:36:38 -0400
-Received: by mail-ua1-f68.google.com with SMTP id a46so2157545uae.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:36:37 -0700 (PDT)
+        Fri, 19 Apr 2019 19:38:15 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h21so5740832ljk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=++Hp+hQI2A1lbNdiR3ijME7viUSjt5MJqK0zoL6hpGs=;
-        b=rMPM8cWY1AXSzGuo4F8G3XIUsErUC/EfMes/xzkWnNqw/pAJ9YoifQRn5q3yVOED52
-         /4fReHjdsTJQA7W6wfujd757niPnZj7a9F1okbD/up1AioZcDDq16uULa/VMIkzhtRNN
-         tUVzVef5Gg+SHDx7fXhYyFgGy1f6IRZDyYnDvrfJhMhNuif0VmdKybINXZU6VHZzHHcp
-         3McBJoiFFnrahQX3YH3mwb5i0LbY7O7ZKcrdURxSWfoVp9V0Kpp5mAP6ZWqns8dwhmkx
-         yD4+EBDUaVQhhediuKvv9tqYNzvFdh1eLIoFO3MAu9uIize0pmTf2xjm+8Bc038P/cko
-         gJEQ==
+        bh=dpJdQEss2Hf2fCZ1JCBrqDkW/3xv13oIKhlDU7E2du4=;
+        b=CaOcR/pqmdOo7x7iaoApuISj/gPfGJ1QkMjs+AMskAF1vinGAZ74i09Pgh3y1pDKhB
+         79mOsOg744xJsQSz2RfFZzV+ThidOBRe5rh4e6uKUGF9ToOb+0Ag16watR+YN//OjFU/
+         ZjapE5ucktlB/FOc/NeRcsKgdo0hIXyeNa3Qg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=++Hp+hQI2A1lbNdiR3ijME7viUSjt5MJqK0zoL6hpGs=;
-        b=P20G+YwqDJD6tPHuAL1prhJ0p/Pgko+TEZuq7jqHZO6NOin1gZAoPxz/fk6DI9BhzR
-         Prdgq7Kf4c0Scqcr3MSWvHXQg2rTTyfdbqFuMgIYkQt1gYqdO8AtbaMBhiuUu1AjXg7P
-         WvCp/YGCXmkvc16hT/9bQgW97l59RJY/qS1nKaLq6I8GWCcrY01905c6gBBkEMHE7k2n
-         ylaVu1UfKNBKrMGVRHCL5/kvtizzi37gXkMlm5Ekhpv2p+D5eBh0J9BZlPVnfyjik06p
-         g02polcAdq2hhr9F/X4wRbJHghY1aJqA4H+cR0GXo3UYHITOQvPvUlzCGFHybCZCsA39
-         l0AQ==
-X-Gm-Message-State: APjAAAVPhOqF7oEskGWLzvYQFdrfbYpcXPrVFVrtiNq1s4Tzhr58womz
-        XminH6rxNcfF1qWT9mcrQq2De7dFax2StUCs9Ekm8A==
-X-Google-Smtp-Source: APXvYqzLC4ZjSeDdJMdXEbR8m38Zmo8UgbhwnJKRh0h4dE8Xr+s9ErQGpjRcPxstuCYsckX8Ha6E4Zi25USLfkxiG18=
-X-Received: by 2002:ab0:72c2:: with SMTP id g2mr3472560uap.112.1555716996563;
- Fri, 19 Apr 2019 16:36:36 -0700 (PDT)
+        bh=dpJdQEss2Hf2fCZ1JCBrqDkW/3xv13oIKhlDU7E2du4=;
+        b=PZYrriCPYvl6i17Kc+tKiNBveH3c3j1T3b7mrTr4W4HlCaBMBD7vlohZcGs1yqgIHC
+         IHvz/NSPOKq24erxlKbrLmYzXfIH5DuA7QOa+I7XXLic3clTwyVciTvuvP1soLpEAtNE
+         kpoYWgyDYiigicna1mpbgSumxUxJJEiI5jMfuidjG5kJ5BkZFJi71SZ7kYS3oQFQZzV1
+         u6qfG/9pKlOsHHm+52poUeupulPUL86f+Ub/40ktpiXmm5bwq3PORJ/dX4g+Op2UT0QS
+         jp4zZMktTEazSwkq7AaznysILVIDhnHrLRLor0IzYTMpiAk98urvJF69YXk/RUA+IPGg
+         1PYg==
+X-Gm-Message-State: APjAAAWVpKB0hbAacVwwHupaG+YLALjil/+e/YtejyhaULSEG33aZKsK
+        SNA4M1TWAyMrS2BWpnxUPdPx7w+VB40=
+X-Google-Smtp-Source: APXvYqwCClVXuwXGJg5feWhd1sBlF09hukCgrFLiwJ6B03yGxpFN4ITfwKkW304ptuvMhk+WZGEyQQ==
+X-Received: by 2002:a05:651c:14b:: with SMTP id c11mr3599317ljd.185.1555717093028;
+        Fri, 19 Apr 2019 16:38:13 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id r19sm1338811lja.83.2019.04.19.16.38.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 16:38:12 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id r24so5778406ljg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:38:12 -0700 (PDT)
+X-Received: by 2002:a2e:22c4:: with SMTP id i187mr3561786lji.94.1555716778880;
+ Fri, 19 Apr 2019 16:32:58 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
  <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
@@ -60,15 +70,16 @@ References: <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.
  <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
  <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
  <20190419212002.GB44851@google.com> <CAHk-=wiiYUuk7LrkNaggvzZqB63Efu5sChV5hAOdn1ZfunUw6Q@mail.gmail.com>
- <CAHrFyr6rA7w6H_N5bV_9EY26Jxza1TLp6=rLL7=grK6_tp6cHw@mail.gmail.com> <CAHk-=wh8DmfsOFY4OrqRjLYCYi+2Ej7uLbidmiPg+BhBOGZVcA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh8DmfsOFY4OrqRjLYCYi+2Ej7uLbidmiPg+BhBOGZVcA@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 19 Apr 2019 16:36:24 -0700
-Message-ID: <CAKOZuesaWK1Y7c85jNv71LNx7sKoGgn_eLzQVPnoi6e4eUx4aQ@mail.gmail.com>
+ <CAHrFyr6rA7w6H_N5bV_9EY26Jxza1TLp6=rLL7=grK6_tp6cHw@mail.gmail.com>
+In-Reply-To: <CAHrFyr6rA7w6H_N5bV_9EY26Jxza1TLp6=rLL7=grK6_tp6cHw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 19 Apr 2019 16:32:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh8DmfsOFY4OrqRjLYCYi+2Ej7uLbidmiPg+BhBOGZVcA@mail.gmail.com>
+Message-ID: <CAHk-=wh8DmfsOFY4OrqRjLYCYi+2Ej7uLbidmiPg+BhBOGZVcA@mail.gmail.com>
 Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Joel Fernandes <joel@joelfernandes.org>,
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
         Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
         Florian Weimer <fweimer@redhat.com>,
         kernel list <linux-kernel@vger.kernel.org>,
@@ -98,35 +109,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 4:33 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Fri, Apr 19, 2019 at 4:20 PM Christian Brauner <christian@brauner.io> wrote:
 >
-> On Fri, Apr 19, 2019 at 4:20 PM Christian Brauner <christian@brauner.io> wrote:
+> On Sat, Apr 20, 2019 at 1:11 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
 > >
-> > On Sat, Apr 20, 2019 at 1:11 AM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > It's also worth noting that POLLERR/POLLHUP/POLLNVAL cannot be masked
-> > > for "poll()". Even if you only ask for POLLIN/POLLOUT, you will always
-> > > get POLLERR/POLLHUP notification. That is again historical behavior,
-> > > and it's kind of a "you can't poll a hung up fd". But it once again
-> > > means that you should consider POLLHUP to be something *exceptional*
-> > > and final, where no further or other state changes can happen or are
-> > > relevant.
-> >
-> > Which kind of makes sense for process exit. So the historical behavior
-> > here is in our favor and having POLLIN | POLLHUP rather fitting.
-> > It just seems right that POLLHUP indicates "there can be
-> > no more state transitions".
+> > It's also worth noting that POLLERR/POLLHUP/POLLNVAL cannot be masked
+> > for "poll()". Even if you only ask for POLLIN/POLLOUT, you will always
+> > get POLLERR/POLLHUP notification. That is again historical behavior,
+> > and it's kind of a "you can't poll a hung up fd". But it once again
+> > means that you should consider POLLHUP to be something *exceptional*
+> > and final, where no further or other state changes can happen or are
+> > relevant.
 >
-> Note that that is *not* true of process exit.
->
-> The final state transition isn't "exit", it is actually "process has
-> been reaped".  That's the point where data no longer exists.
+> Which kind of makes sense for process exit. So the historical behavior
+> here is in our favor and having POLLIN | POLLHUP rather fitting.
+> It just seems right that POLLHUP indicates "there can be
+> no more state transitions".
 
-FWIW, I think the exit status should be available via pidfd even after
-process reaping. A non-parent holder of a pidfd has no ability to
-control when the parent reaps the child, or even if reaping is
-necessary at all --- the parent could make SIGCHLD SIG_IGN. Someone
-trying to read exit status via a pidfd shouldn't fail to get that exit
-status just because he lost the race with a concurrent waitpid().
+Note that that is *not* true of process exit.
+
+The final state transition isn't "exit", it is actually "process has
+been reaped".  That's the point where data no longer exists.
+
+Arguably "exit()" just means "pidfd is now readable - you can read the
+status". That sounds very much like a normal POLLIN condition to me,
+since the whole *point* of read() on pidfd is presumably to read the
+status.
+
+Now, if you want to have other state transitions (ie read
+execve/fork/whatever state details), then you could say that _those_
+state transitions are just POLLIN, but that the exit state transition
+is POLLIN | POLLHUP. But logically to me it still smells like the
+process being reaped should be POLLHUP.
+
+You could also say that the execve/fork/whatever state is out of band
+data, and use EPOLLRDBAND for it.
+
+But in fact EPOLLPRI might be better for that, because that works well
+with select() (ei if you want to select for execve/fork, you use the
+"ex" bitmask).
+
+That said, if FreeBSD already has something like this, and people
+actually have code that uses it, there's also simply a strong argument
+for "don't be needlessly different".
+
+                      Linus
