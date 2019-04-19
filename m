@@ -2,207 +2,367 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD22BC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3228EC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFD1205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0041205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tP0jP6IR"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VHJZY4p5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfDSSmL (ORCPT
+        id S1728152AbfDSSmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:42:11 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33259 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfDSSmK (ORCPT
+        Fri, 19 Apr 2019 14:42:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51703 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfDSSmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 14:42:10 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j11so4623739lfm.0;
-        Fri, 19 Apr 2019 11:42:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HkDQoCQpTgRPIKUHwSpnY6a7B5BEF0xk1EkoTQxVLwY=;
-        b=tP0jP6IRgLznIdATt0uMp2nYkMcRXvYtZqZS3Wgu8TBD89Nz+/Ro0WR6SwzDCio120
-         aPV34kQsrssK1uSbM39qtjOKbyZZmxqdwGRuhCPRrMrzrSjD68/qCYQKfRb33ekYTByx
-         meRQjz/OqbzFA3sDqMtehLi2eHNPFeYBAfxfkmz9bgq/43sFQAExfMu+cI2uEoy7C31e
-         jZ9+UUzoIhcKE/ZFo6DxaDgWjl/qPM5SVr2w7o91okr8hgZQFCMOmn1v5uIjYUduFngs
-         UrJGkVz7ixz2P1f6DJc39j0dqRemqIiw3HDU+MupIAQozZfsmiCaeAT4HVkowMJuPcrW
-         N5Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HkDQoCQpTgRPIKUHwSpnY6a7B5BEF0xk1EkoTQxVLwY=;
-        b=STtlotRtxCSNBef+1cibTjr/61L3H6qmEMxTvfK0oSTATWsmCk4TzseBgL/KJvx+3R
-         vB9G3SoG2bKuUSmVqB+wR8jxZNQmy8gEpa0kzrLX17icC90NDZtKuBnrcGPS3czsGYqM
-         LHRI3wzauf0bSLw+GYjepS775VQCuk+bPjms1qTnEa/aCvHfeM9NwWH5A2LrFXoFvDBL
-         qLxU2YQ2CjbPNEVfSveik0kgsJsmCmH1BMjjcEebJXoKjUo4gd1fbWHPOEvceWhG60oR
-         /lqZZKspyqS8QcN7sJu4yg8bLZmFpIntJGzGawUTcrvurv4p/trQDpdE3Nv7uE4luKuM
-         Er0A==
-X-Gm-Message-State: APjAAAUgR9agSpBqZ5AbdRpuCAxu3Q0qhDn6hLlpfum2gSjiJQPHOA/4
-        uc3CdzpZCPJ18Rrbg3+yzK0q02tI
-X-Google-Smtp-Source: APXvYqygVdiLLfZ89BVhO+jOmC07goWGyUolGFQSE7DhyxkhRAlan9Af447i6sggU+pibboGL7vhXQ==
-X-Received: by 2002:a19:f703:: with SMTP id z3mr2045154lfe.119.1555674339904;
-        Fri, 19 Apr 2019 04:45:39 -0700 (PDT)
-Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id m3sm1061371lfh.94.2019.04.19.04.45.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 04:45:38 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] clk: tegra: Don't enable already enabled PLLs
-Date:   Fri, 19 Apr 2019 14:42:26 +0300
-Message-Id: <20190419114226.8066-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIfJ4j385515
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 19 Apr 2019 11:41:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIfJ4j385515
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555699281;
+        bh=Efwyr1i21vBMvfN4uDKAkSh9KCe8p5Bsly0k/POMR/E=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=VHJZY4p5aLT6DFZwb0P/hPRYAWPzHCJC6S5ApbsH+xK4ngLtCJWOwZHDvtMCpAEMw
+         kjDBhydPOJeW3qsfg6IBLeAmbE8c+t3RmDQemioZGniVh+ICVUIbeWoJSUTssu/cZT
+         eYvz0EYXJJEOL5z6MBuToiNsAF7TxHwZKf1DXKpqWKgi2ktrBoAJWynLZvvezMPmIh
+         7BzNVR8ejq7oWmAtIF9veHnlf4KAJvvnEz1af662JeFAIkjShubezxZKduqa2C0prH
+         Zgs2EonMwQlBTPvngbB31+2ao0ptOJFUti8IrYbb3FKbd6/n8MNKsl3qNX9LQT03zP
+         YcwnzFwTuSYZg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIfJx1385512;
+        Fri, 19 Apr 2019 11:41:19 -0700
+Date:   Fri, 19 Apr 2019 11:41:19 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
+Message-ID: <tip-76ec759ad71c1fa0c4b327367e82b2650109a22f@git.kernel.org>
+Cc:     tglx@linutronix.de, peterz@infradead.org, jkosina@suse.cz,
+        torvalds@linux-foundation.org, brgerst@gmail.com, mingo@kernel.org,
+        mhiramat@kernel.org, jpoimboe@redhat.com, rostedt@goodmis.org,
+        mtosatti@redhat.com, jbaron@akamai.com, luto@kernel.org,
+        swood@redhat.com, gregkh@linuxfoundation.org, williams@redhat.com,
+        bp@alien8.de, dvlasenk@redhat.com, linux-kernel@vger.kernel.org,
+        bristot@redhat.com, hpa@zytor.com, jolsa@redhat.com,
+        alexander.shishkin@linux.intel.com, crecklin@redhat.com,
+        acme@redhat.com
+Reply-To: williams@redhat.com, bp@alien8.de, dvlasenk@redhat.com,
+          linux-kernel@vger.kernel.org, mtosatti@redhat.com,
+          jbaron@akamai.com, luto@kernel.org, swood@redhat.com,
+          gregkh@linuxfoundation.org, jolsa@redhat.com,
+          alexander.shishkin@linux.intel.com, acme@redhat.com,
+          crecklin@redhat.com, bristot@redhat.com, hpa@zytor.com,
+          torvalds@linux-foundation.org, brgerst@gmail.com,
+          mingo@kernel.org, mhiramat@kernel.org, jpoimboe@redhat.com,
+          tglx@linutronix.de, peterz@infradead.org, jkosina@suse.cz,
+          rostedt@goodmis.org
+In-Reply-To: <e3057f0d0bddd625de6d4e7c631faf734e28628b.1545228276.git.bristot@redhat.com>
+References: <e3057f0d0bddd625de6d4e7c631faf734e28628b.1545228276.git.bristot@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/alternatives] x86/alternative: Batch of patch operations
+Git-Commit-ID: 76ec759ad71c1fa0c4b327367e82b2650109a22f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initially Common Clock Framework isn't aware of the clock-enable status,
-this results in enabling of clocks that were enabled by bootloader. This
-is not a big deal for a regular clock-gates, but for PLL's it may have
-some unpleasant consequences. Thus re-enabling PLLX (the main CPU parent
-clock) may result in extra long period of PLL re-locking.
+Commit-ID:  76ec759ad71c1fa0c4b327367e82b2650109a22f
+Gitweb:     https://git.kernel.org/tip/76ec759ad71c1fa0c4b327367e82b2650109a22f
+Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
+AuthorDate: Fri, 21 Dec 2018 11:27:32 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 19 Apr 2019 19:37:35 +0200
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+x86/alternative: Batch of patch operations
+
+Currently, the patch of an address is done in three steps:
+
+-- Pseudo-code #1 - Current implementation ---
+        1) add an int3 trap to the address that will be patched
+            sync cores (send IPI to all other CPUs)
+        2) update all but the first byte of the patched range
+            sync cores (send IPI to all other CPUs)
+        3) replace the first byte (int3) by the first byte of replacing opcode
+            sync cores (send IPI to all other CPUs)
+-- Pseudo-code #1 ---
+
+When a static key has more than one entry, these steps are called once for
+each entry. The number of IPIs then is linear with regard to the number 'n' of
+entries of a key: O(n*3), which is O(n).
+
+This algorithm works fine for the update of a single key. But we think
+it is possible to optimize the case in which a static key has more than
+one entry. For instance, the sched_schedstats jump label has 56 entries
+in my (updated) fedora kernel, resulting in 168 IPIs for each CPU in
+which the thread that is enabling the key is _not_ running.
+
+With this patch, rather than receiving a single patch to be processed, a vector
+of patches is passed, enabling the rewrite of the pseudo-code #1 in this
+way:
+
+-- Pseudo-code #2 - This patch  ---
+1)  for each patch in the vector:
+        add an int3 trap to the address that will be patched
+
+    sync cores (send IPI to all other CPUs)
+
+2)  for each patch in the vector:
+        update all but the first byte of the patched range
+
+    sync cores (send IPI to all other CPUs)
+
+3)  for each patch in the vector:
+        replace the first byte (int3) by the first byte of replacing opcode
+
+    sync cores (send IPI to all other CPUs)
+-- Pseudo-code #2 - This patch  ---
+
+Doing the update in this way, the number of IPI becomes O(3) with regard
+to the number of keys, which is O(1).
+
+The batch mode is done with the function text_poke_bp_batch(), that receives
+two arguments: a vector of "struct text_to_poke", and the number of entries
+in the vector.
+
+The vector must be sorted by the addr field of the text_to_poke structure,
+enabling the binary search of a handler in the poke_int3_handler function
+(a fast path).
+
+Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Chris von Recklinghausen <crecklin@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Wood <swood@redhat.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/e3057f0d0bddd625de6d4e7c631faf734e28628b.1545228276.git.bristot@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/clk/tegra/clk-pll.c | 50 +++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/text-patching.h |  15 +++++
+ arch/x86/kernel/alternative.c        | 108 +++++++++++++++++++++++++++++++++--
+ 2 files changed, 117 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index 3e67cbcd80da..6b976b2514f7 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -444,6 +444,9 @@ static int clk_pll_enable(struct clk_hw *hw)
- 	unsigned long flags = 0;
- 	int ret;
+diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
+index e85ff65c43c3..42ea7846df33 100644
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -18,6 +18,20 @@ static inline void apply_paravirt(struct paravirt_patch_site *start,
+ #define __parainstructions_end	NULL
+ #endif
  
-+	if (clk_pll_is_enabled(hw))
-+		return 0;
++/*
++ * Currently, the max observed size in the kernel code is
++ * JUMP_LABEL_NOP_SIZE/RELATIVEJUMP_SIZE, which are 5.
++ * Raise it if needed.
++ */
++#define POKE_MAX_OPCODE_SIZE	5
 +
- 	if (pll->lock)
- 		spin_lock_irqsave(pll->lock, flags);
- 
-@@ -940,11 +943,16 @@ static int clk_plle_training(struct tegra_clk_pll *pll)
- static int clk_plle_enable(struct clk_hw *hw)
- {
- 	struct tegra_clk_pll *pll = to_clk_pll(hw);
--	unsigned long input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
- 	struct tegra_clk_pll_freq_table sel;
-+	unsigned long input_rate;
- 	u32 val;
- 	int err;
- 
-+	if (clk_pll_is_enabled(hw))
-+		return 0;
++struct text_to_poke {
++	void *handler;
++	void *addr;
++	size_t len;
++	const char opcode[POKE_MAX_OPCODE_SIZE];
++};
 +
-+	input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
-+
- 	if (_get_table_rate(hw, &sel, pll->params->fixed_rate, input_rate))
- 		return -EINVAL;
+ extern void *text_poke_early(void *addr, const void *opcode, size_t len);
  
-@@ -1355,6 +1363,9 @@ static int clk_pllc_enable(struct clk_hw *hw)
- 	int ret;
- 	unsigned long flags = 0;
+ /*
+@@ -37,6 +51,7 @@ extern void *text_poke_early(void *addr, const void *opcode, size_t len);
+ extern void *text_poke(void *addr, const void *opcode, size_t len);
+ extern int poke_int3_handler(struct pt_regs *regs);
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
++extern void text_poke_bp_batch(struct text_to_poke *tp, unsigned int nr_entries);
+ extern int after_bootmem;
  
-+	if (clk_pll_is_enabled(hw))
-+		return 0;
-+
- 	if (pll->lock)
- 		spin_lock_irqsave(pll->lock, flags);
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 7fce844017f1..0048fd953596 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -22,6 +22,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/io.h>
+ #include <asm/fixmap.h>
++#include <linux/bsearch.h>
  
-@@ -1567,7 +1578,12 @@ static int clk_plle_tegra114_enable(struct clk_hw *hw)
- 	u32 val;
- 	int ret;
- 	unsigned long flags = 0;
--	unsigned long input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
-+	unsigned long input_rate;
-+
-+	if (clk_pll_is_enabled(hw))
-+		return 0;
-+
-+	input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
+ int __read_mostly alternatives_patched;
  
- 	if (_get_table_rate(hw, &sel, pll->params->fixed_rate, input_rate))
- 		return -EINVAL;
-@@ -1704,6 +1720,9 @@ static int clk_pllu_tegra114_enable(struct clk_hw *hw)
- 		return -EINVAL;
- 	}
- 
-+	if (clk_pll_is_enabled(hw))
-+		return 0;
-+
- 	input_rate = clk_hw_get_rate(__clk_get_hw(osc));
- 
- 	if (pll->lock)
-@@ -2379,6 +2398,16 @@ struct clk *tegra_clk_register_pllre_tegra210(const char *name,
- 	return clk;
+@@ -739,10 +740,32 @@ static void do_sync_core(void *info)
  }
  
-+static int clk_plle_tegra210_is_enabled(struct clk_hw *hw)
+ static bool bp_patching_in_progress;
++/*
++ * Single poke.
++ */
+ static void *bp_int3_handler, *bp_int3_addr;
++/*
++ * Batching poke.
++ */
++static struct text_to_poke *bp_int3_tpv;
++static unsigned int bp_int3_tpv_nr;
++
++static int text_bp_batch_bsearch(const void *key, const void *elt)
 +{
-+	struct tegra_clk_pll *pll = to_clk_pll(hw);
-+	u32 val;
++	struct text_to_poke *tp = (struct text_to_poke *) elt;
 +
-+	val = pll_readl_base(pll);
-+
-+	return val & PLLE_BASE_ENABLE ? 1 : 0;
++	if (key < tp->addr)
++		return -1;
++	if (key > tp->addr)
++		return 1;
++	return 0;
 +}
-+
- static int clk_plle_tegra210_enable(struct clk_hw *hw)
- {
- 	struct tegra_clk_pll *pll = to_clk_pll(hw);
-@@ -2386,7 +2415,12 @@ static int clk_plle_tegra210_enable(struct clk_hw *hw)
- 	u32 val;
- 	int ret = 0;
- 	unsigned long flags = 0;
--	unsigned long input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
-+	unsigned long input_rate;
-+
-+	if (clk_plle_tegra210_is_enabled(hw))
-+		return 0;
-+
-+	input_rate = clk_hw_get_rate(clk_hw_get_parent(hw));
  
- 	if (_get_table_rate(hw, &sel, pll->params->fixed_rate, input_rate))
- 		return -EINVAL;
-@@ -2497,16 +2531,6 @@ static void clk_plle_tegra210_disable(struct clk_hw *hw)
- 		spin_unlock_irqrestore(pll->lock, flags);
+ int poke_int3_handler(struct pt_regs *regs)
+ {
++	void *ip;
++	struct text_to_poke *tp;
++
+ 	/*
+ 	 * Having observed our INT3 instruction, we now must observe
+ 	 * bp_patching_in_progress.
+@@ -758,21 +781,41 @@ int poke_int3_handler(struct pt_regs *regs)
+ 	if (likely(!bp_patching_in_progress))
+ 		return 0;
+ 
+-	if (user_mode(regs) || regs->ip != (unsigned long)bp_int3_addr)
++	if (user_mode(regs))
+ 		return 0;
+ 
+-	/* set up the specified breakpoint handler */
+-	regs->ip = (unsigned long) bp_int3_handler;
++	/*
++	 * Single poke first.
++	 */
++	if (bp_int3_addr) {
++		if (regs->ip == (unsigned long) bp_int3_addr) {
++			regs->ip = (unsigned long) bp_int3_handler;
++			return 1;
++		}
++		return 0;
++	}
+ 
+-	return 1;
++	/*
++	 * Batch mode.
++	 */
++	if (bp_int3_tpv_nr) {
++		ip = (void *) regs->ip - sizeof(unsigned char);
++		tp = bsearch(ip, bp_int3_tpv, bp_int3_tpv_nr,
++			     sizeof(struct text_to_poke),
++			     text_bp_batch_bsearch);
++		if (tp) {
++			/* set up the specified breakpoint handler */
++			regs->ip = (unsigned long) tp->handler;
++			return 1;
++		}
++	}
++	return 0;
+ }
+ NOKPROBE_SYMBOL(poke_int3_handler);
+ 
+ static void text_poke_bp_set_handler(void *addr, void *handler,
+ 				     unsigned char int3)
+ {
+-	bp_int3_handler = handler;
+-	bp_int3_addr = (u8 *)addr + sizeof(int3);
+ 	text_poke(addr, &int3, sizeof(int3));
  }
  
--static int clk_plle_tegra210_is_enabled(struct clk_hw *hw)
--{
--	struct tegra_clk_pll *pll = to_clk_pll(hw);
--	u32 val;
--
--	val = pll_readl_base(pll);
--
--	return val & PLLE_BASE_ENABLE ? 1 : 0;
--}
--
- static const struct clk_ops tegra_clk_plle_tegra210_ops = {
- 	.is_enabled =  clk_plle_tegra210_is_enabled,
- 	.enable = clk_plle_tegra210_enable,
--- 
-2.21.0
-
+@@ -817,6 +860,9 @@ void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+ 
+ 	lockdep_assert_held(&text_mutex);
+ 
++	bp_int3_handler = handler;
++	bp_int3_addr = (u8 *)addr + sizeof(int3);
++
+ 	bp_patching_in_progress = true;
+ 	/*
+ 	 * Corresponding read barrier in int3 notifier for making sure the
+@@ -847,6 +893,56 @@ void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+ 	 */
+ 	bp_patching_in_progress = false;
+ 
++	bp_int3_handler = bp_int3_addr = 0;
+ 	return addr;
+ }
+ 
++void text_poke_bp_batch(struct text_to_poke *tp, unsigned int nr_entries)
++{
++	unsigned int i;
++	unsigned char int3 = 0xcc;
++	int patched_all_but_first = 0;
++
++	bp_int3_tpv = tp;
++	bp_int3_tpv_nr = nr_entries;
++	bp_patching_in_progress = true;
++	/*
++	 * Corresponding read barrier in int3 notifier for making sure the
++	 * in_progress and handler are correctly ordered wrt. patching.
++	 */
++	smp_wmb();
++
++	for (i = 0; i < nr_entries; i++)
++		text_poke_bp_set_handler(tp[i].addr, tp[i].handler, int3);
++
++	on_each_cpu(do_sync_core, NULL, 1);
++
++	for (i = 0; i < nr_entries; i++) {
++		if (tp[i].len - sizeof(int3) > 0) {
++			patch_all_but_first_byte(tp[i].addr, tp[i].opcode,
++						 tp[i].len, int3);
++			patched_all_but_first++;
++		}
++	}
++
++	if (patched_all_but_first) {
++		/*
++		 * According to Intel, this core syncing is very likely
++		 * not necessary and we'd be safe even without it. But
++		 * better safe than sorry (plus there's not only Intel).
++		 */
++		on_each_cpu(do_sync_core, NULL, 1);
++	}
++
++	for (i = 0; i < nr_entries; i++)
++		patch_first_byte(tp[i].addr, tp[i].opcode, int3);
++
++	on_each_cpu(do_sync_core, NULL, 1);
++	/*
++	 * sync_core() implies an smp_mb() and orders this store against
++	 * the writing of the new instruction.
++	 */
++	bp_int3_tpv_nr = 0;
++	bp_int3_tpv = NULL;
++	bp_patching_in_progress = false;
++}
