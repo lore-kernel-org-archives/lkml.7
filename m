@@ -2,139 +2,318 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC0EC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74C4C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A168C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCA92171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GdJtsS0U"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="nVjo5xZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfDSUJA (ORCPT
+        id S1727938AbfDSUKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:09:00 -0400
-Received: from mout.gmx.net ([212.227.17.22]:60517 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfDSUJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:09:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1555704514;
-        bh=88SiZFmmhRwC/7md4AJCYpTZ6Fy7rhwLCXuvvhMnM9Y=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=GdJtsS0UYIdRetD0I+Ks7DHl8xnBOlwqtuowppXDb6B2ENY0zLllx0v8+tTLq+p62
-         791u5+655xbJiXK6ZbIz5QIXDeU0VCT8AW27OOoRWkEbiYXipbWGgzHAiaMAcT3PF2
-         wWPl2OlHZRo6VrWiBvD4jIJrO4Iw2WpwkREzaO9I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.171.44]) by mail.gmx.com (mrgmx103
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MegeC-1hSeYE2YSO-00ODox; Fri, 19
- Apr 2019 22:08:34 +0200
-Subject: Re: DISCONTIGMEM is deprecated
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
- <20190419142835.GM18914@techsingularity.net>
-From:   Helge Deller <deller@gmx.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=deller@gmx.de; keydata=
- xsBNBFDPIPYBCAC6PdtagIE06GASPWQJtfXiIzvpBaaNbAGgmd3Iv7x+3g039EV7/zJ1do/a
- y9jNEDn29j0/jyd0A9zMzWEmNO4JRwkMd5Z0h6APvlm2D8XhI94r/8stwroXOQ8yBpBcP0yX
- +sqRm2UXgoYWL0KEGbL4XwzpDCCapt+kmarND12oFj30M1xhTjuFe0hkhyNHkLe8g6MC0xNg
- KW3x7B74Rk829TTAtj03KP7oA+dqsp5hPlt/hZO0Lr0kSAxf3kxtaNA7+Z0LLiBqZ1nUerBh
- OdiCasCF82vQ4/y8rUaKotXqdhGwD76YZry9AQ9p6ccqKaYEzWis078Wsj7p0UtHoYDbABEB
- AAHNHEhlbGdlIERlbGxlciA8ZGVsbGVyQGdteC5kZT7CwJIEEwECADwCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEE9M/0wAvkPPtRU6Boh8nBUbUeOGQFAlrHzIICGQEACgkQh8nB
- UbUeOGT1GAgAt+EeoHB4DbAx+pZoGbBYp6ZY8L6211n8fSi7wiwgM5VppucJ+C+wILoPkqiU
- +ZHKlcWRbttER2oBUvKOt0+yDfAGcoZwHS0P+iO3HtxR81h3bosOCwek+TofDXl+TH/WSQJa
- iaitof6iiPZLygzUmmW+aLSSeIAHBunpBetRpFiep1e5zujCglKagsW78Pq0DnzbWugGe26A
- 288JcK2W939bT1lZc22D9NhXXRHfX2QdDdrCQY7UsI6g/dAm1d2ldeFlGleqPMdaaQMcv5+E
- vDOur20qjTlenjnR/TFm9tA1zV+K7ePh+JfwKc6BSbELK4EHv8J8WQJjfTphakYLVM7ATQRQ
- zyD2AQgA2SJJapaLvCKdz83MHiTMbyk8yj2AHsuuXdmB30LzEQXjT3JEqj1mpvcEjXrX1B3h
- +0nLUHPI2Q4XWRazrzsseNMGYqfVIhLsK6zT3URPkEAp7R1JxoSiLoh4qOBdJH6AJHex4CWu
- UaSXX5HLqxKl1sq1tO8rq2+hFxY63zbWINvgT0FUEME27Uik9A5t8l9/dmF0CdxKdmrOvGMw
- T770cTt76xUryzM3fAyjtOEVEglkFtVQNM/BN/dnq4jDE5fikLLs8eaJwsWG9k9wQUMtmLpL
- gRXeFPRRK+IT48xuG8rK0g2NOD8aW5ThTkF4apznZe74M7OWr/VbuZbYW443QQARAQABwsBf
- BBgBAgAJBQJQzyD2AhsMAAoJEIfJwVG1HjhkNTgH/idWz2WjLE8DvTi7LvfybzvnXyx6rWUs
- 91tXUdCzLuOtjqWVsqBtSaZynfhAjlbqRlrFZQ8i8jRyJY1IwqgvHP6PO9s+rIxKlfFQtqhl
- kR1KUdhNGtiI90sTpi4aeXVsOyG3572KV3dKeFe47ALU6xE5ZL5U2LGhgQkbjr44I3EhPWc/
- lJ/MgLOPkfIUgjRXt0ZcZEN6pAMPU95+u1N52hmqAOQZvyoyUOJFH1siBMAFRbhgWyv+YE2Y
- ZkAyVDL2WxAedQgD/YCCJ+16yXlGYGNAKlvp07SimS6vBEIXk/3h5Vq4Hwgg0Z8+FRGtYZyD
- KrhlU0uMP9QTB5WAUvxvGy8=
-Message-ID: <9e7b80a9-b90e-ac04-8b30-b2f285cd4432@gmx.de>
-Date:   Fri, 19 Apr 2019 22:08:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 16:10:52 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34613 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfDSUKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:10:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y6so3050710plt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AnbEvgYbLB+hJOHvUZIH4N8KzzjuyeRwAEQ6GiR1CDI=;
+        b=nVjo5xZdoQ/umlHkT2dwnjYxkAnsVjZl78HUYfHD558L4a6QIodB2g8B/2Ut+E1uxS
+         XA6ZGTtd1wyzvghQUEoe+ghPWTgUKltWCUkfNPiNPzxHOvnlX9ssZrPPZwbN43o9RvoM
+         OvrPX3u8Zu5nEVPJB77HgwOGEBFvhnVqpDSchvO6dbbYZr3jQb1hOkpegVh45ngUWAbp
+         wcKDrtV5pAc1Nem2ZqLr1CBsK40TkwJ1/SPyl7WlOv/bkcyKanuBdTI5oBPBAlwTtLE0
+         m37cVaATm21bEMu9qdAfLezuatbKIEOk5eifHFijCEcH9BGU/BcRz9sHr9shpdX/7vu0
+         qzrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AnbEvgYbLB+hJOHvUZIH4N8KzzjuyeRwAEQ6GiR1CDI=;
+        b=HrN6vEPot0nCqlifKDVS2AZnr9+U96h72d31M1QoiGxrwZzW9r6bk2I9LxHf9/9o69
+         UjpSjCV4H9F4CE0+k4BqmD2yHO7vykxqv49rZGdk8Ejtsc3QdkQUMrXJSyeegcOC3rHe
+         8YJrs3MhTNXCthOo1umhL1ljLwirS/Ady9UA1hvuXMb6uJHiWpRnebg4iBwbafh9+BLD
+         NcK3GB2dj/tsQtHMGpBN0fRyK2wtoC3+KN/k7CS8YuHi/vovO46DBscO7l3UjwgrX85P
+         UjwyeCDq+86vlo47uzKuVXODa0FRXcsCLoFinZOHABxmWJm3FjSl2ZKhiXlKml3I5n4P
+         Aiww==
+X-Gm-Message-State: APjAAAWOynTnyN7rPFkojwY1SGj/VjqQWChGOp3R7EB/kJpEquDREAvk
+        w8O9T/A/xCs/Rpn0GLo9Glz/dG4JZmw=
+X-Google-Smtp-Source: APXvYqzh7G1eq4vozqPrZhrhi5x8K8z8lYWhZ6lE6VZf8H7iVPVqsAq3d6djVdp1DiUSNomdH76rVQ==
+X-Received: by 2002:a17:902:7594:: with SMTP id j20mr2461240pll.272.1555662938201;
+        Fri, 19 Apr 2019 01:35:38 -0700 (PDT)
+Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id k6sm8965141pfj.173.2019.04.19.01.35.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 01:35:37 -0700 (PDT)
+From:   Daniel Drake <drake@endlessm.com>
+To:     tglx@linutronix.de, lenb@kernel.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com,
+        rjw@rjwysocki.net
+Subject: Re: Detecting x86 LAPIC timer frequency from CPUID data
+Date:   Fri, 19 Apr 2019 16:35:33 +0800
+Message-Id: <20190419083533.32388-1-drake@endlessm.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <alpine.DEB.2.21.1904182359360.3174@nanos.tec.linutronix.de>
+References: 
 MIME-Version: 1.0
-In-Reply-To: <20190419142835.GM18914@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jKfNtqE87ol8fRdlT+ZrUKs8u0n6+ekTNyxZxTDCtgZi2UD62Tv
- Rge/xKNfkt/iueczYZ7jrnjYQUepkQb2HETqx08NAQ2QPH86oI3sEyK+N0Gt8RuE+Rez3r/
- zEe/t3RoTsBjJ2jpG6uKco3FJo1xq39dq2SSz8qeDryfvNa8IZFDty6EYWwuV44zcfPS/w5
- NTK2sl4yXNzb/2Ekt5oqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LRTwxRmzW7s=:5glimZF4c8lHgNpScIYCI9
- Gbes011K3KCpwakv6dhniWP2sx3+xvziqzK6FoR+JZ6BRGkXR4cJ4CSJN9skvADwKTgO5Sgf0
- H1wkQ9ER998YXXi7szaPKd+AmTVVcbR5Y0TqptLkpjqaVepXQorlKucp49ecxpq9bZkdL69iU
- ScJzkXdqK0LhXveRfcru1BQroznrDxFBzW2441omFSjo1FJ2GnDl158277HmUs4h5QzvOrHKT
- F9GRvtxLY7em+iTFt5XsQqGkvRx2eGwXEYMc3zirDNg/UGqeMG4IAc2Hd0ZasVorrjf/iVFMh
- 5LpkkiF1OIZhCjNetlX/JENDZ4TQZ0YF0eb7779qPm5vWszVCgKTIuZnLmra5gQAO5s2+Gjto
- suK9y9sfJ9kvFhAAkf48Hn4xh/KIvRJDLQQSvGaOfy6ZX30ztVCCv37Vc2LcYnlxQYdkBL0xT
- ioOGmDUI6ESuuDDdG8/w7uTpU0Meof2QhCk26vpoLtDM1hTX0t9wgvJ9vGSrHJZ3qNkpwgZbW
- NU+Jh6uSzsM3SHoOlbWrY/mkk9s3on5zJ1TkModulCkDoBTh1HfEcUnehMbr7EBsNzkTL8l1J
- zWi5cUQJ06v/KD2nw9WdGC3DXBk5wRHg8wgiDkMsDBOczHyPvfbZdFRLxIWEcbl5rMTXnlNiP
- Vv5TKYgitStB2ssc3NRatRDwM8n2ysCTrECIK5ekyCDI7fVPwEm2KLPnqelMWhlEQjmsvw0go
- agQg1/X2m+f2cSrSqQsykoivlHYQAcxMiSbsgVVMVSBTvrZJpcDYuZOLmDQiRDfVP7Z797BUQ
- ifdaD4mSj6VCW0kg1ZE5rfr7AHPc68BmuCo0TUCVvo76lLE/qKkRgaM7TSNXNAeAvpz88NIq9
- MdKedSTytSFnPO1vCIi9k0zeOTlkdeTjXuFYt+OywWi4mTn2IH4WLxrrrXAwdQ
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.04.19 16:28, Mel Gorman wrote:
-> On Fri, Apr 19, 2019 at 07:05:21AM -0700, Matthew Wilcox wrote:
->> On Fri, Apr 19, 2019 at 10:43:35AM +0100, Mel Gorman wrote:
->>> DISCONTIG is essentially deprecated and even parisc plans to move to
->>> SPARSEMEM so there is no need to be fancy, this patch simply disables
->>> watermark boosting by default on DISCONTIGMEM.
->>
->> I don't think parisc is the only arch which uses DISCONTIGMEM for !NUMA
->> scenarios.  Grepping the arch/ directories shows:
->>
->> alpha (does support NUMA, but also non-NUMA DISCONTIGMEM)
->> arc (for supporting more than 1GB of memory)
->> ia64 (looks complicated ...)
->> m68k (for multiple chunks of memory)
->> mips (does support NUMA but also non-NUMA)
->> parisc (both NUMA and non-NUMA)
->>
->> I'm not sure that these architecture maintainers even know that DISCONT=
-IGMEM
->> is deprecated.  Adding linux-arch to the cc.
+On Fri, Apr 19, 2019 at 6:30 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>    Time Stamp Counter/Core Crystal Clock Information (0x15):
+>       TSC/clock ratio = 168/2
+>       nominal core crystal clock = 0 Hz
 >
-> Poor wording then -- yes, DISCONTIGMEM is still used but look where it's
-> used. I find it impossible to believe that any new arch would support
-> DISCONTIGMEM or that DISCONTIGMEM would be selected when SPARSEMEM is
-> available.`It's even more insane when you consider that SPARSEMEM can be
-> extended to support VMEMMAP so that it has similar overhead to FLATMEM
-> when mapping pfns to struct pages and vice-versa.
+>    Processor Frequency Information (0x16):
+>       Core Base Frequency (MHz) = 0x834 (2100)
+>       Core Maximum Frequency (MHz) = 0xed8 (3800)
+>       Bus (Reference) Frequency (MHz) = 0x64 (100)
+>
+> Assuming that TSC and local APIC timer run from the same frequency on these
+> modern machines.
+>
+>        2100MHz * 2 / 168 = 25MHz
+>
+> and disabling the tsc deadline timer tells me:
+>
+>   ..... calibration result: 24999
+>
+> Close enough.
 
-FYI, on parisc we will switch from DISCONTIGMEM to SPARSEMEM with kernel 5=
-.2.
-The patch was quite simple and it's currently in the for-next tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/co=
-mmit/?h=3Dfor-next&id=3D281b718721a5e78288271d632731cea9697749f7
+I tested all the Intel SoC generations we have on hand. The assumption that
+the core crystal clock feeds the APIC seems to be consistently true.
 
-Helge
+(Please note that all the following results are done with CONFIG_HZ=250,
+ which is why the "calibration result" is 4x higher than HZ=1000 as used
+ in previous mails)
+
+In the easy case, the low cost platforms do not support CPUID.0x16 (so no
+CPU frequency reporting), but they do tell us the core crystal clock, which
+is consistent with the APIC calibration result:
+
+N5000 (Gemini Lake)
+[    0.122948] ... lapic delta = 119999
+[    0.122948] ... PM-Timer delta = 357950
+[    0.122948] ... PM-Timer result ok
+[    0.122948] ..... delta 119999
+[    0.122948] ..... mult: 5153917
+[    0.122948] ..... calibration result: 76799
+[    0.122948] ..... CPU clock speed is 1094.1542 MHz.
+[    0.122948] ..... host bus clock speed is 19.0799 MHz.
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 171/3
+      nominal core crystal clock = 19200000 Hz
+   Processor Frequency Information (0x16):
+      Core Base Frequency (MHz) = 0x0 (0)
+      Core Maximum Frequency (MHz) = 0x0 (0)
+      Bus (Reference) Frequency (MHz) = 0x0 (0)
+
+N3350 (Apollo Lake)
+[    0.248894] ... lapic delta = 119999
+[    0.248894] ... PM-Timer delta = 357949
+[    0.248894] ... PM-Timer result ok
+[    0.248894] ..... delta 119999
+[    0.248894] ..... mult: 5153917
+[    0.248894] ..... calibration result: 76799
+[    0.248894] ..... CPU clock speed is 1094.1540 MHz.
+[    0.248894] ..... host bus clock speed is 19.0799 MHz.
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 171/3
+      nominal core crystal clock = 19200000 Hz
+(CPUID 0x16 not supported at all)
+
+And the 4 higher-end SoCs that we have available for testing all report
+crystal clock 0Hz from CPUID 0x15, but by combining the CPUID.0x16 base
+frequency with the CPUID.0x15 TSC/clock ratio, the crystal frequency can
+be calculated as you describe, and it consistently matches the APIC timer
+calibration result.
+
+i9-9980HK (Coffee Lake HR)
+[    0.379421] ... lapic delta = 149998
+[    0.379421] ... PM-Timer delta = 357950
+[    0.379421] ... PM-Timer result ok
+[    0.379421] ..... delta 149998
+[    0.379421] ..... mult: 6442365
+[    0.379421] ..... calibration result: 95998
+[    0.379421] ..... CPU clock speed is 2399.3902 MHz.
+[    0.379421] ..... host bus clock speed is 23.3998 MHz.
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 200/2
+      nominal core crystal clock = 0 Hz
+   Processor Frequency Information (0x16):
+      Core Base Frequency (MHz) = 0x960 (2400)
+      Core Maximum Frequency (MHz) = 0x1388 (5000)
+      Bus (Reference) Frequency (MHz) = 0x64 (100)
+
+i7-8565U (Whiskey Lake)
+[    0.173776] ... lapic delta = 149998
+[    0.173776] ... PM-Timer delta = 357950
+[    0.173776] ... PM-Timer result ok
+[    0.173776] ..... delta 149998
+[    0.173776] ..... mult: 6442365
+[    0.173776] ..... calibration result: 95998
+[    0.173776] ..... CPU clock speed is 1991.3903 MHz.
+[    0.173776] ..... host bus clock speed is 23.3998 MHz.
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 166/2
+      nominal core crystal clock = 0 Hz
+   Processor Frequency Information (0x16):
+      Core Base Frequency (MHz) = 0x7d0 (2000)
+      Core Maximum Frequency (MHz) = 0x11f8 (4600)
+      Bus (Reference) Frequency (MHz) = 0x64 (100)
+
+i5-7200U (Kabylake)
+[    0.219142] ... lapic delta = 149998
+[    0.219142] ... PM-Timer delta = 357951
+[    0.219142] ... PM-Timer result ok
+[    0.219142] ..... delta 149998
+[    0.219142] ..... mult: 6442365
+[    0.219142] ..... calibration result: 95998
+[    0.219142] ..... CPU clock speed is 2711.3880 MHz.
+[    0.219142] ..... host bus clock speed is 23.3998 MHz.
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 226/2
+      nominal core crystal clock = 0 Hz
+   Processor Frequency Information (0x16):
+      Core Base Frequency (MHz) = 0xa8c (2700)
+      Core Maximum Frequency (MHz) = 0xc1c (3100)
+      Bus (Reference) Frequency (MHz) = 0x64 (100)
+
+m3-8110Y (Amber Lake)
+[    0.102289] ... lapic delta = 149998
+[    0.102289] ... PM-Timer delta = 357951
+[    0.102289] ... PM-Timer result ok
+[    0.102289] ..... delta 149998
+[    0.102289] ..... mult: 6442365
+[    0.102289] ..... calibration result: 95998
+[    0.102289] ..... CPU clock speed is 1607.3930 MHz.
+[    0.102289] ..... host bus clock speed is 23.3998 MHz.
+   Time Stamp Counter/Core Crystal Clock Information (0x15):
+      TSC/clock ratio = 134/2
+      nominal core crystal clock = 0 Hz
+   Processor Frequency Information (0x16):
+      Core Base Frequency (MHz) = 0x640 (1600)
+      Core Maximum Frequency (MHz) = 0xd48 (3400)
+      Bus (Reference) Frequency (MHz) = 0x64 (100)
+
+Is this data convincing enough or should we additionally wait for some
+comments from Intel?
+
+I came up with the patch below. However, upon testing, I realised that, at
+least for the platforms I have in hand, only the first hunk is really needed.
+We don't need to use your magic calculation to find the crystal frequency
+because Intel already told us! native_calibrate_tsc() already hardcodes the
+crystal frequency for Kabylake, and Amber/Whiskey/Coffee also report the
+0x8e/0x9e Kabylake model codes. Plus ApolloLake/GeminiLake do report the
+crystal frequency in CPUID.0x15 so that is covered too.
+
+While looking around this code I also spotted something curious.
+In calibrate_APIC_clock() for the case where lapic_timer_frequency has been
+externally provided, we have:
+		lapic_clockevent.max_delta_ns =
+			clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
+		lapic_clockevent.max_delta_ticks = 0x7FFFFF;
+
+But in the case where we calibrate, we have:
+	lapic_clockevent.max_delta_ns =
+		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
+	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
+
+0x7FFFFF vs 0x7FFFFFFF, is that intentional?
+
+---
+ arch/x86/kernel/tsc.c | 51 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 3fae23834069..8dcfd9a30b24 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -648,6 +648,23 @@ unsigned long native_calibrate_tsc(void)
+ 
+ 	if (crystal_khz == 0)
+ 		return 0;
++
++#ifdef CONFIG_X86_LOCAL_APIC
++	/* The local APIC appears to be fed by the core crystal clock
++	 * (which sounds entirely sensible). We can set the global
++	 * lapic_timer_frequency here to avoid having to calibrate the APIC
++	 * timer later.
++	 *
++	 * This has been empirically verified on ApolloLake and GeminiLake:
++	 * the APIC calibration otherwise determines the same bus frequency
++	 * as the CPUID.0x15 crystal frequency.
++	 * It has also been empirically verified on KabyLake, where the
++	 * APIC calibration otherwise determines the same bus frequency
++	 * as the one hardcoded above.
++	 */
++	lapic_timer_frequency = (crystal_khz * 1000) / HZ;
++#endif
++
+ 	/*
+ 	 * TSC frequency determined by CPUID is a "hardware reported"
+ 	 * frequency and is the most accurate one so far we have. This
+@@ -665,6 +682,38 @@ unsigned long native_calibrate_tsc(void)
+ 	return crystal_khz * ebx_numerator / eax_denominator;
+ }
+ 
++static void set_lapic_timer_freq_from_cpu_freq(unsigned int base_mhz)
++{
++#ifdef CONFIG_X86_LOCAL_APIC
++	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
++
++	/*
++	 * Use CPUID.0x16 CPU base frequency to calculate the global
++	 * lapic_timer_frequency, which avoids having to calibrate the
++	 * APIC timer later.
++	 *
++	 * Like in native_calibrate_tsc(), we rely on the observation
++	 * that the local APIC is fed by the core crystal clock.
++	 * Experimenting with KabyLake, CoffeeLake, WhiskeyLake and
++	 * AmberLake, the core crystal clock is not reported in CPUID.0x15,
++	 * but we can calculate it by considering the CPU base frequency
++	 * and the TSC/clock ratio. The result has been verified to closely
++	 * match the result that would otherwise be obtained through
++	 * APIC clock calibration.
++	 */
++
++	if (!base_mhz)
++		return;
++
++	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
++	if (!eax_denominator || !ebx_numerator)
++		return;
++
++	lapic_timer_frequency = (base_mhz * 1000000 * \
++				 eax_denominator / ebx_numerator) / HZ;
++#endif
++}
++
+ static unsigned long cpu_khz_from_cpuid(void)
+ {
+ 	unsigned int eax_base_mhz, ebx_max_mhz, ecx_bus_mhz, edx;
+@@ -679,6 +728,8 @@ static unsigned long cpu_khz_from_cpuid(void)
+ 
+ 	cpuid(0x16, &eax_base_mhz, &ebx_max_mhz, &ecx_bus_mhz, &edx);
+ 
++	set_lapic_timer_freq_from_cpu_freq(eax_base_mhz);
++
+ 	return eax_base_mhz * 1000;
+ }
+ 
+-- 
+2.19.1
+
