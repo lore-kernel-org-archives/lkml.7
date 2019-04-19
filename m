@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A38C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE233C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCF62171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835032171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555716195;
-	bh=fFfB7Ozhg/nPpRe5DJTGbObtG38I2bcNcTLujyMefsc=;
+	s=default; t=1555716253;
+	bh=ydnyKJZweRMYKL1eazmcP0gqMcsmNiqSZFZ6jEfK5V4=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=PFsJDpXByt1YmV/F9kcGqM5Bx5IU/o0m8goC9DVRxpUqHWQogos2YuB9yuiNrGoII
-	 gVNNS3BHs3qlQOVQYvxVvU6QSlT+bbmlAJkodqQpOoozRMkqzi1UhRt7bsXvgbwE1Z
-	 7fydkoMa+m7vIpDIHgzdqRTWwiWWFPAo3/9NROhY=
+	b=SIwpPY6FzG4cuEmAtwO65wsqFr/VYDghrR58kb0eV8X2zlddfPr6rtvWM8ELlhxNX
+	 19pF78nLEggnNoX3/I85CNo8xACQkzkMUkXDXoHmBPU3o4bFmDvfJYcgWm2spBs028
+	 T0ZfSnIC1srvUd6LeDONIL12UzKqbabxdJL48yKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfDSXXO (ORCPT
+        id S1727435AbfDSXYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 19:23:14 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53332 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfDSXXN (ORCPT
+        Fri, 19 Apr 2019 19:24:12 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:53436 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfDSXYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 19:23:13 -0400
-Received: by mail-it1-f193.google.com with SMTP id y204so10466370itf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:23:13 -0700 (PDT)
+        Fri, 19 Apr 2019 19:24:12 -0400
+Received: by mail-it1-f196.google.com with SMTP id y204so10468560itf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=atDLwfDA7rORBqIZfz3seZ7IuymQDCP5i79eWQ4zDT4=;
-        b=Ighg3CZPP+6vgzIT3bMIXesO9zQBozDpimUhknWGsi0JEbwpnx2IaiyCI2K74j6qUz
-         xZvSiF52VBmhcPFZX8a9O12h2XyDDOPJ4zV3Oorf7eetH+3Kk1I3CrGlnpw9ILNDJiSJ
-         6CGwzDS59y/f0kOIPXDvGzMT4YM2rMpsD7k3U=
+        bh=j4DS1avFnyiFdbdES9jLYf8qPJs2YzliRnZrOZCnaiE=;
+        b=bv9PZPjz4UM3jJ1eA22hJuuUCMIB4jApD+F1S6Du7axvH2paeH8uQafo2y4uPTjWY4
+         qZZ8Q24N0/COCI/xyWmYT7BdiVxDoFdRDmGzt6Obv/aZUsW971bQNenCaJ8TjloBZKst
+         fmk/gDNIIZR58r6YruZdBzmFL3sPMLpNacHmM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=atDLwfDA7rORBqIZfz3seZ7IuymQDCP5i79eWQ4zDT4=;
-        b=RFDrn7xPQSvLCq8BY0aw90MgNOZbXePoevJGGtr9H4tbdmfUCFiliCd15u10xUz4kg
-         N7jupQ43IQr0aNRTJEKDhxJzyF84XAHCCukCMqgxUirJ8NnUXWY4xUSENQNmDjo8Df7I
-         IIpV0WKlDcI5LVsEQX18/rWBxZUwmV3usB3k9ifzqdTLwFObnGLENlNzn9mlygemO709
-         cQNRHMto0vCRyA+lJKX9MMUQNpB+Lq9bkvb6E2+QFWh2HWBl5GYUgfESAeDwSHvkA0AI
-         SzkjXsG7z24V6dkYe9pbizB25SABgP96JrnE90hD1J6JiB1tTm8T4trFadsJv8TTKhrN
-         JQEA==
-X-Gm-Message-State: APjAAAXpifmdsUpSViuYWi9fJLFo/zwvyF0JHM0Wq/YAd9gysn9m+che
-        uVZUzacS2I8wOCJXLDsvBVI87A==
-X-Google-Smtp-Source: APXvYqwni5eAyDRmxZmesoEfO555+37agRpyLsf83X/89yW+65bYnGITpCpbJAlxikHedtZnFogshw==
-X-Received: by 2002:a24:454e:: with SMTP id y75mr5358364ita.5.1555716192955;
-        Fri, 19 Apr 2019 16:23:12 -0700 (PDT)
+        bh=j4DS1avFnyiFdbdES9jLYf8qPJs2YzliRnZrOZCnaiE=;
+        b=qTjKVScR19C/bxFmMpv8gLHcAKxdpbXKeQaLL0wQq6RZ1LwtlB1Am76AVdmPvy6gkO
+         za2hVqIlDfCo3hUV1g6A6UBXW85fQwrFd5kZGwhzOWgVzWw0NSNXCL8rNnOqxdUDVTpP
+         v88TY8nhmqY1lmZq94rnZZh3G5kGQrAgsaZv86r9PHHy+z7D7v9xwjLV1ZegCv+Xoq4G
+         ATwUaR6euapzsOo7D0M3E7RZpvZeOkbwvU9qICJNAqr2CEb/a95IhQw0FedKJRls+M2s
+         LNL6Egig98vBtOOfRU/ddjXH8vt6aUkbuTGxsMVonnvltn/y2iBJ3+ZU1xOKAPoE1t3+
+         2ExA==
+X-Gm-Message-State: APjAAAUL79v1BvFa7EuUJfX3wJDjTQiYPPy5LU5jCxfdCY7B0R4s5SsG
+        2q065z9MWvGO0XHQJrHvL3QJZ3CANFxchw==
+X-Google-Smtp-Source: APXvYqzdb+VtILtrZX1epLwLh4qM/D82AVtK8J3TKNxGh2nkBweMBbH9P1IKI/mHPeXUSdX1SCzgtA==
+X-Received: by 2002:a24:953:: with SMTP id 80mr5188678itm.139.1555716251433;
+        Fri, 19 Apr 2019 16:24:11 -0700 (PDT)
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id y17sm4672375ita.2.2019.04.19.16.23.11
+        by smtp.gmail.com with ESMTPSA id f17sm2727001itb.13.2019.04.19.16.24.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 16:23:11 -0700 (PDT)
+        Fri, 19 Apr 2019 16:24:10 -0700 (PDT)
 From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     shuah@kernel.org
+To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
 Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: build and run gpio when output directory is the src dir
-Date:   Fri, 19 Apr 2019 17:23:09 -0600
-Message-Id: <20190419232309.9664-1-skhan@linuxfoundation.org>
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Makefile: add kselftest-build target
+Date:   Fri, 19 Apr 2019 17:24:04 -0600
+Message-Id: <20190419232404.9746-1-skhan@linuxfoundation.org>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,50 +73,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Build and run gpio when output directory is the src dir.  gpio has
-dependency on tools/gpio and builds tools/gpio objects in the src
-directory in all cases making the src repo dirty even when object
-relocation is specified.
-
-This fixes the following commands from generating gpio objects in
-the source repository:
-
-make O=dir kselftest
-export KBUILD_OUTPUT=dir; make kselftest
-make O=dir -C tools/testing/selftests
-expoert KBUILD_OUTPUT=dir; make -C tools/testing/selftests
-
-The following still don't work (need fixing in gpio Makefile):
-make O=dir kselftest TARGETS="gpio"
-export KBUILD_OUTPUT=dir; make kselftest TARGETS="gpio"
-make O=dir -C tools/testing/selftests TARGETS="gpio"
-expoert KBUILD_OUTPUT=dir; make -C tools/testing/selftests TARGETS="gpio"
+One of the use-cases is building kselftest and then installing.
+Adding a target to just build the tests from the main Makefile
+will help users and makes it easier.
 
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 ---
- tools/testing/selftests/Makefile | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index b43c5f41fb3e..f2ebf8cf4686 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -99,6 +99,15 @@ ARCH           ?= $(SUBARCH)
- export KSFT_KHDR_INSTALL_DONE := 1
- export BUILD
+diff --git a/Makefile b/Makefile
+index 15c8251d4d5e..38a2ce3c343f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1195,6 +1195,9 @@ endif
+ # ---------------------------------------------------------------------------
+ # Kernel selftest
  
-+# build and run gpio when output directory is the src dir.
-+# gpio has dependency on tools/gpio and builds tools/gpio
-+# objects in the src directory in all cases making the src
-+# repo dirty even when objects are relocated.
-+ifneq (1,$(DEFAULT_INSTALL_HDR_PATH))
-+	TMP := $(filter-out gpio, $(TARGETS))
-+	TARGETS := $(TMP)
-+endif
-+
- # set default goal to all, so make without a target runs all, even when
- # all isn't the first target in the file.
- .DEFAULT_GOAL := all
++PHONY += kselftest-build
++kselftest-build:
++	$(Q)$(MAKE) -C $(srctree)/tools/testing/selftests all
+ PHONY += kselftest
+ kselftest:
+ 	$(Q)$(MAKE) -C $(srctree)/tools/testing/selftests run_tests
 -- 
 2.17.1
 
