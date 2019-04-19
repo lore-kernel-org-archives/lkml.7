@@ -2,101 +2,149 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3E5C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2E4C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5477720449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC91F20449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEEJtvfI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UwqqPr41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfDSShS (ORCPT
+        id S1728255AbfDSSho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:37:18 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41783 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfDSShQ (ORCPT
+        Fri, 19 Apr 2019 14:37:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54839 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfDSShm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:37:16 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k8so5323751lja.8;
-        Fri, 19 Apr 2019 11:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/oAnR9QFJmiluH9HCMbLbrR6ySx9u8WG7unplYByvro=;
-        b=EEEJtvfIxuPgnMw/lFamOp6jLXKjzalKUkSm9JR7U0lCZEjg5SIl/XxaYOcokCfpEX
-         e/hbYD0OH6bBZ2PVAG+obSCTc+/pgBelx7e+vC2Eb6lGFkkfGhB9srAZo4QqAF7mX8BM
-         dFWZ2Io4csz4LdIh/NkCL3oLGAZ07/mfin9jel7yAgL4l25jZDrPyzH1Ayminoa5916b
-         7wB+3nJmxYMwZ7LUpJ++SF+09LlmASUpQJB0uZy/YxxDjpdK82HDU+T1SpVajwTpDjTk
-         NFFElnpmfNFu0SSxgiT9sDVsBo7rD819x8O0J1LFbZbz7yQ2Xhc0bRNlGSwkaclHGuoS
-         pOvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/oAnR9QFJmiluH9HCMbLbrR6ySx9u8WG7unplYByvro=;
-        b=TmRQbOjYenWWE9imWpQ3fwpkkHRVm1fDMIhE7/kMDZ9nhxzBQPfGevo32r2+GIhO2K
-         V1HlEnoPLvee2cMDCkyfPPdTUzylDLs4/mLN3ejCEMQj1eE9T9y0XUSXcGHrTvVlaETJ
-         cBVD23oDDsWKW8RB0EnadH1ggz47DsAX0zikG3Viw33fcIFT1VmBm+JycYo862pFYFtk
-         xrmbHvLbIInavzfk2gNNaVp2ZhpB3TaJkzTe//FxOQwSDUP1uf9yucTOoAtcEQOg8HVo
-         rypKh+urGbAg4tXz9ucyHQY8Yd8pIBzYKEmw1PTobm4vFs0nSpXC0/SYCXIZBIOpo/Ko
-         zF0A==
-X-Gm-Message-State: APjAAAXBKCwEA7XKe75ddhPzKUjh/bDQJ+MnFcSJc54RsFYOH+TyIirn
-        YzBt8m4+u4Y7xA+iE/59FQNg018g
-X-Google-Smtp-Source: APXvYqwYQyC2BkECVlIeFIPPbp04x5/d3vMInVaqcHC/SFJfNsJ3PzdA1B2Su9SvbI8HCf4uGGS5YA==
-X-Received: by 2002:a2e:90c9:: with SMTP id o9mr2161824ljg.102.1555674716048;
-        Fri, 19 Apr 2019 04:51:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id a2sm1106488lfi.13.2019.04.19.04.51.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 04:51:55 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] clk: Tegra124 PLLM fixes
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190411214835.19947-1-digetx@gmail.com>
-Message-ID: <46c12545-0e9e-93bf-2ccc-4577f4eb223e@gmail.com>
-Date:   Fri, 19 Apr 2019 14:50:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 14:37:42 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIacsU384682
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 19 Apr 2019 11:36:39 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIacsU384682
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555699000;
+        bh=bk/Xvo46egf4v/i6cOk0a61d+qBWf/xv2B0IzVZZhuU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=UwqqPr41LfVkhSNxjzEBZXvXVxHJpKDhlL3i08FbjtfdoopbiPlhIs+XDOqErbn3e
+         Msmb/jxQrEeQci2AyoO+LF4naMDqj076VQ0721nC0mBBIOaHoddgBDDCmXuv443s8Q
+         4aX9LcxgmIn2K8OnRVbgdPelU5e5Mfj+pR58x+0x1bQQkGSxnqY/VqDEuJp5OpN/t7
+         Q5yHqz+SlC0A/BlxSLDy2ghz6Tp4EsIvv8IqBrZt1RQjkUUJJlYiYcOULbBZUvsv70
+         tQ2YWfLg4rEPETGLq3/0VfRSAnCboeKkS1vDyG4+JrILo5yCPAWMfMLMWXUpqKvi8O
+         J7Kx8jBKGcODQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIabWq384679;
+        Fri, 19 Apr 2019 11:36:37 -0700
+Date:   Fri, 19 Apr 2019 11:36:37 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
+Message-ID: <tip-b1b944f7230f4101b5a293d5ac3b7a9627ed5e6f@git.kernel.org>
+Cc:     brgerst@gmail.com, jkosina@suse.cz, mingo@kernel.org,
+        jbaron@akamai.com, gregkh@linuxfoundation.org, hpa@zytor.com,
+        bristot@redhat.com, peterz@infradead.org, jolsa@redhat.com,
+        mtosatti@redhat.com, rostedt@goodmis.org,
+        alexander.shishkin@linux.intel.com, dvlasenk@redhat.com,
+        mhiramat@kernel.org, williams@redhat.com, jpoimboe@redhat.com,
+        torvalds@linux-foundation.org, bp@alien8.de, tglx@linutronix.de,
+        acme@redhat.com, crecklin@redhat.com, linux-kernel@vger.kernel.org,
+        swood@redhat.com, luto@kernel.org
+Reply-To: mingo@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+          jbaron@akamai.com, brgerst@gmail.com, jkosina@suse.cz,
+          jolsa@redhat.com, bristot@redhat.com, peterz@infradead.org,
+          rostedt@goodmis.org, mtosatti@redhat.com, dvlasenk@redhat.com,
+          williams@redhat.com, mhiramat@kernel.org,
+          alexander.shishkin@linux.intel.com, jpoimboe@redhat.com,
+          crecklin@redhat.com, linux-kernel@vger.kernel.org, bp@alien8.de,
+          torvalds@linux-foundation.org, tglx@linutronix.de,
+          acme@redhat.com, luto@kernel.org, swood@redhat.com
+In-Reply-To: <206640539a01e31b6f4ef4ef74962b1394e2f930.1545228276.git.bristot@redhat.com>
+References: <206640539a01e31b6f4ef4ef74962b1394e2f930.1545228276.git.bristot@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/alternatives] jump_label: Add for_each_label_entry helper
+Git-Commit-ID: b1b944f7230f4101b5a293d5ac3b7a9627ed5e6f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190411214835.19947-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.04.2019 0:48, Dmitry Osipenko пишет:
-> Hello, here are two trivial patches that are correcting PLLM on Tegra124.
-> First fixes system lockup due to a bad hardware configuration, second
-> removes usage of a non-existent register bit.
-> 
-> Dmitry Osipenko (2):
->   clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides
->     divider
->   clk: tegra124: Remove lock-enable bit from PLLM
-> 
->  drivers/clk/tegra/clk-pll.c      | 4 ++--
->  drivers/clk/tegra/clk-tegra124.c | 3 +--
->  2 files changed, 3 insertions(+), 4 deletions(-)
-> 
+Commit-ID:  b1b944f7230f4101b5a293d5ac3b7a9627ed5e6f
+Gitweb:     https://git.kernel.org/tip/b1b944f7230f4101b5a293d5ac3b7a9627ed5e6f
+Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
+AuthorDate: Fri, 21 Dec 2018 11:27:26 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 19 Apr 2019 19:37:34 +0200
 
-Hello Peter,
+jump_label: Add for_each_label_entry helper
 
-The patches in this series are trivial and fixing the longstanding bug on Tegra124. Could you please take a look and and ACK the series if it looks good to you?
+Add a helper macro to make jump entry iteration code more readable.
+
+Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Chris von Recklinghausen <crecklin@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Wood <swood@redhat.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/206640539a01e31b6f4ef4ef74962b1394e2f930.1545228276.git.bristot@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/jump_label.h | 3 +++
+ kernel/jump_label.c        | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
+index 3e113a1fa0f1..7e91af98bbb1 100644
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -227,6 +227,9 @@ extern void static_key_disable(struct static_key *key);
+ extern void static_key_enable_cpuslocked(struct static_key *key);
+ extern void static_key_disable_cpuslocked(struct static_key *key);
+ 
++#define for_each_label_entry(key, entry, stop)				  \
++	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++)
++
+ /*
+  * We should be using ATOMIC_INIT() for initializing .enabled, but
+  * the inclusion of atomic.h is problematic for inclusion of jump_label.h
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index bad96b476eb6..288d630da22d 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -379,7 +379,7 @@ static void __jump_label_update(struct static_key *key,
+ 				struct jump_entry *stop,
+ 				bool init)
+ {
+-	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++) {
++	for_each_label_entry(key, entry, stop) {
+ 		/*
+ 		 * An entry->code of 0 indicates an entry which has been
+ 		 * disabled because it was in an init text area.
