@@ -2,131 +2,116 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E508EC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2739EC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC4720693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE16A217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfDSBON (ORCPT
+        id S1727170AbfDSBQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 21:14:13 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:59186 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbfDSBOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 21:14:12 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 564E82E40436F81C3093;
-        Fri, 19 Apr 2019 09:14:09 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 19 Apr 2019 09:14:07 +0800
-Received: from [10.134.22.195] (10.134.22.195) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 19 Apr 2019 09:14:07 +0800
-Subject: Re: linux-next: build warning after merge of the block tree
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190417123125.3de22f73@canb.auug.org.au>
- <0879e11b-c84c-65b8-581f-bf7adcb5e231@huawei.com>
- <20190417140305.GB23731@jaegeuk-macbookpro.roam.corp.google.com>
- <b1fcb057-6d89-9846-766b-dd1b710f7654@huawei.com>
- <20190418140104.GA52314@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <b2bc71fb-c11e-8939-daea-facbb5980742@huawei.com>
-Date:   Fri, 19 Apr 2019 09:14:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 18 Apr 2019 21:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbfDSBP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 21:15:59 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD3F2171F;
+        Fri, 19 Apr 2019 01:15:58 +0000 (UTC)
+Date:   Thu, 18 Apr 2019 21:15:56 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "linux-trace-devel@vger.kernel.org" 
+        <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] tools/lib/traceevent: Remove hardcoded install paths from
+ pkg-config file
+Message-ID: <20190418211556.5a12adc3@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190418140104.GA52314@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/18 22:01, Jaegeuk Kim wrote:
-> On 04/18, Chao Yu wrote:
->> On 2019/4/17 22:03, Jaegeuk Kim wrote:
->>> On 04/17, Chao Yu wrote:
->>>> Hi Jaegeuk,
->>>>
->>>> On 2019/4/17 10:31, Stephen Rothwell wrote:
->>>>> Hi all,
->>>>>
->>>>> After merging the block tree, today's linux-next build (x86_64
->>>>> allmodconfig) produced this warning:
->>>>>
->>>>> fs/f2fs/node.c: In function 'f2fs_remove_inode_page':
->>>>> fs/f2fs/node.c:1193:47: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'blkcnt_t' {aka 'long long unsigned int'} [-Wformat=]
->>>>>     "Inconsistent i_blocks, ino:%lu, iblocks:%zu",
->>>>>                                              ~~^
->>>>>                                              %llu
->>>>>     inode->i_ino, inode->i_blocks);
->>>>>                   ~~~~~~~~~~~~~~~       
->>>>
->>>> Could you please help to fix that as below in your dev branch directly?
->>>>
->>>> "Inconsistent i_blocks, ino:%lu, iblocks:%llu",
->>>
->>> We can just use "%lu"?
->>
->> We'd better follow sample in Documentation/core-api/printk-formats.rst:
->>
->> If <type> is dependent on a config option for its size (e.g., sector_t,
->> blkcnt_t) or is architecture-dependent for its size (e.g., tcflag_t), use a
->> format specifier of its largest possible type and explicitly cast to it.
-> 
-> Great, done. :)
 
-Thanks, :)
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-> 
-> Thanks,
-> 
->>
->> Example::
->>
->>         printk("test: sector number/total blocks: %llu/%llu\n",
->>                 (unsigned long long)sector, (unsigned long long)blockcount);
->>
->> Thanks,
->>
->>>
->>>> inode->i_ino, (unsigned long long)inode->i_blocks)
->>>>
->>>>
->>>> It looks that we need to fix below commits as well:
->>>>
->>>> f2fs: fix to avoid panic in dec_valid_block_count()
->>>> f2fs: fix to avoid panic in dec_valid_node_count()
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Introduced by commit
->>>>>
->>>>>   90ae238d9dac ("f2fs: fix to avoid panic in f2fs_remove_inode_page()")
->>>>>
->>>>> from the f2fs tree interacting with commit
->>>>>
->>>>>   72deb455b5ec ("block: remove CONFIG_LBDAF")
->>>>>
->>> .
->>>
-> .
-> 
+Install directories of header and library files are hardcoded in pkg-config
+templete file. They must be configurable, the Makefile should set them on the
+compilation / install stage.
+
+Link: http://lkml.kernel.org/r/20190329144546.5819-1-tstoyanov@vmware.com
+
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/lib/traceevent/Makefile                  | 13 +++++++++----
+ tools/lib/traceevent/libtraceevent.pc.template |  4 ++--
+ 2 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 941761d9923d..34cf33a4f001 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -50,6 +50,9 @@ man_dir = $(prefix)/share/man
+ man_dir_SQ = '$(subst ','\'',$(man_dir))'
+ pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG) 		\
+ 			--variable pc_path pkg-config | tr ":" " "))
++includedir_relative = traceevent
++includedir = $(prefix)/include/$(includedir_relative)
++includedir_SQ = '$(subst ','\'',$(includedir))'
+ 
+ export man_dir man_dir_SQ INSTALL
+ export DESTDIR DESTDIR_SQ
+@@ -279,6 +282,8 @@ define do_install_pkgconfig_file
+ 		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
+ 		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
+ 		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
++		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
++		sed -i "s|HEADER_DIR|$(includedir)|g" ${PKG_CONFIG_FILE}; \
+ 		$(call do_install,$(PKG_CONFIG_FILE),$(pkgconfig_dir),644); 	\
+ 	else 									\
+ 		(echo Failed to locate pkg-config directory) 1>&2;		\
+@@ -300,10 +305,10 @@ install_pkgconfig:
+ 
+ install_headers:
+ 	$(call QUIET_INSTALL, headers) \
+-		$(call do_install,event-parse.h,$(prefix)/include/traceevent,644); \
+-		$(call do_install,event-utils.h,$(prefix)/include/traceevent,644); \
+-		$(call do_install,trace-seq.h,$(prefix)/include/traceevent,644); \
+-		$(call do_install,kbuffer.h,$(prefix)/include/traceevent,644)
++		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
++		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
++		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
++		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
+ 
+ install: install_lib
+ 
+diff --git a/tools/lib/traceevent/libtraceevent.pc.template b/tools/lib/traceevent/libtraceevent.pc.template
+index 42e4d6cb6b9e..86384fcd57f1 100644
+--- a/tools/lib/traceevent/libtraceevent.pc.template
++++ b/tools/lib/traceevent/libtraceevent.pc.template
+@@ -1,6 +1,6 @@
+ prefix=INSTALL_PREFIX
+-libdir=${prefix}/lib64
+-includedir=${prefix}/include/traceevent
++libdir=LIB_DIR
++includedir=HEADER_DIR
+ 
+ Name: libtraceevent
+ URL: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+-- 
+2.20.1
+
