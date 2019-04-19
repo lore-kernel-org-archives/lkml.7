@@ -2,395 +2,207 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CD3C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB2BC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084AE2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555704471;
-	bh=YJ6gM6cRP0XI2cm66rSap8Bm/o2FouiO08BaCkQjMCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fjExZzta/AsKGU3jRPfLq8qyboZo9V1ydNo7v+nT8dONtSws7E5zfaalETM9I1PER
-	 kZmrkJcaiOqAPCbqax5uNxgptrOEci2Qh7CY04dUh0AQFj4t+A/BiceE2ebxyNim+O
-	 trzUOvt1e/CLRU6boLkSBPMLGcx1+eOn8ZYJMn3s=
+	by mail.kernel.org (Postfix) with ESMTP id 5B53F217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iIpvfYpK";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="S+FCj6Xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfDSUHt (ORCPT
+        id S1728240AbfDSUHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfDSUHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:07:49 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E081A2171F;
-        Fri, 19 Apr 2019 20:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555704467;
-        bh=YJ6gM6cRP0XI2cm66rSap8Bm/o2FouiO08BaCkQjMCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gM/rySOR3ij8TRVlG+j6Vis16lewaY79Zs6stFo0YbCQNbwrbbrvrn6cQGrqgq8wt
-         dA6muVaR7W2FBG5/OZxNHCzj9YYum7/xQ+JUV7ffmY2hqQRVVkO2zx6lIVxcHKFzMa
-         vM4oB1Rsej1FCCFA/Z5TdUqBE7DJ6YQZAG5tYXCw=
-Date:   Fri, 19 Apr 2019 15:07:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] PCI / ACPI: Remove the need for 'struct
- hotplug_params'
-Message-ID: <20190419200745.GH173520@google.com>
-References: <20190208162414.3996-1-mr.nuke.me@gmail.com>
- <20190208162414.3996-3-mr.nuke.me@gmail.com>
+        Fri, 19 Apr 2019 16:07:54 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:58550 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726804AbfDSUHw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:07:52 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JJx5w5032418;
+        Fri, 19 Apr 2019 13:07:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=0o7TgRhaW9KvbjPuiOAr7raGQS1pQ+IeI9U51JZC12I=;
+ b=iIpvfYpK9uoABdqXowvTj/D0wOnhc0EcJ3DyUmWS98LMH9aIhIcIt4/5/kuDuZi9fVp2
+ kUibv00Ti57ANvzqVmxIH1MYozD/N9czODlsHNxrElaEo2p1Its8bnZWpdi6XswFtzzz
+ LRgfS5KqX/jTs0IWyirzVEUtkKQHzUGxqOk= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ryjv3gmy8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 19 Apr 2019 13:07:40 -0700
+Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
+ frc-hub06.TheFacebook.com (2620:10d:c021:18::176) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 19 Apr 2019 13:07:39 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 19 Apr 2019 13:07:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0o7TgRhaW9KvbjPuiOAr7raGQS1pQ+IeI9U51JZC12I=;
+ b=S+FCj6XiJVCX4l7FPV03wBXHGmcW9ckOipUBxwN1/xiCg8eKLesmGJ6CslQMHElSQk0yPdNlKVH1BL8fDF0T7JpQr9Tp0SuOISCy+c2/vU4t6YPI3sz/EyswpCFAKjSsiwltfrpe0FFDl8vnQofc8tGBWBE4mgJtsJ2Yr5NNWXI=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3478.namprd15.prod.outlook.com (20.179.60.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.11; Fri, 19 Apr 2019 20:07:37 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.023; Fri, 19 Apr 2019
+ 20:07:37 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: refill_stock for kmem uncharging too
+Thread-Topic: [PATCH] memcg: refill_stock for kmem uncharging too
+Thread-Index: AQHU9i+qSI2o0+IJiEGApVgxjn8CnaZD6q2A
+Date:   Fri, 19 Apr 2019 20:07:37 +0000
+Message-ID: <20190419200733.GB31878@tower.DHCP.thefacebook.com>
+References: <20190418214224.61900-1-shakeelb@google.com>
+In-Reply-To: <20190418214224.61900-1-shakeelb@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0067.namprd10.prod.outlook.com
+ (2603:10b6:300:2c::29) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:180f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4ee3a094-d03e-4029-d408-08d6c502aafb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3478;
+x-ms-traffictypediagnostic: BYAPR15MB3478:
+x-microsoft-antispam-prvs: <BYAPR15MB3478942D3B87EDAE208F65ECBE270@BYAPR15MB3478.namprd15.prod.outlook.com>
+x-forefront-prvs: 0012E6D357
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39860400002)(366004)(136003)(199004)(189003)(486006)(6486002)(54906003)(316002)(476003)(99286004)(446003)(76176011)(6436002)(52116002)(71200400001)(6506007)(478600001)(71190400001)(97736004)(386003)(86362001)(102836004)(5660300002)(14444005)(33656002)(256004)(186003)(14454004)(1076003)(6916009)(7736002)(8676002)(81166006)(81156014)(305945005)(66946007)(66476007)(8936002)(25786009)(6116002)(73956011)(46003)(66446008)(66556008)(2906002)(68736007)(64756008)(6246003)(4326008)(11346002)(229853002)(9686003)(53936002)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3478;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oFguq7AfXgIuTKgfBrkmHBfOpctHZGTcjmJ6pXMp4CZBs1tlqxlA6d7P78h3ZYYTBsIQDlYjOVfJQ4g+Kgirc6lwsNNIcIohrOxLXflXqk6K/oleMI1pKFOKBH5Cui+1UqYjtLqF1Mco7aFo/LXZAiWixb3Yuvdmmq2zV3mVNzYvIS7Zn03cpg0nzmTWs5cRLeTeLV6JAEO9/IxIeLwSBY5fnTauQMXl98U51+BJGVF3vnyHjQswaimQJ0GtoVALSpCe0j9PDJRLIK7wyunp8PiFmYDn8vkSzHiWjR1txs26lr6OYB2WveIr29YNn4Qt39DrtNDl0Qe58w1tY6P5yJ3/3BEEk8fji1LjJDdXEa+s+6D4UZZ41Lv6vg/WkfYItbmSZ8vF41KweBhMPBsy5fU3eYt+gN53Vwp+DCG3I5U=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6E89A0B4BEB6BB42B99AC022945CB334@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190208162414.3996-3-mr.nuke.me@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ee3a094-d03e-4029-d408-08d6c502aafb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 20:07:37.1442
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3478
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_11:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 10:24:12AM -0600, Alexandru Gagniuc wrote:
-> We used to first parse all the _HPP and _HPX tables before using the
-> information to program registers of PCIe devices. Up until HPX type 2,
-> there was only one structure of each type, so we could cheat and store
-> it on the stack.
-> 
-> With HPX type 3 we get an arbitrary number of entries, so the above
-> model doesn't scale that well. Instead of parsing all tables at once,
-> parse and program each entry separately. For _HPP and _HPX 0 thru 2,
-> this is functionally equivalent. The change enables the upcoming _HPX3
-> to integrate more easily.
+On Thu, Apr 18, 2019 at 02:42:24PM -0700, Shakeel Butt wrote:
+> The commit 475d0487a2ad ("mm: memcontrol: use per-cpu stocks for socket
+> memory uncharging") added refill_stock() for skmem uncharging path to
+> optimize workloads having high network traffic. Do the same for the kmem
+> uncharging as well. However bypass the refill for offlined memcgs to not
+> cause zombie apocalypse.
+>=20
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-I think this is tremendous!  It's going to simplify this code
-dramatically.  Two comments below.
+Hello, Shakeel!
 
-> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 > ---
->  drivers/pci/pci-acpi.c      | 108 +++++++++++++++++++-----------------
->  drivers/pci/probe.c         |  16 ++----
->  include/linux/pci_hotplug.h |  18 +++---
->  3 files changed, 72 insertions(+), 70 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index b25e5fa9d1c9..95f4f86d2f34 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -119,7 +119,7 @@ phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle handle)
->  }
->  
->  static acpi_status decode_type0_hpx_record(union acpi_object *record,
-> -					   struct hotplug_params *hpx)
-> +					   struct hpp_type0 *hpx0)
->  {
->  	int i;
->  	union acpi_object *fields = record->package.elements;
-> @@ -132,12 +132,11 @@ static acpi_status decode_type0_hpx_record(union acpi_object *record,
->  		for (i = 2; i < 6; i++)
->  			if (fields[i].type != ACPI_TYPE_INTEGER)
->  				return AE_ERROR;
-> -		hpx->t0 = &hpx->type0_data;
-> -		hpx->t0->revision        = revision;
-> -		hpx->t0->cache_line_size = fields[2].integer.value;
-> -		hpx->t0->latency_timer   = fields[3].integer.value;
-> -		hpx->t0->enable_serr     = fields[4].integer.value;
-> -		hpx->t0->enable_perr     = fields[5].integer.value;
-> +		hpx0->revision        = revision;
-> +		hpx0->cache_line_size = fields[2].integer.value;
-> +		hpx0->latency_timer   = fields[3].integer.value;
-> +		hpx0->enable_serr     = fields[4].integer.value;
-> +		hpx0->enable_perr     = fields[5].integer.value;
->  		break;
->  	default:
->  		printk(KERN_WARNING
-> @@ -149,7 +148,7 @@ static acpi_status decode_type0_hpx_record(union acpi_object *record,
->  }
->  
->  static acpi_status decode_type1_hpx_record(union acpi_object *record,
-> -					   struct hotplug_params *hpx)
-> +					   struct hpp_type1 *hpx1)
->  {
->  	int i;
->  	union acpi_object *fields = record->package.elements;
-> @@ -162,11 +161,10 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
->  		for (i = 2; i < 5; i++)
->  			if (fields[i].type != ACPI_TYPE_INTEGER)
->  				return AE_ERROR;
-> -		hpx->t1 = &hpx->type1_data;
-> -		hpx->t1->revision      = revision;
-> -		hpx->t1->max_mem_read  = fields[2].integer.value;
-> -		hpx->t1->avg_max_split = fields[3].integer.value;
-> -		hpx->t1->tot_max_split = fields[4].integer.value;
-> +		hpx1->revision      = revision;
-> +		hpx1->max_mem_read  = fields[2].integer.value;
-> +		hpx1->avg_max_split = fields[3].integer.value;
-> +		hpx1->tot_max_split = fields[4].integer.value;
->  		break;
->  	default:
->  		printk(KERN_WARNING
-> @@ -178,7 +176,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
->  }
->  
->  static acpi_status decode_type2_hpx_record(union acpi_object *record,
-> -					   struct hotplug_params *hpx)
-> +					   struct hpp_type2 *hpx2)
->  {
->  	int i;
->  	union acpi_object *fields = record->package.elements;
-> @@ -191,24 +189,23 @@ static acpi_status decode_type2_hpx_record(union acpi_object *record,
->  		for (i = 2; i < 18; i++)
->  			if (fields[i].type != ACPI_TYPE_INTEGER)
->  				return AE_ERROR;
-> -		hpx->t2 = &hpx->type2_data;
-> -		hpx->t2->revision      = revision;
-> -		hpx->t2->unc_err_mask_and      = fields[2].integer.value;
-> -		hpx->t2->unc_err_mask_or       = fields[3].integer.value;
-> -		hpx->t2->unc_err_sever_and     = fields[4].integer.value;
-> -		hpx->t2->unc_err_sever_or      = fields[5].integer.value;
-> -		hpx->t2->cor_err_mask_and      = fields[6].integer.value;
-> -		hpx->t2->cor_err_mask_or       = fields[7].integer.value;
-> -		hpx->t2->adv_err_cap_and       = fields[8].integer.value;
-> -		hpx->t2->adv_err_cap_or        = fields[9].integer.value;
-> -		hpx->t2->pci_exp_devctl_and    = fields[10].integer.value;
-> -		hpx->t2->pci_exp_devctl_or     = fields[11].integer.value;
-> -		hpx->t2->pci_exp_lnkctl_and    = fields[12].integer.value;
-> -		hpx->t2->pci_exp_lnkctl_or     = fields[13].integer.value;
-> -		hpx->t2->sec_unc_err_sever_and = fields[14].integer.value;
-> -		hpx->t2->sec_unc_err_sever_or  = fields[15].integer.value;
-> -		hpx->t2->sec_unc_err_mask_and  = fields[16].integer.value;
-> -		hpx->t2->sec_unc_err_mask_or   = fields[17].integer.value;
-> +		hpx2->revision      = revision;
-> +		hpx2->unc_err_mask_and      = fields[2].integer.value;
-> +		hpx2->unc_err_mask_or       = fields[3].integer.value;
-> +		hpx2->unc_err_sever_and     = fields[4].integer.value;
-> +		hpx2->unc_err_sever_or      = fields[5].integer.value;
-> +		hpx2->cor_err_mask_and      = fields[6].integer.value;
-> +		hpx2->cor_err_mask_or       = fields[7].integer.value;
-> +		hpx2->adv_err_cap_and       = fields[8].integer.value;
-> +		hpx2->adv_err_cap_or        = fields[9].integer.value;
-> +		hpx2->pci_exp_devctl_and    = fields[10].integer.value;
-> +		hpx2->pci_exp_devctl_or     = fields[11].integer.value;
-> +		hpx2->pci_exp_lnkctl_and    = fields[12].integer.value;
-> +		hpx2->pci_exp_lnkctl_or     = fields[13].integer.value;
-> +		hpx2->sec_unc_err_sever_and = fields[14].integer.value;
-> +		hpx2->sec_unc_err_sever_or  = fields[15].integer.value;
-> +		hpx2->sec_unc_err_mask_and  = fields[16].integer.value;
-> +		hpx2->sec_unc_err_mask_or   = fields[17].integer.value;
->  		break;
->  	default:
->  		printk(KERN_WARNING
-> @@ -219,17 +216,18 @@ static acpi_status decode_type2_hpx_record(union acpi_object *record,
->  	return AE_OK;
->  }
->  
-> -static acpi_status acpi_run_hpx(acpi_handle handle, struct hotplug_params *hpx)
-> +static acpi_status acpi_run_hpx(struct pci_dev *dev, acpi_handle handle,
-> +				const struct hotplug_program_ops *hp_ops)
->  {
->  	acpi_status status;
->  	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
->  	union acpi_object *package, *record, *fields;
-> +	struct hpp_type0 hpx0;
-> +	struct hpp_type1 hpx1;
-> +	struct hpp_type2 hpx2;
->  	u32 type;
->  	int i;
->  
-> -	/* Clear the return buffer with zeros */
-> -	memset(hpx, 0, sizeof(struct hotplug_params));
-> -
->  	status = acpi_evaluate_object(handle, "_HPX", NULL, &buffer);
->  	if (ACPI_FAILURE(status))
->  		return status;
-> @@ -257,19 +255,25 @@ static acpi_status acpi_run_hpx(acpi_handle handle, struct hotplug_params *hpx)
->  		type = fields[0].integer.value;
->  		switch (type) {
->  		case 0:
-> -			status = decode_type0_hpx_record(record, hpx);
-> +			memset(&hpx0, 0, sizeof(hpx0));
-> +			status = decode_type0_hpx_record(record, &hpx0);
->  			if (ACPI_FAILURE(status))
->  				goto exit;
-> +			hp_ops->program_type0(dev, &hpx0);
->  			break;
->  		case 1:
-> -			status = decode_type1_hpx_record(record, hpx);
-> +			memset(&hpx1, 0, sizeof(hpx1));
-> +			status = decode_type1_hpx_record(record, &hpx1);
->  			if (ACPI_FAILURE(status))
->  				goto exit;
-> +			hp_ops->program_type1(dev, &hpx1);
->  			break;
->  		case 2:
-> -			status = decode_type2_hpx_record(record, hpx);
-> +			memset(&hpx2, 0, sizeof(hpx2));
-> +			status = decode_type2_hpx_record(record, &hpx2);
->  			if (ACPI_FAILURE(status))
->  				goto exit;
-> +			hp_ops->program_type2(dev, &hpx2);
->  			break;
->  		default:
->  			printk(KERN_ERR "%s: Type %d record not supported\n",
-> @@ -283,14 +287,16 @@ static acpi_status acpi_run_hpx(acpi_handle handle, struct hotplug_params *hpx)
->  	return status;
->  }
->  
-> -static acpi_status acpi_run_hpp(acpi_handle handle, struct hotplug_params *hpp)
-> +static acpi_status acpi_run_hpp(struct pci_dev *dev, acpi_handle handle,
-> +				const struct hotplug_program_ops *hp_ops)
->  {
->  	acpi_status status;
->  	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
->  	union acpi_object *package, *fields;
-> +	struct hpp_type0 hpp0;
->  	int i;
->  
-> -	memset(hpp, 0, sizeof(struct hotplug_params));
-> +	memset(&hpp0, 0, sizeof(hpp0));
->  
->  	status = acpi_evaluate_object(handle, "_HPP", NULL, &buffer);
->  	if (ACPI_FAILURE(status))
-> @@ -311,12 +317,13 @@ static acpi_status acpi_run_hpp(acpi_handle handle, struct hotplug_params *hpp)
->  		}
+>  mm/memcontrol.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 2535e54e7989..7b8de091f572 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -178,6 +178,7 @@ struct mem_cgroup_event {
+> =20
+>  static void mem_cgroup_threshold(struct mem_cgroup *memcg);
+>  static void mem_cgroup_oom_notify(struct mem_cgroup *memcg);
+> +static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_page=
+s);
+> =20
+>  /* Stuffs for move charges at task migration. */
+>  /*
+> @@ -2097,10 +2098,7 @@ static void drain_stock(struct memcg_stock_pcp *st=
+ock)
+>  	struct mem_cgroup *old =3D stock->cached;
+> =20
+>  	if (stock->nr_pages) {
+> -		page_counter_uncharge(&old->memory, stock->nr_pages);
+> -		if (do_memsw_account())
+> -			page_counter_uncharge(&old->memsw, stock->nr_pages);
+> -		css_put_many(&old->css, stock->nr_pages);
+> +		cancel_charge(old, stock->nr_pages);
+>  		stock->nr_pages =3D 0;
 >  	}
->  
-> -	hpp->t0 = &hpp->type0_data;
-> -	hpp->t0->revision        = 1;
-> -	hpp->t0->cache_line_size = fields[0].integer.value;
-> -	hpp->t0->latency_timer   = fields[1].integer.value;
-> -	hpp->t0->enable_serr     = fields[2].integer.value;
-> -	hpp->t0->enable_perr     = fields[3].integer.value;
-> +	hpp0.revision        = 1;
-> +	hpp0.cache_line_size = fields[0].integer.value;
-> +	hpp0.latency_timer   = fields[1].integer.value;
-> +	hpp0.enable_serr     = fields[2].integer.value;
-> +	hpp0.enable_perr     = fields[3].integer.value;
+>  	stock->cached =3D NULL;
+> @@ -2133,6 +2131,11 @@ static void refill_stock(struct mem_cgroup *memcg,=
+ unsigned int nr_pages)
+>  	struct memcg_stock_pcp *stock;
+>  	unsigned long flags;
+> =20
+> +	if (unlikely(!mem_cgroup_online(memcg))) {
+> +		cancel_charge(memcg, nr_pages);
+> +		return;
+> +	}
+
+I'm slightly concerned about this part. Do we really need it?
+The number of "zombies" which we can pin is limited by the number of CPUs,
+and it will drop fast if there is any load on the machine.
+
+If we skip offline memcgs, it can slow down charging/uncharging of skmem,
+which might be a problem, if the socket is in active use by an other cgroup=
+.
+Honestly, I'd drop this part.
+
 > +
-> +	hp_ops->program_type0(dev, &hpp0);
->  
->  exit:
->  	kfree(buffer.pointer);
-> @@ -328,7 +335,8 @@ static acpi_status acpi_run_hpp(acpi_handle handle, struct hotplug_params *hpp)
->   * @dev - the pci_dev for which we want parameters
->   * @hpp - allocated by the caller
->   */
-> -int pci_get_hp_params(struct pci_dev *dev, struct hotplug_params *hpp)
-> +int pci_acpi_program_hp_params(struct pci_dev *dev,
-> +			       const struct hotplug_program_ops *hp_ops)
->  {
->  	acpi_status status;
->  	acpi_handle handle, phandle;
-> @@ -351,10 +359,10 @@ int pci_get_hp_params(struct pci_dev *dev, struct hotplug_params *hpp)
->  	 * this pci dev.
->  	 */
->  	while (handle) {
-> -		status = acpi_run_hpx(handle, hpp);
-> +		status = acpi_run_hpx(dev, handle, hp_ops);
->  		if (ACPI_SUCCESS(status))
->  			return 0;
-> -		status = acpi_run_hpp(handle, hpp);
-> +		status = acpi_run_hpp(dev, handle, hp_ops);
->  		if (ACPI_SUCCESS(status))
->  			return 0;
->  		if (acpi_is_root_bridge(handle))
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 257b9f6f2ebb..527c209f0c94 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2131,8 +2131,11 @@ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
->  
->  static void pci_configure_device(struct pci_dev *dev)
->  {
-> -	struct hotplug_params hpp;
-> -	int ret;
-> +	static const struct hotplug_program_ops hp_ops = {
-> +		.program_type0 = program_hpp_type0,
-> +		.program_type1 = program_hpp_type1,
-> +		.program_type2 = program_hpp_type2,
-> +	};
-
-What if we just moved program_hpp_type0(), etc from probe.c to
-pci-acpi.c?  The only reason I see to have it in probe.c is for
-pci_default_type0, and I think that is a pretty obtuse way of doing
-default configuration.  I would have no problem at all just hardcoding
-those defaults in probe.c and then potentially having them overwritten
-by _HPP/_HPX.
-
-If we moved program_hpp_type0(), etc to pci-acpi.c, we could get rid
-of the function pointers and all the ACPI-related code would be in one
-place.
-
->  	pci_configure_mps(dev);
->  	pci_configure_extended_tags(dev, NULL);
-> @@ -2140,14 +2143,7 @@ static void pci_configure_device(struct pci_dev *dev)
->  	pci_configure_ltr(dev);
->  	pci_configure_eetlp_prefix(dev);
->  
-> -	memset(&hpp, 0, sizeof(hpp));
-> -	ret = pci_get_hp_params(dev, &hpp);
-> -	if (ret)
-> -		return;
+>  	local_irq_save(flags);
+> =20
+>  	stock =3D this_cpu_ptr(&memcg_stock);
+> @@ -2768,17 +2771,13 @@ void __memcg_kmem_uncharge(struct page *page, int=
+ order)
+>  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+>  		page_counter_uncharge(&memcg->kmem, nr_pages);
+> =20
+> -	page_counter_uncharge(&memcg->memory, nr_pages);
+> -	if (do_memsw_account())
+> -		page_counter_uncharge(&memcg->memsw, nr_pages);
 > -
-> -	program_hpp_type2(dev, hpp.t2);
-> -	program_hpp_type1(dev, hpp.t1);
-> -	program_hpp_type0(dev, hpp.t0);
-> +	pci_acpi_program_hp_params(dev, &hp_ops);
+>  	page->mem_cgroup =3D NULL;
+> =20
+>  	/* slab pages do not have PageKmemcg flag set */
+>  	if (PageKmemcg(page))
+>  		__ClearPageKmemcg(page);
+> =20
+> -	css_put_many(&memcg->css, nr_pages);
+> +	refill_stock(memcg, nr_pages);
 >  }
->  
->  static void pci_release_capabilities(struct pci_dev *dev)
-> diff --git a/include/linux/pci_hotplug.h b/include/linux/pci_hotplug.h
-> index 7acc9f91e72b..c85378edf235 100644
-> --- a/include/linux/pci_hotplug.h
-> +++ b/include/linux/pci_hotplug.h
-> @@ -124,26 +124,24 @@ struct hpp_type2 {
->  	u32 sec_unc_err_mask_or;
->  };
->  
-> -struct hotplug_params {
-> -	struct hpp_type0 *t0;		/* Type0: NULL if not available */
-> -	struct hpp_type1 *t1;		/* Type1: NULL if not available */
-> -	struct hpp_type2 *t2;		/* Type2: NULL if not available */
-> -	struct hpp_type0 type0_data;
-> -	struct hpp_type1 type1_data;
-> -	struct hpp_type2 type2_data;
-> +struct hotplug_program_ops {
-> +	void (*program_type0)(struct pci_dev *dev, struct hpp_type0 *hpp);
-> +	void (*program_type1)(struct pci_dev *dev, struct hpp_type1 *hpp);
-> +	void (*program_type2)(struct pci_dev *dev, struct hpp_type2 *hpp);
->  };
+>  #endif /* CONFIG_MEMCG_KMEM */
+> =20
+> --=20
+> 2.21.0.392.gf8f6787159e-goog
+>=20
 
-I think a lot of this stuff is only used in drivers/pci, so it could
-be moved from include/linux/pci_hotplug.h to drivers/pci/pci.h.
+The rest looks good to me.
 
->  #ifdef CONFIG_ACPI
->  #include <linux/acpi.h>
-> -int pci_get_hp_params(struct pci_dev *dev, struct hotplug_params *hpp);
-> +int pci_acpi_program_hp_params(struct pci_dev *dev,
-> +			       const struct hotplug_program_ops *hp_ops);
->  bool pciehp_is_native(struct pci_dev *bridge);
->  int acpi_get_hp_hw_control_from_firmware(struct pci_dev *bridge);
->  bool shpchp_is_native(struct pci_dev *bridge);
->  int acpi_pci_check_ejectable(struct pci_bus *pbus, acpi_handle handle);
->  int acpi_pci_detect_ejectable(acpi_handle handle);
->  #else
-> -static inline int pci_get_hp_params(struct pci_dev *dev,
-> -				    struct hotplug_params *hpp)
-> +int pci_acpi_program_hp_params(struct pci_dev *dev,
-> +			       const struct hotplug_program_ops *hp_ops);
->  {
->  	return -ENODEV;
->  }
-> -- 
-> 2.19.2
-> 
+Thanks!
