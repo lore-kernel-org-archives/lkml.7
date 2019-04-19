@@ -7,58 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F1C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CDAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD4D20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76B120643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ru4x/qWz"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CD4oZsZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfDSTDx (ORCPT
+        id S1728974AbfDSTFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:03:53 -0400
+        Fri, 19 Apr 2019 15:05:05 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbfDSTDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:48 -0400
+        id S1729162AbfDSTDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:03:53 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JHSrnQ363196
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JHIaau359225
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 10:28:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JHSrnQ363196
+        Fri, 19 Apr 2019 10:18:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JHIaau359225
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555694935;
-        bh=ctfbVfLvz/n7x0FJwS6+0WTxIFExYZ84TpbQW5OG+ig=;
+        s=2019041745; t=1555694317;
+        bh=ngWiqLqGtYA35SkXbPzhoNP/NtqTzfKdA63DMpBdT7g=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Ru4x/qWzzDHaq1XUjiHfYiXvzV2UmrHc88WnrIuRuViuphYpQjk6vTaRLLxIiFH7I
-         9EOQLHxPDqy+SzR734m2yuWNQgBbXHVEBv53KsYeFV7QYnS9bqMUJHjmchTDJyidae
-         wuWeGux5rRU5eOPz3R/bnrNtaSgFTAfuhZlWACHUpt3/dvbtwtRmLuuSvrgi7s70q/
-         8AId6SX0fjYMlXpyVNekC4UqqfbopmEcy0D+wEwyqlBNRjP22H2a2gWCxz3xvUke2A
-         2Pz97zjfcZmXbDpvlN1mAOCStXmSCdda/darBNpswewWxq9/GPbp/v0WON115rv90z
-         +r3QRlTXj/QpQ==
+        b=CD4oZsZG02SbmZMkiKsYK9bPfFOarqAA7kz3oK0uBUcjRydYTtoxaaIconXFlZXDb
+         p1w9XDGgjIyWkjvo4zT1DfKzYXTcbNC6iOvb/wyemDlMOt9EA5jKCEGXKeBwL7UQWD
+         zD6N6ggkogGDIoCBWpY9xIst2GOirv3XsK6fB1EizKKQieBKNRT0kJzKF0LtS/3kVH
+         YZ6nUvwAFbTxnkSgdVGruzdKtqAp2n5BSHCHerjN9nJjAffzhFvZDrst4e5zbVWBwH
+         r5P+k9RWJeECKVQS73SBRjx5itzob2ju1FfM0I1r71ikqGrs512KPagtSby66uGRz3
+         Wd94bINf3NIcA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JHSqMP363193;
-        Fri, 19 Apr 2019 10:28:52 -0700
-Date:   Fri, 19 Apr 2019 10:28:52 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JHIZ4u359222;
+        Fri, 19 Apr 2019 10:18:35 -0700
+Date:   Fri, 19 Apr 2019 10:18:35 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for YueHaibing <tipbot@zytor.com>
-Message-ID: <tip-28156d7678431312b463361b23a218a1b5645ba5@git.kernel.org>
-Cc:     tony.luck@intel.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        yazen.ghannam@amd.com, peterz@infradead.org,
-        vishal.l.verma@intel.com, yuehaibing@huawei.com, bp@alien8.de,
-        linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, bp@alien8.de,
-          yuehaibing@huawei.com, vishal.l.verma@intel.com,
-          peterz@infradead.org, yazen.ghannam@amd.com, hpa@zytor.com,
-          torvalds@linux-foundation.org, tglx@linutronix.de,
-          mingo@kernel.org, tony.luck@intel.com
-In-Reply-To: <1545981853-70877-1-git-send-email-yuehaibing@huawei.com>
-References: <1545981853-70877-1-git-send-email-yuehaibing@huawei.com>
+From:   tip-bot for Song Liu <tipbot@zytor.com>
+Message-ID: <tip-a93e0b2365e81e5a5b61f25e269b5dc73d242cba@git.kernel.org>
+Cc:     andrii.nakryiko@gmail.com, tglx@linutronix.de, yhs@fb.com,
+        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+        adrian.hunter@intel.com, mingo@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, linux-kernel@vger.kernel.org, kafai@fb.com,
+        songliubraving@fb.com, acme@redhat.com, hpa@zytor.com,
+        peterz@infradead.org, jolsa@kernel.org, ak@linux.intel.com
+Reply-To: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+          mingo@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+          linux-kernel@vger.kernel.org, andrii.nakryiko@gmail.com,
+          tglx@linutronix.de, yhs@fb.com, namhyung@kernel.org,
+          songliubraving@fb.com, acme@redhat.com, hpa@zytor.com,
+          peterz@infradead.org, jolsa@kernel.org, ak@linux.intel.com,
+          kafai@fb.com
+In-Reply-To: <20190416160127.30203-8-jolsa@kernel.org>
+References: <20190416160127.30203-8-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:ras/core] x86/mce: Fix debugfs_simple_attr.cocci warnings
-Git-Commit-ID: 28156d7678431312b463361b23a218a1b5645ba5
+Subject: [tip:perf/urgent] perf tools: Check maps for bpf programs
+Git-Commit-ID: a93e0b2365e81e5a5b61f25e269b5dc73d242cba
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,64 +75,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  28156d7678431312b463361b23a218a1b5645ba5
-Gitweb:     https://git.kernel.org/tip/28156d7678431312b463361b23a218a1b5645ba5
-Author:     YueHaibing <yuehaibing@huawei.com>
-AuthorDate: Fri, 28 Dec 2018 07:24:13 +0000
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 19:25:08 +0200
+Commit-ID:  a93e0b2365e81e5a5b61f25e269b5dc73d242cba
+Gitweb:     https://git.kernel.org/tip/a93e0b2365e81e5a5b61f25e269b5dc73d242cba
+Author:     Song Liu <songliubraving@fb.com>
+AuthorDate: Tue, 16 Apr 2019 18:01:22 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 17 Apr 2019 14:30:11 -0300
 
-x86/mce: Fix debugfs_simple_attr.cocci warnings
+perf tools: Check maps for bpf programs
 
-Use DEFINE_DEBUGFS_ATTRIBUTE() rather than DEFINE_SIMPLE_ATTRIBUTE()
-for debugfs files.
+As reported by Jiri Olsa in:
 
-Semantic patch information:
+  "[BUG] perf: intel_pt won't display kernel function"
+  https://lore.kernel.org/lkml/20190403143738.GB32001@krava
 
-  Rationale: DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
-  imposes some significant overhead as compared to
-  DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
+Recent changes to support PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT
+broke --kallsyms option. This is because it broke test __map__is_kmodule.
 
-Generated by: scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
+This patch fixes this by adding check for bpf program, so that these maps
+are not mistaken as kernel modules.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: kernel-janitors@vger.kernel.org
-Link: http://lkml.kernel.org/r/1545981853-70877-1-git-send-email-yuehaibing@huawei.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Link: http://lkml.kernel.org/r/20190416160127.30203-8-jolsa@kernel.org
+Fixes: 76193a94522f ("perf, bpf: Introduce PERF_RECORD_KSYMBOL")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/x86/kernel/cpu/mce/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/map.c | 16 ++++++++++++++++
+ tools/perf/util/map.h |  4 +++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 58925e7ccb27..3e081428117c 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -2429,8 +2429,8 @@ static int fake_panic_set(void *data, u64 val)
- 	return 0;
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index e32628cd20a7..28d484ef74ae 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -261,6 +261,22 @@ bool __map__is_extra_kernel_map(const struct map *map)
+ 	return kmap && kmap->name[0];
  }
  
--DEFINE_SIMPLE_ATTRIBUTE(fake_panic_fops, fake_panic_get,
--			fake_panic_set, "%llu\n");
-+DEFINE_DEBUGFS_ATTRIBUTE(fake_panic_fops, fake_panic_get, fake_panic_set,
-+			 "%llu\n");
- 
- static int __init mcheck_debugfs_init(void)
++bool __map__is_bpf_prog(const struct map *map)
++{
++	const char *name;
++
++	if (map->dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return true;
++
++	/*
++	 * If PERF_RECORD_BPF_EVENT is not included, the dso will not have
++	 * type of DSO_BINARY_TYPE__BPF_PROG_INFO. In such cases, we can
++	 * guess the type based on name.
++	 */
++	name = map->dso->short_name;
++	return name && (strstr(name, "bpf_prog_") == name);
++}
++
+ bool map__has_symbols(const struct map *map)
  {
-@@ -2439,8 +2439,8 @@ static int __init mcheck_debugfs_init(void)
- 	dmce = mce_get_debugfs_dir();
- 	if (!dmce)
- 		return -ENOMEM;
--	ffake_panic = debugfs_create_file("fake_panic", 0444, dmce, NULL,
--					  &fake_panic_fops);
-+	ffake_panic = debugfs_create_file_unsafe("fake_panic", 0444, dmce,
-+						 NULL, &fake_panic_fops);
- 	if (!ffake_panic)
- 		return -ENOMEM;
+ 	return dso__has_symbols(map->dso);
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 0e20749f2c55..dc93787c74f0 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -159,10 +159,12 @@ int map__set_kallsyms_ref_reloc_sym(struct map *map, const char *symbol_name,
  
+ bool __map__is_kernel(const struct map *map);
+ bool __map__is_extra_kernel_map(const struct map *map);
++bool __map__is_bpf_prog(const struct map *map);
+ 
+ static inline bool __map__is_kmodule(const struct map *map)
+ {
+-	return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map);
++	return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map) &&
++	       !__map__is_bpf_prog(map);
+ }
+ 
+ bool map__has_symbols(const struct map *map);
