@@ -2,319 +2,134 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F3AC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1368C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD904217FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5BF21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b/GKcfCl"
+	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="ovznqg8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfDSVFV (ORCPT
+        id S1727947AbfDSVFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:05:21 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48412 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727478AbfDSVFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:05:19 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JKtTHi005429;
-        Fri, 19 Apr 2019 14:04:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=H7NE/DQyj0AUoebNQbiXLMMGDkxeX8X9Ur6kRvn7pzE=;
- b=b/GKcfClEhVkEwJHZ2/Lmu/lA1F+iERydowaf9Q7dUkJzBlk7G69+uoKHF55vwW1e8HL
- Mqi4EwkZ+wx/EpfwxnzSyCNJMfHOZbD/ST6oTcp4fdQ2PG1fNIk3tOEd9/usm3gbTENj
- FJCH1Z8/Mcbl0YbAaGp6fx7u3yGLf04tvbQ= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ryjv7gyqr-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 19 Apr 2019 14:04:30 -0700
-Received: from mmullins-1.thefacebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server id
- 15.1.1713.5; Fri, 19 Apr 2019 14:04:29 -0700
-From:   Matt Mullins <mmullins@fb.com>
-To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH bpf-next v3 1/5] bpf: add writable context for raw tracepoints
-Date:   Fri, 19 Apr 2019 14:04:05 -0700
-Message-ID: <20190419210409.5021-2-mmullins@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190419210409.5021-1-mmullins@fb.com>
-References: <20190419210409.5021-1-mmullins@fb.com>
+        Fri, 19 Apr 2019 17:05:50 -0400
+Received: from mail-eopbgr720121.outbound.protection.outlook.com ([40.107.72.121]:4293
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726120AbfDSVFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 17:05:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fortanix.onmicrosoft.com; s=selector1-fortanix-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jPuKM2SUxKB6N7+Mw0a0VsLNsrxkeM3zv/1h9c4ENXM=;
+ b=ovznqg8HHjgoEVn+D+5W5PPYAuE6Rc2LC7A8khvtmpqo6WXk3XXxotmsohec0sxhU/AlBpX9hKytaXy6/3vMlsT6ChXz3/UrCtLRKENRw/epje/L7Sysru0keJfbpm+3M+l+z34zZPld8UQ+V+xWwb4JFxQcjbGeDe1Fm/w1vCU=
+Received: from SN6PR11MB3167.namprd11.prod.outlook.com (52.135.109.144) by
+ SN6PR11MB3232.namprd11.prod.outlook.com (52.135.112.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Fri, 19 Apr 2019 21:05:44 +0000
+Received: from SN6PR11MB3167.namprd11.prod.outlook.com
+ ([fe80::11b:a687:cd42:570d]) by SN6PR11MB3167.namprd11.prod.outlook.com
+ ([fe80::11b:a687:cd42:570d%3]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
+ 21:05:44 +0000
+From:   Jethro Beekman <jethro@fortanix.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Andy Lutomirski <luto@kernel.org>, "Dr. Greg" <greg@enjellic.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Thread-Topic: [PATCH v20 00/28] Intel SGX1 support
+Thread-Index: AQHU9QnkBhtGQ+66Y0uqVL4+2rp75qZCKU6AgAAN+gCAAVPlAIAAE4gAgABGE4CAABE+gIAAAfEAgAAFP4A=
+Date:   Fri, 19 Apr 2019 21:05:44 +0000
+Message-ID: <72a190fa-34b6-62ff-f52d-1693f70c59cc@fortanix.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190418171059.GA20819@wind.enjellic.com>
+ <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
+ <20190419141732.GA2269@wind.enjellic.com>
+ <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
+ <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com>
+ <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+ <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
+In-Reply-To: <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0003.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::16) To SN6PR11MB3167.namprd11.prod.outlook.com
+ (2603:10b6:805:c4::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jethro@fortanix.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.107.146]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2e2c946e-105c-40f8-55dc-08d6c50ac9be
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600141)(711020)(4605104)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7193020);SRVR:SN6PR11MB3232;
+x-ms-traffictypediagnostic: SN6PR11MB3232:
+x-microsoft-antispam-prvs: <SN6PR11MB32327F14E7CE23265C4656AAAA270@SN6PR11MB3232.namprd11.prod.outlook.com>
+x-forefront-prvs: 0012E6D357
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(39840400004)(396003)(376002)(199004)(189003)(43544003)(93886005)(316002)(14444005)(52116002)(508600001)(102836004)(5660300002)(86362001)(186003)(66446008)(26005)(36756003)(8936002)(64756008)(256004)(66556008)(66946007)(4326008)(2616005)(6916009)(81166006)(14454004)(97736004)(6486002)(71200400001)(305945005)(2906002)(486006)(8676002)(6116002)(7736002)(81156014)(446003)(71190400001)(3846002)(68736007)(66066001)(54906003)(31686004)(6512007)(11346002)(53936002)(7416002)(76176011)(31696002)(6436002)(476003)(66476007)(229853002)(25786009)(99286004)(6506007)(6246003)(53546011)(73956011)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB3232;H:SN6PR11MB3167.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fortanix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 496NfF/hfLk2BB/+oKWWBlEtKP2Ajxgk+yPw2jOcHfN/oyFk+tX3u7CTPfFG+pXm6uEvB8xjPg3EVrXQx1UzaRaLe3Er24vyQb0DkvdQmJobHfKf+IbIyvVRZ3mVOJx3/HY6y0I9Uv1fhfPvPmF6npYzOzE5vhPmDTvvTvzzZ3mY50qHE9T75SMnCKzgLpcy7VsS7d0wFix6Zuq5T3HoEOAdlF6bGTOo/cZIg8wrnQi3infWqX6oBO7p2vETPx28DsErC2+P7+REWrSQNEW0cWCXYKx5Zea7QmhlnBqSmtpEsa3fSSoRNVh6vOWpz9IeGtBZclT/S+wInzhWQnxrKbmRVHmAxVwnX6K6dmqvKYvBdWnyht+jHdZu6WYd9OjeVy4N4Ge0T0+ZQ2TUmt44+sCixlLKxjJjGr1nnkPqKDY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F6149A358BEEAE49816331A22C3726D6@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [2620:10d:c081:10::13]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_12:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+X-OriginatorOrg: fortanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e2c946e-105c-40f8-55dc-08d6c50ac9be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 21:05:44.6424
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3232
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an opt-in interface that allows a tracepoint to provide a safe
-buffer that can be written from a BPF_PROG_TYPE_RAW_TRACEPOINT program.
-The size of the buffer must be a compile-time constant, and is checked
-before allowing a BPF program to attach to a tracepoint that uses this
-feature.
-
-The pointer to this buffer will be the first argument of tracepoints
-that opt in; the buffer is readable by both BPF_PROG_TYPE_RAW_TRACEPOINT
-and BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE programs that attach to such a
-tracepoint, but the buffer to which it points may only be written by the
-latter.
-
-Signed-off-by: Matt Mullins <mmullins@fb.com>
----
- include/linux/bpf.h             |  2 ++
- include/linux/bpf_types.h       |  1 +
- include/linux/tracepoint-defs.h |  1 +
- include/trace/bpf_probe.h       | 27 +++++++++++++++++++++++++--
- include/uapi/linux/bpf.h        |  1 +
- kernel/bpf/syscall.c            |  8 ++++++--
- kernel/bpf/verifier.c           | 31 +++++++++++++++++++++++++++++++
- kernel/trace/bpf_trace.c        | 21 +++++++++++++++++++++
- 8 files changed, 88 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index a2132e09dc1c..d3c71fd67476 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -263,6 +263,7 @@ enum bpf_reg_type {
- 	PTR_TO_SOCK_COMMON_OR_NULL, /* reg points to sock_common or NULL */
- 	PTR_TO_TCP_SOCK,	 /* reg points to struct tcp_sock */
- 	PTR_TO_TCP_SOCK_OR_NULL, /* reg points to struct tcp_sock or NULL */
-+	PTR_TO_TP_BUFFER,	 /* reg points to a writable raw tp's buffer */
- };
- 
- /* The information passed from prog-specific *_is_valid_access
-@@ -352,6 +353,7 @@ struct bpf_prog_aux {
- 	u32 used_map_cnt;
- 	u32 max_ctx_offset;
- 	u32 max_pkt_offset;
-+	u32 max_tp_access;
- 	u32 stack_depth;
- 	u32 id;
- 	u32 func_cnt; /* used by non-func prog as the number of func progs */
-diff --git a/include/linux/bpf_types.h b/include/linux/bpf_types.h
-index 08bf2f1fe553..c766108608cb 100644
---- a/include/linux/bpf_types.h
-+++ b/include/linux/bpf_types.h
-@@ -25,6 +25,7 @@ BPF_PROG_TYPE(BPF_PROG_TYPE_KPROBE, kprobe)
- BPF_PROG_TYPE(BPF_PROG_TYPE_TRACEPOINT, tracepoint)
- BPF_PROG_TYPE(BPF_PROG_TYPE_PERF_EVENT, perf_event)
- BPF_PROG_TYPE(BPF_PROG_TYPE_RAW_TRACEPOINT, raw_tracepoint)
-+BPF_PROG_TYPE(BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, raw_tracepoint_writable)
- #endif
- #ifdef CONFIG_CGROUP_BPF
- BPF_PROG_TYPE(BPF_PROG_TYPE_CGROUP_DEVICE, cg_dev)
-diff --git a/include/linux/tracepoint-defs.h b/include/linux/tracepoint-defs.h
-index 49ba9cde7e4b..b29950a19205 100644
---- a/include/linux/tracepoint-defs.h
-+++ b/include/linux/tracepoint-defs.h
-@@ -45,6 +45,7 @@ struct bpf_raw_event_map {
- 	struct tracepoint	*tp;
- 	void			*bpf_func;
- 	u32			num_args;
-+	u32			writable_size;
- } __aligned(32);
- 
- #endif
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index 505dae0bed80..d6e556c0a085 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -69,8 +69,7 @@ __bpf_trace_##call(void *__data, proto)					\
-  * to make sure that if the tracepoint handling changes, the
-  * bpf probe will fail to compile unless it too is updated.
-  */
--#undef DEFINE_EVENT
--#define DEFINE_EVENT(template, call, proto, args)			\
-+#define __DEFINE_EVENT(template, call, proto, args, size)		\
- static inline void bpf_test_probe_##call(void)				\
- {									\
- 	check_trace_callback_type_##call(__bpf_trace_##template);	\
-@@ -81,12 +80,36 @@ __bpf_trace_tp_map_##call = {						\
- 	.tp		= &__tracepoint_##call,				\
- 	.bpf_func	= (void *)__bpf_trace_##template,		\
- 	.num_args	= COUNT_ARGS(args),				\
-+	.writable_size	= size,						\
- };
- 
-+#define FIRST(x, ...) x
-+
-+#undef DEFINE_EVENT_WRITABLE
-+#define DEFINE_EVENT_WRITABLE(template, call, proto, args, size)	\
-+static inline void bpf_test_buffer_##call(void)				\
-+{									\
-+	/* BUILD_BUG_ON() is ignored if the code is completely eliminated, but \
-+	 * BUILD_BUG_ON_ZERO() uses a different mechanism that is not	\
-+	 * dead-code-eliminated.					\
-+	 */								\
-+	FIRST(proto);							\
-+	(void)BUILD_BUG_ON_ZERO(size != sizeof(*FIRST(args)));		\
-+}									\
-+__DEFINE_EVENT(template, call, PARAMS(proto), PARAMS(args), size)
-+
-+#undef DEFINE_EVENT
-+#define DEFINE_EVENT(template, call, proto, args)			\
-+	__DEFINE_EVENT(template, call, PARAMS(proto), PARAMS(args), 0)
- 
- #undef DEFINE_EVENT_PRINT
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
- 	DEFINE_EVENT(template, name, PARAMS(proto), PARAMS(args))
- 
- #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-+
-+#undef DEFINE_EVENT_WRITABLE
-+#undef __DEFINE_EVENT
-+#undef FIRST
-+
- #endif /* CONFIG_BPF_EVENTS */
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 3c38ac9a92a7..c5335d53ce82 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -166,6 +166,7 @@ enum bpf_prog_type {
- 	BPF_PROG_TYPE_LIRC_MODE2,
- 	BPF_PROG_TYPE_SK_REUSEPORT,
- 	BPF_PROG_TYPE_FLOW_DISSECTOR,
-+	BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE,
- };
- 
- enum bpf_attach_type {
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 62f6bced3a3c..27e2f22879a4 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1720,12 +1720,16 @@ static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
- 	}
- 	raw_tp->btp = btp;
- 
--	prog = bpf_prog_get_type(attr->raw_tracepoint.prog_fd,
--				 BPF_PROG_TYPE_RAW_TRACEPOINT);
-+	prog = bpf_prog_get(attr->raw_tracepoint.prog_fd);
- 	if (IS_ERR(prog)) {
- 		err = PTR_ERR(prog);
- 		goto out_free_tp;
- 	}
-+	if (prog->type != BPF_PROG_TYPE_RAW_TRACEPOINT &&
-+	    prog->type != BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE) {
-+		err = -EINVAL;
-+		goto out_put_prog;
-+	}
- 
- 	err = bpf_probe_register(raw_tp->btp, prog);
- 	if (err)
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ce166a002d16..32f706e99319 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -411,6 +411,7 @@ static const char * const reg_type_str[] = {
- 	[PTR_TO_SOCK_COMMON_OR_NULL] = "sock_common_or_null",
- 	[PTR_TO_TCP_SOCK]	= "tcp_sock",
- 	[PTR_TO_TCP_SOCK_OR_NULL] = "tcp_sock_or_null",
-+	[PTR_TO_TP_BUFFER]	= "tp_buffer",
- };
- 
- static char slot_type_char[] = {
-@@ -1958,6 +1959,32 @@ static int check_ctx_reg(struct bpf_verifier_env *env,
- 	return 0;
- }
- 
-+static int check_tp_buffer_access(struct bpf_verifier_env *env,
-+				  const struct bpf_reg_state *reg,
-+				  int regno, int off, int size)
-+{
-+	if (off < 0) {
-+		verbose(env,
-+			"R%d invalid tracepoint buffer access: off=%d, size=%d",
-+			regno, off, size);
-+		return -EACCES;
-+	}
-+	if (!tnum_is_const(reg->var_off) || reg->var_off.value) {
-+		char tn_buf[48];
-+
-+		tnum_strn(tn_buf, sizeof(tn_buf), reg->var_off);
-+		verbose(env,
-+			"R%d invalid variable buffer offset: off=%d, var_off=%s",
-+			regno, off, tn_buf);
-+		return -EACCES;
-+	}
-+	if (off + size > env->prog->aux->max_tp_access)
-+		env->prog->aux->max_tp_access = off + size;
-+
-+	return 0;
-+}
-+
-+
- /* truncate register to smaller size (in bytes)
-  * must be called with size < BPF_REG_SIZE
-  */
-@@ -2100,6 +2127,10 @@ static int check_mem_access(struct bpf_verifier_env *env, int insn_idx, u32 regn
- 		err = check_sock_access(env, insn_idx, regno, off, size, t);
- 		if (!err && value_regno >= 0)
- 			mark_reg_unknown(env, regs, value_regno);
-+	} else if (reg->type == PTR_TO_TP_BUFFER) {
-+		err = check_tp_buffer_access(env, reg, regno, off, size);
-+		if (!err && t == BPF_READ && value_regno >= 0)
-+			mark_reg_unknown(env, regs, value_regno);
- 	} else {
- 		verbose(env, "R%d invalid mem access '%s'\n", regno,
- 			reg_type_str[reg->type]);
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index d64c00afceb5..a2dd79dc6871 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -909,6 +909,24 @@ const struct bpf_verifier_ops raw_tracepoint_verifier_ops = {
- const struct bpf_prog_ops raw_tracepoint_prog_ops = {
- };
- 
-+static bool raw_tp_writable_prog_is_valid_access(int off, int size,
-+						 enum bpf_access_type type,
-+						 const struct bpf_prog *prog,
-+						 struct bpf_insn_access_aux *info)
-+{
-+	if (off == 0 && size == sizeof(u64))
-+		info->reg_type = PTR_TO_TP_BUFFER;
-+	return raw_tp_prog_is_valid_access(off, size, type, prog, info);
-+}
-+
-+const struct bpf_verifier_ops raw_tracepoint_writable_verifier_ops = {
-+	.get_func_proto  = raw_tp_prog_func_proto,
-+	.is_valid_access = raw_tp_writable_prog_is_valid_access,
-+};
-+
-+const struct bpf_prog_ops raw_tracepoint_writable_prog_ops = {
-+};
-+
- static bool pe_prog_is_valid_access(int off, int size, enum bpf_access_type type,
- 				    const struct bpf_prog *prog,
- 				    struct bpf_insn_access_aux *info)
-@@ -1198,6 +1216,9 @@ static int __bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *
- 	if (prog->aux->max_ctx_offset > btp->num_args * sizeof(u64))
- 		return -EINVAL;
- 
-+	if (prog->aux->max_tp_access > btp->writable_size)
-+		return -EINVAL;
-+
- 	return tracepoint_probe_register(tp, (void *)btp->bpf_func, prog);
- }
- 
--- 
-2.17.1
-
+T24gMjAxOS0wNC0xOSAxMzo0NiwgSmV0aHJvIEJlZWttYW4gd3JvdGU6DQo+IE9uIDIwMTktMDQt
+MTkgMTM6MzksIFRob21hcyBHbGVpeG5lciB3cm90ZToNCj4+IE9uIEZyaSwgMTkgQXByIDIwMTks
+IEpldGhybyBCZWVrbWFuIHdyb3RlOg0KPj4NCj4+PiBPbiAyMDE5LTA0LTE5IDA4OjI3LCBBbmR5
+IEx1dG9taXJza2kgd3JvdGU6DQo+Pj4+IFRoZXJlIGFyZSBtYW55LA0KPj4+PiBtYW55IExpbnV4
+IHN5c3RlbXMgdGhhdCBlbmZvcmNlIGEgcG9saWN5IHRoYXQgKmFsbCogZXhlY3V0YWJsZSB0ZXh0
+DQo+Pj4+IG5lZWRzIHRvIGNvbWUgZnJvbSBhIHZlcmlmaWVkIHNvdXJjZS4gIE9uIHRoZXNlIHN5
+c3RlbXMsIHlvdSBjYW4ndA0KPj4+PiBtbWFwIHNvbWUgd3JpdGFibGUgbWVtb3J5LCB3cml0ZSB0
+byBpdCwgYW5kIHRoZW4gY2hhbmdlIGl0IHRvDQo+Pj4+IGV4ZWN1dGFibGUuDQo+Pj4NCj4+PiBI
+b3cgaXMgdGhpcyBpbXBsZW1lbnRlZCBvbiB0aG9zZSBzeXN0ZW1zPyBBRkFJSyB0aGVyZSdzIG5v
+IGtlcm5lbCBjb25maWcNCj4+PiBvcHRpb24gdGhhdCBjaGFuZ2VzIHRoZSBzZW1hbnRpY3Mgb2Yg
+bW1hcCBhcyB5b3UgZGVzY3JpYmUuDQo+Pg0KPj4gVGhhdCBoYXMgbm90aGluZyB0byBkbyB3aXRo
+IG1tYXAoKSBzZW1hbnRpY3MuIFlvdSBtbWFwKCkgd3JpdGVhYmxlIG1lbW9yeQ0KPj4gYW5kIHRo
+ZW4geW91IGNoYW5nZSB0aGUgcGVybWlzc2lvbnMgdmlhIG1wcm90ZWN0KCkuIG1wcm90ZWN0KCkg
+Y2FsbHMgaW50bw0KPj4gTFNNIGFuZCBkZXBlbmRpbmcgb24gcG9saWN5IGFuZCBzZWN1cml0eSBt
+b2RlbCB0aGlzIHdpbGwgcmVqZWN0IHRoZQ0KPj4gcmVxdWVzdC4NCj4+DQo+PiBBbmR5IHdhcyBw
+b2ludGluZyBvdXQgdGhhdCB0aGUgU0dYIGlvY3RsIGJ5cGFzc2VzIHRoZSBMU00gbWVjaGFuaWNz
+IHdoaWNoDQo+PiBpcyBvYnZpb3VzbHkgYSBiYWQgdGhpbmcuDQo+IA0KPiBXZSBjb3VsZCBtb2Rp
+ZnkgdGhlIGRyaXZlciBzdWNoIHRoYXQgd2hlbiB5b3UgY2FsbCBpb2N0bCBFQURELCB0aGUgcGFn
+ZQ0KPiB0YWJsZSBwZXJtaXNzaW9ucyBuZWVkIHRvIGJlIHRoZSBQQUdFSU5GTy5TRUNJTkZPLkZM
+QUdTIHwgUFJPVF9XUklURSwNCj4gb3RoZXJ3aXNlIHlvdSBnZXQgRVBFUk0gb3Igc28uIEFmdGVy
+IEVBREQsIGlmIHlvdSB3YW50LCB5b3UgY2FuIHJlc3RyaWN0DQoNCkFjdHVhbGx5LCBJIGRvbid0
+IHRoaW5rIHlvdSBldmVuIG5lZWQgdG8gaW5jbHVkZSBQQUdFSU5GTy5TRUNJTkZPLkZMQUdTLA0K
+eW91IGp1c3QgbmVlZCB0byBlbnN1cmUgUFJPVF9XUklURS4gUmVndWxhciBwYWdlIHRhYmxlIGNo
+ZWNrcyB0YWtlIGNhcmUNCm9mIFBBR0VJTkZPLlNFQ0lORk8uRkxBR1MuDQoNCi0tDQpKZXRocm8g
+QmVla21hbiB8IEZvcnRhbml4DQo=
