@@ -2,92 +2,108 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8B6C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE389C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B82F2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC8E20821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6CqbbCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfDSU6q (ORCPT
+        id S1727667AbfDSU6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:58:46 -0400
-Received: from relay.sw.ru ([185.231.240.75]:35560 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfDSU6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:58:45 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hHWJj-0000tZ-Rm; Fri, 19 Apr 2019 19:24:48 +0300
-Subject: Re: [PATCH 1/4] net/skbuff: don't waste memory reserves
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Willem de Bruijn <willemb@google.com>,
-        Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190418180524.23489-1-aryabinin@virtuozzo.com>
- <791f4f23-d931-4ac8-4e60-3ffe46c4ece2@gmail.com>
- <c2c270d9-29c0-b993-84c5-4c994608f7c8@virtuozzo.com>
- <a80606cf-3076-b01d-0442-ccff3c462276@gmail.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <6651d0b9-4ddf-ef6d-6f53-e1290b7aeeee@virtuozzo.com>
-Date:   Fri, 19 Apr 2019 19:25:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <a80606cf-3076-b01d-0442-ccff3c462276@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Apr 2019 16:58:51 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46377 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfDSU6u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:58:50 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s24so5186045otk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=N1W8LuisafzPG22GTbbXaTDt59BPFMJ1rINmkc7NvLM=;
+        b=D6CqbbCZ296hgBHOniva9HLqHUXJ095kL3fh96HTHVpcc+lMeXrGc9R+KdS6vqNgpN
+         ynZJCQVk1ZXBmt5djxkWV3jbR+FbZ1TIgq+nJHMnDnncqd9F/2kW9U5spWQJPrkqdwdn
+         DgO/wEWzQKgqL+h5BzfmtSPhGoukCc2K4rytQNYJWGwUYdEyNEs8VyMuYZYlQqDjMSZt
+         PCgGtj7BqH0QwdGeHmVXf9/6rMWLDznLkE5WSfp5gXwFqUK2xP599bVrrws7KJmqtlNw
+         GJ7pMYivKbld5RjohgzMXI1b9yTVVr3y0ssiqHcKvCvEceN8yBhb1xbAnBtwQzaNJZvO
+         hZ9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N1W8LuisafzPG22GTbbXaTDt59BPFMJ1rINmkc7NvLM=;
+        b=M4aagvsxHf14F3ZoXfTU8eWj4PdPRfrUWSafxJkaJ8O5Jl5c3tyw4vVPaVz8kXHKmv
+         kxCUIKTrvr1iSo7Aht/sNhYPMOUg91ERfeyoRjgPd0oTPa+CvV15EJO6OyTCwRb0DM3K
+         QN0Jeux2kxyRNABqYQGT0LkgVVbvTuF6eUDxIOcrQqgYn93R+Vt9HGXypoNtSPlY0KBd
+         mrWpemxSpaNjdr80xouZ9iUDti5xzAdGk58Uht81jXxZLSohvjo7B6RI1dP7mhPlKhbP
+         YvufzSAMVBj/SSwbjRlfHmFs/YbQwgcC7/qXPR2myYf+irJZ+7sIpExqPLPZosMtSlLZ
+         vpLQ==
+X-Gm-Message-State: APjAAAVIV27RYc+OIm0pVP7CxJ/aljZWPrBD6pOAjg8vhFIpTtJPwpU7
+        Igh0vJO4CPPoxwfit+B8AHs=
+X-Google-Smtp-Source: APXvYqx2PKSaxFqomLVzIGW5T2N1vY1DFaFZt/d2fnTXrHQjI2ZXSZhXWCdVhHLM3qePdy7cwd+6GA==
+X-Received: by 2002:a9d:3f05:: with SMTP id m5mr3555236otc.59.1555707529919;
+        Fri, 19 Apr 2019 13:58:49 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:151b:11be:d797:d50])
+        by smtp.gmail.com with ESMTPSA id q25sm2211897otl.60.2019.04.19.13.58.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 13:58:49 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH] Staging: rtl8723bs: core: Replace return types
+Date:   Fri, 19 Apr 2019 15:58:45 -0500
+Message-Id: <20190419205845.586-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 4:41 PM, Eric Dumazet wrote:
-> On 04/19/2019 06:17 AM, Andrey Ryabinin wrote:
->>
-> 
->> I don't see why that would be a problem. If refill failed because we didn't have
->> access to reserves, then there going to be an another refill attempt, right?
->> And the next refill attempt will be with access to the reserves if memalloc socket was created.
->> We can't predict the future, so until the memalloc socket appeared we must assume that those
->> RX ring buffers won't be used to reclaim memory (and that is actually true in 99% of cases).
->>
-> 
-> I just said that the alloc might be attempted "in the past"
-> 
-> Yes, we can not predict the future, this is why we need to access the reserve _now_ and not
-> at the time the packet is received.
-> 
-> The 'being true in 99% of cases' argument is not really convincing.
-> 
-> You want the NIC to be ready to receive packets even before sk_memalloc_socks() becomes true.
+Remove unwanted assignments and replace return types.
 
-The fact that we allocate pages before the socket created I completely understand.
+Issue suggested by Coccinelle.
 
-But why that failed allocation is such a problem?
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_sta_mgt.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-1. sk_memalloc_socks() false
-2. NIC driver tries to allocate pages and fails
-3. swapon /nfs/swap_file /* memalloc_socket created */
-4. We may be loosing some packets because of 2. But there will be retransmit, I suppose NIC driver will
-try to allocate pages again, and this time with access to reserves, so eventually we all good.
+diff --git a/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c b/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c
+index b9d36db762a9..2474fa6fb49b 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c
++++ b/drivers/staging/rtl8723bs/core/rtw_sta_mgt.c
+@@ -204,8 +204,7 @@ struct	sta_info *rtw_alloc_stainfo(struct	sta_priv *pstapriv, u8 *hwaddr)
+ 	if (list_empty(&pfree_sta_queue->queue)) {
+ 		/* spin_unlock_bh(&(pfree_sta_queue->lock)); */
+ 		spin_unlock_bh(&(pstapriv->sta_hash_lock));
+-		psta = NULL;
+-		return psta;
++		return NULL;
+ 	} else {
+ 		psta = LIST_CONTAINOR(get_next(&pfree_sta_queue->queue), struct sta_info, list);
+ 
+@@ -586,12 +585,10 @@ u32 rtw_init_bcmc_stainfo(struct adapter *padapter)
+ 
+ struct sta_info *rtw_get_bcmc_stainfo(struct adapter *padapter)
+ {
+-	struct sta_info *psta;
+ 	struct sta_priv *pstapriv = &padapter->stapriv;
+ 	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+ 
+-	psta = rtw_get_stainfo(pstapriv, bc_addr);
+-	return psta;
++	return rtw_get_stainfo(pstapriv, bc_addr);
+ }
+ 
+ u8 rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr)
+-- 
+2.17.1
 
-So what is the problem? Potential lost of some packets for some period of time after swapon?
-
-
-> If a NIC driver has a bug, please fix it.
-> 
-
-I don't follow, what kind of bug are you talking about?
-The problem I'm trying to fix is entirely in __dev_alloc_pages():
-1. sk_memalloc_socks() false all the time.
-2. NIC takes pages from memory reserves
-3. The fact that we occupying memory reserves increases the chances that the next page will be also taken from reserves as well,
-which means more dropped packets than we would have without using the reserves.
