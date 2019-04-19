@@ -2,266 +2,113 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429ACC282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851FDC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09CD020449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CFD220449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698701;
-	bh=KHdfK68h7p/uWDc3oE+Uf7pBOoUGZ4LP+1YJkqA5emw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=2mqIyHTEMfkYX5+niMcMpgZRu63jRikecr8ziXY2lnlMuaOiZmojUKFwWgMYDkUZn
-	 +8+l1/Sxt1n6ru0r54BUeKrVS9feRsjqGFzB1+B5PZUbjurS3Lne2NICNJLTStQvZF
-	 MCJWAcMF40TSwN0Uu41BMc14ACg8uIgOcmh64JwY=
+	s=default; t=1555698705;
+	bh=TWHAWZg1oz+onYqFOauH5y08DI3/Kwu7W8Otd0JRnoc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gd6svGMnA8t+KBvYbFjiGl8M6eleXKHZfWi+E3DkvQ4ctLRY/FrpXlBXM8grJHHD9
+	 1n53Wyr1fTQBaGPO7Yp245vvraC++6UQgzRIkoHCfO4cwMP8z4fBAjO1bVAToVhP/6
+	 i/0Va2H6F1NnocwHeoIj4qH0PflO98Qx7Y9TY4S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfDSSbk (ORCPT
+        id S1728155AbfDSSbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53924 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727744AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727933AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 14:29:17 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59AF5222C9;
-        Fri, 19 Apr 2019 14:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4610A2190B;
+        Fri, 19 Apr 2019 11:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555683470;
-        bh=KHdfK68h7p/uWDc3oE+Uf7pBOoUGZ4LP+1YJkqA5emw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YtO6QQXN0EDZkrkBYlKlvEdsj63bfcrQ+6QKt1cPRfUGODvqmf40am7C8Th0EL8aI
-         sJK4iCfhGR2nP+2oAYTSft+H9O1O7W/3evYagRH0B+PHtVOkmdbkhjyPIhBBI4qtU3
-         5i++DxIvCb0/pnrhf2ykQZrD9LTBl7laqTgERNbk=
-Subject: Re: [PATCH for 5.1 3/3] rseq/selftests: Adapt number of threads to
- the number of detected cpus
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
- <20190305194755.2602-4-mathieu.desnoyers@efficios.com>
- <20190419103847.GA111210@gmail.com>
- <1444419838.71.1555677682502.JavaMail.zimbra@efficios.com>
- <1266612341.87.1555678507226.JavaMail.zimbra@efficios.com>
- <614774674.134.1555681346941.JavaMail.zimbra@efficios.com>
- <1863599735.141.1555681723685.JavaMail.zimbra@efficios.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6ba0796c-8a96-f797-265c-37bfb9b4bb71@kernel.org>
-Date:   Fri, 19 Apr 2019 08:17:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        s=default; t=1555672710;
+        bh=TWHAWZg1oz+onYqFOauH5y08DI3/Kwu7W8Otd0JRnoc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YLxccr+4s21gR0deaKtlBKCkRwMYGYQGd6IGNBTzB0bX6NJ+/X4GgBFtcHcKoAmL7
+         qtbT5xKb4GUavH9L+F4znp+rn3oVBT/wTUWDTQwc0P9F7g8jcVgC/mTR4cxLoRQdQc
+         Vq2HGzU73zKdbCutfiLuFuTRfyzuO1LGjwR6Zg7g=
+Date:   Fri, 19 Apr 2019 19:18:25 +0800
+From:   Guo Ren <guoren@kernel.org>
+To:     Mao Han <han_mao@c-sky.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] csky: add page fault perf event support
+Message-ID: <20190419111825.GA20554@guoren-Inspiron-7460>
+References: <46349332f41f16896afde240973764c385d78cd3.1555568371.git.han_mao@c-sky.com>
 MIME-Version: 1.0
-In-Reply-To: <1863599735.141.1555681723685.JavaMail.zimbra@efficios.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46349332f41f16896afde240973764c385d78cd3.1555568371.git.han_mao@c-sky.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 7:48 AM, Mathieu Desnoyers wrote:
-> ----- On Apr 19, 2019, at 9:42 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-> 
->> ----- On Apr 19, 2019, at 8:55 AM, Mathieu Desnoyers
->> mathieu.desnoyers@efficios.com wrote:
->>
->>> ----- On Apr 19, 2019, at 8:41 AM, Mathieu Desnoyers
->>> mathieu.desnoyers@efficios.com wrote:
->>>
->>>> ----- On Apr 19, 2019, at 6:38 AM, Ingo Molnar mingo@kernel.org wrote:
->>>>
->>>>> * Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
->>>>>
->>>>>> On smaller systems, running a test with 200 threads can take a long
->>>>>> time on machines with smaller number of CPUs.
->>>>>>
->>>>>> Detect the number of online cpus at test runtime, and multiply that
->>>>>> by 6 to have 6 rseq threads per cpu preempting each other.
->>>>>>
->>>>>> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->>>>>> Cc: Shuah Khan <shuah@kernel.org>
->>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>>>> Cc: Joel Fernandes <joelaf@google.com>
->>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>>> Cc: Dave Watson <davejwatson@fb.com>
->>>>>> Cc: Will Deacon <will.deacon@arm.com>
->>>>>> Cc: Andi Kleen <andi@firstfloor.org>
->>>>>> Cc: linux-kselftest@vger.kernel.org
->>>>>> Cc: "H . Peter Anvin" <hpa@zytor.com>
->>>>>> Cc: Chris Lameter <cl@linux.com>
->>>>>> Cc: Russell King <linux@arm.linux.org.uk>
->>>>>> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
->>>>>> Cc: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
->>>>>> Cc: Paul Turner <pjt@google.com>
->>>>>> Cc: Boqun Feng <boqun.feng@gmail.com>
->>>>>> Cc: Josh Triplett <josh@joshtriplett.org>
->>>>>> Cc: Steven Rostedt <rostedt@goodmis.org>
->>>>>> Cc: Ben Maurer <bmaurer@fb.com>
->>>>>> Cc: Andy Lutomirski <luto@amacapital.net>
->>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->>>>>> ---
->>>>>>   tools/testing/selftests/rseq/run_param_test.sh | 7 +++++--
->>>>>>   1 file changed, 5 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/tools/testing/selftests/rseq/run_param_test.sh
->>>>>> b/tools/testing/selftests/rseq/run_param_test.sh
->>>>>> index 3acd6d75ff9f..e426304fd4a0 100755
->>>>>> --- a/tools/testing/selftests/rseq/run_param_test.sh
->>>>>> +++ b/tools/testing/selftests/rseq/run_param_test.sh
->>>>>> @@ -1,6 +1,8 @@
->>>>>>   #!/bin/bash
->>>>>>   # SPDX-License-Identifier: GPL-2.0+ or MIT
->>>>>>   
->>>>>> +NR_CPUS=`grep '^processor' /proc/cpuinfo | wc -l`
->>>>>> +
->>>>>>   EXTRA_ARGS=${@}
->>>>>>   
->>>>>>   OLDIFS="$IFS"
->>>>>> @@ -28,15 +30,16 @@ IFS="$OLDIFS"
->>>>>>   
->>>>>>   REPS=1000
->>>>>>   SLOW_REPS=100
->>>>>> +NR_THREADS=$((6*${NR_CPUS}))
->>>>>>   
->>>>>>   function do_tests()
->>>>>>   {
->>>>>>   	local i=0
->>>>>>   	while [ "$i" -lt "${#TEST_LIST[@]}" ]; do
->>>>>>   		echo "Running test ${TEST_NAME[$i]}"
->>>>>> -		./param_test ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} || exit 1
->>>>>> +		./param_test ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@} ${EXTRA_ARGS}
->>>>>> || exit 1
->>>>>>   		echo "Running compare-twice test ${TEST_NAME[$i]}"
->>>>>> -		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} ||
->>>>>> exit 1
->>>>>> +		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@}
->>>>>> ${EXTRA_ARGS} || exit 1
->>>>>>   		let "i++"
->>>>>>   	done
->>>>>>   }
->>>>>
->>>>> BTW., when trying to build the rseq self-tests I get this build failure:
->>>>>
->>>>>   dagon:~/tip/tools/testing/selftests/rseq> make
->>>>>   gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ -shared
->>>>>   -fPIC rseq.c -lpthread -o
->>>>>   /home/mingo/tip/tools/testing/selftests/rseq/librseq.so
->>>>>   gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ basic_test.c
->>>>>   -lpthread -lrseq -o /home/mingo/tip/tools/testing/selftests/rseq/basic_test
->>>>>   gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./
->>>>>   basic_percpu_ops_test.c -lpthread -lrseq -o
->>>>>   /home/mingo/tip/tools/testing/selftests/rseq/basic_percpu_ops_test
->>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o: in function `rseq_cmpeqv_storev':
->>>>>   /home/mingo/tip/tools/testing/selftests/rseq/./rseq-x86.h:84: undefined
->>>>>   reference to `.L8'
->>>>>   /usr/bin/ld: /home/mingo/tip/tools/testing/selftests/rseq/./rseq-x86.h:84:
->>>>>   undefined reference to `.L49'
->>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o: in function `rseq_cmpnev_storeoffp_load':
->>>>>   /home/mingo/tip/tools/testing/selftests/rseq/./rseq-x86.h:141: undefined
->>>>>   reference to `.L57'
->>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o:(__rseq_failure+0x8): undefined reference to `.L8'
->>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o:(__rseq_failure+0x14): undefined reference to
->>>>>   `.L49'
->>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o:(__rseq_failure+0x20): undefined reference to
->>>>>   `.L55'
->>>>>   collect2: error: ld returned 1 exit status
->>>>>   make: *** [Makefile:22:
->>>>>   /home/mingo/tip/tools/testing/selftests/rseq/basic_percpu_ops_test] Error 1
->>>>>
->>>>> Is this a known problem, or do I miss something from my build environment
->>>>> perhaps? Vanilla 64-bit Ubuntu 18.10 (Cosmic).
->>>>
->>>> It works fine with gcc-7 (gcc version 7.3.0 (Ubuntu 7.3.0-16ubuntu3))
->>>> but indeed I get the same failure with gcc-8 (gcc version 8.0.1 20180414
->>>> (experimental) [trunk revision 259383] (Ubuntu 8-20180414-1ubuntu2)).
->>>>
->>>> Thanks for reporting! I will investigate.
->>>
->>> It looks like gcc-8 optimize away the target of asm goto labels when
->>> there are more than one of them on x86-64. I'll try to come up with
->>> a simpler reproducer.
->>
->> It appears to be related to gcc-8 mishandling combination of
->> asm goto and thread-local storage input operands on x86-64.
->> Here is a simple reproducer:
->>
->> __thread int var;
->>   
->> static int fct(void)
->> {
->>         asm goto (      "jmp %l[testlabel]\n\t"
->>                         : : [var] "m" (var) : : testlabel);
->>         return 0;
->> testlabel:
-> 
-> FWIW, if I add an empty
-> 
->     asm volatile ("");
-> 
-> here after the label, gcc-8 -O2 builds "something" which is
-> a bogus assembler (an endless loop) :
-> 
-> main:
-> .LFB24:
->          .cfi_startproc
-> .L2:
->          subq    $8, %rsp
->          .cfi_def_cfa_offset 16
-> #APP
-> # 6 "test-asm-goto.c" 1
->          jmp .L2
-> 
-> # 0 "" 2
-> #NO_APP
->          movl    %fs:var@tpoff, %edx
->          leaq    .LC0(%rip), %rsi
->          movl    $1, %edi
->          xorl    %eax, %eax
->          call    __printf_chk@PLT
->          xorl    %eax, %eax
->          addq    $8, %rsp
->          .cfi_def_cfa_offset 8
->          ret
->          .cfi_endproc
-> 
-> Thoughts ?
-> 
+Looks good, nice Job, Maomao
 
-Didn't see problems when I tested it before applying it to
-linux-kselftest next.
-
-I have gcc version 7.3.0 (Ubuntu 7.3.0-27ubuntu1~18.04)
-
-thanks,
--- Shuah
-
-
+On Thu, Apr 18, 2019 at 02:20:40PM +0800, Mao Han wrote:
+> This patch add support for page fault count, major fault count
+> and minorfault count. Without this patch page faults are not
+> sampled for perf event.
+> 
+>  Performance counter stats for '/usr/lib/perf-test/callchain_test':
+>                  0      page-faults               #    0.000 K/sec
+> 
+> Signed-off-by: Mao Han <han_mao@c-sky.com>
+> ---
+>  arch/csky/mm/fault.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
+> index e1725f8..d07141d 100644
+> --- a/arch/csky/mm/fault.c
+> +++ b/arch/csky/mm/fault.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/vt_kern.h>
+>  #include <linux/extable.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/perf_event.h>
+>  
+>  #include <asm/hardirq.h>
+>  #include <asm/mmu_context.h>
+> @@ -106,6 +107,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+>  		return;
+>  	}
+>  #endif
+> +
+> +	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+>  	/*
+>  	 * If we're in an interrupt or have no user
+>  	 * context, we must not take the fault..
+> @@ -153,10 +156,15 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
+>  			goto bad_area;
+>  		BUG();
+>  	}
+> -	if (fault & VM_FAULT_MAJOR)
+> +	if (fault & VM_FAULT_MAJOR) {
+>  		tsk->maj_flt++;
+> -	else
+> +		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs,
+> +			      address);
+> +	} else {
+>  		tsk->min_flt++;
+> +		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs,
+> +			      address);
+> +	}
+>  
+>  	up_read(&mm->mmap_sem);
+>  	return;
+> -- 
+> 2.7.4
+> 
