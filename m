@@ -2,109 +2,154 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5C5C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFBAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F309020645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0E42064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="mxkAJYVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbfDSTCo (ORCPT
+        id S1728948AbfDSTCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:02:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51012 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfDSTC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:02:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 07:25:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,370,1549958400"; 
-   d="scan'208";a="152227182"
-Received: from acmoga-mobl3.amr.corp.intel.com (HELO [10.254.89.246]) ([10.254.89.246])
-  by orsmga002.jf.intel.com with ESMTP; 19 Apr 2019 07:25:49 -0700
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190418171059.GA20819@wind.enjellic.com>
- <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
- <20190419141732.GA2269@wind.enjellic.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <8a225d74-0f57-fedd-da31-c11c4f57961d@intel.com>
-Date:   Fri, 19 Apr 2019 07:25:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 15:02:42 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43912 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbfDSTCl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:02:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id i68so4644121lfi.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iK1taWbgATs8Vl8fFsChTbd5jcA8vAv8F4ZJybEWxxU=;
+        b=mxkAJYVmuq2pr6gOlJ0xL389JPlOlngx6VE/088bLhYmI7OQF43z1E4M8O+BW+POKE
+         PR3zP9uyePtE3LCa5weImSzv4ICMWTzz1c5kVbO/oEStZ9XsFILFY6EwGQ0qUbS/bYxH
+         LSfJCvjW+t2Mlq438H0xzjAr8ue1U7JJW7+v5mnKOGqFFBvvp+61pGdvqkCUFshPPUGa
+         qeYIw1MTq4rk3hS9QIjOLMVgF+L3sfuY3II0YNEM15IRnJMhVjnMixF0qIowDclYTvoR
+         swb2KkBkXzVVOIhVIPkg5L62a1BSReSf6rDDUEF2ScPoVS51vzwe6v41CLkIdSLk7IwG
+         IpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iK1taWbgATs8Vl8fFsChTbd5jcA8vAv8F4ZJybEWxxU=;
+        b=UO8RAzT/WAH7ywWhN+rDJJSlrhMylWJfqBg5Ro0iX6+TBmTsrqYtwVj/Ly5jQsFnNV
+         GJkOn5xNHgjjLFqkWuhXpbTFI/BoWWWAuDIVVTdtW5vwTx49qaboUfc/IxyLFAk+AQ8+
+         ySBiQ/h/g0meeBZDPE/lLyaxHbu2ISsDsROZZdBsnHb7mcTsqan3Vd6U4dKnx+nr/Hg+
+         D25zY/zTtGNoTSR8z9vMBKfQWIszE+k/Nul9uLpBWDcODkDScN9W4NBM+PbwDg2meiMg
+         b18cxNXhSvLiK5xqA0FSXl0EZMHrijvUOKflJqzn3K5DzbXTfGG7HvWeFQ/ueA0rUMiz
+         BClw==
+X-Gm-Message-State: APjAAAVnhZyaUfjKvL338tMy+DdlhJ4tiGeozrUjSfopIYt8m1kec4QW
+        WdtOCQUlEC0MNxKuya2BC+30yBZw+neRtfOSI1D1
+X-Google-Smtp-Source: APXvYqyHYDOuzDa4e9JuBSsCJiFvs/FyB2lIMrmM48Pvdmxy8YprG6nz6qk/neEAlYQkJTgIXoi7dCWZIHUWMztxVGs=
+X-Received: by 2002:a19:2814:: with SMTP id o20mr2658257lfo.117.1555690420662;
+ Fri, 19 Apr 2019 09:13:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190419141732.GA2269@wind.enjellic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
+ <20190415134331.GC22204@redhat.com> <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
+ <20190415150520.GA13257@redhat.com> <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
+ <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
+ <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com> <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
+ <20190417145711.GI32622@redhat.com> <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
+ <20190417162723.GK32622@redhat.com> <CAHC9VhT_nk1jmrTj3W=F+1gP1vU3iZsZ=UGOCwdiBLbUsOc9=w@mail.gmail.com>
+ <0ca3f4cf-5c64-2fc0-1885-9dbcca2f4b47@schaufler-ca.com> <5CB7E5D4.2060703@huawei.com>
+ <CAHC9VhQkrR+m9_dYLg4VG-26TdUnf8XFjbmuVQ70YCOp6DhN_g@mail.gmail.com>
+ <5CB933C4.7000300@huawei.com> <CAHC9VhTdJ6uUOjyxrk=+iOkKe=VN+N9DMPtV=OchAY34x95g=w@mail.gmail.com>
+ <5CB9DC75.7010600@huawei.com>
+In-Reply-To: <5CB9DC75.7010600@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 19 Apr 2019 12:13:29 -0400
+Message-ID: <CAHC9VhQqxL+LsK8YTD6PpTHaZsZ-PxAq3atdZKQcZLQZQH7t4g@mail.gmail.com>
+Subject: Re: kernel BUG at kernel/cred.c:434!
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Oleg Nesterov <oleg@redhat.com>, john.johansen@canonical.com,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SELinux <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 7:17 AM, Dr. Greg wrote:
-> 3.) The approach we propose addresses these issues while imposing no
-> functional limitations on how Linux platform owners can use enclave
-> technology.
+On Fri, Apr 19, 2019 at 10:34 AM Yang Yingliang
+<yangyingliang@huawei.com> wrote:
+> On 2019/4/19 21:24, Paul Moore wrote:
+> > On Thu, Apr 18, 2019 at 10:42 PM Yang Yingliang
+> > <yangyingliang@huawei.com> wrote:
+> >> On 2019/4/19 10:04, Paul Moore wrote:
+> >>> On Wed, Apr 17, 2019 at 10:50 PM Yang Yingliang
+> >>> <yangyingliang@huawei.com> wrote:
+> >>>> On 2019/4/18 8:24, Casey Schaufler wrote:
+> >>>>> On 4/17/2019 4:39 PM, Paul Moore wrote:
+> >>>>>> Since it looks like all three LSMs which implement the setprocattr
+> >>>>>> hook are vulnerable I'm open to the idea that proc_pid_attr_write() is
+> >>>>>> a better choice for the cred != read_cred check, but I would want to
+> >>>>>> make sure John and Casey are okay with that.
+> >>>>>>
+> >>>>>> John?
+> >>>>>>
+> >>>>>> Casey?
+> >>>>> I'm fine with the change going into proc_pid_attr_write().
+> >>>> The cred != real_cred checking is not enough.
+> >>>>
+> >>>> Consider this situation, when doing override, cred, real_cred and
+> >>>> new_cred are all same:
+> >>>>
+> >>>> after override_creds()    cred == real_cred == new1_cred
+> >>> I'm sorry, you've lost me.  After override_creds() returns
+> >>> current->cred and current->real_cred are not going to be the same,
+> >>> yes?
+> >> It's possible the new  cred is equal to current->real_cred and
+> >> current->cred,
+> >> so after overrides_creds(), they have the same value.
+> > Both task_struct.cred and task_struct.real_cred are pointer values,
+> > assuming that one uses prepare_creds() to allocate/initialize a new
+> > cred struct for use with override_creds() then the newly created cred
+> > should never be equal to task_struct.real_cred.  Am I missing
+> > something, or are you thinking of something else?
+>
+> In do_acct_process(), file->f_cred may equal to current->real_cred, I
+> confirm
+> it by adding some debug message in do_acct_process() like this:
 
-Let's say v20 gets merged.  Is there any reason your approach can not be
-rebased on top of that code, reviewed and merged later?
+I would expect that; real_cred is the task's objective DAC
+credentials, so using it for f_cred makes sense.
+
+What we are now talking about is the task's subjective credentials,
+which can be overridden via override_creds(), and are what the LSMs
+change via proc_pid_attr_write().
+
+> --- a/kernel/acct.c
+> +++ b/kernel/acct.c
+> @@ -481,6 +481,7 @@ static void do_acct_process(struct bsd_acct_struct
+> *acct)
+>          flim = current->signal->rlim[RLIMIT_FSIZE].rlim_cur;
+>          current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
+>          /* Perform file operations on behalf of whoever enabled
+> accounting */
+> +       pr_info("task:%px new cred:%px real cred:%px cred:%px\n",
+> current, file->f_cred, current->real_cred, current->cred);
+>          orig_cred = override_creds(file->f_cred);
+
+-- 
+paul moore
+www.paul-moore.com
