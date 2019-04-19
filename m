@@ -2,137 +2,147 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F6EC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D77420663
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:54:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQqxB4Jz"
+	by mail.kernel.org (Postfix) with ESMTP id 365FC20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfDSSx7 (ORCPT
+        id S1728539AbfDSSyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:53:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37824 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbfDSSx6 (ORCPT
+        Fri, 19 Apr 2019 14:54:12 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:58892 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfDSSyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:53:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so3017395pgc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ABjKbsKS89ab0w5qLsKCXnPeDLkUJ8jMCwLjkL2i1h0=;
-        b=GQqxB4JzuX0VR1gLQiG6g9rOvWu1e247YrDS+w3LB0vs3i5KfMT130j5yHKxDC5I0f
-         k6EZcSGElKhWbrqZPh7GTsY+qpDb4ifh9qIA9vpjNA62MElr/NhL1ssDMTtHIoI5IvIr
-         AepH8COeogfVBxGf5rysNEkUiDqAUHj6hYYrxU+XFO9xRvy5PFvx6n2t0/VZCgT3gNUr
-         lpNXIRVvMfyqpB9AMumohJMjQEpinxtvT5J2KsaZzjsGqAuIjz+Fja8NSAG6P0wd1HbU
-         HNra6qusbWEAI4WPRP0/ADyl8T4HuJOUugoWvwChrROF1D9eplmWFDe5y2MIUvqEddY/
-         LW/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ABjKbsKS89ab0w5qLsKCXnPeDLkUJ8jMCwLjkL2i1h0=;
-        b=QlPUvI5T/YhV3Z2EDA803hqO2u+rpavFKDqc5h3L8NGaiNygYsvNrDZ3mpvTVH3oQg
-         1dJgkSFhPCZOO6a5DGX7ZyeGvJgM06PwRisXNASgo+rYV744XTmi4ERyBLDui+MLpqAC
-         1iaD3GLNVVLbG1es743IErtJNjVectctvUxklZTjTBbg0nJ5MTuG7v4ayWhuAtN9HFh5
-         odhXx/+pVZyurU22dNK0AQgJ4kHoZxAkn7BnkSjpX8rvzlXl0jE8Eo1yq054osQhryNk
-         bVfLh541Gr1Jv4cuSWgCYVtty8KZBXpPb3qXokSboIppROx+USy1m6Gvpv4Y2muBbsay
-         kWIg==
-X-Gm-Message-State: APjAAAXuxnZgyTzX2h8pLPr2UwxPQx2SML48GX5z50bkYElOvB+uUVcD
-        IVuQceUVOGBsf1F2sM2zOEdZAOkjXRs=
-X-Google-Smtp-Source: APXvYqyMkF5oMGsYFcjmLGmBb5nT1M295t4Ue5AFNuFqK3UDGx6gYKV2KD4HANAKdfzFZkSgByBZLg==
-X-Received: by 2002:a63:165f:: with SMTP id 31mr3339022pgw.321.1555672417424;
-        Fri, 19 Apr 2019 04:13:37 -0700 (PDT)
-Received: from bhanu-VirtualBox.danlawtech.com ([183.82.102.247])
-        by smtp.gmail.com with ESMTPSA id 6sm6223470pfj.95.2019.04.19.04.13.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 04:13:36 -0700 (PDT)
-From:   Bhanusree Pola <bhanusreemahesh@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH v2] Staging: rtl8723bs: Avoid typedefs for structure
-Date:   Fri, 19 Apr 2019 16:42:56 +0530
-Message-Id: <1555672376-20268-1-git-send-email-bhanusreemahesh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Apr 2019 14:54:11 -0400
+X-Greylist: delayed 824 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Apr 2019 14:54:10 EDT
+Received: from relay1-d.mail.gandi.net (unknown [217.70.183.193])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 202DC3AC719;
+        Fri, 19 Apr 2019 10:06:19 +0000 (UTC)
+X-Originating-IP: 90.88.160.238
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E254024000C;
+        Fri, 19 Apr 2019 10:06:15 +0000 (UTC)
+Message-ID: <aaf7a86350afda78fdaaacbd26b497b4af7d894c.camel@bootlin.com>
+Subject: Re: [PATCH] media: cedrus: Fix initialization order
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@bootlin.com
+Cc:     =?ISO-8859-1?Q?andr=E9s_ram=EDrez?= <rrandresf@gmail.com>,
+        mchehab@kernel.org, gregkh@linuxfoundation.org, wens@csie.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
+Date:   Fri, 19 Apr 2019 12:06:15 +0200
+In-Reply-To: <82e793b898657d65cda55c98b9ffcec475193b5b.camel@bootlin.com>
+References: <20190407184728.16620-1-jernej.skrabec@siol.net>
+         <82e793b898657d65cda55c98b9ffcec475193b5b.camel@bootlin.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid typedefs for structure types to maintain kernel coding style.
-Remove typedefs for _ODM_Phy_Dbg_Info and _ODM_Mac_Status_Info_.
-This part is done by the following semantic patch:
+Hi,
 
-<smpl>
-@r1@
-identifier i;
-type t;
-@@
-typedef struct i {
-...
-}t;
+On Mon, 2019-04-08 at 10:18 +0200, Paul Kocialkowski wrote:
+> Hi,
+> 
+> Le dimanche 07 avril 2019 à 20:47 +0200, Jernej Skrabec a écrit :
+> > Currently, MEDIA_IOC_G_TOPOLOGY ioctl on cedrus fails due to incorrect
+> > initialization order. Fix that by moving video_register_device() before
+> > v4l2_m2m_register_media_controller() and while at it, fix error path.
+> > 
+> > Reported-by: Jonas Karlman <jonas@kwiboo.se>
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> Thanks for the fix, good catch!
+> 
+> Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-@r2@
-type r1.t;
-identifier v;
-@@
-t v;
+Looks like this patch wasn't picked-up yet. Could we take it in?
+I think it would also deserve a:
 
-@script:python match@
-i << r1.i;
-x;
-@@
-coccinelle.x = i;
+Fixes: 50e761516f2b ("media: platform: Add Cedrus VPU decoder driver")
 
-@r4@
-identifier match.x;
-type r1.t;
-@@
-- typedef struct x
-+ struct x
-{ ... }
-- t
-;
+Cheers,
 
-@r5@
-type r1.t;
-identifier r2.v, match.x;
-@@
-- t v;
-+ struct x v;
-</smpl>
+Paul
 
-Change Structure name _ODM_Phy_Dbg_Info and _ODM_Mac_Status_Info_ to maintain Linux kernel Coding Style.
-Replace occurences of ODM_PHY_DBG_INFO_T to odm_phy_dbg_info and ODM_MAC_INFO to odm_mac_status_info.
-
-Signed-off-by: Bhanusree Pola <bhanusreemahesh@gmail.com>
----
-v2:
- Changed the occurence of (ODM_MAC_INFO *) to (struct odm_mac_status_info *) in the commented code
-
- drivers/staging/rtl8723bs/hal/odm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/rtl8723bs/hal/odm.c b/drivers/staging/rtl8723bs/hal/odm.c
-index 7de5161..9db9f17 100644
---- a/drivers/staging/rtl8723bs/hal/odm.c
-+++ b/drivers/staging/rtl8723bs/hal/odm.c
-@@ -691,7 +691,7 @@ void ODM_CmnInfoHook(PDM_ODM_T pDM_Odm, ODM_CMNINFO_E CmnInfo, void *pValue)
- 	/* break; */
- 
- 	/* case ODM_CMNINFO_MAC_STATUS: */
--	/* pDM_Odm->pMacInfo = (ODM_MAC_INFO *)pValue; */
-+	/* pDM_Odm->pMacInfo = (struct odm_mac_status_info *)pValue; */
- 	/* break; */
- 	/* To remove the compiler warning, must add an empty default statement to handle the other values. */
- 	default:
+> > ---
+> >  drivers/staging/media/sunxi/cedrus/cedrus.c | 24 ++++++++++-----------
+> >  1 file changed, 12 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > index b98add3cdedd..d0429c0e6b6b 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> > @@ -300,7 +300,7 @@ static int cedrus_probe(struct platform_device *pdev)
+> >  			 "Failed to initialize V4L2 M2M device\n");
+> >  		ret = PTR_ERR(dev->m2m_dev);
+> >  
+> > -		goto err_video;
+> > +		goto err_v4l2;
+> >  	}
+> >  
+> >  	dev->mdev.dev = &pdev->dev;
+> > @@ -310,23 +310,23 @@ static int cedrus_probe(struct platform_device *pdev)
+> >  	dev->mdev.ops = &cedrus_m2m_media_ops;
+> >  	dev->v4l2_dev.mdev = &dev->mdev;
+> >  
+> > -	ret = v4l2_m2m_register_media_controller(dev->m2m_dev, vfd,
+> > -						 MEDIA_ENT_F_PROC_VIDEO_DECODER);
+> > -	if (ret) {
+> > -		v4l2_err(&dev->v4l2_dev,
+> > -			 "Failed to initialize V4L2 M2M media controller\n");
+> > -		goto err_m2m;
+> > -	}
+> > -
+> >  	ret = video_register_device(vfd, VFL_TYPE_GRABBER, 0);
+> >  	if (ret) {
+> >  		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
+> > -		goto err_v4l2;
+> > +		goto err_m2m;
+> >  	}
+> >  
+> >  	v4l2_info(&dev->v4l2_dev,
+> >  		  "Device registered as /dev/video%d\n", vfd->num);
+> >  
+> > +	ret = v4l2_m2m_register_media_controller(dev->m2m_dev, vfd,
+> > +						 MEDIA_ENT_F_PROC_VIDEO_DECODER);
+> > +	if (ret) {
+> > +		v4l2_err(&dev->v4l2_dev,
+> > +			 "Failed to initialize V4L2 M2M media controller\n");
+> > +		goto err_video;
+> > +	}
+> > +
+> >  	ret = media_device_register(&dev->mdev);
+> >  	if (ret) {
+> >  		v4l2_err(&dev->v4l2_dev, "Failed to register media device\n");
+> > @@ -339,10 +339,10 @@ static int cedrus_probe(struct platform_device *pdev)
+> >  
+> >  err_m2m_mc:
+> >  	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
+> > -err_m2m:
+> > -	v4l2_m2m_release(dev->m2m_dev);
+> >  err_video:
+> >  	video_unregister_device(&dev->vfd);
+> > +err_m2m:
+> > +	v4l2_m2m_release(dev->m2m_dev);
+> >  err_v4l2:
+> >  	v4l2_device_unregister(&dev->v4l2_dev);
+> >  
 -- 
-2.7.4
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
