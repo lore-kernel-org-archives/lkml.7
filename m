@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B338AC282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B80C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9F6217FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8403217FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OAl71d2u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aza8PDw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfDSWSm (ORCPT
+        id S1726518AbfDSWSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 18:18:42 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45202 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfDSWSm (ORCPT
+        Fri, 19 Apr 2019 18:18:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40514 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfDSWSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 18:18:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bf11so3127526plb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 15:18:41 -0700 (PDT)
+        Fri, 19 Apr 2019 18:18:43 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so3132801plr.7
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 15:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s1sB1GoBG8jgYUqmC8R7BIjAuUM8QSOtRx/2W9R3rOk=;
-        b=OAl71d2uuhHRB0be/hhOKjQWPonk8yDHaNCvHAhGIqFhy5mrexY0tRFlcAwxRXuyrC
-         vEhUhFIdHv5scwPVQPSmWp8YTUunCNeVm+haVVpqktcrW/a4c4w4BEnh1r2n0tMOGLE1
-         X9lr3QfmQoprME/6UDLpaecSwcGzJWG2ySbbk=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pmFy/F7Y+9nJ0AHy8XDviXaJUnstsHwng/faFGXf8Ko=;
+        b=Aza8PDw+bba+FVBbZ5IcJt3QhHpEhdCJye0rT2ueBDpBTtObY8A7byyPpsF8IK+f21
+         l+5Yl+UKDVWSbu4vINlQCMt/ZMTmuy913V7JOu6BiydfNIlQ32WpidjWqgT/4uUVXDba
+         /97k401A2Cy2Sg4mggDKBlUI9/GFr5Fv7kBrI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s1sB1GoBG8jgYUqmC8R7BIjAuUM8QSOtRx/2W9R3rOk=;
-        b=nIbOxPQjGdJxwz5ArLiT5Wt6hLYa/+jUYSBcB6wxg7RNQ40FM5vyrysEVxXtEPTLvX
-         jIV642yzx6E8I2w9RX1JNZoUAeOHcegfRmehRWuO3j1fFjxDEcYLrqY0RoH9iYPXZoxV
-         su0KqideR6/pm8QgmDa8pkM18INDfy1hbfuQnZSnT7i1ZKP61VWN8mDIWIkaPR5hoXw3
-         8xUTmg0AwfrGj2Jc4Wc4uIoFcc8O0YcmScm/YKFHKuOZ0Jc+YVBCi0ynJdH7TKDefpfo
-         XFS4/GLJPzlrGXsJA/UjZB/pedcMC1/QasnBjB2Be02sWX/LALCIrQ26K01EtCvZNUGB
-         V2TQ==
-X-Gm-Message-State: APjAAAVx3eLyqSU0vc/2RRBubIa3rog03ZFF6pEBcHfrtbAb9dLaj6Kl
-        O7nwvyUiMz9KUhpRREVW5SaXgw==
-X-Google-Smtp-Source: APXvYqy040/JIipaz4jkwC3Bd/TwLllG3XTi4pBeE74yt9sxtLCjQEjMOrZ5EmDGWm4GllX6yy5SGg==
-X-Received: by 2002:a17:902:7043:: with SMTP id h3mr6404044plt.228.1555712321184;
-        Fri, 19 Apr 2019 15:18:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pmFy/F7Y+9nJ0AHy8XDviXaJUnstsHwng/faFGXf8Ko=;
+        b=ZpDVxGe3qhn3+FxuctIybWUuzdTwDF/mqVpWp79tecyoCzy9GCQYw53WiPO9MCQ+F0
+         BgNMcg+XagTPghXaxTSXoMCM3DraeDNfl9WgdU/ya47AYCdXnGSsJwTWxc8CKD2v75uS
+         o8nn2XN5w6m5cu90QqYgiGYwkhsRdJeMiTTcR2mJv5DbxOAqqedjqmEXL/jgGx4UQ944
+         TKqxLIR+fXZ3GSFs5aJ4Xxi9gQfndL+CE/72dtN526EeiSTJtWLhRY0UBxYWWrJ3jawh
+         tWELcQ/5qyGma+qbfpqexEWoWS9nrRPvfPSuoHqgLGAy/6HXjxbnx5IzBWvA1Sq/kiFc
+         kvkA==
+X-Gm-Message-State: APjAAAV28FPrEr+9O162qO3qhWZTp3S78KEPNSq+LgR5mVM+xA4fydeZ
+        Ez31aX5zDuwlLrHLZ+bgM3XJOA==
+X-Google-Smtp-Source: APXvYqwD4Qo3e9qUi57ZVQh4GPpV+TC78quohbp4D0Vaxq2cmqU8sakD0iIm4mwYRaEvoGRpOT4Bfg==
+X-Received: by 2002:a17:902:b20f:: with SMTP id t15mr6301266plr.341.1555712322413;
+        Fri, 19 Apr 2019 15:18:42 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id a3sm8162536pfn.182.2019.04.19.15.18.39
+        by smtp.gmail.com with ESMTPSA id a3sm8162536pfn.182.2019.04.19.15.18.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 15:18:40 -0700 (PDT)
+        Fri, 19 Apr 2019 15:18:41 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Russell King <linux@armlinux.org.uk>
 Cc:     mark.rutland@arm.com, Salva.Climent@arm.com,
@@ -60,7 +60,6 @@ Cc:     mark.rutland@arm.com, Salva.Climent@arm.com,
         will.deacon@arm.com, bbatacha@arm.com, mka@chromium.org,
         robin.murphy@arm.com, heiko@sntech.de,
         Douglas Anderson <dianders@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
         Arnd Bergmann <arnd@arndb.de>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
@@ -69,12 +68,14 @@ Cc:     mark.rutland@arm.com, Salva.Climent@arm.com,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Marc Zyngier <marc.zyngier@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
         Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 1/2] ARM: errata: Workaround errata A12 857271 / A17 857272
-Date:   Fri, 19 Apr 2019 15:18:02 -0700
-Message-Id: <20190419221803.99322-1-dianders@chromium.org>
+Subject: [PATCH 2/2] ARM: errata: add support for A12/A17 errata CR711784
+Date:   Fri, 19 Apr 2019 15:18:03 -0700
+Message-Id: <20190419221803.99322-2-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+In-Reply-To: <20190419221803.99322-1-dianders@chromium.org>
+References: <20190419221803.99322-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,59 +83,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sonny Rao <sonnyrao@chromium.org>
+This adds a code for turning on chicken bit 11, which appears to avoid
+a potential CPU deadlock that could occur.  The exact set of
+instruction needed to trigger this errata is not totaly known but we
+have a high level of confidence that the problem is fixed by setting
+chicken bit 11.
 
-This adds support for working around errata A12 857271 / A17 857272.
-These errata were causing hangs on rk3288-based Chromebooks and it was
-confirmed that this workaround fixed the problems.  In the Chrome OS
-3.14 kernel [1] this erratum was known as ERRATA_FOOBAR due to lack of
-an official number from ARM (though the workaround of setting chicken
-bit 10 came from ARM).  In the meantime ARM came up with official
-errata numbers but never published the workaround upstream.
+All details are in http://crbug.com/711784
 
-Let's actually get the workaround landed.
+This erratum has no known number and thus I have tagged it CR711784
+(after the Chrome OS bug number).  I have created separate A12 / A17
+configs to match how the rest of the A12 / A17 errata is handled.
 
-[1] https://crrev.com/c/342753
-
-Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm/Kconfig      | 19 +++++++++++++++++++
+ arch/arm/Kconfig      | 18 ++++++++++++++++++
  arch/arm/mm/proc-v7.S | 10 ++++++++++
- 2 files changed, 29 insertions(+)
+ 2 files changed, 28 insertions(+)
 
 diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b509cd338219..4376fe74f95e 100644
+index 4376fe74f95e..34ec9039206b 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -1172,6 +1172,15 @@ config ARM_ERRATA_825619
- 	  DMB NSHST or DMB ISHST instruction followed by a mix of Cacheable
- 	  and Device/Strongly-Ordered loads and stores might cause deadlock
+@@ -1181,6 +1181,13 @@ config ARM_ERRATA_857271
+ 	  hang. The workaround is expected to have a negligible performance
+ 	  impact.
  
-+config ARM_ERRATA_857271
-+	bool "ARM errata: A12: CPU might deadlock under some very rare internal conditions"
++config ARM_ERRATA_CR711784_A12
++	bool "ARM errata: A12: conditional instructions can lead to a CPU hang"
 +	depends on CPU_V7
 +	help
-+	  This option enables the workaround for the 857271 Cortex-A12
-+	  (all revs) erratum. Under very rare timing conditions, the CPU might
-+	  hang. The workaround is expected to have a negligible performance
-+	  impact.
++	  This option enables the workaround for a Cortex-A12 erratum without a
++	  number. The problems are best described in https://crbug.com/711784
 +
  config ARM_ERRATA_852421
  	bool "ARM errata: A17: DMB ST might fail to create order between stores"
  	depends on CPU_V7
-@@ -1193,6 +1202,16 @@ config ARM_ERRATA_852423
+@@ -1212,6 +1219,17 @@ config ARM_ERRATA_857272
  	  config option from the A12 erratum due to the way errata are checked
  	  for and handled.
  
-+config ARM_ERRATA_857272
-+	bool "ARM errata: A17: CPU might deadlock under some very rare internal conditions"
++config ARM_ERRATA_CR711784_A17
++	bool "ARM errata: A17: conditional instructions can lead to a CPU hang"
 +	depends on CPU_V7
 +	help
-+	  This option enables the workaround for the 857272 Cortex-A17 erratum.
++	  This option enables the workaround for a Cortex-A17 erratum without a
++	  number. The problems are best described in https://crbug.com/711784
 +	  This erratum is not known to be fixed in any A17 revision.
-+	  This is identical to Cortex-A12 erratum 857271.  It is a separate
++	  This is identical to Cortex-A12 erratum CR711784.  It is a separate
 +	  config option from the A12 erratum due to the way errata are checked
 +	  for and handled.
 +
@@ -142,29 +139,29 @@ index b509cd338219..4376fe74f95e 100644
  
  source "arch/arm/common/Kconfig"
 diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-index 339eb17c9808..cd2accbab844 100644
+index cd2accbab844..a5156ea734ee 100644
 --- a/arch/arm/mm/proc-v7.S
 +++ b/arch/arm/mm/proc-v7.S
-@@ -391,6 +391,11 @@ __ca12_errata:
+@@ -396,6 +396,11 @@ __ca12_errata:
  	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
- 	orr	r10, r10, #1 << 24		@ set bit #24
+ 	orr	r10, r10, #1 << 10		@ set bit #10
  	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
 +#endif
-+#ifdef CONFIG_ARM_ERRATA_857271
++#ifdef CONFIG_ARM_ERRATA_CR711784_A12
 +	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
-+	orr	r10, r10, #1 << 10		@ set bit #10
++	orr	r10, r10, #1 << 11		@ set bit #11
 +	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
  #endif
  	b	__errata_finish
  
-@@ -406,6 +411,11 @@ __ca17_errata:
- 	mrcle	p15, 0, r10, c15, c0, 1		@ read diagnostic register
- 	orrle	r10, r10, #1 << 12		@ set bit #12
- 	mcrle	p15, 0, r10, c15, c0, 1		@ write diagnostic register
+@@ -416,6 +421,11 @@ __ca17_errata:
+ 	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
+ 	orr	r10, r10, #1 << 10		@ set bit #10
+ 	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
 +#endif
-+#ifdef CONFIG_ARM_ERRATA_857272
++#ifdef CONFIG_ARM_ERRATA_CR711784_A17
 +	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
-+	orr	r10, r10, #1 << 10		@ set bit #10
++	orr	r10, r10, #1 << 11		@ set bit #11
 +	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
  #endif
  	b	__errata_finish
