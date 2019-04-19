@@ -2,161 +2,171 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEC9C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F2BC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CA120693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="Or5gTy1s"
+	by mail.kernel.org (Postfix) with ESMTP id 0BF0D20693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfDSTNr (ORCPT
+        id S1729716AbfDSTNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:13:47 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]:39410 "EHLO
-        mail-qk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfDSTNp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:13:45 -0400
-Received: by mail-qk1-f178.google.com with SMTP id j10so3389899qkk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=PpIUSk15nxWJsA3TYf0KsoPEdQ/S0Pil7IwighIbZlM=;
-        b=Or5gTy1s8mZ8jH+2nJs7p+7aDshTv6eloiqek1aWHwG9X6NDicKcFd0R35m4MzXkkA
-         +5EAvl/8OO+HWZoH1iMritgp1cknJ4c9ynffCiJodc8DqOZBeXIAVM1esCTecczPBENs
-         yq53rEt85CvzQoif1JoWkzADPYtKfGuvCkjkyJsw48yRlipCNZW/eqDr/hsbYeAHW7oD
-         VFjVl44AoiX3eb2yAI1pWc+cVyxU3+PU9RoalTFqdADnBdzsJXA7GGFQGPdmkCJTIuOy
-         xjy292/UK7eL84CGlMAf/GSjWEvstKNDY0jnB2cUFA8GadiGBlBv+t3rOKoBgPl8SmFc
-         s7zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=PpIUSk15nxWJsA3TYf0KsoPEdQ/S0Pil7IwighIbZlM=;
-        b=uiaGnbbYUlqKcCJBZ5EdXgI+eYbqz9kQkUwgMJyZpI/WGPJMmsrefEvOLq01+eLCzB
-         RxTeN5C93wP3LY3XWl8c69n7hgdV4KnRn5iwXTYeZ2Zj8/X8pP3INPbNBLLurk7eLN/C
-         I9XqjgKVeG7jgzU6mpJCgJyrl0ANGnSvhN8TRTUfwMmbcFhVHb+aqZ7Hn+uZkdYGY++4
-         i1wP7DqOj3f6ugu6DxYVjBBQQ+GNBO9vLCH+WMR7EVfxDvTz6DrtUD7rnH6Y7oLomRyH
-         JAj7xnTBcelq+JJ/mvONQEJkI5xlUXNQWTXYr0PFgyouxfVIpphP9YIz+o6snBk4MOH2
-         x4Rg==
-X-Gm-Message-State: APjAAAVdXYN2FlCOEKmHp1yVhUtugJpB0M0CD02n84mpFds+q/haPM5Y
-        jsguUaq5ML37AoH16TNB82MEQg==
-X-Google-Smtp-Source: APXvYqzelYVPsR93oFeLNbjJJp+IkeVpjtH/JE2L/XGVFalF7K7+3MPphDsIcsu9cy4rNc5b3QQoVA==
-X-Received: by 2002:a05:620a:1372:: with SMTP id d18mr3396902qkl.310.1555687869833;
-        Fri, 19 Apr 2019 08:31:09 -0700 (PDT)
-Received: from skullcanyon ([2002:c0de:c115:0:481e:e17e:2f68:43f8])
-        by smtp.gmail.com with ESMTPSA id z85sm1161988qka.18.2019.04.19.08.31.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 08:31:08 -0700 (PDT)
-Message-ID: <52e092f7009d57087c10b5e21ea597bcad506bfd.camel@ndufresne.ca>
-Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Eric Anholt <eric@anholt.net>, Rob Clark <robdclark@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Date:   Fri, 19 Apr 2019 11:31:06 -0400
-In-Reply-To: <CAAFQd5CojNuiJ09gXEjnOorfDnRP1Bk436yaffHFKmmsfoUiQQ@mail.gmail.com>
-References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
-         <20190418081816.GO13337@phenom.ffwll.local>
-         <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
-         <CAAFQd5CojNuiJ09gXEjnOorfDnRP1Bk436yaffHFKmmsfoUiQQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 (3.32.0-1.fc30) 
+        Fri, 19 Apr 2019 15:13:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42426 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726030AbfDSTNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:13:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3D28ADD4;
+        Fri, 19 Apr 2019 12:58:13 +0000 (UTC)
+Subject: Re: [PATCH] mm, page_alloc: Always use a captured page regardless of
+ compaction result
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Li Wang <liwang@redhat.com>, linux-mm <linux-mm@kvack.org>,
+        linux-kernel@vger.kernel.org
+References: <20190419085133.GH18914@techsingularity.net>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
+ KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
+ n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
+ AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
+ DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
+ ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
+ T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
+ k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
+ YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
+ 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
+ k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
+ Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
+ B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
+ 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
+ uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
+ 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
+ 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
+ +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
+ J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
+ rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
+ D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
+ ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
+ Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
+ NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
+ NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
+ F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
+ J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
+ PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
+ gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
+ rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
+ miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
+ hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
+ E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
+ 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
+ xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
+ 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
+ hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
+ Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
+Message-ID: <e99a54aa-bc21-d3f3-54a5-5da0039216a9@suse.cz>
+Date:   Fri, 19 Apr 2019 14:54:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190419085133.GH18914@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le vendredi 19 avril 2019 à 13:27 +0900, Tomasz Figa a écrit :
-> On Fri, Apr 19, 2019 at 9:30 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
-> > Le jeudi 18 avril 2019 à 10:18 +0200, Daniel Vetter a écrit :
-> > > > It would be cool if both could be used concurrently and not just return
-> > > > -EBUSY when the device is used with the other subsystem.
-> > > 
-> > > We live in this world already :-) I think there's even patches (or merged
-> > > already) to add fences to v4l, for Android.
-> > 
-> > This work is currently suspended. It will require some feature on DRM
-> > display to really make this useful, but there is also a lot of
-> > challanges in V4L2. In GFX space, most of the use case are about
-> > rendering as soon as possible. Though, in multimedia we have two
-> > problems, we need to synchronize the frame rendering with the audio,
-> > and output buffers may comes out of order due to how video CODECs are
-> > made.
-> > 
-> > In the first, we'd need a mechanism where we can schedule a render at a
-> > specific time or vblank. We can of course already implement this in
-> > software, but with fences, the scheduling would need to be done in the
-> > driver. Then if the fence is signalled earlier, the driver should hold
-> > on until the delay is met. If the fence got signalled late, we also
-> > need to think of a workflow. As we can't schedule more then one render
-> > in DRM at one time, I don't really see yet how to make that work.
-> > 
-> > For the second, it's complicated on V4L2 side. Currently we signal
-> > buffers when they are ready in the display order. With fences, we
-> > receive early pairs buffer and fence (in decoding order). There exist
-> > cases where reordering is done by the driver (stateful CODEC). We
-> > cannot schedule these immediately we would need a new mechanism to know
-> > which one come next. If we just reuse current mechnism, it would void
-> > the fence usage since the fence will always be signalled by the time it
-> > reaches DRM or other v4l2 component.
-> > 
-> > There also other issues, for video capture pipeline, if you are not
-> > rendering ASAP, you need the HW timestamp in order to schedule. Again,
-> > we'd get the fence early, but the actual timestamp will be signalled at
-> > the very last minutes, so we also risk of turning the fence into pure
-> > overhead. Note that as we speak, I have colleagues who are
-> > experimenting with frame timestamp prediction that slaves to the
-> > effective timestamp (catching up over time). But we still have issues
-> > when the capture driver skipped a frame (missed a capture window).
+On 4/19/19 10:51 AM, Mel Gorman wrote:
+> During the development of commit 5e1f0f098b46 ("mm, compaction: capture
+> a page under direct compaction"), a paranoid check was added to ensure
+> that if a captured page was available after compaction that it was
+> consistent with the final state of compaction. The intent was to catch
+> serious programming bugs such as using a stale page pointer and causing
+> corruption problems.
 > 
-> Note that a fence has a timestamp internally and it can be queried for
-> it from the user space if exposed as a sync file:
-> https://elixir.bootlin.com/linux/v5.1-rc5/source/drivers/dma-buf/sync_file.c#L386
-
-Don't we need something the other way around ? This seems to be the
-timestamp of when it was triggered (I'm not familiar with this though).
-
+> However, it is possible to get a captured page even if compaction was
+> unsuccessful if an interrupt triggered and happened to free pages in
+> interrupt context that got merged into a suitable high-order page. It's
+> highly unlikely but Li Wang did report the following warning on s390
+> occuring when testing OOM handling. Note that the warning is slightly
+> edited for clarity.
 > 
-> Fences in V4L2 would be also useful for stateless decoders and any
-> mem-to-mem processors that operate in order, like the blitters
-> mentioned here or actually camera ISPs, which can be often chained
-> into relatively sophisticated pipelines.
-
-I agree fence can be used to optimize specific corner cases. They are
-not as critical in V4L2 since we have async queues. I think the use
-case for fences in V4L2 is mostly to lower the latency. Not all use
-cases requires such a low latency. There was argument around fences
-that is simplify the the code, I haven't seen a compelling argument
-demonstrating that this would be the case for V4L2 programming. The
-only case is when doing V4L2 to DRM exchanges, and only in the context
-where time synchronization does not matter. In fact, so far it is more
-work since information starts flowing through separate events
-(buffer/fence first, later timestamps and possibly critical metadata.
-This might be induced by the design, but clearly there is a slight API
-clash.
-
+> [ 1422.124060] WARNING: CPU: 0 PID: 9783 at mm/page_alloc.c:3777 __alloc_pages_direct_compact+0x182/0x190
+> [ 1422.124065] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver
+>  nfs lockd grace fscache sunrpc pkey ghash_s390 prng xts aes_s390 des_s390
+>  des_generic sha512_s390 zcrypt_cex4 zcrypt vmur binfmt_misc ip_tables xfs
+>  libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth qdio lcs ctcm
+>  ccwgroup fsm dm_mirror dm_region_hash dm_log dm_mod
+> [ 1422.124086] CPU: 0 PID: 9783 Comm: copy.sh Kdump: loaded Not tainted 5.1.0-rc 5 #1
 > 
-> Best regards,
-> Tomasz
+> This patch simply removes the check entirely instead of trying to be
+> clever about pages freed from interrupt context. If a serious programming
+> error was introduced, it is highly likely to be caught by prep_new_page()
+> instead.
+> 
+> Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
+> Reported-by: Li Wang <liwang@redhat.com>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+
+Ah, noticed the new formal resend only after replying to the first one,
+so here goes again:
+
+
+Yup, no need for a Cc: stable on a very rare WARN_ON_ONCE. So the AI
+will pick it anyway...
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+
+> ---
+>  mm/page_alloc.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d96ca5bc555b..cfaba3889fa2 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3773,11 +3773,6 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
+>  	memalloc_noreclaim_restore(noreclaim_flag);
+>  	psi_memstall_leave(&pflags);
+>  
+> -	if (*compact_result <= COMPACT_INACTIVE) {
+> -		WARN_ON_ONCE(page);
+> -		return NULL;
+> -	}
+> -
+>  	/*
+>  	 * At least in one zone compaction wasn't deferred or skipped, so let's
+>  	 * count a compaction stall
+> 
 
