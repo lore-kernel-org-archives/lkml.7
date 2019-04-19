@@ -2,130 +2,127 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13399C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAAEC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D38222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1D4222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naIP3E07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfDSSVG (ORCPT
+        id S1727741AbfDSSVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:21:06 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58650 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727371AbfDSSVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:21:05 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ED4D0200176;
-        Fri, 19 Apr 2019 10:53:32 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3C572000D0;
-        Fri, 19 Apr 2019 10:53:29 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 857E9402BB;
-        Fri, 19 Apr 2019 16:53:25 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     leoyang.li@nxp.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH] dmaengine: fsl-qdma: fixed the source/destination descriptior format
-Date:   Fri, 19 Apr 2019 08:46:29 +0000
-Message-Id: <20190419084629.41742-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 19 Apr 2019 14:21:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46135 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbfDSSVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:21:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t17so7791863wrw.13;
+        Fri, 19 Apr 2019 11:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8sNxl0hEqODlC+hizSvqr3xUDHjjB8NZZkZymPPfOvY=;
+        b=naIP3E07hKz9hhJLONZLM7NzxQwVLhpVzVE0rbFHxxGq15ALwhLw6H7ABoX4JERvdX
+         nPx6ErSt54JKMABpMiNjJG11NXzCjG/1pGSwGOPHD0dHRVt2evWpIUbmTUK0146mNm1M
+         CDojXmqspVqiPZx6r0VSleUcw2nsacUN45VHmMcpL7cCstQTmvGETfAEs7yYhubFfea9
+         zfaX60KKiNxuKC0Yd1vrsxXr0Bu9cFxBZ3w477BNQkpydYazALvEuxq8QsulZ84cyynf
+         ZrilGYcNiWmFGJrLksDC1C54mjK0ysRtwZthtsIv4xgtsg2ujQehxeyEpOwjMxL2gB8R
+         KMkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8sNxl0hEqODlC+hizSvqr3xUDHjjB8NZZkZymPPfOvY=;
+        b=Mn8Db0XtIIPTWjb8vSBzhdjzY2Qw4eM1eQ2cMNdk4rm3BdP0UZ7vaGqFCVim8Akwd+
+         1ZdVnfgVQF/V6B35Ho6NE/CKiN9r6FRyo37B62MCmL3mwHtXp/4qm9ClL4XIjKAaCzC+
+         dwwVG2k8gQqODOVWq2N/uguJn7ce//baN6+TScHr2qI7MXPYTpjVDN/W86FRNAsmb+0K
+         oD5FuosXOW4Pm4PA7K4i4jWddBPxt+rxCNBVEPOqbNrpagPpi1jmXi+bKcDENnloNxY6
+         pVJeLYsV744qSooNIAJavIbiBQOotTpb6OVyMUezgwGQtqHj5R3ynQWWtcTgIeQgby1a
+         wQ1A==
+X-Gm-Message-State: APjAAAUf+aSHHjFzTabNxCeL/00wqY4Ha3r17MVGBEMW1HMO/SAo/fp0
+        AMu/fjoe8qWgYMndcXSpC+gH3I3m
+X-Google-Smtp-Source: APXvYqwh6gIi39S5w5C6TPjurD4+26bXvW/pWLM6lP5xIJizR5hUqlc8BiOjXGcQVwM/YYwkaO1ZVQ==
+X-Received: by 2002:a5d:4d42:: with SMTP id a2mr4134240wru.130.1555696630034;
+        Fri, 19 Apr 2019 10:57:10 -0700 (PDT)
+Received: from debian64.daheim (p4FD090B5.dip0.t-ipconnect.de. [79.208.144.181])
+        by smtp.gmail.com with ESMTPSA id c2sm4718719wrr.13.2019.04.19.10.57.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 10:57:08 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hHXkr-0007gA-OV; Fri, 19 Apr 2019 19:56:59 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: p54: drop device reference count if fails to enable device
+Date:   Fri, 19 Apr 2019 19:56:47 +0200
+Message-ID: <4374745.djV02MS7NJ@debian64>
+In-Reply-To: <1555494083-130833-1-git-send-email-bianpan2016@163.com>
+References: <1555494083-130833-1-git-send-email-bianpan2016@163.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CMD of Source/Destination descriptior format should be lower of
-struct fsl_qdma_engine number data address.
+Subject should include a "[PATCH]" as per:
+https://www.kernel.org/doc/html/v4.15/process/submitting-patches.html#include-patch-in-the-subject
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- drivers/dma/fsl-qdma.c |   29 ++++++++++++++++++-----------
- 1 files changed, 18 insertions(+), 11 deletions(-)
+Nevertheless, patchwork picked it up.... so, you are probably fine.
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index aa1d0ae..542765a 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -113,6 +113,7 @@
- /* Field definition for Descriptor offset */
- #define QDMA_CCDF_STATUS		20
- #define QDMA_CCDF_OFFSET		20
-+#define QDMA_SDDF_CMD(x)		(((u64)(x)) << 32)
- 
- /* Field definition for safe loop count*/
- #define FSL_QDMA_HALT_COUNT		1500
-@@ -214,6 +215,12 @@ struct fsl_qdma_engine {
- 
- };
- 
-+static inline void
-+qdma_sddf_set_cmd(struct fsl_qdma_format *sddf, u32 val)
-+{
-+	sddf->data = QDMA_SDDF_CMD(val);
-+}
-+
- static inline u64
- qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
- {
-@@ -341,6 +348,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
- static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 				      dma_addr_t dst, dma_addr_t src, u32 len)
- {
-+	u32 cmd;
- 	struct fsl_qdma_format *sdf, *ddf;
- 	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
- 
-@@ -353,6 +361,7 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 
- 	memset(fsl_comp->virt_addr, 0, FSL_QDMA_COMMAND_BUFFER_SIZE);
- 	memset(fsl_comp->desc_virt_addr, 0, FSL_QDMA_DESCRIPTOR_BUFFER_SIZE);
-+
- 	/* Head Command Descriptor(Frame Descriptor) */
- 	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
- 	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
-@@ -369,14 +378,14 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 	/* This entry is the last entry. */
- 	qdma_csgf_set_f(csgf_dest, len);
- 	/* Descriptor Buffer */
--	sdf->data =
--		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
--			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
--	ddf->data =
--		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
--			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
--	ddf->data |=
--		cpu_to_le64(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
-+	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
-+			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
-+	qdma_sddf_set_cmd(sdf, cmd);
-+
-+	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
-+			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
-+	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
-+	qdma_sddf_set_cmd(ddf, cmd);
- }
- 
- /*
-@@ -701,10 +710,8 @@ static irqreturn_t fsl_qdma_error_handler(int irq, void *dev_id)
- 
- 	intr = qdma_readl(fsl_qdma, status + FSL_QDMA_DEDR);
- 
--	if (intr) {
-+	if (intr)
- 		dev_err(fsl_qdma->dma_dev.dev, "DMA transaction error!\n");
--		return IRQ_NONE;
--	}
- 
- 	qdma_writel(fsl_qdma, FSL_QDMA_DEDR_CLEAR, status + FSL_QDMA_DEDR);
- 	return IRQ_HANDLED;
--- 
-1.7.1
+https://patchwork.kernel.org/patch/10905039/
+
+On Wednesday, April 17, 2019 11:41:23 AM CEST Pan Bian wrote:
+> The function p54p_probe takes an extra reference count of the PCI
+> device. However, the extra reference count is not dropped when it fails
+> to enable the PCI device. This patch fixes the bug.
+> 
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+Cc: stable@vger.kernel.org 
+Acked-by: Christian Lamparter <chunkeey@gmail.com>
+
+> ---
+>  drivers/net/wireless/intersil/p54/p54pci.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/intersil/p54/p54pci.c b/drivers/net/wireless/intersil/p54/p54pci.c
+> index 27a4906..57ad564 100644
+> --- a/drivers/net/wireless/intersil/p54/p54pci.c
+> +++ b/drivers/net/wireless/intersil/p54/p54pci.c
+> @@ -554,7 +554,7 @@ static int p54p_probe(struct pci_dev *pdev,
+>  	err = pci_enable_device(pdev);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "Cannot enable new PCI device\n");
+> -		return err;
+> +		goto err_put;
+>  	}
+>  
+>  	mem_addr = pci_resource_start(pdev, 0);
+> @@ -639,6 +639,7 @@ static int p54p_probe(struct pci_dev *pdev,
+>  	pci_release_regions(pdev);
+>   err_disable_dev:
+>  	pci_disable_device(pdev);
+> +err_put:
+>  	pci_dev_put(pdev);
+>  	return err;
+>  }
+> 
+
+
+
 
