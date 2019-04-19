@@ -2,317 +2,107 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF44C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E0AC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98232064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ACD20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fQfWncG3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfDSTDI (ORCPT
+        id S1729014AbfDSTDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:03:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51012 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfDSTC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:02:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 01:41:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,368,1549958400"; 
-   d="scan'208";a="338990800"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2019 01:41:32 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     arei.gonglei@huawei.com, aik@ozlabs.ru,
-        Zhengxiao.zx@alibaba-inc.com, shuangtai.tst@alibaba-inc.com,
-        qemu-devel@nongnu.org, eauger@redhat.com, yi.l.liu@intel.com,
-        ziye.yang@intel.com, mlevitsk@redhat.com, pasic@linux.ibm.com,
-        felipe@nutanix.com, changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, alex.williamson@redhat.com,
-        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
-        kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 2/2] drm/i915/gvt: export mdev device version to sysfs for Intel vGPU
-Date:   Fri, 19 Apr 2019 04:35:59 -0400
-Message-Id: <20190419083559.19725-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190419083258.19580-1-yan.y.zhao@intel.com>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+        Fri, 19 Apr 2019 15:03:14 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:36820 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfDSTDL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:03:11 -0400
+Received: by mail-ua1-f67.google.com with SMTP id k32so2012812uae.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2j6bVI38nNnTFEsqpyh4i9/0AM+zS7jKtH/c4TEI0Bg=;
+        b=fQfWncG3BLeLhGQljJXzFWY5nf+JkAYl/1kkTSYcQxQe0OaZn9X11Ce9h+kI6ZDXYD
+         YJ4VMn2zRM7w+KYczXWlS4ubFMdb27WaLsD8FgcdHtMoqHulDVGrnd1V53yO1jFB3A8L
+         PeODq1AOm93Y+U8Rfr5sRFt2pQOCkrTCHXxD4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2j6bVI38nNnTFEsqpyh4i9/0AM+zS7jKtH/c4TEI0Bg=;
+        b=laDT52qvMdDEwo49bJGXO7nmr/a/YAqSJK2mbfbVaocDyWRtAdSVpjvAPwryPeRXy2
+         /aY+bPJwiYyH5II2PmrzaymolLGAPj1mDfNf30A1awl4fR9FmjpbSSC/jB9qhgxGaVqu
+         dQ3T9juzKQ/74EQNibhDtyhMGudbcDO3nL3B0usoTCH639TihFkwEQB5dqa+mec5rvAG
+         2MCuAjgsdNxhOZGvz4hj7XZCITYFfLC/adYqXVaXRjHrjVyL4lVWsZHLsRSwS/EXltkk
+         8D7cwniCy06B+RFVNFiYmI1rx+h4DFtmfL+kzzg9Q19Sv/8ogS4Ja6v/oOHQz1idXD68
+         zuGw==
+X-Gm-Message-State: APjAAAW84p0tXL2yLpbFXnsytHqES5J197BoUZyS1HJx+ikOiVXDbbub
+        TM6WQWHtVJLbATEfSSvwgT/vTw8pfUQ=
+X-Google-Smtp-Source: APXvYqzAMBiiFmLfj6xcGGTAVcKv5aGKYrtP1qsJN+B9EMMsuq+k3KK1bWsyyL9x2GNXLK+WNh22Fw==
+X-Received: by 2002:ab0:2399:: with SMTP id b25mr2275923uan.129.1555686326767;
+        Fri, 19 Apr 2019 08:05:26 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id 2sm5702667vke.27.2019.04.19.08.05.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 08:05:26 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id p13so1831210uaa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:05:26 -0700 (PDT)
+X-Received: by 2002:ab0:1646:: with SMTP id l6mr2231986uae.75.1555686023710;
+ Fri, 19 Apr 2019 08:00:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190312173248.13490-1-alisaidi@amazon.com> <20190312173248.13490-3-alisaidi@amazon.com>
+ <CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com>
+ <CAGXu5jKcBmj0kwAqjqROXuOi=90=Upy8-J8WviGMjD6FV_Guxg@mail.gmail.com>
+ <34381CFC-A90F-4979-9802-2BA0E6539C68@amazon.com> <20190419085140.GA50390@gmail.com>
+In-Reply-To: <20190419085140.GA50390@gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Fri, 19 Apr 2019 10:00:12 -0500
+X-Gmail-Original-Message-ID: <CAGXu5jJvB-sfsXdZvf8OKSwhmdgANvnsrhZiNGrtraTeQVoOrg@mail.gmail.com>
+Message-ID: <CAGXu5jJvB-sfsXdZvf8OKSwhmdgANvnsrhZiNGrtraTeQVoOrg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in mmap_base
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "Saidi, Ali" <alisaidi@amazon.com>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Liguori, Anthony" <aliguori@amazon.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        X86 ML <x86@kernel.org>, Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This feature implements the version attribute for Intel's vGPU mdev
-devices.
+On Fri, Apr 19, 2019 at 3:51 AM Ingo Molnar <mingo@kernel.org> wrote:
+> I'd suggest incorporating all feedback and sending a v2 series - it's
+> much easier to get people's attention via code submitted. ;-)
 
-version attribute is rw. It is queried by userspace software like libvirt
-to check whether two vGPUs are compatible for live migration.
+I sent my patch out, akpm added it to -mm and then xtensa broke, and
+it got removed. Soooo... I'm looking at it again now. I think I might
+combine the ideas and in the interpreter case bump the entire mmap
+base by the brk randomization size. That should make things less
+strange and solve the corner case without reducing available address
+space in the general case.
 
-It consists of two parts: common part and vendor proprietary part.
-common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
-             identifies device type. e.g., for pci device, it is
-             "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-vendor proprietary part: this part is varied in length. vendor driver can
-             specify any string to identify a device.
-
-For Intel vGPU of gen8 and gen9, the vendor proprietary part currently
-consists of 2 fields: "device id" + "mdev type".
-
-Reading from a vGPU's version attribute, a string is returned in below
-format: 00028086-<device id>-<mdev type>. e.g.
-00028086-193b-i915-GVTg_V5_2.
-
-Writing a string to a vGPU's version attribute will trigger GVT to check
-whether a vGPU identified by the written string is compatible with
-current vGPU owning this version attribute. errno is returned if the two
-vGPUs are incompatible. The length of written string is returned in
-compatible case.
-
-For other platforms, and for GVT not supporting vGPU live migration
-feature, errnos are returned when read/write of mdev devices' version
-attributes.
-
-For old GVT versions where no version attributes exposed in sysfs, it is
-regarded as not supporting vGPU live migration.
-
-For future platforms, besides the current 2 fields in vendor proprietary
-part, more fields may be added to identify Intel vGPU well for live
-migration purpose.
-
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Erik Skultety <eskultet@redhat.com>
-Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-c: Neo Jia <cjia@nvidia.com>
-Cc: Kirti Wankhede <kwankhede@nvidia.com>
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
- drivers/gpu/drm/i915/gvt/device_version.c | 94 +++++++++++++++++++++++
- drivers/gpu/drm/i915/gvt/gvt.c            | 55 +++++++++++++
- drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
- 4 files changed, 156 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
-
-diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
-index 271fb46d4dd0..54e209a23899 100644
---- a/drivers/gpu/drm/i915/gvt/Makefile
-+++ b/drivers/gpu/drm/i915/gvt/Makefile
-@@ -3,7 +3,7 @@ GVT_DIR := gvt
- GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
- 	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
- 	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
--	fb_decoder.o dmabuf.o page_track.o
-+	fb_decoder.o dmabuf.o page_track.o device_version.o
- 
- ccflags-y				+= -I$(src) -I$(src)/$(GVT_DIR)
- i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
-diff --git a/drivers/gpu/drm/i915/gvt/device_version.c b/drivers/gpu/drm/i915/gvt/device_version.c
-new file mode 100644
-index 000000000000..c64010d2bc54
---- /dev/null
-+++ b/drivers/gpu/drm/i915/gvt/device_version.c
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining a
-+ * copy of this software and associated documentation files (the "Software"),
-+ * to deal in the Software without restriction, including without limitation
-+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-+ * and/or sell copies of the Software, and to permit persons to whom the
-+ * Software is furnished to do so, subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice (including the next
-+ * paragraph) shall be included in all copies or substantial portions of the
-+ * Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ */
-+#include <linux/vfio.h>
-+#include "i915_drv.h"
-+
-+#define GVT_VFIO_DEVICE_VENDOR_ID ((0x8086) |	\
-+		((VFIO_DEVICE_FLAGS_PCI & 0xff) << 16))
-+
-+#define GVT_DEVICE_VERSION_COMMON_LEN 0x8
-+#define GVT_DEVICE_VERSION_DEVICE_ID_LEN 0x4
-+
-+static bool is_compatible(const char *self, const char *remote)
-+{
-+	if (strlen(remote) != strlen(self))
-+		return false;
-+
-+	return (strncmp(self, remote, strlen(self))) ? false : true;
-+}
-+
-+ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv)
-+{
-+	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-+		return -ENODEV;
-+
-+	return PAGE_SIZE;
-+}
-+
-+ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_priv,
-+		char *buf, const char *mdev_type)
-+{
-+	int cnt = 0, ret = 0;
-+	const char *str = NULL;
-+
-+	/* currently only gen8 & gen9 are supported */
-+	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-+		return -ENODEV;
-+
-+	/* first 32 bit common part specifying vendor id and it's a pci
-+	 * device
-+	 */
-+	cnt = snprintf(buf, GVT_DEVICE_VERSION_COMMON_LEN + 1,
-+			"%08x", GVT_VFIO_DEVICE_VENDOR_ID);
-+	buf += cnt;
-+	ret += cnt;
-+
-+	/* vendor proprietary part: device id + mdev type */
-+	/* device id */
-+	cnt = snprintf(buf, GVT_DEVICE_VERSION_DEVICE_ID_LEN + 2,
-+			"-%04x", INTEL_DEVID(dev_priv));
-+	buf += cnt;
-+	ret += cnt;
-+
-+	/* mdev type */
-+	str = mdev_type;
-+	cnt = snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
-+	buf += cnt;
-+	ret += cnt;
-+
-+	return ret;
-+}
-+
-+ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
-+		const char *self, const char *remote)
-+{
-+
-+	/* currently only gen8 & gen9 are supported */
-+	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-+		return -ENODEV;
-+
-+	if (!is_compatible(self, remote))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
-index 43f4242062dd..e720465b93d8 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.c
-+++ b/drivers/gpu/drm/i915/gvt/gvt.c
-@@ -105,14 +105,69 @@ static ssize_t description_show(struct kobject *kobj, struct device *dev,
- 		       type->weight);
- }
- 
-+static ssize_t version_show(struct kobject *kobj, struct device *dev,
-+		char *buf)
-+{
-+#ifdef GVT_MIGRATION_VERSION
-+	struct drm_i915_private *i915 = kdev_to_i915(dev);
-+	const char *mdev_type = kobject_name(kobj);
-+
-+	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
-+#else
-+	/* do not support live migration */
-+	return -EINVAL;
-+#endif
-+}
-+
-+static ssize_t version_store(struct kobject *kobj, struct device *dev,
-+		const char *buf, size_t count)
-+{
-+#ifdef GVT_MIGRATION_VERSION
-+	char *remote = NULL, *self = NULL;
-+	int len, ret = 0;
-+	struct drm_i915_private *i915 = kdev_to_i915(dev);
-+	const char *mdev_type = kobject_name(kobj);
-+
-+	len = intel_gvt_get_vfio_device_version_len(i915);
-+	if (len < 0)
-+		return len;
-+
-+	self = kmalloc(len, GFP_KERNEL);
-+	if (!self)
-+		return -ENOMEM;
-+
-+	ret = intel_gvt_get_vfio_device_version(i915, self, mdev_type);
-+	if (ret < 0)
-+		goto out;
-+
-+	remote = kstrndup(buf, count, GFP_KERNEL);
-+	if (!remote) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = intel_gvt_check_vfio_device_version(i915, self, remote);
-+
-+out:
-+	kfree(self);
-+	kfree(remote);
-+	return (ret < 0 ? ret : count);
-+#else
-+	/* do not support live migration */
-+	return -EINVAL;
-+#endif
-+}
-+
- static MDEV_TYPE_ATTR_RO(available_instances);
- static MDEV_TYPE_ATTR_RO(device_api);
- static MDEV_TYPE_ATTR_RO(description);
-+static MDEV_TYPE_ATTR_RW(version);
- 
- static struct attribute *gvt_type_attrs[] = {
- 	&mdev_type_attr_available_instances.attr,
- 	&mdev_type_attr_device_api.attr,
- 	&mdev_type_attr_description.attr,
-+	&mdev_type_attr_version.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
-index f5a328b5290a..4062f6b26acf 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.h
-+++ b/drivers/gpu/drm/i915/gvt/gvt.h
-@@ -687,6 +687,12 @@ void intel_gvt_debugfs_remove_vgpu(struct intel_vgpu *vgpu);
- int intel_gvt_debugfs_init(struct intel_gvt *gvt);
- void intel_gvt_debugfs_clean(struct intel_gvt *gvt);
- 
-+ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *i915,
-+		char *buf, const char *mdev_type);
-+ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
-+		const char *self, const char *remote);
-+ssize_t
-+intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv);
- 
- #include "trace.h"
- #include "mpt.h"
 -- 
-2.17.1
-
+Kees Cook
