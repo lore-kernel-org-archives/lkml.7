@@ -2,143 +2,163 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6551C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4A7C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA38214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99679205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hxRW4+KX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfDSARZ convert rfc822-to-8bit (ORCPT
+        id S1726443AbfDSAZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 20:17:25 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38279 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfDSARZ (ORCPT
+        Thu, 18 Apr 2019 20:25:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43225 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfDSAZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 20:17:25 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f36so1881437plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 17:17:24 -0700 (PDT)
+        Thu, 18 Apr 2019 20:25:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z9so1904708pgu.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 17:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aBpZyaS+ZmDCtg5dDjJTAz16MJIF3r/OZvt6uyCX5no=;
+        b=hxRW4+KXFLn/f3c5kN3LpTmaastUMsuL8zLEvsIiRwd2vDGrrZIaAkVkjXRVAhK+vR
+         FjQUelPoyHwoMpGKx12GOz3Yb8uUHf2p8zDlteqKzwzGE1JR56m6NXbzVwFHI3h4cK2Q
+         SAAebPG0TElmFxsYTBobrbnan/XCdb0/XE95wSsRzjiutTpRCpfrq2y34zURyiys4q/Q
+         YUjHoye9wBjNN5QzUexD9bZK/55tSeFX0Sn1Di/bEE1YIpfBRUghA8i9XnS870h6y2Ud
+         aOQeGf4ATN3AP9athzkogumnkpaOz9nk3VfZxXemu8GH3VOWK15kvUqdt+WhzOyK6un/
+         Xs0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=EI0Z6tTTZtHou+ddBuW2q5/I4T5ckgzWn0pKpWFfDic=;
-        b=rnMRYrACxlnm2GJkjwU9MrSDCho11+FGzle6XApMBr/q1wFax19a/Dm7ksrtRnJ9Wq
-         ydCwbuULk8z3NFcKJ6C3HiM2GFuZCk6w91Yqr5xB9p552YD4GNxMaR/fbVFrw4O44Rg8
-         t49K2U5typQ1Nvr2dl8aIZL+3TT2H9l5um9d38KxU+PfZzailae1MhGAslDkRlxGjdUX
-         C93vCoat2GXt9wQoiFY20HzuWLqVzbqErHetPXb+VVNbTgmU0Sj/rDm+J0afRJeHsw+U
-         B2r9rEGMeg60ooXDGb8FIgIll3PMUwLV1H9VI3z7G4M5+uT14b+wHyIqscOLYv+ONcYc
-         s+ow==
-X-Gm-Message-State: APjAAAV3n4K80g2KxYPmPTOnZuXb5jI25ghHQwH9QJ6dR3i/w3gF05di
-        J/s4CFTzfuNyFnizFhkUdTsZ4Q==
-X-Google-Smtp-Source: APXvYqwLBJO580DxIms78I2IA+KimlAlcGotMl7QATxRMSGr+lIYshYIJNoc9b7scbXuZ6CdTqkxmA==
-X-Received: by 2002:a17:902:822:: with SMTP id 31mr569190plk.41.1555633043969;
-        Thu, 18 Apr 2019 17:17:23 -0700 (PDT)
-Received: from [10.99.178.44] (p3300202-ipngn21401hodogaya.kanagawa.ocn.ne.jp. [153.129.48.202])
-        by smtp.gmail.com with ESMTPSA id a3sm3480824pgj.89.2019.04.18.17.17.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Apr 2019 17:17:22 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 09:17:17 +0900
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190418154045.2ad0bd50e73a6e71c0fac768@linux-foundation.org>
-References: <20190417131531.9525-1-mcroce@redhat.com> <20190418154045.2ad0bd50e73a6e71c0fac768@linux-foundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aBpZyaS+ZmDCtg5dDjJTAz16MJIF3r/OZvt6uyCX5no=;
+        b=B5PDVAlPMcLC5Gu13qAmAtjM+uMEtN+jro0ZfD7cNjBA8fpQjYxV/K9hGPm+lfyAxm
+         XSJipOXvu1kGnjyMZhutcQ3woveWUl/G90vbTbeZ8M/pmeV8lDuhyfod1qxFi1jy0iTg
+         v6lOt61iMWESM9V5OsI2eNDdcmv+wWuGvRiYt7EwEKdePR2b5jK1t7i/IeEn2uTzzdDX
+         dhRTD8B4uyQzi7qW1IWSAGz3RTU7TWvZxiop0DN3Fnwyqcj07PWkb+IfHcXQVuu1e/6s
+         PuEZd6QIyIFQwbdX2s/PnIXfffh2ApDcIFGLSEQPhaNMXwcX3VMcyvcuPE79KhLWuLus
+         OZzQ==
+X-Gm-Message-State: APjAAAV6Q9lLAOuTbDq4RVGp6jG5wm3D1Gt+2z1eVZahbUnGq7v+ynfR
+        EVKC924wA9hPlZhbTYYTD9iuwg==
+X-Google-Smtp-Source: APXvYqxHtM1ZtkLyXCCakQ1g/LH3mkpXMOlDZpFODTjlKy94Bqy7XYBlwE6UXVcSYMn1qNpIg1TEfA==
+X-Received: by 2002:a63:c34c:: with SMTP id e12mr878940pgd.279.1555633500911;
+        Thu, 18 Apr 2019 17:25:00 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id n65sm11068363pfb.160.2019.04.18.17.24.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Apr 2019 17:24:59 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 17:24:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     joro@8bytes.org, will.deacon@arm.com, robin.murphy@arm.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Log CBFRSYNRA register on context
+ fault
+Message-ID: <20190419002457.GA3137@builder>
+References: <4cfc7b3b-bc74-6b37-19f5-40b6394fa762@codeaurora.org>
+ <20190415173758.22112-1-vivek.gautam@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v3] proc/sysctl: add shared variables for range check
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-From:   Matteo Croce <mcroce@redhat.com>
-Message-ID: <1109DAD2-E25B-47A3-8381-E02260FE51B9@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415173758.22112-1-vivek.gautam@codeaurora.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On April 19, 2019 7:40:45 AM GMT+09:00, Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Wed, 17 Apr 2019 15:15:31 +0200 Matteo Croce <mcroce@redhat.com>
-> wrote:
-> 
-> > In the sysctl code the proc_dointvec_minmax() function is often used
-> to
-> > validate the user supplied value between an allowed range. This
-> function
-> > uses the extra1 and extra2 members from struct ctl_table as minimum
-> and
-> > maximum allowed value.
-> > 
-> > On sysctl handler declaration, in every source file there are some
-> readonly
-> > variables containing just an integer which address is assigned to
-> the
-> > extra1 and extra2 members, so the sysctl range is enforced.
-> > 
-> > The special values 0, 1 and INT_MAX are very often used as range
-> boundary,
-> > leading duplication of variables like zero=0, one=1, int_max=INT_MAX
-> in
-> > different source files:
-> > 
-> >     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
-> >     245
-> > 
-> > This patch adds three const variables for the most commonly used
-> values,
-> > and use them instead of creating a local one for every object file.
-> > 
-> > ...
-> >
-> > --- a/arch/s390/appldata/appldata_base.c
-> > +++ b/arch/s390/appldata/appldata_base.c
-> > @@ -220,15 +220,13 @@ appldata_timer_handler(struct ctl_table *ctl,
-> int write,
-> >  			   void __user *buffer, size_t *lenp, loff_t *ppos)
-> >  {
-> >  	int timer_active = appldata_timer_active;
-> > -	int zero = 0;
-> > -	int one = 1;
-> >  	int rc;
-> >  	struct ctl_table ctl_entry = {
-> >  		.procname	= ctl->procname,
-> >  		.data		= &timer_active,
-> >  		.maxlen		= sizeof(int),
-> > -		.extra1		= &zero,
-> > -		.extra2		= &one,
-> > +		.extra1		= (void *)&sysctl_zero,
-> > +		.extra2		= (void *)&sysctl_one,
-> >  	};
-> 
-> Still not liking the casts :(
-> 
-> Did we decide whether making extra1&2 const void*'s was feasible?
-> 
-> I'm wondering if it would be better to do
-> 
-> extern const int sysctl_zero;
-> /* comment goes here */
-> #define SYSCTL_ZERO ((void *)&sysctl_zero)
-> 
-> and then use SYSCTL_ZERO everywhere.  That centralizes the ugliness
-> and
-> makes it easier to switch over if/when extra1&2 are constified.
-> 
-> But it's all a bit sad and lame :( 
+On Mon 15 Apr 10:37 PDT 2019, Vivek Gautam wrote:
 
-No, we didn't decide yet. I need to check for all extra1,2 assignment. Not an impossible task, anyway.
+> Bits[15:0] in CBFRSYNRA register contain information about
+> StreamID of the incoming transaction that generated the
+> fault. Dump CBFRSYNRA register to get this info.
+> This is specially useful in a distributed SMMU architecture
+> where multiple masters are connected to the SMMU.
+> SID information helps to quickly identify the faulting
+> master device.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> ---
+> 
+> V1 of the patch available @
+> https://lore.kernel.org/patchwork/patch/1061615/
+> 
+> Changes from v1:
+>  - Dump the raw register value of CBFRSYNRA register in the
+>    context fault log rather than extracting the SID inforamtion
+>    and dumping that.
+> 
+>  drivers/iommu/arm-smmu-regs.h | 2 ++
+>  drivers/iommu/arm-smmu.c      | 8 ++++++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
+> index a1226e4ab5f8..e9132a926761 100644
+> --- a/drivers/iommu/arm-smmu-regs.h
+> +++ b/drivers/iommu/arm-smmu-regs.h
+> @@ -147,6 +147,8 @@ enum arm_smmu_s2cr_privcfg {
+>  #define CBAR_IRPTNDX_SHIFT		24
+>  #define CBAR_IRPTNDX_MASK		0xff
+>  
+> +#define ARM_SMMU_GR1_CBFRSYNRA(n)	(0x400 + ((n) << 2))
+> +
+>  #define ARM_SMMU_GR1_CBA2R(n)		(0x800 + ((n) << 2))
+>  #define CBA2R_RW64_32BIT		(0 << 0)
+>  #define CBA2R_RW64_64BIT		(1 << 0)
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 045d93884164..a4773e8c6b0e 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -575,7 +575,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+>  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +	void __iomem *gr1_base = ARM_SMMU_GR1(smmu);
+>  	void __iomem *cb_base;
+> +	u32 cbfrsynra;
+>  
+>  	cb_base = ARM_SMMU_CB(smmu, cfg->cbndx);
+>  	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
+> @@ -585,10 +587,12 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+>  
+>  	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
+>  	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
+> +	cbfrsynra = readl_relaxed(gr1_base +
+> +				  ARM_SMMU_GR1_CBFRSYNRA(cfg->cbndx));
 
-I agree that the casts are ugly. Your suggested macro moves the ugliness in a single point, which is good. Or maybe we can do a single macro like:
+The 80 char limit is more like a guideline anyways...please don't wrap
+this.
 
-#define SYSCTL_VAL(x) ((void *)&sysctl_##x)
+>  
+>  	dev_err_ratelimited(smmu->dev,
+> -	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
+> -			    fsr, iova, fsynr, cfg->cbndx);
+> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra = 0x%x, cb=%d\n",
 
-to avoid defining one for every value. And when we decide that everything can be const, we just update the macro.
+Drop the spaces around '='.
+
+With those addressed, you have my
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
--- 
-Matteo Croce
-per aspera ad upstream
+Bjorn
+
+> +			    fsr, iova, fsynr, cbfrsynra, cfg->cbndx);
+>  
+>  	writel(fsr, cb_base + ARM_SMMU_CB_FSR);
+>  	return IRQ_HANDLED;
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
