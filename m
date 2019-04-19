@@ -2,128 +2,154 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6856AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B36BC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3768C20652
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB78222D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvP10dfs"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="dNCGd7XR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfDSS2R (ORCPT
+        id S1727750AbfDSS2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:28:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36684 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfDSS2R (ORCPT
+        Fri, 19 Apr 2019 14:28:21 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46074 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfDSS2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:28:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 85so2997036pgc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:28:16 -0700 (PDT)
+        Fri, 19 Apr 2019 14:28:20 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y6so5286869ljd.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ONT5+2CVkj6hhrYr8uWDTX1Rkzzw8yLeZIpjJqMpjY0=;
-        b=PvP10dfsssoEwVuVGPSsDItBuLoNejtOxSAekgSyrDu81+aFomxA7AAm5XNUVHWMHb
-         CH3AuYdpeLXnxnHx8pKlCwf7BglN8b7FFuuTSMoRLxdRVMiShgysz9XmHN/3ufYD6j8f
-         Gb15kSDSpN5e03RQZd36eUWqf2fHKL79qyZm5oslfSAilc3K21Djqht9HBBe2ZgNDbN/
-         AGo4bY9XFVIS1xjDDto7O8kMPt6zEPVl5ToqrQanfQIPApz+DGWqqBh3W719QhVjtew6
-         9qE0xHdyKlp1n9wodh05AanIgIFEZ9Z47SM2HbChPlVloODQVNgrneYvMhI3nqvG9TFX
-         JbUQ==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uY7PXhPPIbtwGBJ7+viJGiFCPyh+whXUTf1tbSnJh+k=;
+        b=dNCGd7XReD01+88Ijx/UELpZySKJdi2Eu4HlGCDiTrSAUBnqLuxwwpbvJaTcU/z8HM
+         kc3fyyRldwRaUR7FcbepqdTpV/ftS3hbH06PyY3QYbrY1bsBsCw4Ynz0NAP7lnIE68IZ
+         EJ+Fnt+Vv6xAoYV0mEip5kxph5qllCtCpMqwxYZ20h3FgIX4eo5ghNx+5a+sHYWNCNbx
+         7ST8VYIKyF0oipAfNdvHVhczEt9chg6Gc/xcRFtU1dorHnamQqzVl17wHWXkV3cbXQXo
+         PNtOtKji6/eEBKol9smQpVrQqJtD71R+/k/ok8At0D0oFbhcuQyW81josvKvP9iz6Ecf
+         3kYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ONT5+2CVkj6hhrYr8uWDTX1Rkzzw8yLeZIpjJqMpjY0=;
-        b=AzfPxrUUF/otThH+KoPP+BqhQ6Kz0XSj6k8/o1gmMjdlsll4UihtIHZCg17xwnWR99
-         2I7NxibvZ4hQlRjewxvg23/043RF6ag3Qa9+Vj65ZA2GUS+/UX9v+W21QQ8ZTMhsBAg1
-         Dp+YQctL5xksE0wOJLWsMRYrGPQce+tUOWjS1YailqxDZVbAfYDMdNrbGpnakl+vC4LX
-         MzIU9Y2vRnJX/ac/BtyVumN/A/NTu+3jnVq6uacfqmi9qt7w6cNxHmkqDzHKS9G03kN7
-         1H3QwEDg5wd1ISntUMDI0ISR+Rz8HSmUvEegsstVc19oBC5S+8KELtgTCwldp9k+ZVLs
-         KNJA==
-X-Gm-Message-State: APjAAAUAIdwFgMXGG+p+SWD9OYw51zYKlWlGnNkAxr5iQXouM/UZU1e1
-        BkeO6Aq6afQdnEq/dXGxGe8=
-X-Google-Smtp-Source: APXvYqxOZDlhdHXIyQAfJzT3kfqLbILpkD0tXAUB5zcEOxBPI836iychiUOwMplbjzAl3G8Gtx39wQ==
-X-Received: by 2002:a63:5c43:: with SMTP id n3mr5188956pgm.163.1555698496395;
-        Fri, 19 Apr 2019 11:28:16 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id f2sm8558920pgc.30.2019.04.19.11.28.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 11:28:15 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 11:28:13 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 3/3] ASoC: fsl_asrc: Unify the supported input and
- output rate
-Message-ID: <20190419182812.GC1136@Asurada-Nvidia.nvidia.com>
-References: <cover.1555669068.git.shengjiu.wang@nxp.com>
- <b450010bb24e18e01b78d32067d6efdb572a9cc4.1555669068.git.shengjiu.wang@nxp.com>
+        h=x-gm-message-state:subject:from:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uY7PXhPPIbtwGBJ7+viJGiFCPyh+whXUTf1tbSnJh+k=;
+        b=I33MUs1N6ojV6YSqUUvep17GUWxAND5pwfwnN9FfqlQIUvMDITL+Qu3+aSc8MKXgRk
+         9aA11L+SrT36UJKw4f/DyhL9IVqik5j3YQ34ezNFCWwcBrgSF7nW0LJr+YWKghO5vLfM
+         jPI0lVbNjgYPA1qscDDXxDGrQPeq9pqoBrFlCIv6G50T7tpvHuqlTryHZH6bGPX8mfj7
+         xqHnuPT1nnUsi9eXGqADMv4SLRmGXPjNUgkU/XZ1WEe2kS7ZIqH0Sr/uFkQ/XTZFYZ1K
+         4xSlfQ4w4fNq5ouNNrfRpZMdiiGpEqusdTTegfw0dg7zMB8DNNpqeNd/cTmoyeSXdTfW
+         rYxA==
+X-Gm-Message-State: APjAAAV+uAc7X8Ax+CPunKmzBn+OjGGkUPxFaq5C+aQuEzke3IWyANQp
+        3TlwwYWjTcE1XsfsVRzuI9oJofban6c=
+X-Google-Smtp-Source: APXvYqy10GULKxsK4IKRaCxPOpY5H2eN+BjxOt1t2HotSVkRw3CuJT5qCcHNIevCAU3IoYWbFH2EfA==
+X-Received: by 2002:a2e:9a46:: with SMTP id k6mr2627567ljj.119.1555688682241;
+        Fri, 19 Apr 2019 08:44:42 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.82.91])
+        by smtp.gmail.com with ESMTPSA id d22sm1206931lfc.80.2019.04.19.08.44.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 08:44:40 -0700 (PDT)
+Subject: Re: [PATCH v10 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-4-git-send-email-masonccyang@mxic.com.tw>
+ <907f2e87-1cb4-fa37-5406-82bf2bf71188@cogentembedded.com>
+ <OF2F61A6E6.AA7717A3-ON482583DE.0005C1EE-482583DE.00061474@mxic.com.tw>
+ <8720224d-76f4-c620-9e3f-91605d6fa1e3@cogentembedded.com>
+ <OFCBCE0527.706EB4F2-ON482583E0.00200707-482583E0.00208EAD@mxic.com.tw>
+ <9bc4847f-8e7e-3627-5394-6f2b5c5972bc@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <d4e7b0b3-f69e-0513-84b0-076210aa4548@cogentembedded.com>
+Date:   Fri, 19 Apr 2019 18:44:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b450010bb24e18e01b78d32067d6efdb572a9cc4.1555669068.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9bc4847f-8e7e-3627-5394-6f2b5c5972bc@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 10:23:56AM +0000, S.j. Wang wrote:
-> Unify the supported input and output rate, add the
-> 12kHz/24kHz/128kHz to the support list
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  sound/soc/fsl/fsl_asrc.c | 32 +++++++++++++++++++-------------
->  1 file changed, 19 insertions(+), 13 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 2c4bbc3499db..0d06e738264a 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
-> @@ -27,13 +27,14 @@
->  	dev_dbg(&asrc_priv->pdev->dev, "Pair %c: " fmt, 'A' + index, ##__VA_ARGS__)
->  
->  /* Corresponding to process_option */
-> -static int supported_input_rate[] = {
-> -	5512, 8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000, 88200,
-> -	96000, 176400, 192000,
-> +static unsigned int supported_asrc_rate[] = {
-> +	5512, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000,
-> +	64000, 88200, 96000, 128000, 176400, 192000,
->  };
->  
-> -static int supported_asrc_rate[] = {
-> -	8000, 11025, 16000, 22050, 32000, 44100, 48000, 64000, 88200, 96000, 176400, 192000,
-> +static struct snd_pcm_hw_constraint_list fsl_asrc_rate_constraints = {
-> +	.count = ARRAY_SIZE(supported_asrc_rate),
-> +	.list = supported_asrc_rate,
->  };
->  
->  /**
-> @@ -293,11 +294,11 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
->  	ideal = config->inclk == INCLK_NONE;
->  
->  	/* Validate input and output sample rates */
-> -	for (in = 0; in < ARRAY_SIZE(supported_input_rate); in++)
-> -		if (inrate == supported_input_rate[in])
-> +	for (in = 0; in < ARRAY_SIZE(supported_asrc_rate); in++)
-> +		if (inrate == supported_asrc_rate[in])
->  			break;
+On 04/18/2019 07:55 PM, Sergei Shtylyov wrote:
 
-Not sure if we still need it upon having hw_constraint. Maybe m2m
-needs it?
+>>>>  > > Document the bindings used by the Renesas R-Car Gen3 RPC-IF
+>>> MFD controller.
+>>>>  > >
+>>>>  > > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>>>>  > > ---
+>>>>  > >  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt  | 37 +++++++++
+>>>>  > +++++++++++++
+>>>>  > >  1 file changed, 37 insertions(+)
+>>>>  > >  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
+>>>>  > renesas-rpc.txt
+>>>>  > >
+>>>>  > > diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
+>>>>  > rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>>  > > new file mode 100644
+>>>>  > > index 0000000..bfb3d29
+>>>>  > > --- /dev/null
+>>>>  > > +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+>>>>  > > @@ -0,0 +1,37 @@
+>>>>  > > +Renesas R-Car Gen3 RPC-IF MFD controller Device Tree Bindings
+>>>>  > > +-------------------------------------------------------------
+>>>>  > > +
+>>>>  > > +Required properties:
+>>>>  > > +- compatible: should be an SoC-specific compatible value, followed by
+>>>>  > > +      "renesas,rcar-gen3-rpc" as a fallback.
+>>>>  > > +      supported SoC-specific values are:
+>>>>  > > +      "renesas,r8a77995-rpc" (R-Car D3)
+>>>>  > > +- reg: should contain 2 entries, one for the base address of rpc-
+>>>>  > if registers,
+>>>>  > > +   and one for the direct mapping area
+>>>>  > > +- reg-names: should contain "regs", and "dirmap"
+>>>>  >
+>>>>  >    The device tree describes the hardware, not the driver. Why
+>>> did you remove
+>>>>  > the "wbuf" area?
+>>>>
+>>>> I don't think we should describe the hardware that driver did not
+>>> implement it
+>>>> because there are still many RPC registers we don't use them.
+>>>
+>>>     I have to repeat: we describe the hardware, not the driver capabilities.
+>>
+>> how about:
+>>
+>> - reg: should contain three register areas:
+>>           first for the base address of rpc-if registers,
+>>           second for the direct mapping read mode and
+>>           third for an optional write buffer area.
+>>  - reg-names: should contain "regs", "dirmap" and "wbuf"(optional).
+>>
+>> is it OK ?
+> 
+>    No, the write buffer area is always there, at least on the gen3 chips.
+> (I forgot which other Renesas SoC has RPC-IF as well).
+
+   So it was RZ/A1. But it didn't have the HyperFlash mode...
+
+>> thanks & best regards,
+>> Mason
+
+MBR, Sergei
