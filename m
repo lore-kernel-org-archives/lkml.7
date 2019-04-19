@@ -2,91 +2,376 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4DAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606ABC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCE3205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L86zc2b2"
+	by mail.kernel.org (Postfix) with ESMTP id 1C327205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfDSTzo (ORCPT
+        id S1727466AbfDST4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:55:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38390 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfDSTzn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:55:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p14so5462840ljg.5;
-        Fri, 19 Apr 2019 12:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wQu8wWmDvas9DO7USsEZEuYMILtEzUJoNSRphIL+GeU=;
-        b=L86zc2b2EaY3AzRnQ4xEWF0KxJXV6AZY2bomXFvh5oFIVIvIL77HJkub+89r6vzps0
-         tXkfeyKDIrhzbO3pqNCcR7kUx/gqn6QTJNCacdnwT0Hiep+qvf8xh+v9lsVnRG55AYoC
-         QiPYuGt0FW15ofXPwsULcRxqboRsIXzWguX5rXDEdbUzX0G9ZpWl9F/AjnYVU70Y3PRw
-         75h5eHv483uD6v4jpDwZx1CtmwCHb/X+cPYsOzu02LTNXayed2byN0GPWEw2t0jX5D19
-         6YJ9ZlbcTi5H5F3t5Gsxs0CAYkbq/ykmyOynvhG8dep7gwtkKMFmryhPtOHSS/jgiyRd
-         da5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wQu8wWmDvas9DO7USsEZEuYMILtEzUJoNSRphIL+GeU=;
-        b=J43FGeAmij7PopAx8absMMe+aXZgJNouTwS8ismUdS29qmdqhvaEoKcV7hHU8LJvpl
-         AEC6KHKz2aQsDpJdSbCvdgQY/weQUfKQphrv91hg9Ef29SMqzOyJe9mM4O859Vpog7Mf
-         VU5Z/eiE3mM/fIOXPAkY2E/qjZH+ZQCXde5rlpRC5hb4OGUtjG/dfr+FS7cLND0gtd6L
-         XCQ1Ycvt7Oi12MlEQxFD0Jqo4m3sF6GsvRaFDZt4NmckYsOYCSxAN09xMWrSkOa/OiV6
-         iL/WojqNAl/3EdlFxYiHgW6qCP8tG6fZ2qhDGxnerihFTM7JQydCoK7mU2qmw59r1Q1R
-         o4JA==
-X-Gm-Message-State: APjAAAXXlYzP+NkfcsrBlqtBBWG37DjBKKe78cPdJZ365kZ1rzq/zofM
-        KvnxkTKqlD0xJTou5DW5NYgnHjZuDdovDw==
-X-Google-Smtp-Source: APXvYqw/Ndo9kUCntIKeITpXKqqyp9wMPQz0DVGfGYy2xXkcs1UBLNOTNcMJkx85I+mGiFFm9XvARg==
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr1863463ljk.5.1555669746686;
-        Fri, 19 Apr 2019 03:29:06 -0700 (PDT)
-Received: from localhost.localdomain (93-96-157.netrun.cytanet.com.cy. [93.109.96.157])
-        by smtp.gmail.com with ESMTPSA id i25sm1033363lfc.19.2019.04.19.03.29.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 03:29:05 -0700 (PDT)
-From:   Mohan Kumar <mohankumar718@gmail.com>
-To:     rjw@rjwysocki.net
-Cc:     viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: cpufreq: use kstrtoul instead of obsolete simple_strtoul
-Date:   Fri, 19 Apr 2019 13:28:58 +0300
-Message-Id: <1555669738-3869-1-git-send-email-mohankumar718@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Apr 2019 15:56:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21634 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfDST4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:56:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 12:56:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,371,1549958400"; 
+   d="scan'208";a="339124191"
+Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2019 12:56:18 -0700
+Subject: [PATCH] [v2] x86/mpx: fix recursive munmap() corruption
+To:     linux-kernel@vger.kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>, rguenther@suse.de,
+        hjl.tools@gmail.com, yang.shi@linux.alibaba.com, mhocko@suse.com,
+        vbabka@suse.cz, luto@amacapital.net, x86@kernel.org,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-um@lists.infradead.org, benh@kernel.crashing.org,
+        paulus@samba.org, mpe@ellerman.id.au, linux-arch@vger.kernel.org,
+        gxt@pku.edu.cn, jdike@addtoit.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com
+From:   Dave Hansen <dave.hansen@linux.intel.com>
+Date:   Fri, 19 Apr 2019 12:47:47 -0700
+Message-Id: <20190419194747.5E1AD6DC@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the obsolte simple_strtoul function with kstrtoul.
 
-Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+Changes from v1:
+ * Fix compile errors on UML and non-x86 arches
+ * Clarify commit message and Fixes about the origin of the
+   bug and add the impact to powerpc / uml / unicore32
+
+--
+
+This is a bit of a mess, to put it mildly.  But, it's a bug
+that only seems to have showed up in 4.20 but wasn't noticed
+until now because nobody uses MPX.
+
+MPX has the arch_unmap() hook inside of munmap() because MPX
+uses bounds tables that protect other areas of memory.  When
+memory is unmapped, there is also a need to unmap the MPX
+bounds tables.  Barring this, unused bounds tables can eat 80%
+of the address space.
+
+But, the recursive do_munmap() that gets called vi arch_unmap()
+wreaks havoc with __do_munmap()'s state.  It can result in
+freeing populated page tables, accessing bogus VMA state,
+double-freed VMAs and more.
+
+To fix this, call arch_unmap() before __do_unmap() has a chance
+to do anything meaningful.  Also, remove the 'vma' argument
+and force the MPX code to do its own, independent VMA lookup.
+
+== UML / unicore32 impact ==
+
+Remove unused 'vma' argument to arch_unmap().  No functional
+change.
+
+I compile tested this on UML but not unicore32.
+
+== powerpc impact ==
+
+powerpc uses arch_unmap() well to watch for munmap() on the
+VDSO and zeroes out 'current->mm->context.vdso_base'.  Moving
+arch_unmap() makes this happen earlier in __do_munmap().  But,
+'vdso_base' seems to only be used in perf and in the signal
+delivery that happens near the return to userspace.  I can not
+find any likely impact to powerpc, other than the zeroing
+happening a little earlier.
+
+powerpc does not use the 'vma' argument and is unaffected by
+its removal.
+
+I compile-tested a 64-bit powerpc defconfig.
+
+== x86 impact ==
+
+For the common success case this is functionally identical to
+what was there before.  For the munmap() failure case, it's
+possible that some MPX tables will be zapped for memory that
+continues to be in use.  But, this is an extraordinarily
+unlikely scenario and the harm would be that MPX provides no
+protection since the bounds table got reset (zeroed).
+
+I can't imagine anyone doing this:
+
+	ptr = mmap();
+	// use ptr
+	ret = munmap(ptr);
+	if (ret)
+		// oh, there was an error, I'll
+		// keep using ptr.
+
+Because if you're doing munmap(), you are *done* with the
+memory.  There's probably no good data in there _anyway_.
+
+This passes the original reproducer from Richard Biener as
+well as the existing mpx selftests/.
+
+====
+
+The long story:
+
+munmap() has a couple of pieces:
+1. Find the affected VMA(s)
+2. Split the start/end one(s) if neceesary
+3. Pull the VMAs out of the rbtree
+4. Actually zap the memory via unmap_region(), including
+   freeing page tables (or queueing them to be freed).
+5. Fixup some of the accounting (like fput()) and actually
+   free the VMA itself.
+
+This specific ordering was actually introduced by:
+
+	dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
+
+during the 4.20 merge window.  The previous __do_munmap() code
+was actually safe because the only thing after arch_unmap() was
+remove_vma_list().  arch_unmap() could not see 'vma' in the
+rbtree because it was detached, so it is not even capable of
+doing operations unsafe for remove_vma_list()'s use of 'vma'.
+
+Richard Biener reported a test that shows this in dmesg:
+
+[1216548.787498] BUG: Bad rss-counter state mm:0000000017ce560b idx:1 val:551
+[1216548.787500] BUG: non-zero pgtables_bytes on freeing mm: 24576
+
+What triggered this was the recursive do_munmap() called via
+arch_unmap().  It was freeing page tables that has not been
+properly zapped.
+
+But, the problem was bigger than this.  For one, arch_unmap()
+can free VMAs.  But, the calling __do_munmap() has variables
+that *point* to VMAs and obviously can't handle them just
+getting freed while the pointer is still in use.
+
+I tried a couple of things here.  First, I tried to fix the page
+table freeing problem in isolation, but I then found the VMA
+issue.  I also tried having the MPX code return a flag if it
+modified the rbtree which would force __do_munmap() to re-walk
+to restart.  That spiralled out of control in complexity pretty
+fast.
+
+Just moving arch_unmap() and accepting that the bonkers failure
+case might eat some bounds tables seems like the simplest viable
+fix.
+
+This was also reported in the following kernel bugzilla entry:
+
+	https://bugzilla.kernel.org/show_bug.cgi?id=203123
+
+There are some reports that dd2283f2605 ("mm: mmap: zap pages
+with read mmap_sem in munmap") triggered this issue.  While that
+commit certainly made the issues easier to hit, I belive the
+fundamental issue has been with us as long as MPX itself, thus
+the Fixes: tag below is for one of the original MPX commits.
+
+Reported-by: Richard Biener <rguenther@suse.de>
+Reported-by: H.J. Lu <hjl.tools@gmail.com>
+Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: x86@kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: stable@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-um@lists.infradead.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arch@vger.kernel.org
+Cc: Guan Xuetao <gxt@pku.edu.cn>
+Cc: Jeff Dike <jdike@addtoit.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+
 ---
- drivers/cpufreq/elanfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/elanfreq.c b/drivers/cpufreq/elanfreq.c
-index 03419f0..bed76da 100644
---- a/drivers/cpufreq/elanfreq.c
-+++ b/drivers/cpufreq/elanfreq.c
-@@ -184,7 +184,7 @@ static int elanfreq_cpu_init(struct cpufreq_policy *policy)
-  */
- static int __init elanfreq_setup(char *str)
- {
--	max_freq = simple_strtoul(str, &str, 0);
-+	max_freq = kstrtoul(str, 0, (unsigned long *)&val);
- 	pr_warn("You're using the deprecated elanfreq command line option. Use elanfreq.max_freq instead, please!\n");
- 	return 1;
+ b/arch/powerpc/include/asm/mmu_context.h   |    1 -
+ b/arch/um/include/asm/mmu_context.h        |    1 -
+ b/arch/unicore32/include/asm/mmu_context.h |    1 -
+ b/arch/x86/include/asm/mmu_context.h       |    6 +++---
+ b/arch/x86/include/asm/mpx.h               |    5 ++---
+ b/arch/x86/mm/mpx.c                        |   10 ++++++----
+ b/include/asm-generic/mm_hooks.h           |    1 -
+ b/mm/mmap.c                                |   15 ++++++++-------
+ 8 files changed, 19 insertions(+), 21 deletions(-)
+
+diff -puN mm/mmap.c~mpx-rss-pass-no-vma mm/mmap.c
+--- a/mm/mmap.c~mpx-rss-pass-no-vma	2019-04-19 09:31:09.851509404 -0700
++++ b/mm/mmap.c	2019-04-19 09:31:09.864509404 -0700
+@@ -2730,9 +2730,17 @@ int __do_munmap(struct mm_struct *mm, un
+ 		return -EINVAL;
+ 
+ 	len = PAGE_ALIGN(len);
++	end = start + len;
+ 	if (len == 0)
+ 		return -EINVAL;
+ 
++	/*
++	 * arch_unmap() might do unmaps itself.  It must be called
++	 * and finish any rbtree manipulation before this code
++	 * runs and also starts to manipulate the rbtree.
++	 */
++	arch_unmap(mm, start, end);
++
+ 	/* Find the first overlapping VMA */
+ 	vma = find_vma(mm, start);
+ 	if (!vma)
+@@ -2741,7 +2749,6 @@ int __do_munmap(struct mm_struct *mm, un
+ 	/* we have  start < vma->vm_end  */
+ 
+ 	/* if it doesn't overlap, we have nothing.. */
+-	end = start + len;
+ 	if (vma->vm_start >= end)
+ 		return 0;
+ 
+@@ -2811,12 +2818,6 @@ int __do_munmap(struct mm_struct *mm, un
+ 	/* Detach vmas from rbtree */
+ 	detach_vmas_to_be_unmapped(mm, vma, prev, end);
+ 
+-	/*
+-	 * mpx unmap needs to be called with mmap_sem held for write.
+-	 * It is safe to call it before unmap_region().
+-	 */
+-	arch_unmap(mm, vma, start, end);
+-
+ 	if (downgrade)
+ 		downgrade_write(&mm->mmap_sem);
+ 
+diff -puN arch/x86/include/asm/mmu_context.h~mpx-rss-pass-no-vma arch/x86/include/asm/mmu_context.h
+--- a/arch/x86/include/asm/mmu_context.h~mpx-rss-pass-no-vma	2019-04-19 09:31:09.853509404 -0700
++++ b/arch/x86/include/asm/mmu_context.h	2019-04-19 09:31:09.865509404 -0700
+@@ -277,8 +277,8 @@ static inline void arch_bprm_mm_init(str
+ 	mpx_mm_init(mm);
  }
--- 
-2.7.4
-
+ 
+-static inline void arch_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
+-			      unsigned long start, unsigned long end)
++static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
++			      unsigned long end)
+ {
+ 	/*
+ 	 * mpx_notify_unmap() goes and reads a rarely-hot
+@@ -298,7 +298,7 @@ static inline void arch_unmap(struct mm_
+ 	 * consistently wrong.
+ 	 */
+ 	if (unlikely(cpu_feature_enabled(X86_FEATURE_MPX)))
+-		mpx_notify_unmap(mm, vma, start, end);
++		mpx_notify_unmap(mm, start, end);
+ }
+ 
+ /*
+diff -puN include/asm-generic/mm_hooks.h~mpx-rss-pass-no-vma include/asm-generic/mm_hooks.h
+--- a/include/asm-generic/mm_hooks.h~mpx-rss-pass-no-vma	2019-04-19 09:31:09.856509404 -0700
++++ b/include/asm-generic/mm_hooks.h	2019-04-19 09:31:09.865509404 -0700
+@@ -18,7 +18,6 @@ static inline void arch_exit_mmap(struct
+ }
+ 
+ static inline void arch_unmap(struct mm_struct *mm,
+-			struct vm_area_struct *vma,
+ 			unsigned long start, unsigned long end)
+ {
+ }
+diff -puN arch/x86/mm/mpx.c~mpx-rss-pass-no-vma arch/x86/mm/mpx.c
+--- a/arch/x86/mm/mpx.c~mpx-rss-pass-no-vma	2019-04-19 09:31:09.858509404 -0700
++++ b/arch/x86/mm/mpx.c	2019-04-19 09:31:09.866509404 -0700
+@@ -881,9 +881,10 @@ static int mpx_unmap_tables(struct mm_st
+  * the virtual address region start...end have already been split if
+  * necessary, and the 'vma' is the first vma in this range (start -> end).
+  */
+-void mpx_notify_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
+-		unsigned long start, unsigned long end)
++void mpx_notify_unmap(struct mm_struct *mm, unsigned long start,
++		      unsigned long end)
+ {
++       	struct vm_area_struct *vma;
+ 	int ret;
+ 
+ 	/*
+@@ -902,11 +903,12 @@ void mpx_notify_unmap(struct mm_struct *
+ 	 * which should not occur normally. Being strict about it here
+ 	 * helps ensure that we do not have an exploitable stack overflow.
+ 	 */
+-	do {
++	vma = find_vma(mm, start);
++	while (vma && vma->vm_start < end) {
+ 		if (vma->vm_flags & VM_MPX)
+ 			return;
+ 		vma = vma->vm_next;
+-	} while (vma && vma->vm_start < end);
++	}
+ 
+ 	ret = mpx_unmap_tables(mm, start, end);
+ 	if (ret)
+diff -puN arch/x86/include/asm/mpx.h~mpx-rss-pass-no-vma arch/x86/include/asm/mpx.h
+--- a/arch/x86/include/asm/mpx.h~mpx-rss-pass-no-vma	2019-04-19 09:31:09.860509404 -0700
++++ b/arch/x86/include/asm/mpx.h	2019-04-19 09:31:09.866509404 -0700
+@@ -78,8 +78,8 @@ static inline void mpx_mm_init(struct mm
+ 	 */
+ 	mm->context.bd_addr = MPX_INVALID_BOUNDS_DIR;
+ }
+-void mpx_notify_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
+-		      unsigned long start, unsigned long end);
++void mpx_notify_unmap(struct mm_struct *mm, unsigned long start,
++		unsigned long end);
+ 
+ unsigned long mpx_unmapped_area_check(unsigned long addr, unsigned long len,
+ 		unsigned long flags);
+@@ -100,7 +100,6 @@ static inline void mpx_mm_init(struct mm
+ {
+ }
+ static inline void mpx_notify_unmap(struct mm_struct *mm,
+-				    struct vm_area_struct *vma,
+ 				    unsigned long start, unsigned long end)
+ {
+ }
+diff -puN arch/um/include/asm/mmu_context.h~mpx-rss-pass-no-vma arch/um/include/asm/mmu_context.h
+--- a/arch/um/include/asm/mmu_context.h~mpx-rss-pass-no-vma	2019-04-19 09:42:05.789507768 -0700
++++ b/arch/um/include/asm/mmu_context.h	2019-04-19 09:42:57.962507638 -0700
+@@ -22,7 +22,6 @@ static inline int arch_dup_mmap(struct m
+ }
+ extern void arch_exit_mmap(struct mm_struct *mm);
+ static inline void arch_unmap(struct mm_struct *mm,
+-			struct vm_area_struct *vma,
+ 			unsigned long start, unsigned long end)
+ {
+ }
+diff -puN arch/unicore32/include/asm/mmu_context.h~mpx-rss-pass-no-vma arch/unicore32/include/asm/mmu_context.h
+--- a/arch/unicore32/include/asm/mmu_context.h~mpx-rss-pass-no-vma	2019-04-19 09:42:06.189507767 -0700
++++ b/arch/unicore32/include/asm/mmu_context.h	2019-04-19 09:43:25.425507569 -0700
+@@ -88,7 +88,6 @@ static inline int arch_dup_mmap(struct m
+ }
+ 
+ static inline void arch_unmap(struct mm_struct *mm,
+-			struct vm_area_struct *vma,
+ 			unsigned long start, unsigned long end)
+ {
+ }
+diff -puN arch/powerpc/include/asm/mmu_context.h~mpx-rss-pass-no-vma arch/powerpc/include/asm/mmu_context.h
+--- a/arch/powerpc/include/asm/mmu_context.h~mpx-rss-pass-no-vma	2019-04-19 09:42:06.388507766 -0700
++++ b/arch/powerpc/include/asm/mmu_context.h	2019-04-19 09:43:27.392507564 -0700
+@@ -237,7 +237,6 @@ extern void arch_exit_mmap(struct mm_str
+ #endif
+ 
+ static inline void arch_unmap(struct mm_struct *mm,
+-			      struct vm_area_struct *vma,
+ 			      unsigned long start, unsigned long end)
+ {
+ 	if (start <= mm->context.vdso_base && mm->context.vdso_base < end)
+_
