@@ -2,140 +2,69 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAECC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD7DC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776AF20821
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vGeojem1"
+	by mail.kernel.org (Postfix) with ESMTP id 5258820821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbfDSTGA (ORCPT
+        id S1729229AbfDSTGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:06:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729097AbfDSTDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:06:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41024 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729087AbfDSTDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 15:03:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JHJONv359277
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 10:19:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JHJONv359277
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555694365;
-        bh=9aMUz3v12otTjvjuVLZXNSBqxpeJu+jJcyYftk2YjPU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=vGeojem1GVQIvH0KdgnMNwf94aqiY0uJh1f3pn0N2z0QE9CDfqirSNBrwzROR9iRG
-         jwjc/zWzdjygeuu7fT+VzDwjPifACzOEHDO93O6SnDZC6Xuj7ZA/zOjlbUuB4z1ThU
-         qZvWYVWtxW/4/5s2TNgQeqcq6WSEJanlyzlTdz2mdKD7bdhFSgPtfTBIwSaS+fgx63
-         NR/EO0tDyAj/lmvb7Ln0MGVzRbe7+3HmyMJhFU3KIV/EyEFrROdZxmfzIMV4DARwS7
-         f8TiIiFUgxGPvAvna70ar1CTFmulfKYu947Vd8yOpO6Q7nhOijYdFBdBbQMC5T5Lp7
-         hNEX67AErsHPA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JHJN3s359274;
-        Fri, 19 Apr 2019 10:19:23 -0700
-Date:   Fri, 19 Apr 2019 10:19:23 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-adc6257c4a6f23ff97dca8314fcd33828e2d8db5@git.kernel.org>
-Cc:     acme@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
-        daniel@iogearbox.net, ast@kernel.org,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        songliubraving@fb.com, hpa@zytor.com, mingo@kernel.org,
-        adrian.hunter@intel.com, tglx@linutronix.de, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Reply-To: adrian.hunter@intel.com, mingo@kernel.org, ak@linux.intel.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          namhyung@kernel.org, acme@redhat.com, peterz@infradead.org,
-          alexander.shishkin@linux.intel.com, ast@kernel.org,
-          jolsa@kernel.org, daniel@iogearbox.net, hpa@zytor.com,
-          songliubraving@fb.com
-In-Reply-To: <20190416160127.30203-9-jolsa@kernel.org>
-References: <20190416160127.30203-9-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf evlist: Fix side band thread draining
-Git-Commit-ID: adc6257c4a6f23ff97dca8314fcd33828e2d8db5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A9357AD43;
+        Fri, 19 Apr 2019 10:47:48 +0000 (UTC)
+Message-ID: <1555670867.6277.10.camel@suse.de>
+Subject: Re: [PATCH 2/2] docs: hwmon: remove the extension from .rst files
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Date:   Fri, 19 Apr 2019 12:47:47 +0200
+In-Reply-To: <79280b1c2193d9de3ad45df4f024a64c2c1c85d7.1555669842.git.mchehab+samsung@kernel.org>
+References: <70d1286cf7ddb5c44abb7278faac4b7f135d8462.1555669842.git.mchehab+samsung@kernel.org>
+         <79280b1c2193d9de3ad45df4f024a64c2c1c85d7.1555669842.git.mchehab+samsung@kernel.org>
+Organization: Suse Linux
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  adc6257c4a6f23ff97dca8314fcd33828e2d8db5
-Gitweb:     https://git.kernel.org/tip/adc6257c4a6f23ff97dca8314fcd33828e2d8db5
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Tue, 16 Apr 2019 18:01:23 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 17 Apr 2019 14:30:11 -0300
+On Fri, 2019-04-19 at 07:30 -0300, Mauro Carvalho Chehab wrote:
+> On almost all places, we're including ReST files without the
+> extension.
+> 
+> Let's remove the extension here	as well, in order to use just
+> one standard.
+> 
 
-perf evlist: Fix side band thread draining
+Tab in the middle of a sentence.
 
-Current perf_evlist__poll_thread() code could finish without draining
-the data. Adding the logic that makes sure we won't finish before the
-drain.
+> Suggested-by: Jani Nikula <jani.nikula@linux.intel.
+> 
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Fixes: 657ee5531903 ("perf evlist: Introduce side band thread")
-Link: http://lkml.kernel.org/r/20190416160127.30203-9-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/evlist.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+The line above appears to be truncated.
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 6689378ee577..51ead577533f 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1868,12 +1868,12 @@ static void *perf_evlist__poll_thread(void *arg)
- {
- 	struct perf_evlist *evlist = arg;
- 	bool draining = false;
--	int i;
-+	int i, done = 0;
-+
-+	while (!done) {
-+		bool got_data = false;
- 
--	while (draining || !(evlist->thread.done)) {
--		if (draining)
--			draining = false;
--		else if (evlist->thread.done)
-+		if (evlist->thread.done)
- 			draining = true;
- 
- 		if (!draining)
-@@ -1894,9 +1894,13 @@ static void *perf_evlist__poll_thread(void *arg)
- 					pr_warning("cannot locate proper evsel for the side band event\n");
- 
- 				perf_mmap__consume(map);
-+				got_data = true;
- 			}
- 			perf_mmap__read_done(map);
- 		}
-+
-+		if (draining && !got_data)
-+			break;
- 	}
- 	return NULL;
- }
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/hwmon/index.rst | 316 +++++++++++++++++-----------------
+>  1 file changed, 158 insertions(+), 158 deletions(-)
+
+-- 
+Jean Delvare
+SUSE L3 Support
