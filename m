@@ -2,123 +2,111 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFB7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DF5C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A6A20652
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE3D222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfDSS2x (ORCPT
+        id S1727436AbfDSS3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:28:53 -0400
-Received: from mail-ed1-f49.google.com ([209.85.208.49]:37123 "EHLO
-        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfDSS2v (ORCPT
+        Fri, 19 Apr 2019 14:29:10 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:34073 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726072AbfDSS3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:28:51 -0400
-Received: by mail-ed1-f49.google.com with SMTP id f53so5027258ede.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:28:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cOqks1j+bXZCpedikQrIMl/mE0JryKYZl3iqTaQ4Bds=;
-        b=Gdd27XS9XQM7uy5XIAt0T7CipZG/cwLdGmSvKGYN2BJu8yBg7y33bb8xeKWul9Abm2
-         v8L8QK2wnkZQhQ1gc/Pe3V5dioboHGYK9B+8oA3VBYSb9cXr+C1IpwulR032zdrGX3Tf
-         8oq5PqaCmMQYogI0eT1kO4Oa8DF2Inc4UDMC2E8mzUA90Imn5C7Qfk9i/aFaO7dBHsxk
-         skq+81df8KMywTD++eNnouFm+VXtXyYqWPB+hUgPgCPlP/0p5erbYACLZoCDOG8Gl5FA
-         VwJ1BTWoPfto7CL7oHqlERpggtNOpvitr8T24eRfetAvjI7ijvhRiuLav37Tzj0l5dg2
-         yUhQ==
-X-Gm-Message-State: APjAAAW2RaLOTSuxiOiGO+tP+lvGhqy+Auk/TT0K99P21J+Cd/LLieRR
-        MQGF2x633i2t+W8JB6ZeO+ChofsY
-X-Google-Smtp-Source: APXvYqz9leZu8ZUzftcf7+hiTuJXgMEFPspqZ/1x3tRzL5f8VIN/38NHuR0eKfS7AfVjF5EoByQOzA==
-X-Received: by 2002:a50:b144:: with SMTP id l4mr2947732edd.195.1555689771704;
-        Fri, 19 Apr 2019 09:02:51 -0700 (PDT)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
-        by smtp.gmail.com with ESMTPSA id lw14sm935605ejb.24.2019.04.19.09.02.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 09:02:51 -0700 (PDT)
-Received: by mail-wm1-f53.google.com with SMTP id h18so6853646wml.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 09:02:51 -0700 (PDT)
-X-Received: by 2002:a1c:2394:: with SMTP id j142mr3142039wmj.111.1555689770644;
- Fri, 19 Apr 2019 09:02:50 -0700 (PDT)
+        Fri, 19 Apr 2019 14:29:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TPjGOrH_1555691304;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPjGOrH_1555691304)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 20 Apr 2019 00:28:26 +0800
+Subject: Re: [QUESTIONS] THP allocation in NUMA fault migration path
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <aa34f38e-5e55-bdb2-133c-016b91245533@linux.alibaba.com>
+ <20190418063218.GA6567@dhcp22.suse.cz>
+ <bb2464c9-dc45-eff1-b9ac-f29105ccd27b@linux.alibaba.com>
+ <20190419111356.GK18914@techsingularity.net>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <e48a5899-7139-ba76-46e9-76bda4a7ab78@linux.alibaba.com>
+Date:   Fri, 19 Apr 2019 09:28:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20190419080235.24396-1-paul.kocialkowski@bootlin.com>
-In-Reply-To: <20190419080235.24396-1-paul.kocialkowski@bootlin.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 19 Apr 2019 09:02:38 -0700
-X-Gmail-Original-Message-ID: <CAGb2v64iFwqPJ-me2KOWUjGuObg2brjRNvD_pkPw98Y60hnwQg@mail.gmail.com>
-Message-ID: <CAGb2v64iFwqPJ-me2KOWUjGuObg2brjRNvD_pkPw98Y60hnwQg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] drm/sun4i: Unbind components before
- releasing DRM and mem at master unbind
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190419111356.GK18914@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 1:03 AM Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> wrote:
->
-> Our components may still be using the DRM device driver (if only to
-> access our driver's private data), so make sure to unbind them before
-> the final drm_dev_put.
->
-> Also release our resserved memory adter unbind to match reverse
 
-typos...
 
-> creation order.
->
-> Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> index 843b86661833..29258b404e54 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> @@ -149,10 +149,11 @@ static void sun4i_drv_unbind(struct device *dev)
->         drm_kms_helper_poll_fini(drm);
->         drm_atomic_helper_shutdown(drm);
->         drm_mode_config_cleanup(drm);
-> -       of_reserved_mem_device_release(dev);
-> -       drm_dev_put(drm);
->
->         component_unbind_all(dev, NULL);
-> +       of_reserved_mem_device_release(dev);
+On 4/19/19 4:13 AM, Mel Gorman wrote:
+> On Thu, Apr 18, 2019 at 09:18:15AM -0700, Yang Shi wrote:
+>>
+>> On 4/17/19 11:32 PM, Michal Hocko wrote:
+>>> On Wed 17-04-19 21:15:41, Yang Shi wrote:
+>>>> Hi folks,
+>>>>
+>>>>
+>>>> I noticed that there might be new THP allocation in NUMA fault migration
+>>>> path (migrate_misplaced_transhuge_page()) even when THP is disabled (set to
+>>>> "never"). When THP is set to "never", there should be not any new THP
+>>>> allocation, but the migration path is kind of special. So I'm not quite sure
+>>>> if this is the expected behavior or not?
+>>>>
+>>>>
+>>>> And, it looks this allocation disregards defrag setting too, is this
+>>>> expected behavior too?H
+>>> Could you point to the specific code? But in general the miTgration path
+>> Yes. The code is in migrate_misplaced_transhuge_page() called by
+>> do_huge_pmd_numa_page().
+>>
+>> It would just do:
+>> alloc_pages_node(node, (GFP_TRANSHUGE_LIGHT | __GFP_THISNODE),
+>> HPAGE_PMD_ORDER);
+>> without checking if transparent_hugepage is enabled or not.
+>>
+>> THP may be disabled before calling into do_huge_pmd_numa_page(). The
+>> do_huge_pmd_wp_page() does check if THP is disabled or not. If THP is
+>> disabled, it just tries to allocate 512 base pages.
+>>
+>>> should allocate the memory matching the migration origin. If the origin
+>>> was a THP then I find it quite natural if the target was a huge page as
+>> Yes, this is what I would like to confirm. Migration allocates a new THP to
+>> replace the old one.
+>>
+>>> well. How hard the allocation should try is another question and I
+>>> suspect we do want to obedy the defrag setting.
+>> Yes, I thought so too. However, THP NUMA migration was added in 3.8 by
+>> commit b32967f ("mm: numa: Add THP migration for the NUMA working set
+>> scanning fault case."). It disregarded defrag setting at the very beginning.
+>> So, I'm not quite sure if it was done on purpose or just forgot it.
+>>
+> It was on purpose as migration due to NUMA misplacement was not intended
+> to change the type of page used. It would be impossible to tell in advance
+> if locality was more important than the page size from a performance point
+> of view. This is particularly relevant if the workload is virtualised and
+> there is an expectation that huge pages are preserved.  I'm not aware of
+> any bugs whereby there was a complaint that the THP migration caused an
+> excessive stall. It could be altered of course, but it would be preferred
+> to have an example workload demonstrating the problem before making a
+> decision.
 
-You should probably mention this change in the commit log as well.
+Thanks a lot for elaborating the idea. I didn't run into any problem at 
+the moment, just didn't get the thinking behind the choice since other 
+page fault paths (i.e. wp) do allocate hugepages more aggressively.
 
-Otherwise,
-
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-
-> +
-> +       drm_dev_put(drm);
->  }
 >
->  static const struct component_master_ops sun4i_drv_master_ops = {
-> --
-> 2.21.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
+
