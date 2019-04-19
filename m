@@ -2,111 +2,100 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20012C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEB1C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BE6204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698576;
-	bh=upGy2TdU16HfkEriubkDgSX3+ftl0DPDey0K7makTLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DPlFHwiXk4OiytlDgpDoS8O+dObIaeE5zeGz2ptS4qvM7lVnxpTmLjLh6WPZNhd5x
-	 /wr/hQDcOmpi6DuXMj5b+ZchtS45q0q2Y1qcDmTjduSH5IZXz4Ic8TUrv3ha7iX/5S
-	 IvAVIY7KNZX8i/3888JwpgZAPa2vwPonhgRQtd4k=
+	by mail.kernel.org (Postfix) with ESMTP id 5F980204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfDSS3Y (ORCPT
+        id S1728036AbfDSS3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:29:39 -0400
+Received: from sauhun.de ([88.99.104.3]:50784 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:17 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C4C222AC;
-        Fri, 19 Apr 2019 13:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555680699;
-        bh=upGy2TdU16HfkEriubkDgSX3+ftl0DPDey0K7makTLU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NPLllMydalscHfKsEer+OOlgBCBr2KI+tRfCkJfRJFzHQ8HrpePbqAza5CWOm7gZk
-         jwd292GC7MOXqdorMm5ph/CoyWi0cWvS26hR4Jwy57dsH1Ot3K+cV7WoC4TQpm1zz+
-         J8ACXLKHMcgbUM0on89dSwSg4d8gqM54JpaiUSro=
-Date:   Fri, 19 Apr 2019 08:31:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, kishon@ti.com, robh@kernel.org,
-        l.stach@pengutronix.de, andrew.smirnov@gmail.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: keystone: Fix build error while only
- CONFIG_PCI_KEYSTONE is set
-Message-ID: <20190419133137.GA173520@google.com>
-References: <20190419025855.40760-1-yuehaibing@huawei.com>
+        id S1727768AbfDSS3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:29:36 -0400
+Received: from localhost (p5486CC46.dip0.t-ipconnect.de [84.134.204.70])
+        by pokefinder.org (Postfix) with ESMTPSA id AFC8A2E354E;
+        Fri, 19 Apr 2019 20:29:33 +0200 (CEST)
+Date:   Fri, 19 Apr 2019 20:29:33 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Raag Jadav <raag.jadav@einfochips.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: at91: fix TXRDY interrupt spam
+Message-ID: <20190419182933.24pdqa73iu7wz74c@ninjato>
+References: <1555680298-518-1-git-send-email-raag.jadav@einfochips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qtvxrzjs5n7q77of"
 Content-Disposition: inline
-In-Reply-To: <20190419025855.40760-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1555680298-518-1-git-send-email-raag.jadav@einfochips.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 10:58:55AM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> During randconfig builds, I occasionally run into an invalid configuration
-> 
-> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_link_up':
-> pci-keystone.c:(.text+0x90): undefined reference to `__dw_pcie_read_dbi'
-> pci-keystone.c:(.text+0x90): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_read_dbi'
-> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_v3_65_scan_bus':
-> pci-keystone.c:(.text+0x4f0): undefined reference to `__dw_pcie_write_dbi'
-> pci-keystone.c:(.text+0x4f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_write_dbi'
-> 
-> while CONFIG_PCI_KEYSTONE is selected but CONFIG_PCIE_DW
-> is not set, the building failed like this. This patch
-> selects PCIE_DW to fix it.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 5709114f0a97 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index b450ad2..641fa0f 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -105,6 +105,7 @@ config PCIE_SPEAR13XX
->  config PCI_KEYSTONE
->  	bool "TI Keystone PCIe controller"
->  	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
-> +	select PCIE_DW
 
-What version are you building?  In v5.0, PCI_KEYSTONE already selects
-PCIE_DW_HOST:
+--qtvxrzjs5n7q77of
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-$ git grep -A4 PCI_KEYSTONE v5.0:drivers/pci/controller/dwc/Kconfig | cat
-v5.0:drivers/pci/controller/dwc/Kconfig:config PCI_KEYSTONE
-v5.0:drivers/pci/controller/dwc/Kconfig-	bool "TI Keystone PCIe controller"
-v5.0:drivers/pci/controller/dwc/Kconfig-	depends on ARCH_KEYSTONE || (ARM && COMPILE_TEST)
-v5.0:drivers/pci/controller/dwc/Kconfig-	depends on PCI_MSI_IRQ_DOMAIN
-v5.0:drivers/pci/controller/dwc/Kconfig-	select PCIE_DW_HOST
-08:30:42 ~/history (master)$
 
->  	help
->  	  Say Y here if you want to enable PCI controller support on Keystone
->  	  SoCs. The PCI controller on Keystone is based on DesignWare hardware
-> -- 
-> 2.7.4
-> 
-> 
+> *************************************************************************************************************************************************************
+> eInfochips Business Disclaimer: This e-mail message and all
+> attachments transmitted with it are intended solely for the use of the
+> addressee and may contain legally privileged and confidential
+> information. If the reader of this message is not the intended
+> recipient, or an employee or agent responsible for delivering this
+> message to the intended recipient, you are hereby notified that any
+> dissemination, distribution, copying, or other use of this message or
+> its attachments is strictly prohibited. If you have received this
+> message in error, please notify the sender immediately by replying to
+> this message and please delete it from your computer. Any views
+> expressed in this message are those of the individual sender unless
+> otherwise stated. Company has taken enough precautions to prevent the
+> spread of viruses. However the company accepts no liability for any
+> damage caused by any virus transmitted by this email.
+> *************************************************************************************************************************************************************
+
+Your patch might be correct, but as a general rule we do not accept it
+with a disclaimer like this. I mean we spread your patch all over the
+world if it is accepted :) Could you ask your company to drop the
+disclaimer when employees communicate with free software projects? Or if
+it is OK with them if you use another email address?
+
+Oh, and your mail had no To: header, please use the i2c-list next time.
+
+
+--qtvxrzjs5n7q77of
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly6E4gACgkQFA3kzBSg
+KbZwBw/+M5rrKbDEcWUlL/kFHEr3e+Z6Ya64LulfpCSAgsalaufAUaOMcr88UQAK
+40uTdyrGL+hnr1s2A9K9sGnkmKs0omrasWis26PYxyduVawzhCV/nXAS8RhlRFOA
+ou6XOyh1Fey4otajXXQQUwOVJ9RvELYDxqx1f9Un1lhzTUx51glLt3BfxeukgckV
+QUykOrJU4dEFwEOX8i8UZZk/MQS8d/x4SDMou/E8IKCHW3h34kTd4WT/z+9CVdgf
+xtD7TZNEsJv0zf1vcCFY1xoTmJL8TWG9f/c2WVYXyMzyNn1fQDfs8Q57L5oDEz3y
+1Swzt7ZjZTFRZ9Tc6jZVWP3yERk8+tCilKnuESbVyozrA6awyZYpA25nXjB9gozb
+5LVAdWQnMrRnvT54NH2YZlflM4ST6BLajZmFOZ6EAOjUzLgFP1IZnP13Hs5tQjtg
+xEvnA7kaNe24JJSXnqfRUyHBTCBDOh30BBGD5ccLEzkdqHauHLAa9bHF99HgeNp+
+GFzPhOYXYZ6+5vfZhWQJb5UvyfQCBFgQeW2L8alNYZloPicn71Ecm/6oSKn547O2
+PEgWmnz6345/nhnRpLsXAGX6INEEsxafSq+ClWAKn9aIce2BW/aS0LgvkWSFHI4U
+QKcA7odUeK3/pMzIsT5VZfNSV7bUNX+Tgz1yRYGb8+Epz8CElNU=
+=R7nI
+-----END PGP SIGNATURE-----
+
+--qtvxrzjs5n7q77of--
