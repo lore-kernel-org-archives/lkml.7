@@ -2,199 +2,187 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F59C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5344C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20E920869
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6033D20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jQL63evb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bsqIfqxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfDSUeT (ORCPT
+        id S1727121AbfDSUeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:34:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37710 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfDSUeT (ORCPT
+        Fri, 19 Apr 2019 16:34:36 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:38078 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfDSUef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:34:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w23so3056630ply.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:34:18 -0700 (PDT)
+        Fri, 19 Apr 2019 16:34:35 -0400
+Received: by mail-ua1-f66.google.com with SMTP id t15so2060016uao.5
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=hYJg39usgJcllYFrjiYgS86kBJRDdbEEnV9aw2W2GEs=;
-        b=jQL63evb7XKqJALNJHTY+/kR8xLD6D7LYbBaI+N6ELM6b/1RyL+ZzZdYlXwsuNkdtW
-         K+6M7HHA4B6S/HS2LhhoQyrgo6f0o7o/aE2K0Z+C1dzOQa2T62QuXhXDSsxbVs1B1amj
-         iQAPNYrXFX7FntLuHJk0VXbd/9e5LsYwWa0bVUDtSORMYX5hUqBdzMl7pGuV5pDB7cQI
-         S+iLKfGBDTvJqw9H+nMbPaeMMTVoIYCGByFuZge0NbYXIb9HWrTjLGM2MibRhrpiMony
-         yqn2pSzHdvRraHrbSn/LpYS3dqmgHwVjt1Ui9CNyt2diQKlCrHCvokcfthpiTUhCLirB
-         G5FQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EvRGakCeJqqdNk1DtC1nn2B7pbi0sEcCooioNgUV1v4=;
+        b=bsqIfqxlo3ORWn8Xmg1yU1Qg4299WoXlwo14yV4kgBhHDQqkxJVQot9/9qEDr7lqv0
+         WFCOfp3yYDOZLj1d/FoDJ8D1rI4Wlqxr4tg2KAwNrD/xhl6pfgSBS4IigVseMyTRMTqL
+         qLK1W8Z1vrVXl7LfOHu8vg4itTWFsPQvsUIRC4qf2M6znAjDlWVMl/y8yF5tdmeXJrHs
+         CggmcFVgogxsYUk3gH41C/6raJdbsp7gLCcr3Mt12Qpns5q0kPw8gF/AGT4Ka1k/Xu57
+         C7s0V7twls9XNlaQtr6OWTKnnp969/fN79UTlcOM0mzZQ3qY8pbB421iZNyQPMfwSx5K
+         VUNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=hYJg39usgJcllYFrjiYgS86kBJRDdbEEnV9aw2W2GEs=;
-        b=nBE1gXFWP8b5sGhtt/4vWvUP64a7Xxz/oyU6NVvUqz/Btz+zFeFPvehqbG/39vHTs9
-         GGcPn13TpgUJ4gSu7IYXUhcE/FHSUuJCsFuNk8Lti3BV/u/p0WuV+VjrYqAHkEL5PyYQ
-         GPMAMjgyPY9HI54EShWuEUf0lixvK0NDBtYs1PTXi6L7q/2IRCyHjW1aRbQUM6VUiu+X
-         bB1bijO+DeVTb63ZAA6vLp0qyvDaAP44z3sjEAXbDNdrgfg3E0gRmRWXEQYGJvgGCeyA
-         dxgMRiog/Zy3471hbcPxGn4I2zJ9JZ0O6LHy5SvkVsrYiQV9/hWlzQqUPaIGblgLY//k
-         0qjA==
-X-Gm-Message-State: APjAAAV+JnwJe0VJ3KGiJCrVQU//vIwfCWYSpwElWjFBvKi+CNfol9qp
-        /VwgOhlj6LdAP5PG2aNX/xh32A==
-X-Google-Smtp-Source: APXvYqyPPRxdtxGy49YM+WfG5omFqih5zYdg0hfApJjbYRpVmk2PDl+SCQvqvId06FUCmA5yfqUtHA==
-X-Received: by 2002:a17:902:56e:: with SMTP id 101mr5747587plf.142.1555706058366;
-        Fri, 19 Apr 2019 13:34:18 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:6d49:9ddc:13aa:21c9])
-        by smtp.googlemail.com with ESMTPSA id u17sm7271699pfn.19.2019.04.19.13.34.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 13:34:17 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial\@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
-In-Reply-To: <f2bb876c-2b44-663b-ea06-d849f721fb6c@wdc.com>
-References: <20190413020111.23400-1-paul.walmsley@sifive.com> <7hmukmew5j.fsf@baylibre.com> <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com> <7h5zr9dcsi.fsf@baylibre.com> <f2bb876c-2b44-663b-ea06-d849f721fb6c@wdc.com>
-Date:   Fri, 19 Apr 2019 13:34:17 -0700
-Message-ID: <7htvetbupi.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EvRGakCeJqqdNk1DtC1nn2B7pbi0sEcCooioNgUV1v4=;
+        b=fzRPLc8o9fzrxl7dTkW2gSJqB4wNfyFO4dCLAbAW/OedjEMGFIsZt+5/Ecinzkg6qf
+         0W7hJFD1MvYkLIUTnY63GWCKkbJaR/ZnHuVey2+YmuF/7fjZwbSECMe+JnlS+KRg3hlL
+         C99vXZjWZ0tVY4qh22DRLgORaAih+FUSafQ409DeA+64R67Ne84jPC0FhPCWqVFjGIRd
+         V2Kyi0dbmlODnqHcI2bF48BO0jw4QesYEi8JmCIbADSBp07nNtIOS+w/00HSRA9CcBh+
+         D/1bn/MUCNXXc/0tIYdBne7HY8UjhbguWB9Fbld1hJqKPcf2YXtmA3R0OX1ViX5C1yi8
+         NWMw==
+X-Gm-Message-State: APjAAAVH73cxO8W7WzkRY5FU4L4x5xMbr3BFb2oHv7jmkXdTHv2TwouC
+        MFoTuCgoK6Rwi/5N/UMAVf3zVO0RMCJM3htov0721A==
+X-Google-Smtp-Source: APXvYqxKTRrTOVvN6NZG2oJpX1yCy7ib3VvkOhl8JTYudnRgF+v5LtmghpjrAzjWm6y/IAqEM5dQ6JGXEHh24g5C01w=
+X-Received: by 2002:ab0:14c6:: with SMTP id f6mr3229939uae.30.1555706074042;
+ Fri, 19 Apr 2019 13:34:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io> <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io> <20190419194902.GE251571@google.com>
+In-Reply-To: <20190419194902.GE251571@google.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Fri, 19 Apr 2019 13:34:22 -0700
+Message-ID: <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Atish Patra <atish.patra@wdc.com> writes:
-
-> On 4/19/19 12:18 PM, Kevin Hilman wrote:
->> Atish Patra <atish.patra@wdc.com> writes:
->> 
->>> On 4/18/19 4:22 PM, Kevin Hilman wrote:
->>>> Hi Paul,
->>>>
->>>> Paul Walmsley <paul.walmsley@sifive.com> writes:
->>>>
->>>>> This series adds a serial driver, with console support, for the
->>>>> UART IP block present on the SiFive FU540 SoC.  The programming
->>>>> model is straightforward, but unique.
->>>>>
->>>>> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
->>>>> open-source FSBL (with appropriate patches to the DT data).
->>>>>
->>>>> This fifth version fixes a bug in the set_termios handler,
->>>>> found by Andreas Schwab <schwab@suse.de>.
->>>>>
->>>>> The patches in this series can also be found, with the PRCI patches,
->>>>> DT patches, and DT prerequisite patch, at:
->>>>>
->>>>> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
->>>>
->>>> I tried this branch, and it doesn't boot on my unleashed board.
->>>>
->>>> Here's the boot log when I pass the DT built from your branch via
->>>> u-boot: https://termbin.com/rfp3.
->>>>
->>>
->>> Unfortunately, that won't work. The current DT modifications by OpenSBI.
->>>
->>> 1. Change hart status to "masked" from "okay".
->>> 2. M-mode interrupt masking in PLIC node.
->>> 3. Add a chosen node for serial access in U-Boot.
->>>
->>> You can ignore 3 for your use case. However, if you pass a dtb built
->>> from source code, that will have hart0 enabled and M-mode interrupts
->>> enabled in DT.
->> 
->> Hmm, so what you're saying is there not currently any way to pass a DT
->> built from source using OpenSBI + mainline u-boot?
->> 
+On Fri, Apr 19, 2019 at 12:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> OpenSBI can accept DT built from source with following build option.
+> On Fri, Apr 19, 2019 at 09:18:59PM +0200, Christian Brauner wrote:
+> > On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
+> > > On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
+> > > > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
+> > > > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > > > >> On 04/16, Joel Fernandes wrote:
+> > > > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
+> > > > >> > >
+> > > > >> > > Could you explain when it should return POLLIN? When the whole
+> > > > >process exits?
+> > > > >> >
+> > > > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
+> > > > >or when it
+> > > > >> > is in a zombie state and there's no other thread in the thread
+> > > > >group.
+> > > > >>
+> > > > >> IOW, when the whole thread group exits, so it can't be used to
+> > > > >monitor sub-threads.
+> > > > >>
+> > > > >> just in case... speaking of this patch it doesn't modify
+> > > > >proc_tid_base_operations,
+> > > > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
+> > > > >going to use
+> > > > >> the anonymous file returned by CLONE_PIDFD ?
+> > > > >
+> > > > >I don't think procfs works that way. /proc/sub-thread-tid has
+> > > > >proc_tgid_base_operations despite not being a thread group leader.
+> > > > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
+> > > > >be hit trivially, and then the code will misbehave.
+> > > > >
+> > > > >@Joel: I think you'll have to either rewrite this to explicitly bail
+> > > > >out if you're dealing with a thread group leader, or make the code
+> > > > >work for threads, too.
+> > > >
+> > > > The latter case probably being preferred if this API is supposed to be
+> > > > useable for thread management in userspace.
+> > >
+> > > At the moment, we are not planning to use this for sub-thread management. I
+> > > am reworking this patch to only work on clone(2) pidfds which makes the above
+> >
+> > Indeed and agreed.
+> >
+> > > discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
+> > > patches, CLONE_THREAD with pidfd is not supported.
+> >
+> > Yes. We have no one asking for it right now and we can easily add this
+> > later.
+> >
+> > Admittedly I haven't gotten around to reviewing the patches here yet
+> > completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
+> > on process exit which I think is nice as well. How about returning
+> > POLLIN | POLLHUP on process exit?
+> > We already do things like this. For example, when you proxy between
+> > ttys. If the process that you're reading data from has exited and closed
+> > it's end you still can't usually simply exit because it might have still
+> > buffered data that you want to read.  The way one can deal with this
+> > from  userspace is that you can observe a (POLLHUP | POLLIN) event and
+> > you keep on reading until you only observe a POLLHUP without a POLLIN
+> > event at which point you know you have read
+> > all data.
+> > I like the semantics for pidfds as well as it would indicate:
+> > - POLLHUP -> process has exited
+> > - POLLIN  -> information can be read
 >
-> FW_PAYLOAD_FDT="<unleashed>.dtb"
->
-> More documentation:
-> https://github.com/riscv/opensbi/blob/master/docs/firmware/fw_payload.md
+> Actually I think a bit different about this, in my opinion the pidfd should
+> always be readable (we would store the exit status somewhere in the future
+> which would be readable, even after task_struct is dead). So I was thinking
+> we always return EPOLLIN.  If process has not exited, then it blocks.
 
-I'm aware of that method, but I'm looking for a way that doesn't require
-me to rebuild/reflash SBI every time.
+ITYM that a pidfd polls as readable *once a task exits* and stays
+readable forever. Before a task exit, a poll on a pidfd should *not*
+yield POLLIN and reading that pidfd should *not* complete immediately.
+There's no way that, having observed POLLIN on a pidfd, you should
+ever then *not* see POLLIN on that pidfd in the future --- it's a
+one-way transition from not-ready-to-get-exit-status to
+ready-to-get-exit-status.
 
-Basically, I want u-boot to TFTP the DTB (along with kernel and ramdisk)
-and boot it from memory.
+Besides, didn't Linux say that he wanted waitpid(2) to be the function
+for exit status on a pidfd, not read(2)? It doesn't really matter:
+POLLIN on a pidfd would just make "I, the kernel, say that waitpid on
+this FD won't block", whereas for something like socket, it would mean
+"I, the kernel, say read(2) on this FD won't block".
 
-On all other DT platforms in kernelCI, we build DTB(s) along with the
-kernel (but not built into the kernel.)  We then use the bootloader to
-load the kernel, DTB and ramdisk that we built.
-
->> As a short-term workaround, is there a way to make these changes from
->> the u-boot command-line after loading a DTB built from source into
->> memory?  If so, I could at least script that part.
->> 
->> 
->>> Not sure if we should do these DT modifications in U-Boot as well.
->> 
->> I guess so (and I'd be happy to test the patch.)
->> 
->> Either that, or the upstream DTs (or code) should have those features to
->> the right settings.
->> 
->> Speaking of which, I tried to patch the DT from Paul's recent series[1]
->> to make the necessary changes.  I can see where to change cpu0 from
->> "okay" to "masked", but I'm not so sure how to make the PLIC change.
->> 
->
-> Here is the code snippet of how OpenSBI modifies the DT.
->
-> https://github.com/riscv/opensbi/blob/master/platform/sifive/fu540/platform.c#L53
-
-Thanks, based on that, I was able to modify the DTB I'm builing from
-source[1], but it still doesn't fully boot.
-
-Looks like Paul has so far only tested this with BBL + FSBL, so I think
-I'll wait to hear from him how that setup might be different from using
-OpenSBI + u-boot.
-
-Thanks for all the help,
-
-Kevin
-
-[1]
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index dd3b9395cedf..299398c4201d 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -30,7 +30,7 @@
-                        i-cache-size = <16384>;
-                        reg = <0>;
-                        riscv,isa = "rv64imac";
--                       status = "okay";
-+                       status = "masked";
-                        cpu0_intc: interrupt-controller {
-                                #interrupt-cells = <1>;
-                                compatible = "riscv,cpu-intc";
-@@ -148,11 +148,11 @@
-                        reg = <0x0 0xc000000 0x0 0x4000000>;
-                        interrupt-controller;
-                        interrupts-extended = <
--                               &cpu0_intc 11
--                               &cpu1_intc 11 &cpu1_intc 9
--                               &cpu2_intc 11 &cpu2_intc 9
--                               &cpu3_intc 11 &cpu3_intc 9
--                               &cpu4_intc 11 &cpu4_intc 9>;
-+                               &cpu0_intc 0xffffffff
-+                               &cpu1_intc 0xffffffff &cpu1_intc 9
-+                               &cpu2_intc 0xffffffff &cpu2_intc 9
-+                               &cpu3_intc 0xffffffff &cpu3_intc 9
-+                               &cpu4_intc 0xffffffff &cpu4_intc 9>;
-                };
-                prci: clock-controller@10000000 {
-                        compatible = "sifive,fu540-c000-prci";
+I don't see the need for POLLHUP in pidfds at all. IMHO, we shouldn't
+include it. "Hangup" doesn't have an obvious meaning distinct from
+exit, and we might want the POLLHUP bit for something else in the
+future. What would a caller do with POLLHUP? If the answer is
+"something to do with ptrace", let's defer that to some future work,
+since ptrace has a ton of moving parts I don't want to consider right
+now.
