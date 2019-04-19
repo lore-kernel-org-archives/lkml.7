@@ -2,180 +2,184 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF0FC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB817C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23460222E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E299222E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfDSSSq (ORCPT
+        id S1727506AbfDSSSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:18:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50684 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbfDSSSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:18:44 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4AF9C83F3A;
-        Fri, 19 Apr 2019 07:42:40 +0000 (UTC)
-Received: from xz-x1 (ovpn-12-224.pek2.redhat.com [10.72.12.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8794D19C65;
-        Fri, 19 Apr 2019 07:42:27 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 15:42:20 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 17/28] userfaultfd: wp: support swap and page migration
-Message-ID: <20190419074220.GG13323@xz-x1>
-References: <20190320020642.4000-1-peterx@redhat.com>
- <20190320020642.4000-18-peterx@redhat.com>
- <20190418205907.GL3288@redhat.com>
+        Fri, 19 Apr 2019 14:18:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727483AbfDSSSU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:18:20 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JDQR5e076133
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 09:33:16 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rybsq09tk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 09:33:16 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Fri, 19 Apr 2019 14:33:14 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 19 Apr 2019 14:33:10 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3JDXAFb52429038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Apr 2019 13:33:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5304A405B;
+        Fri, 19 Apr 2019 13:33:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EA04A4054;
+        Fri, 19 Apr 2019 13:33:09 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.155.124])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Apr 2019 13:33:09 +0000 (GMT)
+Date:   Fri, 19 Apr 2019 15:33:07 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+In-Reply-To: <20190418204144.16adf2a0@mschwideX1>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+        <20190415051919.GA31481@infradead.org>
+        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+        <20190416110906.6c773aff@mschwideX1>
+        <20190416140658.2cb73a3f@mschwideX1>
+        <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
+        <CAHk-=wj2SW0Zno0Yn=S9wrsmHOKV0FiFPiPS4TM=Gn8yjfYXAg@mail.gmail.com>
+        <20190417094637.51ad4c67@mschwideX1>
+        <20190417100244.42e29736@mschwideX1>
+        <CAHk-=wj5j-zMo7hVNxiw3+5L2d1WQVm3x4fbpg=OXLzDh8FhYg@mail.gmail.com>
+        <20190418100218.0a4afd51@mschwideX1>
+        <CAHk-=whajv8Fw2VcBqZUs0hfx1Dq4fYj3TEEx4yfR3E8+rLS1A@mail.gmail.com>
+        <20190418204144.16adf2a0@mschwideX1>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190418205907.GL3288@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 19 Apr 2019 07:42:41 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041913-0008-0000-0000-000002DBA655
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041913-0009-0000-0000-00002247EB5E
+Message-Id: <20190419153307.4f2911b5@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904190102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 04:59:07PM -0400, Jerome Glisse wrote:
-> On Wed, Mar 20, 2019 at 10:06:31AM +0800, Peter Xu wrote:
-> > For either swap and page migration, we all use the bit 2 of the entry to
-> > identify whether this entry is uffd write-protected.  It plays a similar
-> > role as the existing soft dirty bit in swap entries but only for keeping
-> > the uffd-wp tracking for a specific PTE/PMD.
+On Thu, 18 Apr 2019 20:41:44 +0200
+Martin Schwidefsky <schwidefsky@de.ibm.com> wrote:
+
+> On Thu, 18 Apr 2019 08:49:32 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+> > On Thu, Apr 18, 2019 at 1:02 AM Martin Schwidefsky
+> > <schwidefsky@de.ibm.com> wrote:  
+> > >
+> > > The problematic lines in the generic gup code are these three:
+> > >
+> > > 1845:   pmdp = pmd_offset(&pud, addr);
+> > > 1888:   pudp = pud_offset(&p4d, addr);
+> > > 1916:   p4dp = p4d_offset(&pgd, addr);
+> > >
+> > > Passing the pointer of a *copy* of a page table entry to pxd_offset() does
+> > > not work with the page table folding on s390.    
 > > 
-> > Something special here is that when we want to recover the uffd-wp bit
-> > from a swap/migration entry to the PTE bit we'll also need to take care
-> > of the _PAGE_RW bit and make sure it's cleared, otherwise even with the
-> > _PAGE_UFFD_WP bit we can't trap it at all.
+> > Hmm. I wonder why. x86 too does the folding thing for the p4d and pud case.
 > > 
-> > Note that this patch removed two lines from "userfaultfd: wp: hook
-> > userfault handler to write protection fault" where we try to remove the
-> > VM_FAULT_WRITE from vmf->flags when uffd-wp is set for the VMA.  This
-> > patch will still keep the write flag there.
-> > 
-> > Reviewed-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > The folding works with the local copy just the same way it works with
+> > the orignal value.  
 > 
-> Some missing thing see below.
+> The difference is that with the static page table folding pgd_offset()
+> does the index calculation of the actual hardware top-level table. With
+> dynamic page table folding as s390 is doing it, if the task does not use
+> a 5-level page table pgd_offset() will see a pgd_index() of 0, the indexing
+> of the actual top-level table is done later with p4d_offset(), pud_offset()
+> or pmd_offset(). 
 > 
-> [...]
-> 
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 6405d56debee..c3d57fa890f2 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -736,6 +736,8 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
-> >  				pte = swp_entry_to_pte(entry);
-> >  				if (pte_swp_soft_dirty(*src_pte))
-> >  					pte = pte_swp_mksoft_dirty(pte);
-> > +				if (pte_swp_uffd_wp(*src_pte))
-> > +					pte = pte_swp_mkuffd_wp(pte);
-> >  				set_pte_at(src_mm, addr, src_pte, pte);
-> >  			}
-> >  		} else if (is_device_private_entry(entry)) {
-> 
-> You need to handle the is_device_private_entry() as the migration case
-> too.
+> As an example, with a three level page table we have three indexes x/y/z.
+> The common code "thinks" 5 indexing steps, with static folding the index
+> sequence is x 0 0 y z. With dynamic folding the sequence is 0 0 x y z.
+> By moving the first indexing operation to pgd_offset the static sequence
+> does not add an index to a non-dereferenced pointer to a stack variable,
+> the dynamic sequence does.
 
-Hi, Jerome,
+That problem got stuck in my head and I thought more about it. Why not
+emulate the static folding sequence in the s390 page table code?
 
-Yes I can simply add the handling, but I'd confess I haven't thought
-clearly yet on how userfault-wp will be used with HMM (and that's
-mostly because my unfamiliarity so far with HMM).  Could you give me
-some hint on a most general and possible scenario?
+As the table type is encoded in every entry for the region and segment
+tables, pgd_offset() can look at the first entry to find the table type
+and then do the correct index calculation for the given top-level table.
+Like this:
 
-> 
-> 
-> 
-> > @@ -2825,6 +2827,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
-> >  	flush_icache_page(vma, page);
-> >  	if (pte_swp_soft_dirty(vmf->orig_pte))
-> >  		pte = pte_mksoft_dirty(pte);
-> > +	if (pte_swp_uffd_wp(vmf->orig_pte)) {
-> > +		pte = pte_mkuffd_wp(pte);
-> > +		pte = pte_wrprotect(pte);
-> > +	}
-> >  	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
-> >  	arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
-> >  	vmf->orig_pte = pte;
-> > diff --git a/mm/migrate.c b/mm/migrate.c
-> > index 181f5d2718a9..72cde187d4a1 100644
-> > --- a/mm/migrate.c
-> > +++ b/mm/migrate.c
-> > @@ -241,6 +241,8 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
-> >  		entry = pte_to_swp_entry(*pvmw.pte);
-> >  		if (is_write_migration_entry(entry))
-> >  			pte = maybe_mkwrite(pte, vma);
-> > +		else if (pte_swp_uffd_wp(*pvmw.pte))
-> > +			pte = pte_mkuffd_wp(pte);
-> >  
-> >  		if (unlikely(is_zone_device_page(new))) {
-> >  			if (is_device_private_page(new)) {
-> 
-> You need to handle is_device_private_page() case ie mark its swap
-> as uffd_wp
+static inline pgd_t *pgd_offset_raw(pgd_t *pgd, unsigned long address)
+{
+        unsigned long rste;
+        unsigned int shift;
 
-Yes I can do this too.
+        /* Get the first entry of the top level table */
+        rste = pgd_val(*pgd);
+        /* Pick up the shift from the table type of the first entry */
+        shift = ((rste & _REGION_ENTRY_TYPE_MASK) >> 2) * 11 + 20;
+        return pgd + ((address >> shift) & (PTRS_PER_PGD - 1));
+}
 
-> 
-> > @@ -2301,6 +2303,8 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
-> >  			swp_pte = swp_entry_to_pte(entry);
-> >  			if (pte_soft_dirty(pte))
-> >  				swp_pte = pte_swp_mksoft_dirty(swp_pte);
-> > +			if (pte_uffd_wp(pte))
-> > +				swp_pte = pte_swp_mkuffd_wp(swp_pte);
-> >  			set_pte_at(mm, addr, ptep, swp_pte);
-> >
-> >  			/*
-> > diff --git a/mm/mprotect.c b/mm/mprotect.c
-> > index 855dddb07ff2..96c0f521099d 100644
-> > --- a/mm/mprotect.c
-> > +++ b/mm/mprotect.c
-> > @@ -196,6 +196,8 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
-> >  				newpte = swp_entry_to_pte(entry);
-> >  				if (pte_swp_soft_dirty(oldpte))
-> >  					newpte = pte_swp_mksoft_dirty(newpte);
-> > +				if (pte_swp_uffd_wp(oldpte))
-> > +					newpte = pte_swp_mkuffd_wp(newpte);
-> >  				set_pte_at(mm, addr, pte, newpte);
-> >  
-> >  				pages++;
-> 
-> Need to handle is_write_device_private_entry() case just below
-> that chunk.
+#define pgd_offset(mm, address) pgd_offset_raw((mm)->pgd, address)
+#define pgd_offset_k(address) pgd_offset(&init_mm, address)
 
-This one is a bit special - because it's not only the private entries
-that are missing but also all swap/migration entries, which is
-explicitly handled by patch 25.  But I think I can just squash it into
-this patch as you suggested.
+static inline p4d_t *p4d_offset(pgd_t *pgd, unsigned long address)
+{
+        if ((pgd_val(*pgd) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R1)
+                return (p4d_t *) pgd;
+        return (p4d_t *) pgd_deref(*pgd) + p4d_index(address);
+}
 
-Thanks,
+static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
+{
+        if ((p4d_val(*p4d) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R2)
+                return (pud_t *) p4d;
+        return (pud_t *) p4d_deref(*p4d) + pud_index(address);
+}
+
+static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
+{
+        if ((pud_val(*pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
+                return (pmd_t *) pud;
+        return (pmd_t *) pud_deref(*pud) + pmd_index(address);
+}
+
+This needs more thorough testing but in principle it does work. The kernel
+boots and survives a kernel compile. The only things that is slightly off is
+that pgd_offset() now has to look at the first table entry to do its job.
 
 -- 
-Peter Xu
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
