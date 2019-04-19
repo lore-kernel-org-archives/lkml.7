@@ -2,137 +2,133 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42351C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F602C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0277120652
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA4F222C5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="B0BQlA/P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzNuBYgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfDSSZw (ORCPT
+        id S1727736AbfDSS0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:25:52 -0400
-Received: from condef-07.nifty.com ([202.248.20.72]:40749 "EHLO
-        condef-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727378AbfDSSZv (ORCPT
+        Fri, 19 Apr 2019 14:26:00 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41940 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfDSSZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:25:51 -0400
-Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-07.nifty.com with ESMTP id x3J9nRw7028234;
-        Fri, 19 Apr 2019 18:49:27 +0900
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x3J9mDiV012304;
-        Fri, 19 Apr 2019 18:48:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3J9mDiV012304
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555667309;
-        bh=sNr4ub5sQxS+0LMMMb+j8VzxalFAFd/JYoE5EUyoP38=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0BQlA/PTYdRhr/cnabblYMwAYhKD6J8OBAnfSjQcaEkjG6yjSsJYkeL42KRC579r
-         PNg66kXGfTKg1PT7Mcezea0Le+TIG2L3R4/go1gHcEczBgXpsHfXnTklxKr73FcJpB
-         pgKBhSPoXPMW7FmxAXFP1oXRnpOJMTmVFfi2T1b21yJJ50Dxj8uphUr9arAF2VZ5Gt
-         iFyTtCd7tSUQLuAgFMsInuQd7Zi7f4y+HfXk6okijLRI07aBA/2tsWZxCbHUU5cMYd
-         OpHcQiZWhdNji5KDIWUGz0avKi8LtEztXO2FBxeNaT2m5466QUP8yjbxpOEGypVmOj
-         xzYLsSTkB+gRA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 10/11] powerpc/mm/radix: mark as __tlbie_pid() and friends as__always_inline
-Date:   Fri, 19 Apr 2019 18:47:53 +0900
-Message-Id: <20190419094754.24667-11-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190419094754.24667-1-yamada.masahiro@socionext.com>
-References: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+        Fri, 19 Apr 2019 14:25:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c12so1679864wrt.8;
+        Fri, 19 Apr 2019 11:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=J0AacS0VXB9Digb/uS8wUCrW1a/KxZR4Mwk025xF7BE=;
+        b=OzNuBYgBB4lkqAok0CpNjN+8GtTd7Liuv1XeFq4msEIQGtIsjd6xO4liGRXOk5dmFB
+         Axt1nyfu+eX+oy0PePKjpVni2MUW8oj/KC59/Gjtk/wlLNhrM1D9JYSP8KklJunNVkVf
+         jFG+OE5/0p10I5SfOjnbh147w4XOwU13fK2p4CmgbARcT0PzxQ4iOqwywn4qZZyiGgoF
+         B+ki+PKONXWWXBv4NWt2/ZR9XjpE5BuM1a9uko8oSWxDODLjAaVXOqTeQ8+j6AbXP0TC
+         JTfYu4N/ub5vj9IHtZRZ4P9wa9ikHqkJ03mRyGFijbHY7UDhizo26TLYh3DRQZNR5tjw
+         MEpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=J0AacS0VXB9Digb/uS8wUCrW1a/KxZR4Mwk025xF7BE=;
+        b=iMXOnBRnNKNKX2VFG0sfK+q7ezDrj6m/onwFjWN9RGIB4RSDLvBAr7AzdtuuQP1TJe
+         rTp2RDiMiVj2jYM7b9vMLzaARlKMwBanAalZ5tiPdXs0Ru3puWQUKXDNZKBDYNp6hzMv
+         De2ayx5yavUD3dGqgirNJ+hS10ijSgFNlD7mzQ5hfc+eP5mwAGt49tSZYH5dOBRU+nim
+         /8hD8BG9anchdb0+P5j0KIreY0NGhrYBPjCJ9epcNg4g/S/UuPJd/gQmRuWbJ1pdg2MA
+         nsY1k2ad2gELUP6214xrySrCtMl6NcMRF9FwQrMa3XPVbD5vf51gpL7SWsAaQmYZ8Vb8
+         TOww==
+X-Gm-Message-State: APjAAAVfLqb1Enx5Icc4UViXscP7hKZ5eu0o77GCpKvtLFWRu8WpN9DR
+        m5ofj6iB0le3kinHLpg5aHHem+NeJ0c=
+X-Google-Smtp-Source: APXvYqzRlwioNMs6CaQDgnPLYOk66EdYjEgsxgYHBimb5QUql9eblV6e0ELRwP6VIAkjdaPp+hQ3cw==
+X-Received: by 2002:adf:dcca:: with SMTP id x10mr2304668wrm.57.1555667843090;
+        Fri, 19 Apr 2019 02:57:23 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id 192sm5791849wme.13.2019.04.19.02.57.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 02:57:22 -0700 (PDT)
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Subject: [PATCH v3 00/11] asus-wmi: Support of ASUS TUF Gaming series laptops
+Message-ID: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Date:   Fri, 19 Apr 2019 11:57:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-place. We need to eliminate potential issues beforehand.
+Hi,
 
-If it is enabled for powerpc, the following errors are reported:
+this is the third version of the patch series. 
 
-arch/powerpc/mm/tlb-radix.c: In function '__tlbie_lpid':
-arch/powerpc/mm/tlb-radix.c:148:2: warning: asm operand 3 probably doesn't match constraints
-  asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
-  ^~~
-arch/powerpc/mm/tlb-radix.c:148:2: error: impossible constraint in 'asm'
-arch/powerpc/mm/tlb-radix.c: In function '__tlbie_pid':
-arch/powerpc/mm/tlb-radix.c:118:2: warning: asm operand 3 probably doesn't match constraints
-  asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
-  ^~~
-arch/powerpc/mm/tlb-radix.c: In function '__tlbiel_pid':
-arch/powerpc/mm/tlb-radix.c:104:2: warning: asm operand 3 probably doesn't match constraints
-  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
-  ^~~
+Changelog:
+v3: 
+  * Use devm_* function in patch 01
+  * Detect DSTS/DCTS using _UID in patch 04
+  * Detect event queue by _UID as well in patch 05
+  * Rename poll function in patch 05
+  * Fix terminology in patches 09 and 10
+  * Correct commit messages
+v2:
+  * Fix logging
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+INTRODUCTION
+The support for this laptop series is currently non-existent, as the
+asus-nb-wmi driver (which is essentially configuration for asus-wmi) fails
+to load and multiple ACPI errors are logged in dmesg. This patch series
+adds pretty comprehensive support for these relatively new laptops, adds
+some code organization, and fixes a couple of bugs in the asus-wmi module.
 
-Changes in v2:
-  - new patch
+Original message from V1/V2:
+https://lkml.org/lkml/2019/4/10/973
 
- arch/powerpc/mm/tlb-radix.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+It is really long, so I will not copy it completely here, please refer
+to the original for notes on design decisions and existing minor issues
+(other than quirks, which should be hopefully solved now).
 
-diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
-index a2b2848f0ae3..14ff414d1545 100644
---- a/arch/powerpc/mm/tlb-radix.c
-+++ b/arch/powerpc/mm/tlb-radix.c
-@@ -90,8 +90,8 @@ void radix__tlbiel_all(unsigned int action)
- 	asm volatile(PPC_INVALIDATE_ERAT "; isync" : : :"memory");
- }
- 
--static inline void __tlbiel_pid(unsigned long pid, int set,
--				unsigned long ric)
-+static __always_inline void __tlbiel_pid(unsigned long pid, int set,
-+					 unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -106,7 +106,7 @@ static inline void __tlbiel_pid(unsigned long pid, int set,
- 	trace_tlbie(0, 1, rb, rs, ric, prs, r);
- }
- 
--static inline void __tlbie_pid(unsigned long pid, unsigned long ric)
-+static __always_inline void __tlbie_pid(unsigned long pid, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -136,7 +136,7 @@ static inline void __tlbiel_lpid(unsigned long lpid, int set,
- 	trace_tlbie(lpid, 1, rb, rs, ric, prs, r);
- }
- 
--static inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
-+static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
- /*
-  * We use 128 set in radix mode and 256 set in hpt mode.
-  */
--static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
-+static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
- {
- 	int set;
- 
+Yurii Pavlovskyi (11):
+  platform/x86: asus-wmi: Fix hwmon device cleanup
+  platform/x86: asus-wmi: Fix preserving keyboard backlight intensity on
+    load
+  platform/x86: asus-wmi: Increase the input buffer size of WMI methods
+  platform/x86: asus-wmi: Improve DSTS WMI method ID detection
+  platform/x86: asus-wmi: Support WMI event queue
+  platform/x86: asus-nb-wmi: Add microphone mute key code
+  platform/x86: asus-wmi: Organize code into sections
+  platform/x86: asus-wmi: Enhance detection of thermal data
+  platform/x86: asus-wmi: Control RGB keyboard backlight
+  platform/x86: asus-wmi: Switch fan boost mode
+  platform/x86: asus-wmi: Do not disable keyboard backlight on unloading
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |  71 ++
+ drivers/platform/x86/asus-nb-wmi.c            |   3 +-
+ drivers/platform/x86/asus-wmi.c               | 797 +++++++++++++++---
+ drivers/platform/x86/wmi.c                    |  19 +
+ include/linux/acpi.h                          |   1 +
+ include/linux/platform_data/x86/asus-wmi.h    |   7 +-
+ 6 files changed, 797 insertions(+), 101 deletions(-)
+
 -- 
 2.17.1
 
