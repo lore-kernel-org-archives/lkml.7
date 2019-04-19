@@ -2,113 +2,98 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86C8C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21722C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8F620663
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69B320663
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b/L5hdEy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBOLM+il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfDSTrk (ORCPT
+        id S1727623AbfDSTs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:47:40 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38425 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfDSTrj (ORCPT
+        Fri, 19 Apr 2019 15:48:29 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46238 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfDSTs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:47:39 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w15so7366011wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:47:38 -0700 (PDT)
+        Fri, 19 Apr 2019 15:48:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 9so2940363pfj.13;
+        Fri, 19 Apr 2019 12:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=aSruXCIf56eTUnwd91mFJWvgWo5ilLOW75OOPS8G/vQ=;
-        b=b/L5hdEywCgjzZXewVEgNkwkRzSctvTyMAgjLLfQe/+d8De14q8WZX75J9BSDobTku
-         YUBJKbF348WamlAnWAxLY8sGTZvvMi2yJIx2ug6l/zntb9dohxh0wh4tCkJGuI1d0z8L
-         SrQZhZStVkUneIGq++IlAWsT2hX5/S0B8XP0NSNA4FAlnN04Ysw+Lv2b4MR89PMJOH2K
-         R6rVoL0zmApHrx57+z8sXYHfjMS321lOzp1YwQ0P4p7s/xPwQ8gOC71JF4DxI7SHCf9F
-         Ret9rCen/YzJXaWJ+lP/WFlhuEObKsdn5HpdKtYREmNd66KMY02IMnL2faRr9dUPQJhh
-         RAdA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lpkcT/3cE2I0/ol0HQ9o/OLoFNZFToJRobNwO3yOpLQ=;
+        b=KBOLM+il38KdGXODrHXidLcFmi+ph7A9384dUj4GhMmhDRwGiQvCRGJd/Nk05b1z9L
+         B6W5NkStdoHw5+UV6nMB7Z0btAPOfP1rET4VVvToK1wEkzhhlgOsZWdi7AMexeopnAtE
+         UbkdIG4ZjaGg+AiNRWtBxekU7H/iGGZ86ydoighL+DCxD63t1q53sNZIsQu+kk3T/JhX
+         37664+p6F501v8z/PfmWWYUOLyyr7XmA5IwqWzJ1WlCcaS0eMJpZxlAwW54KBF1Xa12e
+         74u6qFuiq7kYJQ6RnBmrmmv90ER1piQHhtcZoKP0/+lX+nSE3Y7g2uPqpSxiYw7fu9LG
+         JvRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aSruXCIf56eTUnwd91mFJWvgWo5ilLOW75OOPS8G/vQ=;
-        b=Zmo1lMVHDrz0KtX9AOI5CtKfM+58vMCR2ret3h6+KrqgWw17IXoqb2HC6dwqtkxMy1
-         3ix13ExORrt+TpNXiwXqk7a/qxvdMoyOHsICID37V9KVHZTWJlFGQ16ECQo/R6mKBdAf
-         GZa3IyxmFxzvAN5dcyxed6ht2WQvqkXDPeSaCVbfyqzmKNk2pFsNG7KgAreloxCA1UQh
-         HXOV5rlR/Y076KvL+EaQTpdkw5qXtb13+nRfvvvX2cwCbsey6uy8zZDzl7zATVd8lwob
-         tWREfp5ILQyRXrKljiGz0IoTdRJaL3nFAqeg99U7Mjrxd/kJ64XFT9YxwSOgzUDL+a3n
-         SFjg==
-X-Gm-Message-State: APjAAAV+aLDiDGdPDq+lZPhqHS1KkvDeSNsIAnX+3oegLP/T1m6Mojgv
-        LqIkz/IhUinAuFAMwcah1hPUflRbCNo=
-X-Google-Smtp-Source: APXvYqxfjCfRWxLbTWBnUcA/cu/fK391O64x79gXKonNAQ0gNZuh0zwpSSvj2c3lV75vHBq3aiErZQ==
-X-Received: by 2002:a1c:e0c6:: with SMTP id x189mr1764732wmg.4.1555662903279;
-        Fri, 19 Apr 2019 01:35:03 -0700 (PDT)
-Received: from localhost.localdomain (cpc89244-aztw30-2-0-cust4998.18-1.cable.virginm.net. [86.31.179.135])
-        by smtp.gmail.com with ESMTPSA id t76sm5700147wmt.8.2019.04.19.01.35.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 01:35:02 -0700 (PDT)
-From:   Peter Griffin <peter.griffin@linaro.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        john.stultz@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org,
-        yuq825@gmail.com
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, lima@lists.freedesktop.org
-Subject: [PATCH v2 0/6] Add HiKey / HI6220 SoC Mali-450 support
-Date:   Fri, 19 Apr 2019 09:32:55 +0100
-Message-Id: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lpkcT/3cE2I0/ol0HQ9o/OLoFNZFToJRobNwO3yOpLQ=;
+        b=ILMiXjYzg0kMGmUaa6WniB4wLaaLWlSfgjhi64W3w83u0ID8sDjcyBtNXkx/0oNVdg
+         YUyU+XRk2W1EDwdIohQKzSL9wYLeyZDY7+gMoPqIhj8U4uDmR63YNVQtLiLgi64tH6tt
+         vKiqzqLGGNXUbyp5XseCrSf7QAwcn8zYFa4gMvyKoJe2C/CDC7FXPPGd614juqjaww1I
+         o/YhM3D7iVlIcOjuaTG65zryePsMchQ8prfWJsijrpPDXEQVKTtWp0hzjdUe6NeBcTs1
+         lLubOPPh3IXKxeGnfLzG6hPnlwQCrM2uI7P0GFcX39g6rEZFlYpdYkDI4qN8bMdyKdH2
+         qwSA==
+X-Gm-Message-State: APjAAAUqtSbPJguC/ZE1l9pzidQ6tAKHDwDd+myxCDtz/1c+/f2iRjGk
+        LfEAghtakZ4jguE6QCPCRMh0u5+A
+X-Google-Smtp-Source: APXvYqzmlKk8jKG4CXsKoPVGvHWm4tXy6VvMmJfjZjl3SUHrh7YbDMEuYt90EcVJCO83oC9Vi9SPbA==
+X-Received: by 2002:a65:5cc8:: with SMTP id b8mr3184229pgt.36.1555671442964;
+        Fri, 19 Apr 2019 03:57:22 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c3sm5991738pfo.2.2019.04.19.03.57.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 03:57:22 -0700 (PDT)
+Subject: Re: [PATCH 4.9 00/50] 4.9.170-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190418160422.455656724@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <98a55711-2cdb-47ae-7130-ce5b944643a3@roeck-us.net>
+Date:   Fri, 19 Apr 2019 03:57:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+On 4/18/19 10:57 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.170 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat Apr 20 16:03:22 UTC 2019.
+> Anything received after that time might be too late.
+> 
 
-This series adds support for the Mali450 MP4 GPU found on the
-hi6220 SoC from HiSilicon. It has been tested with the
-lima drm/mesa driver hosted on freedesktop.org gitlab,
-and validated using Weston and kmscube.
 
-As lima drm driver has now been merged this v2 series includes
-one extra patch to avoid Oops when all Mali ip blocks share the
-same irq.
+Building i386:tools/perf ... failed
+--------------
+Error log:
 
-regards,
+bench/numa.c:726:0: error: "BIT" redefined [-Werror]
 
-Peter.
-
-Changes since v1:
-* Additional drm/lima patch to avoid Oops in shared irq case (Peter Griffin)
-* Squash clock and reset driver parts to avoid bisection hole (Stephen Boyd)
-* Add comment as to what other driver is probing same dt node (Stephen Boyd)
-* Check regmap_write error code and return individually (Philipp Zabel)
-* Add Rob Herring Reviewed by tags
-
-Peter Griffin (6):
-  dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
-  dt-bindings: reset: hisilicon: Update compatible documentation
-  arm64: dts: hisilicon: Add Mali-450 MP4 GPU DT entry
-  reset: hi6220: Add support for AO reset controller
-  dt-bindings: reset: hisilicon: Add ao reset controller
-  drm/lima: handle shared irq case for lima_pp_bcast_irq_handler
-
- .../devicetree/bindings/gpu/arm,mali-utgard.txt    |  5 ++
- .../bindings/reset/hisilicon,hi6220-reset.txt      |  1 +
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi          | 38 +++++++++++++
- drivers/clk/hisilicon/clk-hi6220.c                 |  3 +-
- drivers/gpu/drm/lima/lima_pp.c                     |  8 ++-
- drivers/reset/hisilicon/hi6220_reset.c             | 65 +++++++++++++++++++++-
- include/dt-bindings/reset/hisi,hi6220-resets.h     |  7 +++
- 7 files changed, 124 insertions(+), 3 deletions(-)
-
--- 
-2.7.4
-
+Guenter
