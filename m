@@ -2,107 +2,111 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E0AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFC7C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80ACD20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2A520643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fQfWncG3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wdv7JA/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfDSTDO (ORCPT
+        id S1729024AbfDSTDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:03:14 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:36820 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfDSTDL (ORCPT
+        Fri, 19 Apr 2019 15:03:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42412 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728999AbfDSTDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:11 -0400
-Received: by mail-ua1-f67.google.com with SMTP id k32so2012812uae.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:03:10 -0700 (PDT)
+        Fri, 19 Apr 2019 15:03:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g3so7924094wrx.9;
+        Fri, 19 Apr 2019 12:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2j6bVI38nNnTFEsqpyh4i9/0AM+zS7jKtH/c4TEI0Bg=;
-        b=fQfWncG3BLeLhGQljJXzFWY5nf+JkAYl/1kkTSYcQxQe0OaZn9X11Ce9h+kI6ZDXYD
-         YJ4VMn2zRM7w+KYczXWlS4ubFMdb27WaLsD8FgcdHtMoqHulDVGrnd1V53yO1jFB3A8L
-         PeODq1AOm93Y+U8Rfr5sRFt2pQOCkrTCHXxD4=
+        d=gmail.com; s=20161025;
+        h=subject:from:cc:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=D5OOA2KesAQE4cCxLou/+hQFW5UG2WDyvZfR5JDwzZ8=;
+        b=Wdv7JA/P/PvqD30VTsPVeHTZ99kGlcdLPHsamBmqU36Qfj9B25WWbfM9KHGVIkiNqn
+         JtiyGWch+0XpldJgdIRlpZTCWRhUTg/S3sndYJm1PZofEZ+RcTIb+9wYIOZtPBrPfqQq
+         ZbowP14LkHCeWT8r1ruNB0+XPG/4SmoH8Q71IMLIYHGWd0VY26QNbP98DRay4gCmfpgt
+         R5KPC5HCQjx/kZhzgWbzgwReM++iTnPR1Aun9gzvEh9twpZX5BP4qdiHRS/zg1CeP6F/
+         3pag1QISUUsxIgruBJKsboSLS4EbALC+MGjUVT+m6BxIwtGuNdf8coW30mwRFxgwgq1+
+         I9Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2j6bVI38nNnTFEsqpyh4i9/0AM+zS7jKtH/c4TEI0Bg=;
-        b=laDT52qvMdDEwo49bJGXO7nmr/a/YAqSJK2mbfbVaocDyWRtAdSVpjvAPwryPeRXy2
-         /aY+bPJwiYyH5II2PmrzaymolLGAPj1mDfNf30A1awl4fR9FmjpbSSC/jB9qhgxGaVqu
-         dQ3T9juzKQ/74EQNibhDtyhMGudbcDO3nL3B0usoTCH639TihFkwEQB5dqa+mec5rvAG
-         2MCuAjgsdNxhOZGvz4hj7XZCITYFfLC/adYqXVaXRjHrjVyL4lVWsZHLsRSwS/EXltkk
-         8D7cwniCy06B+RFVNFiYmI1rx+h4DFtmfL+kzzg9Q19Sv/8ogS4Ja6v/oOHQz1idXD68
-         zuGw==
-X-Gm-Message-State: APjAAAW84p0tXL2yLpbFXnsytHqES5J197BoUZyS1HJx+ikOiVXDbbub
-        TM6WQWHtVJLbATEfSSvwgT/vTw8pfUQ=
-X-Google-Smtp-Source: APXvYqzAMBiiFmLfj6xcGGTAVcKv5aGKYrtP1qsJN+B9EMMsuq+k3KK1bWsyyL9x2GNXLK+WNh22Fw==
-X-Received: by 2002:ab0:2399:: with SMTP id b25mr2275923uan.129.1555686326767;
-        Fri, 19 Apr 2019 08:05:26 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id 2sm5702667vke.27.2019.04.19.08.05.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 08:05:26 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id p13so1831210uaa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:05:26 -0700 (PDT)
-X-Received: by 2002:ab0:1646:: with SMTP id l6mr2231986uae.75.1555686023710;
- Fri, 19 Apr 2019 08:00:23 -0700 (PDT)
+        h=x-gm-message-state:subject:from:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D5OOA2KesAQE4cCxLou/+hQFW5UG2WDyvZfR5JDwzZ8=;
+        b=qaPAPlPt9fxGQM+70KEI6tVpNLUSoCSISBvpuxKxh9tFEClXJBezc+gIPjMMQz7Vn7
+         PGhu7jF7Yt0eBRyPWMYQ87duR2antomZrN1N3aAXZ5qM/RMHJH3IkVUoYxt0mJr9Nm0G
+         fef8G9GjipywDW9r4Dwj2nKwvHd1t2jMU1mkOEU+R3fQJ4lTQBf1EqbO/S4NxprlOJoR
+         RiRDUkXDuwv4PZ6ccPmDJvc9cFquprJouyFSSK2kUMp6cVGxoxchqSUxRtKyAdM6/MzQ
+         crSyRa2Kt6rCSM1Hi3s7vxdpu/lLnxNREIAW/a8xbswPwS3QlOdhizpXoWo/zJMmbVKS
+         867g==
+X-Gm-Message-State: APjAAAVUPj2WmMFa7dmuNYpJmWY4N9ezeIFISLlKWwMQNUZRscbVtQMK
+        QVVZZ/DK9k/xERMIrg7UPrlBoVCu67I=
+X-Google-Smtp-Source: APXvYqw7UQCebd+9C2FW6+rrosqpCDixDfKZRM0dsvPXDnu1o1JrdkdP9ofhnUR/aN4x4NEp9xKTAQ==
+X-Received: by 2002:a5d:6a0b:: with SMTP id m11mr2265479wru.290.1555668225822;
+        Fri, 19 Apr 2019 03:03:45 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id t76sm6070105wmt.8.2019.04.19.03.03.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 03:03:45 -0700 (PDT)
+Subject: [PATCH v3 02/11] platform/x86: asus-wmi: Fix preserving keyboard
+ backlight intensity on load
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Message-ID: <83ca4d6b-523a-5c89-1f0e-7103e5c5923b@gmail.com>
+Date:   Fri, 19 Apr 2019 12:03:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190312173248.13490-1-alisaidi@amazon.com> <20190312173248.13490-3-alisaidi@amazon.com>
- <CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com>
- <CAGXu5jKcBmj0kwAqjqROXuOi=90=Upy8-J8WviGMjD6FV_Guxg@mail.gmail.com>
- <34381CFC-A90F-4979-9802-2BA0E6539C68@amazon.com> <20190419085140.GA50390@gmail.com>
-In-Reply-To: <20190419085140.GA50390@gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Fri, 19 Apr 2019 10:00:12 -0500
-X-Gmail-Original-Message-ID: <CAGXu5jJvB-sfsXdZvf8OKSwhmdgANvnsrhZiNGrtraTeQVoOrg@mail.gmail.com>
-Message-ID: <CAGXu5jJvB-sfsXdZvf8OKSwhmdgANvnsrhZiNGrtraTeQVoOrg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in mmap_base
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     "Saidi, Ali" <alisaidi@amazon.com>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Liguori, Anthony" <aliguori@amazon.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        X86 ML <x86@kernel.org>, Will Deacon <will.deacon@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 3:51 AM Ingo Molnar <mingo@kernel.org> wrote:
-> I'd suggest incorporating all feedback and sending a v2 series - it's
-> much easier to get people's attention via code submitted. ;-)
+The error code and return value are mixed up. The intensity is always set
+to 0 on load as kbd_led_read returns either 0 or negative value. To
+reproduce set backlight to maximum, reload driver and try to increase it
+using keyboard hotkey, the intensity will drop as a result. Correct the
+implementation.
 
-I sent my patch out, akpm added it to -mm and then xtensa broke, and
-it got removed. Soooo... I'm looking at it again now. I think I might
-combine the ideas and in the interpreter case bump the entire mmap
-base by the brk randomization size. That should make things less
-strange and solve the corner case without reducing available address
-space in the general case.
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index d865eb95054c..731ffd382426 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -590,8 +590,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 			goto error;
+ 	}
+ 
+-	led_val = kbd_led_read(asus, NULL, NULL);
+-	if (led_val >= 0) {
++	if (!kbd_led_read(asus, &led_val, NULL)) {
+ 		asus->kbd_led_wk = led_val;
+ 		asus->kbd_led.name = "asus::kbd_backlight";
+ 		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
 -- 
-Kees Cook
+2.17.1
+
