@@ -2,119 +2,141 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70440C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCD5C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BA6204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FyA4yNqI"
+	by mail.kernel.org (Postfix) with ESMTP id 10F3D204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfDSTNX (ORCPT
+        id S1728886AbfDSTN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:13:23 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:47050 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfDSTNW (ORCPT
+        Fri, 19 Apr 2019 15:13:26 -0400
+Received: from outbound-smtp19.blacknight.com ([46.22.139.246]:34332 "EHLO
+        outbound-smtp19.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726392AbfDSTNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:13:22 -0400
-Received: by mail-vs1-f66.google.com with SMTP id e2so3284624vsc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9QUm65j9zaqX3NmkwhqrGvg2w2/MqiKzyq38aKFYGFE=;
-        b=FyA4yNqIL4cKH95MMKw4u/A3HUc3RVRvgJELbGY/WBldZ6rdrykfCHJJdZCwLgZ5/b
-         TpTHsZOmpr83Isxt1Vcc/9IuWEfDRwra4T/T8ofh3mChN975HK584QQNFexIo/ojZd3b
-         ShHVQunRSEKIdYgCajppGiO4IENZHzWP38jZM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9QUm65j9zaqX3NmkwhqrGvg2w2/MqiKzyq38aKFYGFE=;
-        b=e5noWpK0dBK/sk+L79g7vcvLdzpUvDqYEZ2xTdy7I6f1ZlXkc239Z1u0P7Ny3dHSvn
-         j1qryFupsMkfozMa0fQbs7wO3jLfQfpf87Iqd+lLMR/AbYaMoxcIk+zHSp/bJIXVTCR2
-         igGKF2IQf7vuq5hJOuzGvofTTm/JCjV3F/V8nZbm0J+FPoEkGE6hrhocieE8JgukY/Vu
-         t/OmythEwS4URuHgmz3aeUl1Kx5VfBhcDcehFIM3dxQIy0AaKUt3aTxawKom2lo+xKze
-         GlPMqYgs5KRz6NEUhmUOht3aUdmjd7KRI+b5nXBXUkxzkmtkS9HWZporUN6y8AHD2IDu
-         pxFw==
-X-Gm-Message-State: APjAAAX3s7Oh5R15PyTkKw3jvTHcAYhADjoBIHGMtaW6DNzslb/dVhFl
-        noTueeEzUJsAVBQLu+6F7pHTOi4Wwzo=
-X-Google-Smtp-Source: APXvYqz0CIcX9VfUqePLOuReGO8F2s7Xh6veL17B4kFbxSalvhw8R3/GlYU5g2Pii9ZZcqmk1/mNHA==
-X-Received: by 2002:a67:fa04:: with SMTP id i4mr2405088vsq.18.1555686162823;
-        Fri, 19 Apr 2019 08:02:42 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id q190sm1846675vkd.50.2019.04.19.08.02.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 08:02:42 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id c6so1844390uan.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:02:41 -0700 (PDT)
-X-Received: by 2002:ab0:72c2:: with SMTP id g2mr2239270uap.112.1555686161245;
- Fri, 19 Apr 2019 08:02:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1555669773-9766-1-git-send-email-alex.popov@linux.com>
-In-Reply-To: <1555669773-9766-1-git-send-email-alex.popov@linux.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Fri, 19 Apr 2019 10:02:29 -0500
-X-Gmail-Original-Message-ID: <CAGXu5j+qUm_ad6XOU7eLbCEdV3bUjJeYoseZrWdpzXqe84-5Bw@mail.gmail.com>
-Message-ID: <CAGXu5j+qUm_ad6XOU7eLbCEdV3bUjJeYoseZrWdpzXqe84-5Bw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] kconfig: Terminate menu blocks with a newline in the
- generated config
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Fri, 19 Apr 2019 15:13:25 -0400
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp19.blacknight.com (Postfix) with ESMTPS id 71F761C1CA1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 10:43:37 +0100 (IST)
+Received: (qmail 17638 invoked from network); 19 Apr 2019 09:43:37 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Apr 2019 09:43:37 -0000
+Date:   Fri, 19 Apr 2019 10:43:35 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] mm: Do not boost watermarks to avoid fragmentation for the
+ DISCONTIG memory model
+Message-ID: <20190419094335.GJ18914@techsingularity.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 5:29 AM Alexander Popov <alex.popov@linux.com> wrote:
->
-> Currently menu blocks start with a pretty header but end with nothing in
-> the generated config. So next config options stick together with the
-> options from the menu block.
->
-> Let's terminate menu blocks with a newline in the generated config.
->
-> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Mikulas Patocka reported that 1c30844d2dfe ("mm: reclaim small amounts
+of memory when an external fragmentation event occurs") "broke" memory
+management on parisc. The machine is not NUMA but the DISCONTIG model
+creates three pgdats even though it's a UMA machine for the following
+ranges
 
-Seems fine to improve readability at a few bytes size increase.
+        0) Start 0x0000000000000000 End 0x000000003fffffff Size   1024 MB
+        1) Start 0x0000000100000000 End 0x00000001bfdfffff Size   3070 MB
+        2) Start 0x0000004040000000 End 0x00000040ffffffff Size   3072 MB
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+From his own report
 
--Kees
+	With the patch 1c30844d2, the kernel will incorrectly reclaim the
+	first zone when it fills up, ignoring the fact that there are two
+	completely free zones. Basiscally, it limits cache size to 1GiB.
 
-> ---
->  scripts/kconfig/confdata.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-> index 08ba146..1459153 100644
-> --- a/scripts/kconfig/confdata.c
-> +++ b/scripts/kconfig/confdata.c
-> @@ -888,6 +888,8 @@ int conf_write(const char *name)
->                 if (menu->next)
->                         menu = menu->next;
->                 else while ((menu = menu->parent)) {
-> +                       if (!menu->sym && menu_is_visible(menu))
-> +                               fprintf(out, "\n");
->                         if (menu->next) {
->                                 menu = menu->next;
->                                 break;
-> --
-> 2.7.4
->
+	For example, if I run:
+	# dd if=/dev/sda of=/dev/null bs=1M count=2048
 
+	- with the proper kernel, there should be "Buffers - 2GiB"
+	when this command finishes. With the patch 1c30844d2, buffers
+	will consume just 1GiB or slightly more, because the kernel was
+	incorrectly reclaiming them.
 
--- 
-Kees Cook
+The page allocator and reclaim makes assumptions that pgdats really
+represent NUMA nodes and zones represent ranges and makes decisions
+on that basis. Watermark boosting for small pgdats leads to unexpected
+results even though this would have behaved reasonably on SPARSEMEM.
+
+DISCONTIG is essentially deprecated and even parisc plans to move to
+SPARSEMEM so there is no need to be fancy, this patch simply disables
+watermark boosting by default on DISCONTIGMEM.
+
+Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external fragmentation event occurs")
+Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+Tested-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ Documentation/sysctl/vm.txt | 16 ++++++++--------
+ mm/page_alloc.c             | 13 +++++++++++++
+ 2 files changed, 21 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/sysctl/vm.txt b/Documentation/sysctl/vm.txt
+index 6af24cdb25cc..3f13d8599337 100644
+--- a/Documentation/sysctl/vm.txt
++++ b/Documentation/sysctl/vm.txt
+@@ -866,14 +866,14 @@ The intent is that compaction has less work to do in the future and to
+ increase the success rate of future high-order allocations such as SLUB
+ allocations, THP and hugetlbfs pages.
+ 
+-To make it sensible with respect to the watermark_scale_factor parameter,
+-the unit is in fractions of 10,000. The default value of 15,000 means
+-that up to 150% of the high watermark will be reclaimed in the event of
+-a pageblock being mixed due to fragmentation. The level of reclaim is
+-determined by the number of fragmentation events that occurred in the
+-recent past. If this value is smaller than a pageblock then a pageblocks
+-worth of pages will be reclaimed (e.g.  2MB on 64-bit x86). A boost factor
+-of 0 will disable the feature.
++To make it sensible with respect to the watermark_scale_factor
++parameter, the unit is in fractions of 10,000. The default value of
++15,000 on !DISCONTIGMEM configurations means that up to 150% of the high
++watermark will be reclaimed in the event of a pageblock being mixed due
++to fragmentation. The level of reclaim is determined by the number of
++fragmentation events that occurred in the recent past. If this value is
++smaller than a pageblock then a pageblocks worth of pages will be reclaimed
++(e.g.  2MB on 64-bit x86). A boost factor of 0 will disable the feature.
+ 
+ =============================================================
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index cfaba3889fa2..86c3806f1070 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -266,7 +266,20 @@ compound_page_dtor * const compound_page_dtors[] = {
+ 
+ int min_free_kbytes = 1024;
+ int user_min_free_kbytes = -1;
++#ifdef CONFIG_DISCONTIGMEM
++/*
++ * DiscontigMem defines memory ranges as separate pg_data_t even if the ranges
++ * are not on separate NUMA nodes. Functionally this works but with
++ * watermark_boost_factor, it can reclaim prematurely as the ranges can be
++ * quite small. By default, do not boost watermarks on discontigmem as in
++ * many cases very high-order allocations like THP are likely to be
++ * unsupported and the premature reclaim offsets the advantage of long-term
++ * fragmentation avoidance.
++ */
++int watermark_boost_factor __read_mostly;
++#else
+ int watermark_boost_factor __read_mostly = 15000;
++#endif
+ int watermark_scale_factor = 10;
+ 
+ static unsigned long nr_kernel_pages __initdata;
