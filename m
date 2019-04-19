@@ -2,127 +2,103 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BA2C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45D7C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB74C208C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8144208C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfDSVSH (ORCPT
+        id S1727431AbfDSVTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:18:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:51908 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfDSVSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:18:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A338B15A2;
-        Fri, 19 Apr 2019 14:18:05 -0700 (PDT)
-Received: from [192.168.1.105] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52AF43F68F;
-        Fri, 19 Apr 2019 14:18:03 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
- Exynos542x SoCs
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
- <CACfOrNdEpC2vNgCOBXtrW-HjGHNG_6iLAFUCtVoZstGASPtcsA@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <38dee054-19ce-a545-fb62-dea4d0036c94@arm.com>
-Date:   Fri, 19 Apr 2019 22:18:02 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 17:19:11 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:56568 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725932AbfDSVTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 17:19:11 -0400
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JLHjZw019148;
+        Fri, 19 Apr 2019 21:18:43 GMT
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2ryjx7s0dq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Apr 2019 21:18:42 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 2B04D86;
+        Fri, 19 Apr 2019 21:18:42 +0000 (UTC)
+Received: from anatevka (anatevka.americas.hpqcorp.net [10.34.81.61])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 8030842;
+        Fri, 19 Apr 2019 21:18:41 +0000 (UTC)
+Date:   Fri, 19 Apr 2019 15:18:41 -0600
+From:   Jerry Hoemann <jerry.hoemann@hpe.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/16] watchdog: hpwdt: drop warning after calling
+ watchdog_init_timeout
+Message-ID: <20190419211840.GB5775@anatevka>
+Reply-To: Jerry.Hoemann@hpe.com
+References: <20190419181601.7412-1-wsa+renesas@sang-engineering.com>
+ <20190419181601.7412-7-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-In-Reply-To: <CACfOrNdEpC2vNgCOBXtrW-HjGHNG_6iLAFUCtVoZstGASPtcsA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190419181601.7412-7-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904190147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-19 6:53 pm, Willy Wolff wrote:
-> Hi,
+On Fri, Apr 19, 2019 at 08:15:51PM +0200, Wolfram Sang wrote:
+> The core will print out details now.
 > 
-> This patch can be dropped, as it needs more work.
-> 
-> In fact, the interrupts seems to be wrong. The interrupts suggested by
-> Anand Moon gave the same following results.
-> 
-> export CCI_DEV=CCI_400
-> export OMP_NUM_THREADS=2
-> sudo --preserve-env ./perf stat -a \
->    -e armv7_cortex_a7/config=0x11,name=a7_cycles/ \
->    -e armv7_cortex_a15/config=0x11,name=a15_cycles/ \
->    -e armv7_cortex_a7/config=0x19,name=a7_bus/ \
->    -e armv7_cortex_a15/config=0x19,name=a15_bus/ \
->    -e ${CCI_DEV}/config=0xff,name=cci400_cycles/ \
->    -e ${CCI_DEV}/config=0x0,name=cci400_si_rrq_hs_any/ \
->    -e ${CCI_DEV}/config=0xc,name=cci400_si_wrq_hs_any/ \
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/watchdog/hpwdt.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
- From the look of those configs, you'll be counting events on slave 
-interface 0, which may not even have anything connected anyway. The CPU 
-clusters on a CCI-400 will be on slave interfaces 3 and 4, so try 
-something like '-e CCI_400/cci400_si_rrq_hs_any,source=4/'.
+Applied patches 1,2, and 6.  Messages are well formed when soft_margin
+is out of range.
 
-The interrupts only matter for counter overflow, so confirming those 
-could be done by picking a sufficiently frequent event, counting for 
-long enough to capture slightly more than 2^32 of those, then seeing 
-whether the overflow accumulates correctly or the count appears to go 
-backwards (and/or checking what fired in /proc/interrupts). I believe 
-the cycle counter is also 32-bit on CCI, so that should be relatively 
-easy; for the other counters beyond the first one it should be feasible 
-to schedule additional dummy events before the event of interest in 
-order to trick pmu_get_event_idx() into allocating the desired counter 
-for it.
+Tested-by: Jerry Hoemann <jerry.hoemann@hpe.com>
 
-Robin.
 
->    taskset -c 0,7 /home/user/cg.x.A 1
 > 
-> [..]
-> 
->   Performance counter stats for 'system wide':
-> 
->       9,362,850,550      a7_cycles
->       1,682,125,760      a15_cycles
->          68,920,347      a7_bus
->          61,484,352      a15_bus
->       3,789,936,935      cci400_cycles
->                   0      cci400_si_rrq_hs_any
->                   0      cci400_si_wrq_hs_any
-> 
->         9.541340558 seconds time elapsed
-> 
-> cg.x.A comes from NAS benchmark suite, compiled with fopenmp support, setup
-> to run 2 threads and taskmapped to ran on both a7 and a15 clusters.
-> a7_bus and a15_bus report main memory accesses.
-> 
-> Only cci400_cycles seems to be correct. However, all pmcs from the master
-> interface are reported as unsupported and all pmcs from the slave interface
-> return 0, which is probably not correct.
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0470f/CJHICFBF.html
-> 
-> Would it be possible that someone from Samsung provide the right
-> interrupts values?
-> Many thanks.
-> 
-> Regards,
-> Willy
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
+> index ef30c7e9728d..db1bf6f546ae 100644
+> --- a/drivers/watchdog/hpwdt.c
+> +++ b/drivers/watchdog/hpwdt.c
+> @@ -311,8 +311,7 @@ static int hpwdt_init_one(struct pci_dev *dev,
+>  		goto error_init_nmi_decoding;
+>  
+>  	watchdog_set_nowayout(&hpwdt_dev, nowayout);
+> -	if (watchdog_init_timeout(&hpwdt_dev, soft_margin, NULL))
+> -		dev_warn(&dev->dev, "Invalid soft_margin: %d.\n", soft_margin);
+> +	watchdog_init_timeout(&hpwdt_dev, soft_margin, NULL);
+>  
+>  	if (pretimeout && hpwdt_dev.timeout <= PRETIMEOUT_SEC) {
+>  		dev_warn(&dev->dev, "timeout <= pretimeout. Setting pretimeout to zero\n");
+> -- 
+> 2.11.0
+
+-- 
+
+-----------------------------------------------------------------------------
+Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+-----------------------------------------------------------------------------
