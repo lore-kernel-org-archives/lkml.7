@@ -7,55 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299A2C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C9C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46C42064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6039D20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EKpAOyCO"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pwG/ClYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfDSTEU (ORCPT
+        id S1729353AbfDSTEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:04:20 -0400
+        Fri, 19 Apr 2019 15:04:31 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbfDSTEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:04:08 -0400
+        id S1729248AbfDSTEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:04:00 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JAaxx8235158
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCsTv9276779
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 03:36:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JAaxx8235158
+        Fri, 19 Apr 2019 05:54:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCsTv9276779
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555670219;
-        bh=ej39wruWdfkhUuefr9kqIW0UVaOCQln4+W6loEQCo1M=;
+        s=2019041745; t=1555678469;
+        bh=Iqaor1cbvLtRWJMnWDJmRtYIP+w7qS/RRzkzMK/1D+E=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=EKpAOyCOVtmwZ2pFsGW8aGdz/cpZPqffekq7/Q6rh7xCa0m3AKC5gtvt/9Gicy8J2
-         j6evgDcu/RrjJN+rKqYRR5pYeK4FOVf/gAd8uVkQ4RWNrp0V/VTjatiYqyYFcR+Jvf
-         EcbVhdX2BQrcGFvbQ5zFYPiLGogMs6xCFmnwy0iBTLYJ5QAJ9dIYJGqQnIYafPT9/l
-         gKNKKRrYhsKbG830VfHG6K3kYHce4lQOzocJCQ7ZH3zl0yj+phD4N+w+rkC4on/Ax3
-         dztSfw6vJ0Njg3Xvqz57dztW4rNKkuJC3T4CxlwFE6FDRytGwMTqUPlbyXO5SJK2Dv
-         pvn1zrA5pG+LQ==
+        b=pwG/ClYyIxs09sUGJekfggTWuM3yNnrQghXevMa5OdHqW6geGTs+xS96vDx9tUEPs
+         kHSwzxh9Y9VWdiJjsPc64GTENvVAq/4gUu/fKE2IHCBDv1VISNC8kYcEm+NbvnTYLg
+         V1KTSlGySKsbBGEcuAhbxPwquJWfq6LFHCiog7WhFBrF0RlRJ76Qt1csKgZZJCgFwx
+         Y+j3ovmm9IuVK8Y8FN19s6h/iEB2ZhMDwsgqx79qLMp39LMn/1F5G2LKATrlhFTSs2
+         6UvPzamN68ogTZ1K9nElsCxFRw4sUcgpE4O1Su4Ood1ewv1AW2RRchcoYNFxhvKMd0
+         bmELSo/Y3LPPg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JAaw5N235155;
-        Fri, 19 Apr 2019 03:36:58 -0700
-Date:   Fri, 19 Apr 2019 03:36:58 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCsSok276776;
+        Fri, 19 Apr 2019 05:54:28 -0700
+Date:   Fri, 19 Apr 2019 05:54:28 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   "tip-bot for Ahmed S. Darwish" <tipbot@zytor.com>
-Message-ID: <tip-93ddedaa5c9cb828d39a19b5d6e7e1939393085a@git.kernel.org>
-Cc:     mingo@kernel.org, darwish.07@gmail.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, peterz@infradead.org,
-        tglx@linutronix.de, torvalds@linux-foundation.org, bp@alien8.de
-Reply-To: torvalds@linux-foundation.org, bp@alien8.de,
-          peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-          darwish.07@gmail.com, linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190306004425.GA30537@darwi-home-pc>
-References: <20190306004425.GA30537@darwi-home-pc>
+From:   tip-bot for Masami Hiramatsu <tipbot@zytor.com>
+Message-ID: <tip-b191fa96ea6dc00d331dcc28c1f7db5e075693a0@git.kernel.org>
+Cc:     mhiramat@kernel.org, mingo@kernel.org, peterz@infradead.org,
+        mathieu.desnoyers@efficios.com, torvalds@linux-foundation.org,
+        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, righi.andrea@gmail.com, hpa@zytor.com
+Reply-To: hpa@zytor.com, righi.andrea@gmail.com, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+          torvalds@linux-foundation.org, mingo@kernel.org,
+          mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+          peterz@infradead.org
+In-Reply-To: <155094064889.6137.972160690963039.stgit@devbox>
+References: <155094064889.6137.972160690963039.stgit@devbox>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/build] x86/defconfig: Remove archaic partition tables
- support
-Git-Commit-ID: 93ddedaa5c9cb828d39a19b5d6e7e1939393085a
+Subject: [tip:perf/urgent] x86/kprobes: Avoid kretprobe recursion bug
+Git-Commit-ID: b191fa96ea6dc00d331dcc28c1f7db5e075693a0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,75 +71,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  93ddedaa5c9cb828d39a19b5d6e7e1939393085a
-Gitweb:     https://git.kernel.org/tip/93ddedaa5c9cb828d39a19b5d6e7e1939393085a
-Author:     Ahmed S. Darwish <darwish.07@gmail.com>
-AuthorDate: Wed, 6 Mar 2019 01:44:25 +0100
+Commit-ID:  b191fa96ea6dc00d331dcc28c1f7db5e075693a0
+Gitweb:     https://git.kernel.org/tip/b191fa96ea6dc00d331dcc28c1f7db5e075693a0
+Author:     Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate: Sun, 24 Feb 2019 01:50:49 +0900
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 12:29:48 +0200
+CommitDate: Fri, 19 Apr 2019 14:26:07 +0200
 
-x86/defconfig: Remove archaic partition tables support
+x86/kprobes: Avoid kretprobe recursion bug
 
-On x86 systems, only MSDOS and GPT partition tables are typically
-encountered. Remove all the rest.
+Avoid kretprobe recursion loop bg by setting a dummy
+kprobes to current_kprobe per-CPU variable.
 
-Note, CONFIG_EFI_PARTITION is also removed since it defaults to `y'.
+This bug has been introduced with the asm-coded trampoline
+code, since previously it used another kprobe for hooking
+the function return placeholder (which only has a nop) and
+trampoline handler was called from that kprobe.
 
-Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>
+This revives the old lost kprobe again.
+
+With this fix, we don't see deadlock anymore.
+
+And you can see that all inner-called kretprobe are skipped.
+
+  event_1                                  235               0
+  event_2                                19375           19612
+
+The 1st column is recorded count and the 2nd is missed count.
+Above shows (event_1 rec) + (event_2 rec) ~= (event_2 missed)
+(some difference are here because the counter is racy)
+
+Reported-by: Andrea Righi <righi.andrea@gmail.com>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190306004425.GA30537@darwi-home-pc
+Cc: stable@vger.kernel.org
+Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
+Link: http://lkml.kernel.org/r/155094064889.6137.972160690963039.stgit@devbox
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/configs/i386_defconfig   | 12 ------------
- arch/x86/configs/x86_64_defconfig | 12 ------------
- 2 files changed, 24 deletions(-)
+ arch/x86/kernel/kprobes/core.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index 9f908112bbb9..2b2481acc661 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -25,18 +25,6 @@ CONFIG_JUMP_LABEL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
--CONFIG_PARTITION_ADVANCED=y
--CONFIG_OSF_PARTITION=y
--CONFIG_AMIGA_PARTITION=y
--CONFIG_MAC_PARTITION=y
--CONFIG_BSD_DISKLABEL=y
--CONFIG_MINIX_SUBPARTITION=y
--CONFIG_SOLARIS_X86_PARTITION=y
--CONFIG_UNIXWARE_DISKLABEL=y
--CONFIG_SGI_PARTITION=y
--CONFIG_SUN_PARTITION=y
--CONFIG_KARMA_PARTITION=y
--CONFIG_EFI_PARTITION=y
- CONFIG_SMP=y
- CONFIG_X86_GENERIC=y
- CONFIG_HPET_TIMER=y
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index 1d3badfda09e..e8829abf063a 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -24,18 +24,6 @@ CONFIG_JUMP_LABEL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_FORCE_UNLOAD=y
--CONFIG_PARTITION_ADVANCED=y
--CONFIG_OSF_PARTITION=y
--CONFIG_AMIGA_PARTITION=y
--CONFIG_MAC_PARTITION=y
--CONFIG_BSD_DISKLABEL=y
--CONFIG_MINIX_SUBPARTITION=y
--CONFIG_SOLARIS_X86_PARTITION=y
--CONFIG_UNIXWARE_DISKLABEL=y
--CONFIG_SGI_PARTITION=y
--CONFIG_SUN_PARTITION=y
--CONFIG_KARMA_PARTITION=y
--CONFIG_EFI_PARTITION=y
- CONFIG_SMP=y
- CONFIG_CALGARY_IOMMU=y
- CONFIG_NR_CPUS=64
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 18fbe9be2d68..fed46ddb1eef 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -749,11 +749,16 @@ asm(
+ NOKPROBE_SYMBOL(kretprobe_trampoline);
+ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+ 
++static struct kprobe kretprobe_kprobe = {
++	.addr = (void *)kretprobe_trampoline,
++};
++
+ /*
+  * Called from kretprobe_trampoline
+  */
+ static __used void *trampoline_handler(struct pt_regs *regs)
+ {
++	struct kprobe_ctlblk *kcb;
+ 	struct kretprobe_instance *ri = NULL;
+ 	struct hlist_head *head, empty_rp;
+ 	struct hlist_node *tmp;
+@@ -763,6 +768,17 @@ static __used void *trampoline_handler(struct pt_regs *regs)
+ 	void *frame_pointer;
+ 	bool skipped = false;
+ 
++	preempt_disable();
++
++	/*
++	 * Set a dummy kprobe for avoiding kretprobe recursion.
++	 * Since kretprobe never run in kprobe handler, kprobe must not
++	 * be running at this point.
++	 */
++	kcb = get_kprobe_ctlblk();
++	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
++	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+@@ -838,10 +854,9 @@ static __used void *trampoline_handler(struct pt_regs *regs)
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+ 			__this_cpu_write(current_kprobe, &ri->rp->kp);
+-			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
+ 			ri->ret_addr = correct_ret_addr;
+ 			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, NULL);
++			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
+ 		}
+ 
+ 		recycle_rp_inst(ri, &empty_rp);
+@@ -857,6 +872,9 @@ static __used void *trampoline_handler(struct pt_regs *regs)
+ 
+ 	kretprobe_hash_unlock(current, &flags);
+ 
++	__this_cpu_write(current_kprobe, NULL);
++	preempt_enable();
++
+ 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+ 		hlist_del(&ri->hlist);
+ 		kfree(ri);
