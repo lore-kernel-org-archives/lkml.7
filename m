@@ -2,99 +2,108 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E256C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560EBC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8CD222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D7F222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555698209;
+	bh=9iNK0gwcUMYFeR0tIfG8ohfqV+rxApq+ECYCJiECHlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z/jsOQJxx9Vz+dIl8ynVvREmeTlbT91nEBIX3/T8A/i5Xu4g/nvkwRtSR3cUcZQ1n
+	 8baVUgUxlpogVCtGTQjgYXVVKRegXLp41VejTpnjvCdOrpJqLGhatgepZsz9INVya5
+	 ryptHY56F1ubfmnQWtsueWLta0YxPoc8Zu87A+Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfDSSXV (ORCPT
+        id S1725821AbfDSSX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:23:21 -0400
-Received: from mx.socionext.com ([202.248.49.38]:31247 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbfDSSVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:21:43 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 19 Apr 2019 17:59:54 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E24C218028E;
-        Fri, 19 Apr 2019 17:59:54 +0900 (JST)
-Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Fri, 19 Apr 2019 17:59:54 +0900
-Received: from SOC-EX01V.e01.socionext.com (10.213.24.21) by
- SOC-EX01V.e01.socionext.com (10.213.24.21) with Microsoft SMTP Server (TLS)
- id 15.0.995.29; Fri, 19 Apr 2019 17:59:54 +0900
-Received: from SOC-EX01V.e01.socionext.com ([10.213.24.21]) by
- SOC-EX01V.e01.socionext.com ([10.213.24.21]) with mapi id 15.00.0995.028;
- Fri, 19 Apr 2019 17:59:54 +0900
-From:   <yamada.masahiro@socionext.com>
-To:     <sergey.senozhatsky.work@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <sergey.senozhatsky@gmail.com>
-Subject: RE: [next] kbuild: use $(srctree) instead of KBUILD_SRC to check
- out-of-tree build
-Thread-Topic: [next] kbuild: use $(srctree) instead of KBUILD_SRC to check
- out-of-tree build
-Thread-Index: AQHU9oqaBkqafxKYBk6eibRvw8CxlaZDLaAQ
-Date:   Fri, 19 Apr 2019 08:59:53 +0000
-Message-ID: <43c5127830dd44e0817c2aa1906fe515@SOC-EX01V.e01.socionext.com>
-References: <20190419083339.GA8504@jagdpanzerIV>
-In-Reply-To: <20190419083339.GA8504@jagdpanzerIV>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-securitypolicycheck: OK by SHieldMailChecker v2.5.2
-x-shieldmailcheckerpolicyversion: POLICY190117
-x-originating-ip: [10.213.24.1]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 19 Apr 2019 14:23:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38528 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfDSSVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:21:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L02lidpU1CWJs+5WvBdKuXF1cJhohg86bxgiBZZR0xU=; b=DgaVWyKzfGLpL8WTjq6xjbRJg
+        cXPNBN2oTgNzZvV1P49C16H285liahkHS0bGwxqAUgPW5VJsod3iigt/9PARyVtMHI7pXeHjICcCC
+        gWgyEuHIsjjR84JuKvRBjoWP6KWE2GF3FhtxyLathZ9ZCRmRlQtunkSnEdSJWTIP9RCvo=;
+Received: from 188.29.164.213.threembb.co.uk ([188.29.164.213] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hHUrp-0008BF-Bc; Fri, 19 Apr 2019 14:51:53 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 62107441D3B; Fri, 19 Apr 2019 15:51:51 +0100 (BST)
+Date:   Fri, 19 Apr 2019 15:51:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
+        dwmw2@infradead.org, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, computersforpeace@gmal.com,
+        paul.burton@mips.com, stefan@agner.ch, christophe.kerello@st.com,
+        liang.yang@amlogic.com, geert@linux-m68k.org,
+        devicetree@vger.kernel.org, marcel.ziswiler@toradex.com,
+        linux-mtd@lists.infradead.org, richard@nod.at,
+        miquel.raynal@bootlin.com, juliensu@mxic.com.tw,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 3/4] spi: Patch Macronix SPI controller driver
+ according to MX25F0A MFD driver
+Message-ID: <20190419145151.GR2803@sirena.org.uk>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555320234-15802-4-git-send-email-masonccyang@mxic.com.tw>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IUSVF+LtaR4kWxuH"
+Content-Disposition: inline
+In-Reply-To: <1555320234-15802-4-git-send-email-masonccyang@mxic.com.tw>
+X-Cookie: Shah, shah!  Ayatollah you so!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2VyZ2V5LA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNlcmdl
-eSBTZW5vemhhdHNreSBbbWFpbHRvOnNlcmdleS5zZW5vemhhdHNreS53b3JrQGdtYWlsLmNvbV0N
-Cj4gU2VudDogRnJpZGF5LCBBcHJpbCAxOSwgMjAxOSA1OjM0IFBNDQo+IFRvOiBZYW1hZGEsIE1h
-c2FoaXJvL+WxseeUsCDnnJ/lvJggPHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29tPg0KPiBD
-YzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2VyZ2V5IFNlbm96aGF0c2t5DQo+IDxz
-ZXJnZXkuc2Vub3poYXRza3lAZ21haWwuY29tPg0KPiBTdWJqZWN0OiBbbmV4dF0ga2J1aWxkOiB1
-c2UgJChzcmN0cmVlKSBpbnN0ZWFkIG9mIEtCVUlMRF9TUkMgdG8gY2hlY2sNCj4gb3V0LW9mLXRy
-ZWUgYnVpbGQNCj4gDQo+IEhlbGxvIE1hc2FoaXJvLA0KPiANCj4gSXQgc2VlbXMgdGhhdCBjb21t
-aXQgYTlhNDljMmFkOWI5YjggKGxpbnV4LW5leHQpIGJyZWFrcyAuL3NjcmlwdHMvdGFncy5zaA0K
-PiBvbiBteSBzeXN0ZW0uIEl0IHNjYW5zLCBiYXNpY2FsbHksIG15IGVudGlyZSBkcml2ZSBub3cg
-KGluY2x1ZGluZyB0aGUNCj4gcm9vdCBwYXJ0aXRpb24pOg0KPiANCj4gJCAuL3NjcmlwdHMvdGFn
-cy5zaCB0YWdzDQoNCg0KSSBkaWQgbm90IGtub3cgdGhpcyBzY3JpcHQgaXMgcnVuIGRpcmVjdGx5
-DQpiZWNhdXNlIEkgZXhwZWN0ZWQgcGVvcGxlIHdlcmUgdXNpbmcgJ21ha2UgdGFncycuDQoNCkl0
-IGlzIGVhc3kgdG8gZml4LCB0aG91Z2guDQoNCg0KZGlmZiAtLWdpdCBhL3NjcmlwdHMvdGFncy5z
-aCBiL3NjcmlwdHMvdGFncy5zaA0KaW5kZXggNmE1NTE4MDVkYjUyLi43MGUxNGM2N2JkZTcgMTAw
-NzU1DQotLS0gYS9zY3JpcHRzL3RhZ3Muc2gNCisrKyBiL3NjcmlwdHMvdGFncy5zaA0KQEAgLTE5
-LDcgKzE5LDcgQEAgaWdub3JlPSIkaWdub3JlICggLW5hbWUgKi5tb2QuYyApIC1wcnVuZSAtbyIN
-CiAjIERvIG5vdCB1c2UgZnVsbCBwYXRoIGlmIHdlIGRvIG5vdCB1c2UgTz0uLiBidWlsZHMNCiAj
-IFVzZSBtYWtlIE89LiB7dGFnc3xjc2NvcGV9DQogIyB0byBmb3JjZSBmdWxsIHBhdGhzIGZvciBh
-IG5vbi1PPSBidWlsZA0KLWlmIFsgIiR7c3JjdHJlZX0iID0gIi4iIF07IHRoZW4NCitpZiBbICIk
-e3NyY3RyZWV9IiA9ICIuIiAtbyAteiAiJHtzcmN0cmVlfSIgXTsgdGhlbg0KICAgICAgICB0cmVl
-PQ0KIGVsc2UNCiAgICAgICAgdHJlZT0ke3NyY3RyZWV9Lw0KDQoNCg0KPiBmaW5kOiDigJgvYXJj
-aC8qLltjaFNdL+KAmTogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQ0KPiBmaW5kOiDigJgvaW5j
-bHVkZeKAmTogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQ0KPiBmaW5kOiDigJgvYm9vdC9sb3N0
-K2ZvdW5k4oCZOiBQZXJtaXNzaW9uIGRlbmllZA0KPiBmaW5kOiDigJgvZXRjL3BhY21hbi5kL2du
-dXBnL29wZW5wZ3AtcmV2b2NzLmTigJk6IFBlcm1pc3Npb24gZGVuaWVkDQo+IGZpbmQ6IOKAmC9l
-dGMvcGFjbWFuLmQvZ251cGcvcHJpdmF0ZS1rZXlzLXYxLmTigJk6IFBlcm1pc3Npb24gZGVuaWVk
-DQo+IGZpbmQ6IOKAmC9ldGMvcGFjbWFuLmQvZ251cGcvY3Jscy5k4oCZOiBQZXJtaXNzaW9uIGRl
-bmllZA0KPiBmaW5kOiDigJgvZXRjL3BvbGtpdC0xL3J1bGVzLmTigJk6IFBlcm1pc3Npb24gZGVu
-aWVkDQo+IGZpbmQ6IOKAmC9ldGMvc3Vkb2Vycy5k4oCZOiBQZXJtaXNzaW9uIGRlbmllZA0KPiBm
-aW5kOiDigJgvZXRjL2F1ZGlzcC9wbHVnaW5zLmTigJk6IFBlcm1pc3Npb24gZGVuaWVkDQo+IGZp
-bmQ6IOKAmC9ob21lL2xvc3QrZm91bmTigJk6IFBlcm1pc3Npb24gZGVuaWVkDQo+IGZpbmQ6IOKA
-mC9ob21lL3Nr4oCZOiBQZXJtaXNzaW9uIGRlbmllZA0KPiBmaW5kOiDigJgvbG9zdCtmb3VuZOKA
-mTogUGVybWlzc2lvbiBkZW5pZWQNCj4gY3RhZ3M6IFdhcm5pbmc6IC0tZXh0cmEgb3B0aW9uIGlz
-IG9ic29sZXRlOyB1c2UgLS1leHRyYXMgaW5zdGVhZA0KPiBbLi5dDQo+IA0KPiANCj4gV2l0aCBy
-ZXZlcnRlZCBhOWE0OWMyYWQ5YjliOCB0YWdzIHNjYW5zIGtlcm5lbCBzb3VyY2UgdHJlZSBvbmx5
-DQo+IA0KPiAuL3NjcmlwdHMvdGFncy5zaCB0YWdzDQo+IGZpbmQ6IOKAmGFyY2gvKi5bY2hTXS/i
-gJk6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkNCj4gY3RhZ3M6IFdhcm5pbmc6IC0tZXh0cmEg
-b3B0aW9uIGlzIG9ic29sZXRlOyB1c2UgLS1leHRyYXMgaW5zdGVhZA0KPiBbLi5dDQo+IA0KPiAJ
-LXNzDQo=
+
+--IUSVF+LtaR4kWxuH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Apr 15, 2019 at 05:23:53PM +0800, Mason Yang wrote:
+> Patch Macronix MX25F0A SPI controller driver according to it's MFD driver.
+
+It'd be much better to describe what the above actually means - what
+changes have been made in the introduction of the MFD driver?  It does
+feel like there's not as much abstraction as I'd expect between the MFD
+and the child, there's a lot of peering into the parent and enabling and
+disabling individual clocks for example rather than either having this
+hidden behind a function or just having the clocks owned by the child
+driver.  The driver also isn't using the MFD interfaces to pass through
+the register subblocks for the IP - instead the child driver is peering
+straight into the MFD structure and looking at a variable in there.
+
+--IUSVF+LtaR4kWxuH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly54IYACgkQJNaLcl1U
+h9D0PQf/erY3gZlhAvdcG9BNLPO9WNE8OrfW8W1e5MFQI3MEhJC9fi3BynwsbKtq
+oYO7n4IlWTIXmNDQdlZTdlGU2ybIAMGbUmRh0sP2UB5dh2nNnCTfzdOKdszWov18
+JFDl2+5xeyM5ensdZqRVNaXOP/j3eavC/1AOgDTlVummvycoxPH7AeDEg/+UTHrb
+blDrIxdutZnG+hGdmdoDBZdMsP/eWTS2FJ1t3bnU2AVnftWS/35E5NXpJG4o+gz+
+kb+NmEWgrDFoCOk03rq02pudfkdQawONL85giQwm5Apz4OcKeGRV7tIUjfVr0DxT
+9Rw+gkXFeqGyyD3rS25VYKnDsuXRCg==
+=WftF
+-----END PGP SIGNATURE-----
+
+--IUSVF+LtaR4kWxuH--
