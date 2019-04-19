@@ -2,138 +2,126 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C53AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07FCC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15222204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB22204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="w4FKdiYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfDSSei (ORCPT
+        id S1728355AbfDSSeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:34:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43264 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727995AbfDSSeg (ORCPT
+        Fri, 19 Apr 2019 14:34:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59213 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfDSSel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:34:36 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JFTsqA080949
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:34:20 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rybt5m7yb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:34:20 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
-        Fri, 19 Apr 2019 16:34:18 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 19 Apr 2019 16:34:15 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3JFYERa43253856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Apr 2019 15:34:14 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 211ACA4060;
-        Fri, 19 Apr 2019 15:34:14 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0DADA405B;
-        Fri, 19 Apr 2019 15:34:13 +0000 (GMT)
-Received: from bahia.lan (unknown [9.145.170.150])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Apr 2019 15:34:13 +0000 (GMT)
-Subject: [PATCH] powerpc/powernv/npu: Fix reference leak
-From:   Greg Kurz <groug@kaod.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alistair Popple <alistair@popple.id.au>
-Date:   Fri, 19 Apr 2019 17:34:13 +0200
-User-Agent: StGit/unknown-version
+        Fri, 19 Apr 2019 14:34:41 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIYHDc384135
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 19 Apr 2019 11:34:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIYHDc384135
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555698857;
+        bh=HkLN3uLvaQusWAtPoOKgQckjhX+Fo28CPjJvGY72Owk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=w4FKdiYKWXXESRb88ojtbGXL3C5OhR+VwY96iPC4ZHFWSwgKNct65L4T8Xevnxbzt
+         65Gectxr6Cc/EwKyb4mDE9fLJo7hAtsWTkeJcp6lh4JnskdpA3Fih5GmmuKyysXAY9
+         mTOhR6XxJ9rhezl6IxBzytzwZVcQTayhuifVVZbLvij6cse9uOnkZxeSkHUIHGimky
+         pbHEDPvHEcB+ioFUOof9c3Ys2XVhsaxbe1rWIuwV/UGnTqurV1crZOAOypuEGvLD49
+         +XwKem4kOti5cdjB1xbOwwSx4HoHwEZ+0KQXGsNvp7zFVGPsiajtaa0pfB3UQMJg20
+         8yH84VmXwtTUA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIYFJX384132;
+        Fri, 19 Apr 2019 11:34:15 -0700
+Date:   Fri, 19 Apr 2019 11:34:15 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for David Wang <tipbot@zytor.com>
+Message-ID: <tip-987ddbe4870b53623d76ac64044c55a13e368113@git.kernel.org>
+Cc:     peterz@infradead.org, tglx@linutronix.de,
+        torvalds@linux-foundation.org, mingo@kernel.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, pavel@ucw.cz, davidwang@zhaoxin.com
+Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, pavel@ucw.cz,
+          davidwang@zhaoxin.com, peterz@infradead.org, tglx@linutronix.de,
+          torvalds@linux-foundation.org, mingo@kernel.org
+In-Reply-To: <1545900110-2757-1-git-send-email-davidwang@zhaoxin.com>
+References: <1545900110-2757-1-git-send-email-davidwang@zhaoxin.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cpu] x86/power: Optimize C3 entry on Centaur CPUs
+Git-Commit-ID: 987ddbe4870b53623d76ac64044c55a13e368113
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041915-0020-0000-0000-00000331A9DC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041915-0021-0000-0000-00002183FFAE
-Message-Id: <155568805354.600470.13376593185688810607.stgit@bahia.lan>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=955 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904190114
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
-has the effect of incrementing the reference count of the PCI device, as
-explained in drivers/pci/search.c:
+Commit-ID:  987ddbe4870b53623d76ac64044c55a13e368113
+Gitweb:     https://git.kernel.org/tip/987ddbe4870b53623d76ac64044c55a13e368113
+Author:     David Wang <davidwang@zhaoxin.com>
+AuthorDate: Thu, 27 Dec 2018 16:41:50 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 19 Apr 2019 19:28:06 +0200
 
- * Given a PCI domain, bus, and slot/function number, the desired PCI
- * device is located in the list of PCI devices. If the device is
- * found, its reference count is increased and this function returns a
- * pointer to its data structure.  The caller must decrement the
- * reference count by calling pci_dev_put().  If no device is found,
- * %NULL is returned.
+x86/power: Optimize C3 entry on Centaur CPUs
 
-Nothing was done to call pci_dev_put() and the reference count of GPU and
-NPU PCI devices rockets up.
+For new Centaur CPUs the ucode will take care of the preservation of cache coherence
+between CPU cores in C-states regardless of how deep the C-states are. So, it is not
+necessary to flush the caches in software befor entering C3. This useless operation
+will cause performance drop for the cores which share some caches with the idling core.
 
-A natural way to fix this would be to teach the callers about the change,
-so that they call pci_dev_put() when done with the pointer. This turns
-out to be quite intrusive, as it affects many paths in npu-dma.c,
-pci-ioda.c and vfio_pci_nvlink2.c. Also, the issue appeared in 4.16 and
-some affected code got moved around since then: it would be problematic
-to backport the fix to stable releases.
-
-All that code never cared for reference counting anyway. Call pci_dev_put()
-from get_pci_dev() to revert to the previous behavior.
-
-Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev from pci_dn")
-Cc: stable@vger.kernel.org # v4.16
-Signed-off-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: David Wang <davidwang@zhaoxin.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: brucechang@via-alliance.com
+Cc: cooperyan@zhaoxin.com
+Cc: len.brown@intel.com
+Cc: linux-pm@kernel.org
+Cc: qiyuanwang@zhaoxin.com
+Cc: rjw@rjwysocki.net
+Cc: timguo@zhaoxin.com
+Link: http://lkml.kernel.org/r/1545900110-2757-1-git-send-email-davidwang@zhaoxin.com
+[ Tidy up the comment. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/kernel/acpi/cstate.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
-index e713ade30087..d8f3647e8fb2 100644
---- a/arch/powerpc/platforms/powernv/npu-dma.c
-+++ b/arch/powerpc/platforms/powernv/npu-dma.c
-@@ -31,9 +31,22 @@ static DEFINE_SPINLOCK(npu_context_lock);
- static struct pci_dev *get_pci_dev(struct device_node *dn)
- {
- 	struct pci_dn *pdn = PCI_DN(dn);
-+	struct pci_dev *pdev;
- 
--	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
-+	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
- 					   pdn->busno, pdn->devfn);
-+
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index 158ad1483c43..cb6e076a6d39 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -51,6 +51,18 @@ void acpi_processor_power_init_bm_check(struct acpi_processor_flags *flags,
+ 	if (c->x86_vendor == X86_VENDOR_INTEL &&
+ 	    (c->x86 > 0xf || (c->x86 == 6 && c->x86_model >= 0x0f)))
+ 			flags->bm_control = 0;
 +	/*
-+	 * pci_get_domain_bus_and_slot() increased the reference count of
-+	 * the PCI device, but callers don't need that actually as the PE
-+	 * already holds a reference to the device. Since callers aren't
-+	 * aware of the reference count change, call pci_dev_put() now to
-+	 * avoid leaks.
++	 * For all recent Centaur CPUs, the ucode will make sure that each
++	 * core can keep cache coherence with each other while entering C3
++	 * type state. So, set bm_check to 1 to indicate that the kernel
++	 * doesn't need to execute a cache flush operation (WBINVD) when
++	 * entering C3 type state.
 +	 */
-+	if (pdev)
-+		pci_dev_put(pdev);
-+
-+	return pdev;
++	if (c->x86_vendor == X86_VENDOR_CENTAUR) {
++		if (c->x86 > 6 || (c->x86 == 6 && c->x86_model == 0x0f &&
++		    c->x86_stepping >= 0x0e))
++			flags->bm_check = 1;
++	}
  }
+ EXPORT_SYMBOL(acpi_processor_power_init_bm_check);
  
- /* Given a NPU device get the associated PCI device. */
-
