@@ -2,111 +2,87 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DF5C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68DAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE3D222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9808720449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555698559;
+	bh=303gAaiUE5R3dQExfBtJ8EvjoHzMdyHL08HUoe5pGYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VDeyruIVHv0W2Mvjd3Mekty6q/cJR/0VQULSJ9MVYvwZhhj+RK1Dg6V3klvLqKGmK
+	 voxeSY5XHU8r02dvJna+BT7ffYgrrMx0Be3jliPTqxIjf8hF5NEO8fVaNy8grEc/7L
+	 hoOK49h5VBVyclqK1z6+08iDfK1FjP1qz+nP+Jso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfDSS3K (ORCPT
+        id S1727959AbfDSS3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:29:10 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:34073 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbfDSS3J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TPjGOrH_1555691304;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPjGOrH_1555691304)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 20 Apr 2019 00:28:26 +0800
-Subject: Re: [QUESTIONS] THP allocation in NUMA fault migration path
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <aa34f38e-5e55-bdb2-133c-016b91245533@linux.alibaba.com>
- <20190418063218.GA6567@dhcp22.suse.cz>
- <bb2464c9-dc45-eff1-b9ac-f29105ccd27b@linux.alibaba.com>
- <20190419111356.GK18914@techsingularity.net>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <e48a5899-7139-ba76-46e9-76bda4a7ab78@linux.alibaba.com>
-Date:   Fri, 19 Apr 2019 09:28:21 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 19 Apr 2019 14:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727451AbfDSS3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:29:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A0D621916;
+        Fri, 19 Apr 2019 11:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555672954;
+        bh=303gAaiUE5R3dQExfBtJ8EvjoHzMdyHL08HUoe5pGYI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wiiwK0fqLTiovDFf5PLdIh8oAXSLyYDnld7XmaxyXJdTcRR0dicVqs+SJhihV0OBE
+         pmfOgs6QWzXHQ8KL7CpKJjXeygyBW/l+5bPlLT7ey+XnV+BbSyi9wIdGl+6ylZZjg2
+         KNW6TvhPpuZBo/8RWF87e8FujHsMlRAd7FUGOJ8M=
+Date:   Fri, 19 Apr 2019 13:22:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bhanusree Pola <bhanusreemahesh@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8723bs: core: Replace rtw_malloc with kmalloc
+Message-ID: <20190419112232.GB14886@kroah.com>
+References: <1555669363-19782-1-git-send-email-bhanusreemahesh@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190419111356.GK18914@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555669363-19782-1-git-send-email-bhanusreemahesh@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 19, 2019 at 03:52:43PM +0530, Bhanusree Pola wrote:
+> Replace rtw_malloc with kmalloc to make code OS independent
+> use kmalloc second argument as GFP_ATOMIC as these are called by functions
+> that holds lock.
+> 
+> Signed-off-by: Bhanusree Pola <bhanusreemahesh@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_ap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> index 18fabf5..6a6683c 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> @@ -128,7 +128,7 @@ static void update_BCNTIM(struct adapter *padapter)
+>  		}
+>  
+>  		if (remainder_ielen > 0) {
+> -			pbackup_remainder_ie = rtw_malloc(remainder_ielen);
+> +			pbackup_remainder_ie = kmalloc(remainder_ielen,GFP_ATOMIC);
 
+Always run checkpatch.pl on your patches so you do nto get grumpy
+maintainers telling you to run checkpatch.pl on your code :)
 
-On 4/19/19 4:13 AM, Mel Gorman wrote:
-> On Thu, Apr 18, 2019 at 09:18:15AM -0700, Yang Shi wrote:
->>
->> On 4/17/19 11:32 PM, Michal Hocko wrote:
->>> On Wed 17-04-19 21:15:41, Yang Shi wrote:
->>>> Hi folks,
->>>>
->>>>
->>>> I noticed that there might be new THP allocation in NUMA fault migration
->>>> path (migrate_misplaced_transhuge_page()) even when THP is disabled (set to
->>>> "never"). When THP is set to "never", there should be not any new THP
->>>> allocation, but the migration path is kind of special. So I'm not quite sure
->>>> if this is the expected behavior or not?
->>>>
->>>>
->>>> And, it looks this allocation disregards defrag setting too, is this
->>>> expected behavior too?H
->>> Could you point to the specific code? But in general the miTgration path
->> Yes. The code is in migrate_misplaced_transhuge_page() called by
->> do_huge_pmd_numa_page().
->>
->> It would just do:
->> alloc_pages_node(node, (GFP_TRANSHUGE_LIGHT | __GFP_THISNODE),
->> HPAGE_PMD_ORDER);
->> without checking if transparent_hugepage is enabled or not.
->>
->> THP may be disabled before calling into do_huge_pmd_numa_page(). The
->> do_huge_pmd_wp_page() does check if THP is disabled or not. If THP is
->> disabled, it just tries to allocate 512 base pages.
->>
->>> should allocate the memory matching the migration origin. If the origin
->>> was a THP then I find it quite natural if the target was a huge page as
->> Yes, this is what I would like to confirm. Migration allocates a new THP to
->> replace the old one.
->>
->>> well. How hard the allocation should try is another question and I
->>> suspect we do want to obedy the defrag setting.
->> Yes, I thought so too. However, THP NUMA migration was added in 3.8 by
->> commit b32967f ("mm: numa: Add THP migration for the NUMA working set
->> scanning fault case."). It disregarded defrag setting at the very beginning.
->> So, I'm not quite sure if it was done on purpose or just forgot it.
->>
-> It was on purpose as migration due to NUMA misplacement was not intended
-> to change the type of page used. It would be impossible to tell in advance
-> if locality was more important than the page size from a performance point
-> of view. This is particularly relevant if the workload is virtualised and
-> there is an expectation that huge pages are preserved.  I'm not aware of
-> any bugs whereby there was a complaint that the THP migration caused an
-> excessive stall. It could be altered of course, but it would be preferred
-> to have an example workload demonstrating the problem before making a
-> decision.
+Why not fix up all of the callers of this function?  And are you sure
+that GFP_ATOMIC is the correct thing to do here?
 
-Thanks a lot for elaborating the idea. I didn't run into any problem at 
-the moment, just didn't get the thinking behind the choice since other 
-page fault paths (i.e. wp) do allocate hugepages more aggressively.
+thanks,
 
->
-
+greg k-h
