@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBD1C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4C7C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424272064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE4F20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TwUC/4C1"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SCEuOyDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfDSTG0 (ORCPT
+        id S1729338AbfDSTGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:06:26 -0400
+        Fri, 19 Apr 2019 15:06:24 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbfDSTGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:06:24 -0400
+        id S1726262AbfDSTGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:06:21 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JAk4VI239021
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JAh67n236666
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 03:46:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JAk4VI239021
+        Fri, 19 Apr 2019 03:43:07 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JAh67n236666
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555670766;
-        bh=KMXy5bFsHmIcSLl+yxjKCvjgONFeyAEA9qC3Y41B5cU=;
+        s=2019041745; t=1555670588;
+        bh=RyB9VAIn2pS4GGEVIEMe9R1Aw22aFC/T0jRgQBrXIKw=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TwUC/4C1HQcJSbTh+TcwSApXefz1J4o/YQtPqTgjDyAdARUudvWAUHIuA3d34QfFE
-         cbp/pDRQuOE/UTsfR/dvQcKEszED+mf+LXLi8bnnvQYU5SceT8fhp7BwqbxXcpeunS
-         NKANgLBZsor8Y6VMd9GsVPpKifD2ZG2TYqSHkPN6x06ap8JL/yzfNl35igIHk4huJu
-         OiDj6yDtwL6hsB/vAqcD4jXejTgDGuV7LU+EfJ8ugja2saKaLoYZyoqC7SQ/2b18So
-         WKEhVsijMybKtMRAMUSiLREs+0wo3KypQ+VsL4DPjqE2+Z7x2ixKC2uT7UxSvdRCVk
-         iYgPzlOQCIl/Q==
+        b=SCEuOyDULZAPBpasGLrttZ8YrbA/oLS/nldGSsdFH3YTPLBQMCMKn6ltFM8hO/ZRp
+         SeTEZgW+dFeO3w+YLOzNpMpfIc/auwTi+pfyRkI9VXQZUmoKbDyuvDtY90FAfA8lZE
+         C6WwBSebQtUKHsex375tnZH/AA++gbUgJ2JWBCsCOmp7j9l5SO/B7Zb2vNiaMM2M+m
+         7ciIJV5WIbV+b6ZYN34UA9dKOULAWSqLFqItItDEGcCkgLdI0V+emiHINGvRwZWeVO
+         ysBY13w3Az0vQLh4fmJqxeDPuUqcccsH9+XR0OhOq7KruS5KFbtY/6+A8oj/vt4Xnn
+         rtLyaLZ8lC+mg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JAk0CK239018;
-        Fri, 19 Apr 2019 03:46:00 -0700
-Date:   Fri, 19 Apr 2019 03:46:00 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JAh6cq236663;
+        Fri, 19 Apr 2019 03:43:06 -0700
+Date:   Fri, 19 Apr 2019 03:43:06 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Mathieu Desnoyers <tipbot@zytor.com>
-Message-ID: <tip-03a33ecc26af28ca9535de2b0612c54deafa9728@git.kernel.org>
-Cc:     davejwatson@fb.com, mingo@kernel.org, cl@linux.com,
-        linux-kernel@vger.kernel.org, linux@arm.linux.org.uk,
-        mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
-        joelaf@google.com, catalin.marinas@arm.com, mtk.manpages@gmail.com,
-        luto@amacapital.net, boqun.feng@gmail.com, pjt@google.com,
-        bmaurer@fb.com, shuah@kernel.org, paulmck@linux.vnet.ibm.com,
-        akpm@linux-foundation.org, will.deacon@arm.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        peterz@infradead.org, hpa@zytor.com, josh@joshtriplett.org
-Reply-To: will.deacon@arm.com, akpm@linux-foundation.org,
-          rostedt@goodmis.org, catalin.marinas@arm.com, joelaf@google.com,
-          davejwatson@fb.com, mingo@kernel.org, bmaurer@fb.com,
-          pjt@google.com, paulmck@linux.vnet.ibm.com, shuah@kernel.org,
-          linux@arm.linux.org.uk, mathieu.desnoyers@efficios.com,
-          linux-kernel@vger.kernel.org, cl@linux.com, peterz@infradead.org,
-          tglx@linutronix.de, luto@amacapital.net, josh@joshtriplett.org,
-          hpa@zytor.com, boqun.feng@gmail.com, mtk.manpages@gmail.com,
-          torvalds@linux-foundation.org
-In-Reply-To: <20190305194755.2602-4-mathieu.desnoyers@efficios.com>
-References: <20190305194755.2602-4-mathieu.desnoyers@efficios.com>
+Message-ID: <tip-bff9504bfc9c5c6610b42d47f689f350fd969eb8@git.kernel.org>
+Cc:     joelaf@google.com, pjt@google.com, bmaurer@fb.com,
+        peterz@infradead.org, torvalds@linux-foundation.org, hpa@zytor.com,
+        will.deacon@arm.com, paulmck@linux.vnet.ibm.com,
+        tglx@linutronix.de, josh@joshtriplett.org, catalin.marinas@arm.com,
+        mathieu.desnoyers@efficios.com, cl@linux.com, davejwatson@fb.com,
+        linux@arm.linux.org.uk, mingo@kernel.org, rostedt@goodmis.org,
+        mtk.manpages@gmail.com, luto@amacapital.net,
+        akpm@linux-foundation.org, boqun.feng@gmail.com,
+        linux-kernel@vger.kernel.org
+Reply-To: joelaf@google.com, pjt@google.com, bmaurer@fb.com,
+          peterz@infradead.org, torvalds@linux-foundation.org,
+          hpa@zytor.com, will.deacon@arm.com, paulmck@linux.vnet.ibm.com,
+          tglx@linutronix.de, josh@joshtriplett.org,
+          catalin.marinas@arm.com, mathieu.desnoyers@efficios.com,
+          cl@linux.com, davejwatson@fb.com, linux@arm.linux.org.uk,
+          mingo@kernel.org, rostedt@goodmis.org, mtk.manpages@gmail.com,
+          luto@amacapital.net, akpm@linux-foundation.org,
+          boqun.feng@gmail.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20190305194755.2602-2-mathieu.desnoyers@efficios.com>
+References: <20190305194755.2602-2-mathieu.desnoyers@efficios.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/rseq] rseq/selftests: Adapt number of threads to the
- number of detected CPUs
-Git-Commit-ID: 03a33ecc26af28ca9535de2b0612c54deafa9728
+Subject: [tip:core/rseq] rseq: Clean up comments by reflecting removal of
+ event counter
+Git-Commit-ID: bff9504bfc9c5c6610b42d47f689f350fd969eb8
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -81,20 +81,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  03a33ecc26af28ca9535de2b0612c54deafa9728
-Gitweb:     https://git.kernel.org/tip/03a33ecc26af28ca9535de2b0612c54deafa9728
+Commit-ID:  bff9504bfc9c5c6610b42d47f689f350fd969eb8
+Gitweb:     https://git.kernel.org/tip/bff9504bfc9c5c6610b42d47f689f350fd969eb8
 Author:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-AuthorDate: Tue, 5 Mar 2019 14:47:55 -0500
+AuthorDate: Tue, 5 Mar 2019 14:47:53 -0500
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 19 Apr 2019 12:42:14 +0200
+CommitDate: Fri, 19 Apr 2019 12:39:31 +0200
 
-rseq/selftests: Adapt number of threads to the number of detected CPUs
+rseq: Clean up comments by reflecting removal of event counter
 
-On smaller systems, running a test with 200 threads can take a long
-time on machines with smaller number of CPUs.
-
-Detect the number of online CPUs at test runtime, and multiply that
-by 6 to have 6 rseq threads per CPU preempting each other.
+The "event counter" was removed from rseq before it was merged upstream.
+However, a few comments in the source code still refer to it. Adapt the
+comments to match reality.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -105,6 +103,7 @@ Cc: Boqun Feng <boqun.feng@gmail.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Chris Lameter <cl@linux.com>
 Cc: Dave Watson <davejwatson@fb.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Joel Fernandes <joelaf@google.com>
 Cc: Josh Triplett <josh@joshtriplett.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
@@ -113,47 +112,59 @@ Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Paul Turner <pjt@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Shuah Khan <shuah@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: linux-api@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190305194755.2602-4-mathieu.desnoyers@efficios.com
+Link: http://lkml.kernel.org/r/20190305194755.2602-2-mathieu.desnoyers@efficios.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/testing/selftests/rseq/run_param_test.sh | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/kernel/signal.c | 3 +--
+ arch/x86/kernel/signal.c | 5 +----
+ kernel/rseq.c            | 3 +--
+ 3 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/run_param_test.sh b/tools/testing/selftests/rseq/run_param_test.sh
-index 3acd6d75ff9f..e426304fd4a0 100755
---- a/tools/testing/selftests/rseq/run_param_test.sh
-+++ b/tools/testing/selftests/rseq/run_param_test.sh
-@@ -1,6 +1,8 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0+ or MIT
+diff --git a/arch/arm/kernel/signal.c b/arch/arm/kernel/signal.c
+index 76bb8de6bf6b..be5edfdde558 100644
+--- a/arch/arm/kernel/signal.c
++++ b/arch/arm/kernel/signal.c
+@@ -549,8 +549,7 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+ 	int ret;
  
-+NR_CPUS=`grep '^processor' /proc/cpuinfo | wc -l`
-+
- EXTRA_ARGS=${@}
+ 	/*
+-	 * Increment event counter and perform fixup for the pre-signal
+-	 * frame.
++	 * Perform fixup for the pre-signal frame.
+ 	 */
+ 	rseq_signal_deliver(ksig, regs);
  
- OLDIFS="$IFS"
-@@ -28,15 +30,16 @@ IFS="$OLDIFS"
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 08dfd4c1a4f9..22c233b509da 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -688,10 +688,7 @@ setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs)
+ 	sigset_t *set = sigmask_to_save();
+ 	compat_sigset_t *cset = (compat_sigset_t *) set;
  
- REPS=1000
- SLOW_REPS=100
-+NR_THREADS=$((6*${NR_CPUS}))
+-	/*
+-	 * Increment event counter and perform fixup for the pre-signal
+-	 * frame.
+-	 */
++	/* Perform fixup for the pre-signal frame. */
+ 	rseq_signal_deliver(ksig, regs);
  
- function do_tests()
- {
- 	local i=0
- 	while [ "$i" -lt "${#TEST_LIST[@]}" ]; do
- 		echo "Running test ${TEST_NAME[$i]}"
--		./param_test ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} || exit 1
-+		./param_test ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@} ${EXTRA_ARGS} || exit 1
- 		echo "Running compare-twice test ${TEST_NAME[$i]}"
--		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} || exit 1
-+		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@} ${EXTRA_ARGS} || exit 1
- 		let "i++"
- 	done
- }
+ 	/* Set up the stack frame */
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index 25e9a7b60eba..849afe749131 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -254,8 +254,7 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+  * - signal delivery,
+  * and return to user-space.
+  *
+- * This is how we can ensure that the entire rseq critical section,
+- * consisting of both the C part and the assembly instruction sequence,
++ * This is how we can ensure that the entire rseq critical section
+  * will issue the commit instruction only if executed atomically with
+  * respect to other threads scheduled on the same CPU, and with respect
+  * to signal handlers.
