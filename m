@@ -2,110 +2,83 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171FAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3764CC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C5520693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:53:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IE8Ds0UE"
+	by mail.kernel.org (Postfix) with ESMTP id 0A08F20645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfDSSxF (ORCPT
+        id S1728538AbfDSSxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:53:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53601 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfDSSxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:53:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q16so7103150wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ce+xsHXl4yFXBVy1VUWq5FJ/Ala/Os2pJsWh4xCgH2Q=;
-        b=IE8Ds0UEUpH1f+3I6uwelgIIq26MWuAaBjFXVFvqp0hUyWENlu7GgR+VSATdjFczq+
-         a7vz1MIpVKHX767N8pRQovw7XNRECSOx5GUUC+8Ca/lQaopQ2l258H1JlwxoabzPtM8b
-         grZPsuCzCqTQF7t2RnZrdh8zLjlUzal5b64UHYh7ZMwl1LxFjB6ZosWOkyJKEtlp0cYD
-         GhKmw5IPZdB2ParXTexHcEYHUyrFVQEREIvKrUg2pDiJFmMfodtZ+ViIbxGt9J0dZpYl
-         3/Yl22r1W6/FAQdxpWIqafuO0evAhh6vdcygaSDBnqr4LbmAW7iFzUBtA1L89XigRGW/
-         /i9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ce+xsHXl4yFXBVy1VUWq5FJ/Ala/Os2pJsWh4xCgH2Q=;
-        b=aKiSzYXAAm08ctZS+MDhHTq0qmluNhDtZYsO1FpvfbMJeUh7LbG1LAuzXVcPkaJxfJ
-         0f0AgTwPyjc2QHfQeAfmU75tC8vAtH0sJR5j1P2eGqsyPRJYEu++yU40cXQU4yW00GBx
-         EHMt7nFFX78etAveMF+pdAS24s8lfVB0V9ApPBw/B8G7mLaDM0KBnYzT/4CcStnaNv0U
-         YlRmZ4pazG0dUKZ/Debc95At2CW2KFPZFRm1b44J2ZE3YpGqZyr9SG4E2p1roRoBNuXG
-         IQQBD4YpReeAUo/0FAQGOPzCLDWWZMFhI2U3tobLgX7X0DmPjFsT4/v3lGMciyGCM/gV
-         uk+g==
-X-Gm-Message-State: APjAAAW1R8cEV0Fx5zd6tQ5OjEPmiPrBh1r4y8RH6zxANahN0dS6tKmK
-        lpNk1CDS7y2ekaqd4OJN/3FB8D2bbJs=
-X-Google-Smtp-Source: APXvYqxHCiejcT6tfcxtXdLG5uPOoyx8wHXcYqizHu+I/8l6MFuXaHqJKEsT1gnEHkdZKqtfL7vAoQ==
-X-Received: by 2002:a1c:185:: with SMTP id 127mr1758875wmb.145.1555662910901;
-        Fri, 19 Apr 2019 01:35:10 -0700 (PDT)
-Received: from localhost.localdomain (cpc89244-aztw30-2-0-cust4998.18-1.cable.virginm.net. [86.31.179.135])
-        by smtp.gmail.com with ESMTPSA id t76sm5700147wmt.8.2019.04.19.01.35.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 01:35:10 -0700 (PDT)
-From:   Peter Griffin <peter.griffin@linaro.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        john.stultz@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        xuwei5@hisilicon.com, mturquette@baylibre.com, sboyd@kernel.org,
-        yuq825@gmail.com
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, lima@lists.freedesktop.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 6/6] drm/lima: handle shared irq case for lima_pp_bcast_irq_handler
-Date:   Fri, 19 Apr 2019 09:33:01 +0100
-Message-Id: <1555662781-22570-7-git-send-email-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
-References: <1555662781-22570-1-git-send-email-peter.griffin@linaro.org>
+        Fri, 19 Apr 2019 14:53:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53490 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728513AbfDSSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:53:30 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52F4830917F0;
+        Fri, 19 Apr 2019 11:44:27 +0000 (UTC)
+Received: from localhost (ovpn-12-186.pek2.redhat.com [10.72.12.186])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ACE3A5D70D;
+        Fri, 19 Apr 2019 11:44:24 +0000 (UTC)
+Date:   Fri, 19 Apr 2019 19:44:21 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
+ mapping before accessing it
+Message-ID: <20190419114421.GH11060@MiWiFi-R3L-srv>
+References: <20190419101733.GA10324@zn.tnic>
+ <20190419105014.GE11060@MiWiFi-R3L-srv>
+ <20190419112801.GB10324@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190419112801.GB10324@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 19 Apr 2019 11:44:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Hikey board all lima ip blocks are shared with one irq.
-This patch avoids a NULL ptr deref crash on this platform
-on startup. Tested with Weston and kmscube.
+On 04/19/19 at 01:28pm, Borislav Petkov wrote:
+> Why does that "seem" so?
+> 
+> Read again what I said: "should all be passed through boot_params".
+> Which means, boot_params should be extended with a field of a flag to
+> say: "this is a kexec'ed kernel".
+> 
+> If it "seems" then it should be made to not "seem" but to work properly.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Qiang Yu <yuq825@gmail.com>
----
- drivers/gpu/drm/lima/lima_pp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+No objection to extending with fields of a flag to mark kexec'ed kernel.
+Or kdump kernel either. We now check kdump kernel by /proc/vmcore.
 
-diff --git a/drivers/gpu/drm/lima/lima_pp.c b/drivers/gpu/drm/lima/lima_pp.c
-index d29721e..8fef224 100644
---- a/drivers/gpu/drm/lima/lima_pp.c
-+++ b/drivers/gpu/drm/lima/lima_pp.c
-@@ -64,7 +64,13 @@ static irqreturn_t lima_pp_bcast_irq_handler(int irq, void *data)
- 	struct lima_ip *pp_bcast = data;
- 	struct lima_device *dev = pp_bcast->dev;
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_pp;
--	struct drm_lima_m450_pp_frame *frame = pipe->current_task->frame;
-+	struct drm_lima_m450_pp_frame *frame;
-+
-+	/* for shared irq case */
-+	if (!pipe->current_task)
-+		return IRQ_NONE;
-+
-+	frame = pipe->current_task->frame;
- 
- 	for (i = 0; i < frame->num_pp; i++) {
- 		struct lima_ip *ip = pipe->processor[i];
--- 
-2.7.4
+> 
+> > Yeah, adding the systab mapping looks good. Kairui put it in
+> > decompressing stage just because he wants to cover the case in which the
+> > old kernel kexec jumping to 2nd kernel. Now it seems not very
+> > reasonable, we also have the new kernel kexec jumping to old 2nd kernel.
+> 
+> I don't think we can guarantee kexec between old<->new kernel to always
+> work. Otherwise, we can forget all development and improvements of new
+> kernel.
 
+I personally agree with this. Very earlier, we tried to remove the
+896 MB limitation of crashkernel=xM, to extend it to 4G or the whole
+RAM, but rejcted by linus since he worried it could break the old kernel
+kdumping. I may not remember well.
