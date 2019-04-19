@@ -6,88 +6,88 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C2C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7929DC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2329921479
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D652171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tkSMhpou"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1ZDK/4JL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfDSTa4 (ORCPT
+        id S1728014AbfDSTa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:30:56 -0400
+        Fri, 19 Apr 2019 15:30:57 -0400
 Received: from merlin.infradead.org ([205.233.59.134]:52654 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfDSTa4 (ORCPT
+        with ESMTP id S1727220AbfDSTa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:30:56 -0400
+        Fri, 19 Apr 2019 15:30:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HeRWp3SbhYmoU91Lf8c1z2p2ddTb4bDbJKsU2tWCahE=; b=tkSMhpoum3YIfOBi7tKJVq9Yx
-        UMuKJJUDWogZqua/oD58ODAPZIns9EArjYEoll3EBvu3a4aONaOnIdLDsIhfNRcrHCoC7BIokfxFY
-        ZkoSgDs5IJS6Bk0yZUK2qTP4FIo9RYWAXiq/CLhT1RnQnweIdPjbcswLvoBcrsupCpga2XNUXQQey
-        VpGBgUnXIB9eQA+XQ9wjGzRsSVLb1uByAfkR4TJqVCH1nd9b12r5Te6e0mdk7LxxgRGel2f52Netj
-        gI4Q9j3VO7udHGgAkDDAES8q3p5XRjxm1QhnXTCPIcwKCkO89RDPP5jA4bKEYm0X6cBcLye24hSr4
-        l+ik22GoA==;
+         bh=6VWnVgCweh/i9J13ePCp1WXpskD7OICjHvPqGHw06p0=; b=1ZDK/4JL4PFJ7ECgMePxOadtU
+        3iO1VjKc1QJ3XtMihHAFP6phDWMBwxN2J5Sn5JdX/KgZ4WEDpsNuEJjjq2r0oJy7jqe3+Q56+a5S0
+        7VzTe4BOcHBHK7sGxPTNgcztZxz4N9Ms+Bqvfxq/hV7qa22+Yh73orjOn7ThwetWkTCH7n21uQzYS
+        4/uhUJ/uFnFz1+UV5t2LkbNoJ1SRnYDleHcjvFG2jhVaEFxSuBP1iBfZB9B/D1hipJGw7TG23SJyD
+        r8pIBywdaBJutJtSUtY3VQa+8c8uwzADZFTVDT7YvUXL8KN9Mv9T4fzdlNcRkNKxcolj+01tETHcG
+        i0ub7QG5Q==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hHONZ-0004Rd-GR; Fri, 19 Apr 2019 07:56:14 +0000
+        id 1hHXoC-0006kP-UV; Fri, 19 Apr 2019 18:00:21 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7A61329B52926; Fri, 19 Apr 2019 09:56:10 +0200 (CEST)
-Date:   Fri, 19 Apr 2019 09:56:10 +0200
+        id D55C229BF0C04; Fri, 19 Apr 2019 20:00:17 +0200 (CEST)
+Date:   Fri, 19 Apr 2019 20:00:17 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 12/16] locking/rwsem: Enable time-based spinning on
- reader-owned rwsem
-Message-ID: <20190419075610.GN4038@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-13-longman@redhat.com>
- <20190418130611.GK4038@hirez.programming.kicks-ass.net>
- <52aee7c3-b8aa-a617-c1f2-34bc99c72474@redhat.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
+ by smp_mb__{before,after}_atomic()
+Message-ID: <20190419180017.GP4038@hirez.programming.kicks-ass.net>
+References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <52aee7c3-b8aa-a617-c1f2-34bc99c72474@redhat.com>
+In-Reply-To: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 11:15:33AM -0400, Waiman Long wrote:
-> On 04/18/2019 09:06 AM, Peter Zijlstra wrote:
+On Fri, Apr 19, 2019 at 01:21:45PM -0400, Alan Stern wrote:
+> Index: usb-devel/Documentation/atomic_t.txt
+> ===================================================================
+> --- usb-devel.orig/Documentation/atomic_t.txt
+> +++ usb-devel/Documentation/atomic_t.txt
+> @@ -171,7 +171,10 @@ The barriers:
+>    smp_mb__{before,after}_atomic()
+>  
+>  only apply to the RMW ops and can be used to augment/upgrade the ordering
+> -inherent to the used atomic op. These barriers provide a full smp_mb().
+> +inherent to the used atomic op. Unlike normal smp_mb() barriers, they order
+> +only the RMW op itself against the instructions preceding the
+> +smp_mb__before_atomic() or following the smp_mb__after_atomic(); they do
+> +not order instructions on the other side of the RMW op at all.
 
-> >> +			/*
-> >> +			 * Check time threshold every 16 iterations to
-> >> +			 * avoid calling sched_clock() too frequently.
-> >> +			 * This will make the actual spinning time a
-> >> +			 * bit more than that specified in the threshold.
-> >> +			 */
-> >> +			else if (!(++loop & 0xf) &&
-> >> +				 (sched_clock() > rspin_threshold)) {
-> > Why is calling sched_clock() lots a problem?
-> 
-> Actually I am more concern about the latency introduced by the
-> sched_clock() call. BTW, I haven't done any measurement myself. Do you
-> know how much cost the sched_clock() call is?
-> 
-> If the cost is relatively high, the average latency period after the
-> lock is free and the spinner is ready to do a trylock will increase.
+Now it is I who is confused; what?
 
-Totally depends on the arch or course :/ For 'sane' x86 it is: RDTSC,
-MUL; SHRD; SHR; ADD, which is plenty fast.
+	x = 1;
+	smp_mb__before_atomic();
+	atomic_add(1, &a);
+	y = 1;
 
-I know we have poll loops with sched_clock/local_clock in them, I just
-can't seem to find any atm.
+the stores to both x and y will be ordered as if an smp_mb() where
+there. There is no order between a and y otoh.
