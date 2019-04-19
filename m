@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53F8C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F44C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABCF205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE0D204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:39:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tbOTq2zo"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="C0oNfeKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfDSSjT (ORCPT
+        id S1728236AbfDSSjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:39:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53641 "EHLO
+        Fri, 19 Apr 2019 14:39:24 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55211 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbfDSSjR (ORCPT
+        with ESMTP id S1727499AbfDSSjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:39:17 -0400
+        Fri, 19 Apr 2019 14:39:18 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIbOxQ384772
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JIcC84384876
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 11:37:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIbOxQ384772
+        Fri, 19 Apr 2019 11:38:13 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JIcC84384876
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555699045;
-        bh=qhfzhDsUYm+ropBQrcfCGmoyoJH6fuWuP0UnMUJk6WM=;
+        s=2019041745; t=1555699094;
+        bh=TCKc54tId747hgym/x7du8UVb1IBSjT2pkoDMuBjiRA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=tbOTq2zodLczYof3nSiYR066wl6HQEXf/sYcyu/W40zdhmeebK12x+8lZJaPK3Zr2
-         fsfsxQsSD2nuUHvYHo7M4uzjDkY/sbqC+M+Un39t/NMZcClOGJMCQWXAeNF4SQHglz
-         V11nNXPXgbKJEKmhWn+i5SnZtQvp/bbLYLD/VdMNO6W03N6vJe9Z/SP8sja10LUYoD
-         8MT5LiZaFobl0Nr67ece3nX7CcHi+2//MHoCzs8HADLmhrIYDv5yX0QepIpHR9XICl
-         48l5lZQ3NQKX3j4oaG0NlRs/MhoP3iZmSAoEBFKvDPh7cgLSC8brrYBS646J30GczN
-         yJu6Iv0PSsfew==
+        b=C0oNfeKp2j0aFXyPm+YoGdJq2o4LgZfzuWQ2Ac3OFe9GiIiB+GpKKHMxLvFI+r7m8
+         LFMOXlxu/891XYEe3NDuGgbZCNAoIOY/6l0s4XtGMn+0nBs4G/BEYq3Cd9pqy1eOLn
+         5i5/6+Ef6EQOasiAFbUO8nxleisyRTsRk3UnxsPLiXgZYMGQoL2Cje1XBT545aFIFi
+         48dls6Zufdr+56jCeRX83yMTZSWmVSr9rj7vDJGLgvos/Jn8thHEHg2FAHRkQmr0DI
+         9767UEdpWRCsOrf+TP6Vy9rOam6qeG6A6ykTrwouDSl7UUiquSeq02V0roHA/mioUa
+         YgvPrzrPvgWzg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIbOgD384769;
-        Fri, 19 Apr 2019 11:37:24 -0700
-Date:   Fri, 19 Apr 2019 11:37:24 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JIcCZ2384872;
+        Fri, 19 Apr 2019 11:38:12 -0700
+Date:   Fri, 19 Apr 2019 11:38:12 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
-Message-ID: <tip-41bef31d0abe29b5888b33b526cacc8a30795318@git.kernel.org>
-Cc:     jkosina@suse.cz, linux-kernel@vger.kernel.org, jbaron@akamai.com,
-        mhiramat@kernel.org, dvlasenk@redhat.com, bristot@redhat.com,
-        mingo@kernel.org, hpa@zytor.com, brgerst@gmail.com,
-        swood@redhat.com, peterz@infradead.org, acme@redhat.com,
-        luto@kernel.org, alexander.shishkin@linux.intel.com,
-        jpoimboe@redhat.com, crecklin@redhat.com, tglx@linutronix.de,
-        jolsa@redhat.com, rostedt@goodmis.org,
-        torvalds@linux-foundation.org, williams@redhat.com,
-        gregkh@linuxfoundation.org, mtosatti@redhat.com, bp@alien8.de
-Reply-To: peterz@infradead.org, swood@redhat.com, brgerst@gmail.com,
-          hpa@zytor.com, mingo@kernel.org, bristot@redhat.com,
-          alexander.shishkin@linux.intel.com, luto@kernel.org,
-          acme@redhat.com, linux-kernel@vger.kernel.org, jkosina@suse.cz,
-          dvlasenk@redhat.com, mhiramat@kernel.org, jbaron@akamai.com,
-          mtosatti@redhat.com, gregkh@linuxfoundation.org,
-          williams@redhat.com, bp@alien8.de, jolsa@redhat.com,
-          tglx@linutronix.de, crecklin@redhat.com, jpoimboe@redhat.com,
-          torvalds@linux-foundation.org, rostedt@goodmis.org
-In-Reply-To: <1e758cd3b2206be96091a57a17b26585e94792b6.1545228276.git.bristot@redhat.com>
-References: <1e758cd3b2206be96091a57a17b26585e94792b6.1545228276.git.bristot@redhat.com>
+Message-ID: <tip-ddbefdc167f3d492036e6b0babd11a350c3bd3e3@git.kernel.org>
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com, crecklin@redhat.com,
+        peterz@infradead.org, gregkh@linuxfoundation.org, jkosina@suse.cz,
+        mhiramat@kernel.org, jolsa@redhat.com, bristot@redhat.com,
+        williams@redhat.com, jbaron@akamai.com, brgerst@gmail.com,
+        luto@kernel.org, acme@redhat.com, swood@redhat.com,
+        rostedt@goodmis.org, mtosatti@redhat.com, dvlasenk@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, bp@alien8.de
+Reply-To: linux-kernel@vger.kernel.org, bp@alien8.de, williams@redhat.com,
+          bristot@redhat.com, brgerst@gmail.com, jbaron@akamai.com,
+          hpa@zytor.com, torvalds@linux-foundation.org, mingo@kernel.org,
+          mhiramat@kernel.org, jkosina@suse.cz, gregkh@linuxfoundation.org,
+          rostedt@goodmis.org, mtosatti@redhat.com, jolsa@redhat.com,
+          dvlasenk@redhat.com, alexander.shishkin@linux.intel.com,
+          swood@redhat.com, acme@redhat.com, luto@kernel.org,
+          jpoimboe@redhat.com, tglx@linutronix.de, crecklin@redhat.com,
+          peterz@infradead.org
+In-Reply-To: <296d5a75c4aee4a957ee7923127c0604903f9daa.1545228276.git.bristot@redhat.com>
+References: <296d5a75c4aee4a957ee7923127c0604903f9daa.1545228276.git.bristot@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/alternatives] jump_label: Add the
- jump_label_can_update_check() helper
-Git-Commit-ID: 41bef31d0abe29b5888b33b526cacc8a30795318
+Subject: [tip:x86/alternatives] x86/jump_label: Move checking code away from
+ __jump_label_transform()
+Git-Commit-ID: ddbefdc167f3d492036e6b0babd11a350c3bd3e3
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -82,17 +82,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  41bef31d0abe29b5888b33b526cacc8a30795318
-Gitweb:     https://git.kernel.org/tip/41bef31d0abe29b5888b33b526cacc8a30795318
+Commit-ID:  ddbefdc167f3d492036e6b0babd11a350c3bd3e3
+Gitweb:     https://git.kernel.org/tip/ddbefdc167f3d492036e6b0babd11a350c3bd3e3
 Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
-AuthorDate: Fri, 21 Dec 2018 11:27:27 +0100
+AuthorDate: Fri, 21 Dec 2018 11:27:28 +0100
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Fri, 19 Apr 2019 19:37:34 +0200
 
-jump_label: Add the jump_label_can_update_check() helper
+x86/jump_label: Move checking code away from __jump_label_transform()
 
-Move the check of if a jump_entry is valid to a specific function. No
-functional change.
+Move the check of the current code, before updating an entry, to specialized
+functions. No changes in the method, only code relocation.
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -116,56 +116,99 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Scott Wood <swood@redhat.com>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1e758cd3b2206be96091a57a17b26585e94792b6.1545228276.git.bristot@redhat.com
+Link: http://lkml.kernel.org/r/296d5a75c4aee4a957ee7923127c0604903f9daa.1545228276.git.bristot@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/jump_label.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ arch/x86/kernel/jump_label.c | 60 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 288d630da22d..456c0d7cbb5b 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -374,22 +374,32 @@ static enum jump_label_type jump_label_type(struct jump_entry *entry)
- 	return enabled ^ branch;
+diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+index f99bd26bd3f1..e443c43478eb 100644
+--- a/arch/x86/kernel/jump_label.c
++++ b/arch/x86/kernel/jump_label.c
+@@ -35,16 +35,53 @@ static void bug_at(unsigned char *ip, int line)
+ 	BUG();
  }
  
-+bool jump_label_can_update_check(struct jump_entry *entry, bool init)
++static inline void __jump_label_trans_check_enable(struct jump_entry *entry,
++						   enum jump_label_type type,
++						   const unsigned char *ideal_nop,
++						   int init)
 +{
-+	/*
-+	 * An entry->code of 0 indicates an entry which has been
-+	 * disabled because it was in an init text area.
-+	 */
-+	if (init || !jump_entry_is_init(entry)) {
-+		if (!kernel_text_address(jump_entry_code(entry))) {
-+			WARN_ONCE(1, "can't patch jump_label at %pS",
-+				  (void *)jump_entry_code(entry));
-+			return 0;
-+		}
-+		return 1;
++	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
++	const void *expect;
++	int line;
++
++	if (init) {
++		expect = default_nop; line = __LINE__;
++	} else {
++		expect = ideal_nop; line = __LINE__;
 +	}
-+	return 0;
++
++	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
++		bug_at((void *)jump_entry_code(entry), line);
 +}
 +
- static void __jump_label_update(struct static_key *key,
- 				struct jump_entry *entry,
- 				struct jump_entry *stop,
- 				bool init)
++static inline void __jump_label_trans_check_disable(struct jump_entry *entry,
++						    enum jump_label_type type,
++						    union jump_code_union *jmp,
++						    int init)
++{
++	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
++	const void *expect;
++	int line;
++
++	if (init) {
++		expect = default_nop; line = __LINE__;
++	} else {
++		expect = jmp->code; line = __LINE__;
++	}
++
++	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
++		bug_at((void *)jump_entry_code(entry), line);
++}
++
++
+ static void __ref __jump_label_transform(struct jump_entry *entry,
+ 					 enum jump_label_type type,
+ 					 void *(*poker)(void *, const void *, size_t),
+ 					 int init)
  {
- 	for_each_label_entry(key, entry, stop) {
--		/*
--		 * An entry->code of 0 indicates an entry which has been
--		 * disabled because it was in an init text area.
--		 */
--		if (init || !jump_entry_is_init(entry)) {
--			if (kernel_text_address(jump_entry_code(entry)))
--				arch_jump_label_transform(entry, jump_label_type(entry));
--			else
--				WARN_ONCE(1, "can't patch jump_label at %pS",
--					  (void *)jump_entry_code(entry));
-+		if (jump_label_can_update_check(entry, init)) {
-+			arch_jump_label_transform(entry,
-+						  jump_label_type(entry));
- 		}
+ 	union jump_code_union jmp;
+-	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
+ 	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
+-	const void *expect, *code;
+-	int line;
++	const void *code;
+ 
+ 	jmp.jump = 0xe9;
+ 	jmp.offset = jump_entry_target(entry) -
+@@ -54,26 +91,13 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
+ 		poker = text_poke_early;
+ 
+ 	if (type == JUMP_LABEL_JMP) {
+-		if (init) {
+-			expect = default_nop; line = __LINE__;
+-		} else {
+-			expect = ideal_nop; line = __LINE__;
+-		}
+-
++		__jump_label_trans_check_enable(entry, type, ideal_nop, init);
+ 		code = &jmp.code;
+ 	} else {
+-		if (init) {
+-			expect = default_nop; line = __LINE__;
+-		} else {
+-			expect = &jmp.code; line = __LINE__;
+-		}
+-
++		__jump_label_trans_check_disable(entry, type, &jmp, init);
+ 		code = ideal_nop;
  	}
- }
+ 
+-	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
+-		bug_at((void *)jump_entry_code(entry), line);
+-
+ 	/*
+ 	 * Make text_poke_bp() a default fallback poker.
+ 	 *
