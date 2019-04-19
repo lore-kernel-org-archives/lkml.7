@@ -2,81 +2,130 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D11C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E427C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D563F20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05CBD20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfDSTBY (ORCPT
+        id S1728889AbfDSTB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:01:24 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:38444 "EHLO
+        Fri, 19 Apr 2019 15:01:29 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:38526 "EHLO
         mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbfDSTBU (ORCPT
+        with ESMTP id S1727478AbfDSTB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:01:20 -0400
-Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 646EC3AAF05;
-        Fri, 19 Apr 2019 08:00:20 +0000 (UTC)
-X-Originating-IP: 109.212.207.226
-Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 830EDFF809;
-        Fri, 19 Apr 2019 08:00:19 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 6/8] rtc: ep93xx: use .set_time
-Date:   Fri, 19 Apr 2019 10:00:03 +0200
-Message-Id: <20190419080005.16138-6-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190419080005.16138-1-alexandre.belloni@bootlin.com>
-References: <20190419080005.16138-1-alexandre.belloni@bootlin.com>
+        Fri, 19 Apr 2019 15:01:27 -0400
+Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 808EA3A97D4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 17:10:59 +0000 (UTC)
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B8B90C000A;
+        Fri, 19 Apr 2019 17:10:54 +0000 (UTC)
+Message-ID: <1fcd1b7b1b52e67e4f0a28fca567bf3243fe0ada.camel@bootlin.com>
+Subject: Re: [linux-sunxi] [PATCH] drm/sun4i: Unbind components before
+ releasing DRM and mem at master unbind
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Fri, 19 Apr 2019 19:10:53 +0200
+In-Reply-To: <CAGb2v64iFwqPJ-me2KOWUjGuObg2brjRNvD_pkPw98Y60hnwQg@mail.gmail.com>
+References: <20190419080235.24396-1-paul.kocialkowski@bootlin.com>
+         <CAGb2v64iFwqPJ-me2KOWUjGuObg2brjRNvD_pkPw98Y60hnwQg@mail.gmail.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use .set_time instead of the deprecated .set_mmss.
+Hi,
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/rtc-ep93xx.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Fri, 2019-04-19 at 09:02 -0700, Chen-Yu Tsai wrote:
+> On Fri, Apr 19, 2019 at 1:03 AM Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+> > Our components may still be using the DRM device driver (if only to
+> > access our driver's private data), so make sure to unbind them before
+> > the final drm_dev_put.
+> > 
+> > Also release our resserved memory adter unbind to match reverse
+> 
+> typos...
 
-diff --git a/drivers/rtc/rtc-ep93xx.c b/drivers/rtc/rtc-ep93xx.c
-index 60e390c6ef06..a243bd85b842 100644
---- a/drivers/rtc/rtc-ep93xx.c
-+++ b/drivers/rtc/rtc-ep93xx.c
-@@ -63,9 +63,10 @@ static int ep93xx_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	return 0;
- }
- 
--static int ep93xx_rtc_set_mmss(struct device *dev, unsigned long secs)
-+static int ep93xx_rtc_set_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct ep93xx_rtc *ep93xx_rtc = dev_get_platdata(dev);
-+	unsigned long secs = rtc_tm_to_time64(tm);
- 
- 	writel(secs + 1, ep93xx_rtc->mmio_base + EP93XX_RTC_LOAD);
- 	return 0;
-@@ -85,7 +86,7 @@ static int ep93xx_rtc_proc(struct device *dev, struct seq_file *seq)
- 
- static const struct rtc_class_ops ep93xx_rtc_ops = {
- 	.read_time	= ep93xx_rtc_read_time,
--	.set_mmss	= ep93xx_rtc_set_mmss,
-+	.set_time	= ep93xx_rtc_set_time,
- 	.proc		= ep93xx_rtc_proc,
- };
- 
+I'll probably spin up a v2 to fix them, they annoy me as well.
+
+> > creation order.
+> > 
+> > Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> > index 843b86661833..29258b404e54 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> > @@ -149,10 +149,11 @@ static void sun4i_drv_unbind(struct device *dev)
+> >         drm_kms_helper_poll_fini(drm);
+> >         drm_atomic_helper_shutdown(drm);
+> >         drm_mode_config_cleanup(drm);
+> > -       of_reserved_mem_device_release(dev);
+> > -       drm_dev_put(drm);
+> > 
+> >         component_unbind_all(dev, NULL);
+> > +       of_reserved_mem_device_release(dev);
+> 
+> You should probably mention this change in the commit log as well.
+
+That's what I meant with the line that has typos. Maybe I should make
+it slightly more explicit as:
+
+Also released our reserved memory after component unbind instead of
+before to match reverse creation order.
+
+What do you think?
+
+> Otherwise,
+> 
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+
+Thanks for the review!
+
+Cheers,
+
+Paul
+
+> > +
+> > +       drm_dev_put(drm);
+> >  }
+> > 
+> >  static const struct component_master_ops sun4i_drv_master_ops = {
+> > --
+> > 2.21.0
+> > 
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > For more options, visit https://groups.google.com/d/optout.
 -- 
-2.20.1
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
