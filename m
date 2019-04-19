@@ -2,992 +2,742 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA0EC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C589C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6197020449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3374A204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555698647;
+	bh=bsvgMdQ7aqFTiojxDyHNZx6CN5bAzlDRt89hWgYyD/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DvwwaYVx3TUXGduPSSI2tIK/ahvZqVkbGUQSgqrIxPaZG/UnFjwPwMY2mzZpzwn62
+	 BxIZYVLOtWMnkRKp08IeW9KEb3MIFGSyPYP2AEtB4LwTulpN8cxcat2vfXUyZxU5wt
+	 zzDFzd+Rtgt38YTouag+Rukkpn0Dx40UDUoyw3JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfDSSam (ORCPT
+        id S1728095AbfDSSaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:30:42 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.116]:37774 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727397AbfDSSaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:30:35 -0400
-Received: from [67.219.246.198] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-c.us-east-1.aws.symcld.net id EE/D0-24715-3E1B9BC5; Fri, 19 Apr 2019 11:32:51 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRWlGSWpSXmKPExsWS8eIht+7jjTt
-  jDBZ9lLbYdZnDYsbeB8wW84+cY7X4ff4vs8Wmx9dYLZpXn2O2uLxrDpvF0usXmSxOtbxgsWjd
-  e4Tdgcvjavsudo8189YweizYVOpx8eMxZo9NqzrZPDYvqfc4P2Mho8fnTXIBHFGsmXlJ+RUJr
-  Bn7/9UUTGtirNi4aC17A+OKzC5GLg4hgQ4miZcnO5khnPmMEjvPPGTtYuTkYBNQkzg5+x4rSE
-  JE4A6jxOSN18GqmAUmMUo0fLnCDFIlLOAqMWnJHhYQm0VAVaJ1/gsmEJtXwFni/8VrYDUSAnI
-  SN891Mk9g5FzAyLCK0SypKDM9oyQ3MTNH19DAQNfQ0EjXRNfQxEAvsUo3Wa+0WDc1sbhE11Av
-  sbxYr7gyNzknRS8vtWQTIzDQUgpYenYwHluafohRkoNJSZQ3t3xnjBBfUn5KZUZicUZ8UWlOa
-  vEhRhkODiUJXmtg4AoJFqWmp1akZeYAQx4mLcHBoyTC+2IDUJq3uCAxtzgzHSJ1ilFRSpzXF6
-  RPACSRUZoH1waLs0uMslLCvIwMDAxCPAWpRbmZJajyrxjFORiVhHl/gIznycwrgZv+CmgxE9D
-  iKTqrQRaXJCKkpBoY2W10fVl+3jjWpv87oy41JchozaMdrU0KkbVTxD51fHmt8dxiz/EFu9ew
-  3Zm1zTVJY6N2H2+trW2SKINtTdbKvvDglyWVCfa7i2bcrVvP6CmSsrD81PSv+tWL/mr3fvopJ
-  fRSZ+53vUr1uOUt97oXVl7WmNTXteZOzZbmp/ULVynOuRN5pExdiaU4I9FQi7moOBEA8tyxPa
-  4CAAA=
-X-Env-Sender: pengms1@lenovo.com
-X-Msg-Ref: server-2.tower-406.messagelabs.com!1555673571!6170547!1
-X-Originating-IP: [104.232.225.11]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13329 invoked from network); 19 Apr 2019 11:32:51 -0000
-Received: from unknown (HELO aesmtp.lenovo.com) (104.232.225.11)
-  by server-2.tower-406.messagelabs.com with DHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 19 Apr 2019 11:32:51 -0000
-Received: from smtpinternal.lenovo.com (unknown [10.96.80.15])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Apr 2019 14:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727775AbfDSS3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:29:18 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 1960AC81E290CCBCF081;
-        Fri, 19 Apr 2019 07:21:23 -0400 (EDT)
-Received: from localhost.localdomain (unknown [10.245.100.154])
-        by Forcepoint Email with ESMTP id 422D026D4E03A77C04BD;
-        Fri, 19 Apr 2019 19:32:46 +0800 (CST)
-From:   Andrew Peng <pengms1@lenovo.com>
-To:     benjaminfair@google.com, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        andrew@aj.id.au, mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     pengms1@lenovo.com, liuyj19@lenovo.com, dukh@lenovo.com,
-        liuyh21@lenovo.com, hsung1@lenovo.com, joel@jms.id.au,
-        openbmc@lists.ozlabs.org
-Subject: [PATCH] [PATCH v1] ARM: dts: aspeed: Adding Lenovo Hr630 BMC
-Date:   Fri, 19 Apr 2019 19:32:36 +0800
-Message-Id: <1555673556-419097-1-git-send-email-pengms1@lenovo.com>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id 08BF221B26;
+        Fri, 19 Apr 2019 13:59:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555682360;
+        bh=bsvgMdQ7aqFTiojxDyHNZx6CN5bAzlDRt89hWgYyD/E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bBzLenvX+L+gQ68xxOVDqua6nXUqCoVUUQ5mDAVLqbJ8HEjrY9KhZMBCcfcWCkpPX
+         gNhoY1llreuKKXEWW9QQF1Wgacpn9sjJU6dLlWgvAMOEJ1YTm3fkEKLVDTwAX8ubdy
+         +/CGVNWwxDdSCOmICARlQo6WJKXrS5fW68O/UDLQ=
+Date:   Fri, 19 Apr 2019 08:59:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>,
+        Keith Busch <keith.busch@intel.com>
+Subject: Re: [PATCH v1 1/5] PCI/IOV: Add support to verify PF/VF spec
+ compliance
+Message-ID: <20190419135918.GC173520@google.com>
+References: <cover.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <317aaed09820db65c21452663bed33468f874d3a.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <317aaed09820db65c21452663bed33468f874d3a.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initial introduction of Lenovo Hr630 family equipped with
-Aspeed 2500 BMC SoC. Hr630 is a x86 server development kit
-with a ASPEED ast2500 BMC manufactured by Lenovo.
-Specifically, This adds the Hr630 platform device tree file
-used by the Hr630 BMC machines.
+Hi Kuppuswamy,
 
-This also adds an entry of Hr630 device tree file in Makefile
+On Wed, Mar 06, 2019 at 02:11:14PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> PF/VF implementation must comply with PCIe specification as
+> defined in r4.0, sec 9.3.4, 9.3.5, 9.3.6 and 9.3.7. And if
+> it does not comply, return error and skip PF/VF device
+> creation.
 
-Signed-off-by: Andrew Peng <pengms1@lenovo.com>
-Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
-Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
----
- arch/arm/boot/dts/Makefile                    |   3 +-
- arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts | 884 ++++++++++++++++++++++++++
- 2 files changed, 886 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+As far as I can tell, this patch basically looks for excuses not to
+enable SR-IOV.  Does this actually solve a problem?  Are there
+non-compliant devices out there that blow up if we enable SR-IOV?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4f5aea..375e53b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1261,4 +1261,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-opp-witherspoon.dtb \
- 	aspeed-bmc-opp-zaius.dtb \
- 	aspeed-bmc-portwell-neptune.dtb \
--	aspeed-bmc-quanta-q71l.dtb
-+	aspeed-bmc-quanta-q71l.dtb \
-+	aspeed-bmc-lenovo-hr630.dtb
-diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
-new file mode 100644
-index 0000000..ca80509
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
-@@ -0,0 +1,884 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//"Copyright ? 2019-present Lenovo
-+//Licensed under GPL v2, see COPYING file for details."
-+
-+
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "HR630 BMC";
-+	compatible = "lenovo,hr630-bmc", "aspeed,ast2500";
-+
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x00100000>; /* 1M */
-+		};
-+
-+		gfx_memory: framebuffer {
-+			size = <0x01000000>;
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		heartbeat {
-+			gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		fault {
-+			gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-+		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
-+		<&adc 8>, <&adc 9>, <&adc 10>,
-+		<&adc 12>, <&adc 13>, <&adc 14>;
-+	};
-+
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <50000000>;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&vuart {
-+	status = "okay";
-+};
-+
-+&ibt {
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&mac1 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-+};
-+
-+&adc {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	/* temp1 inlet */
-+	tmp75@4e {
-+		compatible = "national,lm75";
-+		reg = <0x4e>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	/* temp2 outlet */
-+	tmp75@4d {
-+		compatible = "national,lm75";
-+		reg = <0x4d>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+	/*
-+	 *eeprom@50 {
-+	 *	compatible = "atmel,24c08";
-+	 *	reg = <0x50>;
-+	 *	pagesize = <16>;
-+	 *};
-+	 */
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+	/*	Slot 0,
-+	 *	Slot 1,
-+	 *	Slot 2,
-+	 *	Slot 3
-+	 */
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9545";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;	/* may use mux@70 next. */
-+
-+		i2c_rbp: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c_fbp1: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		i2c_fbp2: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		i2c_fbp3: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+
-+	/*	Slot 0,
-+	 *	Slot 1,
-+	 *	Slot 2,
-+	 *	Slot 3
-+	 */
-+	i2c-switch@76 {
-+		compatible = "nxp,pca9546";
-+		reg = <0x76>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;  /* may use mux@76 next. */
-+
-+		i2c_riser2: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c_pcie4: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		i2c_riser1: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		i2c_ocp: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+
-+	eeprom@57 {
-+		compatible = "atmel,24c256";
-+		reg = <0x57>;
-+		pagesize = <16>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+};
-+
-+/*
-+ * Enable port A as device (via the virtual hub) and port B as
-+ * host by default on the eval board. This can be easily changed
-+ * by replacing the override below with &ehci0 { ... } to enable
-+ * host on both ports.
-+ */
-+&vhub {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&uhci {
-+	status = "okay";
-+};
-+
-+&gfx {
-+	status = "okay";
-+	memory-region = <&gfx_memory>;
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default
-+	&pinctrl_pwm1_default
-+	&pinctrl_pwm2_default
-+	&pinctrl_pwm3_default
-+	&pinctrl_pwm4_default
-+	&pinctrl_pwm5_default
-+	&pinctrl_pwm6_default>;
-+
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+
-+	fan@2 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+
-+	fan@3 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
-+	};
-+
-+	fan@4 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
-+	};
-+
-+	fan@5 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
-+	};
-+
-+	fan@6 {
-+		reg = <0x03>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
-+	};
-+
-+	fan@7 {
-+		reg = <0x03>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
-+	};
-+
-+	fan@8 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
-+	};
-+
-+	fan@9 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
-+	};
-+
-+	fan@10 {
-+		reg = <0x05>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
-+	};
-+
-+	fan@11 {
-+		reg = <0x05>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
-+	};
-+
-+	fan@12 {
-+		reg = <0x06>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
-+	};
-+
-+	fan@13 {
-+		reg = <0x06>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
-+	};
-+};
-+
-+&gpio {
-+
-+	pin_gpio_a0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(A, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "MAC1_INT_N";
-+	};
-+
-+	pin_gpio_a1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(A, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "MEZZ_C_PRESENT_N";
-+	};
-+
-+	pin_gpio_a2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(A, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU1_PRST";
-+	};
-+
-+	pin_gpio_a3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU2_PRST";
-+	};
-+
-+	pin_gpio_b5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "IRQ_BMC_PCH_SMI_LPC_N";
-+	};
-+
-+	pin_gpio_f0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "IRQ_BMC_PCH_NMI_R";
-+	};
-+
-+	pin_gpio_f1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_CPU1_DISABLE_COD_N";
-+	};
-+
-+	pin_gpio_f2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "SMB_LAN_ALERT_N_MEZZ";
-+	};
-+
-+	pin_gpio_f3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "I2C_BUS0_RST_OUT_N";
-+	};
-+
-+	pin_gpio_f4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "FM_SKT0_FAULT_LED";
-+	};
-+
-+	pin_gpio_f5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 5) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "FM_SKT1_FAULT_LED";
-+	};
-+
-+	pin_gpio_f6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "IRQ_BMC_CPLD_NMI";
-+	};
-+
-+	pin_gpio_f7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(F, 7) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU2_ALERT_N";
-+	};
-+
-+	pin_gpio_g0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_CPU_ERR2_LVT3_N";
-+	};
-+
-+	pin_gpio_g1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_CPU_MSMI_CATERR_LVT3_N";
-+	};
-+
-+	pin_gpio_g2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_PCH_BMC_THERMTRIP_N";
-+	};
-+
-+	pin_gpio_g3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 3) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "BMC_I2C_BUS7_INT_N";
-+	};
-+
-+	pin_gpio_g4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FAN_PWR_CTL_N";
-+	};
-+
-+	pin_gpio_g5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 5) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "NFC_FD_N";
-+	};
-+
-+	pin_gpio_g6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "IRQ_NMI_EVENT_N";
-+	};
-+
-+	pin_gpio_g7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "RST_BMC_PCIE_I2CMUX_N";
-+	};
-+
-+	pin_gpio_h0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU1_EPOW_N_R";
-+	};
-+
-+	pin_gpio_h1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU2_EPOW_N_R";
-+	};
-+
-+	pin_gpio_h2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "PSU1_FFS_N_R";
-+	};
-+
-+	pin_gpio_h3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "PSU2_FFS_N_R";
-+	};
-+
-+	pin_gpio_h4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU1_THROTTLE_N_R";
-+	};
-+
-+	pin_gpio_h5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 5) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU2_THROTTLE_N_R";
-+	};
-+
-+	pin_gpio_h6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU1_SMB_RESET_N";
-+	};
-+
-+	pin_gpio_h7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU2_SMB_RESET_N";
-+	};
-+
-+	pin_gpio_i1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(I, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FP_PWR_BTN_N";
-+	};
-+
-+	pin_gpio_i2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(I, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "BIOS_RCVR_N";
-+	};
-+
-+	pin_gpio_i3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_INTRUDED_COVER";
-+	};
-+
-+	pin_gpio_j2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_BIOS_UPDATE_N";
-+	};
-+
-+	pin_gpio_j3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "RST_BMC_HDD_I2CMUX_N";
-+	};
-+
-+	pin_gpio_q4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Q, 4) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "MEZZ_A_PRESENT_N";
-+	};
-+
-+	pin_gpio_q5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Q, 5) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "VGA_FRONT_PRES_N";
-+	};
-+
-+	pin_gpio_q6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Q, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "I2C_RISER1_INT_N";
-+	};
-+
-+	pin_gpio_q7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "NCSI_CABLE_DET_N";
-+	};
-+
-+	pin_gpio_r0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FP_RST_BTN_N";
-+	};
-+
-+	pin_gpio_r2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "HDDSIG1_DETECT_N";
-+	};
-+
-+	pin_gpio_r3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 3) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "HDDSIG2_DETECT_N";
-+	};
-+
-+	pin_gpio_r4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 4) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "HDDSIG3_DETECT_N";
-+	};
-+
-+	pin_gpio_r5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(R, 5) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "VIDEO_CABLE_DETECT_N";
-+	};
-+
-+	pin_gpio_s0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "BMC_PS_RAPIDON_WAKE_R_N";
-+	};
-+
-+	pin_gpio_s1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "HOST_TPM_PP_BUF";
-+	};
-+
-+	pin_gpio_s2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "BMC_VGA_SW";
-+	};
-+
-+	pin_gpio_s3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 3) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "IRQ_SML0_ALERT_MUX_N";
-+	};
-+
-+	pin_gpio_s4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 4) GPIO_ACTIVE_HIGH>;
-+		output;
-+		line-name = "VBAT_EN_N";
-+	};
-+
-+	pin_gpio_s5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 5) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "BMC_HW_STRAP_4";
-+	};
-+
-+	pin_gpio_s6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "PU_BMC_GPIOS6";
-+	};
-+
-+	pin_gpio_s7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "I2C_BUS7_RESET_N";
-+	};
-+
-+	pin_gpio_y0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Y, 0) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "BMC_NCSI_MUX_CTL_S0";
-+	};
-+
-+	pin_gpio_y1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Y, 1) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "BMC_NCSI_MUX_CTL_S1";
-+	};
-+
-+	pin_gpio_y2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Y, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "UID_ALERT_N";
-+	};
-+
-+	pin_gpio_z0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 0) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "I2C_RISER2_INT_N";
-+	};
-+
-+	pin_gpio_z2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "I2C_RISER2_RESET_N";
-+	};
-+
-+	pin_gpio_z3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "FM_BMC_PCH_SCI_LPC_N";
-+	};
-+
-+	pin_gpio_z4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 4) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "BMC_HW_STRAP_17";
-+	};
-+
-+	pin_gpio_z6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "BMC_HW_STRAP_20";
-+	};
-+
-+	pin_gpio_z7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(Z, 7) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "BMC_POST_CMPLT_N";
-+	};
-+
-+	pin_gpio_aa0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "HOST_BMC_USB_SEL";
-+	};
-+
-+	pin_gpio_aa1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "PSU1_ALERT_N";
-+	};
-+
-+	pin_gpio_aa2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_PVCCIN_CPU0_PWR_IN_ALERT_N";
-+	};
-+
-+	pin_gpio_aa3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_PVCCIN_CPU1_PWR_IN_ALERT_N";
-+	};
-+
-+	pin_gpio_aa4 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "USB_CABLE_DETECT_N";
-+	};
-+
-+	pin_gpio_aa5 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 5) GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "I2C_BUS1_RST_OUT_N";
-+	};
-+
-+	pin_gpio_aa6 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 6) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "IRQ_SMI_ACTIVE_N";
-+	};
-+
-+	pin_gpio_aa7 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_BIOS_POST_CMPLT_N";
-+	};
-+
-+	pin_gpio_ab0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AB, 0) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FM_TPM_MOD_PRES_N";
-+	};
-+
-+	pin_gpio_ab1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AB, 1) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "FORCE_NMI_SW_FPGA_N";
-+	};
-+
-+	pin_gpio_ab2 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AB, 2) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "1U_2U_PCBA_SEL_R";
-+	};
-+
-+	pin_gpio_ab3 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(AB, 3) GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "INTRUDED_PRES_N";
-+	};
-+};
--- 
-2.7.4
+I'm not sure we should just go looking for things that are broken
+unless the breakage directly affects our ability to use the device.
 
+Bjorn
+
+> Also add a command line parameter support to skip error when
+> PF/VF spec validation failed.
+> 
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |   2 +
+>  drivers/pci/iov.c                             | 468 ++++++++++++++++++
+>  drivers/pci/pci.c                             |   2 +
+>  drivers/pci/pci.h                             |   6 +
+>  include/linux/pci.h                           |  30 +-
+>  include/uapi/linux/pci_regs.h                 |  15 +-
+>  6 files changed, 520 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 858b6c0b9a15..9e84b5f9c58d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3363,6 +3363,8 @@
+>  				bridges without forcing it upstream. Note:
+>  				this removes isolation between devices and
+>  				may put more devices in an IOMMU group.
+> +		noiov_iverror	Don't skip PCIe device enumeration, if VF/PF
+> +				function is not PCIe specification compliant.
+>  
+>  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
+>  			Management.
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 3aa115ed3a65..9b121a649b90 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -17,6 +17,14 @@
+>  
+>  #define VIRTFN_ID_LEN	16
+>  
+> +/* IOV invalid error */
+> +static int pci_iov_iverror = 1;
+> +
+> +void pci_noiov_iverror(void)
+> +{
+> +	pci_iov_iverror = 0;
+> +}
+> +
+>  int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
+>  {
+>  	if (!dev->is_physfn)
+> @@ -136,6 +144,455 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
+>  	physfn->sriov->cfg_size = pci_cfg_space_size(virtfn);
+>  }
+>  
+> +static int pci_iov_physfn_valid(struct pci_dev *pdev)
+> +{
+> +	int status = 0, cap;
+> +
+> +	if (!pdev->is_physfn)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.9, PF must not implement MRIOV
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_MRIOV);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		pdev->invalid_cap |= PCI_IOV_INVALID_MRIOV;
+> +		dev_warn(&pdev->dev, "%s: %s %s\n", "PF", "MRIOV Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	return status;
+> +}
+> +
+> +static int pci_iov_virtfn_valid(struct pci_dev *vdev)
+> +{
+> +	struct pci_dev *pdev = vdev->physfn;
+> +	u16 vreg16, preg16;
+> +	u32 vreg32, preg32;
+> +	u64 vreg64, preg64;
+> +	int status = 0, cap;
+> +
+> +	if (!vdev->is_virtfn)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.4.1.3, in Command register, I/O Space
+> +	 * Enable, Memory Space Enable and Interrupt Disable bits should
+> +	 * be tied to 0 for VFs.
+> +	 */
+> +	pci_read_config_word(vdev, PCI_COMMAND, &vreg16);
+> +	if (vreg16 & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+> +		      PCI_COMMAND_INTX_DISABLE)) {
+> +		dev_warn(&vdev->dev, "%s: %s\n", "VF",
+> +			 "Non compilaint value in COMMAND register");
+> +		status = -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.4.1.6, Class Code value should match
+> +	 * between PF and VF.
+> +	 */
+> +	pci_read_config_dword(vdev, PCI_CLASS_REVISION, &vreg32);
+> +	pci_read_config_dword(pdev, PCI_CLASS_REVISION, &preg32);
+> +	vreg32 = vreg32 >> 8;
+> +	preg32 = preg32 >> 8;
+> +	if (vreg32 != preg32) {
+> +		dev_warn(&vdev->dev, "%s: %s %x!=%x\n", "PF/VF",
+> +			 "Class Code mismatch", vreg32, preg32);
+> +		status = -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.4.1.13, Subsystem Vendor ID value should
+> +	 * match between PF and VF.
+> +	 */
+> +	pci_read_config_word(vdev, PCI_SUBSYSTEM_VENDOR_ID, &vreg16);
+> +	pci_read_config_word(pdev, PCI_SUBSYSTEM_VENDOR_ID, &preg16);
+> +	if (vreg16 != preg16) {
+> +		dev_warn(&vdev->dev, "%s: %s %x!=%x\n", "PF/VF",
+> +			 "Subsystem Vendor ID mismatch", vreg16, preg16);
+> +		status = -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced Allocation
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_capability(vdev, PCI_CAP_ID_EA);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_EA;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Enhanced Allocation Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Native PCIe
+> +	 * Enclosure Management (NPEM) Capability.
+> +	 */
+> +	cap = pci_find_capability(vdev, PCI_CAP_ID_NPEM);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_NPEM;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Native PCIe Native PCIe Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.1, VF must not implement Virtual Channel
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_VC);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_VC;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Virtual Channel Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.1, VF must not implement Multi Function
+> +	 * Virtual Channel Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MFVC);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_MFVC;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Multi Function VC Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.1, VF must not implement Virtual Channel(9)
+> +	 * Virtual Channel Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_VC9);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_VC9;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Virtual Channel(9) Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.2, VF can optionally implement Device
+> +	 * Serial Number Capability. But if it implements it, the value
+> +	 * should match the PF.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_DSN);
+> +	if (cap) {
+> +		pci_read_config_dword(vdev, cap + PCI_DSN_SNUR, &vreg32);
+> +		vreg64 = (u64)vreg32 << 32;
+> +		pci_read_config_dword(vdev, cap + PCI_DSN_SNLR, &vreg32);
+> +		vreg64 |= vreg32;
+> +		cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DSN);
+> +		if (cap) {
+> +			pci_read_config_dword(pdev, cap + PCI_DSN_SNUR,
+> +					      &preg32);
+> +			preg64 = (u64)preg32 << 32;
+> +			pci_read_config_dword(pdev, cap + PCI_DSN_SNLR,
+> +					      &preg32);
+> +			preg64 |= preg32;
+> +		}
+> +		if (!cap || vreg64 != preg64) {
+> +			status = -EINVAL;
+> +			vdev->invalid_cap |= PCI_IOV_INVALID_DSN;
+> +			dev_warn(&vdev->dev, "%s: %s\n", "PF/VF",
+> +				 "Device Serial Number mismatch");
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.3, VF must not implement Power Budgeting
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PWR);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PWR;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Power Budgeting Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.8, if VF implements Address Translation
+> +	 * Services (ATS) Extended Capability then corresponding PF should
+> +	 * also implement it.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_ATS);
+> +	if (cap) {
+> +		cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS);
+> +		if (!cap) {
+> +			status = -EINVAL;
+> +			vdev->invalid_cap |= PCI_IOV_INVALID_ATS;
+> +			dev_warn(&vdev->dev, "%s: %s\n", "PF/VF",
+> +				 "ATS Capability mismatch");
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement SRIOV
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_SRIOV);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_SRIOV;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF", "SRIOV Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.9, VF must not implement MRIOV
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MRIOV);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_MRIOV;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF", "MRIOV Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.10, if VF implements Multicast
+> +	 * Capability then corresponding PF should also implement it.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MCAST);
+> +	if (cap) {
+> +		cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_MCAST);
+> +		if (!cap) {
+> +			status = -EINVAL;
+> +			vdev->invalid_cap |= PCI_IOV_INVALID_MCAST;
+> +			dev_warn(&vdev->dev, "%s: %s\n", "PF/VF",
+> +				 "Multicast Capability mismatch");
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PRI);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PRI;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF", "PRI Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.4, VF must not implement Resizable BAR
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_REBAR);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_REBAR;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Resizable BAR Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.4, VF must not implement VF Resizable BAR
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_VREBAR);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_VREBAR;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "VF Resizable BAR Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.12, VF must not implement Dynamic Power
+> +	 * Allocation Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_DPA);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_DPA;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Dynamic Power Allocation Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Latency Tolerance
+> +	 * Reporting (LTR) Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_LTR);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_LTR;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Latency Tolerance Reporting Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Secondary PCIe
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_SECPCI);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_SECPCI;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Secondary PCIe Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Protocol
+> +	 * Multiplexing Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PMUX);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PMUX;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Protocol Multiplexing Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7.14, VF must not implement Process Address
+> +	 * Space ID (PASID) Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PASID);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PASID;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Process Address Space ID Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement L1 PM Substates
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_L1SS);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_L1SS;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "L1 PM Substates Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Precision Time
+> +	 * Measurement Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PTM);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PTM;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Precision Time Measurement",
+> +			 "Capability must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement PCI Express
+> +	 * over M-PHY Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MPHY);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_MPHY;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "PCI Express over M-PHY Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Data Link Feature
+> +	 * Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_DLF);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_DLF;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Data Link Feature Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Physical Layer 16.0
+> +	 * GT/s Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PL16);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PL16;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Physical Layer 16.0 GT/s Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	/*
+> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Physical Layer 16.0
+> +	 * GT/s Margining Capability.
+> +	 */
+> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PL16M);
+> +	if (cap) {
+> +		status = -EINVAL;
+> +		vdev->invalid_cap |= PCI_IOV_INVALID_PL16M;
+> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
+> +			 "Physical Layer 16.0 GT/s Margining Capability",
+> +			 "must not be implemented");
+> +	}
+> +
+> +	if (vdev->pcie_cap) {
+> +		/*
+> +		 * Per PCIe r4.0, sec 9.3.5.3, in VF device, Device
+> +		 * Capabilities Register Phantom Functions Supported
+> +		 * bit should be tied to 0 and Function Level Reset
+> +		 * Capability bit should be tied to 1.
+> +		 */
+> +		pcie_capability_read_dword(vdev, PCI_EXP_DEVCAP, &vreg32);
+> +		if (vreg32 & PCI_EXP_DEVCAP_PHANTOM) {
+> +			dev_warn(&vdev->dev, "%s: %s\n", "VF",
+> +				 "Phantom Functions Supported bit is invalid");
+> +			status = -EINVAL;
+> +		}
+> +		if (!(vreg32 & PCI_EXP_DEVCAP_FLR)) {
+> +			dev_warn(&vdev->dev, "%s: %s\n", "VF",
+> +				 "Function Level Reset bit is invalid");
+> +			status = -EINVAL;
+> +		}
+> +
+> +		/*
+> +		 * Per PCIe r4.0, sec 9.3.5.5, in VF device, Device Status
+> +		 * Register AUX Power Detected bit and Emergency Power
+> +		 * Reduction Detected bits should be tied to 0.
+> +		 */
+> +		pcie_capability_read_word(vdev, PCI_EXP_DEVSTA, &vreg16);
+> +		if (vreg16 & (PCI_EXP_DEVSTA_AUXPD | PCI_EXP_DEVSTA_EPRD)) {
+> +			dev_warn(&vdev->dev, "%s: %s\n", "VF",
+> +				 "Device Status register value is invalid");
+> +			status = -EINVAL;
+> +		}
+> +	}
+> +
+> +	return status;
+> +}
+> +
+>  int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  {
+>  	int i;
+> @@ -186,6 +643,11 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  
+>  	pci_device_add(virtfn, virtfn->bus);
+>  
+> +	/* Verify whether VF complies with spec */
+> +	rc = pci_iov_virtfn_valid(virtfn);
+> +	if (rc < 0 && pci_iov_iverror)
+> +		goto failed2;
+> +
+>  	sprintf(buf, "virtfn%u", id);
+>  	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
+>  	if (rc)
+> @@ -511,6 +973,12 @@ static int sriov_init(struct pci_dev *dev, int pos)
+>  
+>  	dev->sriov = iov;
+>  	dev->is_physfn = 1;
+> +
+> +	/* Verify whether PF complies with spec */
+> +	rc = pci_iov_physfn_valid(dev);
+> +	if (rc < 0 && pci_iov_iverror)
+> +		goto fail_max_buses;
+> +
+>  	rc = compute_max_vf_buses(dev);
+>  	if (rc)
+>  		goto fail_max_buses;
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index c25acace7d91..67fac64ba112 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6197,6 +6197,8 @@ static int __init pci_setup(char *str)
+>  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+>  				disable_acs_redir_param =
+>  					kstrdup(str + 18, GFP_KERNEL);
+> +			} else if (!strcmp(str, "noiov_iverror")) {
+> +				pci_noiov_iverror();
+>  			} else {
+>  				printk(KERN_ERR "PCI: Unknown option `%s'\n",
+>  						str);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 224d88634115..9cc04271b715 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -602,4 +602,10 @@ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+>  static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
+>  #endif
+>  
+> +#ifdef CONFIG_PCI_IOV
+> +void pci_noiov_iverror(void);
+> +#else
+> +static inline void pci_noiov_iverror(void) { }
+> +#endif
+> +
+>  #endif /* DRIVERS_PCI_H */
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 65f1d8c2f082..489fc0f68bb1 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -435,6 +435,7 @@ struct pci_dev {
+>  #ifdef CONFIG_PCI_MSI
+>  	const struct attribute_group **msi_irq_groups;
+>  #endif
+> +	u64	invalid_cap;	/* PF/VF: Invalid Capability bitmap*/
+>  	struct pci_vpd *vpd;
+>  #ifdef CONFIG_PCI_ATS
+>  	union {
+> @@ -446,7 +447,7 @@ struct pci_dev {
+>  	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
+>  #endif
+>  #ifdef CONFIG_PCI_PRI
+> -	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
+> +	u32		pri_reqs_alloc;	/* Number of PRI requests allocated */
+>  #endif
+>  #ifdef CONFIG_PCI_PASID
+>  	u16		pasid_features;
+> @@ -1953,6 +1954,33 @@ extern int pci_pci_problems;
+>  #define PCIPCI_ALIMAGIK		32	/* Need low latency setting */
+>  #define PCIAGP_FAIL		64	/* No PCI to AGP DMA */
+>  
+> +/* invalid_cap bitmap definitions*/
+> +#define PCI_IOV_INVALID_EA	BIT(0)	/* Invalid EA Capability */
+> +#define PCI_IOV_INVALID_NPEM	BIT(1)	/* Invalid NPEM Capability */
+> +#define PCI_IOV_INVALID_VC	BIT(2)	/* Invalid VC Capability */
+> +#define PCI_IOV_INVALID_MFVC	BIT(3)	/* Invalid MFVC Capability */
+> +#define PCI_IOV_INVALID_VC9	BIT(4)	/* Invalid VC9 Capability */
+> +#define PCI_IOV_INVALID_DSN	BIT(5)	/* Invalid DSN Capability */
+> +#define PCI_IOV_INVALID_PWR	BIT(6)	/* Invalid PWR Capability */
+> +#define PCI_IOV_INVALID_ATS	BIT(7)	/* Invalid ATS Capability */
+> +#define PCI_IOV_INVALID_SRIOV	BIT(8)	/* Invalid SRIOV Capability */
+> +#define PCI_IOV_INVALID_MRIOV	BIT(9)	/* Invalid MRIOV Capability */
+> +#define PCI_IOV_INVALID_MCAST	BIT(10)	/* Invalid MCAST Capability */
+> +#define PCI_IOV_INVALID_PRI	BIT(11)	/* Invalid PRI Capability */
+> +#define PCI_IOV_INVALID_REBAR	BIT(12)	/* Invalid REBAR Capability */
+> +#define PCI_IOV_INVALID_VREBAR	BIT(13)	/* Invalid VREBAR Capability */
+> +#define PCI_IOV_INVALID_DPA	BIT(14)	/* Invalid DPA Capability */
+> +#define PCI_IOV_INVALID_LTR	BIT(15)	/* Invalid LTR Capability */
+> +#define PCI_IOV_INVALID_SECPCI	BIT(16)	/* Invalid SECPCI Capability */
+> +#define PCI_IOV_INVALID_PMUX	BIT(17)	/* Invalid PMUX Capability */
+> +#define PCI_IOV_INVALID_PASID	BIT(18)	/* Invalid PASID Capability */
+> +#define PCI_IOV_INVALID_L1SS	BIT(19)	/* Invalid L1SS Capability */
+> +#define PCI_IOV_INVALID_PTM	BIT(20)	/* Invalid PTM Capability */
+> +#define PCI_IOV_INVALID_MPHY	BIT(21)	/* Invalid MPHY Capability */
+> +#define PCI_IOV_INVALID_DLF	BIT(22)	/* Invalid DLF Capability */
+> +#define PCI_IOV_INVALID_PL16	BIT(23)	/* Invalid PL16 Capability */
+> +#define PCI_IOV_INVALID_PL16M	BIT(24)	/* Invalid PL16M Capability */
+> +
+>  extern unsigned long pci_cardbus_io_size;
+>  extern unsigned long pci_cardbus_mem_size;
+>  extern u8 pci_dfl_cache_line_size;
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e1e9888c85e6..d377d48ee99c 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -227,7 +227,8 @@
+>  #define  PCI_CAP_ID_SATA	0x12	/* SATA Data/Index Conf. */
+>  #define  PCI_CAP_ID_AF		0x13	/* PCI Advanced Features */
+>  #define  PCI_CAP_ID_EA		0x14	/* PCI Enhanced Allocation */
+> -#define  PCI_CAP_ID_MAX		PCI_CAP_ID_EA
+> +#define  PCI_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
+> +#define  PCI_CAP_ID_MAX		PCI_CAP_ID_NPEM
+>  #define PCI_CAP_LIST_NEXT	1	/* Next capability in the list */
+>  #define PCI_CAP_FLAGS		2	/* Capability defined flags (16 bits) */
+>  #define PCI_CAP_SIZEOF		4
+> @@ -517,6 +518,7 @@
+>  #define  PCI_EXP_DEVSTA_URD	0x0008	/* Unsupported Request Detected */
+>  #define  PCI_EXP_DEVSTA_AUXPD	0x0010	/* AUX Power Detected */
+>  #define  PCI_EXP_DEVSTA_TRPND	0x0020	/* Transactions Pending */
+> +#define  PCI_EXP_DEVSTA_EPRD	0x0040	/* Emergency Power Reduction Detected */
+>  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V1	12	/* v1 endpoints without link end here */
+>  #define PCI_EXP_LNKCAP		12	/* Link Capabilities */
+>  #define  PCI_EXP_LNKCAP_SLS	0x0000000f /* Supported Link Speeds */
+> @@ -705,7 +707,12 @@
+>  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+> +#define PCI_EXT_CAP_ID_MPHY	0x20	/* PCI Express over M-PHY (M-PCIe) */
+> +#define PCI_EXT_CAP_ID_VREBAR	0x24	/* VF Resizable BAR */
+> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> +#define PCI_EXT_CAP_ID_PL16	0x26	/* Physical Layer 16.0 GT/s */
+> +#define PCI_EXT_CAP_ID_PL16M	0x27	/* Physical Layer 16.0 GT/s Margining*/
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL16M
+>  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -798,6 +805,10 @@
+>  #define PCI_CAP_VC_BASE_SIZEOF		0x10
+>  #define PCI_CAP_VC_PER_VC_SIZEOF	0x0C
+>  
+> +/* Device Serial Number */
+> +#define PCI_DSN_SNLR		0x04 /* Serial Number Lower Register */
+> +#define PCI_DSN_SNUR		0x08 /* Serial Number Upper Register */
+> +
+>  /* Power Budgeting */
+>  #define PCI_PWR_DSR		4	/* Data Select Register */
+>  #define PCI_PWR_DATA		8	/* Data Register */
+> -- 
+> 2.20.1
+> 
