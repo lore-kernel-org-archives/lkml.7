@@ -2,152 +2,166 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A8EC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8940BC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44BD204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F8120693
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:19:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tRFstsV7"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="X3lEXccy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfDSTSY (ORCPT
+        id S1727146AbfDSTTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:18:24 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39575 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfDSTSY (ORCPT
+        Fri, 19 Apr 2019 15:19:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36917 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfDSTTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:18:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i17so2931216pfo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:18:23 -0700 (PDT)
+        Fri, 19 Apr 2019 15:19:03 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f53so5130722ede.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=htQo5ULp1r9WrGxwNnWzafOVFDLMMLJb0v1Sl5g4wrQ=;
-        b=tRFstsV7JsxedOaa21pVSKpbOigtWYRXdjXt0XpHtU1RqL6aHuTepaEbN/vMhlAcuS
-         NrjfX1pres/nyK8PozNEdIsGw3Mgjt31Y1EorPozX5ej++FB+Kbf3YDjkPlyZeLVeq8x
-         5xaEp0HruLP/wAXFJFVvqSxt54ROSP/Yr1h8xKCCcX6vBi+NbRJMdSTcstU6TmViqliF
-         5jS6I624KEkZ/DYFWC8f1E7EcFO+nCZ5GC24hn7EpO1+Njqp5d2u6QrCeypUuBYmlXxl
-         CleR7/E0P0gGw5TiOUxUSRRredgPXZkCRiTboZnMXTD9wmXZF8CqnlnYrw7sii1ud23L
-         FpJw==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t9l4roH8WxvwwvmEnViHg1WSKtIwKFLl9PJXAr2QNR0=;
+        b=X3lEXccy2bJwj6bnya4DEh7lWnhTvS+tv8OHyMJ8Mgs46ZqjY/S2l+REETEDlN7d5O
+         9/PVpA7B/QI65PwXyctpHEHzKJVPw396uofOhxHeCce8yoFNNQp1gCj9vB67kNkQFx0F
+         f5zJT3BMEzQV2ZROsYi9QtXSALkqGNM0OJ+ajiyUqfZuncVC8sXzsHkzgrQdzGDTvON8
+         WknJeWiN2gOdb3TFUWwTPHrA74MldCXrjeEw/VhOW9H2VJh1F//7qS2rDcW8UMOreLlS
+         PHB6H1Lw145g6cD6Rbfc2o+uPrI4t29xiVk4z3uI4iT8Vb1x+zxKkq/oO0YlJIORXTwc
+         gGGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=htQo5ULp1r9WrGxwNnWzafOVFDLMMLJb0v1Sl5g4wrQ=;
-        b=Q8N2qvVd5iXy7y9IMsbJ3dQXIsoXo4yuBZZ9fIeEoIwXy/5EIRvmEU7wHOdMh6H4Hj
-         JvCOJnEKH3l8QiLDjUfMc9GPEIbVfQDKKoivF0ASlxD153/1+6H/EpBrI82XQ7nIdgv+
-         fIcoDJuk9Dty6h7T096SLdVuKMpGoGuPYjxuxhBOX5g83K6V4aM4gRzFKyrswodjNflP
-         0MrSdjRd/OsqLDvdBw+UCzP4bnfzxG5IFBr1MsaX8uygcHQUjC+mbsNvAGWZIGDHi5Vx
-         jT7xhSq4+voLgIl1o5VLJV1W6ax5xZqMDOKHWv4Urr9S9/q4mL6/30n7cROwC7ujal8d
-         1d+w==
-X-Gm-Message-State: APjAAAVroe56AVMX3x0g31NS6dmXrvykew82173A8poOmFndWl1ZZzEH
-        QI03qBwdyDTIYW2krRD/Yo1xhA==
-X-Google-Smtp-Source: APXvYqxjBAA4uqPIpSyZfwreiIjZo/1gxP8H/bj4leRVysHhL45uquM7Adx4dbrM7zqyU0bXnt9DtA==
-X-Received: by 2002:a63:f40d:: with SMTP id g13mr5551465pgi.345.1555701503422;
-        Fri, 19 Apr 2019 12:18:23 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:6d49:9ddc:13aa:21c9])
-        by smtp.googlemail.com with ESMTPSA id g73sm8119521pfd.185.2019.04.19.12.18.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 12:18:22 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial\@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
-In-Reply-To: <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
-References: <20190413020111.23400-1-paul.walmsley@sifive.com> <7hmukmew5j.fsf@baylibre.com> <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
-Date:   Fri, 19 Apr 2019 12:18:21 -0700
-Message-ID: <7h5zr9dcsi.fsf@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t9l4roH8WxvwwvmEnViHg1WSKtIwKFLl9PJXAr2QNR0=;
+        b=G9OqPa05dX0OHhuHvi0D8kQN1pwAKHfkLn20lGceK3NhqaDV3rzurkb8pGReyX54XY
+         nQxvneQ3MaNIrLHV1pM5oEwJvLkzc+A9PWV478XU3Tw18r4cFvY0F2I9m2B88f0KQA9A
+         rg0Zlpc631a8ss6h2QxWTf3RY3icKOlG3q23e/nUZblOjL5/PjSHsuoa7bpj4BPLb4Qm
+         fnAi0oGWOEjh70jdhImEqX1oPPd5m4WH4f4iYZTlUfrXpXy1Xn2BN1XVKKjx/ShIzUFO
+         rWlIEaQNXVZR9pjBrn/AmCWG4XJjyO1RQuQP+s833o33G1qUhup5ToQrL5LBcyxGhgmk
+         Gr/g==
+X-Gm-Message-State: APjAAAUlny6SccryWhw0UmsO/0UmDuDu4hVeZNamS0meVwkAd78nULFB
+        e5nOSJK5dP7FvmbznNVmGnT7gA==
+X-Google-Smtp-Source: APXvYqxlYSH6DuStaQt3Y2LNsdfMIq2ZPV9BZfhui6MSNTDYO/L4/Pi7qhRTwGaHtdvggejDPAaUMg==
+X-Received: by 2002:a17:906:aad1:: with SMTP id kt17mr2712741ejb.289.1555701540967;
+        Fri, 19 Apr 2019 12:19:00 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id a9sm1536639edm.14.2019.04.19.12.18.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 19 Apr 2019 12:19:00 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 21:18:59 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Colascione <dancol@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+Message-ID: <20190419191858.iwcvqm6fihbkaata@brauner.io>
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com>
+ <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com>
+ <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+ <20190419190247.GB251571@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190419190247.GB251571@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Atish Patra <atish.patra@wdc.com> writes:
+On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
+> On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
+> > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
+> > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > >> On 04/16, Joel Fernandes wrote:
+> > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
+> > >> > >
+> > >> > > Could you explain when it should return POLLIN? When the whole
+> > >process exits?
+> > >> >
+> > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
+> > >or when it
+> > >> > is in a zombie state and there's no other thread in the thread
+> > >group.
+> > >>
+> > >> IOW, when the whole thread group exits, so it can't be used to
+> > >monitor sub-threads.
+> > >>
+> > >> just in case... speaking of this patch it doesn't modify
+> > >proc_tid_base_operations,
+> > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
+> > >going to use
+> > >> the anonymous file returned by CLONE_PIDFD ?
+> > >
+> > >I don't think procfs works that way. /proc/sub-thread-tid has
+> > >proc_tgid_base_operations despite not being a thread group leader.
+> > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
+> > >be hit trivially, and then the code will misbehave.
+> > >
+> > >@Joel: I think you'll have to either rewrite this to explicitly bail
+> > >out if you're dealing with a thread group leader, or make the code
+> > >work for threads, too.
+> > 
+> > The latter case probably being preferred if this API is supposed to be
+> > useable for thread management in userspace.
+> 
+> At the moment, we are not planning to use this for sub-thread management. I
+> am reworking this patch to only work on clone(2) pidfds which makes the above
 
-> On 4/18/19 4:22 PM, Kevin Hilman wrote:
->> Hi Paul,
->> 
->> Paul Walmsley <paul.walmsley@sifive.com> writes:
->> 
->>> This series adds a serial driver, with console support, for the
->>> UART IP block present on the SiFive FU540 SoC.  The programming
->>> model is straightforward, but unique.
->>>
->>> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
->>> open-source FSBL (with appropriate patches to the DT data).
->>>
->>> This fifth version fixes a bug in the set_termios handler,
->>> found by Andreas Schwab <schwab@suse.de>.
->>>
->>> The patches in this series can also be found, with the PRCI patches,
->>> DT patches, and DT prerequisite patch, at:
->>>
->>> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
->> 
->> I tried this branch, and it doesn't boot on my unleashed board.
->> 
->> Here's the boot log when I pass the DT built from your branch via
->> u-boot: https://termbin.com/rfp3.
->> 
->
-> Unfortunately, that won't work. The current DT modifications by OpenSBI.
->
-> 1. Change hart status to "masked" from "okay".
-> 2. M-mode interrupt masking in PLIC node.
-> 3. Add a chosen node for serial access in U-Boot.
->
-> You can ignore 3 for your use case. However, if you pass a dtb built 
-> from source code, that will have hart0 enabled and M-mode interrupts 
-> enabled in DT.
+Indeed and agreed.
 
-Hmm, so what you're saying is there not currently any way to pass a DT
-built from source using OpenSBI + mainline u-boot?
+> discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
+> patches, CLONE_THREAD with pidfd is not supported.
 
-As a short-term workaround, is there a way to make these changes from
-the u-boot command-line after loading a DTB built from source into
-memory?  If so, I could at least script that part.
+Yes. We have no one asking for it right now and we can easily add this
+later.
 
+Admittedly I haven't gotten around to reviewing the patches here yet
+completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
+on process exit which I think is nice as well. How about returning
+POLLIN | POLLHUP on process exit?
+We already do things like this. For example, when you proxy between
+ttys. If the process that you're reading data from has exited and closed
+it's end you still can't usually simply exit because it might have still
+buffered data that you want to read.  The way one can deal with this
+from  userspace is that you can observe a (POLLHUP | POLLIN) event and
+you keep on reading until you only observe a POLLHUP without a POLLIN
+event at which point you know you have read
+all data.
+I like the semantics for pidfds as well as it would indicate:
+- POLLHUP -> process has exited
+- POLLIN  -> information can be read
 
-> Not sure if we should do these DT modifications in U-Boot as well.
-
-I guess so (and I'd be happy to test the patch.)
-
-Either that, or the upstream DTs (or code) should have those features to
-the right settings.
-
-Speaking of which, I tried to patch the DT from Paul's recent series[1]
-to make the necessary changes.  I can see where to change cpu0 from
-"okay" to "masked", but I'm not so sure how to make the PLIC change.
-
-I was hoping to be able to review/test Paul's DT patches, but now I'm a
-bit confused as to how to do that.
-
-> I also noticed that your kernel is booting only 1 hart.
-> Just FYI: RISC-V SMP for U-Boot patches are merged in master. So you 
-> should be able to boot all cpus. You can ingore FU540_ENABLED_HART_MASK 
-> in OpenSBI build as well.
-
-Ah, nice.
-
-I've just updated to u-boot master branch with SMP enabled, and build a
-new openSBI (also from master branch) with u-boot payload. Using your
-v5.1-rc4_unleashed branch, I see 4 CPUs booting:
-https://termbin.com/kg13
-
-Thanks,
-
-Kevin
-
-[1] https://lore.kernel.org/lkml/20190413020111.23400-1-paul.walmsley@sifive.com/T/#m77daa2857b76ec7cbca0672ad03ae286f61ca0e6
+Christian
