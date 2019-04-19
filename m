@@ -2,742 +2,183 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C589C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39ADC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3374A204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698647;
-	bh=bsvgMdQ7aqFTiojxDyHNZx6CN5bAzlDRt89hWgYyD/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DvwwaYVx3TUXGduPSSI2tIK/ahvZqVkbGUQSgqrIxPaZG/UnFjwPwMY2mzZpzwn62
-	 BxIZYVLOtWMnkRKp08IeW9KEb3MIFGSyPYP2AEtB4LwTulpN8cxcat2vfXUyZxU5wt
-	 zzDFzd+Rtgt38YTouag+Rukkpn0Dx40UDUoyw3JM=
+	by mail.kernel.org (Postfix) with ESMTP id 9F6C1204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n28YC/1X";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n28YC/1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbfDSSaj (ORCPT
+        id S1728103AbfDSSav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbfDSS3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:18 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 19 Apr 2019 14:30:51 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58670 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfDSSas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:30:48 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8ACE561231; Fri, 19 Apr 2019 05:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555652054;
+        bh=ynX1XiN+F09ar8DitQQHvhoLDOwf4suTYCkS8lWqtOs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n28YC/1XscTnbcd2PndXOSwiZ8LP7lf8E6TmR4IFeUuHDxvFs/cU07lt8T1iA24eT
+         8HCE7/WCqq4dXGlK5q82Nc2BXJ8tRQs/+L8rZqpTULXtvAWz3EMGqg4x8VV52DR+d1
+         d4S4JhSUjnm6fD2i2U94Z5Kx8Lj7HmYftndqihn0=
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08BF221B26;
-        Fri, 19 Apr 2019 13:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555682360;
-        bh=bsvgMdQ7aqFTiojxDyHNZx6CN5bAzlDRt89hWgYyD/E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bBzLenvX+L+gQ68xxOVDqua6nXUqCoVUUQ5mDAVLqbJ8HEjrY9KhZMBCcfcWCkpPX
-         gNhoY1llreuKKXEWW9QQF1Wgacpn9sjJU6dLlWgvAMOEJ1YTm3fkEKLVDTwAX8ubdy
-         +/CGVNWwxDdSCOmICARlQo6WJKXrS5fW68O/UDLQ=
-Date:   Fri, 19 Apr 2019 08:59:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH v1 1/5] PCI/IOV: Add support to verify PF/VF spec
- compliance
-Message-ID: <20190419135918.GC173520@google.com>
-References: <cover.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <317aaed09820db65c21452663bed33468f874d3a.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A778361231;
+        Fri, 19 Apr 2019 05:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555652054;
+        bh=ynX1XiN+F09ar8DitQQHvhoLDOwf4suTYCkS8lWqtOs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n28YC/1XscTnbcd2PndXOSwiZ8LP7lf8E6TmR4IFeUuHDxvFs/cU07lt8T1iA24eT
+         8HCE7/WCqq4dXGlK5q82Nc2BXJ8tRQs/+L8rZqpTULXtvAWz3EMGqg4x8VV52DR+d1
+         d4S4JhSUjnm6fD2i2U94Z5Kx8Lj7HmYftndqihn0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A778361231
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f48.google.com with SMTP id d55so3630318ede.0;
+        Thu, 18 Apr 2019 22:34:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAWW380CfQWHTxHvk6f24rJ2sMXkV3n2ztXaJVQA8yg4thh1B41Z
+        U6PJTZf0cqSNsZxW9uxZB2wWVf7eZOPEE8wDuM0=
+X-Google-Smtp-Source: APXvYqxKBkj/cAGFLjJH0WBxF78ZtkgeIy6ptaKEC1snAwaCsNqTXmJNxY1CDdKIh3zm81v36mBP2LJKptmGM5OShm8=
+X-Received: by 2002:a50:b51b:: with SMTP id y27mr1157250edd.251.1555652052483;
+ Thu, 18 Apr 2019 22:34:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <317aaed09820db65c21452663bed33468f874d3a.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <4cfc7b3b-bc74-6b37-19f5-40b6394fa762@codeaurora.org>
+ <20190415173758.22112-1-vivek.gautam@codeaurora.org> <20190419002457.GA3137@builder>
+In-Reply-To: <20190419002457.GA3137@builder>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Fri, 19 Apr 2019 11:04:01 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iFSeOLh-RE2GM_Yah+ANmVUQZjuyH7zF9qOOSLxhGbdvw@mail.gmail.com>
+Message-ID: <CAFp+6iFSeOLh-RE2GM_Yah+ANmVUQZjuyH7zF9qOOSLxhGbdvw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Log CBFRSYNRA register on context fault
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kuppuswamy,
+On Fri, Apr 19, 2019 at 5:55 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 15 Apr 10:37 PDT 2019, Vivek Gautam wrote:
+>
+> > Bits[15:0] in CBFRSYNRA register contain information about
+> > StreamID of the incoming transaction that generated the
+> > fault. Dump CBFRSYNRA register to get this info.
+> > This is specially useful in a distributed SMMU architecture
+> > where multiple masters are connected to the SMMU.
+> > SID information helps to quickly identify the faulting
+> > master device.
+> >
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > ---
+> >
+> > V1 of the patch available @
+> > https://lore.kernel.org/patchwork/patch/1061615/
+> >
+> > Changes from v1:
+> >  - Dump the raw register value of CBFRSYNRA register in the
+> >    context fault log rather than extracting the SID inforamtion
+> >    and dumping that.
+> >
+> >  drivers/iommu/arm-smmu-regs.h | 2 ++
+> >  drivers/iommu/arm-smmu.c      | 8 ++++++--
+> >  2 files changed, 8 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
+> > index a1226e4ab5f8..e9132a926761 100644
+> > --- a/drivers/iommu/arm-smmu-regs.h
+> > +++ b/drivers/iommu/arm-smmu-regs.h
+> > @@ -147,6 +147,8 @@ enum arm_smmu_s2cr_privcfg {
+> >  #define CBAR_IRPTNDX_SHIFT           24
+> >  #define CBAR_IRPTNDX_MASK            0xff
+> >
+> > +#define ARM_SMMU_GR1_CBFRSYNRA(n)    (0x400 + ((n) << 2))
+> > +
+> >  #define ARM_SMMU_GR1_CBA2R(n)                (0x800 + ((n) << 2))
+> >  #define CBA2R_RW64_32BIT             (0 << 0)
+> >  #define CBA2R_RW64_64BIT             (1 << 0)
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index 045d93884164..a4773e8c6b0e 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -575,7 +575,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+> >       struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> >       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> >       struct arm_smmu_device *smmu = smmu_domain->smmu;
+> > +     void __iomem *gr1_base = ARM_SMMU_GR1(smmu);
+> >       void __iomem *cb_base;
+> > +     u32 cbfrsynra;
+> >
+> >       cb_base = ARM_SMMU_CB(smmu, cfg->cbndx);
+> >       fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
+> > @@ -585,10 +587,12 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+> >
+> >       fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
+> >       iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
+> > +     cbfrsynra = readl_relaxed(gr1_base +
+> > +                               ARM_SMMU_GR1_CBFRSYNRA(cfg->cbndx));
+>
+> The 80 char limit is more like a guideline anyways...please don't wrap
+> this.
+>
+> >
+> >       dev_err_ratelimited(smmu->dev,
+> > -     "Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
+> > -                         fsr, iova, fsynr, cfg->cbndx);
+> > +     "Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra = 0x%x, cb=%d\n",
+>
+> Drop the spaces around '='.
+>
+> With those addressed, you have my
+>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-On Wed, Mar 06, 2019 at 02:11:14PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> PF/VF implementation must comply with PCIe specification as
-> defined in r4.0, sec 9.3.4, 9.3.5, 9.3.6 and 9.3.7. And if
-> it does not comply, return error and skip PF/VF device
-> creation.
+Thanks for the review Bjorn. Will address above comments and respin.
 
-As far as I can tell, this patch basically looks for excuses not to
-enable SR-IOV.  Does this actually solve a problem?  Are there
-non-compliant devices out there that blow up if we enable SR-IOV?
+Best regards
+Vivek
 
-I'm not sure we should just go looking for things that are broken
-unless the breakage directly affects our ability to use the device.
+>
+> Regards,
+> Bjorn
+>
+> > +                         fsr, iova, fsynr, cbfrsynra, cfg->cbndx);
+> >
+> >       writel(fsr, cb_base + ARM_SMMU_CB_FSR);
+> >       return IRQ_HANDLED;
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+> >
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-Bjorn
 
-> Also add a command line parameter support to skip error when
-> PF/VF spec validation failed.
-> 
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Suggested-by: Ashok Raj <ashok.raj@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |   2 +
->  drivers/pci/iov.c                             | 468 ++++++++++++++++++
->  drivers/pci/pci.c                             |   2 +
->  drivers/pci/pci.h                             |   6 +
->  include/linux/pci.h                           |  30 +-
->  include/uapi/linux/pci_regs.h                 |  15 +-
->  6 files changed, 520 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 858b6c0b9a15..9e84b5f9c58d 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3363,6 +3363,8 @@
->  				bridges without forcing it upstream. Note:
->  				this removes isolation between devices and
->  				may put more devices in an IOMMU group.
-> +		noiov_iverror	Don't skip PCIe device enumeration, if VF/PF
-> +				function is not PCIe specification compliant.
->  
->  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
->  			Management.
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 3aa115ed3a65..9b121a649b90 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -17,6 +17,14 @@
->  
->  #define VIRTFN_ID_LEN	16
->  
-> +/* IOV invalid error */
-> +static int pci_iov_iverror = 1;
-> +
-> +void pci_noiov_iverror(void)
-> +{
-> +	pci_iov_iverror = 0;
-> +}
-> +
->  int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
->  {
->  	if (!dev->is_physfn)
-> @@ -136,6 +144,455 @@ static void pci_read_vf_config_common(struct pci_dev *virtfn)
->  	physfn->sriov->cfg_size = pci_cfg_space_size(virtfn);
->  }
->  
-> +static int pci_iov_physfn_valid(struct pci_dev *pdev)
-> +{
-> +	int status = 0, cap;
-> +
-> +	if (!pdev->is_physfn)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.9, PF must not implement MRIOV
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_MRIOV);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		pdev->invalid_cap |= PCI_IOV_INVALID_MRIOV;
-> +		dev_warn(&pdev->dev, "%s: %s %s\n", "PF", "MRIOV Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	return status;
-> +}
-> +
-> +static int pci_iov_virtfn_valid(struct pci_dev *vdev)
-> +{
-> +	struct pci_dev *pdev = vdev->physfn;
-> +	u16 vreg16, preg16;
-> +	u32 vreg32, preg32;
-> +	u64 vreg64, preg64;
-> +	int status = 0, cap;
-> +
-> +	if (!vdev->is_virtfn)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.4.1.3, in Command register, I/O Space
-> +	 * Enable, Memory Space Enable and Interrupt Disable bits should
-> +	 * be tied to 0 for VFs.
-> +	 */
-> +	pci_read_config_word(vdev, PCI_COMMAND, &vreg16);
-> +	if (vreg16 & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-> +		      PCI_COMMAND_INTX_DISABLE)) {
-> +		dev_warn(&vdev->dev, "%s: %s\n", "VF",
-> +			 "Non compilaint value in COMMAND register");
-> +		status = -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.4.1.6, Class Code value should match
-> +	 * between PF and VF.
-> +	 */
-> +	pci_read_config_dword(vdev, PCI_CLASS_REVISION, &vreg32);
-> +	pci_read_config_dword(pdev, PCI_CLASS_REVISION, &preg32);
-> +	vreg32 = vreg32 >> 8;
-> +	preg32 = preg32 >> 8;
-> +	if (vreg32 != preg32) {
-> +		dev_warn(&vdev->dev, "%s: %s %x!=%x\n", "PF/VF",
-> +			 "Class Code mismatch", vreg32, preg32);
-> +		status = -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.4.1.13, Subsystem Vendor ID value should
-> +	 * match between PF and VF.
-> +	 */
-> +	pci_read_config_word(vdev, PCI_SUBSYSTEM_VENDOR_ID, &vreg16);
-> +	pci_read_config_word(pdev, PCI_SUBSYSTEM_VENDOR_ID, &preg16);
-> +	if (vreg16 != preg16) {
-> +		dev_warn(&vdev->dev, "%s: %s %x!=%x\n", "PF/VF",
-> +			 "Subsystem Vendor ID mismatch", vreg16, preg16);
-> +		status = -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Enhanced Allocation
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_capability(vdev, PCI_CAP_ID_EA);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_EA;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Enhanced Allocation Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.6, VF must not implement Native PCIe
-> +	 * Enclosure Management (NPEM) Capability.
-> +	 */
-> +	cap = pci_find_capability(vdev, PCI_CAP_ID_NPEM);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_NPEM;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Native PCIe Native PCIe Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.1, VF must not implement Virtual Channel
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_VC);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_VC;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Virtual Channel Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.1, VF must not implement Multi Function
-> +	 * Virtual Channel Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MFVC);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_MFVC;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Multi Function VC Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.1, VF must not implement Virtual Channel(9)
-> +	 * Virtual Channel Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_VC9);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_VC9;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Virtual Channel(9) Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.2, VF can optionally implement Device
-> +	 * Serial Number Capability. But if it implements it, the value
-> +	 * should match the PF.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_DSN);
-> +	if (cap) {
-> +		pci_read_config_dword(vdev, cap + PCI_DSN_SNUR, &vreg32);
-> +		vreg64 = (u64)vreg32 << 32;
-> +		pci_read_config_dword(vdev, cap + PCI_DSN_SNLR, &vreg32);
-> +		vreg64 |= vreg32;
-> +		cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DSN);
-> +		if (cap) {
-> +			pci_read_config_dword(pdev, cap + PCI_DSN_SNUR,
-> +					      &preg32);
-> +			preg64 = (u64)preg32 << 32;
-> +			pci_read_config_dword(pdev, cap + PCI_DSN_SNLR,
-> +					      &preg32);
-> +			preg64 |= preg32;
-> +		}
-> +		if (!cap || vreg64 != preg64) {
-> +			status = -EINVAL;
-> +			vdev->invalid_cap |= PCI_IOV_INVALID_DSN;
-> +			dev_warn(&vdev->dev, "%s: %s\n", "PF/VF",
-> +				 "Device Serial Number mismatch");
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.3, VF must not implement Power Budgeting
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PWR);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PWR;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Power Budgeting Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.8, if VF implements Address Translation
-> +	 * Services (ATS) Extended Capability then corresponding PF should
-> +	 * also implement it.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_ATS);
-> +	if (cap) {
-> +		cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS);
-> +		if (!cap) {
-> +			status = -EINVAL;
-> +			vdev->invalid_cap |= PCI_IOV_INVALID_ATS;
-> +			dev_warn(&vdev->dev, "%s: %s\n", "PF/VF",
-> +				 "ATS Capability mismatch");
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement SRIOV
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_SRIOV);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_SRIOV;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF", "SRIOV Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.9, VF must not implement MRIOV
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MRIOV);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_MRIOV;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF", "MRIOV Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.10, if VF implements Multicast
-> +	 * Capability then corresponding PF should also implement it.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MCAST);
-> +	if (cap) {
-> +		cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_MCAST);
-> +		if (!cap) {
-> +			status = -EINVAL;
-> +			vdev->invalid_cap |= PCI_IOV_INVALID_MCAST;
-> +			dev_warn(&vdev->dev, "%s: %s\n", "PF/VF",
-> +				 "Multicast Capability mismatch");
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PRI);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PRI;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF", "PRI Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.4, VF must not implement Resizable BAR
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_REBAR);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_REBAR;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Resizable BAR Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.4, VF must not implement VF Resizable BAR
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_VREBAR);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_VREBAR;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "VF Resizable BAR Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.12, VF must not implement Dynamic Power
-> +	 * Allocation Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_DPA);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_DPA;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Dynamic Power Allocation Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Latency Tolerance
-> +	 * Reporting (LTR) Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_LTR);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_LTR;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Latency Tolerance Reporting Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Secondary PCIe
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_SECPCI);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_SECPCI;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Secondary PCIe Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Protocol
-> +	 * Multiplexing Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PMUX);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PMUX;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Protocol Multiplexing Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7.14, VF must not implement Process Address
-> +	 * Space ID (PASID) Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PASID);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PASID;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Process Address Space ID Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement L1 PM Substates
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_L1SS);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_L1SS;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "L1 PM Substates Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Precision Time
-> +	 * Measurement Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PTM);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PTM;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Precision Time Measurement",
-> +			 "Capability must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement PCI Express
-> +	 * over M-PHY Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_MPHY);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_MPHY;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "PCI Express over M-PHY Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Data Link Feature
-> +	 * Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_DLF);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_DLF;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Data Link Feature Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Physical Layer 16.0
-> +	 * GT/s Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PL16);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PL16;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Physical Layer 16.0 GT/s Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	/*
-> +	 * Per PCIe r4.0, sec 9.3.7, VF must not implement Physical Layer 16.0
-> +	 * GT/s Margining Capability.
-> +	 */
-> +	cap = pci_find_ext_capability(vdev, PCI_EXT_CAP_ID_PL16M);
-> +	if (cap) {
-> +		status = -EINVAL;
-> +		vdev->invalid_cap |= PCI_IOV_INVALID_PL16M;
-> +		dev_warn(&vdev->dev, "%s: %s %s\n", "VF",
-> +			 "Physical Layer 16.0 GT/s Margining Capability",
-> +			 "must not be implemented");
-> +	}
-> +
-> +	if (vdev->pcie_cap) {
-> +		/*
-> +		 * Per PCIe r4.0, sec 9.3.5.3, in VF device, Device
-> +		 * Capabilities Register Phantom Functions Supported
-> +		 * bit should be tied to 0 and Function Level Reset
-> +		 * Capability bit should be tied to 1.
-> +		 */
-> +		pcie_capability_read_dword(vdev, PCI_EXP_DEVCAP, &vreg32);
-> +		if (vreg32 & PCI_EXP_DEVCAP_PHANTOM) {
-> +			dev_warn(&vdev->dev, "%s: %s\n", "VF",
-> +				 "Phantom Functions Supported bit is invalid");
-> +			status = -EINVAL;
-> +		}
-> +		if (!(vreg32 & PCI_EXP_DEVCAP_FLR)) {
-> +			dev_warn(&vdev->dev, "%s: %s\n", "VF",
-> +				 "Function Level Reset bit is invalid");
-> +			status = -EINVAL;
-> +		}
-> +
-> +		/*
-> +		 * Per PCIe r4.0, sec 9.3.5.5, in VF device, Device Status
-> +		 * Register AUX Power Detected bit and Emergency Power
-> +		 * Reduction Detected bits should be tied to 0.
-> +		 */
-> +		pcie_capability_read_word(vdev, PCI_EXP_DEVSTA, &vreg16);
-> +		if (vreg16 & (PCI_EXP_DEVSTA_AUXPD | PCI_EXP_DEVSTA_EPRD)) {
-> +			dev_warn(&vdev->dev, "%s: %s\n", "VF",
-> +				 "Device Status register value is invalid");
-> +			status = -EINVAL;
-> +		}
-> +	}
-> +
-> +	return status;
-> +}
-> +
->  int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  {
->  	int i;
-> @@ -186,6 +643,11 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  
->  	pci_device_add(virtfn, virtfn->bus);
->  
-> +	/* Verify whether VF complies with spec */
-> +	rc = pci_iov_virtfn_valid(virtfn);
-> +	if (rc < 0 && pci_iov_iverror)
-> +		goto failed2;
-> +
->  	sprintf(buf, "virtfn%u", id);
->  	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
->  	if (rc)
-> @@ -511,6 +973,12 @@ static int sriov_init(struct pci_dev *dev, int pos)
->  
->  	dev->sriov = iov;
->  	dev->is_physfn = 1;
-> +
-> +	/* Verify whether PF complies with spec */
-> +	rc = pci_iov_physfn_valid(dev);
-> +	if (rc < 0 && pci_iov_iverror)
-> +		goto fail_max_buses;
-> +
->  	rc = compute_max_vf_buses(dev);
->  	if (rc)
->  		goto fail_max_buses;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index c25acace7d91..67fac64ba112 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6197,6 +6197,8 @@ static int __init pci_setup(char *str)
->  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
->  				disable_acs_redir_param =
->  					kstrdup(str + 18, GFP_KERNEL);
-> +			} else if (!strcmp(str, "noiov_iverror")) {
-> +				pci_noiov_iverror();
->  			} else {
->  				printk(KERN_ERR "PCI: Unknown option `%s'\n",
->  						str);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 224d88634115..9cc04271b715 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -602,4 +602,10 @@ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->  static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
->  #endif
->  
-> +#ifdef CONFIG_PCI_IOV
-> +void pci_noiov_iverror(void);
-> +#else
-> +static inline void pci_noiov_iverror(void) { }
-> +#endif
-> +
->  #endif /* DRIVERS_PCI_H */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 65f1d8c2f082..489fc0f68bb1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -435,6 +435,7 @@ struct pci_dev {
->  #ifdef CONFIG_PCI_MSI
->  	const struct attribute_group **msi_irq_groups;
->  #endif
-> +	u64	invalid_cap;	/* PF/VF: Invalid Capability bitmap*/
->  	struct pci_vpd *vpd;
->  #ifdef CONFIG_PCI_ATS
->  	union {
-> @@ -446,7 +447,7 @@ struct pci_dev {
->  	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
->  #endif
->  #ifdef CONFIG_PCI_PRI
-> -	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
-> +	u32		pri_reqs_alloc;	/* Number of PRI requests allocated */
->  #endif
->  #ifdef CONFIG_PCI_PASID
->  	u16		pasid_features;
-> @@ -1953,6 +1954,33 @@ extern int pci_pci_problems;
->  #define PCIPCI_ALIMAGIK		32	/* Need low latency setting */
->  #define PCIAGP_FAIL		64	/* No PCI to AGP DMA */
->  
-> +/* invalid_cap bitmap definitions*/
-> +#define PCI_IOV_INVALID_EA	BIT(0)	/* Invalid EA Capability */
-> +#define PCI_IOV_INVALID_NPEM	BIT(1)	/* Invalid NPEM Capability */
-> +#define PCI_IOV_INVALID_VC	BIT(2)	/* Invalid VC Capability */
-> +#define PCI_IOV_INVALID_MFVC	BIT(3)	/* Invalid MFVC Capability */
-> +#define PCI_IOV_INVALID_VC9	BIT(4)	/* Invalid VC9 Capability */
-> +#define PCI_IOV_INVALID_DSN	BIT(5)	/* Invalid DSN Capability */
-> +#define PCI_IOV_INVALID_PWR	BIT(6)	/* Invalid PWR Capability */
-> +#define PCI_IOV_INVALID_ATS	BIT(7)	/* Invalid ATS Capability */
-> +#define PCI_IOV_INVALID_SRIOV	BIT(8)	/* Invalid SRIOV Capability */
-> +#define PCI_IOV_INVALID_MRIOV	BIT(9)	/* Invalid MRIOV Capability */
-> +#define PCI_IOV_INVALID_MCAST	BIT(10)	/* Invalid MCAST Capability */
-> +#define PCI_IOV_INVALID_PRI	BIT(11)	/* Invalid PRI Capability */
-> +#define PCI_IOV_INVALID_REBAR	BIT(12)	/* Invalid REBAR Capability */
-> +#define PCI_IOV_INVALID_VREBAR	BIT(13)	/* Invalid VREBAR Capability */
-> +#define PCI_IOV_INVALID_DPA	BIT(14)	/* Invalid DPA Capability */
-> +#define PCI_IOV_INVALID_LTR	BIT(15)	/* Invalid LTR Capability */
-> +#define PCI_IOV_INVALID_SECPCI	BIT(16)	/* Invalid SECPCI Capability */
-> +#define PCI_IOV_INVALID_PMUX	BIT(17)	/* Invalid PMUX Capability */
-> +#define PCI_IOV_INVALID_PASID	BIT(18)	/* Invalid PASID Capability */
-> +#define PCI_IOV_INVALID_L1SS	BIT(19)	/* Invalid L1SS Capability */
-> +#define PCI_IOV_INVALID_PTM	BIT(20)	/* Invalid PTM Capability */
-> +#define PCI_IOV_INVALID_MPHY	BIT(21)	/* Invalid MPHY Capability */
-> +#define PCI_IOV_INVALID_DLF	BIT(22)	/* Invalid DLF Capability */
-> +#define PCI_IOV_INVALID_PL16	BIT(23)	/* Invalid PL16 Capability */
-> +#define PCI_IOV_INVALID_PL16M	BIT(24)	/* Invalid PL16M Capability */
-> +
->  extern unsigned long pci_cardbus_io_size;
->  extern unsigned long pci_cardbus_mem_size;
->  extern u8 pci_dfl_cache_line_size;
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index e1e9888c85e6..d377d48ee99c 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -227,7 +227,8 @@
->  #define  PCI_CAP_ID_SATA	0x12	/* SATA Data/Index Conf. */
->  #define  PCI_CAP_ID_AF		0x13	/* PCI Advanced Features */
->  #define  PCI_CAP_ID_EA		0x14	/* PCI Enhanced Allocation */
-> -#define  PCI_CAP_ID_MAX		PCI_CAP_ID_EA
-> +#define  PCI_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
-> +#define  PCI_CAP_ID_MAX		PCI_CAP_ID_NPEM
->  #define PCI_CAP_LIST_NEXT	1	/* Next capability in the list */
->  #define PCI_CAP_FLAGS		2	/* Capability defined flags (16 bits) */
->  #define PCI_CAP_SIZEOF		4
-> @@ -517,6 +518,7 @@
->  #define  PCI_EXP_DEVSTA_URD	0x0008	/* Unsupported Request Detected */
->  #define  PCI_EXP_DEVSTA_AUXPD	0x0010	/* AUX Power Detected */
->  #define  PCI_EXP_DEVSTA_TRPND	0x0020	/* Transactions Pending */
-> +#define  PCI_EXP_DEVSTA_EPRD	0x0040	/* Emergency Power Reduction Detected */
->  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V1	12	/* v1 endpoints without link end here */
->  #define PCI_EXP_LNKCAP		12	/* Link Capabilities */
->  #define  PCI_EXP_LNKCAP_SLS	0x0000000f /* Supported Link Speeds */
-> @@ -705,7 +707,12 @@
->  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_MPHY	0x20	/* PCI Express over M-PHY (M-PCIe) */
-> +#define PCI_EXT_CAP_ID_VREBAR	0x24	/* VF Resizable BAR */
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL16	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_PL16M	0x27	/* Physical Layer 16.0 GT/s Margining*/
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL16M
->  
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -798,6 +805,10 @@
->  #define PCI_CAP_VC_BASE_SIZEOF		0x10
->  #define PCI_CAP_VC_PER_VC_SIZEOF	0x0C
->  
-> +/* Device Serial Number */
-> +#define PCI_DSN_SNLR		0x04 /* Serial Number Lower Register */
-> +#define PCI_DSN_SNUR		0x08 /* Serial Number Upper Register */
-> +
->  /* Power Budgeting */
->  #define PCI_PWR_DSR		4	/* Data Select Register */
->  #define PCI_PWR_DATA		8	/* Data Register */
-> -- 
-> 2.20.1
-> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
