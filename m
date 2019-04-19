@@ -2,152 +2,143 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD109C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EA2C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04E20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B23F20859
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfDSXua (ORCPT
+        id S1727505AbfDSXyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 19:50:30 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:45228 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725817AbfDSXua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 19:50:30 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 8DFDE8DFBEC5C3C673DE;
-        Fri, 19 Apr 2019 16:03:00 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 19 Apr 2019 16:02:59 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 19 Apr 2019 16:02:59 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: relocate chksum_offset for large_nat_bitmap feature
-Date:   Fri, 19 Apr 2019 16:02:54 +0800
-Message-ID: <20190419080254.19867-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 19 Apr 2019 19:54:10 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:53062 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfDSXyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 19:54:07 -0400
+Received: by mail-it1-f199.google.com with SMTP id 73so6924653itl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=NZd6zkJCiCFjb6F1NCu4UBa1DkIlMkFieM9sbYOP5K8=;
+        b=uPtCmJnFBPsHaPYRmJ9wx1G3R+W/8vK81wAg6uhv8QPXx36oAgIp/BMlwUCQ6xjK1Y
+         zMEu0h5bD1fYZP9l5VhR/WT4ZEtvFYnAPF9OHeGTJyG2F//7bEjDoQL8EkWiHp87iiCR
+         buN73w/ygh7cwKM+4Z4oo3Nc2VESKisFeNWQPz+dS8IpthZrFS6cw5B8AZPLBeuHRm22
+         C/HIkoTJCMgsejZ9THF8JKcCf/MAGjhRVvsbOLlJ8hjQtqAzm4QutSX9AMRT3sfyhfEO
+         iyOJgh7MazLpaTs5q4R15xDTeFD78rSDesKiq25HLMdDvEk0C4UA2ADtLXufkAsxmNXN
+         eTyA==
+X-Gm-Message-State: APjAAAVSt5KsQq+gZqeFEPAkeYDXJgwVZJsT1EyOxXWOQs/uhfrtpLw2
+        jwWUtiQGVEYKmNWVyjFPH92vIc2OIm0ScwEtS+NKyMCA78jd
+X-Google-Smtp-Source: APXvYqwDPpxNtqxwMfkZkOiHuHhY8JC4XcordDAegWyWpKhHl9QOUb+mdRnHWDb+T7E5G/FDw608cUmA2iP1vqOv6v9Nnuyo6Ymm
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a05:6602:2246:: with SMTP id o6mr668715ioo.170.1555718046015;
+ Fri, 19 Apr 2019 16:54:06 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 16:54:06 -0700
+In-Reply-To: <00000000000024bbd7058682eda1@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000080e9260586ead5b5@google.com>
+Subject: Re: WARNING: ODEBUG bug in rsi_probe
+From:   syzbot <syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com>
+To:     amitkarwar@gmail.com, andreyknvl@google.com, davem@davemloft.net,
+        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, siva8118@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For large_nat_bitmap feature, there is a design flaw:
+syzbot has found a reproducer for the following crash on:
 
-Previous:
+HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=13431e7b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+dashboard link: https://syzkaller.appspot.com/bug?extid=1d1597a5aa3679c65b9f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12534fdd200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147c9247200000
 
-struct f2fs_checkpoint layout:
-+--------------------------+  0x0000
-| checkpoint_ver           |
-| ......                   |
-| checksum_offset          |------+
-| ......                   |      |
-| sit_nat_version_bitmap[] |<-----|-------+
-| ......                   |      |       |
-| checksum_value           |<-----+       |
-+--------------------------+  0x1000      |
-|                          |      nat_bitmap + sit_bitmap
-| payload blocks           |              |
-|                          |              |
-+--------------------------|<-------------+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com
 
-Obviously, if nat_bitmap size + sit_bitmap size is larger than
-MAX_BITMAP_SIZE_IN_CKPT, nat_bitmap or sit_bitmap may overlap
-checkpoint checksum's position, once checkpoint() is triggered
-from kernel, nat or sit bitmap will be damaged by checksum field.
+rsi_91x: rsi_load_firmware: REGOUT read failed
+rsi_91x: rsi_hal_device_init: Failed to load TA instructions
+rsi_91x: rsi_probe: Failed in device init
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object type: timer_list hint:  
+bl_cmd_timeout+0x0/0x50 drivers/net/wireless/rsi/rsi_91x_hal.c:577
+WARNING: CPU: 0 PID: 563 at lib/debugobjects.c:325  
+debug_print_object+0x162/0x250 lib/debugobjects.c:325
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 563 Comm: kworker/0:2 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  panic+0x29d/0x5f2 kernel/panic.c:214
+  __warn.cold+0x20/0x48 kernel/panic.c:571
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:debug_print_object+0x162/0x250 lib/debugobjects.c:325
+Code: dd c0 a8 b3 8e 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
+8b 14 dd c0 a8 b3 8e 48 c7 c7 40 9d b3 8e e8 8e c3 d2 fd <0f> 0b 83 05 f9  
+0f 5a 10 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffff88809e1ef110 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b1d22 RDI: ffffed1013c3de14
+RBP: 0000000000000001 R08: ffff88809e1cb100 R09: ffffed1015a03edb
+R10: ffffed1015a03eda R11: ffff8880ad01f6d7 R12: ffffffff917e77c0
+R13: ffffffff8161e740 R14: ffffffff96d3ea28 R15: ffff8880a5a75f60
+  __debug_check_no_obj_freed lib/debugobjects.c:785 [inline]
+  debug_check_no_obj_freed+0x2a3/0x42e lib/debugobjects.c:817
+  slab_free_hook mm/slub.c:1426 [inline]
+  slab_free_freelist_hook+0xfb/0x140 mm/slub.c:1456
+  slab_free mm/slub.c:3003 [inline]
+  kfree+0xce/0x280 mm/slub.c:3958
+  rsi_probe+0xdf3/0x140d drivers/net/wireless/rsi/rsi_91x_sdio.c:1178
+  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x1398/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-In order to fix this, let's relocate checksum_value's position
-to the head of sit_nat_version_bitmap as below, then nat/sit
-bitmap and chksum value update will become safe.
-
-After:
-
-struct f2fs_checkpoint layout:
-+--------------------------+  0x0000
-| checkpoint_ver           |
-| ......                   |
-| checksum_offset          |------+
-| ......                   |      |
-| sit_nat_version_bitmap[] |<-----+
-| ......                   |<-------------+
-|                          |              |
-+--------------------------+  0x1000      |
-|                          |      nat_bitmap + sit_bitmap
-| payload blocks           |              |
-|                          |              |
-+--------------------------|<-------------+
-
-Related report and discussion:
-
-https://sourceforge.net/p/linux-f2fs/mailman/message/36642346/
-
-Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- allow get_checkpoint_version() to detect deprecated layout of
-large_nat_bitmap.
- fs/f2fs/checkpoint.c | 12 ++++++++++++
- fs/f2fs/f2fs.h       |  6 +++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 08b339c665a1..6eb51dd1f22a 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -816,6 +816,18 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
- 		return -EINVAL;
- 	}
- 
-+	if (__is_set_ckpt_flags(*cp_block, CP_LARGE_NAT_BITMAP_FLAG)) {
-+		if (crc_offset != offsetof(struct f2fs_checkpoint,
-+						sit_nat_version_bitmap)) {
-+			f2fs_put_page(*cp_page, 1);
-+			f2fs_msg(sbi->sb, KERN_WARNING,
-+				"layout of large_nat_bitmap is deprecated, "
-+				"run fsck to repair, chksum_offset: %zu",
-+				crc_offset);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	crc = cur_cp_crc(*cp_block);
- 	if (!f2fs_crc_valid(sbi, crc, *cp_block, crc_offset)) {
- 		f2fs_put_page(*cp_page, 1);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 31531711e148..f5ffc09705eb 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1911,7 +1911,11 @@ static inline void *__bitmap_ptr(struct f2fs_sb_info *sbi, int flag)
- 	if (is_set_ckpt_flags(sbi, CP_LARGE_NAT_BITMAP_FLAG)) {
- 		offset = (flag == SIT_BITMAP) ?
- 			le32_to_cpu(ckpt->nat_ver_bitmap_bytesize) : 0;
--		return &ckpt->sit_nat_version_bitmap + offset;
-+		/*
-+		 * if large_nat_bitmap feature is enabled, leave checksum
-+		 * protection for all nat/sit bitmaps.
-+		 */
-+		return &ckpt->sit_nat_version_bitmap + offset + sizeof(__le32);
- 	}
- 
- 	if (__cp_payload(sbi) > 0) {
--- 
-2.18.0.rc1
+======================================================
 
