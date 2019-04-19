@@ -2,94 +2,105 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD41BC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CF9C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA404222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C3E222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555698100;
+	bh=LOYJYi8yRYty55xfk85OOpyfuIB1K+6jGPiTYiNlM8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w6S59aOdbAFOEhmEQ30w3+lcd0UceJXOF7/dbPpgBVIj+wgeRaVjbNH2SyenLEmJk
+	 bU8OCrw4WiuheDWaEWqC4nQ1DoGHtGs9FM1EzntnxIuNzh5jDyrUr4NzDavN4StYZQ
+	 +l9gzIj+gSackUpNq1wzjgLx3kSM2y3vDhwVhzl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfDSSVf (ORCPT
+        id S1727765AbfDSSVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:21:35 -0400
-Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:46885 "EHLO
-        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727374AbfDSSVT (ORCPT
+        Fri, 19 Apr 2019 14:21:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38528 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727378AbfDSSVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:21:19 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id 5855C1C333A
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 09:51:35 +0100 (IST)
-Received: (qmail 14374 invoked from network); 19 Apr 2019 08:51:35 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Apr 2019 08:51:35 -0000
-Date:   Fri, 19 Apr 2019 09:51:33 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Li Wang <liwang@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
-        linux-mm <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm, page_alloc: Always use a captured page regardless of
- compaction result
-Message-ID: <20190419085133.GH18914@techsingularity.net>
+        Fri, 19 Apr 2019 14:21:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CR0l63MsMkbpSElEofDsa9+rQQWzCQ5B3utGWeqKvco=; b=TuVsJDeYTMOrdR3CxkNl30bQ1
+        hpRroV5TZAolAnMG18k9U7TGYcmLHVfcPcjc75G3RsLVzrloIwlRHGUpT06dmQ46QfwrVGxnQzxfD
+        4MsEcqkkhI0Skn1hsFAxwA4d3UGFKUOYWrTzYwjCTtB6m88HwPXE1oA8TVqx2ezT6KaZc=;
+Received: from 188.29.164.213.threembb.co.uk ([188.29.164.213] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hHVO0-0008Io-Ox; Fri, 19 Apr 2019 15:25:08 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 35253441D3B; Fri, 19 Apr 2019 16:25:07 +0100 (BST)
+Date:   Fri, 19 Apr 2019 16:25:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [alsa-devel] [PATCH V2] ASoC: fsl_esai: Add pm runtime function
+Message-ID: <20190419152507.GU2803@sirena.org.uk>
+References: <VE1PR04MB6479A85982748088CC42901DE3270@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4WCFFtl4AQpQKunj"
 Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6479A85982748088CC42901DE3270@VE1PR04MB6479.eurprd04.prod.outlook.com>
+X-Cookie: Shah, shah!  Ayatollah you so!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the development of commit 5e1f0f098b46 ("mm, compaction: capture
-a page under direct compaction"), a paranoid check was added to ensure
-that if a captured page was available after compaction that it was
-consistent with the final state of compaction. The intent was to catch
-serious programming bugs such as using a stale page pointer and causing
-corruption problems.
 
-However, it is possible to get a captured page even if compaction was
-unsuccessful if an interrupt triggered and happened to free pages in
-interrupt context that got merged into a suitable high-order page. It's
-highly unlikely but Li Wang did report the following warning on s390
-occuring when testing OOM handling. Note that the warning is slightly
-edited for clarity.
+--4WCFFtl4AQpQKunj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[ 1422.124060] WARNING: CPU: 0 PID: 9783 at mm/page_alloc.c:3777 __alloc_pages_direct_compact+0x182/0x190
-[ 1422.124065] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver
- nfs lockd grace fscache sunrpc pkey ghash_s390 prng xts aes_s390 des_s390
- des_generic sha512_s390 zcrypt_cex4 zcrypt vmur binfmt_misc ip_tables xfs
- libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth qdio lcs ctcm
- ccwgroup fsm dm_mirror dm_region_hash dm_log dm_mod
-[ 1422.124086] CPU: 0 PID: 9783 Comm: copy.sh Kdump: loaded Not tainted 5.1.0-rc 5 #1
+On Fri, Apr 19, 2019 at 11:01:21AM +0000, S.j. Wang wrote:
 
-This patch simply removes the check entirely instead of trying to be
-clever about pages freed from interrupt context. If a serious programming
-error was introduced, it is highly likely to be caught by prep_new_page()
-instead.
+> > fsl_esai_probe(struct platform_device *pdev)
+> >                 return ret;
+> >         }
+> >=20
+> > +       pm_runtime_enable(&pdev->dev);
+> > +
 
-Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
-Reported-by: Li Wang <liwang@redhat.com>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- mm/page_alloc.c | 5 -----
- 1 file changed, 5 deletions(-)
+> I just have a question, do I need to add pm_runtime_idle(&pdev->dev)?
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d96ca5bc555b..cfaba3889fa2 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3773,11 +3773,6 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
- 	memalloc_noreclaim_restore(noreclaim_flag);
- 	psi_memstall_leave(&pflags);
- 
--	if (*compact_result <= COMPACT_INACTIVE) {
--		WARN_ON_ONCE(page);
--		return NULL;
--	}
--
- 	/*
- 	 * At least in one zone compaction wasn't deferred or skipped, so let's
- 	 * count a compaction stall
+It gets used to help drivers get into the correct state on startup, if
+you're unsure if it's 100% required it shouldn't hurt.
+
+--4WCFFtl4AQpQKunj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly56FIACgkQJNaLcl1U
+h9CGCwf/V4SKmPiu420k0g+uofTrLtN6Jv9aTQuGhf7zO7AX1stWXlkVwZwj6RZK
+XC7w1TLKHMVSJUp+U5nUKH9lrbIPsldykON2Mn1cK7TQRIXMXoXgZgBZRagddQkU
+iP0RupSAma6LT4/o4RHV6pjp2qDMU8oJfIUcBqiyFQsmaEMvYK14izz7hOScKwIb
+VZMnFG60t8T7AxVCKda6cW72ikkuV1pvAENJ2j36iTNfaFA9Ufo/du99PNZK+9bW
+o34ZkH1FrcKZRgM0gQ3icbYUxQQV+WflxfFayC4M/qfCXjJiVoAbvEpLzfSSVYtW
+Irvy3o+JKq311kA8vioI3gdp9HFhUg==
+=6lYl
+-----END PGP SIGNATURE-----
+
+--4WCFFtl4AQpQKunj--
