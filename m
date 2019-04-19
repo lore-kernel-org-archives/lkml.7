@@ -2,128 +2,146 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF1BC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E61CC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A124F20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADD720645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="asUVADWY"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="dSxlCpbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfDST12 (ORCPT
+        id S1727448AbfDST2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:27:28 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38912 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfDST11 (ORCPT
+        Fri, 19 Apr 2019 15:28:53 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33555 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfDST2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:27:27 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d12so4681754lfk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:27:26 -0700 (PDT)
+        Fri, 19 Apr 2019 15:28:53 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j11so4691111lfm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:28:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sUNkOJM5qQtNldmZZQggNGfurY1I1f4x5vigVCXTz5M=;
-        b=asUVADWY1w/KJmvk3KMptj3GHBzRs/1x148BANaxwxjkyMSdwMhNhtFeZUQSoAzFlt
-         PinC8ym4WsV3RSD7j6cw+f/vwC7jv2iohDUYgEWc0XfgEshit3qTQj3S830qlxs7YNDv
-         uewDFfCZf8QxgXVychr4LWxSw4GJ4cfW7EIT7fQl9HmhWKgtDCt/3fUipb8STmZNOIDb
-         OBe+UPHtv2AnTXQ49p9VrEU+HqluA5dPs6oJw5iDOTCJaz1R2V/XbcmlwKiVrK6warbB
-         HYd6FNgLcrydrmmAdhOyLE/qy/0AOEz+lffTleVl7NlPxaVuYL3EUf/NNRUs+6jp2yaV
-         RvTw==
+        bh=f8awkoFgJo+7sK0/t71k/qt5Gg5gyX9rXy3SAgYCU+U=;
+        b=dSxlCpbLirYkjVORpxe+f+H6+6jho/uixN8Rws9Ju2GRfPAgh4P3cSj45wsYrHpGdd
+         t3ElM5Z4PShUQJtPAQLTOoFw4OAdKyRdoWQgVUFkA4i2x+EHXAukvaRbs01lT2absiwt
+         30YE4MRhtZTOsmrLfW4alm/lIypUsLQdZNo6RqtnVIaOi3aNRXZAYZmN+LKxqnBWpryA
+         XNAQJAyCazdJO1XUVj0ZXkMqKf+bm8GNmUC3f3H9+nCoFR42tyDSA0K2csZ6cwTw4t7+
+         Yfk09FCamdjkN+Zmr25Jgi90G++8EIKITP9uDuWJl9wuZE4zTFUAjc5iQYA/W4b1uoE4
+         Ii2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sUNkOJM5qQtNldmZZQggNGfurY1I1f4x5vigVCXTz5M=;
-        b=pYtu65zB+DbsBTrt0JqRm9pJln0nK8BhKZLo4su2a1CyjSmIzFzvVXBh8W4hybkZEN
-         wvnHlEim8/IMpMq0u09rdndYCmoTrJ7w95OXqLD5yz2KgB1sf1iZsE2D7k+KFia+oSwp
-         AR1dbkqkz7t47XtMKtB6HZTtHdYa01Nbyflj0vCj/xSChq3dWcmUSXxYchPJDlkiypT7
-         WIMXqDZxXVq88OjWTkCu5rsrXPTu4OBy7YWuF6IXOgh3zRVJ1Gz7JpKngABpj/T6p+4O
-         tP7Kut8KK1uR+t783rLLwExhtDnrkr+FWenrtOhjsBKdQV8Ty7Jp2QtIXs2mFrIA6pBl
-         cw4A==
-X-Gm-Message-State: APjAAAXx5+Ax0BKr6ZnhhGVxdIOvcoEL+SLVzIv8764PGh4oPNC96Sx2
-        lLi1y/UsOS067z4U/egbKFWbwGMNk/lVHWYqgZSSzSOHsg==
-X-Google-Smtp-Source: APXvYqw0//3w9hhdaegDxBJ6hccf6Q5Sh4sn4DOwxGN3dliwNYTV3AbmbJlw2zyCh6FgTPUZQJkZPh6tP/i3GAATOOQ=
-X-Received: by 2002:a19:6b0d:: with SMTP id d13mr2241991lfa.79.1555680305311;
- Fri, 19 Apr 2019 06:25:05 -0700 (PDT)
+        bh=f8awkoFgJo+7sK0/t71k/qt5Gg5gyX9rXy3SAgYCU+U=;
+        b=LrYOiO1XDS4ruWhdPRXim4quAHSgL+H/2YwZahUrsqgpKHSaBqNta3WlkJVtg9Mkt9
+         7HrWGkAwkanQSf8Tb+7hk4iHOBCd+dZR1LBfi2Z4KxNTGrRxLVdoISoNWfOkXT1VIdCH
+         MJjpdHuZKRclAy6nsLyejHamszVndyEZRn9RatFY68wrDnzLtXtShDlUU5BC/BOMTL5m
+         9PYDppIGrjBaUFJ6yPqluE9B6tEHKD+u3pB/6DLiNFDYgMh4nYvD+CMstx0GhcFDyiJH
+         rdbDHJD00mYc+uhGxWSs8hxhVMG0kcFyqfWUHt2YWzmI1X0fu1+6pi/uP2rQvYmULiuc
+         NU2A==
+X-Gm-Message-State: APjAAAVywPkO7KRVjQun9PbUUy3GD3BHw99woxymxkgoFGROg7TEq4fy
+        5o2Rme9AMhR1k6//rjuGYzxhmdRcFSlvBRIWPMaY
+X-Google-Smtp-Source: APXvYqzBJqbVUnf0fY0jaEzpCdPCVacMyfip+5rGxzp4JLaXM+UOIkL3UXFqlLikP6OgQcV4L4M5RVNsMxr37VBeTs8=
+X-Received: by 2002:a19:2814:: with SMTP id o20mr3081918lfo.117.1555702130446;
+ Fri, 19 Apr 2019 12:28:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <20190415134331.GC22204@redhat.com> <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
- <20190415150520.GA13257@redhat.com> <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
- <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com> <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
- <20190417145711.GI32622@redhat.com> <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
- <20190417162723.GK32622@redhat.com> <CAHC9VhT_nk1jmrTj3W=F+1gP1vU3iZsZ=UGOCwdiBLbUsOc9=w@mail.gmail.com>
- <0ca3f4cf-5c64-2fc0-1885-9dbcca2f4b47@schaufler-ca.com> <5CB7E5D4.2060703@huawei.com>
- <CAHC9VhQkrR+m9_dYLg4VG-26TdUnf8XFjbmuVQ70YCOp6DhN_g@mail.gmail.com> <5CB933C4.7000300@huawei.com>
-In-Reply-To: <5CB933C4.7000300@huawei.com>
+References: <1555686587-13866-1-git-send-email-wang6495@umn.edu>
+In-Reply-To: <1555686587-13866-1-git-send-email-wang6495@umn.edu>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 19 Apr 2019 09:24:54 -0400
-Message-ID: <CAHC9VhTdJ6uUOjyxrk=+iOkKe=VN+N9DMPtV=OchAY34x95g=w@mail.gmail.com>
-Subject: Re: kernel BUG at kernel/cred.c:434!
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Oleg Nesterov <oleg@redhat.com>, john.johansen@canonical.com,
-        "chengjian (D)" <cj.chengjian@huawei.com>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>
+Date:   Fri, 19 Apr 2019 15:28:39 -0400
+Message-ID: <CAHC9VhQNGiw_+KhZPC7DhzS83u3gi+Ch1AKCeZitsFg=98gUDA@mail.gmail.com>
+Subject: Re: [PATCH v2] audit: fix a memory leak bug
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     Eric Paris <eparis@redhat.com>,
+        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:42 PM Yang Yingliang
-<yangyingliang@huawei.com> wrote:
-> On 2019/4/19 10:04, Paul Moore wrote:
-> > On Wed, Apr 17, 2019 at 10:50 PM Yang Yingliang
-> > <yangyingliang@huawei.com> wrote:
-> >> On 2019/4/18 8:24, Casey Schaufler wrote:
-> >>> On 4/17/2019 4:39 PM, Paul Moore wrote:
-> >>>> Since it looks like all three LSMs which implement the setprocattr
-> >>>> hook are vulnerable I'm open to the idea that proc_pid_attr_write() is
-> >>>> a better choice for the cred != read_cred check, but I would want to
-> >>>> make sure John and Casey are okay with that.
-> >>>>
-> >>>> John?
-> >>>>
-> >>>> Casey?
-> >>> I'm fine with the change going into proc_pid_attr_write().
-> >> The cred != real_cred checking is not enough.
-> >>
-> >> Consider this situation, when doing override, cred, real_cred and
-> >> new_cred are all same:
-> >>
-> >> after override_creds()    cred == real_cred == new1_cred
-> > I'm sorry, you've lost me.  After override_creds() returns
-> > current->cred and current->real_cred are not going to be the same,
-> > yes?
+On Fri, Apr 19, 2019 at 11:10 AM Wenwen Wang <wang6495@umn.edu> wrote:
 >
-> It's possible the new  cred is equal to current->real_cred and
-> current->cred,
-> so after overrides_creds(), they have the same value.
+> In audit_rule_change(), audit_data_to_entry() is firstly invoked to
+> translate the payload data to the kernel's rule representation. In
+> audit_data_to_entry(), depending on the audit field type, an audit tree may
+> be created in audit_make_tree(), which eventually invokes kmalloc() to
+> allocate the tree.  Since this tree is a temporary tree, it will be then
+> freed in the following execution, e.g., audit_add_rule() if the message
+> type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
+> AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
+> AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
+> temporary tree is not freed.
+>
+> To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
+> or AUDIT_DEL_RULE.
+>
+> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+> ---
+>  kernel/auditfilter.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
 
-Both task_struct.cred and task_struct.real_cred are pointer values,
-assuming that one uses prepare_creds() to allocate/initialize a new
-cred struct for use with override_creds() then the newly created cred
-should never be equal to task_struct.real_cred.  Am I missing
-something, or are you thinking of something else?
+This looks good, it just needs some minor vertical whitespace fixes (see below).
+
+> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> index 63f8b3f..923b858 100644
+> --- a/kernel/auditfilter.c
+> +++ b/kernel/auditfilter.c
+> @@ -1114,22 +1114,28 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+>         int err = 0;
+>         struct audit_entry *entry;
+>
+> -       entry = audit_data_to_entry(data, datasz);
+> -       if (IS_ERR(entry))
+> -               return PTR_ERR(entry);
+> -
+>         switch (type) {
+>         case AUDIT_ADD_RULE:
+> +               entry = audit_data_to_entry(data, datasz);
+> +               if (IS_ERR(entry))
+> +                       return PTR_ERR(entry);
+> +
+
+I realize you are taking the blank line from the code above, but we
+probably don't need it here.
+
+>                 err = audit_add_rule(entry);
+>                 audit_log_rule_change("add_rule", &entry->rule, !err);
+>                 break;
+> +
+
+Definitely do not add this blank line.
+
+>         case AUDIT_DEL_RULE:
+> +               entry = audit_data_to_entry(data, datasz);
+> +               if (IS_ERR(entry))
+> +                       return PTR_ERR(entry);
+> +
+>                 err = audit_del_rule(entry);
+>                 audit_log_rule_change("remove_rule", &entry->rule, !err);
+>                 break;
+> +
+
+Same here.
+
+>         default:
+> -               err = -EINVAL;
+>                 WARN_ON(1);
+> +               return -EINVAL;
+>         }
+>
+>         if (err || type == AUDIT_DEL_RULE) {
+> --
+> 2.7.4
 
 -- 
 paul moore
