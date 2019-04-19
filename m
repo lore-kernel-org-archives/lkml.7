@@ -2,563 +2,372 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F03C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C260C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E1621736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510FD21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jVXxaRh3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1oZfadI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfDSTtG (ORCPT
+        id S1728003AbfDSTtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:49:06 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40873 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfDSTtF (ORCPT
+        Fri, 19 Apr 2019 15:49:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50221 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfDSTtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:49:05 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d31so3062802pgl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:49:05 -0700 (PDT)
+        Fri, 19 Apr 2019 15:49:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z11so7294869wmi.0;
+        Fri, 19 Apr 2019 12:49:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LpoyHi0HeGZF5U4MGNDxs/nnBmqgJD8DcpF6f/4GO14=;
-        b=jVXxaRh3ynwVPNMwZpTgWyD+hmK4dveFAwXhkTehTmmH7wZa6Li3FeAKRclEYCVVgd
-         5Y2A3bTAcnsOfMHQcq5qWbhiz3QSksB4mcz37epSYErjfhrU+xkwWbGfcKL5hTb+oQyf
-         4KGA4QLUnCrspbM3sGo6Ge3z7VLkSI+CYMCkY=
+        d=gmail.com; s=20161025;
+        h=subject:from:cc:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=aJB9vZEivpTYcxe60Rw8TV3c7mATmB3KiJeMZf8AEvs=;
+        b=R1oZfadI5D5jjZhwD5ag2OTCMfSJN6oA89fYGjdqBFMhTmADHFzNtPCX9FuvXWN34r
+         T/FKoKVtnJ/eiauMpzTq0/NfjqDAatmjmqSVhyW0c8vdqOqqLOQfMIcuyExAJ/GfWoCU
+         u62qAkRQL0PLbLRkplIaKxlcVObhzka83AOX84X9ZXovK5TRNblM1WJ+cULhRpsGSRRn
+         8d3tM+otxZaaoin8yei3yLvxzknR0PGXt6WEMT2NzDVoVHavHce0Ru1QTkrLvPxazhnj
+         my0H701I+AQO7+uWY7Xdyj4KQpDBm0lG5pY6v7Vn+1i4J7Z0lNi31/gBYub2BhfQiuNf
+         oHLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LpoyHi0HeGZF5U4MGNDxs/nnBmqgJD8DcpF6f/4GO14=;
-        b=hbB572CdS0btSULPLt/Nk/fJ7V7qe7R+btWW9aYKIggqm3X6sesAG2sIHRNnqIXEwb
-         Kkqa367q6BU+g4607y9hZ2E7Sdyew93K8FQi+RQXdORzQNQsvi3way2dl9ZuXvENWIh7
-         PJe+n+A/k2bo9QefjxK+an60PhxiP8K/qCkiaBi9DiOcb4JHiJlZVeqZQXk9zzISAB08
-         xRMTAM70TA9ttgLe7Z3mMQROSzLGP9J6AYgu+jx6vtTzusDSGzQri8D3rNGI8Yf+xTqO
-         +etP3Wh8GKHQKKjKTpXd85xbQHKHdRTzXLR6LSk2QUgdWYFCqZbVZnQYoKZnnFKQTe0P
-         D94A==
-X-Gm-Message-State: APjAAAXmv7Exv2mXXA+YcnSJkh6/XgOtTQLs+0gP5+ic9Ce86Yi4QKhb
-        T28w9OhYBMEMxsBhE7Kru8XAMg==
-X-Google-Smtp-Source: APXvYqxtySt/hPDC0keU0UMY3Pbx0q/itm+b5891W1vxk5u13rc6DIumWHDNc4jDpywhf5HRYufO2Q==
-X-Received: by 2002:aa7:8384:: with SMTP id u4mr5741934pfm.214.1555703344461;
-        Fri, 19 Apr 2019 12:49:04 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p6sm6943696pfd.122.2019.04.19.12.49.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 12:49:03 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 15:49:02 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-Message-ID: <20190419194902.GE251571@google.com>
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com>
- <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com>
- <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
- <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io>
+        h=x-gm-message-state:subject:from:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aJB9vZEivpTYcxe60Rw8TV3c7mATmB3KiJeMZf8AEvs=;
+        b=bSSjNC4VfwGDbJ8i0/rOL4aSfq4kku9IrruIFKWlX1OAn+XccKMDU3kNz1kP6LVWg/
+         PtORPc/ZSgaWVSywYJy0h9tuGo1y7OK1BlY0X5YRphiGILvE/C2xV0a2mUXEl143IgkP
+         OgrzGSYKsR8+2BITudmuweDDbEC/BO6S+UNdzHU8YesmoVmqHVkpSYsNdZu88x1fFfg/
+         Cv6QM3PCtmt17GsBBx+HNUeCaBhGDmkR3Wx4rHiXf5/YWRPc/hvJ8HzXiEnM5Wro1tqY
+         UZQGx9SSjtR9gNHgfy9/GIYNpWFLB3J10PSG5IfGbjlEH2pej3i+KJwMlxwYkLrvKgGk
+         /aEw==
+X-Gm-Message-State: APjAAAXdYHk1VEB2i32tQ/jKdhu4ejfdYJZ4SVZLNomw+WcPlCFHA3JB
+        K3gZSv+rY0dxPbGKt09WdatknqnqeuM=
+X-Google-Smtp-Source: APXvYqxGNWum+wkHzsDzSv5OqK3N+NQlfFiLVOm34MfLXY9Y42FHzEXmj+JAkaVBuqPXBUcA2q6z3Q==
+X-Received: by 2002:a1c:4844:: with SMTP id v65mr2126039wma.139.1555668948629;
+        Fri, 19 Apr 2019 03:15:48 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id f16sm2697805wru.19.2019.04.19.03.15.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 03:15:47 -0700 (PDT)
+Subject: [PATCH v3 10/11] platform/x86: asus-wmi: Switch fan boost mode
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Message-ID: <bc454e6f-58f5-f326-3037-56e843e96800@gmail.com>
+Date:   Fri, 19 Apr 2019 12:15:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190419191858.iwcvqm6fihbkaata@brauner.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 09:18:59PM +0200, Christian Brauner wrote:
-> On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
-> > On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
-> > > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> > > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > >> On 04/16, Joel Fernandes wrote:
-> > > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> > > >> > >
-> > > >> > > Could you explain when it should return POLLIN? When the whole
-> > > >process exits?
-> > > >> >
-> > > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
-> > > >or when it
-> > > >> > is in a zombie state and there's no other thread in the thread
-> > > >group.
-> > > >>
-> > > >> IOW, when the whole thread group exits, so it can't be used to
-> > > >monitor sub-threads.
-> > > >>
-> > > >> just in case... speaking of this patch it doesn't modify
-> > > >proc_tid_base_operations,
-> > > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
-> > > >going to use
-> > > >> the anonymous file returned by CLONE_PIDFD ?
-> > > >
-> > > >I don't think procfs works that way. /proc/sub-thread-tid has
-> > > >proc_tgid_base_operations despite not being a thread group leader.
-> > > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
-> > > >be hit trivially, and then the code will misbehave.
-> > > >
-> > > >@Joel: I think you'll have to either rewrite this to explicitly bail
-> > > >out if you're dealing with a thread group leader, or make the code
-> > > >work for threads, too.
-> > > 
-> > > The latter case probably being preferred if this API is supposed to be
-> > > useable for thread management in userspace.
-> > 
-> > At the moment, we are not planning to use this for sub-thread management. I
-> > am reworking this patch to only work on clone(2) pidfds which makes the above
-> 
-> Indeed and agreed.
-> 
-> > discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
-> > patches, CLONE_THREAD with pidfd is not supported.
-> 
-> Yes. We have no one asking for it right now and we can easily add this
-> later.
-> 
-> Admittedly I haven't gotten around to reviewing the patches here yet
-> completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
-> on process exit which I think is nice as well. How about returning
-> POLLIN | POLLHUP on process exit?
-> We already do things like this. For example, when you proxy between
-> ttys. If the process that you're reading data from has exited and closed
-> it's end you still can't usually simply exit because it might have still
-> buffered data that you want to read.  The way one can deal with this
-> from  userspace is that you can observe a (POLLHUP | POLLIN) event and
-> you keep on reading until you only observe a POLLHUP without a POLLIN
-> event at which point you know you have read
-> all data.
-> I like the semantics for pidfds as well as it would indicate:
-> - POLLHUP -> process has exited
-> - POLLIN  -> information can be read
+The WMI exposes a write-only device ID where up to three fan modes modes
+can be switched on some laptops (TUF Gaming FX505GM). There is a hotkey
+combination Fn-F5 that does have a fan icon which is designed to toggle
+between fan modes. The DSTS of the device ID returns information about the
+presence of the device and the presence of each of the two additional fan
+modes as a bitmask (0x01 - overboost present, 0x02 - silent present) [1].
 
-Actually I think a bit different about this, in my opinion the pidfd should
-always be readable (we would store the exit status somewhere in the future
-which would be readable, even after task_struct is dead). So I was thinking
-we always return EPOLLIN.  If process has not exited, then it blocks.
+Add a SysFS entry that reads the last written value and updates value in
+WMI on write and a hotkey handler that toggles the modes taking into
+account their availability according to DSTS.
 
-However, we also are returning EPOLLERR in previous patch if the task_struct
-has been reaped (task == NULL). I could change that to EPOLLHUP.
+Modes:
+* 0x00 - normal or balanced,
+* 0x01 - overboost, increased fan RPM,
+* 0x02 - silent, decreased fan RPM
 
-So the update patch looks like below. Thoughts?
+[1] https://lkml.org/lkml/2019/4/12/110
 
----8<-----------------------
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Suggested-by: Daniel Drake <drake@endlessm.com>
+---
+ .../ABI/testing/sysfs-platform-asus-wmi       |  10 ++
+ drivers/platform/x86/asus-wmi.c               | 149 +++++++++++++++++-
+ include/linux/platform_data/x86/asus-wmi.h    |   1 +
+ 3 files changed, 152 insertions(+), 8 deletions(-)
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6a803a0b75df..eb279b5f4115 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -3069,8 +3069,45 @@ static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
- 				   tgid_base_stuff, ARRAY_SIZE(tgid_base_stuff));
- }
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index 1cc54d5e3e10..6f396c4eabdc 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -97,3 +97,13 @@ Description:
+ 		Write changed RGB keyboard backlight parameters:
+ 			* 1 - permanently,
+ 			* 2 - temporarily.
++
++What:		/sys/devices/platform/<platform>/fan_mode
++Date:		Apr 2019
++KernelVersion:	5.1
++Contact:	"Yurii Pavlovskyi" <yurii.pavlovskyi@gmail.com>
++Description:
++		Fan boost mode:
++			* 0 - normal,
++			* 1 - overboost,
++			* 2 - silent
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 0a32079336d8..7974283b7b12 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+ #define NOTIFY_KBD_BRTUP		0xc4
+ #define NOTIFY_KBD_BRTDWN		0xc5
+ #define NOTIFY_KBD_BRTTOGGLE		0xc7
++#define NOTIFY_KBD_FBM			0x99
  
-+static unsigned int proc_tgid_base_poll(struct file *file, struct poll_table_struct *pts)
-+{
-+	int poll_flags = 0;
-+	struct task_struct *task;
-+	struct pid *pid;
-+
-+	task = get_proc_task(file->f_path.dentry->d_inode);
-+
-+	WARN_ON_ONCE(task && !thread_group_leader(task));
-+
-+	/*
-+	 * tasklist_lock must be held because to avoid racing with
-+	 * changes in exit_state and wake up. Basically to avoid:
-+	 *
-+	 * P0: read exit_state = 0
-+	 * P1: write exit_state = EXIT_DEAD
-+	 * P1: Do a wake up - wq is empty, so do nothing
-+	 * P0: Queue for polling - wait forever.
-+	 */
-+	read_lock(&tasklist_lock);
-+	if (!task)
-+		poll_flags = POLLIN | POLLRDNORM | POLLHUP;
-+	else if (task->exit_state && thread_group_empty(task))
-+		poll_flags = POLLIN | POLLRDNORM;
-+
-+	if (!poll_flags) {
-+		pid = proc_pid(file->f_path.dentry->d_inode);
-+		poll_wait(file, &pid->wait_pidfd, pts);
-+	}
-+	read_unlock(&tasklist_lock);
-+
-+	if (task)
-+		put_task_struct(task);
-+	return poll_flags;
-+}
-+
- static const struct file_operations proc_tgid_base_operations = {
- 	.read		= generic_read_dir,
-+	.poll		= proc_tgid_base_poll,
- 	.iterate_shared	= proc_tgid_base_readdir,
- 	.llseek		= generic_file_llseek,
- };
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index b6f4ba16065a..2e0dcbc6d14e 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -3,6 +3,7 @@
- #define _LINUX_PID_H
+ #define ASUS_FAN_DESC			"cpu_fan"
+ #define ASUS_FAN_MFUN			0x13
+@@ -77,6 +78,13 @@ MODULE_LICENSE("GPL");
+ #define ASUS_FAN_CTRL_MANUAL		1
+ #define ASUS_FAN_CTRL_AUTO		2
  
- #include <linux/rculist.h>
-+#include <linux/wait.h>
- 
- enum pid_type
- {
-@@ -60,6 +61,8 @@ struct pid
- 	unsigned int level;
- 	/* lists of tasks that use this pid */
- 	struct hlist_head tasks[PIDTYPE_MAX];
-+	/* wait queue for pidfd pollers */
-+	wait_queue_head_t wait_pidfd;
- 	struct rcu_head rcu;
- 	struct upid numbers[1];
- };
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 20881598bdfa..5c90c239242f 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
- 	for (type = 0; type < PIDTYPE_MAX; ++type)
- 		INIT_HLIST_HEAD(&pid->tasks[type]);
- 
-+	init_waitqueue_head(&pid->wait_pidfd);
++#define ASUS_FAN_MODE_NORMAL		0
++#define ASUS_FAN_MODE_OVERBOOST		1
++#define ASUS_FAN_MODE_OVERBOOST_MASK	0x01
++#define ASUS_FAN_MODE_SILENT		2
++#define ASUS_FAN_MODE_SILENT_MASK	0x02
++#define ASUS_FAN_MODES_MASK		0x03
 +
- 	upid = pid->numbers + ns->level;
- 	spin_lock_irq(&pidmap_lock);
- 	if (!(ns->pid_allocated & PIDNS_ADDING))
-diff --git a/kernel/signal.c b/kernel/signal.c
-index f98448cf2def..e3781703ef7e 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1800,6 +1800,17 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
- 	return ret;
- }
+ #define USB_INTEL_XUSB2PR		0xD0
+ #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
  
-+static void do_wakeup_pidfd_pollers(struct task_struct *task)
-+{
-+	struct pid *pid;
+@@ -198,6 +206,10 @@ struct asus_wmi {
+ 	int asus_hwmon_num_fans;
+ 	int asus_hwmon_pwm;
+ 
++	bool fan_mode_available;
++	u8 fan_mode_mask;
++	u8 fan_mode;
 +
-+	lockdep_assert_held(&tasklist_lock);
-+
-+	pid = get_task_pid(task, PIDTYPE_PID);
-+	wake_up_all(&pid->wait_pidfd);
-+	put_pid(pid);
-+}
-+
- /*
-  * Let a parent know about the death of a child.
-  * For a stopped/continued status change, use do_notify_parent_cldstop instead.
-@@ -1823,6 +1834,9 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
- 	BUG_ON(!tsk->ptrace &&
- 	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+ 	bool kbbl_rgb_available;
+ 	struct asus_kbbl_rgb kbbl_rgb;
  
-+	/* Wake up all pidfd waiters */
-+	do_wakeup_pidfd_pollers(tsk);
-+
- 	if (sig != SIGCHLD) {
- 		/*
- 		 * This is only possible if parent == real_parent.
-diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-index deaf8073bc06..4b31c14f273c 100644
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@ -1,4 +1,4 @@
--CFLAGS += -g -I../../../../usr/include/
-+CFLAGS += -g -I../../../../usr/include/ -lpthread
- 
- TEST_GEN_PROGS := pidfd_test
- 
-diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-index d59378a93782..57ae217339e9 100644
---- a/tools/testing/selftests/pidfd/pidfd_test.c
-+++ b/tools/testing/selftests/pidfd/pidfd_test.c
-@@ -4,18 +4,26 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <linux/types.h>
-+#include <pthread.h>
- #include <sched.h>
- #include <signal.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <syscall.h>
-+#include <sys/epoll.h>
-+#include <sys/mman.h>
- #include <sys/mount.h>
- #include <sys/wait.h>
-+#include <time.h>
- #include <unistd.h>
- 
- #include "../kselftest.h"
- 
-+#define CHILD_THREAD_MIN_WAIT 3 /* seconds */
-+#define MAX_EVENTS 5
-+#define __NR_pidfd_send_signal 424
-+
- static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
- 					unsigned int flags)
- {
-@@ -30,6 +38,22 @@ static void set_signal_received_on_sigusr1(int sig)
- 		signal_received = 1;
- }
- 
-+static int open_pidfd(const char *test_name, pid_t pid)
-+{
-+	char buf[256];
-+	int pidfd;
-+
-+	snprintf(buf, sizeof(buf), "/proc/%d", pid);
-+	pidfd = open(buf, O_DIRECTORY | O_CLOEXEC);
-+
-+	if (pidfd < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to open process file descriptor\n",
-+			test_name);
-+
-+	return pidfd;
-+}
-+
- /*
-  * Straightforward test to see whether pidfd_send_signal() works is to send
-  * a signal to ourself.
-@@ -87,7 +111,6 @@ static int wait_for_pid(pid_t pid)
- static int test_pidfd_send_signal_exited_fail(void)
- {
- 	int pidfd, ret, saved_errno;
--	char buf[256];
- 	pid_t pid;
- 	const char *test_name = "pidfd_send_signal signal exited process";
- 
-@@ -99,17 +122,10 @@ static int test_pidfd_send_signal_exited_fail(void)
- 	if (pid == 0)
- 		_exit(EXIT_SUCCESS);
- 
--	snprintf(buf, sizeof(buf), "/proc/%d", pid);
--
--	pidfd = open(buf, O_DIRECTORY | O_CLOEXEC);
-+	pidfd = open_pidfd(test_name, pid);
- 
- 	(void)wait_for_pid(pid);
- 
--	if (pidfd < 0)
--		ksft_exit_fail_msg(
--			"%s test: Failed to open process file descriptor\n",
--			test_name);
--
- 	ret = sys_pidfd_send_signal(pidfd, 0, NULL, 0);
- 	saved_errno = errno;
- 	close(pidfd);
-@@ -368,10 +384,179 @@ static int test_pidfd_send_signal_syscall_support(void)
+@@ -1827,6 +1839,114 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
  	return 0;
  }
  
-+void *test_pidfd_poll_exec_thread(void *priv)
++/* Fan mode *******************************************************************/
++
++static int fan_mode_check_present(struct asus_wmi *asus)
 +{
-+	char waittime[256];
++	u32 result;
++	int err;
 +
-+	ksft_print_msg("Child Thread: starting. pid %d tid %d ; and sleeping\n",
-+			getpid(), syscall(SYS_gettid));
-+	ksft_print_msg("Child Thread: doing exec of sleep\n");
++	asus->fan_mode_available = false;
 +
-+	sprintf(waittime, "%d", CHILD_THREAD_MIN_WAIT);
-+	execl("/bin/sleep", "sleep", waittime, (char *)NULL);
-+
-+	ksft_print_msg("Child Thread: DONE. pid %d tid %d\n",
-+			getpid(), syscall(SYS_gettid));
-+	return NULL;
-+}
-+
-+static int poll_pidfd(const char *test_name, int pidfd)
-+{
-+	int c;
-+	int epoll_fd = epoll_create1(0);
-+	struct epoll_event event, events[MAX_EVENTS];
-+
-+	if (epoll_fd == -1)
-+		ksft_exit_fail_msg("%s test: Failed to create epoll file descriptor\n",
-+				   test_name);
-+
-+	event.events = EPOLLIN;
-+	event.data.fd = pidfd;
-+
-+	if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, pidfd, &event)) {
-+		ksft_print_msg("%s test: Failed to add epoll file descriptor: Skipping\n",
-+			       test_name);
-+		_exit(PIDFD_SKIP);
++	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FAN_MODE, &result);
++	if (err) {
++		if (err == -ENODEV)
++			return 0;
++		else
++			return err;
 +	}
 +
-+	c = epoll_wait(epoll_fd, events, MAX_EVENTS, 5000);
-+	if (c != 1 || !(events[0].events & EPOLLIN))
-+		ksft_exit_fail_msg("%s test: Unexpected epoll_wait result (c=%d, events=%x)\n",
-+				   test_name, c, events[0].events);
-+
-+	close(epoll_fd);
-+	return events[0].events;
-+
-+}
-+
-+int test_pidfd_poll_exec(int use_waitpid)
-+{
-+	int pid, pidfd;
-+	int status, ret;
-+	pthread_t t1;
-+	time_t prog_start = time(NULL);
-+	const char *test_name = "pidfd_poll check for premature notification on child thread exec";
-+
-+	ksft_print_msg("Parent: pid: %d\n", getpid());
-+	pid = fork();
-+	if (pid == 0) {
-+		ksft_print_msg("Child: starting. pid %d tid %d\n", getpid(),
-+				syscall(SYS_gettid));
-+		pthread_create(&t1, NULL, test_pidfd_poll_exec_thread, NULL);
-+		/*
-+		 * Exec in the non-leader thread will destroy the leader immediately.
-+		 * If the wait in the parent returns too soon, the test fails.
-+		 */
-+		while (1)
-+			;
++	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
++			(result & ASUS_FAN_MODES_MASK)) {
++		asus->fan_mode_available = true;
++		asus->fan_mode_mask = result & ASUS_FAN_MODES_MASK;
 +	}
 +
-+	ksft_print_msg("Parent: Waiting for Child (%d) to complete.\n", pid);
++	return 0;
++}
 +
-+	if (use_waitpid) {
-+		ret = waitpid(pid, &status, 0);
-+		if (ret == -1)
-+			ksft_print_msg("Parent: error\n");
++static int fan_mode_write(struct asus_wmi *asus)
++{
++	int err;
++	u8 value;
++	u32 retval;
 +
-+		if (ret == pid)
-+			ksft_print_msg("Parent: Child process waited for.\n");
++	value = asus->fan_mode;
++
++	pr_info("Set fan mode: %u\n", value);
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_MODE, value, &retval);
++
++	if (err) {
++		pr_warn("Failed to set fan mode: %d\n", err);
++		return err;
++	}
++
++	if (retval != 1) {
++		pr_warn("Failed to set fan mode (retval): 0x%x\n", retval);
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int fan_mode_switch_next(struct asus_wmi *asus)
++{
++	if (asus->fan_mode == ASUS_FAN_MODE_NORMAL) {
++		if (asus->fan_mode_mask & ASUS_FAN_MODE_OVERBOOST_MASK)
++			asus->fan_mode = ASUS_FAN_MODE_OVERBOOST;
++		else if (asus->fan_mode_mask & ASUS_FAN_MODE_SILENT_MASK)
++			asus->fan_mode = ASUS_FAN_MODE_SILENT;
++	} else if (asus->fan_mode == ASUS_FAN_MODE_OVERBOOST) {
++		if (asus->fan_mode_mask & ASUS_FAN_MODE_SILENT_MASK)
++			asus->fan_mode = ASUS_FAN_MODE_SILENT;
++		else
++			asus->fan_mode = ASUS_FAN_MODE_NORMAL;
 +	} else {
-+		pidfd = open_pidfd(test_name, pid);
-+		poll_pidfd(test_name, pidfd);
++		asus->fan_mode = ASUS_FAN_MODE_NORMAL;
 +	}
 +
-+	time_t prog_time = time(NULL) - prog_start;
-+
-+	ksft_print_msg("Time waited for child: %lu\n", prog_time);
-+
-+	close(pidfd);
-+
-+	if (prog_time < CHILD_THREAD_MIN_WAIT || prog_time > CHILD_THREAD_MIN_WAIT + 2)
-+		ksft_exit_fail_msg("%s test: Failed\n", test_name);
-+	else
-+		ksft_test_result_pass("%s test: Passed\n", test_name);
++	return fan_mode_write(asus);
 +}
 +
-+void *test_pidfd_poll_leader_exit_thread(void *priv)
++static ssize_t fan_mode_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
 +{
-+	char waittime[256];
++	struct asus_wmi *asus = dev_get_drvdata(dev);
 +
-+	ksft_print_msg("Child Thread: starting. pid %d tid %d ; and sleeping\n",
-+			getpid(), syscall(SYS_gettid));
-+	sleep(CHILD_THREAD_MIN_WAIT);
-+	ksft_print_msg("Child Thread: DONE. pid %d tid %d\n", getpid(), syscall(SYS_gettid));
-+	return NULL;
++	return show_u8(asus->fan_mode, buf);
 +}
 +
-+static time_t *child_exit_secs;
-+int test_pidfd_poll_leader_exit(int use_waitpid)
++static ssize_t fan_mode_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
 +{
-+	int pid, pidfd;
-+	int status, ret;
-+	pthread_t t1, t2;
-+	time_t prog_start = time(NULL);
-+	const char *test_name = "pidfd_poll check for premature notification on non-empty"
-+				"group leader exit";
++	int result;
++	u8 new_mode;
 +
-+	child_exit_secs = mmap(NULL, sizeof *child_exit_secs, PROT_READ | PROT_WRITE,
-+			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
++	struct asus_wmi *asus = dev_get_drvdata(dev);
 +
-+	ksft_print_msg("Parent: pid: %d\n", getpid());
-+	pid = fork();
-+	if (pid == 0) {
-+		ksft_print_msg("Child: starting. pid %d tid %d\n", getpid(), syscall(SYS_gettid));
-+		pthread_create(&t1, NULL, test_pidfd_poll_leader_exit_thread, NULL);
-+		pthread_create(&t2, NULL, test_pidfd_poll_leader_exit_thread, NULL);
++	result = store_u8(&new_mode, buf, count);
++	if (result < 0)
++		return result;
 +
-+		/*
-+		 * glibc exit calls exit_group syscall, so explicity call exit only
-+		 * so that only the group leader exits, leaving the threads alone.
-+		 */
-+		*child_exit_secs = time(NULL);
-+		syscall(SYS_exit, 0);
++	if (new_mode == ASUS_FAN_MODE_OVERBOOST) {
++		if (!(asus->fan_mode_mask & ASUS_FAN_MODE_OVERBOOST_MASK))
++			return -EINVAL;
++	} else if (new_mode == ASUS_FAN_MODE_SILENT) {
++		if (!(asus->fan_mode_mask & ASUS_FAN_MODE_SILENT_MASK))
++			return -EINVAL;
++	} else if (new_mode != ASUS_FAN_MODE_NORMAL) {
++		return -EINVAL;
 +	}
 +
-+	ksft_print_msg("Parent: Waiting for Child (%d) to complete.\n", pid);
++	asus->fan_mode = new_mode;
++	fan_mode_write(asus);
 +
-+	if (use_waitpid) {
-+		ret = waitpid(pid, &status, 0);
-+		if (ret == -1)
-+			ksft_print_msg("Parent: error\n");
-+	} else {
-+		/*
-+		 * This sleep tests for the case where if the child exits, and is in
-+		 * EXIT_ZOMBIE, but the thread group leader is non-empty, then the poll
-+		 * doesn't prematurely return even though there are active threads
-+		 */
-+		sleep(1);
-+		pidfd = open_pidfd(test_name, pid);
-+		poll_pidfd(test_name, pidfd);
-+	}
-+
-+	if (ret == pid)
-+		ksft_print_msg("Parent: Child process waited for.\n");
-+
-+	time_t since_child_exit = time(NULL) - *child_exit_secs;
-+
-+	ksft_print_msg("Time since child exit: %lu\n", since_child_exit);
-+
-+	close(pidfd);
-+
-+	if (since_child_exit < CHILD_THREAD_MIN_WAIT ||
-+			since_child_exit > CHILD_THREAD_MIN_WAIT + 2)
-+		ksft_exit_fail_msg("%s test: Failed\n", test_name);
-+	else
-+		ksft_test_result_pass("%s test: Passed\n", test_name);
++	return result;
 +}
 +
- int main(int argc, char **argv)
- {
- 	ksft_print_header();
++// Fan mode: 0 - normal, 1 - overboost, 2 - silent
++static DEVICE_ATTR_RW(fan_mode);
++
+ /* Backlight ******************************************************************/
  
-+	test_pidfd_poll_exec(0);
-+	test_pidfd_poll_exec(1);
-+	test_pidfd_poll_leader_exit(0);
-+	test_pidfd_poll_leader_exit(1);
- 	test_pidfd_send_signal_syscall_support();
- 	test_pidfd_send_signal_simple_success();
- 	test_pidfd_send_signal_exited_fail();
+ static int read_backlight_power(struct asus_wmi *asus)
+@@ -2078,6 +2198,11 @@ static void asus_wmi_handle_notify_code(int code, struct asus_wmi *asus)
+ 		return;
+ 	}
+ 
++	if (asus->fan_mode_available && code == NOTIFY_KBD_FBM) {
++		fan_mode_switch_next(asus);
++		return;
++	}
++
+ 	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
+ 		return;
+ 
+@@ -2234,6 +2359,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_touchpad.attr,
+ 	&dev_attr_lid_resume.attr,
+ 	&dev_attr_als_enable.attr,
++	&dev_attr_fan_mode.attr,
+ 	NULL
+ };
+ 
+@@ -2255,6 +2381,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		devid = ASUS_WMI_DEVID_LID_RESUME;
+ 	else if (attr == &dev_attr_als_enable.attr)
+ 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
++	else if (attr == &dev_attr_fan_mode.attr)
++		ok = asus->fan_mode_available;
+ 
+ 	if (devid != -1)
+ 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
+@@ -2355,12 +2483,7 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ 		asus_wmi_set_devstate(ASUS_WMI_DEVID_CWAP,
+ 				      asus->driver->quirks->wapf, NULL);
+ 
+-	return asus_wmi_sysfs_init(asus->platform_device);
+-}
+-
+-static void asus_wmi_platform_exit(struct asus_wmi *asus)
+-{
+-	asus_wmi_sysfs_exit(asus->platform_device);
++	return 0;
+ }
+ 
+ /* debugfs ********************************************************************/
+@@ -2539,6 +2662,14 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_platform;
+ 
++	err = fan_mode_check_present(asus);
++	if (err)
++		goto fail_fan_mode;
++
++	err = asus_wmi_sysfs_init(asus->platform_device);
++	if (err)
++		goto fail_sysfs;
++
+ 	err = asus_wmi_input_init(asus);
+ 	if (err)
+ 		goto fail_input;
+@@ -2622,7 +2753,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ fail_hwmon:
+ 	asus_wmi_input_exit(asus);
+ fail_input:
+-	asus_wmi_platform_exit(asus);
++	asus_wmi_sysfs_exit(asus->platform_device);
++fail_sysfs:
++fail_fan_mode:
+ fail_platform:
+ 	kfree(asus);
+ 	return err;
+@@ -2640,7 +2773,7 @@ static int asus_wmi_remove(struct platform_device *device)
+ 	kbbl_rgb_exit(asus);
+ 	asus_wmi_rfkill_exit(asus);
+ 	asus_wmi_debugfs_exit(asus);
+-	asus_wmi_platform_exit(asus);
++	asus_wmi_sysfs_exit(asus->platform_device);
+ 	asus_hwmon_fan_set_auto(asus);
+ 
+ 	kfree(asus);
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index c8c6e939e196..fdf5839f64ad 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -59,6 +59,7 @@
+ #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
+ #define ASUS_WMI_DEVID_KBD_RGB		0x00100056
+ #define ASUS_WMI_DEVID_KBD_RGB2		0x00100057
++#define ASUS_WMI_DEVID_FAN_MODE		0x00110018
+ 
+ /* Misc */
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
+-- 
+2.17.1
+
