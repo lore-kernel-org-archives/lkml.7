@@ -7,57 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FF7C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201BAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC86D2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1542064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TNki1vF/"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DoaGhE8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfDSTD6 (ORCPT
+        id S1728900AbfDSTEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:03:58 -0400
+        Fri, 19 Apr 2019 15:04:02 -0400
 Received: from terminus.zytor.com ([198.137.202.136]:42949 "EHLO
         mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbfDSTD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:56 -0400
+        id S1729199AbfDSTD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:03:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCGxQE265334
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3JCHkgA265387
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 19 Apr 2019 05:16:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCGxQE265334
+        Fri, 19 Apr 2019 05:17:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3JCHkgA265387
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555676220;
-        bh=oMquC4Hqs+4PBwEW4SZwEz0ab5O6GnBFepmZPk2AUlg=;
+        s=2019041745; t=1555676267;
+        bh=3lHQyr7OY8VigoK/YL4cHC83L/bIkpKWAHB8JQwF76A=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TNki1vF/ryTh4tmJQ//3b7q+C5MblTGg7f8crbLPJMcyGfuTxgQ9XT/OAOusCTJma
-         G5vxOpXqdFr9ocAZhR7hlQZOg1wYR9Lps9BKY2M2DlRSQUS5Aptz6CqgrrcKdhwfbW
-         Mrmzwp/5DMYw8V+DXY4WTvDjiNvfcP/BWtfHygq+CauH9wxNMUEwJMeSq6cbix6E3D
-         bFKnxoAx3/hZRmzCE9aFFjT7pOt4bCrwqbW//XXp38oa/TDK9VNUWwrOl358SX+efV
-         6LKOtdIQ+c+qA+BU77Tl2Vo9JiTqLOHfYdjTM7LDY56Q1lW72GruKtmBCrhQo1bdLo
-         0HDMgg3dYQiJg==
+        b=DoaGhE8JiY1m11SUSsmJvaYEaFaWq4Wp5Uo+7C/3vA1uygfQgCLul1YJwNv4FxEDu
+         XV+LW81sbNYU/nQGoZ2xdroiSD3xxWgtBjvwoX+S8hGjFtcSNVqKkn7dl4DCv0j6wu
+         ZYS63zlPJyqAJxmHGbvj5sKaUbaOY5yJ09+yZmMIVjX+QjeskOj69QW4R6gSIZ1e/n
+         5KYzXMyNIU28v4gmhsI3hKX5yxo2MZkkxsI8JMPiOVowkNyYvnbELJgLysA31x1N6O
+         nv08Xu06v5E5zCcI6o0roO/Q0qSMWjtK0xwfcIzna/Br7hw4dJ6JeWtQqJ6ZRIHixw
+         wi0LrqiMiTSqQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCGwqr265331;
-        Fri, 19 Apr 2019 05:16:58 -0700
-Date:   Fri, 19 Apr 2019 05:16:58 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3JCHj9S265384;
+        Fri, 19 Apr 2019 05:17:45 -0700
+Date:   Fri, 19 Apr 2019 05:17:45 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Konstantin Khlebnikov <tipbot@zytor.com>
-Message-ID: <tip-5b61d50ab4ef590f5e1d4df15cd2cea5f5715308@git.kernel.org>
-Cc:     tglx@linutronix.de, a.p.zijlstra@chello.nl, hpa@zytor.com,
-        khlebnikov@yandex-team.ru, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        mingo@kernel.org
-Reply-To: khlebnikov@yandex-team.ru, hpa@zytor.com, a.p.zijlstra@chello.nl,
-          tglx@linutronix.de, mingo@kernel.org,
-          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org
-In-Reply-To: <155125501891.293431.3345233332801109696.stgit@buzz>
-References: <155125501891.293431.3345233332801109696.stgit@buzz>
+Message-ID: <tip-1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8@git.kernel.org>
+Cc:     hpa@zytor.com, a.p.zijlstra@chello.nl, peterz@infradead.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        torvalds@linux-foundation.org, khlebnikov@yandex-team.ru
+Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, khlebnikov@yandex-team.ru, hpa@zytor.com,
+          a.p.zijlstra@chello.nl, tglx@linutronix.de, peterz@infradead.org
+In-Reply-To: <155125502079.293431.3947497929372138600.stgit@buzz>
+References: <155125502079.293431.3947497929372138600.stgit@buzz>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/core: Handle overflow in
- cpu_shares_write_u64
-Git-Commit-ID: 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308
+Subject: [tip:sched/core] sched/core: Check quota and period overflow at
+ usec to nsec conversion
+Git-Commit-ID: 1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,47 +69,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5b61d50ab4ef590f5e1d4df15cd2cea5f5715308
-Gitweb:     https://git.kernel.org/tip/5b61d50ab4ef590f5e1d4df15cd2cea5f5715308
+Commit-ID:  1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8
+Gitweb:     https://git.kernel.org/tip/1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8
 Author:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-AuthorDate: Wed, 27 Feb 2019 11:10:18 +0300
+AuthorDate: Wed, 27 Feb 2019 11:10:20 +0300
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Fri, 19 Apr 2019 13:42:10 +0200
 
-sched/core: Handle overflow in cpu_shares_write_u64
+sched/core: Check quota and period overflow at usec to nsec conversion
 
-Bit shift in scale_load() could overflow shares. This patch saturates
-it to MAX_SHARES like following sched_group_set_shares().
+Large values could overflow u64 and pass following sanity checks.
 
-Example:
+ # echo 18446744073750000 > cpu.cfs_period_us
+ # cat cpu.cfs_period_us
+ 40448
 
- # echo 9223372036854776832 > cpu.shares
- # cat cpu.shares
+ # echo 18446744073750000 > cpu.cfs_quota_us
+ # cat cpu.cfs_quota_us
+ 40448
 
-Before patch: 1024
-After pattch: 262144
+After this patch they will fail with -EINVAL.
 
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
+Link: http://lkml.kernel.org/r/155125502079.293431.3947497929372138600.stgit@buzz
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fb09eaad1d3a..685b1541ce51 100644
+index 685b1541ce51..de8ab411826c 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6507,6 +6507,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
- static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
- 				struct cftype *cftype, u64 shareval)
- {
-+	if (shareval > scale_load_down(ULONG_MAX))
-+		shareval = MAX_SHARES;
- 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
+@@ -6611,8 +6611,10 @@ static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
+ 	period = ktime_to_ns(tg->cfs_bandwidth.period);
+ 	if (cfs_quota_us < 0)
+ 		quota = RUNTIME_INF;
+-	else
++	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
+ 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
++	else
++		return -EINVAL;
+ 
+ 	return tg_set_cfs_bandwidth(tg, period, quota);
  }
+@@ -6634,6 +6636,9 @@ static int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
+ {
+ 	u64 quota, period;
+ 
++	if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
++
+ 	period = (u64)cfs_period_us * NSEC_PER_USEC;
+ 	quota = tg->cfs_bandwidth.quota;
  
