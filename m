@@ -2,252 +2,304 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2195C282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C3C282E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64936217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9msF5Bc"
+	by mail.kernel.org (Postfix) with ESMTP id 5F77C217FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfDSWqZ (ORCPT
+        id S1726307AbfDSWrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 18:46:25 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41023 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfDSWqY (ORCPT
+        Fri, 19 Apr 2019 18:47:47 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41775 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfDSWrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 18:46:24 -0400
-Received: by mail-vs1-f67.google.com with SMTP id g187so3501929vsc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 15:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z9BZNnXe85uskZFvz7dY6ivJpp0VMOQrQnMUIB7aytc=;
-        b=N9msF5BctZCDYRQh6reDgjFREMWOTLJCoq+cOkbKvtoXHPVzJN6A5q3Ztgcj7zMBCf
-         L5bX9Wcd+qRJ41ibbQ6gH2zkQoQQt5UN4WAJCaXqx1ROknaD4RUHyZJcKrXaCRz4EyrL
-         EToNcPMQ2IlwhojCoOBLQw3Xl/YoVorc8bZK2bibFgDGHl6b2N8MWOFJvRtPv25DCsLP
-         Wu4dg5oSOHEoXzmPrCaeF4dai9gBJVM7yPBuxW+OOEt1uo64wSgmJ2YIWrN6MsB/hNmo
-         c1PAhBmrueHPN4PnSpRNA2dPDTvpA39GfN2R7/m4SdWaP0HB2PVJ4axqhTXVGPqG8ngC
-         g2nA==
+        Fri, 19 Apr 2019 18:47:46 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x10so6234435qto.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 15:47:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z9BZNnXe85uskZFvz7dY6ivJpp0VMOQrQnMUIB7aytc=;
-        b=rW1S119Ohk5ivoyll8GcN2sO1eueeXD6GqyPK32alM8YzgnBuL1xbZvGFWAdMNb2tu
-         MlQ/cfmdVE1EVjzaMxLsCqyBQb7D8iDiCc6Aj0RrXYZ5l4e596woGr3hDldPc4ZVoljZ
-         Sp6Z2xcZeX4Mz2vtXFquFWld2a9y0WTI/BEWav7BizCmC4GmIzKRQs8MR9hXWqgmzlZ2
-         gr6G5j4/BjHjbfagrWVXsV23O8aq6kHGkNxlErT8bS82+8mE3B2ahfn2bNLtW9KsApKe
-         J7nxQPjRLG8KkEjzTzJD5LC98pYZslRqO0HIusc3fjI/PmDTTXw+YpszuqLDN8hh+vg5
-         F16Q==
-X-Gm-Message-State: APjAAAUJDuC9Q6cJL79ZyVT70BB/FZyVvL1BQZDLvc/2I1JgXPXj/MY6
-        kvGDt+D3llfOcKpyl/RhMRlfznvEwWJ27VnhHCYw3w==
-X-Google-Smtp-Source: APXvYqwFExF26xoQibDWcvVDeXykJ2BJt/rX5/X/ejlzJLCYFEDIZcFK3BXEh0mC5XV9HLZpgYW0XYPKZf8Az9rP8ps=
-X-Received: by 2002:a67:ea0a:: with SMTP id g10mr3399212vso.77.1555713982564;
- Fri, 19 Apr 2019 15:46:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io> <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io> <20190419194902.GE251571@google.com>
- <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
- <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
- <CAKOZueuBTwyrLtpVQaoTAgjGSgeHY7392sKv5uAYdy4XKNHKHQ@mail.gmail.com>
- <CAHrFyr6f_CUP__818e1u6TaHd-XpWY6NOxri4yzzR6rNY5rk_w@mail.gmail.com> <CAHrFyr76KrgUwHz91fZbkvHD43KzVrcXndRKUJjG9-gT4ZFZuQ@mail.gmail.com>
-In-Reply-To: <CAHrFyr76KrgUwHz91fZbkvHD43KzVrcXndRKUJjG9-gT4ZFZuQ@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 19 Apr 2019 15:46:09 -0700
-Message-ID: <CAKOZueu_ouL_u17UKNNkDaSuP-_m_=fE8nLZGb9YAjonF=zVHg@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vIS7MDTSEtYce2+CW2jJ89KJsV5GOFggi2hqHHvCCSE=;
+        b=SfQYGph+ujJtF9iVqS6W13OaVUk8Q8rczYcJWoXqveqjJbTA+Zx7yIdFgm1ghCVI5f
+         wwMN26Jq3ATHFn1yhXJLxMdYP+6PVf0XksF9azBgu8YpaRFarMpId2kj+jqHEXU8grfE
+         7E/HWxwgnc4u2nF+qt80tzeKEkaEDG4eYfZ4hmdbBtVd4D6ILu5tjh//EvRAj5Qupy3F
+         nnaBEajISYITW+I6JQwFEV1RXVhuQKKbiah9mSsQT4s8x8wPgiujbgv1SzgPwp7ZLNCl
+         WfTft8K9xraSlSKl976xkZTiMEdBh1jZcBq3Ur7Og8LLn/nxre18EyLgqpYuq38mKsfr
+         Wtpg==
+X-Gm-Message-State: APjAAAWOkwrKHIaWlVf33IPa3zmMHYgxlGDN9pvL7WmurDlP2J7i/F5F
+        52TvsBbjaPPc7az3F5O7jVhGZg==
+X-Google-Smtp-Source: APXvYqxx4I9Xry+3LvTfBjLXp09NMdxLKmu0XJFptxlEsqLx3fO3wGWj0g3xOnFPx1VxyxPlyOdBKQ==
+X-Received: by 2002:a0c:924a:: with SMTP id 10mr5537258qvz.168.1555714065488;
+        Fri, 19 Apr 2019 15:47:45 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id z9sm3804230qtb.73.2019.04.19.15.47.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 15:47:44 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 18:47:42 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+        Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pv-drivers <Pv-drivers@vmware.com>,
+        Julien Freche <jfreche@vmware.com>
+Subject: Re: [PATCH v2 1/4] mm/balloon_compaction: list interfaces
+Message-ID: <20190419183802-mutt-send-email-mst@kernel.org>
+References: <20190328010718.2248-1-namit@vmware.com>
+ <20190328010718.2248-2-namit@vmware.com>
+ <20190419174452-mutt-send-email-mst@kernel.org>
+ <B2DD0CC3-DA8D-408C-986F-130B4B00A892@vmware.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <B2DD0CC3-DA8D-408C-986F-130B4B00A892@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 3:02 PM Christian Brauner <christian@brauner.io> wrote:
->
-> On Fri, Apr 19, 2019 at 11:48 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > On Fri, Apr 19, 2019 at 11:21 PM Daniel Colascione <dancol@google.com> wrote:
-> > >
-> > > On Fri, Apr 19, 2019 at 1:57 PM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > On Fri, Apr 19, 2019 at 10:34 PM Daniel Colascione <dancol@google.com> wrote:
-> > > > >
-> > > > > On Fri, Apr 19, 2019 at 12:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > > > >
-> > > > > > On Fri, Apr 19, 2019 at 09:18:59PM +0200, Christian Brauner wrote:
-> > > > > > > On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
-> > > > > > > > On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
-> > > > > > > > > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> > > > > > > > > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > > > > > > > >> On 04/16, Joel Fernandes wrote:
-> > > > > > > > > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> > > > > > > > > >> > >
-> > > > > > > > > >> > > Could you explain when it should return POLLIN? When the whole
-> > > > > > > > > >process exits?
-> > > > > > > > > >> >
-> > > > > > > > > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
-> > > > > > > > > >or when it
-> > > > > > > > > >> > is in a zombie state and there's no other thread in the thread
-> > > > > > > > > >group.
-> > > > > > > > > >>
-> > > > > > > > > >> IOW, when the whole thread group exits, so it can't be used to
-> > > > > > > > > >monitor sub-threads.
-> > > > > > > > > >>
-> > > > > > > > > >> just in case... speaking of this patch it doesn't modify
-> > > > > > > > > >proc_tid_base_operations,
-> > > > > > > > > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
-> > > > > > > > > >going to use
-> > > > > > > > > >> the anonymous file returned by CLONE_PIDFD ?
-> > > > > > > > > >
-> > > > > > > > > >I don't think procfs works that way. /proc/sub-thread-tid has
-> > > > > > > > > >proc_tgid_base_operations despite not being a thread group leader.
-> > > > > > > > > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
-> > > > > > > > > >be hit trivially, and then the code will misbehave.
-> > > > > > > > > >
-> > > > > > > > > >@Joel: I think you'll have to either rewrite this to explicitly bail
-> > > > > > > > > >out if you're dealing with a thread group leader, or make the code
-> > > > > > > > > >work for threads, too.
-> > > > > > > > >
-> > > > > > > > > The latter case probably being preferred if this API is supposed to be
-> > > > > > > > > useable for thread management in userspace.
-> > > > > > > >
-> > > > > > > > At the moment, we are not planning to use this for sub-thread management. I
-> > > > > > > > am reworking this patch to only work on clone(2) pidfds which makes the above
-> > > > > > >
-> > > > > > > Indeed and agreed.
-> > > > > > >
-> > > > > > > > discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
-> > > > > > > > patches, CLONE_THREAD with pidfd is not supported.
-> > > > > > >
-> > > > > > > Yes. We have no one asking for it right now and we can easily add this
-> > > > > > > later.
-> > > > > > >
-> > > > > > > Admittedly I haven't gotten around to reviewing the patches here yet
-> > > > > > > completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
-> > > > > > > on process exit which I think is nice as well. How about returning
-> > > > > > > POLLIN | POLLHUP on process exit?
-> > > > > > > We already do things like this. For example, when you proxy between
-> > > > > > > ttys. If the process that you're reading data from has exited and closed
-> > > > > > > it's end you still can't usually simply exit because it might have still
-> > > > > > > buffered data that you want to read.  The way one can deal with this
-> > > > > > > from  userspace is that you can observe a (POLLHUP | POLLIN) event and
-> > > > > > > you keep on reading until you only observe a POLLHUP without a POLLIN
-> > > > > > > event at which point you know you have read
-> > > > > > > all data.
-> > > > > > > I like the semantics for pidfds as well as it would indicate:
-> > > > > > > - POLLHUP -> process has exited
-> > > > > > > - POLLIN  -> information can be read
-> > > > > >
-> > > > > > Actually I think a bit different about this, in my opinion the pidfd should
-> > > > > > always be readable (we would store the exit status somewhere in the future
-> > > > > > which would be readable, even after task_struct is dead). So I was thinking
-> > > > > > we always return EPOLLIN.  If process has not exited, then it blocks.
-> > > > >
-> > > > > ITYM that a pidfd polls as readable *once a task exits* and stays
-> > > > > readable forever. Before a task exit, a poll on a pidfd should *not*
-> > > > > yield POLLIN and reading that pidfd should *not* complete immediately.
-> > > > > There's no way that, having observed POLLIN on a pidfd, you should
-> > > > > ever then *not* see POLLIN on that pidfd in the future --- it's a
-> > > > > one-way transition from not-ready-to-get-exit-status to
-> > > > > ready-to-get-exit-status.
-> > > >
-> > > > What do you consider interesting state transitions? A listener on a pidfd
-> > > > in epoll_wait() might be interested if the process execs for example.
-> > > > That's a very valid use-case for e.g. systemd.
-> > >
-> > > Sure, but systemd is specialized.
-> >
-> > So is Android and we're not designing an interface for Android but for
-> > all of userspace.
-> > I hope this is clear. Service managers are quite important and systemd
-> > is the largest one
-> > and they can make good use of this feature.
-> >
-> > >
-> > > There are two broad classes of programs that care about process exit
-> > > status: 1) those that just want to do something and wait for it to
-> > > complete, and 2) programs that want to perform detailed monitoring of
-> > > processes and intervention in their state. #1 is overwhelmingly more
-> > > common. The basic pidfd feature should take care of case #1 only, as
-> > > wait*() in file descriptor form. I definitely don't think we should be
-> > > complicating the interface and making it more error-prone (see below)
-> > > for the sake of that rare program that cares about non-exit
-> > > notification conditions. You're proposing a complicated combination of
-> > > poll bit flags that most users (the ones who just wait to wait for
-> > > processes) don't care about and that risk making the facility hard to
-> > > use with existing event loops, which generally recognize readability
-> > > and writability as the only properties that are worth monitoring.
-> >
-> > That whole pargraph is about dismissing a range of valid use-cases based on
-> > assumptions such as "way more common" and
-> > even argues that service managers are special cases and therefore not
-> > really worth considering. I would like to be more open to other use cases.
-> >
-> > >
-> > > > We can't use EPOLLIN for that too otherwise you'd need to to waitid(_WNOHANG)
-> > > > to check whether an exit status can be read which is not nice and then you
-> > > > multiplex different meanings on the same bit.
-> > > > I would prefer if the exit status can only be read from the parent which is
-> > > > clean and the least complicated semantics, i.e. Linus waitid() idea.
-> > >
-> > > Exit status information should be *at least* as broadly available
-> > > through pidfds as it is through the last field of /proc/pid/stat
-> > > today, and probably more broadly. I've been saying for six months now
-> > > that we need to talk about *who* should have access to exit status
-> > > information. We haven't had that conversation yet. My preference is to
-> > > just make exit status information globally available, as FreeBSD seems
->
-> Totally aside from whether or not this is a good idea but since you
-> keep bringing
-> this up and I'm really curious about this where is this documented and how
-> does this work, please?
+On Fri, Apr 19, 2019 at 10:34:04PM +0000, Nadav Amit wrote:
+> > On Apr 19, 2019, at 3:07 PM, Michael S. Tsirkin <mst@redhat.com> wrote:
+> > 
+> > On Thu, Mar 28, 2019 at 01:07:15AM +0000, Nadav Amit wrote:
+> >> Introduce interfaces for ballooning enqueueing and dequeueing of a list
+> >> of pages. These interfaces reduce the overhead of storing and restoring
+> >> IRQs by batching the operations. In addition they do not panic if the
+> >> list of pages is empty.
+> >> 
+> >> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> >> Cc: Jason Wang <jasowang@redhat.com>
+> >> Cc: linux-mm@kvack.org
+> >> Cc: virtualization@lists.linux-foundation.org
+> >> Reviewed-by: Xavier Deguillard <xdeguillard@vmware.com>
+> >> Signed-off-by: Nadav Amit <namit@vmware.com>
+> >> ---
+> >> include/linux/balloon_compaction.h |   4 +
+> >> mm/balloon_compaction.c            | 145 +++++++++++++++++++++--------
+> >> 2 files changed, 111 insertions(+), 38 deletions(-)
+> >> 
+> >> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
+> >> index f111c780ef1d..1da79edadb69 100644
+> >> --- a/include/linux/balloon_compaction.h
+> >> +++ b/include/linux/balloon_compaction.h
+> >> @@ -64,6 +64,10 @@ extern struct page *balloon_page_alloc(void);
+> >> extern void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
+> >> 				 struct page *page);
+> >> extern struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info);
+> >> +extern size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
+> >> +				      struct list_head *pages);
+> >> +extern size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
+> >> +				     struct list_head *pages, int n_req_pages);
+> > 
+> > Why size_t I wonder? It can never be > n_req_pages which is int.
+> > Callers also seem to assume int.
+> 
+> Only because on the previous iteration
+> ( https://lkml.org/lkml/2019/2/6/912 ) you said:
+> 
+> > Are we sure this int never overflows? Why not just use u64
+> > or size_t straight away?
 
-According to the kqueue FreeBSD man page [1] (I'm reading the FreeBSD
-12 version), it's possible to register in a kqueue instead a PID of
-interest via EVFILT_PROC and receive a NOTE_EXIT notification when
-that process dies. NOTE_EXIT comes with the exit status of the process
-that died. I don't see any requirement that EVFILT_PROC work only on
-child processes of the waiter: on the contrary, the man page states
-that "if a process can normally see another
-process, it can attach an event to it.". This documentation reads to
-me like on FreeBSD process exit status is much more widely available
-than it is on Linux. Am I missing something?
+And the answer is because n_req_pages is an int too?
 
-[1] https://www.freebsd.org/cgi/man.cgi?query=kqueue&apropos=0&sektion=0&manpath=FreeBSD+12.0-RELEASE+and+Ports&arch=default&format=html
+> 
+> I am ok either way, but please be consistent.
+
+I guess n_req_pages should be size_t too then?
+
+> > 
+> >> static inline void balloon_devinfo_init(struct balloon_dev_info *balloon)
+> >> {
+> > 
+> > 
+> >> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+> >> index ef858d547e2d..88d5d9a01072 100644
+> >> --- a/mm/balloon_compaction.c
+> >> +++ b/mm/balloon_compaction.c
+> >> @@ -10,6 +10,106 @@
+> >> #include <linux/export.h>
+> >> #include <linux/balloon_compaction.h>
+> >> 
+> >> +static int balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
+> >> +				     struct page *page)
+> >> +{
+> >> +	/*
+> >> +	 * Block others from accessing the 'page' when we get around to
+> >> +	 * establishing additional references. We should be the only one
+> >> +	 * holding a reference to the 'page' at this point.
+> >> +	 */
+> >> +	if (!trylock_page(page)) {
+> >> +		WARN_ONCE(1, "balloon inflation failed to enqueue page\n");
+> >> +		return -EFAULT;
+> > 
+> > Looks like all callers bug on a failure. So let's just do it here,
+> > and then make this void?
+> 
+> As you noted below, actually balloon_page_list_enqueue() does not do
+> anything when an error occurs. I really prefer to avoid adding BUG_ON() - 
+> I always get pushed back on such things. Yes, this might lead to memory
+> leak, but there is no reason to crash the system.
+
+Need to audit callers to make sure they don't misbehave in worse ways.
+
+I think in this case this indicates that someone is using the page so if
+one keeps going and adds it into balloon this will lead to corruption down the road.
+
+If you can change the caller code such that it's just a leak,
+then a warning is more appropriate. Or even do not warn at all.
+
+
+> >> +	}
+> >> +	list_del(&page->lru);
+> >> +	balloon_page_insert(b_dev_info, page);
+> >> +	unlock_page(page);
+> >> +	__count_vm_event(BALLOON_INFLATE);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +/**
+> >> + * balloon_page_list_enqueue() - inserts a list of pages into the balloon page
+> >> + *				 list.
+> >> + * @b_dev_info: balloon device descriptor where we will insert a new page to
+> >> + * @pages: pages to enqueue - allocated using balloon_page_alloc.
+> >> + *
+> >> + * Driver must call it to properly enqueue a balloon pages before definitively
+> >> + * removing it from the guest system.
+> > 
+> > A bunch of grammar error here. Pls fix for clarify.
+> > Also - document that nothing must lock the pages? More assumptions?
+> > What is "it" in this context? All pages? And what does removing from
+> > guest mean? Really adding to the balloon?
+> 
+> I pretty much copy-pasted this description from balloon_page_enqueue(). I
+> see that you edited this message in the past at least couple of times (e.g.,
+> c7cdff0e86471 “virtio_balloon: fix deadlock on OOM”) and left it as is.
+> 
+> So maybe all of the comments in this file need a rework, but I don’t think
+> this patch-set needs to do it.
+
+I see.
+That one dealt with one page so "it" was the page. This one deals with
+many pages so you can't just copy it over without changes.
+Makes it look like "it" refers to driver or guest.
+
+> >> + *
+> >> + * Return: number of pages that were enqueued.
+> >> + */
+> >> +size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
+> >> +			       struct list_head *pages)
+> >> +{
+> >> +	struct page *page, *tmp;
+> >> +	unsigned long flags;
+> >> +	size_t n_pages = 0;
+> >> +
+> >> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+> >> +	list_for_each_entry_safe(page, tmp, pages, lru) {
+> >> +		balloon_page_enqueue_one(b_dev_info, page);
+> > 
+> > Do we want to do something about an error here?
+> 
+> Hmm… This is really something that should never happen, but I still prefer
+> to avoid BUG_ON(), as I said before. I will just not count the page.
+
+Callers can BUG then if they want. That is fine but you then
+need to change the callers to do it.
+
+> > 
+> >> +		n_pages++;
+> >> +	}
+> >> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+> >> +	return n_pages;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(balloon_page_list_enqueue);
+> >> +
+> >> +/**
+> >> + * balloon_page_list_dequeue() - removes pages from balloon's page list and
+> >> + *				 returns a list of the pages.
+> >> + * @b_dev_info: balloon device decriptor where we will grab a page from.
+> >> + * @pages: pointer to the list of pages that would be returned to the caller.
+> >> + * @n_req_pages: number of requested pages.
+> >> + *
+> >> + * Driver must call it to properly de-allocate a previous enlisted balloon pages
+> >> + * before definetively releasing it back to the guest system. This function
+> >> + * tries to remove @n_req_pages from the ballooned pages and return it to the
+> >> + * caller in the @pages list.
+> >> + *
+> >> + * Note that this function may fail to dequeue some pages temporarily empty due
+> >> + * to compaction isolated pages.
+> >> + *
+> >> + * Return: number of pages that were added to the @pages list.
+> >> + */
+> >> +size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
+> >> +				 struct list_head *pages, int n_req_pages)
+> >> +{
+> >> +	struct page *page, *tmp;
+> >> +	unsigned long flags;
+> >> +	size_t n_pages = 0;
+> >> +
+> >> +	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+> >> +	list_for_each_entry_safe(page, tmp, &b_dev_info->pages, lru) {
+> >> +		/*
+> >> +		 * Block others from accessing the 'page' while we get around
+> >> +		 * establishing additional references and preparing the 'page'
+> >> +		 * to be released by the balloon driver.
+> >> +		 */
+> >> +		if (!trylock_page(page))
+> >> +			continue;
+> >> +
+> >> +		if (IS_ENABLED(CONFIG_BALLOON_COMPACTION) &&
+> >> +		    PageIsolated(page)) {
+> >> +			/* raced with isolation */
+> >> +			unlock_page(page);
+> >> +			continue;
+> >> +		}
+> >> +		balloon_page_delete(page);
+> >> +		__count_vm_event(BALLOON_DEFLATE);
+> >> +		unlock_page(page);
+> >> +		list_add(&page->lru, pages);
+> >> +		if (++n_pages >= n_req_pages)
+> >> +			break;
+> >> +	}
+> >> +	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
+> >> +
+> >> +	return n_pages;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
+> >> +
+> >> /*
+> >>  * balloon_page_alloc - allocates a new page for insertion into the balloon
+> >>  *			  page list.
+> >> @@ -43,17 +143,9 @@ void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
+> >> {
+> >> 	unsigned long flags;
+> >> 
+> >> -	/*
+> >> -	 * Block others from accessing the 'page' when we get around to
+> >> -	 * establishing additional references. We should be the only one
+> >> -	 * holding a reference to the 'page' at this point.
+> >> -	 */
+> >> -	BUG_ON(!trylock_page(page));
+> >> 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
+> >> -	balloon_page_insert(b_dev_info, page);
+> >> -	__count_vm_event(BALLOON_INFLATE);
+> >> +	balloon_page_enqueue_one(b_dev_info, page);
+> > 
+> > We used to bug on failure to lock page, now we
+> > silently ignore this error. Why?
+> 
+> That’s a mistake. I’ll add a BUG_ON() if balloon_page_enqueue_one() fails.
+> 
+> 
