@@ -2,126 +2,91 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B971C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4DAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119A3217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCE3205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzZqGiNj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L86zc2b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfDSTxV (ORCPT
+        id S1727193AbfDSTzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:53:21 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37942 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfDSTxV (ORCPT
+        Fri, 19 Apr 2019 15:55:44 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38390 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfDSTzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:53:21 -0400
-Received: by mail-yb1-f196.google.com with SMTP id w206so2375796ybg.5;
-        Fri, 19 Apr 2019 12:53:20 -0700 (PDT)
+        Fri, 19 Apr 2019 15:55:43 -0400
+Received: by mail-lj1-f195.google.com with SMTP id p14so5462840ljg.5;
+        Fri, 19 Apr 2019 12:55:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qtlSwlrVY/goP+PctpH8UCAG3AsT0X+m7uAupcx87Eg=;
-        b=RzZqGiNjSuI4w+vEsTQHh2moqzupHJOtrEBLhRhmSDHWmK6sjXKMY0LN+B4LZNlwj8
-         CAel2+lhMk7aK7BQ7cTwzJc4MYLgXT3zSPcnHMdosTFr5LT8JeyHSmeI0lK6C0xOyl3v
-         MoDA3dsmEyI72VBoL1w09I63mA1QhmB0+6dNaXLxrzDfpCN9AwgsP6w5XHfKw3fv8umI
-         USo7ugMaFo85uIra6Hn0Yl+OcRESoEmW/UYZ8aUKv90v2KgBIrGZiPxPfr7SkMs5H9YB
-         aMWn3Is3D7/mLKy7+lAiAEmmSFrIISKlA47le6Lw0Ez3QKzON9HiIsI6wqyml3xDvu2i
-         7iyw==
+        h=from:to:cc:subject:date:message-id;
+        bh=wQu8wWmDvas9DO7USsEZEuYMILtEzUJoNSRphIL+GeU=;
+        b=L86zc2b2EaY3AzRnQ4xEWF0KxJXV6AZY2bomXFvh5oFIVIvIL77HJkub+89r6vzps0
+         tXkfeyKDIrhzbO3pqNCcR7kUx/gqn6QTJNCacdnwT0Hiep+qvf8xh+v9lsVnRG55AYoC
+         QiPYuGt0FW15ofXPwsULcRxqboRsIXzWguX5rXDEdbUzX0G9ZpWl9F/AjnYVU70Y3PRw
+         75h5eHv483uD6v4jpDwZx1CtmwCHb/X+cPYsOzu02LTNXayed2byN0GPWEw2t0jX5D19
+         6YJ9ZlbcTi5H5F3t5Gsxs0CAYkbq/ykmyOynvhG8dep7gwtkKMFmryhPtOHSS/jgiyRd
+         da5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qtlSwlrVY/goP+PctpH8UCAG3AsT0X+m7uAupcx87Eg=;
-        b=ZBkFzEQti7IOuIYHMvV69sBt/KMYzMD3vjBk8/0ltFiAcRSP4Fk7APoJEjgvx5X5vw
-         LGTYe1gk4IzJvhoUln5q5Q8VREtbWrFLljSyPnU47UMVLa6SUh9a3WG/tRgSLThqC8Of
-         ARz2Eligr8/uYQbHsou7tFLq9NwfP/hpwFQtpQ+5/1yXrgJoEcIFS74ErV6PHybtCm8U
-         aA/0qxC/P5ebcUVcM9X9NFIiPeJep0kLWp6MgIEvzNlxQLB1kuPV+Zl5mmr66wiR7ji3
-         bqybJT/h7q81IiQJRo4Npgj23/Fq6AbNVd4NvADN95Uppe+ngTlar47aYJmwO/qW1w5o
-         bSqw==
-X-Gm-Message-State: APjAAAXqJvCFpKMn8LQWdWf6Fr/lFaUUmTYYP14e/ANxHYek2cHO+Djp
-        F/dOe0fVtudlnTb15ucplYPmx6MDixK1YNEP5V43TrrV
-X-Google-Smtp-Source: APXvYqwo8Jhl3r+ZOD48KbfwYNT3vv6PaPtRkiJHrXAnzWZURf2iZq1Ss22N9GIQsFFkGZUef1loMLFgostZSdLBI5Y=
-X-Received: by 2002:a25:952:: with SMTP id u18mr1809007ybm.397.1555662074979;
- Fri, 19 Apr 2019 01:21:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000064bcf057a59e3b9@google.com> <0000000000004f7f7c0584fe33c0@google.com>
-In-Reply-To: <0000000000004f7f7c0584fe33c0@google.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 19 Apr 2019 11:21:03 +0300
-Message-ID: <CAOQ4uxjOm+VFyTbm=2k1d0774qu2tK5gzEgKNnRPjd0GvMnihA@mail.gmail.com>
-Subject: Re: WARNING in ovl_instantiate
-To:     syzbot <syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wQu8wWmDvas9DO7USsEZEuYMILtEzUJoNSRphIL+GeU=;
+        b=J43FGeAmij7PopAx8absMMe+aXZgJNouTwS8ismUdS29qmdqhvaEoKcV7hHU8LJvpl
+         AEC6KHKz2aQsDpJdSbCvdgQY/weQUfKQphrv91hg9Ef29SMqzOyJe9mM4O859Vpog7Mf
+         VU5Z/eiE3mM/fIOXPAkY2E/qjZH+ZQCXde5rlpRC5hb4OGUtjG/dfr+FS7cLND0gtd6L
+         XCQ1Ycvt7Oi12MlEQxFD0Jqo4m3sF6GsvRaFDZt4NmckYsOYCSxAN09xMWrSkOa/OiV6
+         iL/WojqNAl/3EdlFxYiHgW6qCP8tG6fZ2qhDGxnerihFTM7JQydCoK7mU2qmw59r1Q1R
+         o4JA==
+X-Gm-Message-State: APjAAAXXlYzP+NkfcsrBlqtBBWG37DjBKKe78cPdJZ365kZ1rzq/zofM
+        KvnxkTKqlD0xJTou5DW5NYgnHjZuDdovDw==
+X-Google-Smtp-Source: APXvYqw/Ndo9kUCntIKeITpXKqqyp9wMPQz0DVGfGYy2xXkcs1UBLNOTNcMJkx85I+mGiFFm9XvARg==
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr1863463ljk.5.1555669746686;
+        Fri, 19 Apr 2019 03:29:06 -0700 (PDT)
+Received: from localhost.localdomain (93-96-157.netrun.cytanet.com.cy. [93.109.96.157])
+        by smtp.gmail.com with ESMTPSA id i25sm1033363lfc.19.2019.04.19.03.29.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 19 Apr 2019 03:29:05 -0700 (PDT)
+From:   Mohan Kumar <mohankumar718@gmail.com>
+To:     rjw@rjwysocki.net
+Cc:     viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: cpufreq: use kstrtoul instead of obsolete simple_strtoul
+Date:   Fri, 19 Apr 2019 13:28:58 +0300
+Message-Id: <1555669738-3869-1-git-send-email-mohankumar718@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 2:10 PM syzbot
-<syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 01b39dcc95680b04c7af5de7f39f577e9c4865e3
-> Author: Amir Goldstein <amir73il@gmail.com>
-> Date:   Fri May 11 08:15:15 2018 +0000
->
->      ovl: use inode_insert5() to hash a newly created inode
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176da0cd200000
-> start commit:   de6629eb Merge tag 'pci-v5.0-fixes-1' of git://git.kernel...
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=14eda0cd200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10eda0cd200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=edf1c3031097c304
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9c69c282adc4edd2b540
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c7a94f400000
->
-> Reported-by: syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com
-> Fixes: 01b39dcc9568 ("ovl: use inode_insert5() to hash a newly created
-> inode")
->
+Replace the obsolte simple_strtoul function with kstrtoul.
 
-Dmitry,
+Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+---
+ drivers/cpufreq/elanfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The root cause of this bug is that repro is mounting overlapping overlay
-layers (i.e. upperdir=./file0,lowerdir=.:file0).
-Miklos claimed that the fix should be to fail such mounts.
-Below is a patch to test:
+diff --git a/drivers/cpufreq/elanfreq.c b/drivers/cpufreq/elanfreq.c
+index 03419f0..bed76da 100644
+--- a/drivers/cpufreq/elanfreq.c
++++ b/drivers/cpufreq/elanfreq.c
+@@ -184,7 +184,7 @@ static int elanfreq_cpu_init(struct cpufreq_policy *policy)
+  */
+ static int __init elanfreq_setup(char *str)
+ {
+-	max_freq = simple_strtoul(str, &str, 0);
++	max_freq = kstrtoul(str, 0, (unsigned long *)&val);
+ 	pr_warn("You're using the deprecated elanfreq command line option. Use elanfreq.max_freq instead, please!\n");
+ 	return 1;
+ }
+-- 
+2.7.4
 
-#syz test: https://github.com/amir73il/linux.git ovl-check-overlap
-
-However, I see that this specific overlapping layers mount has already
-mutated to several other repros out there, like the ones in this bug:
-
-https://syzkaller.appspot.com/bug?extid=a55ccfc8a853d3cff213
-
-I believe that disallowing overlapping layers will silence some
-bugs, whose root cause may be different.
-
-Besides doing the overlapping layers mount, this repro family also
-does extensive access to overlay underlying layers concurrently
-with overlay access and *that* is the root cause for most of these
-"possible deadlock" bugs (some false positives and some real).
-
-Assuming that ovl-check-overlap will get merged, you may need to
-hint syzkaller that overlapping layers is no longer a valid input or
-maybe it will figure it out on its own?...
-
-Thanks,
-Amir.
