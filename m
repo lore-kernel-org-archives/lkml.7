@@ -2,172 +2,78 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71954C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA73FC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370FC20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="grl/Plz7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NxQZCOJK"
+	by mail.kernel.org (Postfix) with ESMTP id AD9EA20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfDSTqg (ORCPT
+        id S1728073AbfDSTqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:46:36 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34820 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfDSTq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:46:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 545CB6177C; Fri, 19 Apr 2019 19:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555703186;
-        bh=q6Z9XuLR6vei5PGQQ5811OIfmHL6VegdJDh4lD+p21c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=grl/Plz7Ygg4dLSpMg/6gr4cXXD+09ztPXHuC6GkYDiqq4AEJLr/AjNDas2hGDB4A
-         E56ZstnQJG1LC5cmv5dMSx3yIJVh7t0Ca5WHB5/tX0viLNBA4pF63y1/QQCr3E/woz
-         dsePSy6A+S21RakyL9Bx/8UTymyC0XKGpxnasq+Y=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD418615E7;
-        Fri, 19 Apr 2019 19:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555703185;
-        bh=q6Z9XuLR6vei5PGQQ5811OIfmHL6VegdJDh4lD+p21c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxQZCOJKDadKmUJ8VDJqEEa5Pzhu4XVrs+pxkN7RSVsU9dq9Mse9B6nKJ72SxStEl
-         eD1TmbnecyknVa5/yn8caYNbT92h6oXWdGD0azHIx9owiBcaAcnN2gWgFY1Mv6vRFM
-         BwTRvnO0TkYX1tyCqNfMti7zTUOffbZpmJhJGfV0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD418615E7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-arm-msm@vger.kernel.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Daniel Mack <daniel@zonque.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v2 2/3] drm/msm/a6xx: Add zap shader load
-Date:   Fri, 19 Apr 2019 13:46:15 -0600
-Message-Id: <1555703176-5499-3-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555703176-5499-1-git-send-email-jcrouse@codeaurora.org>
-References: <1555703176-5499-1-git-send-email-jcrouse@codeaurora.org>
+        Fri, 19 Apr 2019 15:46:54 -0400
+Received: from mga04.intel.com ([192.55.52.120]:13189 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbfDSTqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:46:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 12:46:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,371,1549958400"; 
+   d="scan'208";a="144129771"
+Received: from jmishra-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.185.34])
+  by orsmga003.jf.intel.com with ESMTP; 19 Apr 2019 12:46:51 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 0/2] soundwire: fix Kconfig select/depend issues
+Date:   Fri, 19 Apr 2019 14:46:47 -0500
+Message-Id: <20190419194649.18467-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The a6xx GPU powers on in secure mode which restricts what memory it can
-write to. To get out of secure mode the GPU driver can write to
-REG_A6XX_RBBM_SECVID_TRUST_CNTL but on targets that are "secure" that
-register region is blocked and writes will cause the system to go down.
+0-day/Kbuild starts complaining about missed module dependencies and
+compilation issues. Since codecs and soc drivers need to be compilable
+independently, let's fix this using the following model:
 
-For those targets we need to execute a special sequence that involves
-loadinga special shader that clears the GPU registers and use a PM4
-sequence to pull the GPU out of secure. Add support for loading the zap
-shader and executing the secure sequence. For targets that do not support
-SCM or the specific SCM sequence this should fail and we would fall back
-to writing the register.
+SOF_INTEL_XYZ --- select ---->  SOUNDWIRE_INTEL ---> select ----
+                                                               |
+				                               v
+                                                        SOUNDWIRE_BUS
+   							       ^
+                                                               |
+CODEC_ABC ------- select -----> REGMAP_SOUNDWIRE ---> select ---
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+The SOUNDWIRE option remains a top-level boolean selector without
+impact on compilation, as recommended by Linus [1] and done for all
+Intel ASoC stuff.
 
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 38 +++++++++++++++++++++++++++++-
- drivers/gpu/drm/msm/adreno/adreno_device.c |  1 +
- 2 files changed, 38 insertions(+), 1 deletion(-)
+[1] https://lkml.org/lkml/2017/11/15/554
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 576559a..7028bb7 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -10,6 +10,8 @@
- 
- #include <linux/devfreq.h>
- 
-+#define GPU_PAS_ID 13
-+
- static inline bool _a6xx_check_idle(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-@@ -343,6 +345,20 @@ static int a6xx_ucode_init(struct msm_gpu *gpu)
- 	return 0;
- }
- 
-+static int a6xx_zap_shader_init(struct msm_gpu *gpu)
-+{
-+	static bool loaded;
-+	int ret;
-+
-+	if (loaded)
-+		return 0;
-+
-+	ret = adreno_zap_shader_load(gpu, GPU_PAS_ID);
-+
-+	loaded = !ret;
-+	return ret;
-+}
-+
- #define A6XX_INT_MASK (A6XX_RBBM_INT_0_MASK_CP_AHB_ERROR | \
- 	  A6XX_RBBM_INT_0_MASK_RBBM_ATB_ASYNCFIFO_OVERFLOW | \
- 	  A6XX_RBBM_INT_0_MASK_CP_HW_ERROR | \
-@@ -491,7 +507,27 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		goto out;
- 
--	gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+	/*
-+	 * Try to load a zap shader into the secure world. If successful
-+	 * we can use the CP to switch out of secure mode. If not then we
-+	 * have no resource but to try to switch ourselves out manually. If we
-+	 * guessed wrong then access to the RBBM_SECVID_TRUST_CNTL register will
-+	 * be blocked and a permissions violation will soon follow.
-+	 */
-+	ret = a6xx_zap_shader_init(gpu);
-+	if (!ret) {
-+		OUT_PKT7(gpu->rb[0], CP_SET_SECURE_MODE, 1);
-+		OUT_RING(gpu->rb[0], 0x00000000);
-+
-+		a6xx_flush(gpu, gpu->rb[0]);
-+		if (!a6xx_idle(gpu, gpu->rb[0]))
-+			return -EINVAL;
-+	} else {
-+		/* Print a warning so if we die, we know why */
-+		dev_warn_once(gpu->dev->dev,
-+			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
-+		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+	}
- 
- out:
- 	/*
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 0d87db7..b907245 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -155,6 +155,7 @@ static const struct adreno_info gpulist[] = {
- 		.gmem = SZ_1M,
- 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init = a6xx_gpu_init,
-+		.zapfw = "a630_zap.mdt",
- 	},
- };
- 
+Changes since v1:
+Removed useless depend in REGMAP_SOUNDWIRE (select will ignore dependencies)
+Reordered patches to avoid circular dependencies with git bisect
+
+Pierre-Louis Bossart (2):
+  soundwire: fix SOUNDWIRE_BUS option
+  regmap: soundwire: fix Kconfig select/depend issue
+
+ drivers/base/regmap/Kconfig | 2 +-
+ drivers/soundwire/Kconfig   | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
 -- 
-2.7.4
+2.17.1
 
