@@ -2,133 +2,124 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366C8C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AD6C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA37204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698834;
-	bh=h3gcGpiGPtefheJf96gt7F+FQkOHoNChboFIJMOtF60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E9q7saNzboLd/xUhTathr1a+zxb37krLQdu2wzwqtslD/n5RI1BRC4cjVKbKHiYdo
-	 iuoQUYkt6kAuQhALgz+d+2CbYcwCjpeUhvHBLXybbgMim5aHKVgdrs/vOeQI3fLS8D
-	 NUdvdqhfWrYEp7E2b2Sw0Sa4+P4vIesX2BaCpOe0=
+	by mail.kernel.org (Postfix) with ESMTP id B4322204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfDSSdw (ORCPT
+        id S1728313AbfDSSeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:34:05 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:58564 "EHLO wind.enjellic.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbfDSS3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ACB621903;
-        Fri, 19 Apr 2019 11:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555672860;
-        bh=h3gcGpiGPtefheJf96gt7F+FQkOHoNChboFIJMOtF60=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uXwRrlDP489Vvntan/RU8yP8FCWNLSAnCt32CnDERPevJz4ocKVGeOQa3Ql0X++X6
-         OCtp9Mbp9nyHzokygin1RrfBs1S04fSevGbHx3kIiuiaewhUSSpAxl43TWE1HCBOha
-         4iX9ZHR0iVmtuE08AG6I96zw25KDmnUFBjsm5pZA=
-Date:   Fri, 19 Apr 2019 13:20:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bhanusree Pola <bhanusreemahesh@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Staging: rtl8723bs: Avoid typedefs for structure
-Message-ID: <20190419112057.GA14886@kroah.com>
-References: <1555672376-20268-1-git-send-email-bhanusreemahesh@gmail.com>
-MIME-Version: 1.0
+        id S1728285AbfDSSeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:34:03 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x3JEHZjQ002435;
+        Fri, 19 Apr 2019 09:17:35 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x3JEHWMW002434;
+        Fri, 19 Apr 2019 09:17:32 -0500
+Date:   Fri, 19 Apr 2019 09:17:32 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190419141732.GA2269@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190418171059.GA20819@wind.enjellic.com> <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555672376-20268-1-git-send-email-bhanusreemahesh@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 19 Apr 2019 09:17:35 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 04:42:56PM +0530, Bhanusree Pola wrote:
-> Avoid typedefs for structure types to maintain kernel coding style.
-> Remove typedefs for _ODM_Phy_Dbg_Info and _ODM_Mac_Status_Info_.
-> This part is done by the following semantic patch:
-> 
-> <smpl>
-> @r1@
-> identifier i;
-> type t;
-> @@
-> typedef struct i {
-> ...
-> }t;
-> 
-> @r2@
-> type r1.t;
-> identifier v;
-> @@
-> t v;
-> 
-> @script:python match@
-> i << r1.i;
-> x;
-> @@
-> coccinelle.x = i;
-> 
-> @r4@
-> identifier match.x;
-> type r1.t;
-> @@
-> - typedef struct x
-> + struct x
-> { ... }
-> - t
-> ;
-> 
-> @r5@
-> type r1.t;
-> identifier r2.v, match.x;
-> @@
-> - t v;
-> + struct x v;
-> </smpl>
-> 
-> Change Structure name _ODM_Phy_Dbg_Info and _ODM_Mac_Status_Info_ to maintain Linux kernel Coding Style.
-> Replace occurences of ODM_PHY_DBG_INFO_T to odm_phy_dbg_info and ODM_MAC_INFO to odm_mac_status_info.
-> 
-> Signed-off-by: Bhanusree Pola <bhanusreemahesh@gmail.com>
-> ---
-> v2:
->  Changed the occurence of (ODM_MAC_INFO *) to (struct odm_mac_status_info *) in the commented code
-> 
->  drivers/staging/rtl8723bs/hal/odm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/odm.c b/drivers/staging/rtl8723bs/hal/odm.c
-> index 7de5161..9db9f17 100644
-> --- a/drivers/staging/rtl8723bs/hal/odm.c
-> +++ b/drivers/staging/rtl8723bs/hal/odm.c
-> @@ -691,7 +691,7 @@ void ODM_CmnInfoHook(PDM_ODM_T pDM_Odm, ODM_CMNINFO_E CmnInfo, void *pValue)
->  	/* break; */
->  
->  	/* case ODM_CMNINFO_MAC_STATUS: */
-> -	/* pDM_Odm->pMacInfo = (ODM_MAC_INFO *)pValue; */
-> +	/* pDM_Odm->pMacInfo = (struct odm_mac_status_info *)pValue; */
->  	/* break; */
->  	/* To remove the compiler warning, must add an empty default statement to handle the other values. */
->  	default:
+On Thu, Apr 18, 2019 at 11:01:00AM -0700, Dave Hansen wrote:
 
-This patch doesn't really do anything at all, right?
+Good morning to everyone.
 
-Are you sure you included the correct patch?
+> On 4/18/19 10:10 AM, Dr. Greg wrote:
+> > Both the current controls for enclave access to the PROVISION
+> > attribute and the security controls that are being proposed to emerge
+> > for the driver, sometime in the future, suffer from being dependent on
+> > discretionary access controls, ie. file privileges, that can be
+> > defeated by a privilege escalation attack.  Those of us building
+> > architectures on top of this technology have a need to certify that an
+> > application will provide security contracts robust in the face of a
+> > privilege escalation event or platform compromise.
 
-thanks,
+> I'm not following.
+>
+> Are you saying that the implementation here is too permissive with
+> the enclaves that are allowed to run?  Because it's too permissive,
+> this leaves us vulnerable to SGX being used to conceal a cache
+> attack?
 
-greg k-h
+I believe that would be the conclusion of a dispassionate observer who
+has followed this conversation and read the paper that I provided a
+link to.
+
+For the benefit of those with a disinclination to read, particularly
+16 page research papers, the following link provides a summary of the
+issues at hand.
+
+https://www.securityweek.com/intel-sgx-can-be-abused-hide-advanced-malware-researchers
+
+Of relevance to this conversation is Intel Security's official
+response to the paper, which is as follows:
+
+"The value of Intel SGX is to execute code in a protected enclave;
+however, Intel SGX does not guarantee that the code executed in the
+enclave is from a trusted source.  In all cases, we recommend
+utilizing programs, files, apps and plugins from trusted sources,"
+Intel said.
+
+The issue is not as much the ABI break but the following facts that
+are at hand:
+
+1.) The proposed mainline driver offers no cryptographic or
+architecturally relevant security controls for ensuring that enclaves
+are from a trusted source.
+
+2.) Based on Andy's comments there may be a disinclination to ever
+provide those controls.
+
+3.) The approach we propose addresses these issues while imposing no
+functional limitations on how Linux platform owners can use enclave
+technology.
+
+Seems like a win.
+
+There you go, one sentence replies.
+
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"Laugh now but you won't be laughing when we find you laying on the
+ side of the road dead."
+                                -- Betty Wettstein
+                                   At the Lake
