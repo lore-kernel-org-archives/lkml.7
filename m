@@ -2,163 +2,160 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4A7C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553D7C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99679205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3A3214DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 00:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hxRW4+KX"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qNb/FxIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfDSAZC (ORCPT
+        id S1726474AbfDSA0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 20:25:02 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43225 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfDSAZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 20:25:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z9so1904708pgu.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 17:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aBpZyaS+ZmDCtg5dDjJTAz16MJIF3r/OZvt6uyCX5no=;
-        b=hxRW4+KXFLn/f3c5kN3LpTmaastUMsuL8zLEvsIiRwd2vDGrrZIaAkVkjXRVAhK+vR
-         FjQUelPoyHwoMpGKx12GOz3Yb8uUHf2p8zDlteqKzwzGE1JR56m6NXbzVwFHI3h4cK2Q
-         SAAebPG0TElmFxsYTBobrbnan/XCdb0/XE95wSsRzjiutTpRCpfrq2y34zURyiys4q/Q
-         YUjHoye9wBjNN5QzUexD9bZK/55tSeFX0Sn1Di/bEE1YIpfBRUghA8i9XnS870h6y2Ud
-         aOQeGf4ATN3AP9athzkogumnkpaOz9nk3VfZxXemu8GH3VOWK15kvUqdt+WhzOyK6un/
-         Xs0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aBpZyaS+ZmDCtg5dDjJTAz16MJIF3r/OZvt6uyCX5no=;
-        b=B5PDVAlPMcLC5Gu13qAmAtjM+uMEtN+jro0ZfD7cNjBA8fpQjYxV/K9hGPm+lfyAxm
-         XSJipOXvu1kGnjyMZhutcQ3woveWUl/G90vbTbeZ8M/pmeV8lDuhyfod1qxFi1jy0iTg
-         v6lOt61iMWESM9V5OsI2eNDdcmv+wWuGvRiYt7EwEKdePR2b5jK1t7i/IeEn2uTzzdDX
-         dhRTD8B4uyQzi7qW1IWSAGz3RTU7TWvZxiop0DN3Fnwyqcj07PWkb+IfHcXQVuu1e/6s
-         PuEZd6QIyIFQwbdX2s/PnIXfffh2ApDcIFGLSEQPhaNMXwcX3VMcyvcuPE79KhLWuLus
-         OZzQ==
-X-Gm-Message-State: APjAAAV6Q9lLAOuTbDq4RVGp6jG5wm3D1Gt+2z1eVZahbUnGq7v+ynfR
-        EVKC924wA9hPlZhbTYYTD9iuwg==
-X-Google-Smtp-Source: APXvYqxHtM1ZtkLyXCCakQ1g/LH3mkpXMOlDZpFODTjlKy94Bqy7XYBlwE6UXVcSYMn1qNpIg1TEfA==
-X-Received: by 2002:a63:c34c:: with SMTP id e12mr878940pgd.279.1555633500911;
-        Thu, 18 Apr 2019 17:25:00 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n65sm11068363pfb.160.2019.04.18.17.24.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 17:24:59 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 17:24:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     joro@8bytes.org, will.deacon@arm.com, robin.murphy@arm.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/arm-smmu: Log CBFRSYNRA register on context
- fault
-Message-ID: <20190419002457.GA3137@builder>
-References: <4cfc7b3b-bc74-6b37-19f5-40b6394fa762@codeaurora.org>
- <20190415173758.22112-1-vivek.gautam@codeaurora.org>
+        Thu, 18 Apr 2019 20:26:54 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41890 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbfDSA0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 20:26:54 -0400
+Received: from zn.tnic (p200300EC2F112E00C9E732E76EE3BD2F.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:c9e7:32e7:6ee3:bd2f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 15A611EC0104;
+        Fri, 19 Apr 2019 02:26:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555633611;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1YZoxVL4nlCMCM9p35yh+VCDOgqqk+dpQwzBW2u7IBY=;
+        b=qNb/FxIYDuO5FiGi4xiKmcihbcVoPIdEM4M8qeykACEKzSBix3wTxnWO4j4bDg2xEWTQ06
+        gKAqGtk7yfAm4JnIW3crg/ayxCg/1KwoBjYw14KCmAh7TAbAnKZbZKGeugkODUn4bjWwKE
+        ccSXvWJR4x8Xk+nCZKlTObUCW01wDXI=
+Date:   Fri, 19 Apr 2019 02:26:45 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
+Message-ID: <20190419002645.GA559@zn.tnic>
+References: <20190418220229.32133-1-tony.luck@intel.com>
+ <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
+ <20190418232910.GR27160@zn.tnic>
+ <CAM_iQpVWvg-U6hzKsCPXdObiwKJhQ=BkGDDeP+p671cCWK7QFA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190415173758.22112-1-vivek.gautam@codeaurora.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <CAM_iQpVWvg-U6hzKsCPXdObiwKJhQ=BkGDDeP+p671cCWK7QFA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 15 Apr 10:37 PDT 2019, Vivek Gautam wrote:
+On Thu, Apr 18, 2019 at 04:58:22PM -0700, Cong Wang wrote:
+> No, it is all about whether we should break users' expectation.
 
-> Bits[15:0] in CBFRSYNRA register contain information about
-> StreamID of the incoming transaction that generated the
-> fault. Dump CBFRSYNRA register to get this info.
-> This is specially useful in a distributed SMMU architecture
-> where multiple masters are connected to the SMMU.
-> SID information helps to quickly identify the faulting
-> master device.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
-> 
-> V1 of the patch available @
-> https://lore.kernel.org/patchwork/patch/1061615/
-> 
-> Changes from v1:
->  - Dump the raw register value of CBFRSYNRA register in the
->    context fault log rather than extracting the SID inforamtion
->    and dumping that.
-> 
->  drivers/iommu/arm-smmu-regs.h | 2 ++
->  drivers/iommu/arm-smmu.c      | 8 ++++++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
-> index a1226e4ab5f8..e9132a926761 100644
-> --- a/drivers/iommu/arm-smmu-regs.h
-> +++ b/drivers/iommu/arm-smmu-regs.h
-> @@ -147,6 +147,8 @@ enum arm_smmu_s2cr_privcfg {
->  #define CBAR_IRPTNDX_SHIFT		24
->  #define CBAR_IRPTNDX_MASK		0xff
->  
-> +#define ARM_SMMU_GR1_CBFRSYNRA(n)	(0x400 + ((n) << 2))
-> +
->  #define ARM_SMMU_GR1_CBA2R(n)		(0x800 + ((n) << 2))
->  #define CBA2R_RW64_32BIT		(0 << 0)
->  #define CBA2R_RW64_64BIT		(1 << 0)
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 045d93884164..a4773e8c6b0e 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -575,7 +575,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
->  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->  	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> +	void __iomem *gr1_base = ARM_SMMU_GR1(smmu);
->  	void __iomem *cb_base;
-> +	u32 cbfrsynra;
->  
->  	cb_base = ARM_SMMU_CB(smmu, cfg->cbndx);
->  	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
-> @@ -585,10 +587,12 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
->  
->  	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
->  	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
-> +	cbfrsynra = readl_relaxed(gr1_base +
-> +				  ARM_SMMU_GR1_CBFRSYNRA(cfg->cbndx));
+What user expectation?
 
-The 80 char limit is more like a guideline anyways...please don't wrap
-this.
+> This doesn't sounds like a valid reason for us to break users'
+> expectation.
 
->  
->  	dev_err_ratelimited(smmu->dev,
-> -	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
-> -			    fsr, iova, fsynr, cfg->cbndx);
-> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra = 0x%x, cb=%d\n",
+I think it is *you* who has some sort of "expectation" but that
+"expectation" is wrong.
 
-Drop the spaces around '='.
+> Prior to CONFIG_RAS, mcelog just works fine for users (at least Intel
+> users). Suddenly after enabling CONFIG_RAS in kernel, mcelog will
+> no longer receive any correctable memory errors _silently_.
 
-With those addressed, you have my
+That is, of course, wrong too.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> What's more, we don't even have rasdaemon running in our system, so
 
-Regards,
-Bjorn
+Are you saying "we" to mean "we the users" or some company "we"?
 
-> +			    fsr, iova, fsynr, cbfrsynra, cfg->cbndx);
->  
->  	writel(fsr, cb_base + ARM_SMMU_CB_FSR);
->  	return IRQ_HANDLED;
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+And that is wrong too, there's at least one rasdaemon:
+
+  http://git.infradead.org/users/mchehab/rasdaemon.git
+
+> there is no consumer of RAS CEC,
+
+RAS CEC doesn't need a consumer. You're misunderstanding the whole
+concept of the error collector.
+
+> these errors just simply disappear from users' expected place.
+
+They "disappear" because you have CONFIG_RAS_CEC enabled. But they
+don't really disappear - they're collected by the thing to filter out
+only the pages which keep generating errors constantly and those get
+soft-offlined.
+
+The sporadic ones simply get ignored because they don't happen again
+and are only result of alpha particles or overheating conditions or
+whatever.
+
+Now here's the CEC help text:
+
+config RAS_CEC
+        bool "Correctable Errors Collector"
+        depends on X86_MCE && MEMORY_FAILURE && DEBUG_FS
+        ---help---
+          This is a small cache which collects correctable memory errors per 4K
+          page PFN and counts their repeated occurrence. Once the counter for a
+          PFN overflows, we try to soft-offline that page as we take it to mean
+          that it has reached a relatively high error count and would probably
+          be best if we don't use it anymore.
+
+          Bear in mind that this is absolutely useless if your platform doesn't
+          have ECC DIMMs and doesn't have DRAM ECC checking enabled in the BIOS.
+
+you can tell me what in that text is not clear so that I can make it
+more clear and obvious what that thing is.
+
+> I know CONFIG_RAS is new feature supposed to replace MCELOG,
+
+No, it isn't. CONFIG_RAS is supposed to collect all the RAS-related
+functionality in the kernel and it looks like you have some
+misconceptions about it.
+
+> but they can co-exist in kernel config, which means mcelog should
+> continue to work as before until it gets fully replaced.
+
+For that you need to enable X86_MCELOG_LEGACY.
+
+And let me repeat it again - if you want to collect errors in userspace,
+do not enable RAS_CEC at all.
+
+> Even the following PoC change could make this situation better,
+> because with this change when we enable CONFIG_RAS,mcelog
+> will break _loudly_ rather than just silently, users will notice mcelog
+> is no longer supported and will look for its alternative choice.
+
+You have somehow put in your head that CONFIG_RAS is the counterpart of
+CONFIG_X86_MCELOG_LEGACY. Which is *simply* *not* *true*.
+
+And the moment you realize that, then you'll be a step further in the
+right direction.
+
+So enable X86_MCELOG_LEGACY and you can collect all the errors you wish.
+And there's a rasdaemon which you can use too, as I pointed above, if
+you don't want mcelog.
+
+CEC is something *completely* different and its purpose is to run in the
+kernel and prevent users and admins from upsetting unnecessarily with
+every sporadic correctable error and just because an alpha particle flew
+through their DIMMs, they all start running in headless chicken mode,
+trying to RMA perfectly good hardware.
+
+Now, if any of that above still doesn't make it clear, please state what
+you're trying to achieve and I'll try to help.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
