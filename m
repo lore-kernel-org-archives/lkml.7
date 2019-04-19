@@ -2,106 +2,106 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDAAC282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527D8C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6AF20449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201F220449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XuDk5pY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfDSSbA (ORCPT
+        id S1728098AbfDSSbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:31:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24408 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfDSSa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:30:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 00:08:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,368,1549958400"; 
-   d="scan'208";a="150647763"
-Received: from bob-dev.sh.intel.com ([10.239.15.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Apr 2019 00:08:25 -0700
-From:   Tong Bo <bo.tong@intel.com>
-To:     luto@kernel.org, x86@kernel.org
-Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tong Bo <bo.tong@intel.com>
-Subject: [PATCH v3] selftests/x86: Support Atom for syscall_arg_fault test
-Date:   Fri, 19 Apr 2019 15:10:55 +0800
-Message-Id: <1555657855-31855-1-git-send-email-bo.tong@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Apr 2019 14:31:03 -0400
+Received: from condef-06.nifty.com ([202.248.20.71]:25329 "EHLO
+        condef-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfDSSbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:31:02 -0400
+Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-06.nifty.com with ESMTP id x3J9nQ9e029017;
+        Fri, 19 Apr 2019 18:49:26 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x3J9mDiL012304;
+        Fri, 19 Apr 2019 18:48:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x3J9mDiL012304
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555667295;
+        bh=KIJsj9BjbJCKV5d3TQJAGFjQI0UA9lTr5KAl3uaBdzI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XuDk5pY0o90ECZwUqGP84ppzgA6XEFU/Q8b2Wpng7fY2TlkWcTHQKCAwfKS3dEkoJ
+         /wM2hrBugVAd8GDB21Y8r0JmiV1i/gqCD2bM8RPKqcOV7FCV/a2Iu+967c3DkrjItY
+         prjosvSKi8xi6N93D24mp+8Bpa0LsxVR4uwfvLM6ReLlODp1Xe6kOsbWU9InjeslPy
+         yjlzg2YpxqNZbvyhGr5IALaj3VQob8rd8k4t/yp4OMWFo109A06sOFx+WGB5wXNN+x
+         SclFXVMgtA/pdCK17FEbRqdD8lS8YsTeJeaU6jfT33kteQIcqOupLrNvGeHjD25cCx
+         DUnO5stjBOW0A==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 00/11] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+Date:   Fri, 19 Apr 2019 18:47:43 +0900
+Message-Id: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Atom-based CPUs trigger stack fault when invoke 32-bit SYSENTER instruction
-with invalid register values. So we also need SIGBUS handling in this case.
 
-Following is assembly when the fault exception happens.
+Major changes in v2:
+ - Eliminate more errors and warnings
+ - Delete 'depends on !MIPS'
+ - Split into separate patches
 
-(gdb) disassemble $eip
-Dump of assembler code for function __kernel_vsyscall:
-   0xf7fd8fe0 <+0>:     push   %ecx
-   0xf7fd8fe1 <+1>:     push   %edx
-   0xf7fd8fe2 <+2>:     push   %ebp
-   0xf7fd8fe3 <+3>:     mov    %esp,%ebp
-   0xf7fd8fe5 <+5>:     sysenter
-   0xf7fd8fe7 <+7>:     int    $0x80
-=> 0xf7fd8fe9 <+9>:     pop    %ebp
-   0xf7fd8fea <+10>:    pop    %edx
-   0xf7fd8feb <+11>:    pop    %ecx
-   0xf7fd8fec <+12>:    ret
-End of assembler dump.
+Arnd Bergmann (1):
+  ARM: prevent tracing IPI_CPU_BACKTRACE
 
-According to Intel SDM, this could also be a Stack Segment Fault(#SS, 12),
-except a normal Page Fault(#PF, 14). Especially, in section 6.9 of Vol.3A,
-both stack and page faults are within the 10th(lowest priority) class, and
-as it said, "exceptions within each class are implementation-dependent and
-may vary from processor to processor". It's expected for processors like
-Intel Atom to trigger stack fault(SIGBUS), while we get page fault(SIGSEGV)
-from common Core processors.
+Masahiro Yamada (10):
+  arm64: mark (__)cpus_have_const_cap as __always_inline
+  MIPS: mark mult_sh_align_mod() as __always_inline
+  s390/cpacf: mark scpacf_query() as __always_inline
+  mtd: rawnand: vf610_nfc: add initializer to avoid
+    -Wmaybe-uninitialized
+  MIPS: mark __fls() as __always_inline
+  ARM: mark setup_machine_tags() stub as __init __noreturn
+  powerpc/prom_init: mark prom_getprop() and prom_getproplen() as __init
+  powerpc/mm/radix: mark __radix__flush_tlb_range_psize() as
+    __always_inline
+  powerpc/mm/radix: mark as __tlbie_pid() and friends as__always_inline
+  compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
 
-Signed-off-by: Tong Bo <bo.tong@intel.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
----
- tools/testing/selftests/x86/syscall_arg_fault.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/include/asm/hardirq.h      |  1 +
+ arch/arm/kernel/atags.h             |  2 +-
+ arch/arm/kernel/smp.c               |  6 +++++-
+ arch/arm64/include/asm/cpufeature.h |  4 ++--
+ arch/mips/include/asm/bitops.h      |  2 +-
+ arch/mips/kernel/cpu-bugs64.c       |  4 ++--
+ arch/powerpc/kernel/prom_init.c     |  6 +++---
+ arch/powerpc/mm/tlb-radix.c         | 12 ++++++------
+ arch/s390/include/asm/cpacf.h       |  2 +-
+ arch/x86/Kconfig                    |  3 ---
+ arch/x86/Kconfig.debug              | 14 --------------
+ drivers/mtd/nand/raw/vf610_nfc.c    |  2 +-
+ include/linux/compiler_types.h      |  3 +--
+ lib/Kconfig.debug                   | 14 ++++++++++++++
+ 14 files changed, 38 insertions(+), 37 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
-index 7db4fc9..d2548401 100644
---- a/tools/testing/selftests/x86/syscall_arg_fault.c
-+++ b/tools/testing/selftests/x86/syscall_arg_fault.c
-@@ -43,7 +43,7 @@ static sigjmp_buf jmpbuf;
- 
- static volatile sig_atomic_t n_errs;
- 
--static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
-+static void sigsegv_or_sigbus(int sig, siginfo_t *info, void *ctx_void)
- {
- 	ucontext_t *ctx = (ucontext_t*)ctx_void;
- 
-@@ -73,7 +73,13 @@ int main()
- 	if (sigaltstack(&stack, NULL) != 0)
- 		err(1, "sigaltstack");
- 
--	sethandler(SIGSEGV, sigsegv, SA_ONSTACK);
-+	sethandler(SIGSEGV, sigsegv_or_sigbus, SA_ONSTACK);
-+	/*
-+	 * The actual exception can vary.  On Atom CPUs, we get #SS
-+	 * instead of #PF when the vDSO fails to access the stack when
-+	 * ESP is too close to 2^32, and #SS causes SIGBUS.
-+	 */
-+	sethandler(SIGBUS, sigsegv_or_sigbus, SA_ONSTACK);
- 	sethandler(SIGILL, sigill, SA_ONSTACK);
- 
- 	/*
 -- 
-2.7.4
+2.17.1
 
