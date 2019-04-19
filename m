@@ -2,259 +2,413 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B94C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F1C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE3C222EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3AB222EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfDSSSD (ORCPT
+        id S1726421AbfDSSSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:18:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59712 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726251AbfDSSSB (ORCPT
+        Fri, 19 Apr 2019 14:18:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37004 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726134AbfDSSSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:18:01 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JH9T7U052370
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:17:22 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ryf987mc2-1
+        Fri, 19 Apr 2019 14:18:03 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3JFiXY0122215
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:46:17 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ryf6fvy7a-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:17:22 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:46:16 -0400
 Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 19 Apr 2019 18:17:21 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Fri, 19 Apr 2019 16:46:14 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 19 Apr 2019 18:17:15 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3JHHFPL37814294
+        Fri, 19 Apr 2019 16:46:05 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3JFk3LC50266340
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Apr 2019 17:17:15 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7F8FB2064;
-        Fri, 19 Apr 2019 17:17:14 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9311B205F;
-        Fri, 19 Apr 2019 17:17:14 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Apr 2019 17:17:14 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7303016C0A09; Fri, 19 Apr 2019 10:17:16 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 10:17:16 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 19 Apr 2019 15:46:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 83415A4051;
+        Fri, 19 Apr 2019 15:46:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC3F5A404D;
+        Fri, 19 Apr 2019 15:45:57 +0000 (GMT)
+Received: from [9.145.44.158] (unknown [9.145.44.158])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Apr 2019 15:45:57 +0000 (GMT)
+Subject: Re: [PATCH v12 09/31] mm: VMA sequence count
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
+        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
+        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
         Will Deacon <will.deacon@arm.com>,
-        Daniel Kroening <kroening@cs.ox.ac.uk>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: Adding plain accesses and detecting data races in the LKMM
-Reply-To: paulmck@linux.ibm.com
-References: <20190419124720.GU14111@linux.ibm.com>
- <Pine.LNX.4.44L0.1904191032280.1406-100000@iolanthe.rowland.org>
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        haren@linux.vnet.ibm.com, npiggin@gmail.com,
+        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <20190416134522.17540-10-ldufour@linux.ibm.com>
+ <20190418224857.GI11645@redhat.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Fri, 19 Apr 2019 17:45:57 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1904191032280.1406-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190418224857.GI11645@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041917-0072-0000-0000-0000041C47FD
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010957; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01191409; UDB=6.00624397; IPR=6.00972210;
- MB=3.00026517; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-19 17:17:19
+x-cbid: 19041915-0028-0000-0000-00000362ABA3
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041917-0073-0000-0000-00004BE3158D
-Message-Id: <20190419171716.GY14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_09:,,
+x-cbparentid: 19041915-0029-0000-0000-00002421EFDD
+Message-Id: <d217e71c-7d55-ce1a-6461-ce1de732fb57@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-19_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904190123
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904190115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 10:34:06AM -0400, Alan Stern wrote:
-> On Fri, 19 Apr 2019, Paul E. McKenney wrote:
-> 
-> > On Fri, Apr 19, 2019 at 02:53:02AM +0200, Andrea Parri wrote:
-> > > > Are you saying that on x86, atomic_inc() acts as a full memory barrier 
-> > > > but not as a compiler barrier, and vice versa for 
-> > > > smp_mb__after_atomic()?  Or that neither atomic_inc() nor 
-> > > > smp_mb__after_atomic() implements a full memory barrier?
-> > > 
-> > > I'd say the former; AFAICT, these boil down to:
-> > > 
-> > >   https://elixir.bootlin.com/linux/v5.1-rc5/source/arch/x86/include/asm/atomic.h#L95
-> > >   https://elixir.bootlin.com/linux/v5.1-rc5/source/arch/x86/include/asm/barrier.h#L84
-> > 
-> > OK, how about the following?
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > commit 19d166dadc4e1bba4b248fb46d32ca4f2d10896b
-> > Author: Paul E. McKenney <paulmck@linux.ibm.com>
-> > Date:   Fri Apr 19 05:20:30 2019 -0700
-> > 
-> >     tools/memory-model: Make smp_mb__{before,after}_atomic() match x86
-> >     
-> >     Read-modify-write atomic operations that do not return values need not
-> >     provide any ordering guarantees, and this means that both the compiler
-> >     and the CPU are free to reorder accesses across things like atomic_inc()
-> >     and atomic_dec().  The stronger systems such as x86 allow the compiler
-> >     to do the reordering, but prevent the CPU from so doing, and these
-> >     systems implement smp_mb__{before,after}_atomic() as compiler barriers.
-> >     The weaker systems such as Power allow both the compiler and the CPU
-> >     to reorder accesses across things like atomic_inc() and atomic_dec(),
-> >     and implement smp_mb__{before,after}_atomic() as full memory barriers.
-> >     
-> >     This means that smp_mb__before_atomic() only orders the atomic operation
-> >     itself with accesses preceding the smp_mb__before_atomic(), and does
-> >     not necessarily provide any ordering whatsoever against accesses
-> >     folowing the atomic operation.  Similarly, smp_mb__after_atomic()
-> >     only orders the atomic operation itself with accesses following the
-> >     smp_mb__after_atomic(), and does not necessarily provide any ordering
-> >     whatsoever against accesses preceding the atomic operation.  Full ordering
-> >     therefore requires both an smp_mb__before_atomic() before the atomic
-> >     operation and an smp_mb__after_atomic() after the atomic operation.
-> >     
-> >     Therefore, linux-kernel.cat's current model of Before-atomic
-> >     and After-atomic is too strong, as it guarantees ordering of
-> >     accesses on the other side of the atomic operation from the
-> >     smp_mb__{before,after}_atomic().  This commit therefore weakens
-> >     the guarantee to match the semantics called out above.
-> >     
-> >     Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> >     Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> >     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > 
-> > diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-> > index 169d938c0b53..e5b97c3e8e39 100644
-> > --- a/Documentation/memory-barriers.txt
-> > +++ b/Documentation/memory-barriers.txt
-> > @@ -1888,7 +1888,37 @@ There are some more advanced barrier functions:
-> >  	atomic_dec(&obj->ref_count);
-> >  
-> >       This makes sure that the death mark on the object is perceived to be set
-> > -     *before* the reference counter is decremented.
-> > +     *before* the reference counter is decremented.  However, please note
-> > +     that smp_mb__before_atomic()'s ordering guarantee does not necessarily
-> > +     extend beyond the atomic operation.  For example:
-> > +
-> > +	obj->dead = 1;
-> > +	smp_mb__before_atomic();
-> > +	atomic_dec(&obj->ref_count);
-> > +	r1 = a;
-> > +
-> > +     Here the store to obj->dead is not guaranteed to be ordered with
-> > +     with the load from a.  This reordering can happen on x86 as follows:
-> > +     (1) The compiler can reorder the load from a to precede the
-> > +     atomic_dec(), (2) Because x86 smp_mb__before_atomic() is only a
-> > +     compiler barrier, the CPU can reorder the preceding store to
-> > +     obj->dead with the later load from a.
-> > +
-> > +     This could be avoided by using READ_ONCE(), which would prevent the
-> > +     compiler from reordering due to both atomic_dec() and READ_ONCE()
-> > +     being volatile accesses, and is usually preferable for loads from
-> > +     shared variables.  However, weakly ordered CPUs would still be
-> > +     free to reorder the atomic_dec() with the load from a, so a more
-> > +     readable option is to also use smp_mb__after_atomic() as follows:
-> > +
-> > +	WRITE_ONCE(obj->dead, 1);
-> > +	smp_mb__before_atomic();
-> > +	atomic_dec(&obj->ref_count);
-> > +	smp_mb__after_atomic();
-> > +	r1 = READ_ONCE(a);
-> > +
-> > +     This orders all three accesses against each other, and also makes
-> > +     the intent quite clear.
-> >  
-> >       See Documentation/atomic_{t,bitops}.txt for more information.
-> >  
-> > diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
-> > index 8dcb37835b61..b6866f93abb8 100644
-> > --- a/tools/memory-model/linux-kernel.cat
-> > +++ b/tools/memory-model/linux-kernel.cat
-> > @@ -28,8 +28,8 @@ include "lock.cat"
-> >  let rmb = [R \ Noreturn] ; fencerel(Rmb) ; [R \ Noreturn]
-> >  let wmb = [W] ; fencerel(Wmb) ; [W]
-> >  let mb = ([M] ; fencerel(Mb) ; [M]) |
-> > -	([M] ; fencerel(Before-atomic) ; [RMW] ; po? ; [M]) |
-> > -	([M] ; po? ; [RMW] ; fencerel(After-atomic) ; [M]) |
-> > +	([M] ; fencerel(Before-atomic) ; [RMW]) |
-> > +	([RMW] ; fencerel(After-atomic) ; [M]) |
-> >  	([M] ; po? ; [LKW] ; fencerel(After-spinlock) ; [M]) |
-> >  	([M] ; po ; [UL] ; (co | po) ; [LKW] ;
-> >  		fencerel(After-unlock-lock) ; [M])
-> 
-> Something like the following should also be applied, either as part of 
-> the same patch or immediately after.
+Hi Jerome,
 
-Please do send a patch!
+Thanks a lot for reviewing this series.
 
-							Thanx, Paul
+Le 19/04/2019 à 00:48, Jerome Glisse a écrit :
+> On Tue, Apr 16, 2019 at 03:45:00PM +0200, Laurent Dufour wrote:
+>> From: Peter Zijlstra <peterz@infradead.org>
+>>
+>> Wrap the VMA modifications (vma_adjust/unmap_page_range) with sequence
+>> counts such that we can easily test if a VMA is changed.
+>>
+>> The calls to vm_write_begin/end() in unmap_page_range() are
+>> used to detect when a VMA is being unmap and thus that new page fault
+>> should not be satisfied for this VMA. If the seqcount hasn't changed when
+>> the page table are locked, this means we are safe to satisfy the page
+>> fault.
+>>
+>> The flip side is that we cannot distinguish between a vma_adjust() and
+>> the unmap_page_range() -- where with the former we could have
+>> re-checked the vma bounds against the address.
+>>
+>> The VMA's sequence counter is also used to detect change to various VMA's
+>> fields used during the page fault handling, such as:
+>>   - vm_start, vm_end
+>>   - vm_pgoff
+>>   - vm_flags, vm_page_prot
+>>   - vm_policy
+> 
+> ^ All above are under mmap write lock ?
 
-> Alan
+Yes, changes are still made under the protection of the mmap_sem.
+
+> 
+>>   - anon_vma
+> 
+> ^ This is either under mmap write lock or under page table lock
+> 
+> So my question is do we need the complexity of seqcount_t for this ?
+
+The sequence counter is used to detect write operation done while 
+readers (SPF handler) is running.
+
+The implementation is quite simple (here without the lockdep checks):
+
+static inline void raw_write_seqcount_begin(seqcount_t *s)
+{
+	s->sequence++;
+	smp_wmb();
+}
+
+I can't see why this is too complex here, would you elaborate on this ?
+
+> 
+> It seems that using regular int as counter and also relying on vm_flags
+> when vma is unmap should do the trick.
+
+vm_flags is not enough I guess an some operation are not impacting the 
+vm_flags at all (resizing for instance).
+Am I missing something ?
+
+> 
+> vma_delete(struct vm_area_struct *vma)
+> {
+>      ...
+>      /*
+>       * Make sure the vma is mark as invalid ie neither read nor write
+>       * so that speculative fault back off. A racing speculative fault
+>       * will either see the flags as 0 or the new seqcount.
+>       */
+>      vma->vm_flags = 0;
+>      smp_wmb();
+>      vma->seqcount++;
+>      ...
+> }
+
+Well I don't think we can safely clear the vm_flags this way when the 
+VMA is unmap, I think it is used later when cleaning is doen.
+
+Later in this series, the VMA deletion is managed when the VMA is 
+unlinked from the RB Tree. That is checked using the vm_rb field's 
+value, and managed using RCU.
+
+> Then:
+> speculative_fault_begin(struct vm_area_struct *vma,
+>                          struct spec_vmf *spvmf)
+> {
+>      ...
+>      spvmf->seqcount = vma->seqcount;
+>      smp_rmb();
+>      spvmf->vm_flags = vma->vm_flags;
+>      if (!spvmf->vm_flags) {
+>          // Back off the vma is dying ...
+>          ...
+>      }
+> }
+> 
+> bool speculative_fault_commit(struct vm_area_struct *vma,
+>                                struct spec_vmf *spvmf)
+> {
+>      ...
+>      seqcount = vma->seqcount;
+>      smp_rmb();
+>      vm_flags = vma->vm_flags;
+> 
+>      if (spvmf->vm_flags != vm_flags || seqcount != spvmf->seqcount) {
+>          // Something did change for the vma
+>          return false;
+>      }
+>      return true;
+> }
+> 
+> This would also avoid the lockdep issue described below. But maybe what
+> i propose is stupid and i will see it after further reviewing thing.
+
+That's true that the lockdep is quite annoying here. But it is still 
+interesting to keep in the loop to avoid 2 subsequent 
+write_seqcount_begin() call being made in the same context (which would 
+lead to an even sequence counter value while write operation is in 
+progress). So I think this is still a good thing to have lockdep 
+available here.
+
+
+
+> 
+> Cheers,
+> Jérôme
 > 
 > 
-> Index: usb-devel/Documentation/atomic_t.txt
-> ===================================================================
-> --- usb-devel.orig/Documentation/atomic_t.txt
-> +++ usb-devel/Documentation/atomic_t.txt
-> @@ -171,7 +171,10 @@ The barriers:
->    smp_mb__{before,after}_atomic()
->  
->  only apply to the RMW ops and can be used to augment/upgrade the ordering
-> -inherent to the used atomic op. These barriers provide a full smp_mb().
-> +inherent to the used atomic op. Unlike normal smp_mb() barriers, they order
-> +only the RMW op itself against the instructions preceding the
-> +smp_mb__before_atomic() or following the smp_mb__after_atomic(); they do
-> +not order instructions on the other side of the RMW op at all.
->  
->  These helper barriers exist because architectures have varying implicit
->  ordering on their SMP atomic primitives. For example our TSO architectures
-> @@ -195,7 +198,8 @@ Further, while something like:
->    atomic_dec(&X);
->  
->  is a 'typical' RELEASE pattern, the barrier is strictly stronger than
-> -a RELEASE. Similarly for something like:
-> +a RELEASE because it orders preceding instructions against both the read
-> +and write parts of the atomic_dec(). Similarly, something like:
->  
->    atomic_inc(&X);
->    smp_mb__after_atomic();
-> @@ -227,7 +231,8 @@ strictly stronger than ACQUIRE. As illus
->  
->  This should not happen; but a hypothetical atomic_inc_acquire() --
->  (void)atomic_fetch_inc_acquire() for instance -- would allow the outcome,
-> -since then:
-> +because it would not order the W part of the RMW against the following
-> +WRITE_ONCE.  Thus:
->  
->    P1			P2
->  
+>>
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>
+>> [Port to 4.12 kernel]
+>> [Build depends on CONFIG_SPECULATIVE_PAGE_FAULT]
+>> [Introduce vm_write_* inline function depending on
+>>   CONFIG_SPECULATIVE_PAGE_FAULT]
+>> [Fix lock dependency between mapping->i_mmap_rwsem and vma->vm_sequence by
+>>   using vm_raw_write* functions]
+>> [Fix a lock dependency warning in mmap_region() when entering the error
+>>   path]
+>> [move sequence initialisation INIT_VMA()]
+>> [Review the patch description about unmap_page_range()]
+>> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+>> ---
+>>   include/linux/mm.h       | 44 ++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/mm_types.h |  3 +++
+>>   mm/memory.c              |  2 ++
+>>   mm/mmap.c                | 30 +++++++++++++++++++++++++++
+>>   4 files changed, 79 insertions(+)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 2ceb1d2869a6..906b9e06f18e 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1410,6 +1410,9 @@ struct zap_details {
+>>   static inline void INIT_VMA(struct vm_area_struct *vma)
+>>   {
+>>   	INIT_LIST_HEAD(&vma->anon_vma_chain);
+>> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+>> +	seqcount_init(&vma->vm_sequence);
+>> +#endif
+>>   }
+>>   
+>>   struct page *_vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+>> @@ -1534,6 +1537,47 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+>>   	unmap_mapping_range(mapping, holebegin, holelen, 0);
+>>   }
+>>   
+>> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+>> +static inline void vm_write_begin(struct vm_area_struct *vma)
+>> +{
+>> +	write_seqcount_begin(&vma->vm_sequence);
+>> +}
+>> +static inline void vm_write_begin_nested(struct vm_area_struct *vma,
+>> +					 int subclass)
+>> +{
+>> +	write_seqcount_begin_nested(&vma->vm_sequence, subclass);
+>> +}
+>> +static inline void vm_write_end(struct vm_area_struct *vma)
+>> +{
+>> +	write_seqcount_end(&vma->vm_sequence);
+>> +}
+>> +static inline void vm_raw_write_begin(struct vm_area_struct *vma)
+>> +{
+>> +	raw_write_seqcount_begin(&vma->vm_sequence);
+>> +}
+>> +static inline void vm_raw_write_end(struct vm_area_struct *vma)
+>> +{
+>> +	raw_write_seqcount_end(&vma->vm_sequence);
+>> +}
+>> +#else
+>> +static inline void vm_write_begin(struct vm_area_struct *vma)
+>> +{
+>> +}
+>> +static inline void vm_write_begin_nested(struct vm_area_struct *vma,
+>> +					 int subclass)
+>> +{
+>> +}
+>> +static inline void vm_write_end(struct vm_area_struct *vma)
+>> +{
+>> +}
+>> +static inline void vm_raw_write_begin(struct vm_area_struct *vma)
+>> +{
+>> +}
+>> +static inline void vm_raw_write_end(struct vm_area_struct *vma)
+>> +{
+>> +}
+>> +#endif /* CONFIG_SPECULATIVE_PAGE_FAULT */
+>> +
+>>   extern int access_process_vm(struct task_struct *tsk, unsigned long addr,
+>>   		void *buf, int len, unsigned int gup_flags);
+>>   extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
+>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>> index fd7d38ee2e33..e78f72eb2576 100644
+>> --- a/include/linux/mm_types.h
+>> +++ b/include/linux/mm_types.h
+>> @@ -337,6 +337,9 @@ struct vm_area_struct {
+>>   	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
+>>   #endif
+>>   	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
+>> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+>> +	seqcount_t vm_sequence;
+>> +#endif
+>>   } __randomize_layout;
+>>   
+>>   struct core_thread {
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index d5bebca47d98..423fa8ea0569 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -1256,6 +1256,7 @@ void unmap_page_range(struct mmu_gather *tlb,
+>>   	unsigned long next;
+>>   
+>>   	BUG_ON(addr >= end);
+>> +	vm_write_begin(vma);
+>>   	tlb_start_vma(tlb, vma);
+>>   	pgd = pgd_offset(vma->vm_mm, addr);
+>>   	do {
+>> @@ -1265,6 +1266,7 @@ void unmap_page_range(struct mmu_gather *tlb,
+>>   		next = zap_p4d_range(tlb, vma, pgd, addr, next, details);
+>>   	} while (pgd++, addr = next, addr != end);
+>>   	tlb_end_vma(tlb, vma);
+>> +	vm_write_end(vma);
+>>   }
+>>   
+>>   
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 5ad3a3228d76..a4e4d52a5148 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -726,6 +726,30 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>   	long adjust_next = 0;
+>>   	int remove_next = 0;
+>>   
+>> +	/*
+>> +	 * Why using vm_raw_write*() functions here to avoid lockdep's warning ?
+>> +	 *
+>> +	 * Locked is complaining about a theoretical lock dependency, involving
+>> +	 * 3 locks:
+>> +	 *   mapping->i_mmap_rwsem --> vma->vm_sequence --> fs_reclaim
+>> +	 *
+>> +	 * Here are the major path leading to this dependency :
+>> +	 *  1. __vma_adjust() mmap_sem  -> vm_sequence -> i_mmap_rwsem
+>> +	 *  2. move_vmap() mmap_sem -> vm_sequence -> fs_reclaim
+>> +	 *  3. __alloc_pages_nodemask() fs_reclaim -> i_mmap_rwsem
+>> +	 *  4. unmap_mapping_range() i_mmap_rwsem -> vm_sequence
+>> +	 *
+>> +	 * So there is no way to solve this easily, especially because in
+>> +	 * unmap_mapping_range() the i_mmap_rwsem is grab while the impacted
+>> +	 * VMAs are not yet known.
+>> +	 * However, the way the vm_seq is used is guarantying that we will
+>> +	 * never block on it since we just check for its value and never wait
+>> +	 * for it to move, see vma_has_changed() and handle_speculative_fault().
+>> +	 */
+>> +	vm_raw_write_begin(vma);
+>> +	if (next)
+>> +		vm_raw_write_begin(next);
+>> +
+>>   	if (next && !insert) {
+>>   		struct vm_area_struct *exporter = NULL, *importer = NULL;
+>>   
+>> @@ -950,6 +974,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>   			 * "vma->vm_next" gap must be updated.
+>>   			 */
+>>   			next = vma->vm_next;
+>> +			if (next)
+>> +				vm_raw_write_begin(next);
+>>   		} else {
+>>   			/*
+>>   			 * For the scope of the comment "next" and
+>> @@ -996,6 +1022,10 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>   	if (insert && file)
+>>   		uprobe_mmap(insert);
+>>   
+>> +	if (next && next != vma)
+>> +		vm_raw_write_end(next);
+>> +	vm_raw_write_end(vma);
+>> +
+>>   	validate_mm(mm);
+>>   
+>>   	return 0;
+>> -- 
+>> 2.21.0
+>>
 > 
 
