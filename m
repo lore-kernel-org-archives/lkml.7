@@ -2,239 +2,103 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE088C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3C7C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91385222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698307;
-	bh=CJe1FHug80vq4K2CwnwnlrY8C37gIW0bFED1xOT6w4M=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=S7yLnHZoGEszVtRtCTVVz1N2DRgIUVn/8DBCvtp2qZFdbn/K2pdqfuk+86rhSgSQT
-	 VFoyA/Mu/EolAU6xgMwCu8Aun1PNFPxQ8W4HpLReiHmu9nyLhBQdiym3rcBoi2AuIY
-	 uomlaC64lQcEHwDGSdeRPLnFE5bn8UML4zHpszKA=
+	by mail.kernel.org (Postfix) with ESMTP id 8B751222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="eYwUB7ox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfDSSZG (ORCPT
+        id S1727801AbfDSSZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:25:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38528 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfDSSUm (ORCPT
+        Fri, 19 Apr 2019 14:25:11 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:48258 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfDSSZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:20:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=DI+Wp2iP1Yej61R/QW21QuoK43+W17C0/uq/KBYfnII=; b=N3NGHA32Yy6s
-        zCsL25ajG2YdkIO3kzBAuYoD9PiZ0Qdsa0OP+vocFz41CMrzPxOWZyoF6z7fhU33tWP67MC8pjlsM
-        H1ZnCb3qekdYynWPVOUtDJ0hBO9UMgQsIUP4fndn01uMdGh7PSE25jlBj18VWFVzT8J70DCvBArp+
-        87bR0=;
-Received: from 188.29.164.213.threembb.co.uk ([188.29.164.213] helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hHW9k-00007g-Kg; Fri, 19 Apr 2019 16:14:28 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 640AC441D3C; Fri, 19 Apr 2019 17:14:26 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Applied "regulator: ltc3589: Get rid of struct ltc3589_regulator" to the regulator tree
-In-Reply-To: <20190418114500.1098-2-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190419161426.640AC441D3C@finisterre.ee.mobilebroadband>
-Date:   Fri, 19 Apr 2019 17:14:26 +0100 (BST)
+        Fri, 19 Apr 2019 14:25:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by chill.innovation.ch (Postfix) with ESMTP id 21B5A640142;
+        Fri, 19 Apr 2019 01:19:35 -0700 (PDT)
+X-Virus-Scanned: amavisd-new at 
+Received: from chill.innovation.ch ([127.0.0.1])
+        by localhost (chill.innovation.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id Iim8H0WEAY1a; Fri, 19 Apr 2019 01:19:33 -0700 (PDT)
+From:   =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch DB76E6400F3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1555661973;
+        bh=Prs4g5iOIQ9sFrQh+TU+UZlx2U0kKl+7nUEjspq3cqI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eYwUB7oxvbfvf6KToK2KRW5R5V9laWyooZxFNE/2pDgU2NgsyOC6dTsnd6YEWl7Oj
+         q2T+1hmRb8E5jDTrGL7w5aJ6SdSWTgklMf4FJ3ElZKlROJzty5issWWfaxXN7988bU
+         uGG0giZDBaX4o0oE4DYxnhQhxYWJ+TSOtpI66oMpM3TkH38yTRZBSBdcwcpuJVpxnG
+         9s+yEhYnWZYC7bhtmdVafvUPQpar0okl5/yFseh89MBEEy1USulo6efTk2aIuLE0nA
+         plx5G/+UtV9PGwPBR5IY3BOjqYs4J0Y559pivibqi6as7MwgVUTUMxNJaB2AU9RcxH
+         1nXslyruq9OZA==
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/2] Add Apple SPI keyboard and trackpad driver
+Date:   Fri, 19 Apr 2019 01:19:24 -0700
+Message-Id: <20190419081926.13567-1-ronald@innovation.ch>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+This changeset adds a driver for the SPI keyboard and trackpad on recent
+MacBook's and MacBook Pro's. The driver has seen a fair amount of use
+over the last 2 years (basically anybody running linux on these
+machines), with only relatively small changes in the last year or so.
+For those interested, the driver development has been hosted at
+https://github.com/cb22/macbook12-spi-driver/ (as well as my clone at
+https://github.com/roadrunner2/macbook12-spi-driver/).
 
-   regulator: ltc3589: Get rid of struct ltc3589_regulator
+The first patch fixes a problem during config. While it affects the drm
+tree, Andrzej Hajda has given his ok for this patch to be taken via the
+input tree because the second patch here depends on it.
 
-has been applied to the regulator tree at
+The second patch contains the new applespi driver.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+Changes in v7:
+ - Fixed unused variable warning introduced in previous patch series and
+   accidently overlooked
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Ronald Tschalär (2):
+  drm/bridge: sil_sii8620: make remote control optional.
+  Input: add Apple SPI keyboard and trackpad driver.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+ drivers/gpu/drm/bridge/Kconfig          |    3 +-
+ drivers/gpu/drm/bridge/sil-sii8620.c    |   10 +-
+ drivers/input/keyboard/Kconfig          |   15 +
+ drivers/input/keyboard/Makefile         |    1 +
+ drivers/input/keyboard/applespi.c       | 1975 +++++++++++++++++++++++
+ drivers/input/keyboard/applespi.h       |   29 +
+ drivers/input/keyboard/applespi_trace.h |   94 ++
+ 7 files changed, 2122 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/input/keyboard/applespi.c
+ create mode 100644 drivers/input/keyboard/applespi.h
+ create mode 100644 drivers/input/keyboard/applespi_trace.h
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 7d110b65553079f7125a1df611dffab96c2429f0 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 18 Apr 2019 19:44:59 +0800
-Subject: [PATCH] regulator: ltc3589: Get rid of struct ltc3589_regulator
-
-After converting to use simplified DT parsing, the struct ltc3589_regulator
-only has a desc member. So let's remove struct ltc3589_regulator and use
-struct regulator_desc instead.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/ltc3589.c | 69 +++++++++++++++++--------------------
- 1 file changed, 31 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
-index 35741f476024..077e73715514 100644
---- a/drivers/regulator/ltc3589.c
-+++ b/drivers/regulator/ltc3589.c
-@@ -84,15 +84,11 @@ enum ltc3589_reg {
- 	LTC3589_NUM_REGULATORS,
- };
- 
--struct ltc3589_regulator {
--	struct regulator_desc desc;
--};
--
- struct ltc3589 {
- 	struct regmap *regmap;
- 	struct device *dev;
- 	enum ltc3589_variant variant;
--	struct ltc3589_regulator regulator_descs[LTC3589_NUM_REGULATORS];
-+	struct regulator_desc regulator_descs[LTC3589_NUM_REGULATORS];
- 	struct regulator_dev *regulators[LTC3589_NUM_REGULATORS];
- };
- 
-@@ -209,7 +205,7 @@ static int ltc3589_of_parse_cb(struct device_node *np,
- 			       struct regulator_config *config)
- {
- 	struct ltc3589 *ltc3589 = config->driver_data;
--	struct ltc3589_regulator *rdesc = &ltc3589->regulator_descs[desc->id];
-+	struct regulator_desc *rdesc = &ltc3589->regulator_descs[desc->id];
- 	u32 r[2];
- 	int ret;
- 
-@@ -227,36 +223,34 @@ static int ltc3589_of_parse_cb(struct device_node *np,
- 	if (!r[0] || !r[1])
- 		return 0;
- 
--	rdesc->desc.min_uV = ltc3589_scale(desc->min_uV, r[0], r[1]);
--	rdesc->desc.uV_step = ltc3589_scale(desc->uV_step, r[0], r[1]);
--	rdesc->desc.fixed_uV = ltc3589_scale(desc->fixed_uV, r[0], r[1]);
-+	rdesc->min_uV = ltc3589_scale(desc->min_uV, r[0], r[1]);
-+	rdesc->uV_step = ltc3589_scale(desc->uV_step, r[0], r[1]);
-+	rdesc->fixed_uV = ltc3589_scale(desc->fixed_uV, r[0], r[1]);
- 
- 	return 0;
- }
- 
- #define LTC3589_REG(_name, _of_name, _ops, en_bit, dtv1_reg, dtv_mask, go_bit)\
- 	[LTC3589_ ## _name] = {						\
--		.desc = {						\
--			.name = #_name,					\
--			.of_match = of_match_ptr(#_of_name),		\
--			.regulators_node = of_match_ptr("regulators"),	\
--			.of_parse_cb = ltc3589_of_parse_cb,		\
--			.n_voltages = (dtv_mask) + 1,			\
--			.min_uV = (go_bit) ? 362500 : 0,		\
--			.uV_step = (go_bit) ? 12500 : 0,		\
--			.ramp_delay = (go_bit) ? 1750 : 0,		\
--			.fixed_uV = (dtv_mask) ? 0 : 800000,		\
--			.ops = &ltc3589_ ## _ops ## _regulator_ops,	\
--			.type = REGULATOR_VOLTAGE,			\
--			.id = LTC3589_ ## _name,			\
--			.owner = THIS_MODULE,				\
--			.vsel_reg = (dtv1_reg),			\
--			.vsel_mask = (dtv_mask),			\
--			.apply_reg = (go_bit) ? LTC3589_VCCR : 0,	\
--			.apply_bit = (go_bit),				\
--			.enable_reg = (en_bit) ? LTC3589_OVEN : 0,	\
--			.enable_mask = (en_bit),			\
--		},							\
-+		.name = #_name,						\
-+		.of_match = of_match_ptr(#_of_name),			\
-+		.regulators_node = of_match_ptr("regulators"),		\
-+		.of_parse_cb = ltc3589_of_parse_cb,			\
-+		.n_voltages = (dtv_mask) + 1,				\
-+		.min_uV = (go_bit) ? 362500 : 0,			\
-+		.uV_step = (go_bit) ? 12500 : 0,			\
-+		.ramp_delay = (go_bit) ? 1750 : 0,			\
-+		.fixed_uV = (dtv_mask) ? 0 : 800000,			\
-+		.ops = &ltc3589_ ## _ops ## _regulator_ops,		\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.id = LTC3589_ ## _name,				\
-+		.owner = THIS_MODULE,					\
-+		.vsel_reg = (dtv1_reg),					\
-+		.vsel_mask = (dtv_mask),				\
-+		.apply_reg = (go_bit) ? LTC3589_VCCR : 0,		\
-+		.apply_bit = (go_bit),					\
-+		.enable_reg = (en_bit) ? LTC3589_OVEN : 0,		\
-+		.enable_mask = (en_bit),				\
- 	}
- 
- #define LTC3589_LINEAR_REG(_name, _of_name, _dtv1)			\
-@@ -267,7 +261,7 @@ static int ltc3589_of_parse_cb(struct device_node *np,
- #define LTC3589_FIXED_REG(_name, _of_name)				\
- 	LTC3589_REG(_name, _of_name, fixed, LTC3589_OVEN_ ## _name, 0, 0, 0)
- 
--static struct ltc3589_regulator ltc3589_regulators[LTC3589_NUM_REGULATORS] = {
-+static const struct regulator_desc ltc3589_regulators[] = {
- 	LTC3589_LINEAR_REG(SW1, sw1, B1DTV1),
- 	LTC3589_LINEAR_REG(SW2, sw2, B2DTV1),
- 	LTC3589_LINEAR_REG(SW3, sw3, B3DTV1),
-@@ -403,7 +397,7 @@ static int ltc3589_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
- 	struct device *dev = &client->dev;
--	struct ltc3589_regulator *descs;
-+	struct regulator_desc *descs;
- 	struct ltc3589 *ltc3589;
- 	int i, ret;
- 
-@@ -422,11 +416,11 @@ static int ltc3589_probe(struct i2c_client *client,
- 	descs = ltc3589->regulator_descs;
- 	memcpy(descs, ltc3589_regulators, sizeof(ltc3589_regulators));
- 	if (ltc3589->variant == LTC3589) {
--		descs[LTC3589_LDO3].desc.fixed_uV = 1800000;
--		descs[LTC3589_LDO4].desc.volt_table = ltc3589_ldo4;
-+		descs[LTC3589_LDO3].fixed_uV = 1800000;
-+		descs[LTC3589_LDO4].volt_table = ltc3589_ldo4;
- 	} else {
--		descs[LTC3589_LDO3].desc.fixed_uV = 2800000;
--		descs[LTC3589_LDO4].desc.volt_table = ltc3589_12_ldo4;
-+		descs[LTC3589_LDO3].fixed_uV = 2800000;
-+		descs[LTC3589_LDO4].volt_table = ltc3589_12_ldo4;
- 	}
- 
- 	ltc3589->regmap = devm_regmap_init_i2c(client, &ltc3589_regmap_config);
-@@ -437,8 +431,7 @@ static int ltc3589_probe(struct i2c_client *client,
- 	}
- 
- 	for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
--		struct ltc3589_regulator *rdesc = &ltc3589->regulator_descs[i];
--		struct regulator_desc *desc = &rdesc->desc;
-+		struct regulator_desc *desc = &ltc3589->regulator_descs[i];
- 		struct regulator_config config = { };
- 
- 		config.dev = dev;
 -- 
 2.20.1
 
