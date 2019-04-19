@@ -2,125 +2,181 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3565FC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90009C282DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0277521736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D3A21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 03:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfDSDno (ORCPT
+        id S1727276AbfDSDpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 23:43:44 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2926 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726822AbfDSDno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 23:43:44 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id C9D275459B0641D7A75C;
-        Fri, 19 Apr 2019 11:43:39 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 19 Apr 2019 11:43:39 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 19 Apr 2019 11:43:39 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: relocate chksum_offset for large_nat_bitmap feature
-Date:   Fri, 19 Apr 2019 11:43:33 +0800
-Message-ID: <20190419034333.80383-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 18 Apr 2019 23:45:08 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:41920 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfDSDpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 23:45:06 -0400
+Received: by mail-it1-f199.google.com with SMTP id m128so4334312itm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 20:45:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=G2sSzzWtu5hqwMXpUY/ZwUzvofMXxnWS2eXRGgy8sVE=;
+        b=iCQuoSm/dgsI0buskxgBOV/X6TKQdBVoNVTK0nHfzxHNmE7F6hG6xuyJ8NfqlV9v9P
+         NMPrCsOVum3TnCZhVPmgcCC8DRk7RHQehJX5hIGmA5am5ELKjAgVEoHF2lMYWXt0/BwO
+         AEziAwUyZr9Pj5HJGN0j1nea76ZGqey2Ff4ihs1QBp8PT4gwnixr1Hq/ZKuET9VRxsib
+         J1/FXsmJJu+HIknMN5pJ4duG4AYfHcAn2jbGmARxQUE896Sii1/GGm7C0AcD/V+eCfNA
+         rROYbJoB1VPm+1tT8Andx/1niNcySLFtMmWsFg4ygTZ6xvjKW8OWQ6US9j2Ule2M4CcK
+         RABg==
+X-Gm-Message-State: APjAAAXdK6COSyaWtfvTrq08665Yk0sAzP6iFnOKu4AHbw5HTqpqZy/i
+        isJe60wZ/g97US2BB++dCRbUtW4r8S2SdkdBTChneD2c+fRC
+X-Google-Smtp-Source: APXvYqxs1X3zR/MAXk4CZ9M4boIZRlpWE5tSS50nuQ36DPYw6/PZNR/Baa2OHOu0ZZEzPgfOIg2HcaHQ0lozP6wtXztavMfOak0f
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a5d:899a:: with SMTP id m26mr1424176iol.268.1555645505345;
+ Thu, 18 Apr 2019 20:45:05 -0700 (PDT)
+Date:   Thu, 18 Apr 2019 20:45:05 -0700
+In-Reply-To: <0000000000004a6d7c057e77e97e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000be25710586d9f15a@google.com>
+Subject: Re: KASAN: use-after-free Read in refcount_sub_and_test_checked (2)
+From:   syzbot <syzbot+b0775615fa4c4479b691@syzkaller.appspotmail.com>
+To:     -O-request@vger.kernel.org, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, andrew.hendry@gmail.com,
+        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, dvlasenk@redhat.com,
+        gregkh@linuxfoundation.org, jolsa@redhat.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
+        mingo@redhat.com, ms@dev.tdt.de, namhyung@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For large_nat_bitmap feature, there is a design flaw:
+syzbot has found a reproducer for the following crash on:
 
-Previous:
+HEAD commit:    6d906f99 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=129b4003200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=b0775615fa4c4479b691
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15df396b200000
 
-struct f2fs_checkpoint layout:
-+--------------------------+  0x0000
-| checkpoint_ver           |
-| ......                   |
-| checksum_offset          |------+
-| ......                   |      |
-| sit_nat_version_bitmap[] |<-----|-------+
-| ......                   |      |       |
-| checksum_value           |<-----+       |
-+--------------------------+  0x1000      |
-|                          |      nat_bitmap + sit_bitmap
-| payload blocks           |              |
-|                          |              |
-+--------------------------|<-------------+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b0775615fa4c4479b691@syzkaller.appspotmail.com
 
-Obviously, if nat_bitmap size + sit_bitmap size is larger than
-MAX_BITMAP_SIZE_IN_CKPT, nat_bitmap or sit_bitmap may overlap
-checkpoint checksum's position, once checkpoint() is triggered
-from kernel, nat or sit bitmap will be damaged by checksum field.
+==================================================================
+BUG: KASAN: use-after-free in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in refcount_sub_and_test_checked+0x87/0x200  
+lib/refcount.c:182
+Read of size 4 at addr ffff8880a8d5e060 by task syz-executor.0/31157
 
-In order to fix this, let's relocate checksum_value's position
-to the head of sit_nat_version_bitmap as below, then nat/sit
-bitmap and chksum value update will become safe.
+CPU: 0 PID: 31157 Comm: syz-executor.0 Not tainted 5.1.0-rc5+ #74
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+  kasan_check_read+0x11/0x20 mm/kasan/common.c:102
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  refcount_sub_and_test_checked+0x87/0x200 lib/refcount.c:182
+  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
+  put_task_struct include/linux/sched/task.h:97 [inline]
+  _free_event+0x3d7/0x13b0 kernel/events/core.c:4460
+  free_event+0x5f/0xd0 kernel/events/core.c:4481
+  perf_event_release_kernel+0x5b2/0xbe0 kernel/events/core.c:4642
+  perf_release+0x37/0x50 kernel/events/core.c:4656
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:166
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4129e1
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 e4 1a 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffc793703e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 00000000004129e1
+RDX: 0000000000000000 RSI: 0000000000000081 RDI: 0000000000000003
+RBP: 0000000000741220 R08: 0000000000741218 R09: 000000000002c9b0
+R10: 00007ffc793704a0 R11: 0000000000000293 R12: 0000000000000000
+R13: 0000000000000001 R14: 0000000000000003 R15: 000000000073bfac
 
-After:
+Allocated by task 31160:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
+  slab_post_alloc_hook mm/slab.h:437 [inline]
+  slab_alloc_node mm/slab.c:3337 [inline]
+  kmem_cache_alloc_node+0x131/0x710 mm/slab.c:3647
+  alloc_task_struct_node kernel/fork.c:157 [inline]
+  dup_task_struct kernel/fork.c:844 [inline]
+  copy_process.part.0+0x1d08/0x7980 kernel/fork.c:1752
+  copy_process kernel/fork.c:1709 [inline]
+  _do_fork+0x257/0xfd0 kernel/fork.c:2226
+  __do_sys_clone kernel/fork.c:2333 [inline]
+  __se_sys_clone kernel/fork.c:2327 [inline]
+  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2327
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-struct f2fs_checkpoint layout:
-+--------------------------+  0x0000
-| checkpoint_ver           |
-| ......                   |
-| checksum_offset          |------+
-| ......                   |      |
-| sit_nat_version_bitmap[] |<-----+
-| ......                   |<-------------+
-|                          |              |
-+--------------------------+  0x1000      |
-|                          |      nat_bitmap + sit_bitmap
-| payload blocks           |              |
-|                          |              |
-+--------------------------|<-------------+
+Freed by task 31160:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+  __cache_free mm/slab.c:3500 [inline]
+  kmem_cache_free+0x86/0x260 mm/slab.c:3766
+  free_task_struct kernel/fork.c:162 [inline]
+  free_task+0xdd/0x120 kernel/fork.c:457
+  copy_process.part.0+0x1a3a/0x7980 kernel/fork.c:2158
+  copy_process kernel/fork.c:1709 [inline]
+  _do_fork+0x257/0xfd0 kernel/fork.c:2226
+  __do_sys_clone kernel/fork.c:2333 [inline]
+  __se_sys_clone kernel/fork.c:2327 [inline]
+  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2327
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Related report and discussion:
+The buggy address belongs to the object at ffff8880a8d5e040
+  which belongs to the cache task_struct(44:syz0) of size 6080
+The buggy address is located 32 bytes inside of
+  6080-byte region [ffff8880a8d5e040, ffff8880a8d5f800)
+The buggy address belongs to the page:
+page:ffffea0002a35780 count:1 mapcount:0 mapping:ffff88808b2adcc0 index:0x0  
+compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002301808 ffffea0002171f08 ffff88808b2adcc0
+raw: 0000000000000000 ffff8880a8d5e040 0000000100000001 ffff888085710580
+page dumped because: kasan: bad access detected
+page->mem_cgroup:ffff888085710580
 
-https://sourceforge.net/p/linux-f2fs/mailman/message/36642346/
-
-Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/f2fs.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 31531711e148..f5ffc09705eb 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1911,7 +1911,11 @@ static inline void *__bitmap_ptr(struct f2fs_sb_info *sbi, int flag)
- 	if (is_set_ckpt_flags(sbi, CP_LARGE_NAT_BITMAP_FLAG)) {
- 		offset = (flag == SIT_BITMAP) ?
- 			le32_to_cpu(ckpt->nat_ver_bitmap_bytesize) : 0;
--		return &ckpt->sit_nat_version_bitmap + offset;
-+		/*
-+		 * if large_nat_bitmap feature is enabled, leave checksum
-+		 * protection for all nat/sit bitmaps.
-+		 */
-+		return &ckpt->sit_nat_version_bitmap + offset + sizeof(__le32);
- 	}
- 
- 	if (__cp_payload(sbi) > 0) {
--- 
-2.18.0.rc1
+Memory state around the buggy address:
+  ffff8880a8d5df00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a8d5df80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8880a8d5e000: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                                        ^
+  ffff8880a8d5e080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a8d5e100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
