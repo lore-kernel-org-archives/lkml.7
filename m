@@ -2,103 +2,180 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06254C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD94C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C063421736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C592171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555707791;
-	bh=58oPZUXjhRkw7XY+ljE3W49BNutBG0Z7wXR2Np07/u8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=KXXnn9uKsdk68tyXoy9u5VQEoOTshP1GxUJmfP1M0zjEagJBackb6lXc8EKuAlJhD
-	 +dWVN5m7A1jtunIxydpVBgE5pUVFSw5SH+ZlSnmwwwE4VP0OEGtjbvQ/sC2JvR6Vu+
-	 Be052g7AwQU2X9iMaRJJehiToBcxXTpsuqbtTQMo=
+	s=default; t=1555707840;
+	bh=tT8a0hMsSQ0YyLXya2F2hbc7P7S1+/rh8wg7HPWKRzM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=g9YshBRwytN6KdPp61aX2g2zIcu7SYrdFqiVFaQhfH+oEJhCOwmelPXxXMoSwE+nT
+	 PbIvYdU5sijlSwJptL+lOBbX90wIMJCWUEx4rvmFvtckiD0FYvF2j99PVJ5uf6GEGa
+	 yGjWn0fhJBdbKuvuX7oedUabDYruJT33GggwrljU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfDSVDK (ORCPT
+        id S1727559AbfDSVD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:03:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfDSVDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:03:10 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF692171F;
-        Fri, 19 Apr 2019 21:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555707789;
-        bh=58oPZUXjhRkw7XY+ljE3W49BNutBG0Z7wXR2Np07/u8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=C/bHvNaHcIXeWTwuL4x1cs1/7dBlY4x29liDaN4LHtUSDwBkqLePe1fjMRyPC902Z
-         QcPnNI/CHYJAbns+AYhpf3gHKMV4LkxxpMhvkhYOdbCvQlAw1aTYZyo6IcG3kIIdeg
-         DnZ/rdq1r9fBVfBhj7uYsxuSOvABq7i/OUZpeur0=
-Subject: Re: [PATCH for 5.1 3/3] rseq/selftests: Adapt number of threads to
- the number of detected cpus
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
- <1444419838.71.1555677682502.JavaMail.zimbra@efficios.com>
- <1266612341.87.1555678507226.JavaMail.zimbra@efficios.com>
- <614774674.134.1555681346941.JavaMail.zimbra@efficios.com>
- <1863599735.141.1555681723685.JavaMail.zimbra@efficios.com>
- <6ba0796c-8a96-f797-265c-37bfb9b4bb71@kernel.org>
- <580328197.148.1555684824260.JavaMail.zimbra@efficios.com>
- <cfcbace7-363d-e45e-11da-8efb200783b7@kernel.org>
- <1136505826.203.1555707541777.JavaMail.zimbra@efficios.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <45ecf26a-a2f4-fa86-a252-e1d9b3bc4224@kernel.org>
-Date:   Fri, 19 Apr 2019 15:03:06 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 19 Apr 2019 17:03:58 -0400
+Received: from casper.infradead.org ([85.118.1.10]:39858 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfDSVD6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 17:03:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AQ19LFwVTjtH/+6i4GAAIQgmeJLnXakChake00M6d3E=; b=u9E/KHxxrDNXuAgARNyTWdqYQZ
+        PvqYcYCK489DM67JjEGQq0JY/mEmWSD1fv0JgaMubtBFzKXz+vvaMy5OgIIWPyJUx+5Jj6JS8SJoh
+        su0DC3164wWvPusfOk84evgU0MnZlR4liClnCOKPvJQ2A5Y2gChGGzd97GGUwfg8S4q0jgsC0LxJt
+        jhKTXnLuRU1y7SvTs/VLS1U89q9nB6h2wBYMpmCTQEeFGVotwuL/u64cZxQOeQ8PryZ7eH9l7cCSv
+        A0vhL71Iuh3hK92iwfE70fBHnMsVUUz+l1kHCXsT+3qzO9MppFPAqewVGd6JbaZ/dTfd+eAfAzfF0
+        CyqO/vLw==;
+Received: from 177.18.24.91.dynamic.adsl.gvt.net.br ([177.18.24.91] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hHQk9-0004qq-Lt; Fri, 19 Apr 2019 10:27:42 +0000
+Date:   Fri, 19 Apr 2019 07:27:35 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] docs: hwmon: convert three docs to ReST format
+Message-ID: <20190419072735.46f26b87@coco.lan>
+In-Reply-To: <877ebqgv79.fsf@intel.com>
+References: <287cf72fc213656c1593f8bd42feb62f7a5f26e7.1555580417.git.mchehab+samsung@kernel.org>
+        <87k1frgysq.fsf@intel.com>
+        <20190418151028.341723f7@coco.lan>
+        <877ebqgv79.fsf@intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1136505826.203.1555707541777.JavaMail.zimbra@efficios.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 2:59 PM, Mathieu Desnoyers wrote:
-> ----- On Apr 19, 2019, at 2:57 PM, shuah shuah@kernel.org wrote:
-> [...]
->> Should I drop this patch that is currently in linux-kseltest next? Just
->> confirming if your new patch is supposed to be applied on top of this
->> one or not?
+Em Fri, 19 Apr 2019 13:12:26 +0300
+Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+
+> On Thu, 18 Apr 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> > Em Thu, 18 Apr 2019 17:42:29 +0300
+> > Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+> >  
+> >> On Thu, 18 Apr 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:  
+> >> > Those three new drivers were missed on the initial conversion
+> >> > to ReST format. So:
+> >> >
+> >> > - Rename them to .rst;
+> >> > - Add them to the hwmon index.rst index;
+> >> > - add some blank lines at the "Supported systems:" part, in
+> >> >   order to allow Sphinx to properly identify new lines,
+> >> >   suppressing warnings and avoid it to output some random
+> >> >   lines in bold;
+> >> > - When multiple authors are involved, change the authors
+> >> >   part to a list, in order to avoid adding blank lines.
+> >> > - adjust the table cells (one of the tables seemed to be
+> >> >   assuming that tab is 4 positions instead of 8) and add
+> >> >   the table markup.
+> >> > - be sure that the section markups have the same number of
+> >> >   characters as the section title.
+> >> >
+> >> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> >> > ---
+> >> >  Documentation/hwmon/index.rst                 |  3 +++
+> >> >  Documentation/hwmon/{ir38064 => ir38064.rst}  | 21 ++++++++++++-------
+> >> >  .../hwmon/{isl68137 => isl68137.rst}          | 16 ++++++++++----
+> >> >  .../hwmon/{lochnagar => lochnagar.rst}        |  7 +++++--
+> >> >  4 files changed, 33 insertions(+), 14 deletions(-)
+> >> >  rename Documentation/hwmon/{ir38064 => ir38064.rst} (76%)
+> >> >  rename Documentation/hwmon/{isl68137 => isl68137.rst} (85%)
+> >> >  rename Documentation/hwmon/{lochnagar => lochnagar.rst} (93%)
+> >> >
+> >> > diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> >> > index 893804414510..3fa14fe7b49c 100644
+> >> > --- a/Documentation/hwmon/index.rst
+> >> > +++ b/Documentation/hwmon/index.rst
+> >> > @@ -65,6 +65,8 @@ Hardware Monitoring Kernel Drivers
+> >> >     ina2xx.rst
+> >> >     ina3221.rst
+> >> >     ir35221.rst
+> >> > +   ir38064.rst
+> >> > +   isl68137.rst    
+> >> 
+> >> Didn't notice it on the first patch adding index.rst, but I don't think
+> >> it's customary to add .rst suffix to the toctree.  
+> >
+> > Provided that all documents are at the same time, I guess it
+> > doesn't matter having a .rst there or not.  
 > 
-> We should keep this patch in linux-kselftest next. The fix applies on top
-> of it.
+> Parse error. No other index.rst has the suffixes.
+
+Actually, there are a few that has, including the doc-guide
+
+$ git grep \\.rst $(find Documentation/ -name index.rst)|cut -d: -f1|sort|uniq
+Documentation/admin-guide/mm/index.rst
+Documentation/doc-guide/index.rst
+Documentation/filesystems/ext4/index.rst
+Documentation/filesystems/index.rst
+Documentation/hwmon/index.rst
+Documentation/translations/it_IT/doc-guide/index.rst
+Documentation/translations/it_IT/kernel-hacking/index.rst
+Documentation/translations/it_IT/process/index.rst
+Documentation/translations/zh_CN/process/index.rst
+
+(I'm looking at linux-next).
+
+Clearly, the Documentation/doc-guide/index.rst has it:
+
+=================================
+How to write kernel documentation
+=================================
+
+.. toctree::
+   :maxdepth: 1
+
+   sphinx.rst
+   kernel-doc.rst
+   parse-headers.rst
+
+Anyway I'll send a patch removing the extra .rst from hwmon, to
+be applied after this one, and another one for the doc-guide.
+
+> 
+> > Btw, newer versions of Sphinx build can work with other formats
+> > like markdown. I suspect that, if we end mixing markdown documents,
+> > it would be worth having the extension there.
+> >
+> > FYI, someone recently added a markdown file at the tree:
+> >
+> > commit e453fa60e086786fe89ba15ee8fef80bc2e6ecc3
+> > Author: Sascha Hauer <s.hauer@pengutronix.de>
+> > Date:   Fri Sep 7 14:36:46 2018 +0200
+> >
+> >     Documentation: ubifs: Add authentication whitepaper
+> >
+> > 	Documentation/filesystems/ubifs-authentication.md
+> >
+> > IMO, the best would be to just run pandoc into it and convert
+> > to .rst, than to mix different markup languages.  
+> 
+> Agreed. I'd rather we keep it all rst.
+> 
+> BR,
+> Jani.
+> 
 > 
 
-Will do. Thanks for a quick response.
 
--- Shuah
+
+Thanks,
+Mauro
