@@ -2,174 +2,130 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A50C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77818C282E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6A42171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFF6217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DEmWHlp7"
+	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="cekhzssQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfDSUpF (ORCPT
+        id S1727360AbfDSUrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:45:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53790 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfDSUpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:45:04 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3JKTWBG074720;
-        Fri, 19 Apr 2019 20:44:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=BJcecETyWVwvoyBv1O0IswXJSKKY/HvHD+pqeK7LFps=;
- b=DEmWHlp7j5aTkReUuQQWWaDlzVEfhwDetyaTRFpeUIPBcAu0R1PfmxYucGICW2b+c3Zv
- oXpGnk/NZCl0hosTnVJMJ/yILwLI5FM6Ot3CA6AH7X7X1rOxmglaj3cb2+xebVgKbtdo
- 2kHfZqaD0IlKimkioWtk39Ig58OszBMyuDzuevRoclNFV5tqAetqSjni3T7nmxLZsBZz
- 3l/JQlXepe8IClPvVzjEGJn0/aMG6daNRBbX0oIDbPeD00FGwBj4Ih1XhZtorrEBJNyZ
- 14rII8Cj8tDo4B2vFQZiqRqq3IRh2UsqDV67Bj/S610KGzGGmVFHJ1r/h8mwqzoJhbMc bw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ryjv90he2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Apr 2019 20:44:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3JKiXmI084931;
-        Fri, 19 Apr 2019 20:44:51 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2ryjus24xn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Apr 2019 20:44:51 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3JKimZi030778;
-        Fri, 19 Apr 2019 20:44:49 GMT
-Received: from monkey.oracle.com (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 19 Apr 2019 13:44:48 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yufen Yu <yuyufen@huawei.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Fri, 19 Apr 2019 16:47:02 -0400
+Received: from mail-eopbgr810135.outbound.protection.outlook.com ([40.107.81.135]:6167
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726455AbfDSUrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:47:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fortanix.onmicrosoft.com; s=selector1-fortanix-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tm6JXoYeRQgbEwbr9Zxy9IBwJp6mLY2u2wkYAsvuQH4=;
+ b=cekhzssQnpE+op3k57YRBVGvXbnwOpzKwhi2BYZyxiiNJY6fkrUc4zSgRwbmbEQk1SSmEdiMShzO9JKJa5LTk87QbqwIKnDFH9oXhtKqNzcMM9ST/Oce0QuXNI2WgcJ6VrZZ6uw9ipUKxnrdH3NRihSOtq8igcKNdaCZR/if/uA=
+Received: from SN6PR11MB3167.namprd11.prod.outlook.com (52.135.109.144) by
+ SN6PR11MB3341.namprd11.prod.outlook.com (52.135.111.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Fri, 19 Apr 2019 20:46:57 +0000
+Received: from SN6PR11MB3167.namprd11.prod.outlook.com
+ ([fe80::11b:a687:cd42:570d]) by SN6PR11MB3167.namprd11.prod.outlook.com
+ ([fe80::11b:a687:cd42:570d%3]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
+ 20:46:57 +0000
+From:   Jethro Beekman <jethro@fortanix.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Andy Lutomirski <luto@kernel.org>, "Dr. Greg" <greg@enjellic.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH] hugetlbfs: always use address space in inode for resv_map pointer
-Date:   Fri, 19 Apr 2019 13:44:35 -0700
-Message-Id: <20190419204435.16984-1-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190416065058.GB11561@dhcp22.suse.cz>
-References: <20190416065058.GB11561@dhcp22.suse.cz>
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Thread-Topic: [PATCH v20 00/28] Intel SGX1 support
+Thread-Index: AQHU9QnkBhtGQ+66Y0uqVL4+2rp75qZCKU6AgAAN+gCAAVPlAIAAE4gAgABGE4CAABE+gIAAAfEA
+Date:   Fri, 19 Apr 2019 20:46:57 +0000
+Message-ID: <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190418171059.GA20819@wind.enjellic.com>
+ <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
+ <20190419141732.GA2269@wind.enjellic.com>
+ <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
+ <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com>
+ <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0047.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::24) To SN6PR11MB3167.namprd11.prod.outlook.com
+ (2603:10b6:805:c4::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jethro@fortanix.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.107.146]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 581ddceb-5ede-4dc9-1357-08d6c50829e1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN6PR11MB3341;
+x-ms-traffictypediagnostic: SN6PR11MB3341:
+x-microsoft-antispam-prvs: <SN6PR11MB33413A3C6BA31712DBF8AE2AAA270@SN6PR11MB3341.namprd11.prod.outlook.com>
+x-forefront-prvs: 0012E6D357
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(136003)(39840400004)(366004)(189003)(199004)(6436002)(305945005)(6486002)(7736002)(71190400001)(186003)(71200400001)(53936002)(6512007)(54906003)(229853002)(6116002)(316002)(6916009)(7416002)(14454004)(508600001)(3846002)(2906002)(66066001)(26005)(6506007)(53546011)(76176011)(476003)(386003)(81156014)(8936002)(102836004)(52116002)(68736007)(81166006)(93886005)(256004)(8676002)(14444005)(31686004)(99286004)(86362001)(31696002)(66476007)(97736004)(446003)(5660300002)(486006)(6246003)(36756003)(4326008)(66946007)(11346002)(66556008)(2616005)(73956011)(25786009)(64756008)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB3341;H:SN6PR11MB3167.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fortanix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: At55TULCxsFO8epLWx12vOGWN4nZUMGkFWkqT0uKEb6T0iBKMcgsV3eMqX6hFmV3JedCLMXLL5lazBPk4Xxbe90I9Kb69mo82kc216WxNqsRRPPeYGi9DfJD2yZFUKDgQ/YEOFMheY40UIbeudggsM0OyO3UbU/8LSi2pffetL8WANC9/DxizGnRG1C8e12rshzlzY8p/UXhYUenP5/nX5nBxgEeE1zbd0HmiEGwJ3wwXDKGp5g6V/LYoj+E7E1RpKbkIbwaT+TsuNAP/NooFBO00F/1xIgyR7AedI0kJXWqs3V/wh0V0u9Ax4UjLxQVoGz6CmUVDb0vmshz/L54Z1tkOuqnitdfVsppgtAeS7twXtzrSVtfaew7flnorgJ2Z5mWCfobnEZFuTIfsfJPHZUx+viEem1XlZZv2TQ+SMw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0929D3224B70A94D91C47A0D42F07743@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9232 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904190143
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9232 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904190143
+X-OriginatorOrg: fortanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 581ddceb-5ede-4dc9-1357-08d6c50829e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 20:46:57.5562
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3341
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Continuing discussion about commit 58b6e5e8f1ad ("hugetlbfs: fix memory
-leak for resv_map") brought up the issue that inode->i_mapping may not
-point to the address space embedded within the inode at inode eviction
-time.  The hugetlbfs truncate routine handles this by explicitly using
-inode->i_data.  However, code cleaning up the resv_map will still use
-the address space pointed to by inode->i_mapping.  Luckily, private_data
-is NULL for address spaces in all such cases today but, there is no
-guarantee this will continue.
-
-Change all hugetlbfs code getting a resv_map pointer to explicitly get
-it from the address space embedded within the inode.  In addition, add
-more comments in the code to indicate why this is being done.
-
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- fs/hugetlbfs/inode.c | 11 +++++++++--
- mm/hugetlb.c         | 19 ++++++++++++++++++-
- 2 files changed, 27 insertions(+), 3 deletions(-)
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 9285dd4f4b1c..cbc649cd1722 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -499,8 +499,15 @@ static void hugetlbfs_evict_inode(struct inode *inode)
- 	struct resv_map *resv_map;
- 
- 	remove_inode_hugepages(inode, 0, LLONG_MAX);
--	resv_map = (struct resv_map *)inode->i_mapping->private_data;
--	/* root inode doesn't have the resv_map, so we should check it */
-+
-+	/*
-+	 * Get the resv_map from the address space embedded in the inode.
-+	 * This is the address space which points to any resv_map allocated
-+	 * at inode creation time.  If this is a device special inode,
-+	 * i_mapping may not point to the original address space.
-+	 */
-+	resv_map = (struct resv_map *)(&inode->i_data)->private_data;
-+	/* Only regular and link inodes have associated reserve maps */
- 	if (resv_map)
- 		resv_map_release(&resv_map->refs);
- 	clear_inode(inode);
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6cdc7b2d9100..b30e97b0ef37 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -740,7 +740,15 @@ void resv_map_release(struct kref *ref)
- 
- static inline struct resv_map *inode_resv_map(struct inode *inode)
- {
--	return inode->i_mapping->private_data;
-+	/*
-+	 * At inode evict time, i_mapping may not point to the original
-+	 * address space within the inode.  This original address space
-+	 * contains the pointer to the resv_map.  So, always use the
-+	 * address space embedded within the inode.
-+	 * The VERY common case is inode->mapping == &inode->i_data but,
-+	 * this may not be true for device special inodes.
-+	 */
-+	return (struct resv_map *)(&inode->i_data)->private_data;
- }
- 
- static struct resv_map *vma_resv_map(struct vm_area_struct *vma)
-@@ -4477,6 +4485,11 @@ int hugetlb_reserve_pages(struct inode *inode,
- 	 * called to make the mapping read-write. Assume !vma is a shm mapping
- 	 */
- 	if (!vma || vma->vm_flags & VM_MAYSHARE) {
-+		/*
-+		 * resv_map can not be NULL as hugetlb_reserve_pages is only
-+		 * called for inodes for which resv_maps were created (see
-+		 * hugetlbfs_get_inode).
-+		 */
- 		resv_map = inode_resv_map(inode);
- 
- 		chg = region_chg(resv_map, from, to);
-@@ -4568,6 +4581,10 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
- 	struct hugepage_subpool *spool = subpool_inode(inode);
- 	long gbl_reserve;
- 
-+	/*
-+	 * Since this routine can be called in the evict inode path for all
-+	 * hugetlbfs inodes, resv_map could be NULL.
-+	 */
- 	if (resv_map) {
- 		chg = region_del(resv_map, start, end);
- 		/*
--- 
-2.20.1
-
+T24gMjAxOS0wNC0xOSAxMzozOSwgVGhvbWFzIEdsZWl4bmVyIHdyb3RlOg0KPiBPbiBGcmksIDE5
+IEFwciAyMDE5LCBKZXRocm8gQmVla21hbiB3cm90ZToNCj4gDQo+PiBPbiAyMDE5LTA0LTE5IDA4
+OjI3LCBBbmR5IEx1dG9taXJza2kgd3JvdGU6DQo+Pj4gVGhlcmUgYXJlIG1hbnksDQo+Pj4gbWFu
+eSBMaW51eCBzeXN0ZW1zIHRoYXQgZW5mb3JjZSBhIHBvbGljeSB0aGF0ICphbGwqIGV4ZWN1dGFi
+bGUgdGV4dA0KPj4+IG5lZWRzIHRvIGNvbWUgZnJvbSBhIHZlcmlmaWVkIHNvdXJjZS4gIE9uIHRo
+ZXNlIHN5c3RlbXMsIHlvdSBjYW4ndA0KPj4+IG1tYXAgc29tZSB3cml0YWJsZSBtZW1vcnksIHdy
+aXRlIHRvIGl0LCBhbmQgdGhlbiBjaGFuZ2UgaXQgdG8NCj4+PiBleGVjdXRhYmxlLg0KPj4NCj4+
+IEhvdyBpcyB0aGlzIGltcGxlbWVudGVkIG9uIHRob3NlIHN5c3RlbXM/IEFGQUlLIHRoZXJlJ3Mg
+bm8ga2VybmVsIGNvbmZpZw0KPj4gb3B0aW9uIHRoYXQgY2hhbmdlcyB0aGUgc2VtYW50aWNzIG9m
+IG1tYXAgYXMgeW91IGRlc2NyaWJlLg0KPiANCj4gVGhhdCBoYXMgbm90aGluZyB0byBkbyB3aXRo
+IG1tYXAoKSBzZW1hbnRpY3MuIFlvdSBtbWFwKCkgd3JpdGVhYmxlIG1lbW9yeQ0KPiBhbmQgdGhl
+biB5b3UgY2hhbmdlIHRoZSBwZXJtaXNzaW9ucyB2aWEgbXByb3RlY3QoKS4gbXByb3RlY3QoKSBj
+YWxscyBpbnRvDQo+IExTTSBhbmQgZGVwZW5kaW5nIG9uIHBvbGljeSBhbmQgc2VjdXJpdHkgbW9k
+ZWwgdGhpcyB3aWxsIHJlamVjdCB0aGUNCj4gcmVxdWVzdC4NCj4gDQo+IEFuZHkgd2FzIHBvaW50
+aW5nIG91dCB0aGF0IHRoZSBTR1ggaW9jdGwgYnlwYXNzZXMgdGhlIExTTSBtZWNoYW5pY3Mgd2hp
+Y2gNCj4gaXMgb2J2aW91c2x5IGEgYmFkIHRoaW5nLg0KDQpXZSBjb3VsZCBtb2RpZnkgdGhlIGRy
+aXZlciBzdWNoIHRoYXQgd2hlbiB5b3UgY2FsbCBpb2N0bCBFQURELCB0aGUgcGFnZQ0KdGFibGUg
+cGVybWlzc2lvbnMgbmVlZCB0byBiZSB0aGUgUEFHRUlORk8uU0VDSU5GTy5GTEFHUyB8IFBST1Rf
+V1JJVEUsDQpvdGhlcndpc2UgeW91IGdldCBFUEVSTSBvciBzby4gQWZ0ZXIgRUFERCwgaWYgeW91
+IHdhbnQsIHlvdSBjYW4gcmVzdHJpY3QNCnRoZSBwYWdlIHRhYmxlIHBlcm1pc3Npb25zIGFnYWlu
+IHVzaW5nIG1wcm90ZWN0IGJ1dCB0aGUgcGFnZSB0YWJsZQ0KcGVybWlzc2lvbnMgZG9uJ3QgcmVh
+bGx5IG1hdHRlciBmb3IgU0dYLg0KDQotLQ0KSmV0aHJvIEJlZWttYW4gfCBGb3J0YW5peA0K
