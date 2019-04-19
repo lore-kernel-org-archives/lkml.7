@@ -6,51 +6,78 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A0AC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429ACC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18ADE204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CD020449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698699;
-	bh=9EZTsllLlsdE9lck2TdP/bKYiYbB7SkWLK4Z7FhPoBo=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=f0z1pYaxRNu3Cps0lQCiehEisJ9FW13MBicdBWMlCoUfwflsTAdXHl9X0RoDaphZy
-	 zRPw7n7KWo+hJooy/vth1LjMpj8Yx71F96NvGYHKFsrxisbFgR83VHKnnfseBUsjIz
-	 Jucv7a+V7cI15iWZNGzUGNfpT3K5XGPVN/RUC1cw=
+	s=default; t=1555698701;
+	bh=KHdfK68h7p/uWDc3oE+Uf7pBOoUGZ4LP+1YJkqA5emw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2mqIyHTEMfkYX5+niMcMpgZRu63jRikecr8ziXY2lnlMuaOiZmojUKFwWgMYDkUZn
+	 +8+l1/Sxt1n6ru0r54BUeKrVS9feRsjqGFzB1+B5PZUbjurS3Lne2NICNJLTStQvZF
+	 MCJWAcMF40TSwN0Uu41BMc14ACg8uIgOcmh64JwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfDSSbh (ORCPT
+        id S1728165AbfDSSbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53928 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727744AbfDSS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Apr 2019 14:29:17 -0400
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DCE222A1;
-        Fri, 19 Apr 2019 13:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59AF5222C9;
+        Fri, 19 Apr 2019 14:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555680007;
-        bh=9EZTsllLlsdE9lck2TdP/bKYiYbB7SkWLK4Z7FhPoBo=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=SJyG3cobriifyKmFuvcR4EXqxD1/LSrmsa7MbmsDxfSUjc90y7fhkALBIvuORw+/Q
-         k+RabzCUyzQZ8RLKOiX8xaWI751AC2ur2jS3IfMnKRv1xi4v+fv2YAuDK4xHLLvVvs
-         n87Fy2CsNr7Vudl8aW3hgENTY48By/ffOdAsK7iU=
-Subject: Re: [PATCHv2] selftests/efivarfs: clean up test files from
- test_create*()
-To:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=default; t=1555683470;
+        bh=KHdfK68h7p/uWDc3oE+Uf7pBOoUGZ4LP+1YJkqA5emw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YtO6QQXN0EDZkrkBYlKlvEdsj63bfcrQ+6QKt1cPRfUGODvqmf40am7C8Th0EL8aI
+         sJK4iCfhGR2nP+2oAYTSft+H9O1O7W/3evYagRH0B+PHtVOkmdbkhjyPIhBBI4qtU3
+         5i++DxIvCb0/pnrhf2ykQZrD9LTBl7laqTgERNbk=
+Subject: Re: [PATCH for 5.1 3/3] rseq/selftests: Adapt number of threads to
+ the number of detected cpus
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
         shuah <shuah@kernel.org>
-References: <20190419131221.28297-1-po-hsu.lin@canonical.com>
+References: <20190305194755.2602-1-mathieu.desnoyers@efficios.com>
+ <20190305194755.2602-4-mathieu.desnoyers@efficios.com>
+ <20190419103847.GA111210@gmail.com>
+ <1444419838.71.1555677682502.JavaMail.zimbra@efficios.com>
+ <1266612341.87.1555678507226.JavaMail.zimbra@efficios.com>
+ <614774674.134.1555681346941.JavaMail.zimbra@efficios.com>
+ <1863599735.141.1555681723685.JavaMail.zimbra@efficios.com>
 From:   shuah <shuah@kernel.org>
-Message-ID: <03bdc88d-07cd-08ca-7d2f-ba93069eb41b@kernel.org>
-Date:   Fri, 19 Apr 2019 07:19:52 -0600
+Message-ID: <6ba0796c-8a96-f797-265c-37bfb9b4bb71@kernel.org>
+Date:   Fri, 19 Apr 2019 08:17:48 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190419131221.28297-1-po-hsu.lin@canonical.com>
+In-Reply-To: <1863599735.141.1555681723685.JavaMail.zimbra@efficios.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,47 +86,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/19/19 7:12 AM, Po-Hsu Lin wrote:
-> Test files created by test_create*() tests will stay in the
-> $efivarfs_mount directory unless the system was rebooted.
+On 4/19/19 7:48 AM, Mathieu Desnoyers wrote:
+> ----- On Apr 19, 2019, at 9:42 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 > 
-> When the tester tries to run this efivarfs test again on the same
-> system, the immutable characteristics in that directory will cause some
-> "Operation not permitted" noises and a false-positve test result to the
-> test_create_read() test.
+>> ----- On Apr 19, 2019, at 8:55 AM, Mathieu Desnoyers
+>> mathieu.desnoyers@efficios.com wrote:
+>>
+>>> ----- On Apr 19, 2019, at 8:41 AM, Mathieu Desnoyers
+>>> mathieu.desnoyers@efficios.com wrote:
+>>>
+>>>> ----- On Apr 19, 2019, at 6:38 AM, Ingo Molnar mingo@kernel.org wrote:
+>>>>
+>>>>> * Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+>>>>>
+>>>>>> On smaller systems, running a test with 200 threads can take a long
+>>>>>> time on machines with smaller number of CPUs.
+>>>>>>
+>>>>>> Detect the number of online cpus at test runtime, and multiply that
+>>>>>> by 6 to have 6 rseq threads per cpu preempting each other.
+>>>>>>
+>>>>>> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>>>>>> Cc: Shuah Khan <shuah@kernel.org>
+>>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>>>>> Cc: Joel Fernandes <joelaf@google.com>
+>>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>>> Cc: Dave Watson <davejwatson@fb.com>
+>>>>>> Cc: Will Deacon <will.deacon@arm.com>
+>>>>>> Cc: Andi Kleen <andi@firstfloor.org>
+>>>>>> Cc: linux-kselftest@vger.kernel.org
+>>>>>> Cc: "H . Peter Anvin" <hpa@zytor.com>
+>>>>>> Cc: Chris Lameter <cl@linux.com>
+>>>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>>>> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+>>>>>> Cc: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+>>>>>> Cc: Paul Turner <pjt@google.com>
+>>>>>> Cc: Boqun Feng <boqun.feng@gmail.com>
+>>>>>> Cc: Josh Triplett <josh@joshtriplett.org>
+>>>>>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>>>>>> Cc: Ben Maurer <bmaurer@fb.com>
+>>>>>> Cc: Andy Lutomirski <luto@amacapital.net>
+>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>>>>>> ---
+>>>>>>   tools/testing/selftests/rseq/run_param_test.sh | 7 +++++--
+>>>>>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/testing/selftests/rseq/run_param_test.sh
+>>>>>> b/tools/testing/selftests/rseq/run_param_test.sh
+>>>>>> index 3acd6d75ff9f..e426304fd4a0 100755
+>>>>>> --- a/tools/testing/selftests/rseq/run_param_test.sh
+>>>>>> +++ b/tools/testing/selftests/rseq/run_param_test.sh
+>>>>>> @@ -1,6 +1,8 @@
+>>>>>>   #!/bin/bash
+>>>>>>   # SPDX-License-Identifier: GPL-2.0+ or MIT
+>>>>>>   
+>>>>>> +NR_CPUS=`grep '^processor' /proc/cpuinfo | wc -l`
+>>>>>> +
+>>>>>>   EXTRA_ARGS=${@}
+>>>>>>   
+>>>>>>   OLDIFS="$IFS"
+>>>>>> @@ -28,15 +30,16 @@ IFS="$OLDIFS"
+>>>>>>   
+>>>>>>   REPS=1000
+>>>>>>   SLOW_REPS=100
+>>>>>> +NR_THREADS=$((6*${NR_CPUS}))
+>>>>>>   
+>>>>>>   function do_tests()
+>>>>>>   {
+>>>>>>   	local i=0
+>>>>>>   	while [ "$i" -lt "${#TEST_LIST[@]}" ]; do
+>>>>>>   		echo "Running test ${TEST_NAME[$i]}"
+>>>>>> -		./param_test ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} || exit 1
+>>>>>> +		./param_test ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@} ${EXTRA_ARGS}
+>>>>>> || exit 1
+>>>>>>   		echo "Running compare-twice test ${TEST_NAME[$i]}"
+>>>>>> -		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} ${@} ${EXTRA_ARGS} ||
+>>>>>> exit 1
+>>>>>> +		./param_test_compare_twice ${TEST_LIST[$i]} -r ${REPS} -t ${NR_THREADS} ${@}
+>>>>>> ${EXTRA_ARGS} || exit 1
+>>>>>>   		let "i++"
+>>>>>>   	done
+>>>>>>   }
+>>>>>
+>>>>> BTW., when trying to build the rseq self-tests I get this build failure:
+>>>>>
+>>>>>   dagon:~/tip/tools/testing/selftests/rseq> make
+>>>>>   gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ -shared
+>>>>>   -fPIC rseq.c -lpthread -o
+>>>>>   /home/mingo/tip/tools/testing/selftests/rseq/librseq.so
+>>>>>   gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ basic_test.c
+>>>>>   -lpthread -lrseq -o /home/mingo/tip/tools/testing/selftests/rseq/basic_test
+>>>>>   gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./
+>>>>>   basic_percpu_ops_test.c -lpthread -lrseq -o
+>>>>>   /home/mingo/tip/tools/testing/selftests/rseq/basic_percpu_ops_test
+>>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o: in function `rseq_cmpeqv_storev':
+>>>>>   /home/mingo/tip/tools/testing/selftests/rseq/./rseq-x86.h:84: undefined
+>>>>>   reference to `.L8'
+>>>>>   /usr/bin/ld: /home/mingo/tip/tools/testing/selftests/rseq/./rseq-x86.h:84:
+>>>>>   undefined reference to `.L49'
+>>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o: in function `rseq_cmpnev_storeoffp_load':
+>>>>>   /home/mingo/tip/tools/testing/selftests/rseq/./rseq-x86.h:141: undefined
+>>>>>   reference to `.L57'
+>>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o:(__rseq_failure+0x8): undefined reference to `.L8'
+>>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o:(__rseq_failure+0x14): undefined reference to
+>>>>>   `.L49'
+>>>>>   /usr/bin/ld: /tmp/ccuHTWnZ.o:(__rseq_failure+0x20): undefined reference to
+>>>>>   `.L55'
+>>>>>   collect2: error: ld returned 1 exit status
+>>>>>   make: *** [Makefile:22:
+>>>>>   /home/mingo/tip/tools/testing/selftests/rseq/basic_percpu_ops_test] Error 1
+>>>>>
+>>>>> Is this a known problem, or do I miss something from my build environment
+>>>>> perhaps? Vanilla 64-bit Ubuntu 18.10 (Cosmic).
+>>>>
+>>>> It works fine with gcc-7 (gcc version 7.3.0 (Ubuntu 7.3.0-16ubuntu3))
+>>>> but indeed I get the same failure with gcc-8 (gcc version 8.0.1 20180414
+>>>> (experimental) [trunk revision 259383] (Ubuntu 8-20180414-1ubuntu2)).
+>>>>
+>>>> Thanks for reporting! I will investigate.
+>>>
+>>> It looks like gcc-8 optimize away the target of asm goto labels when
+>>> there are more than one of them on x86-64. I'll try to come up with
+>>> a simpler reproducer.
+>>
+>> It appears to be related to gcc-8 mishandling combination of
+>> asm goto and thread-local storage input operands on x86-64.
+>> Here is a simple reproducer:
+>>
+>> __thread int var;
+>>   
+>> static int fct(void)
+>> {
+>>         asm goto (      "jmp %l[testlabel]\n\t"
+>>                         : : [var] "m" (var) : : testlabel);
+>>         return 0;
+>> testlabel:
 > 
->      --------------------
->      running test_create
->      --------------------
->      ./efivarfs.sh: line 59: /sys/firmware/efi/efivars/test_create-210be57c-9849-4fc7-a635-e6382d1aec27: Operation not permitted
->        [PASS]
->      --------------------
->      running test_create_empty
->      --------------------
->      ./efivarfs.sh: line 78: /sys/firmware/efi/efivars/test_create_empty-210be57c-9849-4fc7-a635-e6382d1aec27: Operation not permitted
->       [PASS]
->      --------------------
->      running test_create_read
->      --------------------
->      open(O_WRONLY): Operation not permitted
->       [FAIL]
->      --------------------
+> FWIW, if I add an empty
 > 
-> Create a file_cleanup() to remove those test files in the end of each
-> test to solve this issue.
+>     asm volatile ("");
 > 
-> Also, use this function to replace the existing file removal code.
+> here after the label, gcc-8 -O2 builds "something" which is
+> a bogus assembler (an endless loop) :
 > 
-> Link: https://bugs.launchpad.net/bugs/1809704
+> main:
+> .LFB24:
+>          .cfi_startproc
+> .L2:
+>          subq    $8, %rsp
+>          .cfi_def_cfa_offset 16
+> #APP
+> # 6 "test-asm-goto.c" 1
+>          jmp .L2
 > 
-> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> ---
+> # 0 "" 2
+> #NO_APP
+>          movl    %fs:var@tpoff, %edx
+>          leaq    .LC0(%rip), %rsi
+>          movl    $1, %edi
+>          xorl    %eax, %eax
+>          call    __printf_chk@PLT
+>          xorl    %eax, %eax
+>          addq    $8, %rsp
+>          .cfi_def_cfa_offset 8
+>          ret
+>          .cfi_endproc
+> 
+> Thoughts ?
+> 
 
-Thanks for the patch. There is another patch that does the same in
-linux-kselftest next branch.
+Didn't see problems when I tested it before applying it to
+linux-kselftest next.
 
-Please check to see if that fixes the problem you are seeing.
+I have gcc version 7.3.0 (Ubuntu 7.3.0-27ubuntu1~18.04)
 
 thanks,
 -- Shuah
+
 
