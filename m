@@ -2,130 +2,200 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8E1C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D2C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EDD205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7CE205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfDSSnd (ORCPT
+        id S1728029AbfDSSnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:43:33 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36062 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfDSSnd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:43:33 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o74so4994465ota.3;
-        Fri, 19 Apr 2019 11:43:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rgm+DlPYj4YwXD0IUlXbIhCkCaP4ItKaQlGxc47GSHs=;
-        b=SInIFcY2m/TthGm7X5J5Pfh5/DQVBIN+8IX9GBRwCmeME5BBL+YdnsY6m9iKJrSJP0
-         d4T5uk0NLMnY0ZUcQdPnx+0P0x41Qju76vA+uWVpqBfJMEC9s+hyD5TtUrjKb16I8jcr
-         CB3GDLbsi0tuD+CY1eFkR4kR2z3g3rF1Bt4rUS1647NBbn+xRvUVYeAGZ0iflbdtvVR5
-         kCA1AoQQism+1jfr6f2V2p8tDjGlILnyC55bT5PrlaLsY6EgbROxIn59CW42TIjJfpxr
-         OHXwSM8XFEJ4kS9UadY8A34aIAlzMJjV0TwxkT/Zxy5tP+RoTptVs41SFVenXQY4WtYC
-         zK+w==
-X-Gm-Message-State: APjAAAVD3ky2kh/ApTNtrpqKFS+D3jNF8Ij0snE/ufOCcY9q9WFYfo6V
-        VfTk1D5yzTTWtKe3cj6rCaIummrlxNJ/1RHD//0oQw3N
-X-Google-Smtp-Source: APXvYqyzS5bhws5CT7A5nXn4OpfeWT4dvhjZS6lwiZnWt+A2qa8xQlOemhAXzlKYNBL6JXPtGyLamsLnBS+1CfuvVbc=
-X-Received: by 2002:a9d:7dda:: with SMTP id k26mr2666597otn.354.1555688742221;
- Fri, 19 Apr 2019 08:45:42 -0700 (PDT)
+        Fri, 19 Apr 2019 14:43:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56162 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbfDSSnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:43:45 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 76E9A89C39;
+        Fri, 19 Apr 2019 15:08:13 +0000 (UTC)
+Received: from redhat.com (ovpn-121-136.rdu2.redhat.com [10.10.121.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1370460BEC;
+        Fri, 19 Apr 2019 15:08:04 +0000 (UTC)
+Date:   Fri, 19 Apr 2019 11:08:02 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 17/28] userfaultfd: wp: support swap and page migration
+Message-ID: <20190419150802.GB3311@redhat.com>
+References: <20190320020642.4000-1-peterx@redhat.com>
+ <20190320020642.4000-18-peterx@redhat.com>
+ <20190418205907.GL3288@redhat.com>
+ <20190419074220.GG13323@xz-x1>
 MIME-Version: 1.0
-References: <20190419094754.24667-1-yamada.masahiro@socionext.com> <20190419094754.24667-7-yamada.masahiro@socionext.com>
-In-Reply-To: <20190419094754.24667-7-yamada.masahiro@socionext.com>
-From:   Mathieu Malaterre <malat@debian.org>
-Date:   Fri, 19 Apr 2019 17:45:31 +0200
-Message-ID: <CA+7wUsygTo=AN_giku_X6_a4mQWdJL48RoVbVB4hBqkZSKkP0Q@mail.gmail.com>
-Subject: Re: [PATCH v2 06/11] MIPS: mark __fls() as __always_inline
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        x86@kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-mtd@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190419074220.GG13323@xz-x1>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 19 Apr 2019 15:08:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 19, 2019 at 03:42:20PM +0800, Peter Xu wrote:
+> On Thu, Apr 18, 2019 at 04:59:07PM -0400, Jerome Glisse wrote:
+> > On Wed, Mar 20, 2019 at 10:06:31AM +0800, Peter Xu wrote:
+> > > For either swap and page migration, we all use the bit 2 of the entry to
+> > > identify whether this entry is uffd write-protected.  It plays a similar
+> > > role as the existing soft dirty bit in swap entries but only for keeping
+> > > the uffd-wp tracking for a specific PTE/PMD.
+> > > 
+> > > Something special here is that when we want to recover the uffd-wp bit
+> > > from a swap/migration entry to the PTE bit we'll also need to take care
+> > > of the _PAGE_RW bit and make sure it's cleared, otherwise even with the
+> > > _PAGE_UFFD_WP bit we can't trap it at all.
+> > > 
+> > > Note that this patch removed two lines from "userfaultfd: wp: hook
+> > > userfault handler to write protection fault" where we try to remove the
+> > > VM_FAULT_WRITE from vmf->flags when uffd-wp is set for the VMA.  This
+> > > patch will still keep the write flag there.
+> > > 
+> > > Reviewed-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
+> > > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > 
+> > Some missing thing see below.
+> > 
+> > [...]
+> > 
+> > > diff --git a/mm/memory.c b/mm/memory.c
+> > > index 6405d56debee..c3d57fa890f2 100644
+> > > --- a/mm/memory.c
+> > > +++ b/mm/memory.c
+> > > @@ -736,6 +736,8 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+> > >  				pte = swp_entry_to_pte(entry);
+> > >  				if (pte_swp_soft_dirty(*src_pte))
+> > >  					pte = pte_swp_mksoft_dirty(pte);
+> > > +				if (pte_swp_uffd_wp(*src_pte))
+> > > +					pte = pte_swp_mkuffd_wp(pte);
+> > >  				set_pte_at(src_mm, addr, src_pte, pte);
+> > >  			}
+> > >  		} else if (is_device_private_entry(entry)) {
+> > 
+> > You need to handle the is_device_private_entry() as the migration case
+> > too.
+> 
+> Hi, Jerome,
+> 
+> Yes I can simply add the handling, but I'd confess I haven't thought
+> clearly yet on how userfault-wp will be used with HMM (and that's
+> mostly because my unfamiliarity so far with HMM).  Could you give me
+> some hint on a most general and possible scenario?
 
-On Fri, Apr 19, 2019 at 12:06 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-> place. We need to eliminate potential issues beforehand.
->
-> If it is enabled for mips, the following errors are reported:
->
-> arch/mips/mm/sc-mips.o: In function `mips_sc_prefetch_enable.part.2':
-> sc-mips.c:(.text+0x98): undefined reference to `mips_gcr_base'
-> sc-mips.c:(.text+0x9c): undefined reference to `mips_gcr_base'
-> sc-mips.c:(.text+0xbc): undefined reference to `mips_gcr_base'
-> sc-mips.c:(.text+0xc8): undefined reference to `mips_gcr_base'
-> sc-mips.c:(.text+0xdc): undefined reference to `mips_gcr_base'
-> arch/mips/mm/sc-mips.o:sc-mips.c:(.text.unlikely+0x44): more undefined references to `mips_gcr_base'
+device private is just a temporary state with HMM you can have thing
+like GPU or FPGA migrate some anonymous page to their local memory
+because it is use by the GPU or the FPGA. The GPU or FPGA behave like
+a CPU from mm POV so if it wants to write it will fault and go through
+the regular CPU page fault.
 
-Tested with success on ppc32/G4. But on CI20 (ci20_defconfig from
-master), I get:
+That said it can still migrate a page that is UFD write protected just
+because the device only care about reading. So if you have a UFD pte
+to a regular page that get migrated to some device memory you want to
+keep the UFD WP flags after the migration (in both direction when going
+to device memory and from coming back from it).
 
-  MODPOST vmlinux.o
-mipsel-linux-gnu-ld: arch/mips/kernel/traps.o: in function
-`addr_gcr_err_control':
-/home/mathieu/tmp/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:169:
-undefined reference to `mips_gcr_base'
-mipsel-linux-gnu-ld:
-/home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:169:
-undefined reference to `mips_gcr_base'
-mipsel-linux-gnu-ld: arch/mips/mm/sc-mips.o: in function
-`addr_gcr_l2_pft_control':
-/home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
-undefined reference to `mips_gcr_base'
-mipsel-linux-gnu-ld:
-/home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
-undefined reference to `mips_gcr_base'
-mipsel-linux-gnu-ld:
-/home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
-undefined reference to `mips_gcr_base'
-mipsel-linux-gnu-ld:
-arch/mips/mm/sc-mips.o:/home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
-more undefined references to `mips_gcr_base' follow
+As far as UFD is concern this is just another page, it just does not
+have a valid pte entry because CPU can not access such memory. But from
+mm point of view it just another page.
 
+> 
+> > 
+> > 
+> > 
+> > > @@ -2825,6 +2827,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> > >  	flush_icache_page(vma, page);
+> > >  	if (pte_swp_soft_dirty(vmf->orig_pte))
+> > >  		pte = pte_mksoft_dirty(pte);
+> > > +	if (pte_swp_uffd_wp(vmf->orig_pte)) {
+> > > +		pte = pte_mkuffd_wp(pte);
+> > > +		pte = pte_wrprotect(pte);
+> > > +	}
+> > >  	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
+> > >  	arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
+> > >  	vmf->orig_pte = pte;
+> > > diff --git a/mm/migrate.c b/mm/migrate.c
+> > > index 181f5d2718a9..72cde187d4a1 100644
+> > > --- a/mm/migrate.c
+> > > +++ b/mm/migrate.c
+> > > @@ -241,6 +241,8 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
+> > >  		entry = pte_to_swp_entry(*pvmw.pte);
+> > >  		if (is_write_migration_entry(entry))
+> > >  			pte = maybe_mkwrite(pte, vma);
+> > > +		else if (pte_swp_uffd_wp(*pvmw.pte))
+> > > +			pte = pte_mkuffd_wp(pte);
+> > >  
+> > >  		if (unlikely(is_zone_device_page(new))) {
+> > >  			if (is_device_private_page(new)) {
+> > 
+> > You need to handle is_device_private_page() case ie mark its swap
+> > as uffd_wp
+> 
+> Yes I can do this too.
+> 
+> > 
+> > > @@ -2301,6 +2303,8 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+> > >  			swp_pte = swp_entry_to_pte(entry);
+> > >  			if (pte_soft_dirty(pte))
+> > >  				swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> > > +			if (pte_uffd_wp(pte))
+> > > +				swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> > >  			set_pte_at(mm, addr, ptep, swp_pte);
+> > >
+> > >  			/*
+> > > diff --git a/mm/mprotect.c b/mm/mprotect.c
+> > > index 855dddb07ff2..96c0f521099d 100644
+> > > --- a/mm/mprotect.c
+> > > +++ b/mm/mprotect.c
+> > > @@ -196,6 +196,8 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+> > >  				newpte = swp_entry_to_pte(entry);
+> > >  				if (pte_swp_soft_dirty(oldpte))
+> > >  					newpte = pte_swp_mksoft_dirty(newpte);
+> > > +				if (pte_swp_uffd_wp(oldpte))
+> > > +					newpte = pte_swp_mkuffd_wp(newpte);
+> > >  				set_pte_at(mm, addr, pte, newpte);
+> > >  
+> > >  				pages++;
+> > 
+> > Need to handle is_write_device_private_entry() case just below
+> > that chunk.
+> 
+> This one is a bit special - because it's not only the private entries
+> that are missing but also all swap/migration entries, which is
+> explicitly handled by patch 25.  But I think I can just squash it into
+> this patch as you suggested.
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-> Changes in v2:
->   - new patch
->
->  arch/mips/include/asm/bitops.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
-> index 830c93a010c3..6a26ead1c2b6 100644
-> --- a/arch/mips/include/asm/bitops.h
-> +++ b/arch/mips/include/asm/bitops.h
-> @@ -482,7 +482,7 @@ static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *
->   * Return the bit position (0..63) of the most significant 1 bit in a word
->   * Returns -1 if no 1 bit exists
->   */
-> -static inline unsigned long __fls(unsigned long word)
-> +static __always_inline unsigned long __fls(unsigned long word)
->  {
->         int num;
->
-> --
-> 2.17.1
->
+Yeah i was reading thing in order and you can do that in patch 25.
+
+Cheers,
+Jérôme
