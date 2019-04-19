@@ -2,112 +2,76 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AEAC10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30F1C282DF
 	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A782171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A449217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 02:05:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY5wHoCX"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="jlCbgQtC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfDSBvR (ORCPT
+        id S1727176AbfDSCBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 21:51:17 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44177 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfDSBvR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 21:51:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g12so1944253pll.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2019 18:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XvS3qKIr/Ejv+SveqCQaasuPf5uqSaB2yx4GMq+Ea/k=;
-        b=aY5wHoCXOrFEwMN8m5tYFFoADR3kabD68UXcjEbWXc0draBZofWXaa5nH9x+P09G09
-         ktJ7cWXcbpjTqg0BE0ni9e4jzDf3N0xZUOJE/iNzn3voDBhElVaOIFOczWa5Qx3Tw1Ak
-         7COcScue2G87O62m93A96OjeEI0ItiB17HYC4Hi9mS4ukf6FtbkChOr5ONBTrRtc8Cao
-         upe02pFPJI9FtQ8DoRbu/RDz6CGks+cFR6zDhmX2U/+E7XFvwU587K/y2atbBrtfH83q
-         k5fSCcJa+nr518I4bryoLH3uw13vo5TDc5xLMgCmVQkMD8dJpwMiqK0ugv6pdgkie5Jt
-         2kIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XvS3qKIr/Ejv+SveqCQaasuPf5uqSaB2yx4GMq+Ea/k=;
-        b=A3RCkA0cTuNT+UZgBbmzun1MbcSX3Cr82pFl1Liv/fqm01zSkHCk+I6ur/gAuOkIEl
-         BjEaje8p5JfjBW3QBSFwIFcZr1MNWpXW0D/d0i+1E5+hgE0az+1mAM8OOABNUJt7fdJy
-         YWscS4OTIYeQlm6HONGapQ5DoRYDYrKClrGST9+yYpUiTVinogKuQg5HKdZCyGIMmFB2
-         VSfvU8lW1w5kfAfRqddgmQEczgtQ1aRSS567ClfGh4Bxk8BywCnNx/kUHOYnCKVrGJ8u
-         58eEXp8PS9VBJFxXCtk7EDgSDXK1M/jmVnb8N8TYWTBeYbLmqHs0qzfu67RN18Y+BlzG
-         Moog==
-X-Gm-Message-State: APjAAAWXYjDL0OWhmOmbdY9rutFCkE27c6px+/eG7v6DJeL7YP9kBttB
-        fMJpQl81ycRfa6io+IyaY94=
-X-Google-Smtp-Source: APXvYqzVrFGT8/GqxXxXY7Cbx2ElMfFbQWidnmVNrfwF35nBvzarLpgV4QlTLCzNwHyy7J4e/9sYbg==
-X-Received: by 2002:a17:902:5ac4:: with SMTP id g4mr918619plm.261.1555638676725;
-        Thu, 18 Apr 2019 18:51:16 -0700 (PDT)
-Received: from localhost ([175.223.3.190])
-        by smtp.gmail.com with ESMTPSA id c3sm5065669pfg.88.2019.04.18.18.51.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Apr 2019 18:51:15 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 10:51:12 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/10] vsprintf: Prevent silent crashes and
- consolidate error handling
-Message-ID: <20190419015112.GA18748@jagdpanzerIV>
-References: <20190417115350.20479-1-pmladek@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417115350.20479-1-pmladek@suse.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 18 Apr 2019 22:01:33 -0400
+Received: from smtpbgsg2.qq.com ([54.254.200.128]:57295 "EHLO smtpbgsg2.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbfDSCBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Apr 2019 22:01:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1555639287;
+        bh=MepexU0iTscd2IW5I8kn0yY9P9NlfHnmIZmXJO0VyLo=;
+        h=From:To:Subject:Mime-Version:Content-Type:Content-Transfer-Encoding:Date:Message-ID;
+        b=jlCbgQtCwDlBDAVLv31ySHCiyjlchnZ1a1MPBdaad/XU6LOjjWoVgyWK0Dlw2sug8
+         Etg4P4hLgbp4p46MKvuHYabO3N6SF/WUcOml5jApGiqOdkOvn0u4+NlklYxZ2L94WL
+         MhF18gE+UH5scZS59Ee31WMYirt7yrOddJ3vwiFc=
+X-QQ-FEAT: jfJxHuYZxOBPSDhREzDobKD9vlA6L+SfAUnSublIxtfQbkfbUFIfYWeBHJO29
+        aNRUMlqeZyqrV3L4sCJ9LUr4sM4JAZfEjoZ9mn8g8hMrDnb7LXb3iYJhKQpNwPTnTBhih8n
+        WsJ9dXj4okFPRi+KXJk3AkLTlHWMvWaFawW/pl949QVg0qm5D8hOgvYZpvlnHjwHCQCNcUX
+        9iCOPSz3mryG3HzuvLyEEgHdkRT/BxaMgnC3gSJAACnaubXYqp5/s4Au5KcQBmeZf+YSzXA
+        GX3yZuXGXXTWrN7IhSu7b0JoE=
+X-QQ-SSF: 000000000000002000000000000000V
+X-HAS-ATTACH: no
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 202.120.10.167
+X-QQ-STYLE: 
+X-QQ-mid: webmail166t1555639286t6758160
+From:   "=?ISO-8859-1?B?UGx1c09uZVNlY29uZA==?=" <plusonesecond@foxmail.com>
+To:     "=?ISO-8859-1?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: net: ax25: %x specifier misuse in kernel?
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="ISO-8859-1"
+Content-Transfer-Encoding: base64
+Date:   Fri, 19 Apr 2019 10:01:25 +0800
+X-Priority: 3
+Message-ID: <tencent_3A04033395F30A3361F8A78F814E1FF92B07@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+        by smtp.qq.com (ESMTP) with SMTP
+        id ; Fri, 19 Apr 2019 10:01:27 +0800 (CST)
+Feedback-ID: webmail:foxmail.com:bgforeign:bgforeign2
+X-QQ-Bgrelay: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (04/17/19 13:53), Petr Mladek wrote:
-> Crash in vsprintf() might be silent when it happens under logbuf_lock
-> in vprintk_emit(). This patch set prevents most of the crashes by probing
-> the address. The check is done only by %s and some %p* specifiers that need
-> to dereference the address.
->
-> Only the first byte of the address is checked to keep it simple. It should
-> be enough to catch most problems.
->
-> The check is explicitly done in each function that does the dereference.
-> It helps to avoid the questionable strchr() of affected specifiers. This
-> change motivated me to do some preparation patches that consolidated
-> the error handling and cleaned the code a bit.
+SW4gYXgyNV9pbmZvX3Nob3cgb2YgYWZfYXgyNS5jOjE4OTEsIGxpbnV4LTUuMS4KVGhlIHBv
+aW50ZXIgYXgyNSBpcyBjYXN0IHRvIGxvbmcgdHlwZSB0byBwcmludCBvdXQuCgpXaHkgaXQg
+cHJpbnRzIHRoZSBhIHBvaW50ZXIgJ2F4MjUnIHVzZSAlOC44bHggcmF0aGVyIHRoYW4gJXA/
+CklmIGl0IHJlYWxseSB3YW50IHRvIHByaW50IHRoZSB2YWx1ZSBvZiBheDI1LCBpdCBzaG91
+bGQgdXNlICVweC4KCkFsc28sIEkgIHNjYW4gdGhlIGtlcm5lbCBjb2RlIGFuZCBub3RpY2Ug
+dGhhdCBtb3N0IG9mIHRoZSBwb2ludGVycyBjYXN0IHRvIGxvbmcgb3IgdW5zaWduZWQgbG9u
+ZyB0eXBlIHRvIHByaW50IG91dCBhcmUgbWFya2VkIHdpdGggX19pb21lbS4KSXMgaXQgYSBt
+aXN1c2Ugb2YgJXg/CgoKVGhhbmtzLg==
 
-The patch set looks OK to me.
 
-I got confused by 'pC?' error string, but once you start looking
-at it as a regex (? - zero or one occurrences) things look OK.
-Regex in dmesg/serial output might be something very new to people,
-stack traces, after all, is a rather common error reporting mechanism.
-So the previous "WARN_ON() + exact unrecognized fmt[N] char" was not
-totally awful or wrong (well, it was, before we introduced printk_safe()),
-but I don't have strong objections against that new regex thing.
 
-FWIW,
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-
-	-ss
