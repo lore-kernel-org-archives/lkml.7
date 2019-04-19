@@ -2,96 +2,147 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E455C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC92C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241D020449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RVgR1liM"
+	by mail.kernel.org (Postfix) with ESMTP id C858820449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfDSSec (ORCPT
+        id S1728346AbfDSSee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:34:32 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36386 "EHLO mail.skyhub.de"
+        Fri, 19 Apr 2019 14:34:34 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:58564 "EHLO wind.enjellic.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbfDSSeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:34:02 -0400
-Received: from zn.tnic (p200300EC2F112E006C6C37C052F44BC9.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:6c6c:37c0:52f4:4bc9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F3E511EC072C;
-        Fri, 19 Apr 2019 12:17:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555669059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=VbZ14AhUhV2CnGdz9eL+4RGhVN9ZX8J/raSb7y7Ie9Y=;
-        b=RVgR1liMHySIvBlvtqbqJNEX4qouxv5eValcXjObfXH9TAIyD0XXIGMIvzQgetLTDl1snL
-        ne5etwT9pRGsQFWpS+KWx+VeaQQ4A2oDxLJirNbgcUwxyXvzTkU30N8C4NaNkFfSHkzdJE
-        /cgOeKVK3KkWmcp0rLz4c/xEq1x8N5U=
-Date:   Fri, 19 Apr 2019 12:17:33 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kairui Song <kasong@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Dave Young <dyoung@redhat.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
- mapping before accessing it
-Message-ID: <20190419101733.GA10324@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        id S1728279AbfDSSeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:34:01 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x3JGOqAw002718;
+        Fri, 19 Apr 2019 11:24:52 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x3JGOonq002717;
+        Fri, 19 Apr 2019 11:24:50 -0500
+Date:   Fri, 19 Apr 2019 11:24:50 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190419162450.GA2615@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190418171059.GA20819@wind.enjellic.com> <d79261c0-f2ae-0ed8-96b6-fb4d1677e3dc@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam: Yes
+In-Reply-To: <d79261c0-f2ae-0ed8-96b6-fb4d1677e3dc@intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 19 Apr 2019 11:24:52 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Breaking thread because this one got too big.
+On Thu, Apr 18, 2019 at 10:24:42AM -0700, Dave Hansen wrote:
 
-On Fri, Apr 19, 2019 at 04:34:58PM +0800, Kairui Song wrote:
-> There are two approach to fix it, detect if the systab is mapped, and
-> avoid reading it if not.
+Good morning again.
 
-Ok, so tglx and I discussed this situation which is slowly getting out
-of hand with all the tinkering.
+> On 4/18/19 10:10 AM, Dr. Greg wrote:
+> > In addition, the driver breaks all existing SGX software by breaking
+> > compatibility with what is a 3+ year ABI provided by the existing
+> > driver.  This seems to contravene the well understood philosophy that
+> > Linux doesn't, if at all possible, break existing applications,
 
-So, here's what we should do - scream loudly now if some of this doesn't
-make any sense.
+> Sorry, that doesn't apply to out-of-tree modules.  While we don't go
+> out of our way to intentionally break apps who are relying on
+> out-of-tree modules, we also don't go our of or way to keep them
+> working.
 
-1. Junichi's patch should get the systab check above added and sent to
-5.1 so that at least some EFI kexecing can work with 5.1
+Yes, there is no question that we understand this concept.
 
-2. Then, the fact whether the kernel has been kexec'ed and which
-addresses it should use early, should all be passed through boot_params
-which is either setup by kexec(1) or by the first kernel itself, in the
-kexec_file_load() case.
+The salient point is that when given an opportunity to preserve and
+transition an existing development community, provide an
+architecturally relevant driver and to impose no restrictions on how a
+new, as yet untested and undesigned security architecture can emerge,
+the decision is made to break all compatibility.
 
-> the systab region is not mapped by the identity mapping provided by
-> kexec.
+> Please stop asking about this.  I don't see any route where it's going
+> to change.
 
-3. Then that needs to be fixed in the first kernel as it is a
-shortcoming of us starting to parse systab very early. It is the kexec
-setup code's problem not the early compressed stage's problem that the
-EFI systab is not mapped.
+Which goes to my first e-mail where I noted this was about idealogy
+rather then technology.
 
-Anything else I've forgotten? Anything I've misrepresented?
+Nothing wrong with that as long as we are intellectually honest.
 
-Thx.
+> Companies ideally shouldn't be getting their customers hooked on
+> out-of-tree ABIs and customers should consume out-of-tree ABIs
+> *expecting* them to break in the future.
 
--- 
-Regards/Gruss,
-    Boris.
+At the risk of being indelicate, it was your company that hooked the
+SGX development community on out-of-tree driver ABI's and software.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+We are just trying to find a mutually beneficial and productive path
+forward.
+
+On that note.
+
+One of the issues we have raised in multiple missives, that remains
+unaddressed, was the notion that the proposed driver may not work on
+all SGX hardware moving forward.  Is there going to be an OEM mandated
+requirement, enforced by Intel licensing, that all SGX capable
+platforms will implement Flexible Launch Control?
+
+For those following along at home, here is a link to the Intel
+Security announcements made at RSA-2019 in February:
+
+https://newsroom.intel.com/news/rsa-2019-intel-partner-ecosystem-offer-new-silicon-enabled-security-solutions/
+
+Of relevant note is the section 'Operational Control':
+
+"Intel is delivering a new capability called flexible launch control
+that enables a company's data center operations to set and manage
+their own unique security policies for launching enclaves as well as
+providing controlled access to sensitive platform identification
+information.  This capability is currently available on Intel
+SGX-enabled Intel Xeon E Processors and some Intel NUC's".
+
+FLC is primarily about supporting Data-Center Attestation Services
+(DCAS) on XEON class servers.  New technologies are released on NUC's
+since those are the platforms that Intel seems to target for developer
+experimentation.
+
+We have had some experience with legal and liability sensitivities
+surrounding security in general and SGX in particular.  Absent an
+official policy statement, it is a really open question whether this
+driver will be universally useful, with the end result being a fair
+amount of chaos for the Linux SGX community.
+
+As opposed to Windows, which will have a known and stable ABI that
+works on any SGX capable hardware.
+
+As I noted in my first e-mail yesterday, we anticipated this and our
+architecture provides a path forward for resolving this issue as well.
+
+Have a good weekend.
+
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"If you get to thinkin' you're a person of some influence, try
+ orderin' somebody else's dog around."
+                                -- Cowboy Wisdom
