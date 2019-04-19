@@ -2,122 +2,96 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A84FC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141B0C282E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F932183F
+	by mail.kernel.org (Postfix) with ESMTP id C31A0217F9
 	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 22:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i1Hy/GRW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555714468;
+	bh=IzduzcZ48b0pyV7kevrmzwUYJt3IAcMhd+CyazgAt8U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PAMILXwmS46iLsCQmjWuolcOPRFuF8KFENtOj9X8Do0Woa8+GVhR/jXsXiUlsJDNa
+	 ag6utZqHpRBiZT6MPsOsHA3lOh//lmelyFHM9BisB4bGniSz3z1fNvaAsR6GeShFQ1
+	 Gbfbpn8wD3nKJnKyGSdj19GLK99q7fXG2bxQHTZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfDSWyW (ORCPT
+        id S1727470AbfDSWy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 18:54:22 -0400
+        Fri, 19 Apr 2019 18:54:26 -0400
 Received: from bombadil.infradead.org ([198.137.202.133]:49702 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfDSWyV (ORCPT
+        with ESMTP id S1726485AbfDSWyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 18:54:21 -0400
+        Fri, 19 Apr 2019 18:54:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L7eq8Aug6+D0Uzgmn7vgZITr6hThHMPewFsEW47cNZg=; b=i1Hy/GRW9HiWiapoFoRTCdgu1
-        cUt7Er7sr71bgd43+dYv+n0Lv5GqnvJ+fSpYP2kjtQcZK4KSH9eqZMuPMywNyKvmhH64/AJZF28Kd
-        AlhoxD9/xO4V7UsOg/7MAE2EeVnrnoWM0Pi7ybOHHUHP44EMSsIwE6Jwu+NXpJ/AgQnIsAxNgPdAJ
-        Ota/ejkQQY1W48qZZdy3Q4RNzTzjM7hk86diK53SIfg/s2qF6MI2J0OScfSmfawFdDLDzngU6/tDG
-        13MF/x52A68J+MK67YWX2NX2H2bIpQcWWr4GQXNqFjTBedeNIaoV6M4g88Nvr+yKVzWJBaI25hvyv
-        9aVlwsorw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+         bh=fieiSTuDt11pJGq7xpXK91Dsnm8q+eSBj5kKlOZTvis=; b=tC2Ifw5NWdPrULHsbVJdxa9N+
+        cxDx77PXr9rB/wQUzGudN4N9p6X/oCEE8SX+CbeN0ZB9kR1rhu7OU8qApp4SqtrMv0GyyED68wU+z
+        qXU9+WScsxygyIUTTmuQopBpoOlPne0l12iy1LbezfD6iLWcqJwwSMBe8gKvw1s7XLIHs6LoecWoT
+        HqAXc3IVQjZrnoolLAhJJiFlSpR3s+KfVSqQ6vID6C5xLoz4WKfJguJ83Qd+gb30v9MNCT4f6rez+
+        y4Sdm07rM4dc15QtDZ3KqKTRD/KT1MSISVz3Ls2AVMUt6Fp4b6x6QVlysToOZQ6sqm+HdNSaUwpGz
+        lvw6g6YfA==;
+Received: from 177.18.24.91.dynamic.adsl.gvt.net.br ([177.18.24.91] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hHNXI-00007w-SC; Fri, 19 Apr 2019 07:02:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5B5DB29B52F42; Fri, 19 Apr 2019 09:02:11 +0200 (CEST)
-Date:   Fri, 19 Apr 2019 09:02:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        linux-arch@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [patch V2 28/29] stacktrace: Provide common infrastructure
-Message-ID: <20190419070211.GL4038@hirez.programming.kicks-ass.net>
-References: <20190418084119.056416939@linutronix.de>
- <20190418084255.652003111@linutronix.de>
- <20190418145201.mjzyqbmkjcghqzex@treble>
- <alpine.DEB.2.21.1904181734200.3174@nanos.tec.linutronix.de>
+        id 1hHQnJ-0002uG-RZ; Fri, 19 Apr 2019 10:30:57 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hHQnG-0000D6-0o; Fri, 19 Apr 2019 07:30:54 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: [PATCH 1/2] docs: doc-guide: remove the extension from .rst files
+Date:   Fri, 19 Apr 2019 07:30:51 -0300
+Message-Id: <70d1286cf7ddb5c44abb7278faac4b7f135d8462.1555669842.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904181734200.3174@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 05:42:55PM +0200, Thomas Gleixner wrote:
-> On Thu, 18 Apr 2019, Josh Poimboeuf wrote:
+On almost all places, we're including ReST files without the
+extension.
 
-> > Another idea I had (but never got a chance to work on) was to extend the
-> > x86 unwind interface to all arches.  So instead of the callbacks, each
-> > arch would implement something like this API:
+Let's remove the extension here as well, in order to use just
+one standard.
 
-> I surely thought about that, but after staring at all incarnations of
-> arch/*/stacktrace.c I just gave up.
-> 
-> Aside of that quite some archs already have callback based unwinders
-> because they use them for more than stacktracing and just have a single
-> implementation of that loop.
-> 
-> I'm fine either way. We can start with x86 and then let archs convert over
-> their stuff, but I wouldn't hold my breath that this will be completed in
-> the forseeable future.
+Suggested-by: Jani Nikula <jani.nikula@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/doc-guide/index.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I suggested the same to Thomas early on, and I even spend the time to
-convert some $random arch to the iterator interface, and while it is
-indeed entirely feasible, it is _far_ more work.
+diff --git a/Documentation/doc-guide/index.rst b/Documentation/doc-guide/index.rst
+index a7f95d7d3a63..603f3ff55d5a 100644
+--- a/Documentation/doc-guide/index.rst
++++ b/Documentation/doc-guide/index.rst
+@@ -7,9 +7,9 @@ How to write kernel documentation
+ .. toctree::
+    :maxdepth: 1
+ 
+-   sphinx.rst
+-   kernel-doc.rst
+-   parse-headers.rst
++   sphinx
++   kernel-doc
++   parse-headers
+ 
+ .. only::  subproject and html
+ 
+-- 
+2.20.1
 
-The callback thing OTOH is flexible enough to do what we want to do now,
-and allows converting most archs to it without too much pain (as Thomas
-said, many archs are already in this form and only need minor API
-adjustments), which gets us in a far better place than we are now.
-
-And we can always go to iterators later on. But I think getting the
-generic unwinder improved across all archs is a really important first
-step here.
