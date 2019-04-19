@@ -2,119 +2,175 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4D1C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ECCC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F2120449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CF620449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+cCwQn7"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GxcdP2ur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbfDSSiD (ORCPT
+        id S1728352AbfDSSiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:38:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43806 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbfDSSiB (ORCPT
+        Fri, 19 Apr 2019 14:38:19 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52244 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728290AbfDSShw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:38:01 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z9so2984335pgu.10;
-        Fri, 19 Apr 2019 11:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MklF8PNztSjUNEBc1fSmie3GqF6hawXRpqU3LIf0sTM=;
-        b=Y+cCwQn7NtR/IVns+wfnccDQ9CUdKrp91cVcDx6KzCyWG56Vrplh7SWsAWgMXZj7e8
-         4MW+BGX/zKj4pVofe5TcgT/y5zw0WqN1IOsmEU13TjOb6pO1625rIkbM9iElmFteTn6I
-         FRK2dvToa4FIJj2A3UOrGchzBsqH/dCbDJrISMPUsSK2qHR7d9WLdsbKP3GfvzY4PALg
-         ARgNE9m65yCdKiDNcrOvd8KvvBtxhle4Fe0ObOlClg5AiMarivk4ufOLH9QPiEJPIbz/
-         cWB8w4FdiYXykKG39Rf83GnF3f255I3iFt6F2v4QIk4VZrMf3XUasxjYfk2vnjqtkEou
-         Mc8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MklF8PNztSjUNEBc1fSmie3GqF6hawXRpqU3LIf0sTM=;
-        b=Fo9dJ/sGgRod3r+QteH2wD47wktD/ejIk4xMjSKvpCRWwzNHLy8lUrk1oOSgiLbp5R
-         ApgmiR2P1penSbZ6Eb3XDEOxch+YpAF9AOzOgRV7JFM4Ey95bUdlmzOOKHYJU0aYxyw7
-         2YaeOeNTTnUNItLn+pSxwG1Q8ons1Y2HK3Rd047WrGI+UtQo+ALVYAJGfaD3MNtHz0cX
-         MzaCS3vwCD990vvsPYDTuoZ7xa2nU4n3JhFGMyAC8AYaOxQP7tjBLFHNWD4SwllmIfrT
-         NS7AI4CSLMXe1kEPPhZqR1hBkeafPJ4/cKoPOJqb16cfFxmAuT/bEa0WstiNPOZ7sy9k
-         A5AA==
-X-Gm-Message-State: APjAAAVqoPRR2XV/X3z9tsuMNX8lmD4RgUtVuBz3taamB8byL28Ciz0T
-        7bF6ZaFVQkp255oov4yq+eqkzNO1LZ0=
-X-Google-Smtp-Source: APXvYqzhd8z3FJAtKC4F5ro6eKxUN7nyJgpV8t0MJSepyVlQLyKWvQYfpRWgLr+xo8vYOy+azxE1MA==
-X-Received: by 2002:aa7:8c13:: with SMTP id c19mr2305723pfd.225.1555659627134;
-        Fri, 19 Apr 2019 00:40:27 -0700 (PDT)
-Received: from localhost ([61.199.190.18])
-        by smtp.gmail.com with ESMTPSA id q87sm6583475pfa.133.2019.04.19.00.40.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 00:40:25 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 07:40:21 +0000
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH 1/4] mod_devicetable: helper macro for declaring oftree
- module device table
-Message-ID: <20190419074021.tigbyfezmt4erjms@penguin>
-References: <1555444645-15156-1-git-send-email-info@metux.net>
- <1555444645-15156-2-git-send-email-info@metux.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555444645-15156-2-git-send-email-info@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 19 Apr 2019 14:37:52 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190419134825euoutp02df201ba62635f860136563a3a3452bd9~W5ETdMHO90662906629euoutp02F
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:48:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190419134825euoutp02df201ba62635f860136563a3a3452bd9~W5ETdMHO90662906629euoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1555681705;
+        bh=HLV8RfTTYMJHCpoVzMgMpnDdAuBIjRTs2a5rElTq130=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GxcdP2urj0OQVvsCtdplP9b0GvSrKZ1UdCQWrNAAInXO+f4Ge71GNkvSxaxPNDYh0
+         utCX8JcUNgu5ZsBWF9jnIBXAPL7QyF6c3SQnHseKCNTbitpE0Xzxq5T32Plqn+sArV
+         h/syhVv/jqkdbUe2WykezieIxvkuFB+roJn8w14g=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190419134824eucas1p2a552ccb05f8c0f47ea9d4b24e3642b0d~W5EScF4m80964809648eucas1p2M;
+        Fri, 19 Apr 2019 13:48:24 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 11.69.04377.8A1D9BC5; Fri, 19
+        Apr 2019 14:48:24 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6~W5ERw4Eg_2483224832eucas1p1g;
+        Fri, 19 Apr 2019 13:48:23 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190419134823eusmtrp10782bb81d2f0505051df40fa19f44671~W5ERi479W2847828478eusmtrp1L;
+        Fri, 19 Apr 2019 13:48:23 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-74-5cb9d1a8ad7a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BD.BE.04140.7A1D9BC5; Fri, 19
+        Apr 2019 14:48:23 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190419134822eusmtip207d2af356ac28d0544c4c92fb930a231~W5EQ2JVYL0862908629eusmtip2i;
+        Fri, 19 Apr 2019 13:48:22 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org,
+        l.luba@partner.samsung.com, willy.mh.wolff.ml@gmail.com
+Subject: [PATCH v3 4/4] DT: arm: exynos4412: add event data type which is
+ monitored
+Date:   Fri, 19 Apr 2019 15:48:08 +0200
+Message-Id: <1555681688-19643-5-git-send-email-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHO/fu7t6NVrdp+kPDYiC97R0H01BSuBRF/0RQhq28mbSp7apZ
+        Sa3M1DEfGD1mzh5W6jLNOUQtxXRkJc5GqKmtUougfEBbQhGSt2v03+d8z+d8f4fDYUi1nQpi
+        kpLTeEOyVqeRK2WNz3+61la5m+PW3y8LwPU36ig84PtC4VtOF4WLxr6RuLf3MY17Lo7TeMi4
+        BNvH+in8pqVMjr0FToRv9LYR+JHTQ+P7A24CD1+okuOcVieNO8dzKTz9YhRFLeJqymsQ11zq
+        oTm7LV/ONdw7zz2bfEpwhQ4b4rz2kL30AWVEAq9LyuAN67YfVh6vqHZRqbWqzCejlZQRvVKY
+        kIIBdjN4anOQCSkZNVuF4GVJIy0tfAjMzWZCtNSsF8E1c+S/E/Udd0lJqkRQZH1IStLsiW/9
+        C02IYeRsGDTZToqxP1uBYLrzgOiT7AMC2rK//y31Y/dBu8VHiyxjQ2HIXEyJrGJ3woh7iJCG
+        hcCgK58UOxXsLqicyBB7gH1Fw7i1QCY5MdDjq5BL7Adfuxy0xEug+4p5zhHAWHAHSZwFY0XW
+        OWcbdHa5KbGfZFdCXcs6KY6G1h/tSIyBXQBvJxaJMTmLJY3XSSlWQd5ltWSvAIf59dyFA6Cy
+        5tpcOQfWq1/l0kuVI7j+y4OK0dLS/8NuI2RDgXy6oE/khY3J/KkwQasX0pMTw46m6O1o9id1
+        z3T5mlDL7yMdiGWQZr6qvaQ5Tk1pM4TT+g4EDKnxV0UnOOLUqgTt6TO8ISXekK7jhQ4UzMg0
+        gaqz8z4eVLOJ2jT+BM+n8oZ/uwSjCDKiGEuuJUc3/CFoOTZt3fPBM7qUjw+uoxSmT5diRxps
+        fWP5nxt2WGOn8m72DWg2lbx8MPjeN+GYBGJxdzgXsZue2Z95LjvO4g7YMq96jTcpPooPrw1d
+        Vu0fOHWohiqdog/yeeH3vnx6N5n7kajP351lSgwKOXTMs9qxrHAycoYu1ciE49oNq0iDoP0D
+        GJTDK0UDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xe7rLL+6MMVh8VtVi44z1rBbXvzxn
+        tZh/5ByrRf/j18wW589vYLc42/SG3eJWg4zFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26x
+        9PpFJovbjSvYLFr3HmG3OPymndXi24lHjA6CHmvmrWH02DnrLrvHplWdbB6bl9R7HHy3h8mj
+        b8sqRo/Pm+QC2KP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLL
+        Uov07RL0MhavPMdasI63Yvej5awNjKc4uxg5OSQETCQ2HlrE3MXIxSEksJRR4vOHA4wQCTGJ
+        Sfu2s0PYwhJ/rnWxQRR9YpR4cGw9UBEHB5uAnsSOVYUgcRGB5YwSx1a9BZvELLCNSWLPld1g
+        k4QFgiUa37eygdgsAqoSt3omsILYvAJeEg8v3mKC2CAncfNcJzPIUE4Bb4nlb8tAwkJAJdef
+        n2GewMi3gJFhFaNIamlxbnpusZFecWJucWleul5yfu4mRmCkbDv2c8sOxq53wYcYBTgYlXh4
+        D0zaGSPEmlhWXJl7iFGCg1lJhNcxZUuMEG9KYmVValF+fFFpTmrxIUZToJsmMkuJJucDoziv
+        JN7Q1NDcwtLQ3Njc2MxCSZz3vEFllJBAemJJanZqakFqEUwfEwenVAPjzNVrg9ouXtZ5bmyf
+        tFq+Kux+jNXMNOmGNMkjTGembrQ/wvKua+OLtf/SgiZOObrdbyOXAo/E36Vnf7DPySl4f7w2
+        xzp998Zdm+85T+gz+Vs2Vd7QpTEqOyMria/MwWaht5z8giXqr/59DkxdxqBvu+dk3HzNDsdv
+        GeJTNVpzbi88af/oyrf3SizFGYmGWsxFxYkAx9wTmqoCAAA=
+X-CMS-MailID: 20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6
+References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419134823eucas1p1ff852194b1db655ed2dbce72b5f7f3a6@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enrico,
+The patch adds new field in the PPMU event which shows explicitly
+what kind of data the event is monitoring. It is possible to change it
+using defined values in exynos_ppmu.h file.
 
-On Tue, Apr 16, 2019 at 09:57:22PM +0200, Enrico Weigelt, metux IT consult wrote:
-> Little helper macro that declares an oftree module device table,
-> if CONFIG_OF is enabled. Otherwise it's just noop.
-> 
-> This is also helpful if some drivers can be built w/ or w/o
-> oftree support.
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-This should go to OF folks, please.
-
-> 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  include/linux/mod_devicetable.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index 448621c..853e301 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -245,6 +245,15 @@ struct of_device_id {
->  	const void *data;
->  };
->  
-> +/*
-> + * macro for adding the of module device table only if CONFIG_OF enabled
-> + */
-> +#ifdef CONFIG_OF
-> +#define MODULE_DEVICE_TABLE_OF(name)	MODULE_DEVICE_TABLE(of,name)
-> +#else
-> +#define MODULE_DEVICE_TABLE_OF(name)
-> +#endif /* CONFIG_OF */
-> +
->  /* VIO */
->  struct vio_device_id {
->  	char type[32];
-> -- 
-> 1.9.1
-> 
-
+diff --git a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+index 3a3b2fa..549faba 100644
+--- a/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
+@@ -6,12 +6,16 @@
+  * Author: Chanwoo Choi <cw00.choi@samsung.com>
+  */
+ 
++#include <dt-bindings/pmu/exynos_ppmu.h>
++
+ &ppmu_dmc0 {
+        status = "okay";
+ 
+        events {
+ 	       ppmu_dmc0_3: ppmu-event3-dmc0 {
+ 		       event-name = "ppmu-event3-dmc0";
++		       event-data-type = <(PPMU_RO_DATA_CNT |
++					   PPMU_WO_DATA_CNT)>;
+ 	       };
+        };
+ };
+@@ -22,6 +26,8 @@
+        events {
+ 	       ppmu_dmc1_3: ppmu-event3-dmc1 {
+ 		       event-name = "ppmu-event3-dmc1";
++		       event-data-type = <(PPMU_RO_DATA_CNT |
++					   PPMU_WO_DATA_CNT)>;
+ 	       };
+        };
+ };
+@@ -32,6 +38,8 @@
+        events {
+ 	       ppmu_leftbus_3: ppmu-event3-leftbus {
+ 		       event-name = "ppmu-event3-leftbus";
++		       event-data-type = <(PPMU_RO_DATA_CNT |
++					   PPMU_WO_DATA_CNT)>;
+ 	       };
+        };
+ };
+@@ -42,6 +50,8 @@
+        events {
+ 	       ppmu_rightbus_3: ppmu-event3-rightbus {
+ 		       event-name = "ppmu-event3-rightbus";
++		       event-data-type = <(PPMU_RO_DATA_CNT |
++					   PPMU_WO_DATA_CNT)>;
+ 	       };
+        };
+ };
 -- 
-Dmitry
+2.7.4
+
