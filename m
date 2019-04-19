@@ -3,38 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88303C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F121C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C53F20643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F9320645
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbfDSTDY (ORCPT
+        id S1728885AbfDSTD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:03:24 -0400
+        Fri, 19 Apr 2019 15:03:28 -0400
 Received: from Galois.linutronix.de ([146.0.238.70]:42077 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfDSTDX (ORCPT
+        with ESMTP id S1726309AbfDSTD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:03:23 -0400
+        Fri, 19 Apr 2019 15:03:27 -0400
 Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hHPKZ-0001fl-0i; Fri, 19 Apr 2019 10:57:11 +0200
-Date:   Fri, 19 Apr 2019 10:57:10 +0200 (CEST)
+        id 1hHRBB-0002lN-E1; Fri, 19 Apr 2019 12:55:37 +0200
+Date:   Fri, 19 Apr 2019 12:55:36 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Daniel Drake <drake@endlessm.com>
-cc:     Len Brown <lenb@kernel.org>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux@endlessm.com,
-        rjw@rjwysocki.net, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: Detecting x86 LAPIC timer frequency from CPUID data
-In-Reply-To: <20190419083533.32388-1-drake@endlessm.com>
-Message-ID: <alpine.DEB.2.21.1904191042180.3174@nanos.tec.linutronix.de>
-References:  <20190419083533.32388-1-drake@endlessm.com>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, rguenther@suse.de,
+        mhocko@suse.com, vbabka@suse.cz, luto@amacapital.net,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, stable@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] x86/mpx: fix recursive munmap() corruption
+In-Reply-To: <20190401141549.3F4721FE@viggo.jf.intel.com>
+Message-ID: <alpine.DEB.2.21.1904191248090.3174@nanos.tec.linutronix.de>
+References: <20190401141549.3F4721FE@viggo.jf.intel.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,85 +48,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019, Daniel Drake wrote:
-> On Fri, Apr 19, 2019 at 6:30 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >    Time Stamp Counter/Core Crystal Clock Information (0x15):
-> >       TSC/clock ratio = 168/2
-> >       nominal core crystal clock = 0 Hz
-> >
-> >    Processor Frequency Information (0x16):
-> >       Core Base Frequency (MHz) = 0x834 (2100)
-> >       Core Maximum Frequency (MHz) = 0xed8 (3800)
-> >       Bus (Reference) Frequency (MHz) = 0x64 (100)
-> >
-> > Assuming that TSC and local APIC timer run from the same frequency on these
-> > modern machines.
-> >
-> >        2100MHz * 2 / 168 = 25MHz
-> >
-> > and disabling the tsc deadline timer tells me:
-> >
-> >   ..... calibration result: 24999
-> >
-> > Close enough.
-> 
-> I tested all the Intel SoC generations we have on hand. The assumption that
-> the core crystal clock feeds the APIC seems to be consistently true.
-> 
-> (Please note that all the following results are done with CONFIG_HZ=250,
->  which is why the "calibration result" is 4x higher than HZ=1000 as used
->  in previous mails)
-> 
-> In the easy case, the low cost platforms do not support CPUID.0x16 (so no
-> CPU frequency reporting), but they do tell us the core crystal clock, which
-> is consistent with the APIC calibration result:
+On Mon, 1 Apr 2019, Dave Hansen wrote:
+> diff -puN mm/mmap.c~mpx-rss-pass-no-vma mm/mmap.c
+> --- a/mm/mmap.c~mpx-rss-pass-no-vma	2019-04-01 06:56:53.409411123 -0700
+> +++ b/mm/mmap.c	2019-04-01 06:56:53.423411123 -0700
+> @@ -2731,9 +2731,17 @@ int __do_munmap(struct mm_struct *mm, un
+>  		return -EINVAL;
+>  
+>  	len = PAGE_ALIGN(len);
+> +	end = start + len;
+>  	if (len == 0)
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * arch_unmap() might do unmaps itself.  It must be called
+> +	 * and finish any rbtree manipulation before this code
+> +	 * runs and also starts to manipulate the rbtree.
+> +	 */
+> +	arch_unmap(mm, start, end);
 
 ...
+  
+> -static inline void arch_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
+> -			      unsigned long start, unsigned long end)
+> +static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
+> +			      unsigned long end)
 
-> And the 4 higher-end SoCs that we have available for testing all report
-> crystal clock 0Hz from CPUID 0x15, but by combining the CPUID.0x16 base
-> frequency with the CPUID.0x15 TSC/clock ratio, the crystal frequency can
-> be calculated as you describe, and it consistently matches the APIC timer
-> calibration result.
+While you fixed up the asm-generic thing, this breaks arch/um and
+arch/unicorn32. For those the fixup is trivial by removing the vma
+argument.
 
-...
+But itt also breaks powerpc and there I'm not sure whether moving
+arch_unmap() to the beginning of __do_munmap() is safe. Micheal???
 
-> Is this data convincing enough or should we additionally wait for some
-> comments from Intel?
+Aside of that the powerpc variant looks suspicious:
 
-For me it's pretty convincing, but having some confirmation from Intel
-wouldn't be a bad thing.
- 
-> I came up with the patch below. However, upon testing, I realised that, at
-> least for the platforms I have in hand, only the first hunk is really needed.
-> We don't need to use your magic calculation to find the crystal frequency
-> because Intel already told us! native_calibrate_tsc() already hardcodes the
-> crystal frequency for Kabylake, and Amber/Whiskey/Coffee also report the
-> 0x8e/0x9e Kabylake model codes.
+static inline void arch_unmap(struct mm_struct *mm,
+                              unsigned long start, unsigned long end)
+{
+ 	if (start <= mm->context.vdso_base && mm->context.vdso_base < end)
+                mm->context.vdso_base = 0;
+}
 
-I'd rather replace these model checks with math. These tables are horrible
-to maintain.
+Shouldn't that be: 
 
-> Plus ApolloLake/GeminiLake do report the crystal frequency in CPUID.0x15
-> so that is covered too.
+ 	if (start >= mm->context.vdso_base && mm->context.vdso_base < end)
 
-> While looking around this code I also spotted something curious.
-> In calibrate_APIC_clock() for the case where lapic_timer_frequency has been
-> externally provided, we have:
-> 		lapic_clockevent.max_delta_ns =
-> 			clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
-> 		lapic_clockevent.max_delta_ticks = 0x7FFFFF;
-> 
-> But in the case where we calibrate, we have:
-> 	lapic_clockevent.max_delta_ns =
-> 		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
-> 	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
-> 
-> 0x7FFFFF vs 0x7FFFFFFF, is that intentional?
-
-I don't think so. Looks like a failed copy and paste. Cc'ed Jacob, he might
-know.
+Hmm?
 
 Thanks,
 
 	tglx
+
