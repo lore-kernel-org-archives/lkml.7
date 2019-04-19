@@ -2,207 +2,183 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DATE_IN_PAST_03_06,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873F3C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9CCC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D9520652
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i/oL4Xpi"
+	by mail.kernel.org (Postfix) with ESMTP id CEAC020652
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfDSS1t (ORCPT
+        id S1727661AbfDSS2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:27:49 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35865 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfDSS1s (ORCPT
+        Fri, 19 Apr 2019 14:28:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:41674 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfDSS2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:27:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ck15so2952588plb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=nj20xMbOiR4njzRpU9pd8U3u7JqbjbpoQeo6wrWiKUM=;
-        b=i/oL4XpiFE0mQsjwmNOMFL7+oT0QPZEHoNCCWcrnIzGqVup023mTwyVByRjAAlAG1/
-         M6fgQr1MitkgwVThu9VhubVic8pv4eNnA5mkG2cc9xwfS4uv6/cbY4ibMCVGte1eB806
-         Y4TE6eIjAeWziKHb/LeVQYDoGbUWDqeuovzHp4RPoEalaK2ATCs/08lZf1++J7GcHr9x
-         trnLc+fWmUqIN82yL9h+71j0f0B26jhX2/QKU3y1aM9NmIQ94eCgWQKSHzsoTOHXEEd9
-         797FUpTn4odqz7SOeiN1gJbr3PJLSe9mPtpwR2gYkI5/4bdhZgf5cNhjxRj/CuI0T7Tb
-         wWiw==
+        Fri, 19 Apr 2019 14:28:06 -0400
+Received: by mail-io1-f72.google.com with SMTP id e126so5197620ioa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 11:28:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nj20xMbOiR4njzRpU9pd8U3u7JqbjbpoQeo6wrWiKUM=;
-        b=aEnb1xQBPmfS8sYv+dsa8mDf/Mj/yPnQLcv70KpIgHnFGkmuuNQVxEjjxrFmlqLA9G
-         coYKdlK9y52B3vSBYKFvnET+VZWlbRbJMm6bDLgQF7n+VXPN4j2w2b0opMrZSbrxEsJT
-         xCkSdPApYmAmMhaIMK90DsKkPj4CstY4hbKjrzWiA9otYLoNTMlgAhHZ8s5Skx2UN40y
-         lFPVvYAhHkYT4vB8FqC+SUF9CTAueOOY7rHoLBLGDPxUx1zVfa3xTTWH5S94bu7tM4lP
-         jQnIxQSn3d/V7cBf+Afg31bJRqSbj4XxBSzHF/AyNEVuZSWhauWRaEahXHa9uJXOApLI
-         PC3g==
-X-Gm-Message-State: APjAAAU3xyn/9RipVeGnIstvr3zHfzsE99+yOQNB8+vOOKP9DdBRygVf
-        hl7K8w04eqRu+gexGFjKP9ru3p5wV90=
-X-Google-Smtp-Source: APXvYqygjQrqQVFkVOsEC4wg6n+XrBF44gDTyGi2nuXU+12+myTQiOLsrQtN68VAd3utyNJcniRUVQ==
-X-Received: by 2002:a17:902:8a4:: with SMTP id 33mr5176440pll.7.1555696805063;
-        Fri, 19 Apr 2019 11:00:05 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:4e72:b9ff:fe99:466a])
-        by smtp.gmail.com with ESMTPSA id m7sm5829688pgg.62.2019.04.19.11.00.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 11:00:04 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Da Lv <lvda3@hisilicon.com>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Yidong Lin <linyidong@huawei.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH] drm: kirin: Fix for hikey620 display offset problem
-Date:   Fri, 19 Apr 2019 11:00:00 -0700
-Message-Id: <1555696800-15961-1-git-send-email-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tFKuCP5sWc3Lw1+DiSI04bLvA52hIWgjARkMR8y4QLc=;
+        b=d3hXRZ57yC9sPg3ldjrAynBM2pafWqSGSdR2t60dKSHIMeW2+bWbtgxFNepwtHIZex
+         5KH4X2qlZrueKXBeMoPFU2ptVgibmqHRGNzh4Ff3ZRjtMnGz30UXYNbPgxXCJJYGsYCt
+         zPXph23fjMetSwe8BKtw8Fz8dt51An+VJLPMZhofZeUFxLj3TmcyQJGIiIO5+h2qo2tD
+         IjokJWjCftkWVQM21VZczJNFsn7hh9gpjM9kmAbaCtCC8phiJ6ltNpDm8Vqvn+mmvR4s
+         /oZxFgo2n/LBflz+DVg9WeyNoDOab3WKMxcoofqi0Q70GmZZk/DBolm2ipV4wJub7qc/
+         +9sg==
+X-Gm-Message-State: APjAAAV/7Y7V3Q1778GeXcXOY/qFsFn8MiUbzKmrYQdb6KF86WsALObM
+        0HTfgpBheBl9HsAKd7R+eJE9ZsqEuR7S2TRnQSgZA9bOw3ez
+X-Google-Smtp-Source: APXvYqw603Z0rIRcAIvSGSxVl7pXCqLPjmimWzd9Gz02pUh89kkfG2GJpdpETTeFWdAhVSxYQaomna+K1vN7v3vJAc5nOs1wWfIZ
+MIME-Version: 1.0
+X-Received: by 2002:a24:70d5:: with SMTP id f204mr3014431itc.32.1555684565732;
+ Fri, 19 Apr 2019 07:36:05 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 07:36:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ec53de0586e309fc@google.com>
+Subject: KASAN: use-after-free Read in v4l2_fh_init
+From:   syzbot <syzbot+c025d34b8eaa54c571b8@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Da Lv <lvda3@hisilicon.com>
+Hello,
 
-The original HiKey (620) board has had a long running issue
-where when using a 1080p montior, the display would occasionally
-blink and come come back with a horizontal offset (usually also
-shifting the colors, depending on the value of the offset%4).
+syzbot found the following crash on:
 
-After lots of analysis by HiSi developers, they found the issue
-was due to when running at 1080p, it was possible to hit the
-device memory bandwidth limits, which could cause the DSI signal
-to get out of sync.
+HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=125bbb5b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+dashboard link: https://syzkaller.appspot.com/bug?extid=c025d34b8eaa54c571b8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1513ac1d200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13555c1d200000
 
-Unfortunately the DSI logic doesn't have the ability to
-automatically recover from this situation, but we can get a an
-LDI underflow interrupt when it happens.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c025d34b8eaa54c571b8@syzkaller.appspotmail.com
 
-To then correct the issue, when we get an LDI underflow irq, we
-we can simply suspend and resume the display, which resets the
-hardware.
+em28xx 1-1:5.176: failed to create media graph
+em28xx 1-1:5.176: V4L2 device video32 deregistered
+em28xx 1-1:5.176: Binding DVB extension
+==================================================================
+em28xx 1-1:5.176: no endpoint for DVB mode and transfer type 0
+BUG: KASAN: use-after-free in v4l2_fh_init+0x24c/0x290  
+drivers/media/v4l2-core/v4l2-fh.c:33
+Read of size 8 at addr ffff8880a4f149d0 by task v4l_id/5313
 
-Thus, this patch enables the ldi underflow interrupt, and
-initializes a workqueue that is used to suspend/resume the
-display to recover. Then when the irq occurs we clear it and
-schedule the workqueue to reset display engine.
+CPU: 1 PID: 5313 Comm: v4l_id Not tainted 5.1.0-rc5-319617-gd34f951 #4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+em28xx 1-1:5.176: failed to pre-allocate USB transfer buffers for DVB.
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  print_address_description+0x6c/0x236 mm/kasan/report.c:187
+em28xx 1-1:5.176: Registering input extension
+  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
+  v4l2_fh_init+0x24c/0x290 drivers/media/v4l2-core/v4l2-fh.c:33
+  v4l2_fh_open+0x8d/0xd0 drivers/media/v4l2-core/v4l2-fh.c:71
+  em28xx_v4l2_open+0x11f/0x470 drivers/media/usb/em28xx/em28xx-video.c:2184
+  v4l2_open+0x1b6/0x360 drivers/media/v4l2-core/v4l2-dev.c:427
+  chrdev_open+0x220/0x5d0 fs/char_dev.c:417
+  do_dentry_open+0x49c/0x1130 fs/open.c:777
+  do_last fs/namei.c:3416 [inline]
+  path_openat+0x147d/0x40b0 fs/namei.c:3533
+  do_filp_open+0x1a6/0x280 fs/namei.c:3563
+  do_sys_open+0x3c5/0x590 fs/open.c:1069
+  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fdb23b8d120
+Code: 48 8b 15 1b 4d 2b 00 f7 d8 64 89 02 83 c8 ff c3 90 90 90 90 90 90 90  
+90 90 90 83 3d d5 a4 2b 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 73 31 c3 48 83 ec 08 e8 5e 8c 01 00 48 89 04 24
+RSP: 002b:00007ffc1aebde18 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007ffc1aebdf78 RCX: 00007fdb23b8d120
+RDX: 00007fdb23e42138 RSI: 0000000000000000 RDI: 00007ffc1aebef17
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+R13: 00007ffc1aebdf70 R14: 0000000000000000 R15: 0000000000000000
 
-Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-Cc: Rongrong Zou <zourongrong@gmail.com>
-Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Cc: Chen Feng <puck.chen@hisilicon.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Signed-off-by: Da Lv <lvda3@hisilicon.com>
-Signed-off-by: Yidong Lin <linyidong@huawei.com>
-[jstultz: Reworded the commit message, checkpatch cleanups]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Change-Id: I792ce0b50a1c941d94d8cbec6b52c0f838d967bd
+Allocated by task 12:
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
+  kmalloc include/linux/slab.h:547 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  em28xx_v4l2_init drivers/media/usb/em28xx/em28xx-video.c:2563 [inline]
+  em28xx_v4l2_init.cold+0x93/0x3112  
+drivers/media/usb/em28xx/em28xx-video.c:2541
+  em28xx_init_extension+0x13a/0x200  
+drivers/media/usb/em28xx/em28xx-core.c:1128
+  request_module_async+0x62/0x70 drivers/media/usb/em28xx/em28xx-cards.c:3300
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Freed by task 12:
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+  slab_free_hook mm/slub.c:1429 [inline]
+  slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
+  slab_free mm/slub.c:3003 [inline]
+  kfree+0xce/0x280 mm/slub.c:3958
+  em28xx_free_v4l2 drivers/media/usb/em28xx/em28xx-video.c:2149 [inline]
+  kref_put include/linux/kref.h:67 [inline]
+  em28xx_v4l2_init drivers/media/usb/em28xx/em28xx-video.c:2920 [inline]
+  em28xx_v4l2_init.cold+0x2cf/0x3112  
+drivers/media/usb/em28xx/em28xx-video.c:2541
+  em28xx_init_extension+0x13a/0x200  
+drivers/media/usb/em28xx/em28xx-core.c:1128
+  request_module_async+0x62/0x70 drivers/media/usb/em28xx/em28xx-cards.c:3300
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8880a4f14200
+  which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 2000 bytes inside of
+  8192-byte region [ffff8880a4f14200, ffff8880a4f16200)
+The buggy address belongs to the page:
+page:ffffea000293c400 count:1 mapcount:0 mapping:ffff88812c3f4400 index:0x0  
+compound_mapcount: 0
+flags: 0xfff00000010200(slab|head)
+raw: 00fff00000010200 dead000000000100 dead000000000200 ffff88812c3f4400
+raw: 0000000000000000 0000000080030003 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a4f14880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a4f14900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880a4f14980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff8880a4f14a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a4f14a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h |  6 ++++++
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 23 +++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-index 4cf281b7..ced40c6 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-@@ -87,6 +87,7 @@
- #define VSIZE_OFST			20
- #define LDI_INT_EN			0x741C
- #define FRAME_END_INT_EN_OFST		1
-+#define UNDERFLOW_INT_EN_OFST		2
- #define LDI_CTRL			0x7420
- #define BPP_OFST			3
- #define DATA_GATE_EN			BIT(2)
-@@ -97,6 +98,11 @@
- #define LDI_HDMI_DSI_GT			0x7434
- 
- /*
-+ *BIT_LDI_UNFLOW
-+ */
-+#define BIT_LDI_UNFLOW         BIT(2)
-+
-+/*
-  * ADE media bus service regs
-  */
- #define ADE0_QOSGENERATOR_MODE		0x010C
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index 73611a9..1d935ab 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -58,6 +58,7 @@ struct ade_hw_ctx {
- struct ade_crtc {
- 	struct drm_crtc base;
- 	struct ade_hw_ctx *ctx;
-+	struct work_struct drm_device_wq;
- 	bool enable;
- 	u32 out_format;
- };
-@@ -176,6 +177,7 @@ static void ade_init(struct ade_hw_ctx *ctx)
- 	 */
- 	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
- 			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-+	ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
- }
- 
- static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-@@ -345,6 +347,18 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
- 			MASK(1), 0);
- }
- 
-+static void drm_underflow_wq(struct work_struct *work)
-+{
-+	struct ade_crtc *acrtc = container_of(work, struct ade_crtc,
-+					      drm_device_wq);
-+	struct drm_device *drm_dev = (&acrtc->base)->dev;
-+	void __iomem *base = acrtc->ctx->base;
-+	struct drm_atomic_state *state;
-+
-+	state = drm_atomic_helper_suspend(drm_dev);
-+	drm_atomic_helper_resume(drm_dev, state);
-+}
-+
- static irqreturn_t ade_irq_handler(int irq, void *data)
- {
- 	struct ade_crtc *acrtc = data;
-@@ -362,6 +376,12 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
- 				MASK(1), 1);
- 		drm_crtc_handle_vblank(crtc);
- 	}
-+	if (status & BIT_LDI_UNFLOW) {
-+		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
-+				MASK(1), 1);
-+		DRM_ERROR("LDI underflow!");
-+		schedule_work(&acrtc->drm_device_wq);
-+	}
- 
- 	return IRQ_HANDLED;
- }
-@@ -1038,6 +1058,9 @@ static int ade_drm_init(struct platform_device *pdev)
- 	/* vblank irq init */
- 	ret = devm_request_irq(dev->dev, ctx->irq, ade_irq_handler,
- 			       IRQF_SHARED, dev->driver->name, acrtc);
-+
-+	INIT_WORK(&acrtc->drm_device_wq, drm_underflow_wq);
-+
- 	if (ret)
- 		return ret;
- 
--- 
-2.7.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
