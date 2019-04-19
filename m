@@ -2,86 +2,139 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F22C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC0EC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C91217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555704511;
-	bh=C+p1NL8mFdhSCUqYHh0ol748ybYOAWTd11xT8WF9pRM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Dt/4PyZVfhLgb/XVNLjg9iRaxHR2dy92JLjwg9sQ9YCOewC/9sW6mTZGT5EBXPoTx
-	 hwskOqdSMlfO+XuHCsNCsiv5EwnOswYDfpX/b79WGggPCWpbE1rSmAUI33HWsYlU3y
-	 QqPXC4zs8U9YFcPyNUvfGCcybibno6EVVinfZDR0=
+	by mail.kernel.org (Postfix) with ESMTP id A168C2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GdJtsS0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfDSUIa (ORCPT
+        id S1728249AbfDSUJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:08:30 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:56766 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfDSUI3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:08:29 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id A0A0F27C6;
-        Fri, 19 Apr 2019 20:08:28 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 13:08:26 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -mm] elf: init pt_regs pointer later
-Message-Id: <20190419130826.849441bb8f526c9defcb1c0f@linux-foundation.org>
-In-Reply-To: <20190419200343.GA19788@avx2>
-References: <20190419200343.GA19788@avx2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Apr 2019 16:09:00 -0400
+Received: from mout.gmx.net ([212.227.17.22]:60517 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbfDSUJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:09:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1555704514;
+        bh=88SiZFmmhRwC/7md4AJCYpTZ6Fy7rhwLCXuvvhMnM9Y=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=GdJtsS0UYIdRetD0I+Ks7DHl8xnBOlwqtuowppXDb6B2ENY0zLllx0v8+tTLq+p62
+         791u5+655xbJiXK6ZbIz5QIXDeU0VCT8AW27OOoRWkEbiYXipbWGgzHAiaMAcT3PF2
+         wWPl2OlHZRo6VrWiBvD4jIJrO4Iw2WpwkREzaO9I=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.171.44]) by mail.gmx.com (mrgmx103
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0MegeC-1hSeYE2YSO-00ODox; Fri, 19
+ Apr 2019 22:08:34 +0200
+Subject: Re: DISCONTIGMEM is deprecated
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
+References: <20190419094335.GJ18914@techsingularity.net>
+ <20190419140521.GI7751@bombadil.infradead.org>
+ <20190419142835.GM18914@techsingularity.net>
+From:   Helge Deller <deller@gmx.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=deller@gmx.de; keydata=
+ xsBNBFDPIPYBCAC6PdtagIE06GASPWQJtfXiIzvpBaaNbAGgmd3Iv7x+3g039EV7/zJ1do/a
+ y9jNEDn29j0/jyd0A9zMzWEmNO4JRwkMd5Z0h6APvlm2D8XhI94r/8stwroXOQ8yBpBcP0yX
+ +sqRm2UXgoYWL0KEGbL4XwzpDCCapt+kmarND12oFj30M1xhTjuFe0hkhyNHkLe8g6MC0xNg
+ KW3x7B74Rk829TTAtj03KP7oA+dqsp5hPlt/hZO0Lr0kSAxf3kxtaNA7+Z0LLiBqZ1nUerBh
+ OdiCasCF82vQ4/y8rUaKotXqdhGwD76YZry9AQ9p6ccqKaYEzWis078Wsj7p0UtHoYDbABEB
+ AAHNHEhlbGdlIERlbGxlciA8ZGVsbGVyQGdteC5kZT7CwJIEEwECADwCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEE9M/0wAvkPPtRU6Boh8nBUbUeOGQFAlrHzIICGQEACgkQh8nB
+ UbUeOGT1GAgAt+EeoHB4DbAx+pZoGbBYp6ZY8L6211n8fSi7wiwgM5VppucJ+C+wILoPkqiU
+ +ZHKlcWRbttER2oBUvKOt0+yDfAGcoZwHS0P+iO3HtxR81h3bosOCwek+TofDXl+TH/WSQJa
+ iaitof6iiPZLygzUmmW+aLSSeIAHBunpBetRpFiep1e5zujCglKagsW78Pq0DnzbWugGe26A
+ 288JcK2W939bT1lZc22D9NhXXRHfX2QdDdrCQY7UsI6g/dAm1d2ldeFlGleqPMdaaQMcv5+E
+ vDOur20qjTlenjnR/TFm9tA1zV+K7ePh+JfwKc6BSbELK4EHv8J8WQJjfTphakYLVM7ATQRQ
+ zyD2AQgA2SJJapaLvCKdz83MHiTMbyk8yj2AHsuuXdmB30LzEQXjT3JEqj1mpvcEjXrX1B3h
+ +0nLUHPI2Q4XWRazrzsseNMGYqfVIhLsK6zT3URPkEAp7R1JxoSiLoh4qOBdJH6AJHex4CWu
+ UaSXX5HLqxKl1sq1tO8rq2+hFxY63zbWINvgT0FUEME27Uik9A5t8l9/dmF0CdxKdmrOvGMw
+ T770cTt76xUryzM3fAyjtOEVEglkFtVQNM/BN/dnq4jDE5fikLLs8eaJwsWG9k9wQUMtmLpL
+ gRXeFPRRK+IT48xuG8rK0g2NOD8aW5ThTkF4apznZe74M7OWr/VbuZbYW443QQARAQABwsBf
+ BBgBAgAJBQJQzyD2AhsMAAoJEIfJwVG1HjhkNTgH/idWz2WjLE8DvTi7LvfybzvnXyx6rWUs
+ 91tXUdCzLuOtjqWVsqBtSaZynfhAjlbqRlrFZQ8i8jRyJY1IwqgvHP6PO9s+rIxKlfFQtqhl
+ kR1KUdhNGtiI90sTpi4aeXVsOyG3572KV3dKeFe47ALU6xE5ZL5U2LGhgQkbjr44I3EhPWc/
+ lJ/MgLOPkfIUgjRXt0ZcZEN6pAMPU95+u1N52hmqAOQZvyoyUOJFH1siBMAFRbhgWyv+YE2Y
+ ZkAyVDL2WxAedQgD/YCCJ+16yXlGYGNAKlvp07SimS6vBEIXk/3h5Vq4Hwgg0Z8+FRGtYZyD
+ KrhlU0uMP9QTB5WAUvxvGy8=
+Message-ID: <9e7b80a9-b90e-ac04-8b30-b2f285cd4432@gmx.de>
+Date:   Fri, 19 Apr 2019 22:08:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190419142835.GM18914@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jKfNtqE87ol8fRdlT+ZrUKs8u0n6+ekTNyxZxTDCtgZi2UD62Tv
+ Rge/xKNfkt/iueczYZ7jrnjYQUepkQb2HETqx08NAQ2QPH86oI3sEyK+N0Gt8RuE+Rez3r/
+ zEe/t3RoTsBjJ2jpG6uKco3FJo1xq39dq2SSz8qeDryfvNa8IZFDty6EYWwuV44zcfPS/w5
+ NTK2sl4yXNzb/2Ekt5oqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LRTwxRmzW7s=:5glimZF4c8lHgNpScIYCI9
+ Gbes011K3KCpwakv6dhniWP2sx3+xvziqzK6FoR+JZ6BRGkXR4cJ4CSJN9skvADwKTgO5Sgf0
+ H1wkQ9ER998YXXi7szaPKd+AmTVVcbR5Y0TqptLkpjqaVepXQorlKucp49ecxpq9bZkdL69iU
+ ScJzkXdqK0LhXveRfcru1BQroznrDxFBzW2441omFSjo1FJ2GnDl158277HmUs4h5QzvOrHKT
+ F9GRvtxLY7em+iTFt5XsQqGkvRx2eGwXEYMc3zirDNg/UGqeMG4IAc2Hd0ZasVorrjf/iVFMh
+ 5LpkkiF1OIZhCjNetlX/JENDZ4TQZ0YF0eb7779qPm5vWszVCgKTIuZnLmra5gQAO5s2+Gjto
+ suK9y9sfJ9kvFhAAkf48Hn4xh/KIvRJDLQQSvGaOfy6ZX30ztVCCv37Vc2LcYnlxQYdkBL0xT
+ ioOGmDUI6ESuuDDdG8/w7uTpU0Meof2QhCk26vpoLtDM1hTX0t9wgvJ9vGSrHJZ3qNkpwgZbW
+ NU+Jh6uSzsM3SHoOlbWrY/mkk9s3on5zJ1TkModulCkDoBTh1HfEcUnehMbr7EBsNzkTL8l1J
+ zWi5cUQJ06v/KD2nw9WdGC3DXBk5wRHg8wgiDkMsDBOczHyPvfbZdFRLxIWEcbl5rMTXnlNiP
+ Vv5TKYgitStB2ssc3NRatRDwM8n2ysCTrECIK5ekyCDI7fVPwEm2KLPnqelMWhlEQjmsvw0go
+ agQg1/X2m+f2cSrSqQsykoivlHYQAcxMiSbsgVVMVSBTvrZJpcDYuZOLmDQiRDfVP7Z797BUQ
+ ifdaD4mSj6VCW0kg1ZE5rfr7AHPc68BmuCo0TUCVvo76lLE/qKkRgaM7TSNXNAeAvpz88NIq9
+ MdKedSTytSFnPO1vCIi9k0zeOTlkdeTjXuFYt+OywWi4mTn2IH4WLxrrrXAwdQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 23:03:43 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+On 19.04.19 16:28, Mel Gorman wrote:
+> On Fri, Apr 19, 2019 at 07:05:21AM -0700, Matthew Wilcox wrote:
+>> On Fri, Apr 19, 2019 at 10:43:35AM +0100, Mel Gorman wrote:
+>>> DISCONTIG is essentially deprecated and even parisc plans to move to
+>>> SPARSEMEM so there is no need to be fancy, this patch simply disables
+>>> watermark boosting by default on DISCONTIGMEM.
+>>
+>> I don't think parisc is the only arch which uses DISCONTIGMEM for !NUMA
+>> scenarios.  Grepping the arch/ directories shows:
+>>
+>> alpha (does support NUMA, but also non-NUMA DISCONTIGMEM)
+>> arc (for supporting more than 1GB of memory)
+>> ia64 (looks complicated ...)
+>> m68k (for multiple chunks of memory)
+>> mips (does support NUMA but also non-NUMA)
+>> parisc (both NUMA and non-NUMA)
+>>
+>> I'm not sure that these architecture maintainers even know that DISCONT=
+IGMEM
+>> is deprecated.  Adding linux-arch to the cc.
+>
+> Poor wording then -- yes, DISCONTIGMEM is still used but look where it's
+> used. I find it impossible to believe that any new arch would support
+> DISCONTIGMEM or that DISCONTIGMEM would be selected when SPARSEMEM is
+> available.`It's even more insane when you consider that SPARSEMEM can be
+> extended to support VMEMMAP so that it has similar overhead to FLATMEM
+> when mapping pfns to struct pages and vice-versa.
 
-> Get "current_pt_regs" pointer right before usage.
-> 
-> Space savings on x86_64:
-> 
-> 	add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-180 (-180)
-> 	Function                           old     new   delta
-> 	load_elf_binary                   5806    5626    -180 !!!
+FYI, on parisc we will switch from DISCONTIGMEM to SPARSEMEM with kernel 5=
+.2.
+The patch was quite simple and it's currently in the for-next tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/co=
+mmit/?h=3Dfor-next&id=3D281b718721a5e78288271d632731cea9697749f7
 
--256 bytes with my setup.
-
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -704,12 +704,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  	unsigned long start_code, end_code, start_data, end_data;
->  	unsigned long reloc_func_desc __maybe_unused = 0;
->  	int executable_stack = EXSTACK_DEFAULT;
-> -	struct pt_regs *regs = current_pt_regs();
->  	struct {
->  		struct elfhdr elf_ex;
->  		struct elfhdr interp_elf_ex;
->  	} *loc;
->  	struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
-> +	struct pt_regs *regs;
->  
->  	loc = kmalloc(sizeof(*loc), GFP_KERNEL);
->  	if (!loc) {
-> @@ -1159,6 +1159,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
->  				MAP_FIXED | MAP_PRIVATE, 0);
->  	}
->  
-> +	regs = current_pt_regs();
->  #ifdef ELF_PLAT_INIT
->  	/*
->  	 * The ABI may specify that certain registers be set up in special
-
-Why the heck does this make such a difference?
+Helge
