@@ -2,164 +2,228 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A223C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6B6C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD20B217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6EF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="iWXxEUM4"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OPa8z4Y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfDSVTi (ORCPT
+        id S1727664AbfDSVUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:19:38 -0400
-Received: from mail-eopbgr740094.outbound.protection.outlook.com ([40.107.74.94]:30609
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725932AbfDSVTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:19:37 -0400
+        Fri, 19 Apr 2019 17:20:06 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34716 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfDSVUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 17:20:05 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y6so3109490plt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector1-fortanix-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=syC6hG6IwS5Ha4q8xKjm/VWVMmKH7D/ta198QkM2E0g=;
- b=iWXxEUM4TsOT71togTyGvJyeaUkc5/DxeXsfsCWcOymz5bHJ0Qr7GfQr4wMSgucX5xXEK+nbfH4KGnFGnNtWvUCb2lcu6jZz+/QnAaDQuWq+6RbicuThguJIJxJ29MO4E2oMOuFIm3J/zZSQeJsJ/P/yf3JYL9JeOBEmDA5EWDc=
-Received: from SN6PR11MB3167.namprd11.prod.outlook.com (52.135.109.144) by
- SN6PR11MB2813.namprd11.prod.outlook.com (52.135.93.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Fri, 19 Apr 2019 21:19:31 +0000
-Received: from SN6PR11MB3167.namprd11.prod.outlook.com
- ([fe80::11b:a687:cd42:570d]) by SN6PR11MB3167.namprd11.prod.outlook.com
- ([fe80::11b:a687:cd42:570d%3]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
- 21:19:31 +0000
-From:   Jethro Beekman <jethro@fortanix.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cfEecVnvamXFtWUlfFupVj/pT2q/fHA5qW/QsQJm3qM=;
+        b=OPa8z4Y2YvrsIBeX3WF5BQ4Rx5ch+6t4D91wa5a0Arsh3DktWDDQAg3V69RSxwh6O+
+         00SAFOldg0Z73/BgHD7qJudLGwyP4rP9RxL9yGaB26ds7uZfBdO7J87BnvSrnLMUQRnL
+         wW/7/2IOwbV+LVr++pOmK+DhMC0bHWrhzZyjk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cfEecVnvamXFtWUlfFupVj/pT2q/fHA5qW/QsQJm3qM=;
+        b=gdVRsfDj2ekldRLJes3XSjs3uJ5ZVmUc1jpbFmZAEDUSsqsN6xQKIUMNEsU69zGhnY
+         Ntx4ibp6dDLJRx0DowWK+wJeIP4dw02xNjXVApavO2d1K29CPIRATbHBxge9+nmRKrzy
+         ub61lX7xGF4fBRJPcIGwWU4TPuu4mJ7UrDG1lpUzZw4wA2VzCensuxAbWIguLCCPsgax
+         e0rq0ZfGAnBEfoHdfNQLSSQAfDvKhWmO8FkhJ4Vd2euxO7yXC5/zbK1amtZwQUswFdOE
+         jBK+bX8+rxkBCdbc5TlwlHtbO6GpCpETXJqDohwqT1zoNoZRX/CCxBpvikerce54CvkT
+         nVAQ==
+X-Gm-Message-State: APjAAAW/5U9ACUwpGGlstS6cNoQyIr3dUVC6uyM3gABmSg7O1N6HYEZp
+        rIplQUuh0XZlMObdgp52V4Q0HQ==
+X-Google-Smtp-Source: APXvYqy5gG+cdhXOYLjSgushpuV2mCFs+q3uhWMRlzkz4btJxsWrt0UEyG4nAfhyrQCOoCBMJRCCBw==
+X-Received: by 2002:a17:902:382:: with SMTP id d2mr6081557pld.253.1555708804522;
+        Fri, 19 Apr 2019 14:20:04 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id i15sm7764377pfr.8.2019.04.19.14.20.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 14:20:03 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 17:20:02 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Thread-Topic: [PATCH v20 00/28] Intel SGX1 support
-Thread-Index: AQHU9QnkBhtGQ+66Y0uqVL4+2rp75qZCKU6AgAAN+gCAAVPlAIAAE4gAgABGE4CAABE+gIAAAfEAgAABGQCAAADeAIAABewAgAABNYA=
-Date:   Fri, 19 Apr 2019 21:19:31 +0000
-Message-ID: <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190418171059.GA20819@wind.enjellic.com>
- <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
- <20190419141732.GA2269@wind.enjellic.com>
- <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
- <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com>
- <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
- <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
- <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
- <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
- <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
-In-Reply-To: <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0064.namprd05.prod.outlook.com
- (2603:10b6:a03:74::41) To SN6PR11MB3167.namprd11.prod.outlook.com
- (2603:10b6:805:c4::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jethro@fortanix.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [67.207.107.146]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6910fdad-576d-44bd-b073-08d6c50cb676
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600141)(711020)(4605104)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7193020);SRVR:SN6PR11MB2813;
-x-ms-traffictypediagnostic: SN6PR11MB2813:
-x-microsoft-antispam-prvs: <SN6PR11MB2813E425DCD2196440EA8B18AA270@SN6PR11MB2813.namprd11.prod.outlook.com>
-x-forefront-prvs: 0012E6D357
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(366004)(39840400004)(136003)(396003)(346002)(376002)(199004)(189003)(7416002)(305945005)(26005)(6506007)(386003)(53546011)(102836004)(36756003)(14454004)(3846002)(7736002)(93886005)(97736004)(316002)(6486002)(229853002)(66946007)(31686004)(31696002)(14444005)(256004)(6916009)(99286004)(73956011)(5660300002)(6512007)(71200400001)(86362001)(81156014)(25786009)(81166006)(8676002)(8936002)(508600001)(52116002)(186003)(2616005)(486006)(476003)(446003)(6116002)(4326008)(71190400001)(6436002)(6246003)(66446008)(66476007)(68736007)(53936002)(66066001)(54906003)(76176011)(64756008)(11346002)(66556008)(2906002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB2813;H:SN6PR11MB3167.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fortanix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1X+iVMuNJVaOxfwsIi21mx5l42MglD6WUFIg+V+x3WkcoMkbd2RAKMIvhkyU9/8k3QTSJwxPtYN8BapWUW4iW2FyBmZ0I1PfxIHKuHDnMFZeqq91PGPwQWB45TjU0XzTk5yNBnfuT1o0pitczxLScAjcV6bqriKOGMjfFmdexuFbMU+I5Qk4Gug9PBHb3kFLzTd3iu18sa2ucmefZdB5nZfi0dRUBAxD3nUCzAQPNj5TsphMLa0iFFwJ/zUjvZqWCGGXU+2JtBedcGhv8dL5FjwT08qgNbyQLJEtXPTqaYucpdKTsgVEB3i26tjeQ9hxmFMLyHtAuxy9mDnosI+57POEYev3l31gYwSCLNl2qfzan/DWzpoymQFW10IK5P/C0zadP2w2vNxuR8vpqK+jpaGQTC1BLK9Oxf5nP2Nmbnk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <73A7C21FAEBA93429F11F62F815898AB@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+Message-ID: <20190419212002.GB44851@google.com>
+References: <20190416120430.GA15437@redhat.com>
+ <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com>
+ <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+ <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io>
+ <20190419194902.GE251571@google.com>
+ <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
+ <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6910fdad-576d-44bd-b073-08d6c50cb676
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 21:19:31.3616
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2813
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCkpldGhybyBCZWVrbWFuIHwgRm9ydGFuaXgNCg0KT24gMjAxOS0wNC0xOSAxNDoxNSwgQW5k
-eSBMdXRvbWlyc2tpIHdyb3RlOg0KPiANCj4gDQo+IA0KPiANCj4+IE9uIEFwciAxOSwgMjAxOSwg
-YXQgMTo1NCBQTSwgSmV0aHJvIEJlZWttYW4gPGpldGhyb0Bmb3J0YW5peC5jb20+IHdyb3RlOg0K
-Pj4NCj4+PiBPbiAyMDE5LTA0LTE5IDEzOjUwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6DQo+Pj4+
-IE9uIEZyaSwgMTkgQXByIDIwMTksIEpldGhybyBCZWVrbWFuIHdyb3RlOg0KPj4+Pj4gT24gMjAx
-OS0wNC0xOSAxMzozOSwgVGhvbWFzIEdsZWl4bmVyIHdyb3RlOg0KPj4+Pj4+IE9uIEZyaSwgMTkg
-QXByIDIwMTksIEpldGhybyBCZWVrbWFuIHdyb3RlOg0KPj4+Pj4+DQo+Pj4+Pj4+IE9uIDIwMTkt
-MDQtMTkgMDg6MjcsIEFuZHkgTHV0b21pcnNraSB3cm90ZToNCj4+Pj4+Pj4gVGhlcmUgYXJlIG1h
-bnksDQo+Pj4+Pj4+IG1hbnkgTGludXggc3lzdGVtcyB0aGF0IGVuZm9yY2UgYSBwb2xpY3kgdGhh
-dCAqYWxsKiBleGVjdXRhYmxlIHRleHQNCj4+Pj4+Pj4gbmVlZHMgdG8gY29tZSBmcm9tIGEgdmVy
-aWZpZWQgc291cmNlLiAgT24gdGhlc2Ugc3lzdGVtcywgeW91IGNhbid0DQo+Pj4+Pj4+IG1tYXAg
-c29tZSB3cml0YWJsZSBtZW1vcnksIHdyaXRlIHRvIGl0LCBhbmQgdGhlbiBjaGFuZ2UgaXQgdG8N
-Cj4+Pj4+Pj4gZXhlY3V0YWJsZS4NCj4+Pj4+Pg0KPj4+Pj4+IEhvdyBpcyB0aGlzIGltcGxlbWVu
-dGVkIG9uIHRob3NlIHN5c3RlbXM/IEFGQUlLIHRoZXJlJ3Mgbm8ga2VybmVsIGNvbmZpZw0KPj4+
-Pj4+IG9wdGlvbiB0aGF0IGNoYW5nZXMgdGhlIHNlbWFudGljcyBvZiBtbWFwIGFzIHlvdSBkZXNj
-cmliZS4NCj4+Pj4+DQo+Pj4+PiBUaGF0IGhhcyBub3RoaW5nIHRvIGRvIHdpdGggbW1hcCgpIHNl
-bWFudGljcy4gWW91IG1tYXAoKSB3cml0ZWFibGUgbWVtb3J5DQo+Pj4+PiBhbmQgdGhlbiB5b3Ug
-Y2hhbmdlIHRoZSBwZXJtaXNzaW9ucyB2aWEgbXByb3RlY3QoKS4gbXByb3RlY3QoKSBjYWxscyBp
-bnRvDQo+Pj4+PiBMU00gYW5kIGRlcGVuZGluZyBvbiBwb2xpY3kgYW5kIHNlY3VyaXR5IG1vZGVs
-IHRoaXMgd2lsbCByZWplY3QgdGhlDQo+Pj4+PiByZXF1ZXN0Lg0KPj4+Pj4NCj4+Pj4+IEFuZHkg
-d2FzIHBvaW50aW5nIG91dCB0aGF0IHRoZSBTR1ggaW9jdGwgYnlwYXNzZXMgdGhlIExTTSBtZWNo
-YW5pY3Mgd2hpY2gNCj4+Pj4+IGlzIG9idmlvdXNseSBhIGJhZCB0aGluZy4NCj4+Pj4NCj4+Pj4g
-V2UgY291bGQgbW9kaWZ5IHRoZSBkcml2ZXIgc3VjaCB0aGF0IHdoZW4geW91IGNhbGwgaW9jdGwg
-RUFERCwgdGhlIHBhZ2UNCj4+Pj4gdGFibGUgcGVybWlzc2lvbnMgbmVlZCB0byBiZSB0aGUgUEFH
-RUlORk8uU0VDSU5GTy5GTEFHUyB8IFBST1RfV1JJVEUsDQo+Pj4+IG90aGVyd2lzZSB5b3UgZ2V0
-IEVQRVJNIG9yIHNvLiBBZnRlciBFQURELCBpZiB5b3Ugd2FudCwgeW91IGNhbiByZXN0cmljdA0K
-Pj4+PiB0aGUgcGFnZSB0YWJsZSBwZXJtaXNzaW9ucyBhZ2FpbiB1c2luZyBtcHJvdGVjdCBidXQg
-dGhlIHBhZ2UgdGFibGUNCj4+Pj4gcGVybWlzc2lvbnMgZG9uJ3QgcmVhbGx5IG1hdHRlciBmb3Ig
-U0dYLg0KPj4+DQo+Pj4gQW5kIHRoZSBwb2ludCBvZiB0aGF0IGlzPyBUaGF0IHlvdSBzdGlsbCBj
-YW4gY2lydW12ZW50IExTTSBmb3IgZmVlZGluZw0KPj4+IGV4ZWN1dGFibGUgY29kZSBpbnRvIFNH
-WC4NCj4+DQo+PiBIb3c/IExTTSB3b3VsZCBzZWUgdGhhdCB5b3UncmUgdHJ5aW5nIHRvIG1hcCBh
-IHBhZ2UgUldYIHNvIHlvdSBjYW4gZG8NCj4+IHlvdXIgaW9jdGw/DQo+IA0KPiBXaXRoIHBsYWlu
-IG1tYXAoKSArIG1wcm90ZWN0KCksIHRoZSBMU00gd2lsbCBwcmV2ZW50IHlvdSBmcm9tIG1ha2lu
-ZyBtZW1vcnkgdGhhdCAqd2FzKiB3cml0YWJsZSBleGVjdXRhYmxlLiAgVGhpcyBpcyBieSBkZXNp
-Z24gYW5kIFNFTGludXggc3VwcG9ydHMgaXQuICBJIGRvbuKAmXQgcmVtZW1iZXIgdGhlIG5hbWUg
-b2YgdGhlIGFzc29jaWF0ZWQgU0VMaW51eCBwZXJtaXNzaW9uIG9mZiB0aGUgdG9wIG9mIG15IGhl
-YWQuDQo+IA0KPiBJZiB3ZSBzdGFydCBlbmZvcmNpbmcgZXF1aXZhbGVudCBydWxlcyBvbiBTR1gs
-IHRoZW4gdGhlIGN1cnJlbnQgQVBJIHdpbGwgc2ltcGx5IG5vdCBhbGxvdyBlbmNsYXZlcyB0byBi
-ZSBsb2FkZWQg4oCUIG5vIG1hdHRlciBob3cgeW91IHNsaWNlIGl0LCBsb2FkaW5nIGFuIGVuY2xh
-dmUgd2l0aCB0aGUgY3VycmVudCBBUEkgaXMgaW5kaXN0aW5ndWlzaGFibGUgZnJvbSBtYWtpbmcg
-YXJiaXRyYXJ5IGRhdGEgZXhlY3V0YWJsZS4NCg0KWWVzIHRoaXMgaXMgZXhhY3RseSB3aGF0IEkg
-aW50ZW5kZWQgaGVyZTogYSB2ZXJ5IHNpbXBsZSBjaGFuZ2UgdGhhdA0Kc3RvcHMgU0dYIGZyb20g
-Y29uZnVzaW5nIExTTS4gSnVzdCBieSBlbmZvcmNpbmcgdGhhdCBldmVyeXRoaW5nIHRoYXQNCmxv
-b2tzIGxpa2UgYSBtZW1vcnkgd3JpdGUgKEVBREQsIEVBVUcsIEVEQkdXUiwgZXRjLikgYWN0dWFs
-bHkgcmVxdWlyZXMNCndyaXRlIHBlcm1pc3Npb25zLCByZWFsaXR5IGFuZCBMU00gc2hvdWxkIGJl
-IG9uIHRoZSBzYW1lIHBhZ2UuDQoNCklmIHlvdSB3YW50IHRvIGdvIGZ1cnRoZXIgYW5kIGFjdHVh
-bGx5IGFsbG93IHRoaXMgYmVoYXZpb3Igd2hlbiB5b3VyIExTTQ0Kd291bGQgb3RoZXJ3aXNlIHBy
-b2hpYml0IGl0LCBwcmVzdW1hYmx5IHRoZSBzYW1lIHdvcmthcm91bmRzIHRoYXQgZXhpc3QNCmZv
-ciBKSVRzIGNhbiBiZSB1c2VkIGZvciBTR1guDQoNCi0tDQpKZXRocm8gQmVla21hbiB8IEZvcnRh
-bml4DQo=
+On Fri, Apr 19, 2019 at 10:57:11PM +0200, Christian Brauner wrote:
+> On Fri, Apr 19, 2019 at 10:34 PM Daniel Colascione <dancol@google.com> wrote:
+> >
+> > On Fri, Apr 19, 2019 at 12:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > On Fri, Apr 19, 2019 at 09:18:59PM +0200, Christian Brauner wrote:
+> > > > On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
+> > > > > On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
+> > > > > > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
+> > > > > > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > > > > > >> On 04/16, Joel Fernandes wrote:
+> > > > > > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
+> > > > > > >> > >
+> > > > > > >> > > Could you explain when it should return POLLIN? When the whole
+> > > > > > >process exits?
+> > > > > > >> >
+> > > > > > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
+> > > > > > >or when it
+> > > > > > >> > is in a zombie state and there's no other thread in the thread
+> > > > > > >group.
+> > > > > > >>
+> > > > > > >> IOW, when the whole thread group exits, so it can't be used to
+> > > > > > >monitor sub-threads.
+> > > > > > >>
+> > > > > > >> just in case... speaking of this patch it doesn't modify
+> > > > > > >proc_tid_base_operations,
+> > > > > > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
+> > > > > > >going to use
+> > > > > > >> the anonymous file returned by CLONE_PIDFD ?
+> > > > > > >
+> > > > > > >I don't think procfs works that way. /proc/sub-thread-tid has
+> > > > > > >proc_tgid_base_operations despite not being a thread group leader.
+> > > > > > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
+> > > > > > >be hit trivially, and then the code will misbehave.
+> > > > > > >
+> > > > > > >@Joel: I think you'll have to either rewrite this to explicitly bail
+> > > > > > >out if you're dealing with a thread group leader, or make the code
+> > > > > > >work for threads, too.
+> > > > > >
+> > > > > > The latter case probably being preferred if this API is supposed to be
+> > > > > > useable for thread management in userspace.
+> > > > >
+> > > > > At the moment, we are not planning to use this for sub-thread management. I
+> > > > > am reworking this patch to only work on clone(2) pidfds which makes the above
+> > > >
+> > > > Indeed and agreed.
+> > > >
+> > > > > discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
+> > > > > patches, CLONE_THREAD with pidfd is not supported.
+> > > >
+> > > > Yes. We have no one asking for it right now and we can easily add this
+> > > > later.
+> > > >
+> > > > Admittedly I haven't gotten around to reviewing the patches here yet
+> > > > completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
+> > > > on process exit which I think is nice as well. How about returning
+> > > > POLLIN | POLLHUP on process exit?
+> > > > We already do things like this. For example, when you proxy between
+> > > > ttys. If the process that you're reading data from has exited and closed
+> > > > it's end you still can't usually simply exit because it might have still
+> > > > buffered data that you want to read.  The way one can deal with this
+> > > > from  userspace is that you can observe a (POLLHUP | POLLIN) event and
+> > > > you keep on reading until you only observe a POLLHUP without a POLLIN
+> > > > event at which point you know you have read
+> > > > all data.
+> > > > I like the semantics for pidfds as well as it would indicate:
+> > > > - POLLHUP -> process has exited
+> > > > - POLLIN  -> information can be read
+> > >
+> > > Actually I think a bit different about this, in my opinion the pidfd should
+> > > always be readable (we would store the exit status somewhere in the future
+> > > which would be readable, even after task_struct is dead). So I was thinking
+> > > we always return EPOLLIN.  If process has not exited, then it blocks.
+> >
+> > ITYM that a pidfd polls as readable *once a task exits* and stays
+> > readable forever. Before a task exit, a poll on a pidfd should *not*
+> > yield POLLIN and reading that pidfd should *not* complete immediately.
+> > There's no way that, having observed POLLIN on a pidfd, you should
+> > ever then *not* see POLLIN on that pidfd in the future --- it's a
+> > one-way transition from not-ready-to-get-exit-status to
+> > ready-to-get-exit-status.
+> 
+> What do you consider interesting state transitions? A listener on a pidfd
+> in epoll_wait() might be interested if the process execs for example.
+> That's a very valid use-case for e.g. systemd.
+> We can't use EPOLLIN for that too otherwise you'd need to to waitid(_WNOHANG)
+> to check whether an exit status can be read which is not nice and then you
+> multiplex different meanings on the same bit.
+> I would prefer if the exit status can only be read from the parent which is
+> clean and the least complicated semantics, i.e. Linus waitid() idea.
+> EPOLLIN on a pidfd could very well mean that data can be read via
+> a read() on the pidfd *other* than the exit status. The read could e.g.
+> give you a lean struct that indicates the type of state transition: NOTIFY_EXIT,
+> NOTIFY_EXEC, etc.. This way we are not bound to a specific poll event indicating
+> a specific state.
+> Though there's a case to be made that EPOLLHUP could indicate process exit
+> and EPOLLIN a state change + read().
+
+According to Linus, POLLHUP usually indicates that something is readable:
+https://lkml.org/lkml/2019/4/18/1181
+"So generally a HUP condition should mean that POLLIN and POLLOUT also
+get set. Not because there's any actual _data_ to be read, but simply
+because the read will not block."
+
+I feel the future state changes such as for NOTIFY_EXEC can easily be
+implemented on top of this patch.
+
+Just for the exit notification purposes, the states are:
+if process has exit_state == 0, block.
+if process is zombie/dead but not reaped, then return POLLIN
+if process is reaped, then return POLLIN | POLLHUP
+
+for the exec notification case, that could be implemnted along with this with
+something like:
+if process has exit_state == 0, or has not exec'd since poll was called, block.
+if process exec'd, then return POLLIN
+if process is zombie/dead but not reaped, then return POLLIN
+if process is reaped, then return POLLIN | POLLHUP
+
+Do you agree or did I miss something?
+
+thanks,
+
+ - Joel
+
