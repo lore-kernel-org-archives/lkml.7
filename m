@@ -2,143 +2,874 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0782BC282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC70C282E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB278217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:20:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hPPQTx5w"
+	by mail.kernel.org (Postfix) with ESMTP id 0B1D220821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfDSUUw (ORCPT
+        id S1727483AbfDSUVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:20:52 -0400
-Received: from mail-eopbgr60077.outbound.protection.outlook.com ([40.107.6.77]:27715
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725817AbfDSUUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:20:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K8t4Z2B0HxQ84uDbmdFEnLjkX7+aloEp8achwIls+xw=;
- b=hPPQTx5wahogBI2aUcdOND4+GuHONqiI2Sf7r9Y0ClIUqWlntljBuDd1mDddNH1lwm80iVOX5nb/nj95dglujlKmdbshcHzjgHKU2SN+5UPyHymFw+S4CnhWLiSVNfTdnPtUsBs7esO9bNvJQax844yhaWA1I5NsyL7uFFJSG3M=
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
- VI1PR0402MB3392.eurprd04.prod.outlook.com (52.134.1.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.14; Fri, 19 Apr 2019 20:20:42 +0000
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::c16b:662d:9299:6be6]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::c16b:662d:9299:6be6%6]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
- 20:20:42 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-Thread-Index: AQHU9u1belSuPjg9j0eSzCLrjjl2TQ==
-Date:   Fri, 19 Apr 2019 20:20:40 +0000
-Message-ID: <20190419202024.27314-3-daniel.baluta@nxp.com>
-References: <20190419202024.27314-1-daniel.baluta@nxp.com>
-In-Reply-To: <20190419202024.27314-1-daniel.baluta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR09CA0076.eurprd09.prod.outlook.com
- (2603:10a6:802:29::20) To VI1PR0402MB3357.eurprd04.prod.outlook.com
- (2603:10a6:803:2::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2c1f26bc-0de4-418a-35dc-08d6c5047ddf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3392;
-x-ms-traffictypediagnostic: VI1PR0402MB3392:
-x-microsoft-antispam-prvs: <VI1PR0402MB33923F14C88B89434AFD1B1CF9270@VI1PR0402MB3392.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0012E6D357
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(346002)(136003)(396003)(189003)(199004)(81166006)(68736007)(1730700003)(8936002)(81156014)(44832011)(1076003)(2501003)(50226002)(71200400001)(54906003)(4326008)(52116002)(71190400001)(25786009)(8676002)(99286004)(316002)(76176011)(66066001)(5660300002)(305945005)(7736002)(53936002)(86362001)(6436002)(6486002)(73956011)(5640700003)(14454004)(36756003)(6916009)(97736004)(102836004)(66556008)(66476007)(66446008)(386003)(64756008)(6512007)(478600001)(3846002)(256004)(6116002)(26005)(2906002)(66946007)(446003)(11346002)(6506007)(2616005)(486006)(476003)(2351001)(14444005)(186003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3392;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sH4CVlyJTFzRAH43r4ZHMbMJ5QxrOI1Vmfm7U8IBILIPjK5hjvm4Zpzf/f8x66q7Wp6LHf89Yo3pweBS/dZEGolCzREJ+tuQGPX/FpWTS0GHPua7hiDQ+3glYI44Kv+YmJD66qwkol6zg8HaMxXfIhLe9+T1mqnOMjgutePsoGTx0ZnhTe7IZJg2GHYfU28nt5ENqnBtlw6JtworRzmJDRgRjsIgbUfpW3V2lFaOTClCBKIRJ/uk0b+rIoW6p99EaJL+5hA/75/vVsHbtdplfBUmNxej3V/jpeSFt4bNPovtILqQkQBuXrT422J0wznnlmGM0wXuEuIGMPWVPr5Z2JmDo21e9q2zdtsH8KXIlQvQqH2PLYOW5F7TnaiWUe6ZfMdv725XXg65n06zxRdXmahN2/0lbPFPwog30l3MCHE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 19 Apr 2019 16:21:53 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:43230 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDSUVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:21:53 -0400
+X-Greylist: delayed 4812 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Apr 2019 16:21:50 EDT
+Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 843C03A34FA;
+        Fri, 19 Apr 2019 13:30:50 +0000 (UTC)
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 4CE2920000E;
+        Fri, 19 Apr 2019 13:30:46 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH net-next] net: mvpp2: cls: Add Classification offload support
+Date:   Fri, 19 Apr 2019 15:30:27 +0200
+Message-Id: <20190419133027.8012-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c1f26bc-0de4-418a-35dc-08d6c5047ddf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 20:20:40.5377
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3392
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aS5NWDhNTSBFVksgaGFzIG9uZSB3bTg1MjQgYXVkaW8gY29kZWMgY29ubmVjdGVkIHdpdGgNClNB
-STMgZGlnaXRhbCBhdWRpbyBpbnRlcmZhY2UuDQoNClRoaXMgcGF0Y2ggdXNlcyBzaW1wbGUtY2Fy
-ZCBtYWNoaW5lIGRyaXZlciBpbiBvcmRlcg0KdG8gZW5hYmxlIHdtODUyNCBjb2RlYy4NCg0KV2Ug
-bmVlZCB0byBzZXQ6DQoJKiBTQUkzIHBpbmN0cmwgY29uZmlndXJhdGlvbg0KCSogY2xvY2sgaGll
-cmFyY2h5DQoJKiBjb2RlYyBub2RlDQoJKiBzaW1wbGUtY2FyZCBjb25maWd1cmF0aW9uDQoNClNp
-Z25lZC1vZmYtYnk6IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCi0tLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS1ldmsuZHRzIHwgNDggKysrKysr
-KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLWV2ay5kdHMgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0tZXZrLmR0cw0KaW5kZXggMmQ1ZDg5
-NDc1Yjc2Li4yMDdiMTMyNjZhOTYgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4bW0tZXZrLmR0cw0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvaW14OG1tLWV2ay5kdHMNCkBAIC0zNyw2ICszNywzNSBAQA0KIAkJZ3BpbyA9IDwmZ3BpbzIg
-MTkgR1BJT19BQ1RJVkVfSElHSD47DQogCQllbmFibGUtYWN0aXZlLWhpZ2g7DQogCX07DQorDQor
-CXdtODUyNDogYXVkaW8tY29kZWMgew0KKwkJI3NvdW5kLWRhaS1jZWxscyA9IDwwPjsNCisJCWNv
-bXBhdGlibGUgPSAid2xmLHdtODUyNCI7DQorCQl3bGYsbXV0ZS1ncGlvcyA9IDwmZ3BpbzUgMjEg
-R1BJT19BQ1RJVkVfTE9XPjsNCisJfTsNCisNCisJc291bmQtd204NTI0IHsNCisJCWNvbXBhdGli
-bGUgPSAic2ltcGxlLWF1ZGlvLWNhcmQiOw0KKwkJc2ltcGxlLWF1ZGlvLWNhcmQsbmFtZSA9ICJ3
-bTg1MjQtYXVkaW8iOw0KKwkJc2ltcGxlLWF1ZGlvLWNhcmQsZm9ybWF0ID0gImkycyI7DQorCQlz
-aW1wbGUtYXVkaW8tY2FyZCxmcmFtZS1tYXN0ZXIgPSA8JmNwdWRhaT47DQorCQlzaW1wbGUtYXVk
-aW8tY2FyZCxiaXRjbG9jay1tYXN0ZXIgPSA8JmNwdWRhaT47DQorCQlzaW1wbGUtYXVkaW8tY2Fy
-ZCx3aWRnZXRzID0NCisJCQkiTGluZSIsICJMZWZ0IExpbmUgT3V0IEphY2siLA0KKwkJCSJMaW5l
-IiwgIlJpZ2h0IExpbmUgT3V0IEphY2siOw0KKwkJc2ltcGxlLWF1ZGlvLWNhcmQscm91dGluZyA9
-DQorCQkJIkxlZnQgTGluZSBPdXQgSmFjayIsICJMSU5FVk9VVEwiLA0KKwkJCSJSaWdodCBMaW5l
-IE91dCBKYWNrIiwgIkxJTkVWT1VUUiI7DQorDQorCQljcHVkYWk6IHNpbXBsZS1hdWRpby1jYXJk
-LGNwdSB7DQorCQkJc291bmQtZGFpID0gPCZzYWkzPjsNCisJCX07DQorDQorCQlsaW5rX2NvZGVj
-OiBzaW1wbGUtYXVkaW8tY2FyZCxjb2RlYyB7DQorCQkJc291bmQtZGFpID0gPCZ3bTg1MjQ+Ow0K
-KwkJCWNsb2NrcyA9IDwmY2xrIElNWDhNTV9DTEtfU0FJM19ST09UPjsNCisJCX07DQorCX07DQog
-fTsNCiANCiAmZmVjMSB7DQpAQCAtNjEsNiArOTAsMTUgQEANCiAJfTsNCiB9Ow0KIA0KKyZzYWkz
-IHsNCisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCisJcGluY3RybC0wID0gPCZwaW5jdHJs
-X3NhaTM+Ow0KKwlhc3NpZ25lZC1jbG9ja3MgPSA8JmNsayBJTVg4TU1fQ0xLX1NBSTM+Ow0KKwlh
-c3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZjbGsgSU1YOE1NX0FVRElPX1BMTDFfT1VUPjsNCisJ
-YXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MjQ1NzYwMDA+Ow0KKwlzdGF0dXMgPSAib2theSI7DQor
-fTsNCisNCiAmdWFydDIgeyAvKiBjb25zb2xlICovDQogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7DQogCXBpbmN0cmwtMCA9IDwmcGluY3RybF91YXJ0Mj47DQpAQCAtMTMwLDYgKzE2OCwxNiBA
-QA0KIAkJPjsNCiAJfTsNCiANCisJcGluY3RybF9zYWkzOiBzYWkzZ3JwIHsNCisJCWZzbCxwaW5z
-ID0gPA0KKwkJCU1YOE1NX0lPTVVYQ19TQUkzX1RYRlNfU0FJM19UWF9TWU5DICAgICAweGQ2DQor
-CQkJTVg4TU1fSU9NVVhDX1NBSTNfVFhDX1NBSTNfVFhfQkNMSyAgICAgIDB4ZDYNCisJCQlNWDhN
-TV9JT01VWENfU0FJM19NQ0xLX1NBSTNfTUNMSyAgICAgICAgMHhkNg0KKwkJCU1YOE1NX0lPTVVY
-Q19TQUkzX1RYRF9TQUkzX1RYX0RBVEEwICAgICAweGQ2DQorCQkJTVg4TU1fSU9NVVhDX0kyQzRf
-U0RBX0dQSU81X0lPMjEgICAgICAgIDB4ZDYNCisJCT47DQorCX07DQorDQogCXBpbmN0cmxfdWFy
-dDI6IHVhcnQyZ3JwIHsNCiAJCWZzbCxwaW5zID0gPA0KIAkJCU1YOE1NX0lPTVVYQ19VQVJUMl9S
-WERfVUFSVDJfRENFX1JYCTB4MTQwDQotLSANCjIuMTcuMQ0KDQo=
+This commit introduces basic classification offloading support for the
+PPv2 controller.
+
+The PPv2 classifier has many classification engines, for now we only use
+the C2 TCAM match engine.
+
+This engine allows to perform ternary lookups on 64 bits keys (called
+Header Extracted Key), that are built by extracting fields from the packet
+header and concatenating them. At most 4 fields can be extracted for a
+single lookup.
+
+This basic implementation allows to build the HEK from the following
+fields :
+ - L4 source and destination ports (for UDP and TCP)
+
+More fields are to be added in the future.
+
+Classification flows are added through the ethtool interface, using the
+newly introduced flow_rule infrastructure as an internal rule
+representation, allowing to more easily implement tc flower rules if
+need be.
+
+Flows are separated based on their flow-type (supported flow-types are
+tcp4, udp4, tcp6, udp6, ip4, ip6 and ether), each type can contain up to
+7 classification rules. Note that the most specific flow-type is always
+used, meaning that a rule in the tcp4 flow will superseed a rule in the
+ip4 flow matching the same key)
+
+When inserting a rule in a given flow, the location given is relative to
+the flow :
+
+ethtool -N eth0 flow-type udp4 dst-port 1234 action 2 loc 0
+
+ethtool -N eth0 flow-type tcp4 dst-port 1234 action 3 loc 0
+
+However when removing a rule, the global location is to be used. This
+location can be retrieved by using ethtool -n <interface>.
+
+This commit only introduces support for the "steer to rxq" action.
+
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+
+Hi all,
+
+Sorry for the huge patch, I find it difficult to split this whole new
+feature into multiple patches in a way that makes sense.
+
+If this is too big to review, I can try to send it a series, but this
+will definitely add unused code in-between patches.
+
+I've got follow-up patches queued-up to extend this feature, but this
+patch is hard enough to review to burry it in a huge series adding all
+at the same time.
+
+Thanks,
+
+Maxime
+
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  50 ++
+ .../net/ethernet/marvell/mvpp2/mvpp2_cls.c    | 458 +++++++++++++++++-
+ .../net/ethernet/marvell/mvpp2/mvpp2_cls.h    |  56 ++-
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   |  24 +-
+ 4 files changed, 573 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+index 67cce2736806..663663b7cc65 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+@@ -14,6 +14,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/phy.h>
+ #include <linux/phylink.h>
++#include <net/flow_offload.h>
+ 
+ /* Fifo Registers */
+ #define MVPP2_RX_DATA_FIFO_SIZE_REG(port)	(0x00 + 4 * (port))
+@@ -126,6 +127,7 @@
+ #define MVPP22_CLS_C2_TCAM_DATA4		0x1b20
+ #define     MVPP22_CLS_C2_LU_TYPE(lu)		((lu) & 0x3f)
+ #define     MVPP22_CLS_C2_PORT_ID(port)		((port) << 8)
++#define     MVPP22_CLS_C2_PORT_MASK		(0xff << 8)
+ #define MVPP22_CLS_C2_TCAM_INV			0x1b24
+ #define     MVPP22_CLS_C2_TCAM_INV_BIT		BIT(31)
+ #define MVPP22_CLS_C2_HIT_CTR			0x1b50
+@@ -615,6 +617,10 @@
+ #define MVPP2_BIT_IN_WORD(bit)		((bit) % 32)
+ 
+ #define MVPP2_N_PRS_FLOWS		52
++#define MVPP2_N_RFS_ENTRIES_PER_FLOW	7
++
++/* There are 7 supported high-level flows */
++#define MVPP2_N_RFS_RULES		(MVPP2_N_RFS_ENTRIES_PER_FLOW * 7)
+ 
+ /* RSS constants */
+ #define MVPP22_RSS_TABLE_ENTRIES	32
+@@ -812,6 +818,46 @@ struct mvpp2_queue_vector {
+ 	struct cpumask *mask;
+ };
+ 
++/* Internal represention of a Flow Steering rule */
++struct mvpp2_rfs_rule {
++	/* Rule location inside the flow*/
++	int loc;
++
++	/* Flow type, such as TCP_V4_FLOW, IP6_FLOW, etc. */
++	int flow_type;
++
++	/* The lookup type used by this flow. This allows the classification
++	 * engines to differentiate between entries that match the same
++	 * parameters
++	 */
++	int lu_type;
++
++	/* Index of the entry handling this rule in the flow table */
++	int flt_index;
++
++	/* Index of the C2 TCAM entry handling this rule */
++	int c2_index;
++
++	/* TCAM key and mask for C2-based steering. These fields should be
++	 * encapsulated in a union should we add more engines.
++	 */
++	u64 c2_tcam;
++	u64 c2_tcam_mask;
++
++	/* Header fields that needs to be extracted to match this flow */
++	u16 hek_fields;
++
++	/* CLS engine : only c2 is supported for now. */
++	u8 engine;
++
++	struct flow_rule *flow;
++};
++
++struct mvpp2_ethtool_fs {
++	struct mvpp2_rfs_rule rule;
++	struct ethtool_rxnfc rxnfc;
++};
++
+ struct mvpp2_port {
+ 	u8 id;
+ 
+@@ -883,6 +929,10 @@ struct mvpp2_port {
+ 
+ 	/* RSS indirection table */
+ 	u32 indir[MVPP22_RSS_TABLE_ENTRIES];
++
++	/* List of steering rules active on that port */
++	struct mvpp2_ethtool_fs *rfs_rules[MVPP2_N_RFS_RULES];
++	int n_rfs_rules;
+ };
+ 
+ /* The mvpp2_tx_desc and mvpp2_rx_desc structures describe the
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+index 1087974d3b98..d47bc9c7325b 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -448,6 +448,17 @@ static void mvpp2_cls_flow_port_add(struct mvpp2_cls_flow_entry *fe,
+ 	fe->data[0] |= MVPP2_CLS_FLOW_TBL0_PORT_ID(port);
+ }
+ 
++static void mvpp2_cls_flow_port_remove(struct mvpp2_cls_flow_entry *fe,
++				       u32 port)
++{
++	fe->data[0] &= ~MVPP2_CLS_FLOW_TBL0_PORT_ID(port);
++}
++
++static u8 mvpp2_cls_flow_pmap_get(struct mvpp2_cls_flow_entry *fe)
++{
++	return (fe->data[0] >> 4) & MVPP2_CLS_FLOW_TBL0_PORT_ID_MASK;
++}
++
+ static void mvpp2_cls_flow_lu_type_set(struct mvpp2_cls_flow_entry *fe,
+ 				       u8 lu_type)
+ {
+@@ -455,6 +466,12 @@ static void mvpp2_cls_flow_lu_type_set(struct mvpp2_cls_flow_entry *fe,
+ 	fe->data[1] |= MVPP2_CLS_FLOW_TBL1_LU_TYPE(lu_type);
+ }
+ 
++static u8 mvpp2_cls_flow_lu_type_get(struct mvpp2_cls_flow_entry *fe)
++{
++	return (fe->data[1] &
++		MVPP2_CLS_FLOW_TBL1_LU_TYPE(MVPP2_CLS_LU_TYPE_MASK)) >> 3;
++}
++
+ /* Initialize the parser entry for the given flow */
+ static void mvpp2_cls_flow_prs_init(struct mvpp2 *priv,
+ 				    const struct mvpp2_cls_flow *flow)
+@@ -539,6 +556,35 @@ void mvpp2_cls_c2_read(struct mvpp2 *priv, int index,
+ 	c2->valid = !(val & MVPP22_CLS_C2_TCAM_INV_BIT);
+ }
+ 
++static int mvpp2_cls_c2_port_flow_get_type(int flow_type)
++{
++	switch (flow_type) {
++	case TCP_V4_FLOW:
++		return MVPP22_FLOW_TCP4;
++	case TCP_V6_FLOW:
++		return MVPP22_FLOW_TCP6;
++	case UDP_V4_FLOW:
++		return MVPP22_FLOW_UDP4;
++	case UDP_V6_FLOW:
++		return MVPP22_FLOW_UDP6;
++	case IPV4_FLOW:
++		return MVPP22_FLOW_IP4;
++	case IPV6_FLOW:
++		return MVPP22_FLOW_IP6;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int mvpp2_cls_c2_port_flow_index(struct mvpp2_port *port, int lu_type,
++					int loc)
++{
++	if (loc >= MVPP22_CLS_C2_PORT_N_RFS)
++		return -EINVAL;
++
++	return MVPP22_CLS_C2_RFS_LOC(port->id, lu_type, loc);
++}
++
+ /* Initialize the flow table entries for the given flow */
+ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+ 				const struct mvpp2_cls_flow *flow)
+@@ -565,7 +611,7 @@ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+ 
+ 	mvpp2_cls_flow_eng_set(&fe, MVPP22_CLS_ENGINE_C2);
+ 	mvpp2_cls_flow_port_id_sel(&fe, true);
+-	mvpp2_cls_flow_lu_type_set(&fe, MVPP2_CLS_LU_ALL);
++	mvpp2_cls_flow_lu_type_set(&fe, MVPP22_FLOW_ETHER);
+ 
+ 	/* Add all ports */
+ 	for (i = 0; i < MVPP2_MAX_PORTS; i++)
+@@ -652,6 +698,26 @@ static int mvpp2_flow_set_hek_fields(struct mvpp2_cls_flow_entry *fe,
+ 	return 0;
+ }
+ 
++/* Returns the size, in bits, of the corresponding HEK field */
++static int mvpp2_cls_hek_field_size(u32 field)
++{
++	switch (field) {
++	case MVPP22_CLS_HEK_OPT_MAC_DA:
++		return 48;
++	case MVPP22_CLS_HEK_OPT_IP4SA:
++	case MVPP22_CLS_HEK_OPT_IP4DA:
++		return 32;
++	case MVPP22_CLS_HEK_OPT_IP6SA:
++	case MVPP22_CLS_HEK_OPT_IP6DA:
++		return 128;
++	case MVPP22_CLS_HEK_OPT_L4SIP:
++	case MVPP22_CLS_HEK_OPT_L4DIP:
++		return 16;
++	default:
++		return -1;
++	}
++}
++
+ const struct mvpp2_cls_flow *mvpp2_cls_flow_get(int flow)
+ {
+ 	if (flow >= MVPP2_N_PRS_FLOWS)
+@@ -810,7 +876,7 @@ static void mvpp2_port_c2_cls_init(struct mvpp2_port *port)
+ 
+ 	/* Match on Lookup Type */
+ 	c2.tcam[4] |= MVPP22_CLS_C2_TCAM_EN(MVPP22_CLS_C2_LU_TYPE(MVPP2_CLS_LU_TYPE_MASK));
+-	c2.tcam[4] |= MVPP22_CLS_C2_LU_TYPE(MVPP2_CLS_LU_ALL);
++	c2.tcam[4] |= MVPP22_CLS_C2_LU_TYPE(MVPP22_FLOW_ETHER);
+ 
+ 	/* Update RSS status after matching this entry */
+ 	c2.act = MVPP22_CLS_C2_ACT_RSS_EN(MVPP22_C2_UPD_LOCK);
+@@ -944,6 +1010,18 @@ void mvpp22_port_rss_disable(struct mvpp2_port *port)
+ 	mvpp2_rss_port_c2_disable(port);
+ }
+ 
++static void mvpp22_port_c2_lookup_disable(struct mvpp2_port *port, int entry)
++{
++	struct mvpp2_cls_c2_entry c2;
++
++	mvpp2_cls_c2_read(port->priv, entry, &c2);
++
++	/* Clear the port map so that the entry doesn't match anymore */
++	c2.tcam[4] &= ~(MVPP22_CLS_C2_PORT_ID(BIT(port->id)));
++
++	mvpp2_cls_c2_write(port->priv, &c2);
++}
++
+ /* Set CPU queue number for oversize packets */
+ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
+ {
+@@ -960,6 +1038,382 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
+ 	mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+ }
+ 
++static int mvpp2_port_c2_tcam_rule_add(struct mvpp2_port *port,
++				       struct mvpp2_rfs_rule *rule)
++{
++	struct flow_action_entry *act;
++	struct mvpp2_cls_c2_entry c2;
++	u8 qh, ql, pmap;
++
++	memset(&c2, 0, sizeof(c2));
++
++	c2.index = mvpp2_cls_c2_port_flow_index(port, rule->lu_type, rule->loc);
++	if (c2.index < 0)
++		return -EINVAL;
++
++	act = &rule->flow->action.entries[0];
++
++	rule->c2_index = c2.index;
++
++	c2.tcam[0] = (rule->c2_tcam & 0xffff) |
++		     ((rule->c2_tcam_mask & 0xffff) << 16);
++	c2.tcam[1] = ((rule->c2_tcam >> 16) & 0xffff) |
++		     (((rule->c2_tcam_mask >> 16) & 0xffff) << 16);
++	c2.tcam[2] = ((rule->c2_tcam >> 32) & 0xffff) |
++		     (((rule->c2_tcam_mask >> 32) & 0xffff) << 16);
++	c2.tcam[3] = ((rule->c2_tcam >> 48) & 0xffff) |
++		     (((rule->c2_tcam_mask >> 48) & 0xffff) << 16);
++
++	pmap = BIT(port->id);
++	c2.tcam[4] = MVPP22_CLS_C2_PORT_ID(pmap);
++	c2.tcam[4] |= MVPP22_CLS_C2_TCAM_EN(MVPP22_CLS_C2_PORT_ID(pmap));
++
++	/* Match on Lookup Type */
++	c2.tcam[4] |= MVPP22_CLS_C2_TCAM_EN(MVPP22_CLS_C2_LU_TYPE(MVPP2_CLS_LU_TYPE_MASK));
++	c2.tcam[4] |= MVPP22_CLS_C2_LU_TYPE(rule->lu_type);
++
++	/* Mark packet as "forwarded to software", needed for RSS */
++	c2.act |= MVPP22_CLS_C2_ACT_FWD(MVPP22_C2_FWD_SW_LOCK);
++
++	c2.act |= MVPP22_CLS_C2_ACT_QHIGH(MVPP22_C2_UPD_LOCK) |
++		   MVPP22_CLS_C2_ACT_QLOW(MVPP22_C2_UPD_LOCK);
++
++	qh = ((act->queue.index + port->first_rxq) >> 3) & MVPP22_CLS_C2_ATTR0_QHIGH_MASK;
++	ql = (act->queue.index + port->first_rxq) & MVPP22_CLS_C2_ATTR0_QLOW_MASK;
++
++	c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
++		      MVPP22_CLS_C2_ATTR0_QLOW(ql);
++
++	c2.valid = true;
++
++	mvpp2_cls_c2_write(port->priv, &c2);
++
++	return 0;
++}
++
++static int mvpp2_port_c2_rfs_rule_insert(struct mvpp2_port *port,
++					 struct mvpp2_rfs_rule *rule)
++{
++	return mvpp2_port_c2_tcam_rule_add(port, rule);
++}
++
++static int mvpp2_port_flow_table_find(struct mvpp2 *priv, int flow_id,
++				      u8 engine, u8 lu_type, u16 hek_fields)
++{
++	struct mvpp2_cls_flow_entry fe;
++	u16 flow_hek_fields;
++	int i, flow_engine;
++	u8 flow_lu_type;
++
++	/* Iterate on all flow table entries for this ID */
++	for (i = MVPP2_CLS_FLT_FIRST(flow_id);
++	     i < MVPP2_CLS_FLT_LAST(flow_id); i++) {
++		mvpp2_cls_flow_read(priv, i, &fe);
++
++		flow_hek_fields = mvpp2_flow_get_hek_fields(&fe);
++		if (flow_hek_fields != hek_fields)
++			continue;
++
++		flow_engine = mvpp2_cls_flow_eng_get(&fe);
++		if (flow_engine != engine)
++			continue;
++
++		flow_lu_type = mvpp2_cls_flow_lu_type_get(&fe);
++		if (flow_lu_type != lu_type)
++			continue;
++
++		return i;
++	}
++
++	return -1;
++}
++
++static int mvpp2_port_flow_table_find_free(struct mvpp2 *priv, int flow_id)
++{
++	struct mvpp2_cls_flow_entry fe;
++	u8 pmap;
++	int i;
++
++	memset(&fe, 0, sizeof(fe));
++	for (i = 0; i < MVPP2_N_RFS_ENTRIES_PER_FLOW; i++) {
++		mvpp2_cls_flow_read(priv, MVPP2_CLS_FLT_C2_RFS(flow_id, i),
++				    &fe);
++
++		/* get pmap */
++		pmap = mvpp2_cls_flow_pmap_get(&fe);
++		if (!pmap)
++			return MVPP2_CLS_FLT_C2_RFS(flow_id, i);
++	}
++
++	return -1;
++}
++
++/**
++ * It's possible that multiple different rfs rules use the same flow_table
++ * entry, if the rules use the same key and the same engine. In that case,
++ * we must make sure not to delete this flow_table entry when removing the
++ * rule, unless it's the last rule that uses this entry.
++ */
++static bool mvpp2_port_flt_has_siblings(struct mvpp2_port *port,
++					struct mvpp2_rfs_rule *rule)
++{
++	struct mvpp2_ethtool_fs *efs;
++	int i;
++
++	for (i = 0; i <= MVPP2_N_RFS_RULES; i++) {
++		efs = port->rfs_rules[i];
++		if (!efs)
++			continue;
++		/* Skip the entry we are trying to find the sibling of */
++		if (efs->rule.loc == rule->loc)
++			continue;
++		if (efs->rule.flt_index == rule->flt_index)
++			return true;
++	}
++
++	return false;
++}
++
++static int mvpp2_port_cls_rfs_rule_remove(struct mvpp2_port *port,
++					  struct mvpp2_rfs_rule *rule)
++{
++	struct mvpp2_cls_flow_entry fe;
++
++	if (rule->flt_index >= 0 &&
++	    !mvpp2_port_flt_has_siblings(port, rule)) {
++		mvpp2_cls_flow_read(port->priv, rule->flt_index, &fe);
++		mvpp2_cls_flow_port_remove(&fe, BIT(port->id));
++		mvpp2_cls_flow_write(port->priv, &fe);
++	}
++
++	if (rule->c2_index >= 0)
++		mvpp22_port_c2_lookup_disable(port, rule->c2_index);
++
++	return 0;
++}
++
++static int mvpp2_port_flt_rfs_rule_insert(struct mvpp2_port *port,
++					  struct mvpp2_rfs_rule *rule)
++{
++	const struct mvpp2_cls_flow *flow;
++	struct mvpp2 *priv = port->priv;
++	struct mvpp2_cls_flow_entry fe;
++	int index, ret, i;
++
++	if (rule->engine != MVPP22_CLS_ENGINE_C2)
++		return -EOPNOTSUPP;
++
++	ret = mvpp2_port_c2_rfs_rule_insert(port, rule);
++	if (ret)
++		return ret;
++
++	for_each_cls_flow_id_with_type(i, rule->flow_type) {
++		flow = mvpp2_cls_flow_get(i);
++		if (!flow)
++			return 0;
++
++		/* Don't perform steering on HEK fields that aren't relevant
++		 * for this flow, e.g. steering on VLAN tag when in an untagged
++		 * flow.
++		 */
++		if ((rule->hek_fields | flow->supported_hash_opts) !=
++		    flow->supported_hash_opts)
++			return 0;
++
++		index = mvpp2_port_flow_table_find(priv, flow->flow_id,
++						   rule->engine, rule->lu_type,
++						   rule->hek_fields);
++
++		/* If there already is a flow entry that matches our
++		 * parameters
++		 */
++		if (index >= 0) {
++			rule->flt_index = index;
++			mvpp2_cls_flow_read(priv, index, &fe);
++			mvpp2_cls_flow_port_add(&fe, BIT(port->id));
++			mvpp2_cls_flow_write(priv, &fe);
++			continue;
++		} else {
++			index = mvpp2_port_flow_table_find_free(priv,
++								flow->flow_id);
++			if (index < 0)
++				return -EOPNOTSUPP;
++		}
++
++		/* Create entry */
++		rule->flt_index = index;
++		mvpp2_cls_flow_read(priv, index, &fe);
++
++		mvpp2_cls_flow_eng_set(&fe, rule->engine);
++		mvpp2_cls_flow_port_id_sel(&fe, true);
++		mvpp2_flow_set_hek_fields(&fe, rule->hek_fields);
++		mvpp2_cls_flow_lu_type_set(&fe, rule->lu_type);
++		mvpp2_cls_flow_port_add(&fe, 0xf);
++
++		mvpp2_cls_flow_write(priv, &fe);
++	}
++
++	return 0;
++}
++
++static int mvpp2_cls_c2_build_match(struct mvpp2_rfs_rule *rule)
++{
++	struct flow_rule *flow = rule->flow;
++	struct flow_action_entry *act;
++	int offs = 64;
++
++	act = &flow->action.entries[0];
++
++	if (flow_rule_match_key(flow, FLOW_DISSECTOR_KEY_PORTS)) {
++		struct flow_match_ports match;
++
++		flow_rule_match_ports(flow, &match);
++		if (match.mask->src) {
++			rule->hek_fields |= MVPP22_CLS_HEK_OPT_L4SIP;
++			offs -= mvpp2_cls_hek_field_size(MVPP22_CLS_HEK_OPT_L4SIP);
++
++			rule->c2_tcam |= ((u64)ntohs(match.key->src)) << offs;
++			rule->c2_tcam_mask |= ((u64)ntohs(match.mask->src)) << offs;
++		}
++
++		if (match.mask->dst) {
++			rule->hek_fields |= MVPP22_CLS_HEK_OPT_L4DIP;
++			offs -= mvpp2_cls_hek_field_size(MVPP22_CLS_HEK_OPT_L4DIP);
++
++			rule->c2_tcam |= ((u64)ntohs(match.key->dst)) << offs;
++			rule->c2_tcam_mask |= ((u64)ntohs(match.mask->dst)) << offs;
++		}
++	}
++
++	if (hweight16(rule->hek_fields) > MVPP2_FLOW_N_FIELDS)
++		return -EOPNOTSUPP;
++
++	return 0;
++}
++
++static int mvpp2_cls_rfs_parse_rule(struct mvpp2_rfs_rule *rule)
++{
++	struct flow_rule *flow = rule->flow;
++	struct flow_action_entry *act;
++
++	act = &flow->action.entries[0];
++	if (act->id != FLOW_ACTION_QUEUE)
++		return -EOPNOTSUPP;
++
++	/* For now, only use the C2 engine which has a HEK size limited to 64
++	 * bits for TCAM matching.
++	 */
++	rule->engine = MVPP22_CLS_ENGINE_C2;
++
++	if (mvpp2_cls_c2_build_match(rule))
++		return -EINVAL;
++
++	return 0;
++}
++
++int mvpp2_ethtool_cls_rule_get(struct mvpp2_port *port,
++			       struct ethtool_rxnfc *rxnfc)
++{
++	struct mvpp2_ethtool_fs *efs;
++
++	if (rxnfc->fs.location >= MVPP2_N_RFS_RULES)
++		return -EINVAL;
++
++	efs = port->rfs_rules[rxnfc->fs.location];
++	if (!efs)
++		return -ENOENT;
++
++	memcpy(rxnfc, &efs->rxnfc, sizeof(efs->rxnfc));
++
++	return 0;
++}
++
++int mvpp2_ethtool_cls_rule_ins(struct mvpp2_port *port,
++			       struct ethtool_rxnfc *info)
++{
++	struct ethtool_rx_flow_spec_input input = {};
++	struct ethtool_rx_flow_rule *ethtool_rule;
++	struct mvpp2_ethtool_fs *efs, *old_efs;
++	int ret = 0, index;
++
++	if (info->fs.location >= MVPP22_CLS_C2_PORT_N_RFS ||
++	    info->fs.location < 0)
++		return -EINVAL;
++
++	efs = kzalloc(sizeof(*efs), GFP_KERNEL);
++	if (!efs)
++		return -ENOMEM;
++
++	input.fs = &info->fs;
++
++	ethtool_rule = ethtool_rx_flow_rule_create(&input);
++	if (IS_ERR(ethtool_rule)) {
++		ret = PTR_ERR(ethtool_rule);
++		goto clean_rule;
++	}
++
++	efs->rule.flow = ethtool_rule->rule;
++	efs->rule.flow_type = info->fs.flow_type & ~(FLOW_EXT | FLOW_MAC_EXT |
++						     FLOW_RSS);
++	efs->rule.lu_type = mvpp2_cls_c2_port_flow_get_type(efs->rule.flow_type);
++
++	ret = mvpp2_cls_rfs_parse_rule(&efs->rule);
++	if (ret)
++		goto clean_eth_rule;
++
++	efs->rule.loc = info->fs.location;
++
++	index = (efs->rule.lu_type - 1) * MVPP22_CLS_C2_PORT_N_FLOWS +
++		efs->rule.loc;
++
++	/* Replace an already existing rule */
++	if (port->rfs_rules[index]) {
++		old_efs = port->rfs_rules[index];
++		ret = mvpp2_port_cls_rfs_rule_remove(port, &old_efs->rule);
++		if (ret)
++			goto clean_eth_rule;
++		kfree(old_efs);
++	}
++
++	ret = mvpp2_port_flt_rfs_rule_insert(port, &efs->rule);
++	if (ret)
++		goto clean_eth_rule;
++
++	info->fs.location = index;
++
++	memcpy(&efs->rxnfc, info, sizeof(*info));
++	port->rfs_rules[index] = efs;
++	port->n_rfs_rules++;
++
++clean_eth_rule:
++	ethtool_rx_flow_rule_destroy(ethtool_rule);
++clean_rule:
++	kfree(efs);
++	return ret;
++}
++
++int mvpp2_ethtool_cls_rule_del(struct mvpp2_port *port,
++			       struct ethtool_rxnfc *info)
++{
++	struct mvpp2_ethtool_fs *efs;
++	int ret;
++
++	efs = port->rfs_rules[info->fs.location];
++	if (!efs)
++		return -EINVAL;
++
++	/* Remove the rule from the engines. */
++	ret = mvpp2_port_cls_rfs_rule_remove(port, &efs->rule);
++	if (ret)
++		return ret;
++
++	port->n_rfs_rules--;
++	port->rfs_rules[info->fs.location] = NULL;
++	kfree(efs);
++
++	return 0;
++}
++
+ static inline u32 mvpp22_rxfh_indir(struct mvpp2_port *port, u32 rxq)
+ {
+ 	int nrxqs, cpu, cpus = num_possible_cpus();
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
+index 96304ffc5d49..1d91d5d3b0e1 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
+@@ -107,15 +107,43 @@ struct mvpp2_cls_c2_entry {
+ 	u8 valid;
+ };
+ 
++enum mvpp2_lu_type {
++	/* LU Type 0 is the default value, it shouldn't be used, to avoid
++	 * spurious matches.
++	 */
++	MVPP22_FLOW_TCP4 = 1,
++	MVPP22_FLOW_TCP6,
++	MVPP22_FLOW_UDP4,
++	MVPP22_FLOW_UDP6,
++	MVPP22_FLOW_IP4,
++	MVPP22_FLOW_IP6,
++	MVPP22_FLOW_ETHER,
++	MVPP22_FLOW_LAST = MVPP22_FLOW_ETHER,
++};
++
+ /* Classifier C2 engine entries */
+ #define MVPP22_CLS_C2_N_ENTRIES		256
+ 
+ /* Number of per-port dedicated entries in the C2 TCAM */
+-#define MVPP22_CLS_C2_PORT_RANGE	8
++#define MVPP22_CLS_C2_PORT_FLOW_RANGE	8
++#define MVPP22_CLS_C2_PORT_N_RFS	MVPP2_N_RFS_ENTRIES_PER_FLOW
++
++/* We have one C2 range per supported flow type : ip4, i6, tcp4, tcp6, udp4, udp6 */
++#define MVPP22_CLS_C2_PORT_N_FLOWS	(MVPP22_FLOW_LAST)
++
++/* Each port has oen range per flow type + one entry controling the global RSS
++ * setting and the default rx queue
++ */
++#define MVPP22_CLS_C2_PORT_RANGE	(MVPP22_CLS_C2_PORT_FLOW_RANGE * \
++					 MVPP22_CLS_C2_PORT_N_FLOWS + 1)
++
++#define MVPP22_CLS_C2_PORT_FIRST(p)	((p) * MVPP22_CLS_C2_PORT_RANGE)
++#define MVPP22_CLS_C2_RSS_ENTRY(p)	(MVPP22_CLS_C2_PORT_FIRST((p) + 1) - 1)
+ 
+-#define MVPP22_CLS_C2_PORT_FIRST(p)	(MVPP22_CLS_C2_N_ENTRIES - \
+-					((p) * MVPP22_CLS_C2_PORT_RANGE))
+-#define MVPP22_CLS_C2_RSS_ENTRY(p)	(MVPP22_CLS_C2_PORT_FIRST(p) - 1)
++#define MVPP22_CLS_C2_PORT_FLOW_FIRST(p, f)	(MVPP22_CLS_C2_PORT_FIRST(p) + \
++						 ((f) - 1) * MVPP22_CLS_C2_PORT_FLOW_RANGE)
++
++#define MVPP22_CLS_C2_RFS_LOC(p, f, loc)	(MVPP22_CLS_C2_PORT_FLOW_FIRST(p, f) + (loc))
+ 
+ /* Packet flow ID */
+ enum mvpp2_prs_flow {
+@@ -145,10 +173,6 @@ enum mvpp2_prs_flow {
+ 	MVPP2_FL_LAST,
+ };
+ 
+-enum mvpp2_cls_lu_type {
+-	MVPP2_CLS_LU_ALL = 0,
+-};
+-
+ /* LU Type defined for all engines, and specified in the flow table */
+ #define MVPP2_CLS_LU_TYPE_MASK			0x3f
+ 
+@@ -168,11 +192,12 @@ struct mvpp2_cls_flow {
+ 	struct mvpp2_prs_result_info prs_ri;
+ };
+ 
+-#define MVPP2_CLS_FLT_ENTRIES_PER_FLOW		(MVPP2_MAX_PORTS + 1)
++#define MVPP2_CLS_FLT_ENTRIES_PER_FLOW		(MVPP2_MAX_PORTS + 1 + MVPP2_N_RFS_ENTRIES_PER_FLOW)
+ #define MVPP2_CLS_FLT_FIRST(id)			(((id) - MVPP2_FL_START) * \
+ 						 MVPP2_CLS_FLT_ENTRIES_PER_FLOW)
+-#define MVPP2_CLS_FLT_C2_RSS_ENTRY(id)		(MVPP2_CLS_FLT_FIRST(id))
+-#define MVPP2_CLS_FLT_HASH_ENTRY(port, id)	(MVPP2_CLS_FLT_C2_RSS_ENTRY(id) + (port) + 1)
++#define MVPP2_CLS_FLT_C2_RFS(id, rfs_n)		(MVPP2_CLS_FLT_FIRST(id) + (rfs_n))
++#define MVPP2_CLS_FLT_C2_RSS_ENTRY(id)		(MVPP2_CLS_FLT_C2_RFS(id, MVPP2_N_RFS_ENTRIES_PER_FLOW))
++#define MVPP2_CLS_FLT_HASH_ENTRY(port, id)	(MVPP2_CLS_FLT_C2_RSS_ENTRY(id) + 1 + (port))
+ #define MVPP2_CLS_FLT_LAST(id)			(MVPP2_CLS_FLT_FIRST(id) + \
+ 						 MVPP2_CLS_FLT_ENTRIES_PER_FLOW - 1)
+ 
+@@ -246,4 +271,13 @@ u32 mvpp2_cls_c2_hit_count(struct mvpp2 *priv, int c2_index);
+ void mvpp2_cls_c2_read(struct mvpp2 *priv, int index,
+ 		       struct mvpp2_cls_c2_entry *c2);
+ 
++int mvpp2_ethtool_cls_rule_get(struct mvpp2_port *port,
++			       struct ethtool_rxnfc *rxnfc);
++
++int mvpp2_ethtool_cls_rule_ins(struct mvpp2_port *port,
++			       struct ethtool_rxnfc *info);
++
++int mvpp2_ethtool_cls_rule_del(struct mvpp2_port *port,
++			       struct ethtool_rxnfc *info);
++
+ #endif
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index f128ea22b339..d38952eb7aa9 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -3937,7 +3937,7 @@ static int mvpp2_ethtool_get_rxnfc(struct net_device *dev,
+ 				   struct ethtool_rxnfc *info, u32 *rules)
+ {
+ 	struct mvpp2_port *port = netdev_priv(dev);
+-	int ret = 0;
++	int ret = 0, i, loc = 0;
+ 
+ 	if (!mvpp22_rss_is_supported())
+ 		return -EOPNOTSUPP;
+@@ -3949,6 +3949,18 @@ static int mvpp2_ethtool_get_rxnfc(struct net_device *dev,
+ 	case ETHTOOL_GRXRINGS:
+ 		info->data = port->nrxqs;
+ 		break;
++	case ETHTOOL_GRXCLSRLCNT:
++		info->rule_cnt = port->n_rfs_rules;
++		break;
++	case ETHTOOL_GRXCLSRULE:
++		ret = mvpp2_ethtool_cls_rule_get(port, info);
++		break;
++	case ETHTOOL_GRXCLSRLALL:
++		for (i = 0; i < MVPP2_N_RFS_RULES; i++) {
++			if (port->rfs_rules[i])
++				rules[loc++] = i;
++		}
++		break;
+ 	default:
+ 		return -ENOTSUPP;
+ 	}
+@@ -3969,6 +3981,12 @@ static int mvpp2_ethtool_set_rxnfc(struct net_device *dev,
+ 	case ETHTOOL_SRXFH:
+ 		ret = mvpp2_ethtool_rxfh_set(port, info);
+ 		break;
++	case ETHTOOL_SRXCLSRLINS:
++		ret = mvpp2_ethtool_cls_rule_ins(port, info);
++		break;
++	case ETHTOOL_SRXCLSRLDEL:
++		ret = mvpp2_ethtool_cls_rule_del(port, info);
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -5040,8 +5058,10 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+ 	dev->hw_features |= features | NETIF_F_RXCSUM | NETIF_F_GRO |
+ 			    NETIF_F_HW_VLAN_CTAG_FILTER;
+ 
+-	if (mvpp22_rss_is_supported())
++	if (mvpp22_rss_is_supported()) {
+ 		dev->hw_features |= NETIF_F_RXHASH;
++		dev->features |= NETIF_F_NTUPLE;
++	}
+ 
+ 	if (port->pool_long->id == MVPP2_BM_JUMBO && port->id != 0) {
+ 		dev->features &= ~(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM);
+-- 
+2.20.1
+
