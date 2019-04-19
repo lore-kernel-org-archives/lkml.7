@@ -4,152 +4,308 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531C7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFEAC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FDC20645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C358720643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfDSTCA (ORCPT
+        id S1728674AbfDSTC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:02:00 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:16086 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfDSTB7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:01:59 -0400
-X-IronPort-AV: E=Sophos;i="5.60,369,1549954800"; 
-   d="scan'208";a="30262762"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 19 Apr 2019 04:40:02 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch04.mchp-main.com
- (10.10.76.105) with Microsoft SMTP Server id 14.3.352.0; Fri, 19 Apr 2019
- 04:40:01 -0700
-Date:   Fri, 19 Apr 2019 13:39:37 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Masahiro Yamada <yamada.masahiro@socionext.com>, <arm@kernel.org>,
-        "Olof Johansson" <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH 2/3] ARM: at91: move platform-specific asm-offset.h to
- arch/arm/mach-at91
-Message-ID: <20190419113937.jtkdqcud7lozoqpo@M43218.corp.atmel.com>
-Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>, arm@kernel.org,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Russell King <linux@armlinux.org.uk>
-References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
- <20190408075427.6052-2-yamada.masahiro@socionext.com>
- <20190415151450.GG3578@piout.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190415151450.GG3578@piout.net>
-User-Agent: NeoMutt/20180716
+        Fri, 19 Apr 2019 15:02:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:51012 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfDSTC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:02:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 01:40:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,368,1549958400"; 
+   d="scan'208";a="338990668"
+Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2019 01:40:38 -0700
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     intel-gvt-dev@lists.freedesktop.org
+Cc:     arei.gonglei@huawei.com, aik@ozlabs.ru,
+        Zhengxiao.zx@alibaba-inc.com, shuangtai.tst@alibaba-inc.com,
+        qemu-devel@nongnu.org, eauger@redhat.com, yi.l.liu@intel.com,
+        ziye.yang@intel.com, mlevitsk@redhat.com, pasic@linux.ibm.com,
+        felipe@nutanix.com, changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
+        kevin.tian@intel.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
+        Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute for mdev device
+Date:   Fri, 19 Apr 2019 04:35:04 -0400
+Message-Id: <20190419083505.19654-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190419083258.19580-1-yan.y.zhao@intel.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:14:50PM +0200, Alexandre Belloni wrote:
-> External E-Mail
-> 
-> 
-> On 08/04/2019 16:54:26+0900, Masahiro Yamada wrote:
-> > <generated/at91_pm_data-offsets.h> is only generated and included
-> > by arch/arm/mach-at91/, so it does not need to reside in the
-> > globally visible include/generated/.
-> > 
-> > I moved and renamed it to arch/arm/mach-at91/pm_data-offsets.h
-> > since the prefix 'at91_' is just redundant in mach-at91/.
-> > 
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> 
+device version attribute in mdev sysfs is used by user space software
+(e.g. libvirt) to query device compatibility for live migration of VFIO
+mdev devices. This attribute is mandatory if a mdev device supports live
+migration.
 
-Applied in at91-soc. Let me know if it's an issue, I plan to do the PR
-soon.
+It consists of two parts: common part and vendor proprietary part.
+common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+             identifies device type. e.g., for pci device, it is
+             "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+vendor proprietary part: this part is varied in length. vendor driver can
+             specify any string to identify a device.
 
-Regards
+When reading this attribute, it should show device version string of the
+device of type <type-id>. If a device does not support live migration, it
+should return errno.
+When writing a string to this attribute, it returns errno for
+incompatibility or returns written string length in compatibility case.
+If a device does not support live migration, it always returns errno.
 
-Ludovic
+For user space software to use:
+1.
+Before starting live migration, user space software first reads source side
+mdev device's version. e.g.
+"#cat \
+/sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
+00028086-193b-i915-GVTg_V5_4
 
-> > ---
-> > 
-> > Can this be applied to ARM-SOC tree in a series?
-> > (with Ack from the platform sub-maintainer.)
-> > 
-> > at91_pm_data-offsets.h header does not need to reside in
-> > include/generated/, but you may ask
-> > "Why must it get out of include/generated/?"
-> > 
-> > My main motivation is to avoid a race condition in the currently
-> > proposed patch:
-> > 
-> > https://lore.kernel.org/patchwork/patch/1052763/
-> > 
-> > This patch tries to embed some build artifacts into the kernel.
-> > 
-> > If arch/arm/mach-at91/ and kernel/ are built at the same time,
-> > it may embed a truncated file.
-> > 
-> > 
-> >  arch/arm/mach-at91/.gitignore   | 1 +
-> >  arch/arm/mach-at91/Makefile     | 5 +++--
-> >  arch/arm/mach-at91/pm_suspend.S | 2 +-
-> >  3 files changed, 5 insertions(+), 3 deletions(-)
-> >  create mode 100644 arch/arm/mach-at91/.gitignore
-> > 
-> > diff --git a/arch/arm/mach-at91/.gitignore b/arch/arm/mach-at91/.gitignore
-> > new file mode 100644
-> > index 000000000000..2ecd6f51c8a9
-> > --- /dev/null
-> > +++ b/arch/arm/mach-at91/.gitignore
-> > @@ -0,0 +1 @@
-> > +pm_data-offsets.h
-> > diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-> > index 31b61f0e1c07..de64301dcff2 100644
-> > --- a/arch/arm/mach-at91/Makefile
-> > +++ b/arch/arm/mach-at91/Makefile
-> > @@ -19,9 +19,10 @@ ifeq ($(CONFIG_PM_DEBUG),y)
-> >  CFLAGS_pm.o += -DDEBUG
-> >  endif
-> >  
-> > -include/generated/at91_pm_data-offsets.h: arch/arm/mach-at91/pm_data-offsets.s FORCE
-> > +$(obj)/pm_data-offsets.h: $(obj)/pm_data-offsets.s FORCE
-> >  	$(call filechk,offsets,__PM_DATA_OFFSETS_H__)
-> >  
-> > -arch/arm/mach-at91/pm_suspend.o: include/generated/at91_pm_data-offsets.h
-> > +$(obj)/pm_suspend.o: $(obj)/pm_data-offsets.h
-> >  
-> >  targets += pm_data-offsets.s
-> > +clean-files += pm_data-offsets.h
-> > diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
-> > index bfe1c4d06901..a31c1b20f3fa 100644
-> > --- a/arch/arm/mach-at91/pm_suspend.S
-> > +++ b/arch/arm/mach-at91/pm_suspend.S
-> > @@ -14,7 +14,7 @@
-> >  #include <linux/linkage.h>
-> >  #include <linux/clk/at91_pmc.h>
-> >  #include "pm.h"
-> > -#include "generated/at91_pm_data-offsets.h"
-> > +#include "pm_data-offsets.h"
-> >  
-> >  #define	SRAMC_SELF_FRESH_ACTIVE		0x01
-> >  #define	SRAMC_SELF_FRESH_EXIT		0x00
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+2.
+Then, user space software writes the source side returned version string
+to device version attribute in target side, and checks the return value.
+If a negative errno is returned in the target side, then mdev devices in
+source and target sides are not compatible;
+If a positive number is returned and it equals to the length of written
+string, then the two mdev devices in source and target side are compatible.
+e.g.
+(a) compatibility case
+"# echo 00028086-193b-i915-GVTg_V5_4 >
+/sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+
+(b) incompatibility case
+"#echo 00028086-193b-i915-GVTg_V5_1 >
+/sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+-bash: echo: write error: Invalid argument
+
+3. if two mdev devices are compatible, user space software can start
+live migration, and vice versa.
+
+Note: if a mdev device does not support live migration, it either does
+not provide a version attribute, or always returns errno when its version
+attribute is read/written.
+
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Erik Skultety <eskultet@redhat.com>
+Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+Cc: Neo Jia <cjia@nvidia.com>
+Cc: Kirti Wankhede <kwankhede@nvidia.com>
+
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
+ samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
+ samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
+ samples/vfio-mdev/mtty.c               | 16 ++++++++++++
+ 4 files changed, 85 insertions(+)
+
+diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+index c3f69bcaf96e..bc28471c0667 100644
+--- a/Documentation/vfio-mediated-device.txt
++++ b/Documentation/vfio-mediated-device.txt
+@@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+   |     |   |--- available_instances
+   |     |   |--- device_api
+   |     |   |--- description
++  |     |   |--- version
+   |     |   |--- [devices]
+   |     |--- [<type-id>]
+   |     |   |--- create
+@@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+   |     |   |--- available_instances
+   |     |   |--- device_api
+   |     |   |--- description
++  |     |   |--- version
+   |     |   |--- [devices]
+   |     |--- [<type-id>]
+   |          |--- create
+@@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+   |          |--- available_instances
+   |          |--- device_api
+   |          |--- description
++  |          |--- version
+   |          |--- [devices]
+ 
+ * [mdev_supported_types]
+@@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
+   [<type-id>], device_api, and available_instances are mandatory attributes
+   that should be provided by vendor driver.
+ 
++  version is a mandatory attribute if a mdev device supports live migration.
++
+ * [<type-id>]
+ 
+   The [<type-id>] name is created by adding the device driver string as a prefix
+@@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
+   This attribute should show the number of devices of type <type-id> that can be
+   created.
+ 
++* version
++
++  This attribute is rw. It is used to check whether two devices are compatible
++  for live migration. If this attribute is missing, then the corresponding mdev
++  device is regarded as not supporting live migration.
++
++  It consists of two parts: common part and vendor proprietary part.
++  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
++               device type. e.g., for pci device, it is
++               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
++  vendor proprietary part: this part is varied in length. vendor driver can
++               specify any string to identify a device.
++
++  When reading this attribute, it should show device version string of the device
++  of type <type-id>. If a device does not support live migration, it should
++  return errno.
++  When writing a string to this attribute, it returns errno for incompatibility
++  or returns written string length in compatibility case. If a device does not
++  support live migration, it always returns errno.
++
++  for example.
++  # cat \
++ /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
++  00028086-193b-i915-GVTg_V5_2
++
++  #echo 00028086-193b-i915-GVTg_V5_2 > \
++ /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
++ -bash: echo: write error: Invalid argument
++
+ * [device]
+ 
+   This directory contains links to the devices of type <type-id> that have been
+@@ -327,12 +361,14 @@ card.
+         |   |   |-- available_instances
+         |   |   |-- create
+         |   |   |-- device_api
++        |   |   |-- version
+         |   |   |-- devices
+         |   |   `-- name
+         |   `-- mtty-2
+         |       |-- available_instances
+         |       |-- create
+         |       |-- device_api
++        |       |-- version
+         |       |-- devices
+         |       `-- name
+         |-- mtty_dev
+diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+index b038aa9f5a70..2f5ba96b91a2 100644
+--- a/samples/vfio-mdev/mbochs.c
++++ b/samples/vfio-mdev/mbochs.c
+@@ -1391,11 +1391,28 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+ }
+ MDEV_TYPE_ATTR_RO(device_api);
+ 
++static ssize_t version_show(struct kobject *kobj, struct device *dev,
++		char *buf)
++{
++	/* do not support live migration */
++	return -EINVAL;
++}
++
++static ssize_t version_store(struct kobject *kobj, struct device *dev,
++		const char *buf, size_t count)
++{
++	/* do not support live migration */
++	return -EINVAL;
++}
++
++static MDEV_TYPE_ATTR_RW(version);
++
+ static struct attribute *mdev_types_attrs[] = {
+ 	&mdev_type_attr_name.attr,
+ 	&mdev_type_attr_description.attr,
+ 	&mdev_type_attr_device_api.attr,
+ 	&mdev_type_attr_available_instances.attr,
++	&mdev_type_attr_version.attr,
+ 	NULL,
+ };
+ 
+diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+index cc86bf6566e4..ff15fdfc7d46 100644
+--- a/samples/vfio-mdev/mdpy.c
++++ b/samples/vfio-mdev/mdpy.c
+@@ -695,11 +695,27 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+ }
+ MDEV_TYPE_ATTR_RO(device_api);
+ 
++static ssize_t version_show(struct kobject *kobj, struct device *dev,
++		char *buf)
++{
++	/* do not support live migration */
++	return -EINVAL;
++}
++
++static ssize_t version_store(struct kobject *kobj, struct device *dev,
++		const char *buf, size_t count)
++{
++	/* do not support live migration */
++	return -EINVAL;
++}
++static MDEV_TYPE_ATTR_RW(version);
++
+ static struct attribute *mdev_types_attrs[] = {
+ 	&mdev_type_attr_name.attr,
+ 	&mdev_type_attr_description.attr,
+ 	&mdev_type_attr_device_api.attr,
+ 	&mdev_type_attr_available_instances.attr,
++	&mdev_type_attr_version.attr,
+ 	NULL,
+ };
+ 
+diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+index 1c77c370c92f..4ae3aad3474d 100644
+--- a/samples/vfio-mdev/mtty.c
++++ b/samples/vfio-mdev/mtty.c
+@@ -1390,10 +1390,26 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+ 
+ MDEV_TYPE_ATTR_RO(device_api);
+ 
++static ssize_t version_show(struct kobject *kobj, struct device *dev,
++		char *buf)
++{
++	/* do not support live migration */
++	return -EINVAL;
++}
++
++static ssize_t version_store(struct kobject *kobj, struct device *dev,
++		const char *buf, size_t count)
++{
++	/* do not support live migration */
++	return -EINVAL;
++}
++
++static MDEV_TYPE_ATTR_RW(version);
+ static struct attribute *mdev_types_attrs[] = {
+ 	&mdev_type_attr_name.attr,
+ 	&mdev_type_attr_device_api.attr,
+ 	&mdev_type_attr_available_instances.attr,
++	&mdev_type_attr_version.attr,
+ 	NULL,
+ };
+ 
+-- 
+2.17.1
+
