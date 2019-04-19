@@ -2,112 +2,95 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F387DC282E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D866DC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A1321736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941AB217FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTPBTzWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfDSVcV (ORCPT
+        id S1727687AbfDSVdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:32:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726000AbfDSVcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:32:20 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B4B438779134A61EA796;
-        Fri, 19 Apr 2019 21:46:45 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Fri, 19 Apr 2019
- 21:46:41 +0800
-Subject: Re: [PATCH] PCI: keystone: Fix build error while only
- CONFIG_PCI_KEYSTONE is set
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20190419025855.40760-1-yuehaibing@huawei.com>
- <20190419133137.GA173520@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <kishon@ti.com>, <robh@kernel.org>,
-        <l.stach@pengutronix.de>, <andrew.smirnov@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <35486240-8c29-410d-e0f4-c87dc42fb668@huawei.com>
-Date:   Fri, 19 Apr 2019 21:46:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190419133137.GA173520@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Fri, 19 Apr 2019 17:33:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45389 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfDSVdA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 17:33:00 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e5so5236046otk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 14:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Jdl6t2IM6ApyBuk8s8xMjHnlErgRbISG8DOVqfNGV/A=;
+        b=cTPBTzWF0dsLmxIn9aIbf9/hKrwgfoFAgZ61w3fVVeRKIwaP3FtGNYFUXDAHqx9gKy
+         JK3kpHJWiCzFBMyktQ8hx7ScmdnMTvwH42s4gcZ4bP3OAqc+21lUlCqnjBrZEsh/4IyL
+         iVRiy8DpYCopaoaAUJc0hGmoSWZ5TZCJSZvAmm63JTTJlJMNcHwIv3JQfbZgD5Xn2TnB
+         y6Ydyg8lCOA3WXGRUvH+h7tgkbiLpahLFqubHxFWCnNb+Tn/jkeKdbdOqEfAXGryA3oU
+         1OY2tgG8ZqrAidATKLeA9It1GyR71ErEdjY4URq61JFhxpAKanF9aDH3Hwp74Ivujuel
+         FoEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Jdl6t2IM6ApyBuk8s8xMjHnlErgRbISG8DOVqfNGV/A=;
+        b=nPc2uozdusRirIbMJ0IwpwMTHMs+kpNxtmTTwof7hB+rQOxLhhNV2a5fEq7ZSYv3Bu
+         Rln/eHb1nbquOhFUCW9smhX8A6ge0V7l0Hv8NX3CAyNC+cJvs8Y62fxD5ZGaC+9Sxh7W
+         L8Ybun9yIHwy2BrlRq6W9QKGuysX4R3i2lnfBYg38YD2aEX1JZdprAsCQ0md6h4SFIDD
+         pG+o9ox+2PrkdxWSMolSRXNdglSCYC1gbbQB/cbsVLzIqQ2rIH+47VfsHjqJ5qqlnFhe
+         LSEhZ1zaK6990uez3JfCKSan7+K32Gpq6TFNciSx0/uzjhTU+uA6R8j8GujBsrMjjUO3
+         +pIg==
+X-Gm-Message-State: APjAAAVtLi6fRoDh65g9uyjFR3czo730miC7QYT74Cb6A8C99/0oN+Gp
+        XaOf9JGP7ZNaw/FrfYYkyM8=
+X-Google-Smtp-Source: APXvYqwqBWKZlOefGul/8H8WX2QV8Cj64yNBo3hMyA7F6tZIVHYOD94/zV1YoLjqYQRIqXQ20cIPLw==
+X-Received: by 2002:a9d:7411:: with SMTP id n17mr3396593otk.205.1555709580019;
+        Fri, 19 Apr 2019 14:33:00 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:151b:11be:d797:d50])
+        by smtp.gmail.com with ESMTPSA id 6sm2534476ota.79.2019.04.19.14.32.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 14:32:59 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH] Staging: rtlwifi: Replace return type
+Date:   Fri, 19 Apr 2019 16:32:56 -0500
+Message-Id: <20190419213256.23032-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/19 21:31, Bjorn Helgaas wrote:
-> On Fri, Apr 19, 2019 at 10:58:55AM +0800, Yue Haibing wrote:
->> From: YueHaibing <yuehaibing@huawei.com>
->>
->> During randconfig builds, I occasionally run into an invalid configuration
->>
->> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_link_up':
->> pci-keystone.c:(.text+0x90): undefined reference to `__dw_pcie_read_dbi'
->> pci-keystone.c:(.text+0x90): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_read_dbi'
->> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_v3_65_scan_bus':
->> pci-keystone.c:(.text+0x4f0): undefined reference to `__dw_pcie_write_dbi'
->> pci-keystone.c:(.text+0x4f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_write_dbi'
->>
->> while CONFIG_PCI_KEYSTONE is selected but CONFIG_PCIE_DW
->> is not set, the building failed like this. This patch
->> selects PCIE_DW to fix it.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 5709114f0a97 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/pci/controller/dwc/Kconfig | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index b450ad2..641fa0f 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -105,6 +105,7 @@ config PCIE_SPEAR13XX
->>  config PCI_KEYSTONE
->>  	bool "TI Keystone PCIe controller"
->>  	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
->> +	select PCIE_DW
-> 
-> What version are you building?  In v5.0, PCI_KEYSTONE already selects
-> PCIE_DW_HOST:
-> 
-> $ git grep -A4 PCI_KEYSTONE v5.0:drivers/pci/controller/dwc/Kconfig | cat
-> v5.0:drivers/pci/controller/dwc/Kconfig:config PCI_KEYSTONE
-> v5.0:drivers/pci/controller/dwc/Kconfig-	bool "TI Keystone PCIe controller"
-> v5.0:drivers/pci/controller/dwc/Kconfig-	depends on ARCH_KEYSTONE || (ARM && COMPILE_TEST)
-> v5.0:drivers/pci/controller/dwc/Kconfig-	depends on PCI_MSI_IRQ_DOMAIN
-> v5.0:drivers/pci/controller/dwc/Kconfig-	select PCIE_DW_HOST
-> 08:30:42 ~/history (master)$
+Replace return type and remove the respective assignment.
 
-This patch based on linux-next:
+Issue found by Coccinelle.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=5709114f0a97
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+---
+ drivers/staging/rtlwifi/core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> 
->>  	help
->>  	  Say Y here if you want to enable PCI controller support on Keystone
->>  	  SoCs. The PCI controller on Keystone is based on DesignWare hardware
->> -- 
->> 2.7.4
->>
->>
-> 
-> .
-> 
+diff --git a/drivers/staging/rtlwifi/core.c b/drivers/staging/rtlwifi/core.c
+index 2cce65368f92..1e4e858f7517 100644
+--- a/drivers/staging/rtlwifi/core.c
++++ b/drivers/staging/rtlwifi/core.c
+@@ -377,9 +377,7 @@ static u16 _calculate_wol_pattern_crc(u8 *pattern, u16 len)
+ 	for (i = 0; i < len; i++)
+ 		crc = crc16_ccitt(pattern[i], crc);
+ 
+-	crc = ~crc;
+-
+-	return crc;
++	return ~crc;
+ }
+ 
+ static void _rtl_add_wowlan_patterns(struct ieee80211_hw *hw,
+-- 
+2.17.1
 
