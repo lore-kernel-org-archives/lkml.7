@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58282C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0F5C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A27F222AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B45222AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698103;
-	bh=mndNB3NJKtjTSXWqW7UKN7Gn1zfIUq8XEhxf+xj0RFw=;
+	s=default; t=1555698106;
+	bh=cnrGWA+ez/LVxbvxaSo+JN56JsmoxBmA38W/daBIKss=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iIbp4B49bStF9fMEF+kXAOvd3tGuWt3eD8Uh9qPLyEcd19BGL8qn5rdIoqY5TTI+Z
-	 jg0KQsLOnbFT+ZyG9wNeG/QPThoM/t30szbh0Z0tTCgB/XTjpvpHkqNCp42xb/D65w
-	 PyKDiXBenr4GZHq0CMECSJckT5gslvL0lluTQKjU=
+	b=uw5fnpW1wIGuwfrdgCMlKDnw2dXsfeHRXsuqyGp7va6LSVql0bFW3m64p/gUyBsVS
+	 O6czy3U3eAxFcQy78L7LlF7HCeN9eON8Z6/qzbwlnEs6z31MaUo8sVETVii+atvRC4
+	 vr4nNy7Y6fjZGvkle6B9p/wpwaTQMv1I6MJyUNY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfDSSVm (ORCPT
+        id S1727486AbfDSSVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:21:42 -0400
+        Fri, 19 Apr 2019 14:21:44 -0400
 Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38528 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727367AbfDSSVj (ORCPT
+        with ESMTP id S1727378AbfDSSVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:21:39 -0400
+        Fri, 19 Apr 2019 14:21:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6njRe5o8G6A+ppBgPdqz2Z6b688AhITNwzCSnl4pMIE=; b=Oph9NWt2oKBUOzs4gd8+/wNvw
-        qwqXgco4cvwrNzOWmL2pW1dLljwWTXpwEyYOWjnWGVgkrytcXlFQSfxeFGDb5ZcEIZOcZTcD5pewX
-        QsFKn2q08xDPbu7fmzkx5myCwFgafQ9ILbezAAmhbRHJoZODB12O/I3jkipNhR/PiMddU=;
+         bh=XG8zAcN/Cdib2jKfVHm3MDgQxp0vn5cRdxCvErmhPxo=; b=lPcOCrrQG/9tpNtFqLHxtdrVN
+        mb67sKYJQFy5ANW24x4Ccz4QR8e7AV9piCpIbcKgDYbOUoKIaUiSwVGXFISviJFTShYc6KftMznTM
+        iWC1XCiOwvTlC3CoiqxVnL1FhRSfXtB2Sw34Njl8RSrfFyAoVMjh+FjnWqzo+P6UmQPhg=;
 Received: from 188.29.164.213.threembb.co.uk ([188.29.164.213] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hHVL8-0008HD-AH; Fri, 19 Apr 2019 15:22:10 +0000
+        id 1hHVHV-0008Fv-OF; Fri, 19 Apr 2019 15:18:25 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 6FCC6441D3B; Fri, 19 Apr 2019 16:22:08 +0100 (BST)
-Date:   Fri, 19 Apr 2019 16:22:08 +0100
+        id 575F0441D3B; Fri, 19 Apr 2019 16:18:23 +0100 (BST)
+Date:   Fri, 19 Apr 2019 16:18:23 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
@@ -51,15 +51,15 @@ Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
         ldewangan@nvidia.com, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 3/9] spi: add SPI_LSBYTE_FIRST mode
-Message-ID: <20190419152208.GT2803@sirena.org.uk>
+Subject: Re: [PATCH V3 5/9] spi: export spi core function spi_set_cs
+Message-ID: <20190419151823.GS2803@sirena.org.uk>
 References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
- <1555363834-32155-4-git-send-email-skomatineni@nvidia.com>
+ <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pnDjx0H/VpusRTEI"
+        protocol="application/pgp-signature"; boundary="QHhm1I6mwQR20oIa"
 Content-Disposition: inline
-In-Reply-To: <1555363834-32155-4-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
 X-Cookie: Shah, shah!  Ayatollah you so!
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,37 +68,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---pnDjx0H/VpusRTEI
+--QHhm1I6mwQR20oIa
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2019 at 02:30:28PM -0700, Sowjanya Komatineni wrote:
-> Some SPI slaves expect bytes to be in least significant first order
-> and some expects most significant first oder.
->=20
-> This patch adds support for requesting SPI master controllers for
-> least significant first order using SPI_LSBYTE_FIRST mode.
+On Mon, Apr 15, 2019 at 02:30:30PM -0700, Sowjanya Komatineni wrote:
+> This patch exports spi_set_cs of the spi core to allow SPI masters
+> to use when gpio based chip select is needed.
 
-This is byte ordering as opposed to bit ordering which the core already
-supports.  Do you have any examples of devices that need this or is it
-just being added for completeness?  If devices are going to rely on this
-we probably need emulation support in the core I guess given that this
-is a pretty unusual controller feature.
+This isn't really what I meant when I said it'd be good to use the core
+GPIO code - this function doesn't do a huge amount really and the usage
+of it in your subsequent patch for the driver isn't exactly joined up
+with the little it does (which is mainly swapping in the GPIO chip
+select instead of the hardware chip select) isn't used in your driver
+usage of this as far as I can see.  The bulk of the chip select handling
+code in the core is actually in transfer_one_message() which your driver
+doesn't use as it's got it's own implementation of that; I've not looked
+in enough detail to figure out if it could use it.
 
---pnDjx0H/VpusRTEI
+--QHhm1I6mwQR20oIa
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly5558ACgkQJNaLcl1U
-h9ABdAf/VSTPgRMQCRuu5mKG7sETGap2gcwbgefEWavIGVVyUwfycisAdwMX7fnz
-o9BCutybIvNC09o6dTuMEwJEVfYDMDQGdLY337ofB/O1lOKbFNp51bOC5knj69Rn
-rX1O0T5DP9pHAbAWle473JCt4QXoLjw6bfasqZww/g6GQBQVFTMFw5RAI6Tbdwci
-OSEmszHN/b8s6u5oty9GmPjc0kn2SPoahgM4myTvTBNFrzabvsfyXhV7XeaHOox8
-kmMRDhZ2X8hrOkBpno4nFW63ZmVzKgqKkcrNoERIPmzw6awYpNCaWmvIA88Ba/es
-TMw7K+3CDCo+OOrDtOWR/CQ2VCUNAw==
-=00zp
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly55r4ACgkQJNaLcl1U
+h9ABFQf/di4BhVkLLzj0LzAWfq+W3aQXLwjMllikpbSVi4yBAjMMBCiY/hJ694sK
+t74oXpOBl1I+nU8XTCCo2UQgwEkIg5nVLHQJqoALeiqtM8W26w9xCeN4I3skqA1m
+lftMW84AiOm3Rj8FXw62w8WvnugSHO5D+YMbL1DHlltQw2RBM0K6mVrENcuCu+eZ
+3BVN3SzoKeuWgJV0HrZhFklXSPjbYUHKlWESz2gNukz9mmP7O+IPPAx6YJ5qbQac
+Ek1vYs20B7Ldl3EmbRDIdoiiiPssmHNAqT7wiG+WDrehx2f4SF2LTEHQknLypBim
+/NexZZx63UoROPuN2ifzuZSjJT2bZQ==
+=bYUd
 -----END PGP SIGNATURE-----
 
---pnDjx0H/VpusRTEI--
+--QHhm1I6mwQR20oIa--
