@@ -2,140 +2,94 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441EEC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06EBC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1293C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66424217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:39:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjhyM2Mf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfDSTjT convert rfc822-to-8bit (ORCPT
+        id S1728031AbfDSTj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:39:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47392 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbfDSTjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:39:18 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2857E3082A24;
-        Fri, 19 Apr 2019 19:39:18 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E12AA5C219;
-        Fri, 19 Apr 2019 19:39:16 +0000 (UTC)
-Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
- negative
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-15-longman@redhat.com>
- <20190418135151.GB12232@hirez.programming.kicks-ass.net>
- <d931916b-41f5-f12d-8c38-0cccbc00a301@redhat.com>
- <20190418144036.GE12232@hirez.programming.kicks-ass.net>
- <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
- <20190419102647.GP7905@worktop.programming.kicks-ass.net>
- <20190419120207.GO4038@hirez.programming.kicks-ass.net>
- <20190419130304.GV14281@hirez.programming.kicks-ass.net>
- <20190419131522.GW14281@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
-Date:   Fri, 19 Apr 2019 15:39:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 19 Apr 2019 15:39:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42341 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfDSTj2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:39:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cv12so3001603plb.9;
+        Fri, 19 Apr 2019 12:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VfDvt0B6ZtvV3cVIl4aWBX91BpGwjs/33R80AABiXFk=;
+        b=tjhyM2Mf9PlYYCAxHA5eMwUmyA6W+Z1VVc5d1yxVEslmuzfymhFVyKb34oHyYPmL44
+         YhRZbsPRimPuMjezYdZRVUdx2L7GOBQOvRVXrd6rIsWNHNPouEbGRP4oh5NmQvOcdESb
+         1xZrhE5oiJYt3Mms+022cBnTWwvtccj8fGNbGCEV0ydasIB/k0YDbBZn3vNcDqTbn+s3
+         wBTLPx5+5K6QgGk5Fiq2uNN5A9qCTYSSXib/uQ83g0aRRZOgLtGDkn+ilu+p2KgKtj6C
+         kZLs4cA1NbDo9LS3sRonNZ+ITMmL8eoM1B6AA6ibvmp3nupoHoKXDo+QC9wsiiH2mOFC
+         IXwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VfDvt0B6ZtvV3cVIl4aWBX91BpGwjs/33R80AABiXFk=;
+        b=KO8MUALyZgOUm+SuPmsyFWaUq92TEEbvMTDYEWzD8kDBNiK8qrKkGTgW0+6wh/iVHP
+         /GDK1ueS6k4Shga23VmOyL0pYBU1Qjhtj3lmpX+VRV6D9LFgw0x+9qs0ZUX1MflJgQqu
+         xZYUGjUseu8qdUHs+G5jyunvU8AkDebMFsL7kcKqESMwveNIjGeJrjVEv0WPqhAuXT+S
+         c5nytSFgvX53wGdVEcmzAXh8lefdEYIzwzEt1ZmXwzm5hmCzhQr/P1nBscWjcDKPIZOF
+         cRfncxKUtV4GptIHmLfKfWNKbNywWzejt7q+UL6dEJCnTX2FM8qa45cX8CSJ/VzmgaoO
+         8cjw==
+X-Gm-Message-State: APjAAAV3NzQFxr4VkuRma4MarJJqRPxn3yF5D3wFqdodbDbcEq5WVVLD
+        0KKBwpP1OzNEI9k0LDsrkGg=
+X-Google-Smtp-Source: APXvYqxSw12mz9o24utxhpd9sckTINoAxy/KHcaXsBdE/53Kf4MHIRY9CXBLunzwqorZpXQGnW3AGQ==
+X-Received: by 2002:a17:902:7247:: with SMTP id c7mr5615621pll.255.1555702767711;
+        Fri, 19 Apr 2019 12:39:27 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h127sm7671629pgc.31.2019.04.19.12.39.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 12:39:27 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 12:39:26 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/50] 4.9.170-stable review
+Message-ID: <20190419193926.GA10320@roeck-us.net>
+References: <20190418160422.455656724@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190419131522.GW14281@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 19 Apr 2019 19:39:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/19/2019 09:15 AM, Peter Zijlstra wrote:
-> On Fri, Apr 19, 2019 at 03:03:04PM +0200, Peter Zijlstra wrote:
->> On Fri, Apr 19, 2019 at 02:02:07PM +0200, Peter Zijlstra wrote:
->>> On Fri, Apr 19, 2019 at 12:26:47PM +0200, Peter Zijlstra wrote:
->>>> I thought of a horrible horrible alternative:
->>> Hurm, that's broken as heck. Let me try again.
->> So I can't make that scheme work, it all ends up wanting to have
->> cmpxchg().
->>
->> Do we have a performance comparison somewhere of xadd vs cmpxchg
->> readers? I tried looking in the old threads, but I can't seem to locate
->> it.
->>
->> We need new instructions :/ Or more clever than I can muster just now.
-> In particular, an (unsigned) saturation arithmetic variant of XADD would
-> be very nice to have at this point.
+On Thu, Apr 18, 2019 at 07:57:11PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.170 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat Apr 20 16:03:22 UTC 2019.
+> Anything received after that time might be too late.
+> 
+Build results:
+	total: 172 pass: 170 fail: 2
+Failed builds: 
+	i386:tools/perf 
+	x86_64:tools/perf 
+Qemu test results:
+	total: 320 pass: 320 fail: 0
 
-I just want to clear about my current scheme. There will be 16 bits
-allocated for reader count. I use the MS bit for signaling that there
-are too many readers. So the fast path will fail and the readers will be
-put into the wait list. This effectively limit readers to 32k-1, but it
-doesn't mean the actual reader count cannot go over that. As long as the
-actual count is less than 64k, everything should still work perfectly.
-IOW, even though we have reached the limit of 32k, we need to pile on an
-additional 32k readers to really overflow the count and cause problem.
-
-Cheers,
-Longman
-
-
-
+Guenter
