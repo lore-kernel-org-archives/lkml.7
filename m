@@ -2,168 +2,83 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2867DC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC014C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A0D214DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C4C217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 01:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ZvPzltre"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="noNrtn3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfDSBE5 (ORCPT
+        id S1727168AbfDSBHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Apr 2019 21:04:57 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:22988 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfDSBE4 (ORCPT
+        Thu, 18 Apr 2019 21:07:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46810 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfDSBHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Apr 2019 21:04:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555635896; x=1587171896;
-  h=subject:to:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=JNCt4ralk0VadV9rI8zNMEe1OWC5/ViM+mry1FGDxlM=;
-  b=ZvPzltre0G/L7sLTSotNiafGmZre0dCG2tG7hcxBvXtmJNN9qOTbdNN0
-   yv6fc8a3AGODjQCNR2vt2nlLzbbPCSJSJTHaRuPLDh/5PYRjNeCsCycgD
-   HogVqq1XaGRldbSmjE+nU2GhpTL0RVe5FrsUxd8GhFmNgpDNyTUjk3Tnr
-   INW+Ba6ocR1pH+AyUVpAb1xTPmRtu6zAIFKZQwLUCda7pPIiFflbkkm4N
-   xx9Vkj3aEhUo48fPnbLwj+e8ieXYKhc9M5zZa7niak9J/f9gU3y85Pwh0
-   +1lwHPqy/LeEF8o8qFql8BGYt5MG8Dz/AyP5zLi/19rIoTSyGMteAIIfF
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,368,1549900800"; 
-   d="scan'208";a="212085422"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Apr 2019 09:04:36 +0800
-IronPort-SDR: +vxX5KAOsYkY9Pjub9Q8F9Bu3pUt93VBp2Hpy+UZOnom9i8ahrPR72k82HNOa4FyuP1bHC1oFG
- BvO5H9lKuMq9BSRNe1KCgGJv/bvCeIvbAb4WgAAZlxsPazj5DQy0rYkbSsA7JKZpHGhWsNnQpN
- IlEgbMOQ/ugseyKL4WBIhlVSr6HvDyswE2aUpqWJH0X0pZ0Pk9ckc9PRAzNNsaEw7ZXQVSSohg
- DRlfhs5e4mIIfQYJpvhK5mbZAYRzNrcG0WLzSzfeWaiT1R6O0z0VrG64AbTmiKtEuD4FwsC7Wo
- XoECFlZ1M/AR68wuHb6gKNLC
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 18 Apr 2019 17:43:25 -0700
-IronPort-SDR: PQR7nOItCqyBJzQYvRhU0UFx1nEetSzlPMBSxEpDHPcrR/bWebKsjXtP4/6ZOR9NjIxVlo15VQ
- CF4wNaEv3BDEJmG3ShBB7joswaPwzgIvA7mHYOEFQGGJfeO8ZjCMrbgUpp2UP4HW7cEPMjQibG
- Vs2mRJCPcV3BtuM48t/1J9KJOyVeOjG+I2gMivURKmXU9g0y8Soj9kYhGgCDZpFcqHaBlScf14
- CTcRrgbN4djH750Tr12ON6tuwzNoyKc9kPld8Q0HpRougXQOeHZATi2BW2HBDOgEm6Bo3G3OzL
- 0Ro=
-Received: from usa003981.ad.shared (HELO [10.86.53.90]) ([10.86.53.90])
-  by uls-op-cesaip02.wdc.com with ESMTP; 18 Apr 2019 18:04:36 -0700
-Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver for
- the SiFive FU540 UART
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-References: <20190413020111.23400-1-paul.walmsley@sifive.com>
- <7hmukmew5j.fsf@baylibre.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com>
-Date:   Thu, 18 Apr 2019 18:04:34 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 18 Apr 2019 21:07:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=35diIJS73KQvDrRnDVHsGCCD+aQpo2DkYGTkvHNwcks=; b=noNrtn3lmSJKq6RLqjIMAiPu3
+        AhijGEwYtPqa1qnwcAhTihn0PKpcjata3vuw+0ZO5tC7AfFI6vf8EM+2kzf1t/AoVyuuB6iYVl19+
+        ou9sn9kCdUEPB473KOFAukioBAY5otnlL7YfteDsOGUCyiOfpzpmWHrnkFT1agzKEo+Bf8URBhGvc
+        qvc5XgF/LbofWAR/LMkK/pf0dLTB7w53gIClNvrMOCapP0DlKbiRWfOnCJJJLEg5de44V9EWucJ29
+        d7ACqawnoLFVZjzF0w0SKiQ+kSG+ChfIcAuIm2gZdJw0MgZ6B/CMGogyCtmrIwbTpQ7NRZYilInbK
+        3H4Cxm8XA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hHHzm-0006YG-JW; Fri, 19 Apr 2019 01:07:14 +0000
+Date:   Thu, 18 Apr 2019 18:07:14 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v3] proc/sysctl: add shared variables for range check
+Message-ID: <20190419010714.GH7751@bombadil.infradead.org>
+References: <20190417131531.9525-1-mcroce@redhat.com>
+ <20190418154045.2ad0bd50e73a6e71c0fac768@linux-foundation.org>
+ <1109DAD2-E25B-47A3-8381-E02260FE51B9@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <7hmukmew5j.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1109DAD2-E25B-47A3-8381-E02260FE51B9@redhat.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/19 4:22 PM, Kevin Hilman wrote:
-> Hi Paul,
+On Fri, Apr 19, 2019 at 09:17:17AM +0900, Matteo Croce wrote:
+> > extern const int sysctl_zero;
+> > /* comment goes here */
+> > #define SYSCTL_ZERO ((void *)&sysctl_zero)
+> > 
+> > and then use SYSCTL_ZERO everywhere.  That centralizes the ugliness
+> > and
+> > makes it easier to switch over if/when extra1&2 are constified.
+> > 
+> > But it's all a bit sad and lame :( 
 > 
-> Paul Walmsley <paul.walmsley@sifive.com> writes:
+> No, we didn't decide yet. I need to check for all extra1,2 assignment. Not an impossible task, anyway.
 > 
->> This series adds a serial driver, with console support, for the
->> UART IP block present on the SiFive FU540 SoC.  The programming
->> model is straightforward, but unique.
->>
->> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
->> open-source FSBL (with appropriate patches to the DT data).
->>
->> This fifth version fixes a bug in the set_termios handler,
->> found by Andreas Schwab <schwab@suse.de>.
->>
->> The patches in this series can also be found, with the PRCI patches,
->> DT patches, and DT prerequisite patch, at:
->>
->> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
+> I agree that the casts are ugly. Your suggested macro moves the ugliness in a single point, which is good. Or maybe we can do a single macro like:
 > 
-> I tried this branch, and it doesn't boot on my unleashed board.
+> #define SYSCTL_VAL(x) ((void *)&sysctl_##x)
 > 
-> Here's the boot log when I pass the DT built from your branch via
-> u-boot: https://termbin.com/rfp3.
-> 
+> to avoid defining one for every value. And when we decide that everything can be const, we just update the macro.
 
-Unfortunately, that won't work. The current DT modifications by OpenSBI.
+If we're going to do that, we can save two EXPORTs and do:
 
-1. Change hart status to "masked" from "okay".
-2. M-mode interrupt masking in PLIC node.
-3. Add a chosen node for serial access in U-Boot.
+const int sysctl_vals[] = { 0, 1, -1 };
+EXPORT_SYMBOL(sysctl_vals);
 
-You can ignore 3 for your use case. However, if you pass a dtb built 
-from source code, that will have hart0 enabled and M-mode interrupts 
-enabled in DT.
-
-Not sure if we should do these DT modifications in U-Boot as well.
-
-I also noticed that your kernel is booting only 1 hart.
-Just FYI: RISC-V SMP for U-Boot patches are merged in master. So you 
-should be able to boot all cpus. You can ingore FU540_ENABLED_HART_MASK 
-in OpenSBI build as well.
-
-Regards,
-Atish
-> I also tried the same thing, but using the DT that's hard-coded into
-> SBI/u-boot.  That doesn't boot fully either[1], but one thing I noted is
-> that with the DT from the kernel tree, the printk timestamps aren't
-> moving.  Maybe I'm still missing some kconfig options to enable the
-> right clock and/or IRQ controllers? I'm using this fragment[2] on top of
-> the default defconfig (arch/riscv/configs/defconfig).
-> 
-> Could you share the defconfig you're using when testing your branch?
-> 
-> Also for reference, I'm able to successfully build/boot the
-> 5.1-rc1-unleashed branch from Atish's tree[3] using that kconfig
-> fragment[2] (and the hard-coded DT from u-boot/SBI).  Full log here[4].
-> 
-> Thanks,
-> 
-> Kevin
-> 
-> [1] https://termbin.com/wuc9
-> [2]
-> CONFIG_CLK_SIFIVE=y
-> CONFIG_CLK_SIFIVE_FU540_PRCI=y
-> 
-> CONFIG_SERIAL_SIFIVE=y
-> CONFIG_SERIAL_SIFIVE_CONSOLE=y
-> 
-> CONFIG_SIFIVE_PLIC=y
-> CONFIG_SPI=y
-> CONFIG_SPI_SIFIVE=y
-> CONFIG_GPIOLIB=y
-> CONFIG_GPIO_SIFIVE=y
-> CONFIG_PWM_SIFIVE=y
-> 
-> CONFIG_CLK_U54_PRCI=y
-> CONFIG_CLK_GEMGXL_MGMT=y
-> 
-> [3] https://github.com/atishp04/linux/tree/5.1-rc1-unleashed
-> [4] https://termbin.com/12bg
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-
+#define SYSCTL_ZERO	((void *)&sysctl_vals[0])
