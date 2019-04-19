@@ -2,97 +2,63 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CFDC282E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F190EC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564C621736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CA221736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfDSVio (ORCPT
+        id S1727703AbfDSVkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:38:44 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:42560 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfDSVin (ORCPT
+        Fri, 19 Apr 2019 17:40:08 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35656 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfDSVkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:38:43 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hHbDS-0001rd-5E; Fri, 19 Apr 2019 23:38:38 +0200
-Date:   Fri, 19 Apr 2019 23:38:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jethro Beekman <jethro@fortanix.com>
-cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-In-Reply-To: <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com>
-Message-ID: <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190418171059.GA20819@wind.enjellic.com> <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com> <20190419141732.GA2269@wind.enjellic.com> <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
- <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com> <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de> <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de> <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
- <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net> <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com> <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net> <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-821550267-1555709918=:3174"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 19 Apr 2019 17:40:08 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 83BA614DAB8B0;
+        Fri, 19 Apr 2019 14:40:07 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 14:40:06 -0700 (PDT)
+Message-Id: <20190419.144006.2099381369535226239.davem@davemloft.net>
+To:     po-hsu.lin@canonical.com
+Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/net: correct the return value for
+ run_afpackettests
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190419110113.21883-1-po-hsu.lin@canonical.com>
+References: <20190419110113.21883-1-po-hsu.lin@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 19 Apr 2019 14:40:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Date: Fri, 19 Apr 2019 19:01:13 +0800
 
---8323329-821550267-1555709918=:3174
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+> The run_afpackettests will be marked as passed regardless the return
+> value of those sub-tests in the script:
+>     --------------------
+>     running psock_tpacket test
+>     --------------------
+>     [FAIL]
+>     selftests: run_afpackettests [PASS]
+> 
+> Fix this by changing the return value for each tests.
+> 
+> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
 
-On Fri, 19 Apr 2019, Jethro Beekman wrote:
-> On 2019-04-19 14:31, Andy Lutomirski wrote:
-> > I do think we need to follow LSM rules.  But my bigger point is that
-> > there are policies that don’t allow JIT at all. I think we should
-> > arrange the SGX API so it’s still usable when such a policy is in
-> > effect.
-
-> I don't think we need to arrange that right now. This patch set needs to
-> be merged after more than 2 years of development. I'd like to avoid
-
-We merge stuff when it is ready and not when someone declares that it needs
-to be merged.
-
-> introducing any more big changes. Let's just do what I described to make
-> LSM not broken, which is a minimal change to the current approach. We
-> can adjust the API later to support the use case you describe.
-
-You are working around LSM nothing else and that's just not going to fly.
-
-Thanks,
-
-	tglx
-
---8323329-821550267-1555709918=:3174--
+Applied, thank you.
