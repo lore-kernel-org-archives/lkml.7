@@ -3,98 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10FEC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E79C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C359321736
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB5D21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 21:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfDSVe4 (ORCPT
+        id S1727769AbfDSVfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 17:34:56 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:42540 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfDSVe4 (ORCPT
+        Fri, 19 Apr 2019 17:35:22 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35570 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfDSVfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 17:34:56 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hHb9j-0001fc-Do; Fri, 19 Apr 2019 23:34:47 +0200
-Date:   Fri, 19 Apr 2019 23:34:46 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jethro Beekman <jethro@fortanix.com>
-cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-In-Reply-To: <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
-Message-ID: <alpine.DEB.2.21.1904192329490.3174@nanos.tec.linutronix.de>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <20190418171059.GA20819@wind.enjellic.com> <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com> <20190419141732.GA2269@wind.enjellic.com> <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
- <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com> <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de> <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de> <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
- <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net> <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-659989961-1555709687=:3174"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 19 Apr 2019 17:35:21 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 53DD414DAB89C;
+        Fri, 19 Apr 2019 14:35:20 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 14:35:19 -0700 (PDT)
+Message-Id: <20190419.143519.94034508850689697.davem@davemloft.net>
+To:     o.rempel@pengutronix.de
+Cc:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org,
+        robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com,
+        mark.rutland@arm.com, kernel@pengutronix.de,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] net: ethernet: add ag71xx driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190418052620.20835-4-o.rempel@pengutronix.de>
+References: <20190418052620.20835-1-o.rempel@pengutronix.de>
+        <20190418052620.20835-4-o.rempel@pengutronix.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 19 Apr 2019 14:35:20 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Date: Thu, 18 Apr 2019 07:26:20 +0200
 
---8323329-659989961-1555709687=:3174
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+> +static int ag71xx_remove(struct platform_device *pdev)
+> +{
+> +	struct net_device *ndev = platform_get_drvdata(pdev);
+> +	struct ag71xx *ag;
+> +
+> +	if (!ndev)
+> +		return 0;
+> +
+> +	ag = netdev_priv(ndev);
+> +	ag71xx_phy_disconnect(ag);
+> +	ag71xx_mdio_remove(ag);
+> +	unregister_netdev(ndev);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
 
-On Fri, 19 Apr 2019, Jethro Beekman wrote:
-> On 2019-04-19 14:15, Andy Lutomirski wrote:
-> > With plain mmap() + mprotect(), the LSM will prevent you from making
-> > memory that *was* writable executable.  This is by design and SELinux
-> > supports it.  I don’t remember the name of the associated SELinux
-> > permission off the top of my head.
-> >
-> > If we start enforcing equivalent rules on SGX, then the current API
-> > will simply not allow enclaves to be loaded — no matter how you slice
-> > it, loading an enclave with the current API is indistinguishable from
-> > making arbitrary data executable.
-> >
-> Yes this is exactly what I intended here: a very simple change that
-> stops SGX from confusing LSM. Just by enforcing that everything that
-> looks like a memory write (EADD, EAUG, EDBGWR, etc.) actually requires
-> write permissions, reality and LSM should be on the same page.
+You should unregister the netdev before you disconnect the PHY and remove
+the MDIO.
 
-And how so? You create writeable AND executable memory. That's a nono and
-you can argue in circles, that's not going to change with any of your
-proposed changes. Andy clearly made a proposal which solves it in a proper
-way.
-
-Thanks,
-
-	tglx
---8323329-659989961-1555709687=:3174--
+Also you need to call free_netdev() afterwards otherwise you will leak it.
