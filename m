@@ -2,145 +2,116 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9AAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4567FC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5803320643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="mcYybduG"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA7420643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfDSStH (ORCPT
+        id S1728503AbfDSStX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:49:07 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:49760 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfDSStG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:49:06 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 9BC5374E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 15:10:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ed2hw2GhHst7 for <linux-kernel@vger.kernel.org>;
-        Fri, 19 Apr 2019 10:10:00 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        Fri, 19 Apr 2019 14:49:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37832 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbfDSStV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:49:21 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 71890F2D
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 10:10:00 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id v11so7146858itb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 08:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=heZMTrXK8yMYnPBX0J6luSX1OYpenKN39rpGD2b6xog=;
-        b=mcYybduGKD6t/GHU9UpwjNHuaq/J5MOlHl1AnHkI7xBe7TZcTqXdOEPRIdG08W6qQA
-         IzTSRjBelu/r0fciczxjS9SKd3O4l1SqTA/30M+aEVCCZb4OE/Fd1HMJuWg1+AgInU2k
-         yI1MLyB9ixa6SFIQ/xCcvUriPpIx+EjB0pNyA331wUGkukXpb6At7zdEUfPfd8dXBg3p
-         LJVbZ9Hvmz0PgyLjzDpciy3rX6md/KkREEttSMNpQb+Bdy2ivUDUhrIDXFSlQOo6O4hP
-         4VzPQ6z0FznT9fXDv80pcAWZ+CFjkrj4lBovI3i2isuwo4t9W5PNTWzCk5n3dMAEmpvW
-         SEwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=heZMTrXK8yMYnPBX0J6luSX1OYpenKN39rpGD2b6xog=;
-        b=enWsIpJ9AAGocye+csHemHWw74jhtz2BRqUg7YsTHW9ntX5+foVq6sDBnXKaRr30f1
-         9PEfjBGs5XVyIz+t9tfv9sVUi9yvm8x3VBueUz+JE7gx7z0D4Pp3oE6d1iHz58eba1sZ
-         44SAP5hMr4zFWdWgURAiBIxzfqQ4rkvRXpjAIDa70FTTPAE+fIoBgygvVEnKSWKpDvmg
-         GjkFFTeb5fX33OXgh2H4GaRuY6xMmlRk9rwoW0R/bpwb+qjwCxNZc2S8qDvBYMZcFloy
-         VXsTEyF5QbqfCP3wItBC5+cQ/X0Yk459hQwHQubZ9kVS1qR5FP/Arm4r14tQg9hKoLZ8
-         bEZg==
-X-Gm-Message-State: APjAAAXaUM08ZU6EqW04D42R/ztJdSFrKFQI/v5gQka9cJxxF0bbhi+5
-        kQ14iR9YZuBdH0dzKrBJ0d2VRe7cWKc6WIwXpet2hMWdxC4727mC/tXqPo4uH0G8n54yes0zIq+
-        zWEIVR2o4KYxSZr9JV4ueQW6ZCtcs
-X-Received: by 2002:a02:6209:: with SMTP id d9mr3090688jac.34.1555686600034;
-        Fri, 19 Apr 2019 08:10:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxis8ezIQ+Vr5Tp2X/s63yFpoh5uoAFbTIgcDVHLDxOODQxlXa84NdaYDHEb2VlzceWeFPrFA==
-X-Received: by 2002:a02:6209:: with SMTP id d9mr3090671jac.34.1555686599829;
-        Fri, 19 Apr 2019 08:09:59 -0700 (PDT)
-Received: from cs-u-cslp16.dtc.umn.edu (cs-u-cslp16.cs.umn.edu. [128.101.106.40])
-        by smtp.gmail.com with ESMTPSA id k203sm1557638itb.0.2019.04.19.08.09.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 08:09:59 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-        linux-audit@redhat.com (moderated list:AUDIT SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] audit: fix a memory leak bug
-Date:   Fri, 19 Apr 2019 10:09:47 -0500
-Message-Id: <1555686587-13866-1-git-send-email-wang6495@umn.edu>
-X-Mailer: git-send-email 2.7.4
+        by mx1.redhat.com (Postfix) with ESMTPS id 151093086272;
+        Fri, 19 Apr 2019 15:44:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 9F7081001E81;
+        Fri, 19 Apr 2019 15:43:55 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 19 Apr 2019 17:44:00 +0200 (CEST)
+Date:   Fri, 19 Apr 2019 17:43:54 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Colascione <dancol@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+Message-ID: <20190419154354.GB12228@redhat.com>
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com>
+ <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com>
+ <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 19 Apr 2019 15:44:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In audit_rule_change(), audit_data_to_entry() is firstly invoked to
-translate the payload data to the kernel's rule representation. In
-audit_data_to_entry(), depending on the audit field type, an audit tree may
-be created in audit_make_tree(), which eventually invokes kmalloc() to
-allocate the tree.  Since this tree is a temporary tree, it will be then
-freed in the following execution, e.g., audit_add_rule() if the message
-type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
-AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
-AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
-temporary tree is not freed.
+On 04/18, Jann Horn wrote:
+>
+> On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > On 04/16, Joel Fernandes wrote:
+> > > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
+> > > >
+> > > > Could you explain when it should return POLLIN? When the whole process exits?
+> > >
+> > > It returns POLLIN when the task is dead or doesn't exist anymore, or when it
+> > > is in a zombie state and there's no other thread in the thread group.
+> >
+> > IOW, when the whole thread group exits, so it can't be used to monitor sub-threads.
+> >
+> > just in case... speaking of this patch it doesn't modify proc_tid_base_operations,
+> > so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are going to use
+> > the anonymous file returned by CLONE_PIDFD ?
+>
+> I don't think procfs works that way. /proc/sub-thread-tid has
+> proc_tgid_base_operations despite not being a thread group leader.
 
-To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
-or AUDIT_DEL_RULE.
+Yes, sorry, I meant /proc/pid/task/sub-thread-tid.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
----
- kernel/auditfilter.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+But poll("/proc/sub-thread-tid") won't work too, we can't rely on do_notify_parent()
+if the task is not a group leader.
 
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index 63f8b3f..923b858 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -1114,22 +1114,28 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
- 	int err = 0;
- 	struct audit_entry *entry;
- 
--	entry = audit_data_to_entry(data, datasz);
--	if (IS_ERR(entry))
--		return PTR_ERR(entry);
--
- 	switch (type) {
- 	case AUDIT_ADD_RULE:
-+		entry = audit_data_to_entry(data, datasz);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
-+
- 		err = audit_add_rule(entry);
- 		audit_log_rule_change("add_rule", &entry->rule, !err);
- 		break;
-+
- 	case AUDIT_DEL_RULE:
-+		entry = audit_data_to_entry(data, datasz);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
-+
- 		err = audit_del_rule(entry);
- 		audit_log_rule_change("remove_rule", &entry->rule, !err);
- 		break;
-+
- 	default:
--		err = -EINVAL;
- 		WARN_ON(1);
-+		return -EINVAL;
- 	}
- 
- 	if (err || type == AUDIT_DEL_RULE) {
--- 
-2.7.4
+> (Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
+> be hit trivially, and then the code will misbehave.
+
+Heh, I didn't even notice that WARN_ON_ONCE(task && !thread_group_leader(task)) ;)
+
+> @Joel: I think you'll have to either rewrite this to explicitly bail
+> out if you're dealing with a thread group leader, or make the code
+> work for threads, too.
+
+The last version of CLONE_PIDFD doesn't allow CLONE_THREAD, so we can forget
+about this problem for now.
+
+Oleg.
 
