@@ -2,154 +2,188 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC916C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A629C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6CD222E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC661222AD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb3TGYRV"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OozXvIcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfDSSS7 (ORCPT
+        id S1727615AbfDSSTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:18:59 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45618 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfDSSSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:18:53 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y84so4512842oia.12;
-        Fri, 19 Apr 2019 11:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X/hLQpHGE1nTb+M+K/IecZnZNDziSOQqF73l6PGV8NA=;
-        b=eb3TGYRVeXXq45nTJxEIkXv84cFepFfM6I8aTkKCCJiEw4XIPcVRBIvZlUaTor9TFr
-         fbtxcIEgMAbsR2DLuSnu89mzpL7DBo1NjVKAnJW9EjKLrnVHoNwwzAEpft1UwVTvFnNF
-         wnwvqzN7EtjpKDkYqQB/2sJwPLhNtxMFRejD/NVbUpsiBf8o00+C85mv58iD6jdYctWw
-         T5MKgHrP2691rDocufwPvdr7hpe6xscjURezVg8PE/6ACVdAkro7kilyEeuXltWsndiB
-         Fu1wOUJo1n+IWO5+u5AVeOo0t/cz3hTP/XWN+N1udv7058TESP7CcYpFUPh9YuIqUiuM
-         FIYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X/hLQpHGE1nTb+M+K/IecZnZNDziSOQqF73l6PGV8NA=;
-        b=gbJGwHi5IWqJ5R3QtXs8IlV1gKtq0ab1sMsVgrfHwTX8E2KSXlxJ0T17AK7A6PnAKw
-         S3ZBYg5UX9GN2YEkUQ/6muy3/CdNqev0A6Y21E3L6iaVaI2/V7ublbR3zmy4QJ2Xmpf7
-         QgfoATCsbvRSF8hlNCCqjYya5vk0ALYO9NuCMSD34H+CHgJkdErjwSPxIgBhNigscH5F
-         8czYSKu3EeZtBynj72JGDkCoc0tbEWnStzbDFAqUMlyrlh9C7cFs/yt2vQQUb/PWVhIb
-         hNpWLlJkaB6sJ4Z683x2zL3t7jAYGoS3gFNbLFuAtpGmLQvaarSKZ2DStpKPeidZJ26w
-         1jRg==
-X-Gm-Message-State: APjAAAUadPCMYijE/BgbCn0GpqfHk0En1u79RNYzlMkWwoPo3f9fHpPj
-        fOIggfXcLaixWg2SirYwgaOMSDZPdT4=
-X-Google-Smtp-Source: APXvYqyAvazz134UGdE3uY6fi6/ztybt+Do5+lqi/oxed7ssxuRXOJT3VwfxLlX0raAZgoCyHXZvHw==
-X-Received: by 2002:aca:bf83:: with SMTP id p125mr2171074oif.47.1555687391478;
-        Fri, 19 Apr 2019 08:23:11 -0700 (PDT)
-Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id y9sm1981723otk.20.2019.04.19.08.23.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 08:23:11 -0700 (PDT)
-From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
-To:     bhelgaas@google.com
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] PCI: pciehp: Do not turn off slot if presence comes up after link
-Date:   Fri, 19 Apr 2019 10:22:24 -0500
-Message-Id: <20190419152238.12251-3-mr.nuke.me@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190419152238.12251-1-mr.nuke.me@gmail.com>
-References: <20190419000148.GI126710@google.com>
- <20190419152238.12251-1-mr.nuke.me@gmail.com>
+        Fri, 19 Apr 2019 14:19:22 -0400
+Received: from mail-eopbgr140055.outbound.protection.outlook.com ([40.107.14.55]:5761
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726033AbfDSSTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:19:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ipgvj3XGQP1hUVXvUGXDSgvrgZrs2HC13fEL/GhxzFo=;
+ b=OozXvIcPULHF64QmVgAnnDVCpemsexHjBh2cdRkDJPn3vu4jbMKRCD2N1dNFIAcqdpIi0xrlz6UChLz5Bni1nbLYuKj7uMWw7lX98+PDefv9XDfjZxVX/63Hc7OpM3ee5jUqa0btxJ3qNNPYjtz6qYjuorwVbP8fEN2Ykq/C4zk=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6349.eurprd04.prod.outlook.com (10.255.118.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Fri, 19 Apr 2019 10:23:53 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1813.013; Fri, 19 Apr 2019
+ 10:23:53 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH V4 2/3] ASoC: fsl_asrc: replace the process_option table with
+ function
+Thread-Topic: [PATCH V4 2/3] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Index: AQHU9pn8ypK2cCcT5E2IJLHdJt9wog==
+Date:   Fri, 19 Apr 2019 10:23:53 +0000
+Message-ID: <0f7a6907c73e110c797b478fedaba2fc47b5e994.1555669068.git.shengjiu.wang@nxp.com>
+References: <cover.1555669068.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1555669068.git.shengjiu.wang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 1.9.1
+x-clientproxiedby: HK0PR03CA0082.apcprd03.prod.outlook.com
+ (2603:1096:203:72::22) To VE1PR04MB6479.eurprd04.prod.outlook.com
+ (2603:10a6:803:11e::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78ebef55-7711-4773-b60a-08d6c4b11f1a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6349;
+x-ms-traffictypediagnostic: VE1PR04MB6349:
+x-microsoft-antispam-prvs: <VE1PR04MB634984AD93516205F629BB98E3270@VE1PR04MB6349.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0012E6D357
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(136003)(366004)(346002)(189003)(199004)(97736004)(73956011)(25786009)(26005)(2501003)(2906002)(71190400001)(478600001)(7736002)(102836004)(2201001)(71200400001)(256004)(6506007)(386003)(14444005)(52116002)(53936002)(99286004)(66446008)(68736007)(66066001)(66476007)(64756008)(66556008)(3846002)(6116002)(86362001)(6436002)(6512007)(6486002)(76176011)(186003)(2616005)(316002)(54906003)(476003)(4326008)(486006)(5660300002)(8676002)(36756003)(81156014)(81166006)(118296001)(11346002)(110136005)(446003)(305945005)(14454004)(8936002)(50226002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6349;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rZyCGSKgY/jU3iclIoJpsAa8AGL/hh/hIMC3D8EI37XH4J43m/wzKrgPWtKlu5sAlKS3o6EXkHr/fq887sTUfwYErV5dGrVC5mebNFWH8ROSPIUa8o9kezhEaU4boWv3UjIgViIhgbiz7z6SaDgi9NxABcTk2WXCGZuGtm6pIz9vkqAzJIAi1qsWHL1WAIAWvpw6qfj5D8iZZGITqkS1dhkHObb9sO9q2n86Ce7l6Ukb7VMv0oDvyWJVLD0glGaNZQJ1qwIjHRx/KzKro5Hz7OVTwJWXBjzbig0XKGPD50jXNCrfeHganre92bkXinevtCiOSAYDHLg5y5XuQbh7KHwpmNmMOkpYKhsqCcDwRYfLWcEW+ULE47vhZeiddPAGKvxEDk9kfG+7MpRhGIZz8mXvXpKMD0hYkFPoDwefGqg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78ebef55-7711-4773-b60a-08d6c4b11f1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2019 10:23:53.4787
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6349
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to PCIe 3.0, the presence detect state is a logical OR of
-in-band and out-of-band presence. With this, we'd expect the presence
-state to always be asserted when the link comes up.
-
-Not all hardware follows this, and it is possible for the presence to
-come up after the link. In this case, the PCIe device would be
-erroneously disabled and re-probed. It is possible to distinguish
-between a delayed presence and a card swap by looking at the DLL state
-changed bit -- The link has to come down if the card is removed.
-
-Thus, for a device that is probed, present and has its link active, a
-lack of a link state change event guarantees we have the same device,
-and shutdown is not needed.
-
-Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
----
- drivers/pci/hotplug/pciehp_ctrl.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 905282a8ddaa..d46724f0b4ce 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -217,6 +217,22 @@ void pciehp_handle_disable_request(struct controller *ctrl)
- 	ctrl->request_result = pciehp_disable_slot(ctrl, SAFE_REMOVAL);
- }
- 
-+static bool is_delayed_presence_up_event(struct controller *ctrl, u32 events)
-+{
-+	bool present, link_active;
-+
-+	if (!ctrl->inband_presence_disabled)
-+		return false;
-+
-+	present = pciehp_card_present(ctrl);
-+	link_active = pciehp_check_link_active(ctrl);
-+
-+	if (!present || !link_active || events & PCI_EXP_SLTSTA_DLLSC)
-+		return false;
-+
-+	return true;
-+}
-+
- void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- {
- 	bool present, link_active;
-@@ -224,6 +240,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	/*
- 	 * If the slot is on and presence or link has changed, turn it off.
- 	 * Even if it's occupied again, we cannot assume the card is the same.
-+	 *
-+	 * An exception is a delayed "Card present" after a "Link Up". This can
-+	 * happen on controllers with in-band presence disabled.
- 	 */
- 	mutex_lock(&ctrl->state_lock);
- 	switch (ctrl->state) {
-@@ -231,6 +250,11 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 		cancel_delayed_work(&ctrl->button_work);
- 		/* fall through */
- 	case ON_STATE:
-+		if (is_delayed_presence_up_event(ctrl, events)) {
-+			mutex_unlock(&ctrl->state_lock);
-+			ctrl_dbg(ctrl, "Presence state came up after link");
-+			return;
-+		}
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
- 		if (events & PCI_EXP_SLTSTA_DLLSC)
--- 
-2.20.1
-
+V2hlbiB3ZSB3YW50IHRvIHN1cHBvcnQgbW9yZSBzYW1wbGUgcmF0ZSwgZm9yIGV4YW1wbGUgMTJr
+SHovMjRrSHoNCndlIG5lZWQgdXBkYXRlIHRoZSBwcm9jZXNzX29wdGlvbiB0YWJsZSwgaWYgd2Ug
+d2FudCB0byBzdXBwb3J0IG1vcmUNCnNhbXBsZSByYXRlIG5leHQgdGltZSwgdGhlIHRhYmxlIG5l
+ZWQgdG8gYmUgdXBkYXRlZCBhZ2Fpbi4gd2hpY2gNCmlzIG5vdCBmbGV4aWJsZS4NCg0KV2UgZ290
+IGEgZnVuY3Rpb24gZnNsX2FzcmNfc2VsX3Byb2MgdG8gcmVwbGFjZSB0aGUgdGFibGUsIHdoaWNo
+IGNhbg0KZ2l2ZSB0aGUgcHJlLXByb2Nlc3NpbmcgYW5kIHBvc3QtcHJvY2Vzc2luZyBvcHRpb25z
+IGFjY29yZGluZyB0bw0KdGhlIHNhbXBsZSByYXRlLg0KDQpTaWduZWQtb2ZmLWJ5OiBTaGVuZ2pp
+dSBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+DQotLS0NCiBzb3VuZC9zb2MvZnNsL2ZzbF9h
+c3JjLmMgfCA3NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0t
+LS0NCiAxIGZpbGUgY2hhbmdlZCwgNTUgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pDQoN
+CmRpZmYgLS1naXQgYS9zb3VuZC9zb2MvZnNsL2ZzbF9hc3JjLmMgYi9zb3VuZC9zb2MvZnNsL2Zz
+bF9hc3JjLmMNCmluZGV4IDViOGFkYzdmYjExNy4uMmM0YmJjMzQ5OWRiIDEwMDY0NA0KLS0tIGEv
+c291bmQvc29jL2ZzbC9mc2xfYXNyYy5jDQorKysgYi9zb3VuZC9zb2MvZnNsL2ZzbF9hc3JjLmMN
+CkBAIC0yNiwyNCArMjYsNiBAQA0KICNkZWZpbmUgcGFpcl9kYmcoZm10LCAuLi4pIFwNCiAJZGV2
+X2RiZygmYXNyY19wcml2LT5wZGV2LT5kZXYsICJQYWlyICVjOiAiIGZtdCwgJ0EnICsgaW5kZXgs
+ICMjX19WQV9BUkdTX18pDQogDQotLyogU2FtcGxlIHJhdGVzIGFyZSBhbGlnbmVkIHdpdGggdGhh
+dCBkZWZpbmVkIGluIHBjbS5oIGZpbGUgKi8NCi1zdGF0aWMgY29uc3QgdTggcHJvY2Vzc19vcHRp
+b25bXVsxMl1bMl0gPSB7DQotCS8qIDhrSHogMTEuMDI1a0h6IDE2a0h6IDIyLjA1a0h6IDMya0h6
+IDQ0LjFrSHogNDhrSHogICA2NGtIeiAgIDg4LjJrSHogOTZrSHogICAxNzZrSHogIDE5MmtIeiAq
+Lw0KLQl7ezAsIDF9LCB7MCwgMX0sIHswLCAxfSwgezAsIDB9LCB7MCwgMH0sIHswLCAwfSwgezAs
+IDB9LCB7MCwgMH0sIHswLCAwfSwgezAsIDB9LCB7MCwgMH0sIHswLCAwfSx9LAkvKiA1NTEySHog
+Ki8NCi0Je3swLCAxfSwgezAsIDF9LCB7MCwgMX0sIHswLCAxfSwgezAsIDB9LCB7MCwgMH0sIHsw
+LCAwfSwgezAsIDB9LCB7MCwgMH0sIHswLCAwfSwgezAsIDB9LCB7MCwgMH0sfSwJLyogOGtIeiAq
+Lw0KLQl7ezAsIDJ9LCB7MCwgMX0sIHswLCAxfSwgezAsIDF9LCB7MCwgMH0sIHswLCAwfSwgezAs
+IDB9LCB7MCwgMH0sIHswLCAwfSwgezAsIDB9LCB7MCwgMH0sIHswLCAwfSx9LAkvKiAxMTAyNUh6
+ICovDQotCXt7MSwgMn0sIHswLCAyfSwgezAsIDF9LCB7MCwgMX0sIHswLCAxfSwgezAsIDF9LCB7
+MCwgMX0sIHswLCAwfSwgezAsIDB9LCB7MCwgMH0sIHswLCAwfSwgezAsIDB9LH0sCS8qIDE2a0h6
+ICovDQotCXt7MSwgMn0sIHsxLCAyfSwgezAsIDJ9LCB7MCwgMX0sIHswLCAxfSwgezAsIDF9LCB7
+MCwgMX0sIHswLCAwfSwgezAsIDB9LCB7MCwgMH0sIHswLCAwfSwgezAsIDB9LH0sCS8qIDIyMDUw
+SHogKi8NCi0Je3sxLCAyfSwgezIsIDF9LCB7MiwgMX0sIHswLCAyfSwgezAsIDF9LCB7MCwgMX0s
+IHswLCAxfSwgezAsIDF9LCB7MCwgMX0sIHswLCAwfSwgezAsIDB9LCB7MCwgMH0sfSwJLyogMzJr
+SHogKi8NCi0Je3syLCAyfSwgezIsIDJ9LCB7MiwgMX0sIHsyLCAxfSwgezAsIDJ9LCB7MCwgMX0s
+IHswLCAxfSwgezAsIDF9LCB7MCwgMX0sIHswLCAxfSwgezAsIDB9LCB7MCwgMH0sfSwJLyogNDQu
+MWtIeiAqLw0KLQl7ezIsIDJ9LCB7MiwgMn0sIHsyLCAxfSwgezIsIDF9LCB7MCwgMn0sIHswLCAy
+fSwgezAsIDF9LCB7MCwgMX0sIHswLCAxfSwgezAsIDF9LCB7MCwgMH0sIHswLCAwfSx9LAkvKiA0
+OGtIeiAqLw0KLQl7ezIsIDJ9LCB7MiwgMn0sIHsyLCAyfSwgezIsIDF9LCB7MSwgMn0sIHswLCAy
+fSwgezAsIDJ9LCB7MCwgMX0sIHswLCAxfSwgezAsIDF9LCB7MCwgMX0sIHswLCAwfSx9LAkvKiA2
+NGtIeiAqLw0KLQl7ezIsIDJ9LCB7MiwgMn0sIHsyLCAyfSwgezIsIDJ9LCB7MSwgMn0sIHsxLCAy
+fSwgezEsIDJ9LCB7MSwgMX0sIHsxLCAxfSwgezEsIDF9LCB7MSwgMX0sIHsxLCAxfSx9LAkvKiA4
+OC4ya0h6ICovDQotCXt7MiwgMn0sIHsyLCAyfSwgezIsIDJ9LCB7MiwgMn0sIHsxLCAyfSwgezEs
+IDJ9LCB7MSwgMn0sIHsxLCAxfSwgezEsIDF9LCB7MSwgMX0sIHsxLCAxfSwgezEsIDF9LH0sCS8q
+IDk2a0h6ICovDQotCXt7MiwgMn0sIHsyLCAyfSwgezIsIDJ9LCB7MiwgMn0sIHsyLCAyfSwgezIs
+IDJ9LCB7MiwgMn0sIHsyLCAxfSwgezIsIDF9LCB7MiwgMX0sIHsyLCAxfSwgezIsIDF9LH0sCS8q
+IDE3NmtIeiAqLw0KLQl7ezIsIDJ9LCB7MiwgMn0sIHsyLCAyfSwgezIsIDJ9LCB7MiwgMn0sIHsy
+LCAyfSwgezIsIDJ9LCB7MiwgMX0sIHsyLCAxfSwgezIsIDF9LCB7MiwgMX0sIHsyLCAxfSx9LAkv
+KiAxOTJrSHogKi8NCi19Ow0KLQ0KIC8qIENvcnJlc3BvbmRpbmcgdG8gcHJvY2Vzc19vcHRpb24g
+Ki8NCiBzdGF0aWMgaW50IHN1cHBvcnRlZF9pbnB1dF9yYXRlW10gPSB7DQogCTU1MTIsIDgwMDAs
+IDExMDI1LCAxNjAwMCwgMjIwNTAsIDMyMDAwLCA0NDEwMCwgNDgwMDAsIDY0MDAwLCA4ODIwMCwN
+CkBAIC04MCw2ICs2Miw1MSBAQA0KIHN0YXRpYyB1bnNpZ25lZCBjaGFyICpjbGtfbWFwWzJdOw0K
+IA0KIC8qKg0KKyAqIFNlbGVjdCB0aGUgcHJlLXByb2Nlc3NpbmcgYW5kIHBvc3QtcHJvY2Vzc2lu
+ZyBvcHRpb25zDQorICogVW5zdXBwb3J0IGNhc2VzOiBUc291dCA+IDguMTI1ICogVHNpbiwgVHNv
+dXQgPiAxNi4xMjUgKiBUc2luDQorICoNCisgKiBpbnJhdGU6IGlucHV0IHNhbXBsZSByYXRlDQor
+ICogb3V0cmF0ZTogb3V0cHV0IHNhbXBsZSByYXRlDQorICogcHJlX3Byb2M6IHJldHVybiB2YWx1
+ZSBmb3IgcHJlLXByb2Nlc3Npbmcgb3B0aW9uDQorICogcG9zdF9wcm9jOiByZXR1cm4gdmFsdWUg
+Zm9yIHBvc3QtcHJvY2Vzc2luZyBvcHRpb24NCisgKi8NCitzdGF0aWMgaW50IGZzbF9hc3JjX3Nl
+bF9wcm9jKGludCBpbnJhdGUsIGludCBvdXRyYXRlLA0KKwkJCSAgICAgaW50ICpwcmVfcHJvYywg
+aW50ICpwb3N0X3Byb2MpDQorew0KKwlib29sIHBvc3RfcHJvY19jb25kMjsNCisJYm9vbCBwb3N0
+X3Byb2NfY29uZDA7DQorDQorCS8qIHNlbGVjdCBwcmVfcHJvYyBiZXR3ZWVuIFswLCAyXSAqLw0K
+KwlpZiAoaW5yYXRlICogOCA+IDMzICogb3V0cmF0ZSkNCisJCSpwcmVfcHJvYyA9IDI7DQorCWVs
+c2UgaWYgKGlucmF0ZSAqIDggPiAxNSAqIG91dHJhdGUpIHsNCisJCWlmIChpbnJhdGUgPiAxNTIw
+MDApDQorCQkJKnByZV9wcm9jID0gMjsNCisJCWVsc2UNCisJCQkqcHJlX3Byb2MgPSAxOw0KKwl9
+IGVsc2UgaWYgKGlucmF0ZSA8IDc2MDAwKQ0KKwkJKnByZV9wcm9jID0gMDsNCisJZWxzZSBpZiAo
+aW5yYXRlID4gMTUyMDAwKQ0KKwkJKnByZV9wcm9jID0gMjsNCisJZWxzZQ0KKwkJKnByZV9wcm9j
+ID0gMTsNCisNCisJLyogQ29uZGl0aW9uIGZvciBzZWxlY3Rpb24gb2YgcG9zdC1wcm9jZXNzaW5n
+ICovDQorCXBvc3RfcHJvY19jb25kMiA9IChpbnJhdGUgKiAxNSA+IG91dHJhdGUgKiAxNiAmJiBv
+dXRyYXRlIDwgNTYwMDApIHx8DQorCQkJICAoaW5yYXRlID4gNTYwMDAgJiYgb3V0cmF0ZSA8IDU2
+MDAwKTsNCisJcG9zdF9wcm9jX2NvbmQwID0gaW5yYXRlICogMjMgPCBvdXRyYXRlICogODsNCisN
+CisJaWYgKHBvc3RfcHJvY19jb25kMikNCisJCSpwb3N0X3Byb2MgPSAyOw0KKwllbHNlIGlmIChw
+b3N0X3Byb2NfY29uZDApDQorCQkqcG9zdF9wcm9jID0gMDsNCisJZWxzZQ0KKwkJKnBvc3RfcHJv
+YyA9IDE7DQorDQorCXJldHVybiAwOw0KK30NCisNCisvKioNCiAgKiBSZXF1ZXN0IEFTUkMgcGFp
+cg0KICAqDQogICogSXQgYXNzaWducyBwYWlyIGJ5IHRoZSBvcmRlciBvZiBBLT5DLT5CIGJlY2F1
+c2UgYWxsb2NhdGlvbiBvZiBwYWlyIEIsDQpAQCAtMjM5LDggKzI2NiwxMCBAQCBzdGF0aWMgaW50
+IGZzbF9hc3JjX2NvbmZpZ19wYWlyKHN0cnVjdCBmc2xfYXNyY19wYWlyICpwYWlyKQ0KIAl1MzIg
+aW5yYXRlLCBvdXRyYXRlLCBpbmRpdiwgb3V0ZGl2Ow0KIAl1MzIgY2xrX2luZGV4WzJdLCBkaXZb
+Ml07DQogCWludCBpbiwgb3V0LCBjaGFubmVsczsNCisJaW50IHByZV9wcm9jLCBwb3N0X3Byb2M7
+DQogCXN0cnVjdCBjbGsgKmNsazsNCiAJYm9vbCBpZGVhbDsNCisJaW50IHJldDsNCiANCiAJaWYg
+KCFjb25maWcpIHsNCiAJCXBhaXJfZXJyKCJpbnZhbGlkIHBhaXIgY29uZmlnXG4iKTsNCkBAIC0y
+ODksNiArMzE4LDEyIEBAIHN0YXRpYyBpbnQgZnNsX2FzcmNfY29uZmlnX3BhaXIoc3RydWN0IGZz
+bF9hc3JjX3BhaXIgKnBhaXIpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiAJfQ0KIA0KKwlyZXQgPSBm
+c2xfYXNyY19zZWxfcHJvYyhpbnJhdGUsIG91dHJhdGUsICZwcmVfcHJvYywgJnBvc3RfcHJvYyk7
+DQorCWlmIChyZXQpIHsNCisJCXBhaXJfZXJyKCJObyBzdXBwb3J0ZWQgcHJlLXByb2Nlc3Npbmcg
+b3B0aW9uc1xuIik7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQogCS8qIFZhbGlkYXRlIGlucHV0
+IGFuZCBvdXRwdXQgY2xvY2sgc291cmNlcyAqLw0KIAljbGtfaW5kZXhbSU5dID0gY2xrX21hcFtJ
+Tl1bY29uZmlnLT5pbmNsa107DQogCWNsa19pbmRleFtPVVRdID0gY2xrX21hcFtPVVRdW2NvbmZp
+Zy0+b3V0Y2xrXTsNCkBAIC0zODAsOCArNDE1LDggQEAgc3RhdGljIGludCBmc2xfYXNyY19jb25m
+aWdfcGFpcihzdHJ1Y3QgZnNsX2FzcmNfcGFpciAqcGFpcikNCiAJLyogQXBwbHkgY29uZmlndXJh
+dGlvbnMgZm9yIHByZS0gYW5kIHBvc3QtcHJvY2Vzc2luZyAqLw0KIAlyZWdtYXBfdXBkYXRlX2Jp
+dHMoYXNyY19wcml2LT5yZWdtYXAsIFJFR19BU1JDRkcsDQogCQkJICAgQVNSQ0ZHX1BSRU1PRGlf
+TUFTSyhpbmRleCkgfAlBU1JDRkdfUE9TVE1PRGlfTUFTSyhpbmRleCksDQotCQkJICAgQVNSQ0ZH
+X1BSRU1PRChpbmRleCwgcHJvY2Vzc19vcHRpb25baW5dW291dF1bMF0pIHwNCi0JCQkgICBBU1JD
+RkdfUE9TVE1PRChpbmRleCwgcHJvY2Vzc19vcHRpb25baW5dW291dF1bMV0pKTsNCisJCQkgICBB
+U1JDRkdfUFJFTU9EKGluZGV4LCBwcmVfcHJvYykgfA0KKwkJCSAgIEFTUkNGR19QT1NUTU9EKGlu
+ZGV4LCBwb3N0X3Byb2MpKTsNCiANCiAJcmV0dXJuIGZzbF9hc3JjX3NldF9pZGVhbF9yYXRpbyhw
+YWlyLCBpbnJhdGUsIG91dHJhdGUpOw0KIH0NCi0tIA0KMS45LjENCg0K
