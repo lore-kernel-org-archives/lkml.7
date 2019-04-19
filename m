@@ -2,194 +2,142 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D62C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D70C282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB4F21855
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zr9dN/sI"
+	by mail.kernel.org (Postfix) with ESMTP id 0F6CA21736
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 23:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555715520;
+	bh=ePj/BWoLV3AAsvH/rEPZCke8uzzjZYdlFd4lptMDRy8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OI83z94azuO+MXgZriG0gzxJbAZGO+s0lFplwKP9e2Uek9SyIZlgvRVvXk8XHaNri
+	 ef0U3Mpg7tGqvRHC6wIWF6W3KvjOZgQBqoOlIfRO7ao6+Q/p4lJ60CHS/rJzJjaVU3
+	 6pv18H+O9bEaY+b9mZcLlWNMIZ3N+sOBj2UhbadA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfDSXK5 (ORCPT
+        id S1727261AbfDSXL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 19:10:57 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:19292 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfDSXK5 (ORCPT
+        Fri, 19 Apr 2019 19:11:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42047 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfDSXL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 19:10:57 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x3JNAbIS007248
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 08:10:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x3JNAbIS007248
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555715438;
-        bh=pa90i84vyjdYK0dtVSvPrJVmCogqAS44X1pILdjRN0o=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=zr9dN/sII2PIEJis1Us+3M25Fv/um3oBl/w5/TzrZd1yyFmq0fambtz9d2udfdmRg
-         hmyHgmor6UbKTkU6wFZ260c+X60wUOf8KVR4UcZecn7c2NnILEZtI7/twLQG/DHxg6
-         ZJbrlH9xqXGaOPUra/mnYMdaaRNbTGCsP1SUwQJHeiU2pWKrz9lil7jIYFqA8EhLFn
-         Z+N3CxWTGDRn+y+GVjAmYWhF0XqRTssss3NlWn3W5Vu6yfS82QH+RUz3l0fnt+T66z
-         2JfAegTl9mD0bPOFGDbCmcCeOGsZuM7u/EEF3uY/Buw1STDZ5wkMkEA8e1k8+xlS4S
-         KXJULBw1tdqgQ==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id s2so3523013vsi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:10:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAWq3pgWCtdi7CWJfn7JcUkTJUnumCLQ8LUqMVaCCM2uHzlB47FH
-        kOSiNUgAfXPlGDKfNVIr/KQcILjGPRqKMSZuq/k=
-X-Google-Smtp-Source: APXvYqwJX8yinQUcgwOvjvlKxyFmQM9l0v3k0xwu5fHkmmCaEFIL3l3BWeuL6KGXAWkLfmiQ1rEdO4HK58cy8zdAWxE=
-X-Received: by 2002:a67:f105:: with SMTP id n5mr3550845vsk.181.1555715436589;
- Fri, 19 Apr 2019 16:10:36 -0700 (PDT)
+        Fri, 19 Apr 2019 19:11:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v22so5713920lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zdUf3lFbFQiNVBd828vl0zLRp6GM+2VM7En0qhuWigE=;
+        b=W1H/EhobO3jdaaFICBrL4EdvmrKM5H/rZe9k3wwV4Xjsn8IG1+N3EncfkPMpszyU5h
+         jWaiv1a7My9tKLMI/AOpM8zIfr0rydXlPidRIVM5StgDb0YtknNIn3Pjwm86NQXgnQvj
+         H7avsLNDEC3dUuePD1+ekBG08hJ2FbNbiQQV8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zdUf3lFbFQiNVBd828vl0zLRp6GM+2VM7En0qhuWigE=;
+        b=XVgQilZF1e4+ys4EgO82zB4U+08lAU/Feh0A1cHfph6Cr8XHIUmcn35zQIMq/92BYC
+         AeWC/JcZ2INw2iNHr9+MqP7YFb/O4y2LZCP2/sKNBLv50Xn8/lIyVYpx3tq/ZBvOfROf
+         NYWJmiW4Tpg3FVrtHaBIHFqxh5VSzN/ICKKofpx00NBAncW+/2UJY5OYSHB/XNr9ipvI
+         HJQbRTFS5HgyGK9vIKvXXknNry67FW64H1F+jqSdWGxqh3CSlyqGG1fwWOlOdUp17kJo
+         PdT4RB0N1AOFLbSkAjV1HwP2GOyah0pRyiFgxU0sgeaZGestcZgY4BnuiQwXzbKEkaUd
+         LMiw==
+X-Gm-Message-State: APjAAAXwYj0lXEBNEGIQT0btjXtoKFqtFEA7BIvzQaspKX8fcEjIC7Dr
+        WXwoLfiRHi8PyjJ+gxe6+eZ7PQ21r0E=
+X-Google-Smtp-Source: APXvYqzyQy0QZLJCbqkaH8Z8eQ9ihcX4J1fpWCWa4EiaKIXbC9MCthYfTkIwLxwsyfRAE/KDTIhzRw==
+X-Received: by 2002:a2e:9a49:: with SMTP id k9mr3610804ljj.84.1555715515648;
+        Fri, 19 Apr 2019 16:11:55 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id c19sm658970lfi.69.2019.04.19.16.11.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 16:11:54 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id u17so4970761lfi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 16:11:54 -0700 (PDT)
+X-Received: by 2002:ac2:547a:: with SMTP id e26mr3548958lfn.148.1555715513747;
+ Fri, 19 Apr 2019 16:11:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190408075427.6052-1-yamada.masahiro@socionext.com>
- <20190408075427.6052-2-yamada.masahiro@socionext.com> <20190415151450.GG3578@piout.net>
- <20190419113937.jtkdqcud7lozoqpo@M43218.corp.atmel.com>
-In-Reply-To: <20190419113937.jtkdqcud7lozoqpo@M43218.corp.atmel.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 20 Apr 2019 08:10:00 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATU190SqP00uwj03d-wgbhmO5J3XM6xVMvnYn1xx5_O7w@mail.gmail.com>
-Message-ID: <CAK7LNATU190SqP00uwj03d-wgbhmO5J3XM6xVMvnYn1xx5_O7w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: at91: move platform-specific asm-offset.h to arch/arm/mach-at91
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>,
+References: <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io> <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io> <20190419194902.GE251571@google.com>
+ <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
+ <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com> <20190419212002.GB44851@google.com>
+In-Reply-To: <20190419212002.GB44851@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 19 Apr 2019 16:11:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiiYUuk7LrkNaggvzZqB63Efu5sChV5hAOdn1ZfunUw6Q@mail.gmail.com>
+Message-ID: <CAHk-=wiiYUuk7LrkNaggvzZqB63Efu5sChV5hAOdn1ZfunUw6Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Russell King <linux@armlinux.org.uk>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 4:03 AM Ludovic Desroches
-<ludovic.desroches@microchip.com> wrote:
+On Fri, Apr 19, 2019 at 2:20 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> On Mon, Apr 15, 2019 at 05:14:50PM +0200, Alexandre Belloni wrote:
-> > External E-Mail
-> >
-> >
-> > On 08/04/2019 16:54:26+0900, Masahiro Yamada wrote:
-> > > <generated/at91_pm_data-offsets.h> is only generated and included
-> > > by arch/arm/mach-at91/, so it does not need to reside in the
-> > > globally visible include/generated/.
-> > >
-> > > I moved and renamed it to arch/arm/mach-at91/pm_data-offsets.h
-> > > since the prefix 'at91_' is just redundant in mach-at91/.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> >
->
-> Applied in at91-soc. Let me know if it's an issue, I plan to do the PR
-> soon.
+> According to Linus, POLLHUP usually indicates that something is readable:
 
+Note that if you use the legacy interfaces (ie "select()"), then even
+just a plain POLLHUP will always just show as "readable".
 
-There is one minor issue.
+So for a lot of applications, it won't even matter. Returning POLLHUP
+will mean it's readable whether POLLIN is set or not (and EPOLLERR
+will automatically mean that it's marked both readable and writable).
 
-If you apply 2/3 (this one) alone,
-arch/arm/mach-at91/pm_data-offsets.h is not cleaned.
+In fact, I'd argue that not a lot of people care about the more
+esoteric bits at all. If your poll function does POLLIN and POLLOUT,
+it's fine. Anything else is specialized enough that most people simply
+won't care. Don't overdesign things too much. You need to have a major
+reason to care about the other POLL bits.
 
+It's also worth noting that POLLERR/POLLHUP/POLLNVAL cannot be masked
+for "poll()". Even if you only ask for POLLIN/POLLOUT, you will always
+get POLLERR/POLLHUP notification. That is again historical behavior,
+and it's kind of a "you can't poll a hung up fd". But it once again
+means that you should consider POLLHUP to be something *exceptional*
+and final, where no further or other state changes can happen or are
+relevant.
 
-1/3 fixes the "make clean" issue:
-https://lkml.org/lkml/2019/4/8/153
+That may well work fine for pidfd when the task is gone, but it's
+really worth noting that any *normal* state should be about
+POLLIN/POLLOUT. People should not think that "POLLHUP sounds like the
+appropriate name", they should realize that POLLHUP is basically a
+terminal error condition, not a "input is available".
 
+So just keep that in mind.
 
-That is why I sent this as a series
-in order to avoid the regression of cleaning.
-
-
-
-Thanks.
-
-Masahiro Yamada
-
-
-> Regards
->
-> Ludovic
->
-> > > ---
-> > >
-> > > Can this be applied to ARM-SOC tree in a series?
-> > > (with Ack from the platform sub-maintainer.)
-> > >
-> > > at91_pm_data-offsets.h header does not need to reside in
-> > > include/generated/, but you may ask
-> > > "Why must it get out of include/generated/?"
-> > >
-> > > My main motivation is to avoid a race condition in the currently
-> > > proposed patch:
-> > >
-> > > https://lore.kernel.org/patchwork/patch/1052763/
-> > >
-> > > This patch tries to embed some build artifacts into the kernel.
-> > >
-> > > If arch/arm/mach-at91/ and kernel/ are built at the same time,
-> > > it may embed a truncated file.
-> > >
-> > >
-> > >  arch/arm/mach-at91/.gitignore   | 1 +
-> > >  arch/arm/mach-at91/Makefile     | 5 +++--
-> > >  arch/arm/mach-at91/pm_suspend.S | 2 +-
-> > >  3 files changed, 5 insertions(+), 3 deletions(-)
-> > >  create mode 100644 arch/arm/mach-at91/.gitignore
-> > >
-> > > diff --git a/arch/arm/mach-at91/.gitignore b/arch/arm/mach-at91/.gitignore
-> > > new file mode 100644
-> > > index 000000000000..2ecd6f51c8a9
-> > > --- /dev/null
-> > > +++ b/arch/arm/mach-at91/.gitignore
-> > > @@ -0,0 +1 @@
-> > > +pm_data-offsets.h
-> > > diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-> > > index 31b61f0e1c07..de64301dcff2 100644
-> > > --- a/arch/arm/mach-at91/Makefile
-> > > +++ b/arch/arm/mach-at91/Makefile
-> > > @@ -19,9 +19,10 @@ ifeq ($(CONFIG_PM_DEBUG),y)
-> > >  CFLAGS_pm.o += -DDEBUG
-> > >  endif
-> > >
-> > > -include/generated/at91_pm_data-offsets.h: arch/arm/mach-at91/pm_data-offsets.s FORCE
-> > > +$(obj)/pm_data-offsets.h: $(obj)/pm_data-offsets.s FORCE
-> > >     $(call filechk,offsets,__PM_DATA_OFFSETS_H__)
-> > >
-> > > -arch/arm/mach-at91/pm_suspend.o: include/generated/at91_pm_data-offsets.h
-> > > +$(obj)/pm_suspend.o: $(obj)/pm_data-offsets.h
-> > >
-> > >  targets += pm_data-offsets.s
-> > > +clean-files += pm_data-offsets.h
-> > > diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
-> > > index bfe1c4d06901..a31c1b20f3fa 100644
-> > > --- a/arch/arm/mach-at91/pm_suspend.S
-> > > +++ b/arch/arm/mach-at91/pm_suspend.S
-> > > @@ -14,7 +14,7 @@
-> > >  #include <linux/linkage.h>
-> > >  #include <linux/clk/at91_pmc.h>
-> > >  #include "pm.h"
-> > > -#include "generated/at91_pm_data-offsets.h"
-> > > +#include "pm_data-offsets.h"
-> > >
-> > >  #define    SRAMC_SELF_FRESH_ACTIVE         0x01
-> > >  #define    SRAMC_SELF_FRESH_EXIT           0x00
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > --
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> >
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+                Linus
