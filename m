@@ -2,137 +2,102 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B91C282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF87C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE34320449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698864;
-	bh=SnwmMtDipDEreGZHMEGa/ANZacEH0LoF4kgqAiOW5Nc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olScY5J36kuz7t6fFeWUx2XEbrBt7m7K2cq0vuJDAx2mJCfDaTGjM/dk0DIQr5AaG
-	 R1NfsFNHMLE+Nun/Wbm1S/w3n77nCus8TpBmuIWy5Z/OyLawq3CxSDXjQOiOMDXmtw
-	 gmGOgIwIh8si1slQN24vtyC29rKru9dafMqvDMyw=
+	by mail.kernel.org (Postfix) with ESMTP id 62B0920449
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qMcVltDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfDSSeC (ORCPT
+        id S1728062AbfDSSe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:34:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:34:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36384 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfDSS3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:16 -0400
-Received: from quaco.ghostprotocols.net (unknown [177.102.80.83])
+        id S1728284AbfDSSeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:34:02 -0400
+Received: from zn.tnic (p200300EC2F112E006C6C37C052F44BC9.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:6c6c:37c0:52f4:4bc9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2314021A4A;
-        Fri, 19 Apr 2019 12:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555677071;
-        bh=SnwmMtDipDEreGZHMEGa/ANZacEH0LoF4kgqAiOW5Nc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szdm0XxSuPitiVX//dA3zJoZzh37XBDacGIwDyWM0L4iTqMWGvBizFoiHsWNEoOg/
-         jq1lz2Ty4Cd8twRKe/ZMI2brxqmZ7tyj7dcMTpbfvdIRYGrL8QMFqInUGqophNBADz
-         1g4/w18N5NbCSy1UkrQrfemTxaXb4p8VDM4dHIEM=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 6/7] perf tools: Fix map reference counting
-Date:   Fri, 19 Apr 2019 09:30:28 -0300
-Message-Id: <20190419123029.11328-7-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190419123029.11328-1-acme@kernel.org>
-References: <20190419123029.11328-1-acme@kernel.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E9FCE1EC04B9;
+        Fri, 19 Apr 2019 13:28:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555673287;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kt13yk+NKdfiWFO/sWb2l+mHuf8xiV4zJjS1XefOfVQ=;
+        b=qMcVltDQi/FSqb+ryguk7TJsERARDdIDFiulUbh6pQb32vuPqpRuugzkLI6GyM0NE5UtQu
+        SeeeTVQrXuGmXK2F1cIYWfLe6JtmVvnMlDxaezolqXujDh+orvkqzbbrY90H7Ak2gupCsG
+        7JkwyGXS5+Q55lTqU2D1i1AD27c7CRA=
+Date:   Fri, 19 Apr 2019 13:28:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
+ mapping before accessing it
+Message-ID: <20190419112801.GB10324@zn.tnic>
+References: <20190419101733.GA10324@zn.tnic>
+ <20190419105014.GE11060@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190419105014.GE11060@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Fri, Apr 19, 2019 at 06:50:14PM +0800, Baoquan He wrote:
+> Talked with Kairui privately just now. Seems Junichi's patch need add
+> this systab mapping. Since the systab region is not mapped on some
+> machines. Those machine don't have this issue because they got systab
+> region luckily coverred by 1 GB page mapping in 1st kernel before
+> kexec jumping.
 
-By calling maps__insert() we assume to get 2 references on the map,
-which we relese within maps__remove call.
+You don't have to repeat all I that - I know what the problem is. Read
+what I said again: it is too late for 5.1 to do any involved surgery.
 
-However if there's already same map name, we currently don't bump the
-reference and can crash, like:
+> > 2. Then, the fact whether the kernel has been kexec'ed and which
+> > addresses it should use early, should all be passed through boot_params
+> > which is either setup by kexec(1) or by the first kernel itself, in the
+> > kexec_file_load() case.
+> 
+> Seems no better way to check if it's kexec-ed kernel, except of the
+> setup data checking of kexec-ed kernel.
 
-  Program received signal SIGABRT, Aborted.
-  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
+Why does that "seem" so?
 
-  (gdb) bt
-  #0  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
-  #1  0x00007ffff75d0895 in abort () from /lib64/libc.so.6
-  #2  0x00007ffff75d0769 in __assert_fail_base.cold () from /lib64/libc.so.6
-  #3  0x00007ffff75de596 in __assert_fail () from /lib64/libc.so.6
-  #4  0x00000000004fc006 in refcount_sub_and_test (i=1, r=0x1224e88) at tools/include/linux/refcount.h:131
-  #5  refcount_dec_and_test (r=0x1224e88) at tools/include/linux/refcount.h:148
-  #6  map__put (map=0x1224df0) at util/map.c:299
-  #7  0x00000000004fdb95 in __maps__remove (map=0x1224df0, maps=0xb17d80) at util/map.c:953
-  #8  maps__remove (maps=0xb17d80, map=0x1224df0) at util/map.c:959
-  #9  0x00000000004f7d8a in map_groups__remove (map=<optimized out>, mg=<optimized out>) at util/map_groups.h:65
-  #10 machine__process_ksymbol_unregister (sample=<optimized out>, event=0x7ffff7279670, machine=<optimized out>) at util/machine.c:728
-  #11 machine__process_ksymbol (machine=<optimized out>, event=0x7ffff7279670, sample=<optimized out>) at util/machine.c:741
-  #12 0x00000000004fffbb in perf_session__deliver_event (session=0xb11390, event=0x7ffff7279670, tool=0x7fffffffc7b0, file_offset=13936) at util/session.c:1362
-  #13 0x00000000005039bb in do_flush (show_progress=false, oe=0xb17e80) at util/ordered-events.c:243
-  #14 __ordered_events__flush (oe=0xb17e80, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:322
-  #15 0x00000000005005e4 in perf_session__process_user_event (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8,
-  ...
+Read again what I said: "should all be passed through boot_params".
+Which means, boot_params should be extended with a field of a flag to
+say: "this is a kexec'ed kernel".
 
-Add the map to the list and getting the reference event if we find the
-map with same name.
+If it "seems" then it should be made to not "seem" but to work properly.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Fixes: 1e6285699b30 ("perf symbols: Fix slowness due to -ffunction-section")
-Link: http://lkml.kernel.org/r/20190416160127.30203-10-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/map.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> Yeah, adding the systab mapping looks good. Kairui put it in
+> decompressing stage just because he wants to cover the case in which the
+> old kernel kexec jumping to 2nd kernel. Now it seems not very
+> reasonable, we also have the new kernel kexec jumping to old 2nd kernel.
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 28d484ef74ae..ee71efb9db62 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -926,10 +926,8 @@ static void __maps__insert_name(struct maps *maps, struct map *map)
- 		rc = strcmp(m->dso->short_name, map->dso->short_name);
- 		if (rc < 0)
- 			p = &(*p)->rb_left;
--		else if (rc  > 0)
--			p = &(*p)->rb_right;
- 		else
--			return;
-+			p = &(*p)->rb_right;
- 	}
- 	rb_link_node(&map->rb_node_name, parent, p);
- 	rb_insert_color(&map->rb_node_name, &maps->names);
+I don't think we can guarantee kexec between old<->new kernel to always
+work. Otherwise, we can forget all development and improvements of new
+kernel.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
