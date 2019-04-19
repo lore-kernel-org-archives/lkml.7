@@ -2,122 +2,110 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4D7C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E014AC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89A82171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2132171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u0JjnRmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfDSUCh convert rfc822-to-8bit (ORCPT
+        id S1727639AbfDSUDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:02:37 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:53232 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbfDSUCh (ORCPT
+        Fri, 19 Apr 2019 16:03:48 -0400
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:55413 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfDSUDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:02:37 -0400
-X-Greylist: delayed 4785 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Apr 2019 16:02:35 EDT
-Received: from relay7-d.mail.gandi.net (unknown [217.70.183.200])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 08C973AC227
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 09:00:50 +0000 (UTC)
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A093720011;
-        Fri, 19 Apr 2019 09:00:46 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 11:00:44 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Liang Yang <liang.yang@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-mtd@lists.infradead.org,
-        richard@nod.at, linux-arm-kernel@lists.infradead.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        bbrezillon@kernel.org, jianxin.pan@amlogic.com
-Subject: Re: [PATCH 4/4] mtd: rawnand: meson: only initialize the RB
- completion once
-Message-ID: <20190419110044.6a2d7d86@xps13>
-In-Reply-To: <CAFBinCB9Z_H4wX3_g2hVL-XnS6Oq-KtPHa4Z1ws79FGp5jCapQ@mail.gmail.com>
-References: <20190411220056.19109-1-martin.blumenstingl@googlemail.com>
-        <20190411220056.19109-5-martin.blumenstingl@googlemail.com>
-        <bd1900db-7ca1-a6e5-39f9-db54e0b570dd@amlogic.com>
-        <CAFBinCB9Z_H4wX3_g2hVL-XnS6Oq-KtPHa4Z1ws79FGp5jCapQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 19 Apr 2019 16:03:48 -0400
+Received: by mail-wm1-f47.google.com with SMTP id o25so7235040wmf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:03:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=HkaUUMEyE0J/2pYdvNujrPvD1ZnFsAgpHeniNz9TYHw=;
+        b=u0JjnRmKVihQG3XKPOpk/gPpdEVZbmqIBIofo/ikwQERLk966uEPRqTgcsh/9D+olj
+         8pkNFWx6w1ylDPPCkP6kKHYhrFosAzEpu+u5rRZ+EeOIVr7bZ7CHvYaHHndL8i2xDIxz
+         g+f2ijNActxMeTMEkZMUozpY20c7XwdKPN+REHKrG0cTtPIpbfpHxphh+7TNQeirbyBA
+         FV6P7uH+2TKldM3b/bjUb6YGc5P3WSfT5YnO832tw83GEJdY9oHLwnQtFlwxS4k6r4j0
+         6UKWdmhYQ2KqXdWyU9szF/vUuutl0AuX9wPyDw2k+nbOrB0tpnCpfPpoYM1bq3kvQxqO
+         DGxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HkaUUMEyE0J/2pYdvNujrPvD1ZnFsAgpHeniNz9TYHw=;
+        b=s7Tgk0yZCnYXS4OnRl4mc95S6Xxqj0XrnuaX0t+cYb0d+tHGlewzyhYgMIKQvcAeC9
+         wZF0daSUHvtKC4DCGDnc28C743QYnVqneCZHbiMNTrlvXJ1WJ+QdKfvtm1lRo1whgD05
+         PTyKd2GZthK4NDHkXVsUTLZssmtwlnUeKiAYAV9iqUs7H+um2zMJfe58vstdWo4DAYyI
+         eiDUqBQ8PgfUUPbpxxH41Pq2jX6MikEtB7WoX/lc0Vyx78sIkWt9YsKYPXhHvnUwHIFk
+         W9duoVh9zzksJSc6qsmrHgXjZ9WlahWKEwwCnSxDkbQ+39BnAIgIccRuquV1k3ZCUPz0
+         us4w==
+X-Gm-Message-State: APjAAAVRZvaZSjyye/O5riu8/RhbtsXxcqczm9/ZLQdE0bfJKOJsvWyr
+        gfdkZyrwSwMXMfMesSY39hoSuW4=
+X-Google-Smtp-Source: APXvYqyvEjNPpahCGjREsMJ6DP/7Y5y0i1vbMQqIJXAlEvMnRz17iOezcNaEtIg7KvFw9qI+PT3y1g==
+X-Received: by 2002:a7b:c257:: with SMTP id b23mr3670763wmj.83.1555704226473;
+        Fri, 19 Apr 2019 13:03:46 -0700 (PDT)
+Received: from avx2 ([46.53.241.77])
+        by smtp.gmail.com with ESMTPSA id s1sm4354112wrt.43.2019.04.19.13.03.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 13:03:45 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 23:03:43 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH -mm] elf: init pt_regs pointer later
+Message-ID: <20190419200343.GA19788@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+Get "current_pt_regs" pointer right before usage.
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote on Thu,
-18 Apr 2019 21:44:05 +0200:
+Space savings on x86_64:
 
-> Hi Liang,
-> 
-> On Mon, Apr 15, 2019 at 8:04 AM Liang Yang <liang.yang@amlogic.com> wrote:
-> >
-> >
-> > On 2019/4/12 6:00, Martin Blumenstingl wrote:  
-> > > Documentation/scheduler/completion.txt states:
-> > >    Calling init_completion() on the same completion object twice is
-> > >    most likely a bug as it re-initializes the queue to an empty queue and
-> > >    enqueued tasks could get "lost" - use reinit_completion() in that case,
-> > >    but be aware of other races.
-> > >
-> > > Initialize nfc->completion in meson_nfc_probe using init_completion and
-> > > change the call in meson_nfc_queue_rb to reinit_completion so the logic
-> > > matches what the documentation suggests.
-> > >
-> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > > ---
-> > >   drivers/mtd/nand/raw/meson_nand.c | 3 ++-
-> > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson_nand.c
-> > > index 57cc4bd3f665..ea57ddcec41e 100644
-> > > --- a/drivers/mtd/nand/raw/meson_nand.c
-> > > +++ b/drivers/mtd/nand/raw/meson_nand.c
-> > > @@ -400,7 +400,7 @@ static int meson_nfc_queue_rb(struct meson_nfc *nfc, int timeout_ms)
-> > >       cfg |= NFC_RB_IRQ_EN;
-> > >       writel(cfg, nfc->reg_base + NFC_REG_CFG);
-> > >
-> > > -     init_completion(&nfc->completion);
-> > > +     reinit_completion(&nfc->completion);  
-> > Tested-by:Liang Yang <liang.yang@amlogic.com>
-> > Acked-by: Liang Yang <liang.yang@amlogic.com>  
-> thank you for reviewing and testing my patches!
-> 
-> [...]
-> > Tested-by:Liang Yang <liang.yang@amlogic.com>
-> > Acked-by: Liang Yang <liang.yang@amlogic.com>  
-> please consider the following note for future code-reviews:
-> most maintainers take the patch from patchwork and apply it to their git tree.
-> however, patchwork is not smart enough to detect when the same
-> Tested-by/Acked-by is sent multiple times.
-> this results in the same Tested-by/Acked-by being listed multiple
-> times in the final commit: [0]
-> 
-> what I do instead is to reply with one set of Tested-by/Acked-by
-> (below the author's Signed-off-by) which is then valid for the whole
-> patch.
-> There's no problem to have Tested-by and Acked-by at the same time,
-> the issue only shows up if you send Acked-by (or any other tag) for
-> the same patch multiple times.
+	add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-180 (-180)
+	Function                           old     new   delta
+	load_elf_binary                   5806    5626    -180 !!!
 
-Crap, I did not noticed that.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-Thanks for pointing it. I don't have time right now to fix it and send
-a new PR, I'll see in one week.
+ fs/binfmt_elf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
-Thanks,
-Miquèl
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -704,12 +704,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	unsigned long start_code, end_code, start_data, end_data;
+ 	unsigned long reloc_func_desc __maybe_unused = 0;
+ 	int executable_stack = EXSTACK_DEFAULT;
+-	struct pt_regs *regs = current_pt_regs();
+ 	struct {
+ 		struct elfhdr elf_ex;
+ 		struct elfhdr interp_elf_ex;
+ 	} *loc;
+ 	struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
++	struct pt_regs *regs;
+ 
+ 	loc = kmalloc(sizeof(*loc), GFP_KERNEL);
+ 	if (!loc) {
+@@ -1159,6 +1159,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 				MAP_FIXED | MAP_PRIVATE, 0);
+ 	}
+ 
++	regs = current_pt_regs();
+ #ifdef ELF_PLAT_INIT
+ 	/*
+ 	 * The ABI may specify that certain registers be set up in special
