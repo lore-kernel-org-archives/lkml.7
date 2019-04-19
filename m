@@ -2,310 +2,85 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFEAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D55CC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C358720643
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B9B20643
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfDSTC2 (ORCPT
+        id S1728770AbfDSTCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:02:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51012 "EHLO mga07.intel.com"
+        Fri, 19 Apr 2019 15:02:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:51014 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfDSTC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:02:27 -0400
+        id S1726290AbfDSTC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 15:02:28 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 01:40:43 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 04:42:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,368,1549958400"; 
-   d="scan'208";a="338990668"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.9])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Apr 2019 01:40:38 -0700
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     arei.gonglei@huawei.com, aik@ozlabs.ru,
-        Zhengxiao.zx@alibaba-inc.com, shuangtai.tst@alibaba-inc.com,
-        qemu-devel@nongnu.org, eauger@redhat.com, yi.l.liu@intel.com,
-        ziye.yang@intel.com, mlevitsk@redhat.com, pasic@linux.ibm.com,
-        felipe@nutanix.com, changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, alex.williamson@redhat.com,
-        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
-        kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute for mdev device
-Date:   Fri, 19 Apr 2019 04:35:04 -0400
-Message-Id: <20190419083505.19654-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190419083258.19580-1-yan.y.zhao@intel.com>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+X-IronPort-AV: E=Sophos;i="5.60,369,1549958400"; 
+   d="scan'208";a="141962866"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Apr 2019 04:42:01 -0700
+Subject: Re: [PATCH v15 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190416063250.7514-1-aubrey.li@linux.intel.com>
+ <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org>
+ <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
+ <alpine.DEB.2.21.1904181500100.3174@nanos.tec.linutronix.de>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <547c8966-8252-01b9-a807-5e28f91acf6b@linux.intel.com>
+Date:   Fri, 19 Apr 2019 19:42:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1904181500100.3174@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device version attribute in mdev sysfs is used by user space software
-(e.g. libvirt) to query device compatibility for live migration of VFIO
-mdev devices. This attribute is mandatory if a mdev device supports live
-migration.
+On 2019/4/18 21:00, Thomas Gleixner wrote:
+> On Wed, 17 Apr 2019, Andy Lutomirski wrote:
+> 
+>> On Tue, Apr 16, 2019 at 4:01 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>>>
+>>> On Tue, 16 Apr 2019 14:32:48 +0800 Aubrey Li <aubrey.li@linux.intel.com> wrote:
+>>>
+>>>> The architecture specific information of the running processes could
+>>>> be useful to the userland. Add support to examine process architecture
+>>>> specific information externally.
+>>>
+>>> The implementation looks just fine to me.  Have you had any feedback on
+>>> the overall desirability of adding this feature?
+>>
+>> I think I've been the most outspoken, and my not-all-that-strong
+>> opinion is that I don't really like it.  /proc/PID/status is already a
+>> bit of a mess, and I don't think we really want it to be a mess that
+>> is different on different architectures.  Hence my suggestion of
+>> /proc/PID/x86_status instead.  Or we could do /proc/PID/arch_status, I
+> 
+> arch_status looks like the right thing to do.
 
-It consists of two parts: common part and vendor proprietary part.
-common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
-             identifies device type. e.g., for pci device, it is
-             "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-vendor proprietary part: this part is varied in length. vendor driver can
-             specify any string to identify a device.
-
-When reading this attribute, it should show device version string of the
-device of type <type-id>. If a device does not support live migration, it
-should return errno.
-When writing a string to this attribute, it returns errno for
-incompatibility or returns written string length in compatibility case.
-If a device does not support live migration, it always returns errno.
-
-For user space software to use:
-1.
-Before starting live migration, user space software first reads source side
-mdev device's version. e.g.
-"#cat \
-/sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
-00028086-193b-i915-GVTg_V5_4
-
-2.
-Then, user space software writes the source side returned version string
-to device version attribute in target side, and checks the return value.
-If a negative errno is returned in the target side, then mdev devices in
-source and target sides are not compatible;
-If a positive number is returned and it equals to the length of written
-string, then the two mdev devices in source and target side are compatible.
-e.g.
-(a) compatibility case
-"# echo 00028086-193b-i915-GVTg_V5_4 >
-/sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-
-(b) incompatibility case
-"#echo 00028086-193b-i915-GVTg_V5_1 >
-/sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
--bash: echo: write error: Invalid argument
-
-3. if two mdev devices are compatible, user space software can start
-live migration, and vice versa.
-
-Note: if a mdev device does not support live migration, it either does
-not provide a version attribute, or always returns errno when its version
-attribute is read/written.
-
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Erik Skultety <eskultet@redhat.com>
-Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-Cc: Neo Jia <cjia@nvidia.com>
-Cc: Kirti Wankhede <kwankhede@nvidia.com>
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
- samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
- samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
- samples/vfio-mdev/mtty.c               | 16 ++++++++++++
- 4 files changed, 85 insertions(+)
-
-diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
-index c3f69bcaf96e..bc28471c0667 100644
---- a/Documentation/vfio-mediated-device.txt
-+++ b/Documentation/vfio-mediated-device.txt
-@@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
-   |     |   |--- available_instances
-   |     |   |--- device_api
-   |     |   |--- description
-+  |     |   |--- version
-   |     |   |--- [devices]
-   |     |--- [<type-id>]
-   |     |   |--- create
-@@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
-   |     |   |--- available_instances
-   |     |   |--- device_api
-   |     |   |--- description
-+  |     |   |--- version
-   |     |   |--- [devices]
-   |     |--- [<type-id>]
-   |          |--- create
-@@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
-   |          |--- available_instances
-   |          |--- device_api
-   |          |--- description
-+  |          |--- version
-   |          |--- [devices]
- 
- * [mdev_supported_types]
-@@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
-   [<type-id>], device_api, and available_instances are mandatory attributes
-   that should be provided by vendor driver.
- 
-+  version is a mandatory attribute if a mdev device supports live migration.
-+
- * [<type-id>]
- 
-   The [<type-id>] name is created by adding the device driver string as a prefix
-@@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
-   This attribute should show the number of devices of type <type-id> that can be
-   created.
- 
-+* version
-+
-+  This attribute is rw. It is used to check whether two devices are compatible
-+  for live migration. If this attribute is missing, then the corresponding mdev
-+  device is regarded as not supporting live migration.
-+
-+  It consists of two parts: common part and vendor proprietary part.
-+  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
-+               device type. e.g., for pci device, it is
-+               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-+  vendor proprietary part: this part is varied in length. vendor driver can
-+               specify any string to identify a device.
-+
-+  When reading this attribute, it should show device version string of the device
-+  of type <type-id>. If a device does not support live migration, it should
-+  return errno.
-+  When writing a string to this attribute, it returns errno for incompatibility
-+  or returns written string length in compatibility case. If a device does not
-+  support live migration, it always returns errno.
-+
-+  for example.
-+  # cat \
-+ /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
-+  00028086-193b-i915-GVTg_V5_2
-+
-+  #echo 00028086-193b-i915-GVTg_V5_2 > \
-+ /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
-+ -bash: echo: write error: Invalid argument
-+
- * [device]
- 
-   This directory contains links to the devices of type <type-id> that have been
-@@ -327,12 +361,14 @@ card.
-         |   |   |-- available_instances
-         |   |   |-- create
-         |   |   |-- device_api
-+        |   |   |-- version
-         |   |   |-- devices
-         |   |   `-- name
-         |   `-- mtty-2
-         |       |-- available_instances
-         |       |-- create
-         |       |-- device_api
-+        |       |-- version
-         |       |-- devices
-         |       `-- name
-         |-- mtty_dev
-diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-index b038aa9f5a70..2f5ba96b91a2 100644
---- a/samples/vfio-mdev/mbochs.c
-+++ b/samples/vfio-mdev/mbochs.c
-@@ -1391,11 +1391,28 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
- }
- MDEV_TYPE_ATTR_RO(device_api);
- 
-+static ssize_t version_show(struct kobject *kobj, struct device *dev,
-+		char *buf)
-+{
-+	/* do not support live migration */
-+	return -EINVAL;
-+}
-+
-+static ssize_t version_store(struct kobject *kobj, struct device *dev,
-+		const char *buf, size_t count)
-+{
-+	/* do not support live migration */
-+	return -EINVAL;
-+}
-+
-+static MDEV_TYPE_ATTR_RW(version);
-+
- static struct attribute *mdev_types_attrs[] = {
- 	&mdev_type_attr_name.attr,
- 	&mdev_type_attr_description.attr,
- 	&mdev_type_attr_device_api.attr,
- 	&mdev_type_attr_available_instances.attr,
-+	&mdev_type_attr_version.attr,
- 	NULL,
- };
- 
-diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-index cc86bf6566e4..ff15fdfc7d46 100644
---- a/samples/vfio-mdev/mdpy.c
-+++ b/samples/vfio-mdev/mdpy.c
-@@ -695,11 +695,27 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
- }
- MDEV_TYPE_ATTR_RO(device_api);
- 
-+static ssize_t version_show(struct kobject *kobj, struct device *dev,
-+		char *buf)
-+{
-+	/* do not support live migration */
-+	return -EINVAL;
-+}
-+
-+static ssize_t version_store(struct kobject *kobj, struct device *dev,
-+		const char *buf, size_t count)
-+{
-+	/* do not support live migration */
-+	return -EINVAL;
-+}
-+static MDEV_TYPE_ATTR_RW(version);
-+
- static struct attribute *mdev_types_attrs[] = {
- 	&mdev_type_attr_name.attr,
- 	&mdev_type_attr_description.attr,
- 	&mdev_type_attr_device_api.attr,
- 	&mdev_type_attr_available_instances.attr,
-+	&mdev_type_attr_version.attr,
- 	NULL,
- };
- 
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index 1c77c370c92f..4ae3aad3474d 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -1390,10 +1390,26 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
- 
- MDEV_TYPE_ATTR_RO(device_api);
- 
-+static ssize_t version_show(struct kobject *kobj, struct device *dev,
-+		char *buf)
-+{
-+	/* do not support live migration */
-+	return -EINVAL;
-+}
-+
-+static ssize_t version_store(struct kobject *kobj, struct device *dev,
-+		const char *buf, size_t count)
-+{
-+	/* do not support live migration */
-+	return -EINVAL;
-+}
-+
-+static MDEV_TYPE_ATTR_RW(version);
- static struct attribute *mdev_types_attrs[] = {
- 	&mdev_type_attr_name.attr,
- 	&mdev_type_attr_device_api.attr,
- 	&mdev_type_attr_available_instances.attr,
-+	&mdev_type_attr_version.attr,
- 	NULL,
- };
- 
--- 
-2.17.1
-
+Thanks Andy and Thomas, let me change the patch to use arch_status instead.
