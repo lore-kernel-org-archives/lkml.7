@@ -2,100 +2,140 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAAFC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0DAC282E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C11120645
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3F320821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHSxBoQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfDSTLF (ORCPT
+        id S1729376AbfDSTL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:11:05 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38080 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbfDSTLD (ORCPT
+        Fri, 19 Apr 2019 15:11:28 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37840 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfDSTL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:11:03 -0400
-Received: by mail-it1-f196.google.com with SMTP id f22so9629057ita.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:11:03 -0700 (PDT)
+        Fri, 19 Apr 2019 15:11:27 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v84so4621101oif.4;
+        Fri, 19 Apr 2019 12:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+2drH5CEdV46g6LB3v7o+zWjzFiQ1J6IZVvI0w9yvfU=;
+        b=ZHSxBoQYrfU2dxsZQQqGxEZIyuA/1ek2/MFLecIqgFx1YVTsIP1xTRAzqDe1FixNTk
+         6oOpOY0LOoSy01zsOWAnSZBy31/aVodErLKBfOW8kwt5sCTEotXvPDi8smtzRHNRBccz
+         xdBrXE9d2jALCY2HN+7VLz57ASGGC29AjNO01j8W8Gz8r1qeGhzfVhiCmDUO+DD752cW
+         oANhKwSxUnFgV1OXppWWyIXFI4GsMGRqV57HXkB4YVFyrCNIs5s4edPJm0hhECeUGtDe
+         lYqYzXzXqeqE5z94/cNOL7boK3DrsSgypEHV7A6vs/G52lrrnZ1dPDw2JlIz031XSHsd
+         0Oyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RTOZ59iF6vyITV6RUy35ISuiq8HQkbzhWEffOIA1370=;
-        b=nka3so4UR+c6IjnlrfTkSoQVdGuNno0pgyeYC9kZECex5iZj+IvDmI5GPyV5pmKmrf
-         JxB1DzC364QhmUrshhnmAtmNYg5W5XDkmtnreQMlv9yg5wpu8UOF4COPL/nD23YiYlOi
-         LLKy68BNZ7WaVEo1Zdiq30tonrObE+NhtgYg3DMUtNN/tSk+PeqSJxETWXngFBoSTOS7
-         S3twxIs0lHbTIL6hVJQI7kGS5l8HSI1UgeVAkYNH9ArGylabfJwN+2MmJUDESN23KyVC
-         NvjUXIhk+VEzGyS3tbSmn2DeVqvHt0QcQDvLudcImEt3ST6GW4WrCkKjeGuC0ssrI7df
-         6qaA==
-X-Gm-Message-State: APjAAAU4oN9cycs0G4YRovE7QFkpE8LWIkXTDVMq+BEeK5C+lcJnIoEj
-        +C1TlPmG4KKzX4qwuRS4Yz0VmAjCzq5GsON61Ro3rjuGyaM9ng==
-X-Google-Smtp-Source: APXvYqxcW3nWbjBA1HutHIeI6yQle841Kg3kR1pT99RNxTcnlGUUMdYfPr0jvbZPcPrBHM+tuhPyV8d0Q8RRE1qZdG8=
-X-Received: by 2002:a02:c510:: with SMTP id s16mr2144469jam.51.1555674449868;
- Fri, 19 Apr 2019 04:47:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+2drH5CEdV46g6LB3v7o+zWjzFiQ1J6IZVvI0w9yvfU=;
+        b=sNv6uWkfwR+za4y5LIDaOW6tpiYwQF6rQLr1DUk5SBLUUFFsZoGkPuxhyNR/AfGSgs
+         K3oKKLNRxVoBbCvIaDxJRqMYx1xdtyaRq76pZs01qhnRHl9Rw1D4XmiRhcbwZE00+SgX
+         tZqw3ZJaesdWDwbosCvhvjuVfxZapEaYgpy4StzN24sWE9Q8LnuhKyZjAWhnmIUURg2v
+         9WaW99i2KOPLcjEmpzQUPn/dc38N1mJNzZiVvSJqDRHvYGxOvrbZmZLs1/6RrPWHV+/I
+         ToOelK/Yyw2YDUPNriZZ9KRyx29/mV9cIo52X5bO95j9lfMrdFAdLRbqIqCRHDUnysz9
+         8WdA==
+X-Gm-Message-State: APjAAAWQ1BbrVNARgJwM1l7pQA1zBucXTTmv2jCrHIYND1Eb8A3YUWHb
+        X0I1IG9Mpco/d5Zae9BAUNhYv1TNIUA=
+X-Google-Smtp-Source: APXvYqzZSMLoPPohOVoFI1SE6z3j9BzvEfCXlMxQrZidqZZZsN8fjNejYaNz3qfb1i3TGQiVl+C5dw==
+X-Received: by 2002:aca:fd93:: with SMTP id b141mr2017782oii.153.1555687402034;
+        Fri, 19 Apr 2019 08:23:22 -0700 (PDT)
+Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id y9sm1981723otk.20.2019.04.19.08.23.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 08:23:21 -0700 (PDT)
+From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
+To:     bhelgaas@google.com
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/4] PCI: hotplug: Wait for PDS when in-band presence is disabled
+Date:   Fri, 19 Apr 2019 10:22:25 -0500
+Message-Id: <20190419152238.12251-4-mr.nuke.me@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190419152238.12251-1-mr.nuke.me@gmail.com>
+References: <20190419000148.GI126710@google.com>
+ <20190419152238.12251-1-mr.nuke.me@gmail.com>
 MIME-Version: 1.0
-References: <20190418160730.11901-1-kasong@redhat.com> <20190419005821.ttlpav7gviaed7am@treble>
- <CACPcB9fsYqs+xaj6w6ExKdpi-Pk4RqiD5HxTyURpee_arYQANg@mail.gmail.com> <20190419094313.GO7905@worktop.programming.kicks-ass.net>
-In-Reply-To: <20190419094313.GO7905@worktop.programming.kicks-ass.net>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 19 Apr 2019 19:47:18 +0800
-Message-ID: <CACPcB9dKmH4oNR1fAwGndoPMiZsgfFve4g2_d26pYTByGrt75w@mail.gmail.com>
-Subject: Re: [RFC PATCH v3] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 5:43 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Apr 19, 2019 at 10:17:49AM +0800, Kairui Song wrote:
-> > On Fri, Apr 19, 2019 at 8:58 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > I still don't like using regs->bp because it results in different code
-> > > paths for FP and ORC.  In the FP case, the regs are treated like real
-> > > regs even though they're fake.
-> > >
-> > > Something like the below would be much simpler.  Would this work?  I don't
-> > > know if any other code relies on the fake regs->bp or regs->sp.
-> >
-> > Works perfectly. My only concern is that FP path used to work very
-> > well, not sure it's a good idea to change it, and this may bring some
-> > extra overhead for FP path.
->
-> Given Josh wrote all that code, I'm fairly sure it is still OK :-)
->
-> But also looking at the code in unwind_frame.c, __unwind_start() seems
-> to pretty much do what the removed caller_frame_pointer() did (when
-> .regs=NULL) but better.
->
+When inband presence is disabled, PDS may come up at any time, or not
+at all. PDS being low may indicate that the card is still mating, and
+we could expect contact bounce to bring down the link as well.
 
-OK, with FP we will also need to do a few more extra unwinding,
-previously it start directly from the frame of the trace point, now
-have to trace back to the trace point first.
-If that's fine I could post another update (that will be pretty much
-just copy&paste from the Josh's code he posted :P , is this OK?)
+It is reasonable to assume that most cards will mate in a hotplug slot
+in less than a second. Thus, when we know PDS only reflects
+out-of-band presence, it's worthwhile to wait the extra second and
+make sure the card is properly mated before loading the driver.
 
+Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+---
+ drivers/pci/hotplug/pciehp_hpc.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 078d78a7437d..6cd2c4fb4edb 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -240,6 +240,25 @@ static bool pci_bus_check_dev(struct pci_bus *bus, int devfn)
+ 	return found;
+ }
+ 
++static void pcie_wait_for_presence(struct pci_dev *pdev)
++{
++	int timeout = 1000;
++	bool pds;
++	u16 slot_status;
++
++	while(true) {
++		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
++		pds = !!(slot_status & PCI_EXP_SLTSTA_PDS);
++		if (pds || timeout <= 0)
++			break;
++		msleep(10);
++		timeout -= 10;
++	}
++
++	if (!pds)
++		pci_info(pdev, "Presence Detect state not set in 1000 msec\n");
++}
++
+ int pciehp_check_link_status(struct controller *ctrl)
+ {
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+@@ -249,6 +268,9 @@ int pciehp_check_link_status(struct controller *ctrl)
+ 	if (!pcie_wait_for_link(pdev, true))
+ 		return -1;
+ 
++	if (ctrl->inband_presence_disabled)
++		pcie_wait_for_presence(pdev);
++
+ 	found = pci_bus_check_dev(ctrl->pcie->port->subordinate,
+ 					PCI_DEVFN(0, 0));
+ 
+-- 
+2.20.1
 
-
-
---
-Best Regards,
-Kairui Song
