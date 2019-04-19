@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A6FC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810BDC282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A81218A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48566217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfDSULP (ORCPT
+        id S1728257AbfDSULW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35944 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 16:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbfDSULO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:11:14 -0400
+        id S1726498AbfDSULV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:11:21 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CD282171F;
-        Fri, 19 Apr 2019 20:11:10 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 16:11:09 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C6321872;
+        Fri, 19 Apr 2019 20:11:17 +0000 (UTC)
+Date:   Fri, 19 Apr 2019 16:11:16 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -60,11 +60,12 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         linux-arch@vger.kernel.org
-Subject: Re: [patch V2 23/29] tracing: Simplify stack trace retrieval
-Message-ID: <20190419161109.5f981236@gandalf.local.home>
-In-Reply-To: <20190418084255.186774860@linutronix.de>
+Subject: Re: [patch V2 24/29] tracing: Remove the last struct stack_trace
+ usage
+Message-ID: <20190419161116.14f52ff8@gandalf.local.home>
+In-Reply-To: <20190418084255.275696472@linutronix.de>
 References: <20190418084119.056416939@linutronix.de>
-        <20190418084255.186774860@linutronix.de>
+        <20190418084255.275696472@linutronix.de>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -74,14 +75,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 10:41:42 +0200
+On Thu, 18 Apr 2019 10:41:43 +0200
 Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> Replace the indirection through struct stack_trace by using the storage
-> array based interfaces.
+> Simplify the stack retrieval code by using the storage array based
+> interface.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
+
 
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
