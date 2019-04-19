@@ -2,111 +2,136 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F5C282DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC1FC282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A0D21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B0721479
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjTNY/B6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/bi+KKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfDSTco (ORCPT
+        id S1728100AbfDSTcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:32:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42991 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbfDSTcn (ORCPT
+        Fri, 19 Apr 2019 15:32:50 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36025 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfDSTct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:32:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w25so2936851pfi.9;
-        Fri, 19 Apr 2019 12:32:43 -0700 (PDT)
+        Fri, 19 Apr 2019 15:32:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u17so4696520lfi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:32:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Opmc57fy+M6CMn85wO5GVzdSn9MSV8hVuhSL868U+yY=;
-        b=hjTNY/B65Cca8jZ0d6efgsSYEw1p5a5xCwxZU7j3wjXMwlJcvKs7Rf7AvPxMY9EESV
-         lZc9qJzsoJ+rugbZGFDREf/MnHS+Oeag6p8hLD6ZTial3L7ThBbPDGG47qIJTJ4OM6bC
-         YHLRTwwmFB6B4Jm4wJIh+rOxxZ0L90HIP5md/+mhIDIk4Dk/wiFdT3sBhYqWyz+/taZh
-         uIpTfcCxpgzacA81f1rllALMMnrxBUVVf25rVxfxj2sbfoSPq1KyIX9KAQEX6Cu5gaop
-         nwlZdr9YcB9lpQ34gaduqRghEPPp2e2W1esc+Vs7Xjf6rkuBpVKBc1vbdk7MNMUqCNR6
-         eGsg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d7j7ibmI/hwuau+9LB435H5B5khOUvNKDYHZSK8OJFI=;
+        b=K/bi+KKGE7S545qHzeqi6n/FJwXwGGUlAEbJUE+w2bUHyRKzGBFbKRCye4dUEz1qdz
+         LwvqlLbO764cPhEDKXb6vj82GDFZxW7AJ1A/5wh9ym5F1FdF4d6d8rxiawecXO04Hfos
+         7XYOWKRpQKGTb9XjGhEf1G3iW7yWQZfoMsYbhYcphRUxAk72mO56e2v8yiLpoOeNHip2
+         pI88bF6Hpb/KQe96JeO52I9X7ncjXy+uY/pVVYsr/c1U51PxPweULIYZw7QhFBNGvtrl
+         iSbqC/fyzaC3NN52XvGHlFlU1CwI+VAMHYCenP3E7YK0sE7zBYvpynJGUCFZPmodxJMm
+         lTpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Opmc57fy+M6CMn85wO5GVzdSn9MSV8hVuhSL868U+yY=;
-        b=EIIXvmYRjucd7lSa0EKp78hwMaw5DfE03yPZTlnFDcW2o+a4jknHtePUEah2dgzbVo
-         Z3XJ5t5PxnGfeiSt70fD3Cra5XLkzNvcfWayYR73z+ksqx5uzRTLAgZyfVQ1fPw7ar+W
-         94y/whl1CXSzgVntGyaoHZNHnMreL/B7JHOcA/tI3GdpjtC7KKaSJFc3lzFvrIpqVJB6
-         oz0gSCZfEs6jNoarGS5dAFZCy/qxHSkNkq0+a9ckH6BYpqvZV4LSWeV3z27qkNESWIuQ
-         3Ss7ON0LpCTpUHF+wjwa2+wc3/Mb64cfWwoMCbzsYE7JX2mBRl0t55iGuHLRWXSoDVuW
-         I9rg==
-X-Gm-Message-State: APjAAAV9yQpC+mJhipof5maRjEnKAHIE/XiR524pHLc67/92enDvtGnG
-        wCXsa2ObYa3KuAdB9apbtnL5KhHTdn/KiQ==
-X-Google-Smtp-Source: APXvYqyGiCWg7OGG1tA7wDwKM7SRJsi4DTOHa1VVBFCV/MYLUhpfATPz5EYoFKYuhxol9Lnh59zVMQ==
-X-Received: by 2002:a63:3281:: with SMTP id y123mr2734240pgy.272.1555663574072;
-        Fri, 19 Apr 2019 01:46:14 -0700 (PDT)
-Received: from localhost.localdomain ([132.237.175.246])
-        by smtp.gmail.com with ESMTPSA id y3sm4688740pge.7.2019.04.19.01.46.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 01:46:13 -0700 (PDT)
-From:   crag0715@gmail.com
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, hayeswang@realtek.com,
-        mario_limonciello@dell.com, crag0715@gmail.com,
-        "Crag.Wang" <crag.wang@dell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Glass <sjg@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Grant Grundler <grundler@chromium.org>,
-        David Chen <david.chen7@dell.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Charles Hyde <charles.hyde@dell.corp-partner.google.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 1/1] r8152: sync sa_family with the media type of network device
-Date:   Fri, 19 Apr 2019 16:45:46 +0800
-Message-Id: <20190419084547.26220-1-crag0715@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=d7j7ibmI/hwuau+9LB435H5B5khOUvNKDYHZSK8OJFI=;
+        b=JwzwRe8+nfS6KAPjTa1SSSl8z94c5tHHnC3bO3YIsYP/Ag+KgJhiPoR+IORDqhvSZ3
+         J1COXQbcGcqUyUK+T4vxjc9hvo6g/QxnHjMQRjWInn0YG12YXKoeOfITBpr+Y3qmYkft
+         UOr6CMdFl/gW/pbWxJSU7KeklIKyLh6ziZuur6VskEHR5eayxnrFPZSqkDg8RlovIFqD
+         62OAWCBFW6FExQeoBomsyiZVw39G3pQc7tiIvbGC6vD2OXehhBcyCxxbie5Vr8e7D0jW
+         OJo+J3MqfoflqfSfhiXPOdwg6SlLw/rw+BIDABXvcyUbDWxPWVYpO4ZOPlc3qwCHOtJn
+         /bfQ==
+X-Gm-Message-State: APjAAAUr08GGH1ZtFDWaFXD+T/w3gGZNtCwXNyB5XcvfbjDUA6WrXXKP
+        mPjbulwRCl2X54frCHlssU3/fU2GMS0=
+X-Google-Smtp-Source: APXvYqwTZmuIgaxsK6mxNtZhqxSzZBt6gqVy7LhhvyXiNb+iHuXGwBl9pp3nVnnMWQymAmV94CSj7w==
+X-Received: by 2002:ac2:48bb:: with SMTP id u27mr1876562lfg.17.1555670553078;
+        Fri, 19 Apr 2019 03:42:33 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id m18sm942231ljb.35.2019.04.19.03.42.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 19 Apr 2019 03:42:32 -0700 (PDT)
+Date:   Fri, 19 Apr 2019 13:42:30 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        hawk@kernel.org, xdp-newbies@vger.kernel.org, ast@kernel.org,
+        aniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+Subject: Re: [RFC PATCH 3/3] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190419104228.GA4268@khorivan>
+Mail-Followup-To: Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        hawk@kernel.org, xdp-newbies@vger.kernel.org, ast@kernel.org,
+        aniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
+ <20190417174942.11811-4-ivan.khoronzhuk@linaro.org>
+ <20190419083156.GA6687@apalos>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190419083156.GA6687@apalos>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Crag.Wang" <crag.wang@dell.com>
+On Fri, Apr 19, 2019 at 11:31:56AM +0300, Ilias Apalodimas wrote:
+>Hi Ivan,
+>
+>> +static struct page *cpsw_alloc_page(struct cpsw_common *cpsw)
+>> +{
+>> +	struct page_pool *pool = cpsw->rx_page_pool;
+>> +	struct page *page;
+>> +	int i = 0;
+>> +
+>> +	do {
+>> +		page = page_pool_dev_alloc_pages(pool);
+>> +		if (!page)
+>> +			return NULL;
+>> +
+>> +		/* skip pages used by skb netstack */
+>I think the comment here is wrong and might confuse people.
+>The page ref cnt is 1, which means the packet was *processed* and netstack is
+>done with it, hence you can re-use it.
+>If it's !=1 then you correctly unmap the buffer and decrease the ref cnt, so it
+>will eventually be freed and not returned to the pool, right?
+It's compensation substitution for page_pool support in skb netsack.
+And should be considered in combine with:
 
-Without this patch the socket address family sporadically gets wrong
-value ends up the dev_set_mac_address() fails to set the desired MAC
-address.
+skb = build_skb(xmeta, cpsw_rxbuf_total_len(pkt_size));
+...
+page_pool_recycle_direct(pool, page);
+page_ref_inc(page);
+netif_receive_skb(skb);
 
-Change-Id: Ib48a303730bee81667a2859be32e48cc8a66f277
-Signed-off-by: Crag.Wang <crag.wang@dell.com>
----
- drivers/net/usb/r8152.c | 2 ++
- 1 file changed, 2 insertions(+)
+Here order is important.
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 4c63b40d5e00..41fb39ce69c9 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -1225,6 +1225,8 @@ static int determine_ethernet_addr(struct r8152 *tp, struct sockaddr *sa)
- 	struct net_device *dev = tp->netdev;
- 	int ret;
- 
-+	sa->sa_family = dev->type;
-+
- 	if (tp->version == RTL_VER_01) {
- 		ret = pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
- 	} else {
+I will correct comments in final version (w/o overloading) ofc, leaving
+thinking environment for people. I think it's fair enough about this.
+
+>> +		if (page_ref_count(page) == 1)
+>> +			break;
+>> +
+>> +		/* it's a pitty, but free page */
+>> +		page_pool_recycle_direct(pool, page);
+>> +	} while (++i < descs_pool_size);
+>> +
+>> +	return page;
+>> +}
+>> +
+>
+> /Ilias
+
 -- 
-2.20.1
-
+Regards,
+Ivan Khoronzhuk
