@@ -2,148 +2,245 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D166BC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A328C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C7120693
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFCE2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 19:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="vFtkEwj0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="QCLn0Ghb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfDSTCw (ORCPT
+        id S1728530AbfDSTC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 15:02:52 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38349 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbfDSTCu (ORCPT
+        Fri, 19 Apr 2019 15:02:57 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.87]:46406 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728823AbfDSTCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 15:02:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f36so2976566plb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 12:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p9ek9Lo1t5TDwh6GoEDfO3CWDi0O8EcB/kULAdUF/OU=;
-        b=vFtkEwj0yv9OP3j0uE/8mvF2oBbaEbnga9y0/sXtRCBUScAMbt5NbTRw9cKstPvPtp
-         FG33T7XnDBQnO2UeZGyqTGavpSTMU0mx83wbpIqF/UKm9SlMNGM3hc0ZLXsEMCRt3JoW
-         s9Wmh0Xi1JY4d0EDv4nUp4wWSeeRaYl6u3s6U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p9ek9Lo1t5TDwh6GoEDfO3CWDi0O8EcB/kULAdUF/OU=;
-        b=rqgy5K+5vTR+aYwnbkb82if8TAyx86SpBg/bL2XQtHQIclQ74ICd3iLTo3qDwUKaqC
-         SD8yuOdGmltQFUQqsnk7NG7zJ9xos3n3AAeNQdx7gNtPTCMj+FJLwDkKLgto9c/oHCYE
-         ANcyMw2iWnS8Zi2GiMa4Lz79A+5ukSKr5sdcjNFw13i5+peDNsfc3J0oRUSrU0VILRii
-         AlzY8r46m+Z2B9yW6WaKBoF2ETVbCo09AhOxf5+F5qS0S1nIRM9K2jryI6tnqH2rVDZO
-         s6MghVrci+Tzz70Ro9U7QqK9foywg8Ub/hExBiFPNTpua2iHqoALW1Yb6JgCflfxtuXn
-         8K+w==
-X-Gm-Message-State: APjAAAW/92HypZM0vSDdIQWUoI6JtIhHap4TWmUuCsAUDi70iIztLbZl
-        A/8DhyrdGSyP3DFSpbBHLBkQTg==
-X-Google-Smtp-Source: APXvYqxsaWDdMXJAhn/z/WdbNMp1NyDUuHVxHZBUgyUycIQ+4HZPM1Nx2CEEyiMjCCtZoDlQM+bZCg==
-X-Received: by 2002:a17:902:442:: with SMTP id 60mr5506960ple.107.1555700569184;
-        Fri, 19 Apr 2019 12:02:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o89sm9909856pfi.178.2019.04.19.12.02.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 12:02:48 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 15:02:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-Message-ID: <20190419190247.GB251571@google.com>
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com>
- <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com>
- <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+        Fri, 19 Apr 2019 15:02:52 -0400
+X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Apr 2019 15:02:51 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 38E63D847CC
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:12:52 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id HY0KhQw8qYTGMHY0KhXu2I; Fri, 19 Apr 2019 13:12:52 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=POBm3POgnF9dNWYaSNQl7zAnLu6dfC4n/mraAAfr//s=; b=QCLn0Ghbw9fi2w6SWZfZQ9XlPS
+        WgwLi8mx4pW+OIGiLRfSgOZIEuzSDo0U9ftMZDF1EOtKNEwewAYKBPbf8/ZEjmky+chxdvkQ/bFIC
+        V+2kYxjLm/ToQLiOveRPW7QVXnqfcfsKIdauPP0uGxprvlIdO+Pt+L1g1RBatls+Lk2EDAETxZ/vc
+        WcKwb2yf1KsdD/G1HXhrWoGPo5ggLIBh4C/Y3wmuv4+CHZDcDrXPqWip03ak1upAklY1CnlxCc2TH
+        /rTobVg01krjGzNnfdj8L3aJ1kuILu2iSqrfa04o+Qok56ixYMeGu0L3siaBCox90fvExUP2z2vJB
+        nFsw810g==;
+Received: from [177.35.229.111] (port=52782 helo=[192.168.0.50])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1hHY0J-003wyR-DH; Fri, 19 Apr 2019 15:12:51 -0300
+Subject: Re: [PATCH v2 1/4] power: supply: max17040: Add IRQ handler for low
+ SOC alert
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br>
+ <20190415012635.6369-2-matheus@castello.eng.br>
+ <CAJKOXPfXS_L992rPdHqitFyRmw93En9GRLVOjRRnwGgiEwV28Q@mail.gmail.com>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <c4bffa4d-36bb-1f6c-cf56-69a990d9b832@castello.eng.br>
+Date:   Fri, 19 Apr 2019 15:12:48 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJKOXPfXS_L992rPdHqitFyRmw93En9GRLVOjRRnwGgiEwV28Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 177.35.229.111
+X-Source-L: No
+X-Exim-ID: 1hHY0J-003wyR-DH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.50]) [177.35.229.111]:52782
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 10
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
-> On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> >> On 04/16, Joel Fernandes wrote:
-> >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> >> > >
-> >> > > Could you explain when it should return POLLIN? When the whole
-> >process exits?
-> >> >
-> >> > It returns POLLIN when the task is dead or doesn't exist anymore,
-> >or when it
-> >> > is in a zombie state and there's no other thread in the thread
-> >group.
-> >>
-> >> IOW, when the whole thread group exits, so it can't be used to
-> >monitor sub-threads.
-> >>
-> >> just in case... speaking of this patch it doesn't modify
-> >proc_tid_base_operations,
-> >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
-> >going to use
-> >> the anonymous file returned by CLONE_PIDFD ?
-> >
-> >I don't think procfs works that way. /proc/sub-thread-tid has
-> >proc_tgid_base_operations despite not being a thread group leader.
-> >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
-> >be hit trivially, and then the code will misbehave.
-> >
-> >@Joel: I think you'll have to either rewrite this to explicitly bail
-> >out if you're dealing with a thread group leader, or make the code
-> >work for threads, too.
+
+
+Em 4/15/19 4:10 AM, Krzysztof Kozlowski escreveu:
+> On Mon, 15 Apr 2019 at 03:49, Matheus Castello <matheus@castello.eng.br> wrote:
+>>
+>> According datasheet max17040 has a pin for alert host for low SOC.
+>> This pin can be used as external interrupt, so we need to check for
+>> interrupts assigned for device and handle it.
+>>
+>> In hadler we are checking and storing fuel gauge registers values
+>> and send an uevent to notificate user space, so user space can decide
+>> save work or turn off since the alert demonstrate that the battery may
+>> no have the power to keep the system turned on for much longer.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>   drivers/power/supply/max17040_battery.c | 69 +++++++++++++++++++++++--
+>>   1 file changed, 64 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+>> index 91cafc7bed30..8d2f8ed3f44c 100644
+>> --- a/drivers/power/supply/max17040_battery.c
+>> +++ b/drivers/power/supply/max17040_battery.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/i2c.h>
+>>   #include <linux/delay.h>
+>> +#include <linux/interrupt.h>
+>>   #include <linux/power_supply.h>
+>>   #include <linux/max17040_battery.h>
+>>   #include <linux/slab.h>
+>> @@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
+>>                  chip->status = POWER_SUPPLY_STATUS_FULL;
+>>   }
+>>
+>> +static void max17040_check_changes(struct i2c_client *client)
+>> +{
+>> +       max17040_get_vcell(client);
+>> +       max17040_get_soc(client);
+>> +       max17040_get_online(client);
+>> +       max17040_get_status(client);
+>> +}
+>> +
+>>   static void max17040_work(struct work_struct *work)
+>>   {
+>>          struct max17040_chip *chip;
+>>
+>>          chip = container_of(work, struct max17040_chip, work.work);
+>> -
+>> -       max17040_get_vcell(chip->client);
+>> -       max17040_get_soc(chip->client);
+>> -       max17040_get_online(chip->client);
+>> -       max17040_get_status(chip->client);
+>> +       max17040_check_changes(chip->client);
+>>
+>>          queue_delayed_work(system_power_efficient_wq, &chip->work,
+>>                             MAX17040_DELAY);
+>>   }
+>>
+>> +static irqreturn_t max17040_thread_handler(int id, void *dev)
+>> +{
+>> +       struct max17040_chip *chip = dev;
+>> +       struct i2c_client *client = chip->client;
+>> +
+>> +       dev_warn(&client->dev, "IRQ: Alert battery low level");
+>> +       /* read registers */
+>> +       max17040_check_changes(chip->client);
+>> +
+>> +       /* send uevent */
+>> +       power_supply_changed(chip->battery);
+>> +
+>> +       return IRQ_HANDLED;
+>> +}
+>> +
+>>   static enum power_supply_property max17040_battery_props[] = {
+>>          POWER_SUPPLY_PROP_STATUS,
+>>          POWER_SUPPLY_PROP_ONLINE,
+>> @@ -217,6 +237,27 @@ static int max17040_probe(struct i2c_client *client,
+>>                  return PTR_ERR(chip->battery);
+>>          }
+>>
+>> +       /* check interrupt */
+>> +       if (client->irq) {
+>> +               int ret;
+>> +               unsigned int flags;
+>> +
+>> +               dev_info(&client->dev, "IRQ: enabled\n");
+>> +               flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+>> +
+>> +               ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+>> +                                               max17040_thread_handler, flags,
+>> +                                               chip->battery->desc->name,
+>> +                                               chip);
+>> +
+>> +               if (ret) {
+>> +                       client->irq = 0;
+>> +                       if (ret != -EBUSY)
 > 
-> The latter case probably being preferred if this API is supposed to be
-> useable for thread management in userspace.
+> Why not on EBUSY?
+> 
+>> +                               dev_warn(&client->dev,
+>> +                                       "Failed to get IRQ err %d\n", ret);
+>> +               }
+>> +       }
+>> +
+>>          max17040_reset(client);
+>>          max17040_get_version(client);
+>>
+>> @@ -224,6 +265,8 @@ static int max17040_probe(struct i2c_client *client,
+>>          queue_delayed_work(system_power_efficient_wq, &chip->work,
+>>                             MAX17040_DELAY);
+>>
+>> +       device_init_wakeup(&client->dev, 1);
+> 
+> Either you parse DT for wakeup-source property and use it... or you
+> unconditionally enable wakeup. In the second case - there is no point
+> to check later for device_may_wakeup(). Instead check the return value
+> of device_init_wakeup().
+> 
+>> +
+>>          return 0;
+>>   }
+>>
+>> @@ -244,6 +287,14 @@ static int max17040_suspend(struct device *dev)
+>>          struct max17040_chip *chip = i2c_get_clientdata(client);
+>>
+>>          cancel_delayed_work(&chip->work);
+>> +
+>> +       if (client->irq) {
+>> +               if (device_may_wakeup(dev))
+>> +                       enable_irq_wake(client->irq);
+>> +               else
+>> +                       disable_irq_wake(client->irq);
+> 
+> Did you try the wakeup from suspend? You do not have a disable_irq()
+> here which usually was needed for interrupts to work properly on
+> suspend. Maybe this was fixed?
+> 
+> Best regards,
+> Krzysztof
+> 
+Hi Krzysztof,
 
-At the moment, we are not planning to use this for sub-thread management. I
-am reworking this patch to only work on clone(2) pidfds which makes the above
-discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
-patches, CLONE_THREAD with pidfd is not supported.
+I test it using mem state and suspend, resuming seems to have worked 
+correctly ...
 
-Also we wanted to make the polling of pidfd quite close to the wait(2) family
-semantics which, as I understand correctly, is not something that works for
-sub-threads. In the future, we could bail in poll(2) or return an error, if
-clone(2) starts supporting thread pidfds, but at the moment I will like to
-keep the WARN_ON just in case. Please let me know if I missed something.
+Thanks for the review, I'm working in your suggestions and I expect to 
+send v3 this weekend.
 
-thanks!
-
- - Joel
+Best Regards,
+Matheus Castello
 
