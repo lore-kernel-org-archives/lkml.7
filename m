@@ -2,192 +2,238 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A9CC282E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BF1C282E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02F720821
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="VG4YzUHD"
+	by mail.kernel.org (Postfix) with ESMTP id 0287C20821
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555707450;
+	bh=KlbRKB9GU202DsocgIU4dZrSHqRRzgS4R4c9hoyDTfY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0QCYeSgNQkbfdlvdyt46rup2JRFQdkRJktkYVToN+C9Wb9G28wPfBdfNTDKdiAqm6
+	 fNsOiZCRCvLaHZ8/OgBipruoXYpSVgCxjsH7UeCLRrtK5Yxpk9At6aR5Blocx+DrcZ
+	 XUTGGBwm59755t4ZWi3OLYrPqotGqUJ1U1JCJyaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfDSU5Z (ORCPT
+        id S1727464AbfDSU53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:57:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46869 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfDSU5Z (ORCPT
+        Fri, 19 Apr 2019 16:57:29 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:33478 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727287AbfDSU51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:57:25 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h21so5539202ljk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:57:23 -0700 (PDT)
+        Fri, 19 Apr 2019 16:57:27 -0400
+Received: by mail-it1-f195.google.com with SMTP id v8so11184757itf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:57:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mc8m+moEJITkvv7tcKWJ/u36imYJnwxGy3M0tYcmGgc=;
-        b=VG4YzUHDQUjJy4KWZ0IAXKLszdM8zM5abCV++aJeoxlGp3DWX2Og9XU3vgvJtsy4ua
-         gwGrew7zv91gmUoYmvGUB7yRiL8k8dm1afksgP18dtzWVfM1SZJ5B+iRMGRO5gHnDcev
-         5E6dQOSRBR71Zy9eP+ivXyiaI18lC20sdIoC1MD7Auzcww0w2vHCwgGDsLPshUWBpFcK
-         ZGxgqb5KEdHvHaPeFH/w+JKw6GMwtQML4E/ysKYGj8efG35cafNGGlaRDNsFvEDOhio9
-         G0qWMShEy6MJK0KOrCNHUEtrhYwIT11RLqXgGanOGVxOs/Vom558NIWdQiCJlu8NJlwt
-         u1Jg==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F3pvgHdPn+EnNNgquwHhpEAcSFkVPjKX6k7ahUQM/gQ=;
+        b=V7dPGmMBZIvZ/gdong7ExLntcG76MjdGGJ4G90crc+zcs0JrlovD7UYiLEkx7IM5rz
+         pnVQS91/tss8qcFB9uzhMsTMqdcrrpZNR36cOU8hi6qiIJoq6g1YoO4n5/KarsxB6NZ/
+         UnP1CB2wQltSalrlRJX/cgyq9nHn03xUyh48A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mc8m+moEJITkvv7tcKWJ/u36imYJnwxGy3M0tYcmGgc=;
-        b=E6Pv+z/aR4n4YvHzMBUlqnd/QzltnycB3yiage/ee4RieWG6NR7GvD6bL8n3MNu+Ox
-         BJUP4tDi6ZIKwU6NJlyJoUK6xVhhUjb3pg2H0ztEtYm+xc0QQFM/jv0H1u6g05QzRsP0
-         0zl3rSWZw2xa04nI63eB7OzoQLjUhS80yQ3JkTfAWd4JuBGN02LCshyd21AIiFNmgJaE
-         kY3QqEkfUCm8Z5Khvc0RYV0VbBZg0veYmQ6YK6Qm4yywqtEVYEptQvlmfONLLDz8w89c
-         QV9hQ8F6Y4mBvgrTqGjICvsqnW8HXHYIqBFdt4KFiOZqk+vWM/gRC1WmzMEC9rjjiL2l
-         ihsw==
-X-Gm-Message-State: APjAAAW7687VMfJa9m/OEKSH9YdmrO49I0op9qBPngzKPk4/rV/P+pX9
-        u3IvIolWZz8N9nyWqS9sD6LEtmW7naCAUdJ0NgZEEA==
-X-Google-Smtp-Source: APXvYqxO0HDBEvOnE5QlJr7xKgsh+21XyLDRcGR6nWVwXE5w2UlDGWuISvOhhpj5K4c0tmQyL7rMftCj3gKOlgrSVF8=
-X-Received: by 2002:a2e:8550:: with SMTP id u16mr3326389ljj.11.1555707442235;
- Fri, 19 Apr 2019 13:57:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F3pvgHdPn+EnNNgquwHhpEAcSFkVPjKX6k7ahUQM/gQ=;
+        b=OW/fRrBhCWofdsHrtJysAAIoX/AapNLEkLuKJVprCo/WVgP1OyZV9T3tN9ZaND79h9
+         LPmgBLFBy/AFuc3wUzAAkZqhjPW9uudZMnG9/TR1CZe8FeUEYOA1piSdwFLiSUHiZQ8C
+         p2aS/JY0jME/30C5CVFRR7UG9TnCj3LQe9kq4NNIip9rewu8X8X6pk8BjucjjLmu7R03
+         xsMocQcRAQjzesijoXupTYT4O5pb00OMu7BFB4cF/Xp3SR3kpGi1xJyDGks3DU8qdLOt
+         1AlZ7Nm+wAvWwXaK9PDQCESWsdXtXBALO/P3ENsdMc5jqxFS+QBR3j+uvSTtr/VMczbv
+         ME6g==
+X-Gm-Message-State: APjAAAUniekEiVoj0HW4fU7NsusxNUh+rsC10dS27eJtFQJ0/ZJKkLyp
+        THIKFUNF0RPE9cMpM6pxLTAL7w==
+X-Google-Smtp-Source: APXvYqxXH5N2knSsmatyGQR0Nna797VPKBVkxIv0Vvq5Cf1D11OZztTIXhVDR9CM9fdwJPi4dfJ2KQ==
+X-Received: by 2002:a24:ca44:: with SMTP id k65mr4722982itg.175.1555707446667;
+        Fri, 19 Apr 2019 13:57:26 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m137sm2828706itb.27.2019.04.19.13.57.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Apr 2019 13:57:25 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] selftests: fix headers_install circular dependency
+Date:   Fri, 19 Apr 2019 14:57:23 -0600
+Message-Id: <20190419205723.3414-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com> <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io> <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io> <20190419194902.GE251571@google.com>
- <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
-In-Reply-To: <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
-From:   Christian Brauner <christian@brauner.io>
-Date:   Fri, 19 Apr 2019 22:57:11 +0200
-Message-ID: <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 10:34 PM Daniel Colascione <dancol@google.com> wrote:
->
-> On Fri, Apr 19, 2019 at 12:49 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Fri, Apr 19, 2019 at 09:18:59PM +0200, Christian Brauner wrote:
-> > > On Fri, Apr 19, 2019 at 03:02:47PM -0400, Joel Fernandes wrote:
-> > > > On Thu, Apr 18, 2019 at 07:26:44PM +0200, Christian Brauner wrote:
-> > > > > On April 18, 2019 7:23:38 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> > > > > >On Wed, Apr 17, 2019 at 3:09 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > > > >> On 04/16, Joel Fernandes wrote:
-> > > > > >> > On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> > > > > >> > >
-> > > > > >> > > Could you explain when it should return POLLIN? When the whole
-> > > > > >process exits?
-> > > > > >> >
-> > > > > >> > It returns POLLIN when the task is dead or doesn't exist anymore,
-> > > > > >or when it
-> > > > > >> > is in a zombie state and there's no other thread in the thread
-> > > > > >group.
-> > > > > >>
-> > > > > >> IOW, when the whole thread group exits, so it can't be used to
-> > > > > >monitor sub-threads.
-> > > > > >>
-> > > > > >> just in case... speaking of this patch it doesn't modify
-> > > > > >proc_tid_base_operations,
-> > > > > >> so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are
-> > > > > >going to use
-> > > > > >> the anonymous file returned by CLONE_PIDFD ?
-> > > > > >
-> > > > > >I don't think procfs works that way. /proc/sub-thread-tid has
-> > > > > >proc_tgid_base_operations despite not being a thread group leader.
-> > > > > >(Yes, that's kinda weird.) AFAICS the WARN_ON_ONCE() in this code can
-> > > > > >be hit trivially, and then the code will misbehave.
-> > > > > >
-> > > > > >@Joel: I think you'll have to either rewrite this to explicitly bail
-> > > > > >out if you're dealing with a thread group leader, or make the code
-> > > > > >work for threads, too.
-> > > > >
-> > > > > The latter case probably being preferred if this API is supposed to be
-> > > > > useable for thread management in userspace.
-> > > >
-> > > > At the moment, we are not planning to use this for sub-thread management. I
-> > > > am reworking this patch to only work on clone(2) pidfds which makes the above
-> > >
-> > > Indeed and agreed.
-> > >
-> > > > discussion about /proc a bit unnecessary I think. Per the latest CLONE_PIDFD
-> > > > patches, CLONE_THREAD with pidfd is not supported.
-> > >
-> > > Yes. We have no one asking for it right now and we can easily add this
-> > > later.
-> > >
-> > > Admittedly I haven't gotten around to reviewing the patches here yet
-> > > completely. But one thing about using POLLIN. FreeBSD is using POLLHUP
-> > > on process exit which I think is nice as well. How about returning
-> > > POLLIN | POLLHUP on process exit?
-> > > We already do things like this. For example, when you proxy between
-> > > ttys. If the process that you're reading data from has exited and closed
-> > > it's end you still can't usually simply exit because it might have still
-> > > buffered data that you want to read.  The way one can deal with this
-> > > from  userspace is that you can observe a (POLLHUP | POLLIN) event and
-> > > you keep on reading until you only observe a POLLHUP without a POLLIN
-> > > event at which point you know you have read
-> > > all data.
-> > > I like the semantics for pidfds as well as it would indicate:
-> > > - POLLHUP -> process has exited
-> > > - POLLIN  -> information can be read
-> >
-> > Actually I think a bit different about this, in my opinion the pidfd should
-> > always be readable (we would store the exit status somewhere in the future
-> > which would be readable, even after task_struct is dead). So I was thinking
-> > we always return EPOLLIN.  If process has not exited, then it blocks.
->
-> ITYM that a pidfd polls as readable *once a task exits* and stays
-> readable forever. Before a task exit, a poll on a pidfd should *not*
-> yield POLLIN and reading that pidfd should *not* complete immediately.
-> There's no way that, having observed POLLIN on a pidfd, you should
-> ever then *not* see POLLIN on that pidfd in the future --- it's a
-> one-way transition from not-ready-to-get-exit-status to
-> ready-to-get-exit-status.
+"make kselftest" fails with "Circular Makefile.o <- prepare dependency
+dropped." error, when lib.mk invokes "make headers_install".
 
-What do you consider interesting state transitions? A listener on a pidfd
-in epoll_wait() might be interested if the process execs for example.
-That's a very valid use-case for e.g. systemd.
-We can't use EPOLLIN for that too otherwise you'd need to to waitid(_WNOHANG)
-to check whether an exit status can be read which is not nice and then you
-multiplex different meanings on the same bit.
-I would prefer if the exit status can only be read from the parent which is
-clean and the least complicated semantics, i.e. Linus waitid() idea.
-EPOLLIN on a pidfd could very well mean that data can be read via
-a read() on the pidfd *other* than the exit status. The read could e.g.
-give you a lean struct that indicates the type of state transition: NOTIFY_EXIT,
-NOTIFY_EXEC, etc.. This way we are not bound to a specific poll event indicating
-a specific state.
-Though there's a case to be made that EPOLLHUP could indicate process exit
-and EPOLLIN a state change + read().
+Make level 0: Main make calls selftests run_tests target
+...
+Make level n: selftests lib.mk invokes main make's headers_install
+
+The secondary level make inherits builtin-rules which will use the rule
+to generate Makefile.o  and runs into "Circular Makefile.o <- prepare
+dependency dropped." error, and kselftest compile fails.
+
+Invoke headers_install target with --no-builtin-rules to avoid circular
+error.
+
+In addition, lib.mk installs headers in the default HDR_PATH, even when
+build relocation is requested with O= or export KBUILD_OUTPUT. Fix the
+problem by passing in INSTALL_HDR_PATH. The headers are installed under
+the specified output "dir/usr".
+
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+Changes since v1:
+lib.mk needs DEFAULT_GOAL to run all
+
+ tools/testing/selftests/Makefile | 52 +++++++++++++++++++++++++++-----
+ tools/testing/selftests/lib.mk   | 38 +++++++++++++++++++++--
+ 2 files changed, 80 insertions(+), 10 deletions(-)
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 971fc8428117..743cd374d07d 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -75,12 +75,15 @@ ifneq ($(KBUILD_SRC),)
+ override LDFLAGS =
+ endif
+ 
+-BUILD := $(O)
+-ifndef BUILD
+-  BUILD := $(KBUILD_OUTPUT)
+-endif
+-ifndef BUILD
+-  BUILD := $(shell pwd)
++ifneq ($(O),)
++	BUILD := $(O)
++else
++	ifneq ($(KBUILD_OUTPUT),)
++		BUILD := $(KBUILD_OUTPUT)
++	else
++		BUILD := $(shell pwd)
++		DEFAULT_INSTALL_HDR_PATH := 1
++	endif
+ endif
+ 
+ # KSFT_TAP_LEVEL is used from KSFT framework to prevent nested TAP header
+@@ -89,8 +92,41 @@ endif
+ # with system() call. Export it here to cover override RUN_TESTS defines.
+ export KSFT_TAP_LEVEL=`echo 1`
+ 
++# Prepare for headers install
++top_srcdir ?= ../../..
++include $(top_srcdir)/scripts/subarch.include
++ARCH           ?= $(SUBARCH)
++export KSFT_KHDR_INSTALL_DONE := 1
+ export BUILD
+-all:
++
++# set default goal to all, so make without a target runs all, even when
++# all isn't the first target in the file.
++.DEFAULT_GOAL := all
++
++# Install headers here once for all tests. KSFT_KHDR_INSTALL_DONE
++# is used to avoid running headers_install from lib.mk.
++# Invoke headers install with --no-builtin-rules to avoid circular
++# dependency in "make kselftest" case. In this case, second level
++# make inherits builtin-rules which will use the rule generate
++# Makefile.o and runs into
++# "Circular Makefile.o <- prepare dependency dropped."
++# and headers_install fails and test compile fails.
++#
++# O= KBUILD_OUTPUT cases don't run into this error, since main Makefile
++# invokes them as sub-makes and --no-builtin-rules is not necessary,
++# but doesn't cause any failures. Keep it simple and use the same
++# flags in both cases.
++# Local build cases: "make kselftest", "make -C" - headers are installed
++# in the default INSTALL_HDR_PATH usr/include.
++khdr:
++ifeq (1,$(DEFAULT_INSTALL_HDR_PATH))
++	make --no-builtin-rules ARCH=$(ARCH) -C $(top_srcdir) headers_install
++else
++	make --no-builtin-rules INSTALL_HDR_PATH=$$BUILD/usr \
++		ARCH=$(ARCH) -C $(top_srcdir) headers_install
++endif
++
++all: khdr
+ 	@for TARGET in $(TARGETS); do		\
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+ 		mkdir $$BUILD_TARGET  -p;	\
+@@ -173,4 +209,4 @@ clean:
+ 		make OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
+ 	done;
+ 
+-.PHONY: all run_tests hotplug run_hotplug clean_hotplug run_pstore_crash install clean
++.PHONY: khdr all run_tests hotplug run_hotplug clean_hotplug run_pstore_crash install clean
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 8b0f16409ed7..5979fdc4f36c 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -3,7 +3,16 @@
+ CC := $(CROSS_COMPILE)gcc
+ 
+ ifeq (0,$(MAKELEVEL))
+-OUTPUT := $(shell pwd)
++    ifneq ($(O),)
++	OUTPUT := $(O)
++    else
++	ifneq ($(KBUILD_OUTPUT),)
++		OUTPUT := $(KBUILD_OUTPUT)
++	else
++		OUTPUT := $(shell pwd)
++		DEFAULT_INSTALL_HDR_PATH := 1
++	endif
++    endif
+ endif
+ 
+ # The following are built by lib.mk common compile rules.
+@@ -21,9 +30,34 @@ top_srcdir ?= ../../../..
+ include $(top_srcdir)/scripts/subarch.include
+ ARCH		?= $(SUBARCH)
+ 
++# set default goal to all, so make without a target runs all, even when
++# all isn't the first target in the file.
++.DEFAULT_GOAL := all
++
++# Invoke headers install with --no-builtin-rules to avoid circular
++# dependency in "make kselftest" case. In this case, second level
++# make inherits builtin-rules which will use the rule generate
++# Makefile.o and runs into
++# "Circular Makefile.o <- prepare dependency dropped."
++# and headers_install fails and test compile fails.
++# O= KBUILD_OUTPUT cases don't run into this error, since main Makefile
++# invokes them as sub-makes and --no-builtin-rules is not necessary,
++# but doesn't cause any failures. Keep it simple and use the same
++# flags in both cases.
++# Note that the support to install headers from lib.mk is necessary
++# when test Makefile is run directly with "make -C".
++# When local build is done, headers are installed in the default
++# INSTALL_HDR_PATH usr/include.
+ .PHONY: khdr
+ khdr:
+-	make ARCH=$(ARCH) -C $(top_srcdir) headers_install
++ifndef KSFT_KHDR_INSTALL_DONE
++ifeq (1,$(DEFAULT_INSTALL_HDR_PATH))
++	make --no-builtin-rules ARCH=$(ARCH) -C $(top_srcdir) headers_install
++else
++	make --no-builtin-rules INSTALL_HDR_PATH=$$OUTPUT/usr \
++		ARCH=$(ARCH) -C $(top_srcdir) headers_install
++endif
++endif
+ 
+ all: khdr $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES)
+ else
+-- 
+2.17.1
+
