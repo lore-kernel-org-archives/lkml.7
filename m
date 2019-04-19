@@ -2,88 +2,107 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810BDC282E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CF4C282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48566217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E6422171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 20:11:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SkZ8/X33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfDSULW (ORCPT
+        id S1728017AbfDSULu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 16:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726498AbfDSULV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 16:11:21 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1C6321872;
-        Fri, 19 Apr 2019 20:11:17 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 16:11:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev@googlegroups.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [patch V2 24/29] tracing: Remove the last struct stack_trace
- usage
-Message-ID: <20190419161116.14f52ff8@gandalf.local.home>
-In-Reply-To: <20190418084255.275696472@linutronix.de>
-References: <20190418084119.056416939@linutronix.de>
-        <20190418084255.275696472@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 19 Apr 2019 16:11:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33675 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfDSULt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 16:11:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t16so3047308plo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 13:11:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZKeSUUUQGTRmZxCS8jznOXNyqkqOgW2KyZJn0I7vAUM=;
+        b=SkZ8/X33CU6Hpz9cO6mROiWAqKKJtJxcdQDEeXHfyzpHO4HEtbBB+sE8G6T0PCY/g2
+         psuIm/AUp8q//zTDXwyEXbMBEO+n7cItTTGnmQQTH6nvvYNCx1egayUzi1Z+1cb6+4pi
+         9T/PG8oHqogftJudKc0/dES01lF65+2AWwvOzW2sYYfxz8k8Jq/33zkuC00q5ku6/gPq
+         y15NzvD1eSDPkUUUEGGITCxMAUwdeOW32tla/g9HfKZmt9DN7HqnH751e81SF/Q55ZLW
+         jB4ngiVZObPG0KXYOyi0nSlBVdwrow40J33AESlyxkQxa2KnvtZFHybcQ+nPFWuJJz3a
+         ECKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZKeSUUUQGTRmZxCS8jznOXNyqkqOgW2KyZJn0I7vAUM=;
+        b=PbpbnqtBBwb6cTgwpOHt/QgNHD/b48Wk/NJWbpGqKYXGmY97FbZAtxIXBi5GIleEFv
+         DTv03mw5QjEFafOZW/iVbfnL+mRkqnXDQUede8hY+XdamgqNEdbSl2lsNhyiTqhZSkKG
+         7GxLhFU/MLYEXxJF8rKBEmZG7ZHILW3xJ6bzr5WfG+kDRxyi5MyVinChqGgNZqgu4UkQ
+         Hp+ohFQozPG71QBSRgRIFGZoSyA24znak2yvwENZXjVY6udtO45DXXquX6oVlnzPXpkj
+         CKsNrhkYqx31j1XHT7hz/asqX3XC0k9oXsPXwPeHbUWslkrTuTvET9rls0c893zmyRbu
+         gLMg==
+X-Gm-Message-State: APjAAAU2bvJOJy+ATt7AP4B6c4/wUASriRAYCtgHxP51Z7gS8odR1ued
+        fDtIJ3ann7h/tmYLgoOaetuvaQ==
+X-Google-Smtp-Source: APXvYqzo/GfaX8iHMaHRgcGhDIXxApkuJ0/5mhuZls9eK1mxeK0g+NlaSi58riMFALB2nJdIgFF/qQ==
+X-Received: by 2002:a17:902:a513:: with SMTP id s19mr3072326plq.97.1555671289558;
+        Fri, 19 Apr 2019 03:54:49 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id v189sm6890820pgd.77.2019.04.19.03.54.46
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 19 Apr 2019 03:54:49 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     broonie@kernel.org, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        baolin.wang@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: soc: sprd: Add Spreadtrum MCDT documentation
+Date:   Fri, 19 Apr 2019 18:54:31 +0800
+Message-Id: <f7edc4078b2d6f44ed5ad47c14dd58da5cc50f21.1555670768.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 10:41:43 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+Add documentation for Spreadtrum multi-channel data transfer controller,
+which is used for sound stream transmission between audio subsystem and
+other AP/CP subsystems.
 
-> Simplify the stack retrieval code by using the storage array based
-> interface.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../devicetree/bindings/soc/sprd/sprd-mcdt.txt     |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt
 
+diff --git a/Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt b/Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt
+new file mode 100644
+index 0000000..274ba0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/sprd/sprd-mcdt.txt
+@@ -0,0 +1,19 @@
++Spreadtrum Multi-Channel Data Transfer Binding
++
++The Multi-channel data transfer controller is used for sound stream
++transmission between audio subsystem and other AP/CP subsystem. It
++supports 10 DAC channel and 10 ADC channel, and each channel can be
++configured with DMA mode or interrupt mode.
++
++Required properties:
++- compatible: Should be "sprd,sc9860-mcdt".
++- reg: Should contain registers address and length.
++- interrupts: Should contain one interrupt shared by all channel.
++
++Example:
++
++mcdt@41490000 {
++	compatible = "sprd,sc9860-mcdt";
++	reg = <0 0x41490000 0 0x170>;
++	interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++};
+-- 
+1.7.9.5
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
