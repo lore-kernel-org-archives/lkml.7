@@ -2,87 +2,87 @@ Return-Path: <SRS0=WRlz=SV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68DAC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4742CC282DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9808720449
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095D8204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Apr 2019 18:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555698559;
-	bh=303gAaiUE5R3dQExfBtJ8EvjoHzMdyHL08HUoe5pGYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VDeyruIVHv0W2Mvjd3Mekty6q/cJR/0VQULSJ9MVYvwZhhj+RK1Dg6V3klvLqKGmK
-	 voxeSY5XHU8r02dvJna+BT7ffYgrrMx0Be3jliPTqxIjf8hF5NEO8fVaNy8grEc/7L
-	 hoOK49h5VBVyclqK1z6+08iDfK1FjP1qz+nP+Jso=
+	s=default; t=1555698563;
+	bh=MmZrG7AeLkJrBajeK5MMaz+A5Ag1JEZxMOQhAfM55dg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=XqQif5TGJgBDmEqzQ+Sb+1KDlt0EvmlbMwpxidHCV7PAKCLclo8so5xLqkLYMDMyi
+	 x98rIbcM4Hx5wBDA0Rs+6tD6CnBQLqyoM5YCPTfTKXDuLKjj3nfTJP4ZVY63bOrDVF
+	 uRyKmNn/RNjUl6MHGJCpC1U4JB1bTRTVtvpEO2RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfDSS3T (ORCPT
+        id S1727980AbfDSS3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 14:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
+        Fri, 19 Apr 2019 14:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbfDSS3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 14:29:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727550AbfDSS3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 14:29:16 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A0D621916;
-        Fri, 19 Apr 2019 11:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FAA5222D0;
+        Fri, 19 Apr 2019 14:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555672954;
-        bh=303gAaiUE5R3dQExfBtJ8EvjoHzMdyHL08HUoe5pGYI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wiiwK0fqLTiovDFf5PLdIh8oAXSLyYDnld7XmaxyXJdTcRR0dicVqs+SJhihV0OBE
-         pmfOgs6QWzXHQ8KL7CpKJjXeygyBW/l+5bPlLT7ey+XnV+BbSyi9wIdGl+6ylZZjg2
-         KNW6TvhPpuZBo/8RWF87e8FujHsMlRAd7FUGOJ8M=
-Date:   Fri, 19 Apr 2019 13:22:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bhanusree Pola <bhanusreemahesh@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8723bs: core: Replace rtw_malloc with kmalloc
-Message-ID: <20190419112232.GB14886@kroah.com>
-References: <1555669363-19782-1-git-send-email-bhanusreemahesh@gmail.com>
+        s=default; t=1555683878;
+        bh=MmZrG7AeLkJrBajeK5MMaz+A5Ag1JEZxMOQhAfM55dg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=b/SomUX29GzFkGhS7hncvBupsO7SkWpT+YR4y0Hax5iLj7/6OdsPhCbw45icF+3Yi
+         WX1hJMthAxwACq+jqLbmPbliyiuxd4ojq7su/vgHV7j081TrM6Zuq+C8Rl6GVRDr0V
+         udVFM9ThaVLf5dcshq+fA18niHvkOtSjZrAtbq10=
+Subject: Re: [PATCH 4.9 00/50] 4.9.170-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190418160422.455656724@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2ce78639-5bb8-8ba2-9e34-1ed2c03c709f@kernel.org>
+Date:   Fri, 19 Apr 2019 08:24:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555669363-19782-1-git-send-email-bhanusreemahesh@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190418160422.455656724@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 03:52:43PM +0530, Bhanusree Pola wrote:
-> Replace rtw_malloc with kmalloc to make code OS independent
-> use kmalloc second argument as GFP_ATOMIC as these are called by functions
-> that holds lock.
+On 4/18/19 11:57 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.170 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Bhanusree Pola <bhanusreemahesh@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_ap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Responses should be made by Sat Apr 20 16:03:22 UTC 2019.
+> Anything received after that time might be too late.
 > 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> index 18fabf5..6a6683c 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> @@ -128,7 +128,7 @@ static void update_BCNTIM(struct adapter *padapter)
->  		}
->  
->  		if (remainder_ielen > 0) {
-> -			pbackup_remainder_ie = rtw_malloc(remainder_ielen);
-> +			pbackup_remainder_ie = kmalloc(remainder_ielen,GFP_ATOMIC);
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.170-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Always run checkpatch.pl on your patches so you do nto get grumpy
-maintainers telling you to run checkpatch.pl on your code :)
-
-Why not fix up all of the callers of this function?  And are you sure
-that GFP_ATOMIC is the correct thing to do here?
+Compiled and booted on my test system. No dmesg regressions.
 
 thanks,
+-- Shuah
 
-greg k-h
