@@ -7,129 +7,99 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659E0C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 18:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2E2C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 18:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E8E20833
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 18:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6B120833
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 18:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJd3d3Y9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFOJeEv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfDTSS6 (ORCPT
+        id S1728533AbfDTSZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 14:18:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43907 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbfDTSS6 (ORCPT
+        Sat, 20 Apr 2019 14:25:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37658 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfDTSZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 14:18:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so3959822plp.10
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 11:18:57 -0700 (PDT)
+        Sat, 20 Apr 2019 14:25:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so3894063pfr.4;
+        Sat, 20 Apr 2019 11:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kidv6qiLoczvxz2U/7ftzZU0wU9KupIfm3B94JIjFHI=;
-        b=MJd3d3Y9mpB2sWqX0+DXlgykeb1FD1RTpbcE1CLQ5HSrKNcWYVPvWb0WBic/bQM4G1
-         oKTYi3B7IAzTeMiiC2fjmrKPt6Vald+a0oa3T03Xysor6ftp2ANo78W4n9CKUonB5T40
-         NDpPcceR56amwwuEfsmrIVH6hfthaiwABwGMTkfuoMsfGa3msYwX+sGo3SNYxHvq3kKF
-         M9JNOK6QEn8bwTyRZsO7HYP4c5Cih7aKmO6iFE9ehK9Hhil5qP7oHk6A41Xa+zMKr0Ss
-         u9GkoOC9b2DVJyexptlJGCJ+7WviGiMb3ZF8vQWWNjlMGpF4lHMeJmWaCDz1YhI9d5X7
-         UZyw==
+        bh=dQ8y5mFIdqzNGUZnBmwx5iymSgQ29DHWCnuYeuYo1Ec=;
+        b=GFOJeEv59ua6iGd/j2LVfsUt6QYblkOI46WHT80ZW5j80yCfI0wnhpE59N/u2G0gJq
+         qCzB/8Jv/oLZZsiiWUZBonLHG5NwiJvUmPcSjzZ9JqLMEGgGgD1OLSWLCKjpp5SOUoeY
+         LJ+EWOpJ81N5AEmB/Tv03jeKMw8fWGZqR9aB5h7fGiK3t+SEbIOY/ybMfPPbYYT7Y1x9
+         XabXipFFCYdPQb2dJstupPlAqnmFu4ck89b4gqJkask1mnlguukWvgS/dqqCfAHDab7r
+         SZyXwmTmbjmRSnQgSvZ1vgSgUGIVVuvOfWT7qZ9SYCQmmoOa2e0xg8TinJ3bT+bMwJXd
+         S3Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kidv6qiLoczvxz2U/7ftzZU0wU9KupIfm3B94JIjFHI=;
-        b=tFU23eXBrJz39XW594GMOPSMZ8dPLN9kCDI92jro1CAjNAhVa+fnGDX1QeKnRbBNrR
-         MwpuCocvhu+xDpsV4flPNOmtlmtalsSbvQdG5d7S9iEERsJsbdLZ3zxns4cJ7kPuHM5g
-         xD15k72OcA1YRIw1sfgSXz9LFUA7iENu77xTubVjmkZlF+aYoTM0pN2rU9AYZCjxj1J4
-         teG0lfYGzhbAR5tLiMKsHi2MAXgjEz0Mj6OYfwfRKZW5393s/HNiClChUjbje088k0Er
-         8Bm9kjtUp1XdgEnzON7GAgVW9BeV2xnzciMJxgvtSLxd9v1M01o2TuPPsqAimLkT+ruy
-         N+TA==
-X-Gm-Message-State: APjAAAVej9igYsaYkHi4M0gfp0D5NrTT5U1mYFqAkf2zz/th5iOtheGY
-        XCbRxiOU3f5UEuvWkgRcaTMa9o4DIvntXBStNbM6Wq7O
-X-Google-Smtp-Source: APXvYqw9rn4eYdWAh9GV0h/miIcY+00Nn8aQCDeVE2y7LUjw9Q78vVM5B3C7/60LX/2AXvW7VcqkhhtAmjotRZ4i/II=
-X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr10823545plp.165.1555784337275;
- Sat, 20 Apr 2019 11:18:57 -0700 (PDT)
+        bh=dQ8y5mFIdqzNGUZnBmwx5iymSgQ29DHWCnuYeuYo1Ec=;
+        b=NvaM1p6rKjPaPXpmcOmKN+lpm96VBIWA1TejtHbWVhh87hIX371etbYOzNGwJQl/2t
+         NbPlnFOq0Wg3qRSa6nO7wnyTNJzxcsG/oMSWJkprSWMBUemlYROeSe924UND9OBO4YFl
+         zPiD6Y244lLasYX+xidDjVaIbEjGQG3HEgV8p4b5UREL3uRwJC6316/qAfmAbsDhUVCw
+         2LHmGYvlHC6ZfFbMA+Sy6I0rSOvq+H5XeF8dLPt1qVXeo5YPLq3dlmm6xPrL0bs9UQr2
+         MzTP2y1OkAAJye2W2VhsxQtBXoPPQih6WVII+VH4aKUbZ1J0PuRkY7dJfSTtV4ejUBGq
+         Lc3w==
+X-Gm-Message-State: APjAAAVsdAdGIV5cwmQMXiajYdOfxiHTXOXEOulDyaYRIu58uS9ECvgy
+        CuJvaNF3V7l9Ot3wDfZ8xh/eqyeX5K5ldMrrQH4hS2+Y
+X-Google-Smtp-Source: APXvYqwdzMJNgm/3LSQApJzlLtz4G8JbfUBlMc1t1GWT1Op99cYYnm8DfzBWXJXZt1HMnoNnuvF3ZZ+O3SoeWDJ1q+k=
+X-Received: by 2002:aa7:8092:: with SMTP id v18mr10914137pff.35.1555784754834;
+ Sat, 20 Apr 2019 11:25:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190418220229.32133-1-tony.luck@intel.com> <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
- <20190418232910.GR27160@zn.tnic> <CAM_iQpVWvg-U6hzKsCPXdObiwKJhQ=BkGDDeP+p671cCWK7QFA@mail.gmail.com>
- <20190419002645.GA559@zn.tnic> <CAM_iQpVk564gCu_FBKvYVQjA1hGZ4YXB6ogrSFt=qZwiWen2tw@mail.gmail.com>
- <20190420091313.GA29704@zn.tnic>
-In-Reply-To: <20190420091313.GA29704@zn.tnic>
+References: <20190416213351.28999-1-xiyou.wangcong@gmail.com>
+ <20190416214634.GP31772@zn.tnic> <CAM_iQpVd02zkVJ846cj-Fg1yUNuz6tY5q1Vpj4LrXmE06dPYYg@mail.gmail.com>
+ <20190420113444.GC29704@zn.tnic>
+In-Reply-To: <20190420113444.GC29704@zn.tnic>
 From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sat, 20 Apr 2019 11:18:46 -0700
-Message-ID: <CAM_iQpUaBOS92u7K+hzzRX5hw0Kbrp-0o0DSfLwSGBhenntVjA@mail.gmail.com>
-Subject: Re: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
+Date:   Sat, 20 Apr 2019 11:25:43 -0700
+Message-ID: <CAM_iQpXKWDr4AbROO=ZbkxwQHkj4anA9FJAaohOqg1SCq0L7eg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] ras: fix an off-by-one error in __find_elem()
 To:     Borislav Petkov <bp@alien8.de>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 2:13 AM Borislav Petkov <bp@alien8.de> wrote:
+On Sat, Apr 20, 2019 at 4:34 AM Borislav Petkov <bp@alien8.de> wrote:
 >
-> On Fri, Apr 19, 2019 at 10:43:03PM -0700, Cong Wang wrote:
-> > With this change, although not even compiled, mcelog should still
-> > receive correctable memory errors like before, even when we have
-> > CONFIG_RAS_CEC=y.
+> On Tue, Apr 16, 2019 at 04:16:08PM -0700, Cong Wang wrote:
+> > It is actually fairly easy:
 > >
-> > Does this make any sense to you?
+> > 1) Fill the whole page with PFN's:
+> > for i in `seq 0 511`; do echo $i >> /sys/kernel/debug/ras/cec/pfn; done
+> >
+> > 2) Set thresh to 1 in order to trigger the deletion:
+> > echo 1 > /sys/kernel/debug/ras/cec/count_threshold
+> >
+> > 3) Repeatedly add and remove the last element:
+> > echo 512 >> /sys/kernel/debug/ras/cec/pfn
+> > (until you get a crash.)
 >
-> Yes, the answer is in the mail you snipped. Did you read it?
+> Thanks, I was able to reproduce with that. Below is a conglomerate patch
+> which converts __find_elem() to using Donald Knuth's binary search
+> version. I don't know what I was thinking then and why I didn't use
+> it from the get-go. The textbook even says that one can easily get it
+> wrong...
 
-I read it, all of your response is based on your speculation that I
-don't have CONFIG_X86_MCELOG_LEGACY=y, which is clearly
-a misunderstanding.
+If you want to go that far, you can choose to use lib/bsearch.c too in
+case you want to reinvent the wheel.
 
-You didn't answer my question here, because I asked you whether
-the following change (PoC only) makes sense:
+What's your point here? You know my fix is targeted for -stable, I doubt
+your 83-line change could fit for -stable.
 
-@ -567,12 +567,12 @@ static int mce_first_notifier(struct
-notifier_block *nb, unsigned long val,
-                              void *data)
- {
-        struct mce *m = (struct mce *)data;
-+       bool consumed;
+Feel free to drop my patch to favor yours. I am really tired.
 
-        if (!m)
-                return NOTIFY_DONE;
-
--       if (cec_add_mce(m))
--               return NOTIFY_STOP;
-+       consumed = cec_add_mce(m);
-
-        /* Emit the trace record: */
-        trace_mce_record(m);
-@@ -581,7 +581,7 @@ static int mce_first_notifier(struct
-notifier_block *nb, unsigned long val,
-
-        mce_notify_irq();
-
--       return NOTIFY_DONE;
-+       return consumed ? NOTIFY_STOP : NOTIFY_DONE;
- }
-
-
->
-> Hint: disable CONFIG_RAS_CEC.
-
-I knew disabling it could cure the problem from the beginning, please
-save your own time by not repeating things we both already knew. :)
-
-Once again, I still don't think it is the right answer, which is also why I
-keep finding different solutions. I know you disagree, but you never explain
-why you disagree, you speculated CONFIG_X86_MCELOG_LEGACY,
-which is completely a misunderstanding.
-
-I brought up CONFIG_X86_MCELOG_LEGACY simply to show you
-how we could break mcelog _LOUDLY_ if we really decide to break it,
-currently it just breaks silently. You misinterpret it as if I understand
-CONFIG_RAS as a replacement for CONFIG_X86_MCELOG_LEGACY,
-which is a very sad misunderstanding.
+Good luck with that!
 
 Thanks.
