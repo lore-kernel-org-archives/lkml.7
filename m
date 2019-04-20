@@ -2,172 +2,135 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ECEC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 05:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150E6C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 05:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10F721479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 05:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MCghoAVS"
+	by mail.kernel.org (Postfix) with ESMTP id CC1A721479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 05:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfDTFdc (ORCPT
+        id S1727452AbfDTFfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 01:33:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37610 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfDTFdc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 01:33:32 -0400
-Received: by mail-lf1-f67.google.com with SMTP id o19so5335915lfl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 22:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Vbh88o/bwMJfvOcVqGplo3mL6oW5w1CqC89NgPg1h+Y=;
-        b=MCghoAVSwp/AMvIt7/KymAK6/WdCIQZ1Hk1LeX+bpZT0+rAjRbuPEhOb7YcU9VBr52
-         PtY2exUGArTqzZTavvMr38nFdvRWj5UPKpTTSQXNdjgRQTC7XivGIUp2v7hwyH77U4Re
-         NwhfIEBZzy+LiZAjMNtDGUItDvjnNKR5gmAY4LZMKcobAlf89NRKZONmVkX+cjODE9WF
-         97GwRUx1LeeVMZR+sPTE9NDF7uiJZwPYGwDljYN/5EVQi7YouZkLzqRAPYWXw8gv57WX
-         jIxX/veXvhSLlPThjCzmSIb1f8No8XLPSYp9l0Bm52RE/pbV16k8cMT49XzMyor6Tswz
-         SQQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Vbh88o/bwMJfvOcVqGplo3mL6oW5w1CqC89NgPg1h+Y=;
-        b=PDft16salXm5LQU+0s+4HK7k2oi7+TFRVDRRBD96sniTbLd0SZ+ugRbNh/TQh8ZLcm
-         HRMPqOFGr1E5zb9sEmqAWYJtUQkOTgQMRKQRdDkZm8UFGDgr84HKRKO00Z6LxxsMRcqY
-         1A9msLu8AkhuPVVF6qUqu+9VNHRi0Byq2RiWNmwk8U0yLTDplU8YiF5IhQMhhlLEIY5p
-         gGoGGOYEP/S84d63cvzXfF77lRVoIWI1r7fX3g0bU+fzxXSoVHoATlPkuHnsLV+6k2+e
-         +j0dxPRGso/rLnorwksjg+HZz7uUHuQkfc8QiEpxEz68pPZYzEr3hMzyYBLG1OsIhzob
-         A6Aw==
-X-Gm-Message-State: APjAAAX8DYtjwQgZkXraLMlJTxXWsxQMsh0PuEn72T8ERp5Hn2pK1gcs
-        5cNORzJXrxYC+hj+Fna5t+E4IuRlAr9hIdzf116nV0lxB8o=
-X-Google-Smtp-Source: APXvYqwGP7rUFabJ8kRXHAlzS2LM+GoyyGmbO5qmpUn7TLwpf7/nmrTUNviaN7UdzFxrq4R8A+7jDwjipg7MD/WgNsA=
-X-Received: by 2002:ac2:5455:: with SMTP id d21mr4061737lfn.60.1555738410112;
- Fri, 19 Apr 2019 22:33:30 -0700 (PDT)
+        Sat, 20 Apr 2019 01:35:17 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43741 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbfDTFfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 01:35:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 22:35:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,372,1549958400"; 
+   d="scan'208";a="144225083"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga003.jf.intel.com with ESMTP; 19 Apr 2019 22:35:16 -0700
+Date:   Fri, 19 Apr 2019 22:35:16 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: allow tests to use bad virtual-APIC page
+ address
+Message-ID: <20190420053516.GA15539@linux.intel.com>
+References: <1555335333-23636-2-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <20190418160437.484158340@linuxfoundation.org>
-In-Reply-To: <20190418160437.484158340@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 20 Apr 2019 11:03:19 +0530
-Message-ID: <CA+G9fYtyC2PyfwhPZ3m6=brXqMm9YaN5dZ74UjQ=mVoB=VS0Qg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/110] 4.19.36-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555335333-23636-2-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 at 23:29, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.36 release.
-> There are 110 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat Apr 20 16:03:29 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.36-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, Apr 15, 2019 at 03:35:33PM +0200, Paolo Bonzini wrote:
+> As mentioned in the comment, there are some special cases where we can simply
+> clear the TPR shadow bit from the CPU-based execution controls in the vmcs02.
+> Handle them so that we can remove some XFAILs from vmx.flat.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 25 ++++++++++++++++---------
+>  arch/x86/kvm/vmx/vmx.c    |  2 +-
+>  arch/x86/kvm/vmx/vmx.h    |  2 ++
+>  3 files changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 7ec9bb1dd723..a22af5a85540 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -2873,20 +2873,27 @@ static void nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
+>  		/*
+>  		 * If translation failed, VM entry will fail because
+>  		 * prepare_vmcs02 set VIRTUAL_APIC_PAGE_ADDR to -1ull.
+> -		 * Failing the vm entry is _not_ what the processor
+> -		 * does but it's basically the only possibility we
+> -		 * have.  We could still enter the guest if CR8 load
+> -		 * exits are enabled, CR8 store exits are enabled, and
+> -		 * virtualize APIC access is disabled; in this case
+> -		 * the processor would never use the TPR shadow and we
+> -		 * could simply clear the bit from the execution
+> -		 * control.  But such a configuration is useless, so
+> -		 * let's keep the code simple.
+>  		 */
+>  		if (!is_error_page(page)) {
+>  			vmx->nested.virtual_apic_page = page;
+>  			hpa = page_to_phys(vmx->nested.virtual_apic_page);
+>  			vmcs_write64(VIRTUAL_APIC_PAGE_ADDR, hpa);
+> +		} else if (nested_cpu_has(vmcs12, CPU_BASED_CR8_LOAD_EXITING) &&
+> +		           nested_cpu_has(vmcs12, CPU_BASED_CR8_STORE_EXITING) &&
+> +			   !nested_cpu_has2(vmcs12, SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
+> +			/*
+> +			 * The processor will never use the TPR shadow, simply
+> +			 * clear the bit from the execution control.  Such a
+> +			 * configuration is useless, but it happens in tests.
+> +			 * For any other configuration, failing the vm entry is
+> +			 * _not_ what the processor does but it's basically the
+> +			 * only possibility we have.
+> +			 */
+> +			vmcs_clear_bits(CPU_BASED_VM_EXEC_CONTROL,
+> +					CPU_BASED_TPR_SHADOW);
+> +		} else {
+> +			printk("bad virtual-APIC page address\n");
+> +			dump_vmcs();
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I don't think we should dump the VMCS here, or have any form of print
+at all.  dump_vmcs() is especially bad as it allows userspace to spam
+the kernel log at the error level.  I haven't actually checked, but I
+assume the nested consistency check tracing patch would be a better
+way to debug something of this nature in production.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.19.36-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: e409a9a7917997e4aa9b49cd5c445208696ee1cf
-git describe: v4.19.35-111-ge409a9a79179
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.35-111-ge409a9a79179
-
-
-No regressions (compared to build v4.19.34-102-ge4f859c2cd83)
-
-
-No fixes (compared to build v4.19.34-102-ge4f859c2cd83)
-
-Ran 23730 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+>  		}
+>  	}
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index f8054dc1de65..14cacfd7ffd0 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5603,7 +5603,7 @@ static void vmx_dump_dtsel(char *name, uint32_t limit)
+>  	       vmcs_readl(limit + GUEST_GDTR_BASE - GUEST_GDTR_LIMIT));
+>  }
+>  
+> -static void dump_vmcs(void)
+> +void dump_vmcs(void)
+>  {
+>  	u32 vmentry_ctl = vmcs_read32(VM_ENTRY_CONTROLS);
+>  	u32 vmexit_ctl = vmcs_read32(VM_EXIT_CONTROLS);
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index a1e00d0a2482..f879529906b4 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -517,4 +517,6 @@ static inline void decache_tsc_multiplier(struct vcpu_vmx *vmx)
+>  	vmcs_write64(TSC_MULTIPLIER, vmx->current_tsc_ratio);
+>  }
+>  
+> +void dump_vmcs(void);
+> +
+>  #endif /* __KVM_X86_VMX_H */
+> -- 
+> 1.8.3.1
+> 
