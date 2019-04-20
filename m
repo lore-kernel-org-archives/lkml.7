@@ -2,202 +2,221 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A684C282DD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19A5C282E3
 	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B912087F
+	by mail.kernel.org (Postfix) with ESMTP id 7054620883
 	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dBBqRo5x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nTYZr1Gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfDTQS3 (ORCPT
+        id S1728391AbfDTQW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 12:18:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34029 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfDTQS3 (ORCPT
+        Sat, 20 Apr 2019 12:22:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58744 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDTQW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 12:18:29 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k21so6514300otf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 09:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cJN6otCh8mhys26P8h5FkPQRQ5riYty4NiN3tBK+gLo=;
-        b=dBBqRo5xaNfsV65MZBeymXv/NSTESmTl3+fwmssTwZNQ0DDa0tnjbuffQOVu5qCvnG
-         AG0VrOm4le3e+LX0JifIfOiuhEFvhKUUSN4039SOYLKauDfj1YVSe6s3yICiYmPeLG10
-         PpR77q2mmZSO7IfFzQnmN61txzK05CNUgJ7hIh0osSPhkkRe9xHAejpjk+obuFyl91Ea
-         jqB8dqVcVidO5NVOQwunL0nyFBTZNu4VnnB2MGhV4fub6mYPICSFjjGc4/iD7scI+mfL
-         bxPnEMInGsg92KgtQL43DNw8s96ppM0p4V72EtLQFKKx4PfoMrHYIL/Ze6leYix4Tnqr
-         6jTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cJN6otCh8mhys26P8h5FkPQRQ5riYty4NiN3tBK+gLo=;
-        b=OHZqNplQz1SjddddXByivSaceJPImrJbTI1OyuJ3kR40+kCKqv/F5XGW66i8sErcAZ
-         mBClkGtQbdEqLqwjaLyDsPgWTTwa1TTOkQs+VYVoqBB/rY1+Q4xO2c4B51qW7+6K0Uzy
-         cU0iHGdFnmGiE97LsfdJFbJA0pcwurfbsrgF8sGYWHqHH22sVKhMlGnYtKLovDIEVg1/
-         SM3qGeS4EgexXv6utEngcCExZt3zgidhAdiS89fGXYOOW2lazkAUohqwoqHcp+QoS413
-         WjUpek1Ab5qnAbINgive0vhTWjwmu7sdCc2eTTmmowjTEknvkAXfamIJhR9rUXIdrKoM
-         +61w==
-X-Gm-Message-State: APjAAAUccmJ3IvyNd5P3rHUvQWRnKju59H2WM9zxhixxswI9OcIrH06l
-        +HVPoBrXdM5UfJvw+IE1tDMXGK7vek6XU7BSA63cSg==
-X-Google-Smtp-Source: APXvYqz2wCGHjhO+pn/eM92vfjTkdPXmx9hD0C9qPGAa4bPwoPEXhsRYteLJiJI+bs/h1798PltDHVLFtDj5+musWq0=
-X-Received: by 2002:a9d:7749:: with SMTP id t9mr5687797otl.229.1555777107880;
- Sat, 20 Apr 2019 09:18:27 -0700 (PDT)
+        Sat, 20 Apr 2019 12:22:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Cc:From:References:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2otoseUa1j4IuHgJJVx4jfhfUlvZlbAJeQAUQ+fLZew=; b=nTYZr1GrNyVAr+K9S2/C08K03G
+        QWxwyW6fGQeBpun4KX3xKY3UI0mluvei+ckwPtlVzrUIivIxDPyYOMNxfNyJWiNlzZQsHAd2NAZYR
+        8l858clnoNjmqtG2wGZvKPVeOB88UkwP0LhygM/Rl5E1Sdo0FmUsLL+qe1rfb+jyFhcK7c7jiIz4o
+        xfEObilFyRWvYgMsdhoYxutHJrC1qgcMRZZkv+Ss4FykfcNX4JgeAFAtNdoBbkliOiy3Fq9W97EWi
+        rOaWTLGkaTdCcStISgFQyQWi+U8ng7oTiFdFRNCTpac8KxgtIbNLbRSYdDnCS5tOsF/xvHCuqSYNh
+        wjVHze5g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hHsl0-0000Vf-L3; Sat, 20 Apr 2019 16:22:26 +0000
+Subject: Re: [PATCH] Fix some misuses of %x
+To:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <20190419132158.32420-1-huangfq.daxian@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Message-ID: <6dbabc14-188e-286f-1926-911b500ce0df@infradead.org>
+Date:   Sat, 20 Apr 2019 09:22:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190420153148.21548-1-pasha.tatashin@soleen.com> <20190420153148.21548-3-pasha.tatashin@soleen.com>
-In-Reply-To: <20190420153148.21548-3-pasha.tatashin@soleen.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 20 Apr 2019 09:18:16 -0700
-Message-ID: <CAPcyv4j9sG6Wy3EfTuPb0uZ2qp=gr9UgUhpnXQA_g6Ko9KFmLA@mail.gmail.com>
-Subject: Re: [v1 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190419132158.32420-1-huangfq.daxian@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 8:36 AM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> It is now allowed to use persistent memory like a regular RAM, but
-> currently there is no way to remove this memory until machine is
-> rebooted.
->
-> This work expands the functionality to also allow hot removing
-> previously hotplugged persistent memory, and recover the device for use
-> for other purposes.
->
-> To hotremove persistent memory, the management software must unbind it
-> from device-dax/kmem driver:
->
->             echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
->
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> ---
->  drivers/dax/dax-private.h |  2 +
->  drivers/dax/kmem.c        | 77 +++++++++++++++++++++++++++++++++++++--
->  2 files changed, 75 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index a45612148ca0..999aaf3a29b3 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -53,6 +53,7 @@ struct dax_region {
->   * @pgmap - pgmap for memmap setup / lifetime (driver owned)
->   * @ref: pgmap reference count (driver owned)
->   * @cmp: @ref final put completion (driver owned)
-> + * @dax_mem_res: physical address range of hotadded DAX memory
->   */
->  struct dev_dax {
->         struct dax_region *region;
-> @@ -62,6 +63,7 @@ struct dev_dax {
->         struct dev_pagemap pgmap;
->         struct percpu_ref ref;
->         struct completion cmp;
-> +       struct resource *dax_kmem_res;
->  };
->
->  static inline struct dev_dax *to_dev_dax(struct device *dev)
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index 4c0131857133..026c34f93df5 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -71,21 +71,90 @@ int dev_dax_kmem_probe(struct device *dev)
->                 kfree(new_res);
->                 return rc;
->         }
-> +       dev_dax->dax_kmem_res = new_res;
->
->         return 0;
->  }
->
-> +#ifdef CONFIG_MEMORY_HOTREMOVE
-> +/*
-> + * Offline device-dax's memory_blocks. If a memory_block cannot be offlined
-> + * a warning is printed and an error is returned. dax hotremove can succeed
-> + * only when every memory_block is offline.
-> + */
-> +static int
-> +offline_memblock_cb(struct memory_block *mem, void *arg)
-> +{
-> +       struct device *dev = (struct device *)arg;
-> +       int rc = device_offline(&mem->dev);
-> +
-> +       if (rc < 0) {
-> +               unsigned long spfn = section_nr_to_pfn(mem->start_section_nr);
-> +               unsigned long epfn = section_nr_to_pfn(mem->end_section_nr);
-> +               phys_addr_t spa = spfn << PAGE_SHIFT;
-> +               phys_addr_t epa = epfn << PAGE_SHIFT;
-> +
-> +               dev_warn(dev, "could not offline memory block [%pa-%pa]\n",
-> +                        &spa, &epa);
-> +
-> +               return rc;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int dev_dax_kmem_remove(struct device *dev)
-> +{
-> +       struct dev_dax *dev_dax = to_dev_dax(dev);
-> +       struct resource *res = dev_dax->dax_kmem_res;
-> +       resource_size_t kmem_start;
-> +       resource_size_t kmem_size;
-> +       unsigned long start_pfn;
-> +       unsigned long end_pfn;
-> +       int rc;
-> +
-> +       /*
-> +        * dax kmem resource does not exist, means memory was never hotplugged.
-> +        * So, nothing to do here.
-> +        */
-> +       if (!res)
-> +               return 0;
-> +
-> +       kmem_start = res->start;
-> +       kmem_size = resource_size(res);
-> +       start_pfn = kmem_start >> PAGE_SHIFT;
-> +       end_pfn = start_pfn + (kmem_size >> PAGE_SHIFT) - 1;
-> +
-> +       /* Walk and offline every singe memory_block of the dax region. */
-> +       lock_device_hotplug();
-> +       rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
-> +       unlock_device_hotplug();
-> +       if (rc)
-> +               return rc;
+On 4/19/19 6:21 AM, Fuqian Huang wrote:
+> The pointers should be printed with %p or %px rather than
+> cast to long or unsigned long type and printed with %x.
+> Change %x to %p to print pointers.
+> 
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-This potential early return is the reason why memory hotremove is not
-reliable vs the driver-core. If this walk fails to offline the memory
-it will still be online, but the driver-core has no consideration for
-device-unbind failing. The ubind will proceed while the memory stays
-pinned.
+Hi,
+
+You will need to send this patch (or patch set/patch series) to the
+appropriate subsystem maintainers and their respective mailing lists.
+Maintainers don't browse the linux-kernel mailing list to search or
+pick up patches.
+
+From Documentation/process/submitting-patches.rst:
+
+5) Select the recipients for your patch
+---------------------------------------
+
+You should always copy the appropriate subsystem maintainer(s) on any patch
+to code that they maintain; look through the MAINTAINERS file and the
+source code revision history to see who those maintainers are.  The
+script scripts/get_maintainer.pl can be very useful at this step.  If you
+cannot find a maintainer for the subsystem you are working on, Andrew
+Morton (akpm@linux-foundation.org) serves as a maintainer of last resort.
+
+You should also normally choose at least one mailing list to receive a copy
+of your patch set.  linux-kernel@vger.kernel.org functions as a list of
+last resort, but the volume on that list has caused a number of developers
+to tune it out.  Look in the MAINTAINERS file for a subsystem-specific
+list; your patch will probably get more attention there.  Please do not
+spam unrelated lists, though.
+
+Many kernel-related lists are hosted on vger.kernel.org; you can find a
+list of them at http://vger.kernel.org/vger-lists.html.  There are
+kernel-related lists hosted elsewhere as well, though.
+
+
+Thanks.
+
+> ---
+>  drivers/atm/iphase.c               | 4 ++--
+>  drivers/misc/genwqe/card_debugfs.c | 4 ++--
+>  drivers/net/hippi/rrunner.c        | 4 ++--
+>  kernel/cgroup/debug.c              | 8 ++++----
+>  net/ax25/af_ax25.c                 | 4 ++--
+>  sound/isa/gus/gus_mem.c            | 2 +-
+>  6 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/atm/iphase.c b/drivers/atm/iphase.c
+> index 82532c299bb5..5278c57dce73 100644
+> --- a/drivers/atm/iphase.c
+> +++ b/drivers/atm/iphase.c
+> @@ -2826,8 +2826,8 @@ static int ia_ioctl(struct atm_dev *dev, unsigned int cmd, void __user *arg)
+>           case 0x6:
+>           {  
+>               ia_cmds.status = 0; 
+> -             printk("skb = 0x%lx\n", (long)skb_peek(&iadev->tx_backlog));
+> -             printk("rtn_q: 0x%lx\n",(long)ia_deque_rtn_q(&iadev->tx_return_q));
+> +             printk("skb = 0x%p\n", skb_peek(&iadev->tx_backlog));
+> +             printk("rtn_q: 0x%p\n",ia_deque_rtn_q(&iadev->tx_return_q));
+>           }
+>               break;
+>           case 0x8:
+> diff --git a/drivers/misc/genwqe/card_debugfs.c b/drivers/misc/genwqe/card_debugfs.c
+> index 7c713e01d198..6f7e39f07811 100644
+> --- a/drivers/misc/genwqe/card_debugfs.c
+> +++ b/drivers/misc/genwqe/card_debugfs.c
+> @@ -227,7 +227,7 @@ static int ddcb_info_show(struct seq_file *s, void *unused)
+>  	seq_puts(s, "DDCB QUEUE:\n");
+>  	seq_printf(s, "  ddcb_max:            %d\n"
+>  		   "  ddcb_daddr:          %016llx - %016llx\n"
+> -		   "  ddcb_vaddr:          %016llx\n"
+> +		   "  ddcb_vaddr:          %p\n"
+>  		   "  ddcbs_in_flight:     %u\n"
+>  		   "  ddcbs_max_in_flight: %u\n"
+>  		   "  ddcbs_completed:     %u\n"
+> @@ -237,7 +237,7 @@ static int ddcb_info_show(struct seq_file *s, void *unused)
+>  		   queue->ddcb_max, (long long)queue->ddcb_daddr,
+>  		   (long long)queue->ddcb_daddr +
+>  		   (queue->ddcb_max * DDCB_LENGTH),
+> -		   (long long)queue->ddcb_vaddr, queue->ddcbs_in_flight,
+> +		   queue->ddcb_vaddr, queue->ddcbs_in_flight,
+>  		   queue->ddcbs_max_in_flight, queue->ddcbs_completed,
+>  		   queue->return_on_busy, queue->wait_on_busy,
+>  		   cd->irqs_processed);
+> diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+> index 029206e4da3b..0f7025f3a384 100644
+> --- a/drivers/net/hippi/rrunner.c
+> +++ b/drivers/net/hippi/rrunner.c
+> @@ -1298,11 +1298,11 @@ static void rr_dump(struct net_device *dev)
+>  	if (rrpriv->tx_skbuff[cons]){
+>  		len = min_t(int, 0x80, rrpriv->tx_skbuff[cons]->len);
+>  		printk("skbuff for cons %i is valid - dumping data (0x%x bytes - skbuff len 0x%x)\n", cons, len, rrpriv->tx_skbuff[cons]->len);
+> -		printk("mode 0x%x, size 0x%x,\n phys %08Lx, skbuff-addr %08lx, truesize 0x%x\n",
+> +		printk("mode 0x%x, size 0x%x,\n phys %08Lx, skbuff-addr %p, truesize 0x%x\n",
+>  		       rrpriv->tx_ring[cons].mode,
+>  		       rrpriv->tx_ring[cons].size,
+>  		       (unsigned long long) rrpriv->tx_ring[cons].addr.addrlo,
+> -		       (unsigned long)rrpriv->tx_skbuff[cons]->data,
+> +		       rrpriv->tx_skbuff[cons]->data,
+>  		       (unsigned int)rrpriv->tx_skbuff[cons]->truesize);
+>  		for (i = 0; i < len; i++){
+>  			if (!(i & 7))
+> diff --git a/kernel/cgroup/debug.c b/kernel/cgroup/debug.c
+> index 5f1b87330bee..80aa3f027ac3 100644
+> --- a/kernel/cgroup/debug.c
+> +++ b/kernel/cgroup/debug.c
+> @@ -64,8 +64,8 @@ static int current_css_set_read(struct seq_file *seq, void *v)
+>  		css = cset->subsys[ss->id];
+>  		if (!css)
+>  			continue;
+> -		seq_printf(seq, "%2d: %-4s\t- %lx[%d]\n", ss->id, ss->name,
+> -			  (unsigned long)css, css->id);
+> +		seq_printf(seq, "%2d: %-4s\t- %p[%d]\n", ss->id, ss->name,
+> +			  css, css->id);
+>  	}
+>  	rcu_read_unlock();
+>  	spin_unlock_irq(&css_set_lock);
+> @@ -224,8 +224,8 @@ static int cgroup_subsys_states_read(struct seq_file *seq, void *v)
+>  		if (css->parent)
+>  			snprintf(pbuf, sizeof(pbuf) - 1, " P=%d",
+>  				 css->parent->id);
+> -		seq_printf(seq, "%2d: %-4s\t- %lx[%d] %d%s\n", ss->id, ss->name,
+> -			  (unsigned long)css, css->id,
+> +		seq_printf(seq, "%2d: %-4s\t- %p[%d] %d%s\n", ss->id, ss->name,
+> +			  css, css->id,
+>  			  atomic_read(&css->online_cnt), pbuf);
+>  	}
+>  
+> diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
+> index 5d01edf8d819..90c2831297dd 100644
+> --- a/net/ax25/af_ax25.c
+> +++ b/net/ax25/af_ax25.c
+> @@ -1888,8 +1888,8 @@ static int ax25_info_show(struct seq_file *seq, void *v)
+>  	 * magic dev src_addr dest_addr,digi1,digi2,.. st vs vr va t1 t1 t2 t2 t3 t3 idle idle n2 n2 rtt window paclen Snd-Q Rcv-Q inode
+>  	 */
+>  
+> -	seq_printf(seq, "%8.8lx %s %s%s ",
+> -		   (long) ax25,
+> +	seq_printf(seq, "%p %s %s%s ",
+> +		   ax25,
+>  		   ax25->ax25_dev == NULL? "???" : ax25->ax25_dev->dev->name,
+>  		   ax2asc(buf, &ax25->source_addr),
+>  		   ax25->iamdigi? "*":"");
+> diff --git a/sound/isa/gus/gus_mem.c b/sound/isa/gus/gus_mem.c
+> index 4ac76f46dd76..63e790fbf066 100644
+> --- a/sound/isa/gus/gus_mem.c
+> +++ b/sound/isa/gus/gus_mem.c
+> @@ -306,7 +306,7 @@ static void snd_gf1_mem_info_read(struct snd_info_entry *entry,
+>  	used = 0;
+>  	for (block = alloc->first, i = 0; block; block = block->next, i++) {
+>  		used += block->size;
+> -		snd_iprintf(buffer, "Block %i at 0x%lx onboard 0x%x size %i (0x%x):\n", i, (long) block, block->ptr, block->size, block->size);
+> +		snd_iprintf(buffer, "Block %i at 0x%p onboard 0x%x size %i (0x%x):\n", i, block, block->ptr, block->size, block->size);
+>  		if (block->share ||
+>  		    block->share_id[0] || block->share_id[1] ||
+>  		    block->share_id[2] || block->share_id[3])
+> 
+
+
+-- 
+~Randy
