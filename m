@@ -2,143 +2,99 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE73C282E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C92C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F4B205C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81B62087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qaZ8lzoU"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="LJsLFwpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfDTJYE (ORCPT
+        id S1727519AbfDTJdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 05:24:04 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43365 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDTJYD (ORCPT
+        Sat, 20 Apr 2019 05:33:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51353 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDTJdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 05:24:03 -0400
-Received: by mail-ot1-f67.google.com with SMTP id u15so5996430otq.10;
-        Sat, 20 Apr 2019 02:24:03 -0700 (PDT)
+        Sat, 20 Apr 2019 05:33:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 4so8625523wmf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 02:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Gb4/VMu7KH5rxCB7x/AZRSTQfoVJyp09bqTmrvK/YA=;
-        b=qaZ8lzoUYYFnk+Usd9KrVY3GM7kajdk1D4RL26DCG+K+DrT7/PSfCyX/412VOM9Di9
-         GONs056tAErtnwcw+/+CmU+cWHrCZkRcZIXZc96kQlXieE/muBnSCQJbTWAnF8Q7vcre
-         CUiIIJUo7TL6kYOysdexDtTVK9SKCWDnVWs0/3uAmmDIkhcPcHeDS6pNzuOGTAHXTurS
-         DkC1PpaPMaDIJYEmmNBmcVCUjEPa22qisXRkKXRRDOg+CaRJfU8+llNsTAbLPUzj9TUj
-         iGgtTE+Ck6ALbGsm0AYzx4Bj1+IRMMKKmqz2fTau1KXAPhJ+c9nVxp2lZmJUhJeKgRN9
-         Si7g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LlwusV5xkrlPrMvp3F6BsXTUrYiLIFI2XvB6iP5cgFk=;
+        b=LJsLFwpquTfoWgpcKDZr4tlhW62nbLMAZTfSrg+97SjPTIAm5ZKKlU1uMHBRBQ0c0k
+         CCNT9j2z/C5+2lbW0xLV7LzipRgue8kF8i9faFB1im3XB5Z0maSXvkqOid7rAq19JFWt
+         T/t9rf/ANQQFhF44q5mc6x8zKcGpYYEkNmTruJNPXlD9OjshIblHSbYZbUEXfxQUoHDB
+         d24jEWSDtWkGGnfvkyZGW6JvWDaaA31UkmhD+3NZTFuXnaS3u266p+Xtj4pqAkYUbdW/
+         q5+WKbXc2FkH2pyQ0Q6QpTZn+ycb8oOvIbs6abOfUskTKb86iksaeytI6wjbV6Yrb5uw
+         59qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Gb4/VMu7KH5rxCB7x/AZRSTQfoVJyp09bqTmrvK/YA=;
-        b=VkGw9/gdIeg/COcSKmyyYLYzinrtVikb+flxCcUiqv6STY7VkWQuvmh/Ujr/V/l8d1
-         /dcbUzO4sWzUJKYWxTT4EFFTs2prs9dws6WoDjUGhy52m5yfdsS2nQevD1a3dUYo0hWn
-         u2Y1kSj9Zu0xkSEvIhlhNdroLDFFqEyB+EIi1CG4VXdec2gWPyXfOSF4YD/TbBrNI0UA
-         dSXRWV4+KkirX+flWuIP4SPxsraC8pylNnIq2Q/g+l4NEjxGk0ae5YoKA7xJc3mXM1il
-         lyNB9o8FUqVGriGkbNa3usdtnr8Gm5xW49xhBHoAdYKALSYh012zo0WhOr6+9iX/HRGv
-         zPbw==
-X-Gm-Message-State: APjAAAWRXq0jSnWCCt3y94sUaHjYmDm9Kx1xoPG2pfl9c3axr+d0RLD/
-        Czw+Rbgd3EvG0h8/033xGf8BZmhQPqGFpGHthoc=
-X-Google-Smtp-Source: APXvYqxhGTYdMX6k/b7uYzLmx+89ZwQCwYkcqnAJHrnbaTvpka4HeMXsiP8119gswQQ9Ucv5yu4kByN6OHPH+OI59y0=
-X-Received: by 2002:a9d:3db4:: with SMTP id l49mr5073251otc.131.1555752242781;
- Sat, 20 Apr 2019 02:24:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190417204355.469-1-jbrunet@baylibre.com> <20190417204355.469-6-jbrunet@baylibre.com>
- <CAFBinCCAbMpWYY6-W+909Q=jLpweC2F6ED6CVf6zVGrRiA1hxg@mail.gmail.com>
- <8316d7875bf0479e91cc11ce5fbf3b2e21f92a2c.camel@baylibre.com>
- <CAFBinCBQPSsqwDSd6nQMLqOuApiESwHXn4wQbOp49WLpXfBk=Q@mail.gmail.com>
- <5b19d32be23fbe630339fd48f93b16e9301385d1.camel@baylibre.com> <5d65cc12e18f9a4b86c097fbade0cef91b3b5d9b.camel@baylibre.com>
-In-Reply-To: <5d65cc12e18f9a4b86c097fbade0cef91b3b5d9b.camel@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LlwusV5xkrlPrMvp3F6BsXTUrYiLIFI2XvB6iP5cgFk=;
+        b=bYUdGqX5g1XOAtth0ymOzHudlZRXPr1sNGJYIKL5Ko0rZ01e5Cv6jCsp2cc+snVtHE
+         P3t880cuo7/EI+rWbSjRiXkaGu7ExSDcbLGfDoW7QnUSVreLcIwPC8hq4nBu69CXY+OZ
+         KRFxCY54lPcJbtoPTruq+2C0mqPMbUuqseOuQzd/Acs2t+wHABxp1RuHqTT4e7j7ZbVy
+         KQvNln4U2jJs2jywemYcPzldCqfxaststqZL8S5lJ5CE2dXVr0/EfomgDSAfndjQ8aFq
+         9uCeVBP7l2jzh/pxZmyAyVHjIP052oyYwOp72AE59uOdHPVkdMWWWvrFRqkl9NXbjhTK
+         Vm4g==
+X-Gm-Message-State: APjAAAUP1rLiW4rvHekzQj5t4xoTjAP73FXxhjnE+rU3iAhG4ql+5MOM
+        bJcUQ9YpZqnOoQd7SwcXc+c=
+X-Google-Smtp-Source: APXvYqyOm16IL7NomyQEgKcwNH2Yz97yqIwRk456Tr7o8sFhFjDbNFHfsWTwT0nv8hrxqjbXNj4/dQ==
+X-Received: by 2002:a7b:c086:: with SMTP id r6mr5220402wmh.123.1555752792829;
+        Sat, 20 Apr 2019 02:33:12 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C8AD0028C4739A57449001.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:28c4:739a:5744:9001])
+        by smtp.googlemail.com with ESMTPSA id w11sm12858244wre.15.2019.04.20.02.33.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Apr 2019 02:33:11 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 20 Apr 2019 11:23:51 +0200
-Message-ID: <CAFBinCBtc=Yb3WDgLzgnyd=NauaZnkQRnc08_j-XbiDybh=7cg@mail.gmail.com>
-Subject: Re: [PATCH 5/7] mmc: meson-gx: avoid clock glitch when switching to
- DDR modes
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/2] ARM: dts: meson: two GPU fixes
+Date:   Sat, 20 Apr 2019 11:32:56 +0200
+Message-Id: <20190420093258.2012-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome,
+While switching over to the main mesa git repository I was testing
+kmscube again. On my Meson8m2 board I noticed that two interrupts were
+correctly set up. This didn't cause any errors so far because on my
+setup the lima driver is using the "pp_bcast" interrupt instead of
+ppX and ppmmuX.
 
-On Fri, Apr 19, 2019 at 10:53 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> On Thu, 2019-04-18 at 23:15 +0200, Jerome Brunet wrote:
-> > On Thu, 2019-04-18 at 22:53 +0200, Martin Blumenstingl wrote:
-> > > Hi Jerome,
-> > >
-> > > On Thu, Apr 18, 2019 at 10:46 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > > > On Thu, 2019-04-18 at 22:16 +0200, Martin Blumenstingl wrote:
-> > > > > Hi Jerome,
-> > > > >
-> > > > > On Wed, Apr 17, 2019 at 10:44 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > > > > > Activating DDR in the Amlogic mmc controller, among other things, will
-> > > > > > divide the output clock by 2. So by activating it with clock on, we are
-> > > > > > creating a glitch on the output.
-> > > > > >
-> > > > > > Instead, let's deal with DDR when the clock output is off, when setting
-> > > > > > the clock.
-> > > > > >
-> > > > > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > > > > it seems that this patch breaks SD card on my Khadas VIM and Khadas VIM2.
-> > > >
-> > > > The error I see in your logs is with eMMC and hs200, not SD card.
-> > > sorry, I should have been more clear that there are two errors:
-> > > eMMC, this is what I have been seeing for a while on my Khadas VIM2
-> > > (it's probably not related to this patch):
-> > >    mmc1: mmc_select_hs200 failed, error -84
-> > >    mmc1: error -84 whilst initialising MMC card
-> >
-> > Following patches were also supposed to help the vim2.
-> > ... something I tested numerous time on this particular board.
-> >
-> > > however, then there's this other error:
-> > >    print_req_error: I/O error, dev mmcblk0, sector 0 flags 0
-> > >    Buffer I/O error on dev mmcblk0, logical block 0, async page read
-> > > as result of this the partition table cannot be read and my kernel
-> > > cannot find the rootfs.
-> >
-> > I don't know what the problem is (probably some CRC error - you can check the log
-> > in interrupt for this) but I'm pretty sure it is not related to this patch.
-> >
-> > I see in the log SD is indeed in HS mode, so not in any DDR mode.
-> > I also see that the SDIO fails as well. There something really weird, which can't
-> > be explained by this patch alone AFAICT.
->
-> Ok, I think I got it. It is indeed not linked to DDR, but a more trivial mistake.
-> It looks like a writel went AWOL during the final rebase (and after the test campaign).
->
-> in meson_mmc_set_ios, after:
-> val |= FIELD_PREP(CFG_BUS_WIDTH_MASK, bus_width);
->
-> Could you try adding
-> writel(val, host->regs + SD_EMMC_CFG);
-good catch!
+While fixing the interrupt lines I also noticed that I accidentally
+left the switch-delay property in there. That was needed at some
+point to run the out-of-tree lima kernel driver. It's not required
+anymore and it's not documented so drop it.
 
-> Without this, the bus width is not changed, which explains why eMMC, SD and SDIO fail
-> on init.
-I have added that missing writel on top of the whole series and now:
-- SD card is detected again (same as without this series)
-- SDIO wifi is detected again (same as without this series)
-- eMMC is detected (was not working before)
-
-I will give my Tested-by on v2 of these patches
+Target release: v5.2 (if possible because this is where the lima kernel
+driver will land). No need to send it for v5.1-rcX because there lima
+driver won't be part of v5.1.
 
 
-Martin
+Martin Blumenstingl (2):
+  ARM: dts: meson8: fix GPU interrupts and drop an undocumented property
+  ARM: dts: meson8b: drop undocumented property from the Mali GPU node
+
+ arch/arm/boot/dts/meson8.dtsi  | 5 ++---
+ arch/arm/boot/dts/meson8b.dtsi | 1 -
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+-- 
+2.21.0
+
