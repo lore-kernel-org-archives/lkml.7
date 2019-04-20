@@ -2,274 +2,209 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB7FC282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 04:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31773C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 04:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87E721479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 04:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OO+PORDx"
+	by mail.kernel.org (Postfix) with ESMTP id 0951421479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 04:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfDTEFh (ORCPT
+        id S1727858AbfDTEGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 00:05:37 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42726 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfDTEFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 00:05:37 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v22so6018509lje.9;
-        Fri, 19 Apr 2019 21:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5iuKKqF8/Xmym00zfxsVjKrr4Qwc+UuAXjuAx19SovU=;
-        b=OO+PORDxKph5D799MXNS/odzNa241Q8sfwLH1SDXrLuYhi1mup7F5eaeMEfNzm6CHt
-         y0h0anndrFw28NRd2GOSv8a7FU75j4GU7IwL2zXMLNpjwwSHIi95/qTZUMzoJ851Jo5L
-         0txtg4AkyAWxuKelv79AKIQInsQmZvZsw9iF5qPIA9i0CBlx/VdhOUDviWd52SHZSXXa
-         nJKdymYskUEg/N4GDOBm4AZEL7FFUsSEux0u1yHzZukxI40GgPyOlaabVxzZ+WktMnnB
-         aNC5Aycd192SnVW6d0a/e3kqYZRgh/kUcKegw+wnqEHEX2x2h0Or/fwdWvkU7PyDPi8X
-         riOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5iuKKqF8/Xmym00zfxsVjKrr4Qwc+UuAXjuAx19SovU=;
-        b=iu9sbzEkZh85eml5moYovjCqFmA1iF4ilSyHpwI0XFuzV/end3A+hhvk9C5ci5vUCk
-         oQZfR2a6Ljc2aNkZawT7hhS+KC/cjOG+j/R7sl/mH2eL3LUHeg+vBJcF62n0VP/SMGv2
-         Bn6T5YVO9KjZ5Abpb6Cy+tHW7/qDG9qzPdS+7GN8S/jpwQBmTu5jwdJY5Ka2vK6Fc8XK
-         uo9reYGAlJqPGa5uuJiXfCfGYzb+GucrLu4dhOKW3/BjzazI6OuZfqB2SRMzELJK25rk
-         tlLuKTRGg5Iax7tNWc2DP6HENNn1fLOS+vCmNobEIPYnFtj6Ev6X6lRec0JbDGflzvx5
-         /+Mw==
-X-Gm-Message-State: APjAAAUL3sCgvg97vUmrbK7RgLXFO4ACgaVnGsCiY0bieGhXDtrz8s7g
-        Y7RxXFUuuDlVZOtjmFC03f8=
-X-Google-Smtp-Source: APXvYqwcLsmtu1SjU+FgFR1sLAJJg0FFk3TC/I+6nxTBoFl6Ru4t/vLkpjiodlATk2mT3v5qSPQewA==
-X-Received: by 2002:a2e:3c0a:: with SMTP id j10mr4008017lja.164.1555733134287;
-        Fri, 19 Apr 2019 21:05:34 -0700 (PDT)
-Received: from localhost.localdomain (93-96-157.netrun.cytanet.com.cy. [93.109.96.157])
-        by smtp.gmail.com with ESMTPSA id h12sm1685613lfj.45.2019.04.19.21.05.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 21:05:33 -0700 (PDT)
-From:   Mohan Kumar <mohankumar718@gmail.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] PCI: Define pr_fmt() and use pr_*() instead of printk()
-Date:   Sat, 20 Apr 2019 07:05:30 +0300
-Message-Id: <1555733130-19804-1-git-send-email-mohankumar718@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 20 Apr 2019 00:06:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7205 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725825AbfDTEGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 00:06:22 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CE9BB880A6487598603C;
+        Sat, 20 Apr 2019 12:06:18 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Sat, 20 Apr 2019
+ 12:06:11 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <mojha@codeaurora.org>,
+        <skashyap@marvell.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] scsi: qedi: remove memset/memcpy to nfunc and use func instead
+Date:   Sat, 20 Apr 2019 12:05:54 +0800
+Message-ID: <20190420040554.41888-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190412094829.15868-1-colin.king@canonical.com>
+References: <20190412094829.15868-1-colin.king@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define a pr_fmt() macro that convert all of the explicit printk() calls
-into corresponding pr_*().
+From: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+KASAN report this:
+
+BUG: KASAN: global-out-of-bounds in qedi_dbg_err+0xda/0x330 [qedi]
+Read of size 31 at addr ffffffffc12b0ae0 by task syz-executor.0/2429
+
+CPU: 0 PID: 2429 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x1c4/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ memcpy+0x1f/0x50 mm/kasan/common.c:130
+ qedi_dbg_err+0xda/0x330 [qedi]
+ ? 0xffffffffc12d0000
+ qedi_init+0x118/0x1000 [qedi]
+ ? 0xffffffffc12d0000
+ ? 0xffffffffc12d0000
+ ? 0xffffffffc12d0000
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f2d57e55c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 00000000200003c0 RDI: 0000000000000003
+RBP: 00007f2d57e55c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2d57e566bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+
+The buggy address belongs to the variable:
+ __func__.67584+0x0/0xffffffffffffd520 [qedi]
+
+Memory state around the buggy address:
+ ffffffffc12b0980: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 05 fa
+ ffffffffc12b0a00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 05 fa fa
+> ffffffffc12b0a80: fa fa fa fa 00 06 fa fa fa fa fa fa 00 02 fa fa
+                                                          ^
+ ffffffffc12b0b00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 03 fa
+ ffffffffc12b0b80: fa fa fa fa 00 00 02 fa fa fa fa fa 00 00 04 fa
+
+Currently the qedi_dbg_* family of functions can overrun the end
+of the source string if it is less than the destination buffer
+length because of the use of a fixed sized memcpy. Remove the
+memset/memcpy calls to nfunc and just use func instead as it
+is always a null terminated string.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pci/bus.c       |  5 ++++-
- drivers/pci/pci-stub.c  | 11 +++++------
- drivers/pci/pci-sysfs.c |  3 ++-
- drivers/pci/pci.c       |  5 +++--
- drivers/pci/quirks.c    |  9 +++++----
- drivers/pci/setup-bus.c |  5 +++--
- drivers/pci/slot.c      |  4 +++-
- 7 files changed, 25 insertions(+), 17 deletions(-)
+ drivers/scsi/qedi/qedi_dbg.c | 32 ++++++++------------------------
+ 1 file changed, 8 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 5cb40b2..a742ef5 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -6,6 +6,9 @@
-  *	David Miller (davem@redhat.com)
-  *	Ivan Kokshaysky (ink@jurassic.park.msu.ru)
-  */
-+
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/pci.h>
-@@ -23,7 +26,7 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+diff --git a/drivers/scsi/qedi/qedi_dbg.c b/drivers/scsi/qedi/qedi_dbg.c
+index 8fd28b0..3383314 100644
+--- a/drivers/scsi/qedi/qedi_dbg.c
++++ b/drivers/scsi/qedi/qedi_dbg.c
+@@ -16,10 +16,6 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+ {
+ 	va_list va;
+ 	struct va_format vaf;
+-	char nfunc[32];
+-
+-	memset(nfunc, 0, sizeof(nfunc));
+-	memcpy(nfunc, func, sizeof(nfunc) - 1);
  
- 	entry = resource_list_create_entry(res, 0);
- 	if (!entry) {
--		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
-+		pr_err("can't add host bridge window %pR\n", res);
- 		return;
- 	}
+ 	va_start(va, fmt);
  
-diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
-index 66f8a59..f946bf9 100644
---- a/drivers/pci/pci-stub.c
-+++ b/drivers/pci/pci-stub.c
-@@ -16,6 +16,8 @@
-  * .../0000:00:19.0/driver -> ../../../bus/pci/drivers/pci-stub
-  */
+@@ -28,9 +24,9 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
  
-+#define pr_fmt(fmt) "pci-stub: " fmt
-+
- #include <linux/module.h>
- #include <linux/pci.h>
+ 	if (likely(qedi) && likely(qedi->pdev))
+ 		pr_err("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+-		       nfunc, line, qedi->host_no, &vaf);
++		       func, line, qedi->host_no, &vaf);
+ 	else
+-		pr_err("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
++		pr_err("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
  
-@@ -66,20 +68,17 @@ static int __init pci_stub_init(void)
- 				&class, &class_mask);
- 
- 		if (fields < 2) {
--			printk(KERN_WARNING
--			       "pci-stub: invalid id string \"%s\"\n", id);
-+			pr_warn("invalid id string \"%s\"\n", id);
- 			continue;
- 		}
- 
--		printk(KERN_INFO
--		       "pci-stub: add %04X:%04X sub=%04X:%04X cls=%08X/%08X\n",
-+		pr_info("add %04X:%04X sub=%04X:%04X cls=%08X/%08X\n",
- 		       vendor, device, subvendor, subdevice, class, class_mask);
- 
- 		rc = pci_add_dynid(&stub_driver, vendor, device,
- 				   subvendor, subdevice, class, class_mask, 0);
- 		if (rc)
--			printk(KERN_WARNING
--			       "pci-stub: failed to add dynamic id (%d)\n", rc);
-+			pr_warn("failed to add dynamic id (%d)\n", rc);
- 	}
- 
- 	return 0;
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 25794c2..455bf29 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -12,6 +12,7 @@
-  * Modeled after usb's driverfs.c
-  */
- 
-+#define pr_fmt(fmt) "pci: warning: " fmt
- 
- #include <linux/kernel.h>
- #include <linux/sched.h>
-@@ -1111,7 +1112,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	kfree(b->legacy_io);
- 	b->legacy_io = NULL;
- kzalloc_err:
--	printk(KERN_WARNING "pci: warning: could not create legacy I/O port and ISA memory resources to sysfs\n");
-+	pr_warn("could not create legacy I/O port and ISA memory resources to sysfs\n");
- 	return;
+ 	va_end(va);
  }
+@@ -41,10 +37,6 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+ {
+ 	va_list va;
+ 	struct va_format vaf;
+-	char nfunc[32];
+-
+-	memset(nfunc, 0, sizeof(nfunc));
+-	memcpy(nfunc, func, sizeof(nfunc) - 1);
  
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f5ff01d..a24a8bc 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -8,6 +8,8 @@
-  * Copyright 1997 -- 2000 Martin Mares <mj@ucw.cz>
-  */
+ 	va_start(va, fmt);
  
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
-@@ -6276,8 +6278,7 @@ static int __init pci_setup(char *str)
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
- 			} else {
--				printk(KERN_ERR "PCI: Unknown option `%s'\n",
--						str);
-+				pr_err("Unknown option `%s'\n", str);
- 			}
- 		}
- 		str = k;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 06af0c3..fb802d1 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -12,6 +12,8 @@
-  * file, where their drivers can use them.
-  */
+@@ -56,9 +48,9 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
  
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
-@@ -159,8 +161,7 @@ static int __init pci_apply_final_quirks(void)
- 	u8 tmp;
+ 	if (likely(qedi) && likely(qedi->pdev))
+ 		pr_warn("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+-			nfunc, line, qedi->host_no, &vaf);
++			func, line, qedi->host_no, &vaf);
+ 	else
+-		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
++		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
  
- 	if (pci_cache_line_size)
--		printk(KERN_DEBUG "PCI: CLS %u bytes\n",
--		       pci_cache_line_size << 2);
-+		pr_info("CLS %u bytes\n", pci_cache_line_size << 2);
+ ret:
+ 	va_end(va);
+@@ -70,10 +62,6 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+ {
+ 	va_list va;
+ 	struct va_format vaf;
+-	char nfunc[32];
+-
+-	memset(nfunc, 0, sizeof(nfunc));
+-	memcpy(nfunc, func, sizeof(nfunc) - 1);
  
- 	pci_apply_fixup_final_quirks = true;
- 	for_each_pci_dev(dev) {
-@@ -177,7 +178,7 @@ static int __init pci_apply_final_quirks(void)
- 			if (!tmp || cls == tmp)
- 				continue;
+ 	va_start(va, fmt);
  
--			printk(KERN_DEBUG "PCI: CLS mismatch (%u != %u), using %u bytes\n",
-+			pr_info("CLS mismatch (%u != %u), using %u bytes\n",
- 			       cls << 2, tmp << 2,
- 			       pci_dfl_cache_line_size << 2);
- 			pci_cache_line_size = pci_dfl_cache_line_size;
-@@ -185,7 +186,7 @@ static int __init pci_apply_final_quirks(void)
- 	}
+@@ -85,10 +73,10 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
  
- 	if (!pci_cache_line_size) {
--		printk(KERN_DEBUG "PCI: CLS %u bytes, default %u\n",
-+		pr_info("CLS %u bytes, default %u\n",
- 		       cls << 2, pci_dfl_cache_line_size << 2);
- 		pci_cache_line_size = cls ? cls : pci_dfl_cache_line_size;
- 	}
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index ec44a0f..418023a 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -14,6 +14,8 @@
-  *	     tighter packing. Prefetchable range support.
-  */
+ 	if (likely(qedi) && likely(qedi->pdev))
+ 		pr_notice("[%s]:[%s:%d]:%d: %pV",
+-			  dev_name(&qedi->pdev->dev), nfunc, line,
++			  dev_name(&qedi->pdev->dev), func, line,
+ 			  qedi->host_no, &vaf);
+ 	else
+-		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
++		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
  
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -2016,8 +2018,7 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
- 		goto enable_all;
- 	}
+ ret:
+ 	va_end(va);
+@@ -100,10 +88,6 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+ {
+ 	va_list va;
+ 	struct va_format vaf;
+-	char nfunc[32];
+-
+-	memset(nfunc, 0, sizeof(nfunc));
+-	memcpy(nfunc, func, sizeof(nfunc) - 1);
  
--	printk(KERN_DEBUG "PCI: No. %d try to assign unassigned res\n",
--			 tried_times + 1);
-+	pr_info("No. %d try to assign unassigned res\n", tried_times + 1);
+ 	va_start(va, fmt);
  
- 	/*
- 	 * Try to release leaf bridge's resources that doesn't fit resource of
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index c46d5e1..9f0463e 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -5,6 +5,8 @@
-  *	Alex Chiang <achiang@hp.com>
-  */
+@@ -115,9 +99,9 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
  
-+#define pr_fmt(fmt) "PCI: " fmt
-+
- #include <linux/kobject.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-@@ -403,7 +405,7 @@ static int pci_slot_init(void)
- 	pci_slots_kset = kset_create_and_add("slots", NULL,
- 						&pci_bus_kset->kobj);
- 	if (!pci_slots_kset) {
--		printk(KERN_ERR "PCI: Slot initialization failure\n");
-+		pr_err("Slot initialization failure\n");
- 		return -ENOMEM;
- 	}
- 	return 0;
+ 	if (likely(qedi) && likely(qedi->pdev))
+ 		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+-			nfunc, line, qedi->host_no, &vaf);
++			func, line, qedi->host_no, &vaf);
+ 	else
+-		pr_info("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
++		pr_info("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
+ 
+ ret:
+ 	va_end(va);
 -- 
-2.7.4
+2.7.0
+
 
