@@ -2,132 +2,98 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD6C282E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4772FC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F56620869
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA7520869
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="lQ5hlKkn"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=yehs2007@zoho.com header.b="Q24btHAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbfDTQei (ORCPT
+        id S1728462AbfDTQfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 12:34:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45142 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDTQei (ORCPT
+        Sat, 20 Apr 2019 12:35:43 -0400
+Received: from sender-pp-092.zoho.com ([135.84.80.237]:25489 "EHLO
+        sender-pp-o92.zoho.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725920AbfDTQfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 12:34:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y84so5875275oia.12
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 09:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2nkNuARp9X01dKfEBOtMwOp996ppluuGSD9cN/HBKF0=;
-        b=lQ5hlKknHgUdIgtdCdSW+BlZNAFfLwu4hWsS9k88Ag24YEMBmAwCWE3/CkQVyeYzeg
-         3DBa/mRqMobf0jbS4KDLFQpX2/bLaOPnc0J0DAzpIxxqngPpoOFIZcZ1Ig2O2j1EO3wf
-         GAun3ArtW1LScidQo9nzjwulZ5rXl5sF8L72MNAsiCJCkFtoO5KK4A8jdV4ivGcF97H+
-         I44a7FkspL8ec+mXvswIjUGz6vQ1DsIc+M8DgUzXLsv2YU7wNEYsP/zx7o4x1/zNh3AH
-         Tv/+hv9FI06FU/1rSvaLo8VX4p/Z2DHQwjQ2PjY8ERIoNlVwd9PcVwuwgdbAyuDsq3tt
-         oQRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2nkNuARp9X01dKfEBOtMwOp996ppluuGSD9cN/HBKF0=;
-        b=nNHQBlImLzij2UifN/YclQBl0h99GIhQtp0FQlFCqQqXNHfg9zjnxxQ/06ZI6CDfgY
-         gbSJG1AaMOIgkLwrnmab8qz390m7VEyoiXXbA3SkZeGqb5y/8VCXFwun8iUK5fn+d9w5
-         CkzqEmpw9ADOUiEaqlaLG0QfwvDxnnUeFJmmHionBi2YsQtvMjasF+0MfpX3ukk33ReP
-         bdGZpb5JLvPekRda/njMkLQrQ/Vl+SeoFRf4eRNlLY9tK5Ll00iq+q8RcrDfozeJ6GL7
-         TnSIL+sps2yCjk2JtupgddA4m2MzZPBxOroHIlzNy9maCl7Mls6P2m9xvh9NeuS3FNFg
-         1W3w==
-X-Gm-Message-State: APjAAAXhmnhyIbKva1BRPHyLs8MAmADyNBb7r7gw9bErm3ExTJCAbELD
-        3Y9QU7eQu1qZNpkXYARwZ+bSPvQB1SpAuZ91QiVhpA==
-X-Google-Smtp-Source: APXvYqwPxWJkMWqyvsgPZQqhL3+W5zzE3UErLcb18t7ERNXhzlO8we8FPAnQV+jOk6LI1G7NFpMMK/IvtwiYI/3C0cA=
-X-Received: by 2002:aca:d513:: with SMTP id m19mr5252902oig.73.1555778077724;
- Sat, 20 Apr 2019 09:34:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190420153148.21548-1-pasha.tatashin@soleen.com>
-In-Reply-To: <20190420153148.21548-1-pasha.tatashin@soleen.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 20 Apr 2019 09:34:26 -0700
-Message-ID: <CAPcyv4h73gUwntDYx012qcyMYCmzZDU3HOvKcW5DRkO-GoTc+w@mail.gmail.com>
-Subject: Re: [v1 0/2] "Hotremove" persistent memory
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 20 Apr 2019 12:35:43 -0400
+X-Greylist: delayed 845 seconds by postgrey-1.27 at vger.kernel.org; Sat, 20 Apr 2019 12:35:42 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1555777235; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=jOTdygbaBc3MNIK+QEDeBIHL51EgYK9ANlqNMKWUa1S7831q+sVySiWH3poGnmcj8TJJOBBNt/XGGtQF2sSmvSnYLvM57MxLgvuPsi0jJchaQ8/U/3vVKktKhHKoS/Msr1vHIZWx8gBmk1oftvBeuF86IntuZxccGChSUY1Rouw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1555777235; h=Cc:Date:From:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=nKKEQ5f1oa3D1Wd+54DCouDXUJUpRXhHI/GbN5YNV+Y=; 
+        b=VCWWwcSQ0MQfvEVE3d/5R+62Tl0GPa28+bEGe9inxxXWloYZKvcKHk1x0YtAnvaTI996uo5d/ae0KxBgAgkdkS+ZNfKYAU5GS3vxEox9Hmg72lywSr6a25wviPxDMFCSookcLVgOC4Mmw1G1afNLhGsfV688jN/cUG1ObNPzFl8=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=yehs2007@zoho.com;
+        dmarc=pass header.from=<yehs2007@zoho.com> header.from=<yehs2007@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=R6dIYuhJxJ95/saFjkorgrGxdOhMIwIZoEg79xRa/OZCQdLIEkskC5cJtV3p4ciJx6dSWNDftjbs
+    qqzVvDTUTG9isE+LfG9gbffgcGECrsZ13cYf+Hvej1xcyMBQE+Hx  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1555777235;
+        s=default; d=zoho.com; i=yehs2007@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id; l=1105;
+        bh=nKKEQ5f1oa3D1Wd+54DCouDXUJUpRXhHI/GbN5YNV+Y=;
+        b=Q24btHApiNn552wdGVNZo9UKSnCy/GSxIeszFftyF/BEAeuZe7LPW+P8N2B7WisG
+        0bd2QTD7yll2MXiu0u+HQYUsxIos94qJInqzfG+rDmO9Z+MMWYix/XmScLbLk6i/t+3
+        vXwIkG9Bw5hRSGsjZcp2HqrPdeCn1DHHndgWtRAw=
+Received: from YEHS1XR3054QMS.lenovo.com (123.118.182.142 [123.118.182.142]) by mx.zohomail.com
+        with SMTPS id 1555777233734654.2448340674076; Sat, 20 Apr 2019 09:20:33 -0700 (PDT)
+From:   Huaisheng Ye <yehs2007@zoho.com>
+To:     mpatocka@redhat.com, snitzer@redhat.com, agk@redhat.com
+Cc:     prarit@redhat.com, chengnt@lenovo.com, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, Huaisheng Ye <yehs1@lenovo.com>
+Subject: [PATCH] dm-writecache: remove unused member page_offset in writeback_struct
+Date:   Sun, 21 Apr 2019 00:20:17 +0800
+Message-Id: <20190420162017.6052-1-yehs2007@zoho.com>
+X-Mailer: git-send-email 2.17.0.windows.1
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 8:32 AM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> Recently, adding a persistent memory to be used like a regular RAM was
-> added to Linux. This work extends this functionality to also allow hot
-> removing persistent memory.
->
-> We (Microsoft) have a very important use case for this functionality.
->
-> The requirement is for physical machines with small amount of RAM (~8G)
-> to be able to reboot in a very short period of time (<1s). Yet, there is
-> a userland state that is expensive to recreate (~2G).
->
-> The solution is to boot machines with 2G preserved for persistent
-> memory.
+From: Huaisheng Ye <yehs1@lenovo.com>
 
-Makes sense, but I have some questions about the details.
+The structure member page_offset in writeback_struct never has been
+used actually. Remove it.
 
->
-> Copy the state, and hotadd the persistent memory so machine still has all
-> 8G for runtime. Before reboot, hotremove device-dax 2G, copy the memory
-> that is needed to be preserved to pmem0 device, and reboot.
->
-> The series of operations look like this:
->
->         1. After boot restore /dev/pmem0 to boot
->         2. Convert raw pmem0 to devdax
->         ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
->         3. Hotadd to System RAM
->         echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
->         echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
->         4. Before reboot hotremove device-dax memory from System RAM
->         echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
->         5. Create raw pmem0 device
->         ndctl create-namespace --mode raw  -e namespace0.0 -f
->         6. Copy the state to this device
+Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
+---
+ drivers/md/dm-writecache.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-What is the source of this copy? The state that was in the hot-added
-memory? Isn't it "already there" since you effectively renamed dax0.0
-to pmem0?
+diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+index cfbbfbc..ddf1732 100644
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -190,7 +190,6 @@ struct writeback_struct {
+ 	struct dm_writecache *wc;
+ 	struct wc_entry **wc_list;
+ 	unsigned wc_list_n;
+-	unsigned page_offset;
+ 	struct page *page;
+ 	struct wc_entry *wc_list_inline[WB_LIST_INLINE];
+ 	struct bio bio;
+@@ -1481,7 +1480,6 @@ static void __writecache_writeback_pmem(struct dm_writecache *wc, struct writeba
+ 		bio->bi_end_io = writecache_writeback_endio;
+ 		bio_set_dev(bio, wc->dev->bdev);
+ 		bio->bi_iter.bi_sector = read_original_sector(wc, e);
+-		wb->page_offset = PAGE_SIZE;
+ 		if (max_pages <= WB_LIST_INLINE ||
+ 		    unlikely(!(wb->wc_list = kmalloc_array(max_pages, sizeof(struct wc_entry *),
+ 							   GFP_NOIO | __GFP_NORETRY |
+-- 
+1.8.3.1
 
->         7. Do kexec reboot, or reboot through firmware, is firmware does not
->         zero memory in pmem region.
 
-Wouldn't the dax0.0 contents be preserved regardless? How does the
-guest recover the pre-initialized state / how does the kernel know to
-give out the same pages to the application as the previous boot?
