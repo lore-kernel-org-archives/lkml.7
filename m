@@ -2,110 +2,103 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED819C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFAAC282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B629F2087B
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8398B21855
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfDTK6m (ORCPT
+        id S1727838AbfDTLAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 06:58:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34538 "EHLO mx1.redhat.com"
+        Sat, 20 Apr 2019 07:00:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:51065 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfDTK6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 06:58:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725920AbfDTLAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 07:00:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5D522CA1FA;
-        Sat, 20 Apr 2019 10:58:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0B4955D9D6;
-        Sat, 20 Apr 2019 10:58:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Sat, 20 Apr 2019 12:58:40 +0200 (CEST)
-Date:   Sat, 20 Apr 2019 12:58:38 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Roman Gushchin <guroan@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 4/9] cgroup: cgroup v2 freezer
-Message-ID: <20190420105838.GA17468@redhat.com>
-References: <20190405174708.1010-1-guro@fb.com>
- <20190405174708.1010-5-guro@fb.com>
- <20190419151912.GA12152@redhat.com>
- <20190419161118.GA23357@tower.DHCP.thefacebook.com>
- <20190419162600.GC12228@redhat.com>
- <20190419165600.GC23357@tower.DHCP.thefacebook.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44mVHV0c1bz9s70;
+        Sat, 20 Apr 2019 21:00:21 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>, rguenther@suse.de,
+        hjl.tools@gmail.com, yang.shi@linux.alibaba.com, mhocko@suse.com,
+        vbabka@suse.cz, luto@amacapital.net, x86@kernel.org,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        stable@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-um@lists.infradead.org, benh@kernel.crashing.org,
+        paulus@samba.org, linux-arch@vger.kernel.org, gxt@pku.edu.cn,
+        jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
+Subject: Re: [PATCH] [v2] x86/mpx: fix recursive munmap() corruption
+In-Reply-To: <20190419194747.5E1AD6DC@viggo.jf.intel.com>
+References: <20190419194747.5E1AD6DC@viggo.jf.intel.com>
+Date:   Sat, 20 Apr 2019 21:00:21 +1000
+Message-ID: <878sw5szzu.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190419165600.GC23357@tower.DHCP.thefacebook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Sat, 20 Apr 2019 10:58:41 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/19, Roman Gushchin wrote:
+Dave Hansen <dave.hansen@linux.intel.com> writes:
+> Changes from v1:
+>  * Fix compile errors on UML and non-x86 arches
+>  * Clarify commit message and Fixes about the origin of the
+>    bug and add the impact to powerpc / uml / unicore32
 >
-> > > >
-> > > > wake_up_interruptible() ?
-> > >
-> > > Wait_up_interruptible() is supposed to work with a workqueue,
-> > > but here there is nothing like this. Probably, I didn't understand your idea.
-> > > Can you, please, elaborate a bit more?
-> >
-> > Not sure I understand... We need to wake up the task if it sleeps in
-> > do_freezer_trap(), right? do_freezer_trap() uses TASK_INTERRUPTIBLE, so
-> > why can't wake_up_interruptible() == __wake_up(TASK_INTERRUPTIBLE) work?
+> --
 >
-> Right, but __wake_up is supposed to wake threads blocked on a waitqueue:
-
-Ugh sorry ;) of course I meant wake_up_state(task, TASK_INTERRUPTIBLE).
-
-> > > > > +		if (unlikely(cgroup_task_frozen(current))) {
-> > > > >  			spin_unlock_irq(&sighand->siglock);
-> > > > > +			cgroup_leave_frozen(true);
-> > > > >  			goto relock;
-> > > > >  		}
-> > > >
-> > > > afaics cgroup_leave_frozen(false) makes more sense here.
-> > >
-> > > Why? I don't see any reasons why the task should remain in the frozen
-> > > state after this point.
-> >
-> > But cgroup_leave_frozen(false) will equally clear ->frozen if !CGRP_FREEZE ?
-> > OTOH, if CGRP_FREEZE is set again, why do we need to clear ->frozen?
+> This is a bit of a mess, to put it mildly.  But, it's a bug
+> that only seems to have showed up in 4.20 but wasn't noticed
+> until now because nobody uses MPX.
 >
-> Hm, it might work too, but I'm not sure I like it more. IMO, the best option
-> is to have a single cgroup_leave_frozen(true) in signal.c, it's just simpler.
-> If a user changed the desired state of cgroup twice, there is no need to avoid
-> state transitions. Or maybe I don't see it yet.
+> MPX has the arch_unmap() hook inside of munmap() because MPX
+> uses bounds tables that protect other areas of memory.  When
+> memory is unmapped, there is also a need to unmap the MPX
+> bounds tables.  Barring this, unused bounds tables can eat 80%
+> of the address space.
+>
+> But, the recursive do_munmap() that gets called vi arch_unmap()
+> wreaks havoc with __do_munmap()'s state.  It can result in
+> freeing populated page tables, accessing bogus VMA state,
+> double-freed VMAs and more.
+>
+> To fix this, call arch_unmap() before __do_unmap() has a chance
+> to do anything meaningful.  Also, remove the 'vma' argument
+> and force the MPX code to do its own, independent VMA lookup.
+>
+> == UML / unicore32 impact ==
+>
+> Remove unused 'vma' argument to arch_unmap().  No functional
+> change.
+>
+> I compile tested this on UML but not unicore32.
+>
+> == powerpc impact ==
+>
+> powerpc uses arch_unmap() well to watch for munmap() on the
+> VDSO and zeroes out 'current->mm->context.vdso_base'.  Moving
+> arch_unmap() makes this happen earlier in __do_munmap().  But,
+> 'vdso_base' seems to only be used in perf and in the signal
+> delivery that happens near the return to userspace.  I can not
+> find any likely impact to powerpc, other than the zeroing
+> happening a little earlier.
 
-Then why do we need cgroup_leave_frozen(false) in wait_for_vfork_done() ? How
-does it differ from get_signal() ?
+Yeah I agree.
 
-If nothing else. Suppose that wait_for_vfork_done() calls leave(false) and this
-races with freezer, CGRP_FREEZE is already set but JOBCTL_TRAP_FREEZE is not.
+> powerpc does not use the 'vma' argument and is unaffected by
+> its removal.
+>
+> I compile-tested a 64-bit powerpc defconfig.
 
-This sets TIF_SIGPENDING to ensure the task won't return to user mode, thus it
-calls get_signal().
+Thanks.
 
-get_signal() doesn't see JOBCTL_TRAP_FREEZE, it notices ->frozen == T and does
-cgroup_leave_frozen(true) which clears ->frozen.
-
-Then the task calls dequeue_signal(), clears TIF_SIGPENDING and returns to user
-mode?
-
-Oleg.
-
+cheers
