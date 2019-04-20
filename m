@@ -2,59 +2,60 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF528C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD090C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3A720883
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FFE2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="b/Yq2Wyk"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="gv4y9y7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfDTPbw (ORCPT
+        id S1728327AbfDTPby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 11:31:52 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]:33772 "EHLO
-        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfDTPbv (ORCPT
+        Sat, 20 Apr 2019 11:31:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34545 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfDTPbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 11:31:51 -0400
-Received: by mail-qt1-f182.google.com with SMTP id g7so733611qtc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 08:31:51 -0700 (PDT)
+        Sat, 20 Apr 2019 11:31:53 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k2so8193989qtm.1
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 08:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=iv/3jCjojRbd14DgOBHd7PqX9WLmv8DR7Ac/LmkKrj0=;
-        b=b/Yq2Wyky+AzSHOY8doHM8jY0gDFDLN4Bwh9KAQ/2+IlQgeZY75BLUNWCKYxkdKv5n
-         hS2Y+Ojmik31r27ETq9pxJpeop8Ag2eXVOpaOkBN2UHh5xm+yzaR7Ht1NlY+jEHUaZ7G
-         D9HWFJY4TFDC0GQ8XSLYTxyCibHgzBAlnHx08PM/ZNlcGqxcZFrEWJq1KN2LvmVebPlA
-         o3pVg2F8CmMUQhE823VPI3JGCn48LTavYXzWNiKBhXD00tk5UELtXpqCRgtY0CFU5GkH
-         f4sDIvUpgnEziD65bkWGSAuxd1RTc8bArgId61nh2RCiDcDQCq92BSToui4qQPwDAZuy
-         ppLQ==
+        bh=CYN5iyU5BivsuLuaj0p6OjCQw7Id7vPwrKGL/YIcXb0=;
+        b=gv4y9y7cf3o267pQaWmOusE3XjrIdET78C/jhvKeJOOIswRYeg+xJ6iCNkoIp7jwe8
+         eMfmiMGvm3jiItgfWh7rsIC0iDU2arJGD0I8dEWbvohWpSoDYFJHV3UkftKRvGPAoITY
+         i6rIXoLgVSE0QCGGL2ddMLcfig3wKerZ3dju3rIHWGRenLbwMbvtm+Lsy5PzFF4kpInT
+         KtkQO0u2+bNCrI8wkRsYqKOOf0MB81gCxkVmhHSnce37h8lverX4ZAJfovKz65KVuDEZ
+         NQQnlVEnrSOI+B8KgloCauPdOt7A+nn+BGv5pJdp8UVFUN+0TOUYGt5tUHMaPh4tM4jZ
+         hVcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iv/3jCjojRbd14DgOBHd7PqX9WLmv8DR7Ac/LmkKrj0=;
-        b=EGiOAD99mc+Oju4fRElK7ybCWKtmMxWwIASJm124EXSlT7vNLdTTQndntgh/qgjpNk
-         e7QfjnQv82FQhOshktxWpqoCNaUhb8yMkaECE5HVV7M0BBoBXIPUj32WfPXtisp2cUHv
-         wpgUVnCDDGl+gbureKGVjEQdhgIapl2CuhCZSIONecyzLTM03rkSNfs8wynLnvWhjMa1
-         JnN9+6aToa/Ytx9RTzvMuXXuGfCxeJFxnGrEje8t5DkIk0DfCsfT7Zp2xNDCTyQScLu7
-         iESZd+psbUl7vp81dJDGadXVK8a6Z3Q4knWm2kMzcIPJM8Lm2Kf3UUFvuSYxBkneWp74
-         dAdA==
-X-Gm-Message-State: APjAAAWEHKP3x7kQtdh9WzmHQzvD1fwjq+7LPZJjyW92hcZGfgFd9y8k
-        WD8X+JqRkc6XLCL6oozQfYI+3g==
-X-Google-Smtp-Source: APXvYqwTnQt2szuODS6U8sqXMKFWO/ts92cmT+co0EE9kl200+47XKgG9xaCl7CYjK6wOgGhVT1l0w==
-X-Received: by 2002:ac8:21ad:: with SMTP id 42mr8105239qty.219.1555774310943;
-        Sat, 20 Apr 2019 08:31:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CYN5iyU5BivsuLuaj0p6OjCQw7Id7vPwrKGL/YIcXb0=;
+        b=eAZ/AwKiJMKFr3MQPVw9jvQQYXNIEJaDzLYXqNkoANggliF2ObOq8TxNkpnoHm3tQu
+         Rf4iFUZZpxpVIoxaFTFcde2iEYfJK74eGl6/znYRrAftYuQCFtC6srFVTkA56tPf8CjL
+         PO47kBvbqrUMNJVDeOgbYwMtPITUOLL8VxoG3DZNgsY7R6ZUBiR0AgncfOu9FA+5HxJa
+         1kfFisnlJNwvxCmb8WD1S7ZZLyGZU80P+SH8gUuttamtw58LX1l09h3+K3tqOH9Rkhwb
+         0493CIaK5bb7K2EqVDztfvsc46TkBZGUYBEY97xWsnWHDPina6Ww1I2Jx8NJnQNAaIDd
+         HXaQ==
+X-Gm-Message-State: APjAAAW1viHHyXO0EdkQoqqPpAowqIg3XfzarvG1VN/XqBzCIh/Y2+Xw
+        zCEOyjFpvTIdaQumdMAPseBw8Pt2ULg=
+X-Google-Smtp-Source: APXvYqy+F9p8F+adABZCVE7+/c6WL6tSVwOuI2/YAflpnkot9CpEHJuJLRjxVI692CvA24SyHzRqyA==
+X-Received: by 2002:ac8:1aec:: with SMTP id h41mr7984682qtk.345.1555774312594;
+        Sat, 20 Apr 2019 08:31:52 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id n201sm3976523qka.10.2019.04.20.08.31.49
+        by smtp.gmail.com with ESMTPSA id n201sm3976523qka.10.2019.04.20.08.31.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 08:31:50 -0700 (PDT)
+        Sat, 20 Apr 2019 08:31:51 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -65,10 +66,12 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         thomas.lendacky@amd.com, ying.huang@intel.com,
         fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
         baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com
-Subject: [v1 0/2] "Hotremove" persistent memory
-Date:   Sat, 20 Apr 2019 11:31:46 -0400
-Message-Id: <20190420153148.21548-1-pasha.tatashin@soleen.com>
+Subject: [v1 1/2] device-dax: fix memory and resource leak if hotplug fails
+Date:   Sat, 20 Apr 2019 11:31:47 -0400
+Message-Id: <20190420153148.21548-2-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190420153148.21548-1-pasha.tatashin@soleen.com>
+References: <20190420153148.21548-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,47 +79,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently, adding a persistent memory to be used like a regular RAM was
-added to Linux. This work extends this functionality to also allow hot
-removing persistent memory.
+When add_memory() function fails, the resource and the memory should be
+freed.
 
-We (Microsoft) have a very important use case for this functionality.
+Fixes: c221c0b0308f ("device-dax: "Hotplug" persistent memory for use like normal RAM")
 
-The requirement is for physical machines with small amount of RAM (~8G)
-to be able to reboot in a very short period of time (<1s). Yet, there is
-a userland state that is expensive to recreate (~2G).
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ drivers/dax/kmem.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The solution is to boot machines with 2G preserved for persistent
-memory.
-
-Copy the state, and hotadd the persistent memory so machine still has all
-8G for runtime. Before reboot, hotremove device-dax 2G, copy the memory
-that is needed to be preserved to pmem0 device, and reboot.
-
-The series of operations look like this:
-
-	1. After boot restore /dev/pmem0 to boot
-	2. Convert raw pmem0 to devdax
-	ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
-	3. Hotadd to System RAM 
-	echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
-	echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
-	4. Before reboot hotremove device-dax memory from System RAM
-	echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-	5. Create raw pmem0 device
-	ndctl create-namespace --mode raw  -e namespace0.0 -f
-	6. Copy the state to this device
-	7. Do kexec reboot, or reboot through firmware, is firmware does not
-	zero memory in pmem region.
-
-Pavel Tatashin (2):
-  device-dax: fix memory and resource leak if hotplug fails
-  device-dax: "Hotremove" persistent memory that is used like normal RAM
-
- drivers/dax/dax-private.h |  2 +
- drivers/dax/kmem.c        | 82 ++++++++++++++++++++++++++++++++++++---
- 2 files changed, 79 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index a02318c6d28a..4c0131857133 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -66,8 +66,11 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	new_res->name = dev_name(dev);
+ 
+ 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+-	if (rc)
++	if (rc) {
++		release_resource(new_res);
++		kfree(new_res);
+ 		return rc;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.21.0
 
