@@ -2,146 +2,203 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB7C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 00:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5875C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 00:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D7920859
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 00:33:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sux2xyij"
+	by mail.kernel.org (Postfix) with ESMTP id 7BFD321855
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 00:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfDTAdq (ORCPT
+        id S1726533AbfDTAlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 20:33:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47330 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfDTAdq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 20:33:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3J8OhPS064730;
-        Fri, 19 Apr 2019 03:24:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555662283;
-        bh=2BcTRh2OlH2bDsIqds7rgbXDXhkpNvmzKs9G89ttX7A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sux2xyijJzYYqP/Y+eWCrSNESQlmPwBP/j8iGd6gV/4GfAs2GuUScgtZVcBIJG3kQ
-         eEPnWWGxuZUJbS386hJbrhri/YF2iCail1CYyB9UZ0NLqFAkkwU6aLIUmT6DR3ZLti
-         TAc4nR9EY6nbrPrg/iLG4X/7OCFcCmxewuJb+B9E=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3J8OhW3002607
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Apr 2019 03:24:43 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 19
- Apr 2019 03:24:43 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 19 Apr 2019 03:24:43 -0500
-Received: from [172.22.188.35] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3J8OdZp087910;
-        Fri, 19 Apr 2019 03:24:40 -0500
-Subject: Re: [RFC PATCH 0/3] net: ethernet: ti: cpsw: Add XDP support
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <ilias.apalodimas@linaro.org>,
-        <hawk@kernel.org>, <xdp-newbies@vger.kernel.org>, <ast@kernel.org>,
-        <aniel@iogearbox.net>, <jakub.kicinski@netronome.com>,
-        <john.fastabend@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>
-References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <844a80e9-95fb-7afd-6be3-5e6a0be2ed00@ti.com>
-Date:   Fri, 19 Apr 2019 11:24:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 19 Apr 2019 20:41:08 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37994 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbfDTAlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 20:41:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Apr 2019 17:41:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,371,1549958400"; 
+   d="scan'208";a="137289259"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga006.jf.intel.com with ESMTP; 19 Apr 2019 17:41:07 -0700
+Subject: [PATCH] libnvdimm/namespace: Fix label tracking error
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     stable@vger.kernel.org, Jane Chu <jane.chu@oracle.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Erwin Tsaur <erwin.tsaur@oracle.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-kernel@vger.kernel.org, vishal.l.verma@intel.com
+Date:   Fri, 19 Apr 2019 17:27:21 -0700
+Message-ID: <155572004134.2603218.13620079500159805086.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-In-Reply-To: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ivan,
+Users have reported intermittent occurrences of DIMM initialization
+failures due to duplicate allocations of address capacity detected in
+the labels, or errors of the form below, both have the same root cause.
 
-On 17.04.19 20:49, Ivan Khoronzhuk wrote:
-> This patchset is RFC adding XDP support for TI cpsw driver that is
-> based on page_pool allocator. It was verified with af_xdp sockets
-> and on xdp drop. For XDP redirect to another interface it's under
-> verification, still not sure about all cases that should be verified.
-> Also regular tests with iperf2 were done in order to verify impact on
-> regular netstack performance, compared with base commit from
-> net-next/master: 432bc230700f86801cffa5e159e05dea6229f722
-> 
-> It was verified with following configs enabled:
-> CONFIG_JIT=y
-> CONFIG_BPFILTER=y
-> CONFIG_BPF_SYSCALL=y
-> CONFIG_XDP_SOCKETS=y
-> CONFIG_BPF_EVENTS=y
-> CONFIG_HAVE_EBPF_JIT=y
-> CONFIG_BPF_JIT=y
-> CONFIG_CGROUP_BPF=y
-> 
-> iperf2 UDP RX summary (packet size / Mbps):
-> +--------------------------------------------------------------+
-> | pkt_size/rate | 1024 | 1500 | 1470 |  64  | 128  | 512 | 256 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | base commit   | 561  | 470  | 796  |  35  | 70.1 | 281 | 140 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | XDP patched   | 563  | 455  | 808  |  35  | 70.2 | 282 | 141 |
-> +--------------------------------------------------------------+
-> 
-> iperf2 UDP TX summary (packet size / Mbps):
-> +--------------------------------------------------------------+
-> | pkt_size/rate | 1024 | 1500 | 1470 |  64  | 128  | 512 | 256 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | base commit   | 555  | 666  | 736  | 34.5 | 70.3 | 281 | 140 |
-> |---------------+------+------+------+------+------+-----+-----|
-> | XDP patched   | 558  | 696  | 759  | 35.2 | 69.2 | 279 | 140 |
-> +--------------------------------------------------------------+
-> 
-> iperf2 TCP summary (window size / Mbps):
-> +------------------------------------------------------------+
-> | window size/rate |  16  |  32  |  64  |  128 |  8   | 256  |
-> |------------------+------+------+------+------+------+------|
-> | base commit      | 753  | 887  | 931  | 932  | 676  | 932  |
-> |------------------+------+------+------+------+------+------|
-> | XDP patched      | 823  | 888  | 932  | 933  | 669  | 933  |
-> +------------------------------------------------------------+
-> 
-> For af_xdp socket type verification several generic changes should be added
-> that can be seen here (rough fixes, for samples related seems like last version
-> of samples is more integrated with libbpf api, so should be rebased,
-> witch I will send as RFC separately):
-> https://github.com/ikhorn/af_xdp_stuff/tree/af_xdp_armv7
-> 
-> Ivan Khoronzhuk (3):
->   net: ethernet: ti: davinci_cpdma: add dma mapped submit
->   net: ethernet: ti: davinci_cpdma: return handler status
->   net: ethernet: ti: cpsw: add XDP support
-> 
->  drivers/net/ethernet/ti/Kconfig         |   1 +
->  drivers/net/ethernet/ti/cpsw.c          | 552 +++++++++++++++++++++---
->  drivers/net/ethernet/ti/davinci_cpdma.c | 117 +++--
->  drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
->  drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
->  5 files changed, 591 insertions(+), 103 deletions(-)
-> 
+    nd namespace1.4: failed to track label: 0
+    WARNING: CPU: 17 PID: 1381 at drivers/nvdimm/label.c:863
 
-Thanks for your patches. It's great to have XDP support.
-I have no objection to this series in general, but i'm not xdp expert, so
-it can be moved forward when you resolve comments from other reviewers.
+    RIP: 0010:__pmem_label_update+0x56c/0x590 [libnvdimm]
+    Call Trace:
+     ? nd_pmem_namespace_label_update+0xd6/0x160 [libnvdimm]
+     nd_pmem_namespace_label_update+0xd6/0x160 [libnvdimm]
+     uuid_store+0x17e/0x190 [libnvdimm]
+     kernfs_fop_write+0xf0/0x1a0
+     vfs_write+0xb7/0x1b0
+     ksys_write+0x57/0xd0
+     do_syscall_64+0x60/0x210
 
--- 
-Best regards,
-grygorii
+Unfortunately those reports were typically with a busy parallel
+namespace creation / destruction loop making it difficult to see the
+components of the bug. However, Jane provided a simple reproducer using
+the work-in-progress sub-section implementation.
+
+When ndctl is reconfiguring a namespace it may take an existing defunct
+/ disabled namespace and reconfigure it with a new uuid and other
+parameters. Critically namespace_update_uuid() takes existing address
+resources and renames them for the new namespace to use / reconfigure as
+it sees fit. The bug is that this rename only happens in the resource
+tracking tree. Existing labels with the old uuid are not reaped leading
+to a scenario where multiple active labels reference the same span of
+address range.
+
+Teach namespace_update_uuid() to flag any references to the old uuid for
+reaping at the next label update attempt.
+
+Cc: <stable@vger.kernel.org>
+Fixes: bf9bccc14c05 ("libnvdimm: pmem label sets and namespace instantiation")
+Link: https://github.com/pmem/ndctl/issues/91
+Reported-by: Jane Chu <jane.chu@oracle.com>
+Reported-by: Jeff Moyer <jmoyer@redhat.com>
+Reported-by: Erwin Tsaur <erwin.tsaur@oracle.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/nvdimm/label.c          |   29 ++++++++++++++++-------------
+ drivers/nvdimm/namespace_devs.c |   15 +++++++++++++++
+ drivers/nvdimm/nd.h             |    4 ++++
+ 3 files changed, 35 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+index f3d753d3169c..2030805aa216 100644
+--- a/drivers/nvdimm/label.c
++++ b/drivers/nvdimm/label.c
+@@ -756,6 +756,17 @@ static const guid_t *to_abstraction_guid(enum nvdimm_claim_class claim_class,
+ 		return &guid_null;
+ }
+ 
++static void reap_victim(struct nd_mapping *nd_mapping,
++		struct nd_label_ent *victim)
++{
++	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
++	u32 slot = to_slot(ndd, victim->label);
++
++	dev_dbg(ndd->dev, "free: %d\n", slot);
++	nd_label_free_slot(ndd, slot);
++	victim->label = NULL;
++}
++
+ static int __pmem_label_update(struct nd_region *nd_region,
+ 		struct nd_mapping *nd_mapping, struct nd_namespace_pmem *nspm,
+ 		int pos, unsigned long flags)
+@@ -763,9 +774,9 @@ static int __pmem_label_update(struct nd_region *nd_region,
+ 	struct nd_namespace_common *ndns = &nspm->nsio.common;
+ 	struct nd_interleave_set *nd_set = nd_region->nd_set;
+ 	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+-	struct nd_label_ent *label_ent, *victim = NULL;
+ 	struct nd_namespace_label *nd_label;
+ 	struct nd_namespace_index *nsindex;
++	struct nd_label_ent *label_ent;
+ 	struct nd_label_id label_id;
+ 	struct resource *res;
+ 	unsigned long *free;
+@@ -834,18 +845,10 @@ static int __pmem_label_update(struct nd_region *nd_region,
+ 	list_for_each_entry(label_ent, &nd_mapping->labels, list) {
+ 		if (!label_ent->label)
+ 			continue;
+-		if (memcmp(nspm->uuid, label_ent->label->uuid,
+-					NSLABEL_UUID_LEN) != 0)
+-			continue;
+-		victim = label_ent;
+-		list_move_tail(&victim->list, &nd_mapping->labels);
+-		break;
+-	}
+-	if (victim) {
+-		dev_dbg(ndd->dev, "free: %d\n", slot);
+-		slot = to_slot(ndd, victim->label);
+-		nd_label_free_slot(ndd, slot);
+-		victim->label = NULL;
++		if (test_and_clear_bit(ND_LABEL_REAP, &label_ent->flags)
++				|| memcmp(nspm->uuid, label_ent->label->uuid,
++					NSLABEL_UUID_LEN) == 0)
++			reap_victim(nd_mapping, label_ent);
+ 	}
+ 
+ 	/* update index */
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index 7849bf1812c4..3e2fdfdbe7b8 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -1247,12 +1247,27 @@ static int namespace_update_uuid(struct nd_region *nd_region,
+ 	for (i = 0; i < nd_region->ndr_mappings; i++) {
+ 		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+ 		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
++		struct nd_label_ent *label_ent;
+ 		struct resource *res;
+ 
+ 		for_each_dpa_resource(ndd, res)
+ 			if (strcmp(res->name, old_label_id.id) == 0)
+ 				sprintf((void *) res->name, "%s",
+ 						new_label_id.id);
++
++		mutex_lock(&nd_mapping->lock);
++		list_for_each_entry(label_ent, &nd_mapping->labels, list) {
++			struct nd_namespace_label *nd_label = label_ent->label;
++			struct nd_label_id label_id;
++
++			if (!nd_label)
++				continue;
++			nd_label_gen_id(&label_id, nd_label->uuid,
++					__le32_to_cpu(nd_label->flags));
++			if (strcmp(old_label_id.id, label_id.id) == 0)
++				set_bit(ND_LABEL_REAP, &label_ent->flags);
++		}
++		mutex_unlock(&nd_mapping->lock);
+ 	}
+ 	kfree(*old_uuid);
+  out:
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index a5ac3b240293..191d62af0e51 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -113,8 +113,12 @@ struct nd_percpu_lane {
+ 	spinlock_t lock;
+ };
+ 
++enum nd_label_flags {
++	ND_LABEL_REAP,
++};
+ struct nd_label_ent {
+ 	struct list_head list;
++	unsigned long flags;
+ 	struct nd_namespace_label *label;
+ };
+ 
+
