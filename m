@@ -2,174 +2,109 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAD3C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D3C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B30208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="JUgi6oJe"
+	by mail.kernel.org (Postfix) with ESMTP id 2C1E8208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfDTDBi (ORCPT
+        id S1727460AbfDTDFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 23:01:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35654 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfDTDBi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 23:01:38 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so3341558plp.2
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 20:01:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=Rg+mXht3mS9wGTPPKm62qjSe+aRN/k0EU2A/VE8bfgc=;
-        b=JUgi6oJes2S8O9BqGD7Oene41DccQD3ZfTtxTlsLMrUMGbhM4I9JH9HKEv97KnxkbM
-         JCQdj/bn1F5JchXdcYLzlsz3zXc+A/UddKzbgkkMZpPRczJae4Mcmjjsofvj7EPY1e1w
-         RqXujb29QQn1S257B9uxXhdZoZxIMiY8Dw6CPwDE4bk+3UErnS44sVfPDZHxEjboFnI3
-         RPNLqZSEc/k3Vl8tcBOk8q3MIKW8+A0UfnVlI3JdExvgdY95y4Tc+vkorSEXeJCB3IPb
-         vbr95l0tqMuzSFx6o+XwlAa+TVKFZocfUtzbU7rxUPuGN543KwdRvwqDlTy4Kftm9QuK
-         X/zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Rg+mXht3mS9wGTPPKm62qjSe+aRN/k0EU2A/VE8bfgc=;
-        b=VG1nXJ4w/fDvC8OetU6dR0b6xPJk6SzoVRKa2B7lOalMYceOJrb8WFbkN3UGY1aT6c
-         yn+pmbzOB6d7GVBxzI2mphNFWW4sIzJvod1jlNIHgUZS7BME3Gun1HYW0wpHqvH3jI1D
-         GKjTav9Qzu3KfODKOQTYOm1fVw4hNgqhKH3seucvT6bLOzITAUeA/kc0KLTqTE6rUnQX
-         nThKQ6aHEwD9XJOxLruRVs1GfzfPUyf2Tvo6YrzZDDZF78wL4UMmBukEJWZwxfDmJuzc
-         GYof3IThROw5k66gWTIrRsCN8oJ2/JABvMR0rs2mnUaEzd/Lg6uA9dJ0Sye2xCUP5UKM
-         V20Q==
-X-Gm-Message-State: APjAAAWl2zXSLU/I66P83UoZeIhkf8WH9n7/xZhUsittuty1KWW40xT5
-        ISXGV3sxZOMYY3V7SFBKvGjFJg==
-X-Google-Smtp-Source: APXvYqxXC5kv/3SsIJbrWIIuIs0YR05NsVsqEPSbQlunJzFQEQS3BTvOpFsSQlrBpmSXoSZ0Kec/Ng==
-X-Received: by 2002:a17:902:32b:: with SMTP id 40mr7277964pld.204.1555729297416;
-        Fri, 19 Apr 2019 20:01:37 -0700 (PDT)
-Received: from localhost.localdomain (36-239-215-67.dynamic-ip.hinet.net. [36.239.215.67])
-        by smtp.gmail.com with ESMTPSA id q128sm8662951pga.60.2019.04.19.20.01.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Apr 2019 20:01:36 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: sy8106a: Get rid of struct sy8106a
-Date:   Sat, 20 Apr 2019 11:01:25 +0800
-Message-Id: <20190420030125.6661-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 19 Apr 2019 23:05:09 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2561 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfDTDFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 23:05:09 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id BC27E47654C311B55469;
+        Sat, 20 Apr 2019 11:05:06 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Sat, 20 Apr 2019 11:05:06 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 20 Apr 2019 11:05:06 +0800
+Subject: Re: [PATCH] f2fs: Force type conversion from __le32 to u32
+To:     Bharath Vedartham <linux.bhar@gmail.com>, <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <20190418073510.GA11396@bharath12345-Inspiron-5559>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <00548c37-765a-a2df-9ddf-d53c6ae6bae7@huawei.com>
+Date:   Sat, 20 Apr 2019 11:05:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190418073510.GA11396@bharath12345-Inspiron-5559>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the fields in struct sy8106a are only used in sy8106a_i2c_probe(), so
-use local variables instead.
+On 2019/4/18 15:35, Bharath Vedartham wrote:
+> This patch forces type conversion from __le32 to u32 to prevent sparse
+> warnings like:
+> warning: restricted __le32 degrades to integer
+> 
+> dir.c:
+> fscrypt_fname_disk_to_usr takes a hash of type u32 as it's second arg
+> but de->hash_code is of type __le32.
+> 
+> node.c
+> NULL_ADDR is of type u32 but block_addr is of type __le32.
+> 
+> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> ---
+>  fs/f2fs/dir.c  | 2 +-
+>  fs/f2fs/node.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+> index 59bc460..4f39872 100644
+> --- a/fs/f2fs/dir.c
+> +++ b/fs/f2fs/dir.c
+> @@ -828,7 +828,7 @@ int f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
+>  			int save_len = fstr->len;
+>  
+>  			err = fscrypt_fname_disk_to_usr(d->inode,
+> -						(u32)de->hash_code, 0,
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/sy8106a-regulator.c | 40 +++++++++------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+le32_to_cpu(de->hash_code)
 
-diff --git a/drivers/regulator/sy8106a-regulator.c b/drivers/regulator/sy8106a-regulator.c
-index 65fbd1f0b612..42e03b2c10a0 100644
---- a/drivers/regulator/sy8106a-regulator.c
-+++ b/drivers/regulator/sy8106a-regulator.c
-@@ -22,12 +22,6 @@
-  */
- #define SY8106A_GO_BIT			BIT(7)
- 
--struct sy8106a {
--	struct regulator_dev *rdev;
--	struct regmap *regmap;
--	u32 fixed_voltage;
--};
--
- static const struct regmap_config sy8106a_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -70,36 +64,32 @@ static const struct regulator_desc sy8106a_reg = {
- static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
--	struct sy8106a *chip;
- 	struct device *dev = &i2c->dev;
--	struct regulator_dev *rdev = NULL;
-+	struct regulator_dev *rdev;
- 	struct regulator_config config = { };
-+	struct regmap *regmap;
- 	unsigned int reg, vsel;
-+	u32 fixed_voltage;
- 	int error;
- 
--	chip = devm_kzalloc(&i2c->dev, sizeof(struct sy8106a), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
- 	error = of_property_read_u32(dev->of_node, "silergy,fixed-microvolt",
--				     &chip->fixed_voltage);
-+				     &fixed_voltage);
- 	if (error)
- 		return error;
- 
--	if (chip->fixed_voltage < SY8106A_MIN_MV * 1000 ||
--	    chip->fixed_voltage > SY8106A_MAX_MV * 1000)
-+	if (fixed_voltage < SY8106A_MIN_MV * 1000 ||
-+	    fixed_voltage > SY8106A_MAX_MV * 1000)
- 		return -EINVAL;
- 
--	chip->regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
--	if (IS_ERR(chip->regmap)) {
--		error = PTR_ERR(chip->regmap);
-+	regmap = devm_regmap_init_i2c(i2c, &sy8106a_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		error = PTR_ERR(regmap);
- 		dev_err(dev, "Failed to allocate register map: %d\n", error);
- 		return error;
- 	}
- 
- 	config.dev = &i2c->dev;
--	config.regmap = chip->regmap;
--	config.driver_data = chip;
-+	config.regmap = regmap;
- 
- 	config.of_node = dev->of_node;
- 	config.init_data = of_get_regulator_init_data(dev, dev->of_node,
-@@ -109,15 +99,15 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	/* Ensure GO_BIT is enabled when probing */
--	error = regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL, &reg);
-+	error = regmap_read(regmap, SY8106A_REG_VOUT1_SEL, &reg);
- 	if (error)
- 		return error;
- 
- 	if (!(reg & SY8106A_GO_BIT)) {
--		vsel = (chip->fixed_voltage / 1000 - SY8106A_MIN_MV) /
-+		vsel = (fixed_voltage / 1000 - SY8106A_MIN_MV) /
- 		       SY8106A_STEP_MV;
- 
--		error = regmap_write(chip->regmap, SY8106A_REG_VOUT1_SEL,
-+		error = regmap_write(regmap, SY8106A_REG_VOUT1_SEL,
- 				     vsel | SY8106A_GO_BIT);
- 		if (error)
- 			return error;
-@@ -131,10 +121,6 @@ static int sy8106a_i2c_probe(struct i2c_client *i2c,
- 		return error;
- 	}
- 
--	chip->rdev = rdev;
--
--	i2c_set_clientdata(i2c, chip);
--
- 	return 0;
- }
- 
--- 
-2.17.1
+> +						(__force u32)de->hash_code, 0,
+>  						&de_name, fstr);
+>  			if (err)
+>  				goto out;
+> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> index 3f99ab2..9e333a5 100644
+> --- a/fs/f2fs/node.c
+> +++ b/fs/f2fs/node.c
+> @@ -2706,7 +2706,7 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
+>  		i = 1;
+>  	}
+>  	for (; i < NAT_ENTRY_PER_BLOCK; i++) {
+> -		if (nat_blk->entries[i].block_addr != NULL_ADDR)
+> +		if ((__force u32)nat_blk->entries[i].block_addr != NULL_ADDR)
 
+block_t blkaddr = le32_to_cpu(nat_blk->entries[i].block_addr);
+
+if (blkaddr != NULL_ADDR)
+
+Thanks,
+
+>  			valid++;
+>  	}
+>  	if (valid == 0) {
+> 
