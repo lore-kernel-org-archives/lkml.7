@@ -7,122 +7,102 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13B5C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E97C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 13:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD2521479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069C42087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 13:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5yI2Exz"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gxGPZ9lv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfDTMmv (ORCPT
+        id S1727432AbfDTMvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 08:42:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53284 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfDTMmu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 08:42:50 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q16so9002068wmj.3
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z1XXjdP1raYtc6eofdmgmZhdX2Q5XdKzCfskQfcYBLo=;
-        b=V5yI2ExzEGPzJK3fF4PXuIC1+Xx/1Thg6ZArDJQEidiQwRW6qzU7JNyrAowiCdCkEY
-         j4mJ3OPLJUYUUvVTK3JNq2690ewLKfWHp3w6WObU3JMqjsF7SODCFZ+f/oQKd76RdDlh
-         YsqXkxMk/yCJJUznxPMm+2R9EJ2bWmNkxTjKXvhVJGKu3srJ7/LG7lcsvDGC6Xf1jyLX
-         ibo+mVUzq/tkSkIujrl2JYUzw8hEwEs3A0hOVt/igJeFElpG5/5h3wGGOrbNWjfi3MOg
-         zNsZK1g9xBLidtNyH3SddaKzhWQOAuXcPo7Okb95toB7IlhLJo/OWUleE31oXeRpt2u6
-         EOxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z1XXjdP1raYtc6eofdmgmZhdX2Q5XdKzCfskQfcYBLo=;
-        b=n2g8IDfWrc5fQCsrSWVXEhuTWCKfetgfofK9X+lKQQpJWLV9LZe5LD800oBH5O3G8U
-         DtPpaaaB7dAuR+O4t3CtHrzxYizJe2KdLjC2BTkzMfuq/rA5m+Ae+arg/C7+QhJ47Mfp
-         qUtf+KOaYH9EtUfC8QAjxe2qcFWBFPZupmAlhDvg0rmGvBHcwnaqpl/1hUGi92qy6HYv
-         P+Sjm9fT288Jfgwc1PfaQ/mMDQ1S34Y0QPcTqDAlk7kJE0AK8UZ1q2rB4oDUhJvNTLaA
-         KxLWSP3oIZpIA8emUEnxh0LE+aEknnDuvkKVerxYD6TWVO8VXbQ0AtMHqeZs8Kil11wu
-         lI6A==
-X-Gm-Message-State: APjAAAUJEiulKAIv4yL5ePowz5PHuHF14/xI5PVhGlYMU5w4iVa6A//R
-        9gsLsyi9nMFT1YmeqM/6OdSPFaew
-X-Google-Smtp-Source: APXvYqwC+sBjLp4Q5DGqysZYI+kM+WeT/OZxn8gy9HKONI2zy0vb+22Ya9i0G0ZLObwTmH9eClC0dw==
-X-Received: by 2002:a1c:a184:: with SMTP id k126mr5921788wme.71.1555764168773;
-        Sat, 20 Apr 2019 05:42:48 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id u6sm8919678wrg.72.2019.04.20.05.42.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 05:42:48 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH] habanalabs: Cancel pr_fmt() definition dependency on includes order
-Date:   Sat, 20 Apr 2019 15:42:38 +0300
-Message-Id: <20190420124238.30666-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 20 Apr 2019 08:51:41 -0400
+Received: from mout.gmx.net ([212.227.17.20]:33563 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfDTMvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 08:51:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1555764684;
+        bh=ub3mAMcNh1mfanJyWXpEkJLVoct0m0L8TaU1rhV0I7M=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=gxGPZ9lvFByoLzl8uf0g+KGDxnayecOWCYkrCuFGCawKcJmmDtk2CmJkRaxZK97er
+         i3pJJvoC7g1YaT0nGWni3yXrpr41Ky7O/nWaqZlb0/rHZeGP6FVMNbUl1I405nugYX
+         aX7clUYMfICC8xsu2a9WwMoliEt4zJJPC/J0huSc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx102
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0Mh6lB-1hUnsb2bmj-00MHfJ; Sat, 20
+ Apr 2019 14:51:24 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     dri-devel@lists.freedesktop.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Eric Anholt <eric@anholt.net>, Pixel Ding <Pixel.Ding@amd.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/sched: Fix description of drm_sched_stop
+Date:   Sat, 20 Apr 2019 14:50:50 +0200
+Message-Id: <20190420125053.32150-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:okTCytA79pzkYmEPFvY+M+knoi56Vuo6jUuAcENqTatsHUQikPN
+ KYeJ3mG0HHCZ/12VdmlMklcZrfVcvD+Yb5M6vOaRTj5Vf8jPwP6IZzm52MlGxnUwsQF987A
+ HIbSWrxQejVE5ldq5jTxysm9QH/0193917XLpZ+fYqm3YbgGp+pO4WKmAP78sWs/DapvLlS
+ /WeUKhPWiPd7s/4LiODfQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jiekJYLotuU=:jTEJJLESDKzlEN4B7tLZcp
+ pndZb9N4XCscn8MgYp8LA5zUf0ejjYH4QKqLTVNHCMf3sNYnGf2iGOyqp59LNMq5mcVI45CVF
+ Yb33rgicwJ5yMbEykkyNjSrlS/IXUguKtWe27Ond1ATIln4q7EMwcbbZ/fukdyTiKt7ZKb72H
+ yKFh6wFw2/rVWTr0ggPnltlAirJG2CNG9KbdL33lNuN9lg4L/7z6DQCWaqw3ILk7o0HmM3e97
+ fGQfTZZN5n/2q8QIWxChM2c8HxW/7qgKzzdWlIeSjyZr5OyrxMqJD6cmL2RQapwRpkhjgC+67
+ CyZSe55rwhiR2jzJjFrepVq0ANWOL09lgYxNHQTRlWABcK5G12HxsIy8tmsWIWphVNC4A9XKQ
+ VMmwpNGutHN/68DVsqGNn0uYWQajCmlndqNy0DtUNx7DeRqW3Xm8tsws7CEbbTHceGNguwtO1
+ YrWPxw4bj3pB+8rf6zE0l6Iy85YnSHmTjN7nhLQ8FFbukByjoZNZ4DuMnL0tR4Yy39tjGqxeR
+ NlE8Sj71CFwk2a7MF0N73PZ9WudDMk2HSAcgX0IDf9vtrpjhINbIJEiZpDMX3AaNGku2bGhm+
+ u4KH9JmFJU4Kv/U2ZGVT9HPM+Rnt/khTgZiyTUIArpDZpvNhvuh6sAkiyZ5/O35+F44DRD7pX
+ GdNlYeNgrCF9BKBoWeoBCYwn8iRowFVtC9C3P8U75VpXjnVvjELwgRNLYE0gdjczEU6LS3Z19
+ HGpwn4idOFrjhaPyyZallngC24XxJYqmabGmIjNwoupMh3jTo5pnjnqj6kdRVIgPhSg6Mw6m4
+ fmDZvRpA9OCFMpjin0rfcmDD8ftU5JmS8jIAQeiQvFnldvaYDcbLzWdmhql5QeMaCex5vDAcH
+ CfdmLliyFOEpkcmQFE45kaaBlgi0cysKotcvY7QVa0HXTfqWzuex7qVmo8GJT4OqGNhzDsA9V
+ AHKBCm+NlTg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomer Tayar <ttayar@habana.ai>
+Since commit 222b5f044159 ("drm/sched: Refactor ring mirror list
+handling."), drm_sched_hw_job_reset is no longer there, so let's adjust
+the doc comment accordingly.
 
-pr_fmt() should be defined before including linux/printk.h, either
-directly or indirectly, in order to avoid redefinition of the macro.
-Currently the macro definition is in habanalabs.h, which is included in
-many files, and that makes the addition/reorder of includes to be prone
-to compilation errors.
-This patch cancels this dependency by defining the macro only in the few
-source files that use it.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ drivers/gpu/drm/scheduler/sched_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/device.c         | 2 ++
- drivers/misc/habanalabs/habanalabs.h     | 2 --
- drivers/misc/habanalabs/habanalabs_drv.c | 2 ++
- 3 files changed, 4 insertions(+), 2 deletions(-)
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/sche=
+duler/sched_main.c
+index 19fc601c9eeb..a1bec2779e76 100644
+=2D-- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -366,10 +366,9 @@ void drm_sched_increase_karma(struct drm_sched_job *b=
+ad)
+ EXPORT_SYMBOL(drm_sched_increase_karma);
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 25bfb093ff26..a88f7be23c7f 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -5,6 +5,8 @@
-  * All Rights Reserved.
-  */
- 
-+#define pr_fmt(fmt)			"habanalabs: " fmt
-+
- #include "habanalabs.h"
- 
- #include <linux/pci.h>
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 2f02bb55f66a..86bd5298efd6 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -11,8 +11,6 @@
- #include "include/armcp_if.h"
- #include "include/qman_if.h"
- 
--#define pr_fmt(fmt)			"habanalabs: " fmt
--
- #include <linux/cdev.h>
- #include <linux/iopoll.h>
- #include <linux/irqreturn.h>
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 1667df7ca64c..5f4d155be767 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -6,6 +6,8 @@
+ /**
+- * drm_sched_hw_job_reset - stop the scheduler if it contains the bad job
++ * drm_sched_stop - stop the scheduler
+  *
+  * @sched: scheduler instance
+- * @bad: bad scheduler job
   *
   */
- 
-+#define pr_fmt(fmt)		"habanalabs: " fmt
-+
- #include "habanalabs.h"
- 
- #include <linux/pci.h>
--- 
-2.17.1
+ void drm_sched_stop(struct drm_gpu_scheduler *sched)
+=2D-
+2.20.1
 
