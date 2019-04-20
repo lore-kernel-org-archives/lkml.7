@@ -2,133 +2,110 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C16DC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED819C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF062087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwO+gArl"
+	by mail.kernel.org (Postfix) with ESMTP id B629F2087B
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfDTKvO (ORCPT
+        id S1727480AbfDTK6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 06:51:14 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43770 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDTKvN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 06:51:13 -0400
-Received: by mail-qk1-f194.google.com with SMTP id p19so1762402qkm.10;
-        Sat, 20 Apr 2019 03:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kaS+veCYE7ao8csQbi/ZAdwFn2xeuMRJDTxk7kh9MmQ=;
-        b=EwO+gArlEBVQK/nJT5vZKE02dfSFFoeHd/43vZOndrjFwkjrhjJgbW66CULGd/qp8M
-         CAKK4/fa+yfKDft5ldNSlPt0B6rGPqndRHkFtb4MayLgZRwIeW+bjjxZxoS2RPm+NmrM
-         5J8qu7sm0tvit9z1Ptm9VeGVZYEOilIUa4FqMFKftvJ8C1sr9isBTWCvBqkSLuRkQFnC
-         /JfrzCUu4i4VMVxMXiNW5Pt1t1KcV3H7PonI7MF2Vn8rgAvwSZzAmsvqnBS5yxoNSCFk
-         Cki0HCuHLWy/0V7zOngTErhlDLx+7wgLUrHt9aXGhXBRdZrcx1OCpXV7iZBdhZmXdUlW
-         Hvng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kaS+veCYE7ao8csQbi/ZAdwFn2xeuMRJDTxk7kh9MmQ=;
-        b=h9tMq1rT3zIKjiFSfQs4Fc7ZxbpRAZuPUxAp8xJfDC8aIa1spnUR6LIPs4pfVA3SDn
-         Sej76RQ2aXoaKkRoRx+GNVwpt88m8C/M0elJn89D34I/LJkflfzqEQERw6p4PYxEzIwU
-         oEu2mWZcgRKqey6Lo3/dXHcXRb/Ze9dJo9ZkhcKtNXkkZssWeVdMhPj68ApjD3iHPdMn
-         PshhtX1tiXEgqxauhBZBsbwYa2Zj3vmdOlgnFLvBQZ61l+RsLIZ4j3s6ARUD9eKYjjEx
-         QwyjQ+/znKxwvC+o93Q/JMNuV3094rxdqAoKyHZRdCyNDwH4NZH6CKrsMFhkRbfWVeUt
-         h/bQ==
-X-Gm-Message-State: APjAAAWULUlE87g9p7a7GnkpjZupZPsqTqrCc2IrWvr/zq79XPTaKAKj
-        qg6Up6xFCh0UgQesjQCfpD5iTaqs1mEmGtqfAIc=
-X-Google-Smtp-Source: APXvYqwATcAIlW4nr9QShhMxeCWgd4J//S9gB2/UnHehq87+pPLyQ1o9lMaZFrSTSc7CUnr7ubTUZZuLbaGHeINqWkU=
-X-Received: by 2002:a37:6886:: with SMTP id d128mr907042qkc.158.1555757472269;
- Sat, 20 Apr 2019 03:51:12 -0700 (PDT)
+        Sat, 20 Apr 2019 06:58:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34538 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfDTK6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 06:58:41 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5D522CA1FA;
+        Sat, 20 Apr 2019 10:58:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0B4955D9D6;
+        Sat, 20 Apr 2019 10:58:39 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sat, 20 Apr 2019 12:58:40 +0200 (CEST)
+Date:   Sat, 20 Apr 2019 12:58:38 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Roman Gushchin <guroan@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 4/9] cgroup: cgroup v2 freezer
+Message-ID: <20190420105838.GA17468@redhat.com>
+References: <20190405174708.1010-1-guro@fb.com>
+ <20190405174708.1010-5-guro@fb.com>
+ <20190419151912.GA12152@redhat.com>
+ <20190419161118.GA23357@tower.DHCP.thefacebook.com>
+ <20190419162600.GC12228@redhat.com>
+ <20190419165600.GC23357@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-References: <20190414091452.22275-1-shyam.saini@amarulasolutions.com> <C398B8C9-6A54-4590-AA88-58D514BAEB71@oracle.com>
-In-Reply-To: <C398B8C9-6A54-4590-AA88-58D514BAEB71@oracle.com>
-From:   Shyam Saini <mayhs11saini@gmail.com>
-Date:   Sat, 20 Apr 2019 16:21:00 +0530
-Message-ID: <CAOfkYf7vn7UnYzZDh9==agVu61sYyFWzvo6hQBt3KfaKrWC-6Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] include: linux: Regularise the use of FIELD_SIZEOF macro
-To:     William Kucharski <william.kucharski@oracle.com>
-Cc:     Shyam Saini <shyam.saini@amarulasolutions.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, devel@lists.orangefs.org,
-        linux-mm <linux-mm@kvack.org>, linux-sctp@vger.kernel.org,
-        bpf <bpf@vger.kernel.org>, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190419165600.GC23357@tower.DHCP.thefacebook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Sat, 20 Apr 2019 10:58:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi William,
-
-Sorry for the late reply.
-
-> > Currently, there are 3 different macros, namely sizeof_field, SIZEOF_FIELD
-> > and FIELD_SIZEOF which are used to calculate the size of a member of
-> > structure, so to bring uniformity in entire kernel source tree lets use
-> > FIELD_SIZEOF and replace all occurrences of other two macros with this.
+On 04/19, Roman Gushchin wrote:
+>
+> > > >
+> > > > wake_up_interruptible() ?
+> > >
+> > > Wait_up_interruptible() is supposed to work with a workqueue,
+> > > but here there is nothing like this. Probably, I didn't understand your idea.
+> > > Can you, please, elaborate a bit more?
 > >
-> > For this purpose, redefine FIELD_SIZEOF in include/linux/stddef.h and
-> > tools/testing/selftests/bpf/bpf_util.h and remove its defination from
-> > include/linux/kernel.h
+> > Not sure I understand... We need to wake up the task if it sleeps in
+> > do_freezer_trap(), right? do_freezer_trap() uses TASK_INTERRUPTIBLE, so
+> > why can't wake_up_interruptible() == __wake_up(TASK_INTERRUPTIBLE) work?
 >
->
-> > --- a/include/linux/stddef.h
-> > +++ b/include/linux/stddef.h
-> > @@ -20,6 +20,15 @@ enum {
-> > #endif
+> Right, but __wake_up is supposed to wake threads blocked on a waitqueue:
+
+Ugh sorry ;) of course I meant wake_up_state(task, TASK_INTERRUPTIBLE).
+
+> > > > > +		if (unlikely(cgroup_task_frozen(current))) {
+> > > > >  			spin_unlock_irq(&sighand->siglock);
+> > > > > +			cgroup_leave_frozen(true);
+> > > > >  			goto relock;
+> > > > >  		}
+> > > >
+> > > > afaics cgroup_leave_frozen(false) makes more sense here.
+> > >
+> > > Why? I don't see any reasons why the task should remain in the frozen
+> > > state after this point.
 > >
-> > /**
-> > + * FIELD_SIZEOF - get the size of a struct's field
-> > + * @t: the target struct
-> > + * @f: the target struct's field
-> > + * Return: the size of @f in the struct definition without having a
-> > + * declared instance of @t.
-> > + */
-> > +#define FIELD_SIZEOF(t, f) (sizeof(((t *)0)->f))
-> > +
-> > +/**
-> >  * sizeof_field(TYPE, MEMBER)
-> >  *
-> >  * @TYPE: The structure containing the field of interest
-> > @@ -34,6 +43,6 @@ enum {
-> >  * @MEMBER: The member within the structure to get the end offset of
-> >  */
-> > #define offsetofend(TYPE, MEMBER) \
-> > -     (offsetof(TYPE, MEMBER) + sizeof_field(TYPE, MEMBER))
-> > +     (offsetof(TYPE, MEMBER) + FIELD_SIZEOF(TYPE, MEMBER))
+> > But cgroup_leave_frozen(false) will equally clear ->frozen if !CGRP_FREEZE ?
+> > OTOH, if CGRP_FREEZE is set again, why do we need to clear ->frozen?
 >
-> If you're doing this, why are you leaving the definition of sizeof_field() in
-> stddef.h untouched?
+> Hm, it might work too, but I'm not sure I like it more. IMO, the best option
+> is to have a single cgroup_leave_frozen(true) in signal.c, it's just simpler.
+> If a user changed the desired state of cgroup twice, there is no need to avoid
+> state transitions. Or maybe I don't see it yet.
 
-I have removed definition of sizeof_field in [1/2] patch.
+Then why do we need cgroup_leave_frozen(false) in wait_for_vfork_done() ? How
+does it differ from get_signal() ?
 
-> Given the way this has worked historically, if you are leaving it in place for
-> source compatibility reasons, shouldn't it be redefined in terms of
-> FIELD_SIZEOF(), e.g.:
->
-> #define sizeof_field(TYPE, MEMBER) FIELD_SIZEOF(TYPE, MEMBER)
+If nothing else. Suppose that wait_for_vfork_done() calls leave(false) and this
+races with freezer, CGRP_FREEZE is already set but JOBCTL_TRAP_FREEZE is not.
 
-Actually, never thought this way. So,Thanks a lot for this valuable feedback.
+This sets TIF_SIGPENDING to ensure the task won't return to user mode, thus it
+calls get_signal().
 
-I'll re-spin and post again.
+get_signal() doesn't see JOBCTL_TRAP_FREEZE, it notices ->frozen == T and does
+cgroup_leave_frozen(true) which clears ->frozen.
+
+Then the task calls dequeue_signal(), clears TIF_SIGPENDING and returns to user
+mode?
+
+Oleg.
+
