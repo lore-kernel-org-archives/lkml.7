@@ -2,86 +2,232 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D679C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED225C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A82A2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF6A20675
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:10:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IEOuG6Jj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="scC7uJKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfDTJl1 (ORCPT
+        id S1727642AbfDTKKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 05:41:27 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35688 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfDTJl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 05:41:27 -0400
-Received: from zn.tnic (p200300EC2F112E00D040D7DB2F5373C5.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:d040:d7db:2f53:73c5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B6AEF1EC082D;
-        Sat, 20 Apr 2019 11:41:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555753285;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=SNKvGACJEaqH1CY/EARCtlVxmHFSq26GHiL/RfUmhho=;
-        b=IEOuG6JjQu8GF9fRrB0Wj307MKMbFlBYd2lKRnW5sD2qO4TCe9MG80Y9kPCzL9a6Yu04Cf
-        f9quGawYIpRTM8OdfCC5vg5ly2RmyE7PiQYFG9uBJTmTHzhOpaWQE1j2+bfDDOm87GgKrD
-        hp8fPohKhtkLldy5trrp4f6pKuwtB4o=
-Date:   Sat, 20 Apr 2019 11:41:20 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
-Message-ID: <20190420094120.GB29704@zn.tnic>
-References: <20190418220229.32133-1-tony.luck@intel.com>
- <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
- <20190418232910.GR27160@zn.tnic>
- <20190419000745.GA12291@agluck-desk>
- <20190419002911.GB559@zn.tnic>
- <20190419150400.GA12738@agluck-desk>
+        Sat, 20 Apr 2019 06:10:50 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48800 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfDTKKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 06:10:50 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3KAARH2032353;
+        Sat, 20 Apr 2019 05:10:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555755027;
+        bh=FoBC9qfVsdOEXcWOPDek5eDlcDWXCcKehSD4uHK91aY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=scC7uJKoi0HnT+Lm2zHZq/wA4YEN23PH8S3odegLSjRB+VqWoZbXhCdIePkMQ/oWY
+         3rI/5rBtJ+jTQ/jtFtsWh/giB4Si2ZWYaL6jqgzav2q/AVID/ljxscgC0rZRAU16yT
+         WF6tzZJlBJ2dithMhER0XNvYSpERdQm/XylrmQ+c=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3KAARcE097188
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 20 Apr 2019 05:10:27 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 20
+ Apr 2019 05:10:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sat, 20 Apr 2019 05:10:26 -0500
+Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAHZq070234;
+        Sat, 20 Apr 2019 05:10:22 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>
+CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>,
+        <linus.walleij@linaro.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>
+Subject: [PATCH v7 01/14] firmware: ti_sci: Add support to get TISCI handle using of_phandle
+Date:   Sat, 20 Apr 2019 15:39:37 +0530
+Message-ID: <20190420100950.7997-2-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190420100950.7997-1-lokeshvutla@ti.com>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190419150400.GA12738@agluck-desk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 08:04:01AM -0700, Luck, Tony wrote:
-> Now there isn't really anything better that CEC can do in
-> this situation. It won't help to have a bigger array. Taking
-> pages offline wouldn't solve the problem (though if that
-> did happen at least it would break the silence).
-> 
-> Same situation for other DRAM failure modes that affect a
-> wide range of pages (rank, bank, perhaps row ... though all
-> the errors from a single row failure might fit in the CEC array).
-> 
-> Allowing the user to bypass CEC (without a reboot ... cloud folks
-> hate to reboot their systems) would allow the sysadmin to see
-> what is happening (either via /dev/mcelog, or via EDAC driver).
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Err, this all sounds to me like the storm detection code should
-*automatically* disable the CEC in such cases, I'd say. Because I
-don't see a cloud admin going into the debugfs and turning it off.
-Rather, if the detection heuristic we use is smart enough, disabling it
-automatically should be a lot better serviceability action.
+TISCI has been updated to have support for Resource management(like
+interrupts etc..). And there can be multiple device instances of a
+resource type in a SoC. So every driver corresponding to a resource type
+should get a TISCI handle so that it can make TISCI calls. And each
+DT node corresponding to a device should exist under its corresponding
+bus node as per the SoC architecture.
 
-Hmmm?
+But existing apis in TISCI library assumes that all TISCI users are
+child nodes of TISCI. Which is not true in the above case. So introduce
+(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
+to get TISCI handle using of phandle property.
 
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+Changes since v6:
+- None
+
+ drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
+ 2 files changed, 100 insertions(+)
+
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 3fbbb61012c4..852043531233 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -1764,6 +1764,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
+ 
++/**
++ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
++ * @np:		device node
++ * @property:	property name containing phandle on TISCI node
++ *
++ * NOTE: The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
++ * Return: pointer to handle if successful, else:
++ * -EPROBE_DEFER if the instance is not ready
++ * -ENODEV if the required node handler is missing
++ * -EINVAL if invalid conditions are encountered.
++ */
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	struct ti_sci_handle *handle = NULL;
++	struct device_node *ti_sci_np;
++	struct ti_sci_info *info;
++	struct list_head *p;
++
++	if (!np) {
++		pr_err("I need a device pointer\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	ti_sci_np = of_parse_phandle(np, property, 0);
++	if (!ti_sci_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&ti_sci_list_mutex);
++	list_for_each(p, &ti_sci_list) {
++		info = list_entry(p, struct ti_sci_info, node);
++		if (ti_sci_np == info->dev->of_node) {
++			handle = &info->handle;
++			info->users++;
++			break;
++		}
++	}
++	mutex_unlock(&ti_sci_list_mutex);
++	of_node_put(ti_sci_np);
++
++	if (!handle)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
++
++/**
++ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
++ * @dev:	Device pointer requesting TISCI handle
++ * @property:	property name containing phandle on TISCI node
++ *
++ * NOTE: This releases the handle once the device resources are
++ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
++ * The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ *
++ * Return: 0 if all went fine, else corresponding error.
++ */
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	const struct ti_sci_handle *handle;
++	const struct ti_sci_handle **ptr;
++
++	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
++
++	if (!IS_ERR(handle)) {
++		*ptr = handle;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..515587e9d373 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -217,6 +217,10 @@ struct ti_sci_handle {
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property);
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static inline
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
