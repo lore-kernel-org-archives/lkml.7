@@ -4,219 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B57C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CA6C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B822521479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA25120850
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="JPJzZ5OI"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OCqsQJ6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfDTPb4 (ORCPT
+        id S1728124AbfDTPlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 11:31:56 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40882 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728317AbfDTPbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 11:31:55 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v7so4620916qti.7
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 08:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=Clj8uwwo5TlLh2AL+5SY6gvLnqtqKsZdzrxWwRvWBiM=;
-        b=JPJzZ5OIKsLYmvTIdkFML/dY72CPRTW2cT1SIq31qcyFxvWqMafajQMhQFxhcBOPTU
-         8AzB3qNhiJmnFlWB5HqQAvz8AGpUtICShYYnF4DOHmWErHByfa3aiDWfCZMtV269BAAY
-         ComE68zI6lRgCS/Xct0un5xrG/E06s0FxD8CFTL4yGNJmepVb515K1dMoVsrPJaC/SRz
-         OBGvYtneZKjRG5lqWq6EnLUu26e6NOpYPYFIRZ72cX6MjO8E2aVpD1MQP7Cazw/2FkcL
-         ZEnWbFIEIG7Vz5OYRaxd7zvnnT9Dd/Tp9eJ4w/B4eBR4YyTWf6PKF5d+M93wGVDSP0fQ
-         R+4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Clj8uwwo5TlLh2AL+5SY6gvLnqtqKsZdzrxWwRvWBiM=;
-        b=GSJ8IC7RdV+bI9oZ58CnQaLLWZtvpko+NGA/p6Q3lJlQkBeRHjTnAcjhQ7FJ/XvsWf
-         OZbZVveYVP9+E6RrldGzYhSjA0LsefZlppwMHbH1JWtdH6nJEVy9L3tXk4g68ANHPkvm
-         lUNMKwIL3o6VrvYu1JIq+MVKEu2jB8MVZvDg3I7Rqiv6085tSQaMyiyB8N0pgmbRrOcv
-         1kvRrcMfs1aPjUrBUhMhbjRqQd0p9F3bvhSc2jXNKCkHEfb26GrKifaAiYc2BobxcXW1
-         0B+c8ikCbfuzN07V+/3EhgFfXRrgYqZFBxlT/Q3j19jLd/GbSKc6evDGTJPJrsDHxFgt
-         6EeQ==
-X-Gm-Message-State: APjAAAXu8w0gkVYvik7vSAHPpJ0E+TmJnRVbj8PeosgwtKAtJSzGKz6C
-        rvl2XMYxfn2Q85Few4AxNZ12zw==
-X-Google-Smtp-Source: APXvYqx+mhwHAne3YPmJNiH6uMUBiZOZZazvJRAODWFHnY5wdXYRB8uUqucch1+iEUrDBmqThGGBGQ==
-X-Received: by 2002:ac8:7687:: with SMTP id g7mr1627560qtr.114.1555774314241;
-        Sat, 20 Apr 2019 08:31:54 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id n201sm3976523qka.10.2019.04.20.08.31.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 08:31:53 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
-        mhocko@suse.com, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com
-Subject: [v1 2/2] device-dax: "Hotremove" persistent memory that is used like normal RAM
-Date:   Sat, 20 Apr 2019 11:31:48 -0400
-Message-Id: <20190420153148.21548-3-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190420153148.21548-1-pasha.tatashin@soleen.com>
-References: <20190420153148.21548-1-pasha.tatashin@soleen.com>
+        Sat, 20 Apr 2019 11:41:09 -0400
+Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:34017
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbfDTPlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 11:41:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OBOqawfWzwu9DA2f0QOXFIfS0ma+Ue6OGErbNsBWkyc=;
+ b=OCqsQJ6UqSMRfr0axHjP4AHY7HLC2lePk6yDA3jaOICL/Py2YB6PHhLkoizHuFb6safv9sjJSjjny0t7fa3+n3strMFZnWB7rCVIlBaSGEL6oTUjSZKg5g0b+fjWVW9dDbiMu0xyJWXyGmtLFSIoav39leThrdsvxArA6lWz1xg=
+Received: from AM6PR0402MB3350.eurprd04.prod.outlook.com (52.133.21.17) by
+ AM6PR0402MB3637.eurprd04.prod.outlook.com (52.133.28.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.11; Sat, 20 Apr 2019 15:41:04 +0000
+Received: from AM6PR0402MB3350.eurprd04.prod.outlook.com
+ ([fe80::f504:a635:91b3:1e7a]) by AM6PR0402MB3350.eurprd04.prod.outlook.com
+ ([fe80::f504:a635:91b3:1e7a%3]) with mapi id 15.20.1813.013; Sat, 20 Apr 2019
+ 15:41:04 +0000
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Subject: [PATCH] ASoC: fsl: sai: Fix clock source for mclk0
+Thread-Topic: [PATCH] ASoC: fsl: sai: Fix clock source for mclk0
+Thread-Index: AQHU9492jGEFcTdxIEKDGilr5DVCtg==
+Date:   Sat, 20 Apr 2019 15:41:04 +0000
+Message-ID: <20190420154038.14576-1-daniel.baluta@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0302CA0017.eurprd03.prod.outlook.com
+ (2603:10a6:800:e9::27) To AM6PR0402MB3350.eurprd04.prod.outlook.com
+ (2603:10a6:209:a::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ef57aa59-3319-49a1-b0f0-08d6c5a69904
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR0402MB3637;
+x-ms-traffictypediagnostic: AM6PR0402MB3637:
+x-microsoft-antispam-prvs: <AM6PR0402MB36378177A56288FFCC4EBC25F9200@AM6PR0402MB3637.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0013079544
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(396003)(346002)(39860400002)(136003)(189003)(199004)(4326008)(68736007)(6512007)(66066001)(256004)(316002)(99286004)(5640700003)(66946007)(386003)(6506007)(8936002)(66476007)(54906003)(66446008)(66556008)(64756008)(73956011)(102836004)(81166006)(50226002)(81156014)(97736004)(86362001)(1730700003)(6436002)(53936002)(52116002)(71200400001)(71190400001)(2501003)(6486002)(44832011)(486006)(476003)(8676002)(2616005)(305945005)(25786009)(7736002)(6916009)(7416002)(14454004)(26005)(1076003)(186003)(2906002)(5660300002)(478600001)(36756003)(3846002)(6116002)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3637;H:AM6PR0402MB3350.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gaG9t009IqWlJXIoYqkxU9x8TGG+z5eFsrqUbdeq3p5g1KC/Hw83aXDpymROqKs41fVLLPnrG4Osf6Tys6k7RSiRX8aCZkWNEKk6nzC++cOJ4/sqBsQd+PswRugkGecNBn0VrRSh4zVz/oKpY5tOPhw/QdAYg9j99O/Jgxj/tuYXThb0+IwiiaHKldM0BwK66j3oaOcmHcVdkVUyJmMfVpNN6PIMX6DU0/UbXYGqeK+6dFToHS8BYV76ZCj3kT82C7MhjpPoRpYTyRUf/Uuwn8ZiQs30e8P9DqtPmILlKJkSo5QAVW4CUhWO+LxTLtuhxaN35qtty4aBsoswuMeAAL45qTwSA+FfhxojiN78dXI517GSVYFgYqXFPG3s2+XcOtiJ7VpBGSB9wV3TgkNQyMykV/kn9Posp5s7OI6/16Q=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef57aa59-3319-49a1-b0f0-08d6c5a69904
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2019 15:41:04.5220
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3637
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is now allowed to use persistent memory like a regular RAM, but
-currently there is no way to remove this memory until machine is
-rebooted.
-
-This work expands the functionality to also allow hot removing
-previously hotplugged persistent memory, and recover the device for use
-for other purposes.
-
-To hotremove persistent memory, the management software must unbind it
-from device-dax/kmem driver:
-
-            echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- drivers/dax/dax-private.h |  2 +
- drivers/dax/kmem.c        | 77 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 75 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index a45612148ca0..999aaf3a29b3 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -53,6 +53,7 @@ struct dax_region {
-  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-  * @ref: pgmap reference count (driver owned)
-  * @cmp: @ref final put completion (driver owned)
-+ * @dax_mem_res: physical address range of hotadded DAX memory
-  */
- struct dev_dax {
- 	struct dax_region *region;
-@@ -62,6 +63,7 @@ struct dev_dax {
- 	struct dev_pagemap pgmap;
- 	struct percpu_ref ref;
- 	struct completion cmp;
-+	struct resource *dax_kmem_res;
- };
- 
- static inline struct dev_dax *to_dev_dax(struct device *dev)
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 4c0131857133..026c34f93df5 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -71,21 +71,90 @@ int dev_dax_kmem_probe(struct device *dev)
- 		kfree(new_res);
- 		return rc;
- 	}
-+	dev_dax->dax_kmem_res = new_res;
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_MEMORY_HOTREMOVE
-+/*
-+ * Offline device-dax's memory_blocks. If a memory_block cannot be offlined
-+ * a warning is printed and an error is returned. dax hotremove can succeed
-+ * only when every memory_block is offline.
-+ */
-+static int
-+offline_memblock_cb(struct memory_block *mem, void *arg)
-+{
-+	struct device *dev = (struct device *)arg;
-+	int rc = device_offline(&mem->dev);
-+
-+	if (rc < 0) {
-+		unsigned long spfn = section_nr_to_pfn(mem->start_section_nr);
-+		unsigned long epfn = section_nr_to_pfn(mem->end_section_nr);
-+		phys_addr_t spa = spfn << PAGE_SHIFT;
-+		phys_addr_t epa = epfn << PAGE_SHIFT;
-+
-+		dev_warn(dev, "could not offline memory block [%pa-%pa]\n",
-+			 &spa, &epa);
-+
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dev_dax_kmem_remove(struct device *dev)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct resource *res = dev_dax->dax_kmem_res;
-+	resource_size_t kmem_start;
-+	resource_size_t kmem_size;
-+	unsigned long start_pfn;
-+	unsigned long end_pfn;
-+	int rc;
-+
-+	/*
-+	 * dax kmem resource does not exist, means memory was never hotplugged.
-+	 * So, nothing to do here.
-+	 */
-+	if (!res)
-+		return 0;
-+
-+	kmem_start = res->start;
-+	kmem_size = resource_size(res);
-+	start_pfn = kmem_start >> PAGE_SHIFT;
-+	end_pfn = start_pfn + (kmem_size >> PAGE_SHIFT) - 1;
-+
-+	/* Walk and offline every singe memory_block of the dax region. */
-+	lock_device_hotplug();
-+	rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
-+	unlock_device_hotplug();
-+	if (rc)
-+		return rc;
-+
-+	/* Hotremove memory, cannot fail because memory is already offlined */
-+	remove_memory(dev_dax->target_node, kmem_start, kmem_size);
-+
-+	/* Release and free dax resources */
-+	release_resource(res);
-+	kfree(res);
-+	dev_dax->dax_kmem_res = NULL;
-+
-+	return 0;
-+}
-+#else
- static int dev_dax_kmem_remove(struct device *dev)
- {
- 	/*
--	 * Purposely leak the request_mem_region() for the device-dax
--	 * range and return '0' to ->remove() attempts. The removal of
--	 * the device from the driver always succeeds, but the region
--	 * is permanently pinned as reserved by the unreleased
-+	 * Without hotremove purposely leak the request_mem_region() for the
-+	 * device-dax range and return '0' to ->remove() attempts. The removal
-+	 * of the device from the driver always succeeds, but the region is
-+	 * permanently pinned as reserved by the unreleased
- 	 * request_mem_region().
- 	 */
- 	return 0;
- }
-+#endif /* CONFIG_MEMORY_HOTREMOVE */
- 
- static struct dax_device_driver device_dax_kmem_driver = {
- 	.drv = {
--- 
-2.21.0
-
+U0FJIHByb3ZpZGUgbXVsdGlwbGUgbWFzdGVyIGNsb2NrIHNvdXJjZSBvcHRpb25zIHNlbGVjdGFi
+bGUNCnZpYSBiaXQgTVNFTCBvZiBUQ1IyL1JDUjIuDQoNCkFsbCBwb3NzaWJsZSBtYXN0ZXIgY2xv
+Y2sgc291cmNlcyBhcmUgc3RvcmVkIGluIHNhaS0+bWNsa19jbGsNCmFycmF5LiBDdXJyZW50IGlt
+cGxlbWVudGF0aW9uIGFzc3VtZXMgdGhhdCBNQ0xLMCBzb3VyY2UgaXMgYWx3YXlzDQpidXNjbGss
+IGJ1dCB0aGlzIGlzIHdyb25nIQ0KDQpGb3IgZXhhbXBsZSwgb24gaS5NWDhRTSB3ZSBoYXZlOg0K
+DQowMGIgLSBCdXMgQ2xvY2sgc2VsZWN0ZWQuDQowMWIgLSBNYXN0ZXIgQ2xvY2sgKE1DTEspIDEg
+b3B0aW9uIHNlbGVjdGVkLg0KMTBiIC0gTWFzdGVyIENsb2NrIChNQ0xLKSAyIG9wdGlvbiBzZWxl
+Y3RlZC4NCjExYiAtIE1hc3RlciBDbG9jayAoTUNMSykgMyBvcHRpb24gc2VsZWN0ZWQuDQoNCndo
+aWxlIG9uIGkuTVg2U1ggd2UgaGF2ZToNCg0KMDBiIC0gTWFzdGVyIENsb2NrIChNQ0xLKSAxIG9w
+dGlvbiBzZWxlY3RlZC4NCjAxYiAtIE1hc3RlciBDbG9jayAoTUNMSykgMSBvcHRpb24gc2VsZWN0
+ZWQuDQoxMGIgLSBNYXN0ZXIgQ2xvY2sgKE1DTEspIDIgb3B0aW9uIHNlbGVjdGVkLg0KMTFiIC0g
+TWFzdGVyIENsb2NrIChNQ0xLKSAzIG9wdGlvbiBzZWxlY3RlZC4NCg0KU28sIHRoaXMgcGF0Y2gg
+d2lsbCByZWFkIG1jbGswIHNvdXJjZSBjbG9jayBmcm9tIGRldmljZSB0cmVlLg0KDQpTaWduZWQt
+b2ZmLWJ5OiBTaGVuZ2ppdSBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+DQpTaWduZWQtb2Zm
+LWJ5OiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+DQotLS0NCiBzb3VuZC9z
+b2MvZnNsL2ZzbF9zYWkuYyB8IDMgKy0tDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+LCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvc291bmQvc29jL2ZzbC9mc2xfc2FpLmMg
+Yi9zb3VuZC9zb2MvZnNsL2ZzbF9zYWkuYw0KaW5kZXggZDJhNGRjNzQ0ZmQ3Li5mYWE4ZGU4N2Zm
+ODMgMTAwNjQ0DQotLS0gYS9zb3VuZC9zb2MvZnNsL2ZzbF9zYWkuYw0KKysrIGIvc291bmQvc29j
+L2ZzbC9mc2xfc2FpLmMNCkBAIC04MjksOCArODI5LDcgQEAgc3RhdGljIGludCBmc2xfc2FpX3By
+b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlzYWktPmJ1c19jbGsgPSBOVUxM
+Ow0KIAl9DQogDQotCXNhaS0+bWNsa19jbGtbMF0gPSBzYWktPmJ1c19jbGs7DQotCWZvciAoaSA9
+IDE7IGkgPCBGU0xfU0FJX01DTEtfTUFYOyBpKyspIHsNCisJZm9yIChpID0gMDsgaSA8IEZTTF9T
+QUlfTUNMS19NQVg7IGkrKykgew0KIAkJc3ByaW50Zih0bXAsICJtY2xrJWQiLCBpKTsNCiAJCXNh
+aS0+bWNsa19jbGtbaV0gPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgdG1wKTsNCiAJCWlmIChJ
+U19FUlIoc2FpLT5tY2xrX2Nsa1tpXSkpIHsNCi0tIA0KMi4xNy4xDQoNCg==
