@@ -2,51 +2,52 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82283C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60988C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485F620675
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249D120675
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JvvcaAB/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uzHTuu1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfDTKK7 (ORCPT
+        id S1728059AbfDTKLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 06:10:59 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45746 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfDTKKu (ORCPT
+        Sat, 20 Apr 2019 06:11:09 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59380 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfDTKLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 06:10:50 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAMOI007903;
-        Sat, 20 Apr 2019 05:10:22 -0500
+        Sat, 20 Apr 2019 06:11:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAjkh080961;
+        Sat, 20 Apr 2019 05:10:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555755022;
-        bh=xQDbruDGAOPCjEmOJRT1Pn+gagYkthvX210zVPFfOsQ=;
-        h=From:To:CC:Subject:Date;
-        b=JvvcaAB/NXDkYWFy/kpuMlL7pTemLBC2G6S2GuAg1F/PFWH1kGb8lCLVnegWBV73T
-         QyaBDbm3GhWNZXa5IRnZMa1bGtJllBQ1rwDaJPqAKXakWKTO5BLT9UKjvwFMzi2tda
-         7QclL2yJ/JAWNidzS9xr9OBsVF1NIliHchy0LYuo=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3KAAME4097115
+        s=ti-com-17Q1; t=1555755045;
+        bh=NNyiwaNwvqRJnp7U4Eg38q4QkjdXLcPjMqAmaCtzNHs=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=uzHTuu1dUQiKtkRWeqQUqDh9vyQ3FWzi8Nse5WOJwi0Rltfaqv4Xg5hxdmfQ6h2IN
+         gx9x9hHgUoRm4XtvYg35YpsKbOZ/N21GZ03k5BEsl5BRYD2RJaGNPdi7U11z3e0zky
+         hRqMjHTTBBFC+aoCQEUD7Iv10080Ug44XO1PxRUk=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3KAAjWM028524
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 20 Apr 2019 05:10:22 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+        Sat, 20 Apr 2019 05:10:45 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 20
- Apr 2019 05:10:22 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 05:10:44 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sat, 20 Apr 2019 05:10:22 -0500
+ Frontend Transport; Sat, 20 Apr 2019 05:10:45 -0500
 Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAHZp070234;
-        Sat, 20 Apr 2019 05:10:18 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAHZu070234;
+        Sat, 20 Apr 2019 05:10:40 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
@@ -59,10 +60,12 @@ CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>
-Subject: [PATCH v7 00/14] Add support for TISCI Interrupt controller drivers
-Date:   Sat, 20 Apr 2019 15:39:36 +0530
-Message-ID: <20190420100950.7997-1-lokeshvutla@ti.com>
+Subject: [PATCH v7 05/14] firmware: ti_sci: Add helper apis to manage resources
+Date:   Sat, 20 Apr 2019 15:39:41 +0530
+Message-ID: <20190420100950.7997-6-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190420100950.7997-1-lokeshvutla@ti.com>
+References: <20190420100950.7997-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -72,123 +75,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI AM65x SoC based on K3 architecture introduced support for Events
-which are message based interrupts with minimal latency. These events
-are not compatible with regular interrupts and are valid only through
-an event transport lane. An Interrupt Aggregator(INTA) is introduced
-to convert these events to interrupts. INTA can also group 64 events
-into a single interrupt. Now the SoC has many peripherals and a large
-number of event sources (time sync or DMA), the use of events is
-completely dependent on a user's specific application, which drives a
-need for maximum flexibility in which event sources are used in the
-system. It is also completely up to software control as to how the
-events are serviced.
+Each resource with in the device can be uniquely identified as defined
+by TISCI. Since this is generic across the devices, resource allocation
+also can be made generic instead of each client driver handling the
+resource. So add helper apis to manage the resource.
 
-Because of the huge flexibility there are certain standard peripherals
-(like GPIO etc)where all interrupts cannot be directly corrected to host
-interrupt controller. For this purpose, Interrupt Router(INTR) is
-introduced in the SoC. INTR just does a classic interrupt redirection.
-
-So the SoC has 3 types of interrupt controllers:
-- GIC500
-- Interrupt Router
-- Interrupt Aggregator
-
-Below is a diagrammatic view of how SoC integration of these interrupt
-controllers:(https://pastebin.ubuntu.com/p/9ngV3jdGj2/)
-
-Device Index-x               Device Index-y
-           |                         |
-           |                         |
-                      ....
-            \                       /
-             \                     /
-              \  (global events)  /
-          +---------------------------+   +---------+
-          |                           |   |         |
-          |             INTA          |   |  GPIO   |
-          |                           |   |         |
-          +---------------------------+   +---------+
-                         |   (vint)            |
-                         |                     |
-                        \|/                    |
-          +---------------------------+        |
-          |                           |<-------+
-          |           INTR            |
-          |                           |
-          +---------------------------+
-                         |
-                         |
-                        \|/ (gic irq)
-          +---------------------------+
-          |                           |
-          |             GIC           |
-          |                           |
-          +---------------------------+
-
-While at it, TISCI abstracts the handling of all above IRQ routes where
-interrupt sources are not directly connected to host interrupt controller.
-That would be configuration of Interrupt Aggregator and Interrupt Router.
-
-This series adds support for:
-- TISCI commands needed for IRQ configuration
-- Interrupt Router(INTR) driver.
-- Interrupt Aggregator(INTA) driver.
-- Interrupt Aggregator MSI bus layer.
-
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
 Changes since v6:
-- Each patch has respective changes mentioned.
+- None
 
-Grygorii Strashko (1):
-  firmware: ti_sci: Add support to get TISCI handle using of_phandle
+ drivers/firmware/ti_sci.c              | 130 +++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h |  54 ++++++++++
+ 2 files changed, 184 insertions(+)
 
-Lokesh Vutla (12):
-  firmware: ti_sci: Add support for RM core ops
-  firmware: ti_sci: Add support for IRQ management
-  firmware: ti_sci: Add helper apis to manage resources
-  genirq: Introduce irq_chip_{request,release}_resource_parent() apis
-  gpio: thunderx: Use the default parent apis for
-    {request,release}_resources
-  dt-bindings: irqchip: Introduce TISCI Interrupt router bindings
-  irqchip: ti-sci-intr: Add support for Interrupt Router driver
-  dt-bindings: irqchip: Introduce TISCI Interrupt Aggregator bindings
-  irqchip: ti-sci-inta: Add support for Interrupt Aggregator driver
-  soc: ti: Add MSI domain bus support for Interrupt Aggregator
-  irqchip: ti-sci-inta: Add msi domain support
-  arm64: arch_k3: Enable interrupt controller drivers
-
-Peter Ujfalusi (1):
-  firmware: ti_sci: Add RM mapping table for am654
-
- .../bindings/arm/keystone/ti,sci.txt          |   3 +-
- .../interrupt-controller/ti,sci-inta.txt      |  66 ++
- .../interrupt-controller/ti,sci-intr.txt      |  84 +++
- MAINTAINERS                                   |   6 +
- arch/arm64/Kconfig.platforms                  |   5 +
- drivers/firmware/ti_sci.c                     | 666 ++++++++++++++++++
- drivers/firmware/ti_sci.h                     | 102 +++
- drivers/gpio/gpio-thunderx.c                  |  16 +-
- drivers/irqchip/Kconfig                       |  23 +
- drivers/irqchip/Makefile                      |   2 +
- drivers/irqchip/irq-ti-sci-inta.c             | 627 +++++++++++++++++
- drivers/irqchip/irq-ti-sci-intr.c             | 285 ++++++++
- drivers/soc/ti/Kconfig                        |   6 +
- drivers/soc/ti/Makefile                       |   1 +
- drivers/soc/ti/ti_sci_inta_msi.c              | 146 ++++
- include/linux/irq.h                           |   2 +
- include/linux/irqdomain.h                     |   1 +
- include/linux/msi.h                           |  10 +
- include/linux/soc/ti/ti_sci_inta_msi.h        |  23 +
- include/linux/soc/ti/ti_sci_protocol.h        | 126 ++++
- kernel/irq/chip.c                             |  27 +
- 21 files changed, 2214 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
- create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
- create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
- create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
-
+diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+index 88e461498def..e4b01cfc5883 100644
+--- a/drivers/firmware/ti_sci.c
++++ b/drivers/firmware/ti_sci.c
+@@ -2277,6 +2277,136 @@ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
+ 
++/**
++ * ti_sci_get_free_resource() - Get a free resource from TISCI resource.
++ * @res:	Pointer to the TISCI resource
++ *
++ * Return: resource num if all went ok else TI_SCI_RESOURCE_NULL.
++ */
++u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
++{
++	unsigned long flags;
++	u16 set, free_bit;
++
++	raw_spin_lock_irqsave(&res->lock, flags);
++	for (set = 0; set < res->sets; set++) {
++		free_bit = find_first_zero_bit(res->desc[set].res_map,
++					       res->desc[set].num);
++		if (free_bit != res->desc[set].num) {
++			set_bit(free_bit, res->desc[set].res_map);
++			raw_spin_unlock_irqrestore(&res->lock, flags);
++			return res->desc[set].start + free_bit;
++		}
++	}
++	raw_spin_unlock_irqrestore(&res->lock, flags);
++
++	return TI_SCI_RESOURCE_NULL;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_free_resource);
++
++/**
++ * ti_sci_release_resource() - Release a resource from TISCI resource.
++ * @res:	Pointer to the TISCI resource
++ * @id:		Resource id to be released.
++ */
++void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
++{
++	unsigned long flags;
++	u16 set;
++
++	raw_spin_lock_irqsave(&res->lock, flags);
++	for (set = 0; set < res->sets; set++) {
++		if (res->desc[set].start <= id &&
++		    (res->desc[set].num + res->desc[set].start) > id)
++			clear_bit(id - res->desc[set].start,
++				  res->desc[set].res_map);
++	}
++	raw_spin_unlock_irqrestore(&res->lock, flags);
++}
++EXPORT_SYMBOL_GPL(ti_sci_release_resource);
++
++/**
++ * ti_sci_get_num_resources() - Get the number of resources in TISCI resource
++ * @res:	Pointer to the TISCI resource
++ *
++ * Return: Total number of available resources.
++ */
++u32 ti_sci_get_num_resources(struct ti_sci_resource *res)
++{
++	u32 set, count = 0;
++
++	for (set = 0; set < res->sets; set++)
++		count += res->desc[set].num;
++
++	return count;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_num_resources);
++
++/**
++ * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
++ * @handle:	TISCI handle
++ * @dev:	Device pointer to which the resource is assigned
++ * @dev_id:	TISCI device id to which the resource is assigned
++ * @of_prop:	property name by which the resource are represented
++ *
++ * Return: Pointer to ti_sci_resource if all went well else appropriate
++ *	   error pointer.
++ */
++struct ti_sci_resource *
++devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
++			    struct device *dev, u32 dev_id, char *of_prop)
++{
++	struct ti_sci_resource *res;
++	u32 resource_subtype;
++	int i, ret;
++
++	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return ERR_PTR(-ENOMEM);
++
++	res->sets = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
++						    sizeof(u32));
++	if (res->sets < 0) {
++		dev_err(dev, "%s resource type ids not available\n", of_prop);
++		return ERR_PTR(res->sets);
++	}
++
++	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
++				 GFP_KERNEL);
++	if (!res->desc)
++		return ERR_PTR(-ENOMEM);
++
++	for (i = 0; i < res->sets; i++) {
++		ret = of_property_read_u32_index(dev_of_node(dev), of_prop, i,
++						 &resource_subtype);
++		if (ret)
++			return ERR_PTR(-EINVAL);
++
++		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
++							resource_subtype,
++							&res->desc[i].start,
++							&res->desc[i].num);
++		if (ret) {
++			dev_err(dev, "dev = %d subtype %d not allocated for this host\n",
++				dev_id, resource_subtype);
++			return ERR_PTR(ret);
++		}
++
++		dev_dbg(dev, "dev = %d, subtype = %d, start = %d, num = %d\n",
++			dev_id, resource_subtype, res->desc[i].start,
++			res->desc[i].num);
++
++		res->desc[i].res_map =
++			devm_kzalloc(dev, BITS_TO_LONGS(res->desc[i].num) *
++				     sizeof(*res->desc[i].res_map), GFP_KERNEL);
++		if (!res->desc[i].res_map)
++			return ERR_PTR(-ENOMEM);
++	}
++	raw_spin_lock_init(&res->lock);
++
++	return res;
++}
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index a0216c947acd..277d98fab505 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -268,6 +268,33 @@ struct ti_sci_handle {
+ 	struct ti_sci_ops ops;
+ };
+ 
++#define TI_SCI_RESOURCE_NULL	0xffff
++
++/**
++ * struct ti_sci_resource_desc - Description of TI SCI resource instance range.
++ * @start:	Start index of the resource.
++ * @num:	Number of resources.
++ * @res_map:	Bitmap to manage the allocation of these resources.
++ */
++struct ti_sci_resource_desc {
++	u16 start;
++	u16 num;
++	unsigned long *res_map;
++};
++
++/**
++ * struct ti_sci_resource - Structure representing a resource assigned
++ *			    to a device.
++ * @sets:	Number of sets available from this resource type
++ * @lock:	Lock to guard the res map in each set.
++ * @desc:	Array of resource descriptors.
++ */
++struct ti_sci_resource {
++	u16 sets;
++	raw_spinlock_t lock;
++	struct ti_sci_resource_desc *desc;
++};
++
+ #if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+@@ -276,6 +303,12 @@ const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
+ 						  const char *property);
+ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
+ 						       const char *property);
++u16 ti_sci_get_free_resource(struct ti_sci_resource *res);
++void ti_sci_release_resource(struct ti_sci_resource *res, u16 id);
++u32 ti_sci_get_num_resources(struct ti_sci_resource *res);
++struct ti_sci_resource *
++devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
++			    struct device *dev, u32 dev_id, char *of_prop);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -308,6 +341,27 @@ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
+ {
+ 	return ERR_PTR(-EINVAL);
+ }
++
++static inline u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
++{
++	return TI_SCI_RESOURCE_NULL;
++}
++
++static inline void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
++{
++}
++
++static inline u32 ti_sci_get_num_resources(struct ti_sci_resource *res)
++{
++	return 0;
++}
++
++static inline struct ti_sci_resource *
++devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
++			    struct device *dev, u32 dev_id, char *of_prop)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
 -- 
 2.21.0
 
