@@ -2,145 +2,239 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B56DC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 22:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D727AC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 22:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CDF208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 22:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E3D208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 22:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ORWiaI+Y"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nEW5kE/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfDTWEV (ORCPT
+        id S1727172AbfDTWk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 18:04:21 -0400
-Received: from mail-ed1-f42.google.com ([209.85.208.42]:38507 "EHLO
-        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDTWEU (ORCPT
+        Sat, 20 Apr 2019 18:40:58 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57288 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfDTWk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 18:04:20 -0400
-Received: by mail-ed1-f42.google.com with SMTP id c1so973857edk.5
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 15:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ldGakbeMe/Lt2zN3VzkUpoUzBgNiYR8VYYlH08lu4Jo=;
-        b=ORWiaI+Ytll5EGAnzlMifemWhfONQL/8msZPZ/t4GAzbqUTRWL+AGGqRfzgLwXLiYy
-         oHPdYzxjUpBtlRyjdQ530CpJDKKxaFyJBULeP4lDTl/wRK2XTLS7qR723rh74zQfIW/H
-         ixP6H8jBuseWGRJWSt9MLpIqcCLqqMlpQCwmj+m4zBngIq+hM4igY4AdKlnJr6VxDtOr
-         l3EaYq85sBwm3KKumaNJ1bgvLqehaU1VZ/ST0dovMxskHTSocMIyzkONaiX21+kmXy9w
-         yXQnYu9JZpgDAj/jILsEWEOupBZywML2kC+4becYHw526Xv2UrS8FYD9Xc3BgNTsbuve
-         hOaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ldGakbeMe/Lt2zN3VzkUpoUzBgNiYR8VYYlH08lu4Jo=;
-        b=oNI4o/Cpv2MA+8n4jDsdPubD7VRB3p8Oms+eN53pG6nkxGYyRqmukS+hRIkdIyURA1
-         /eoFb8897RKrd2e1n5ugBU1JI4hOGMsFoSf4OxrvNmF+sP73N//KQvd9q9uNToUVnWrv
-         nZ63Q+cnOByovARuAFVQyqwhKqC061JQt6nOJfvwpqqwsaB2t8Fr8SdWZTHJcY9UYOhK
-         eM83Xzud1D1O5lLzanAs1e+yYYO/9bzrtUW++xnlb+pvyEWk5mTToV1mg1jKVn8a5YPX
-         ffVeR6vfkgCWrgliEt/Kjyi4ksdBNfK8Ozpq4l7DaS7bO7r6CxHrKdz/1b1z63xb339H
-         yWxw==
-X-Gm-Message-State: APjAAAWiRDh3Rtxjt2T43muFbQwZ/WF9+y3kZ69Wbhj7Pbpc/ezWxt51
-        iXZpKtpKMfd7iKfle1uyuX5V7lbRb1vSg7rwulaJYA==
-X-Google-Smtp-Source: APXvYqzJsP/uUBOTa8F60H6DOWHPR7LdNkf2eeXWxOZiwVI9vC4YfgDXBWK2g4ZV7P0lur0pLJWVe3HVjkyAGGl/u7c=
-X-Received: by 2002:aa7:cf8f:: with SMTP id z15mr4002141edx.190.1555797858736;
- Sat, 20 Apr 2019 15:04:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190420153148.21548-1-pasha.tatashin@soleen.com>
- <20190420153148.21548-3-pasha.tatashin@soleen.com> <CAPcyv4j9sG6Wy3EfTuPb0uZ2qp=gr9UgUhpnXQA_g6Ko9KFmLA@mail.gmail.com>
- <CA+CK2bA2QTzZtFvGRMaG10_TretDr6CGgZc4Hyi_1pku4ECqXw@mail.gmail.com>
- <CAPcyv4jrxMNEEeUZZG3=CdkYSyX7OtJLv_ZQ1gbML7bscePiQA@mail.gmail.com>
- <CA+CK2bA-wDwRT5Gv2p9Nm1Vr8LNg84rQdE6=s2m2hQLYqj5Rog@mail.gmail.com> <CAPcyv4gBu5QhgRQ+maJs108JwBrcCa9U1e9wgO8FP6Q3qwy69g@mail.gmail.com>
-In-Reply-To: <CAPcyv4gBu5QhgRQ+maJs108JwBrcCa9U1e9wgO8FP6Q3qwy69g@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Sat, 20 Apr 2019 18:04:07 -0400
-Message-ID: <CA+CK2bBFqq0tNOE9gh7JAhjw8XLW_pMpVQtUwbm6JwW=LWt_iQ@mail.gmail.com>
-Subject: Re: [v1 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        Sat, 20 Apr 2019 18:40:58 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 835F75F;
+        Sun, 21 Apr 2019 00:40:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1555800054;
+        bh=nMMfdyv+gYWL/rzGRQxoZDTpKhi9T+p/BKTgaM49D1E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nEW5kE/KcCUCiBOZ5rauRPeNiMnSnZLAeeLtG4ELwverbQXX4z894rr87N3YRfTTs
+         BdZJw5s8t7aAY/MthpOpP/+PEe6BFzikwVbuHKA60NrnlWyHtE+LzFVF64s2yZG66b
+         4omh1kcWJXVf3oedt3ehQnRQFOHqIszEFjIdVFDs=
+Date:   Sun, 21 Apr 2019 01:40:45 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+Message-ID: <20190420224045.GY4964@pendragon.ideasonboard.com>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+ <20190417154121.GJ13337@phenom.ffwll.local>
+ <20190418062229.eyog4i62eg4pr6uf@flea>
+ <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+ <20190418090221.e57dogn4yx5nwdni@flea>
+ <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 5:02 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sat, Apr 20, 2019 at 10:02 AM Pavel Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> >
-> > > > Thank you for looking at this.  Are you saying, that if drv.remove()
-> > > > returns a failure it is simply ignored, and unbind proceeds?
-> > >
-> > > Yeah, that's the problem. I've looked at making unbind able to fail,
-> > > but that can lead to general bad behavior in device-drivers. I.e. why
-> > > spend time unwinding allocated resources when the driver can simply
-> > > fail unbind? About the best a driver can do is make unbind wait on
-> > > some event, but any return results in device-unbind.
-> >
-> > Hm, just tested, and it is indeed so.
-> >
-> > I see the following options:
-> >
-> > 1. Move hot remove code to some other interface, that can fail. Not
-> > sure what that would be, but outside of unbind/remove_id. Any
-> > suggestion?
-> > 2. Option two is don't attept to offline memory in unbind. Do
-> > hot-remove memory in unbind if every section is already offlined.
-> > Basically, do a walk through memblocks, and if every section is
-> > offlined, also do the cleanup.
->
-> I think something like option-2 could work just as long as the user is
-> ok with failure and prepared to handle it. It's already the case that
-> the request_region() in kmem permanently prevents the memory range
-> from being reused by any other driver. So if the hot-unplug fails it
-> could skip the corresponding release_region() and effectively it's the
-> same as what we have now in terms of reuse protection. In your flow if
-> the memory remove failed then the conversion attempt from devdax to
-> raw mode would also fail and presumably you could fall back to doing a
-> full reboot / rebuild of the application state?
+Hi Paul,
 
-With option two, where we will simply check that every memory_block is
-offlined, we will have deterministic behavior:
+On Thu, Apr 18, 2019 at 01:49:54PM +0200, Paul Kocialkowski wrote:
+> On Thu, 2019-04-18 at 11:02 +0200, Maxime Ripard wrote:
+> > On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
+> >> And a lot of people pushed for the "fourcc is a standard", when
+> >> really it's totally not.
+> > 
+> > Even if it's not a standard, having consistency would be a good thing.
+> > 
+> > And you said yourself that DRM fourcc is now pretty much an authority
+> > for the fourcc, so it definitely looks like a standard to me.
+> 
+> I think trying to make the V4L2 and DRM fourccs converge is a lost
+> cause, as it has already significantly diverged. Even if we coordinate
+> an effort to introduce new formats with the same fourcc on both sides,
+> I don't see what good that would be since the formats we have now are
+> still plagued by the inconsistency.
+> 
+> I think we always need an explicit translation step from either v4l2 or
+> drm to the internal representation and back, without ever assuming that
+> formats might be compatible because they share the same fourcc.
 
-1. If user did not offline every dax memory section beforehand via
-echo offline > /sys/devices/system/memory/memoryN/state
+I don't agree. APIs evolve, and while we can't switch from one set of
+4CCs to another in existing APIs, we could in new APIs. Boris is working
+on new ioctls to handle formats in V4L2, and while 4CC unification could
+be impopular from a userspace developers point of view there, I don't
+think we have ruled it out completely. The move to the request API is
+also an area where a common set of 4CCs could be used, as it will depart
+from the existing V4L2 ioctls. To summarize my opinion, we're not there
+yet, but I wouldn't rule it out completely for the future.
 
-echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-Will be the same as now, will simply return, and user won't be able to
-use dax afterwords or hotremove it.
+> It looks like so far, V4L2 pixel formats describe a DRM pixel format +
+> modifier.
 
-2. If user did offline ever dax memory section beforehand
-echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-Will be guaranteed to succeed to hotremove the memory, as there is
-nothing that can fail.
+DRM modifiers are mostly about tiling and compression, and we hardly
+support these in V4L2. What are the modifiers you think are hardcoded in
+4CCs in V4L2 ?
 
-So, if user wants to hotremove dax memory, he/she must ensure that
-every section is offlined before unbinding.
+> I think Boris (CCed) is working to change that by allowing to
+> pass a DRM modifier through V4L2. With that, we'd be in a situation
+> where some formats are described by the v4l2 pixfmt alone and some
+> formats are also described a modifier (but I looked at it from a
+> distance so might have misunderstod). That feels better since it avoids
+> the combinatory explosion from describing each format + modifier
+> individually.
+> 
+> What do you think?
+> 
+> >> v4l tends to conflate pixel format with stuff that we tend to encode
+> >> in modifiers a lot more.
+> > 
+> > Boris is working on adding the modifiers concept to v4l2, so we're
+> > converging here, and we can totally have a layer in v4l2 to convert
+> > between old v4l2 "format+modifiers" formats, and DRM style formats.
+> > 
+> >> There's a bunch of reasons we can't just use v4l, and they're as
+> >> valid as ever:
+> >> 
+> >> - We overlap badly in some areas, so even if fourcc codes match, we
+> >>   can't use them and need a duplicated DRM_FOURCC code.
+> > 
+> > Do yo have an example of one of those areas?
+> > 
+> >> - v4l encodes some metadata into the fourcc that we encode elsewhere,
+> >>   e.g. offset for planar yuv formats, or tiling mode
+> > 
+> > As I was saying, this changes on the v4l2 side, and converging to
+> > what DRM is doing.
+> > 
+> >> - drm fourcc code doesn't actually define the drm_format_info
+> >>   uniquely, drivers can override that (that's an explicit design
+> >>   intent of modifiers, to allow drivers to add another plane for
+> >>   e.g. compression information). You'd need to pull that driver
+> >>   knowledge into your format library.
+> > 
+> > I'm not sure how my patches are changing anything here. This is
+> > litterally the same code, with the functions renamed.
+> > 
+> > If drivers want to override that, then yeah, fine, we can let them do
+> > that. Just like any helper this just provides a default that covers
+> > most of the cases.
+> > 
+> >> Iow there's no way we can easily adopt v4l fourcc, except if we do
+> >> something like a new addfb flag.
+> > 
+> > For the formats that would be described as a modifier, sure. For all
+> > the others (that are not yet supported by DRM), then I don't really
+> > see why not.
+> > 
+> >>> And given how the current state is a mess in this regard, I'm not too
+> >>> optimistic about keeping the formats in their relevant frameworks.
+> >>> 
+> >>> Having a shared library, governed by both, will make this far easier,
+> >>> since it will be easy to discover the formats that are already
+> >>> supported by the other subsystem.
+> >> 
+> >> I think a compat library that (tries to, best effort) convert between
+> >> v4l and drm fourcc would make sense. Somewhere in drivers/video, next
+> >> to the conversion functions for videomode <-> drm_display_mode
+> >> perhaps. That should be useful for drivers.
+> > 
+> > That's not really what this series is about though. That series is
+> > about sharing the (image|pixels) formats database across everyone so
+> > that everyone can benefit from it.
+> > 
+> >> Unifying the formats themselves, and all the associated metadata is
+> >> imo a no-go, and was a pretty conscious decision when we implemented
+> >> drm_fourcc a few years back.
+> >> 
+> >>> If we want to keep the current library in DRM, we have two options
+> >>> then:
+> >>> 
+> >>>   - Support all the v4l2 formats in the DRM library, which is
+> >>>     essentially what I'm doing in the last patches. However, that
+> >>>     would require to have the v4l2 developpers also reviewing stuff
+> >>>     there. And given how busy they are, I cannot really see how that
+> >>>     would work.
+> >> 
+> >> Well, if we end up with a common library then yes we need cross
+> >> review. There's no way around that. Doesn't matter where exactly that
+> >> library is in the filesystem tree, and adding a special MAINTAINERS
+> >> entry for anything related to fourcc (both drm and v4l) to make sure
+> >> they get cross-posted is easy. No file renaming needed.
+> > 
+> > That would create some governing issues as well. For example, if you
+> > ever have a patch from one fourcc addition (that might or might not be
+> > covered by v4l2), will you wait for any v4l2 developper to review it?
+> > 
+> > If it's shared code, then it should be shared, and every client
+> > framework put on an equal footing.
+> > 
+> >>>   - Develop the same library from within v4l2. That is really a poor
+> >>>     solution, since the information would be greatly duplicated
+> >>>     between the two, and in terms of maintainance, code, and binary
+> >>>     size that would be duplicated too.
+> >> 
+> >> It's essentially what we decided to do for drm years back.
+> > 
+> > And it was probably the right solution back then, but I'm really not
+> > convinced it's still the right thing to do today.
+> > 
+> >>> Having it shared allows to easily share, and discover formats from the
+> >>> other subsystem, and to have a single, unique place where this is
+> >>> centralized.
+> >> 
+> >> What I think could work as middle ground:
+> >> - Put drm_format stuff into a separate .ko
+> >> - Add a MAINTAINERS entry to make sure all things fourcc are cross
+> >> posted to both drm and v4l lists. Easy on the drm side, since it's all
+> >> separate files. Not sure it's so convenient for v4l uapi.
+> >> - Add a conversion library that tries to best-effort map between drm
+> >> and v4l formats. On the drm side that most likely means you need
+> >> offsets for planes, and modifiers too (since those are implied in some
+> >> v4l fourcc). Emphasis on "best effort" i.e. only support as much as
+> >> the drivers that use this library need.
+> >> - Add drm_fourcc as-needed by these drivers that want to use a unified
+> >> format space.
+> >> 
+> >> Forcing this unification on everyone otoh is imo way too much.
+> > 
+> > v4l2 is starting to converge with DRM, and we're using the DRM API
+> > pretty much untouched for that library, so I'm not really sure how
+> > anyone is hurt by that unification.
 
-Pasha
+-- 
+Regards,
+
+Laurent Pinchart
