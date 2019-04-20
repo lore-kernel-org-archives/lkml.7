@@ -2,177 +2,202 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DB4C282E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A684C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EB420651
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B912087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dBBqRo5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfDTQDY (ORCPT
+        id S1728373AbfDTQS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 12:03:24 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:58636 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfDTQDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 12:03:24 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x3KG2nBD017520;
-        Sat, 20 Apr 2019 11:02:49 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x3KG2lfU017519;
-        Sat, 20 Apr 2019 11:02:47 -0500
-Date:   Sat, 20 Apr 2019 11:02:47 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Sat, 20 Apr 2019 12:18:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34029 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfDTQS3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 12:18:29 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k21so6514300otf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 09:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cJN6otCh8mhys26P8h5FkPQRQ5riYty4NiN3tBK+gLo=;
+        b=dBBqRo5xaNfsV65MZBeymXv/NSTESmTl3+fwmssTwZNQ0DDa0tnjbuffQOVu5qCvnG
+         AG0VrOm4le3e+LX0JifIfOiuhEFvhKUUSN4039SOYLKauDfj1YVSe6s3yICiYmPeLG10
+         PpR77q2mmZSO7IfFzQnmN61txzK05CNUgJ7hIh0osSPhkkRe9xHAejpjk+obuFyl91Ea
+         jqB8dqVcVidO5NVOQwunL0nyFBTZNu4VnnB2MGhV4fub6mYPICSFjjGc4/iD7scI+mfL
+         bxPnEMInGsg92KgtQL43DNw8s96ppM0p4V72EtLQFKKx4PfoMrHYIL/Ze6leYix4Tnqr
+         6jTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cJN6otCh8mhys26P8h5FkPQRQ5riYty4NiN3tBK+gLo=;
+        b=OHZqNplQz1SjddddXByivSaceJPImrJbTI1OyuJ3kR40+kCKqv/F5XGW66i8sErcAZ
+         mBClkGtQbdEqLqwjaLyDsPgWTTwa1TTOkQs+VYVoqBB/rY1+Q4xO2c4B51qW7+6K0Uzy
+         cU0iHGdFnmGiE97LsfdJFbJA0pcwurfbsrgF8sGYWHqHH22sVKhMlGnYtKLovDIEVg1/
+         SM3qGeS4EgexXv6utEngcCExZt3zgidhAdiS89fGXYOOW2lazkAUohqwoqHcp+QoS413
+         WjUpek1Ab5qnAbINgive0vhTWjwmu7sdCc2eTTmmowjTEknvkAXfamIJhR9rUXIdrKoM
+         +61w==
+X-Gm-Message-State: APjAAAUccmJ3IvyNd5P3rHUvQWRnKju59H2WM9zxhixxswI9OcIrH06l
+        +HVPoBrXdM5UfJvw+IE1tDMXGK7vek6XU7BSA63cSg==
+X-Google-Smtp-Source: APXvYqz2wCGHjhO+pn/eM92vfjTkdPXmx9hD0C9qPGAa4bPwoPEXhsRYteLJiJI+bs/h1798PltDHVLFtDj5+musWq0=
+X-Received: by 2002:a9d:7749:: with SMTP id t9mr5687797otl.229.1555777107880;
+ Sat, 20 Apr 2019 09:18:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190420153148.21548-1-pasha.tatashin@soleen.com> <20190420153148.21548-3-pasha.tatashin@soleen.com>
+In-Reply-To: <20190420153148.21548-3-pasha.tatashin@soleen.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 20 Apr 2019 09:18:16 -0700
+Message-ID: <CAPcyv4j9sG6Wy3EfTuPb0uZ2qp=gr9UgUhpnXQA_g6Ko9KFmLA@mail.gmail.com>
+Subject: Re: [v1 2/2] device-dax: "Hotremove" persistent memory that is used
+ like normal RAM
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190420160247.GA17291@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de> <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com> <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net> <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com> <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net> <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com> <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de> <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com> <alpine.DEB.2.21.1904200727410.3174@nanos.tec.linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904200727410.3174@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sat, 20 Apr 2019 11:02:49 -0500 (CDT)
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 07:42:13AM +0200, Thomas Gleixner wrote:
-
-Good morning/weekend to everyone.
-
-> On Fri, 19 Apr 2019, Jethro Beekman wrote:
-> > On 2019-04-19 14:34, Thomas Gleixner wrote:
-> > > And how so? You create writeable AND executable memory. That's a nono and
-> > > you can argue in circles, that's not going to change with any of your
-> > > proposed changes.
-
-> > On 2019-04-19 14:38, Thomas Gleixner wrote:
-> > > You are working around LSM nothing else and that's just not going to fly.
-> > 
-> > Based on your comments, I'm still unsure if we're on the same page with
-> > regards to what I'm proposing.
-> > 
-> > Here's a regular non-SGX flow that LSM would likely prevent:
-> > 
-> > mmap(PROT_READ|PROT_WRITE)
-> > memcpy()
-> > mmap(PROT_READ|PROT_EXEC) <-- denied by LSM
-> > 
-> > Or just something based on regular PT permissions:
-> > 
-> > mmap(PROT_READ|PROT_EXEC)
-> > memcpy() <-- SIGSEGV
-> > 
-> > Now, the equivalent for SGX:
-> > 
-> > mmap(PROT_READ|PROT_WRITE)
-> > ioctl(EADD)
-> > mmap(PROT_READ|PROT_EXEC) <-- denied by LSM
-
-> This is completely irrelevant, really.
+On Sat, Apr 20, 2019 at 8:36 AM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
 >
-> The point is that the SGX driver loads and executes arbitrary data
-> which is handed in from user space via an ioctl w/o any chance of
-> verifying where that comes from.
+> It is now allowed to use persistent memory like a regular RAM, but
+> currently there is no way to remove this memory until machine is
+> rebooted.
 >
-> What Andy proposed is to open a file with the SGX payload and hand
-> in the file descriptor. That way LSM can decide whether this is
-> allowed or denied based on the file descriptor and whatever the
-> security model/policy is in a particular setup.
+> This work expands the functionality to also allow hot removing
+> previously hotplugged persistent memory, and recover the device for use
+> for other purposes.
 >
-> Right know the SGX driver and its proposed API prevent any form of
-> LSM auditing and whatever permission checks you had in mind won't
-> change that at all.
+> To hotremove persistent memory, the management software must unbind it
+> from device-dax/kmem driver:
+>
+>             echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  drivers/dax/dax-private.h |  2 +
+>  drivers/dax/kmem.c        | 77 +++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 75 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+> index a45612148ca0..999aaf3a29b3 100644
+> --- a/drivers/dax/dax-private.h
+> +++ b/drivers/dax/dax-private.h
+> @@ -53,6 +53,7 @@ struct dax_region {
+>   * @pgmap - pgmap for memmap setup / lifetime (driver owned)
+>   * @ref: pgmap reference count (driver owned)
+>   * @cmp: @ref final put completion (driver owned)
+> + * @dax_mem_res: physical address range of hotadded DAX memory
+>   */
+>  struct dev_dax {
+>         struct dax_region *region;
+> @@ -62,6 +63,7 @@ struct dev_dax {
+>         struct dev_pagemap pgmap;
+>         struct percpu_ref ref;
+>         struct completion cmp;
+> +       struct resource *dax_kmem_res;
+>  };
+>
+>  static inline struct dev_dax *to_dev_dax(struct device *dev)
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 4c0131857133..026c34f93df5 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -71,21 +71,90 @@ int dev_dax_kmem_probe(struct device *dev)
+>                 kfree(new_res);
+>                 return rc;
+>         }
+> +       dev_dax->dax_kmem_res = new_res;
+>
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +/*
+> + * Offline device-dax's memory_blocks. If a memory_block cannot be offlined
+> + * a warning is printed and an error is returned. dax hotremove can succeed
+> + * only when every memory_block is offline.
+> + */
+> +static int
+> +offline_memblock_cb(struct memory_block *mem, void *arg)
+> +{
+> +       struct device *dev = (struct device *)arg;
+> +       int rc = device_offline(&mem->dev);
+> +
+> +       if (rc < 0) {
+> +               unsigned long spfn = section_nr_to_pfn(mem->start_section_nr);
+> +               unsigned long epfn = section_nr_to_pfn(mem->end_section_nr);
+> +               phys_addr_t spa = spfn << PAGE_SHIFT;
+> +               phys_addr_t epa = epfn << PAGE_SHIFT;
+> +
+> +               dev_warn(dev, "could not offline memory block [%pa-%pa]\n",
+> +                        &spa, &epa);
+> +
+> +               return rc;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int dev_dax_kmem_remove(struct device *dev)
+> +{
+> +       struct dev_dax *dev_dax = to_dev_dax(dev);
+> +       struct resource *res = dev_dax->dax_kmem_res;
+> +       resource_size_t kmem_start;
+> +       resource_size_t kmem_size;
+> +       unsigned long start_pfn;
+> +       unsigned long end_pfn;
+> +       int rc;
+> +
+> +       /*
+> +        * dax kmem resource does not exist, means memory was never hotplugged.
+> +        * So, nothing to do here.
+> +        */
+> +       if (!res)
+> +               return 0;
+> +
+> +       kmem_start = res->start;
+> +       kmem_size = resource_size(res);
+> +       start_pfn = kmem_start >> PAGE_SHIFT;
+> +       end_pfn = start_pfn + (kmem_size >> PAGE_SHIFT) - 1;
+> +
+> +       /* Walk and offline every singe memory_block of the dax region. */
+> +       lock_device_hotplug();
+> +       rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
+> +       unlock_device_hotplug();
+> +       if (rc)
+> +               return rc;
 
-I don't even want to remotely get in the middle of this arguement,
-since we are probably already persona-non-grata for having stimulated
-a discussion that has slowed upstreaming, but some comments to assist
-and clarify further progress on the driver.
-
-We understand and support the need for the LSM to trap these events,
-but what does LSM provenance mean if the platform is compromised?
-That is, technically, the target application for SGX technology.
-
-This issue is what drove our concern for having ring-0 based
-enforcement of who can initialize an enclave.  As Andy has pointed
-out, the mmap semantics of the SGX driver allow the introduction of
-executable code that bypasses LSM enforcement, but the platform owner,
-with appropriate enforcements on an FLC platform, has cryptographic
-verification and trust for the origin and provenance of that executable
-code.
-
-It may be possible to load the executable code into enclave memory but
-the processor will refuse to access the memory until the EINIT
-instruction validates that the loaded code is compliant with the
-enclave metadata and measurement.  That is why we were argueing for,
-simple, ring-0 based verification of the key signature that authorizes
-the EINIT instruction to complete.
-
-From a more practical perspective, an enclave shared image is a rather
-complex beast, that contains a lot of metadata.  An application has to
-open the shared image file and parse the metadata in order to properly
-construct the enclave image from the text in the image file.  I
-believe in practice that will effectively activate LSM recognition of
-the executable code.
-
-That obviously leaves a cunning adversary an opportunity to teleport a
-simple binary file or network stream onto a platform and load and
-execute the contents.  But that takes us back to the need for ring-0
-enforcement of enclave initialization... :-)
-
-We wrote a major enhancement to the Linux IMA architecture to
-implement introspection of behavioral namespaces.  The actor/subject
-events get forwarded up into a modeling engine running inside of a
-namespace specific SGX enclave instance that issues a system call to
-instruct an LSM that we wrote, and that pairs with the IMA extension,
-to 'discipline' the process if it is acting outside its behavioral
-specification.
-
-We will verify with Jarkko's current HEAD, but I believe it is
-consistently trapping access to the shared image file and hence the
-text of the enclave.
-
-> Thanks,
-> 
-> 	tglx
-
-Have a good weekend.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Simplicity is prerequisite for reliability."
-                                -- Edsger W. Dijkstra
+This potential early return is the reason why memory hotremove is not
+reliable vs the driver-core. If this walk fails to offline the memory
+it will still be online, but the driver-core has no consideration for
+device-unbind failing. The ubind will proceed while the memory stays
+pinned.
