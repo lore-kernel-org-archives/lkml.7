@@ -2,92 +2,97 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2368C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 13:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99301C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 14:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B47802183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 13:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555767236;
-	bh=uv9UMcb4koHXzC+O2iZ4IX/kI0rURgmQss4GjE9TCNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sQo0QlGYVOXNDTsyvSihSi3lokkC2TX45wEGJbiFLLeRBqkJumDpc9s+zaIF/0TzU
-	 w6soCgT/iMo6vALcJaOF/1ogz9U8IBRzi68jqgN4oIIqMPd7PU/DJPErcT/u8iK7mP
-	 su/Y5TnGekRSmHfqy5ONxefRYCMfuoyfAIXp/L8c=
+	by mail.kernel.org (Postfix) with ESMTP id 60CF521479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 14:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPvXhmN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfDTNdz (ORCPT
+        id S1726566AbfDTNup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 09:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725891AbfDTNdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 09:33:55 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C66E21479;
-        Sat, 20 Apr 2019 13:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555767234;
-        bh=uv9UMcb4koHXzC+O2iZ4IX/kI0rURgmQss4GjE9TCNc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C8kv3jAbL73OANYUFSdPoMHloXvQaaVMOBSy0Qf4ng1XtgdcJnZFYtHcXFSu1SVWI
-         0LZXwmugw5ttG17EsCkWvO0FENxph6CKJG4Lwu0aU9BJ4UuKPQmP+NBqmT+iyRY+Sg
-         KOLF5Qf8M3SGqtVwpyWtJSibhwBN/sC4oA0wUD48=
-Date:   Sat, 20 Apr 2019 21:33:43 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as
- "ipg" clock to SDMA
-Message-ID: <20190420133342.GB14187@dragon>
-References: <20190329064924.8728-1-andrew.smirnov@gmail.com>
- <20190411023008.GK26817@dragon>
- <CAHCN7xLczbdXx+TEQhsY1L3z09wPubvxX5SDO3Z1OzavPie0=Q@mail.gmail.com>
+        Sat, 20 Apr 2019 09:50:45 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40917 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDTNuo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 09:50:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c207so3718205pfc.7
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 06:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=QLeGJFuLxQqSr+hrr+ncR0/AZmCWVrFuK9P7lBzxR0c=;
+        b=gPvXhmN+k92EqRCcw6u+lb9e4GSE2kRp6pPCaeLzQMVwxsNFEgZ9L40Y9aWA9oe+AN
+         gmTwjvxhczUN9JHSI85TIpuyMwKQPefzVFylrLZAFI2bNQ10p1yY3nnVjOwpsPkoolgE
+         e9C7F/3Bp0X+NaqwVykGCUtmN39dOg5sEKfi45t9bICwKcA3uTkNw06sPIPzbK08sPZ9
+         9O7TBRUCU2QVaPNj4ubT0mM648zS4nvazWgvFlgk7UV34c/0tZFovFIPNUmrFjvJTZx7
+         5oeLRzc6tlIcEbNj62JWyXRpC7Xu1viA6SgJNSZeYsUM6TCMBgyTna7ag0OlnCc/N4WX
+         TCJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QLeGJFuLxQqSr+hrr+ncR0/AZmCWVrFuK9P7lBzxR0c=;
+        b=s8urz1m6r7uc/gDuU1kV9rFiiU6WXtuYY7hukF9k2yyPkEM0M6O36ZAd+Ah1xnkmkV
+         VJsEm+ccpKs7tiJkb5p/igBWpJak2imyyKvGenz7c7xSY67HeiSCy03F5YX/2gg7aGU7
+         zJISNoVXO9qtdlsUWCHxxfFddQwGyCyIFggCxbnarn4p2UxOfkTp34JcN5JnedkG9Nux
+         3vnL13GWQCc1Glm4UgqI/A/GPxhHAaThJZkB29RfoukwwoaPan9Gny3QSr6sgvkRWQ+A
+         qmjwz66Io/zo1i/SGwjtzpNTMYXiQ4Ogms5HPAvJZ9W+KC+iw7V+Rb7FgOi1zMzZSF+a
+         sswg==
+X-Gm-Message-State: APjAAAWCJ4Ot2RWmHfhQbQP1piFQREa5HZffkmHSaCmhSDH561A0/wOq
+        6IBtZVW5SsqIWNIeR5GETdA=
+X-Google-Smtp-Source: APXvYqzaBQHJ4waiNVteMPhu7AfZk7ZzmQ6K5nuxTVoyPLq7wM7kewOVdH+dRhAcBvdScY53OplwHQ==
+X-Received: by 2002:a62:e50a:: with SMTP id n10mr10056422pff.55.1555768244338;
+        Sat, 20 Apr 2019 06:50:44 -0700 (PDT)
+Received: from willow72 ([122.45.59.17])
+        by smtp.gmail.com with ESMTPSA id e126sm18503235pfh.35.2019.04.20.06.50.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 20 Apr 2019 06:50:43 -0700 (PDT)
+Date:   Sat, 20 Apr 2019 22:50:40 +0900
+From:   Youngjun Yoo <youngjun.willow@gmail.com>
+To:     jaegeuk@kernel.org
+Cc:     yuchao0@huawei.com, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] fs: f2fs: Replace spaces with tab.
+Message-ID: <20190420135040.GA7404@willow72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHCN7xLczbdXx+TEQhsY1L3z09wPubvxX5SDO3Z1OzavPie0=Q@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 07:14:26AM -0500, Adam Ford wrote:
-> On Wed, Apr 10, 2019 at 9:30 PM Shawn Guo <shawnguo@kernel.org> wrote:
-> >
-> > On Thu, Mar 28, 2019 at 11:49:16PM -0700, Andrey Smirnov wrote:
-> > > Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-> > > clock to determine if it needs to configure the IP block as operating
-> > > at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-> > > clocks as IMX6QDL_CLK_SDMA results in driver incorrectly thinking that
-> > > ratio is 1:1 which results in broken SDMA funtionality(this at least
-> > > breaks RAVE SP serdev driver on RDU2). Fix the code to specify
-> > > IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
-> > > clock ratio.
-> > >
-> > > Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
-> >
-> > Since we have a fix in the dma driver, I dropped the Fixes tag here.
-> >
-> > Applied all, thanks.
-> 
-> Do you know if the SDMA fixes will be back-ported to 5.0.y branch?  To
-> get 5.0 working, I need to manually apply the patches.
+Modify coding style
+ERROR: code indent should use tabs where possible
 
-I'm confused here.  The regression was caused by 25aaa75df1e6
-("dmaengine: imx-sdma: add clock ratio 1:1 check"), which only lands on
-mainline with v5.1-rc1.  How would 5.0.y branch need fixing?
+Signed-off-by: Youngjun Yoo <youngjun.willow@gmail.com>
+---
+ fs/f2fs/acl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Shawn
+diff --git a/fs/f2fs/acl.c b/fs/f2fs/acl.c
+index 63e599524085..a10b5abc1eb2 100644
+--- a/fs/f2fs/acl.c
++++ b/fs/f2fs/acl.c
+@@ -326,7 +326,7 @@ static int f2fs_acl_create_masq(struct posix_acl *acl, umode_t *mode_p)
+ 	}
+ 
+ 	*mode_p = (*mode_p & ~S_IRWXUGO) | mode;
+-        return not_equiv;
++	return not_equiv;
+ }
+ 
+ static int f2fs_acl_create(struct inode *dir, umode_t *mode,
+-- 
+2.17.1
+
