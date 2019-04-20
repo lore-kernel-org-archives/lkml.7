@@ -2,182 +2,132 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779ABC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B787C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0CC20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4CA20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSQDJpee"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tB2wm3wN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfDTLh7 (ORCPT
+        id S1728242AbfDTLjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 07:37:59 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39608 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfDTLh6 (ORCPT
+        Sat, 20 Apr 2019 07:39:01 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38043 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfDTLjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 07:37:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e92so1927646plb.6
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 04:37:58 -0700 (PDT)
+        Sat, 20 Apr 2019 07:39:01 -0400
+Received: by mail-qk1-f196.google.com with SMTP id g1so4144539qki.5
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 04:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3020UUccBrg127CsNRYXb+mKxuRCUYyY6IZkq6qugwo=;
-        b=GSQDJpee/iBNBkoq2UFZuA1kBZEwwdn1ge1Tw0rtuxVc469vlZRGU2KTmXjrW76coo
-         90PPXQYyUOyCkWy0jPQRz1L3YdjVUN4IubLSrJVoqjI5xcUzZbWkx0YlddrbP/01z2tU
-         r5G8FvoKwoTEj3M7QJY4fY+xW7gLpfPLUruxynZhLQtZdE1PuuClvLDbnzaR7TN1KWGa
-         aEZpQ4fX8ZlJdFnaCgliBCB6ye41qp0JBQNJTSsC9AtjjNCIQTJjKQtUY5rwxkCcH2JF
-         YxIrzTl/8xE1U4Ey+QxLaHHIQzCtPYMnuppepDoc5M3eaCgyboA8XpXWkzHgImnhGGBk
-         lXNA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OsDcQdZeF4Hg0g3DvskuWeoRBxlX3x0h8DSFWh8g77A=;
+        b=tB2wm3wN5sca1OGJ1NXKXSbdNdgY10r6JxAD1wiGhXms3/1Tm0H9mV5Mvte+abaj47
+         jLmhffjlqU2/invqray1awTRIVaHE8C2wqqRhTwXykaqFTa2JtHOnSLnWSQk+Yb2QKKK
+         RhLO44tDpXiSDHkifVCguPAKKQTD7fmYU7p4I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3020UUccBrg127CsNRYXb+mKxuRCUYyY6IZkq6qugwo=;
-        b=Vpob6Dc1yGM+u7i2orxRGQ2dSCHvXlrGWLNjhTS5J9jRMB2sV8Nyhd+h6q2cL3hvY8
-         CyMFzHVWPE5/QSw5orZ5ReBoe4BleLe0IEiDW65p2gnk++Eb2cC3IL6GMEa9ziQfcPnB
-         nhvZhCxwGUCyiq23+DlV1Dp9Go96dAQUh6x7n1rqvzy6Hvnc64Fh7OUS9M1QW8vXNZN2
-         n+YJKFxGCTsPr5dRQnEjssCWkQceJoB76YJIkMoC2uRHTHLzswWae7Bj/6oVrl6UAU7t
-         QDBUSW7PYA3CbxuHSoRfw1VlXCSR1Ww8VaUGsHfAas4Cf3pqLbQ/SG2bc7KSTWMuYLA/
-         TG0w==
-X-Gm-Message-State: APjAAAWp/Yqi9t/xPEay6M9OkgjDQe3Wf3OYMnWgw8YPZ+nee8tZZy23
-        m8rKhDaUxPsFTesMlvCNPPQ=
-X-Google-Smtp-Source: APXvYqziPSPuMDAKp7dEcHfOA9zHeZ/x2DKYM8Pl577KRlh/ectxYmugRVu3qIYrwZoFm/iXZ0kVAg==
-X-Received: by 2002:a17:902:22f:: with SMTP id 44mr9079854plc.175.1555760277844;
-        Sat, 20 Apr 2019 04:37:57 -0700 (PDT)
-Received: from localhost.localdomain ([117.204.45.231])
-        by smtp.gmail.com with ESMTPSA id i1sm17407669pgc.63.2019.04.20.04.37.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 04:37:57 -0700 (PDT)
-From:   MosesChristopher <moseschristopherb@gmail.com>
-To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        florian.c.schilhabel@googlemail.com, insafonov@gmail.com,
-        hdegoede@redhat.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Moses Christopher <moseschristopherb@gmail.com>
-Subject: [PATCH] staging: rtl8*: use help instead of ---help--- in Kconfig
-Date:   Sat, 20 Apr 2019 11:37:31 +0000
-Message-Id: <20190420113731.26160-1-moseschristopherb@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OsDcQdZeF4Hg0g3DvskuWeoRBxlX3x0h8DSFWh8g77A=;
+        b=jANoALDJQM9nBAeKEy2DEQMEHZugawaQqjYw07JGPEpDAAp2kBP/efh6iC4X6hTR7Q
+         HIOdToVLrB0fVYsuM4xYl4MlqQ84ntyCPSaeCL9siGKBWuJvwnuOlmoEVgXpcxmJaVTY
+         D/0a1qhpOnV8y5vSV18X3ypOoWaaNfehFyYgx/8LslXNi5afy3exfxT0waN7qq2nt+bu
+         nhpkNay1im7sQxvjqTdJnwBxlSWfxzG2ZSErjufvZN8Yzr0jM/XwoVyPH6ecYSgKCRqU
+         MjU8e2ZxMnX5FIIG00t8dYurs5VXP+svLqTRTAxyq5cg6/78HZOShmJaeGJoPJ9+1ZXm
+         8M7A==
+X-Gm-Message-State: APjAAAUwdL6H23stctWpgHS8SUPplATDbx3sDUpwI8vmmPf/hoMeEeCa
+        WKnC8oCHqo/7CrsRzUgA6CGQZg==
+X-Google-Smtp-Source: APXvYqyLGqkjonz4aCz/+g8/U4M0XUI9Z2qmO5Y8UVUkr6H2TGM28TtLwYJ9crLkNO5jQGx3jgP2pA==
+X-Received: by 2002:a37:de04:: with SMTP id h4mr6745862qkj.196.1555760340410;
+        Sat, 20 Apr 2019 04:39:00 -0700 (PDT)
+Received: from localhost (c-73-216-90-110.hsd1.va.comcast.net. [73.216.90.110])
+        by smtp.gmail.com with ESMTPSA id u190sm3362335qkf.91.2019.04.20.04.38.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 20 Apr 2019 04:38:59 -0700 (PDT)
+Date:   Sat, 20 Apr 2019 11:38:58 +0000
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        paulmck@linux.vnet.ibm.com, keescook@chromium.org,
+        mathieu.desnoyers@efficios.com,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] module: Make __tracepoints_ptrs as read-only
+Message-ID: <20190420113858.GA1058@localhost>
+References: <20190410195708.162185-1-joel@joelfernandes.org>
+ <20190410195708.162185-3-joel@joelfernandes.org>
+ <20190410161112.540017d9@gandalf.local.home>
+ <20190410202902.GA167446@google.com>
+ <20190410204401.62f928ca@gandalf.local.home>
+ <20190417151618.GD17099@linux-8ccs>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417151618.GD17099@linux-8ccs>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moses Christopher <moseschristopherb@gmail.com>
+On Wed, Apr 17, 2019 at 05:16:18PM +0200, Jessica Yu wrote:
+> +++ Steven Rostedt [10/04/19 20:44 -0400]:
+> > On Wed, 10 Apr 2019 16:29:02 -0400
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > 
+> > > The srcu structure pointer array is modified at module load time because the
+> > > array is fixed up by the module loader at load-time with the final locations
+> > > of the tracepoints right?  Basically relocation fixups. At compile time, I
+> > > believe it is not know what the values in the ptr array are. I believe same
+> > > is true for the tracepoint ptrs array.
+> > > 
+> > > Also it needs to be in a separate __tracepoint_ptrs so that this code works:
+> > > 
+> > > 
+> > > #ifdef CONFIG_TRACEPOINTS
+> > > 	mod->tracepoints_ptrs = section_objs(info, "__tracepoints_ptrs",
+> > > 					     sizeof(*mod->tracepoints_ptrs),
+> > > 					     &mod->num_tracepoints);
+> > > #endif
+> > > 
+> > > Did I  miss some point? Thanks,
+> > 
+> > But there's a lot of others too. Hmm, does this mean that the RO data
+> > sections that are in modules are not set to RO?
+> > 
+> > There's a bunch of separate sections that are RO. Just look in
+> > include/asm-generic/vmlinux.lds.h under the RO_DATA_SECTION() macro.
+> > 
+> > A lot of the sections saved in module.c:find_module_sections() are in
+> > that RO_DATA when compiled as a builtin. Are they not RO when loaded via
+> > a module?
+> 
+> Unlike the kernel, the module loader does not rely on a linker script
+> to determine which sections get what protections. On module load, all
+> sections in a module are looped through and those sections without the
+> SHF_WRITE flag will be set to RO. For example, when there is a section
+> filled with structs declared as const or if the section was explicitly
+> given only the SHF_ALLOC attribute, those will be read-only. As long
+> as the sections were given the correct section attributes for
+> read-only, it'll have read-only protection. I see this is already the
+> case for __param and  __ksymtab*/__kcrctab* sections, but I agree that
+> a full audit would be useful to be consistent with builtin RO
+> protections.
 
-  - Resolve the following warning from the Kconfig,
-    "WARNING: prefer 'help' over '---help---' for new help texts"
+Thanks a lot for the explanations. Yes we dropped the patches because const
+worked. This is good to know for future such ventures as well ;-)
 
-Signed-off-by: Moses Christopher <moseschristopherb@gmail.com>
----
- drivers/staging/rtl8188eu/Kconfig | 4 ++--
- drivers/staging/rtl8192e/Kconfig  | 8 ++++----
- drivers/staging/rtl8712/Kconfig   | 4 ++--
- drivers/staging/rtl8723bs/Kconfig | 2 +-
- 4 files changed, 9 insertions(+), 9 deletions(-)
+Best,
 
-diff --git a/drivers/staging/rtl8188eu/Kconfig b/drivers/staging/rtl8188eu/Kconfig
-index ff7832798a77..3f8c655856bf 100644
---- a/drivers/staging/rtl8188eu/Kconfig
-+++ b/drivers/staging/rtl8188eu/Kconfig
-@@ -7,7 +7,7 @@ config R8188EU
- 	select LIB80211
- 	select LIB80211_CRYPT_WEP
- 	select LIB80211_CRYPT_CCMP
--	---help---
-+	help
- 	This option adds the Realtek RTL8188EU USB device such as TP-Link TL-WN725N.
- 	If built as a module, it will be called r8188eu.
- 
-@@ -16,7 +16,7 @@ if R8188EU
- config 88EU_AP_MODE
- 	bool "Realtek RTL8188EU AP mode"
- 	default y
--	---help---
-+	help
- 	This option enables Access Point mode. Unless you know that your system
- 	will never be used as an AP, or the target system has limited memory,
- 	"Y" should be selected.
-diff --git a/drivers/staging/rtl8192e/Kconfig b/drivers/staging/rtl8192e/Kconfig
-index 4602a47cdb4a..aa571c12678f 100644
---- a/drivers/staging/rtl8192e/Kconfig
-+++ b/drivers/staging/rtl8192e/Kconfig
-@@ -3,7 +3,7 @@ config RTLLIB
- 	depends on WLAN && m
- 	default n
- 	select LIB80211
--	---help---
-+	help
- 	  If you have a wireless card that uses rtllib, say
- 	  Y. Currently the only card is the rtl8192e.
- 
-@@ -16,7 +16,7 @@ config RTLLIB_CRYPTO_CCMP
- 	depends on RTLLIB
- 	select CRYPTO_AES
- 	default y
--	---help---
-+	help
- 	  CCMP crypto driver for rtllib.
- 
- 	  If you enabled RTLLIB, you want this.
-@@ -27,7 +27,7 @@ config RTLLIB_CRYPTO_TKIP
- 	select CRYPTO_ARC4
- 	select CRYPTO_MICHAEL_MIC
- 	default y
--	---help---
-+	help
- 	  TKIP crypto driver for rtllib.
- 
- 	  If you enabled RTLLIB, you want this.
-@@ -37,7 +37,7 @@ config RTLLIB_CRYPTO_WEP
- 	select CRYPTO_ARC4
- 	depends on RTLLIB
- 	default y
--	---help---
-+	help
- 	  TKIP crypto driver for rtllib.
- 
- 	  If you enabled RTLLIB, you want this.
-diff --git a/drivers/staging/rtl8712/Kconfig b/drivers/staging/rtl8712/Kconfig
-index f160eee52f09..b377d90742db 100644
---- a/drivers/staging/rtl8712/Kconfig
-+++ b/drivers/staging/rtl8712/Kconfig
-@@ -4,14 +4,14 @@ config R8712U
- 	select WIRELESS_EXT
- 	select WEXT_PRIV
- 	select FW_LOADER
--	---help---
-+	help
- 	This option adds the Realtek RTL8712 USB device such as the D-Link DWA-130.
- 	If built as a module, it will be called r8712u.
- 
- config R8712_TX_AGGR
- 	bool "Realtek RTL8712U Transmit Aggregation code"
- 	depends on R8712U && BROKEN
--	---help---
-+	help
- 	This option provides transmit aggregation for the Realtek RTL8712 USB device.
- 
- 
-diff --git a/drivers/staging/rtl8723bs/Kconfig b/drivers/staging/rtl8723bs/Kconfig
-index deae0427ba6c..41ad6ed24860 100644
---- a/drivers/staging/rtl8723bs/Kconfig
-+++ b/drivers/staging/rtl8723bs/Kconfig
-@@ -4,7 +4,7 @@ config RTL8723BS
- 	depends on m
- 	select WIRELESS_EXT
- 	select WEXT_PRIV
--	---help---
-+	help
- 	This option enables support for RTL8723BS SDIO drivers, such as
- 	the wifi found on the 1st gen Intel Compute Stick, the CHIP
- 	and many other Intel Atom and ARM based devices.
--- 
-2.11.0
+- Joel
 
+> Jessica
