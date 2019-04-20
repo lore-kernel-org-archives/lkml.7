@@ -2,133 +2,179 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA67C282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537F6C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1894F20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1304A20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 11:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ykqrm0ie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfDTLNH (ORCPT
+        id S1727969AbfDTLPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 07:13:07 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:43301 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDTLNG (ORCPT
+        Sat, 20 Apr 2019 07:15:19 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46649 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfDTLPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 07:13:06 -0400
-Received: by mail-it1-f199.google.com with SMTP id m192so7910069ita.8
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 04:13:06 -0700 (PDT)
+        Sat, 20 Apr 2019 07:15:19 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d1so6205206edd.13
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 04:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=533SjRzjlb4Sgec1eVhGJFFMHRXyFPupfjAINBU7ZJg=;
+        b=Ykqrm0ie5C3Y53AK/O2g9e4MEi4Fz+T5k+cMCPaYqgzsV7lE2S7gXGX8Q5AKIgcY+E
+         I5oZStQrpM5iHMIW5vapG/k1DSnRjfYlGWUp67gzk3hzhc+pXLyTe+SnhVb+yzb0XjyO
+         VxmfMz0x0mWRNsh1NtI8QzrkmyZaLKDmsEeiAzPo1Oq4wfm1jgQTrQsUaDz7Lj+xn+eB
+         Mj3ZT+RdgaK/L6ZSMU1uaoIzx6pH9Gv32ODvf68Q0+RkzTz2W4KxiLSqicWkd/7SWdUw
+         WPIzgRigH6jEpWNOpUviKKsCEPhNnXeohYvGxwodBjdOpuQG0WMEogD5dHmfeZxTZ5lp
+         1Ekg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=C3OsLnpDhNMTzXLUemQZ7plH6zAEsAJYSauXVjZ0yDY=;
-        b=VwNou9tM8DrgxOthdpJB5+Q+7wmQiAjM3lXFN1leCDX7aw0jsZzk05ocz9wpjnGT8k
-         TR3BkOIgqXYw5Je+9tUZ3+Xrf430yQ3sWFfoX9V686IIEBj4UGW+tBvpYsaM3Jnpjr+w
-         tTB9UEnTdIQ7AGIrbHDwYqEr1weHm/0uz6AoacrEyKTYGqdW+1SdxsKNjKv65NBhrf73
-         2sASD5iGk2S3AfggB1l69HHCwCZXjnMolsrfF2g6tZjdtiNV6vmscyy7Scc/HBeY7ODZ
-         QkdaThiUboTHzqVfRM8JqusL7be+nYmVwoTmQoZaC2BnEiXvrD3+Ywze2cnYW/EYuZ/I
-         aFuw==
-X-Gm-Message-State: APjAAAUOCdodjA+AdOWBVCwghIQyg67YASQ+F9fjkp8kfU3zeh4BIeGA
-        n1kO0jYko1HiSRyAJ0jPybd7fHlmCdMlTs6z9MGpzDC2q019
-X-Google-Smtp-Source: APXvYqwUEY3GZRL5L05qVD82iOt5lzMCgyU9cDXmJVQHZlzDziI5g1GB8McKjYJYLsEDkWut18Zzz1oVJdp3pcGJN9uhl9q7zi5T
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=533SjRzjlb4Sgec1eVhGJFFMHRXyFPupfjAINBU7ZJg=;
+        b=P4lcbzg16LAs3qnLledCL1QpwsTtnYX8MG6/5BaublbmSBLNp5AJ3plz0ZhYzVeMCo
+         W9gJCSn1A6+RO3bKsgJiCHGYYtnkAqkqYVGcfjEz3C1rQ2KJKAYxaA8nHNI+/KkPEihr
+         DsYLU181E34D/X9O1Z4KDJQdWbIgbWkAcrgWypDlsOO1mzOsAgjaFwVFUgrCUzzLJ/VR
+         Clb0GeYy6YcUvi3/S4ows5l/O9y+xM8V4uafGvmi1HK9j8ExReQVdHVPZ84hQruEe+sl
+         hVtK08uABd9GLLtMfM2Ik7AzHb7F29iPMGdJ+at+9+6cqBB80VW9qF8wqurq554phhs6
+         FHeg==
+X-Gm-Message-State: APjAAAVhtqCidQE/tKHZLeImS0zpowOOg2cL0PeHoH48R9yqd0QIRwld
+        90IF+2zLoGLLZgFqhKmXjoIr0w==
+X-Google-Smtp-Source: APXvYqy/nNbCpOhCLhbIpfSgs72vW8SXa8mcIOGC6ppwyfj1G+JJiW/5vQZ7UJpBss3tiR7JMIzNhw==
+X-Received: by 2002:a50:aa28:: with SMTP id o37mr5595181edc.121.1555758916521;
+        Sat, 20 Apr 2019 04:15:16 -0700 (PDT)
+Received: from HUAWEI-nova-2-351a175292c.fritz.box ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id r29sm2053691eda.37.2019.04.20.04.15.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Apr 2019 04:15:15 -0700 (PDT)
+Date:   Sat, 20 Apr 2019 13:15:11 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190420071406.GA22257@ip-172-31-15-78>
+References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net> <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com> <20190420071406.GA22257@ip-172-31-15-78>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8441:: with SMTP id w1mr5052355ior.99.1555758785897;
- Sat, 20 Apr 2019 04:13:05 -0700 (PDT)
-Date:   Sat, 20 Apr 2019 04:13:05 -0700
-In-Reply-To: <000000000000e8cf3805867bd715@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ca2fee0586f451c5@google.com>
-Subject: Re: WARNING: locking bug in lock_sock_nested
-From:   syzbot <syzbot+605a69fff339d9cc221e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
+To:     Kevin Easton <kevin@guarana.org>, Andy Lutomirski <luto@kernel.org>
+CC:     Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <D2514402-C7FA-4465-8B37-6C0579F4CD84@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On April 20, 2019 9:14:06 AM GMT+02:00, Kevin Easton <kevin@guarana=2Eorg> =
+wrote:
+>On Mon, Apr 15, 2019 at 01:29:23PM -0700, Andy Lutomirski wrote:
+>> On Mon, Apr 15, 2019 at 12:59 PM Aleksa Sarai <cyphar@cyphar=2Ecom>
+>wrote:
+>> >
+>> > On 2019-04-15, Enrico Weigelt, metux IT consult <lkml@metux=2Enet>
+>wrote:
+>> > > > This patchset makes it possible to retrieve pid file
+>descriptors at
+>> > > > process creation time by introducing the new flag CLONE_PIDFD
+>to the
+>> > > > clone() system call as previously discussed=2E
+>> > >
+>> > > Sorry, for highjacking this thread, but I'm curious on what
+>things to
+>> > > consider when introducing new CLONE_* flags=2E
+>> > >
+>> > > The reason I'm asking is:
+>> > >
+>> > > I'm working on implementing plan9-like fs namespaces, where
+>unprivileged
+>> > > processes can change their own namespace at will=2E For that,
+>certain
+>> > > traditional unix'ish things have to be disabled, most notably
+>suid=2E
+>> > > As forbidding suid can be helpful in other scenarios, too, I
+>thought
+>> > > about making this its own feature=2E Doing that switch on clone()
+>seems
+>> > > a nice place for that, IMHO=2E
+>> >
+>> > Just spit-balling -- is no_new_privs not sufficient for this
+>usecase?
+>> > Not granting privileges such as setuid during execve(2) is the main
+>> > point of that flag=2E
+>> >
+>>=20
+>> I would personally *love* it if distros started setting no_new_privs
+>> for basically all processes=2E  And pidfd actually gets us part of the
+>> way toward a straightforward way to make sudo and su still work in a
+>> no_new_privs world: su could call into a daemon that would spawn the
+>> privileged task, and su would get a (read-only!) pidfd back and then
+>> wait for the fd and exit=2E  I suppose that, done naively, this might
+>> cause some odd effects with respect to tty handling, but I bet it's
+>> solveable=2E  I suppose it would be nifty if there were a way for a
+>> process, by mutual agreement, to reparent itself to an unrelated
+>> process=2E
+>>=20
+>> Anyway, clone(2) is an enormous mess=2E  Surely the right solution here
+>> is to have a whole new process creation API that takes a big,
+>> extensible struct as an argument, and supports *at least* the full
+>> abilities of posix_spawn() and ideally covers all the use cases for
+>> fork() + do stuff + exec()=2E  It would be nifty if this API also had a
+>> way to say "add no_new_privs and therefore enable extra functionality
+>> that doesn't work without no_new_privs"=2E  This functionality would
+>> include things like returning a future extra-privileged pidfd that
+>> gives ptrace-like access=2E
+>>=20
+>> As basic examples, the improved process creation API should take a
+>> list of dup2() operations to perform, fds to remove the O_CLOEXEC
+>flag
+>> from, fds to close (or, maybe even better, a list of fds to *not*
+>> close), a list of rlimit changes to make, a list of signal changes to
+>> make, the ability to set sid, pgrp, uid, gid (as in
+>> setresuid/setresgid), the ability to do capset() operations, etc=2E=20
+>The
+>> posix_spawn() API, for all that it's rather complicated, covers a
+>> bunch of the basics pretty well=2E
+>
+>The idea of a system call that takes an infinitely-extendable laundry
+>list of operations to perform in kernel space seems quite inelegant, if
+>only for the error-reporting reason=2E
+>
+>Instead, I suggest that what you'd want is a way to create a new
+>embryonic process that has no address space and isn't yet schedulable=2E
+>You then just need other-process-directed variants of all the normal
+>setup functions - so pr_openat(pidfd, dirfd, pathname, flags, mode),
+>pr_sigaction(pidfd, signum, act, oldact), pr_dup2(pidfd, oldfd, newfd)
+>etc=2E
+>
+>Then when it's all set up you pr_execve() to kick it off=2E
+>
+>    - Kevin
 
-HEAD commit:    d7cc399e tcp: properly reset skb->truesize for tx recycling
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=168bd7b7200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=54210acf3a9ad2ad
-dashboard link: https://syzkaller.appspot.com/bug?extid=605a69fff339d9cc221e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119fb72d200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+605a69fff339d9cc221e@syzkaller.appspotmail.com
-
-WARNING: CPU: 1 PID: 21195 at kernel/locking/lockdep.c:746  
-arch_local_save_flags arch/x86/include/asm/paravirt.h:762 [inline]
-WARNING: CPU: 1 PID: 21195 at kernel/locking/lockdep.c:746  
-arch_local_save_flags arch/x86/include/asm/paravirt.h:760 [inline]
-WARNING: CPU: 1 PID: 21195 at kernel/locking/lockdep.c:746  
-look_up_lock_class kernel/locking/lockdep.c:737 [inline]
-WARNING: CPU: 1 PID: 21195 at kernel/locking/lockdep.c:746  
-register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1090
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21195 Comm: syz-executor.0 Not tainted 5.1.0-rc5+ #146
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:746 [inline]
-RIP: 0010:register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1090
-Code: 00 48 89 da 4d 8b 76 c0 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80  
-3c 02 00 0f 85 23 07 00 00 4c 89 33 e9 e3 f4 ff ff 0f 0b <0f> 0b e9 ea f3  
-ff ff 44 89 e0 4c 8b 95 50 ff ff ff 83 c0 01 4c 8b
-RSP: 0018:ffff8880977675e0 EFLAGS: 00010087
-RAX: dffffc0000000000 RBX: ffff8880900aa7e0 RCX: 0000000000000000
-RDX: 1ffff110120154ff RSI: 0000000000000000 RDI: ffff8880900aa7f8
-RBP: ffff8880977676a8 R08: 1ffff11012eecec4 R09: ffffffff8a5d0a20
-R10: ffffffff8a0b8408 R11: 0000000000000000 R12: ffffffff8a126780
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff87fbbe60
-  __lock_acquire+0xf9/0x3fb0 kernel/locking/lockdep.c:3582
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:168
-  spin_lock_bh include/linux/spinlock.h:334 [inline]
-  lock_sock_nested+0x41/0x120 net/core/sock.c:2912
-  lock_sock include/net/sock.h:1520 [inline]
-  do_ipv6_setsockopt.isra.0+0x27e/0x49e0 net/ipv6/ipv6_sockglue.c:167
-  ipv6_setsockopt+0xfc/0x170 net/ipv6/ipv6_sockglue.c:946
-  udpv6_setsockopt+0x68/0xb0 net/ipv6/udp.c:1570
-  sock_common_setsockopt+0x9a/0xe0 net/core/sock.c:3125
-  __sys_setsockopt+0x180/0x280 net/socket.c:2065
-  __do_sys_setsockopt net/socket.c:2076 [inline]
-  __se_sys_setsockopt net/socket.c:2073 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2073
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458c29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fdce1d99c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000458c29
-RDX: 0000000000000023 RSI: 0000000000000029 RDI: 0000000000000004
-RBP: 000000000073bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fdce1d9a6d4
-R13: 00000000004cd628 R14: 00000000004db978 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+I proposed a version of this a while back when we first started talking ab=
+out this=2E
