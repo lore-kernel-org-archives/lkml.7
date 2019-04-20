@@ -2,148 +2,110 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A20FC282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 00:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3017CC282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 01:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440132183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 00:47:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wSdZMzhK"
+	by mail.kernel.org (Postfix) with ESMTP id EDD7A21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 01:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDTArB (ORCPT
+        id S1727771AbfDTBGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 20:47:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33073 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfDTArB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 20:47:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t16so3253280plo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 17:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lJeJCEsvjqX5rGVJW/HifUv3RwhSjNdHLvuBe2kGGfU=;
-        b=wSdZMzhKAmXWG+c9nxI1Ty9OEoHWhIECkuhxH3mr4CfZGPhKu+43CIdbUmWjaHFNPN
-         a4iDaM9ERZujhMePnXrwwGOTOIn+Iel8E4QAXJfWq2VqhCHHcQVA2EWiYAdUcfJugZxt
-         iUzsd2EFp378t7EixJw76/OIwIrt3puPV7NuE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lJeJCEsvjqX5rGVJW/HifUv3RwhSjNdHLvuBe2kGGfU=;
-        b=eGSZSymao2raCC8eXzIHOdakwXBcJt461J84Lddw6We7XT6BJWedYnO53h1T8AYc19
-         hrv8gKDpYNtbSOJ8mC3xPiD7eTYgx/fH2eLOHRWRapSNY1mlSUwa1ACqtxTuoAa9T4TA
-         xLGkiK13LLz0wBnWNZoPRe0Eg0KfK4ZHS41i08SH/tW6CTmMlelMmU9gId3RXMxg26m0
-         o0NSZjDe4HV0v5N/8Ut1vjog2+ah5gdoJOaJXuZiiSMuS4ZBSY4OmkVzilAsiVrV5Uk+
-         TXI8tfUAOoUU1JfYQuQ3ZqvaND9pyA3hKXbYWIULDRELgKb1YFrAyVTHu/ZAlGwaznOi
-         9eVQ==
-X-Gm-Message-State: APjAAAVjIvH6+5vPAIwsWwFLJ2V6dArh5fMlOBqUArSRdM7zaCq08Pul
-        JA4fp+fbMhagJnYHGC5UuXiPNA==
-X-Google-Smtp-Source: APXvYqxfATsHcB4e2dILvIrcj7CiKIpV6NhIpgkeRV7u+EE3NNbOror1y4PJCT6woCZacJ/MaSsKlg==
-X-Received: by 2002:a17:902:3064:: with SMTP id u91mr6507760plb.181.1555721220670;
-        Fri, 19 Apr 2019 17:47:00 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id u4sm433524pgr.89.2019.04.19.17.46.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 17:46:59 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 20:46:58 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-Message-ID: <20190420004658.GG251571@google.com>
-References: <20190417130940.GC32622@redhat.com>
- <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
- <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io>
- <20190419194902.GE251571@google.com>
- <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
- <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
- <20190419212002.GB44851@google.com>
- <CAHk-=wiiYUuk7LrkNaggvzZqB63Efu5sChV5hAOdn1ZfunUw6Q@mail.gmail.com>
+        Fri, 19 Apr 2019 21:06:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7204 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725860AbfDTBGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 21:06:09 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5485057E19D4A52ED96E;
+        Sat, 20 Apr 2019 09:06:05 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Sat, 20 Apr 2019
+ 09:05:57 +0800
+Subject: Re: [PATCH net-next 10/12] net: hns3: Add handling of MAC tunnel
+ interruption
+To:     Neil Horman <nhorman@redhat.com>
+CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>
+References: <1555643147-52407-1-git-send-email-tanhuazhong@huawei.com>
+ <1555643147-52407-11-git-send-email-tanhuazhong@huawei.com>
+ <20190419112902.GA31368@hmswarspite.think-freely.org>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <fa85b5e9-2005-e977-af2a-b308ac6a86a2@huawei.com>
+Date:   Sat, 20 Apr 2019 09:05:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiiYUuk7LrkNaggvzZqB63Efu5sChV5hAOdn1ZfunUw6Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190419112902.GA31368@hmswarspite.think-freely.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 04:11:37PM -0700, Linus Torvalds wrote:
-> On Fri, Apr 19, 2019 at 2:20 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > According to Linus, POLLHUP usually indicates that something is readable:
-> 
-> Note that if you use the legacy interfaces (ie "select()"), then even
-> just a plain POLLHUP will always just show as "readable".
-> 
-> So for a lot of applications, it won't even matter. Returning POLLHUP
-> will mean it's readable whether POLLIN is set or not (and EPOLLERR
-> will automatically mean that it's marked both readable and writable).
-> 
-> In fact, I'd argue that not a lot of people care about the more
-> esoteric bits at all. If your poll function does POLLIN and POLLOUT,
-> it's fine. Anything else is specialized enough that most people simply
-> won't care. Don't overdesign things too much. You need to have a major
-> reason to care about the other POLL bits.
-> 
-> It's also worth noting that POLLERR/POLLHUP/POLLNVAL cannot be masked
-> for "poll()". Even if you only ask for POLLIN/POLLOUT, you will always
-> get POLLERR/POLLHUP notification. That is again historical behavior,
-> and it's kind of a "you can't poll a hung up fd". But it once again
-> means that you should consider POLLHUP to be something *exceptional*
-> and final, where no further or other state changes can happen or are
-> relevant.
-> 
-> That may well work fine for pidfd when the task is gone, but it's
-> really worth noting that any *normal* state should be about
-> POLLIN/POLLOUT. People should not think that "POLLHUP sounds like the
-> appropriate name", they should realize that POLLHUP is basically a
-> terminal error condition, not a "input is available".
-> 
-> So just keep that in mind.
 
-Got it, thanks a lot for the detailed explanation of the flags. So then I
-feel I should not return POLLHUP or POLLERR because the task_struct getting
-reaped is not an error condition. I will simplify the patch and repost it. It
-seems that would be the best thing to do to serve the usecase. We just want
-to know when the task exited and a reaped task also counts as one that
-exited.
 
-thanks,
+On 2019/4/19 19:29, Neil Horman wrote:
+> On Fri, Apr 19, 2019 at 11:05:45AM +0800, Huazhong Tan wrote:
+>> From: Weihang Li <liweihang@hisilicon.com>
+>>
+>> MAC tnl interruptions are different from other type of RAS and MSI-X
+>> errors, because some bits, such as OVF/LR/RF will occur during link up
+>> and down.
+>>
+>> The drivers should clear status of all MAC tnl interruption bits but
+>> shouldn't print any message that would mislead the users.
+>>
+>> In case that link down and re-up in a short time because of some reasons,
+>> we record when they occurred, and users can query them by debugfs.
+>>
+>> Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+>> Signed-off-by: Peng Li <lipeng321@huawei.com>
+>> ---
+>> <snip>>
+>>   					     bool en)
+>>   {
+>> @@ -1611,6 +1636,7 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
+>>   int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+>>   			       unsigned long *reset_requests)
+>>   {
+>> +	struct hclge_mac_tnl_stats mac_tnl_stats;
+>>   	struct device *dev = &hdev->pdev->dev;
+>>   	u32 mpf_bd_num, pf_bd_num, bd_num;
+>>   	enum hnae3_reset_type reset_level;
+>> @@ -1745,6 +1771,31 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+>>   		set_bit(HNAE3_GLOBAL_RESET, reset_requests);
+>>   	}
+>>   
+>> +	/* query and clear mac tnl interruptions */
+>> +	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_OPC_QUERY_MAC_TNL_INT,
+>> +				   true);
+>> +	ret = hclge_cmd_send(&hdev->hw, &desc[0], 1);
+> Is this running in interrupt context ever?  I don't think it is, but the
+> function name makes me think otherwise.  If it is, this could be unsafe as you
+> take a spinlock in hclge_cmd_send, which is protected against bottom halves, but
+> not interrupts.  That could cause a deadlock if there is a path to get here
+> directly from an interrupt context.
+> Neil
+> 
 
- - Joel
+This function is not running in interrupt context. When the driver 
+recieve the msix interrupt, the irq_handler will schedule a task to call 
+this function for querying more information about the msix interrupt.
+
+Best Regards, Huazhong
+
+> 
+> .
+> 
 
