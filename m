@@ -2,111 +2,136 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C837CC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4FAC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F19B21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F232087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mg66WX9a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qy1i4P8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfDTMBZ (ORCPT
+        id S1728169AbfDTMOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 08:01:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40651 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfDTMBY (ORCPT
+        Sat, 20 Apr 2019 08:14:35 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35673 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfDTMOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 08:01:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c207so3643791pfc.7
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:01:24 -0700 (PDT)
+        Sat, 20 Apr 2019 08:14:35 -0400
+Received: by mail-it1-f195.google.com with SMTP id w15so11913791itc.0
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TYcqLUKwgRRyQzi5mdeTkKEfri0f6DVFA/6M4shfqls=;
-        b=mg66WX9agvFJy/CrgjwOOHSCCOBN54K1XX6aHCU/0GFSW2ImILcPcw2R6Z+mOVevpz
-         nSLUYLdd6VzXm0aNlSXu5YXnlljDSwAhwdgbnM/C0XgeNpIcvvy1QKEuRg6ddEMP36yi
-         bLAwfMYOjIJu+1k+kqrWjyXLeyTCskFmc+mAD+GIgtha5/MzPnp/YijMwmholv7ZTi7b
-         V52Eh7v8o9SwhVF+8dnBIq64Ykmx1j4muQc9wNe1AG76MgDz50mipFo72KnGE+WTQxgw
-         OARFqg7aJ5MbekqAFCHlTbzHjvsBXNjT2VdcFmdE41PAE6/DaeAYSGEHWzrZyEZO1RyE
-         ZYJw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fphgyWKbqViu/pj7GY3RUNNMls9BoBesSIAe3IcTvKc=;
+        b=Qy1i4P8gEnqcmyqeh0pf4yZI2j+HV8xj7CGkOVwfoC8UkEfBvlQHV3kaY+89+aIEQo
+         4aNab6+Qr/56KgesV9lddO7O0o1Y2ElQSgzJSRwcMnwPlvSoZvAAcx0YPYLB7PSvpynM
+         aMbsHKc6L9zhaaE9eQhyhekn1i5WDFpNcRj3J3gRQzqnitpMqGFVGazHvT9/zjMBLl8S
+         vSFEZXUq38oIQai7N1D23nE2UqHstg8CbfixQMaHKW3VBPYFTLBx1CtyXu+kby9m3CAj
+         2/x1LiR0eG5S2Cbhehf0yzFV5uhzsIIrL6b/u+w/wxDJOrh8worFoWjgY6awG963oM9f
+         dt4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TYcqLUKwgRRyQzi5mdeTkKEfri0f6DVFA/6M4shfqls=;
-        b=pbIrJVBraK2Fs196Fnv4jiVrwcx8aN8ALl0Hw/nfrrmVQK6nJJTgBCunuUtzUyXp9v
-         GeSdeGj03fOxRvZVAlv0zvRGZ/TOA6cANmaQ5WG8q7lei/mxSXs96mSeRwkCqIvv7WPp
-         owRtl5U7w799TRj9qkXcT67U+gN71DVGtuS3i9WIf9hrG3RnyZak4oCKRTDjfLNrR65N
-         Z+xm9SS+CmKmugWKZpJPUjQ+yNl0AxO1ixMcxevI57kPNJofyAEultxC8DEQ65lkFvVJ
-         LFrnp2mT5fE2EHDcMy7kOhlM++2YBFpOVPZ5cymecDFOIrngItzsQjlH5FfYyZrfqrMm
-         Flag==
-X-Gm-Message-State: APjAAAWDoLSVmFXQqHAhoIPaorpNlRRKnstkekYr3Jun+r96NxUNFgPT
-        vDE5Z6+lZz7qGKYU15g3K7OYpB3G2yI=
-X-Google-Smtp-Source: APXvYqzDQ9cYpbqAXkdiyfbFuYzb76SIVmkTkgzr5yAL9cTcMtI4tIkb/ihzu2K9AIVCB/knM8IZ+w==
-X-Received: by 2002:a63:da14:: with SMTP id c20mr4750286pgh.444.1555761684148;
-        Sat, 20 Apr 2019 05:01:24 -0700 (PDT)
-Received: from localhost.localdomain ([117.204.45.231])
-        by smtp.gmail.com with ESMTPSA id f20sm17269742pff.176.2019.04.20.05.01.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 05:01:23 -0700 (PDT)
-From:   MosesChristopher <moseschristopherb@gmail.com>
-To:     forest@alittletooquiet.net, gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Moses Christopher <moseschristopherb@gmail.com>
-Subject: [PATCH] staging: vt665*: use help instead of ---help--- in Kconfig
-Date:   Sat, 20 Apr 2019 12:01:08 +0000
-Message-Id: <20190420120108.31718-1-moseschristopherb@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fphgyWKbqViu/pj7GY3RUNNMls9BoBesSIAe3IcTvKc=;
+        b=P/cldohXWC91XI+MNq+hp1zMAboG2n2jJPAc03E5yQw25vy/rm9ilD6FSv5AL4lSp3
+         hqQrXqx8LMUQkDHYwZ0zqnGhtxUMHWtvRItqLfFIZ5TO3qwJzciBybyiaJ1x7nSAGhoL
+         XhmYvoWERMjgXsryku1szTAGoIHmVfFMpKrwiVg8SiRXA7EnUEg6b95/hvaHnkky1Fuf
+         oHQ2lwmJ+Kq9ffwS/sn2n5BrQw5glRmDBp2hlJOSa7pVrqufGlP8Mj2mOmiCiW+tbyN3
+         j3a8dPCSNlEuP0cmVKIvOZV1vHADPAjle2d7BiL1cl0NnbFibak8uFZrZfeiDehhMOek
+         iD6w==
+X-Gm-Message-State: APjAAAW/yt/hxpXDk047P7VreTgAH9aTtmXPC1xCe9fV2af14rshJBDH
+        7uT82cMOX3r8cZo+R0RiCsELRknwmooxrczVD/I=
+X-Google-Smtp-Source: APXvYqx27kNqSNhGwhWXgCVROvSHDI+llyzlYuB6w2SBu65/MOX/OQqZaYfCoTdCWNWKjtE0vsGZ9Lwl56Sv4i3n69w=
+X-Received: by 2002:a24:24cc:: with SMTP id f195mr5678364ita.168.1555762474219;
+ Sat, 20 Apr 2019 05:14:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190329064924.8728-1-andrew.smirnov@gmail.com> <20190411023008.GK26817@dragon>
+In-Reply-To: <20190411023008.GK26817@dragon>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sat, 20 Apr 2019 07:14:26 -0500
+Message-ID: <CAHCN7xLczbdXx+TEQhsY1L3z09wPubvxX5SDO3Z1OzavPie0=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as
+ "ipg" clock to SDMA
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moses Christopher <moseschristopherb@gmail.com>
+On Wed, Apr 10, 2019 at 9:30 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Thu, Mar 28, 2019 at 11:49:16PM -0700, Andrey Smirnov wrote:
+> > Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+> > clock to determine if it needs to configure the IP block as operating
+> > at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+> > clocks as IMX6QDL_CLK_SDMA results in driver incorrectly thinking that
+> > ratio is 1:1 which results in broken SDMA funtionality(this at least
+> > breaks RAVE SP serdev driver on RDU2). Fix the code to specify
+> > IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
+> > clock ratio.
+> >
+> > Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
+>
+> Since we have a fix in the dma driver, I dropped the Fixes tag here.
+>
+> Applied all, thanks.
 
-  - Resolve the following warning from the Kconfig,
-    "WARNING: prefer 'help' over '---help---' for new help texts"
-  - Use 8space tab instead of 3space in  vt6655/Kconfig
+Do you know if the SDMA fixes will be back-ported to 5.0.y branch?  To
+get 5.0 working, I need to manually apply the patches.
 
-Signed-off-by: Moses Christopher <moseschristopherb@gmail.com>
----
- drivers/staging/vt6655/Kconfig | 9 ++++-----
- drivers/staging/vt6656/Kconfig | 4 ++--
- 2 files changed, 6 insertions(+), 7 deletions(-)
+thanks
 
-diff --git a/drivers/staging/vt6655/Kconfig b/drivers/staging/vt6655/Kconfig
-index 77cfc708c516..ed0cfc765677 100644
---- a/drivers/staging/vt6655/Kconfig
-+++ b/drivers/staging/vt6655/Kconfig
-@@ -1,6 +1,5 @@
- config VT6655
--   tristate "VIA Technologies VT6655 support"
--   depends on PCI && MAC80211 && m
--   ---help---
--   This is a vendor-written driver for VIA VT6655.
--
-+	tristate "VIA Technologies VT6655 support"
-+	depends on PCI && MAC80211 && m
-+	help
-+	  This is a vendor-written driver for VIA VT6655.
-diff --git a/drivers/staging/vt6656/Kconfig b/drivers/staging/vt6656/Kconfig
-index b602ef175d55..16b124ed23bc 100644
---- a/drivers/staging/vt6656/Kconfig
-+++ b/drivers/staging/vt6656/Kconfig
-@@ -2,6 +2,6 @@ config VT6656
- 	tristate "VIA Technologies VT6656 support"
- 	depends on MAC80211 && USB && WLAN && m
- 	select FW_LOADER
--	---help---
--	This is a vendor-written driver for VIA VT6656.
-+	help
-+	  This is a vendor-written driver for VIA VT6656.
- 
--- 
-2.11.0
-
+adam
+>
+> Shawn
+>
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> > index 9f9aa6e7ed0e..354feba077b2 100644
+> > --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> > @@ -949,7 +949,7 @@
+> >                               compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
+> >                               reg = <0x020ec000 0x4000>;
+> >                               interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+> > -                             clocks = <&clks IMX6QDL_CLK_SDMA>,
+> > +                             clocks = <&clks IMX6QDL_CLK_IPG>,
+> >                                        <&clks IMX6QDL_CLK_SDMA>;
+> >                               clock-names = "ipg", "ahb";
+> >                               #dma-cells = <3>;
+> > --
+> > 2.20.1
+> >
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
