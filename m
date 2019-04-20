@@ -2,100 +2,122 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6E4C282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 19:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E382C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 19:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9312147C
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 19:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374EB20651
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 19:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Vtk1BtFZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mzwZvj05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfDTT2a (ORCPT
+        id S1727779AbfDTTet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 15:28:30 -0400
-Received: from mail-eopbgr790100.outbound.protection.outlook.com ([40.107.79.100]:25280
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726309AbfDTT23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 15:28:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NptcuhOsa1dY36fxPi5miAHlhMHLJprO9JvfeoGkIfA=;
- b=Vtk1BtFZAsEaPcCQ8d0MSsqsYEXNwvi4lmAf3RRpr2QUkhzz64GiK6XarOudPmKlfM3mLNIHTVbtrKWv/fyWODMNo0Sqz2HDxj0g7eTRM8oh3HOYEf1XL7v05C3b1KPsR27dq0GwLDJ930suIFqmkitIwkkPCRWfSCe8K3asKdY=
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com (52.135.95.148) by
- SN6PR13MB2576.namprd13.prod.outlook.com (52.135.96.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.7; Sat, 20 Apr 2019 19:28:25 +0000
-Received: from SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::48d2:c5de:2651:4c30]) by SN6PR13MB2494.namprd13.prod.outlook.com
- ([fe80::48d2:c5de:2651:4c30%2]) with mapi id 15.20.1835.003; Sat, 20 Apr 2019
- 19:28:25 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: [GIT PULL] Please pull 1 NFS client bugfix
-Thread-Topic: [GIT PULL] Please pull 1 NFS client bugfix
-Thread-Index: AQHU9685McGBL3YIb0GmIuF5ZemXpw==
-Date:   Sat, 20 Apr 2019 19:28:24 +0000
-Message-ID: <bb6e36bd32eb85f32b15edacc9753341641f43fc.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 21936fc3-f197-4fc9-202b-08d6c5c65b9d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR13MB2576;
-x-ms-traffictypediagnostic: SN6PR13MB2576:
-x-microsoft-antispam-prvs: <SN6PR13MB2576DD7703D329D8EB0781E1B8200@SN6PR13MB2576.namprd13.prod.outlook.com>
-x-forefront-prvs: 0013079544
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(136003)(346002)(396003)(366004)(199004)(189003)(91956017)(76116006)(73956011)(316002)(64756008)(2906002)(6506007)(4326008)(2351001)(7736002)(102836004)(54906003)(118296001)(305945005)(26005)(66946007)(256004)(6116002)(66446008)(8676002)(8936002)(6486002)(81156014)(53936002)(6512007)(81166006)(1730700003)(6436002)(25786009)(97736004)(68736007)(5640700003)(186003)(66556008)(86362001)(6916009)(3846002)(4744005)(2616005)(486006)(476003)(71200400001)(478600001)(99286004)(14454004)(5660300002)(36756003)(71190400001)(2501003)(66066001)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR13MB2576;H:SN6PR13MB2494.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /9T2jqmbCfhl76zHUI/+KniqS6j9UMhnYhgnUEDbUHk4oVouKiqmedAzxPZvN9UpewUrH+fYxYx3P8BxNFdJwPFxM3tKLBLmlf0fS7Mjlq5cgznoKFHTn3x4R6lEbR8RxgypFEGDhqtuA8SjuSWMTTyByiNR7TmpNbvwfWIzi74BIYtP2WM1dp5B+KUxieDsW9kkH3O3+WcAKwdoDtKgn/c2SUT7phx3lv1xeyTTX97NTPymJwtKjILg4edqizi9Z54wdOO0brnSZ9phnfxYcHh7ALKnO+JuTwt9+9qnembWJY3UaZQ/UMTqSlJ3gA3cLzaMXqyMNPf5EMgkiVujBZToW6W5FSAJ8rTLfAVR8t8vdJimIE3Qc7TQUdBlX27QtpPCWAZD5TKPSANCoSW1X10WMVijX6YyzFfUnmvfpyg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DEB2AE7035EB204B8FA85CCAC394C2D8@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 20 Apr 2019 15:34:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59614 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfDTTet (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 15:34:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=yBGAB8b1n3dFt3YiVQiw88D3yeUo9coqXwfyseTVuP8=; b=mzwZvj05wmRaDLh4JLHUh9hDwF
+        s8L8iA3qot/dFziw+9hvQXQwPfastAs0EqxYFVKDs6NBq0z7nHKRCZVkUi2Sa2eYZngi6Op4SkFZv
+        NqrB0fDDreHKatH9VA9DR/fRDYFA+z9GnN3XijRaant9BZ8vgFT6FDuV0RYux+kuss+CoyiSLjeKm
+        uQU+jRzxBFEn3oDnmDXHTxepOk7cMPLn/97W3hxQVRCfO0W2xO6O5vuu9ts4vMphbUDYH5JQ7b+fK
+        if1GHX4UxMYE5l4f0fmjWIhkdJieSYWDuwHIQjmm4N1SvF0yRQZhyUkg8qmOoQn9c9MBdKuseBXDE
+        hwoRTgyw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hHvl2-00026T-6j; Sat, 20 Apr 2019 19:34:40 +0000
+Subject: Re: arch/sh/kernel/cpu/sh2/clock-sh7619.o:undefined reference to
+ `followparent_recalc'
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        paul.mundt@gmail.com, Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <201904201516.DdPznV5M%lkp@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <fb6880d2-06a4-cec2-e12c-c526d3a4358a@infradead.org>
+Date:   Sat, 20 Apr 2019 12:34:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21936fc3-f197-4fc9-202b-08d6c5c65b9d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2019 19:28:24.8682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR13MB2576
+In-Reply-To: <201904201516.DdPznV5M%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgZGM0MDYwYTVk
-YzI1NTdlNmI1YWE4MTNiZjViNzM2NzcyOTlkNjJkMjoNCg0KICBMaW51eCA1LjEtcmM1ICgyMDE5
-LTA0LTE0IDE1OjE3OjQxIC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xp
-bnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuMS01DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
-cyB1cCB0byBhN2IxYTQ4MzlmZjk3OWI0ZGQ0ZmI2YzFjY2QzMWFmMTFkZTljYTg3Og0KDQogIFNV
-TlJQQzogSWdub3JlIHF1ZXVlIHRyYW5zbWlzc2lvbiBlcnJvcnMgb24gc3VjY2Vzc2Z1bCB0cmFu
-c21pc3Npb24gKDIwMTktMDQtMTcgMTY6MDc6MjggLTA0MDApDQoNCkNoZWVycw0KICBUcm9uZA0K
-DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tDQpORlMgY2xpZW50IGJ1Z2ZpeGVzIGZvciBMaW51eCA1LjENCg0KSGlnaGxpZ2h0
-cyBpbmNsdWRlOg0KDQpCdWdmaXhlczoNCi0gRml4IGEgcmVncmVzc2lvbiBpbiB3aGljaCBhbiBS
-UEMgY2FsbCBjYW4gYmUgdGFnZ2VkIHdpdGggYW4gZXJyb3IgZGVzcGl0ZQ0KICB0aGUgdHJhbnNt
-aXNzaW9uIGJlaW5nIHN1Y2Nlc3NmdWwNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KVHJvbmQgTXlrbGVidXN0ICgxKToN
-CiAgICAgIFNVTlJQQzogSWdub3JlIHF1ZXVlIHRyYW5zbWlzc2lvbiBlcnJvcnMgb24gc3VjY2Vz
-c2Z1bCB0cmFuc21pc3Npb24NCg0KIG5ldC9zdW5ycGMvY2xudC5jIHwgNyArKysrKy0tDQogMSBm
-aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCi0tIA0KVHJvbmQg
-TXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9u
-ZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On 4/20/19 12:40 AM, kbuild test robot wrote:
+> Hi Randy,
+> 
+> It's probably a bug fix that unveils the link errors.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   371dd432ab39f7bc55d6ec77d63b430285627e04
+> commit: acaf892ecbf5be7710ae05a61fd43c668f68ad95 sh: fix multiple function definition build errors
+> date:   2 weeks ago
+> config: sh-allmodconfig (attached as .config)
+> compiler: sh4-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout acaf892ecbf5be7710ae05a61fd43c668f68ad95
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.2.0 make.cross ARCH=sh 
+
+Hi,
+
+Once again, the question is the validity of the SH2 .config file in this case
+(that was attached).
+
+I don't believe that it is valid because CONFIG_SH_DEVICE_TREE=y,
+which selects COMMON_CLK, and there is no followparent_recalc() in the
+COMMON_CLK API.
+
+Also, while CONFIG_HAVE_CLK=y, drivers/sh/Makefile prevents that from
+building clk/core.c, which could provide followparent_recalc():
+
+ifneq ($(CONFIG_COMMON_CLK),y)
+obj-$(CONFIG_HAVE_CLK)			+= clk/
+endif
+
+Hm, maybe that's where the problem is.  I'll look into that more.
+
+
+
+It would be Good if someone from the SuperH area could/would comment.
+
+Thanks.
+
+
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.data+0x1c): undefined reference to `followparent_recalc'
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+
+
+-- 
+~Randy
