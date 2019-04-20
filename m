@@ -2,126 +2,137 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093FAC282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF1EC282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECA72183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F6421479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ZzH21STK"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Pbu4x3EC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfDTCXN (ORCPT
+        id S1727211AbfDTC2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 22:23:13 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:57722 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfDTCXM (ORCPT
+        Fri, 19 Apr 2019 22:28:13 -0400
+Received: from mail.efficios.com ([167.114.142.138]:58302 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfDTC2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 22:23:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 05BDDF79
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 02:23:11 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9rEivAskvXUH for <linux-kernel@vger.kernel.org>;
-        Fri, 19 Apr 2019 21:23:10 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id D1B73F81
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 21:23:10 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id t12so1014117ioc.19
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 19:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=MNz7GatuofIkkUh4eG147AyWudtcNieUuNdHadeb8VY=;
-        b=ZzH21STKCXugCQGQfpv024ow8+mKSF6+dPsvzPjt4inQ19GYOXhY5GiSfysGzFxhau
-         OOQ0QD+tFun1sp8WcODRnjwJ8HtphptXRu9HcZIzOdudVw8t4kv9dvIySFpY1NrK2tOq
-         bnO+e0P0IPciUJju8QN8KPGa8fNdlQbsKpmKI/dS8wzk31hamDJuXH1EUswUwr9s6LD0
-         4qb8MtxPeb6TY+i1yQ/36FXKwlIhRBlCZs59yJI5uO6YF8LpcTXTGBKrp1pWMyAwKrBd
-         l61dy1ddT9HTEI19j2Yz43PXv1B6ITgXmK4V/HcB8Z+rDmAivGe6HpOQkFnEz0QkaRxB
-         EEkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MNz7GatuofIkkUh4eG147AyWudtcNieUuNdHadeb8VY=;
-        b=Epi1YbqM/JOo//bll+hZm0vIViF2Zqn1cvW6w7WeG4Ht8XeBP8xcOP9/PPWVszfYWD
-         pit66FZgnP4w+4nzofQWknp/IjWbyJKdGZgAgtWxPSlGtgjGw7bh2SKgYch6sCWZpl0t
-         B5JZTsZOnGtHVMH8OJnfPGaAUU+5NHXsi7HKJXnqdewziMSoGLZ245OE4hLoobDkoMoZ
-         GdAg4sO/meEu09P+qbe2e8GciueA0S4i1HOB4vIAYyDWVVBbnOL1aiqmvWLbW3rAcgfj
-         T0Ul7tdcrTkRI7sgq7nDPyb0A8Z89qnt60wh16dYgvtZzVI0j3n8ZjNG8K7W3O0B7O7W
-         +/KA==
-X-Gm-Message-State: APjAAAVe9ZVBI2my0ns/NXd4HBjDnEjHP0ne3gaE7tgnzNR5juoJGw04
-        DK3k0iixnVzTD2+ybPc5XwWjquX8OV+P1eZYr+/Iucjd41XIVY6rlQhAdOozgylEwLaHgMdWa2r
-        HhTThFR4Fb00QYnUDoCmoWzJiQ6Uh
-X-Received: by 2002:a02:5143:: with SMTP id s64mr5149832jaa.54.1555726990551;
-        Fri, 19 Apr 2019 19:23:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyEwpFKOR/qnQPEhgKxhwtq/FXMwxkqa6uGigFXa3x53dzxnUyhr0xN7iEag1OrA4rrxSpd7A==
-X-Received: by 2002:a02:5143:: with SMTP id s64mr5149826jaa.54.1555726990401;
-        Fri, 19 Apr 2019 19:23:10 -0700 (PDT)
-Received: from cs-u-cslp16.dtc.umn.edu (cs-u-cslp16.cs.umn.edu. [128.101.106.40])
-        by smtp.gmail.com with ESMTPSA id h133sm3330836itb.34.2019.04.19.19.23.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 19 Apr 2019 19:23:09 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] tracing: Fix a memory leak bug
-Date:   Fri, 19 Apr 2019 21:22:59 -0500
-Message-Id: <1555726979-15633-1-git-send-email-wang6495@umn.edu>
-X-Mailer: git-send-email 2.7.4
+        Fri, 19 Apr 2019 22:28:13 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C74711D9997;
+        Fri, 19 Apr 2019 22:28:10 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id I_wPYGz7c6Ta; Fri, 19 Apr 2019 22:28:09 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id D8B8F1D9990;
+        Fri, 19 Apr 2019 22:28:09 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D8B8F1D9990
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555727289;
+        bh=TupeHBU59ibOei9RAOkaZEgMj6S5MPat7rMLbN2Ggc8=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Pbu4x3EC4Poea5sN0TzMlUoWkrKvKKsJGDmN674JxVG7vOjo00UwA4Jj5E8ql7cX/
+         bxbK88xvZFk4QeHPn9lk9HJhmGQHLCYhBbHh1/kn0/mBEnjcKyUEYHCh2N3oCPV9yt
+         TWc6RgLIFxzRVYAufxvVDFBtrZXHVRYWZtrDVXKE48QphMgqa4oc+q2A9PQAafg2tt
+         7iuk1V8T7aB166lt4IZxIz6PgtAlyixVu+ms2fJPIlWwlCmo4p7kIbpgnynBg7K+jG
+         ZZ7HD8BTshlxqWsPX2fJ5QkYZinimHxKlMg3yDKWMa0B8fiX5qT6lIBnbMq+uIweoF
+         H0chmDwgAkH1Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id uiGc65aIrWhr; Fri, 19 Apr 2019 22:28:09 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id B88BA1D9989;
+        Fri, 19 Apr 2019 22:28:09 -0400 (EDT)
+Date:   Fri, 19 Apr 2019 22:28:09 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Chris Lameter <cl@linux.com>, shuah <shuah@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Dave Watson <davejwatson@fb.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Paul Turner <pjt@google.com>, Ben Maurer <bmaurer@fb.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-tip-commits <linux-tip-commits@vger.kernel.org>
+Message-ID: <1655257247.250.1555727289505.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1950499847.215.1555708401414.JavaMail.zimbra@efficios.com>
+References: <20190419145327.12736-1-mathieu.desnoyers@efficios.com> <tip-3c0f67279fb57568b436dece3aa20651aa6c5a05@git.kernel.org> <CAHk-=wieuxm+B-Bmhcy+Sszqs6h=iTNMEP=TeSBFKxtnEsKHUg@mail.gmail.com> <1950499847.215.1555708401414.JavaMail.zimbra@efficios.com>
+Subject: Re: [tip:core/rseq] rseq/selftests/x86: Work around bogus gcc-8
+ optimisation
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: core/rseq] rseq/selftests/x86: Work around bogus gcc-8 optimisation
+Thread-Index: 2gmq457gCH9wUFVmC+16zGNn1BTfLDnsbvYf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In trace_pid_write(), the buffer for trace parser is allocated through
-kmalloc() in trace_parser_get_init(). Later on, after the buffer is used,
-it is then freed through kfree() in trace_parser_put(). However, it is
-possible that trace_pid_write() is terminated due to unexpected errors,
-e.g., ENOMEM. In that case, the allocated buffer will not be freed, which
-is a memory leak bug.
+----- On Apr 19, 2019, at 5:13 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-To fix this issue, free the allocated buffer when an error is encountered.
+> ----- On Apr 19, 2019, at 2:53 PM, Linus Torvalds torvalds@linux-foundation.org
+> wrote:
+> 
+>> On Fri, Apr 19, 2019 at 11:46 AM tip-bot for Mathieu Desnoyers
+>> <tipbot@zytor.com> wrote:
+>>>
+>>> rseq/selftests/x86: Work around bogus gcc-8 optimisation
+>>>
+>>> At least the following versions of gcc-8:
+>>>
+>>>  - gcc version 8.0.1 20180414 (experimental) [trunk revision 259383] (Ubuntu
+>>>  8-20180414-1ubuntu2)
+>>>  - gcc 8.2.0-7ubuntu1 (Ubuntu 18.10 (Cosmic)),
+>>>
+>>> generate broken assembler with asm goto that have a thread-local storage
+>>> "m" input operand on both x86-32 and x86-64. For instance:
+>> 
+>> Is there a gcc bugzilla for this? Shouldn't that be mentioned here?
+> 
+> My google-fu did not find any match, so I don't think so. I'll open one
+> shortly.
+> 
+>> 
+>> Also, we use "asm goto" together with "m" all the time in the kernel.
+>> In fact, it's the most common case, with the RMWcc ops being generated
+>> with that. I realize that we don't use the gcc thread-local storage
+>> for them (we often do use our *own* thread-local storage), but it
+>> would be good to have that gcc bugzilla to see why it can only affect
+>> those user level "__thread" cases.
+> 
+> Indeed, it would be good to investigate and understand all problematic
+> scenarios triggering this bug.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
----
- kernel/trace/trace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I've opened a ticket on gcc's bugzilla:
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6c24755..fd12c9c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -496,8 +496,10 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
- 	 * not modified.
- 	 */
- 	pid_list = kmalloc(sizeof(*pid_list), GFP_KERNEL);
--	if (!pid_list)
-+	if (!pid_list) {
-+		trace_parser_put(&parser);
- 		return -ENOMEM;
-+	}
- 
- 	pid_list->pid_max = READ_ONCE(pid_max);
- 
-@@ -507,6 +509,7 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
- 
- 	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
- 	if (!pid_list->pids) {
-+		trace_parser_put(&parser);
- 		kfree(pid_list);
- 		return -ENOMEM;
- 	}
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90193
+
+Thanks,
+
+Mathieu
+
+
 -- 
-2.7.4
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
