@@ -2,136 +2,144 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B3DC282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F232087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276C32087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qy1i4P8g"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="WwxZc8O1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbfDTMOf (ORCPT
+        id S1727616AbfDTMXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 08:14:35 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35673 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfDTMOf (ORCPT
+        Sat, 20 Apr 2019 08:23:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37068 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfDTMXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 08:14:35 -0400
-Received: by mail-it1-f195.google.com with SMTP id w15so11913791itc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:14:34 -0700 (PDT)
+        Sat, 20 Apr 2019 08:23:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e6so3804537pgc.4
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:23:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fphgyWKbqViu/pj7GY3RUNNMls9BoBesSIAe3IcTvKc=;
-        b=Qy1i4P8gEnqcmyqeh0pf4yZI2j+HV8xj7CGkOVwfoC8UkEfBvlQHV3kaY+89+aIEQo
-         4aNab6+Qr/56KgesV9lddO7O0o1Y2ElQSgzJSRwcMnwPlvSoZvAAcx0YPYLB7PSvpynM
-         aMbsHKc6L9zhaaE9eQhyhekn1i5WDFpNcRj3J3gRQzqnitpMqGFVGazHvT9/zjMBLl8S
-         vSFEZXUq38oIQai7N1D23nE2UqHstg8CbfixQMaHKW3VBPYFTLBx1CtyXu+kby9m3CAj
-         2/x1LiR0eG5S2Cbhehf0yzFV5uhzsIIrL6b/u+w/wxDJOrh8worFoWjgY6awG963oM9f
-         dt4A==
+         :cc:content-transfer-encoding;
+        bh=lZrcXnZdn7xjrXsqmqiror62OxRMVPaG0x3r/D/8YBQ=;
+        b=WwxZc8O19Qlub3zgWlpi5OUaGAH38MjbtmfB6pV1Bnvn2bopmJ+gO44s0krCgU1BS+
+         /xZHFCfsl1+Ij4/0qjBZgK593iIOnYegGprcFFka5b/G/mJKnzonSHgDoMNt1J2rXmcx
+         2lTT8fu0DPy4zc18zbuawNtfNEecgRpZQTWXl9Gah0/CQ1Tq3gjfZmRfBDvmranTV+cf
+         MS4PLIGDVM2daVOiBy77m+B4c5v9yPyySMn1a1HAlCMbGaDdcncjxA6fdQEqwnY5C5u2
+         kXbw/zwG+VEU17iLriowDr5gcb+ZCReSJ09FttusDgF0gqga5gsvAN5HZWpdvbbEIUhz
+         73Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fphgyWKbqViu/pj7GY3RUNNMls9BoBesSIAe3IcTvKc=;
-        b=P/cldohXWC91XI+MNq+hp1zMAboG2n2jJPAc03E5yQw25vy/rm9ilD6FSv5AL4lSp3
-         hqQrXqx8LMUQkDHYwZ0zqnGhtxUMHWtvRItqLfFIZ5TO3qwJzciBybyiaJ1x7nSAGhoL
-         XhmYvoWERMjgXsryku1szTAGoIHmVfFMpKrwiVg8SiRXA7EnUEg6b95/hvaHnkky1Fuf
-         oHQ2lwmJ+Kq9ffwS/sn2n5BrQw5glRmDBp2hlJOSa7pVrqufGlP8Mj2mOmiCiW+tbyN3
-         j3a8dPCSNlEuP0cmVKIvOZV1vHADPAjle2d7BiL1cl0NnbFibak8uFZrZfeiDehhMOek
-         iD6w==
-X-Gm-Message-State: APjAAAW/yt/hxpXDk047P7VreTgAH9aTtmXPC1xCe9fV2af14rshJBDH
-        7uT82cMOX3r8cZo+R0RiCsELRknwmooxrczVD/I=
-X-Google-Smtp-Source: APXvYqx27kNqSNhGwhWXgCVROvSHDI+llyzlYuB6w2SBu65/MOX/OQqZaYfCoTdCWNWKjtE0vsGZ9Lwl56Sv4i3n69w=
-X-Received: by 2002:a24:24cc:: with SMTP id f195mr5678364ita.168.1555762474219;
- Sat, 20 Apr 2019 05:14:34 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lZrcXnZdn7xjrXsqmqiror62OxRMVPaG0x3r/D/8YBQ=;
+        b=BlzCUeNXZY6ZdJV9pPKhuFhRTFTHQzDlj5rJ31jyGsWNIQ8dI8Lo29spIpSUL44xbL
+         poBDwvtgJwv7ArK+EedKyaahKF/e1FKeQ5AA0DnikwmboGxSSxbHAt9qDDyyZSnTddmN
+         JJ5bqgnWcNGu2DwRouM81y3ta2aD6enjHkd87viqC+WUpJUKdH8pG27BjaM5kvebYlbA
+         xerkbJG1+3/pmZFjKcaAUhJQxd2rQYU7g3vGJtWMO0CvjqDVsCKkOvV514aYSzfNof5O
+         kSn0PjQhL3Tg6hd0Pz8pGcCJDfAcnmSvrfa3SQeKauhZvqBc/oIg+x2jPJzTpTyN7Ngt
+         03zg==
+X-Gm-Message-State: APjAAAU528MXy1bqXdw4S4d7KILuwRRp6wNflX6M/R2flTkeHmTr/kAx
+        4bHmjZ9vdVYEjOXQ1sfltWJfce3X8x2Tp7Kk3ivfjg==
+X-Google-Smtp-Source: APXvYqxZurU01XjM49DVH6vAb1H86e2zcwQh60AcdJrwpdWhXXMd7YSkgR8LgTFEMNjx3u++0DydVdVaiPPW7zlHm/4=
+X-Received: by 2002:a62:2fc7:: with SMTP id v190mr9325689pfv.10.1555763004733;
+ Sat, 20 Apr 2019 05:23:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190329064924.8728-1-andrew.smirnov@gmail.com> <20190411023008.GK26817@dragon>
-In-Reply-To: <20190411023008.GK26817@dragon>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 20 Apr 2019 07:14:26 -0500
-Message-ID: <CAHCN7xLczbdXx+TEQhsY1L3z09wPubvxX5SDO3Z1OzavPie0=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as
- "ipg" clock to SDMA
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Lucas Stach <l.stach@pengutronix.de>
+References: <20190414200824.28348-1-paul@crapouillou.net> <20190414200824.28348-2-paul@crapouillou.net>
+ <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+In-Reply-To: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sat, 20 Apr 2019 09:23:13 -0300
+Message-ID: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, od@zcrc.me,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 9:30 PM Shawn Guo <shawnguo@kernel.org> wrote:
+On Wed, 17 Apr 2019 at 10:48, Rob Herring <robh+dt@kernel.org> wrote:
 >
-> On Thu, Mar 28, 2019 at 11:49:16PM -0700, Andrey Smirnov wrote:
-> > Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-> > clock to determine if it needs to configure the IP block as operating
-> > at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-> > clocks as IMX6QDL_CLK_SDMA results in driver incorrectly thinking that
-> > ratio is 1:1 which results in broken SDMA funtionality(this at least
-> > breaks RAVE SP serdev driver on RDU2). Fix the code to specify
-> > IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
-> > clock ratio.
+> On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil <paul@crapouillou.net> wrot=
+e:
 > >
-> > Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
+> > Add macros that can be used with the ingenic,lcd-mode property in the
+> > devicetree node that corresponds to the ingenic-drm driver.
 >
-> Since we have a fix in the dma driver, I dropped the Fixes tag here.
+> DRM is a Linuxism.
 >
-> Applied all, thanks.
-
-Do you know if the SDMA fixes will be back-ported to 5.0.y branch?  To
-get 5.0 working, I need to manually apply the patches.
-
-thanks
-
-adam
->
-> Shawn
->
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
+> >
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Tested-by: Artur Rojek <contact@artur-rojek.eu>
 > > ---
-> >  arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> > index 9f9aa6e7ed0e..354feba077b2 100644
-> > --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> > @@ -949,7 +949,7 @@
-> >                               compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
-> >                               reg = <0x020ec000 0x4000>;
-> >                               interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
-> > -                             clocks = <&clks IMX6QDL_CLK_SDMA>,
-> > +                             clocks = <&clks IMX6QDL_CLK_IPG>,
-> >                                        <&clks IMX6QDL_CLK_SDMA>;
-> >                               clock-names = "ipg", "ahb";
-> >                               #dma-cells = <3>;
-> > --
-> > 2.20.1
+> > Notes:
+> >     v2: No change
 > >
+> >     v3: s/_DRM//
+> >
+> >  include/dt-bindings/display/ingenic,drm.h | 28 +++++++++++++++++++++++=
++++++
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> DRM is a Linuxism...
+>
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644 include/dt-bindings/display/ingenic,drm.h
+> >
+> > diff --git a/include/dt-bindings/display/ingenic,drm.h b/include/dt-bin=
+dings/display/ingenic,drm.h
+> > new file mode 100644
+> > index 000000000000..c749b8c346fc
+> > --- /dev/null
+> > +++ b/include/dt-bindings/display/ingenic,drm.h
+> > @@ -0,0 +1,28 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + *  Ingenic JZ47xx KMS driver
+>
+> Pretty sure this file is not a KMS driver.
+>
+> > + *
+> > + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
+> > + */
+> > +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> > +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+> > +
+> > +#define JZ_LCD_GENERIC_16BIT                   0
+> > +#define JZ_LCD_GENERIC_18BIT                   16
+>
+> We have some generic properties for defining the bus width already.
+> Plus, in many cases this can be implied by the panel compatible. The
+> exceptions are cases such as when both the ctrlr and panel support
+> multiple modes.
+>
+
+In the same direction as Rob's comment, I'd like to see these decoupled
+from the register value.
+
+Ideally, we'd like to reuse this driver and its bindings for JZ4780,
+and these values are already different.
+
+Thanks!
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
