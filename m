@@ -2,190 +2,89 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C06C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 01:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A8C282E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 01:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 847A021479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 01:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6C32186A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 01:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555722768;
+	bh=DAIimE/QAXzynNbNX5bEdlCnR/hW0nw3ObD19MBz0a4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2eBmtq9kQz7fIGS1cBcEfH7K2dsHmULg3usMrqEM+FhSS09xl59EY06S56HrJSTs4
+	 UVx0A7bk1i0mSPpV9TXdJKacATPbBgfqYKbHy5VBLP5u2TEcf9HPp//l9meVNCSzVB
+	 4hEvWQ5bYekL3YxTqU9fKvtTGY5wZwFP8w7g/11Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfDTBKo (ORCPT
+        id S1727586AbfDTBMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 21:10:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33840 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725858AbfDTBKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 21:10:43 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 95CADB52F90959D4F936;
-        Sat, 20 Apr 2019 09:10:39 +0800 (CST)
-Received: from [127.0.0.1] (10.57.77.74) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Sat, 20 Apr 2019
- 09:10:29 +0800
-Subject: Re: [PATCH] drm: kirin: Fix for hikey620 display offset problem
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <1555696800-15961-1-git-send-email-john.stultz@linaro.org>
-CC:     Da Lv <lvda3@hisilicon.com>, Rongrong Zou <zourongrong@gmail.com>,
-        "Xinwei Kong" <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Yidong Lin <linyidong@huawei.com>
-From:   xinliang <z.liuxinliang@hisilicon.com>
-Message-ID: <5CBA7185.8000900@hisilicon.com>
-Date:   Sat, 20 Apr 2019 09:10:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.3.0
+        Fri, 19 Apr 2019 21:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbfDTBMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 21:12:47 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BEF420859;
+        Sat, 20 Apr 2019 01:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555722766;
+        bh=DAIimE/QAXzynNbNX5bEdlCnR/hW0nw3ObD19MBz0a4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sdz4HLSfp4sFEi8eJcjrkQ9v+fx4WYbGCe0uaqjLpRTPs3gW2t4A2ie/eYvWPhn3x
+         HXTJnRjFOTXZdjiziVjgDT/KQoIqbElm363r9uUN1zuhLFnnWyoC6+dXf/fbEMDxVo
+         zaEeX9XWnga3xpXzeCOyNPpEGrWxvd62nKQPiKyA=
+Date:   Fri, 19 Apr 2019 21:12:45 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/50] 4.9.170-stable review
+Message-ID: <20190420011245.GG17719@sasha-vm>
+References: <20190418160422.455656724@linuxfoundation.org>
+ <20190419193926.GA10320@roeck-us.net>
+ <20190419201637.GA5347@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <1555696800-15961-1-git-send-email-john.stultz@linaro.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.77.74]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190419201637.GA5347@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 19, 2019 at 01:16:37PM -0700, Guenter Roeck wrote:
+>On Fri, Apr 19, 2019 at 12:39:26PM -0700, Guenter Roeck wrote:
+>> On Thu, Apr 18, 2019 at 07:57:11PM +0200, Greg Kroah-Hartman wrote:
+>> > This is the start of the stable review cycle for the 4.9.170 release.
+>> > There are 50 patches in this series, all will be posted as a response
+>> > to this one.  If anyone has any issues with these being applied, please
+>> > let me know.
+>> >
+>> > Responses should be made by Sat Apr 20 16:03:22 UTC 2019.
+>> > Anything received after that time might be too late.
+>> >
+>> Build results:
+>> 	total: 172 pass: 170 fail: 2
+>> Failed builds:
+>> 	i386:tools/perf
+>> 	x86_64:tools/perf
+>
+>Caused by "tools include: Adopt linux/bits.h". That isn't really
+>a bug fix, and since it is the last commit in the perf directory
+>it isn't needed either. Reverting it fixes the problem.
 
+Indeed. I'll remove it from all branches since it doesn't look like a
+fix to begin with.
 
-On 2019/4/20 2:00, John Stultz wrote:
-> From: Da Lv <lvda3@hisilicon.com>
->
-> The original HiKey (620) board has had a long running issue
-> where when using a 1080p montior, the display would occasionally
-> blink and come come back with a horizontal offset (usually also
-> shifting the colors, depending on the value of the offset%4).
->
-> After lots of analysis by HiSi developers, they found the issue
-> was due to when running at 1080p, it was possible to hit the
-> device memory bandwidth limits, which could cause the DSI signal
-> to get out of sync.
->
-> Unfortunately the DSI logic doesn't have the ability to
-> automatically recover from this situation, but we can get a an
-> LDI underflow interrupt when it happens.
->
-> To then correct the issue, when we get an LDI underflow irq, we
-> we can simply suspend and resume the display, which resets the
-> hardware.
->
-> Thus, this patch enables the ldi underflow interrupt, and
-> initializes a workqueue that is used to suspend/resume the
-> display to recover. Then when the irq occurs we clear it and
-> schedule the workqueue to reset display engine.
->
-> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Signed-off-by: Da Lv <lvda3@hisilicon.com>
-> Signed-off-by: Yidong Lin <linyidong@huawei.com>
-> [jstultz: Reworded the commit message, checkpatch cleanups]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-Thanks for the patch John,
-Reviewed-by:  Xinliang Liu <z.liuxinliang@hisilicon.com>
-
-Xinliang
-> Change-Id: I792ce0b50a1c941d94d8cbec6b52c0f838d967bd
-> ---
->   drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h |  6 ++++++
->   drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 23 +++++++++++++++++++++++
->   2 files changed, 29 insertions(+)
->
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> index 4cf281b7..ced40c6 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> @@ -87,6 +87,7 @@
->   #define VSIZE_OFST			20
->   #define LDI_INT_EN			0x741C
->   #define FRAME_END_INT_EN_OFST		1
-> +#define UNDERFLOW_INT_EN_OFST		2
->   #define LDI_CTRL			0x7420
->   #define BPP_OFST			3
->   #define DATA_GATE_EN			BIT(2)
-> @@ -97,6 +98,11 @@
->   #define LDI_HDMI_DSI_GT			0x7434
->   
->   /*
-> + *BIT_LDI_UNFLOW
-> + */
-> +#define BIT_LDI_UNFLOW         BIT(2)
-> +
-> +/*
->    * ADE media bus service regs
->    */
->   #define ADE0_QOSGENERATOR_MODE		0x010C
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> index 73611a9..1d935ab 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> @@ -58,6 +58,7 @@ struct ade_hw_ctx {
->   struct ade_crtc {
->   	struct drm_crtc base;
->   	struct ade_hw_ctx *ctx;
-> +	struct work_struct drm_device_wq;
->   	bool enable;
->   	u32 out_format;
->   };
-> @@ -176,6 +177,7 @@ static void ade_init(struct ade_hw_ctx *ctx)
->   	 */
->   	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
->   			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-> +	ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
->   }
->   
->   static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-> @@ -345,6 +347,18 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
->   			MASK(1), 0);
->   }
->   
-> +static void drm_underflow_wq(struct work_struct *work)
-> +{
-> +	struct ade_crtc *acrtc = container_of(work, struct ade_crtc,
-> +					      drm_device_wq);
-> +	struct drm_device *drm_dev = (&acrtc->base)->dev;
-> +	void __iomem *base = acrtc->ctx->base;
-> +	struct drm_atomic_state *state;
-> +
-> +	state = drm_atomic_helper_suspend(drm_dev);
-> +	drm_atomic_helper_resume(drm_dev, state);
-> +}
-> +
->   static irqreturn_t ade_irq_handler(int irq, void *data)
->   {
->   	struct ade_crtc *acrtc = data;
-> @@ -362,6 +376,12 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
->   				MASK(1), 1);
->   		drm_crtc_handle_vblank(crtc);
->   	}
-> +	if (status & BIT_LDI_UNFLOW) {
-> +		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
-> +				MASK(1), 1);
-> +		DRM_ERROR("LDI underflow!");
-> +		schedule_work(&acrtc->drm_device_wq);
-> +	}
->   
->   	return IRQ_HANDLED;
->   }
-> @@ -1038,6 +1058,9 @@ static int ade_drm_init(struct platform_device *pdev)
->   	/* vblank irq init */
->   	ret = devm_request_irq(dev->dev, ctx->irq, ade_irq_handler,
->   			       IRQF_SHARED, dev->driver->name, acrtc);
-> +
-> +	INIT_WORK(&acrtc->drm_device_wq, drm_underflow_wq);
-> +
->   	if (ret)
->   		return ret;
->   
-
-
+--
+Thanks,
+Sasha
