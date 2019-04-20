@@ -2,52 +2,52 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93F6C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE5C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BD320675
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990A52186A
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n9qZ3SbI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qXJYnBNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfDTKLq (ORCPT
+        id S1728268AbfDTKLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 06:11:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59442 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfDTKLp (ORCPT
+        Sat, 20 Apr 2019 06:11:48 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48928 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfDTKLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 06:11:45 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3KABHex081016;
-        Sat, 20 Apr 2019 05:11:17 -0500
+        Sat, 20 Apr 2019 06:11:46 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3KAB3dD032456;
+        Sat, 20 Apr 2019 05:11:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555755077;
-        bh=ZJ7suusii44CrYsn3kDjnXK6reKLp45jPmnmJlOfVQA=;
+        s=ti-com-17Q1; t=1555755063;
+        bh=3lpDkHJUWV6LAF4lIQLK4wSm1Kb7KJp+kaM9TNzdMmA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=n9qZ3SbI2YP/GQFXJ+7dmfRRao+QmkTX8GXX419o/eb/SJJpQn12WhNzeI/0qf8Wz
-         3I424lpxrmT6KV+v6N5BhnE9pVXKEUQzrquGre44HwXXyYL4VZQNn7EBNUiJFbNhHg
-         E3Kt6lejoGG165uaGsIKn5ldBrCinOGygDPD+Kwo=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3KABHu2043048
+        b=qXJYnBNhx/MX8DWVGJhbtxEmxNvAcQM9vQ0TdP9f6pxEtqkRjS52ee3dvI8Z7yTgb
+         4B365f2cEUmHsGS10aRIaTLSs+NAdcR7OEu0cmlchchiR/D2LmHWb8zMSqQMdUyAp6
+         e7ymMi6gkhra+CBoJA2EphK9aAdbyTbRzGQet8g0=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3KAB3Lh028820
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 20 Apr 2019 05:11:17 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        Sat, 20 Apr 2019 05:11:03 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sat, 20
- Apr 2019 05:11:16 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 05:11:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sat, 20 Apr 2019 05:11:16 -0500
+ Frontend Transport; Sat, 20 Apr 2019 05:11:03 -0500
 Received: from uda0131933.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAHa3070234;
-        Sat, 20 Apr 2019 05:11:12 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3KAAHa0070234;
+        Sat, 20 Apr 2019 05:10:59 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <marc.zyngier@arm.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
@@ -60,9 +60,9 @@ CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>
-Subject: [PATCH v7 12/14] soc: ti: Add MSI domain bus support for Interrupt Aggregator
-Date:   Sat, 20 Apr 2019 15:39:48 +0530
-Message-ID: <20190420100950.7997-13-lokeshvutla@ti.com>
+Subject: [PATCH v7 09/14] irqchip: ti-sci-intr: Add support for Interrupt Router driver
+Date:   Sat, 20 Apr 2019 15:39:45 +0530
+Message-ID: <20190420100950.7997-10-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190420100950.7997-1-lokeshvutla@ti.com>
 References: <20190420100950.7997-1-lokeshvutla@ti.com>
@@ -75,307 +75,365 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the system coprocessor managing the range allocation of the
-inputs to Interrupt Aggregator, it is difficult to represent
-the device IRQs from DT.
+Texas Instruments' K3 generation SoCs has an IP Interrupt Router
+that does allows for redirection of input interrupts to host
+interrupt controller. Interrupt Router inputs are either from a
+peripheral or from an Interrupt Aggregator which is another
+interrupt controller.
 
-The suggestion is to use MSI in such cases where devices wants
-to allocate and group interrupts dynamically.
+Configuration of the interrupt router registers can only be done by
+a system co-processor and the driver needs to send a message to this
+co processor over TISCI protocol.
 
-Create a MSI domain bus layer that allocates and frees MSIs for
-a device.
-
-APIs that are implemented:
-- ti_sci_inta_msi_create_irq_domain() that creates a MSI domain
-- ti_sci_inta_msi_domain_alloc_irqs() that creates MSIs for the
-  specified device and resource.
-- ti_sci_inta_msi_domain_free_irqs() frees the irqs attached to the device.
-- ti_sci_inta_msi_get_virq() for getting the virq attached to a specific event.
+Add support for Interrupt Router driver over TISCI protocol.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
 Changes since v6:
-- Arranged header files in alphabetical order.
-- Dropped dev_id from struct ti_sci_inta_msi_desc
-- Renamed index to dev_index in struct ti_sci_inta_msi_desc
-- Fixed few cosmetic changes.
+- Arranged header files in alphabetical order
+- Dropped few unused members in ti_sci_intr_irq_domain structure
 
- MAINTAINERS                            |   2 +
- drivers/soc/ti/Kconfig                 |   6 +
- drivers/soc/ti/Makefile                |   1 +
- drivers/soc/ti/ti_sci_inta_msi.c       | 146 +++++++++++++++++++++++++
- include/linux/irqdomain.h              |   1 +
- include/linux/msi.h                    |  10 ++
- include/linux/soc/ti/ti_sci_inta_msi.h |  23 ++++
- 7 files changed, 189 insertions(+)
- create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
- create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
+ MAINTAINERS                       |   1 +
+ drivers/irqchip/Kconfig           |  11 ++
+ drivers/irqchip/Makefile          |   1 +
+ drivers/irqchip/irq-ti-sci-intr.c | 285 ++++++++++++++++++++++++++++++
+ 4 files changed, 298 insertions(+)
+ create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 055467fb2019..96159e502e6c 100644
+index b40762656a6d..63851f106b5c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15353,6 +15353,8 @@ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- F:	drivers/irqchip/irq-ti-sci-intr.c
- F:	drivers/irqchip/irq-ti-sci-inta.c
-+F:	include/linux/soc/ti/ti_sci_inta_msi.h
-+F:	drivers/soc/ti/ti_sci_inta_msi.c
+@@ -15350,6 +15350,7 @@ F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+ F:	drivers/clk/keystone/sci-clk.c
+ F:	drivers/reset/reset-ti-sci.c
+ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
++F:	drivers/irqchip/irq-ti-sci-intr.c
  
  Texas Instruments ASoC drivers
  M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
-diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-index be4570baad96..82f110fe4953 100644
---- a/drivers/soc/ti/Kconfig
-+++ b/drivers/soc/ti/Kconfig
-@@ -73,4 +73,10 @@ config TI_SCI_PM_DOMAINS
- 	  called ti_sci_pm_domains. Note this is needed early in boot before
- 	  rootfs may be available.
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 5438abb1baba..4f84e7902626 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -425,6 +425,17 @@ config LS1X_IRQ
+ 	help
+ 	  Support for the Loongson-1 platform Interrupt Controller.
  
-+config TI_SCI_INTA_MSI_DOMAIN
++config TI_SCI_INTR_IRQCHIP
 +	bool
-+	select GENERIC_MSI_IRQ_DOMAIN
++	depends on TI_SCI_PROTOCOL
++	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
 +	help
-+	  Driver to enable Interrupt Aggregator specific MSI Domain.
++	  This enables the irqchip driver support for K3 Interrupt router
++	  over TI System Control Interface available on some new TI's SoCs.
++	  If you wish to use interrupt router irq resources managed by the
++	  TI System Controller, say Y here. Otherwise, say N.
 +
- endif # SOC_TI
-diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-index a22edc0b258a..b3868d392d4f 100644
---- a/drivers/soc/ti/Makefile
-+++ b/drivers/soc/ti/Makefile
-@@ -8,3 +8,4 @@ obj-$(CONFIG_KEYSTONE_NAVIGATOR_DMA)	+= knav_dma.o
- obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
- obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
- obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
-+obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
-diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
+ endmenu
+ 
+ config SIFIVE_PLIC
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 85972ae1bd7f..fa5c865788b5 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -97,3 +97,4 @@ obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+ obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
++obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
 new file mode 100644
-index 000000000000..0eb9462f609e
+index 000000000000..354b9d53798d
 --- /dev/null
-+++ b/drivers/soc/ti/ti_sci_inta_msi.c
-@@ -0,0 +1,146 @@
++++ b/drivers/irqchip/irq-ti-sci-intr.c
+@@ -0,0 +1,285 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Texas Instruments' K3 Interrupt Aggregator MSI bus
++ * Texas Instruments' K3 Interrupt Router irqchip driver
 + *
 + * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
 + *	Lokesh Vutla <lokeshvutla@ti.com>
 + */
 +
-+#include <linux/irq.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/io.h>
++#include <linux/irqchip.h>
 +#include <linux/irqdomain.h>
-+#include <linux/msi.h>
++#include <linux/of_platform.h>
 +#include <linux/of_address.h>
-+#include <linux/of_device.h>
 +#include <linux/of_irq.h>
-+#include <linux/soc/ti/ti_sci_inta_msi.h>
 +#include <linux/soc/ti/ti_sci_protocol.h>
 +
-+static void ti_sci_inta_msi_write_msg(struct irq_data *data,
-+				      struct msi_msg *msg)
++#define TI_SCI_DEV_ID_MASK	0xffff
++#define TI_SCI_DEV_ID_SHIFT	16
++#define TI_SCI_IRQ_ID_MASK	0xffff
++#define TI_SCI_IRQ_ID_SHIFT	0
++#define HWIRQ_TO_DEVID(hwirq)	(((hwirq) >> (TI_SCI_DEV_ID_SHIFT)) & \
++				 (TI_SCI_DEV_ID_MASK))
++#define HWIRQ_TO_IRQID(hwirq)	((hwirq) & (TI_SCI_IRQ_ID_MASK))
++#define TO_HWIRQ(dev, index)	((((dev) & TI_SCI_DEV_ID_MASK) << \
++				 TI_SCI_DEV_ID_SHIFT) | \
++				((index) & TI_SCI_IRQ_ID_MASK))
++
++/**
++ * struct ti_sci_intr_irq_domain - Structure representing a TISCI based
++ *				   Interrupt Router IRQ domain.
++ * @sci:	Pointer to TISCI handle
++ * @dst_irq:	TISCI resource pointer representing GIC irq controller.
++ * @dst_id:	TISCI device ID of the GIC irq controller.
++ * @type:	Specifies the trigger type supported by this Interrupt Router
++ */
++struct ti_sci_intr_irq_domain {
++	const struct ti_sci_handle *sci;
++	struct ti_sci_resource *dst_irq;
++	u32 dst_id;
++	u32 type;
++};
++
++static struct irq_chip ti_sci_intr_irq_chip = {
++	.name			= "INTR",
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++	.irq_set_type		= irq_chip_set_type_parent,
++	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_set_affinity	= irq_chip_set_affinity_parent,
++};
++
++/**
++ * ti_sci_intr_irq_domain_translate() - Retrieve hwirq and type from
++ *					IRQ firmware specific handler.
++ * @domain:	Pointer to IRQ domain
++ * @fwspec:	Pointer to IRQ specific firmware structure
++ * @hwirq:	IRQ number identified by hardware
++ * @type:	IRQ type
++ *
++ * Return 0 if all went ok else appropriate error.
++ */
++static int ti_sci_intr_irq_domain_translate(struct irq_domain *domain,
++					    struct irq_fwspec *fwspec,
++					    unsigned long *hwirq,
++					    unsigned int *type)
 +{
-+	/* Nothing to do */
-+}
++	struct ti_sci_intr_irq_domain *intr = domain->host_data;
 +
-+static void ti_sci_inta_msi_compose_msi_msg(struct irq_data *data,
-+					    struct msi_msg *msg)
-+{
-+	/* Nothing to do */
-+}
-+
-+static void ti_sci_inta_msi_update_chip_ops(struct msi_domain_info *info)
-+{
-+	struct irq_chip *chip = info->chip;
-+
-+	if (WARN_ON(!chip))
-+		return;
-+
-+	chip->irq_request_resources = irq_chip_request_resources_parent;
-+	chip->irq_release_resources = irq_chip_release_resources_parent;
-+	chip->irq_compose_msi_msg = ti_sci_inta_msi_compose_msi_msg;
-+	chip->irq_write_msi_msg = ti_sci_inta_msi_write_msg;
-+	chip->irq_set_type = irq_chip_set_type_parent;
-+	chip->irq_unmask = irq_chip_unmask_parent;
-+	chip->irq_mask = irq_chip_mask_parent;
-+	chip->irq_ack = irq_chip_ack_parent;
-+}
-+
-+struct irq_domain *ti_sci_inta_msi_create_irq_domain(struct fwnode_handle *fwnode,
-+						     struct msi_domain_info *info,
-+						     struct irq_domain *parent)
-+{
-+	struct irq_domain *domain;
-+
-+	ti_sci_inta_msi_update_chip_ops(info);
-+
-+	domain = msi_create_irq_domain(fwnode, info, parent);
-+	if (domain)
-+		irq_domain_update_bus_token(domain, DOMAIN_BUS_TI_SCI_INTA_MSI);
-+
-+	return domain;
-+}
-+EXPORT_SYMBOL_GPL(ti_sci_inta_msi_create_irq_domain);
-+
-+static void ti_sci_inta_msi_free_descs(struct device *dev)
-+{
-+	struct msi_desc *desc, *tmp;
-+
-+	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
-+		list_del(&desc->list);
-+		free_msi_entry(desc);
-+	}
-+}
-+
-+static int ti_sci_inta_msi_alloc_descs(struct device *dev,
-+				       struct ti_sci_resource *res)
-+{
-+	struct msi_desc *msi_desc;
-+	int set, i, count = 0;
-+
-+	for (set = 0; set < res->sets; set++) {
-+		for (i = 0; i < res->desc[set].num; i++) {
-+			msi_desc = alloc_msi_entry(dev, 1, NULL);
-+			if (!msi_desc) {
-+				ti_sci_inta_msi_free_descs(dev);
-+				return -ENOMEM;
-+			}
-+
-+			msi_desc->inta.dev_index = res->desc[set].start + i;
-+			INIT_LIST_HEAD(&msi_desc->list);
-+			list_add_tail(&msi_desc->list, dev_to_msi_list(dev));
-+			count++;
-+		}
-+	}
-+
-+	return count;
-+}
-+
-+int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
-+				      struct ti_sci_resource *res)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct irq_domain *msi_domain;
-+	int ret, nvec;
-+
-+	msi_domain = dev_get_msi_domain(dev);
-+	if (!msi_domain)
++	if (fwspec->param_count != 3)
 +		return -EINVAL;
 +
-+	if (pdev->id < 0)
-+		return -ENODEV;
++	*hwirq = TO_HWIRQ(fwspec->param[0], fwspec->param[1]);
++	*type = intr->type;
 +
-+	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
-+	if (nvec <= 0)
-+		return nvec;
++	/* Third parameter can be either 0 or 1 */
++	if (fwspec->param[2] != 0 && fwspec->param[2] != 1)
++		return -EINVAL;
 +
-+	ret = msi_domain_alloc_irqs(msi_domain, dev, nvec);
-+	if (ret) {
-+		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
-+		goto cleanup;
-+	}
++	return 0;
++}
++
++/**
++ * ti_sci_intr_irq_domain_free() - Free the specified IRQs from the domain.
++ * @domain:	Domain to which the irqs belong
++ * @virq:	Linux virtual IRQ to be freed.
++ * @nr_irqs:	Number of continuous irqs to be freed
++ */
++static void ti_sci_intr_irq_domain_free(struct irq_domain *domain,
++					unsigned int virq, unsigned int nr_irqs)
++{
++	struct ti_sci_intr_irq_domain *intr = domain->host_data;
++	struct irq_data *data, *parent_data;
++	u16 dev_id, irq_index;
++	u8 flags;
++
++	parent_data = irq_domain_get_irq_data(domain->parent, virq);
++	data = irq_domain_get_irq_data(domain, virq);
++	flags = (uintptr_t)irq_data_get_irq_chip_data(data);
++	irq_index = HWIRQ_TO_IRQID(data->hwirq);
++	dev_id = HWIRQ_TO_DEVID(data->hwirq);
++
++	intr->sci->ops.rm_irq_ops.free_irq(intr->sci, dev_id, irq_index,
++					   intr->dst_id, parent_data->hwirq,
++					   flags);
++	ti_sci_release_resource(intr->dst_irq, parent_data->hwirq);
++	irq_domain_free_irqs_parent(domain, virq, 1);
++	irq_domain_reset_irq_data(data);
++}
++
++/**
++ * ti_sci_intr_alloc_gic_irq() - Allocate GIC specific IRQ
++ * @domain:	Pointer to the interrupt router IRQ domain
++ * @virq:	Corresponding Linux virtual IRQ number
++ * @hwirq:	Corresponding hwirq for the IRQ within this IRQ domain
++ * @flags:	Corresponding flags to the IRQ
++ *
++ * Returns 0 if all went well else appropriate error pointer.
++ */
++static int ti_sci_intr_alloc_gic_irq(struct irq_domain *domain,
++				     unsigned int virq, u32 hwirq, u8 flags)
++{
++	struct ti_sci_intr_irq_domain *intr = domain->host_data;
++	struct irq_fwspec fwspec;
++	u16 dev_id, irq_index;
++	u16 dst_irq;
++	int err;
++
++	dev_id = HWIRQ_TO_DEVID(hwirq);
++	irq_index = HWIRQ_TO_IRQID(hwirq);
++
++	dst_irq = ti_sci_get_free_resource(intr->dst_irq);
++	if (dst_irq == TI_SCI_RESOURCE_NULL)
++		return -EINVAL;
++
++	fwspec.fwnode = domain->parent->fwnode;
++	fwspec.param_count = 3;
++	fwspec.param[0] = 0;	/* SPI */
++	fwspec.param[1] = dst_irq - 32; /* SPI offset */
++	fwspec.param[2] = intr->type;
++
++	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
++	if (err)
++		goto err_irqs;
++
++	err = intr->sci->ops.rm_irq_ops.set_irq(intr->sci, dev_id, irq_index,
++						intr->dst_id, dst_irq, flags);
++	if (err)
++		goto err_msg;
 +
 +	return 0;
 +
-+cleanup:
-+	ti_sci_inta_msi_free_descs(&pdev->dev);
-+	return ret;
++err_msg:
++	irq_domain_free_irqs_parent(domain, virq, 1);
++err_irqs:
++	ti_sci_release_resource(intr->dst_irq, dst_irq);
++	return err;
 +}
-+EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
 +
-+void ti_sci_inta_msi_domain_free_irqs(struct device *dev)
-+{
-+	msi_domain_free_irqs(dev->msi_domain, dev);
-+	ti_sci_inta_msi_free_descs(dev);
-+}
-+EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_free_irqs);
-+
-+unsigned int ti_sci_inta_msi_get_virq(struct device *dev, u32 dev_index)
-+{
-+	struct msi_desc *desc;
-+
-+	for_each_msi_entry(desc, dev)
-+		if (desc->inta.dev_index == dev_index)
-+			return desc->irq;
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(ti_sci_inta_msi_get_virq);
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 61706b430907..07ec8b390161 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -82,6 +82,7 @@ enum irq_domain_bus_token {
- 	DOMAIN_BUS_NEXUS,
- 	DOMAIN_BUS_IPI,
- 	DOMAIN_BUS_FSL_MC_MSI,
-+	DOMAIN_BUS_TI_SCI_INTA_MSI,
- };
- 
- /**
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 7e9b81c3b50d..7c28762851a3 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -47,6 +47,14 @@ struct fsl_mc_msi_desc {
- 	u16				msi_index;
- };
- 
 +/**
-+ * ti_sci_inta_msi_desc - TISCI based INTA specific msi descriptor data
-+ * @dev_index: TISCI device index
++ * ti_sci_intr_irq_domain_alloc() - Allocate Interrupt router IRQs
++ * @domain:	Point to the interrupt router IRQ domain
++ * @virq:	Corresponding Linux virtual IRQ number
++ * @nr_irqs:	Continuous irqs to be allocated
++ * @data:	Pointer to firmware specifier
++ *
++ * Return 0 if all went well else appropriate error value.
 + */
-+struct ti_sci_inta_msi_desc {
-+	u16	dev_index;
++static int ti_sci_intr_irq_domain_alloc(struct irq_domain *domain,
++					unsigned int virq, unsigned int nr_irqs,
++					void *data)
++{
++	struct irq_fwspec *fwspec = data;
++	unsigned long hwirq;
++	unsigned int flags;
++	int err;
++
++	err = ti_sci_intr_irq_domain_translate(domain, fwspec, &hwirq, &flags);
++	if (err)
++		return err;
++
++	flags = fwspec->param[2];
++	err = ti_sci_intr_alloc_gic_irq(domain, virq, hwirq, flags);
++	if (err)
++		return err;
++
++	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
++				      &ti_sci_intr_irq_chip,
++				      (void *)(uintptr_t)flags);
++
++	return 0;
++}
++
++static const struct irq_domain_ops ti_sci_intr_irq_domain_ops = {
++	.free		= ti_sci_intr_irq_domain_free,
++	.alloc		= ti_sci_intr_irq_domain_alloc,
++	.translate	= ti_sci_intr_irq_domain_translate,
 +};
 +
- /**
-  * struct msi_desc - Descriptor structure for MSI based interrupts
-  * @list:	List head for management
-@@ -68,6 +76,7 @@ struct fsl_mc_msi_desc {
-  * @mask_base:	[PCI MSI-X] Mask register base address
-  * @platform:	[platform]  Platform device specific msi descriptor data
-  * @fsl_mc:	[fsl-mc]    FSL MC device specific msi descriptor data
-+ * @inta:	[INTA]	    TISCI based INTA specific msi descriptor data
-  */
- struct msi_desc {
- 	/* Shared device/bus type independent data */
-@@ -106,6 +115,7 @@ struct msi_desc {
- 		 */
- 		struct platform_msi_desc platform;
- 		struct fsl_mc_msi_desc fsl_mc;
-+		struct ti_sci_inta_msi_desc inta;
- 	};
- };
- 
-diff --git a/include/linux/soc/ti/ti_sci_inta_msi.h b/include/linux/soc/ti/ti_sci_inta_msi.h
-new file mode 100644
-index 000000000000..11fb5048f5f6
---- /dev/null
-+++ b/include/linux/soc/ti/ti_sci_inta_msi.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Texas Instruments' K3 TI SCI INTA MSI helper
-+ *
-+ * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Lokesh Vutla <lokeshvutla@ti.com>
-+ */
++static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
++{
++	struct irq_domain *parent_domain, *domain;
++	struct ti_sci_intr_irq_domain *intr;
++	struct device_node *parent_node;
++	struct device *dev = &pdev->dev;
++	int ret;
 +
-+#ifndef __INCLUDE_LINUX_TI_SCI_INTA_MSI_H
-+#define __INCLUDE_LINUX_TI_SCI_INTA_MSI_H
++	parent_node = of_irq_find_parent(dev_of_node(dev));
++	if (!parent_node) {
++		dev_err(dev, "Failed to get IRQ parent node\n");
++		return -ENODEV;
++	}
 +
-+#include <linux/msi.h>
-+#include <linux/soc/ti/ti_sci_protocol.h>
++	parent_domain = irq_find_host(parent_node);
++	if (!parent_domain) {
++		dev_err(dev, "Failed to find IRQ parent domain\n");
++		return -ENODEV;
++	}
 +
-+struct irq_domain
-+*ti_sci_inta_msi_create_irq_domain(struct fwnode_handle *fwnode,
-+				   struct msi_domain_info *info,
-+				   struct irq_domain *parent);
-+int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
-+				      struct ti_sci_resource *res);
-+unsigned int ti_sci_inta_msi_get_virq(struct device *dev, u32 index);
-+void ti_sci_inta_msi_domain_free_irqs(struct device *dev);
-+#endif /* __INCLUDE_LINUX_IRQCHIP_TI_SCI_INTA_H */
++	intr = devm_kzalloc(dev, sizeof(*intr), GFP_KERNEL);
++	if (!intr)
++		return -ENOMEM;
++
++	ret = of_property_read_u32(dev_of_node(dev), "ti,intr-trigger-type",
++				   &intr->type);
++	if (ret) {
++		dev_err(dev, "missing ti,intr-trigger-type property\n");
++		return -EINVAL;
++	}
++
++	intr->sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
++	if (IS_ERR(intr->sci)) {
++		ret = PTR_ERR(intr->sci);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "ti,sci read fail %d\n", ret);
++		intr->sci = NULL;
++		return ret;
++	}
++
++	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dst-id",
++				   &intr->dst_id);
++	if (ret) {
++		dev_err(dev, "missing 'ti,sci-dst-id' property\n");
++		return -EINVAL;
++	}
++
++	intr->dst_irq = devm_ti_sci_get_of_resource(intr->sci, dev,
++						    intr->dst_id,
++						    "ti,sci-rm-range-girq");
++	if (IS_ERR(intr->dst_irq)) {
++		dev_err(dev, "Destination irq resource allocation failed\n");
++		return PTR_ERR(intr->dst_irq);
++	}
++
++	domain = irq_domain_add_hierarchy(parent_domain, 0, 0, dev_of_node(dev),
++					  &ti_sci_intr_irq_domain_ops, intr);
++	if (!domain) {
++		dev_err(dev, "Failed to allocate IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id ti_sci_intr_irq_domain_of_match[] = {
++	{ .compatible = "ti,sci-intr", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ti_sci_intr_irq_domain_of_match);
++
++static struct platform_driver ti_sci_intr_irq_domain_driver = {
++	.probe = ti_sci_intr_irq_domain_probe,
++	.driver = {
++		.name = "ti-sci-intr",
++		.of_match_table = ti_sci_intr_irq_domain_of_match,
++	},
++};
++module_platform_driver(ti_sci_intr_irq_domain_driver);
++
++MODULE_AUTHOR("Lokesh Vutla <lokeshvutla@ticom>");
++MODULE_DESCRIPTION("K3 Interrupt Router driver over TI SCI protocol");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
