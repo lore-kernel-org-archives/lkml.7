@@ -2,79 +2,126 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D7C282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CF6C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1A72183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8182183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beqB2zJv"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="J7gchnRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfDTM2c (ORCPT
+        id S1726955AbfDTMfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 08:28:32 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35828 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfDTM2c (ORCPT
+        Sat, 20 Apr 2019 08:35:10 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39501 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDTMfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 08:28:32 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so3760086plp.2;
-        Sat, 20 Apr 2019 05:28:32 -0700 (PDT)
+        Sat, 20 Apr 2019 08:35:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k45so6334791edb.6
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:35:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brauner.io; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WkfhWDKqFomaa6wxQ2Ft8GRHbvQJRT/WkoJZGmXUAqk=;
-        b=beqB2zJvds5eLtIZGDVvyD3sPhVZE5X0QvE1IRtBnsdpeijIALXJ4HsorD30BaxkG7
-         kWQzhaHbFi7YtWz+dpW/7CeuyGGjNBrIwiNKAOKtUUGyHftNC2vcwwCrMcgLZ1wkAP47
-         AmryxUC47IFYyjNfaoWwwon39CFTLcT3TiBPvgKqI2yHl3M9uhKVdZFMYpITc38wPezq
-         oqHz/pVDdkoBtOlEFkwLaBvXDH3uZWaca+cszR5dGEJUGyE+np237leEeB1D1cMn/+9a
-         P2YmUbyts32gRQlV/47wZkVNvMNNs1MGV3aolVre2w1hoiOMCjtc5sgMjZMDtoEjpvfD
-         12jQ==
+        bh=lfS4jHQHDZpV/nXsHbcDnf57yfYUP32gdciwif1OGGI=;
+        b=J7gchnRQD/fUtkqWGlccOk74KJNsIQOx48hIxszBYnesbNZHkVH0YTeppDOtGWfWSi
+         fI/aA8zB3u8WgIjObQDmW3ukULvUTYL0ogvV9TDETVrXzc8q4xPNSpqEoXOj/FIx/dNM
+         0F+OwzDNkcilQiICD4QteNiMTXTKfekzQXmLqqVgCqqx/yrkkJmL41p2Kcjz4YU0KocL
+         0E+UPlFFB/tP8cQx58COuSTdTyw5Ae4OOaoSdz1w4DxlKhv/1aJvJkhMbeckO0b5CHXQ
+         3l7oDP2GMGuK9+0sUnxjXJxbkRqRHkvoErHqg7GsE1JEbpFptR00tCsu5ePQZmwsPdJX
+         gjXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WkfhWDKqFomaa6wxQ2Ft8GRHbvQJRT/WkoJZGmXUAqk=;
-        b=XyoVnWMnFhaO+O33RnX83P+XiZ3t/EmYKOvWBhqpqpvULBfI2M3gltcc4AUdasEJ5n
-         s/26aRX0g9vzzG8mXLmnoYR38eVENwiHRSQayjJ+7WyezZeDE2hjtROhYYPpZgxb+Iu9
-         Te0VEZSP5WN6iTY3em/w0AGcgOa9WyZPYCSZvsKZwaNoUdweYHc8LCvdIPv1CNKQw31f
-         Mj5OR3yCHXfPq0SQTirVthlUKv021YYPMb3GIXf+o3Sx+u5K5gQ3LRleKLVU1RV3Z0+k
-         6jpIMii7YSrtr/T20wUOzcCgzZLPWRWSoC+lcNZkZh6qHMX7eoeDZALvHKHDA4bywmyU
-         lpyQ==
-X-Gm-Message-State: APjAAAVEoX6gOAzj8WrkV7jUCkd9CVi3MIdo7Bls1XpL3toN1ehuYnkk
-        yvC/kZEd2RVMO4QD5Tm1w5M=
-X-Google-Smtp-Source: APXvYqxoE0B8kiGnj1jGvp4fWfb6SKZGf4W59ptiqgr2YLlIiycZyYQ4LMbMobIReQS3BrKrMoIQ5g==
-X-Received: by 2002:a17:902:6949:: with SMTP id k9mr9213560plt.59.1555763311972;
-        Sat, 20 Apr 2019 05:28:31 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.32])
-        by smtp.gmail.com with ESMTPSA id w21sm10087265pfn.48.2019.04.20.05.28.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 05:28:31 -0700 (PDT)
-Date:   Sat, 20 Apr 2019 17:58:23 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 00/93] 5.0.9-stable review
-Message-ID: <20190420122823.GB18303@bharath12345-Inspiron-5559>
-References: <20190418160436.781762249@linuxfoundation.org>
+        bh=lfS4jHQHDZpV/nXsHbcDnf57yfYUP32gdciwif1OGGI=;
+        b=Z7kRbheUyOcOxhZFnOZHfziyGRkgdAROBCEOuQfypHuNz4Rxd+5ZH56f60JcNYW/Dc
+         U0CShft1AGrlSm2/7MK7uzLBmMQNzPRgNKHmzPzSYPtd0foCGmoZjcBRKr7u6e6ddNad
+         /7eVPRPGonzwD6RUYL2LGIRMdBBwkgc8R2aVk1fW/Y7RXN0zNzJNnn1psMjLn0zJt0PV
+         rC8sLB2SxPSC7ez3X7Xg5XTn1mW9WcvtYDe9ErD+whbiwsj1TmRU8LBUx2UvvNBqSgpB
+         eOIwaQtLHcXlGuQAFtbGKAjUFkeSSyKEtMANh495n1Pe7zH3Ysh0+lSQXM8Ztmcj0K+/
+         iVCQ==
+X-Gm-Message-State: APjAAAVTPt8ZXKwKCr8Y4sFBjCAk5nWlqYmjgMY//2GCMBlL8L2o2twq
+        7T0jfaC+FHd+E5VkCST6bepGXg==
+X-Google-Smtp-Source: APXvYqyyrtC1nJRCk3xC0Q5ImPiI6D+SOjremXeJ9tic2+JtroW6/DiWbdX1kU2+EyySp/1lbN2uXg==
+X-Received: by 2002:a17:906:4d4d:: with SMTP id b13mr4392645ejv.256.1555763707826;
+        Sat, 20 Apr 2019 05:35:07 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id i9sm2128976edk.56.2019.04.20.05.35.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 20 Apr 2019 05:35:07 -0700 (PDT)
+Date:   Sat, 20 Apr 2019 14:35:05 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+Message-ID: <20190420123504.gohscgeahp45hjd3@brauner.io>
+References: <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+ <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io>
+ <20190419194902.GE251571@google.com>
+ <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
+ <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
+ <20190419212002.GB44851@google.com>
+ <CAHrFyr6qqj-q9nSVuNhFL5WOcuQstAFvaDu2544OpeMe6jawQw@mail.gmail.com>
+ <20190420115125.GC17468@redhat.com>
+ <20190420122614.GD17468@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190418160436.781762249@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190420122614.GD17468@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Built and booted on my x86 machine.
-Observed no dmesg regressions.
+On Sat, Apr 20, 2019 at 02:26:15PM +0200, Oleg Nesterov wrote:
+> On 04/20, Oleg Nesterov wrote:
+> >
+> > Note that we need
+> > thread_group_empty() only for the case when the task is traced,
+> 
+> Damn, sorry for noise... of course this is not true, I tried to say that
+> notification won't come otherwise. Nevermind, lets discuss this when we
+> have a patch. I already got lost in this thread and I have no idea what
+
+Agreed. The polling work is not targeted for the 5.2 merge window
+anyway so there's no need to rush this.
+
+> are you all talking about ;)
+
+Nothing patch-worthy comes without a solid portion of controversy and
+confusion at first. ;)
+
+Christian
