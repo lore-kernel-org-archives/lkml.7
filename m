@@ -2,80 +2,95 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FCCC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E419FC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC8A21736
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B95D821736
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfDTDfy (ORCPT
+        id S1727846AbfDTDh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 23:35:54 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:44215 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726082AbfDTDfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 23:35:54 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x3K3Zkf7025552
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Apr 2019 23:35:47 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 164E1420497; Fri, 19 Apr 2019 23:35:46 -0400 (EDT)
-Date:   Fri, 19 Apr 2019 23:35:46 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Jon DeVree <nuxi@vault24.org>
-Cc:     linux-kernel@vger.kernel.org, Jason@zx2c4.com
-Subject: Re: [PATCH] random: fix CRNG initialization when random.trust_cpu=1
-Message-ID: <20190420033546.GA5539@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Jon DeVree <nuxi@vault24.org>, linux-kernel@vger.kernel.org,
-        Jason@zx2c4.com
-References: <20190319172846.30741-1-nuxi@vault24.org>
+        Fri, 19 Apr 2019 23:37:26 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33588 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfDTDh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 23:37:26 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 27878C09A7799721599E;
+        Sat, 20 Apr 2019 11:37:24 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Sat, 20 Apr 2019
+ 11:37:19 +0800
+Subject: Re: [PATCH -next] sched/fair: Make some functions static
+To:     <mingo@redhat.com>, <peterz@infradead.org>
+References: <20190322143030.17348-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <be820e12-2cfd-4c1c-7c4e-961f145b64e4@huawei.com>
+Date:   Sat, 20 Apr 2019 11:37:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190319172846.30741-1-nuxi@vault24.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322143030.17348-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 01:28:47PM -0400, Jon DeVree wrote:
-> When the system boots with random.trust_cpu=1 it doesn't initialize the
-> per-NUMA CRNGs because it skips the rest of the CRNG startup code. This
-> means that the code from 1e7f583af67b ("random: make /dev/urandom scalable
-> for silly userspace programs") is not used when random.trust_cpu=1.
-> 
-> crash> dmesg | grep random:
-> [    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
-> [    0.314029] random: crng done (trusting CPU's manufacturer)
-> crash> print crng_node_pool
-> $6 = (struct crng_state **) 0x0
-> 
-> After adding the missing call to numa_crng_init() the per-NUMA CRNGs are
-> initialized again:
-> 
-> crash> dmesg | grep random:
-> [    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
-> [    0.314031] random: crng done (trusting CPU's manufacturer)
-> crash> print crng_node_pool
-> $1 = (struct crng_state **) 0xffff9a915f4014a0
-> 
-> The call to invalidate_batched_entropy() was also missing. This is
-> important for architectures like PPC and S390 which only have the
-> arch_get_random_seed_* functions.
-> 
-> Fixes: 39a8883a2b98 ("random: add a config option to trust the CPU's hwrng")
-> Signed-off-by: Jon DeVree <nuxi@vault24.org>
+Pls ignore this.
 
-Thanks, applied.
+On 2019/3/22 22:30, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Fix sparse warnings:
+> 
+> kernel/sched/fair.c:2596:6: warning: symbol 'task_tick_numa' was not declared. Should it be static?
+> kernel/sched/fair.c:3570:6: warning: symbol 'sync_entity_load_avg' was not declared. Should it be static?
+> kernel/sched/fair.c:3583:6: warning: symbol 'remove_entity_load_avg' was not declared. Should it be static?
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  kernel/sched/fair.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fdab7eb..18fb781 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -2593,7 +2593,7 @@ void task_numa_work(struct callback_head *work)
+>  /*
+>   * Drive the periodic memory faults..
+>   */
+> -void task_tick_numa(struct rq *rq, struct task_struct *curr)
+> +static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+>  {
+>  	struct callback_head *work = &curr->numa_work;
+>  	u64 period, now;
+> @@ -3567,7 +3567,7 @@ static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
+>   * Synchronize entity load avg of dequeued entity without locking
+>   * the previous rq.
+>   */
+> -void sync_entity_load_avg(struct sched_entity *se)
+> +static void sync_entity_load_avg(struct sched_entity *se)
+>  {
+>  	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>  	u64 last_update_time;
+> @@ -3580,7 +3580,7 @@ void sync_entity_load_avg(struct sched_entity *se)
+>   * Task first catches up with cfs_rq, and then subtract
+>   * itself from the cfs_rq (task must be off the queue now).
+>   */
+> -void remove_entity_load_avg(struct sched_entity *se)
+> +static void remove_entity_load_avg(struct sched_entity *se)
+>  {
+>  	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>  	unsigned long flags;
+> 
 
-					- Ted
