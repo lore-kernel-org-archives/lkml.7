@@ -2,109 +2,93 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D3C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3488C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1E8208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F8D208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="QN1SD40H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfDTDFJ (ORCPT
+        id S1727504AbfDTDIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 23:05:09 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2561 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfDTDFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 23:05:09 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id BC27E47654C311B55469;
-        Sat, 20 Apr 2019 11:05:06 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sat, 20 Apr 2019 11:05:06 +0800
-Received: from [10.134.22.195] (10.134.22.195) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Sat, 20 Apr 2019 11:05:06 +0800
-Subject: Re: [PATCH] f2fs: Force type conversion from __le32 to u32
-To:     Bharath Vedartham <linux.bhar@gmail.com>, <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190418073510.GA11396@bharath12345-Inspiron-5559>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <00548c37-765a-a2df-9ddf-d53c6ae6bae7@huawei.com>
-Date:   Sat, 20 Apr 2019 11:05:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 19 Apr 2019 23:08:47 -0400
+Received: from mta-p4.oit.umn.edu ([134.84.196.204]:55720 "EHLO
+        mta-p4.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfDTDIq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 23:08:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mta-p4.oit.umn.edu (Postfix) with ESMTP id 50E52A47
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 03:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=umn.edu; h=
+        content-type:content-type:subject:subject:message-id:date:date
+        :from:from:in-reply-to:references:mime-version:received:received
+        :received; s=20160920; t=1555729725; x=1557544126; bh=FyO9SkKc0K
+        ZdryFE/meHvxbeKd4PewE0fzY9JSJdgwQ=; b=QN1SD40H4M/u/6nMJvuXGfj9qo
+        DV1U9BCVnHzqie7jsU2RalJAhgyn/U7yTxW+yuTpk3kXzqr7OP/eyVOxOeCJUABn
+        8aqULXiU21nK5FJu61ZtFH6Un6xbKwnX0W4Yl1/C1me9VAsVO7unCzZNSRMa0Oss
+        K/ARd+F0VdLyw1RLc+zJWlE9fahyj6vod9PrGEdjcrHgKiwxRpopAf99Yfa8HrTm
+        G57ANxALMRtwvXkL073LL3Y/GtLuY0/JyToFlZ6ZlZfvb7LjqRA9oXlPHeVglXLZ
+        hcxxtHo+HkLkVPFQCcOujSYTuyTvKlMHjpTa3LUBjJV+gQf9xjrZku7BOiPg==
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p4.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p4.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9PIibCpnM61z for <linux-kernel@vger.kernel.org>;
+        Fri, 19 Apr 2019 22:08:45 -0500 (CDT)
+Received: from mail-it1-f179.google.com (mail-it1-f179.google.com [209.85.166.179])
+        (using TLSv1 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wang6495)
+        by mta-p4.oit.umn.edu (Postfix) with ESMTPSA id 2873FA31
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 22:08:45 -0500 (CDT)
+Received: by mail-it1-f179.google.com with SMTP id a190so10884168ite.4
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 20:08:45 -0700 (PDT)
+X-Gm-Message-State: APjAAAXRalVBRtY9LuCw7OPzkXtp/YI6xuR55eVuT0isSp2LTzmIXZvN
+        Bx8uv3eqELxEUmYGtoCIM+uAj1sdsrzmYEzUYxs=
+X-Google-Smtp-Source: APXvYqzBs5pKRkV+jxdqIb8m2raSH38BDl7bnUYwwhwf5lpDdVeBFA1x5OI01OfPOx+xtrGOKZCY/x49nAlCAPr3+ug=
+X-Received: by 2002:a02:1006:: with SMTP id 6mr5267131jay.47.1555729724961;
+ Fri, 19 Apr 2019 20:08:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190418073510.GA11396@bharath12345-Inspiron-5559>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+References: <1555726979-15633-1-git-send-email-wang6495@umn.edu> <20190419223718.17fa8246@oasis.local.home>
+In-Reply-To: <20190419223718.17fa8246@oasis.local.home>
+From:   Wenwen Wang <wang6495@umn.edu>
+Date:   Fri, 19 Apr 2019 22:08:08 -0500
+X-Gmail-Original-Message-ID: <CAAa=b7dnrz5Pz5hMUc29VHJb9ucFkWArd2sbsCUO+POfuFXFhA@mail.gmail.com>
+Message-ID: <CAAa=b7dnrz5Pz5hMUc29VHJb9ucFkWArd2sbsCUO+POfuFXFhA@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Fix a memory leak bug
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/18 15:35, Bharath Vedartham wrote:
-> This patch forces type conversion from __le32 to u32 to prevent sparse
-> warnings like:
-> warning: restricted __le32 degrades to integer
-> 
-> dir.c:
-> fscrypt_fname_disk_to_usr takes a hash of type u32 as it's second arg
-> but de->hash_code is of type __le32.
-> 
-> node.c
-> NULL_ADDR is of type u32 but block_addr is of type __le32.
-> 
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> ---
->  fs/f2fs/dir.c  | 2 +-
->  fs/f2fs/node.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> index 59bc460..4f39872 100644
-> --- a/fs/f2fs/dir.c
-> +++ b/fs/f2fs/dir.c
-> @@ -828,7 +828,7 @@ int f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
->  			int save_len = fstr->len;
->  
->  			err = fscrypt_fname_disk_to_usr(d->inode,
-> -						(u32)de->hash_code, 0,
+On Fri, Apr 19, 2019 at 9:37 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 19 Apr 2019 21:22:59 -0500
+> Wenwen Wang <wang6495@umn.edu> wrote:
+>
+> > In trace_pid_write(), the buffer for trace parser is allocated through
+> > kmalloc() in trace_parser_get_init(). Later on, after the buffer is used,
+> > it is then freed through kfree() in trace_parser_put(). However, it is
+> > possible that trace_pid_write() is terminated due to unexpected errors,
+> > e.g., ENOMEM. In that case, the allocated buffer will not be freed, which
+> > is a memory leak bug.
+> >
+> > To fix this issue, free the allocated buffer when an error is encountered.
+>
+> Thanks for the patch. Did you find this through manual inspection,
+> running KASAN or via one of the static analyzers?
 
-le32_to_cpu(de->hash_code)
+Thanks for your question, Steve. It was based on a prototype of a
+research project, which aims to statically detect memory leak bugs in
+operating system kernels.
 
-> +						(__force u32)de->hash_code, 0,
->  						&de_name, fstr);
->  			if (err)
->  				goto out;
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index 3f99ab2..9e333a5 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -2706,7 +2706,7 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
->  		i = 1;
->  	}
->  	for (; i < NAT_ENTRY_PER_BLOCK; i++) {
-> -		if (nat_blk->entries[i].block_addr != NULL_ADDR)
-> +		if ((__force u32)nat_blk->entries[i].block_addr != NULL_ADDR)
-
-block_t blkaddr = le32_to_cpu(nat_blk->entries[i].block_addr);
-
-if (blkaddr != NULL_ADDR)
-
-Thanks,
-
->  			valid++;
->  	}
->  	if (valid == 0) {
-> 
+Wenwen
