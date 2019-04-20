@@ -2,92 +2,64 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3552C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37E1C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A88E21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8443221736
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 02:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfDTChV (ORCPT
+        id S1727225AbfDTCwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 22:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbfDTChV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 22:37:21 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC2E21479;
-        Sat, 20 Apr 2019 02:37:20 +0000 (UTC)
-Date:   Fri, 19 Apr 2019 22:37:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH] tracing: Fix a memory leak bug
-Message-ID: <20190419223718.17fa8246@oasis.local.home>
-In-Reply-To: <1555726979-15633-1-git-send-email-wang6495@umn.edu>
-References: <1555726979-15633-1-git-send-email-wang6495@umn.edu>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 19 Apr 2019 22:52:55 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2560 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbfDTCwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 22:52:54 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 08833785E7914BE8B46A;
+        Sat, 20 Apr 2019 10:52:51 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Sat, 20 Apr 2019 10:52:50 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Sat, 20 Apr 2019 10:52:50 +0800
+Subject: Re: [RFC PATCH 16/62] f2fs: switch to ->free_inode()
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+References: <20190416174900.GT2217@ZenIV.linux.org.uk>
+ <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
+ <20190416175340.21068-16-viro@ZenIV.linux.org.uk>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d60cbf60-d6ec-1717-26b1-7ec3472038e7@huawei.com>
+Date:   Sat, 20 Apr 2019 10:52:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190416175340.21068-16-viro@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 21:22:59 -0500
-Wenwen Wang <wang6495@umn.edu> wrote:
-
-> In trace_pid_write(), the buffer for trace parser is allocated through
-> kmalloc() in trace_parser_get_init(). Later on, after the buffer is used,
-> it is then freed through kfree() in trace_parser_put(). However, it is
-> possible that trace_pid_write() is terminated due to unexpected errors,
-> e.g., ENOMEM. In that case, the allocated buffer will not be freed, which
-> is a memory leak bug.
+On 2019/4/17 1:52, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> To fix this issue, free the allocated buffer when an error is encountered.
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-Thanks for the patch. Did you find this through manual inspection,
-running KASAN or via one of the static analyzers?
+Acked-by: Chao Yu <yuchao0@huawei.com>
 
--- Steve
-
-> 
-> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-> ---
->  kernel/trace/trace.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 6c24755..fd12c9c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -496,8 +496,10 @@ int trace_pid_write(struct trace_pid_list
-> *filtered_pids,
->  	 * not modified.
->  	 */
->  	pid_list = kmalloc(sizeof(*pid_list), GFP_KERNEL);
-> -	if (!pid_list)
-> +	if (!pid_list) {
-> +		trace_parser_put(&parser);
->  		return -ENOMEM;
-> +	}
->  
->  	pid_list->pid_max = READ_ONCE(pid_max);
->  
-> @@ -507,6 +509,7 @@ int trace_pid_write(struct trace_pid_list
-> *filtered_pids, 
->  	pid_list->pids = vzalloc((pid_list->pid_max + 7) >> 3);
->  	if (!pid_list->pids) {
-> +		trace_parser_put(&parser);
->  		kfree(pid_list);
->  		return -ENOMEM;
->  	}
-
+Thanks,
