@@ -2,77 +2,121 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C86C282E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF528C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C1F2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3A720883
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 15:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="b/Yq2Wyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfDTP3N (ORCPT
+        id S1728226AbfDTPbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 11:29:13 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43834 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfDTP3N (ORCPT
+        Sat, 20 Apr 2019 11:31:52 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:33772 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfDTPbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 11:29:13 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hHrvD-0007Ag-LO; Sat, 20 Apr 2019 15:28:55 +0000
-Date:   Sat, 20 Apr 2019 16:28:55 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Christian Brauner <christian@brauner.io>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-Message-ID: <20190420152855.GG2217@ZenIV.linux.org.uk>
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin>
- <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+        Sat, 20 Apr 2019 11:31:51 -0400
+Received: by mail-qt1-f182.google.com with SMTP id g7so733611qtc.0
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 08:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iv/3jCjojRbd14DgOBHd7PqX9WLmv8DR7Ac/LmkKrj0=;
+        b=b/Yq2Wyky+AzSHOY8doHM8jY0gDFDLN4Bwh9KAQ/2+IlQgeZY75BLUNWCKYxkdKv5n
+         hS2Y+Ojmik31r27ETq9pxJpeop8Ag2eXVOpaOkBN2UHh5xm+yzaR7Ht1NlY+jEHUaZ7G
+         D9HWFJY4TFDC0GQ8XSLYTxyCibHgzBAlnHx08PM/ZNlcGqxcZFrEWJq1KN2LvmVebPlA
+         o3pVg2F8CmMUQhE823VPI3JGCn48LTavYXzWNiKBhXD00tk5UELtXpqCRgtY0CFU5GkH
+         f4sDIvUpgnEziD65bkWGSAuxd1RTc8bArgId61nh2RCiDcDQCq92BSToui4qQPwDAZuy
+         ppLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iv/3jCjojRbd14DgOBHd7PqX9WLmv8DR7Ac/LmkKrj0=;
+        b=EGiOAD99mc+Oju4fRElK7ybCWKtmMxWwIASJm124EXSlT7vNLdTTQndntgh/qgjpNk
+         e7QfjnQv82FQhOshktxWpqoCNaUhb8yMkaECE5HVV7M0BBoBXIPUj32WfPXtisp2cUHv
+         wpgUVnCDDGl+gbureKGVjEQdhgIapl2CuhCZSIONecyzLTM03rkSNfs8wynLnvWhjMa1
+         JnN9+6aToa/Ytx9RTzvMuXXuGfCxeJFxnGrEje8t5DkIk0DfCsfT7Zp2xNDCTyQScLu7
+         iESZd+psbUl7vp81dJDGadXVK8a6Z3Q4knWm2kMzcIPJM8Lm2Kf3UUFvuSYxBkneWp74
+         dAdA==
+X-Gm-Message-State: APjAAAWEHKP3x7kQtdh9WzmHQzvD1fwjq+7LPZJjyW92hcZGfgFd9y8k
+        WD8X+JqRkc6XLCL6oozQfYI+3g==
+X-Google-Smtp-Source: APXvYqwTnQt2szuODS6U8sqXMKFWO/ts92cmT+co0EE9kl200+47XKgG9xaCl7CYjK6wOgGhVT1l0w==
+X-Received: by 2002:ac8:21ad:: with SMTP id 42mr8105239qty.219.1555774310943;
+        Sat, 20 Apr 2019 08:31:50 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id n201sm3976523qka.10.2019.04.20.08.31.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Apr 2019 08:31:50 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
+        mhocko@suse.com, dave.hansen@linux.intel.com,
+        dan.j.williams@intel.com, keith.busch@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
+        thomas.lendacky@amd.com, ying.huang@intel.com,
+        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
+        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com
+Subject: [v1 0/2] "Hotremove" persistent memory
+Date:   Sat, 20 Apr 2019 11:31:46 -0400
+Message-Id: <20190420153148.21548-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 01:29:23PM -0700, Andy Lutomirski wrote:
+Recently, adding a persistent memory to be used like a regular RAM was
+added to Linux. This work extends this functionality to also allow hot
+removing persistent memory.
 
-> Anyway, clone(2) is an enormous mess.  Surely the right solution here
-> is to have a whole new process creation API that takes a big,
-> extensible struct as an argument, and supports *at least* the full
-> abilities of posix_spawn() and ideally covers all the use cases for
-> fork() + do stuff + exec().  It would be nifty if this API also had a
-> way to say "add no_new_privs and therefore enable extra functionality
-> that doesn't work without no_new_privs".  This functionality would
-> include things like returning a future extra-privileged pidfd that
-> gives ptrace-like access.
+We (Microsoft) have a very important use case for this functionality.
 
-You had been two weeks too late with that, and a bit too obvious with the use
-of "surely" too close to the beginning...
+The requirement is for physical machines with small amount of RAM (~8G)
+to be able to reboot in a very short period of time (<1s). Yet, there is
+a userland state that is expensive to recreate (~2G).
 
-If it was _not_ a belated AFD posting, alt.tasteless is over -> that way...
+The solution is to boot machines with 2G preserved for persistent
+memory.
+
+Copy the state, and hotadd the persistent memory so machine still has all
+8G for runtime. Before reboot, hotremove device-dax 2G, copy the memory
+that is needed to be preserved to pmem0 device, and reboot.
+
+The series of operations look like this:
+
+	1. After boot restore /dev/pmem0 to boot
+	2. Convert raw pmem0 to devdax
+	ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
+	3. Hotadd to System RAM 
+	echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+	echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
+	4. Before reboot hotremove device-dax memory from System RAM
+	echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+	5. Create raw pmem0 device
+	ndctl create-namespace --mode raw  -e namespace0.0 -f
+	6. Copy the state to this device
+	7. Do kexec reboot, or reboot through firmware, is firmware does not
+	zero memory in pmem region.
+
+Pavel Tatashin (2):
+  device-dax: fix memory and resource leak if hotplug fails
+  device-dax: "Hotremove" persistent memory that is used like normal RAM
+
+ drivers/dax/dax-private.h |  2 +
+ drivers/dax/kmem.c        | 82 ++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 79 insertions(+), 5 deletions(-)
+
+-- 
+2.21.0
+
