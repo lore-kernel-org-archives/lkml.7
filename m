@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C64BC282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B475AC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3762183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E242183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Xs0iuGSt"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WQnhJ0rQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfDTKYm (ORCPT
+        id S1727811AbfDTK1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 06:24:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44823 "EHLO
+        Sat, 20 Apr 2019 06:27:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57935 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDTKYl (ORCPT
+        with ESMTP id S1725920AbfDTK1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 06:24:41 -0400
+        Sat, 20 Apr 2019 06:27:21 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3KAJIcO684200
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3KAM4ht685109
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 20 Apr 2019 03:19:18 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3KAJIcO684200
+        Sat, 20 Apr 2019 03:22:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3KAM4ht685109
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555755558;
-        bh=E+sLm9uehRiGlzT+W/+y7Z+7JdEqg9tMPYCh/w6fgas=;
+        s=2019041745; t=1555755725;
+        bh=uDgvLofMZlbsAdT4mzJGmcMQunBDeqaTtSvXsT1dPiU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Xs0iuGStg/dROYjoMJkdRR4xqGDA8RuNrrNI5c+X1AKw9kfoF8niHcBp+6S+niXcd
-         HaupjVSxhhqyXTDvZD7HXzs0gKh9TnoEFq78aZfweBJRQ7706TdGsTKvugdgP9Nntc
-         rwVSEt4GVDo9w5EtvSf7e4vlwLFb5WWQvwzkGN+E+oGz8qTCUWUFw7rICeemHYzu0b
-         md/fMWMkQuw4ej2cABni4iZRjl14RvjUgMK5QsU/f065jSMXujyTY1n1WfI9rPupF5
-         DFzX/p4LVcBQEHUqzHRTQ98zi1djNsWeELrQrC5zPtSARxowj2UuXxGesBnfQ7dDry
-         bYSOeXNV++4oA==
+        b=WQnhJ0rQVAz37oh3qsp51p8WWIN4l6+XECONzOUumFQO2VC9XIvgkLzk0MwY55HJL
+         2pEAih/4RzSDT+AW1zjYxcZHdc3UyYWoNE8i/ypD7/pTvpBTfpTe/R/vnC6U4vCQLC
+         zY0GS9BX6v/kIX0FZug1IkwlXzrVm2Zm8GvbGVR3ReYaUTRObMd3BA5xfeg6+nms2A
+         h6ynJtHnC3gTE7ovl+KpywrdhyLVrXDfg7C6G0aOk5/92Db6ZUW+Oeu7vmCsL5Bx4R
+         d9REY2tmrhMV2vEYPzjueRVGka2hdRdXR0/HygwhIzm27e7BRcsG16UG3aOEKhVgyJ
+         2xQkYHkCuoTeQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3KAJEwk684195;
-        Sat, 20 Apr 2019 03:19:14 -0700
-Date:   Sat, 20 Apr 2019 03:19:14 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3KAM3ds685106;
+        Sat, 20 Apr 2019 03:22:03 -0700
+Date:   Sat, 20 Apr 2019 03:22:03 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for WANG Chao <tipbot@zytor.com>
-Message-ID: <tip-06e0fe2d8e9178bda874a75083bc13647fbf983f@git.kernel.org>
-Cc:     tony.luck@intel.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        chao.wang@ucloud.cn, tglx@linutronix.de, bp@suse.de,
-        mingo@kernel.org, linux-edac@vger.kernel.org
-Reply-To: bp@suse.de, mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-          linux-edac@vger.kernel.org, chao.wang@ucloud.cn,
-          linux-kernel@vger.kernel.org, tony.luck@intel.com
+Message-ID: <tip-09cbd2197e9291d6a3d3f42873f06ca1f388c1a4@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, tony.luck@intel.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        chao.wang@ucloud.cn, hpa@zytor.com, bp@suse.de
+Reply-To: tony.luck@intel.com, linux-edac@vger.kernel.org,
+          chao.wang@ucloud.cn, bp@suse.de, hpa@zytor.com, mingo@kernel.org,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org
 In-Reply-To: <20190418034115.75954-2-chao.wang@ucloud.cn>
 References: <20190418034115.75954-2-chao.wang@ucloud.cn>
 To:     linux-tip-commits@vger.kernel.org
 Subject: [tip:ras/core] RAS/CEC: Increment cec_entered under the mutex lock
-Git-Commit-ID: 06e0fe2d8e9178bda874a75083bc13647fbf983f
+Git-Commit-ID: 09cbd2197e9291d6a3d3f42873f06ca1f388c1a4
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,12 +69,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  06e0fe2d8e9178bda874a75083bc13647fbf983f
-Gitweb:     https://git.kernel.org/tip/06e0fe2d8e9178bda874a75083bc13647fbf983f
-Author:     WANG Chao <chao.wang () ucloud ! cn>
+Commit-ID:  09cbd2197e9291d6a3d3f42873f06ca1f388c1a4
+Gitweb:     https://git.kernel.org/tip/09cbd2197e9291d6a3d3f42873f06ca1f388c1a4
+Author:     WANG Chao <chao.wang@ucloud.cn>
 AuthorDate: Thu, 18 Apr 2019 03:41:14 +0000
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Sat, 20 Apr 2019 12:13:13 +0200
+CommitDate: Sat, 20 Apr 2019 12:16:52 +0200
 
 RAS/CEC: Increment cec_entered under the mutex lock
 
