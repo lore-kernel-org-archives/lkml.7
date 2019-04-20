@@ -2,107 +2,105 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B475AC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E881C282E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E242183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WQnhJ0rQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0799221479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 10:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfDTK1W (ORCPT
+        id S1727957AbfDTKbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 06:27:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57935 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDTK1V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 06:27:21 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3KAM4ht685109
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 20 Apr 2019 03:22:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3KAM4ht685109
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555755725;
-        bh=uDgvLofMZlbsAdT4mzJGmcMQunBDeqaTtSvXsT1dPiU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=WQnhJ0rQVAz37oh3qsp51p8WWIN4l6+XECONzOUumFQO2VC9XIvgkLzk0MwY55HJL
-         2pEAih/4RzSDT+AW1zjYxcZHdc3UyYWoNE8i/ypD7/pTvpBTfpTe/R/vnC6U4vCQLC
-         zY0GS9BX6v/kIX0FZug1IkwlXzrVm2Zm8GvbGVR3ReYaUTRObMd3BA5xfeg6+nms2A
-         h6ynJtHnC3gTE7ovl+KpywrdhyLVrXDfg7C6G0aOk5/92Db6ZUW+Oeu7vmCsL5Bx4R
-         d9REY2tmrhMV2vEYPzjueRVGka2hdRdXR0/HygwhIzm27e7BRcsG16UG3aOEKhVgyJ
-         2xQkYHkCuoTeQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3KAM3ds685106;
-        Sat, 20 Apr 2019 03:22:03 -0700
-Date:   Sat, 20 Apr 2019 03:22:03 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for WANG Chao <tipbot@zytor.com>
-Message-ID: <tip-09cbd2197e9291d6a3d3f42873f06ca1f388c1a4@git.kernel.org>
-Cc:     tglx@linutronix.de, mingo@kernel.org, tony.luck@intel.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chao.wang@ucloud.cn, hpa@zytor.com, bp@suse.de
-Reply-To: tony.luck@intel.com, linux-edac@vger.kernel.org,
-          chao.wang@ucloud.cn, bp@suse.de, hpa@zytor.com, mingo@kernel.org,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org
-In-Reply-To: <20190418034115.75954-2-chao.wang@ucloud.cn>
-References: <20190418034115.75954-2-chao.wang@ucloud.cn>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:ras/core] RAS/CEC: Increment cec_entered under the mutex lock
-Git-Commit-ID: 09cbd2197e9291d6a3d3f42873f06ca1f388c1a4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 20 Apr 2019 06:31:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59405 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfDTKbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 06:31:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44mTf91SR8z9s70;
+        Sat, 20 Apr 2019 20:31:28 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, rguenther@suse.de,
+        mhocko@suse.com, vbabka@suse.cz, luto@amacapital.net,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, stable@vger.kernel.org,
+        Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Subject: Re: [PATCH] x86/mpx: fix recursive munmap() corruption
+In-Reply-To: <alpine.DEB.2.21.1904191248090.3174@nanos.tec.linutronix.de>
+References: <20190401141549.3F4721FE@viggo.jf.intel.com> <alpine.DEB.2.21.1904191248090.3174@nanos.tec.linutronix.de>
+Date:   Sat, 20 Apr 2019 20:31:27 +1000
+Message-ID: <87d0lht1c0.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  09cbd2197e9291d6a3d3f42873f06ca1f388c1a4
-Gitweb:     https://git.kernel.org/tip/09cbd2197e9291d6a3d3f42873f06ca1f388c1a4
-Author:     WANG Chao <chao.wang@ucloud.cn>
-AuthorDate: Thu, 18 Apr 2019 03:41:14 +0000
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Sat, 20 Apr 2019 12:16:52 +0200
+Thomas Gleixner <tglx@linutronix.de> writes:
+> On Mon, 1 Apr 2019, Dave Hansen wrote:
+>> diff -puN mm/mmap.c~mpx-rss-pass-no-vma mm/mmap.c
+>> --- a/mm/mmap.c~mpx-rss-pass-no-vma	2019-04-01 06:56:53.409411123 -0700
+>> +++ b/mm/mmap.c	2019-04-01 06:56:53.423411123 -0700
+>> @@ -2731,9 +2731,17 @@ int __do_munmap(struct mm_struct *mm, un
+>>  		return -EINVAL;
+>>  
+>>  	len = PAGE_ALIGN(len);
+>> +	end = start + len;
+>>  	if (len == 0)
+>>  		return -EINVAL;
+>>  
+>> +	/*
+>> +	 * arch_unmap() might do unmaps itself.  It must be called
+>> +	 * and finish any rbtree manipulation before this code
+>> +	 * runs and also starts to manipulate the rbtree.
+>> +	 */
+>> +	arch_unmap(mm, start, end);
+>
+> ...
+>   
+>> -static inline void arch_unmap(struct mm_struct *mm, struct vm_area_struct *vma,
+>> -			      unsigned long start, unsigned long end)
+>> +static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
+>> +			      unsigned long end)
+>
+> While you fixed up the asm-generic thing, this breaks arch/um and
+> arch/unicorn32. For those the fixup is trivial by removing the vma
+> argument.
+>
+> But itt also breaks powerpc and there I'm not sure whether moving
+> arch_unmap() to the beginning of __do_munmap() is safe. Micheal???
 
-RAS/CEC: Increment cec_entered under the mutex lock
+I don't know for sure but I think it should be fine. That code is just
+there to handle CRIU unmapping/remapping the VDSO. So that either needs
+to happen while the process is stopped or it needs to handle races
+anyway, so I don't see how the placement within the unmap path should
+matter.
 
-Modify ->cec_entered in the critical section of the mutex.
+> Aside of that the powerpc variant looks suspicious:
+>
+> static inline void arch_unmap(struct mm_struct *mm,
+>                               unsigned long start, unsigned long end)
+> {
+>  	if (start <= mm->context.vdso_base && mm->context.vdso_base < end)
+>                 mm->context.vdso_base = 0;
+> }
+>
+> Shouldn't that be: 
+>
+>  	if (start >= mm->context.vdso_base && mm->context.vdso_base < end)
+>
+> Hmm?
 
-Signed-off-by: WANG Chao <chao.wang@ucloud.cn>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190418034115.75954-2-chao.wang@ucloud.cn
----
- drivers/ras/cec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yeah looks pretty suspicious. I'll follow-up with Laurent who wrote it.
+Thanks for spotting it!
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 2d9ec378a8bc..88e4f3ff0cb8 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -286,10 +286,10 @@ int cec_add_elem(u64 pfn)
- 	if (!ce_arr.array || ce_arr.disabled)
- 		return -ENODEV;
- 
--	ca->ces_entered++;
--
- 	mutex_lock(&ce_mutex);
- 
-+	ca->ces_entered++;
-+
- 	if (ca->n == MAX_ELEMS)
- 		WARN_ON(!del_lru_elem_unlocked(ca));
- 
+cheers
