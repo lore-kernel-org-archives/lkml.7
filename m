@@ -2,134 +2,135 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CDDC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C22C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 04:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E463F21479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A8D21479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 04:04:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOT0Kz5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfDTD5b (ORCPT
+        id S1726134AbfDTEEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 23:57:31 -0400
-Received: from smtprelay0155.hostedemail.com ([216.40.44.155]:45450 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725911AbfDTD5b (ORCPT
+        Sat, 20 Apr 2019 00:04:01 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37400 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725910AbfDTEEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 23:57:31 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id E1C88182CED28;
-        Sat, 20 Apr 2019 03:57:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: blade53_5ddfc643d6a28
-X-Filterd-Recvd-Size: 4767
-Received: from XPS-9350 (unknown [162.249.177.49])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 20 Apr 2019 03:57:24 +0000 (UTC)
-Message-ID: <fc2875ed63b9d2b2e94893f9af425cbbedb75d3e.camel@perches.com>
-Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in
- kdb summary
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Date:   Fri, 19 Apr 2019 20:57:05 -0700
-In-Reply-To: <20190419135830.0e3273e223fb83947e5adb0d@linux-foundation.org>
-References: <20190323015227.245455-1-dianders@chromium.org>
-         <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com>
-         <20190416163034.3e642818ebf27ed6891c1981@linux-foundation.org>
-         <CAK7LNAR4Ty8835sfo4HSvBsMCsV65mY2HOajFSY2TOYurmkFdw@mail.gmail.com>
-         <20190418160651.40cb6a11186a6c6028e9d20d@linux-foundation.org>
-         <CAK7LNAQe2uaVfKee1F6R4siVvUSCMgSaYAnUQfz8MS5PeFqpGA@mail.gmail.com>
-         <e5f29ca9b6067fff9ea68cb25e15906659cd51ad.camel@perches.com>
-         <20190419135830.0e3273e223fb83947e5adb0d@linux-foundation.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 20 Apr 2019 00:04:00 -0400
+Received: by mail-lf1-f65.google.com with SMTP id o19so5250512lfl.4;
+        Fri, 19 Apr 2019 21:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=W7EuQ38Jk5ir6uq2mAZGOW3QIER8a/X6pBTKduTAxU0=;
+        b=cOT0Kz5LDOzXz2f4n/ryXXvF89jL5Zy7fwTSex89VHz5rJHMUS6LsUFwrazN+bPUM9
+         dg5MbYjN4UFqUL/YczbI9ZmwYdoAjiepF/c9e2hOjaxu1lq/U2E4Ta1OS9UxShuJRlMj
+         Kx504f+IlzsV0mIGnz8WbmcW+xPPVEwDcP4e7nybULJ9ukcStQrCoRCbCB/2vvnAuEZx
+         XFNMOhkskGCfSdh3aQ/grOmyVU7lKQfZfEYi/iTgg1oy8M1oh3akr1ClSQeBRnrLKtS/
+         J9Rx44TilvwWJR3xDnkiw1zIjGw4C1K+WRH/WxcrfruCypUApT+uUc3WY2HL1LCYEL4I
+         Gy6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W7EuQ38Jk5ir6uq2mAZGOW3QIER8a/X6pBTKduTAxU0=;
+        b=nVPnHlAQGz0rBqI8DdY0oxtAifzDUiPzxkC8Nex/a5NVP/vENZVwnhjFAIO+QRpPjY
+         gCaUm19Rr+MlYSc4Y0uDElwEUEl4cqNcHnuOY0q3JjTSuWfgH8B9w6gsftWNIuJ69ODs
+         dISj2R/5rv+5I1NI3Lni3a3fmTk/0v71TnLqI23CgW4JKKWkGxbZ3YltZZLG6zaBfLTt
+         L+dQoXzWrBTgVGm9PKqtntVkJ3y6xRhd32cPCnh2DBAgPujRObSlCKO30XgSCRcO9523
+         xdrrkZsaC40ni9mw5BlL+J/kP6QGqG9gs1jZmHA7ifo3hfrMAFXPkD8uH5rlMeUyPcg1
+         tujQ==
+X-Gm-Message-State: APjAAAXq9LTaL9tejEAWwOzX/x2asUgRRpLyUDWTOZ+/8w7N/utIvTaL
+        q51ZfMwagBg6v+RT/zd8bGA=
+X-Google-Smtp-Source: APXvYqzqmBc0b7EyiVkU95u1ViIKH3O9RtfeKCGUvfFIwixXqpOM3PBF0+AGuSYtDdrZ//GqKyxHYw==
+X-Received: by 2002:ac2:5a11:: with SMTP id q17mr4042073lfn.145.1555733038211;
+        Fri, 19 Apr 2019 21:03:58 -0700 (PDT)
+Received: from localhost.localdomain (93-96-157.netrun.cytanet.com.cy. [93.109.96.157])
+        by smtp.gmail.com with ESMTPSA id s2sm1551503lfp.20.2019.04.19.21.03.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 19 Apr 2019 21:03:57 -0700 (PDT)
+From:   Mohan Kumar <mohankumar718@gmail.com>
+To:     rjw@rjwysocki.net
+Cc:     lenb@kernel.org, bhelgaas@google.com, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] PCI: Cleanup printk logging
+Date:   Sat, 20 Apr 2019 07:03:46 +0300
+Message-Id: <1555733026-19609-1-git-send-email-mohankumar718@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-19 at 13:58 -0700, Andrew Morton wrote:
-> On Fri, 19 Apr 2019 04:14:27 -0700 Joe Perches <joe@perches.com> wrote:
-> > On Fri, 2019-04-19 at 12:28 +0900, Masahiro Yamada wrote:
-> > > Can you detect redundant Cc: by checkpatch?
-[]
-> > I'm not sure why it's useful or necessary.
-[]
-> The issue here is redundant Cc: lines in the changelog.
+Replace printk with pr_* to avoid checkpatch warnings.
 
-CC: entries have very little actual value in a changelog anyway.
+Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+---
+ drivers/pci/pci-acpi.c | 11 ++++-------
+ drivers/pci/quirks.c   |  2 +-
+ 2 files changed, 5 insertions(+), 8 deletions(-)
 
-> > --- a/scripts/checkpatch.pl
-[]
-> > @@ -2688,6 +2688,19 @@ sub process {
-> >  				$signatures{$sig_nospace} = 1;
-> >  			}
-> >  
-> > +# Check for a cc: line with another signature -by: by the same author
-> > +			if ($sig_nospace =~ /^cc:/) {
-> > +				my $sig_email = substr($sig_nospace, 3);
-> > +				foreach my $sig (sort keys %signatures) {
-> > +					next if ($sig =~ /^cc:/);
-> > +					$sig =~ s/^[^:]+://;
-> > +					if ($sig eq $sig_email) {
-> > +						WARN("BAD_SIGN_OFF",
-> > +						     "Unnecessary CC: as there is another signature with the same name/email address\n" . $herecurr);
-> > +					}
-> > +				}
-> > +			}
-> > +
-> >  # Check Co-developed-by: immediately followed by Signed-off-by: with same name and email
-> >  			if ($sign_off =~ /^co-developed-by:$/i) {
-> >  				if ($email eq $author) {
-> 
-> Thanks.  But my checkpatch.pl is different from yours.
-> 
-> q:/usr/src/25> grep "immediately followed by" scripts/checkpatch.pl
-> q:/usr/src/25> 
-
-I almost always write patches against -next
-
-$ git grep "immediately followed by" next-20190418 -- scripts/checkpatch.pl
-next-20190418:scripts/checkpatch.pl:# Check Co-developed-by: immediately followed by Signed-off-by: with same name and email
-next-20190418:scripts/checkpatch.pl:                                             "Co-developed-by: must be immediately followed by Signed-off-by:\n" . "$here\n" . $rawline);
-next-20190418:scripts/checkpatch.pl:                                         "Co-developed-by: must be immediately followed by Signed-off-by:\n" . "$here\n" . $rawline . "\n" .$rawlines[$linenr]);
-
-You seem to be missing
-
-commit 6c5d24eef7be7adfcb608f2852ab69b58935133b
-Author: Sean Christopherson <sean.j.christopherson@intel.com>
-Date:   Fri Mar 22 14:11:37 2019 -0700
-
-    checkpatch: Warn on improper usage of Co-developed-by
-    
-    The purpose of Co-developed-by: is to give attribution to authors who
-    aren't already attributed by the From: tag, i.e. who aren't the nominal
-    patch author.  Because Co-developed-by: is essentially a variation of
-    From:, it must be accompanied by a Signed-off-by: of the associated
-    co-author.  To ease the burden of determining whether or not co-authors
-    have signed off, Co-developed-by and Signed-off-by: must be explicitly
-    paired, i.e. on consecutive lines for a given co-author.
-    
-    Suggested-by: Joe Perches <joe@perches.com>
-    Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-    Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index e1949f7..3ada026 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -140,8 +140,7 @@ static acpi_status decode_type0_hpx_record(union acpi_object *record,
+ 		hpx->t0->enable_perr     = fields[5].integer.value;
+ 		break;
+ 	default:
+-		printk(KERN_WARNING
+-		       "%s: Type 0 Revision %d record not supported\n",
++		pr_warn("%s: Type 0 Revision %d record not supported\n",
+ 		       __func__, revision);
+ 		return AE_ERROR;
+ 	}
+@@ -169,8 +168,7 @@ static acpi_status decode_type1_hpx_record(union acpi_object *record,
+ 		hpx->t1->tot_max_split = fields[4].integer.value;
+ 		break;
+ 	default:
+-		printk(KERN_WARNING
+-		       "%s: Type 1 Revision %d record not supported\n",
++		pr_warn("%s: Type 1 Revision %d record not supported\n",
+ 		       __func__, revision);
+ 		return AE_ERROR;
+ 	}
+@@ -211,8 +209,7 @@ static acpi_status decode_type2_hpx_record(union acpi_object *record,
+ 		hpx->t2->sec_unc_err_mask_or   = fields[17].integer.value;
+ 		break;
+ 	default:
+-		printk(KERN_WARNING
+-		       "%s: Type 2 Revision %d record not supported\n",
++		pr_warn("%s: Type 2 Revision %d record not supported\n",
+ 		       __func__, revision);
+ 		return AE_ERROR;
+ 	}
+@@ -272,7 +269,7 @@ static acpi_status acpi_run_hpx(acpi_handle handle, struct hotplug_params *hpx)
+ 				goto exit;
+ 			break;
+ 		default:
+-			printk(KERN_ERR "%s: Type %d record not supported\n",
++			pr_err("%s: Type %d record not supported\n",
+ 			       __func__, type);
+ 			status = AE_ERROR;
+ 			goto exit;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f9cd4d4..06af0c3 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2613,7 +2613,7 @@ static void nvbridge_check_legacy_irq_routing(struct pci_dev *dev)
+ 	pci_read_config_dword(dev, 0x74, &cfg);
+ 
+ 	if (cfg & ((1 << 2) | (1 << 15))) {
+-		printk(KERN_INFO "Rewriting IRQ routing register on MCP55\n");
++		pr_info("Rewriting IRQ routing register on MCP55\n");
+ 		cfg &= ~((1 << 2) | (1 << 15));
+ 		pci_write_config_dword(dev, 0x74, cfg);
+ 	}
+-- 
+2.7.4
 
