@@ -2,144 +2,121 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B3DC282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A50C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276C32087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62E921871
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 12:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="WwxZc8O1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="W/vcSW1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfDTMXZ (ORCPT
+        id S1728254AbfDTMYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 08:23:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37068 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfDTMXZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 08:23:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e6so3804537pgc.4
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 05:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lZrcXnZdn7xjrXsqmqiror62OxRMVPaG0x3r/D/8YBQ=;
-        b=WwxZc8O19Qlub3zgWlpi5OUaGAH38MjbtmfB6pV1Bnvn2bopmJ+gO44s0krCgU1BS+
-         /xZHFCfsl1+Ij4/0qjBZgK593iIOnYegGprcFFka5b/G/mJKnzonSHgDoMNt1J2rXmcx
-         2lTT8fu0DPy4zc18zbuawNtfNEecgRpZQTWXl9Gah0/CQ1Tq3gjfZmRfBDvmranTV+cf
-         MS4PLIGDVM2daVOiBy77m+B4c5v9yPyySMn1a1HAlCMbGaDdcncjxA6fdQEqwnY5C5u2
-         kXbw/zwG+VEU17iLriowDr5gcb+ZCReSJ09FttusDgF0gqga5gsvAN5HZWpdvbbEIUhz
-         73Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lZrcXnZdn7xjrXsqmqiror62OxRMVPaG0x3r/D/8YBQ=;
-        b=BlzCUeNXZY6ZdJV9pPKhuFhRTFTHQzDlj5rJ31jyGsWNIQ8dI8Lo29spIpSUL44xbL
-         poBDwvtgJwv7ArK+EedKyaahKF/e1FKeQ5AA0DnikwmboGxSSxbHAt9qDDyyZSnTddmN
-         JJ5bqgnWcNGu2DwRouM81y3ta2aD6enjHkd87viqC+WUpJUKdH8pG27BjaM5kvebYlbA
-         xerkbJG1+3/pmZFjKcaAUhJQxd2rQYU7g3vGJtWMO0CvjqDVsCKkOvV514aYSzfNof5O
-         kSn0PjQhL3Tg6hd0Pz8pGcCJDfAcnmSvrfa3SQeKauhZvqBc/oIg+x2jPJzTpTyN7Ngt
-         03zg==
-X-Gm-Message-State: APjAAAU528MXy1bqXdw4S4d7KILuwRRp6wNflX6M/R2flTkeHmTr/kAx
-        4bHmjZ9vdVYEjOXQ1sfltWJfce3X8x2Tp7Kk3ivfjg==
-X-Google-Smtp-Source: APXvYqxZurU01XjM49DVH6vAb1H86e2zcwQh60AcdJrwpdWhXXMd7YSkgR8LgTFEMNjx3u++0DydVdVaiPPW7zlHm/4=
-X-Received: by 2002:a62:2fc7:: with SMTP id v190mr9325689pfv.10.1555763004733;
- Sat, 20 Apr 2019 05:23:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190414200824.28348-1-paul@crapouillou.net> <20190414200824.28348-2-paul@crapouillou.net>
- <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
-In-Reply-To: <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sat, 20 Apr 2019 09:23:13 -0300
-Message-ID: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver bindings
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Sat, 20 Apr 2019 08:24:16 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:46428 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbfDTMYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 08:24:16 -0400
+Received: from localhost.localdomain (91-115-28-155.adsl.highway.telekom.at [91.115.28.155])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 1F776C17A5;
+        Sat, 20 Apr 2019 12:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1555763053; bh=U/6xQAEPyP1EsnAjW4EqK13j+ZKhfQvV0IwSY8CpWEk=;
+        h=From:To:Cc:Subject:Date;
+        b=W/vcSW1w5ZNHo1cbiwivBW18eUdf1jQrpGnDl20De+Ki/yO4QJSV2fi9NyxwkfVnd
+         tXou1MywKLQKzAbL2DvVJs8yq1SbCDcC42AI7+iMGlD2u4hCC3BHAeZRz3IUumeAZ/
+         MF6U2Aaa09FsBxvXKpeoWusmV0kZaEGN9hCyLvP4=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, od@zcrc.me,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Rob Herring <robh@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
+        Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH v4 1/3] dt-bindings: input: add GPIO controllable vibrator
+Date:   Sat, 20 Apr 2019 14:23:31 +0200
+Message-Id: <20190420122333.23662-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 at 10:48, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil <paul@crapouillou.net> wrot=
-e:
-> >
-> > Add macros that can be used with the ingenic,lcd-mode property in the
-> > devicetree node that corresponds to the ingenic-drm driver.
->
-> DRM is a Linuxism.
->
-> >
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> > ---
-> >
-> > Notes:
-> >     v2: No change
-> >
-> >     v3: s/_DRM//
-> >
-> >  include/dt-bindings/display/ingenic,drm.h | 28 +++++++++++++++++++++++=
-+++++
->
-> DRM is a Linuxism...
->
-> >  1 file changed, 28 insertions(+)
-> >  create mode 100644 include/dt-bindings/display/ingenic,drm.h
-> >
-> > diff --git a/include/dt-bindings/display/ingenic,drm.h b/include/dt-bin=
-dings/display/ingenic,drm.h
-> > new file mode 100644
-> > index 000000000000..c749b8c346fc
-> > --- /dev/null
-> > +++ b/include/dt-bindings/display/ingenic,drm.h
-> > @@ -0,0 +1,28 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + *  Ingenic JZ47xx KMS driver
->
-> Pretty sure this file is not a KMS driver.
->
-> > + *
-> > + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
-> > + */
-> > +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
-> > +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
-> > +
-> > +#define JZ_LCD_GENERIC_16BIT                   0
-> > +#define JZ_LCD_GENERIC_18BIT                   16
->
-> We have some generic properties for defining the bus width already.
-> Plus, in many cases this can be implied by the panel compatible. The
-> exceptions are cases such as when both the ctrlr and panel support
-> multiple modes.
->
+Provide a simple driver for GPIO controllable vibrators.
+It will be used by the Fairphone 2.
 
-In the same direction as Rob's comment, I'd like to see these decoupled
-from the register value.
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+Changes from v3:
+- Convert .txt based doc to the new yaml based format
 
-Ideally, we'd like to reuse this driver and its bindings for JZ4780,
-and these values are already different.
+ .../bindings/input/gpio-vibrator.yaml         | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.yaml
 
-Thanks!
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
+diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+new file mode 100644
+index 000000000000..bca1b6ea07a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/input/gpio-vibrator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: GPIO vibrator
++
++maintainers:
++  - Luca Weiss <luca@z3ntu.xyz>
++
++description: |+
++  Registers a GPIO device as vibrator, where the on/off capability is controlled by a GPIO.
++
++properties:
++  compatible:
++    items:
++      - const: gpio-vibrator
++
++  enable-gpios:
++    maxItems: 1
++
++  vcc-supply:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Regulator that provides power
++
++required:
++  - compatible
++  - enable-gpios
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    vibrator {
++        compatible = "gpio-vibrator";
++        enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
++        vcc-supply = <&pm8941_l18>;
++    };
+-- 
+2.21.0
+
