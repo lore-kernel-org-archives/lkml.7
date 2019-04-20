@@ -2,65 +2,63 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029C9C282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD6C282E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC73208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F56620869
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 16:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="M1iwu9ox"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="lQ5hlKkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfDTQa2 (ORCPT
+        id S1728436AbfDTQei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 12:30:28 -0400
-Received: from mail-ed1-f41.google.com ([209.85.208.41]:45427 "EHLO
-        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfDTQa1 (ORCPT
+        Sat, 20 Apr 2019 12:34:38 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45142 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDTQei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 12:30:27 -0400
-Received: by mail-ed1-f41.google.com with SMTP id k92so6575578edc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 09:30:26 -0700 (PDT)
+        Sat, 20 Apr 2019 12:34:38 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y84so5875275oia.12
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 09:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RZD2TOJdguYske3XdmnLmIq3XfcXZwBSYG0QJWjhaWk=;
-        b=M1iwu9oxwvEKXc+QWcLRm6hRiQ5kUxXpfVx34XcRBUZhoRcClhsh0JUyIwC1Ht03If
-         8a3G+pXgKZ9eavm0LjqGnf1JevmNy/hEoTi1kNvr/hT7CU/N9lh/wstJca1903j3q879
-         zWvJI/IPpJUKqLRCxvH5qRHYbnBDUKQy+AlS8GyhCyUN0nTH4Fd/1S7KmPnCYG9mSn28
-         2gQna42o0dUnhv0WrZf4ZmljAB7Iz/0ANS5d32EYaSbcFqdniC2v+w89Yc+/qAuk6ELQ
-         gBYuclDgpS0azcJCu6eTr5cKRx2t41QOMFBfPxhgW4g9bkAA2N/pCgS01Ui1P8Lw52Gu
-         bixQ==
+        bh=2nkNuARp9X01dKfEBOtMwOp996ppluuGSD9cN/HBKF0=;
+        b=lQ5hlKknHgUdIgtdCdSW+BlZNAFfLwu4hWsS9k88Ag24YEMBmAwCWE3/CkQVyeYzeg
+         3DBa/mRqMobf0jbS4KDLFQpX2/bLaOPnc0J0DAzpIxxqngPpoOFIZcZ1Ig2O2j1EO3wf
+         GAun3ArtW1LScidQo9nzjwulZ5rXl5sF8L72MNAsiCJCkFtoO5KK4A8jdV4ivGcF97H+
+         I44a7FkspL8ec+mXvswIjUGz6vQ1DsIc+M8DgUzXLsv2YU7wNEYsP/zx7o4x1/zNh3AH
+         Tv/+hv9FI06FU/1rSvaLo8VX4p/Z2DHQwjQ2PjY8ERIoNlVwd9PcVwuwgdbAyuDsq3tt
+         oQRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RZD2TOJdguYske3XdmnLmIq3XfcXZwBSYG0QJWjhaWk=;
-        b=m99m062szSt/zhytmPzBQhKk+XKDpKaNUB3nYW+PGR5DSyjlTS2qhGDZaDCOkxYmgI
-         pTUVtc+iwIL7a/38ecNo+o+Z/dyjHdc2FW7a4MYYUGC6/rwG0Zt56uZ6oX3/8Sr8dqK/
-         n9UuJJmmXqmM4Kj3DaXhFPo2M8U4zdzaawbaG2ErCwD+OkKRGlqhndD/k3cQoB38bhaQ
-         sVa+vsjHdHP1OwAzHKhESRyyXo4CKPremixSjGyZRY7rTGoLgwRW2HiXr2P/aqApvUPU
-         XbphFR7lPigFzNagRNc8i+3jjabrznCq0HMMTdBIukiW/xVkmi0i52ovLO7Czw2LzGGI
-         BwZg==
-X-Gm-Message-State: APjAAAV+CD248nqZhOTJpn3R5qLydypzuf8C7kXwIuC8FoQp9rem/yHp
-        GoQLwe1jE34tU8n83iluu5wtUHZEkXnIijqg2UoJrg==
-X-Google-Smtp-Source: APXvYqyvovu6cFSV63PCP8G4i0thnTzgWZNHajiZGvrLh8glESaAwS8yzV/gVTNrN+wbgH9aZrQzqv2Ey0SevBe6Nm8=
-X-Received: by 2002:a50:a4e4:: with SMTP id x33mr6290803edb.61.1555777825844;
- Sat, 20 Apr 2019 09:30:25 -0700 (PDT)
+        bh=2nkNuARp9X01dKfEBOtMwOp996ppluuGSD9cN/HBKF0=;
+        b=nNHQBlImLzij2UifN/YclQBl0h99GIhQtp0FQlFCqQqXNHfg9zjnxxQ/06ZI6CDfgY
+         gbSJG1AaMOIgkLwrnmab8qz390m7VEyoiXXbA3SkZeGqb5y/8VCXFwun8iUK5fn+d9w5
+         CkzqEmpw9ADOUiEaqlaLG0QfwvDxnnUeFJmmHionBi2YsQtvMjasF+0MfpX3ukk33ReP
+         bdGZpb5JLvPekRda/njMkLQrQ/Vl+SeoFRf4eRNlLY9tK5Ll00iq+q8RcrDfozeJ6GL7
+         TnSIL+sps2yCjk2JtupgddA4m2MzZPBxOroHIlzNy9maCl7Mls6P2m9xvh9NeuS3FNFg
+         1W3w==
+X-Gm-Message-State: APjAAAXhmnhyIbKva1BRPHyLs8MAmADyNBb7r7gw9bErm3ExTJCAbELD
+        3Y9QU7eQu1qZNpkXYARwZ+bSPvQB1SpAuZ91QiVhpA==
+X-Google-Smtp-Source: APXvYqwPxWJkMWqyvsgPZQqhL3+W5zzE3UErLcb18t7ERNXhzlO8we8FPAnQV+jOk6LI1G7NFpMMK/IvtwiYI/3C0cA=
+X-Received: by 2002:aca:d513:: with SMTP id m19mr5252902oig.73.1555778077724;
+ Sat, 20 Apr 2019 09:34:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190420153148.21548-1-pasha.tatashin@soleen.com>
- <20190420153148.21548-3-pasha.tatashin@soleen.com> <CAPcyv4j9sG6Wy3EfTuPb0uZ2qp=gr9UgUhpnXQA_g6Ko9KFmLA@mail.gmail.com>
-In-Reply-To: <CAPcyv4j9sG6Wy3EfTuPb0uZ2qp=gr9UgUhpnXQA_g6Ko9KFmLA@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Sat, 20 Apr 2019 12:30:14 -0400
-Message-ID: <CA+CK2bA2QTzZtFvGRMaG10_TretDr6CGgZc4Hyi_1pku4ECqXw@mail.gmail.com>
-Subject: Re: [v1 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     Dan Williams <dan.j.williams@intel.com>
+In-Reply-To: <20190420153148.21548-1-pasha.tatashin@soleen.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 20 Apr 2019 09:34:26 -0700
+Message-ID: <CAPcyv4h73gUwntDYx012qcyMYCmzZDU3HOvKcW5DRkO-GoTc+w@mail.gmail.com>
+Subject: Re: [v1 0/2] "Hotremove" persistent memory
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
 Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux MM <linux-mm@kvack.org>,
@@ -86,23 +84,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +
-> > +       /* Walk and offline every singe memory_block of the dax region. */
-> > +       lock_device_hotplug();
-> > +       rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
-> > +       unlock_device_hotplug();
-> > +       if (rc)
-> > +               return rc;
+On Sat, Apr 20, 2019 at 8:32 AM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
 >
-> This potential early return is the reason why memory hotremove is not
-> reliable vs the driver-core. If this walk fails to offline the memory
-> it will still be online, but the driver-core has no consideration for
-> device-unbind failing. The ubind will proceed while the memory stays
-> pinned.
+> Recently, adding a persistent memory to be used like a regular RAM was
+> added to Linux. This work extends this functionality to also allow hot
+> removing persistent memory.
+>
+> We (Microsoft) have a very important use case for this functionality.
+>
+> The requirement is for physical machines with small amount of RAM (~8G)
+> to be able to reboot in a very short period of time (<1s). Yet, there is
+> a userland state that is expensive to recreate (~2G).
+>
+> The solution is to boot machines with 2G preserved for persistent
+> memory.
 
-Hi Dan,
+Makes sense, but I have some questions about the details.
 
-Thank you for looking at this.  Are you saying, that if drv.remove()
-returns a failure it is simply ignored, and unbind proceeds?
+>
+> Copy the state, and hotadd the persistent memory so machine still has all
+> 8G for runtime. Before reboot, hotremove device-dax 2G, copy the memory
+> that is needed to be preserved to pmem0 device, and reboot.
+>
+> The series of operations look like this:
+>
+>         1. After boot restore /dev/pmem0 to boot
+>         2. Convert raw pmem0 to devdax
+>         ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
+>         3. Hotadd to System RAM
+>         echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+>         echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
+>         4. Before reboot hotremove device-dax memory from System RAM
+>         echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+>         5. Create raw pmem0 device
+>         ndctl create-namespace --mode raw  -e namespace0.0 -f
+>         6. Copy the state to this device
 
-Pasha
+What is the source of this copy? The state that was in the hot-added
+memory? Isn't it "already there" since you effectively renamed dax0.0
+to pmem0?
+
+>         7. Do kexec reboot, or reboot through firmware, is firmware does not
+>         zero memory in pmem region.
+
+Wouldn't the dax0.0 contents be preserved regardless? How does the
+guest recover the pre-initialized state / how does the kernel know to
+give out the same pages to the application as the previous boot?
