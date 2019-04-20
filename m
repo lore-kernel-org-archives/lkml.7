@@ -2,112 +2,141 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D613C282E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 07:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E55C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 07:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E89E2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 07:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F93F2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 07:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="E7hKOzVB"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sO3myiiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfDTHUS (ORCPT
+        id S1727914AbfDTHV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 03:20:18 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43450 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfDTHUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 03:20:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c8so3447928pfd.10
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 00:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8hxiDFq7XRCSfJcR8XGrV9GMZHdT859fYNRXkCpzw2Q=;
-        b=E7hKOzVBVcvwfqxlWmm3bneXx/YWiZazHjPqa4s9wXsvl2IpIoAc6T3X0az9qjFjPA
-         JglvOl4mAX+kj/RoQvLs226wzdtGysZr2ZRz87lyvah2hoedbt5/JCVaoScFJfyqiHIj
-         Jiwj6FZv6uaFLCWlFCJxhG6SN3l4Sys3jkT10RcjTWhmdzB4HH0k3i+BN1+24CEkASml
-         dmYtzTIWyzQXGfi9S6Cpphr3DGUA/tsjqwilXWWvlEnXjxvkC+doqgSXhdokuavsEHyD
-         qVPKLqooXtfs4b7UDaBwOHSl0nE/80VgDHsuyvYSoiviXpxux7OtXBkuWfoeCy3vphYI
-         8HOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8hxiDFq7XRCSfJcR8XGrV9GMZHdT859fYNRXkCpzw2Q=;
-        b=GGznUCa2kyGsEum9Pz62sFFgjXoqqrL1z1eymkLmlyZQd/hkZ6f+FZfMWhno4iy9eN
-         LMBcylZB+iBZtqt5ucwi6WggQ0aBmOMscEFMheIrwv4Ur/UloVFpLlDuXSUIMWlPYG1s
-         UTvEH617+DU2SRwG2+Ns/Bf2aExzEF6PqzxjaHLLAmOmSFobIA78Y8ey+r46F5NmuerR
-         Yj5xmt9x/YO9OzV1yI2HW02ejrj48rTPe4a9wPFwvoWQ3PSW9mU7CQheHfU5rt90+rQZ
-         tO3LAdRzfFJiZuSIWePGxSh71J4bM9ipmwuuOJ1P0bNvbkBCVgV31LwnNkukT18iZkZ8
-         23qg==
-X-Gm-Message-State: APjAAAXaW06JseLwOaggSJ3wH1hjZsTgat/it4wKqfK9HJF7Re6zBhu7
-        XvzmECnj0+avLtoZgdF0ZiP1ng==
-X-Google-Smtp-Source: APXvYqyQbplDQHLQyUMrZcqAtuyqJYJy5h4Glm5RA9uDYlly8+GBMicCvYhv7VKojfh4BuzycDaPow==
-X-Received: by 2002:a65:62c3:: with SMTP id m3mr8097829pgv.159.1555744816333;
-        Sat, 20 Apr 2019 00:20:16 -0700 (PDT)
-Received: from localhost.localdomain (36-239-215-67.dynamic-ip.hinet.net. [36.239.215.67])
-        by smtp.gmail.com with ESMTPSA id g10sm7661852pgq.54.2019.04.20.00.20.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 00:20:15 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Gyungoh Yoo <gyungoh@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: sky81452: Switch to SPDX identifier
-Date:   Sat, 20 Apr 2019 15:20:01 +0800
-Message-Id: <20190420072001.16900-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190420072001.16900-1-axel.lin@ingics.com>
-References: <20190420072001.16900-1-axel.lin@ingics.com>
+        Sat, 20 Apr 2019 03:21:26 -0400
+Received: from mail-eopbgr50053.outbound.protection.outlook.com ([40.107.5.53]:63461
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727273AbfDTHV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 03:21:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H4Kmrrp+vGD4w3K3HdsZQ2YSAVFPIC7rQZC6bvcIoE0=;
+ b=sO3myiiIwK5c0ai3Kja+SwghSNbSGN40igiH0GxVLglNYb3Bd7kZiAIw9nD3ZDj4PmBzPEsrJflwa9Qze4GwgtSv8jlnO+iOguHADW1WP+c4mx22NMAKeBJzWISB5qMYNpGdzQDqJjM1kj4eNNK/jgE5RYfWl9ooh11OSKGT1UY=
+Received: from AM0PR04MB6468.eurprd04.prod.outlook.com (20.179.253.81) by
+ AM0PR04MB4738.eurprd04.prod.outlook.com (20.177.41.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.17; Sat, 20 Apr 2019 07:21:22 +0000
+Received: from AM0PR04MB6468.eurprd04.prod.outlook.com
+ ([fe80::107:1bdc:981e:e292]) by AM0PR04MB6468.eurprd04.prod.outlook.com
+ ([fe80::107:1bdc:981e:e292%4]) with mapi id 15.20.1813.017; Sat, 20 Apr 2019
+ 07:21:22 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V4 2/3] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Topic: [PATCH V4 2/3] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Index: AdT3SZ7klP33S4s3Sf6ybjWjIglRMg==
+Date:   Sat, 20 Apr 2019 07:21:22 +0000
+Message-ID: <AM0PR04MB6468C972CEBB98BC6E3AD73BE3200@AM0PR04MB6468.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.69]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 719e0c8a-550b-42d1-bdc5-08d6c560ca76
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4738;
+x-ms-traffictypediagnostic: AM0PR04MB4738:
+x-microsoft-antispam-prvs: <AM0PR04MB473830AC3B9F4EC111C04583E3200@AM0PR04MB4738.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0013079544
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(199004)(189003)(68736007)(52536014)(66066001)(71200400001)(71190400001)(55016002)(6436002)(66556008)(64756008)(66446008)(73956011)(66946007)(1411001)(229853002)(66476007)(76116006)(6916009)(9686003)(53936002)(476003)(486006)(25786009)(6246003)(5660300002)(4326008)(102836004)(6506007)(33656002)(86362001)(14454004)(7736002)(26005)(305945005)(74316002)(186003)(478600001)(8676002)(81156014)(8936002)(81166006)(316002)(54906003)(97736004)(7696005)(99286004)(2906002)(6116002)(3846002)(256004)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4738;H:AM0PR04MB6468.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /SHSBOu8+zlwShL0NUSyWvhIOxSXHrue5/Cbufoynxc76EIPud7p5BmFDQ/Zoqivp5DULC51v6l7ZgVgnxEsNZTgOMvMvFphRX7azDilNYmmP31MpJnKzxr2lDVnhhR2yCE2+twikgaeKauEb+e6UfVQNrDT0YyJj3Otg7V5T8bVkZqbDP2tb2lgEIVFh+TbKEFw61L6z7TkFdcK+bI+MzkStc187RF45BA38bw+OYljikTAnOpYv3fA2pf3wcOIH7dN4tUvDgdYw15b478+fQJM/+Cp4erWSu0bmpTXZsMaOtF6DkqKS/gxCPhflSLon3OVcrKXTOPV6VDOdDRGm4jqa8M0mR6MqqGoZeUhycV/7SRM/cydgwdoXzEyJT50RiSgzI1zCHAmxLZfQAGN2bqhRJjuVO92R/wt3oTTfJI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 719e0c8a-550b-42d1-bdc5-08d6c560ca76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2019 07:21:22.2114
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4738
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/sky81452-regulator.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+Hi
 
-diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
-index eb2b60968a1a..177dede82a61 100644
---- a/drivers/regulator/sky81452-regulator.c
-+++ b/drivers/regulator/sky81452-regulator.c
-@@ -1,21 +1,9 @@
--/*
-- * sky81452-regulator.c	SKY81452 regulator driver
-- *
-- * Copyright 2014 Skyworks Solutions Inc.
-- * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2
-- * as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License along
-- * with this program; if not, see <http://www.gnu.org/licenses/>.
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// sky81452-regulator.c	SKY81452 regulator driver
-+//
-+// Copyright 2014 Skyworks Solutions Inc.
-+// Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
- 
- #include <linux/module.h>
- #include <linux/kernel.h>
--- 
-2.17.1
+>=20
+>=20
+> On Fri, Apr 19, 2019 at 10:23:53AM +0000, S.j. Wang wrote:
+>=20
+> > @@ -289,6 +318,12 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pa=
+ir
+> *pair)
+> >               return -EINVAL;
+> >       }
+> >
+> > +     ret =3D fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc)=
+;
+>=20
+> Since the function always return 0, I am thinking of treating this functi=
+on as
+> a lookup function, and then moving this call right before the register
+> settings -- as we have already made sure that both inrate and outrate are
+> supported.
 
+Ok.
+
+>=20
+> > +     if (ret) {
+> > +             pair_err("No supported pre-processing options\n");
+> > +             return ret;
+> > +     }
+>=20
+> And probably no longer need this error-out. If there's a new limitation
+> related to this function, I believe we can add it to the rate validation
+> section as we are doing now -- better to have rate validation code at one
+> place.
+>=20
+Ok.
+
+> > @@ -380,8 +415,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pai=
+r
+> *pair)
+> >       /* Apply configurations for pre- and post-processing */
+>=20
+> Here:
+> -       /* Apply configurations for pre- and post-processing */
+> +       /* Select and apply configurations for pre- and post-processing *=
+/
+> +       fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc);
+> >       regmap_update_bits(asrc_priv->regmap, REG_ASRCFG,
+> >                          ASRCFG_PREMODi_MASK(index) |
+> ASRCFG_POSTMODi_MASK(index),
+> > -                        ASRCFG_PREMOD(index, process_option[in][out][0=
+]) |
+> > -                        ASRCFG_POSTMOD(index, process_option[in][out][=
+1]));
+> > +                        ASRCFG_PREMOD(index, pre_proc) |
+> > +                        ASRCFG_POSTMOD(index, post_proc));
