@@ -2,125 +2,73 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FD3C282E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528B0C282E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C10621479
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0Az7iHb"
+	by mail.kernel.org (Postfix) with ESMTP id 169F721479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 03:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfDTDMm (ORCPT
+        id S1727805AbfDTDNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Apr 2019 23:12:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46840 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfDTDMm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Apr 2019 23:12:42 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s24so5606338otk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2019 20:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nsby3r1McbkZMSmZ0BcydHpE4vwRehK0xlPN+cMJu4k=;
-        b=D0Az7iHb04B8XyJHQUHkwI8CbDwXf7k+3c47Wb2P1VSXZhmTpG5b9+CiAPCDo+uNB1
-         fHA8Kj3BvEOSWyInsSGRbZvMHxUXhNGow2UsEhLHQJoXGs+fzD2VCJ0o+3dzxSplBVjA
-         edS06G6brffhFZal+xH6LT7rSF7SQCBGDo6tYX8fYOsOjge75Uh2KG9ZKx2JdhmMP1Oo
-         I9yagGNmTgZ986MFG1KHKFrtBDBndn+5NVVCjYiblA+twD6HapCkMTrGLzp+5yo8ZAg9
-         EXWTsS5A7eSPxT97h9Wi+UyXQonxvi6gLBVszjo+k9S6Mse62EDR1Hi85RZeTgTBvtw4
-         Lh7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nsby3r1McbkZMSmZ0BcydHpE4vwRehK0xlPN+cMJu4k=;
-        b=XfS3n9KVSBBiuQLm4kb+O3UYMdXTw9HWopX0Uh3i3+haWgaKRlV1KN+9J+MMO8pGn2
-         5zEiO8YHbeYj+C9BEy4jlmr8wzutAasKHDS2NAzmHYB8B5TYKHB5OcPX+I8iYR21SJun
-         s5j9I+KwDxQyA+K2z2ZDSVtQgTRPNiTiHZ2TBJnRRaF1gvDNUpgJQFgnHzTgrcU/tPTf
-         gCW4KBVpkIGEJwi/IXW+bKUB+NyREt5RF+8dBgNjEpM0FWtqhUEOAYXinX+9YV2kmqz4
-         JfQO7LfB5KxItENb7hl1CR/lgPXTIfpUi4IrXHZHzdf9gHBiipjmrK89PLdMr4xOx7LW
-         UQ+Q==
-X-Gm-Message-State: APjAAAW4Y6/IdqWzwWMZLFBkv26sJSf6rFhZJgdPwKLqLBVhonygdye7
-        ii8EGqdy7CxigT2VpeZP8xY=
-X-Google-Smtp-Source: APXvYqyE6z5iBDwilt6A035qktTnQNM/6pwZLyj0msq00MnYfx+yCrHS2FD/ZEvukHQUI/LrcnnybQ==
-X-Received: by 2002:a05:6830:1051:: with SMTP id b17mr3835750otp.341.1555729961626;
-        Fri, 19 Apr 2019 20:12:41 -0700 (PDT)
-Received: from madhuleo ([2605:6000:1023:606d:151b:11be:d797:d50])
-        by smtp.gmail.com with ESMTPSA id 189sm2895721oii.58.2019.04.19.20.12.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 19 Apr 2019 20:12:40 -0700 (PDT)
-Date:   Fri, 19 Apr 2019 22:12:38 -0500
-From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     gregkh@linuxfoundation.org, f.fainelli@gmail.com, eric@anholt.net,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: vc04_services: Cleanup in ctrl_set_bitrate()
-Message-ID: <20190420031236.GA23925@madhuleo>
-References: <20190419212321.7325-1-madhumithabiw@gmail.com>
- <2d48664a-eb36-4fcc-7bc5-b1b480dbce9a@i2se.com>
+        Fri, 19 Apr 2019 23:13:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6667 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727572AbfDTDNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Apr 2019 23:13:31 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 83048725AFBA253BE0CF;
+        Sat, 20 Apr 2019 11:13:27 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Sat, 20 Apr 2019
+ 11:13:24 +0800
+Subject: Re: [PATCH -next] regulator: Make symbols static
+To:     Mark Brown <broonie@kernel.org>
+References: <20190416144109.33692-1-yuehaibing@huawei.com>
+ <20190419161206.GA18211@sirena.org.uk>
+CC:     <lgirdwood@gmail.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <27596178-6321-738c-18ed-c8bddb7c3ff4@huawei.com>
+Date:   Sat, 20 Apr 2019 11:13:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d48664a-eb36-4fcc-7bc5-b1b480dbce9a@i2se.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190419161206.GA18211@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/19  :49, Stefan Wahren wrote:
-> Hi Madhumitha,
+On 2019/4/20 0:12, Mark Brown wrote:
+> On Tue, Apr 16, 2019 at 10:41:09PM +0800, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fix sparse warnings:
+>>
+>> drivers/regulator/stm32-pwr.c:35:5: warning:
+>>  symbol 'ready_mask_table' was not declared. Should it be static?
+>> drivers/regulator/stm32-pwr.c:47:5: warning:
+>>  symbol 'stm32_pwr_reg_is_ready' was not declared. Should it be static?
+>> drivers/regulator/stm32-pwr.c:57:5: warning:
+>>  symbol 'stm32_pwr_reg_is_enabled' was not declared. Should it be static?
 > 
-> Am 19.04.19 um 23:23 schrieb Madhumitha Prabakaran:
-> > Remove unnecessary variable and replace return type.
-> >
-> > Issue suggested by Coccinelle.
-> >
-> > Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
-> > ---
-> >  drivers/staging/vc04_services/bcm2835-camera/controls.c | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-> > index e39ab5fae724..f87fa7f61db3 100644
-> > --- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
-> > +++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-> > @@ -607,18 +607,13 @@ static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
-> >  			    struct v4l2_ctrl *ctrl,
-> >  			    const struct bm2835_mmal_v4l2_ctrl *mmal_ctrl)
-> >  {
-> > -	int ret;
-> >  	struct vchiq_mmal_port *encoder_out;
-> >  
-> >  	dev->capture.encode_bitrate = ctrl->val;
-> >  
-> >  	encoder_out = &dev->component[MMAL_COMPONENT_VIDEO_ENCODE]->output[0];
-> >  
-> > -	ret = vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
-> > -					    mmal_ctrl->mmal_id,
-> > -					    &ctrl->val, sizeof(ctrl->val));
-> > -	ret = 0;
-> > -	return ret;
-> > +	return 0;
-> 
-> i don't understand why we can remove here the function call.
+> This doesn't apply against current code, please check and resend (I
+> think it's just that someone else made similar fixes already but didn't
+> check properly).
 
-I overlooked the function call. I will fix it.
+Yep, there is already a fix from kbuild test robot:
+
+82f26185a912 ("regulator: ready_mask_table[] can be static")
 
 > 
-> Stefan
-> 
-> >  }
-> >  
-> >  static int ctrl_set_bitrate_mode(struct bm2835_mmal_dev *dev,
+
