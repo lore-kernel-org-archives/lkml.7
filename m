@@ -2,99 +2,130 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA211C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D90C282E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7583F21855
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="D+98tgcf"
+	by mail.kernel.org (Postfix) with ESMTP id AA3D52087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 09:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfDTJdV (ORCPT
+        id S1727556AbfDTJim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 05:33:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41318 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDTJdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 05:33:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c12so3452516wrt.8
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 02:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=idwqWI24RRMujosXdp72Gc2bSSwiwXLwDzY0CFc9vDM=;
-        b=D+98tgcfLHHn/09OlcyMyPqRyvAkI0RjyRjnng55f1q0Ha+YD2lTxHIZuhaGvY2gdP
-         m2Q1y+7ZkoNNtON3+XSNpkIxTDysbaAgvfWGt3SiYjaJw6rlRmCIr3OyB/c9fr5H/lqz
-         eSEJi2lqkIeVZvz0bFtF5EwMM9srM+UdbIrAiDrbfHMzK0JIUF9pcvC6xnkttRNnjZX1
-         BuqwVdmXfNxJooIAxgaZjcnUqZ1WLhGFWfOEJbeOEpKTzCgH3ZydkaSx9Bxwnj6Kh9P7
-         Irt5ZGLFgHPxmdDXtNyhHu/LM5rn2zfQ/NA5NREcp06Vde31PcdjIcwND1tZf6700CSk
-         kgJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=idwqWI24RRMujosXdp72Gc2bSSwiwXLwDzY0CFc9vDM=;
-        b=Dcbu+OTn0TO/T3PBjp5vm8V+C5LfXrK8jcwbM268hZRtfT8aRCDR1xuulCwOGQyMFu
-         KHzLQ6bbspHRX3W0ztjbfO6awu3XajG9SKA6zt6fn5gf2rfJ9cv925lIU10a8XXBGnxW
-         T6CD9Qkt5BKDRMxNwMUx+ParNJ/WakEELPaVx/sCpX7gMMdfJBDhS7lLFEd59C7zehWb
-         aYvdRKusMy5Ijs4hLyl2BOiMGGIsBTlVyoQZ9BWXhrDfSN6Gic4pm1g7nvOVgA5xwLNQ
-         34jDrfPHyQAEKWiLvY6thfG8Ux0iIIr66nEOZDeEwp7mcaxZ3dCrFkCm96xi5u/kMtUM
-         S39w==
-X-Gm-Message-State: APjAAAXpgsr1SXk5z4DMOwrKLqQJl0Tm9TbJaExp3mTY/LK+lhPRUwOK
-        DEL4lvNSa8LOigUHjV0RxFo=
-X-Google-Smtp-Source: APXvYqyYB2zv3rPKR/iSExi8uLlrZXfzKr72r31aYA603zBukH4UFcppZL9Jev1aaIKTeUmJm0E6gw==
-X-Received: by 2002:adf:ee82:: with SMTP id b2mr1592773wro.233.1555752795276;
-        Sat, 20 Apr 2019 02:33:15 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C8AD0028C4739A57449001.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:28c4:739a:5744:9001])
-        by smtp.googlemail.com with ESMTPSA id w11sm12858244wre.15.2019.04.20.02.33.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 02:33:14 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] ARM: dts: meson8b: drop undocumented property from the Mali GPU node
-Date:   Sat, 20 Apr 2019 11:32:58 +0200
-Message-Id: <20190420093258.2012-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190420093258.2012-1-martin.blumenstingl@googlemail.com>
-References: <20190420093258.2012-1-martin.blumenstingl@googlemail.com>
+        Sat, 20 Apr 2019 05:38:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:5108 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfDTJil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 05:38:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Apr 2019 02:38:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,373,1549958400"; 
+   d="scan'208";a="163501398"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Apr 2019 02:38:38 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hHmSD-000HC2-VJ; Sat, 20 Apr 2019 17:38:38 +0800
+Date:   Sat, 20 Apr 2019 17:37:54 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     kbuild-all@01.org, bleung@chromium.org, sre@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dlaurie@chromium.org, lamzin@google.com, bartfab@google.com,
+        derat@google.com, dtor@google.com, sjg@chromium.org,
+        jchwong@chromium.org, Nick Crews <ncrews@chromium.org>
+Subject: Re: [PATCH v5] power_supply: platform/chrome: wilco_ec: Add charging
+ config driver
+Message-ID: <201904201756.6pNuTXy5%lkp@intel.com>
+References: <20190418233838.149545-1-ncrews@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418233838.149545-1-ncrews@chromium.org>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the undocumented "switch-delay" which is a left-over from my
-experiments with an early lima kernel driver when it was still
-out-of-tree and required this property on Amlogic SoCs.
+Hi Nick,
 
-Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.1-rc5 next-20190418]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Nick-Crews/power_supply-platform-chrome-wilco_ec-Add-charging-config-driver/20190420-041913
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   drivers/power/supply/wilco-charger.c:46:14: sparse: undefined identifier 'POWER_SUPPLY_CHARGE_TYPE_STANDARD'
+   drivers/power/supply/wilco-charger.c:48:14: sparse: undefined identifier 'POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE'
+   drivers/power/supply/wilco-charger.c:50:14: sparse: undefined identifier 'POWER_SUPPLY_CHARGE_TYPE_CUSTOM'
+>> drivers/power/supply/wilco-charger.c:46:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:48:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:50:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:66:24: sparse: undefined identifier 'POWER_SUPPLY_CHARGE_TYPE_STANDARD'
+   drivers/power/supply/wilco-charger.c:68:24: sparse: undefined identifier 'POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE'
+   drivers/power/supply/wilco-charger.c:70:24: sparse: undefined identifier 'POWER_SUPPLY_CHARGE_TYPE_CUSTOM'
+   drivers/power/supply/wilco-charger.c:78:9: sparse: undefined identifier 'POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD'
+   drivers/power/supply/wilco-charger.c:79:9: sparse: undefined identifier 'POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD'
+   drivers/power/supply/wilco-charger.c:95:14: sparse: undefined identifier 'POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD'
+   drivers/power/supply/wilco-charger.c:98:14: sparse: undefined identifier 'POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD'
+   drivers/power/supply/wilco-charger.c:95:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:98:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:132:14: sparse: undefined identifier 'POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD'
+   drivers/power/supply/wilco-charger.c:138:14: sparse: undefined identifier 'POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD'
+   drivers/power/supply/wilco-charger.c:132:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:138:14: sparse: incompatible types for 'case' statement
+   drivers/power/supply/wilco-charger.c:46:14: sparse: Expected constant expression in case statement
+   drivers/power/supply/wilco-charger.c:48:14: sparse: Expected constant expression in case statement
+   drivers/power/supply/wilco-charger.c:50:14: sparse: Expected constant expression in case statement
+   drivers/power/supply/wilco-charger.c:95:14: sparse: Expected constant expression in case statement
+   drivers/power/supply/wilco-charger.c:98:14: sparse: Expected constant expression in case statement
+   drivers/power/supply/wilco-charger.c:132:14: sparse: Expected constant expression in case statement
+   drivers/power/supply/wilco-charger.c:138:14: sparse: Expected constant expression in case statement
+
+vim +/case +46 drivers/power/supply/wilco-charger.c
+
+    37	
+    38	/* Convert from POWER_SUPPLY_PROP_CHARGE_TYPE value to the EC's charge mode */
+    39	static enum charge_mode psp_val_to_charge_mode(int psp_val)
+    40	{
+    41		switch (psp_val) {
+    42		case POWER_SUPPLY_CHARGE_TYPE_TRICKLE:
+    43			return CHARGE_MODE_AC;
+    44		case POWER_SUPPLY_CHARGE_TYPE_FAST:
+    45			return CHARGE_MODE_EXP;
+  > 46		case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
+    47			return CHARGE_MODE_STD;
+    48		case POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE:
+    49			return CHARGE_MODE_AUTO;
+    50		case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
+    51			return CHARGE_MODE_CUSTOM;
+    52		default:
+    53			return CHARGE_MODE_ILLEGAL;
+    54		}
+    55	}
+    56	
+
 ---
- arch/arm/boot/dts/meson8b.dtsi | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 800cd65fc50a..4b919590dae5 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -229,7 +229,6 @@
- 			clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
- 			clock-names = "bus", "core";
- 			operating-points-v2 = <&gpu_opp_table>;
--			switch-delay = <0xffff>;
- 		};
- 	};
- }; /* end of / */
--- 
-2.21.0
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
