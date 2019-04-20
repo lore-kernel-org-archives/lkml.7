@@ -2,127 +2,141 @@ Return-Path: <SRS0=ruH4=SW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8F9C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 08:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1601FC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 08:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0D4208C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 08:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8152521479
+	for <linux-kernel@archiver.kernel.org>; Sat, 20 Apr 2019 08:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mrns.nl header.i=@mrns.nl header.b="X8IbzBiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfDTIX5 (ORCPT
+        id S1727378AbfDTIac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 04:23:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7207 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfDTIX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 04:23:57 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 800FDDF35A468244ACFA;
-        Sat, 20 Apr 2019 16:23:52 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 20 Apr 2019 16:23:44 +0800
-From:   Xie XiuQi <xiexiuqi@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <cj.chengjian@huawei.com>
-Subject: [PATCH] sched: fix a potential divide error
-Date:   Sat, 20 Apr 2019 16:34:16 +0800
-Message-ID: <20190420083416.170446-1-xiexiuqi@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 20 Apr 2019 04:30:32 -0400
+Received: from smtpq4.tb.mail.iss.as9143.net ([212.54.42.167]:55596 "EHLO
+        smtpq4.tb.mail.iss.as9143.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725911AbfDTIab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 04:30:31 -0400
+X-Greylist: delayed 1212 seconds by postgrey-1.27 at vger.kernel.org; Sat, 20 Apr 2019 04:30:30 EDT
+Received: from [212.54.42.137] (helo=smtp6.tb.mail.iss.as9143.net)
+        by smtpq4.tb.mail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <dick@mrns.nl>)
+        id 1hHl4i-0000eN-5Q; Sat, 20 Apr 2019 10:10:16 +0200
+Received: from ip-213-127-67-73.ip.prioritytelecom.net ([213.127.67.73] helo=routi.mrns.nl)
+        by smtp6.tb.mail.iss.as9143.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.86_2)
+        (envelope-from <dick@mrns.nl>)
+        id 1hHl4h-0005OY-2E; Sat, 20 Apr 2019 10:10:16 +0200
+Received: by routi.mrns.nl (sSMTP sendmail emulation); Sat, 20 Apr 2019 10:10:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mrns.nl;
+ i=@mrns.nl; q=dns/txt; s=mail; t=1555747814; h=date : from : to : cc :
+ subject : message-id : mime-version : content-type : from;
+ bh=znwOSSSBdKg6HYBzdnX6GCpeT7U3Py2XItMkuRtGaUc=;
+ b=X8IbzBizj6IzLqViUvswcW83xgHMZBfLB1iYVsHktepyuCFqF0Lot2g7j655o2hQK05OH
+ CreRWnflSH5uijLQaE7ZMOxoltR8RKYTcCKGTC0rpG+PjM5Y4Ty6jUZ7NJq4W7/sxac5S3+
+ +u5dB2NGRFauPnYuvunmmV5zqMexrfU=
+Date:   Sat, 20 Apr 2019 10:10:14 +0200
+From:   Dick Marinus <dick@mrns.nl>
+To:     linux-kernel@vger.kernel.org
+Cc:     wens@csie.org
+Subject: Re: [PATCH] Bluetooth: hci_bcm: Fix empty regulator supplies for
+ Intel Macs
+Message-ID: <20190420081014.nmgjyrekngga4ncl@routi.mrns.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
+X-SourceIP: 213.127.67.73
+X-Authenticated-Sender: boeierlaan60@ziggo.nl (via SMTP)
+X-Ziggo-spambar: /
+X-Ziggo-spamscore: 0.0
+X-Ziggo-spamreport: CMAE Analysis: v=2.3 cv=ENp4LGRC c=1 sm=1 tr=0 a=0nvI0T6MiNaq20ZY2X3xbg==:17 a=9+rZDBEiDlHhcck0kWbJtElFXBc=:19 a=kj9zAlcOel0A:10 a=oexKYjalfGEA:10 a=zu6OG0ZhAAAA:8 a=VwQbUJbxAAAA:8 a=vYmT8LKSE7Qjc22oWjAA:9 a=ZDFt9QSJGRoUNatP:21 a=YSwbCBWV7iuL550X:21 a=CjuIK1q_8ugA:10 a=pAN39diAhXWuPx0-Vjn3:22 a=AjGcO6oz07-iQ99wixmX:22
+X-Ziggo-Spam-Status: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We meet a divide error on 3.10.0 kernel, the error message is bellow:
+This fixes the issue for hanging at modprobe intel-lpss-pci on my
+macbook pro 13,3 2016.
 
-[499992.287996] divide error: 0000 [#1] SMP
-[499992.297796] do nothing after die!
-[499992.299108] Modules linked in: signo_catch macvlan binfmt_misc
-ip_set_hash_netport ip_set_hash_ipport vport_vxlan ipt_REJECT
-xt_statistic xt_physdev xt_nat xt_recent xt_mark xt_comment ...
-[499992.312751] CPU: 8 PID: 23352 Comm: bash Tainted: G ----V-------   3.10.0+ #1
-[499992.314308] Hardware name: OpenStack Foundation OpenStack Nova, BIOS
-rel-1.9.1-0-gb3ef39f-20170329_185309-build9a64a246a231 04/01/2014
-[499992.317411] task: ffff880033fc9700 ti: ffff8807fed60000 task.ti:ffff8807fed60000
-[499992.318967] RIP: 0010:[<ffffffff810c15c2>]  [<ffffffff810c15c2>] task_numa_fault+0x1c2/0xbb0
-[499992.320515] RSP: 0000:ffff8807fed63d38  EFLAGS: 00010246
-[499992.322018] RAX: 0000002b7efd0000 RBX: ffff880033fc9700 RCX:0000000000000003
-[499992.323563] RDX: 0000000000000000 RSI: 0000000000000400 RDI:ffffffff81a80f60
-[499992.325052] RBP: ffff8807fed63db8 R08: ffffffff81a80f68 R09:0000000000000000
-[499992.326531] R10: ffff88083ffda000 R11: 0000000000000000 R12:0000000000000424
-[499992.327987] R13: 00000000002b7efd R14: 0000000000000000 R15:ffffea001ea42a00
-[499992.329420] FS:  00007fa01a3b7740(0000) GS:ffff88103ec00000(0000)knlGS:0000000000000000
-[499992.330866] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[499992.332302] CR2: 0000000000ff1fb0 CR3: 00000007ff1d1000 CR4:00000000003407e0
-[499992.333763] DR0: 0000000000000000 DR1: 0000000000000000 DR2:0000000000000000
-[499992.335187] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:0000000000000400
-[499992.336595] Stack:
-[499992.337974]  0000000000000000 00000001bc9598a8 ffffea001ea42a00 0000000100000001
-[499992.339374]  0000000300000001 0000000000000001 ffffea001ea42a00 ffff8807fed63db8
-[499992.340768]  0000000000000000 0000000000000000 00000000bc9598a8 0000000000000001
-[499992.342148] Call Trace:
-[499992.343494]  [<ffffffff8119ab62>] do_numa_page+0x162/0x1f0
-[499992.344831]  [<ffffffff8119bde7>] handle_mm_fault+0x627/0xf50
-[499992.346145]  [<ffffffff8164e486>] __do_page_fault+0x166/0x470
-[499992.347442]  [<ffffffff8164e853>] trace_do_page_fault+0x43/0x110
-[499992.348711]  [<ffffffff8164df29>] do_async_page_fault+0x29/0xe0
-[499992.349948]  [<ffffffff8164a9f8>] async_page_fault+0x28/0x30
-[499992.351149] Code: 00 3d 00 04 00 00 44 0f 4e d8 41 81 fb 00 04 00 00
-0f 84 67 07 00 00 4c 89 e8 49 83 c6 01 31 d2 48 c1 e0 10 49 83 c4 01 45
-31 c9 <49> f7 f6 48 c7 45 a8 00 00 00 00 48 c7 45 b0 00 00 00 00 49 89
-[499992.353707] RIP  [<ffffffff810c15c2>] task_numa_fault+0x1c2/0xbb0
-[499992.354927]  RSP <ffff8807fed63d38>
-[499992.358114] ---[ end trace 4f2465cac18ff65e ]---
-[499992.359304] Kernel panic - not syncing: Fatal exception
+Error in dmesg:
 
-sched_clock_cpu may not be consistent bwtwen cpus. If a task migrate
-to another cpu, the se.exec_start was set to that cpu's rq_clock_task
-by update_stats_curr_start(). Which may not be monotonic.
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000090
 
-update_stats_curr_start
-  <- set_next_entity
-     <- set_curr_task_fair
-        <- sched_move_task
+Thanks a lot!
 
-So, if  now - p->last_task_numa_placement is -1, then (*period + 1) is
-0, and divide error was triggerred at the div operation:
-  task_numa_placement:
-    runtime = numa_get_avg_runtime(p, &period);
-    f_weight = div64_u64(runtime << 16, period + 1);  // divide error here
-
-In this patch, we make sure period is not less than 0 to avoid this
-divide error.
-
-Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-Cc: stable@vger.kernel.org
----
- kernel/sched/fair.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 40bd1e27b1b7..f2abb258fc85 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2007,6 +2007,10 @@ static u64 numa_get_avg_runtime(struct task_struct *p, u64 *period)
- 	if (p->last_task_numa_placement) {
- 		delta = runtime - p->last_sum_exec_runtime;
- 		*period = now - p->last_task_numa_placement;
-+
-+		/* Avoid backward, and prevent potential divide error */
-+		if ((s64)*period < 0)
-+			*period = 0;
- 	} else {
- 		delta = p->se.avg.load_sum;
- 		*period = LOAD_AVG_MAX;
--- 
-2.20.1
-
+Tested-by: Dick Marinus <dick@mrns.nl>
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The code path for Macs goes through bcm_apple_get_resources(), which
+> skips over the code that sets up the regulator supplies. As a result,
+> the call to regulator_bulk_enable() / regulator_bulk_disable() results
+> in a NULL pointer dereference.
+> 
+> This was reported on the kernel.org Bugzilla, bug 202963.
+> 
+> Unbreak Broadcom Bluetooth support on Intel Macs by checking if the
+> supplies were set up before enabling or disabling them.
+> 
+> The same does not need to be done for the clocks, as the common clock
+> framework API checks for NULL pointers.
+> 
+> Fixes: 75d11676dccb ("Bluetooth: hci_bcm: Add support for regulator supplies")
+> Cc: <stable@vger.kernel.org> # 5.0.x
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+> 
+> I do not own a Mac, so this needs to be tested by someone else.
+> 
+> ---
+>  drivers/bluetooth/hci_bcm.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> index ddbe518c3e5b..b5d31d583d60 100644
+> --- a/drivers/bluetooth/hci_bcm.c
+> +++ b/drivers/bluetooth/hci_bcm.c
+> @@ -228,9 +228,15 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
+>  	int err;
+>  
+>  	if (powered && !dev->res_enabled) {
+> -		err = regulator_bulk_enable(BCM_NUM_SUPPLIES, dev->supplies);
+> -		if (err)
+> -			return err;
+> +		/* Intel Macs use bcm_apple_get_resources() and don't
+> +		 * have regulator supplies configured.
+> +		 */
+> +		if (dev->supplies[0].supply) {
+> +			err = regulator_bulk_enable(BCM_NUM_SUPPLIES,
+> +						    dev->supplies);
+> +			if (err)
+> +				return err;
+> +		}
+>  
+>  		/* LPO clock needs to be 32.768 kHz */
+>  		err = clk_set_rate(dev->lpo_clk, 32768);
+> @@ -259,7 +265,13 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
+>  	if (!powered && dev->res_enabled) {
+>  		clk_disable_unprepare(dev->txco_clk);
+>  		clk_disable_unprepare(dev->lpo_clk);
+> -		regulator_bulk_disable(BCM_NUM_SUPPLIES, dev->supplies);
+> +
+> +		/* Intel Macs use bcm_apple_get_resources() and don't
+> +		 * have regulator supplies configured.
+> +		 */
+> +		if (dev->supplies[0].supply)
+> +			regulator_bulk_disable(BCM_NUM_SUPPLIES,
+> +					       dev->supplies);
+>  	}
+>  
+>  	/* wait for device to power on and come out of reset */
+> -- 
+> 2.20.1
