@@ -2,162 +2,223 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3AFC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 20:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D81C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 20:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFEB20857
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 20:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F382920870
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 20:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MQVqqRNK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBumPsjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfDUUHc (ORCPT
+        id S1726377AbfDUUlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 16:07:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50845 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfDUUHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 16:07:31 -0400
-Received: from [IPv6:2601:646:8680:2bb1:844c:2e29:7c13:f0bc] ([IPv6:2601:646:8680:2bb1:844c:2e29:7c13:f0bc])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x3LK7Fbp1319142
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Sun, 21 Apr 2019 13:07:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x3LK7Fbp1319142
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555877238;
-        bh=eS8uCVOKbnfxvVl834Q+CPSo+ymVh5DSXFEAW80LHvc=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=MQVqqRNKowPh63ENRvHwkvUFflAYXabgNHPDKCykeG9ylqBKeVmlhPGVJbcV9C1nc
-         9nUI9qG8sYBapif62ZrY5OTbwrgyGqhpHQpfHayUPqhkkWsicRVJ2UllA2t3oj7Jxc
-         WL4h3NLk/COzjapi5kHXCcf4Nxz4o0BGroEUBKOSEWIFv1POtCaB3UmOXni6M5WLMN
-         kN0oLBS86S39sqZPK6Ipm/u0y1orjCzZB2sefOkXrrHdEme2JNM/8BbnkMXc3UsAbH
-         2Rp6zoAA1jg7PM27d4kFrySkC2AzmUk1b8OZlWWp9OkDveOP0cs6ejobI8Nc5e+IWo
-         vVK9tdKSfTDbg==
-Date:   Sun, 21 Apr 2019 13:07:08 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190421182842.GD35603@gmail.com>
-References: <20190421160600.GA31092@avx2> <20190421182842.GD35603@gmail.com>
+        Sun, 21 Apr 2019 16:41:36 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32789 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfDUUlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 16:41:36 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j10so8141372otq.0;
+        Sun, 21 Apr 2019 13:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r4o/6Q0G/X+qOkKNqTfldeNXYoQS6vEhD8PbuExrxH8=;
+        b=HBumPsjyKZAB7HHqtR0t+LC6m/LEcm+iS2AWpWm9wFNLlOrBIKed/aEktF3/WH71yt
+         mGnDrMNEMLeHw21gAyOz5m0iKpjnfifjct4GjpdVaIZ11iI/ALpULxzPj/zTGdAQ1wWd
+         gOajSQC0Es7h4NvX3Y4gP9UY/M8mMmk+v6OJjQnlduD4uqRJO6L32k3x4bJ4Gv4yUYXI
+         axA1u9BUbGb3dY+mUwTh2Exds2MQQp8yEmL9dSqrSLQu4I4/M5ed9aPlmiTiRYft3Akb
+         woEhBdLpmJxbiQ/gllDzbMGrcbQ3xILt/nS1zIVfiVaosawHj+3tJN3BH/GPLsF8FKWX
+         sWmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r4o/6Q0G/X+qOkKNqTfldeNXYoQS6vEhD8PbuExrxH8=;
+        b=CU3NCWIN0en7NWoNXMd5FE1Ysmass6nX+TgzpMW32hfgd/rZck90gUMWz+HHbD/Xfi
+         zSJIppTlGL0OqqwyGx30/eZ5e7rsWZBT7WgW/Y4DXP1zEvWKRrTmPDh4zZv5hPaH5Ebt
+         5bET4vfoGad0306Khd9TwuoGFHSUh6Y17hr/e7PNks3lu/rtDTMJJBb5Kr3hy8rtYPzF
+         TIuUJWr8l3vKKvPgOPxNuko0hJq/Sx9R7AlZNqvACXHT9K+S5EcqgD+1WxkOJhJtTioL
+         8vHG1BGfgp9XONAvhfD0kT+2qW9CB4xTOf5PNGCtKSw8/zFN4YyN2ug1tYO4HC0mLQgi
+         n1bw==
+X-Gm-Message-State: APjAAAW/mI71tZ8krdnezaijAGLwd7aIvAWeoGrCddSC7Rmm+QE0qXAY
+        FDv7sfIp9RGZdmLbgV+rcg==
+X-Google-Smtp-Source: APXvYqx526yDC7Nm/hWBDm1CCrhV5xsn9MZd1OlLbx71jexYmTv/T3fkDNqGu7W/c/1gcOOn+bGD0g==
+X-Received: by 2002:a05:6830:128c:: with SMTP id z12mr10055073otp.101.1555879294461;
+        Sun, 21 Apr 2019 13:41:34 -0700 (PDT)
+Received: from ubuntu (99-149-127-125.lightspeed.rlghnc.sbcglobal.net. [99.149.127.125])
+        by smtp.gmail.com with ESMTPSA id m21sm4877170otj.48.2019.04.21.13.41.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 21 Apr 2019 13:41:33 -0700 (PDT)
+Date:   Sun, 21 Apr 2019 16:41:26 -0400
+From:   Stephen Suryaputra <ssuryaextr@gmail.com>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Julian Anastasov <ja@ssi.bg>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+Message-ID: <20190421204126.GA19213@ubuntu>
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86_64: uninline TASK_SIZE
-To:     Ingo Molnar <mingo@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-CC:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-From:   hpa@zytor.com
-Message-ID: <8B42CD57-9343-4234-A96D-80337BFFDF0E@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On April 21, 2019 11:28:42 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->
->* Alexey Dobriyan <adobriyan@gmail=2Ecom> wrote:
->
->> TASK_SIZE macro is quite deceptive: it looks like a constant but in
->fact
->> compiles to 50+ bytes=2E
->>=20
->> Space savings on x86_64 defconfig:
->>=20
->> add/remove: 1/0 grow/shrink: 3/24 up/down: 77/-2247 (-2170)
->> Function                                     old     new   delta
->> _task_size                                     -      52     +52
->> mpol_shared_policy_init                      344     363     +19
->> shmem_get_unmapped_area                       92      97      +5
->> __rseq_handle_notify_resume=2Ecold              34      35      +1
->> copy_from_user_nmi                           123     113     -10
->> mmap_address_hint_valid                       92      56     -36
->> arch_get_unmapped_area_topdown               471     435     -36
->> tlb_gather_mmu                               164     126     -38
->> hugetlb_get_unmapped_area                    774     736     -38
->> __create_xol_area                            497     458     -39
->> arch_tlb_gather_mmu                          160     120     -40
->> setup_new_exec                               380     336     -44
->> __x64_sys_mlockall                           378     333     -45
->> __ia32_sys_mlockall                          378     333     -45
->> tlb_flush_mmu                                235     189     -46
->> unmap_page_range                            2098    2048     -50
->> copy_mount_options                           518     465     -53
->> __get_user_pages                            1737    1675     -62
->> get_unmapped_area                            270     204     -66
->> perf_prepare_sample                         1176    1098     -78
->> perf_callchain_user                          549     469     -80
->> mremap_to=2Eisra                               545     457     -88
->> arch_tlb_finish_mmu                          394     305     -89
->> __do_munmap                                 1039     927    -112
->> elf_map                                      527     409    -118
->> prctl_set_mm                                1509    1335    -174
->> __rseq_handle_notify_resume                 1116     906    -210
->> load_elf_binary                            11761   11111    -650
->> Total: Before=3D14121337, After=3D14119167, chg -0=2E02%
->>=20
->> Signed-off-by: Alexey Dobriyan <adobriyan@gmail=2Ecom>
->> ---
->>=20
->>  arch/x86/include/asm/processor=2Eh |    4 ++--
->>  arch/x86/kernel/Makefile         |    1 +
->>  arch/x86/kernel/task_size_64=2Ec   |    9 +++++++++
->>  3 files changed, 12 insertions(+), 2 deletions(-)
->>=20
->> --- a/arch/x86/include/asm/processor=2Eh
->> +++ b/arch/x86/include/asm/processor=2Eh
->> @@ -887,8 +887,8 @@ static inline void spin_lock_prefetch(const void
->*x)
->> =20
->>  #define TASK_SIZE_LOW		(test_thread_flag(TIF_ADDR32) ? \
->>  					IA32_PAGE_OFFSET : DEFAULT_MAP_WINDOW)
->> -#define TASK_SIZE		(test_thread_flag(TIF_ADDR32) ? \
->> -					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
->> +unsigned long _task_size(void);
->> +#define TASK_SIZE		_task_size()
->>  #define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child,
->TIF_ADDR32)) ? \
->>  					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
->> =20
->> --- a/arch/x86/kernel/Makefile
->> +++ b/arch/x86/kernel/Makefile
->> @@ -46,6 +46,7 @@ CFLAGS_irq=2Eo :=3D -I$(src)/=2E=2E/include/asm/trace
->> =20
->>  obj-y			:=3D process_$(BITS)=2Eo signal=2Eo
->>  obj-$(CONFIG_COMPAT)	+=3D signal_compat=2Eo
->> +obj-$(CONFIG_X86_64)	+=3D task_size_64=2Eo
->>  obj-y			+=3D traps=2Eo idt=2Eo irq=2Eo irq_$(BITS)=2Eo dumpstack_$(BIT=
-S)=2Eo
->>  obj-y			+=3D time=2Eo ioport=2Eo dumpstack=2Eo nmi=2Eo
->>  obj-$(CONFIG_MODIFY_LDT_SYSCALL)	+=3D ldt=2Eo
->> new file mode 100644
->> --- /dev/null
->> +++ b/arch/x86/kernel/task_size_64=2Ec
->> @@ -0,0 +1,9 @@
->> +#include <linux/export=2Eh>
->> +#include <linux/sched=2Eh>
->> +#include <linux/thread_info=2Eh>
->> +
->> +unsigned long _task_size(void)
->> +{
->> +	return test_thread_flag(TIF_ADDR32) ? IA32_PAGE_OFFSET :
->TASK_SIZE_MAX;
->> +}
->> +EXPORT_SYMBOL(_task_size);
->
->Good idea - but instead of adding yet another compilation unit, why not
->
->stick _task_size() into arch/x86/kernel/process_64=2Ec, which is the=20
->canonical place for process management related arch functions?
->
->Thanks,
->
->	Ingo
+Hi David,
 
-Better yet=2E=2E=2E since TIF_ADDR32 isn't something that changes randomly=
-, perhaps this should be a separate variable?
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+I looked at patchwork. This patch hasn't been accepted. Is there a plan
+to resubmit? It is very useful. I had to debug refcnt issues multiple
+times for my employer.
+
+Thanks,
+
+Stephen.
+
+On Mon, Apr 15, 2019 at 09:35:01AM -0600, David Ahern wrote:
+> On 4/15/19 7:36 AM, Tetsuo Handa wrote:
+> > I traced using debug printk() patch shown below.
+> > 
+> 
+> I find tracepoints (see attached patch) and perf are easier to use to
+> debug device refcnt problems.
+> 
+> For example, limit the stack you have to deal with via sysctl -w
+> kernel.perf_event_max_stack=16, and add a filter (e.g., --filter 'name
+> == "lo"') to limit collection to a specific device.
+
+> From 068b1b8362ec5fd1b9dffdbd6e84474ada2eb829 Mon Sep 17 00:00:00 2001
+> From: David Ahern <dsa@cumulusnetworks.com>
+> Date: Thu, 11 Feb 2016 02:40:12 -0800
+> Subject: [PATCH] Add tracepoints to dev_hold and dev_put
+> 
+> Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
+> ---
+>  include/linux/netdevice.h  |  6 ++++++
+>  include/trace/events/net.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  net/core/dev.c             | 21 +++++++++++++++++++++
+>  3 files changed, 65 insertions(+)
+> 
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 219f53c30cb3..7ef6fc672dfb 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -3193,6 +3193,7 @@ extern int		netdev_budget;
+>  /* Called by rtnetlink.c:rtnl_unlock() */
+>  void netdev_run_todo(void);
+>  
+> +#if 0
+>  /**
+>   *	dev_put - release reference to device
+>   *	@dev: network device
+> @@ -3214,6 +3215,11 @@ static inline void dev_hold(struct net_device *dev)
+>  {
+>  	this_cpu_inc(*dev->pcpu_refcnt);
+>  }
+> +#else
+> +void dev_put(struct net_device *dev);
+> +void dev_hold(struct net_device *dev);
+> +
+> +#endif
+>  
+>  /* Carrier loss detection, dial on demand. The functions netif_carrier_on
+>   * and _off may be called from IRQ context, but it is caller
+> diff --git a/include/trace/events/net.h b/include/trace/events/net.h
+> index 49cc7c3de252..9ed73dfe9d09 100644
+> --- a/include/trace/events/net.h
+> +++ b/include/trace/events/net.h
+> @@ -236,6 +236,44 @@ DEFINE_EVENT(net_dev_rx_verbose_template, netif_rx_ni_entry,
+>  	TP_ARGS(skb)
+>  );
+>  
+> +TRACE_EVENT(dev_put,
+> +
+> +	TP_PROTO(struct net_device *dev),
+> +
+> +	TP_ARGS(dev),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(	name,		dev->name	)
+> +		__field(	int,		refcnt )
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, dev->name);
+> +		__entry->refcnt = netdev_refcnt_read(dev);
+> +	),
+> +
+> +	TP_printk("dev=%s refcnt %d", __get_str(name), __entry->refcnt)
+> +);
+> +
+> +TRACE_EVENT(dev_hold,
+> +
+> +	TP_PROTO(struct net_device *dev),
+> +
+> +	TP_ARGS(dev),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(	name,		dev->name	)
+> +		__field(	int,		refcnt )
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, dev->name);
+> +		__entry->refcnt = netdev_refcnt_read(dev);
+> +	),
+> +
+> +	TP_printk("dev=%s refcnt %d", __get_str(name), __entry->refcnt)
+> +);
+> +
+>  #endif /* _TRACE_NET_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index f1284835b8c9..99ac067afd18 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -8117,3 +8117,24 @@ static int __init net_dev_init(void)
+>  }
+>  
+>  subsys_initcall(net_dev_init);
+> +
+> +
+> +void dev_put(struct net_device *dev)
+> +{
+> +	this_cpu_dec(*dev->pcpu_refcnt);
+> +	trace_dev_put(dev);
+> +}
+> +EXPORT_SYMBOL(dev_put);
+> +
+> +/**
+> + *      dev_hold - get reference to device
+> + *      @dev: network device
+> + *
+> + * Hold reference to device to keep it from being freed.
+> + */
+> +void dev_hold(struct net_device *dev)
+> +{
+> +	this_cpu_inc(*dev->pcpu_refcnt);
+> +	trace_dev_hold(dev);
+> +}
+> +EXPORT_SYMBOL(dev_hold);
+> -- 
+> 2.1.4
+> 
+
