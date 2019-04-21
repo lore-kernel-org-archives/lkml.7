@@ -2,243 +2,102 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34921C282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB2FC282E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4962087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4F52087B
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I410LrDU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xc/McHgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfDUDsm (ORCPT
+        id S1726830AbfDUDxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 23:48:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35199 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfDUDsm (ORCPT
+        Sat, 20 Apr 2019 23:53:41 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38933 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfDUDxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 23:48:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so4348954pgf.2;
-        Sat, 20 Apr 2019 20:48:41 -0700 (PDT)
+        Sat, 20 Apr 2019 23:53:41 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f125so8114qke.6;
+        Sat, 20 Apr 2019 20:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Pt1xXI/Z46Xkaq0ePTfP7hl0Wl15voMnKfOEn1h6XqM=;
-        b=I410LrDUJeMAOGJrllvnX/SYrcEwtXY4lQVKcPTf3WricaVO1ov4kwXVvEo9vw3VuE
-         ANjjdXk6wAFCK9Eap+5Ye3E6vE9S4ayqMZdxzjkVrZxcCFnV3XgW+hwqbcREljPR5KXL
-         fvOZ5bldntvMdCPJqdn+ojJhXHgQR/2haIPoF9D2uTq8lABCN7fCwI0yl9zAe9UBTWQT
-         ean1YpL7H4a+cRlY7PGP8U6CZiwuEOh5BADD/61NNmawGszexlEnzKue26TytRpuNcDz
-         RfmEc/5lhkezp3PiUNSZWhrg06i5a2JI2l7aHZlXJ1kPQufl9Fw8F1Ez33fZwWOEpbaF
-         /uow==
+        h=from:to:cc:subject:date:message-id;
+        bh=N/VQEvHt12V6NNBwxqDS9TlB5pbHfWUD7eNc/4Ye5XQ=;
+        b=Xc/McHgtOHcqDBkLWalsqOUbEMogmVXPI0U+HiXsgLdib0+sm2q6AwJVYCvO/vPxqg
+         bFgFVR7BGuZQukKCEJ39bkEr68LE+93ZOfE5hVotQbqXC3H3lQgEl2Lmmq5YZdIztuDo
+         +2Oa7gGsux/dj76MCgkW7k0Z7BFPsEK2C7u2csRwdelJx7UtkeEgusnxyO9VdMC9ET4f
+         4GMx0eW/QUrs+GyBqgI1XUMSiOiV8kHqcl4SX6Rdi4f1YajLabpqXngGgLVLrjh5T2OP
+         s2noUvGlswzYDw6wi6Ib993+7gwDezyQwH5jWg/xd77HuxcIv1rGxl+qGA/Z8iudUJfS
+         Baog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Pt1xXI/Z46Xkaq0ePTfP7hl0Wl15voMnKfOEn1h6XqM=;
-        b=RC0gG6nY+6kJ9mJeG9d45HUZWHXEUR07m9vjxJntNnYoJmm9TcIqaRGVcsGIgs+p4A
-         Zzh4QITuulWxprbB3JiQ6jqEUCMX6mVCeTOwCsTUghKoGNq0ANXtCHTOafyLE9k+9FrI
-         SijRJ4gFLLIj8o+TjaZb/mMLjQL5w9aS0NR+AnORtEr8gCK1sJJ58XLhtD1LpG9vPAks
-         it/uaTjGK594mhmHk4CH9HoXXWvAxiYJ5TfRX7j/O3pD4c5qCmYWY5iBR5fprb5pMmoQ
-         SkqgOp+46UiJlHz+RNgpDStfL9TI4+scUXsKGYBPLKq5wIiIAruIxbZ664sWajjcET6w
-         gyhQ==
-X-Gm-Message-State: APjAAAVzlO6jhnZ8OmtreP8xmndxmyllEDdTrT2j6+KtX3sXd7ZiN57w
-        caTDbykElEa36HSuo+3QYAWA6CbRankHVgZARZ0=
-X-Google-Smtp-Source: APXvYqwoFV7u+ksJgyXV7ZEsvcCx8zPWors/bHxPhJJ22iKdpom8yXzLVDeFEMLsprS5Dg/6ML2A+PKxzake6IkRrcc=
-X-Received: by 2002:a63:f843:: with SMTP id v3mr8292261pgj.69.1555818520930;
- Sat, 20 Apr 2019 20:48:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190410193747.25302-1-jglisse@redhat.com> <CAH2r5ms-Y3FWhrabPEFt7T8MvC8Pwi1jjPFS7viWWRzx5rbVDw@mail.gmail.com>
- <20190418211226.GO3288@redhat.com> <CAKywueS_A9zSnDtEJ-m8yV_AWzpAF_s-gp_HMDhFhM2J1QkiTw@mail.gmail.com>
-In-Reply-To: <CAKywueS_A9zSnDtEJ-m8yV_AWzpAF_s-gp_HMDhFhM2J1QkiTw@mail.gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 20 Apr 2019 22:48:29 -0500
-Message-ID: <CAH2r5msNLx_6jQ_TgFAx4DY5TNd=SMTNuNYHGmgoFFreqUKF8Q@mail.gmail.com>
-Subject: Re: [PATCH] cifs: fix page reference leak with readv/writev
-To:     Pavel Shilovsky <piastryyy@gmail.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N/VQEvHt12V6NNBwxqDS9TlB5pbHfWUD7eNc/4Ye5XQ=;
+        b=hX1NPQsJXG9rcKMNt3ixkv1bGvo1N3Mro879xgrrk8o+LAecPKv5hjrnDjRJzmslcg
+         Jh19bgiMl+ZxOS/H8CUwOnyktNp/YigrT/YWiBKFh9u+4VaVFuvA8mpRtVYPHMjiQUPj
+         VUWUYJhj2trF51Unf6lmoeoHvsWkuTbvF8wm+XrDqdnnQv+IBJnixLqjx6QcFiCAe2fq
+         aO4WwaetbqAYq6q44oleW5FptQEmUTTT5NJu2+QIaieTFhnSlGCzHww8RdQ/ophLpaMT
+         xzCDuEY79FQ7M5lZrTRDklQX2MkDY6rRqKgRJKFbovG2UdT0mxWrX0DsmCECJWYrZxzJ
+         V7iA==
+X-Gm-Message-State: APjAAAXfRaW8H/VLHL11+qmMUBJQ6gkefzo7x3C5aQNTRkAlD1p7WiAi
+        AHw0iWiw0W0wwbX64XKMdeUPVeRHYzo=
+X-Google-Smtp-Source: APXvYqwpaUnOO1XWisXLnQp5tdREM1FKu2ZaqSM6ukJiU70TUiUklqhyPgoORmWo4K1CrBTRbG5WYg==
+X-Received: by 2002:a37:bb07:: with SMTP id l7mr9097948qkf.51.1555818819629;
+        Sat, 20 Apr 2019 20:53:39 -0700 (PDT)
+Received: from localhost.localdomain ([177.96.46.237])
+        by smtp.gmail.com with ESMTPSA id b37sm7341398qtb.92.2019.04.20.20.53.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Apr 2019 20:53:38 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Greg Edwards <gedwards@ddn.com>,
+        Hannes Reinecke <hare@suse.com>, linux-block@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>
+Subject: [RFC PATCH 0/2] Introduce size_to_sectors helper in blkdev.h
+Date:   Sun, 21 Apr 2019 00:53:26 -0300
+Message-Id: <20190421035328.19322-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-updated patch in cifs-2.6.git for-next
+While reading code of drivers/block, I was curious about the set_capacity
+argument, always shifting the value by 9, and so I took me a while to realize
+this is done on purpose: the capacity is the number of sectors of 512 bytes
+related to the storage space.
 
-On Thu, Apr 18, 2019 at 4:45 PM Pavel Shilovsky <piastryyy@gmail.com> wrote=
-:
->
-> =D1=87=D1=82, 18 =D0=B0=D0=BF=D1=80. 2019 =D0=B3. =D0=B2 14:12, Jerome Gl=
-isse <jglisse@redhat.com>:
-> >
-> > On Wed, Apr 10, 2019 at 09:47:01PM -0500, Steve French wrote:
-> > > How was this discovered? Does it address a reported user problem?
-> >
-> > I have spotted it while tracking down how page reference are taken
-> > for bio and how they are release. In the current code, once the page
-> > are GUPed they are never release if there is any failure, on failure
-> > cifs_aio_ctx_release() will be call but it will just free the bio_vec
-> > not release the page reference.
-> >
-> > Page reference are only drop if everything is successful.
-> >
-> > So this patch move the page reference droping to cifs_aio_ctx_release()
-> > which is call from all code path including failure AFAICT and thus page
-> > reference will be drop if failure does happen.
-> >
-> > Cheers,
-> > J=C3=A9r=C3=B4me
-> >
-> > >
-> > > On Wed, Apr 10, 2019 at 2:38 PM <jglisse@redhat.com> wrote:
-> > > >
-> > > > From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > > >
-> > > > CIFS can leak pages reference gotten through GUP (get_user_pages*()
-> > > > through iov_iter_get_pages()). This happen if cifs_send_async_read(=
-)
-> > > > or cifs_write_from_iter() calls fail from within __cifs_readv() and
-> > > > __cifs_writev() respectively. This patch move page unreference to
-> > > > cifs_aio_ctx_release() which will happens on all code paths this is
-> > > > all simpler to follow for correctness.
-> > > >
-> > > > Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > > > Cc: Steve French <sfrench@samba.org>
-> > > > Cc: linux-cifs@vger.kernel.org
-> > > > Cc: samba-technical@lists.samba.org
-> > > > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > > > Cc: linux-fsdevel@vger.kernel.org
-> > > > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > > > Cc: Stable <stable@vger.kernel.org>
-> > > > ---
-> > > >  fs/cifs/file.c | 15 +--------------
-> > > >  fs/cifs/misc.c | 23 ++++++++++++++++++++++-
-> > > >  2 files changed, 23 insertions(+), 15 deletions(-)
-> > > >
-> > > > diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-> > > > index 89006e044973..a756a4d3f70f 100644
-> > > > --- a/fs/cifs/file.c
-> > > > +++ b/fs/cifs/file.c
-> > > > @@ -2858,7 +2858,6 @@ static void collect_uncached_write_data(struc=
-t cifs_aio_ctx *ctx)
-> > > >         struct cifs_tcon *tcon;
-> > > >         struct cifs_sb_info *cifs_sb;
-> > > >         struct dentry *dentry =3D ctx->cfile->dentry;
-> > > > -       unsigned int i;
-> > > >         int rc;
-> > > >
-> > > >         tcon =3D tlink_tcon(ctx->cfile->tlink);
-> > > > @@ -2922,10 +2921,6 @@ static void collect_uncached_write_data(stru=
-ct cifs_aio_ctx *ctx)
-> > > >                 kref_put(&wdata->refcount, cifs_uncached_writedata_=
-release);
-> > > >         }
-> > > >
-> > > > -       if (!ctx->direct_io)
-> > > > -               for (i =3D 0; i < ctx->npages; i++)
-> > > > -                       put_page(ctx->bv[i].bv_page);
-> > > > -
-> > > >         cifs_stats_bytes_written(tcon, ctx->total_len);
-> > > >         set_bit(CIFS_INO_INVALID_MAPPING, &CIFS_I(dentry->d_inode)-=
->flags);
-> > > >
-> > > > @@ -3563,7 +3558,6 @@ collect_uncached_read_data(struct cifs_aio_ct=
-x *ctx)
-> > > >         struct iov_iter *to =3D &ctx->iter;
-> > > >         struct cifs_sb_info *cifs_sb;
-> > > >         struct cifs_tcon *tcon;
-> > > > -       unsigned int i;
-> > > >         int rc;
-> > > >
-> > > >         tcon =3D tlink_tcon(ctx->cfile->tlink);
-> > > > @@ -3647,15 +3641,8 @@ collect_uncached_read_data(struct cifs_aio_c=
-tx *ctx)
-> > > >                 kref_put(&rdata->refcount, cifs_uncached_readdata_r=
-elease);
-> > > >         }
-> > > >
-> > > > -       if (!ctx->direct_io) {
-> > > > -               for (i =3D 0; i < ctx->npages; i++) {
-> > > > -                       if (ctx->should_dirty)
-> > > > -                               set_page_dirty(ctx->bv[i].bv_page);
-> > > > -                       put_page(ctx->bv[i].bv_page);
-> > > > -               }
-> > > > -
-> > > > +       if (!ctx->direct_io)
-> > > >                 ctx->total_len =3D ctx->len - iov_iter_count(to);
-> > > > -       }
-> > > >
-> > > >         /* mask nodata case */
-> > > >         if (rc =3D=3D -ENODATA)
-> > > > diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
-> > > > index bee203055b30..9bc0d17a9d77 100644
-> > > > --- a/fs/cifs/misc.c
-> > > > +++ b/fs/cifs/misc.c
-> > > > @@ -768,6 +768,11 @@ cifs_aio_ctx_alloc(void)
-> > > >  {
-> > > >         struct cifs_aio_ctx *ctx;
-> > > >
-> > > > +       /*
-> > > > +        * Must use kzalloc to initialize ctx->bv to NULL and ctx->=
-direct_io
-> > > > +        * to false so that we know when we have to unreference pag=
-es within
-> > > > +        * cifs_aio_ctx_release()
-> > > > +        */
-> > > >         ctx =3D kzalloc(sizeof(struct cifs_aio_ctx), GFP_KERNEL);
-> > > >         if (!ctx)
-> > > >                 return NULL;
-> > > > @@ -786,7 +791,23 @@ cifs_aio_ctx_release(struct kref *refcount)
-> > > >                                         struct cifs_aio_ctx, refcou=
-nt);
-> > > >
-> > > >         cifsFileInfo_put(ctx->cfile);
-> > > > -       kvfree(ctx->bv);
-> > > > +
-> > > > +       /*
-> > > > +        * ctx->bv is only set if setup_aio_ctx_iter() was call suc=
-cessfuly
-> > > > +        * which means that iov_iter_get_pages() was a success and =
-thus that
-> > > > +        * we have taken reference on pages.
-> > > > +        */
-> > > > +       if (ctx->bv) {
-> > > > +               unsigned i;
-> > > > +
-> > > > +               for (i =3D 0; i < ctx->npages; i++) {
-> > > > +                       if (ctx->should_dirty)
-> > > > +                               set_page_dirty(ctx->bv[i].bv_page);
-> > > > +                       put_page(ctx->bv[i].bv_page);
-> > > > +               }
-> > > > +               kvfree(ctx->bv);
-> > > > +       }
-> > > > +
-> > > >         kfree(ctx);
-> > > >  }
-> > > >
-> > > > --
-> > > > 2.20.1
-> > > >
->
-> Good catch, thanks!
->
-> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
->
-> --
-> Best regards,
-> Pavel Shilovsky
+Rather the shifting by 9, there are other places where the value if shifted by
+SECTOR_SHIFT, which is more readable.
+This patch aims to reduce these differences by adding a new function called
+size_to_sectors, adding a proper comment explaining why this is needed.
 
+null_blk was changed to use this new function.
 
+This is an RFC, please let me know if you have other suggestions.
 
---=20
 Thanks,
+Marcos
 
-Steve
+Marcos Paulo de Souza (2):
+  blkdev.h: Introduce size_to_sectors hlper function
+  null_blk: Make use of size_to_sectors helper
+
+ drivers/block/null_blk_main.c | 18 +++++++++---------
+ include/linux/blkdev.h        | 18 ++++++++++++++++++
+ 2 files changed, 27 insertions(+), 9 deletions(-)
+
+-- 
+2.16.4
+
