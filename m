@@ -2,242 +2,201 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5820DC282DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B04C282DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 02:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280FB20833
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E313020850
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 02:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZcOj6/tW"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="lIcIpYJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfDUBoh (ORCPT
+        id S1727209AbfDUC10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 21:44:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39955 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfDUBog (ORCPT
+        Sat, 20 Apr 2019 22:27:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43445 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfDUC1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 21:44:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id v7so5414651qti.7
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 18:44:36 -0700 (PDT)
+        Sat, 20 Apr 2019 22:27:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so4276573pgu.10
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 19:27:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=KL328kJp7uYop/CaXZcmGRKfoBkXK0v1G+nukTp5itg=;
-        b=ZcOj6/tWBZki8VSTYWIx2hC0zATUWkFU1OTXUPmLys73YN2QUPVmWMkCAzisCIphb4
-         lagFcRl0UAa1+nKpZPFW6/ywAODOoC2ElJuMxdMZK+n/MVj6NLUv0dZbEJuUtuqfRbAG
-         2vQO7zgIlXc6foQWwNvVaXJ4cmOF6Nv1Mbrym5SdV+qbCVa1vCnbCbAIPeojIxSuiyzv
-         alULIAAU7iGCTj9LS/VnbEzAzTbYgUAZW4UQycLNdEUtMMs7BATfDuCFjGJGPJtHwATa
-         X1SGiIiiccfzYurY/yFrS0TMcM5+2hTPgZVtuHjsxwv960+2M26QfeQOg2ZSfR+OrX9P
-         Nihw==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=+he5uOC0TV1I9Vftp/Q5mAs97mJwaCvpxiFwD6rTT3A=;
+        b=lIcIpYJSKffZx/ncg8LybC636IPkYaFDq1OFr4bdGyPcTVCy3eMMiBwQvWQg6p5zAX
+         7lmizjJAP8fsykhPOyYkAcpy0oDbJGwkEIB9itukWLvRNN30UNJ5hQ9HKNp7ojAckKYn
+         drChe7KyaQTBUzDmZfxN7HCInhqlWSH45YKIXWkVB2H3oeI6QXYbPAjh/O9AjPH0mjec
+         Ol6n2n6WHLoKGe1Rt9aN+Awb0+VnMLUHYkoxeN1zcB4Ba8YAUFoN75XWuSiDhv31aZSw
+         Oz1QrerFbC0CfxM8sc2QJEWlE7XkuEOR7YOhHGYWj9jWeHTnTCLI2/QalLPRoyWr2Cc/
+         S5Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KL328kJp7uYop/CaXZcmGRKfoBkXK0v1G+nukTp5itg=;
-        b=Hlum5JN696RzdiCcWWzg6hxqgAg6D40mtRAh/3zoWog7QvvKAKqOCyDwIaLywlHTIL
-         QLVgSkBRRsnoMM/f7kC5TA/+Dvt5ssqPUlK2pBQrTd9pM/6bwUznIAEa2PMHlQsO3Fal
-         1JA+i110TMfUBO6AiKIkj/3GhWqqT4fyCe/ErIkXE02acciSySPgBavd+VtytJN+wxN8
-         m4RzO7+00uRFJlssOgQb9vIiNzp7bRfyQIJIqEZD0w8xCLDlc5QpNeIFFaPMUUK4IwMk
-         VOqFQlo4NYDE1+SMAB6aM2JGalry9zkP7k1Y2NdVp+sr6dcZNtLKdciXmxwe3ViNXK63
-         oN9Q==
-X-Gm-Message-State: APjAAAU8bMXXDj0UoxZ7W3FwjWxlnyX1XWt5ClM9c8Mip7Ceyo77LKxK
-        3o2ICUyE4dqwK4adtqKg/qm0/g==
-X-Google-Smtp-Source: APXvYqwLrbFXWXl4ushQLhaJbuTDu4grdgvxRuAMcypo1JTsKGB8Q7Xxy+bv6W6dd9hWBd51O4WhFg==
-X-Received: by 2002:ac8:1776:: with SMTP id u51mr436168qtk.151.1555811075671;
-        Sat, 20 Apr 2019 18:44:35 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id u1sm1385218qtj.50.2019.04.20.18.44.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+he5uOC0TV1I9Vftp/Q5mAs97mJwaCvpxiFwD6rTT3A=;
+        b=eyoOaYKL5rjk9v1O0hIgi6Df7RQ9PzVmM5v1dwAV27Nt/It2W243RoCk8iSut2ACXu
+         pwP4elVTet3o2OtwJ3rpQIK4oZdNHHgHJM2hvk9ogSbuh6H8s+Jp6DASUZsFgd44+lIP
+         RWC4dusB8jgOHRmIXhF8T/F1OFSJfYOLB+W89px70+jEf475PXrqOhvNtxvf3yAmhyl3
+         RtDZ8D0Jmwg1RWsV+tHrRBrzvKmwSVyIg/sklnLm9gleenN9Xj36T+xJCePWCvb/n0um
+         0tAMYB+UT37TvplbF89hfWfOj5vzAlGKnld475r/YMC+1XNyDvxysdxodN/vCYSEd9np
+         uY/Q==
+X-Gm-Message-State: APjAAAVg7yV7VUI8c4DLMbHsQk3DWEQIYfL9lAkmOaZNW+rCVqcN77ps
+        5ma2Ikr+MGjFHesL59ygnbqWVEi9WJM=
+X-Google-Smtp-Source: APXvYqzMJnGPfEaz+m3KSpkIg9vlvlOp92TD9BUbKIcq4onBTuDn12viJF7IeW0SyVZoULXukMWV/A==
+X-Received: by 2002:a63:cc0b:: with SMTP id x11mr11756917pgf.35.1555813644443;
+        Sat, 20 Apr 2019 19:27:24 -0700 (PDT)
+Received: from localhost.localdomain (118-171-134-240.dynamic-ip.hinet.net. [118.171.134.240])
+        by smtp.gmail.com with ESMTPSA id u20sm12200196pfh.112.2019.04.20.19.27.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Apr 2019 18:44:34 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
-        mhocko@suse.com, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com
-Subject: [v2 2/2] device-dax: "Hotremove" persistent memory that is used like normal RAM
-Date:   Sat, 20 Apr 2019 21:44:29 -0400
-Message-Id: <20190421014429.31206-3-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190421014429.31206-1-pasha.tatashin@soleen.com>
-References: <20190421014429.31206-1-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 20 Apr 2019 19:27:23 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Henry Chen <henryc.chen@mediatek.com>,
+        Chen Zhong <chen.zhong@mediatek.com>,
+        Chenglin Xu <chenglin.xu@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: mt63xx: Switch to SPDX identifier
+Date:   Sun, 21 Apr 2019 10:26:56 +0800
+Message-Id: <20190421022656.5838-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is now allowed to use persistent memory like a regular RAM, but
-currently there is no way to remove this memory until machine is
-rebooted.
+Convert MediaTek mt63xx PMIC drivers to SPDX identifier.
 
-This work expands the functionality to also allows hotremoving
-previously hotplugged persistent memory, and recover the device for use
-for other purposes.
-
-To hotremove persistent memory, the management software must first
-offline all memory blocks of dax region, and than unbind it from
-device-dax/kmem driver. So, operations should look like this:
-
-echo offline > echo offline > /sys/devices/system/memory/memoryN/state
-...
-echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-
-Note: if unbind is done without offlining memory beforehand, it won't be
-possible to do dax0.0 hotremove, and dax's memory is going to be part of
-System RAM until reboot.
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/dax/dax-private.h |  2 +
- drivers/dax/kmem.c        | 91 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 89 insertions(+), 4 deletions(-)
+ drivers/regulator/mt6311-regulator.c | 17 ++++-------------
+ drivers/regulator/mt6311-regulator.h | 10 +---------
+ drivers/regulator/mt6323-regulator.c | 12 ++++--------
+ drivers/regulator/mt6380-regulator.c | 17 ++++-------------
+ drivers/regulator/mt6397-regulator.c | 17 ++++-------------
+ 5 files changed, 17 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index a45612148ca0..999aaf3a29b3 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -53,6 +53,7 @@ struct dax_region {
-  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-  * @ref: pgmap reference count (driver owned)
-  * @cmp: @ref final put completion (driver owned)
-+ * @dax_mem_res: physical address range of hotadded DAX memory
+diff --git a/drivers/regulator/mt6311-regulator.c b/drivers/regulator/mt6311-regulator.c
+index 01d69f43d2b0..af95449d3590 100644
+--- a/drivers/regulator/mt6311-regulator.c
++++ b/drivers/regulator/mt6311-regulator.c
+@@ -1,16 +1,7 @@
+-/*
+- * Copyright (c) 2015 MediaTek Inc.
+- * Author: Henry Chen <henryc.chen@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2015 MediaTek Inc.
++// Author: Henry Chen <henryc.chen@mediatek.com>
+ 
+ #include <linux/err.h>
+ #include <linux/gpio.h>
+diff --git a/drivers/regulator/mt6311-regulator.h b/drivers/regulator/mt6311-regulator.h
+index 5218db46a798..4904d6751714 100644
+--- a/drivers/regulator/mt6311-regulator.h
++++ b/drivers/regulator/mt6311-regulator.h
+@@ -1,15 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2015 MediaTek Inc.
+  * Author: Henry Chen <henryc.chen@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
   */
- struct dev_dax {
- 	struct dax_region *region;
-@@ -62,6 +63,7 @@ struct dev_dax {
- 	struct dev_pagemap pgmap;
- 	struct percpu_ref ref;
- 	struct completion cmp;
-+	struct resource *dax_kmem_res;
- };
  
- static inline struct dev_dax *to_dev_dax(struct device *dev)
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 4c0131857133..d4896b281036 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -71,21 +71,104 @@ int dev_dax_kmem_probe(struct device *dev)
- 		kfree(new_res);
- 		return rc;
- 	}
-+	dev_dax->dax_kmem_res = new_res;
+ #ifndef __MT6311_REGULATOR_H__
+diff --git a/drivers/regulator/mt6323-regulator.c b/drivers/regulator/mt6323-regulator.c
+index 25b002328910..893ea190788a 100644
+--- a/drivers/regulator/mt6323-regulator.c
++++ b/drivers/regulator/mt6323-regulator.c
+@@ -1,11 +1,7 @@
+-/*
+- * Copyright (c) 2016 MediaTek Inc.
+- * Author: Chen Zhong <chen.zhong@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2016 MediaTek Inc.
++// Author: Chen Zhong <chen.zhong@mediatek.com>
  
- 	return 0;
- }
+ #include <linux/module.h>
+ #include <linux/of.h>
+diff --git a/drivers/regulator/mt6380-regulator.c b/drivers/regulator/mt6380-regulator.c
+index 86bc332df3f2..b6aed090b5e0 100644
+--- a/drivers/regulator/mt6380-regulator.c
++++ b/drivers/regulator/mt6380-regulator.c
+@@ -1,16 +1,7 @@
+-/*
+- * Copyright (c) 2017 MediaTek Inc.
+- * Author: Chenglin Xu <chenglin.xu@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2017 MediaTek Inc.
++// Author: Chenglin Xu <chenglin.xu@mediatek.com>
  
-+#ifdef CONFIG_MEMORY_HOTREMOVE
-+/*
-+ * Check that device-dax's memory_blocks are offline. If a memory_block is not
-+ * offline a warning is printed and an error is returned. dax hotremove can
-+ * succeed only when every memory_block is offlined beforehand.
-+ */
-+static int
-+offline_memblock_cb(struct memory_block *mem, void *arg)
-+{
-+	struct device *mem_dev = &mem->dev;
-+	bool is_offline;
-+
-+	device_lock(mem_dev);
-+	is_offline = mem_dev->offline;
-+	device_unlock(mem_dev);
-+
-+	if (!is_offline) {
-+		struct device *dev = (struct device *)arg;
-+		unsigned long spfn = section_nr_to_pfn(mem->start_section_nr);
-+		unsigned long epfn = section_nr_to_pfn(mem->end_section_nr);
-+		phys_addr_t spa = spfn << PAGE_SHIFT;
-+		phys_addr_t epa = epfn << PAGE_SHIFT;
-+
-+		dev_warn(dev, "memory block [%pa-%pa] is not offline\n",
-+			 &spa, &epa);
-+
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dev_dax_kmem_remove(struct device *dev)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct resource *res = dev_dax->dax_kmem_res;
-+	resource_size_t kmem_start;
-+	resource_size_t kmem_size;
-+	unsigned long start_pfn;
-+	unsigned long end_pfn;
-+	int rc;
-+
-+	/*
-+	 * dax kmem resource does not exist, means memory was never hotplugged.
-+	 * So, nothing to do here.
-+	 */
-+	if (!res)
-+		return 0;
-+
-+	kmem_start = res->start;
-+	kmem_size = resource_size(res);
-+	start_pfn = kmem_start >> PAGE_SHIFT;
-+	end_pfn = start_pfn + (kmem_size >> PAGE_SHIFT) - 1;
-+
-+	/*
-+	 * Walk and check that every singe memory_block of dax region is
-+	 * offline
-+	 */
-+	lock_device_hotplug();
-+	rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
-+	unlock_device_hotplug();
-+
-+	/*
-+	 * If admin has not offlined memory beforehand, we cannot hotremove dax.
-+	 * Unfortunately, because unbind will still succeed there is no way for
-+	 * user to hotremove dax after this.
-+	 */
-+	if (rc)
-+		return rc;
-+
-+	/* Hotremove memory, cannot fail because memory is already offlined */
-+	remove_memory(dev_dax->target_node, kmem_start, kmem_size);
-+
-+	/* Release and free dax resources */
-+	release_resource(res);
-+	kfree(res);
-+	dev_dax->dax_kmem_res = NULL;
-+
-+	return 0;
-+}
-+#else
- static int dev_dax_kmem_remove(struct device *dev)
- {
- 	/*
--	 * Purposely leak the request_mem_region() for the device-dax
--	 * range and return '0' to ->remove() attempts. The removal of
--	 * the device from the driver always succeeds, but the region
--	 * is permanently pinned as reserved by the unreleased
-+	 * Without hotremove purposely leak the request_mem_region() for the
-+	 * device-dax range and return '0' to ->remove() attempts. The removal
-+	 * of the device from the driver always succeeds, but the region is
-+	 * permanently pinned as reserved by the unreleased
- 	 * request_mem_region().
- 	 */
- 	return 0;
- }
-+#endif /* CONFIG_MEMORY_HOTREMOVE */
+ #include <linux/module.h>
+ #include <linux/of.h>
+diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
+index 3e6c8d99ec0f..fd9ed864a0c1 100644
+--- a/drivers/regulator/mt6397-regulator.c
++++ b/drivers/regulator/mt6397-regulator.c
+@@ -1,16 +1,7 @@
+-/*
+- * Copyright (c) 2014 MediaTek Inc.
+- * Author: Flora Fu <flora.fu@mediatek.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2014 MediaTek Inc.
++// Author: Flora Fu <flora.fu@mediatek.com>
  
- static struct dax_device_driver device_dax_kmem_driver = {
- 	.drv = {
+ #include <linux/module.h>
+ #include <linux/of.h>
 -- 
-2.21.0
+2.17.1
 
