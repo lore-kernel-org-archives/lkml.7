@@ -2,191 +2,137 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131D7C282E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC534C282E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD3E2087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12AD20833
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="bOYUDjSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfDUB3d (ORCPT
+        id S1727194AbfDUBod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 21:29:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18104 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfDUB2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 21:28:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Apr 2019 18:28:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,376,1549958400"; 
-   d="scan'208";a="136008192"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 20 Apr 2019 18:24:10 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
-        kevin.tian@intel.com, mika.westerberg@linux.intel.com,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v3 09/10] iommu/vt-d: Add dma sync ops for untrusted devices
-Date:   Sun, 21 Apr 2019 09:17:18 +0800
-Message-Id: <20190421011719.14909-10-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190421011719.14909-1-baolu.lu@linux.intel.com>
-References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
+        Sat, 20 Apr 2019 21:44:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39783 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDUBod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 21:44:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id f13so8598812qto.6
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 18:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EUzJcCEPNzxrNRebVTHnadob9f3kjrf4lY7mTXNycVs=;
+        b=bOYUDjSwgmBCuOhOjvyCWmoDmaFqDR+hSTrbz3hZ5hEnHqcNcOESI6IDbjkMh53cxB
+         G2x/gsrquZNFLSsxAj32qOqLpwi+fd3+7zvGuUT/KEdN8aYwoHOWBkQGVACwskgHLMqt
+         3RPy+WduBUFt9ayw0hAttali1QHy8GoqBFz6WeuUUXLS0Cu7c1TkBjkjM6le/CDgWmDe
+         xZWWQ851RPT7HzOEll57WaTFXsioXRv0XRhdEK5/qfxedQm63uqu26QBJLWmkYWWQ/Qm
+         G+bddWTl2F+QpFsIAaDPs/kg0hNvLPx0miCR3utDHzsXmF+aBLXnELNjg0Jn811ftFkW
+         c3RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EUzJcCEPNzxrNRebVTHnadob9f3kjrf4lY7mTXNycVs=;
+        b=kmZ19OJkw0Cl/V4yB7pDuHU1nMMVF6U2bI5jLbkUjSxMC/IuZaGk1+qigbthpH11R5
+         0r+Hfaq3FdLgNKEwy3mWPVMRnVam45IAQ7UsmLMz4/FLx3s237WjpSRl/KaoSexTopXf
+         l+I6Klv0ftCPqskdctCU6k/zl6SjQf43Qn0jN4vavsXUMlQVVM4K1CZBPV8lYQPzRwyb
+         ghuzt7JawbHVJCMv7YkF6AjeUf5ihiyutGpWQ4bd4OvXJDB0npSPVjCmtOAb8jlp2D4G
+         /DB/aaqKjFq0DvzsQBIHjthYKWhQnKAdf6XiQXr360H+iDJccgm6GFPb1E6J79m/9qdr
+         gG/A==
+X-Gm-Message-State: APjAAAXHfKhpK8dX69S5At+P4fO3OplNB8AFQLbMmib9dthAhCoIr7+q
+        D2Kbjv6icj0oFcp5yRLZL8HwPw==
+X-Google-Smtp-Source: APXvYqwGryHsI9e6T0GUZeIzujdwEDcVrbulda/4xor60EE28+izuI26XjYyBBq3siOOME8A8xbffQ==
+X-Received: by 2002:a0c:b7a5:: with SMTP id l37mr9708401qve.94.1555811072426;
+        Sat, 20 Apr 2019 18:44:32 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id u1sm1385218qtj.50.2019.04.20.18.44.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 20 Apr 2019 18:44:31 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
+        mhocko@suse.com, dave.hansen@linux.intel.com,
+        dan.j.williams@intel.com, keith.busch@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
+        thomas.lendacky@amd.com, ying.huang@intel.com,
+        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
+        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com
+Subject: [v2 0/2] "Hotremove" persistent memory
+Date:   Sat, 20 Apr 2019 21:44:27 -0400
+Message-Id: <20190421014429.31206-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the dma sync ops for dma buffers used by any
-untrusted device. We need to sync such buffers because
-they might have been mapped with bounce pages.
+Changelog:
+v2
+- Dan Williams mentioned that drv->remove() return is ignored
+  by unbind. Unbind always succeeds. Because we cannot guarantee
+  that memory can be offlined from the driver, don't even
+  attempt to do so. Simply check that every section is offlined
+  beforehand and only then proceed with removing dax memory.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Tested-by: Xu Pengfei <pengfei.xu@intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@intel.com>
 ---
- drivers/iommu/Kconfig       |  1 +
- drivers/iommu/intel-iommu.c | 96 +++++++++++++++++++++++++++++++++----
- 2 files changed, 88 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index b918c22ca25b..f3191ec29e45 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -194,6 +194,7 @@ config INTEL_IOMMU
- 	select IOMMU_IOVA
- 	select NEED_DMA_MAP_STATE
- 	select DMAR_TABLE
-+	select IOMMU_BOUNCE_PAGE
- 	help
- 	  DMA remapping (DMAR) devices support enables independent address
- 	  translations for Direct Memory Access (DMA) from devices.
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 0d80f26b8a72..ed941ec9b9d5 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3683,16 +3683,94 @@ static int intel_map_sg(struct device *dev, struct scatterlist *sglist, int nele
- 	return nelems;
- }
- 
-+static void
-+intel_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
-+			  size_t size, enum dma_data_direction dir)
-+{
-+	if (WARN_ON(dir == DMA_NONE))
-+		return;
-+
-+	if (!device_needs_bounce(dev))
-+		return;
-+
-+	if (iommu_no_mapping(dev))
-+		return;
-+
-+	iommu_bounce_sync_single(dev, addr, size, dir, SYNC_FOR_CPU);
-+}
-+
-+static void
-+intel_sync_single_for_device(struct device *dev, dma_addr_t addr,
-+			     size_t size, enum dma_data_direction dir)
-+{
-+	if (WARN_ON(dir == DMA_NONE))
-+		return;
-+
-+	if (!device_needs_bounce(dev))
-+		return;
-+
-+	if (iommu_no_mapping(dev))
-+		return;
-+
-+	iommu_bounce_sync_single(dev, addr, size, dir, SYNC_FOR_DEVICE);
-+}
-+
-+static void
-+intel_sync_sg_for_cpu(struct device *dev, struct scatterlist *sglist,
-+		      int nelems, enum dma_data_direction dir)
-+{
-+	struct scatterlist *sg;
-+	int i;
-+
-+	if (WARN_ON(dir == DMA_NONE))
-+		return;
-+
-+	if (!device_needs_bounce(dev))
-+		return;
-+
-+	if (iommu_no_mapping(dev))
-+		return;
-+
-+	for_each_sg(sglist, sg, nelems, i)
-+		iommu_bounce_sync_single(dev, sg_dma_address(sg),
-+					 sg_dma_len(sg), dir, SYNC_FOR_CPU);
-+}
-+
-+static void
-+intel_sync_sg_for_device(struct device *dev, struct scatterlist *sglist,
-+			 int nelems, enum dma_data_direction dir)
-+{
-+	struct scatterlist *sg;
-+	int i;
-+
-+	if (WARN_ON(dir == DMA_NONE))
-+		return;
-+
-+	if (!device_needs_bounce(dev))
-+		return;
-+
-+	if (iommu_no_mapping(dev))
-+		return;
-+
-+	for_each_sg(sglist, sg, nelems, i)
-+		iommu_bounce_sync_single(dev, sg_dma_address(sg),
-+					 sg_dma_len(sg), dir, SYNC_FOR_DEVICE);
-+}
-+
- static const struct dma_map_ops intel_dma_ops = {
--	.alloc = intel_alloc_coherent,
--	.free = intel_free_coherent,
--	.map_sg = intel_map_sg,
--	.unmap_sg = intel_unmap_sg,
--	.map_page = intel_map_page,
--	.unmap_page = intel_unmap_page,
--	.map_resource = intel_map_resource,
--	.unmap_resource = intel_unmap_page,
--	.dma_supported = dma_direct_supported,
-+	.alloc			= intel_alloc_coherent,
-+	.free			= intel_free_coherent,
-+	.map_sg			= intel_map_sg,
-+	.unmap_sg		= intel_unmap_sg,
-+	.map_page		= intel_map_page,
-+	.unmap_page		= intel_unmap_page,
-+	.sync_single_for_cpu	= intel_sync_single_for_cpu,
-+	.sync_single_for_device	= intel_sync_single_for_device,
-+	.sync_sg_for_cpu	= intel_sync_sg_for_cpu,
-+	.sync_sg_for_device	= intel_sync_sg_for_device,
-+	.map_resource		= intel_map_resource,
-+	.unmap_resource		= intel_unmap_page,
-+	.dma_supported		= dma_direct_supported,
- };
- 
- static inline int iommu_domain_cache_init(void)
+Recently, adding a persistent memory to be used like a regular RAM was
+added to Linux. This work extends this functionality to also allow hot
+removing persistent memory.
+
+We (Microsoft) have an important use case for this functionality.
+
+The requirement is for physical machines with small amount of RAM (~8G)
+to be able to reboot in a very short period of time (<1s). Yet, there is
+a userland state that is expensive to recreate (~2G).
+
+The solution is to boot machines with 2G preserved for persistent
+memory.
+
+Copy the state, and hotadd the persistent memory so machine still has
+all 8G available for runtime. Before reboot, offline and hotremove
+device-dax 2G, copy the memory that is needed to be preserved to pmem0
+device, and reboot.
+
+The series of operations look like this:
+
+1. After boot restore /dev/pmem0 to ramdisk to be consumed by apps.
+   and free ramdisk.
+2. Convert raw pmem0 to devdax
+   ndctl create-namespace --mode devdax --map mem -e namespace0.0 -f
+3. Hotadd to System RAM
+   echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/new_id
+   echo online_movable > /sys/devices/system/memoryXXX/state
+4. Before reboot hotremove device-dax memory from System RAM
+   echo offline > /sys/devices/system/memoryXXX/state
+   echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+5. Create raw pmem0 device
+   ndctl create-namespace --mode raw  -e namespace0.0 -f
+6. Copy the state that was stored by apps to ramdisk to pmem device
+7. Do kexec reboot or reboot through firmware if firmware does not
+   zero memory in pmem0 region (These machines have only regular
+   volatile memory). So to have pmem0 device either memmap kernel
+   parameter is used, or devices nodes in dtb are specified.
+
+Pavel Tatashin (2):
+  device-dax: fix memory and resource leak if hotplug fails
+  device-dax: "Hotremove" persistent memory that is used like normal RAM
+
+ drivers/dax/dax-private.h |  2 +
+ drivers/dax/kmem.c        | 96 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 93 insertions(+), 5 deletions(-)
+
 -- 
-2.17.1
+2.21.0
 
