@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FE9C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 05:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52560C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 06:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9706220869
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 05:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D90620869
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 06:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lw2scfNo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAaOxD+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfDUFn4 (ORCPT
+        id S1726475AbfDUFyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 01:43:56 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36819 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfDUFn4 (ORCPT
+        Sun, 21 Apr 2019 01:54:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39301 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfDUFyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 01:43:56 -0400
-Received: by mail-pl1-f195.google.com with SMTP id ck15so4360911plb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 22:43:55 -0700 (PDT)
+        Sun, 21 Apr 2019 01:54:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l18so4272655pgj.6
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Apr 2019 22:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Vf9ZzTVGOZz/x/u6WwRzdjPAr0AAJXLHnSaULvX/H/w=;
-        b=Lw2scfNo0pCLDnHe5tKXI1aDx1dZBT/8nWeqC51fPd20ooRM+ZfjnszD4D/nYW7qSk
-         0LpDxFryk6cwbS+Q32nl4Af42GqFAkTGySqiSOskY9GAviCBk+icX3wzVH9xpVY/eu1l
-         hYRITCuzQjo02Fld1Cgc0ZB90ItGXdVksFYCSzyO/K26Z9CEDL3nnS0jv2cMuY56G9sR
-         gDPuG40RHiFBEF6tKCWtZ35NgdmsyU6AbVMb45gbBILuggu4rWJ8i05YaiBIgHtPbzl3
-         roHL5VU5HxAJbcdA0xGH75qrE7ffR5u1LskYviPH4PG63AuP9lMON24OXolIK4XCqBbN
-         NMqQ==
+        bh=LxIFaDAjG3Mf4CKCOKCnEJN+OeV4ScqkIERFngckI4A=;
+        b=LAaOxD+ZJIu2q9HJbL0xcuvhgWihpdORRIC21ARI/HGLnJetPMuLI6ZxTpxnHrS/VR
+         c0Iki61GRuw3bpWHygxkXOyqF1bWI7cfXSfAtAGAw/w/iinqw9MCzKAhAJ+LIv9STLAG
+         KRNccylvtUNwDoVMN8aKn1sQF/DH0UW2u/JHVQgIqrenfR21YaZLgU8fCnSvtiSfahL+
+         TbEstC5k5OUrbT3aUcTwbAYUsr11xseqDGOXZOqO4dsbWQ1bBCHatPZmc5xoAaWsMI/n
+         3zHT/rIWtqd1kYedbtCmpYHzlXxvpLxP7qxjQG9pdtHQrxaYKBV4tvBlF3XMDNeTt+9G
+         +4Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vf9ZzTVGOZz/x/u6WwRzdjPAr0AAJXLHnSaULvX/H/w=;
-        b=pQOaxG4KjEPEEwN3SfrMB2Y5W/ObUA+TdN2HMKcw3rr/cJ0HvXOOVkpB34yQVylrd3
-         KBjwqwKWi287OpXidME/ZX3Dsw0OoRlUpqHT2fNYSh+aJCF5g1deItPNRLfE0EWlMxkF
-         dNk7xZoxZ1Rc5d7VDZmlhO9B2X6miJDXFr5/4i18ndC7KPX/JazuKMmJIzGk4m4xy5pY
-         edDhDMLtgG4rLBVIo1mzGqIbbPkELDXZFapDWM5Glq6BnNJnk8BctvxOVMHrr2cSn2xO
-         P5GpguczesQF0GApaoYV+/WZ1gNLct/piwm0ws01Pdw36R6AnVOf5+2rS+Gp2znlrwjW
-         BLhQ==
-X-Gm-Message-State: APjAAAUOxibxyiX5Y9dJ9x2mYXuuwNRHO3EINxqlWuj4RsojLnkCD8uX
-        leOPAGRgUk9m68NiEIJGKL4=
-X-Google-Smtp-Source: APXvYqycOfv25+7ZxLuykBETWy3HEdjzEHq93wNZ6mycPKFc0cEIlLQ9t0k9gcZp9nUbTt7WXyaEpw==
-X-Received: by 2002:a17:902:70ca:: with SMTP id l10mr4608591plt.228.1555825435519;
-        Sat, 20 Apr 2019 22:43:55 -0700 (PDT)
+        bh=LxIFaDAjG3Mf4CKCOKCnEJN+OeV4ScqkIERFngckI4A=;
+        b=X2WdDIInZKYnpCCdbLanhKyzRwPnQxptXc9Rj5jyNpYs3nlRsAQqXCIqrlezlm0T1t
+         ruzAUCOeUk0PVxfAjRWdDBl73C/7PwhvBLiN5C4MzgXm/lANO8L/O447aDwzf6qD3ZWT
+         pfgdWoLUqpzwed/bTfiF1PzZUrgBrkKTrzKI7fF/w7S9ZDjE2KZaIGrkyCGo5G0Ot7rS
+         eICFXCJAHVcZDMDTpU/CqzY1yIkUdSQ2YOqCIfnCsbQSM4hRcmL03WgVis2edZJwMTfj
+         xPnr44uPWHTKLyLJmZpUbzDnasnBIInCHJF4YI7dSWXt61oKeLYaHxM58/yRvs8d1m59
+         T5RQ==
+X-Gm-Message-State: APjAAAXky377cy5BN3iXnC3gP9dilonATzm9ngunHr/EpFdTpQ22dlrP
+        c2dLvHMHsa3tFO3Hy8cm+DQ=
+X-Google-Smtp-Source: APXvYqzvbB4cv40Daen5ODJbcKQMVnlU8GPhyobIcmISAHn5oXEuPiQyIM89BWQ1yX5ByHEY7Cna7w==
+X-Received: by 2002:a62:1647:: with SMTP id 68mr13561107pfw.113.1555826050829;
+        Sat, 20 Apr 2019 22:54:10 -0700 (PDT)
 Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id r87sm15461428pfa.71.2019.04.20.22.43.54
+        by smtp.gmail.com with ESMTPSA id v15sm12187074pff.105.2019.04.20.22.54.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 20 Apr 2019 22:43:55 -0700 (PDT)
-Date:   Sat, 20 Apr 2019 22:43:52 -0700
+        Sat, 20 Apr 2019 22:54:10 -0700 (PDT)
+Date:   Sat, 20 Apr 2019 22:54:07 -0700
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
 To:     Daniel Baluta <daniel.baluta@nxp.com>
 Cc:     "broonie@kernel.org" <broonie@kernel.org>,
@@ -71,27 +71,48 @@ Cc:     "broonie@kernel.org" <broonie@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "S.j. Wang" <shengjiu.wang@nxp.com>,
         dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/2] ASoC: fsl: sai: Add support for runtime pm
-Message-ID: <20190421054352.GB683@Asurada-Nvidia.nvidia.com>
+Subject: Re: [PATCH 2/2] ASoC: fsl: Move clock operation to PM runtime
+Message-ID: <20190421055406.GC683@Asurada-Nvidia.nvidia.com>
 References: <20190420155846.10027-1-daniel.baluta@nxp.com>
- <20190420155846.10027-2-daniel.baluta@nxp.com>
+ <20190420155846.10027-3-daniel.baluta@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190420155846.10027-2-daniel.baluta@nxp.com>
+In-Reply-To: <20190420155846.10027-3-daniel.baluta@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 03:59:04PM +0000, Daniel Baluta wrote:
-> @@ -898,6 +899,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, sai);
->  
-> +	pm_runtime_enable(&pdev->dev);
+On Sat, Apr 20, 2019 at 03:59:05PM +0000, Daniel Baluta wrote:
+> Turn off/on clocks when device enters suspend/resume. This
+> helps saving power.
 
-You will need pm_runtime_disable() somewhere, like remove().
+> @@ -934,6 +933,25 @@ static int fsl_sai_runtime_suspend(struct device *dev)
+>  static int fsl_sai_runtime_resume(struct device *dev)
+>  {
+>  	struct fsl_sai *sai = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(sai->bus_clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable bus clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_PLAYBACK)) {
+> +		ret = clk_prepare_enable(sai->mclk_clk[sai->mclk_id[1]]);
+> +		if (ret)
+> +			goto disable_bus_clk;
+> +	}
+> +
+> +	if (sai->mclk_streams & BIT(SNDRV_PCM_STREAM_CAPTURE)) {
+> +		ret = clk_prepare_enable(sai->mclk_clk[sai->mclk_id[0]]);
+> +		if (ret)
+> +			goto disable_tx_clk;
+> +	}
 
-Thanks
+The driver only enables mclk_clks for I2S master mode. But this
+change enables them for I2S slave mode also. It doesn't sound a
+right thing to me since we are supposed to save power?
