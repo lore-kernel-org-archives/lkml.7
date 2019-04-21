@@ -6,66 +6,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF87C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 14:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC83FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 14:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16032086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 14:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4173218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 14:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfDUOTA (ORCPT
+        id S1727890AbfDUOTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 10:19:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51893 "EHLO ozlabs.org"
+        Sun, 21 Apr 2019 10:19:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58253 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbfDUOS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 10:18:59 -0400
+        id S1727796AbfDUOTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 10:19:06 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44nBf84YyCz9sB3; Mon, 22 Apr 2019 00:18:56 +1000 (AEST)
+        id 44nBfJ3wrsz9sMx; Mon, 22 Apr 2019 00:19:04 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: cc76404feaed597bb4f5234d34d3f49e2d1139bf
+X-powerpc-patch-commit: e663e1e06089773cdab03023563aead65cfed042
 X-Patchwork-Hint: ignore
-In-Reply-To: <1553596191-78889-1-git-send-email-peng.hao2@zte.com.cn>
-To:     Peng Hao <peng.hao2@zte.com.cn>, vitb@kernel.crashing.org,
-        benh@kernel.crashing.org, paulus@samba.org, christophe.leroy@c-s.fr
+In-Reply-To: <20190407015447.39292-1-cai@lca.pw>
+To:     Qian Cai <cai@lca.pw>, benh@kernel.crashing.org, paulus@samba.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, Wen Yang <wen.yang99@zte.com.cn>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v3] powerpc/8xx: fix possible object reference leak
-Message-Id: <44nBf84YyCz9sB3@ozlabs.org>
-Date:   Mon, 22 Apr 2019 00:18:56 +1000 (AEST)
+Cc:     Qian Cai <cai@lca.pw>, linuxppc-dev@lists.ozlabs.org,
+        oohall@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: powerpc/pseries/pmem: fix a set but not used value
+Message-Id: <44nBfJ3wrsz9sMx@ozlabs.org>
+Date:   Mon, 22 Apr 2019 00:19:04 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 10:29:51 UTC, Peng Hao wrote:
-> From: Wen Yang <wen.yang99@zte.com.cn>
+On Sun, 2019-04-07 at 01:54:47 UTC, Qian Cai wrote:
+> The commit 4c5d87db4978 ("powerpc/pseries: PAPR persistent memory
+> support") set a local variable "count" in dlpar_hp_pmem() but never
+> use it.
 > 
-> The call to of_find_compatible_node returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
-> irq_domain_add_linear also calls of_node_get to increase refcount,
-> so irq_domain will not be affected when it is released.
+> arch/powerpc/platforms/pseries/pmem.c: In function 'dlpar_hp_pmem':
+> arch/powerpc/platforms/pseries/pmem.c:109:6: warning: variable 'count'
+> set but not used [-Wunused-but-set-variable]
 > 
-> Detected by coccinelle with the following warnings:
-> ./arch/powerpc/platforms/8xx/pic.c:158:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 136, but without a corresponding object release within this function.
-> 
-> Fixes: a8db8cf0d894 ("irq_domain: Replace irq_alloc_host() with
-> revmap-specific initializers")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-> Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Vitaly Bordug <vitb@kernel.crashing.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/cc76404feaed597bb4f5234d34d3f49e
+https://git.kernel.org/powerpc/c/e663e1e06089773cdab03023563aead6
 
 cheers
