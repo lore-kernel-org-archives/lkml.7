@@ -2,163 +2,219 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5703EC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E78C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1027120449
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KfiJ4Cck"
+	by mail.kernel.org (Postfix) with ESMTP id C61BA20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfDUTjZ (ORCPT
+        id S1726233AbfDUTml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 15:39:25 -0400
-Received: from mail-eopbgr00081.outbound.protection.outlook.com ([40.107.0.81]:47332
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726405AbfDUTjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 15:39:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qL6ZZD3fwH+xgBMn5jL3E9WsCIWNJ9kqqLymxMnIOOw=;
- b=KfiJ4CckXicMtKXP4WgagqESekkQeJLJ0zxddpeA1rNgO7T5MINBwscI3LVwagQTBaz3S0gbnzG292kZ9gK0XgdsMpSf9NhVaufDhMJ/tiK9MBJURC1n1PVuv/qbMGLKqKT3rAqKAjiz3PFIk+MbnCfYZxu27a1N5juIzMcMcdI=
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
- VI1PR0402MB3470.eurprd04.prod.outlook.com (52.134.3.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Sun, 21 Apr 2019 19:39:11 +0000
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::c16b:662d:9299:6be6]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::c16b:662d:9299:6be6%6]) with mapi id 15.20.1813.017; Sun, 21 Apr 2019
- 19:39:11 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 3/3 v3] ASoC: fsl_sai: Move clock operation to PM runtime
-Thread-Topic: [PATCH 3/3 v3] ASoC: fsl_sai: Move clock operation to PM runtime
-Thread-Index: AQHU+HnkH3aZLDNrm0yYRps8+ynKpg==
-Date:   Sun, 21 Apr 2019 19:39:10 +0000
-Message-ID: <20190421193853.10188-4-daniel.baluta@nxp.com>
-References: <20190421193853.10188-1-daniel.baluta@nxp.com>
-In-Reply-To: <20190421193853.10188-1-daniel.baluta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1P18901CA0001.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:801::11) To VI1PR0402MB3357.eurprd04.prod.outlook.com
- (2603:10a6:803:2::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e536efe8-d4aa-48dc-a3d0-08d6c691067d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3470;
-x-ms-traffictypediagnostic: VI1PR0402MB3470:
-x-microsoft-antispam-prvs: <VI1PR0402MB347088067EBD2A42D3AA4299F9210@VI1PR0402MB3470.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0014E2CF50
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(376002)(396003)(346002)(189003)(199004)(3846002)(6116002)(86362001)(71190400001)(71200400001)(44832011)(66476007)(64756008)(66556008)(66446008)(76176011)(66946007)(73956011)(6512007)(2906002)(6916009)(6486002)(50226002)(486006)(8936002)(476003)(2616005)(54906003)(11346002)(8676002)(305945005)(81156014)(6436002)(53936002)(1076003)(52116002)(1730700003)(7416002)(81166006)(7736002)(14444005)(256004)(5640700003)(186003)(102836004)(446003)(478600001)(14454004)(316002)(68736007)(4326008)(26005)(66066001)(2501003)(6506007)(25786009)(386003)(2351001)(99286004)(97736004)(36756003)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3470;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: c5vIJjM3i1gA4dQf4XNgfJnlcQmPzDB3r2rLdBni84tQfZRd9aZ0VhBqIc82/8LvYYVqma9fzSmIbTgOPxCY3dcXMDzSsmm1TEFizmhBnbgtAtPRZS+asMUHLKKlO6JFLxkByEh3uPAtQ5A0kR7AVCi/irk0zJEu1OlDH9ByH3SdG1qxqnqeUal0IcdUxQWQ5G/nqt2OueegF6QtlYW26dl6I3UsKLiZCYJyg0xF6H8O4Ru/iQ4WTFpYyzEIwbTSL2rkyuksJhUHqfP2qc2ItnDHYVCz69RrmvIiZqUb5o2bFxIflacIlT8w0mYNCuC9kBTGMiWE73OXfBrhzGwDgvelFKz1T/T20kys4GOTytxRT83XbfO1R7rS6SOXRHfWTOyE3H7yVY3avhluQTeb2Hsl40IBkSpjl7wivF/P7gE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 21 Apr 2019 15:42:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33414 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725767AbfDUTml (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 15:42:41 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3LJd4ug073730
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 15:42:39 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s0gujbh3k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 15:42:39 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sun, 21 Apr 2019 20:42:38 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 21 Apr 2019 20:42:33 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3LJgWpa32637010
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 21 Apr 2019 19:42:33 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D30D5B2068;
+        Sun, 21 Apr 2019 19:42:32 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A951DB2065;
+        Sun, 21 Apr 2019 19:42:32 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.191.223])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 21 Apr 2019 19:42:32 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1502016C623E; Sun, 21 Apr 2019 12:38:29 -0700 (PDT)
+Date:   Sun, 21 Apr 2019 12:38:29 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Daniel Kroening <kroening@cs.ox.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Adding plain accesses and detecting data races in the LKMM
+Reply-To: paulmck@linux.ibm.com
+References: <20190418125412.GA10817@andrea>
+ <Pine.LNX.4.44L0.1904181324420.1303-100000@iolanthe.rowland.org>
+ <20190419005302.GA5311@andrea>
+ <20190419124720.GU14111@linux.ibm.com>
+ <2827195a-f203-b9cd-444d-cf6425cef06f@gmail.com>
+ <20190419180641.GD14111@linux.ibm.com>
+ <516794a4-7a3c-4a82-6e45-de650a02a1de@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e536efe8-d4aa-48dc-a3d0-08d6c691067d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2019 19:39:10.8904
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3470
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <516794a4-7a3c-4a82-6e45-de650a02a1de@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19042119-0052-0000-0000-000003AF217A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010969; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01192414; UDB=6.00625002; IPR=6.00973219;
+ MB=3.00026537; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-21 19:42:37
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042119-0053-0000-0000-00006095319C
+Message-Id: <20190421193829.GF24840@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-21_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904210154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0KDQpUdXJuIG9mZi9v
-biBjbG9ja3Mgd2hlbiBkZXZpY2UgZW50ZXJzIHN1c3BlbmQvcmVzdW1lLiBUaGlzDQpjYW4gaGVs
-cCBzYXZpbmcgcG93ZXIuDQoNCkFzIGEgZnVydGhlciBvcHRpbWl6YXRpb24sIHdlIHR1cm4gb2Zm
-L29uIG1jbGsgb25seSB3aGVuIFNBSQ0KaXMgaW4gbWFzdGVyIG1vZGUgYmVjYXVzZSBvdGhlcndp
-c2UgbWNsayBpcyBleHRlcm5hbGx5IHByb3ZpZGVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBTaGVuZ2pp
-dSBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgQmFs
-dXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+DQotLS0NCiBzb3VuZC9zb2MvZnNsL2ZzbF9zYWku
-YyB8IDYwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tDQogMSBmaWxl
-IGNoYW5nZWQsIDUwIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0
-IGEvc291bmQvc29jL2ZzbC9mc2xfc2FpLmMgYi9zb3VuZC9zb2MvZnNsL2ZzbF9zYWkuYw0KaW5k
-ZXggODYyM2I3Zjg4MmI5Li4xM2E0NjIzNjBlZDMgMTAwNjQ0DQotLS0gYS9zb3VuZC9zb2MvZnNs
-L2ZzbF9zYWkuYw0KKysrIGIvc291bmQvc29jL2ZzbC9mc2xfc2FpLmMNCkBAIC01OTYsMTUgKzU5
-Niw4IEBAIHN0YXRpYyBpbnQgZnNsX3NhaV9zdGFydHVwKHN0cnVjdCBzbmRfcGNtX3N1YnN0cmVh
-bSAqc3Vic3RyZWFtLA0KIHsNCiAJc3RydWN0IGZzbF9zYWkgKnNhaSA9IHNuZF9zb2NfZGFpX2dl
-dF9kcnZkYXRhKGNwdV9kYWkpOw0KIAlib29sIHR4ID0gc3Vic3RyZWFtLT5zdHJlYW0gPT0gU05E
-UlZfUENNX1NUUkVBTV9QTEFZQkFDSzsNCi0Jc3RydWN0IGRldmljZSAqZGV2ID0gJnNhaS0+cGRl
-di0+ZGV2Ow0KIAlpbnQgcmV0Ow0KIA0KLQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoc2FpLT5i
-dXNfY2xrKTsNCi0JaWYgKHJldCkgew0KLQkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZW5hYmxl
-IGJ1cyBjbG9jazogJWRcbiIsIHJldCk7DQotCQlyZXR1cm4gcmV0Ow0KLQl9DQotDQogCXJlZ21h
-cF91cGRhdGVfYml0cyhzYWktPnJlZ21hcCwgRlNMX1NBSV94Q1IzKHR4KSwgRlNMX1NBSV9DUjNf
-VFJDRSwNCiAJCQkgICBGU0xfU0FJX0NSM19UUkNFKTsNCiANCkBAIC02MjEsOCArNjE0LDYgQEAg
-c3RhdGljIHZvaWQgZnNsX3NhaV9zaHV0ZG93bihzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1
-YnN0cmVhbSwNCiAJYm9vbCB0eCA9IHN1YnN0cmVhbS0+c3RyZWFtID09IFNORFJWX1BDTV9TVFJF
-QU1fUExBWUJBQ0s7DQogDQogCXJlZ21hcF91cGRhdGVfYml0cyhzYWktPnJlZ21hcCwgRlNMX1NB
-SV94Q1IzKHR4KSwgRlNMX1NBSV9DUjNfVFJDRSwgMCk7DQotDQotCWNsa19kaXNhYmxlX3VucHJl
-cGFyZShzYWktPmJ1c19jbGspOw0KIH0NCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2Nf
-ZGFpX29wcyBmc2xfc2FpX3BjbV9kYWlfb3BzID0gew0KQEAgLTkzMiw2ICs5MjMsMTYgQEAgc3Rh
-dGljIGludCBmc2xfc2FpX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0K
-IAlzdHJ1Y3QgZnNsX3NhaSAqc2FpID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQogDQorCWlmICgh
-c2FpLT5pc19zbGF2ZV9tb2RlKSB7DQorCQlpZiAoc2FpLT5tY2xrX3N0cmVhbXMgJiBCSVQoU05E
-UlZfUENNX1NUUkVBTV9DQVBUVVJFKSkNCisJCQljbGtfZGlzYWJsZV91bnByZXBhcmUoc2FpLT5t
-Y2xrX2Nsa1tzYWktPm1jbGtfaWRbMF1dKTsNCisNCisJCWlmIChzYWktPm1jbGtfc3RyZWFtcyAm
-IEJJVChTTkRSVl9QQ01fU1RSRUFNX1BMQVlCQUNLKSkNCisJCQljbGtfZGlzYWJsZV91bnByZXBh
-cmUoc2FpLT5tY2xrX2Nsa1tzYWktPm1jbGtfaWRbMV1dKTsNCisJfQ0KKw0KKwljbGtfZGlzYWJs
-ZV91bnByZXBhcmUoc2FpLT5idXNfY2xrKTsNCisNCiAJcmVnY2FjaGVfY2FjaGVfb25seShzYWkt
-PnJlZ21hcCwgdHJ1ZSk7DQogCXJlZ2NhY2hlX21hcmtfZGlydHkoc2FpLT5yZWdtYXApOw0KIA0K
-QEAgLTk0MSw2ICs5NDIsMjcgQEAgc3RhdGljIGludCBmc2xfc2FpX3J1bnRpbWVfc3VzcGVuZChz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQogc3RhdGljIGludCBmc2xfc2FpX3J1bnRpbWVfcmVzdW1lKHN0
-cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0cnVjdCBmc2xfc2FpICpzYWkgPSBkZXZfZ2V0X2Ry
-dmRhdGEoZGV2KTsNCisJaW50IHJldDsNCisNCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHNh
-aS0+YnVzX2Nsayk7DQorCWlmIChyZXQpIHsNCisJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGVu
-YWJsZSBidXMgY2xvY2s6ICVkXG4iLCByZXQpOw0KKwkJcmV0dXJuIHJldDsNCisJfQ0KKw0KKwlp
-ZiAoIXNhaS0+aXNfc2xhdmVfbW9kZSkgew0KKwkJaWYgKHNhaS0+bWNsa19zdHJlYW1zICYgQklU
-KFNORFJWX1BDTV9TVFJFQU1fUExBWUJBQ0spKSB7DQorCQkJcmV0ID0gY2xrX3ByZXBhcmVfZW5h
-YmxlKHNhaS0+bWNsa19jbGtbc2FpLT5tY2xrX2lkWzFdXSk7DQorCQkJaWYgKHJldCkNCisJCQkJ
-Z290byBkaXNhYmxlX2J1c19jbGs7DQorCQl9DQorDQorCQlpZiAoc2FpLT5tY2xrX3N0cmVhbXMg
-JiBCSVQoU05EUlZfUENNX1NUUkVBTV9DQVBUVVJFKSkgew0KKwkJCXJldCA9IGNsa19wcmVwYXJl
-X2VuYWJsZShzYWktPm1jbGtfY2xrW3NhaS0+bWNsa19pZFswXV0pOw0KKwkJCWlmIChyZXQpDQor
-CQkJCWdvdG8gZGlzYWJsZV90eF9jbGs7DQorCQl9DQorCX0NCiANCiAJcmVnY2FjaGVfY2FjaGVf
-b25seShzYWktPnJlZ21hcCwgZmFsc2UpOw0KIAlyZWdtYXBfd3JpdGUoc2FpLT5yZWdtYXAsIEZT
-TF9TQUlfVENTUiwgRlNMX1NBSV9DU1JfU1IpOw0KQEAgLTk0OCw3ICs5NzAsMjUgQEAgc3RhdGlj
-IGludCBmc2xfc2FpX3J1bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCiAJdXNsZWVw
-X3JhbmdlKDEwMDAsIDIwMDApOw0KIAlyZWdtYXBfd3JpdGUoc2FpLT5yZWdtYXAsIEZTTF9TQUlf
-VENTUiwgMCk7DQogCXJlZ21hcF93cml0ZShzYWktPnJlZ21hcCwgRlNMX1NBSV9SQ1NSLCAwKTsN
-Ci0JcmV0dXJuIHJlZ2NhY2hlX3N5bmMoc2FpLT5yZWdtYXApOw0KKw0KKwlyZXQgPSByZWdjYWNo
-ZV9zeW5jKHNhaS0+cmVnbWFwKTsNCisJaWYgKHJldCkNCisJCWdvdG8gZGlzYWJsZV9yeF9jbGs7
-DQorDQorCXJldHVybiAwOw0KKw0KK2Rpc2FibGVfcnhfY2xrOg0KKwlpZiAoIXNhaS0+aXNfc2xh
-dmVfbW9kZSAmJg0KKwkgICAgKHNhaS0+bWNsa19zdHJlYW1zICYgQklUKFNORFJWX1BDTV9TVFJF
-QU1fQ0FQVFVSRSkpKQ0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNhaS0+bWNsa19jbGtbc2Fp
-LT5tY2xrX2lkWzBdXSk7DQorZGlzYWJsZV90eF9jbGs6DQorCWlmICghc2FpLT5pc19zbGF2ZV9t
-b2RlICYmDQorCSAgICAoc2FpLT5tY2xrX3N0cmVhbXMgJiBCSVQoU05EUlZfUENNX1NUUkVBTV9Q
-TEFZQkFDSykpKQ0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNhaS0+bWNsa19jbGtbc2FpLT5t
-Y2xrX2lkWzFdXSk7DQorZGlzYWJsZV9idXNfY2xrOg0KKwljbGtfZGlzYWJsZV91bnByZXBhcmUo
-c2FpLT5idXNfY2xrKTsNCisNCisJcmV0dXJuIHJldDsNCiB9DQogI2VuZGlmIC8qIENPTkZJR19Q
-TSAqLw0KIA0KLS0gDQoyLjE3LjENCg0K
+On Sat, Apr 20, 2019 at 11:50:14PM +0900, Akira Yokosawa wrote:
+> On Fri, 19 Apr 2019 11:06:41 -0700, Paul E. McKenney wrote:
+> > On Sat, Apr 20, 2019 at 12:06:58AM +0900, Akira Yokosawa wrote:
+> >> Hi Paul,
+> >>
+> [...]
+> > 
+> >>> +     (1) The compiler can reorder the load from a to precede the
+> >>> +     atomic_dec(), (2) Because x86 smp_mb__before_atomic() is only a
+> >>> +     compiler barrier, the CPU can reorder the preceding store to
+> >>> +     obj->dead with the later load from a.
+> >>> +
+> >>> +     This could be avoided by using READ_ONCE(), which would prevent the
+> >>> +     compiler from reordering due to both atomic_dec() and READ_ONCE()
+> >>> +     being volatile accesses, and is usually preferable for loads from
+> >>> +     shared variables.  However, weakly ordered CPUs would still be
+> >>> +     free to reorder the atomic_dec() with the load from a, so a more
+> >>> +     readable option is to also use smp_mb__after_atomic() as follows:
+> >>
+> >> The point here is not just "readability", but also the portability of the
+> >> code, isn't it?
+> > 
+> > As Andrea noted, in this particular case, the guarantee that the
+> > store to obj->dead precedes the load from x is portable.  Either the
+> > smp_mb__before_atomic() or the atomic_dec() must provide the ordering.
+> 
+> I think I understood this. What I wanted to say was the code for x86 implied
+> in the subjunctive sentence:
+> 
+> 	obj->dead = 1;
+> 	smp_mb__before_atomic();
+> 	atomic_dec(&obj->ref_count);
+> 	r1 = READ_ONCE(x);
+> 
+> , which was not spelled out, is not portable if we expect the ordering of
+> atomic_dec() with READ_ONCE().
+
+I now understand that you understood.  ;-)
+
+> > However, you are right that there is some non-portability.  But this
+> > non-portability involves the order of the atomic_dec() and the store to x.
+> 
+> Yes, you've guessed it right.
+
+Don't worry, it won't happen again!
+
+> > So what I did was ...
+> > 
+> >>         Thanks, Akira
+> >>
+> >>> +
+> >>> +	WRITE_ONCE(obj->dead, 1);
+> >>> +	smp_mb__before_atomic();
+> >>> +	atomic_dec(&obj->ref_count);
+> >>> +	smp_mb__after_atomic();
+> >>> +	r1 = READ_ONCE(a);
+> >>> +
+> >>> +     This orders all three accesses against each other, and also makes
+> >>> +     the intent quite clear.
+> > 
+> > ... change the above paragraph to read as follows:
+> > 
+> >      In addition, the example without the smp_mb__after_atomic() does
+> >      not necessarily order the atomic_dec() with the load from x.
+> >      In contrast, the example with both smp_mb__before_atomic() and
+> >      smp_mb__after_atomic() orders all three accesses against each other,
+> >      and also makes the intent quite clear.
+> > 
+> > Does that help?
+> 
+> This looks a little bit redundant to me. The original one is clear
+> enough.
+> 
+> How about editing the leading sentence above:
+> 
+> >>> +     shared variables.  However, weakly ordered CPUs would still be
+> >>> +     free to reorder the atomic_dec() with the load from a, so a more
+> >>> +     readable option is to also use smp_mb__after_atomic() as follows:
+> 
+> to read as follows?
+> 
+>      shared variables.  However, weakly ordered CPUs would still be
+>      free to reorder the atomic_dec() with the load from x, so a
+>      portable and more readable option is to also use
+>      smp_mb__after_atomic() as follows:
+
+Adding "portable and", correct?  Makes sense, so I applied this change.
+
+> Obviously, the interesting discussion going on in another thread will
+> surely affect this patch.
+
+Quite possibly!  ;-)
+
+
+							Thanx, Paul
+
+> >>>       See Documentation/atomic_{t,bitops}.txt for more information.
+> >>>  
+> >>> diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
+> >>> index 8dcb37835b61..b6866f93abb8 100644
+> >>> --- a/tools/memory-model/linux-kernel.cat
+> >>> +++ b/tools/memory-model/linux-kernel.cat
+> >>> @@ -28,8 +28,8 @@ include "lock.cat"
+> >>>  let rmb = [R \ Noreturn] ; fencerel(Rmb) ; [R \ Noreturn]
+> >>>  let wmb = [W] ; fencerel(Wmb) ; [W]
+> >>>  let mb = ([M] ; fencerel(Mb) ; [M]) |
+> >>> -	([M] ; fencerel(Before-atomic) ; [RMW] ; po? ; [M]) |
+> >>> -	([M] ; po? ; [RMW] ; fencerel(After-atomic) ; [M]) |
+> >>> +	([M] ; fencerel(Before-atomic) ; [RMW]) |
+> >>> +	([RMW] ; fencerel(After-atomic) ; [M]) |
+> >>>  	([M] ; po? ; [LKW] ; fencerel(After-spinlock) ; [M]) |
+> >>>  	([M] ; po ; [UL] ; (co | po) ; [LKW] ;
+> >>>  		fencerel(After-unlock-lock) ; [M])
+> >>>
+> >>
+> > 
+> 
+
