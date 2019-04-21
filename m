@@ -2,134 +2,140 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4AFC282E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C72C10F14
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F05720833
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:50:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+RQ6yhc"
+	by mail.kernel.org (Postfix) with ESMTP id D5E5320821
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfDUQua (ORCPT
+        id S1727640AbfDUQro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 12:50:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42977 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfDUQua (ORCPT
+        Sun, 21 Apr 2019 12:47:44 -0400
+Received: from mail.grenz-bonn.de ([178.33.37.38]:46732 "EHLO
+        mail.grenz-bonn.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfDUQrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 12:50:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g3so13184212wrx.9
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 09:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=z4R0Iqo2hQ3pWsGLkiXQZCqUrVoMbp7rRWOtfQxntMU=;
-        b=L+RQ6yhck5TP4eqBep4aDNkBsYk53/wR6jiaQlW84Yee3U6uwFKI49b4hEN6fvPADK
-         Sptd6ShfRouGQzE/TpwWWMb9TRL0fEZkN3YRWaEJDmu7CH74tCJrEWGKjNoUfL0feZBh
-         hxfPsUCRkv+Piy8+Cb/5DVDUT7djLHi3wL9Ya4ICYmBVgdxgQqT7OzR55N4lJJCobLya
-         NYqg82mq2XrCHjNpzykPu8HMaFoQXAeTDAU4CnUdC1EG3Gq2J0soE+hA6VdBJmU3QHlr
-         P8t7+/IQmXHoqrdcfcO5QDO5GgMhaeZQ64UfpY9/2urQ9Pz3bRezIvY/pKHm8jo1FtP5
-         YE0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=z4R0Iqo2hQ3pWsGLkiXQZCqUrVoMbp7rRWOtfQxntMU=;
-        b=g6SKiwXZa1LUxWWgtHyaVoslPKDu/9KGVP7RcKFlbTcl/8zGaBOzB+eVF2kLvi0Ni9
-         S0AoFZ2WKtWN3JrudV8nSCgZuCo/IINn9r6kp1g/t0jVVcyyYUwaqT0BSClmDoDdMraE
-         WdGwXQYFfftY/WzHvXJyU/0B7B7C+hrpDP6fN6X3tayBu4dnEGcupXZk2khsoKxXG9zd
-         8J8G5RmD7pSEYae+6CQ9L/oaNXkMVNDWC/k84H9AjsZJ0uXtGyzmBBB2mRkAeAJ/WMUG
-         ZtzljJ9tuK/Sq9gtzysWJOIH9WE7JsN86cnOslSqtrm+KCwHHYDAAWyQF5heBETzUOnE
-         /Nng==
-X-Gm-Message-State: APjAAAUGXz5weK6sM06j0Qw+uUPw7aVlkTrhZP+TmG7urt5NAELC6+xj
-        Yb1mq1eav1esMz7FTZ6u4TEmqCs=
-X-Google-Smtp-Source: APXvYqw0euw3gkJKhTbNEbtGeUHzeIDslZZLUZqvMmGOzJz6mi1Bhxq41MMH4jLRByTY5c4gHrkTTg==
-X-Received: by 2002:a5d:6682:: with SMTP id l2mr9888871wru.33.1555865428691;
-        Sun, 21 Apr 2019 09:50:28 -0700 (PDT)
-Received: from avx2 ([46.53.240.200])
-        by smtp.gmail.com with ESMTPSA id r6sm10866402wrt.38.2019.04.21.09.50.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 09:50:27 -0700 (PDT)
-Date:   Sun, 21 Apr 2019 19:50:25 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] exec: move struct linux_binprm::buf
-Message-ID: <20190421165025.GA26843@avx2>
+        Sun, 21 Apr 2019 12:47:43 -0400
+Received: from [192.168.0.140] (unknown [213.55.176.188])
+        by ks357529.kimsufi.com (Postfix) with ESMTPSA id A611F7D660;
+        Sun, 21 Apr 2019 18:47:41 +0200 (CEST)
+Subject: Re: Reasons for oldconfig resetting config options to =m
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <9500a6a9-d63c-4572-7281-50e744c15679@nh2.me>
+ <ba92fbf8-7870-4bc5-4e1d-70085f0b4dbc@infradead.org>
+From:   =?UTF-8?Q?Niklas_Hamb=c3=bcchen?= <mail@nh2.me>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mail@nh2.me; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <02e44659-230c-7774-9060-f6a9626edd1e@nh2.me>
+Date:   Sun, 21 Apr 2019 18:47:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <ba92fbf8-7870-4bc5-4e1d-70085f0b4dbc@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct linux_binprm::buf is the first field and it is exactly 128 bytes
-in size. It means that on x86_64 all accesses to other fields will go
-though [r64 + disp32] addressing mode which is 3 bytes bloatier than
-[r64 + disp8] addressing mode. Given that accesses to other fields
-outnumber accesses to ->buf, move it down.
+On 2019-04-21 17:55, Randy Dunlap wrote:
+> When using 'make menuconfig', enter /usb_storage and it says:
+> ...
+>   │   Depends on: USB_SUPPORT [=y] && USB [=m] && SCSI [=m]
+> 
+> HTH.  There is nothing quite as explicit as your example output.
 
-Space savings (x86_64 defconfig):
-more on distro configs because LSMs actively dereference "bprm"
-but do not care about first 128 bytes of the executable itself.
+Hmm OK.
 
-add/remove: 0/0 grow/shrink: 0/24 up/down: 0/-492 (-492)
-Function                                     old     new   delta
-selinux_bprm_committing_creds                552     549      -3
-finalize_exec                                 94      91      -3
-__audit_log_bprm_fcaps                       283     280      -3
-__audit_bprm                                  39      36      -3
-perf_trace_sched_process_exec                347     341      -6
-install_exec_creds                           105      99      -6
-cap_bprm_set_creds.cold                       60      54      -6
-would_dump                                   137     128      -9
-load_script                                  637     628      -9
-bprm_change_interp                            61      52      -9
-trace_event_raw_event_sched_process_exec     260     250     -10
-search_binary_handler                        255     240     -15
-remove_arg_zero                              295     277     -18
-free_bprm                                    119     101     -18
-prepare_binprm                               379     360     -19
-setup_new_exec                               336     315     -21
-flush_old_exec                              1638    1617     -21
-copy_strings.isra                            746     724     -22
-setup_arg_pages                              559     530     -29
-load_misc_binary                            1151    1118     -33
-selinux_bprm_set_creds                       792     753     -39
-load_elf_binary                            11111   11072     -39
-cap_bprm_set_creds                          1496    1454     -42
-__do_execve_file.isra                       2395    2286    -109
+The menuconfig approach is what I've used so far manually, but it does not work so well for batch / CI use.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
-
- include/linux/binfmts.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -15,7 +15,6 @@ struct filename;
-  * This structure is used to hold the arguments that are used when loading binaries.
-  */
- struct linux_binprm {
--	char buf[BINPRM_BUF_SIZE];
- #ifdef CONFIG_MMU
- 	struct vm_area_struct *vma;
- 	unsigned long vma_pages;
-@@ -64,6 +63,8 @@ struct linux_binprm {
- 	unsigned long loader, exec;
- 
- 	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
-+
-+	char buf[BINPRM_BUF_SIZE];
- } __randomize_layout;
- 
- #define BINPRM_FLAGS_ENFORCE_NONDUMP_BIT 0
+Thanks nevertheless for the detail explanation!
