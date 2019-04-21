@@ -2,84 +2,126 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC1CC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 13:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C137C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 14:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3BF2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 13:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RgDwe3K3"
+	by mail.kernel.org (Postfix) with ESMTP id 1F40E2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 14:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfDUN0M (ORCPT
+        id S1727514AbfDUOFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 09:26:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49996 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfDUN0L (ORCPT
+        Sun, 21 Apr 2019 10:05:42 -0400
+Received: from mail03.asahi-net.or.jp ([202.224.55.15]:47031 "EHLO
+        mail03.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfDUOFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 09:26:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Rc67H1HDEjDy3HjQxasxWDB9M7vQy15mNKQuX9FUK1U=; b=RgDwe3K3Ke2irRAMVA4Yuayg5
-        BR+M5mJK9AmCzzfU5OcbUqI2BjZcqfev7ed/9vrArbV/YOAew5l297EsE2X6yaD3jvvUrPcrq1UbD
-        0P5HUDSp+DlQo5Oh5ZIIHk3WkRqA0AovrVcIWw/wslFt9rRqrxSRYh+WCla/VeosnH+2t5io5FTUD
-        g4XnitQYKo7V32SMmUH8yOQJiJA0+r/AIo51eUqqIKzTxr49vPVShhvM/R4RhlrvWT2HXJk+wob6O
-        2dhMD6nMhbYh9Db8OAsuM1uuqEPVhzBTbbjV/tsTleBfK+Hv567D52zbX6MzjoUBaVHDk/9M3AtgV
-        zaBGfz//w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hICTv-0003S4-86; Sun, 21 Apr 2019 13:26:07 +0000
-Date:   Sun, 21 Apr 2019 06:26:07 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Sun, 21 Apr 2019 10:05:41 -0400
+X-Greylist: delayed 783 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Apr 2019 10:05:40 EDT
+Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.vps.ablenet.jp [61.195.96.97])
+        (Authenticated sender: PQ4Y-STU)
+        by mail03.asahi-net.or.jp (Postfix) with ESMTPA id 629C73E591;
+        Sun, 21 Apr 2019 22:52:35 +0900 (JST)
+Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 00597240082;
+        Sun, 21 Apr 2019 22:52:28 +0900 (JST)
+Date:   Sun, 21 Apr 2019 22:52:28 +0900
+Message-ID: <87sgubcvoj.wl-ysato@users.sourceforge.jp>
+From:   Yoshinori Sato <ysato@users.sourceforge.jp>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
-Subject: Re: DISCONTIGMEM is deprecated
-Message-ID: <20190421132606.GJ7751@bombadil.infradead.org>
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
- <20190421063859.GA19926@rapoport-lnx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190421063859.GA19926@rapoport-lnx>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+        Linux Memory Management List <linux-mm@kvack.org>,
+        paul.mundt@gmail.com, Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Subject: Re: arch/sh/kernel/cpu/sh2/clock-sh7619.o:undefined reference to `followparent_recalc'
+In-Reply-To: <fb6880d2-06a4-cec2-e12c-c526d3a4358a@infradead.org>
+References: <201904201516.DdPznV5M%lkp@intel.com>
+        <fb6880d2-06a4-cec2-e12c-c526d3a4358a@infradead.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 09:38:59AM +0300, Mike Rapoport wrote:
-> On Fri, Apr 19, 2019 at 07:05:21AM -0700, Matthew Wilcox wrote:
-> > On Fri, Apr 19, 2019 at 10:43:35AM +0100, Mel Gorman wrote:
-> > > DISCONTIG is essentially deprecated and even parisc plans to move to
-> > > SPARSEMEM so there is no need to be fancy, this patch simply disables
-> > > watermark boosting by default on DISCONTIGMEM.
-> > 
-> > I don't think parisc is the only arch which uses DISCONTIGMEM for !NUMA
-> > scenarios.  Grepping the arch/ directories shows:
-> > 
-> > alpha (does support NUMA, but also non-NUMA DISCONTIGMEM)
-> > arc (for supporting more than 1GB of memory)
-> > ia64 (looks complicated ...)
-> > m68k (for multiple chunks of memory)
-> > mips (does support NUMA but also non-NUMA)
-> > parisc (both NUMA and non-NUMA)
+On Sun, 21 Apr 2019 04:34:36 +0900,
+Randy Dunlap wrote:
 > 
-> i386 NUMA as well
+> On 4/20/19 12:40 AM, kbuild test robot wrote:
+> > Hi Randy,
+> > 
+> > It's probably a bug fix that unveils the link errors.
+> > 
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > head:   371dd432ab39f7bc55d6ec77d63b430285627e04
+> > commit: acaf892ecbf5be7710ae05a61fd43c668f68ad95 sh: fix multiple function definition build errors
+> > date:   2 weeks ago
+> > config: sh-allmodconfig (attached as .config)
+> > compiler: sh4-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         git checkout acaf892ecbf5be7710ae05a61fd43c668f68ad95
+> >         # save the attached .config to linux build tree
+> >         GCC_VERSION=7.2.0 make.cross ARCH=sh 
+> 
+> Hi,
+> 
+> Once again, the question is the validity of the SH2 .config file in this case
+> (that was attached).
+> 
+> I don't believe that it is valid because CONFIG_SH_DEVICE_TREE=y,
+> which selects COMMON_CLK, and there is no followparent_recalc() in the
+> COMMON_CLK API.
+> 
+> Also, while CONFIG_HAVE_CLK=y, drivers/sh/Makefile prevents that from
+> building clk/core.c, which could provide followparent_recalc():
+> 
+> ifneq ($(CONFIG_COMMON_CLK),y)
+> obj-$(CONFIG_HAVE_CLK)			+= clk/
+> endif
+> 
+> Hm, maybe that's where the problem is.  I'll look into that more.
+>
 
-I clearly over-trimmed.  The original assumption that Mel had was that
-DISCONTIGMEM => NUMA, and that's not true on the above six architectures.
-It is true on i386 ;-)
+Yes.
+Selected target (CONFIG_SH_7619_SOLUTION_ENGINE) is non devicetree
+and used superh specific clk modules.
+So allyesconfig output is incorrect.
+
+I fixed Kconfig to output the correct config.
+
+> 
+> 
+> It would be Good if someone from the SuperH area could/would comment.
+> 
+> Thanks.
+> 
+> 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >>> arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.data+0x1c): undefined reference to `followparent_recalc'
+> > 
+> > ---
+> > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> > 
+> 
+> 
+> -- 
+> ~Randy
+
+-- 
+Yosinori Sato
