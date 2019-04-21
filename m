@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F282C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D89C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4842087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457082087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQaBDRhG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l99oDpIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfDULrn (ORCPT
+        id S1727523AbfDULr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 07:47:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38315 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfDULrm (ORCPT
+        Sun, 21 Apr 2019 07:47:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33819 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfDULr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 07:47:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 10so4445452pfo.5;
-        Sun, 21 Apr 2019 04:47:42 -0700 (PDT)
+        Sun, 21 Apr 2019 07:47:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b3so4457668pfd.1
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 04:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=l1XMfRfwz3PYG87O4Xru/p0h0VgC3g5uSZkBJ4fCYy0=;
-        b=GQaBDRhGo3GA9dXYbej6iuWKt4/L6Nbh1CB2Fhr313moYpRWPPlELcW9sImdOppe3l
-         Y/1cFyyZ0SWz80ikORm6Byf7f88iHF9uE1AB2Dk2zyMjoHiBifSRNuTK4QDsyq35M7S/
-         uFOdfIyZjK3fwd/ncPT2mIDKuEOXZgs2WhNvX5Rr/cooSIbjwszQZCrwueRHjRBo94/g
-         kOW3JV9EX/GnfmsArfxKgeK3KUGLKPKR8hd0B8iNjvcQPhyNqRkoM1JrRUp/O8FfkKAf
-         XynF2/RbBAoqeSg7aASUbW/3eYtSPnzUTPdKcK9lNplT+okwCVjlPH5Q6XI68oUeF0qJ
-         AseQ==
+        bh=whtq2ZN7fCyP3XM0xkWgV0oR9AWeLM9uhe5XWglxZds=;
+        b=l99oDpIN+j3bfZei78ZpK8kLM38FV/yJIG4udNe9PZR4In+ELT0c4L13MkDzn+1I++
+         a96Th+XpFMPHSq5iRFWMSHVJBaqfExpWukt91dMBIB4OhbRI1N41ssXDiZlLaDEqlwoH
+         OCz4Dt6il51G20ejNYjdrUUey8u2UOjUAWbxQLncFV6LaGbI5tCD6ki+5dfhW4gn34FB
+         wbGO/9itAedYlQjlNzQcntgkDSh6OA0JrJd9/K/C4OZy7UYWl+kIEvU8epaG//mLby19
+         piXgsJ4foQSrXPo+MS7EjND6SRQ4/YAchnNPfbKt/VL1NqT7PutM4I4Gla24SLQGy9an
+         1pww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=l1XMfRfwz3PYG87O4Xru/p0h0VgC3g5uSZkBJ4fCYy0=;
-        b=J8nLnOC1+MHqodZMchJXbOmF6h4GAyyEXB/0nOg8u8XFhYNUYtAVdwt5EIjpCqCVUK
-         tBQxWZjPwyQvc9b3ztwPh4cofTBsevN7HHl7IXW9dnz7KjWhN/hgc2HwpKwz/uy6LNkV
-         73AzlkU2jfXMjhJvLRzObewH1yVsvcwzy1VfEL2yZXCHEaGZkhtNNCzJYUVWI4Jjz1jp
-         ZEgT02ltqCM/NnmgfX9DaLvw4O29jIK/64x3h93E7P7hrnBkGTmBII5Iy/nsYoS//em2
-         euG3t5nX9LHJxWkAAmWlKmNoP0Q2j0ZfMgIhlCfaUcp9DgMHiM4wS1xe2QRxagvHKghe
-         2kDg==
-X-Gm-Message-State: APjAAAWNz8z6a2NGZfOWr02akH/fmSDUVKx6cmkwZMrvi2h6tmzTblU/
-        YR3aVARQoBZGwoYXqfpy1mk=
-X-Google-Smtp-Source: APXvYqxb06nrenI/Bhom5lrSgikF5cdtvwBdIJ4AJGHqTcB3FXSbdPU4H3cBMX+AVyhTBPIbQILxDQ==
-X-Received: by 2002:a65:4481:: with SMTP id l1mr13574357pgq.66.1555847262004;
-        Sun, 21 Apr 2019 04:47:42 -0700 (PDT)
+        bh=whtq2ZN7fCyP3XM0xkWgV0oR9AWeLM9uhe5XWglxZds=;
+        b=jDI0ryDFIYwbyRJPbSXWQ3PppSFZ1S7R78vxnt6WqQF+tdHHeC00ICMlcWxHtKhoKf
+         RsE4J6KefqTwqhe85zXDX8R85C9kRSL2rJEX1q862No7tKBrahuVplWLhSRPi26dwCoC
+         P966t4ynq6TblHzlZQ+sDqoQ6X0H37eoaeb0T2067Ih4F8iWqgv5VrW8AsdnBqawIGx2
+         tZsa8tZZMpSkbvmyrILXWq5i1q8K/v5J4pGWZnn+dz3sML4Zu3V/NF57Id0jQauzEhl4
+         tigaMamn6kM2TuYUdkwFLynrEX+UKS4u8eXK6VefvEmWPgXUdaJ/DP/hFvcPdCvmv7s3
+         qVNQ==
+X-Gm-Message-State: APjAAAVG1gTCQRgcphkqe+dkXHBQmk5Z6otxZIE6VmNmgoIWIAzOpx0d
+        a+pMPhahY6pQixzKb0T5FFE=
+X-Google-Smtp-Source: APXvYqwFDusseZzmDcmJx0jMcjkP9rM5gBocudOovR6cxkQIyTUvxfCkEqTU8o3RqUvBkMBM09lPRw==
+X-Received: by 2002:a63:84c7:: with SMTP id k190mr13623510pgd.255.1555847278864;
+        Sun, 21 Apr 2019 04:47:58 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id x24sm13195697pfn.128.2019.04.21.04.47.38
+        by smtp.googlemail.com with ESMTPSA id d15sm13230275pfo.34.2019.04.21.04.47.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 04:47:41 -0700 (PDT)
+        Sun, 21 Apr 2019 04:47:58 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/06] kernel: cgroup: fix misuse of %x
-Date:   Sun, 21 Apr 2019 19:47:27 +0800
-Message-Id: <20190421114727.20325-1-huangfq.daxian@gmail.com>
+Subject: [PATCH v2 03/06] misc: genwqe: Fix misuse of %x
+Date:   Sun, 21 Apr 2019 19:47:48 +0800
+Message-Id: <20190421114749.20385-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,41 +70,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pointers should be printed with %p or %px rather than
-cast to unsigned long type and printed with %lx.
-Change %lx to %p to print the pointers.
+The pointer should be printed with %p or %px rather than
+cast to long long type and printed with %016llx.
+Change %x to %p to print the pointer.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- kernel/cgroup/debug.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/misc/genwqe/card_debugfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/cgroup/debug.c b/kernel/cgroup/debug.c
-index 5f1b873..80aa3f0 100644
---- a/kernel/cgroup/debug.c
-+++ b/kernel/cgroup/debug.c
-@@ -64,8 +64,8 @@ static int current_css_set_read(struct seq_file *seq, void *v)
- 		css = cset->subsys[ss->id];
- 		if (!css)
- 			continue;
--		seq_printf(seq, "%2d: %-4s\t- %lx[%d]\n", ss->id, ss->name,
--			  (unsigned long)css, css->id);
-+		seq_printf(seq, "%2d: %-4s\t- %p[%d]\n", ss->id, ss->name,
-+			  css, css->id);
- 	}
- 	rcu_read_unlock();
- 	spin_unlock_irq(&css_set_lock);
-@@ -224,8 +224,8 @@ static int cgroup_subsys_states_read(struct seq_file *seq, void *v)
- 		if (css->parent)
- 			snprintf(pbuf, sizeof(pbuf) - 1, " P=%d",
- 				 css->parent->id);
--		seq_printf(seq, "%2d: %-4s\t- %lx[%d] %d%s\n", ss->id, ss->name,
--			  (unsigned long)css, css->id,
-+		seq_printf(seq, "%2d: %-4s\t- %p[%d] %d%s\n", ss->id, ss->name,
-+			  css, css->id,
- 			  atomic_read(&css->online_cnt), pbuf);
- 	}
- 
+diff --git a/drivers/misc/genwqe/card_debugfs.c b/drivers/misc/genwqe/card_debugfs.c
+index 7c713e0..6f7e39f 100644
+--- a/drivers/misc/genwqe/card_debugfs.c
++++ b/drivers/misc/genwqe/card_debugfs.c
+@@ -227,7 +227,7 @@ static int ddcb_info_show(struct seq_file *s, void *unused)
+ 	seq_puts(s, "DDCB QUEUE:\n");
+ 	seq_printf(s, "  ddcb_max:            %d\n"
+ 		   "  ddcb_daddr:          %016llx - %016llx\n"
+-		   "  ddcb_vaddr:          %016llx\n"
++		   "  ddcb_vaddr:          %p\n"
+ 		   "  ddcbs_in_flight:     %u\n"
+ 		   "  ddcbs_max_in_flight: %u\n"
+ 		   "  ddcbs_completed:     %u\n"
+@@ -237,7 +237,7 @@ static int ddcb_info_show(struct seq_file *s, void *unused)
+ 		   queue->ddcb_max, (long long)queue->ddcb_daddr,
+ 		   (long long)queue->ddcb_daddr +
+ 		   (queue->ddcb_max * DDCB_LENGTH),
+-		   (long long)queue->ddcb_vaddr, queue->ddcbs_in_flight,
++		   queue->ddcb_vaddr, queue->ddcbs_in_flight,
+ 		   queue->ddcbs_max_in_flight, queue->ddcbs_completed,
+ 		   queue->return_on_busy, queue->wait_on_busy,
+ 		   cd->irqs_processed);
 -- 
 2.11.0
 
