@@ -2,139 +2,151 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6258CC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A67C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F7F20859
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C798520859
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:38:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zbrav5s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfDUT2r (ORCPT
+        id S1726300AbfDUTil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 15:28:47 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35888 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfDUT2q (ORCPT
+        Sun, 21 Apr 2019 15:38:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37512 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfDUTil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 15:28:46 -0400
-Received: by mail-ed1-f67.google.com with SMTP id u57so8069009edm.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 12:28:45 -0700 (PDT)
+        Sun, 21 Apr 2019 15:38:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v14so12333268wmf.2
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 12:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6fcRlLxWGOK7R0tcaRiZVBc6WdzzkPd+uoXzx6GO828=;
+        b=Zbrav5s5JoykLOSy+gIESD89NzlNHIyTWr4UdSzsG2eEkD60DQ+AxZ15TREWY7f67P
+         m0tnmKGvV8dz8HOdFFR8wDuoUe03+i18OoqPGbYpzm96ouKjcIuYSzKNvNlMu6WRFind
+         AQtWSWT/Q9dLpFSGyYMt/or0CdNxRF4AuPpILlG/UW7zgJkMKGvyzQNUcFkz1Dul2UTB
+         zpAilouV3IvIaTg0CxEThpss7OSi5pHpvIHBRwUSe5pOq0z81k9HbOhVb/sfG7rgIaBr
+         grL0yH/EWKkTHKAx3G1XXn6xwOKqYCBpkAoH23yZ78NqfVvr+OQj5sIAJjiaVO9C9YEC
+         Z4Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=f1WrATvsqWqWqqVYmk9421PbK7hlvZf8bi6E45Oqqjg=;
-        b=TA2gyEm1mawy102KWtq87v4yuuqtS9NuwJr8pnIBx8jqqXfijXh22DeZlr7pdsPMS9
-         AWN6ZupFIhwf98FQN9Dvll/Q/ss1JTmMDhTE/7Sqsi+yxbnmQvEoKMKEX1AUbdhEFV5r
-         XW8NAGJ1se1xn7kphTKg9lfAmOzsCaZMAADPRhkJ+TuI60Iquodi/mFImfIqtRGLyEgB
-         kE9Uy5DxCCdY957vLyNf7GgM3tRucpRhETkpn8/son4/DThk7CI7HoopcXjEcmXCHzTM
-         ATRz88T0sRnVkl4rfBxfpkP+UVon7RAP6sx5bkHBfr5dDGIynAe+xiqgjM4Lw+kD+SB/
-         cXlw==
-X-Gm-Message-State: APjAAAUNa3oTGLFvRD6mVu1F6AoBiwIL2sZMvxaI4JHcsUm+e4tBxv0K
-        mQOQP2sx2jsqu/08p6QdMNQRQw==
-X-Google-Smtp-Source: APXvYqxle5dYhLvoa69re9dU0bYKYC/bGAf+ZQHmStEYAT72iLmVdYhOOAJl5GePAsf9hQbExpRFlg==
-X-Received: by 2002:a50:9e48:: with SMTP id z66mr9956138ede.255.1555874925303;
-        Sun, 21 Apr 2019 12:28:45 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id y12sm1873279ejr.75.2019.04.21.12.28.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 12:28:43 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] Intel Cherry Trail Whiskey Cove LEDs support
-To:     Yauhen Kharuzhy <jekhor@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-References: <20190212205901.13037-1-jekhor@gmail.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <21337ca0-bb91-9ca9-117b-89c47c6b2ade@redhat.com>
-Date:   Sun, 21 Apr 2019 21:28:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190212205901.13037-1-jekhor@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6fcRlLxWGOK7R0tcaRiZVBc6WdzzkPd+uoXzx6GO828=;
+        b=TVAQfhngtRL3885+xCNFGL31RGi26T88JSQPhDPGKp7vvS0bha/gjC3+EjIVigjHdq
+         v3Vi+wDHm1BjUsydVgXlRm4q6wk5PiG89aAkMrfxqwsqdm10EIun8dIjt7Sl7PhwMxOq
+         ebf0oN3EMIeU83Fd4g9T0jhDv+9tiJNe59008b6xm/u16H598uYG7FLaNuhjWNmmpcQy
+         exfw7+lWVcFRw6PmSRDfttvjuCxpQAXCbna+Yet5+NnEpIK/hZ0ldDsWNg/L4HKm9lP9
+         D/vft46Spkje3WbjiXI1taGxnyE+cewQ2XNcUjlUxq09qqZoXfmOsBSdjZ8kCIYONJcq
+         9fuw==
+X-Gm-Message-State: APjAAAWMRggYhUVUzMu5pCDxb28l2075UzmfEgLv71C631R9hHXrn9IP
+        IrWpf9uEVCQYFnvSGgXqgxv34bkz
+X-Google-Smtp-Source: APXvYqwxfQ3WyXwlHEiNeXL+bjK+h6vDPqXfeX3JDkn0fqdmARO9/HUWR8gi/I2GPqF//Oo7Qk62eQ==
+X-Received: by 2002:a05:600c:211a:: with SMTP id u26mr10455003wml.74.1555875519379;
+        Sun, 21 Apr 2019 12:38:39 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id v192sm10342571wme.24.2019.04.21.12.38.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Apr 2019 12:38:38 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 1/2] habanalabs: re-factor goya_parse_cb_no_ext_queue()
+Date:   Sun, 21 Apr 2019 22:38:36 +0300
+Message-Id: <20190421193837.24289-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yauhen,
+This patch re-factors goya_parse_cb_no_ext_queue() to make it more
+readable by inverting the check inside the first if statement so the bulk
+of the function won't be inside an if statement.
 
-On 12-02-19 21:58, Yauhen Kharuzhy wrote:
-> This patch series introduces new driver for controlling LEDs connected
-> to Intel Cherry Trail Whiskey Cove PMIC (general-purpose LED and charger
-> status led). Only simple 'always on' and blinking modes are supported
-> for now, no breathing.
-> 
-> Driver was tested only with Lenovo Yoga Book notebook, and I don't have
-> any documentation for the PMIC, so proposals and testing are welcome.
-> 
-> v2:
->    - Fix comments and code style
->    - Add mutex to protect led state
->    - Add defaults triggers
->    - Fix module license declaration
-> 
-> Yauhen Kharuzhy (2):
->    leds: Add Intel Cherry Trail Whiskey Cove PMIC LEDs
->    mfd: Add leds MFD cell for intel_soc_pmic_chtwc
+The patch also fixes a spelling error in the name of the function.
 
-I had a discussion with Jacek Anaszewski about this in another thread and
-I believe we have come up with a solution for this which should work
-nicely and should allow us to move forward with your driver (after
-it is reworked to match the solution. So the solution we've come up with is:
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/goya/goya.c | 43 ++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-1) After thinking a bit more about the primary use-case for this, I've come
-to the conclusion that putting LED1 / the charging LED in software-controlled
-mode is also the correct thing to do on the GPD win / pocket. The reason for
-this is that ideally the LED would glow while charging and be simply solid
-on when the battery is full, the hw control does not allow this, so the GPD
-win/pocket can benefit from sw-control too.
-
-2) To allow the desired behavior we need to define a new
-"<supply-name>-charging-glow-full-solid" trigger in
-drivers/power/supply/power_supply_leds.c; and this must be the default
-trigger for the Intel Cherry Trail Whiskey Cove LED driver so that
-everything will just work. Also we must restore the original hw control
-setting on reboot/shut-down so that this is used on the GPD win/pocket when
-Linux is not running.
-
-3) To be able to actually implement this new trigger we first need 2 things
-in the kernel internal LED APIs:
-
-3a) An API for triggers to put the LED in glowing mode, we've come up
-with the following prototype for this:
-
-void led_trigger_glow(struct led_trigger *trigger, unsigned long *cylce_time);
-
-Where cycle_time is the number of milliseconds for a full glow cycle (from off
-to full-on to off again).  So if cylce_time is set to 1000 then the LED glows
-at 1 Hz, 500, 2 HZ, etc. Note as with led_trigger_blink() the time passed to
-led_trigger_glow is passed by reference as the LED driver may round it to
-match what the hardware can do and the rounded value is returned to the caller
-through the reference.
-
-3b) 3a) in turn will require adding a new optional glow_set callback to
-struct led_classdev which will then get called by led_trigger_glow if available.
-
-We've not discussed yet what to do if led_trigger_glow gets called on
-a led_classdev which does not implement the new glow_set callback, I guess
-the most sensible thing to do then is to fallback to blinking with delay_on
-and delay_off set to cylce_time / 2.
-
-If you can make some time to work on this solution that would be great. Please
-let me know if you've any questions about the solution outlined below.
-
-Note that glowing is only exported as in kernel functionality, I see no
-use-case for exporting this to userspace and keeping this in kernel allows
-us to keep things nice and simple.
-
-Regards,
-
-Hans
-
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 5100dfbf3acc..ed3c4b81aff1 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -3859,36 +3859,35 @@ static int goya_parse_cb_no_mmu(struct hl_device *hdev,
+ 	return rc;
+ }
+ 
+-static int goya_parse_cb_no_ext_quque(struct hl_device *hdev,
++static int goya_parse_cb_no_ext_queue(struct hl_device *hdev,
+ 					struct hl_cs_parser *parser)
+ {
+ 	struct asic_fixed_properties *asic_prop = &hdev->asic_prop;
+ 	struct goya_device *goya = hdev->asic_specific;
+ 
+-	if (!(goya->hw_cap_initialized & HW_CAP_MMU)) {
+-		/* For internal queue jobs, just check if cb address is valid */
+-		if (hl_mem_area_inside_range(
+-				(u64) (uintptr_t) parser->user_cb,
+-				parser->user_cb_size,
+-				asic_prop->sram_user_base_address,
+-				asic_prop->sram_end_address))
+-			return 0;
++	if (goya->hw_cap_initialized & HW_CAP_MMU)
++		return 0;
+ 
+-		if (hl_mem_area_inside_range(
+-				(u64) (uintptr_t) parser->user_cb,
+-				parser->user_cb_size,
+-				asic_prop->dram_user_base_address,
+-				asic_prop->dram_end_address))
+-			return 0;
++	/* For internal queue jobs, just check if CB address is valid */
++	if (hl_mem_area_inside_range(
++			(u64) (uintptr_t) parser->user_cb,
++			parser->user_cb_size,
++			asic_prop->sram_user_base_address,
++			asic_prop->sram_end_address))
++		return 0;
+ 
+-		dev_err(hdev->dev,
+-			"Internal CB address %px + 0x%x is not in SRAM nor in DRAM\n",
+-			parser->user_cb, parser->user_cb_size);
++	if (hl_mem_area_inside_range(
++			(u64) (uintptr_t) parser->user_cb,
++			parser->user_cb_size,
++			asic_prop->dram_user_base_address,
++			asic_prop->dram_end_address))
++		return 0;
+ 
+-		return -EFAULT;
+-	}
++	dev_err(hdev->dev,
++		"Internal CB address %px + 0x%x is not in SRAM nor in DRAM\n",
++		parser->user_cb, parser->user_cb_size);
+ 
+-	return 0;
++	return -EFAULT;
+ }
+ 
+ int goya_cs_parser(struct hl_device *hdev, struct hl_cs_parser *parser)
+@@ -3896,7 +3895,7 @@ int goya_cs_parser(struct hl_device *hdev, struct hl_cs_parser *parser)
+ 	struct goya_device *goya = hdev->asic_specific;
+ 
+ 	if (!parser->ext_queue)
+-		return goya_parse_cb_no_ext_quque(hdev, parser);
++		return goya_parse_cb_no_ext_queue(hdev, parser);
+ 
+ 	if ((goya->hw_cap_initialized & HW_CAP_MMU) && parser->use_virt_addr)
+ 		return goya_parse_cb_mmu(hdev, parser);
+-- 
+2.17.1
 
