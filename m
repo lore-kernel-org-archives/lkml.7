@@ -2,156 +2,97 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DD4C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93BD120833
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A94020833
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 16:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdI9el8s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FA+cCq6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfDUQ4Q (ORCPT
+        id S1727792AbfDUQ4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 12:56:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34858 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfDUQ4Q (ORCPT
+        Sun, 21 Apr 2019 12:56:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39963 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfDUQ4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 12:56:16 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o12so9896883wrn.2;
-        Sun, 21 Apr 2019 09:56:15 -0700 (PDT)
+        Sun, 21 Apr 2019 12:56:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h4so13199578wre.7
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 09:56:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RM3jDbprF1xHgFL9XM/gvSF3FPpHquXwIDG6URlkSVE=;
-        b=XdI9el8sQoAlCesr0mbddpE5POmzYTMlz5RlTFEdzfbdOaB7WwOb8N2ZjQ7+X0svoz
-         DpWbnRu6+u9XYcaOZDFnXAcWqY7PX7OXe3ewRZAWthHyIEc6PhZZb6W7ikwndKyj07m8
-         LyxLVM5uFbPJvOxQJLFBoI3RuugAf56olmf//ttGxs3Kr7yD0sAs3wjmm34Ju+/Ze7p0
-         lk/LpwfX/7yDuIX6ZoUZ2Hbol0VnbBW5jEXqKDP2JjiZzfJe2t0Q5IcTJxcz7OOEeFn0
-         cPvmMZX4xcnVCnrPxnIGR5wM2FvYzBd1/Yl29TScIjgSGIXFy5k5ssIsOtuSFQrylOVF
-         xh/w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mT9XJLK/o44Uptq0p07MTEyG6GHZtHulPAi7nZhArF8=;
+        b=FA+cCq6cRLqSbzt/TFzy/A1FeLMtbzYKcGn4oUOPIvPnqoaipfPl+rY3yFDKZqjESf
+         wBwI4iRno1XJHeMZG3Ew7pQvvwCl4pfy94mzOiMnir9gQ0PvwpsA0jJ0seGF9oa3WDnr
+         bVTcMXfCDz2sLYqqxf8fni0XB73PY3mgSwUIcYPQtAbt0L9JUP6rjBv4YbkJENNJpElQ
+         BFCJ0dfOduRCtRNorYvYVvzKkaSm6LALtubBgN1kiT6XjUBD46SHgqlKiGjaJKqAPOWF
+         1ccHAh7oqLWThMfmhbbH6VY2u4pS5dqCyOtUpn3C0e17DDBtdsmJiPqGW5gAI7WWAgUK
+         6h9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RM3jDbprF1xHgFL9XM/gvSF3FPpHquXwIDG6URlkSVE=;
-        b=kM0pgOzLlYWs0rHZ8EDyeqQJPdkmxIYEC/Kl1hwTxv0pm+PiN9xnJdSc+v9RxaGzNb
-         5CCGtlf5d0Ux/6mXFAvLRedM/NSg8pSU58BHyXADtDS/kEnxnDMtngE9tHUgPuj4CORh
-         56lVMoTndc2b9gDJ4dN+7HfqDjQcHcwB5KNlFIOviJRu9ttklSYrhUI45duKJ1PuMYcJ
-         5J5+8AmpKFduY6t6I99tO+1P0ZmZPurEF9HcAIco95PEsF8DPyKPSAp+tF7e0su8Vqha
-         P9plWZ4rfdkzk8Sn2OlmALzxjPLswao3Tr2H2ZMgffX9EhPN1+Xm924oyl0VgZSMiWAQ
-         78jw==
-X-Gm-Message-State: APjAAAWrUH7oflWDTokLb4QQASuLCut2MhWalDkipD21Pn1d9I3su2WK
-        eMPDTfWnYw3F3Wv2qTzF7wMJiRY=
-X-Google-Smtp-Source: APXvYqyLVtssQPYb9PCP6xoffn7RwuMAUMZCpe/1t/0Q65iA53tf4/mh3vEEwuPpUx6noj0aY0T49w==
-X-Received: by 2002:adf:e747:: with SMTP id c7mr8266768wrn.114.1555865774538;
-        Sun, 21 Apr 2019 09:56:14 -0700 (PDT)
-Received: from avx2 ([46.53.240.200])
-        by smtp.gmail.com with ESMTPSA id t24sm8954867wmi.10.2019.04.21.09.56.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mT9XJLK/o44Uptq0p07MTEyG6GHZtHulPAi7nZhArF8=;
+        b=OsJAIL7C6FZUasVNvi9szbvOVG+J9BnilKfTl2hiII2iC6NIE2WBTyjANaeD5l09vt
+         2b52jO6pXhz3HAhinqfpO1Y2lG0sk9fJM6zXkFYKW6EsPhJq/Iz7VEnYL753tUhDGjPZ
+         /O2d/vtshl2M42VYE4RWbjmQdqLZsxN3rZFDf0WGV4Ul604A2Zq6pevLsclazjQ9lqhS
+         zRaQsXst2yy48ueLZbqKQK2lE6vU34x+JN7BcVrq9oPWfqH6n28PzhPm4qtAsh7+2/fP
+         FxYWh7nihR0JB4v09lsRCsN5T4U7dIzj/NQnbpWqNhwAFjKIxzjoJju1Ppb3glQZ+WIo
+         aBww==
+X-Gm-Message-State: APjAAAUwTGDO6T+DxNKGcRBRZbViU66r73XBI1zTE/bBXa4GU1h1PiyY
+        4V55/Pso8jbLARn/1zoKoa5GeoSU
+X-Google-Smtp-Source: APXvYqz/qF0YNa7mY11E0+L41+3YOgd8O0pqUQ1Zms90iPycg/BW2AguWZS3TkO7UB80OV4ST7/UBw==
+X-Received: by 2002:adf:e74f:: with SMTP id c15mr9946540wrn.23.1555865800909;
+        Sun, 21 Apr 2019 09:56:40 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5abb88.dynamic.kabel-deutschland.de. [95.90.187.136])
+        by smtp.gmail.com with ESMTPSA id a22sm10012268wmj.44.2019.04.21.09.56.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 09:56:13 -0700 (PDT)
-Date:   Sun, 21 Apr 2019 19:56:11 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20190421165611.GB26843@avx2>
-References: <20190417165321.61cd6380@canb.auug.org.au>
- <CAGXu5jKYxLe9-umda7C3iWfYFe-Thv=dL4bJQC9nU4GMGK5Wwg@mail.gmail.com>
- <CAGXu5j+9_f=5aT7x=K=Hg9LS3eQ9-dhVF18LCBfZcx+EmTO3PA@mail.gmail.com>
- <20190418090247.2982dafd@canb.auug.org.au>
+        Sun, 21 Apr 2019 09:56:40 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: cleanup indenting issue in odm.c
+Date:   Sun, 21 Apr 2019 18:56:28 +0200
+Message-Id: <20190421165628.15864-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190418090247.2982dafd@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 09:02:47AM +1000, Stephen Rothwell wrote:
-> Hi Kees,
-> 
-> On Wed, 17 Apr 2019 17:28:39 -0500 Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, Apr 17, 2019 at 5:22 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Wed, Apr 17, 2019 at 1:53 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:  
-> > > >
-> > > > Hi Andrew,
-> > > >
-> > > > After merging the akpm-current tree, today's linux-next build (arm
-> > > > multi_v7_defconfig) failed like this:
-> > > >
-> > > > fs/binfmt_elf.c: In function 'load_elf_binary':
-> > > > fs/binfmt_elf.c:1140:7: error: 'elf_interpreter' undeclared (first use in this function); did you mean 'interpreter'?
-> > > >   if (!elf_interpreter)
-> > > >        ^~~~~~~~~~~~~~~
-> > > >        interpreter  
-> > >
-> > > static int load_elf_binary(struct linux_binprm *bprm)
-> > > {
-> > > ...
-> > >         char * elf_interpreter = NULL;
-> > >
-> > > This is _absolutely_ a valid variable.  
-> 
-> It was. However commit a34f642bccf1 from Andrew's tree changes its scope.
-> 
-> So there is nothing wrong with commit 3ebf0dd657ce, it is the incorrect
-> rebase of it on top of a34f642bccf1 that causes the build problem.
-> 
-> > > > Caused by commit
-> > > >
-> > > >   3ebf0dd657ce ("fs/binfmt_elf.c: move brk out of mmap when doing direct loader exec")
-> > > >
-> > > > interacting with commit
-> > > >
-> > > >   a34f642bccf1 ("fs/binfmt_elf.c: free PT_INTERP filename ASAP")
-> > > >
-> > > > I have applied the following patch for today.
-> > > >
-> > > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > Date: Wed, 17 Apr 2019 16:48:29 +1000
-> > > > Subject: [PATCH] fix "fs/binfmt_elf.c: move brk out of mmap when doing direct loader exec"
-> > > >
-> > > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > ---
-> > > >  fs/binfmt_elf.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > > > index b3bbe6bca499..fe5668a1bbaa 100644
-> > > > --- a/fs/binfmt_elf.c
-> > > > +++ b/fs/binfmt_elf.c
-> > > > @@ -1137,7 +1137,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> > > >          * collide early with the stack growing down), and into the unused
-> > > >          * ELF_ET_DYN_BASE region.
-> > > >          */
-> > > > -       if (!elf_interpreter)
-> > > > +       if (!interpreter)  
-> > >
-> > > No, this is very wrong and will, I think, cause all PIE binaries to fail to run.  
-> > 
-> > I may be wrong: I think this will cause all static binaries to see
-> > their brk moved very unexpectedly. All static PIE binaries will fail?
-> 
-> Are you sure that elf_interpreter == NULL is not equivalent to
-> interpreter == NULL by this point in the code?  Earlier if
-> elf_intpreter is not NULL, we have set interpreter (using open_exec)
-> and errored out if that fails.
+Cleanup indenting issue reported by checkpatch.
+WARNING: suspect code indent for conditional statements (8, 17)
 
-My patch was done based on this very observation: if interpreter has been
-opened then its filename has been allocated before otherwise how do you
-know which interpreter to open? Just like with pathname resolution, once
-lookup is done and inode has been fished out, pathname becomes irrelevant.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/hal/odm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8188eu/hal/odm.c b/drivers/staging/rtl8188eu/hal/odm.c
+index 95a8fc23e62c..74f7c9c81bf6 100644
+--- a/drivers/staging/rtl8188eu/hal/odm.c
++++ b/drivers/staging/rtl8188eu/hal/odm.c
+@@ -1096,7 +1096,7 @@ void odm_EdcaTurboCheckCE(struct odm_dm_struct *pDM_Odm)
+ 	} else {
+ 		/*  Turn Off EDCA turbo here. */
+ 		/*  Restore original EDCA according to the declaration of AP. */
+-		 if (pDM_Odm->DM_EDCA_Table.bCurrentTurboEDCA) {
++		if (pDM_Odm->DM_EDCA_Table.bCurrentTurboEDCA) {
+ 			usb_write32(Adapter, REG_EDCA_BE_PARAM,
+ 				    Adapter->HalData->AcParam_BE);
+ 			pDM_Odm->DM_EDCA_Table.bCurrentTurboEDCA = false;
+-- 
+2.21.0
+
