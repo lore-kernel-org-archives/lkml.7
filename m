@@ -2,138 +2,236 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08BBC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 08:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAB5C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 08:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A4C20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 08:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D7A2087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 08:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIjf/1px"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lb/UFZ0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfDUIEs (ORCPT
+        id S1727120AbfDUIVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 04:04:48 -0400
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:46806 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfDUIEs (ORCPT
+        Sun, 21 Apr 2019 04:21:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40460 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfDUIVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 04:04:48 -0400
-Received: by mail-pf1-f173.google.com with SMTP id 9so4313550pfj.13
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 01:04:47 -0700 (PDT)
+        Sun, 21 Apr 2019 04:21:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c207so4335623pfc.7;
+        Sun, 21 Apr 2019 01:21:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WqmW3jhJQbbtDKoqaBLxUuj42y/qNfwTdD7pV2EaF9o=;
-        b=SIjf/1pxKngViAfyvKmJt8tPOgmdzVEDD1CCq/ygMSg49AA/NMyPCX1szEe6qNmnc6
-         vV8aR5+SvefgFQNPxxsEoGRVfxkIn8U7Q/wwvLhUlRrVc4vjtZdl3Ymw5HpugKqVfpCn
-         L2dfx4R5331GQ1t7jbDN92uTJo4nkMXWFnGxsQzAnnJO7nt0yPw8C3j2M/m+ukZcc8Tn
-         BwLBdjnvbCiz6NFrRVFEps1EaBIM+AtCnw6rMQEEJnZJUDYVz/lo5/d7c3kxEgEoM+S5
-         mB2OEZh5kEAQFeD2F3G0oC/q9aBAcL5XNT6DXP9T3zNTDw/6gbPRBX+oEcm9sKvaJUpE
-         waVw==
+        bh=o6lc0ay5gHFR5swtwXOmViM7nIFzJo8K7yF0YlsWYOg=;
+        b=Lb/UFZ0uxv3HebvlYtqdvSkTS29Xz8hxWdIwsbbMpu8C9N/iRhCNYm1K+TmfanEsMm
+         cvArHVOtvPB2mp2UGDhFn0XVqB2+e3uzzdzCrndM7HCbkubjT5pBImuRm7BO29prjlrn
+         mj2ykDW3QY8KXZZ2LfO3tiyyAt+NEOgHd/O6inrkJ0jBV0mN1alUE66BPIvj5Qdfak9a
+         APHMyCZIDo9XWZKbSqQOIFOSf4V/rIhAeXy2TqqmSn4/ic4T75A9qJP3T0V+izWBHLh7
+         qE3Y3H+81XpBJf5U1HYbm/W0/xxcEAbnCMA3WXZFmayWksRoxFXViwUcSQRcXbYKEhZl
+         XXHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WqmW3jhJQbbtDKoqaBLxUuj42y/qNfwTdD7pV2EaF9o=;
-        b=BG95zzhDTTkQhG6q5Tx/q6qAB0p+/EdBC2jefKdlWLGUUYttdnv/xkKtUnXsRt96k3
-         OhVJmfAAvCTHa/Nxphn4q8pgD30AFJ0Xe2lzC8B54VWaetNRxIIkQBAibmZhL4Qj5m5n
-         cmizanqoYs3LegtSAy62e3fhKh/hCl8YMYZ/F07ROdral0q/PT+E824sjHkmF6C5fOsU
-         gg5qKm/wkyVYByVLa3aF1pi6rE/XLtBDwtR4yOfZgYTOXv5c59GV1PQCJi2K9vw+TCcE
-         qc+/jxR4OMslH44N6pTuXDVHPZmb7tcybQ2P4FlAqhDIfiOjIZOdfOLbLIp+NWawLpnI
-         zr2g==
-X-Gm-Message-State: APjAAAWMZFaAyQnbGlOTkX2hZbCThYXlfa/mqWFfQrRwnmL/UesJGjni
-        TRxQrw8opal6CGkAE32NrME=
-X-Google-Smtp-Source: APXvYqybW5n0u+5qpusipCUjI3sMOrwQQFo1uaLffNrUsfWApb5P1IWNr0t98L/j5XDQ2j7BdmHINw==
-X-Received: by 2002:a63:5059:: with SMTP id q25mr6094546pgl.314.1555833887143;
-        Sun, 21 Apr 2019 01:04:47 -0700 (PDT)
+        bh=o6lc0ay5gHFR5swtwXOmViM7nIFzJo8K7yF0YlsWYOg=;
+        b=K7UmKt+DZnJDipe63YU1IFVYOYIVZ5fn8SNW/qnyXGrtO9iuP8y9CIj7b3XKX/x1OY
+         R1F/fJDDcGJuQAz/bibDQHX/7u/diaZ1n/nmEhf9wavK6ryGch9tXR/CP+QDgJ80471I
+         XjSgeedQojE9b4ldr+lpQjQXIt1Rmxkwk2xBzgC+gZXXEIvRiyVj+QIQvylOIiCS4WpN
+         yoz0CMrk7MPExw6Gsatcu5tOfJ5rhedU1eSMFNW1u9SJwW5aJWG9ExSrqKgmxsOGe0aP
+         PvsAqQiI1hQcZlN6umKQecsSjmyCKUSheXSj6EEnQUUWNT6EvUWWkxnx0yj3zHmW6TC1
+         e3XA==
+X-Gm-Message-State: APjAAAXSoICtXBGbhfJqaWmNywTwMUT4wtCIu+viMSsFsy3NbEr4k8lA
+        3yoA/SuhcmNGzn1n3F7yhJdJIKAN
+X-Google-Smtp-Source: APXvYqwlm0+U1Ppd89QYq9KWm7eKJRFZ3kO4+wIUqMI3K2tvq7PCdrrvnWY2NN5zgRAX+2m/xkp14Q==
+X-Received: by 2002:a62:7648:: with SMTP id r69mr14095914pfc.114.1555834864277;
+        Sun, 21 Apr 2019 01:21:04 -0700 (PDT)
 Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id w3sm15640299pfn.179.2019.04.21.01.04.45
+        by smtp.gmail.com with ESMTPSA id j20sm12366770pfn.84.2019.04.21.01.21.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 01:04:46 -0700 (PDT)
-Date:   Sun, 21 Apr 2019 01:04:40 -0700
+        Sun, 21 Apr 2019 01:21:03 -0700 (PDT)
+Date:   Sun, 21 Apr 2019 01:20:57 -0700
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: fsl: sai: Fix clock source for mclk0
-Message-ID: <20190421080439.GA8784@Asurada>
-References: <20190420154038.14576-1-daniel.baluta@nxp.com>
- <20190421053749.GA5552@Asurada>
- <CAEnQRZDs_gnS8ehjM2M_y+Yw0Ge-Sq=A2c9BV-g=P_d0+O40hQ@mail.gmail.com>
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add mclk0 clock for SAI
+Message-ID: <20190421082038.GA8304@Asurada>
+References: <20190420091239.3793-1-daniel.baluta@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEnQRZDs_gnS8ehjM2M_y+Yw0Ge-Sq=A2c9BV-g=P_d0+O40hQ@mail.gmail.com>
+In-Reply-To: <20190420091239.3793-1-daniel.baluta@nxp.com>
 User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 10:26:40AM +0300, Daniel Baluta wrote:
-> > Firstly, according to your commit message, neither imx8qm nor
-> > imx6sx has an "mclk0" clock in the clock list. Either of them
-> > starts with "mclk1". So, before you change the driver, I don't
-> > think it's even a right thing to define an "mclk0" in the DT.
+On Sat, Apr 20, 2019 at 09:12:52AM +0000, Daniel Baluta wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
 > 
-> From what I understand mclk0 means option 00b of MSEL bits which is:
-> * busclk for i.MX8
-> * mclk1 for i.MX6/7.
+> SAI has 4 clock sources, which can be selected using MSEL
+> bit of SAI TCR2 register.
 
-MSEL bit is used for an internal clock MUX to select four clock
-inputs. However,  these four clock inputs aren't exactly 1:1 of
-SAI's inputs. As fas as I can tell, SAI only has one bus clock
-and three MCLK[1-3]; the internal clock MUX maps the bus clock
-or MCLK1 to its input0, and then linearly maps MCLK[1-3] to its
-inputs[1-3]. So it doesn't sound right to me that you define an
-"MCLK0" in the DT, as it's supposed to describe input clocks of
-SAI block, other than its internal clock MUX's.
-
-> Adding a mclk0 in the DT and making it point to the correct option
-> (busclk or mclk1) does no harm as the driver doesn't yet parse mclk0.
-
-I know it's making driver easier, but unfortunately it's not a
-right thing to do from my point of view.
-
-> >
-> > >               sai->mclk_clk[i] = devm_clk_get(&pdev->dev, tmp);
-> > >               if (IS_ERR(sai->mclk_clk[i])) {
-> >
-> > Secondly, this would break existing DT bindings of imx6sx and
-> > imx7 platforms as they both have clock-names defined in DTB:
-> >         clock-names = "bus", "mclk1", "mclk2", "mclk3";
-> > Since there's no "mclk0", the entire probe() would error-out.
-> 
-> Not exactly. The probe won't error-out. It will just print a warning message
-
-You're right about this part. I didn't look further as the patch
-ends at the IS_ERR, so made a wrong assumption. Sorry.
-
-> In my opinion, the current implementation of fsl_sai has a bug for imx6/7.
-> 
-> Currently, fsl_sai.c driver does:
-> 
->        sai->mclk_clk[0] = sai->bus_clk;
-> 
-> is wrong, because on imx6/7 mclk_clk[0] should point to the same clk
-> as mclk_clk[1]
-
-You are right. It should be fixed, but not by this approach IMHO.
+I have a doubt at this statement. As far as I can understand,
+this MSEL is probably used by its internal clock MUX, so it's
+not really proving that SAI has 4 MCLK inputs. What I know is
+that SAI block itself only has 3 MCLK inputs as we defined in
+DT. It's just internally connects bus clock or MCLK1 to input0
+of clock MUX's and connects MCLK[1-3] to input[1-3]. So adding
+an MCLK0 here doesn't sound a right way to me. Unless someone
+can justify for it, I think we should just fix it from driver
+side.
 
 Thanks
+Nicolin
+
+> 
+> On imx6/7 mclk0 and mclk1 always point to the same clock
+> source. Anyhow, this is no longer true for imx8.
+> 
+> For this reason, we need to add mclk0 and handle it
+> in a generic way in SAI driver.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6sx.dtsi | 6 ++++--
+>  arch/arm/boot/dts/imx6ul.dtsi | 9 ++++++---
+>  arch/arm/boot/dts/imx7s.dtsi  | 9 ++++++---
+>  3 files changed, 16 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index b16a123990a2..682207b5d868 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -1071,9 +1071,10 @@
+>  				reg = <0x021d4000 0x4000>;
+>  				interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&clks IMX6SX_CLK_SAI1_IPG>,
+> +					 <&clks IMX6SX_CLK_SAI1>,
+>  					 <&clks IMX6SX_CLK_SAI1>,
+>  					 <&clks 0>, <&clks 0>;
+> -				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +				clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  				dma-names = "rx", "tx";
+>  				dmas = <&sdma 31 24 0>, <&sdma 32 24 0>;
+>  				status = "disabled";
+> @@ -1090,9 +1091,10 @@
+>  				reg = <0x021dc000 0x4000>;
+>  				interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&clks IMX6SX_CLK_SAI2_IPG>,
+> +					 <&clks IMX6SX_CLK_SAI2>,
+>  					 <&clks IMX6SX_CLK_SAI2>,
+>  					 <&clks 0>, <&clks 0>;
+> -				clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +				clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  				dma-names = "rx", "tx";
+>  				dmas = <&sdma 33 24 0>, <&sdma 34 24 0>;
+>  				status = "disabled";
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index bbf010c73336..e9691306f557 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -304,9 +304,10 @@
+>  					reg = <0x02028000 0x4000>;
+>  					interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks IMX6UL_CLK_SAI1_IPG>,
+> +						 <&clks IMX6UL_CLK_SAI1>,
+>  						 <&clks IMX6UL_CLK_SAI1>,
+>  						 <&clks IMX6UL_CLK_DUMMY>, <&clks IMX6UL_CLK_DUMMY>;
+> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  					dmas = <&sdma 35 24 0>,
+>  					       <&sdma 36 24 0>;
+>  					dma-names = "rx", "tx";
+> @@ -319,9 +320,10 @@
+>  					reg = <0x0202c000 0x4000>;
+>  					interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks IMX6UL_CLK_SAI2_IPG>,
+> +						 <&clks IMX6UL_CLK_SAI2>,
+>  						 <&clks IMX6UL_CLK_SAI2>,
+>  						 <&clks IMX6UL_CLK_DUMMY>, <&clks IMX6UL_CLK_DUMMY>;
+> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  					dmas = <&sdma 37 24 0>,
+>  					       <&sdma 38 24 0>;
+>  					dma-names = "rx", "tx";
+> @@ -334,9 +336,10 @@
+>  					reg = <0x02030000 0x4000>;
+>  					interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks IMX6UL_CLK_SAI3_IPG>,
+> +						 <&clks IMX6UL_CLK_SAI3>,
+>  						 <&clks IMX6UL_CLK_SAI3>,
+>  						 <&clks IMX6UL_CLK_DUMMY>, <&clks IMX6UL_CLK_DUMMY>;
+> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  					dmas = <&sdma 39 24 0>,
+>  					       <&sdma 40 24 0>;
+>  					dma-names = "rx", "tx";
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 0b01109ac0a9..693b88e37799 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -884,10 +884,11 @@
+>  					reg = <0x308a0000 0x10000>;
+>  					interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks IMX7D_SAI1_IPG_CLK>,
+> +						 <&clks IMX7D_SAI1_ROOT_CLK>,
+>  						 <&clks IMX7D_SAI1_ROOT_CLK>,
+>  						 <&clks IMX7D_CLK_DUMMY>,
+>  						 <&clks IMX7D_CLK_DUMMY>;
+> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  					dma-names = "rx", "tx";
+>  					dmas = <&sdma 8 24 0>, <&sdma 9 24 0>;
+>  					status = "disabled";
+> @@ -899,10 +900,11 @@
+>  					reg = <0x308b0000 0x10000>;
+>  					interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks IMX7D_SAI2_IPG_CLK>,
+> +						 <&clks IMX7D_SAI2_ROOT_CLK>,
+>  						 <&clks IMX7D_SAI2_ROOT_CLK>,
+>  						 <&clks IMX7D_CLK_DUMMY>,
+>  						 <&clks IMX7D_CLK_DUMMY>;
+> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  					dma-names = "rx", "tx";
+>  					dmas = <&sdma 10 24 0>, <&sdma 11 24 0>;
+>  					status = "disabled";
+> @@ -914,10 +916,11 @@
+>  					reg = <0x308c0000 0x10000>;
+>  					interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+>  					clocks = <&clks IMX7D_SAI3_IPG_CLK>,
+> +						 <&clks IMX7D_SAI3_ROOT_CLK>,
+>  						 <&clks IMX7D_SAI3_ROOT_CLK>,
+>  						 <&clks IMX7D_CLK_DUMMY>,
+>  						 <&clks IMX7D_CLK_DUMMY>;
+> -					clock-names = "bus", "mclk1", "mclk2", "mclk3";
+> +					clock-names = "bus", "mclk0", "mclk1", "mclk2", "mclk3";
+>  					dma-names = "rx", "tx";
+>  					dmas = <&sdma 12 24 0>, <&sdma 13 24 0>;
+>  					status = "disabled";
+> -- 
+> 2.17.1
+> 
