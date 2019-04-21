@@ -2,90 +2,63 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0835AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC2AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C286F20685
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FD4218A1
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 03:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfDUD0F (ORCPT
+        id S1726508AbfDUD3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 23:26:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48518 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDUD0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 20 Apr 2019 23:26:04 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B41A485543;
-        Sun, 21 Apr 2019 03:26:04 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-33.pek2.redhat.com [10.72.12.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7084819C4F;
-        Sun, 21 Apr 2019 03:26:01 +0000 (UTC)
-Date:   Sun, 21 Apr 2019 11:25:57 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] checkpatch: mute SOB warning in case SOB exists but without
- From header
-Message-ID: <20190421032557.GA9025@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Sun, 21 Apr 2019 03:26:04 +0000 (UTC)
+        Sat, 20 Apr 2019 23:29:23 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55982 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDUD3X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 20 Apr 2019 23:29:23 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D810D1034AEF0;
+        Sat, 20 Apr 2019 20:29:22 -0700 (PDT)
+Date:   Sat, 20 Apr 2019 20:29:20 -0700 (PDT)
+Message-Id: <20190420.202920.2293248605361106810.davem@davemloft.net>
+To:     po-hsu.lin@canonical.com
+Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/net: correct the return value for
+ run_afpackettests
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190419110113.21883-1-po-hsu.lin@canonical.com>
+References: <20190419110113.21883-1-po-hsu.lin@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 20 Apr 2019 20:29:23 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-checkpatch.pl report below warning but the SOB line is correct:
-$ ./scripts/checkpatch.pl patches/test.patch
-WARNING: Missing Signed-off-by: line by nominal patch author ''
+From: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Date: Fri, 19 Apr 2019 19:01:13 +0800
 
-Actually checkpatch.pl assumes every patch includes "From:" line,
-this is true for a git formated patch, some saved mail format patch.
+> The run_afpackettests will be marked as passed regardless the return
+> value of those sub-tests in the script:
+>     --------------------
+>     running psock_tpacket test
+>     --------------------
+>     [FAIL]
+>     selftests: run_afpackettests [PASS]
+> 
+> Fix this by changing the return value for each tests.
+> 
+> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
 
-But the warning is boring for people who do not use git formated patch.
-Change the script only print warning in case "From:" line exists.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- scripts/checkpatch.pl |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
---- linux-x86.orig/scripts/checkpatch.pl
-+++ linux-x86/scripts/checkpatch.pl
-@@ -2283,7 +2283,7 @@ sub process {
- 	our $clean = 1;
- 	my $signoff = 0;
- 	my $author = '';
--	my $authorsignoff = 0;
-+	my $authorsignoff = -1;
- 	my $is_patch = 0;
- 	my $is_binding_patch = -1;
- 	my $in_header_lines = $file ? 0 : 1;
-@@ -2609,6 +2609,8 @@ sub process {
- 				$l =~ s/"//g;
- 				if ($l =~ /^\s*signed-off-by:\s*\Q$author\E/i) {
- 				    $authorsignoff = 1;
-+				} else {
-+				    $authorsignoff = 0;
- 				}
- 			}
- 		}
-@@ -6649,7 +6651,7 @@ sub process {
- 		if ($signoff == 0) {
- 			ERROR("MISSING_SIGN_OFF",
- 			      "Missing Signed-off-by: line(s)\n");
--		} elsif (!$authorsignoff) {
-+		} elsif ($authorsignoff == 0) {
- 			WARN("NO_AUTHOR_SIGN_OFF",
- 			     "Missing Signed-off-by: line by nominal patch author '$author'\n");
- 		}
+Applied, thanks.
