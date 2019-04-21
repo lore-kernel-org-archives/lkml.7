@@ -2,131 +2,163 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DF0C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 18:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F66FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDC32080D
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 18:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33A72147C
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 19:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jizMIQth"
+	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="Nbydkhqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfDUSwq (ORCPT
+        id S1726219AbfDUTJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 14:52:46 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43255 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfDUSwq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 14:52:46 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3LIqFBD1295810
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 21 Apr 2019 11:52:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3LIqFBD1295810
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555872736;
-        bh=bsEhR4Xqe/APRfa17wqW0jxDIaXT4NlBXNfJDHlfybI=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=jizMIQth9fYH222YSdxG1w9Y+Ulfw1IRRv/wldyqcJD3p1DDqHTS+2CR1C0Ei6Wcn
-         MC3qL+2MjG4mDVnfQin5mJjXTYTHJWyfsud9rEGNMXBep5c1CCBz82zPVokVAovu+2
-         P2Z7y2loNv/ywByThQZwR0ECWLOZQTIZ0xYkdE1kT3Gft/tq7Mi2rRcSKq5AbE5Zuk
-         d1VNE2CVNcekfYAx0aOK7yK50QP10NOGVzMMVvTFw+Q3LLC3xXTUoLOA0UWdgpDVa/
-         Dmc7lJ8JjfPhPsc5seysDq2yuDEkMgKk8XWpTsh5wOriedGmrpmpG1QNzTMvi4Ihqu
-         eid3oxG0wrNaw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3LIqDAd1295807;
-        Sun, 21 Apr 2019 11:52:13 -0700
-Date:   Sun, 21 Apr 2019 11:52:13 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Borislav Petkov <tipbot@zytor.com>
-Message-ID: <tip-ea2f8d60603efbd1cb4e193a593945a2fe24d264@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, mingo@kernel.org, hpa@zytor.com,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@suse.de
-Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, bp@suse.de,
-          peterz@infradead.org, mingo@kernel.org, hpa@zytor.com,
-          torvalds@linux-foundation.org
-In-Reply-To: <20190421183524.GC6048@zn.tnic>
-References: <20190421183524.GC6048@zn.tnic>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/fault: Make fault messages more succinct
-Git-Commit-ID: ea2f8d60603efbd1cb4e193a593945a2fe24d264
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sun, 21 Apr 2019 15:09:35 -0400
+Received: from mail-eopbgr00045.outbound.protection.outlook.com ([40.107.0.45]:18293
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725845AbfDUTJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 15:09:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yzYdVqYYMzd2E5SC/gDOMMJ4+4uTCL+l84JT8yl4O2M=;
+ b=NbydkhqiFCCT9EnQBmrzkcIxVd3linYaOLgIAon9W8u+yS8jbWZ9ZbmzI+eCq/o3Gi7LADWGP+2j5TF6eBmNbiyznNcmSc2b48t2rfmViPjd+E8kcXQzxUl2limjPtKVz0cocdWoQjrDWL3FXTfKDQkaWn6x5fDhBPvfypDNwdc=
+Received: from DB7PR06MB5563.eurprd06.prod.outlook.com (20.178.104.212) by
+ DB7PR06MB4726.eurprd06.prod.outlook.com (20.177.123.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Sun, 21 Apr 2019 19:09:29 +0000
+Received: from DB7PR06MB5563.eurprd06.prod.outlook.com
+ ([fe80::edef:902c:11a7:478]) by DB7PR06MB5563.eurprd06.prod.outlook.com
+ ([fe80::edef:902c:11a7:478%6]) with mapi id 15.20.1813.017; Sun, 21 Apr 2019
+ 19:09:29 +0000
+From:   Han Nandor <nandor.han@vaisala.com>
+To:     "sre@kernel.org" <sre@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     Han Nandor <nandor.han@vaisala.com>
+Subject: [PATCH v3 1/2] power: reset: nvmem-reboot-mode: use NVMEM as reboot
+ mode write interface
+Thread-Topic: [PATCH v3 1/2] power: reset: nvmem-reboot-mode: use NVMEM as
+ reboot mode write interface
+Thread-Index: AQHU+HW+Oj0ofXcEIk+iN/xvJb6seQ==
+Date:   Sun, 21 Apr 2019 19:09:29 +0000
+Message-ID: <20190421190913.1478-2-nandor.han@vaisala.com>
+References: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
+In-Reply-To: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0701CA0060.eurprd07.prod.outlook.com
+ (2603:10a6:3:9e::28) To DB7PR06MB5563.eurprd06.prod.outlook.com
+ (2603:10a6:10:83::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nandor.han@vaisala.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.2
+x-originating-ip: [91.195.247.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 85bdf21b-843d-4370-5a1d-08d6c68ce0e1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DB7PR06MB4726;
+x-ms-traffictypediagnostic: DB7PR06MB4726:
+x-tenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+x-microsoft-antispam-prvs: <DB7PR06MB47264A42ADB9DFB20024782685210@DB7PR06MB4726.eurprd06.prod.outlook.com>
+x-forefront-prvs: 0014E2CF50
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39840400004)(376002)(346002)(366004)(396003)(189003)(199004)(446003)(6512007)(486006)(71200400001)(66446008)(66476007)(36756003)(2501003)(26005)(14454004)(8936002)(81156014)(25786009)(316002)(81166006)(8676002)(110136005)(2906002)(1076003)(14444005)(6506007)(76176011)(476003)(256004)(86362001)(11346002)(68736007)(66556008)(64756008)(71190400001)(2616005)(73956011)(66946007)(186003)(2201001)(102836004)(386003)(11926002)(97736004)(5660300002)(7736002)(6486002)(478600001)(99286004)(53936002)(52116002)(4326008)(5790100002)(3846002)(66066001)(6116002)(6436002)(107886003)(305945005)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR06MB4726;H:DB7PR06MB5563.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vaisala.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: k8XwIuZgpFif1S4/3KiRtGCANmAbGXxXlPKGx0Hjh2owsuAMXR9WSmz8cP0MPvxyyp4F7bpCV+PJrtK09qiMZEBFWxonFgfVUNQxMvAWM4iEgxhrH4XSnBsZmyZOwadMnVwdXHSs9xec2cSNNTpZjzxG0j/ZZ1/+vyhm0ErXZeJIAbPa18vvexw3iGwUDJKku/81FqtkYoSUqCKpKQKv0Wbd5qR9PpTWc3fGBcf/Ol2VCwSA9y5VithHz2gG/RRaAkdbrq8Jmz/VmnztDM1GPyh9D+CRFEsp8dBTparvjqE92OHX9UzGXZlwogxpdylWU/ZuD7sGkI6EFs21kDfa/9uDHr+5S0fKJ8lWs2vwuKwESj93vmH4u64202ZSlshn/oL7ZvnE5lJxffAK7lwB+GlkVV3jaNzNcEncHTpsMlU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85bdf21b-843d-4370-5a1d-08d6c68ce0e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2019 19:09:29.4112
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR06MB4726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ea2f8d60603efbd1cb4e193a593945a2fe24d264
-Gitweb:     https://git.kernel.org/tip/ea2f8d60603efbd1cb4e193a593945a2fe24d264
-Author:     Borislav Petkov <bp@suse.de>
-AuthorDate: Sun, 21 Apr 2019 20:35:24 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Sun, 21 Apr 2019 20:48:51 +0200
-
-x86/fault: Make fault messages more succinct
-
-So we are going to be staring at those in the next years, let's make
-them more succinct. In particular:
-
- - change "address = " to "address: "
-
- - "-privileged" reads funny. It should be simply "kernel" or "user"
-
- - "from kernel code" reads funny too. "kernel mode" or "user mode" is
-   more natural.
-
-An actual example says more than 1000 words, of course:
-
-  [    0.248370] BUG: kernel NULL pointer dereference, address: 00000000000005b8
-  [    0.249120] #PF: supervisor write access in kernel mode
-  [    0.249717] #PF: error_code(0x0002) - not-present page
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: dave.hansen@linux.intel.com
-Cc: luto@kernel.org
-Cc: riel@surriel.com
-Cc: sean.j.christopherson@intel.com
-Cc: yu-cheng.yu@intel.com
-Link: http://lkml.kernel.org/r/20190421183524.GC6048@zn.tnic
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/mm/fault.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 74c9204c5751..a0df19b0897d 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -630,13 +630,13 @@ show_fault_oops(struct pt_regs *regs, unsigned long error_code, unsigned long ad
- 	}
- 
- 	if (address < PAGE_SIZE && !user_mode(regs))
--		pr_alert("BUG: kernel NULL pointer dereference, address = %px\n",
-+		pr_alert("BUG: kernel NULL pointer dereference, address: %px\n",
- 			(void *)address);
- 	else
--		pr_alert("BUG: unable to handle page fault for address = %px\n",
-+		pr_alert("BUG: unable to handle page fault for address: %px\n",
- 			(void *)address);
- 
--	pr_alert("#PF: %s-privileged %s from %s code\n",
-+	pr_alert("#PF: %s %s in %s mode\n",
- 		 (error_code & X86_PF_USER)  ? "user" : "supervisor",
- 		 (error_code & X86_PF_INSTR) ? "instruction fetch" :
- 		 (error_code & X86_PF_WRITE) ? "write access" :
+QWRkIGEgbmV3IHJlYm9vdCBtb2RlIHdyaXRlIGludGVyZmFjZSB0aGF0IGlzIHVzaW5nIGFuIE5W
+TUVNIGNlbGwNCnRvIHN0b3JlIHRoZSByZWJvb3QgbW9kZSBtYWdpYy4NCg0KU2lnbmVkLW9mZi1i
+eTogTmFuZG9yIEhhbiA8bmFuZG9yLmhhbkB2YWlzYWxhLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcG93
+ZXIvcmVzZXQvS2NvbmZpZyAgICAgICAgICAgICB8ICA5ICsrKw0KIGRyaXZlcnMvcG93ZXIvcmVz
+ZXQvTWFrZWZpbGUgICAgICAgICAgICB8ICAxICsNCiBkcml2ZXJzL3Bvd2VyL3Jlc2V0L252bWVt
+LXJlYm9vdC1tb2RlLmMgfCA3NiArKysrKysrKysrKysrKysrKysrKysrKysrDQogMyBmaWxlcyBj
+aGFuZ2VkLCA4NiBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcG93
+ZXIvcmVzZXQvbnZtZW0tcmVib290LW1vZGUuYw0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dl
+ci9yZXNldC9LY29uZmlnIGIvZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnDQppbmRleCA2NTMz
+YWE1NjBhYTEuLmJiNGE0ZTg1NGY5NiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcG93ZXIvcmVzZXQv
+S2NvbmZpZw0KKysrIGIvZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnDQpAQCAtMjQ1LDUgKzI0
+NSwxNCBAQCBjb25maWcgUE9XRVJfUkVTRVRfU0MyN1hYDQogCSAgUE1JQ3MgaW5jbHVkZXMgdGhl
+IFNDMjcyMCwgU0MyNzIxLCBTQzI3MjMsIFNDMjczMA0KIAkgIGFuZCBTQzI3MzEgY2hpcHMuDQog
+DQorY29uZmlnIE5WTUVNX1JFQk9PVF9NT0RFDQorCXRyaXN0YXRlICJHZW5lcmljIE5WTUVNIHJl
+Ym9vdCBtb2RlIGRyaXZlciINCisJc2VsZWN0IFJFQk9PVF9NT0RFDQorCWhlbHANCisJICBTYXkg
+eSBoZXJlIHdpbGwgZW5hYmxlIHJlYm9vdCBtb2RlIGRyaXZlci4gVGhpcyB3aWxsDQorCSAgZ2V0
+IHJlYm9vdCBtb2RlIGFyZ3VtZW50cyBhbmQgc3RvcmUgaXQgaW4gYSBOVk1FTSBjZWxsLA0KKwkg
+IHRoZW4gdGhlIGJvb3Rsb2FkZXIgY2FuIHJlYWQgaXQgYW5kIHRha2UgZGlmZmVyZW50DQorCSAg
+YWN0aW9uIGFjY29yZGluZyB0byB0aGUgbW9kZS4NCisNCiBlbmRpZg0KIA0KZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcG93ZXIvcmVzZXQvTWFrZWZpbGUgYi9kcml2ZXJzL3Bvd2VyL3Jlc2V0L01ha2Vm
+aWxlDQppbmRleCAwYWViZWU5NTRhYzEuLjg1ZGEzMTk4ZTRlMCAxMDA2NDQNCi0tLSBhL2RyaXZl
+cnMvcG93ZXIvcmVzZXQvTWFrZWZpbGUNCisrKyBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvTWFrZWZp
+bGUNCkBAIC0yOSwzICsyOSw0IEBAIG9iai0kKENPTkZJR19QT1dFUl9SRVNFVF9aWCkgKz0gengt
+cmVib290Lm8NCiBvYmotJChDT05GSUdfUkVCT09UX01PREUpICs9IHJlYm9vdC1tb2RlLm8NCiBv
+YmotJChDT05GSUdfU1lTQ09OX1JFQk9PVF9NT0RFKSArPSBzeXNjb24tcmVib290LW1vZGUubw0K
+IG9iai0kKENPTkZJR19QT1dFUl9SRVNFVF9TQzI3WFgpICs9IHNjMjd4eC1wb3dlcm9mZi5vDQor
+b2JqLSQoQ09ORklHX05WTUVNX1JFQk9PVF9NT0RFKSArPSBudm1lbS1yZWJvb3QtbW9kZS5vDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dlci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS5jIGIvZHJp
+dmVycy9wb3dlci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS5jDQpuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KaW5kZXggMDAwMDAwMDAwMDAwLi5lMjI5MzA4ZDQzZTINCi0tLSAvZGV2L251bGwNCisrKyBi
+L2RyaXZlcnMvcG93ZXIvcmVzZXQvbnZtZW0tcmVib290LW1vZGUuYw0KQEAgLTAsMCArMSw3NiBA
+QA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KKy8qDQorICogQ29weXJp
+Z2h0IChjKSBWYWlzYWxhIE95ai4gQWxsIHJpZ2h0cyByZXNlcnZlZC4NCisgKi8NCisNCisjaW5j
+bHVkZSA8bGludXgvaW5pdC5oPg0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCisjaW5jbHVk
+ZSA8bGludXgva2VybmVsLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mLmg+DQorI2luY2x1ZGUgPGxp
+bnV4L252bWVtLWNvbnN1bWVyLmg+DQorI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5o
+Pg0KKyNpbmNsdWRlIDxsaW51eC9yZWJvb3QtbW9kZS5oPg0KKw0KK3N0cnVjdCBudm1lbV9yZWJv
+b3RfbW9kZSB7DQorCXN0cnVjdCByZWJvb3RfbW9kZV9kcml2ZXIgcmVib290Ow0KKwlzdHJ1Y3Qg
+bnZtZW1fY2VsbCAqY2VsbDsNCit9Ow0KKw0KK3N0YXRpYyBpbnQgbnZtZW1fcmVib290X21vZGVf
+d3JpdGUoc3RydWN0IHJlYm9vdF9tb2RlX2RyaXZlciAqcmVib290LA0KKwkJCQkgICAgdW5zaWdu
+ZWQgaW50IG1hZ2ljKQ0KK3sNCisJaW50IHJldDsNCisJc3RydWN0IG52bWVtX3JlYm9vdF9tb2Rl
+ICpudm1lbV9yYm07DQorDQorCW52bWVtX3JibSA9IGNvbnRhaW5lcl9vZihyZWJvb3QsIHN0cnVj
+dCBudm1lbV9yZWJvb3RfbW9kZSwgcmVib290KTsNCisNCisJcmV0ID0gbnZtZW1fY2VsbF93cml0
+ZShudm1lbV9yYm0tPmNlbGwsICZtYWdpYywgc2l6ZW9mKG1hZ2ljKSk7DQorCWlmIChyZXQgPCAw
+KQ0KKwkJZGV2X2VycihyZWJvb3QtPmRldiwgInVwZGF0ZSByZWJvb3QgbW9kZSBiaXRzIGZhaWxl
+ZFxuIik7DQorDQorCXJldHVybiByZXQ7DQorfQ0KKw0KK3N0YXRpYyBpbnQgbnZtZW1fcmVib290
+X21vZGVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCit7DQorCWludCByZXQ7
+DQorCXN0cnVjdCBudm1lbV9yZWJvb3RfbW9kZSAqbnZtZW1fcmJtOw0KKw0KKwludm1lbV9yYm0g
+PSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpudm1lbV9yYm0pLCBHRlBfS0VSTkVM
+KTsNCisJaWYgKCFudm1lbV9yYm0pDQorCQlyZXR1cm4gLUVOT01FTTsNCisNCisJbnZtZW1fcmJt
+LT5yZWJvb3QuZGV2ID0gJnBkZXYtPmRldjsNCisJbnZtZW1fcmJtLT5yZWJvb3Qud3JpdGUgPSBu
+dm1lbV9yZWJvb3RfbW9kZV93cml0ZTsNCisNCisJbnZtZW1fcmJtLT5jZWxsID0gZGV2bV9udm1l
+bV9jZWxsX2dldCgmcGRldi0+ZGV2LCAicmVib290LW1vZGUiKTsNCisJaWYgKElTX0VSUihudm1l
+bV9yYm0tPmNlbGwpKSB7DQorCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0IHRo
+ZSBudm1lbSBjZWxsIHJlYm9vdC1tb2RlXG4iKTsNCisJCXJldHVybiBQVFJfRVJSKG52bWVtX3Ji
+bS0+Y2VsbCk7DQorCX0NCisNCisJcmV0ID0gZGV2bV9yZWJvb3RfbW9kZV9yZWdpc3RlcigmcGRl
+di0+ZGV2LCAmbnZtZW1fcmJtLT5yZWJvb3QpOw0KKwlpZiAocmV0KQ0KKwkJZGV2X2VycigmcGRl
+di0+ZGV2LCAiY2FuJ3QgcmVnaXN0ZXIgcmVib290IG1vZGVcbiIpOw0KKw0KKwlyZXR1cm4gcmV0
+Ow0KK30NCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBudm1lbV9yZWJvb3Rf
+bW9kZV9vZl9tYXRjaFtdID0gew0KKwl7IC5jb21wYXRpYmxlID0gIm52bWVtLXJlYm9vdC1tb2Rl
+IiB9LA0KKwl7fQ0KK307DQorTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbnZtZW1fcmVib290X21v
+ZGVfb2ZfbWF0Y2gpOw0KKw0KK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIG52bWVtX3Jl
+Ym9vdF9tb2RlX2RyaXZlciA9IHsNCisJLnByb2JlID0gbnZtZW1fcmVib290X21vZGVfcHJvYmUs
+DQorCS5kcml2ZXIgPSB7DQorCQkubmFtZSA9ICJudm1lbS1yZWJvb3QtbW9kZSIsDQorCQkub2Zf
+bWF0Y2hfdGFibGUgPSBudm1lbV9yZWJvb3RfbW9kZV9vZl9tYXRjaCwNCisJfSwNCit9Ow0KK21v
+ZHVsZV9wbGF0Zm9ybV9kcml2ZXIobnZtZW1fcmVib290X21vZGVfZHJpdmVyKTsNCisNCitNT0RV
+TEVfQVVUSE9SKCJOYW5kb3IgSGFuIDxuYW5kb3IuaGFuQHZhaXNhbGEuY29tPiIpOw0KK01PRFVM
+RV9ERVNDUklQVElPTigiTlZNRU0gcmVib290IG1vZGUgZHJpdmVyIik7DQorTU9EVUxFX0xJQ0VO
+U0UoIkdQTCIpOw0KLS0gDQoyLjE3LjINCg0K
