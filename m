@@ -2,107 +2,235 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C8BC282E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 06:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE043C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 06:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF3F20869
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 06:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7D7218A6
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 06:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555829139;
+	bh=ZWBWOtLK79YyuX9UoGLt9uQPTihlzGl6rkmhTwAOF/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YuoCCSb1ygdx8C6xYrfxdlyYT/PqzRhp3gt32Li6Luzxl0fi7o7uQJDMpdtw0Cu4j
+	 eii1/5shNYigehqUUB9SyjhL9IzmsnICIbiGvYuE0wapCSakIa28+fG5bHG4j2Q2v7
+	 a7BrrsbpnZe+Y/OjVVLU0Sd5ewK2bsIwi7D8itsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfDUGjK (ORCPT
+        id S1726224AbfDUGpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 02:39:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725937AbfDUGjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 02:39:10 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3L6XUDd057562
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 02:39:08 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s0gqeuwh0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 02:39:08 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 21 Apr 2019 07:39:06 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 21 Apr 2019 07:39:03 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3L6d2FV52625588
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 21 Apr 2019 06:39:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35FB952052;
-        Sun, 21 Apr 2019 06:39:02 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 6B7BA52050;
-        Sun, 21 Apr 2019 06:39:01 +0000 (GMT)
-Date:   Sun, 21 Apr 2019 09:38:59 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
-Subject: Re: DISCONTIGMEM is deprecated
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
+        Sun, 21 Apr 2019 02:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfDUGph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 02:45:37 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B62E2087F;
+        Sun, 21 Apr 2019 06:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555829136;
+        bh=ZWBWOtLK79YyuX9UoGLt9uQPTihlzGl6rkmhTwAOF/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hEHa13BO3Cl4VdDikj5kQTuGrXIPIzXqXGcUM8GBB/BcEzqYJqdJXd76/NlHRjtJs
+         IyiUrlKZhcqoLXHat0MJAI5Yq5IZ83yhMxHJuhRbKm0TxKk4RGjq5n/+32dDAYEiI1
+         caRjPb7ADV1n97GuC8lOUhprDeWdkbHItpCTg1xg=
+Date:   Sun, 21 Apr 2019 14:45:19 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andy Tang <andy.tang@nxp.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal
+ zone node
+Message-ID: <20190421064517.GA19962@dragon>
+References: <20190411083236.9377-1-andy.tang@nxp.com>
+ <915c86d8-d00e-f1e1-e7f5-24bc225c8e42@linaro.org>
+ <AM6PR04MB4326561F037194D84CEB011AF3280@AM6PR04MB4326.eurprd04.prod.outlook.com>
+ <6be740a0-aaa7-6b49-ba82-8d04d47b2339@linaro.org>
+ <VI1PR04MB4333D0D121B60E2CDCE820BEF3260@VI1PR04MB4333.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190419140521.GI7751@bombadil.infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19042106-0016-0000-0000-00000271078B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042106-0017-0000-0000-000032CD6817
-Message-Id: <20190421063859.GA19926@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=463 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904210050
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB4333D0D121B60E2CDCE820BEF3260@VI1PR04MB4333.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 07:05:21AM -0700, Matthew Wilcox wrote:
-> On Fri, Apr 19, 2019 at 10:43:35AM +0100, Mel Gorman wrote:
-> > DISCONTIG is essentially deprecated and even parisc plans to move to
-> > SPARSEMEM so there is no need to be fancy, this patch simply disables
-> > watermark boosting by default on DISCONTIGMEM.
+On Thu, Apr 18, 2019 at 03:28:56AM +0000, Andy Tang wrote:
 > 
-> I don't think parisc is the only arch which uses DISCONTIGMEM for !NUMA
-> scenarios.  Grepping the arch/ directories shows:
+> > -----Original Message-----
+> > From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Sent: 2019年4月12日 20:19
+> > To: Andy Tang <andy.tang@nxp.com>; shawnguo@kernel.org
+> > Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org; rui.zhang@intel.com;
+> > edubezval@gmail.com
+> > Subject: Re: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal
+> > zone node
+> > 
+> > WARNING: This email was created outside of NXP. DO NOT CLICK links or
+> > attachments unless you recognize the sender and know the content is safe.
+> > 
+> > 
+> > 
+> > On 12/04/2019 09:47, Andy Tang wrote:
+> > >
+> > >> -----Original Message-----
+> > >> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > >> Sent: 2019年4月12日 3:15
+> > >> To: Andy Tang <andy.tang@nxp.com>; shawnguo@kernel.org
+> > >> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> > >> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >> linux-pm@vger.kernel.org; rui.zhang@intel.com; edubezval@gmail.com
+> > >> Subject: [EXT] Re: [PATCH v5] arm64: dts: ls1088a: add one more
+> > >> thermal zone node
+> > >>
+> > >> WARNING: This email was created outside of NXP. DO NOT CLICK links or
+> > >> attachments unless you recognize the sender and know the content is safe.
+> > >>
+> > >>
+> > >>
+> > >> On 11/04/2019 10:32, Yuantian Tang wrote:
+> > >>> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
+> > >>> cluster sensor is used to monitor the temperature of core and SoC
+> > >>> platform is for platform. The current dts only support the first sensor.
+> > >>> This patch adds the second sensor node to dts to enable it.
+> > >>>
+> > >>> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > >>> ---
+> > >>> v5:
+> > >>>       - update the thermal zone name due to the length limitation
+> > >>>       - remove cooling map in platform zone
+> > >>> v4:
+> > >>>       - use hyphen instead of underscore in node name
+> > >>> v3:
+> > >>>       - use more descriptive name for each zone
+> > >>> v2:
+> > >>>       - Add more information about sensors to description
+> > >>>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   28
+> > >> ++++++++++++++++++++---
+> > >>>  1 files changed, 24 insertions(+), 4 deletions(-)
+> > >>>
+> > >>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> index de93b42..de39672 100644
+> > >>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > >>> @@ -129,19 +129,19 @@
+> > >>>       };
+> > >>>
+> > >>>       thermal-zones {
+> > >>> -             cpu_thermal: cpu-thermal {
+> > >>> +             core-cluster {
+> > >>>                       polling-delay-passive = <1000>;
+> > >>>                       polling-delay = <5000>;
+> > >>>                       thermal-sensors = <&tmu 0>;
+> > >>>
+> > >>>                       trips {
+> > >>> -                             cpu_alert: cpu-alert {
+> > >>> +                             core_cluster_alert: core-cluster-alert
+> > >>> + {
+> > >>>                                       temperature = <85000>;
+> > >>>                                       hysteresis = <2000>;
+> > >>>                                       type = "passive";
+> > >>>                               };
+> > >>>
+> > >>> -                             cpu_crit: cpu-crit {
+> > >>> +                             core_cluster_crit: core-cluster-crit {
+> > >>>                                       temperature = <95000>;
+> > >>>                                       hysteresis = <2000>;
+> > >>>                                       type = "critical"; @@ -150,7
+> > >>> +150,7 @@
+> > >>>
+> > >>>                       cooling-maps {
+> > >>>                               map0 {
+> > >>> -                                     trip = <&cpu_alert>;
+> > >>> +                                     trip = <&core_cluster_alert>;
+> > >>>                                       cooling-device =
+> > >>>                                               <&cpu0
+> > >> THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > >>>                                               <&cpu1
+> > >> THERMAL_NO_LIMIT
+> > >>> THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
+> > >>>                               };
+> > >>>                       };
+> > >>>               };
+> > >>> +
+> > >>> +             platform {
+> > >>> +                     polling-delay-passive = <1000>;
+> > >>> +                     polling-delay = <5000>;
+> > >>> +                     thermal-sensors = <&tmu 1>;
+> > >>> +
+> > >>> +                     trips {
+> > >>> +                             platform-alert {
+> > >>> +                                     temperature = <85000>;
+> > >>> +                                     hysteresis = <2000>;
+> > >>> +                                     type = "passive";
+> > >>> +                             };
+> > >>> +
+> > >>> +                             platform-crit {
+> > >>> +                                     temperature = <95000>;
+> > >>> +                                     hysteresis = <2000>;
+> > >>> +                                     type = "critical";
+> > >>> +                             };
+> > >>> +                     };
+> > >>> +             };
+> > >>
+> > >>
+> > >> Unfortunately, the documentation says the thermal zone node must
+> > >> contain a "cooling-maps" entry.
+> > > That's a question.
+> > > If I add "cooling-maps", then multiple zones will use same cooling device.
+> > > If I don't, documentation says it is a " Required properties".
+> > > I am wondering how it was dealt with on other platform supporting multiple
+> > zones.
+> > 
+> > I think the problem comes from the fact there are no governors capable of
+> > handling multiple thermal zones.
+> > 
+> > The additional cooling device is the devfreq but as the mali driver is not
+> > upstream, the cooling map for this device does not appear. We can find the
+> > definitions and the driver in the AOSP [1].
+> > 
+> > Moreover, the power is usually managed by the IPA governor, but this one can
+> > not handle multiple thermal zones, so the cooling devices are joined together
+> > into a single thermal zone with their contribution to the cooling effect.
+> > 
+> > Other definitions I have seen upstream are incomplete or broken.
+> > 
+> > [1]
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fandroid.g
+> > ooglesource.com%2Fkernel%2Fhikey-linaro%2F%2B%2Frefs%2Fheads%2Fandr
+> > oid-hikey-linaro-4.14%2Farch%2Farm64%2Fboot%2Fdts%2Fhisilicon%2Fhi3660.
+> > dtsi%231340&amp;data=02%7C01%7Candy.tang%40nxp.com%7C559218b1622e
+> > 4603251908d6bf410e4b%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7
+> > C636906683466836985&amp;sdata=952xIcrr11g%2B0nl2lgKrG18SlRVgGV6L%2
+> > BMBL3U6UaiQ%3D&amp;reserved=0
+> Interesting. I think we have to accept the imperfect for now.
 > 
-> alpha (does support NUMA, but also non-NUMA DISCONTIGMEM)
-> arc (for supporting more than 1GB of memory)
-> ia64 (looks complicated ...)
-> m68k (for multiple chunks of memory)
-> mips (does support NUMA but also non-NUMA)
-> parisc (both NUMA and non-NUMA)
+> Hi Shawn,
+> Any comments?
 
-i386 NUMA as well
- 
-> I'm not sure that these architecture maintainers even know that DISCONTIGMEM
-> is deprecated.  Adding linux-arch to the cc.
-> 
+Sorry.  I'm not going to take a DTS change that contradicts with
+bindings.  If you think bindings is not reasonable, change the bindings
+first.
 
--- 
-Sincerely yours,
-Mike.
-
+Shawn
