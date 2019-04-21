@@ -2,223 +2,260 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D81C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 20:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70F1C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 21:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F382920870
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 20:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBumPsjy"
+	by mail.kernel.org (Postfix) with ESMTP id A52D620857
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 21:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfDUUlg (ORCPT
+        id S1726405AbfDUVIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 16:41:36 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32789 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbfDUUlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 16:41:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j10so8141372otq.0;
-        Sun, 21 Apr 2019 13:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r4o/6Q0G/X+qOkKNqTfldeNXYoQS6vEhD8PbuExrxH8=;
-        b=HBumPsjyKZAB7HHqtR0t+LC6m/LEcm+iS2AWpWm9wFNLlOrBIKed/aEktF3/WH71yt
-         mGnDrMNEMLeHw21gAyOz5m0iKpjnfifjct4GjpdVaIZ11iI/ALpULxzPj/zTGdAQ1wWd
-         gOajSQC0Es7h4NvX3Y4gP9UY/M8mMmk+v6OJjQnlduD4uqRJO6L32k3x4bJ4Gv4yUYXI
-         axA1u9BUbGb3dY+mUwTh2Exds2MQQp8yEmL9dSqrSLQu4I4/M5ed9aPlmiTiRYft3Akb
-         woEhBdLpmJxbiQ/gllDzbMGrcbQ3xILt/nS1zIVfiVaosawHj+3tJN3BH/GPLsF8FKWX
-         sWmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r4o/6Q0G/X+qOkKNqTfldeNXYoQS6vEhD8PbuExrxH8=;
-        b=CU3NCWIN0en7NWoNXMd5FE1Ysmass6nX+TgzpMW32hfgd/rZck90gUMWz+HHbD/Xfi
-         zSJIppTlGL0OqqwyGx30/eZ5e7rsWZBT7WgW/Y4DXP1zEvWKRrTmPDh4zZv5hPaH5Ebt
-         5bET4vfoGad0306Khd9TwuoGFHSUh6Y17hr/e7PNks3lu/rtDTMJJBb5Kr3hy8rtYPzF
-         TIuUJWr8l3vKKvPgOPxNuko0hJq/Sx9R7AlZNqvACXHT9K+S5EcqgD+1WxkOJhJtTioL
-         8vHG1BGfgp9XONAvhfD0kT+2qW9CB4xTOf5PNGCtKSw8/zFN4YyN2ug1tYO4HC0mLQgi
-         n1bw==
-X-Gm-Message-State: APjAAAW/mI71tZ8krdnezaijAGLwd7aIvAWeoGrCddSC7Rmm+QE0qXAY
-        FDv7sfIp9RGZdmLbgV+rcg==
-X-Google-Smtp-Source: APXvYqx526yDC7Nm/hWBDm1CCrhV5xsn9MZd1OlLbx71jexYmTv/T3fkDNqGu7W/c/1gcOOn+bGD0g==
-X-Received: by 2002:a05:6830:128c:: with SMTP id z12mr10055073otp.101.1555879294461;
-        Sun, 21 Apr 2019 13:41:34 -0700 (PDT)
-Received: from ubuntu (99-149-127-125.lightspeed.rlghnc.sbcglobal.net. [99.149.127.125])
-        by smtp.gmail.com with ESMTPSA id m21sm4877170otj.48.2019.04.21.13.41.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 21 Apr 2019 13:41:33 -0700 (PDT)
-Date:   Sun, 21 Apr 2019 16:41:26 -0400
-From:   Stephen Suryaputra <ssuryaextr@gmail.com>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Julian Anastasov <ja@ssi.bg>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-Message-ID: <20190421204126.GA19213@ubuntu>
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
+        Sun, 21 Apr 2019 17:08:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35748 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbfDUVIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 17:08:01 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 45B6E81F0F;
+        Sun, 21 Apr 2019 21:08:00 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-184.rdu2.redhat.com [10.10.120.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9455160BF4;
+        Sun, 21 Apr 2019 21:07:56 +0000 (UTC)
+Reply-To: llong@redhat.com
+Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
+ negative
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-15-longman@redhat.com>
+ <20190418135151.GB12232@hirez.programming.kicks-ass.net>
+ <d931916b-41f5-f12d-8c38-0cccbc00a301@redhat.com>
+ <20190418144036.GE12232@hirez.programming.kicks-ass.net>
+ <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
+ <20190419102647.GP7905@worktop.programming.kicks-ass.net>
+ <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+From:   Waiman Long <llong@redhat.com>
+Organization: Red Hat
+Message-ID: <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+Date:   Sun, 21 Apr 2019 17:07:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Sun, 21 Apr 2019 21:08:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On 4/19/19 3:39 PM, Waiman Long wrote:
+> On 04/19/2019 09:15 AM, Peter Zijlstra wrote:
+>> On Fri, Apr 19, 2019 at 03:03:04PM +0200, Peter Zijlstra wrote:
+>>> On Fri, Apr 19, 2019 at 02:02:07PM +0200, Peter Zijlstra wrote:
+>>>> On Fri, Apr 19, 2019 at 12:26:47PM +0200, Peter Zijlstra wrote:
+>>>>> I thought of a horrible horrible alternative:
+>>>> Hurm, that's broken as heck. Let me try again.
+>>> So I can't make that scheme work, it all ends up wanting to have
+>>> cmpxchg().
+>>>
+>>> Do we have a performance comparison somewhere of xadd vs cmpxchg
+>>> readers? I tried looking in the old threads, but I can't seem to locate
+>>> it.
+>>>
+>>> We need new instructions :/ Or more clever than I can muster just now.
+>> In particular, an (unsigned) saturation arithmetic variant of XADD would
+>> be very nice to have at this point.
+> I just want to clear about my current scheme. There will be 16 bits
+> allocated for reader count. I use the MS bit for signaling that there
+> are too many readers. So the fast path will fail and the readers will be
+> put into the wait list. This effectively limit readers to 32k-1, but it
+> doesn't mean the actual reader count cannot go over that. As long as the
+> actual count is less than 64k, everything should still work perfectly.
+> IOW, even though we have reached the limit of 32k, we need to pile on an
+> additional 32k readers to really overflow the count and cause problem.
 
-I looked at patchwork. This patch hasn't been accepted. Is there a plan
-to resubmit? It is very useful. I had to debug refcnt issues multiple
-times for my employer.
+How about the following chunks to disable preemption temporarily for the
+increment-check-decrement sequence?
 
-Thanks,
-
-Stephen.
-
-On Mon, Apr 15, 2019 at 09:35:01AM -0600, David Ahern wrote:
-> On 4/15/19 7:36 AM, Tetsuo Handa wrote:
-> > I traced using debug printk() patch shown below.
-> > 
-> 
-> I find tracepoints (see attached patch) and perf are easier to use to
-> debug device refcnt problems.
-> 
-> For example, limit the stack you have to deal with via sysctl -w
-> kernel.perf_event_max_stack=16, and add a filter (e.g., --filter 'name
-> == "lo"') to limit collection to a specific device.
-
-> From 068b1b8362ec5fd1b9dffdbd6e84474ada2eb829 Mon Sep 17 00:00:00 2001
-> From: David Ahern <dsa@cumulusnetworks.com>
-> Date: Thu, 11 Feb 2016 02:40:12 -0800
-> Subject: [PATCH] Add tracepoints to dev_hold and dev_put
-> 
-> Signed-off-by: David Ahern <dsa@cumulusnetworks.com>
-> ---
->  include/linux/netdevice.h  |  6 ++++++
->  include/trace/events/net.h | 38 ++++++++++++++++++++++++++++++++++++++
->  net/core/dev.c             | 21 +++++++++++++++++++++
->  3 files changed, 65 insertions(+)
-> 
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index 219f53c30cb3..7ef6fc672dfb 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -3193,6 +3193,7 @@ extern int		netdev_budget;
->  /* Called by rtnetlink.c:rtnl_unlock() */
->  void netdev_run_todo(void);
->  
-> +#if 0
->  /**
->   *	dev_put - release reference to device
->   *	@dev: network device
-> @@ -3214,6 +3215,11 @@ static inline void dev_hold(struct net_device *dev)
->  {
->  	this_cpu_inc(*dev->pcpu_refcnt);
->  }
-> +#else
-> +void dev_put(struct net_device *dev);
-> +void dev_hold(struct net_device *dev);
-> +
-> +#endif
->  
->  /* Carrier loss detection, dial on demand. The functions netif_carrier_on
->   * and _off may be called from IRQ context, but it is caller
-> diff --git a/include/trace/events/net.h b/include/trace/events/net.h
-> index 49cc7c3de252..9ed73dfe9d09 100644
-> --- a/include/trace/events/net.h
-> +++ b/include/trace/events/net.h
-> @@ -236,6 +236,44 @@ DEFINE_EVENT(net_dev_rx_verbose_template, netif_rx_ni_entry,
->  	TP_ARGS(skb)
->  );
->  
-> +TRACE_EVENT(dev_put,
-> +
-> +	TP_PROTO(struct net_device *dev),
-> +
-> +	TP_ARGS(dev),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(	name,		dev->name	)
-> +		__field(	int,		refcnt )
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, dev->name);
-> +		__entry->refcnt = netdev_refcnt_read(dev);
-> +	),
-> +
-> +	TP_printk("dev=%s refcnt %d", __get_str(name), __entry->refcnt)
-> +);
-> +
-> +TRACE_EVENT(dev_hold,
-> +
-> +	TP_PROTO(struct net_device *dev),
-> +
-> +	TP_ARGS(dev),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(	name,		dev->name	)
-> +		__field(	int,		refcnt )
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, dev->name);
-> +		__entry->refcnt = netdev_refcnt_read(dev);
-> +	),
-> +
-> +	TP_printk("dev=%s refcnt %d", __get_str(name), __entry->refcnt)
-> +);
-> +
->  #endif /* _TRACE_NET_H */
->  
->  /* This part must be outside protection */
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index f1284835b8c9..99ac067afd18 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -8117,3 +8117,24 @@ static int __init net_dev_init(void)
->  }
->  
->  subsys_initcall(net_dev_init);
-> +
-> +
-> +void dev_put(struct net_device *dev)
-> +{
-> +	this_cpu_dec(*dev->pcpu_refcnt);
-> +	trace_dev_put(dev);
-> +}
-> +EXPORT_SYMBOL(dev_put);
-> +
-> +/**
-> + *      dev_hold - get reference to device
-> + *      @dev: network device
-> + *
-> + * Hold reference to device to keep it from being freed.
-> + */
-> +void dev_hold(struct net_device *dev)
-> +{
-> +	this_cpu_inc(*dev->pcpu_refcnt);
-> +	trace_dev_hold(dev);
-> +}
-> +EXPORT_SYMBOL(dev_hold);
-> -- 
-> 2.1.4
-> 
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index dd92b1a93919..4cc03ac66e13 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -250,6 +250,8 @@ do { \
+ #define preempt_enable_notrace()               barrier()
+ #define preemptible()                          0
+ 
++#define __preempt_disable_nop  /* preempt_disable() is nop */
++
+ #endif /* CONFIG_PREEMPT_COUNT */
+ 
+ #ifdef MODULE
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 043fd29b7534..54029e6af17b 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -256,11 +256,64 @@ static inline struct task_struct
+*rwsem_get_owner(struct r
+        return (struct task_struct *) (cowner
+                ? cowner | (sowner & RWSEM_NONSPINNABLE) : sowner);
+ }
++
++/*
++ * If __preempt_disable_nop is defined, calling preempt_disable() and
++ * preempt_enable() directly is the most efficient way. Otherwise, it may
++ * be more efficient to disable and enable interrupt instead for disabling
++ * preemption tempoarily.
++ */
++#ifdef __preempt_disable_nop
++#define disable_preemption()   preempt_disable()
++#define enable_preemption()    preempt_enable()
++#else
++#define disable_preemption()   local_irq_disable()
++#define enable_preemption()    local_irq_enable()
++#endif
++
++/*
++ * When the owner task structure pointer is merged into couunt, less bits
++ * will be available for readers. Therefore, there is a very slight chance
++ * that the reader count may overflow. We try to prevent that from
+happening
++ * by checking for the MS bit of the count and failing the trylock attempt
++ * if this bit is set.
++ *
++ * With preemption enabled, there is a remote possibility that preemption
++ * can happen in the narrow timing window between incrementing and
++ * decrementing the reader count and the task is put to sleep for a
++ * considerable amount of time. If sufficient number of such unfortunate
++ * sequence of events happen, we may still overflow the reader count.
++ * To avoid such possibility, we have to disable preemption for the
++ * whole increment-check-decrement sequence.
++ *
++ * The function returns true if there are too many readers and the count
++ * has already been properly decremented so the reader must go directly
++ * into the wait list.
++ */
++static inline bool rwsem_read_trylock(struct rw_semaphore *sem, long *cnt)
++{
++       bool wait = false;      /* Wait now flag */
++
++       disable_preemption();
++       *cnt = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+&sem->count);
++       if (unlikely(*cnt < 0)) {
++               atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
++               wait = true;
++       }
++       enable_preemption();
++       return wait;
++}
+ #else /* !CONFIG_RWSEM_OWNER_COUNT */
+ static inline struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
+ {
+        return READ_ONCE(sem->owner);
+ }
++
++static inline bool rwsem_read_trylock(struct rw_semaphore *sem, long *cnt)
++{
++       *cnt = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+&sem->count);
++       return false;
++}
+ #endif /* CONFIG_RWSEM_OWNER_COUNT */
+ 
+ /*
+@@ -981,32 +1034,18 @@ static inline void clear_wr_nonspinnable(struct
+rw_semaph
+  * Wait for the read lock to be granted
+  */
+ static struct rw_semaphore __sched *
+-rwsem_down_read_slowpath(struct rw_semaphore *sem, int state, long count)
++rwsem_down_read_slowpath(struct rw_semaphore *sem, int state, const
+bool wait)
+ {
+-       long adjustment = -RWSEM_READER_BIAS;
++       long count, adjustment = -RWSEM_READER_BIAS;
+        bool wake = false;
+        struct rwsem_waiter waiter;
+        DEFINE_WAKE_Q(wake_q);
+ 
+-       if (unlikely(count < 0)) {
++       if (unlikely(wait)) {
+                /*
+-                * The sign bit has been set meaning that too many active
+-                * readers are present. We need to decrement reader count &
+-                * enter wait queue immediately to avoid overflowing the
+-                * reader count.
+-                *
+-                * As preemption is not disabled, there is a remote
+-                * possibility that preemption can happen in the narrow
+-                * timing window between incrementing and decrementing
+-                * the reader count and the task is put to sleep for a
+-                * considerable amount of time. If sufficient number
+-                * of such unfortunate sequence of events happen, we
+-                * may still overflow the reader count. It is extremely
+-                * unlikey, though. If this is a concern, we should consider
+-                * disable preemption during this timing window to make
+-                * sure that such unfortunate event will not happen.
++                * The reader count has already been decremented and the
++                * reader should go directly into the wait list now.
+                 */
+-               atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+                adjustment = 0;
+                goto queue;
+        }
+@@ -1358,11 +1397,12 @@ static struct rw_semaphore
+*rwsem_downgrade_wake(struct
+  */
+ inline void __down_read(struct rw_semaphore *sem)
+ {
+-       long tmp = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+-                                                &sem->count);
++       long tmp;
++       bool wait;
+ 
++       wait = rwsem_read_trylock(sem, &tmp);
+        if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
+-               rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE, tmp);
++               rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE, wait);
+                DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+        } else {
+                rwsem_set_reader_owned(sem);
+@@ -1371,11 +1411,12 @@ inline void __down_read(struct rw_semaphore *sem)
+ 
+ static inline int __down_read_killable(struct rw_semaphore *sem)
+ {
+-       long tmp = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+-                                                &sem->count);
++       long tmp;
++       bool wait;
+ 
++       wait = rwsem_read_trylock(sem, &tmp);
+        if (unlikely(tmp & RWSEM_READ_FAILED_MASK)) {
+-               if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE,
+tmp)))
++               if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE,
+wait)))
+                        return -EINTR;
+                DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+        } else {
 
