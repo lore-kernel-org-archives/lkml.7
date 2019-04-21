@@ -5,32 +5,23 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B875BC282E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 15:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB0C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 15:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D80920869
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 15:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D067620693
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 15:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfDUPHA (ORCPT
+        id S1727589AbfDUPLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 11:07:00 -0400
-Received: from mail.grenz-bonn.de ([178.33.37.38]:59863 "EHLO
+        Sun, 21 Apr 2019 11:11:13 -0400
+Received: from mail.grenz-bonn.de ([178.33.37.38]:50291 "EHLO
         mail.grenz-bonn.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfDUPG6 (ORCPT
+        with ESMTP id S1727228AbfDUPLN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 11:06:58 -0400
+        Sun, 21 Apr 2019 11:11:13 -0400
 Received: from [192.168.178.151] (p57B0D1DA.dip0.t-ipconnect.de [87.176.209.218])
-        by ks357529.kimsufi.com (Postfix) with ESMTPSA id BF13289A83;
-        Sun, 21 Apr 2019 16:58:17 +0200 (CEST)
-Subject: Re: [PATCH] ptrace.2: Improve clarity for multi-threaded tracers
-To:     mtk.manpages@gmail.com
-Cc:     "Dmitry V. Levin" <ldv@altlinux.org>,
-        lkml <linux-kernel@vger.kernel.org>, cleverca22@gmail.com,
-        linux-man <linux-man@vger.kernel.org>
-References: <48bb7c89-abb9-1e88-fee3-fb42d4032d12@nh2.me>
- <bfa474c6-5b13-652d-2fd8-16b2be7efb62@nh2.me>
- <20190217221523.GA9233@altlinux.org>
- <CAKgNAkhNCE24+QEYpQjcAjN2ktQe_JdAd7sP9rHR90iA228-yw@mail.gmail.com>
+        by ks357529.kimsufi.com (Postfix) with ESMTPSA id 6FFEF89A75
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 17:11:11 +0200 (CEST)
 From:   =?UTF-8?Q?Niklas_Hamb=c3=bcchen?= <mail@nh2.me>
 Openpgp: preference=signencrypt
 Autocrypt: addr=mail@nh2.me; prefer-encrypt=mutual; keydata=
@@ -117,12 +108,13 @@ Autocrypt: addr=mail@nh2.me; prefer-encrypt=mutual; keydata=
  6NGMsDuaqJ8h/fVs+MxDehnaVnvIF7TDGv9jz3mgqzbrToGXAmpzhhVM3RWIora1j91WzMSL
  +KN/YNvJggdPofH4QwVocD3pSXnLMOdqya8mwBv1pHdwSL4Ug7RAWIVgeBAv0ufeElOJQNjp
  pg16v3C1dl0LUhDYFBJRnknYxq7yCFUZHRl2VpbnzV1aQ2g=
-Message-ID: <ac1d22f1-72d8-a543-0e8d-23fa6da9919e@nh2.me>
-Date:   Sun, 21 Apr 2019 16:58:17 +0200
+To:     lkml <linux-kernel@vger.kernel.org>
+Subject: Reasons for oldconfig resetting config options to =m
+Message-ID: <9500a6a9-d63c-4572-7281-50e744c15679@nh2.me>
+Date:   Sun, 21 Apr 2019 17:11:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAKgNAkhNCE24+QEYpQjcAjN2ktQe_JdAd7sP9rHR90iA228-yw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -131,11 +123,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Michael,
+When you set an option to `=y` but one of its dependencies is set to `=m`, then `make oldconfig` will reset it back to `=m` as well.
 
-On 2019-02-25 16:51, Michael Kerrisk (man-pages) wrote:
-> Do you plan to revise this patch in the light of Dmitry's comments?
+That makes sense, but does there exist a feature somewhere that can tell me explicitly when this happens, ideally with a reason like:
 
-sorry for the delay, I do intend to finish it and just replied.
+    Resetting CONFIG_USB_STORAGE from =y to =m
+        because its dependency CONFIG_... is set to =m
+        Consequently also resetting the following dependent options from =y to =m:
+            CONFIG_USB_STORAGE_REALTEK
+            CONFIG_USB_...
 
+This would help tuning kernel configs in situations where menuconfig is not appropriate, for example when working with diffs of configs.
+
+Is there such tooling, or what do people use?
+
+Thanks,
 Niklas
