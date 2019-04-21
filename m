@@ -7,63 +7,61 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A394C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82D4C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C912087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831452087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 11:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oiG6p+L5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Magw5xp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfDULsU (ORCPT
+        id S1727648AbfDULsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 07:48:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45849 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfDULsT (ORCPT
+        Sun, 21 Apr 2019 07:48:37 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36201 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfDULsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 07:48:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y3so4585076pgk.12;
-        Sun, 21 Apr 2019 04:48:19 -0700 (PDT)
+        Sun, 21 Apr 2019 07:48:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ck15so4559647plb.3;
+        Sun, 21 Apr 2019 04:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=h25SF50tyXVax+xbR9rwt5N9iky28EFEb4s4IWQ/1P0=;
-        b=oiG6p+L54Wro6phc+iiwvLShxIKHLoOq+V0jzo8HmPfC7ztQ8vyn55gkLq68S/JPzO
-         ziapPZd4mgXxBNhSL3ZGfIbmD3/MJBw7wH+JMohEvahInk+Uyw88Cz5ej28/5pExBbWD
-         pZ/968dUokRtdMCRc7HB1VaIJfYvagbmKjm9nQBuH7nsmpxq7ofcIY6A9NWAPFcvQjrl
-         F59MwDKsYYQkS4k1mqeWBOgO+pLDE0AeydbAQSk9tdEaLOUW+AgXEw3EOO5eSoJ0OKzH
-         AjnD++b7OzQ4W9B7JI39riki3ykcvzgND0LSGujdTT/KZnCQpBgJEgFhabKjPY9xZktd
-         zPKw==
+        bh=zPX8nddRpRzZMMKNuqNqkX83XY5HeqqpmfwgbraZ4I8=;
+        b=Magw5xp7IYb6lD2+6GvMxT4CLdN2GMjI3Bl+9a1NB4fwLE455oS7UMABMxdNxKN6UD
+         6xTGmydAUd/NUBYQ+pREv43BFIbaC+g9BV7WPYb3/l0Yw9k8rKqPGxtJLRvx8coP3BcU
+         hn6Aks5iGU84m+OAcHlaZAmqIZcW0OCrzmDj69G15NrY4i4ndaVSB2libpRCQoxcVT9q
+         iJBmIVxtH8kSmJM0MGCLWWVsL52nk8bqvia8w9CfWWCOtD3najg+uM7wzoUdWoE32AbW
+         SjOXcwhGLkXV2/zKeoVEkl52zAFIiI4RpIxPFIJheaYJaoPYTY6jcCmbA23hcckgrONr
+         4JNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=h25SF50tyXVax+xbR9rwt5N9iky28EFEb4s4IWQ/1P0=;
-        b=Jluo3f+w5/OhI1qC8qfBRUJjHW/IdmJAiHvVXZ/aj0FJ6cv6lef4IDJyP+ufLwBbdc
-         LWGjSdoEDSh01SOVFUwyGgIgMrLDsKip7LB9anIU8pdXkqW59uW7DdcfUSBtQBsIKQ79
-         N2n8FhLZMPM9EMqQN8BiGy113uZbMhSBzwuvI6tiTI9F/74T0BHj80tCALtgNXwI/ZEu
-         lHZ5ZYjALm87l1L6SVyEFHb2M7TAp2SL99ZYAKvXo0w0RyTvBg6HMNIaW3ouharQdQdH
-         9TtzkpSf3C7S2FaBO/iInWuHUvujVakI91f9IQT+AwV64q2ovLfZYc1gxtsa1C131mBs
-         8Cpg==
-X-Gm-Message-State: APjAAAX/o9DZfSnTbcDjIdMpzW6tgXorCiBO0JdzEcw1Dc6o6bbGChTw
-        RE5tEAsLvMNkJNsrdRWHa8U=
-X-Google-Smtp-Source: APXvYqy4euE0GEmW/Ht1Z3r7m0Veg/rXtlLMrGSzmNcIhYD/vcICr3xyf9JKJFCqgeoPO7TZS7uP/g==
-X-Received: by 2002:a63:4620:: with SMTP id t32mr13261697pga.363.1555847298833;
-        Sun, 21 Apr 2019 04:48:18 -0700 (PDT)
+        bh=zPX8nddRpRzZMMKNuqNqkX83XY5HeqqpmfwgbraZ4I8=;
+        b=GUyNRRRKXL9ka1/IaBuL/Ksgfj/b0QMBozeHHv4keVkVCck7gnHaD1rz+pQvdrjvK8
+         t2sHOcZGsozI32qzKEr6bnVeHZYehvedYKZWVlYDK2rIUqLhdVtH1M4cJ7DEYC9sq9CR
+         NJmfmhZoCQZjOHXUl45w8Vd66xfAINJ8/rG+IKhz3b1iJ79UtPosTDOFupl/HZaXFWWP
+         6K9M6e1eqd4kuFfO/3rvrcpbSKhKM4nd8UEVyPrJ8VZ6UKPTKcE6Aq/9GHQUXAu/Jewn
+         /BNwymuvVAhNE27HHPAAXLezh8hM9lPBH0/bsDxGRbdSb/lFGt4SRI2NaMaSvIpDCav7
+         E5pg==
+X-Gm-Message-State: APjAAAX6UrustssKIE/SPoVgcohNe6Fo4yOPJPXc6MzQF72YjIEksToH
+        BGl8yWgIW0+UXEqua2Zhro8=
+X-Google-Smtp-Source: APXvYqzq1j91dZEOGFBIzQtrWoud4sDwlQWxi2Hdq7rCMDAQOdkNFK3Q5UQ5H28TypvrT+fCKCDe/A==
+X-Received: by 2002:a17:902:2bc9:: with SMTP id l67mr14607103plb.237.1555847316330;
+        Sun, 21 Apr 2019 04:48:36 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id d187sm11316673pgc.43.2019.04.21.04.48.15
+        by smtp.googlemail.com with ESMTPSA id c5sm11081954pgh.5.2019.04.21.04.48.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 04:48:18 -0700 (PDT)
+        Sun, 21 Apr 2019 04:48:35 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Joerg Reuter <jreuter@yaina.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/06] net: ax25: fix misuse of %x
-Date:   Sun, 21 Apr 2019 19:48:06 +0800
-Message-Id: <20190421114806.20450-1-huangfq.daxian@gmail.com>
+        Jes Sorensen <jes@trained-monkey.org>,
+        "David S. Miller" <davem@davemloft.net>, linux-hippi@sunsite.dk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 05/06] net: hippi:Fix misuse of %x in rrunner.c
+Date:   Sun, 21 Apr 2019 19:48:26 +0800
+Message-Id: <20190421114826.20512-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,30 +69,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pointers should be printed with %p or %px rather than
-cast to long type and printed with %8.8lx.
-Change %8.8lx to %p to print the pointer.
+The pointer should be printed with %p or %px rather than
+cast to unsigned long type and printed with %08lx.
+Change %08lx to %p to print the pointer.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- net/ax25/af_ax25.c | 4 ++--
+ drivers/net/hippi/rrunner.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-index 5d01edf..90c2831 100644
---- a/net/ax25/af_ax25.c
-+++ b/net/ax25/af_ax25.c
-@@ -1888,8 +1888,8 @@ static int ax25_info_show(struct seq_file *seq, void *v)
- 	 * magic dev src_addr dest_addr,digi1,digi2,.. st vs vr va t1 t1 t2 t2 t3 t3 idle idle n2 n2 rtt window paclen Snd-Q Rcv-Q inode
- 	 */
- 
--	seq_printf(seq, "%8.8lx %s %s%s ",
--		   (long) ax25,
-+	seq_printf(seq, "%p %s %s%s ",
-+		   ax25,
- 		   ax25->ax25_dev == NULL? "???" : ax25->ax25_dev->dev->name,
- 		   ax2asc(buf, &ax25->source_addr),
- 		   ax25->iamdigi? "*":"");
+diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+index 029206e..0f7025f 100644
+--- a/drivers/net/hippi/rrunner.c
++++ b/drivers/net/hippi/rrunner.c
+@@ -1298,11 +1298,11 @@ static void rr_dump(struct net_device *dev)
+ 	if (rrpriv->tx_skbuff[cons]){
+ 		len = min_t(int, 0x80, rrpriv->tx_skbuff[cons]->len);
+ 		printk("skbuff for cons %i is valid - dumping data (0x%x bytes - skbuff len 0x%x)\n", cons, len, rrpriv->tx_skbuff[cons]->len);
+-		printk("mode 0x%x, size 0x%x,\n phys %08Lx, skbuff-addr %08lx, truesize 0x%x\n",
++		printk("mode 0x%x, size 0x%x,\n phys %08Lx, skbuff-addr %p, truesize 0x%x\n",
+ 		       rrpriv->tx_ring[cons].mode,
+ 		       rrpriv->tx_ring[cons].size,
+ 		       (unsigned long long) rrpriv->tx_ring[cons].addr.addrlo,
+-		       (unsigned long)rrpriv->tx_skbuff[cons]->data,
++		       rrpriv->tx_skbuff[cons]->data,
+ 		       (unsigned int)rrpriv->tx_skbuff[cons]->truesize);
+ 		for (i = 0; i < len; i++){
+ 			if (!(i & 7))
 -- 
 2.11.0
 
