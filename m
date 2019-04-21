@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADAFC282DD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF84C282E3
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0332087B
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354DB208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 01:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfDUB26 (ORCPT
+        id S1728188AbfDUB3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 20 Apr 2019 21:28:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3763 "EHLO mga18.intel.com"
+        Sat, 20 Apr 2019 21:29:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18104 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbfDUB2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726375AbfDUB2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 20 Apr 2019 21:28:49 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Apr 2019 18:28:47 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Apr 2019 18:28:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,376,1549958400"; 
-   d="scan'208";a="136008189"
+   d="scan'208";a="136008172"
 Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga008.jf.intel.com with ESMTP; 20 Apr 2019 18:24:07 -0700
+  by orsmga008.jf.intel.com with ESMTP; 20 Apr 2019 18:24:01 -0700
 From:   Lu Baolu <baolu.lu@linux.intel.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Joerg Roedel <joro@8bytes.org>
@@ -41,9 +41,9 @@ Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, alan.cox@intel.com,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v3 08/10] iommu/vt-d: Check whether device requires bounce buffer
-Date:   Sun, 21 Apr 2019 09:17:17 +0800
-Message-Id: <20190421011719.14909-9-baolu.lu@linux.intel.com>
+Subject: [PATCH v3 06/10] iommu/vt-d: Add trace events for domain map/unmap
+Date:   Sun, 21 Apr 2019 09:17:15 +0800
+Message-Id: <20190421011719.14909-7-baolu.lu@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190421011719.14909-1-baolu.lu@linux.intel.com>
 References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
@@ -52,81 +52,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a helper to check whether a device needs to
-use bounce buffer. It also provides a boot time option
-to disable the bounce buffer. Users can use this to
-prevent the iommu driver from using the bounce buffer
-for performance gain.
+This adds trace support for the Intel IOMMU driver. It
+also declares some events which could be used to trace
+the events when an IOVA is being mapped or unmapped in
+a domain.
 
 Cc: Ashok Raj <ashok.raj@intel.com>
 Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Tested-by: Xu Pengfei <pengfei.xu@intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@intel.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- drivers/iommu/intel-iommu.c                     | 17 +++++++++++++++++
- 2 files changed, 22 insertions(+)
+ drivers/iommu/Makefile             |   1 +
+ drivers/iommu/intel-trace.c        |  14 +++
+ include/trace/events/intel_iommu.h | 132 +++++++++++++++++++++++++++++
+ 3 files changed, 147 insertions(+)
+ create mode 100644 drivers/iommu/intel-trace.c
+ create mode 100644 include/trace/events/intel_iommu.h
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90bb644..86880eb3fc73 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1726,6 +1726,11 @@
- 			Note that using this option lowers the security
- 			provided by tboot because it makes the system
- 			vulnerable to DMA attacks.
-+		nobounce [Default off]
-+			Do not use the bounce buffer for untrusted devices like
-+			the Thunderbolt devices. This will treat the untrusted
-+			devices as the trusted ones, hence might expose security
-+			risks of DMA attacks.
- 
- 	intel_idle.max_cstate=	[KNL,HW,ACPI,X86]
- 			0	disables intel_idle and fall back on acpi_idle.
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index e4a164324bdd..0d80f26b8a72 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -380,6 +380,7 @@ static int intel_iommu_strict;
- static int intel_iommu_superpage = 1;
- static int intel_iommu_sm;
- static int iommu_identity_mapping;
-+static int intel_no_bounce;
- 
- #define IDENTMAP_ALL		1
- #define IDENTMAP_GFX		2
-@@ -396,6 +397,19 @@ EXPORT_SYMBOL_GPL(intel_iommu_gfx_mapped);
- static DEFINE_SPINLOCK(device_domain_lock);
- static LIST_HEAD(device_domain_list);
- 
-+static inline bool device_needs_bounce(struct device *dev)
-+{
-+	struct pci_dev *pdev = NULL;
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 8c71a15e986b..8b5fb8051281 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SMMU) += arm-smmu.o
+ obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+ obj-$(CONFIG_DMAR_TABLE) += dmar.o
+ obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
++obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
+ obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
+ obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
+ obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
+diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel-trace.c
+new file mode 100644
+index 000000000000..bfb6a6e37a88
+--- /dev/null
++++ b/drivers/iommu/intel-trace.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel IOMMU trace support
++ *
++ * Copyright (C) 2019 Intel Corporation
++ *
++ * Author: Lu Baolu <baolu.lu@linux.intel.com>
++ */
 +
-+	if (intel_no_bounce)
-+		return false;
++#include <linux/string.h>
++#include <linux/types.h>
 +
-+	if (dev_is_pci(dev))
-+		pdev = to_pci_dev(dev);
++#define CREATE_TRACE_POINTS
++#include <trace/events/intel_iommu.h>
+diff --git a/include/trace/events/intel_iommu.h b/include/trace/events/intel_iommu.h
+new file mode 100644
+index 000000000000..49ca57a90079
+--- /dev/null
++++ b/include/trace/events/intel_iommu.h
+@@ -0,0 +1,132 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Intel IOMMU trace support
++ *
++ * Copyright (C) 2019 Intel Corporation
++ *
++ * Author: Lu Baolu <baolu.lu@linux.intel.com>
++ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM intel_iommu
 +
-+	return pdev ? pdev->untrusted : false;
-+}
++#if !defined(_TRACE_INTEL_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_INTEL_IOMMU_H
 +
- /*
-  * Iterate over elements in device_domain_list and call the specified
-  * callback @fn against each element.
-@@ -478,6 +492,9 @@ static int __init intel_iommu_setup(char *str)
- 			printk(KERN_INFO
- 				"Intel-IOMMU: not forcing on after tboot. This could expose security risk for tboot\n");
- 			intel_iommu_tboot_noforce = 1;
-+		} else if (!strncmp(str, "nobounce", 8)) {
-+			pr_info("Intel-IOMMU: No bounce buffer. This could expose security risks of DMA attacks\n");
-+			intel_no_bounce = 1;
- 		}
- 
- 		str += strcspn(str, ",");
++#include <linux/tracepoint.h>
++#include <linux/intel-iommu.h>
++
++TRACE_EVENT(bounce_map_single,
++	TP_PROTO(struct device *dev, dma_addr_t dev_addr, phys_addr_t phys_addr,
++		 size_t size),
++
++	TP_ARGS(dev, dev_addr, phys_addr, size),
++
++	TP_STRUCT__entry(
++		__string(dev_name, dev_name(dev))
++		__field(dma_addr_t, dev_addr)
++		__field(phys_addr_t, phys_addr)
++		__field(size_t,	size)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name, dev_name(dev));
++		__entry->dev_addr = dev_addr;
++		__entry->phys_addr = phys_addr;
++		__entry->size = size;
++	),
++
++	TP_printk("dev=%s dev_addr=0x%llx phys_addr=0x%llx size=%zu",
++		  __get_str(dev_name),
++		  (unsigned long long)__entry->dev_addr,
++		  (unsigned long long)__entry->phys_addr,
++		  __entry->size)
++);
++
++TRACE_EVENT(bounce_unmap_single,
++	TP_PROTO(struct device *dev, dma_addr_t dev_addr, size_t size),
++
++	TP_ARGS(dev, dev_addr, size),
++
++	TP_STRUCT__entry(
++		__string(dev_name, dev_name(dev))
++		__field(dma_addr_t, dev_addr)
++		__field(size_t,	size)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name, dev_name(dev));
++		__entry->dev_addr = dev_addr;
++		__entry->size = size;
++	),
++
++	TP_printk("dev=%s dev_addr=0x%llx size=%zu",
++		  __get_str(dev_name),
++		  (unsigned long long)__entry->dev_addr,
++		  __entry->size)
++);
++
++TRACE_EVENT(bounce_map_sg,
++	TP_PROTO(struct device *dev, unsigned int i, unsigned int nelems,
++		 dma_addr_t dev_addr, phys_addr_t phys_addr, size_t size),
++
++	TP_ARGS(dev, i, nelems, dev_addr, phys_addr, size),
++
++	TP_STRUCT__entry(
++		__string(dev_name, dev_name(dev))
++		__field(unsigned int, i)
++		__field(unsigned int, last)
++		__field(dma_addr_t, dev_addr)
++		__field(phys_addr_t, phys_addr)
++		__field(size_t,	size)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name, dev_name(dev));
++		__entry->i = i;
++		__entry->last = nelems - 1;
++		__entry->dev_addr = dev_addr;
++		__entry->phys_addr = phys_addr;
++		__entry->size = size;
++	),
++
++	TP_printk("dev=%s elem=%u/%u dev_addr=0x%llx phys_addr=0x%llx size=%zu",
++		  __get_str(dev_name), __entry->i, __entry->last,
++		  (unsigned long long)__entry->dev_addr,
++		  (unsigned long long)__entry->phys_addr,
++		  __entry->size)
++);
++
++TRACE_EVENT(bounce_unmap_sg,
++	TP_PROTO(struct device *dev, unsigned int i, unsigned int nelems,
++		 dma_addr_t dev_addr, phys_addr_t phys_addr, size_t size),
++
++	TP_ARGS(dev, i, nelems, dev_addr, phys_addr, size),
++
++	TP_STRUCT__entry(
++		__string(dev_name, dev_name(dev))
++		__field(unsigned int, i)
++		__field(unsigned int, last)
++		__field(dma_addr_t, dev_addr)
++		__field(phys_addr_t, phys_addr)
++		__field(size_t,	size)
++	),
++
++	TP_fast_assign(
++		__assign_str(dev_name, dev_name(dev));
++		__entry->i = i;
++		__entry->last = nelems - 1;
++		__entry->dev_addr = dev_addr;
++		__entry->phys_addr = phys_addr;
++		__entry->size = size;
++	),
++
++	TP_printk("dev=%s elem=%u/%u dev_addr=0x%llx phys_addr=0x%llx size=%zu",
++		  __get_str(dev_name), __entry->i, __entry->last,
++		  (unsigned long long)__entry->dev_addr,
++		  (unsigned long long)__entry->phys_addr,
++		  __entry->size)
++);
++#endif /* _TRACE_INTEL_IOMMU_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 -- 
 2.17.1
 
