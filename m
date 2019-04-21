@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775F5C282E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC32C282E3
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 17:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F4C20833
+	by mail.kernel.org (Postfix) with ESMTP id 1AE852147C
 	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 17:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG50kJM/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kumHUCwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfDURuA (ORCPT
+        id S1726644AbfDURuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 21 Apr 2019 13:50:00 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44757 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfDURtg (ORCPT
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37034 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfDURto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 13:49:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y12so2187894plk.11;
-        Sun, 21 Apr 2019 10:49:35 -0700 (PDT)
+        Sun, 21 Apr 2019 13:49:44 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w23so4762508ply.4;
+        Sun, 21 Apr 2019 10:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8Hedjd6/QrfwVr6rJtP3KtvrNawuf3a3CTYMY8X3Q9M=;
-        b=eG50kJM/D9i2y8Mhka+SYhJWuH1ivdQBonHmv8qSta0lrQQwL7+WocaemINuqRn7Kg
-         BV1hhdcJeuCvgneKLawuhBc3aUlytMYIrJAOX/Qb38Qk2U+M9kKrUUHKakUcTiIvYJrb
-         o3QqzSJMBRTk7DN+p0N02yc4MoFMI95VLOMBsXCh2m8gH6e6STpRisiZHNq7r47kkG5t
-         jhbyrz9Ct18eF0/ZZ6CbEnwqZyMaXyz2awFzzAMXkQuWgKH9x/1d5y6hI0HS4EQYR2fi
-         Cbpd7Fbib1+tIJElr0Jq2il7O+7w142OhwwwaP/ZsTYkFkmRs78f6TVZlsR7icTQi+fS
-         rgBQ==
+        bh=pwolm0wYaQsW4TCiJ23NvsAidX1qtREXRI4t9bNq3t4=;
+        b=kumHUCwIUoicKVMidgvck21qRN0kWl8263cSCVMsR0ZJ04teu5qRgGw2cCK5RsV7+P
+         HcEKJZFqNLmGCNAmbnbp7Ds0zExL2LhYfdslcIQx3yjHKCEJBEOUD11Lbo7PeYp3bjKL
+         mR8cVhF7/HZ6GLAmo4z0QZU88xuQQPHK9hfWHdnBqx7pO3tGHid7oCv9YXuPZGeSr4GP
+         9JoTpMio76b2RqFD+bkKQ91l+cStQbgUbrWOfgDkATU9UlUkfHZ+ljBNSJ3TRoc84RU0
+         ILyCC+j7xAmjwwKqowK16UjY6PeTxqx/9Zqk5N3ZVA0rPxzWmR/FWX7zq2xNyJX4hKKz
+         PSwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8Hedjd6/QrfwVr6rJtP3KtvrNawuf3a3CTYMY8X3Q9M=;
-        b=p6TkFNWyA2hZY/10fn32NEReNPwYSKVApbHEyI/bT0zz6CmVymnnUj///KNtUERqo7
-         F1pJKC3dH/cQ5eiJkIZeqk1X0SFwjml6mOcmw29qDTl2hy+QvymmlfbB0qeeI2X2ynmD
-         YmOUNRrfSIrG/x98m+4OZ5NKWTzTA3nVts6jyrv2xTsuYX8bh/myx+b5NDkcUB/gxeq0
-         w/PRkULy7YSG3FLy0v7WlsInEoFDVAjKGAURLzsiBw8sJHJWDR1HQ6kYYaQWhBHoL5Nv
-         zupqvxZva/7mq0naLxTpvXLQV3a5fu2EP5XOrbQOBaSX6gVT6m0TLDKJQ4ez2xYA5lds
-         PnUg==
-X-Gm-Message-State: APjAAAWioTPbtx3AY7AQEVvdCDgsyRjkSwIf2Vo+yM9uOwF0lMvCx3af
-        ofj+qbmHA57roMQI5kHSGu0=
-X-Google-Smtp-Source: APXvYqwRjpEbFeJKmNItY7bG4fMgAC8e4jErZDaRvH8XJ4h7e7ir9hP3UbtZoblzM/TZwvtRp6Vw4Q==
-X-Received: by 2002:a17:902:362:: with SMTP id 89mr15321619pld.172.1555868975303;
-        Sun, 21 Apr 2019 10:49:35 -0700 (PDT)
+        bh=pwolm0wYaQsW4TCiJ23NvsAidX1qtREXRI4t9bNq3t4=;
+        b=c9eqJ6VJXBvcR3il2kWqRPzuzfJwgDid5Dk5SfOmk7lFWVmT6v4YohNtNsRzdc6U6c
+         do6VmJnWNqTtMA1OWFkqLfskK+kT3pb+0GWNhy5mJQHfEiOO+au5z3wXgLhrLiGLZAuC
+         2TF7RxRgG+PgcPEQ7nQAjV4+Ueqviicnhj0RH6jM+5u0KZga24o5B7oacK1t63go9V6I
+         j3aLXhXe4sceXhDtu+jjZfHrf9oKo19dgPoIBMTysqKEvwh8+CnkJo2At8tsE71v8i4r
+         RnEwL7ANYg2/4fhlsZh1hb/a9QNly08lUVw5/qrztWTGCkl9zvDVqw+PtSehXo6Akjj+
+         cPNA==
+X-Gm-Message-State: APjAAAXNNlAd1gVMyeLEOU7EBYUpTecqyrgVDGZ9DfLCkWCaArZSZud9
+        9YSAtea8/qdRu8axJ0D5Kdo=
+X-Google-Smtp-Source: APXvYqwd0TiSWYl7isxd51Zdrf6b7zOPLxU72lFS+3VMMzfYuXUuPCvnDTq0s0D/7ZPlEvXpf39NaA==
+X-Received: by 2002:a17:902:7081:: with SMTP id z1mr15447072plk.252.1555868983426;
+        Sun, 21 Apr 2019 10:49:43 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id g63sm16279233pfc.127.2019.04.21.10.49.27
+        by smtp.gmail.com with ESMTPSA id g63sm16279233pfc.127.2019.04.21.10.49.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 10:49:34 -0700 (PDT)
+        Sun, 21 Apr 2019 10:49:42 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,9 +67,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/5] mfd: max77620: Support Maxim 77663
-Date:   Sun, 21 Apr 2019 20:48:31 +0300
-Message-Id: <20190421174834.9366-3-digetx@gmail.com>
+Subject: [PATCH v1 3/5] regulator: max77620: Support Maxim 77663
+Date:   Sun, 21 Apr 2019 20:48:32 +0300
+Message-Id: <20190421174834.9366-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190421174834.9366-1-digetx@gmail.com>
 References: <20190421174834.9366-1-digetx@gmail.com>
@@ -80,163 +80,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Maxim 77663 using the Max77620 driver. The hardware
-is very similar to Max77663/20024, although there are couple minor
-differences.
+Add support for Maxim 77663.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/mfd/max77620.c       | 68 +++++++++++++++++++++++++++++++++++-
- include/linux/mfd/max77620.h |  1 +
- 2 files changed, 68 insertions(+), 1 deletion(-)
+ drivers/regulator/max77620-regulator.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
-index d8ddd1a6f304..3b6dded0595c 100644
---- a/drivers/mfd/max77620.c
-+++ b/drivers/mfd/max77620.c
-@@ -111,6 +111,25 @@ static const struct mfd_cell max20024_children[] = {
- 	},
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index 1607ac673e44..7d6b53828056 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -761,6 +761,24 @@ static struct max77620_regulator_info max20024_regs_info[MAX77620_NUM_REGS] = {
+ 	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
  };
  
-+static const struct mfd_cell max77663_children[] = {
-+	{ .name = "max77620-clock", },
++static struct max77620_regulator_info max77663_regs_info[MAX77620_NUM_REGS] = {
++	RAIL_SD(SD0, sd0, "in-sd0", SD0, 600000, 3387500, 12500, 0xFF, NONE),
++	RAIL_SD(SD1, sd1, "in-sd1", SD1, 800000, 1587500, 12500, 0xFF, NONE),
++	RAIL_SD(SD2, sd2, "in-sd2", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD3, sd3, "in-sd3", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD4, sd4, "in-sd4", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++
++	RAIL_LDO(LDO0, ldo0, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO1, ldo1, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO2, ldo2, "in-ldo2",   P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO3, ldo3, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO4, ldo4, "in-ldo4-6", P, 800000, 1587500, 12500),
++	RAIL_LDO(LDO5, ldo5, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO6, ldo6, "in-ldo4-6", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO7, ldo7, "in-ldo7-8", N, 800000, 3950000, 50000),
++	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
++};
++
+ static int max77620_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct max77620_chip *max77620_chip = dev_get_drvdata(pdev->dev.parent);
+@@ -785,9 +803,14 @@ static int max77620_regulator_probe(struct platform_device *pdev)
+ 	case MAX77620:
+ 		rinfo = max77620_regs_info;
+ 		break;
+-	default:
++	case MAX20024:
+ 		rinfo = max20024_regs_info;
+ 		break;
++	case MAX77663:
++		rinfo = max77663_regs_info;
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
+ 	config.regmap = pmic->rmap;
+@@ -881,6 +904,7 @@ static const struct dev_pm_ops max77620_regulator_pm_ops = {
+ static const struct platform_device_id max77620_regulator_devtype[] = {
+ 	{ .name = "max77620-pmic", },
+ 	{ .name = "max20024-pmic", },
 +	{ .name = "max77663-pmic", },
-+	{ .name = "max77620-watchdog", },
-+	{
-+		.name = "max77620-gpio",
-+		.resources = gpio_resources,
-+		.num_resources = ARRAY_SIZE(gpio_resources),
-+	}, {
-+		.name = "max77620-rtc",
-+		.resources = rtc_resources,
-+		.num_resources = ARRAY_SIZE(rtc_resources),
-+	}, {
-+		.name = "max77663-power",
-+		.resources = power_resources,
-+		.num_resources = ARRAY_SIZE(power_resources),
-+	},
-+};
-+
- static const struct regmap_range max77620_readable_ranges[] = {
- 	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
- };
-@@ -171,6 +190,35 @@ static const struct regmap_config max20024_regmap_config = {
- 	.volatile_table = &max77620_volatile_table,
- };
- 
-+static const struct regmap_range max77663_readable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
-+};
-+
-+static const struct regmap_access_table max77663_readable_table = {
-+	.yes_ranges = max77663_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77663_readable_ranges),
-+};
-+
-+static const struct regmap_range max77663_writable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
-+};
-+
-+static const struct regmap_access_table max77663_writable_table = {
-+	.yes_ranges = max77663_writable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77663_writable_ranges),
-+};
-+
-+static const struct regmap_config max77663_regmap_config = {
-+	.name = "power-slave",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MAX77620_REG_CID5 + 1,
-+	.cache_type = REGCACHE_RBTREE,
-+	.rd_table = &max77663_readable_table,
-+	.wr_table = &max77663_writable_table,
-+	.volatile_table = &max77620_volatile_table,
-+};
-+
- /*
-  * MAX77620 and MAX20024 has the following steps of the interrupt handling
-  * for TOP interrupts:
-@@ -237,6 +285,9 @@ static int max77620_get_fps_period_reg_value(struct max77620_chip *chip,
- 	case MAX20024:
- 		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
- 		break;
-+	case MAX77663:
-+		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
-+		break;
- 	case MAX77620:
- 		fps_min_period = MAX77620_FPS_PERIOD_MIN_US;
- 		break;
-@@ -274,6 +325,9 @@ static int max77620_config_fps(struct max77620_chip *chip,
- 	case MAX77620:
- 		fps_max_period = MAX77620_FPS_PERIOD_MAX_US;
- 		break;
-+	case MAX77663:
-+		fps_max_period = MAX20024_FPS_PERIOD_MAX_US;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -375,6 +429,9 @@ static int max77620_initialise_fps(struct max77620_chip *chip)
- 	}
- 
- skip_fps:
-+	if (chip->chip_id == MAX77663)
-+		return 0;
-+
- 	/* Enable wake on EN0 pin */
- 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
- 				 MAX77620_ONOFFCNFG2_WK_EN0,
-@@ -453,6 +510,11 @@ static int max77620_probe(struct i2c_client *client,
- 		n_mfd_cells = ARRAY_SIZE(max20024_children);
- 		rmap_config = &max20024_regmap_config;
- 		break;
-+	case MAX77663:
-+		mfd_cells = max77663_children;
-+		n_mfd_cells = ARRAY_SIZE(max77663_children);
-+		rmap_config = &max77663_regmap_config;
-+		break;
- 	default:
- 		dev_err(chip->dev, "ChipID is invalid %d\n", chip->chip_id);
- 		return -EINVAL;
-@@ -546,6 +608,9 @@ static int max77620_i2c_suspend(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (chip->chip_id == MAX77663)
-+		goto out;
-+
- 	/* Disable WK_EN0 */
- 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
- 				 MAX77620_ONOFFCNFG2_WK_EN0, 0);
-@@ -581,7 +646,7 @@ static int max77620_i2c_resume(struct device *dev)
- 	 * For MAX20024: No need to configure WKEN0 on resume as
- 	 * it is configured on Init.
- 	 */
--	if (chip->chip_id == MAX20024)
-+	if (chip->chip_id == MAX20024 || chip->chip_id == MAX77663)
- 		goto out;
- 
- 	/* Enable WK_EN0 */
-@@ -603,6 +668,7 @@ static int max77620_i2c_resume(struct device *dev)
- static const struct i2c_device_id max77620_id[] = {
- 	{"max77620", MAX77620},
- 	{"max20024", MAX20024},
-+	{"max77663", MAX77663},
  	{},
  };
- 
-diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-index b4fd5a7c2aaa..82407fe85ca2 100644
---- a/include/linux/mfd/max77620.h
-+++ b/include/linux/mfd/max77620.h
-@@ -324,6 +324,7 @@ enum max77620_fps_src {
- enum max77620_chip_id {
- 	MAX77620,
- 	MAX20024,
-+	MAX77663,
- };
- 
- struct max77620_chip {
+ MODULE_DEVICE_TABLE(platform, max77620_regulator_devtype);
 -- 
 2.21.0
 
