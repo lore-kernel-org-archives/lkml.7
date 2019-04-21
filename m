@@ -2,60 +2,60 @@ Return-Path: <SRS0=ebdT=SX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA3AC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 17:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A132C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 17:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E8520833
-	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 17:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D5820870
+	for <linux-kernel@archiver.kernel.org>; Sun, 21 Apr 2019 17:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXcFDWVK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnDUIPFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfDURt0 (ORCPT
+        id S1726734AbfDURuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 13:49:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43602 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfDURtT (ORCPT
+        Sun, 21 Apr 2019 13:50:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32927 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfDURtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 13:49:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c8so4643086pfd.10;
-        Sun, 21 Apr 2019 10:49:19 -0700 (PDT)
+        Sun, 21 Apr 2019 13:49:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k19so4817414pgh.0;
+        Sun, 21 Apr 2019 10:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0a4OYel+MPHwPZSgfhXLKRg7cQA7lfi9yrXmzwAEuXU=;
-        b=gXcFDWVKIanymZygp++olJ9Ke5RljhPaJi3gl8qEkfX9QaTN+Af9EMrIlCS6MZm9GC
-         z1IMPH4aivgerIcpNyYLubAoYknKnkBM9pqAVQFt9pKHbB+98rEVi+hlHPz4hpxiyu2w
-         DvybEXqOiwmBisbPeXnwLi/eP93ObKeD/0huZ9HYAS6w9VthE8xI1zgZUAxPeTWJ36Td
-         tSjvfhwuk7SjG55xeDWUHSqnNtQlTYaAcoDkEkDx03qHFchcVGOCpDaFW/cKJnTal2Ef
-         5fE1YAFZs/hYfc8ivVZFIqpqvZrxMHzCpG+lprn7/OMFI4BV7ApQ0lsHW+AxqITXGRx4
-         ih8Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LgD/uImHb6NwkHJPZVMHXtBTkKsMvl+ZXd/c4dnETFU=;
+        b=hnDUIPFfrNnd7PDqA4WrOToorlxV1XtIn/CAGaFxIWIdfaMB3Sa5BfTwtUocC59z6N
+         Hz7e0XCLgZCiYurAu10kQCNfL2cvQ3VWvVZxS3wYIKSfzRxdzsghr9XxaAG0OEATD6kP
+         44Bv8voEdSd97vWrAHEhtIewr1KsFiRcvph261w5E/SiYZlhDWq3Vi4TQTNJLHoM/9td
+         VXPxO04peYP5ZnLkfsp9U/y5lf4sM2vqtlmEqVWfB2YZbOLoek2G3P0h83kDC7HnvAop
+         zTja9XwxQoF2XDb/38lmm2VWshmPzebuP28xODxCIk0rcht1dn46FmoGDjEQuDmMu8UZ
+         57kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0a4OYel+MPHwPZSgfhXLKRg7cQA7lfi9yrXmzwAEuXU=;
-        b=PN1Kc1q/WoC87tT4mtIa6t1hY2VWvKVrSCX9FlLFAG48PunIMtp4I49zY7okPmGPYs
-         9Rr0j88poeIa8R6KMjYwYqKIOoCB4tAzVvffUHqhbFsMsAb8GS+C75A6rVuhsDlF4195
-         Txvu91QUl1jHQdgeygrpXpIrfIGBUKxKj6aZR6cK8qG6inNlWT5U30wj7RNidB7ojZCF
-         7vMPSs+3zkU2xvZVd7c+mpUgBg2tue36ZOBz5GXu7hSJysgt9p2/taq1D57W5LX0QDdr
-         zehcsPDmga0c+dg9HjPp0qGuT0V8wFpn8oUBRDcvylgiO88rUajQ7VdSxUQad4WnmpuR
-         uKTw==
-X-Gm-Message-State: APjAAAVYsOQ81ZnP2EkTrIJs7mZkezzH3oY8nhUBt2yaOXqUIh58lH8l
-        9UG7+vYk8a2w8YwFOUEdYgk=
-X-Google-Smtp-Source: APXvYqwMGHxwe1zLjyklHd/KmXG3QogK/++Vgu5uS4Wy9+6ZjyZFQIApTBDRqwfRBzolAxcxrZTPQA==
-X-Received: by 2002:a65:4247:: with SMTP id d7mr14830824pgq.114.1555868959009;
-        Sun, 21 Apr 2019 10:49:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LgD/uImHb6NwkHJPZVMHXtBTkKsMvl+ZXd/c4dnETFU=;
+        b=n3wrQS99OaScoQYR2srwKKdI5PKP9N4Zcx6J6E7xZW6V5aV/W4taIoNDFOhgUsSVdI
+         l77zpDh16ZD8VH17pbjX4+xFcO4PdNWgbTMAO7UWgpK7yksVJMdM0zYu7vHDWmXA8ZwY
+         BsqLiIv7jHphgN0pFbybT4Y2Xz+Uv07HDIuDfmr6Hn8mRQJGoY9t6W88rDtJHRyWUdQh
+         +FOJps9uWu4TnDutK8LT/0AYauM2ru87XJzxmK0cIKNyKlUQICt+HKV5qGMBwVAVg6kn
+         /P9YA41iXOBM4SjPT/Dx5ccvCrQZFPwYOxPAOl79/0pmt5ftXm+rBTOkqrcDS3nO/Awm
+         nKeg==
+X-Gm-Message-State: APjAAAUKcgyFHH3TUbYK9KQmUvgah9vjoxjvM4vvaIoZby+UFTxAQ2Xx
+        EhEJBcQHRMH01XZ5YhSsLEhh3aHI
+X-Google-Smtp-Source: APXvYqwTteDTKGFFxT0wiWNmiwFALQu6twk7vWPTSkvyLwN8AJ8saaEJlo5LUOm93eYF462iPydyFA==
+X-Received: by 2002:a65:5189:: with SMTP id h9mr14701933pgq.304.1555868991565;
+        Sun, 21 Apr 2019 10:49:51 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id g63sm16279233pfc.127.2019.04.21.10.49.10
+        by smtp.gmail.com with ESMTPSA id g63sm16279233pfc.127.2019.04.21.10.49.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 10:49:18 -0700 (PDT)
+        Sun, 21 Apr 2019 10:49:51 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,10 +67,12 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/5] Add support for Maxim 77663 MFD
-Date:   Sun, 21 Apr 2019 20:48:29 +0300
-Message-Id: <20190421174834.9366-1-digetx@gmail.com>
+Subject: [PATCH v1 4/5] dt-bindings: mfd: max77620: Add compatible for Maxim 77663
+Date:   Sun, 21 Apr 2019 20:48:33 +0300
+Message-Id: <20190421174834.9366-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190421174834.9366-1-digetx@gmail.com>
+References: <20190421174834.9366-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,30 +80,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Maxim 77663 has a few minor differences in regards to hardware interface
+and available capabilities by comparing it with 77620 and 20024 models,
+hence re-use 77620 device-tree binding for the 77663.
 
-This series adds support for the Maxim 77663 chip that provides PMIC, RTC,
-GPIO and watchdog timer functionality. The hardware is very similar to the
-Maxim 77620/20024 hardware units that are already supported by the kernel,
-hence we will reuse the existing drivers for 77663. The GPIO, regulator,
-RTC and watchdog timer functionality was tested on a Nexus 7 tablet that
-has the Max77663 chip, everything is working perfectly fine. I'm looking
-at upstreaming support for that tablet device and Max77663 is one of the
-core components that are currently missing in the upstream kernel.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ Documentation/devicetree/bindings/mfd/max77620.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Dmitry Osipenko (5):
-  mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-  mfd: max77620: Support Maxim 77663
-  regulator: max77620: Support Maxim 77663
-  dt-bindings: mfd: max77620: Add compatible for Maxim 77663
-  mfd: max77620: Support device-tree properly
-
- .../devicetree/bindings/mfd/max77620.txt      |  4 +-
- drivers/mfd/max77620.c                        | 99 +++++++++++++++++--
- drivers/regulator/max77620-regulator.c        | 26 ++++-
- include/linux/mfd/max77620.h                  |  5 +-
- 4 files changed, 123 insertions(+), 11 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+index 9c16d51cc15b..9058499051e0 100644
+--- a/Documentation/devicetree/bindings/mfd/max77620.txt
++++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+@@ -4,7 +4,8 @@ Required properties:
+ -------------------
+ - compatible: Must be one of
+ 		"maxim,max77620"
+-		"maxim,max20024".
++		"maxim,max20024"
++		"maxim,max77663".
+ - reg: I2C device address.
+ 
+ Optional properties:
+@@ -105,6 +106,7 @@ Optional properties:
+ Here supported time periods by device in microseconds are as follows:
+ MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
+ MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
++MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
+ 
+ -maxim,power-ok-control: configure map power ok bit
+ 			1: Enables POK(Power OK) to control nRST_IO and GPIO1
 -- 
 2.21.0
 
