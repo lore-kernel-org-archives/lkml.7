@@ -2,146 +2,215 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1074C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67268C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9742D20685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Wqlcnd3+"
+	by mail.kernel.org (Postfix) with ESMTP id 27B952064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555940249;
+	bh=xQceLgE4GOqmOy1EnVQPHFmfIiFb8XhkYFKH96y9I/Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lhpcPkS10KCZByav+yxjQxQs/V0ftC9LwWZwk4frVxZfvcnhZudZt8cr6Ihbaz9tH
+	 QoKUhcdb+/PT5W6Bj/Lda/7m0LWZSFMn4W7m+pciF39b/zG8iaNHlryeb48nZvdHt+
+	 rMKur7m5ViYEDMfV6RjfYOMeMjYd2uIeWPrz3+/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfDVNhS (ORCPT
+        id S1728315AbfDVNhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:37:18 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:59582 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbfDVNhR (ORCPT
+        Mon, 22 Apr 2019 09:37:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36842 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbfDVN2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:37:17 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190422133714epoutp01b6b1b982aa0fde5ee6720fe270c04e5f~Xz2YvIgpK1981819818epoutp01G
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 13:37:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190422133714epoutp01b6b1b982aa0fde5ee6720fe270c04e5f~Xz2YvIgpK1981819818epoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555940234;
-        bh=iQqPP7aCWriecL0kX4i4+1/X7zYRmvCB7M1O0zcQtrc=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Wqlcnd3+wtuBEWzKehO+proNgpZDQLjhZ9xI0VxWTZtZ3P34o86SXOys6gkGg7BUn
-         MIAv8xqy4FKo+GXOa3KRfXySN5G47pnFVY8hBN6192GuEgc7HDb8wLtR1OOEt3TXcf
-         F+JtrirWVZeykeCJY0SWpya8MrEzvmeTnme/Jl6M=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20190422133713epcas5p3c1a2f7936bfa9fab70a08604a5c2d093~Xz2YLnDBT1537215372epcas5p3G;
-        Mon, 22 Apr 2019 13:37:13 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A7.F6.04067.983CDBC5; Mon, 22 Apr 2019 22:37:13 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190422133712epcas5p2c70652336c2410d17bf3133c2cfd201a~Xz2Xb3EFE1998619986epcas5p2f;
-        Mon, 22 Apr 2019 13:37:12 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190422133712epsmtrp1a6dfab65aaac932f42611bdaf071483c~Xz2XbPqPk1100311003epsmtrp1Z;
-        Mon, 22 Apr 2019 13:37:12 +0000 (GMT)
-X-AuditID: b6c32a4b-7a3ff70000000fe3-53-5cbdc3890061
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5C.43.03692.883CDBC5; Mon, 22 Apr 2019 22:37:12 +0900 (KST)
-Received: from JOSHIK01 (unknown [107.111.93.135]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190422133711epsmtip1cb27adc831d3e21db31cfcf22b8135a5~Xz2WTNuq72063720637epsmtip1H;
-        Mon, 22 Apr 2019 13:37:11 +0000 (GMT)
-From:   "kanchan" <joshi.k@samsung.com>
-To:     "'Jens Axboe'" <axboe@kernel.dk>, <linux-kernel@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>
-Cc:     <prakash.v@samsung.com>
-In-Reply-To: <6850a3ad-805f-4232-1bc7-f3249e1fba96@kernel.dk>
-Subject: RE: [PATCH v4 4/7] block: introduce write-hint to stream-id
- conversion
-Date:   Mon, 22 Apr 2019 19:06:49 +0530
-Message-ID: <009c01d4f910$7db6ec40$7924c4c0$@samsung.com>
+        Mon, 22 Apr 2019 09:28:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8VAeXYQhAceTMAWihPs9U6+XpVdyQlovkNBbfa8Vd8o=; b=TbTXRfzN9nrv64u8wnCulYfkTd
+        CW5gBg3LeQy06X00i+MSRVZXufpLBBd1Eyq8Tf/TG9eVe9govF9aW8Ufk8HO1C6YjirODM14ZerlW
+        kV0wggg0dTbD9xue+LjwiDL0eMfFlXxm29ovuiGdC+3u4PDklLzRLGothTVA0lv7txiUKh7pBRzRx
+        i/BbeSFuVxgQmJWrWQ4Dy1R+kGUn+s6TCEKyen+svKI3+uv1eGEBuWo3ykdZkfsWVv22Y4q4Mh6pf
+        FszBwxhdnbSk3NwZNurqAhmzvD6hmkCRTPAOcq+0xwJ3lm47lo9LKtftac5Kt36E849F3LoRm3pFa
+        22xPbfsg==;
+Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hIYzU-0005HV-Jk; Mon, 22 Apr 2019 13:28:12 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hIYzS-0005jZ-9T; Mon, 22 Apr 2019 10:28:10 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH v2 02/79] docs: trace: fix some Sphinx warnings
+Date:   Mon, 22 Apr 2019 10:26:51 -0300
+Message-Id: <f3b8a921f5c19e16dba40a7af5e2fc56baf93c74.1555938375.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQK8/LoE/AuxJQqBdxKlIaVgudw56QGc9em7AVEQUzUCUdAPjaROKAng
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7bCmpm7n4b0xBueWSVusvtvPZrH3lrbF
-        zHl32Cz27D3JYnF51xw2i/nLnrJbXJmyiNmB3ePy2VKPzUvqPfq2rGL0+LxJLoAlissmJTUn
-        syy1SN8ugSvjytyfLAW3uSs+XP7J1MD4gLOLkZNDQsBE4sHfKexdjFwcQgK7GSUW7F3ICOF8
-        YpRou3SQFcL5xijR/uYsM0zLtMnbWCASexklFn+YzQzhPGeUaPw1hRWkik1AVeLej142kISI
-        wAlGiRXtN9hBEswC0hITb+1lBLE5BWwl/p78DmYLCwRKNB99A7aCBah50vlOFhCbV8BSYsWe
-        d4wQtqDEyZlPWCDmaEssW/ga6iQFid2fjoItFhFwk5j6+z0bRI24xMujR8C+kxC4zSbR9f4J
-        UBEHkOMicaC1DqJXWOLV8S3sELaUxMv+Nii7WOLXnaPMEL0djBLXG2ayQCTsJS7u+csEModZ
-        QFNi/S59iF18Er2/nzBBjOeV6GgTgqhWlLg36SkrhC0u8XDGEijbQ+L4vaPsExgVZyH5bBaS
-        z2Yh+WAWwrIFjCyrGCVTC4pz01OLTQuM81LL9YoTc4tL89L1kvNzNzGCU4+W9w7GTed8DjEK
-        cDAq8fB+WLUnRog1say4MvcQowQHs5II7680oBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeubJz
-        o4UE0hNLUrNTUwtSi2CyTBycUg2MReLxgtr2Rnu9l1hvOqrlOIH5fCjztJttdW2q3ve3RnK3
-        qk/8+vy83jzPH1IJ+v3/4zkZ9+3ZLH5c81h/w4IbrzRsl/RqJm+bpOOtaun9/fQuiUt72rbu
-        mWhfc6wzamX0gh8zrZxesBYWSXUcabFI1OMoUHoxI3jF/DDviudilbUuzHH/5nErsRRnJBpq
-        MRcVJwIArqIj3jkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJTrfj8N4Yg2W9yhar7/azWey9pW0x
-        c94dNos9e0+yWFzeNYfNYv6yp+wWV6YsYnZg97h8ttRj85J6j74tqxg9Pm+SC2CJ4rJJSc3J
-        LEst0rdL4MrYfq2JsWA/d8XS9Q4NjEc4uxg5OSQETCSmTd7G0sXIxSEksJtRYsGD7SwQCXGJ
-        5ms/2CFsYYmV/56zQxQ9ZZQ4+wciwSagKnHvRy8bSEJE4ByjxJ35f8C6mQWkJSbe2ssIYgsJ
-        /GGU+NGQDGJzCthK/D35HSwuLOAv0XDlNhOIzQI0aNL5TrBeXgFLiRV73jFC2IISJ2c+gZqp
-        LdH7sJURxl628DUzxHUKErs/HWUFsUUE3CSm/n7PBlEjLvHy6BH2CYzCs5CMmoVk1Cwko2Yh
-        aVnAyLKKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4frQ0dzBeXhJ/iFGAg1GJh/fD
-        qj0xQqyJZcWVuYcYJTiYlUR4f6UBhXhTEiurUovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliS
-        mp2aWpBaBJNl4uCUamD05w5szzk+aceLXXOn8d8+seGw26t2zxoFxaNytxwjll7JXdR5UMh6
-        ka/aTMcER0Hh/a8msv3cvMfn1LvUyf8utv8u9Y3vzg+qKp0TFcSoqNkXsPh0yw/Ja+VK9jtD
-        q6b++nWmfUaj60+GaFHRiDdxl68pP2gss867EBG653zgm76v7Ed6r9QqsRRnJBpqMRcVJwIA
-        FJj5OJsCAAA=
-X-CMS-MailID: 20190422133712epcas5p2c70652336c2410d17bf3133c2cfd201a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190417175358epcas1p41a0a4e349dfe0a70bdcc244161c71604
-References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
-        <CGME20190417175358epcas1p41a0a4e349dfe0a70bdcc244161c71604@epcas1p4.samsung.com>
-        <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
-        <6850a3ad-805f-4232-1bc7-f3249e1fba96@kernel.dk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Why not just use the bio write hint? We already disallow merging of dissi=
-milar write hints, so req->bio->bi_write_hint is known to be identical with=
- the rest of the bio's in that chain.
+There are some warnings produced when building trace. Fix them.
 
-Yes, that is better. Thanks for suggesting it.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/trace/ftrace.rst    |  1 +
+ Documentation/trace/histogram.rst | 86 ++++++++++++++++---------------
+ 2 files changed, 45 insertions(+), 42 deletions(-)
 
------Original Message-----
-From: Jens Axboe =5Bmailto:axboe=40kernel.dk=5D=20
-Sent: Wednesday, April 17, 2019 11:28 PM
-To: Kanchan Joshi <joshi.k=40samsung.com>; linux-kernel=40vger.kernel.org; =
-linux-block=40vger.kernel.org; linux-nvme=40lists.infradead.org; linux-fsde=
-vel=40vger.kernel.org; linux-ext4=40vger.kernel.org
-Cc: prakash.v=40samsung.com
-Subject: Re: =5BPATCH v4 4/7=5D block: introduce write-hint to stream-id co=
-nversion
-
-On 4/17/19 11:50 AM, Kanchan Joshi wrote:
-> This patch moves write-hint-to-stream-id conversion in block-layer.
-> Earlier this was done by driver (nvme). Current conversion is of the=20
-> form =22streamid =3D write-hint - 1=22, for both user and kernel streams.
-> Conversion takes stream limit (maintained in request queue) into=20
-> account. Write-hints beyond the exposed limit turn to 0.
-> A new field 'streamid' has been added in request. While 'write-hint'
-> field continues to exist. It keeps original value passed from upper=20
-> layer, and used during merging checks.
-
-Why not just use the bio write hint? We already disallow merging of dissimi=
-lar write hints, so req->bio->bi_write_hint is known to be identical with t=
-he rest of the bio's in that chain.
-
---
-Jens Axboe
-
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 809b39d066ee..f60079259669 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1435,6 +1435,7 @@ trace has provided some very helpful debugging information.
+ 
+ If we prefer function graph output instead of function, we can set
+ display-graph option::
++
+  with echo 1 > options/display-graph
+ 
+   # tracer: irqsoff
+diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
+index 7612c7ad5715..2a6b23f779bb 100644
+--- a/Documentation/trace/histogram.rst
++++ b/Documentation/trace/histogram.rst
+@@ -2121,33 +2121,33 @@ The following commonly-used handler.action pairs are available:
+     the end the event that triggered the snapshot (in this case you
+     can verify the timestamps between the sched_waking and
+     sched_switch events, which should match the time displayed in the
+-    global maximum):
++    global maximum)::
+ 
+-    # cat /sys/kernel/debug/tracing/snapshot
++     # cat /sys/kernel/debug/tracing/snapshot
+ 
+-     <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
+-     <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
+-     <idle>-0     [005] dNh4   309.873613: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
+-     <idle>-0     [005] d..3   309.873616: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
+-     <...>-2102  [005] d..3   309.873625: sched_switch: prev_comm=cyclictest prev_pid=2102 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
+-     <idle>-0     [005] d.h3   309.874624: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
+-     <idle>-0     [005] dNh4   309.874626: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
+-     <idle>-0     [005] dNh3   309.874628: sched_waking: comm=cyclictest pid=2103 prio=19 target_cpu=005
+-     <idle>-0     [005] dNh4   309.874630: sched_wakeup: comm=cyclictest pid=2103 prio=19 target_cpu=005
+-     <idle>-0     [005] d..3   309.874633: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
+-     <idle>-0     [004] d.h3   309.874757: sched_waking: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
+-     <idle>-0     [004] dNh4   309.874762: sched_wakeup: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
+-     <idle>-0     [004] d..3   309.874766: sched_switch: prev_comm=swapper/4 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=gnome-terminal- next_pid=1699 next_prio=120
+- gnome-terminal--1699  [004] d.h2   309.874941: sched_stat_runtime: comm=gnome-terminal- pid=1699 runtime=180706 [ns] vruntime=1126870572 [ns]
+-     <idle>-0     [003] d.s4   309.874956: sched_waking: comm=rcu_sched pid=9 prio=120 target_cpu=007
+-     <idle>-0     [003] d.s5   309.874960: sched_wake_idle_without_ipi: cpu=7
+-     <idle>-0     [003] d.s5   309.874961: sched_wakeup: comm=rcu_sched pid=9 prio=120 target_cpu=007
+-     <idle>-0     [007] d..3   309.874963: sched_switch: prev_comm=swapper/7 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=rcu_sched next_pid=9 next_prio=120
+-  rcu_sched-9     [007] d..3   309.874973: sched_stat_runtime: comm=rcu_sched pid=9 runtime=13646 [ns] vruntime=22531430286 [ns]
+-  rcu_sched-9     [007] d..3   309.874978: sched_switch: prev_comm=rcu_sched prev_pid=9 prev_prio=120 prev_state=R+ ==> next_comm=swapper/7 next_pid=0 next_prio=120
+-      <...>-2102  [005] d..4   309.874994: sched_migrate_task: comm=cyclictest pid=2103 prio=19 orig_cpu=5 dest_cpu=1
+-      <...>-2102  [005] d..4   309.875185: sched_wake_idle_without_ipi: cpu=1
+-     <idle>-0     [001] d..3   309.875200: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2103 next_prio=19
++         <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
++         <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
++         <idle>-0     [005] dNh4   309.873613: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
++         <idle>-0     [005] d..3   309.873616: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
++         <...>-2102  [005] d..3   309.873625: sched_switch: prev_comm=cyclictest prev_pid=2102 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
++         <idle>-0     [005] d.h3   309.874624: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
++         <idle>-0     [005] dNh4   309.874626: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
++         <idle>-0     [005] dNh3   309.874628: sched_waking: comm=cyclictest pid=2103 prio=19 target_cpu=005
++         <idle>-0     [005] dNh4   309.874630: sched_wakeup: comm=cyclictest pid=2103 prio=19 target_cpu=005
++         <idle>-0     [005] d..3   309.874633: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
++         <idle>-0     [004] d.h3   309.874757: sched_waking: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
++         <idle>-0     [004] dNh4   309.874762: sched_wakeup: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
++         <idle>-0     [004] d..3   309.874766: sched_switch: prev_comm=swapper/4 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=gnome-terminal- next_pid=1699 next_prio=120
++     gnome-terminal--1699  [004] d.h2   309.874941: sched_stat_runtime: comm=gnome-terminal- pid=1699 runtime=180706 [ns] vruntime=1126870572 [ns]
++         <idle>-0     [003] d.s4   309.874956: sched_waking: comm=rcu_sched pid=9 prio=120 target_cpu=007
++         <idle>-0     [003] d.s5   309.874960: sched_wake_idle_without_ipi: cpu=7
++         <idle>-0     [003] d.s5   309.874961: sched_wakeup: comm=rcu_sched pid=9 prio=120 target_cpu=007
++         <idle>-0     [007] d..3   309.874963: sched_switch: prev_comm=swapper/7 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=rcu_sched next_pid=9 next_prio=120
++      rcu_sched-9     [007] d..3   309.874973: sched_stat_runtime: comm=rcu_sched pid=9 runtime=13646 [ns] vruntime=22531430286 [ns]
++      rcu_sched-9     [007] d..3   309.874978: sched_switch: prev_comm=rcu_sched prev_pid=9 prev_prio=120 prev_state=R+ ==> next_comm=swapper/7 next_pid=0 next_prio=120
++          <...>-2102  [005] d..4   309.874994: sched_migrate_task: comm=cyclictest pid=2103 prio=19 orig_cpu=5 dest_cpu=1
++          <...>-2102  [005] d..4   309.875185: sched_wake_idle_without_ipi: cpu=1
++         <idle>-0     [001] d..3   309.875200: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2103 next_prio=19
+ 
+   - onchange(var).save(field,..	.)
+ 
+@@ -2201,9 +2201,10 @@ The following commonly-used handler.action pairs are available:
+     following the rest of the fields.
+ 
+     If a snaphot was taken, there is also a message indicating that,
+-    along with the value and event that triggered the snapshot:
++    along with the value and event that triggered the snapshot::
++
++      # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
+ 
+-    # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
+       { dport:       1521 } hitcount:          8
+ 	changed:         10  snd_wnd:      35456  srtt:     154262  rcv_wnd:      42112
+ 
+@@ -2216,14 +2217,15 @@ The following commonly-used handler.action pairs are available:
+       { dport:        443 } hitcount:        211
+ 	changed:         10  snd_wnd:      26960  srtt:      17379  rcv_wnd:      28800
+ 
+-    Snapshot taken (see tracing/snapshot).  Details:
++    Snapshot taken (see tracing/snapshot).  Details::
++
+         triggering value { onchange($cwnd) }:         10
+         triggered by event with key: { dport:         80 }
+ 
+-    Totals:
+-        Hits: 414
+-        Entries: 4
+-        Dropped: 0
++      Totals:
++          Hits: 414
++          Entries: 4
++          Dropped: 0
+ 
+     In the above case, the event that triggered the snapshot has the
+     key with dport == 80.  If you look at the bucket that has 80 as
+@@ -2233,18 +2235,18 @@ The following commonly-used handler.action pairs are available:
+     the global snapshot).
+ 
+     And finally, looking at the snapshot data should show at or near
+-    the end the event that triggered the snapshot:
++    the end the event that triggered the snapshot::
+ 
+-    # cat /sys/kernel/debug/tracing/snapshot
++      # cat /sys/kernel/debug/tracing/snapshot
+ 
+-       gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
+-     kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120
+-       gnome-shell-1261  [006] d..3    49.823114: sched_switch: prev_comm=gnome-shell prev_pid=1261 prev_prio=120 prev_state=R+ ==> next_comm=kworker/6:2 next_pid=387 next_prio=120
+-       kworker/3:2-135   [003] d..3    49.823118: sched_stat_runtime: comm=kworker/3:2 pid=135 runtime=5339 [ns] vruntime=17815800388 [ns]
+-       kworker/6:2-387   [006] d..3    49.823120: sched_stat_runtime: comm=kworker/6:2 pid=387 runtime=9594 [ns] vruntime=14589605367 [ns]
+-       kworker/6:2-387   [006] d..3    49.823122: sched_switch: prev_comm=kworker/6:2 prev_pid=387 prev_prio=120 prev_state=R+ ==> next_comm=gnome-shell next_pid=1261 next_prio=120
+-       kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
+-            <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
++         gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
++       kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120
++         gnome-shell-1261  [006] d..3    49.823114: sched_switch: prev_comm=gnome-shell prev_pid=1261 prev_prio=120 prev_state=R+ ==> next_comm=kworker/6:2 next_pid=387 next_prio=120
++         kworker/3:2-135   [003] d..3    49.823118: sched_stat_runtime: comm=kworker/3:2 pid=135 runtime=5339 [ns] vruntime=17815800388 [ns]
++         kworker/6:2-387   [006] d..3    49.823120: sched_stat_runtime: comm=kworker/6:2 pid=387 runtime=9594 [ns] vruntime=14589605367 [ns]
++         kworker/6:2-387   [006] d..3    49.823122: sched_switch: prev_comm=kworker/6:2 prev_pid=387 prev_prio=120 prev_state=R+ ==> next_comm=gnome-shell next_pid=1261 next_prio=120
++         kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
++              <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
+ 
+ 3. User space creating a trigger
+ --------------------------------
+-- 
+2.20.1
 
