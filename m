@@ -6,56 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBBFC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADE4C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7966D21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9217B21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939785;
-	bh=l7yL/SL9SXxrPZjvMoBJuCVLNcm9amIiUJfzvDMuQco=;
+	s=default; t=1555939791;
+	bh=S+dmwUKWM2BHaPY+YXG+h/bgjzTrae0aqyzDY3bHLUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PCSz1+CShLiQwvXoRcQWyH91UGM9bM2KMbtLPNBYQVE3YAG1nYs8C5pzCeom2oBc1
-	 kbLIcBLtM5uyCtJth4KfxZymaWAVMYe/rx6BG5rwh+FSSWI0Y0m3exTuOaC2CN9Bd9
-	 YUpGeLhEp7c4ArIL/EzD52uF5aLhJhUoXlQ0DD3U=
+	b=eDjDm/a2kInGae3D09SEp+T+OMts0rP/ELCJRZgReW1o/PL0SdbJ3zJf/VPeRv6AE
+	 mQ+YGRBnZphPjbebX9Mmy5+Jlh3wR8oq1c4pxlT8ATAZCa7cbrVirHk3bE28c13DFe
+	 wAdy5YZmMSEmDsN9OlD44QEfPniSZWdZb5rJfhc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfDVN2d (ORCPT
+        id S1727676AbfDVN2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37034 "EHLO
+        Mon, 22 Apr 2019 09:28:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36954 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbfDVN2R (ORCPT
+        with ESMTP id S1727414AbfDVN2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:17 -0400
+        Mon, 22 Apr 2019 09:28:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=12J+vfOXfJMKhBU4MtBXi4ePzNE1fSNAMM5uGRvmeJk=; b=V8TSiUfu8lGxCCRQn2X+f60VtL
-        /Q4jc1TEEJXE8yZ3EfDvHeCNBihTvB8dDWz/DH5uDNx1eLSzzAkvnyss+lTeISEs4w6soIBDDKBW+
-        md4Po9q5WN0LQ5/PTK5j/pbX33lR6GZs2IFH3JWphcbk3KxHiLLK0ToAFJRgCgyvnM2b4urcTAD0c
-        qOGU0aJwKLf8t9mF0aC+UNhPqdxwv3+G/ponxVWTAnH/PaY4aTdk8oWFZ7FD8mk/pn4IfnVmp+Dk7
-        SXOV2G5legxzfULNN4Ta2eRTskqzUrFzw7RFN0eTSnpuXsrti7U0bjgwIcHYQNfvp0jLru1Oxxi/r
-        6JxdBh1w==;
+        bh=38uulUlULyKOiscMjTPy5U64H/2EZEVx81cT35uExnc=; b=TBY/Dd0ckHrgYX+fTkps14BASL
+        i6yttJm0t79o33PljLZMR0Mwgxiv2bEEvQaaq55nf7i5Ho6/1XoU0UK1qDta9eDA0InuCBvHUJsY/
+        J8FoT2U7vdsBkDlKeyuIDmHQaZW9UD+m/vkWdrZXer6t8j5um+d1xVU9oet+iaxVRKIetoQga48tr
+        dTyXh5d3Ez7mb0fMN7aDsRunZAUkb9/EpK6QdIb4zFpsrP+EphAVasr0F72BQ+0QYJ2X7P+EfQtak
+        1dlrqczyL6pxQmHo6I3t+WiYCzpGiAEHLtUgl9fnJAbf1wWltgC0lOVxw49WN1YkC3tp1Ou11YphZ
+        Yl8ozpyA==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzV-0005I0-Kc; Mon, 22 Apr 2019 13:28:15 +0000
+        id 1hIYzU-0005HW-KJ; Mon, 22 Apr 2019 13:28:14 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005m8-8D; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzS-0005jq-D5; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Timur Tabi <timur@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org
-Subject: [PATCH v2 33/79] docs: serial: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:22 -0300
-Message-Id: <ba10b30ab04e948a318fd632612f008de3563b7f.1555938376.git.mchehab+samsung@kernel.org>
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v2 06/79] docs: cdrom-standard.tex: convert from LaTeX to ReST
+Date:   Mon, 22 Apr 2019 10:26:55 -0300
+Message-Id: <c6aa0bf22fc30be2d2128daf69b427cb0a7865a8.1555938375.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -67,2625 +65,2169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The converted files are focused at the Kernel internal API,
-so, this is a good candidate for the kernel API set of books.
+This is the only LaTeX documentation file inside the documentation.
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+Instead of having a Latex document directly there, convert
+it to ReST format, as this is the format we're using for docs.
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+For now, let's keep the extension as .txt in order to avoid
+warnings when building the documentation with Sphinx.
+
+The next patch patch will rename it to .rst and add it to the
+building system.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{README.cycladesZ => cyclades_z.rst}      |   5 +-
- Documentation/serial/{driver => driver.rst}   | 115 +++-
- Documentation/serial/index.rst                |  32 +
- Documentation/serial/moxa-smartio             | 523 ---------------
- Documentation/serial/moxa-smartio.rst         | 615 ++++++++++++++++++
- Documentation/serial/n_gsm.rst                | 103 +++
- Documentation/serial/n_gsm.txt                |  96 ---
- .../serial/{rocket.txt => rocket.rst}         | 144 ++--
- ...{serial-iso7816.txt => serial-iso7816.rst} |  21 +-
- .../{serial-rs485.txt => serial-rs485.rst}    |  22 +-
- Documentation/serial/{tty.txt => tty.rst}     | 111 ++--
- MAINTAINERS                                   |   4 +-
- drivers/tty/Kconfig                           |   4 +-
- drivers/tty/serial/ucc_uart.c                 |   2 +-
- include/linux/serial_core.h                   |   2 +-
- 15 files changed, 1011 insertions(+), 788 deletions(-)
- rename Documentation/serial/{README.cycladesZ => cyclades_z.rst} (85%)
- rename Documentation/serial/{driver => driver.rst} (92%)
- create mode 100644 Documentation/serial/index.rst
- delete mode 100644 Documentation/serial/moxa-smartio
- create mode 100644 Documentation/serial/moxa-smartio.rst
- create mode 100644 Documentation/serial/n_gsm.rst
- delete mode 100644 Documentation/serial/n_gsm.txt
- rename Documentation/serial/{rocket.txt => rocket.rst} (68%)
- rename Documentation/serial/{serial-iso7816.txt => serial-iso7816.rst} (85%)
- rename Documentation/serial/{serial-rs485.txt => serial-rs485.rst} (89%)
- rename Documentation/serial/{tty.txt => tty.rst} (74%)
+ Documentation/cdrom/Makefile           |   21 -
+ Documentation/cdrom/cdrom-standard.tex | 1026 -----------------------
+ Documentation/cdrom/cdrom-standard.txt | 1063 ++++++++++++++++++++++++
+ drivers/cdrom/cdrom.c                  |    2 +-
+ 4 files changed, 1064 insertions(+), 1048 deletions(-)
+ delete mode 100644 Documentation/cdrom/Makefile
+ delete mode 100644 Documentation/cdrom/cdrom-standard.tex
+ create mode 100644 Documentation/cdrom/cdrom-standard.txt
 
-diff --git a/Documentation/serial/README.cycladesZ b/Documentation/serial/cyclades_z.rst
-similarity index 85%
-rename from Documentation/serial/README.cycladesZ
-rename to Documentation/serial/cyclades_z.rst
-index 024a69443cc2..532ff67e2f1c 100644
---- a/Documentation/serial/README.cycladesZ
-+++ b/Documentation/serial/cyclades_z.rst
-@@ -1,8 +1,11 @@
-+================
-+Cyclades-Z notes
-+================
- 
- The Cyclades-Z must have firmware loaded onto the card before it will
- operate.  This operation should be performed during system startup,
- 
- The firmware, loader program and the latest device driver code are
- available from Cyclades at
-+
-     ftp://ftp.cyclades.com/pub/cyclades/cyclades-z/linux/
--
-diff --git a/Documentation/serial/driver b/Documentation/serial/driver.rst
-similarity index 92%
-rename from Documentation/serial/driver
-rename to Documentation/serial/driver.rst
-index 86e47c19a924..4537119bf624 100644
---- a/Documentation/serial/driver
-+++ b/Documentation/serial/driver.rst
-@@ -1,6 +1,6 @@
--
--			Low Level Serial API
--			--------------------
-+====================
-+Low Level Serial API
-+====================
- 
- 
- This document is meant as a brief overview of some aspects of the new serial
-@@ -44,7 +44,7 @@ are described in the uart_ops listing below.)
- There are two locks.  A per-port spinlock, and an overall semaphore.
- 
- From the core driver perspective, the port->lock locks the following
--data:
-+data::
- 
- 	port->mctrl
- 	port->icount
-@@ -75,41 +75,51 @@ hardware.
- 	return TIOCSER_TEMT.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
-+
- 	This call must not sleep
- 
-   set_mctrl(port, mctrl)
- 	This function sets the modem control lines for port described
- 	by 'port' to the state described by mctrl.  The relevant bits
- 	of mctrl are:
-+
- 		- TIOCM_RTS	RTS signal.
- 		- TIOCM_DTR	DTR signal.
- 		- TIOCM_OUT1	OUT1 signal.
- 		- TIOCM_OUT2	OUT2 signal.
- 		- TIOCM_LOOP	Set the port into loopback mode.
-+
- 	If the appropriate bit is set, the signal should be driven
- 	active.  If the bit is clear, the signal should be driven
- 	inactive.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   get_mctrl(port)
- 	Returns the current state of modem control inputs.  The state
- 	of the outputs should not be returned, since the core keeps
- 	track of their state.  The state information should include:
-+
- 		- TIOCM_CAR	state of DCD signal
- 		- TIOCM_CTS	state of CTS signal
- 		- TIOCM_DSR	state of DSR signal
- 		- TIOCM_RI	state of RI signal
-+
- 	The bit is set if the signal is currently driven active.  If
- 	the port does not support CTS, DCD or DSR, the driver should
- 	indicate that the signal is permanently active.  If RI is
- 	not available, the signal should not be indicated as active.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   stop_tx(port)
-@@ -121,14 +131,18 @@ hardware.
- 	possible.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   start_tx(port)
- 	Start transmitting characters.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   throttle(port)
-@@ -138,16 +152,17 @@ hardware.
- 	This will be called only if hardware assisted flow control is enabled.
- 
- 	Locking: serialized with .unthrottle() and termios modification by the
--		 tty layer.
-+	tty layer.
- 
-   unthrottle(port)
- 	Notify the serial driver that characters can now be sent to the serial
- 	port without fear of overrunning the input buffers of the line
- 	disciplines.
-+
- 	This will be called only if hardware assisted flow control is enabled.
- 
- 	Locking: serialized with .throttle() and termios modification by the
--		 tty layer.
-+	tty layer.
- 
-   send_xchar(port,ch)
- 	Transmit a high priority character, even if the port is stopped.
-@@ -159,6 +174,7 @@ hardware.
- 	Do not transmit if ch == '\0' (__DISABLED_CHAR).
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   stop_rx(port)
-@@ -166,7 +182,9 @@ hardware.
- 	being closed.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   enable_ms(port)
-@@ -177,7 +195,9 @@ hardware.
- 	called.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   break_ctl(port,ctl)
-@@ -196,6 +216,7 @@ hardware.
- 	This method will only be called when the port is initially opened.
- 
- 	Locking: port_sem taken.
-+
- 	Interrupts: globally disabled.
- 
-   shutdown(port)
-@@ -210,6 +231,7 @@ hardware.
- 	this port.
- 
- 	Locking: port_sem taken.
-+
- 	Interrupts: caller dependent.
- 
-   flush_buffer(port)
-@@ -220,7 +242,9 @@ hardware.
- 	buffer is cleared.
- 
- 	Locking: port->lock taken.
-+
- 	Interrupts: locally disabled.
-+
- 	This call must not sleep
- 
-   set_termios(port,termios,oldtermios)
-@@ -228,29 +252,46 @@ hardware.
- 	bits.  Update read_status_mask and ignore_status_mask to indicate
- 	the types of events we are interested in receiving.  Relevant
- 	termios->c_cflag bits are:
--		CSIZE	- word size
--		CSTOPB	- 2 stop bits
--		PARENB	- parity enable
--		PARODD	- odd parity (when PARENB is in force)
--		CREAD	- enable reception of characters (if not set,
-+
-+		CSIZE
-+			- word size
-+		CSTOPB
-+			- 2 stop bits
-+		PARENB
-+			- parity enable
-+		PARODD
-+			- odd parity (when PARENB is in force)
-+		CREAD
-+			- enable reception of characters (if not set,
- 			  still receive characters from the port, but
- 			  throw them away.
--		CRTSCTS	- if set, enable CTS status change reporting
--		CLOCAL	- if not set, enable modem status change
-+		CRTSCTS
-+			- if set, enable CTS status change reporting
-+		CLOCAL
-+			- if not set, enable modem status change
- 			  reporting.
-+
- 	Relevant termios->c_iflag bits are:
--		INPCK	- enable frame and parity error events to be
-+
-+		INPCK
-+			- enable frame and parity error events to be
- 			  passed to the TTY layer.
--		BRKINT
--		PARMRK	- both of these enable break events to be
-+		BRKINT / PARMRK
-+			- both of these enable break events to be
- 			  passed to the TTY layer.
- 
--		IGNPAR	- ignore parity and framing errors
--		IGNBRK	- ignore break errors,  If IGNPAR is also
-+		IGNPAR
-+			- ignore parity and framing errors
-+		IGNBRK
-+			- ignore break errors,  If IGNPAR is also
- 			  set, ignore overrun errors as well.
-+
- 	The interaction of the iflag bits is as follows (parity error
- 	given as an example):
-+
-+	=============== ======= ======  =============================
- 	Parity error	INPCK	IGNPAR
-+	=============== ======= ======  =============================
- 	n/a		0	n/a	character received, marked as
- 					TTY_NORMAL
- 	None		1	n/a	character received, marked as
-@@ -258,16 +299,19 @@ hardware.
- 	Yes		1	0	character received, marked as
- 					TTY_PARITY
- 	Yes		1	1	character discarded
-+	=============== ======= ======  =============================
- 
- 	Other flags may be used (eg, xon/xoff characters) if your
- 	hardware supports hardware "soft" flow control.
- 
- 	Locking: caller holds tty_port->mutex
-+
- 	Interrupts: caller dependent.
-+
- 	This call must not sleep
- 
-   set_ldisc(port,termios)
--	Notifier for discipline change. See Documentation/serial/tty.txt.
-+	Notifier for discipline change. See Documentation/serial/tty.rst.
- 
- 	Locking: caller holds tty_port->mutex
- 
-@@ -283,6 +327,7 @@ hardware.
- 	will occur even if CONFIG_PM is not set.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   type(port)
-@@ -291,6 +336,7 @@ hardware.
- 	substituted.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   release_port(port)
-@@ -298,6 +344,7 @@ hardware.
- 	the port.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   request_port(port)
-@@ -306,6 +353,7 @@ hardware.
- 	returns, and it should return -EBUSY on failure.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   config_port(port,type)
-@@ -321,6 +369,7 @@ hardware.
- 	internally hard wired (eg, system on a chip implementations).
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   verify_port(port,serinfo)
-@@ -328,6 +377,7 @@ hardware.
- 	suitable for this port type.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   ioctl(port,cmd,arg)
-@@ -335,6 +385,7 @@ hardware.
- 	using the standard numbering system found in <asm/ioctl.h>
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
- 
-   poll_init(port)
-@@ -343,6 +394,7 @@ hardware.
- 	this should not request interrupts.
- 
- 	Locking: tty_mutex and tty_port->mutex taken.
-+
- 	Interrupts: n/a.
- 
-   poll_put_char(port,ch)
-@@ -350,7 +402,9 @@ hardware.
- 	port.  It can and should block until there is space in the TX FIFO.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
-+
- 	This call must not sleep
- 
-   poll_get_char(port)
-@@ -359,7 +413,9 @@ hardware.
- 	the function should return NO_POLL_CHAR immediately.
- 
- 	Locking: none.
-+
- 	Interrupts: caller dependent.
-+
- 	This call must not sleep
- 
- Other functions
-@@ -370,6 +426,7 @@ uart_update_timeout(port,cflag,baud)
- 	number of bits, parity, stop bits and baud rate.
- 
- 	Locking: caller is expected to take port->lock
-+
- 	Interrupts: n/a
- 
- uart_get_baud_rate(port,termios,old,min,max)
-@@ -385,6 +442,7 @@ uart_get_baud_rate(port,termios,old,min,max)
- 	Note: min..max must always allow 9600 baud to be selected.
- 
- 	Locking: caller dependent.
-+
- 	Interrupts: n/a
- 
- uart_get_divisor(port,baud)
-@@ -395,6 +453,7 @@ uart_get_divisor(port,baud)
- 	custom divisor instead.
- 
- 	Locking: caller dependent.
-+
- 	Interrupts: n/a
- 
- uart_match_port(port1,port2)
-@@ -402,6 +461,7 @@ uart_match_port(port1,port2)
- 	uart_port structures describe the same port.
- 
- 	Locking: n/a
-+
- 	Interrupts: n/a
- 
- uart_write_wakeup(port)
-@@ -409,6 +469,7 @@ uart_write_wakeup(port)
- 	characters in the transmit buffer have dropped below a threshold.
- 
- 	Locking: port->lock should be held.
-+
- 	Interrupts: n/a
- 
- uart_register_driver(drv)
-@@ -419,6 +480,7 @@ uart_register_driver(drv)
- 	registered using uart_add_one_port after this call has succeeded.
- 
- 	Locking: none
-+
- 	Interrupts: enabled
- 
- uart_unregister_driver()
-@@ -427,15 +489,16 @@ uart_unregister_driver()
- 	uart_remove_one_port() if it registered them with uart_add_one_port().
- 
- 	Locking: none
-+
- 	Interrupts: enabled
- 
--uart_suspend_port()
-+**uart_suspend_port()**
- 
--uart_resume_port()
-+**uart_resume_port()**
- 
--uart_add_one_port()
-+**uart_add_one_port()**
- 
--uart_remove_one_port()
-+**uart_remove_one_port()**
- 
- Other notes
- -----------
-@@ -444,7 +507,7 @@ It is intended some day to drop the 'unused' entries from uart_port, and
- allow low level drivers to register their own individual uart_port's with
- the core.  This will allow drivers to use uart_port as a pointer to a
- structure containing both the uart_port entry with their own extensions,
--thus:
-+thus::
- 
- 	struct my_port {
- 		struct uart_port	port;
-@@ -459,14 +522,14 @@ Some helpers are provided in order to set/get modem control lines via GPIO.
- mctrl_gpio_init(port, idx):
- 	This will get the {cts,rts,...}-gpios from device tree if they are
- 	present and request them, set direction etc, and return an
--	allocated structure. devm_* functions are used, so there's no need
-+	allocated structure. `devm_*` functions are used, so there's no need
- 	to call mctrl_gpio_free().
- 	As this sets up the irq handling make sure to not handle changes to the
- 	gpio input lines in your driver, too.
- 
- mctrl_gpio_free(dev, gpios):
- 	This will free the requested gpios in mctrl_gpio_init().
--	As devm_* functions are used, there's generally no need to call
-+	As `devm_*` functions are used, there's generally no need to call
- 	this function.
- 
- mctrl_gpio_to_gpiod(gpios, gidx)
-diff --git a/Documentation/serial/index.rst b/Documentation/serial/index.rst
-new file mode 100644
-index 000000000000..d0ba22ea23bf
---- /dev/null
-+++ b/Documentation/serial/index.rst
-@@ -0,0 +1,32 @@
-+:orphan:
-+
-+==========================
-+Support for Serial devices
-+==========================
-+
-+.. toctree::
-+    :maxdepth: 1
-+
-+
-+    driver
-+    tty
-+
-+Serial drivers
-+==============
-+
-+.. toctree::
-+    :maxdepth: 1
-+
-+    cyclades_z
-+    moxa-smartio
-+    n_gsm
-+    rocket
-+    serial-iso7816
-+    serial-rs485
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/serial/moxa-smartio b/Documentation/serial/moxa-smartio
+diff --git a/Documentation/cdrom/Makefile b/Documentation/cdrom/Makefile
 deleted file mode 100644
-index 5d2a33be0bd8..000000000000
---- a/Documentation/serial/moxa-smartio
+index a19e321928e1..000000000000
+--- a/Documentation/cdrom/Makefile
 +++ /dev/null
-@@ -1,523 +0,0 @@
--=============================================================================
--          MOXA Smartio/Industio Family Device Driver Installation Guide
--		    for Linux Kernel 2.4.x, 2.6.x
--	       Copyright (C) 2008, Moxa Inc.
--=============================================================================
--Date: 01/21/2008
--
--Content
--
--1. Introduction
--2. System Requirement
--3. Installation
--   3.1 Hardware installation
--   3.2 Driver files
--   3.3 Device naming convention
--   3.4 Module driver configuration
--   3.5 Static driver configuration for Linux kernel 2.4.x and 2.6.x.
--   3.6 Custom configuration
--   3.7 Verify driver installation
--4. Utilities
--5. Setserial
--6. Troubleshooting
--
-------------------------------------------------------------------------------
--1. Introduction
--
--   The Smartio/Industio/UPCI family Linux driver supports following multiport
--   boards.
--
--    - 2 ports multiport board
--	CP-102U, CP-102UL, CP-102UF
--	CP-132U-I, CP-132UL,
--	CP-132, CP-132I, CP132S, CP-132IS,
--	CI-132, CI-132I, CI-132IS,
--	(C102H, C102HI, C102HIS, C102P, CP-102, CP-102S)
--
--    - 4 ports multiport board
--	CP-104EL,
--	CP-104UL, CP-104JU,
--	CP-134U, CP-134U-I,
--	C104H/PCI, C104HS/PCI,
--	CP-114, CP-114I, CP-114S, CP-114IS, CP-114UL,
--	C104H, C104HS,
--	CI-104J, CI-104JS,
--	CI-134, CI-134I, CI-134IS,
--	(C114HI, CT-114I, C104P)
--	POS-104UL,
--	CB-114,
--	CB-134I
--
--    - 8 ports multiport board
--	CP-118EL, CP-168EL,
--	CP-118U, CP-168U,
--	C168H/PCI,
--	C168H, C168HS,
--	(C168P),
--	CB-108
--
--   This driver and installation procedure have been developed upon Linux Kernel
--   2.4.x and 2.6.x. This driver supports Intel x86 hardware platform. In order
--   to maintain compatibility, this version has also been properly tested with
--   RedHat, Mandrake, Fedora and S.u.S.E Linux. However, if compatibility problem
--   occurs, please contact Moxa at support@moxa.com.tw.
--
--   In addition to device driver, useful utilities are also provided in this
--   version. They are
--    - msdiag     Diagnostic program for displaying installed Moxa
--                 Smartio/Industio boards.
--    - msmon      Monitor program to observe data count and line status signals.
--    - msterm     A simple terminal program which is useful in testing serial
--	         ports.
--    - io-irq.exe Configuration program to setup ISA boards. Please note that
--                 this program can only be executed under DOS.
--
--   All the drivers and utilities are published in form of source code under
--   GNU General Public License in this version. Please refer to GNU General
--   Public License announcement in each source code file for more detail.
--
--   In Moxa's Web sites, you may always find latest driver at http://www.moxa.com/.
--
--   This version of driver can be installed as Loadable Module (Module driver)
--   or built-in into kernel (Static driver). You may refer to following
--   installation procedure for suitable one. Before you install the driver,
--   please refer to hardware installation procedure in the User's Manual.
--
--   We assume the user should be familiar with following documents.
--   - Serial-HOWTO
--   - Kernel-HOWTO
--
-------------------------------------------------------------------------------
--2. System Requirement
--   - Hardware platform: Intel x86 machine
--   - Kernel version: 2.4.x or 2.6.x
--   - gcc version 2.72 or later
--   - Maximum 4 boards can be installed in combination
--
-------------------------------------------------------------------------------
--3. Installation
--
--   3.1 Hardware installation
--   3.2 Driver files
--   3.3 Device naming convention
--   3.4 Module driver configuration
--   3.5 Static driver configuration for Linux kernel 2.4.x, 2.6.x.
--   3.6 Custom configuration
--   3.7 Verify driver installation
--
--
--   3.1 Hardware installation
--
--       There are two types of buses, ISA and PCI, for Smartio/Industio
--       family multiport board.
--
--       ISA board
--       ---------
--       You'll have to configure CAP address, I/O address, Interrupt Vector
--       as well as IRQ before installing this driver. Please refer to hardware
--       installation procedure in User's Manual before proceed any further.
--       Please make sure the JP1 is open after the ISA board is set properly.
--
--       PCI/UPCI board
--       --------------
--       You may need to adjust IRQ usage in BIOS to avoid from IRQ conflict
--       with other ISA devices. Please refer to hardware installation
--       procedure in User's Manual in advance.
--
--       PCI IRQ Sharing
--       -----------
--       Each port within the same multiport board shares the same IRQ. Up to
--       4 Moxa Smartio/Industio PCI Family multiport boards can be installed
--       together on one system and they can share the same IRQ.
--
--
--   3.2 Driver files
--
--       The driver file may be obtained from ftp, CD-ROM or floppy disk. The
--       first step, anyway, is to copy driver file "mxser.tgz" into specified
--       directory. e.g. /moxa. The execute commands as below.
--
--       # cd /
--       # mkdir moxa
--       # cd /moxa
--       # tar xvf /dev/fd0
--
--       or
--
--       # cd /
--       # mkdir moxa
--       # cd /moxa
--       # cp /mnt/cdrom/<driver directory>/mxser.tgz .
--       # tar xvfz mxser.tgz
--
--
--   3.3 Device naming convention
--
--       You may find all the driver and utilities files in /moxa/mxser.
--       Following installation procedure depends on the model you'd like to
--       run the driver. If you prefer module driver, please refer to 3.4.
--       If static driver is required, please refer to 3.5.
--
--       Dialin and callout port
--       -----------------------
--       This driver remains traditional serial device properties. There are
--       two special file name for each serial port. One is dial-in port
--       which is named "ttyMxx". For callout port, the naming convention
--       is "cumxx".
--
--       Device naming when more than 2 boards installed
--       -----------------------------------------------
--       Naming convention for each Smartio/Industio multiport board is
--       pre-defined as below.
--
--       Board Num.	 Dial-in Port	      Callout port
--       1st board	ttyM0  - ttyM7	      cum0  - cum7
--       2nd board	ttyM8  - ttyM15       cum8  - cum15
--       3rd board	ttyM16 - ttyM23       cum16 - cum23
--       4th board	ttyM24 - ttym31       cum24 - cum31
--
--
--       !!!!!!!!!!!!!!!!!!!! NOTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--       Under Kernel 2.6 the cum Device is Obsolete. So use ttyM*
--       device instead.
--       !!!!!!!!!!!!!!!!!!!! NOTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
--
--       Board sequence
--       --------------
--       This driver will activate ISA boards according to the parameter set
--       in the driver. After all specified ISA board activated, PCI board
--       will be installed in the system automatically driven.
--       Therefore the board number is sorted by the CAP address of ISA boards.
--       For PCI boards, their sequence will be after ISA boards and C168H/PCI
--       has higher priority than C104H/PCI boards.
--
--   3.4 Module driver configuration
--       Module driver is easiest way to install. If you prefer static driver
--       installation, please skip this paragraph.
--
--
--       ------------- Prepare to use the MOXA driver--------------------
--       3.4.1 Create tty device with correct major number
--          Before using MOXA driver, your system must have the tty devices
--          which are created with driver's major number. We offer one shell
--          script "msmknod" to simplify the procedure.
--          This step is only needed to be executed once. But you still
--          need to do this procedure when:
--          a. You change the driver's major number. Please refer the "3.7"
--             section.
--          b. Your total installed MOXA boards number is changed. Maybe you
--             add/delete one MOXA board.
--          c. You want to change the tty name. This needs to modify the
--             shell script "msmknod"
--
--          The procedure is:
--	  # cd /moxa/mxser/driver
--	  # ./msmknod
--
--          This shell script will require the major number for dial-in
--          device and callout device to create tty device. You also need
--          to specify the total installed MOXA board number. Default major
--          numbers for dial-in device and callout device are 30, 35. If
--          you need to change to other number, please refer section "3.7"
--          for more detailed procedure.
--          Msmknod will delete any special files occupying the same device
--          naming.
--
--       3.4.2 Build the MOXA driver and utilities
--          Before using the MOXA driver and utilities, you need compile the
--          all the source code. This step is only need to be executed once.
--          But you still re-compile the source code if you modify the source
--          code. For example, if you change the driver's major number (see
--          "3.7" section), then you need to do this step again.
--
--          Find "Makefile" in /moxa/mxser, then run
--
--	  # make clean; make install
--
--          !!!!!!!!!! NOTE !!!!!!!!!!!!!!!!!
--	  For Red Hat 9, Red Hat Enterprise Linux AS3/ES3/WS3 & Fedora Core1:
--	  # make clean; make installsp1
--
--	  For Red Hat Enterprise Linux AS4/ES4/WS4:
--	  # make clean; make installsp2
--          !!!!!!!!!! NOTE !!!!!!!!!!!!!!!!!
--
--	  The driver files "mxser.o" and utilities will be properly compiled
--	  and copied to system directories respectively.
--
--       ------------- Load MOXA driver--------------------
--       3.4.3 Load the MOXA driver
--
--	  # modprobe mxser <argument>
--
--	  will activate the module driver. You may run "lsmod" to check
--	  if "mxser" is activated. If the MOXA board is ISA board, the
--          <argument> is needed. Please refer to section "3.4.5" for more
--          information.
--
--
--       ------------- Load MOXA driver on boot --------------------
--       3.4.4 For the above description, you may manually execute
--          "modprobe mxser" to activate this driver and run
--	  "rmmod mxser" to remove it.
--          However, it's better to have a boot time configuration to
--          eliminate manual operation. Boot time configuration can be
--          achieved by rc file. We offer one "rc.mxser" file to simplify
--          the procedure under "moxa/mxser/driver".
--
--          But if you use ISA board, please modify the "modprobe ..." command
--          to add the argument (see "3.4.5" section). After modifying the
--          rc.mxser, please try to execute "/moxa/mxser/driver/rc.mxser"
--          manually to make sure the modification is ok. If any error
--          encountered, please try to modify again. If the modification is
--          completed, follow the below step.
--
--	  Run following command for setting rc files.
--
--	  # cd /moxa/mxser/driver
--	  # cp ./rc.mxser /etc/rc.d
--	  # cd /etc/rc.d
--
--	  Check "rc.serial" is existed or not. If "rc.serial" doesn't exist,
--	  create it by vi, run "chmod 755 rc.serial" to change the permission.
--	  Add "/etc/rc.d/rc.mxser" in last line,
--
--          Reboot and check if moxa.o activated by "lsmod" command.
--
--       3.4.5. If you'd like to drive Smartio/Industio ISA boards in the system,
--          you'll have to add parameter to specify CAP address of given
--	  board while activating "mxser.o". The format for parameters are
--	  as follows.
--
--	  modprobe mxser ioaddr=0x???,0x???,0x???,0x???
--				|      |     |	  |
--				|      |     |	  +- 4th ISA board
--				|      |     +------ 3rd ISA board
--				|      +------------ 2nd ISA board
--				+------------------- 1st ISA board
--
--   3.5 Static driver configuration for Linux kernel 2.4.x and 2.6.x
--
--       Note: To use static driver, you must install the linux kernel
--             source package.
--
--       3.5.1 Backup the built-in driver in the kernel.
--          # cd /usr/src/linux/drivers/char
--          # mv mxser.c mxser.c.old
--
--          For Red Hat 7.x user, you need to create link:
--          # cd /usr/src
--          # ln -s linux-2.4 linux
--
--       3.5.2 Create link
--	  # cd /usr/src/linux/drivers/char
--	  # ln -s /moxa/mxser/driver/mxser.c mxser.c
--
--       3.5.3 Add CAP address list for ISA boards. For PCI boards user,
--          please skip this step.
--
--	  In module mode, the CAP address for ISA board is given by
--	  parameter. In static driver configuration, you'll have to
--	  assign it within driver's source code. If you will not
--	  install any ISA boards, you may skip to next portion.
--	  The instructions to modify driver source code are as
--	  below.
--	  a. # cd /moxa/mxser/driver
--	     # vi mxser.c
--	  b. Find the array mxserBoardCAP[] as below.
--
--	     static int mxserBoardCAP[]
--	     = {0x00, 0x00, 0x00, 0x00};
--
--	  c. Change the address within this array using vi. For
--	     example, to driver 2 ISA boards with CAP address
--	     0x280 and 0x180 as 1st and 2nd board. Just to change
--	     the source code as follows.
--
--	     static int mxserBoardCAP[]
--	     = {0x280, 0x180, 0x00, 0x00};
--
--       3.5.4 Setup kernel configuration
--
--          Configure the kernel:
--
--            # cd /usr/src/linux
--            # make menuconfig
--
--          You will go into a menu-driven system. Please select [Character
--          devices][Non-standard serial port support], enable the [Moxa
--          SmartIO support] driver with "[*]" for built-in (not "[M]"), then
--          select [Exit] to exit this program.
--
--       3.5.5 Rebuild kernel
--	  The following are for Linux kernel rebuilding, for your
--          reference only.
--	  For appropriate details, please refer to the Linux document.
--
--	   a. cd /usr/src/linux
--	   b. make clean	     /* take a few minutes */
--	   c. make dep		     /* take a few minutes */
--	   d. make bzImage	     /* take probably 10-20 minutes */
--	   e. make install	     /* copy boot image to correct position */
--	   f. Please make sure the boot kernel (vmlinuz) is in the
--	      correct position.
--	   g. If you use 'lilo' utility, you should check /etc/lilo.conf
--	      'image' item specified the path which is the 'vmlinuz' path,
--	      or you will load wrong (or old) boot kernel image (vmlinuz).
--	      After checking /etc/lilo.conf, please run "lilo".
--
--	  Note that if the result of "make bzImage" is ERROR, then you have to
--	  go back to Linux configuration Setup. Type "make menuconfig" in
--          directory /usr/src/linux.
--
--
--       3.5.6 Make tty device and special file
--          # cd /moxa/mxser/driver
--          # ./msmknod
--
--       3.5.7 Make utility
--	  # cd /moxa/mxser/utility
--	  # make clean; make install
--
--       3.5.8 Reboot
--
--
--
--   3.6 Custom configuration
--       Although this driver already provides you default configuration, you
--       still can change the device name and major number. The instruction to
--       change these parameters are shown as below.
--
--       Change Device name
--       ------------------
--       If you'd like to use other device names instead of default naming
--       convention, all you have to do is to modify the internal code
--       within the shell script "msmknod". First, you have to open "msmknod"
--       by vi. Locate each line contains "ttyM" and "cum" and change them
--       to the device name you desired. "msmknod" creates the device names
--       you need next time executed.
--
--       Change Major number
--       -------------------
--       If major number 30 and 35 had been occupied, you may have to select
--       2 free major numbers for this driver. There are 3 steps to change
--       major numbers.
--
--       3.6.1 Find free major numbers
--	  In /proc/devices, you may find all the major numbers occupied
--	  in the system. Please select 2 major numbers that are available.
--	  e.g. 40, 45.
--       3.6.2 Create special files
--	  Run /moxa/mxser/driver/msmknod to create special files with
--	  specified major numbers.
--       3.6.3 Modify driver with new major number
--	  Run vi to open /moxa/mxser/driver/mxser.c. Locate the line
--	  contains "MXSERMAJOR". Change the content as below.
--	  #define	  MXSERMAJOR		  40
--	  #define	  MXSERCUMAJOR		  45
--       3.6.4 Run "make clean; make install" in /moxa/mxser/driver.
--
--   3.7 Verify driver installation
--       You may refer to /var/log/messages to check the latest status
--       log reported by this driver whenever it's activated.
--
-------------------------------------------------------------------------------
--4. Utilities
--   There are 3 utilities contained in this driver. They are msdiag, msmon and
--   msterm. These 3 utilities are released in form of source code. They should
--   be compiled into executable file and copied into /usr/bin.
--
--   Before using these utilities, please load driver (refer 3.4 & 3.5) and
--   make sure you had run the "msmknod" utility.
--
--   msdiag - Diagnostic
--   --------------------
--   This utility provides the function to display what Moxa Smartio/Industio
--   board found by driver in the system.
--
--   msmon - Port Monitoring
--   -----------------------
--   This utility gives the user a quick view about all the MOXA ports'
--   activities. One can easily learn each port's total received/transmitted
--   (Rx/Tx) character count since the time when the monitoring is started.
--   Rx/Tx throughputs per second are also reported in interval basis (e.g.
--   the last 5 seconds) and in average basis (since the time the monitoring
--   is started). You can reset all ports' count by <HOME> key. <+> <->
--   (plus/minus) keys to change the displaying time interval. Press <ENTER>
--   on the port, that cursor stay, to view the port's communication
--   parameters, signal status, and input/output queue.
--
--   msterm - Terminal Emulation
--   ---------------------------
--   This utility provides data sending and receiving ability of all tty ports,
--   especially for MOXA ports. It is quite useful for testing simple
--   application, for example, sending AT command to a modem connected to the
--   port or used as a terminal for login purpose. Note that this is only a
--   dumb terminal emulation without handling full screen operation.
--
-------------------------------------------------------------------------------
--5. Setserial
--
--   Supported Setserial parameters are listed as below.
--
--   uart		  set UART type(16450-->disable FIFO, 16550A-->enable FIFO)
--   close_delay	  set the amount of time(in 1/100 of a second) that DTR
--		  should be kept low while being closed.
--   closing_wait   set the amount of time(in 1/100 of a second) that the
--		  serial port should wait for data to be drained while
--		  being closed, before the receiver is disable.
--   spd_hi	  Use  57.6kb  when  the application requests 38.4kb.
--   spd_vhi	  Use  115.2kb	when  the application requests 38.4kb.
--   spd_shi	  Use  230.4kb	when  the application requests 38.4kb.
--   spd_warp	  Use  460.8kb	when  the application requests 38.4kb.
--   spd_normal	  Use  38.4kb  when  the application requests 38.4kb.
--   spd_cust	  Use  the custom divisor to set the speed when  the
--		  application requests 38.4kb.
--   divisor	  This option set the custom division.
--   baud_base	  This option set the base baud rate.
--
-------------------------------------------------------------------------------
--6. Troubleshooting
--
--   The boot time error messages and solutions are stated as clearly as
--   possible. If all the possible solutions fail, please contact our technical
--   support team to get more help.
--
--
--   Error msg: More than 4 Moxa Smartio/Industio family boards found. Fifth board
--              and after are ignored.
--   Solution:
--   To avoid this problem, please unplug fifth and after board, because Moxa
--   driver supports up to 4 boards.
--
--   Error msg: Request_irq fail, IRQ(?) may be conflict with another device.
--   Solution:
--   Other PCI or ISA devices occupy the assigned IRQ. If you are not sure
--   which device causes the situation, please check /proc/interrupts to find
--   free IRQ and simply change another free IRQ for Moxa board.
--
--   Error msg: Board #: C1xx Series(CAP=xxx) interrupt number invalid.
--   Solution:
--   Each port within the same multiport board shares the same IRQ. Please set
--   one IRQ (IRQ doesn't equal to zero) for one Moxa board.
--
--   Error msg: No interrupt vector be set for Moxa ISA board(CAP=xxx).
--   Solution:
--   Moxa ISA board needs an interrupt vector.Please refer to user's manual
--   "Hardware Installation" chapter to set interrupt vector.
--
--   Error msg: Couldn't install MOXA Smartio/Industio family driver!
--   Solution:
--   Load Moxa driver fail, the major number may conflict with other devices.
--   Please refer to previous section 3.7 to change a free major number for
--   Moxa driver.
--
--   Error msg: Couldn't install MOXA Smartio/Industio family callout driver!
--   Solution:
--   Load Moxa callout driver fail, the callout device major number may
--   conflict with other devices. Please refer to previous section 3.7 to
--   change a free callout device major number for Moxa driver.
--
--
-------------------------------------------------------------------------------
--
-diff --git a/Documentation/serial/moxa-smartio.rst b/Documentation/serial/moxa-smartio.rst
+@@ -1,21 +0,0 @@
+-LATEXFILE = cdrom-standard
+-
+-all:
+-	make clean
+-	latex $(LATEXFILE)
+-	latex $(LATEXFILE)
+-	@if [ -x `which gv` ]; then \
+-		`dvips -q -t letter -o $(LATEXFILE).ps $(LATEXFILE).dvi` ;\
+-		`gv -antialias -media letter -nocenter $(LATEXFILE).ps` ;\
+-	else \
+-		`xdvi $(LATEXFILE).dvi &` ;\
+-	fi
+-	make sortofclean
+-
+-clean:
+-	rm -f $(LATEXFILE).ps $(LATEXFILE).dvi $(LATEXFILE).aux $(LATEXFILE).log 
+-
+-sortofclean:
+-	rm -f $(LATEXFILE).aux $(LATEXFILE).log 
+-
+-
+diff --git a/Documentation/cdrom/cdrom-standard.tex b/Documentation/cdrom/cdrom-standard.tex
+deleted file mode 100644
+index f7cd455973f7..000000000000
+--- a/Documentation/cdrom/cdrom-standard.tex
++++ /dev/null
+@@ -1,1026 +0,0 @@
+-\documentclass{article}
+-\def\version{$Id: cdrom-standard.tex,v 1.9 1997/12/28 15:42:49 david Exp $}
+-\newcommand{\newsection}[1]{\newpage\section{#1}}
+-
+-\evensidemargin=0pt
+-\oddsidemargin=0pt
+-\topmargin=-\headheight \advance\topmargin by -\headsep
+-\textwidth=15.99cm \textheight=24.62cm % normal A4, 1'' margin
+-
+-\def\linux{{\sc Linux}}
+-\def\cdrom{{\sc cd-rom}}
+-\def\UCD{{\sc Uniform cd-rom Driver}}
+-\def\cdromc{{\tt {cdrom.c}}}
+-\def\cdromh{{\tt {cdrom.h}}}
+-\def\fo{\sl}                    % foreign words
+-\def\ie{{\fo i.e.}}
+-\def\eg{{\fo e.g.}}
+-
+-\everymath{\it} \everydisplay{\it}
+-\catcode `\_=\active \def_{\_\penalty100 }
+-\catcode`\<=\active \def<#1>{{\langle\hbox{\rm#1}\rangle}}
+-
+-\begin{document}
+-\title{A \linux\ \cdrom\ standard}
+-\author{David van Leeuwen\\{\normalsize\tt david@ElseWare.cistron.nl}
+-\\{\footnotesize updated by Erik Andersen {\tt(andersee@debian.org)}}
+-\\{\footnotesize updated by Jens Axboe {\tt(axboe@image.dk)}}}
+-\date{12 March 1999}
+-
+-\maketitle
+-
+-\newsection{Introduction}
+-
+-\linux\ is probably the Unix-like operating system that supports
+-the widest variety of hardware devices. The reasons for this are
+-presumably 
+-\begin{itemize} 
+-\item 
+-  The large list of hardware devices available for the many platforms
+-  that \linux\ now supports (\ie, i386-PCs, Sparc Suns, etc.)
+-\item 
+-  The open design of the operating system, such that anybody can write a
+-  driver for \linux.
+-\item 
+-  There is plenty of source code around as examples of how to write a driver.
+-\end{itemize}
+-The openness of \linux, and the many different types of available
+-hardware has allowed \linux\ to support many different hardware devices.
+-Unfortunately, the very openness that has allowed \linux\ to support
+-all these different devices has also allowed the behavior of each
+-device driver to differ significantly from one device to another.
+-This divergence of behavior has been very significant for \cdrom\
+-devices; the way a particular drive reacts to a `standard' $ioctl()$
+-call varies greatly from one device driver to another. To avoid making
+-their drivers totally inconsistent, the writers of \linux\ \cdrom\
+-drivers generally created new device drivers by understanding, copying,
+-and then changing an existing one. Unfortunately, this practice did not
+-maintain uniform behavior across all the \linux\ \cdrom\ drivers. 
+-
+-This document describes an effort to establish Uniform behavior across
+-all the different \cdrom\ device drivers for \linux. This document also
+-defines the various $ioctl$s, and how the low-level \cdrom\ device
+-drivers should implement them. Currently (as of the \linux\ 2.1.$x$
+-development kernels) several low-level \cdrom\ device drivers, including
+-both IDE/ATAPI and SCSI, now use this Uniform interface.
+-
+-When the \cdrom\ was developed, the interface between the \cdrom\ drive
+-and the computer was not specified in the standards. As a result, many
+-different \cdrom\ interfaces were developed. Some of them had their
+-own proprietary design (Sony, Mitsumi, Panasonic, Philips), other
+-manufacturers adopted an existing electrical interface and changed
+-the functionality (CreativeLabs/SoundBlaster, Teac, Funai) or simply
+-adapted their drives to one or more of the already existing electrical
+-interfaces (Aztech, Sanyo, Funai, Vertos, Longshine, Optics Storage and
+-most of the `NoName' manufacturers). In cases where a new drive really
+-brought its own interface or used its own command set and flow control
+-scheme, either a separate driver had to be written, or an existing
+-driver had to be enhanced. History has delivered us \cdrom\ support for
+-many of these different interfaces. Nowadays, almost all new \cdrom\
+-drives are either IDE/ATAPI or SCSI, and it is very unlikely that any
+-manufacturer will create a new interface. Even finding drives for the
+-old proprietary interfaces is getting difficult.
+-
+-When (in the 1.3.70's) I looked at the existing software interface,
+-which was expressed through \cdromh, it appeared to be a rather wild
+-set of commands and data formats.\footnote{I cannot recollect what
+-kernel version I looked at, then, presumably 1.2.13 and 1.3.34---the
+-latest kernel that I was indirectly involved in.} It seemed that many
+-features of the software interface had been added to accommodate the
+-capabilities of a particular drive, in an {\fo ad hoc\/} manner. More
+-importantly, it appeared that the behavior of the `standard' commands
+-was different for most of the different drivers: \eg, some drivers
+-close the tray if an $open()$ call occurs when the tray is open, while
+-others do not. Some drivers lock the door upon opening the device, to
+-prevent an incoherent file system, but others don't, to allow software
+-ejection. Undoubtedly, the capabilities of the different drives vary,
+-but even when two drives have the same capability their drivers'
+-behavior was usually different.
+-
+-I decided to start a discussion on how to make all the \linux\ \cdrom\
+-drivers behave more uniformly. I began by contacting the developers of
+-the many \cdrom\ drivers found in the \linux\ kernel. Their reactions
+-encouraged me to write the \UCD\ which this document is intended to
+-describe. The implementation of the \UCD\ is in the file \cdromc. This
+-driver is intended to be an additional software layer that sits on top
+-of the low-level device drivers for each \cdrom\ drive. By adding this
+-additional layer, it is possible to have all the different \cdrom\
+-devices behave {\em exactly\/} the same (insofar as the underlying
+-hardware will allow).
+-
+-The goal of the \UCD\ is {\em not\/} to alienate driver developers who
+-have not yet taken steps to support this effort. The goal of \UCD\ is
+-simply to give people writing application programs for \cdrom\ drives
+-{\em one\/} \linux\ \cdrom\ interface with consistent behavior for all
+-\cdrom\ devices. In addition, this also provides a consistent interface
+-between the low-level device driver code and the \linux\ kernel. Care
+-is taken that 100\,\% compatibility exists with the data structures and
+-programmer's interface defined in \cdromh. This guide was written to
+-help \cdrom\ driver developers adapt their code to use the \UCD\ code
+-defined in \cdromc.
+-
+-Personally, I think that the most important hardware interfaces are
+-the IDE/ATAPI drives and, of course, the SCSI drives, but as prices
+-of hardware drop continuously, it is also likely that people may have
+-more than one \cdrom\ drive, possibly of mixed types. It is important
+-that these drives behave in the same way. In December 1994, one of the
+-cheapest \cdrom\ drives was a Philips cm206, a double-speed proprietary
+-drive. In the months that I was busy writing a \linux\ driver for it,
+-proprietary drives became obsolete and IDE/ATAPI drives became the
+-standard. At the time of the last update to this document (November
+-1997) it is becoming difficult to even {\em find} anything less than a
+-16 speed \cdrom\ drive, and 24 speed drives are common.
+-
+-\newsection{Standardizing through another software level}
+-\label{cdrom.c}
+-
+-At the time this document was conceived, all drivers directly
+-implemented the \cdrom\ $ioctl()$ calls through their own routines. This
+-led to the danger of different drivers forgetting to do important things
+-like checking that the user was giving the driver valid data. More
+-importantly, this led to the divergence of behavior, which has already
+-been discussed.
+-
+-For this reason, the \UCD\ was created to enforce consistent \cdrom\
+-drive behavior, and to provide a common set of services to the various
+-low-level \cdrom\ device drivers. The \UCD\ now provides another
+-software-level, that separates the $ioctl()$ and $open()$ implementation
+-from the actual hardware implementation. Note that this effort has
+-made few changes which will affect a user's application programs. The
+-greatest change involved moving the contents of the various low-level
+-\cdrom\ drivers' header files to the kernel's cdrom directory. This was
+-done to help ensure that the user is only presented with only one cdrom
+-interface, the interface defined in \cdromh.
+-
+-\cdrom\ drives are specific enough (\ie, different from other
+-block-devices such as floppy or hard disc drives), to define a set
+-of common {\em \cdrom\ device operations}, $<cdrom-device>_dops$.
+-These operations are different from the classical block-device file
+-operations, $<block-device>_fops$.
+-
+-The routines for the \UCD\ interface level are implemented in the file
+-\cdromc. In this file, the \UCD\ interfaces with the kernel as a block
+-device by registering the following general $struct\ file_operations$:
+-$$
+-\halign{$#$\ \hfil&$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-struct& file_operations\ cdrom_fops = \{\hidewidth\cr
+-        &NULL,                  & lseek \cr
+-        &block_read,            & read---general block-dev read \cr
+-        &block_write,           & write---general block-dev write \cr
+-        &NULL,                  & readdir \cr
+-        &NULL,                  & select \cr
+-        &cdrom_ioctl,           & ioctl \cr
+-        &NULL,                  & mmap \cr
+-        &cdrom_open,            & open \cr
+-        &cdrom_release,         & release \cr
+-        &NULL,                  & fsync \cr
+-        &NULL,                  & fasync \cr
+-        &cdrom_media_changed,   & media change \cr
+-        &NULL                   & revalidate \cr
+-\};\cr
+-}
+-$$ 
+-
+-Every active \cdrom\ device shares this $struct$. The routines
+-declared above are all implemented in \cdromc, since this file is the
+-place where the behavior of all \cdrom-devices is defined and
+-standardized. The actual interface to the various types of \cdrom\ 
+-hardware is still performed by various low-level \cdrom-device
+-drivers. These routines simply implement certain {\em capabilities\/}
+-that are common to all \cdrom\ (and really, all removable-media
+-devices).
+-
+-Registration of a low-level \cdrom\ device driver is now done through
+-the general routines in \cdromc, not through the Virtual File System
+-(VFS) any more. The interface implemented in \cdromc\ is carried out
+-through two general structures that contain information about the
+-capabilities of the driver, and the specific drives on which the
+-driver operates. The structures are:
+-\begin{description}
+-\item[$cdrom_device_ops$] 
+-  This structure contains information about the low-level driver for a
+-  \cdrom\ device. This structure is conceptually connected to the major
+-  number of the device (although some drivers may have different
+-  major numbers, as is the case for the IDE driver).
+-\item[$cdrom_device_info$] 
+-  This structure contains information about a particular \cdrom\ drive,
+-  such as its device name, speed, etc. This structure is conceptually
+-  connected to the minor number of the device.
+-\end{description}
+-
+-Registering a particular \cdrom\ drive with the \UCD\ is done by the
+-low-level device driver though a call to:
+-$$register_cdrom(struct\ cdrom_device_info * <device>_info)  
+-$$
+-The device information structure, $<device>_info$, contains all the
+-information needed for the kernel to interface with the low-level
+-\cdrom\ device driver. One of the most important entries in this
+-structure is a pointer to the $cdrom_device_ops$ structure of the
+-low-level driver.
+-
+-The device operations structure, $cdrom_device_ops$, contains a list
+-of pointers to the functions which are implemented in the low-level
+-device driver. When \cdromc\ accesses a \cdrom\ device, it does it
+-through the functions in this structure. It is impossible to know all
+-the capabilities of future \cdrom\ drives, so it is expected that this
+-list may need to be expanded from time to time as new technologies are
+-developed. For example, CD-R and CD-R/W drives are beginning to become
+-popular, and support will soon need to be added for them. For now, the
+-current $struct$ is:
+-$$
+-\halign{$#$\ \hfil&$#$\ \hfil&\hbox to 10em{$#$\hss}&
+-  $/*$ \rm# $*/$\hfil\cr
+-struct& cdrom_device_ops\ \{ \hidewidth\cr
+-  &int& (* open)(struct\ cdrom_device_info *, int)\cr
+-  &void& (* release)(struct\ cdrom_device_info *);\cr 
+-  &int& (* drive_status)(struct\ cdrom_device_info *, int);\cr     
+-  &unsigned\ int& (* check_events)(struct\ cdrom_device_info *, unsigned\ int, int);\cr
+-  &int& (* media_changed)(struct\ cdrom_device_info *, int);\cr 
+-  &int& (* tray_move)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* lock_door)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* select_speed)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* select_disc)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* get_last_session) (struct\ cdrom_device_info *, 
+-        struct\ cdrom_multisession *{});\cr
+-  &int& (* get_mcn)(struct\ cdrom_device_info *, struct\ cdrom_mcn *{});\cr
+-  &int& (* reset)(struct\ cdrom_device_info *);\cr
+-  &int& (* audio_ioctl)(struct\ cdrom_device_info *, unsigned\ int, 
+-        void *{});\cr 
+-\noalign{\medskip}
+-  &const\ int& capability;& capability flags \cr
+-  &int& (* generic_packet)(struct\ cdrom_device_info *, struct\ packet_command *{});\cr
+-\};\cr
+-}
+-$$
+-When a low-level device driver implements one of these capabilities,
+-it should add a function pointer to this $struct$. When a particular
+-function is not implemented, however, this $struct$ should contain a
+-NULL instead. The $capability$ flags specify the capabilities of the
+-\cdrom\ hardware and/or low-level \cdrom\ driver when a \cdrom\ drive
+-is registered with the \UCD.
+-
+-Note that most functions have fewer parameters than their
+-$blkdev_fops$ counterparts. This is because very little of the
+-information in the structures $inode$ and $file$ is used. For most
+-drivers, the main parameter is the $struct$ $cdrom_device_info$, from
+-which the major and minor number can be extracted. (Most low-level
+-\cdrom\ drivers don't even look at the major and minor number though,
+-since many of them only support one device.) This will be available
+-through $dev$ in $cdrom_device_info$ described below.
+-
+-The drive-specific, minor-like information that is registered with
+-\cdromc, currently contains the following fields:
+-$$
+-\halign{$#$\ \hfil&$#$\ \hfil&\hbox to 10em{$#$\hss}&
+-  $/*$ \rm# $*/$\hfil\cr
+-struct& cdrom_device_info\ \{ \hidewidth\cr
+-  & const\ struct\ cdrom_device_ops *& ops;& device operations for this major\cr
+-  & struct\ list_head& list;& linked list of all device_info\cr
+-  & struct\ gendisk *& disk;& matching block layer disk\cr
+-  & void *&  handle;& driver-dependent data\cr
+-\noalign{\medskip}
+-  & int& mask;& mask of capability: disables them \cr
+-  & int& speed;& maximum speed for reading data \cr
+-  & int& capacity;& number of discs in a jukebox \cr
+-\noalign{\medskip}
+-  &unsigned\ int& options : 30;& options flags \cr
+-  &unsigned& mc_flags : 2;& media-change buffer flags \cr
+-  &unsigned\ int& vfs_events;& cached events for vfs path\cr
+-  &unsigned\ int& ioctl_events;& cached events for ioctl path\cr
+-  & int& use_count;& number of times device is opened\cr
+-  & char& name[20];& name of the device type\cr
+-\noalign{\medskip}
+-  &__u8& sanyo_slot : 2;& Sanyo 3-CD changer support\cr
+-  &__u8& keeplocked : 1;& CDROM_LOCKDOOR status\cr
+-  &__u8& reserved : 5;& not used yet\cr
+-  & int& cdda_method;& see CDDA_* flags\cr
+-  &__u8& last_sense;& saves last sense key\cr
+-  &__u8& media_written;& dirty flag, DVD+RW bookkeeping\cr
+-  &unsigned\ short& mmc3_profile;& current MMC3 profile\cr
+-  & int& for_data;& unknown:TBD\cr
+-  & int\ (* exit)\ (struct\ cdrom_device_info *);&& unknown:TBD\cr
+-  & int& mrw_mode_page;& which MRW mode page is in use\cr
+-\}\cr
+-}$$
+-Using this $struct$, a linked list of the registered minor devices is
+-built, using the $next$ field. The device number, the device operations
+-struct and specifications of properties of the drive are stored in this
+-structure.
+-
+-The $mask$ flags can be used to mask out some of the capabilities listed
+-in $ops\to capability$, if a specific drive doesn't support a feature
+-of the driver. The value $speed$ specifies the maximum head-rate of the
+-drive, measured in units of normal audio speed (176\,kB/sec raw data or
+-150\,kB/sec file system data).  The parameters are declared $const$
+-because they describe properties of the drive, which don't change after
+-registration.
+-
+-A few registers contain variables local to the \cdrom\ drive. The
+-flags $options$ are used to specify how the general \cdrom\ routines
+-should behave. These various flags registers should provide enough
+-flexibility to adapt to the different users' wishes (and {\em not\/} the
+-`arbitrary' wishes of the author of the low-level device driver, as is
+-the case in the old scheme). The register $mc_flags$ is used to buffer
+-the information from $media_changed()$ to two separate queues. Other
+-data that is specific to a minor drive, can be accessed through $handle$,
+-which can point to a data structure specific to the low-level driver.
+-The fields $use_count$, $next$, $options$ and $mc_flags$ need not be
+-initialized.
+-
+-The intermediate software layer that \cdromc\ forms will perform some
+-additional bookkeeping. The use count of the device (the number of
+-processes that have the device opened) is registered in $use_count$. The
+-function $cdrom_ioctl()$ will verify the appropriate user-memory regions
+-for read and write, and in case a location on the CD is transferred,
+-it will `sanitize' the format by making requests to the low-level
+-drivers in a standard format, and translating all formats between the
+-user-software and low level drivers. This relieves much of the drivers'
+-memory checking and format checking and translation. Also, the necessary
+-structures will be declared on the program stack.
+-
+-The implementation of the functions should be as defined in the
+-following sections. Two functions {\em must\/} be implemented, namely
+-$open()$ and $release()$. Other functions may be omitted, their
+-corresponding capability flags will be cleared upon registration.
+-Generally, a function returns zero on success and negative on error. A
+-function call should return only after the command has completed, but of
+-course waiting for the device should not use processor time.
+-
+-\subsection{$Int\ open(struct\ cdrom_device_info * cdi, int\ purpose)$}
+-
+-$Open()$ should try to open the device for a specific $purpose$, which
+-can be either:
+-\begin{itemize}
+-\item[0] Open for reading data, as done by {\tt {mount()}} (2), or the
+-user commands {\tt {dd}} or {\tt {cat}}.  
+-\item[1] Open for $ioctl$ commands, as done by audio-CD playing
+-programs.
+-\end{itemize}
+-Notice that any strategic code (closing tray upon $open()$, etc.)\ is
+-done by the calling routine in \cdromc, so the low-level routine
+-should only be concerned with proper initialization, such as spinning
+-up the disc, etc. % and device-use count
+-
+-
+-\subsection{$Void\ release(struct\ cdrom_device_info * cdi)$}
+-
+-
+-Device-specific actions should be taken such as spinning down the device.
+-However, strategic actions such as ejection of the tray, or unlocking
+-the door, should be left over to the general routine $cdrom_release()$.
+-This is the only function returning type $void$.
+-
+-\subsection{$Int\ drive_status(struct\ cdrom_device_info * cdi, int\ slot_nr)$}
+-\label{drive status}
+-
+-The function $drive_status$, if implemented, should provide
+-information on the status of the drive (not the status of the disc,
+-which may or may not be in the drive). If the drive is not a changer,
+-$slot_nr$ should be ignored. In \cdromh\ the possibilities are listed: 
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDS_NO_INFO& no information available\cr
+-CDS_NO_DISC& no disc is inserted, tray is closed\cr
+-CDS_TRAY_OPEN& tray is opened\cr
+-CDS_DRIVE_NOT_READY& something is wrong, tray is moving?\cr
+-CDS_DISC_OK& a disc is loaded and everything is fine\cr
+-}
+-$$
+-
+-\subsection{$Int\ media_changed(struct\ cdrom_device_info * cdi, int\ disc_nr)$}
+-
+-This function is very similar to the original function in $struct\ 
+-file_operations$. It returns 1 if the medium of the device $cdi\to
+-dev$ has changed since the last call, and 0 otherwise. The parameter
+-$disc_nr$ identifies a specific slot in a juke-box, it should be
+-ignored for single-disc drives.  Note that by `re-routing' this
+-function through $cdrom_media_changed()$, we can implement separate
+-queues for the VFS and a new $ioctl()$ function that can report device
+-changes to software (\eg, an auto-mounting daemon).
+-
+-\subsection{$Int\ tray_move(struct\ cdrom_device_info * cdi, int\ position)$}
+-
+-This function, if implemented, should control the tray movement. (No
+-other function should control this.) The parameter $position$ controls
+-the desired direction of movement:
+-\begin{itemize}
+-\item[0] Close tray
+-\item[1] Open tray
+-\end{itemize}
+-This function returns 0 upon success, and a non-zero value upon
+-error. Note that if the tray is already in the desired position, no
+-action need be taken, and the return value should be 0. 
+-
+-\subsection{$Int\ lock_door(struct\ cdrom_device_info * cdi, int\ lock)$}
+-
+-This function (and no other code) controls locking of the door, if the
+-drive allows this. The value of $lock$ controls the desired locking
+-state:
+-\begin{itemize}
+-\item[0] Unlock door, manual opening is allowed
+-\item[1] Lock door, tray cannot be ejected manually
+-\end{itemize}
+-This function returns 0 upon success, and a non-zero value upon
+-error. Note that if the door is already in the requested state, no
+-action need be taken, and the return value should be 0. 
+-
+-\subsection{$Int\ select_speed(struct\ cdrom_device_info * cdi, int\ speed)$}
+-
+-Some \cdrom\ drives are capable of changing their head-speed. There
+-are several reasons for changing the speed of a \cdrom\ drive. Badly
+-pressed \cdrom s may benefit from less-than-maximum head rate. Modern
+-\cdrom\ drives can obtain very high head rates (up to $24\times$ is
+-common).  It has been reported that these drives can make reading
+-errors at these high speeds, reducing the speed can prevent data loss
+-in these circumstances.  Finally, some of these drives can
+-make an annoyingly loud noise, which a lower speed may reduce. %Finally,
+-%although the audio-low-pass filters probably aren't designed for it,
+-%more than real-time playback of audio might be used for high-speed
+-%copying of audio tracks.
+-
+-This function specifies the speed at which data is read or audio is
+-played back. The value of $speed$ specifies the head-speed of the
+-drive, measured in units of standard cdrom speed (176\,kB/sec raw data
+-or 150\,kB/sec file system data). So to request that a \cdrom\ drive
+-operate at 300\,kB/sec you would call the CDROM_SELECT_SPEED $ioctl$
+-with $speed=2$. The special value `0' means `auto-selection', \ie,
+-maximum data-rate or real-time audio rate. If the drive doesn't have
+-this `auto-selection' capability, the decision should be made on the
+-current disc loaded and the return value should be positive. A negative
+-return value indicates an error.
+-
+-\subsection{$Int\ select_disc(struct\ cdrom_device_info * cdi, int\ number)$}
+-
+-If the drive can store multiple discs (a juke-box) this function
+-will perform disc selection. It should return the number of the
+-selected disc on success, a negative value on error. Currently, only
+-the ide-cd driver supports this functionality.
+-
+-\subsection{$Int\ get_last_session(struct\ cdrom_device_info * cdi, struct\
+-  cdrom_multisession * ms_info)$}
+-
+-This function should implement the old corresponding $ioctl()$. For
+-device $cdi\to dev$, the start of the last session of the current disc
+-should be returned in the pointer argument $ms_info$. Note that
+-routines in \cdromc\ have sanitized this argument: its requested
+-format will {\em always\/} be of the type $CDROM_LBA$ (linear block
+-addressing mode), whatever the calling software requested. But
+-sanitization goes even further: the low-level implementation may
+-return the requested information in $CDROM_MSF$ format if it wishes so
+-(setting the $ms_info\rightarrow addr_format$ field appropriately, of
+-course) and the routines in \cdromc\ will make the transformation if
+-necessary. The return value is 0 upon success.
+-
+-\subsection{$Int\ get_mcn(struct\ cdrom_device_info * cdi, struct\
+-  cdrom_mcn * mcn)$}
+-
+-Some discs carry a `Media Catalog Number' (MCN), also called
+-`Universal Product Code' (UPC). This number should reflect the number
+-that is generally found in the bar-code on the product. Unfortunately,
+-the few discs that carry such a number on the disc don't even use the
+-same format. The return argument to this function is a pointer to a
+-pre-declared memory region of type $struct\ cdrom_mcn$. The MCN is
+-expected as a 13-character string, terminated by a null-character.
+-
+-\subsection{$Int\ reset(struct\ cdrom_device_info * cdi)$}
+-
+-This call should perform a hard-reset on the drive (although in
+-circumstances that a hard-reset is necessary, a drive may very well not
+-listen to commands anymore). Preferably, control is returned to the
+-caller only after the drive has finished resetting. If the drive is no
+-longer listening, it may be wise for the underlying low-level cdrom
+-driver to time out.
+-
+-\subsection{$Int\ audio_ioctl(struct\ cdrom_device_info * cdi, unsigned\
+-  int\ cmd, void * arg)$}
+-
+-Some of the \cdrom-$ioctl$s defined in \cdromh\ can be
+-implemented by the routines described above, and hence the function
+-$cdrom_ioctl$ will use those. However, most $ioctl$s deal with
+-audio-control. We have decided to leave these to be accessed through a
+-single function, repeating the arguments $cmd$ and $arg$. Note that
+-the latter is of type $void*{}$, rather than $unsigned\ long\
+-int$. The routine $cdrom_ioctl()$ does do some useful things,
+-though. It sanitizes the address format type to $CDROM_MSF$ (Minutes,
+-Seconds, Frames) for all audio calls. It also verifies the memory
+-location of $arg$, and reserves stack-memory for the argument. This
+-makes implementation of the $audio_ioctl()$ much simpler than in the
+-old driver scheme. For example, you may look up the function
+-$cm206_audio_ioctl()$ in {\tt {cm206.c}} that should be updated with
+-this documentation. 
+-
+-An unimplemented ioctl should return $-ENOSYS$, but a harmless request
+-(\eg, $CDROMSTART$) may be ignored by returning 0 (success). Other
+-errors should be according to the standards, whatever they are. When
+-an error is returned by the low-level driver, the \UCD\ tries whenever
+-possible to return the error code to the calling program. (We may decide
+-to sanitize the return value in $cdrom_ioctl()$ though, in order to
+-guarantee a uniform interface to the audio-player software.)
+-
+-\subsection{$Int\ dev_ioctl(struct\ cdrom_device_info * cdi, unsigned\ int\
+-  cmd, unsigned\ long\ arg)$}
+-
+-Some $ioctl$s seem to be specific to certain \cdrom\ drives. That is,
+-they are introduced to service some capabilities of certain drives. In
+-fact, there are 6 different $ioctl$s for reading data, either in some
+-particular kind of format, or audio data. Not many drives support
+-reading audio tracks as data, I believe this is because of protection
+-of copyrights of artists. Moreover, I think that if audio-tracks are
+-supported, it should be done through the VFS and not via $ioctl$s. A
+-problem here could be the fact that audio-frames are 2352 bytes long,
+-so either the audio-file-system should ask for 75264 bytes at once
+-(the least common multiple of 512 and 2352), or the drivers should
+-bend their backs to cope with this incoherence (to which I would be
+-opposed).  Furthermore, it is very difficult for the hardware to find
+-the exact frame boundaries, since there are no synchronization headers
+-in audio frames.  Once these issues are resolved, this code should be
+-standardized in \cdromc.
+-
+-Because there are so many $ioctl$s that seem to be introduced to
+-satisfy certain drivers,\footnote{Is there software around that
+-  actually uses these? I'd be interested!} any `non-standard' $ioctl$s
+-are routed through the call $dev_ioctl()$. In principle, `private'
+-$ioctl$s should be numbered after the device's major number, and not
+-the general \cdrom\ $ioctl$ number, {\tt {0x53}}. Currently the
+-non-supported $ioctl$s are: {\it CDROMREADMODE1, CDROMREADMODE2,
+-  CDROMREADAUDIO, CDROMREADRAW, CDROMREADCOOKED, CDROMSEEK,
+-  CDROMPLAY\-BLK and CDROM\-READALL}.
+-
+-
+-\subsection{\cdrom\ capabilities}
+-\label{capability}
+-
+-Instead of just implementing some $ioctl$ calls, the interface in
+-\cdromc\ supplies the possibility to indicate the {\em capabilities\/}
+-of a \cdrom\ drive. This can be done by ORing any number of
+-capability-constants that are defined in \cdromh\ at the registration
+-phase. Currently, the capabilities are any of:
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDC_CLOSE_TRAY& can close tray by software control\cr
+-CDC_OPEN_TRAY& can open tray\cr
+-CDC_LOCK& can lock and unlock the door\cr
+-CDC_SELECT_SPEED& can select speed, in units of $\sim$150\,kB/s\cr
+-CDC_SELECT_DISC& drive is juke-box\cr
+-CDC_MULTI_SESSION& can read sessions $>\rm1$\cr
+-CDC_MCN& can read Media Catalog Number\cr
+-CDC_MEDIA_CHANGED& can report if disc has changed\cr
+-CDC_PLAY_AUDIO& can perform audio-functions (play, pause, etc)\cr
+-CDC_RESET& hard reset device\cr
+-CDC_IOCTLS& driver has non-standard ioctls\cr
+-CDC_DRIVE_STATUS& driver implements drive status\cr
+-}
+-$$
+-The capability flag is declared $const$, to prevent drivers from
+-accidentally tampering with the contents. The capability fags actually
+-inform \cdromc\ of what the driver can do. If the drive found
+-by the driver does not have the capability, is can be masked out by
+-the $cdrom_device_info$ variable $mask$. For instance, the SCSI \cdrom\
+-driver has implemented the code for loading and ejecting \cdrom's, and
+-hence its corresponding flags in $capability$ will be set. But a SCSI
+-\cdrom\ drive might be a caddy system, which can't load the tray, and
+-hence for this drive the $cdrom_device_info$ struct will have set
+-the $CDC_CLOSE_TRAY$ bit in $mask$.
+-
+-In the file \cdromc\ you will encounter many constructions of the type
+-$$\it
+-if\ (cdo\rightarrow capability \mathrel\& \mathord{\sim} cdi\rightarrow mask 
+-   \mathrel{\&} CDC_<capability>) \ldots
+-$$
+-There is no $ioctl$ to set the mask\dots The reason is that
+-I think it is better to control the {\em behavior\/} rather than the
+-{\em capabilities}.
+-
+-\subsection{Options}
+-
+-A final flag register controls the {\em behavior\/} of the \cdrom\
+-drives, in order to satisfy different users' wishes, hopefully
+-independently of the ideas of the respective author who happened to
+-have made the drive's support available to the \linux\ community. The
+-current behavior options are:
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDO_AUTO_CLOSE& try to close tray upon device $open()$\cr
+-CDO_AUTO_EJECT& try to open tray on last device $close()$\cr
+-CDO_USE_FFLAGS& use $file_pointer\rightarrow f_flags$ to indicate
+- purpose for $open()$\cr
+-CDO_LOCK& try to lock door if device is opened\cr
+-CDO_CHECK_TYPE& ensure disc type is data if opened for data\cr
+-}
+-$$
+-
+-The initial value of this register is $CDO_AUTO_CLOSE \mathrel|
+-CDO_USE_FFLAGS \mathrel| CDO_LOCK$, reflecting my own view on user
+-interface and software standards. Before you protest, there are two
+-new $ioctl$s implemented in \cdromc, that allow you to control the
+-behavior by software. These are:
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDROM_SET_OPTIONS& set options specified in $(int)\ arg$\cr
+-CDROM_CLEAR_OPTIONS& clear options specified in $(int)\ arg$\cr
+-}
+-$$
+-One option needs some more explanation: $CDO_USE_FFLAGS$. In the next
+-newsection we explain what the need for this option is.
+-
+-A software package {\tt setcd}, available from the Debian distribution
+-and {\tt sunsite.unc.edu}, allows user level control of these flags. 
+-
+-\newsection{The need to know the purpose of opening the \cdrom\ device}
+-
+-Traditionally, Unix devices can be used in two different `modes',
+-either by reading/writing to the device file, or by issuing
+-controlling commands to the device, by the device's $ioctl()$
+-call. The problem with \cdrom\ drives, is that they can be used for
+-two entirely different purposes. One is to mount removable
+-file systems, \cdrom s, the other is to play audio CD's. Audio commands
+-are implemented entirely through $ioctl$s, presumably because the
+-first implementation (SUN?) has been such. In principle there is
+-nothing wrong with this, but a good control of the `CD player' demands
+-that the device can {\em always\/} be opened in order to give the
+-$ioctl$ commands, regardless of the state the drive is in. 
+-
+-On the other hand, when used as a removable-media disc drive (what the
+-original purpose of \cdrom s is) we would like to make sure that the
+-disc drive is ready for operation upon opening the device. In the old
+-scheme, some \cdrom\ drivers don't do any integrity checking, resulting
+-in a number of i/o errors reported by the VFS to the kernel when an
+-attempt for mounting a \cdrom\ on an empty drive occurs. This is not a
+-particularly elegant way to find out that there is no \cdrom\ inserted;
+-it more-or-less looks like the old IBM-PC trying to read an empty floppy
+-drive for a couple of seconds, after which the system complains it
+-can't read from it. Nowadays we can {\em sense\/} the existence of a
+-removable medium in a drive, and we believe we should exploit that
+-fact. An integrity check on opening of the device, that verifies the
+-availability of a \cdrom\ and its correct type (data), would be
+-desirable.
+-
+-These two ways of using a \cdrom\ drive, principally for data and
+-secondarily for playing audio discs, have different demands for the
+-behavior of the $open()$ call. Audio use simply wants to open the
+-device in order to get a file handle which is needed for issuing
+-$ioctl$ commands, while data use wants to open for correct and
+-reliable data transfer. The only way user programs can indicate what
+-their {\em purpose\/} of opening the device is, is through the $flags$
+-parameter (see {\tt {open(2)}}). For \cdrom\ devices, these flags aren't
+-implemented (some drivers implement checking for write-related flags,
+-but this is not strictly necessary if the device file has correct
+-permission flags). Most option flags simply don't make sense to
+-\cdrom\ devices: $O_CREAT$, $O_NOCTTY$, $O_TRUNC$, $O_APPEND$, and
+-$O_SYNC$ have no meaning to a \cdrom. 
+-
+-We therefore propose to use the flag $O_NONBLOCK$ to indicate
+-that the device is opened just for issuing $ioctl$
+-commands. Strictly, the meaning of $O_NONBLOCK$ is that opening and
+-subsequent calls to the device don't cause the calling process to
+-wait. We could interpret this as ``don't wait until someone has
+-inserted some valid data-\cdrom.'' Thus, our proposal of the
+-implementation for the $open()$ call for \cdrom s is:
+-\begin{itemize}
+-\item If no other flags are set than $O_RDONLY$, the device is opened
+-for data transfer, and the return value will be 0 only upon successful
+-initialization of the transfer. The call may even induce some actions
+-on the \cdrom, such as closing the tray.  
+-\item If the option flag $O_NONBLOCK$ is set, opening will always be
+-successful, unless the whole device doesn't exist. The drive will take
+-no actions whatsoever. 
+-\end{itemize}
+-
+-\subsection{And what about standards?}
+-
+-You might hesitate to accept this proposal as it comes from the
+-\linux\ community, and not from some standardizing institute. What
+-about SUN, SGI, HP and all those other Unix and hardware vendors?
+-Well, these companies are in the lucky position that they generally
+-control both the hardware and software of their supported products,
+-and are large enough to set their own standard. They do not have to
+-deal with a dozen or more different, competing hardware
+-configurations.\footnote{Incidentally, I think that SUN's approach to
+-mounting \cdrom s is very good in origin: under Solaris a
+-volume-daemon automatically mounts a newly inserted \cdrom\ under {\tt
+-{/cdrom/$<volume-name>$/}}. In my opinion they should have pushed this
+-further and have {\em every\/} \cdrom\ on the local area network be
+-mounted at the similar location, \ie, no matter in which particular
+-machine you insert a \cdrom, it will always appear at the same
+-position in the directory tree, on every system. When I wanted to
+-implement such a user-program for \linux, I came across the
+-differences in behavior of the various drivers, and the need for an
+-$ioctl$ informing about media changes.}
+-
+-We believe that using $O_NONBLOCK$ to indicate that a device is being opened
+-for $ioctl$ commands only can be easily introduced in the \linux\
+-community. All the CD-player authors will have to be informed, we can
+-even send in our own patches to the programs. The use of $O_NONBLOCK$
+-has most likely no influence on the behavior of the CD-players on
+-other operating systems than \linux. Finally, a user can always revert
+-to old behavior by a call to $ioctl(file_descriptor, CDROM_CLEAR_OPTIONS,
+-CDO_USE_FFLAGS)$. 
+-
+-\subsection{The preferred strategy of $open()$}
+-
+-The routines in \cdromc\ are designed in such a way that run-time
+-configuration of the behavior of \cdrom\ devices (of {\em any\/} type)
+-can be carried out, by the $CDROM_SET/CLEAR_OPTIONS$ $ioctls$. Thus, various
+-modes of operation can be set:
+-\begin{description}
+-\item[$CDO_AUTO_CLOSE \mathrel| CDO_USE_FFLAGS \mathrel| CDO_LOCK$] This
+-is the default setting. (With $CDO_CHECK_TYPE$ it will be better, in the
+-future.) If the device is not yet opened by any other process, and if
+-the device is being opened for data ($O_NONBLOCK$ is not set) and the
+-tray is found to be open, an attempt to close the tray is made. Then,
+-it is verified that a disc is in the drive and, if $CDO_CHECK_TYPE$ is
+-set, that it contains tracks of type `data mode 1.' Only if all tests
+-are passed is the return value zero. The door is locked to prevent file
+-system corruption. If the drive is opened for audio ($O_NONBLOCK$ is
+-set), no actions are taken and a value of 0 will be returned. 
+-\item[$CDO_AUTO_CLOSE \mathrel| CDO_AUTO_EJECT \mathrel| CDO_LOCK$] This
+-mimics the behavior of the current sbpcd-driver. The option flags are
+-ignored, the tray is closed on the first open, if necessary. Similarly,
+-the tray is opened on the last release, \ie, if a \cdrom\ is unmounted,
+-it is automatically ejected, such that the user can replace it.
+-\end{description} 
+-We hope that these option can convince everybody (both driver
+-maintainers and user program developers) to adopt the new \cdrom\
+-driver scheme and option flag interpretation.
+-
+-\newsection{Description of routines in \cdromc}
+-
+-Only a few routines in \cdromc\ are exported to the drivers. In this
+-new section we will discuss these, as well as the functions that `take
+-over' the \cdrom\ interface to the kernel. The header file belonging
+-to \cdromc\ is called \cdromh. Formerly, some of the contents of this
+-file were placed in the file {\tt {ucdrom.h}}, but this file has now been
+-merged back into \cdromh.
+-
+-\subsection{$Struct\ file_operations\ cdrom_fops$}
+-
+-The contents of this structure were described in section~\ref{cdrom.c}.
+-A pointer to this structure is assigned to the $fops$ field
+-of the $struct gendisk$.
+-
+-\subsection{$Int\ register_cdrom( struct\ cdrom_device_info\ * cdi)$}
+-
+-This function is used in about the same way one registers $cdrom_fops$
+-with the kernel, the device operations and information structures,
+-as described in section~\ref{cdrom.c}, should be registered with the
+-\UCD:
+-$$
+-register_cdrom(\&<device>_info));
+-$$
+-This function returns zero upon success, and non-zero upon
+-failure. The structure $<device>_info$ should have a pointer to the
+-driver's $<device>_dops$, as in 
+-$$
+-\vbox{\halign{&$#$\hfil\cr
+-struct\ &cdrom_device_info\ <device>_info = \{\cr
+-& <device>_dops;\cr
+-&\ldots\cr
+-\}\cr
+-}}$$
+-Note that a driver must have one static structure, $<device>_dops$, while
+-it may have as many structures $<device>_info$ as there are minor devices
+-active. $Register_cdrom()$ builds a linked list from these. 
+-
+-\subsection{$Void\ unregister_cdrom(struct\ cdrom_device_info * cdi)$}
+-
+-Unregistering device $cdi$ with minor number $MINOR(cdi\to dev)$ removes
+-the minor device from the list. If it was the last registered minor for
+-the low-level driver, this disconnects the registered device-operation
+-routines from the \cdrom\ interface. This function returns zero upon
+-success, and non-zero upon failure.
+-
+-\subsection{$Int\ cdrom_open(struct\ inode * ip, struct\ file * fp)$}
+-
+-This function is not called directly by the low-level drivers, it is
+-listed in the standard $cdrom_fops$. If the VFS opens a file, this
+-function becomes active. A strategy is implemented in this routine,
+-taking care of all capabilities and options that are set in the
+-$cdrom_device_ops$ connected to the device. Then, the program flow is
+-transferred to the device_dependent $open()$ call.
+-
+-\subsection{$Void\ cdrom_release(struct\ inode *ip, struct\ file
+-*fp)$}
+-
+-This function implements the reverse-logic of $cdrom_open()$, and then
+-calls the device-dependent $release()$ routine. When the use-count has
+-reached 0, the allocated buffers are flushed by calls to $sync_dev(dev)$
+-and $invalidate_buffers(dev)$.
+-
+-
+-\subsection{$Int\ cdrom_ioctl(struct\ inode *ip, struct\ file *fp,
+-unsigned\ int\ cmd, unsigned\ long\ arg)$}
+-\label{cdrom-ioctl}
+-
+-This function handles all the standard $ioctl$ requests for \cdrom\
+-devices in a uniform way. The different calls fall into three
+-categories: $ioctl$s that can be directly implemented by device
+-operations, ones that are routed through the call $audio_ioctl()$, and
+-the remaining ones, that are presumable device-dependent. Generally, a
+-negative return value indicates an error.
+-
+-\subsubsection{Directly implemented $ioctl$s}
+-\label{ioctl-direct}
+-
+-The following `old' \cdrom-$ioctl$s are implemented by directly
+-calling device-operations in $cdrom_device_ops$, if implemented and
+-not masked:
+-\begin{description}
+-\item[CDROMMULTISESSION] Requests the last session on a \cdrom.
+-\item[CDROMEJECT] Open tray. 
+-\item[CDROMCLOSETRAY] Close tray.
+-\item[CDROMEJECT_SW] If $arg\not=0$, set behavior to auto-close (close
+-tray on first open) and auto-eject (eject on last release), otherwise
+-set behavior to non-moving on $open()$ and $release()$ calls.
+-\item[CDROM_GET_MCN] Get the Media Catalog Number from a CD.
+-\end{description}
+-
+-\subsubsection{$Ioctl$s routed through $audio_ioctl()$}
+-\label{ioctl-audio}
+-
+-The following set of $ioctl$s are all implemented through a call to
+-the $cdrom_fops$ function $audio_ioctl()$. Memory checks and
+-allocation are performed in $cdrom_ioctl()$, and also sanitization of
+-address format ($CDROM_LBA$/$CDROM_MSF$) is done.
+-\begin{description}
+-\item[CDROMSUBCHNL] Get sub-channel data in argument $arg$ of type $struct\
+-cdrom_subchnl *{}$.
+-\item[CDROMREADTOCHDR] Read Table of Contents header, in $arg$ of type
+-$struct\ cdrom_tochdr *{}$. 
+-\item[CDROMREADTOCENTRY] Read a Table of Contents entry in $arg$ and
+-specified by $arg$ of type $struct\ cdrom_tocentry *{}$.
+-\item[CDROMPLAYMSF] Play audio fragment specified in Minute, Second,
+-Frame format, delimited by $arg$ of type $struct\ cdrom_msf *{}$.
+-\item[CDROMPLAYTRKIND] Play audio fragment in track-index format
+-delimited by $arg$ of type $struct\ \penalty-1000 cdrom_ti *{}$.
+-\item[CDROMVOLCTRL] Set volume specified by $arg$ of type $struct\
+-cdrom_volctrl *{}$.
+-\item[CDROMVOLREAD] Read volume into by $arg$ of type $struct\
+-cdrom_volctrl *{}$.
+-\item[CDROMSTART] Spin up disc.
+-\item[CDROMSTOP] Stop playback of audio fragment.
+-\item[CDROMPAUSE] Pause playback of audio fragment.
+-\item[CDROMRESUME] Resume playing.
+-\end{description}
+-
+-\subsubsection{New $ioctl$s in \cdromc}
+-
+-The following $ioctl$s have been introduced to allow user programs to
+-control the behavior of individual \cdrom\ devices. New $ioctl$
+-commands can be identified by the underscores in their names.
+-\begin{description}
+-\item[CDROM_SET_OPTIONS] Set options specified by $arg$. Returns the
+-option flag register after modification. Use  $arg = \rm0$ for reading
+-the current flags.
+-\item[CDROM_CLEAR_OPTIONS] Clear options specified by $arg$. Returns
+-  the option flag register after modification.
+-\item[CDROM_SELECT_SPEED] Select head-rate speed of disc specified as
+-  by $arg$ in units of standard cdrom speed (176\,kB/sec raw data or
+-  150\,kB/sec file system data). The value 0 means `auto-select', \ie,
+-  play audio discs at real time and data discs at maximum speed. The value
+-  $arg$ is checked against the maximum head rate of the drive found in the
+-  $cdrom_dops$.
+-\item[CDROM_SELECT_DISC] Select disc numbered $arg$ from a juke-box.
+-  First disc is numbered 0. The number $arg$ is checked against the
+-  maximum number of discs in the juke-box found in the $cdrom_dops$.
+-\item[CDROM_MEDIA_CHANGED] Returns 1 if a disc has been changed since
+-  the last call. Note that calls to $cdrom_media_changed$ by the VFS
+-  are treated by an independent queue, so both mechanisms will detect
+-  a media change once. For juke-boxes, an extra argument $arg$
+-  specifies the slot for which the information is given. The special
+-  value $CDSL_CURRENT$ requests that information about the currently
+-  selected slot be returned.
+-\item[CDROM_DRIVE_STATUS] Returns the status of the drive by a call to
+-  $drive_status()$. Return values are defined in section~\ref{drive
+-   status}. Note that this call doesn't return information on the
+-  current playing activity of the drive; this can be polled through an
+-  $ioctl$ call to $CDROMSUBCHNL$. For juke-boxes, an extra argument
+-  $arg$ specifies the slot for which (possibly limited) information is
+-  given. The special value $CDSL_CURRENT$ requests that information
+-  about the currently selected slot be returned.
+-\item[CDROM_DISC_STATUS] Returns the type of the disc currently in the
+-  drive.  It should be viewed as a complement to $CDROM_DRIVE_STATUS$.
+-  This $ioctl$ can provide \emph {some} information about the current
+-  disc that is inserted in the drive.  This functionality used to be
+-  implemented in the low level drivers, but is now carried out
+-  entirely in \UCD.
+-  
+-  The history of development of the CD's use as a carrier medium for
+-  various digital information has lead to many different disc types.
+-  This $ioctl$ is useful only in the case that CDs have \emph {only
+-    one} type of data on them.  While this is often the case, it is
+-  also very common for CDs to have some tracks with data, and some
+-  tracks with audio.  Because this is an existing interface, rather
+-  than fixing this interface by changing the assumptions it was made
+-  under, thereby breaking all user applications that use this
+-  function, the \UCD\ implements this $ioctl$ as follows: If the CD in
+-  question has audio tracks on it, and it has absolutely no CD-I, XA,
+-  or data tracks on it, it will be reported as $CDS_AUDIO$.  If it has
+-  both audio and data tracks, it will return $CDS_MIXED$.  If there
+-  are no audio tracks on the disc, and if the CD in question has any
+-  CD-I tracks on it, it will be reported as $CDS_XA_2_2$.  Failing
+-  that, if the CD in question has any XA tracks on it, it will be
+-  reported as $CDS_XA_2_1$.  Finally, if the CD in question has any
+-  data tracks on it, it will be reported as a data CD ($CDS_DATA_1$).
+-
+-  This $ioctl$ can return:
+-  $$
+-  \halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-    CDS_NO_INFO& no information available\cr
+-    CDS_NO_DISC& no disc is inserted, or tray is opened\cr
+-    CDS_AUDIO& Audio disc (2352 audio bytes/frame)\cr
+-    CDS_DATA_1& data disc, mode 1 (2048 user bytes/frame)\cr
+-    CDS_XA_2_1& mixed data (XA), mode 2, form 1 (2048 user bytes)\cr
+-    CDS_XA_2_2& mixed data (XA), mode 2, form 1 (2324  user bytes)\cr
+-    CDS_MIXED& mixed audio/data disc\cr
+-    }
+-  $$
+-  For some information concerning frame layout of the various disc
+-  types, see a recent version of \cdromh.
+-
+-\item[CDROM_CHANGER_NSLOTS] Returns the number of slots in a
+-  juke-box. 
+-\item[CDROMRESET] Reset the drive. 
+-\item[CDROM_GET_CAPABILITY] Returns the $capability$ flags for the
+-  drive. Refer to section \ref{capability} for more information on
+-  these flags.
+-\item[CDROM_LOCKDOOR] Locks the door of the drive. $arg == \rm0$
+-  unlocks the door, any other value locks it.
+-\item[CDROM_DEBUG] Turns on debugging info. Only root is allowed
+-  to do this. Same semantics as CDROM_LOCKDOOR.
+-\end{description}
+-
+-\subsubsection{Device dependent $ioctl$s}
+-
+-Finally, all other $ioctl$s are passed to the function $dev_ioctl()$,
+-if implemented. No memory allocation or verification is carried out. 
+-
+-\newsection{How to update your driver}
+-
+-\begin{enumerate}
+-\item Make a backup of your current driver. 
+-\item Get hold of the files \cdromc\ and \cdromh, they should be in
+-  the directory tree that came with this documentation.
+-\item Make sure you include \cdromh.
+-\item Change the 3rd argument of $register_blkdev$ from
+-$\&<your-drive>_fops$ to $\&cdrom_fops$. 
+-\item Just after that line, add the following to register with the \UCD:
+-  $$register_cdrom(\&<your-drive>_info);$$
+-  Similarly, add a call to $unregister_cdrom()$ at the appropriate place.
+-\item Copy an example of the device-operations $struct$ to your
+-  source, \eg, from {\tt {cm206.c}} $cm206_dops$, and change all
+-  entries to names corresponding to your driver, or names you just
+-  happen to like. If your driver doesn't support a certain function,
+-  make the entry $NULL$. At the entry $capability$ you should list all
+-  capabilities your driver currently supports. If your driver
+-  has a capability that is not listed, please send me a message.
+-\item Copy the $cdrom_device_info$ declaration from the same example
+-  driver, and modify the entries according to your needs. If your
+-  driver dynamically determines the capabilities of the hardware, this
+-  structure should also be declared dynamically. 
+-\item Implement all functions in your $<device>_dops$ structure,
+-  according to prototypes listed in \cdromh, and specifications given
+-  in section~\ref{cdrom.c}. Most likely you have already implemented
+-  the code in a large part, and you will almost certainly need to adapt the
+-  prototype and return values.
+-\item Rename your $<device>_ioctl()$ function to $audio_ioctl$ and
+-  change the prototype a little. Remove entries listed in the first
+-  part in section~\ref{cdrom-ioctl}, if your code was OK, these are
+-  just calls to the routines you adapted in the previous step.
+-\item You may remove all remaining memory checking code in the
+-  $audio_ioctl()$ function that deals with audio commands (these are
+-  listed in the second part of section~\ref{cdrom-ioctl}). There is no
+-  need for memory allocation either, so most $case$s in the $switch$
+-  statement look similar to:
+-  $$
+-  case\ CDROMREADTOCENTRY\colon get_toc_entry\bigl((struct\ 
+-  cdrom_tocentry *{})\ arg\bigr);
+-  $$
+-\item All remaining $ioctl$ cases must be moved to a separate
+-  function, $<device>_ioctl$, the device-dependent $ioctl$s. Note that
+-  memory checking and allocation must be kept in this code!
+-\item Change the prototypes of $<device>_open()$ and
+-  $<device>_release()$, and remove any strategic code (\ie, tray
+-  movement, door locking, etc.).
+-\item Try to recompile the drivers. We advise you to use modules, both
+-  for {\tt {cdrom.o}} and your driver, as debugging is much easier this
+-  way.
+-\end{enumerate} 
+-
+-\newsection{Thanks}
+-
+-Thanks to all the people involved.  First, Erik Andersen, who has
+-taken over the torch in maintaining \cdromc\ and integrating much
+-\cdrom-related code in the 2.1-kernel.  Thanks to Scott Snyder and
+-Gerd Knorr, who were the first to implement this interface for SCSI
+-and IDE-CD drivers and added many ideas for extension of the data
+-structures relative to kernel~2.0.  Further thanks to Heiko Ei{\ss}feldt,
+-Thomas Quinot, Jon Tombs, Ken Pizzini, Eberhard M\"onkeberg and Andrew
+-Kroll, the \linux\ \cdrom\ device driver developers who were kind
+-enough to give suggestions and criticisms during the writing. Finally
+-of course, I want to thank Linus Torvalds for making this possible in
+-the first place.
+-
+-\vfill
+-$ \version\ $
+-\eject
+-\end{document}
+diff --git a/Documentation/cdrom/cdrom-standard.txt b/Documentation/cdrom/cdrom-standard.txt
 new file mode 100644
-index 000000000000..156100f17c3f
+index 000000000000..dde4f7f7fdbf
 --- /dev/null
-+++ b/Documentation/serial/moxa-smartio.rst
-@@ -0,0 +1,615 @@
-+=============================================================
-+MOXA Smartio/Industio Family Device Driver Installation Guide
-+=============================================================
-+
-+.. note::
-+
-+   This file is outdated. It needs some care in order to make it
-+   updated to Kernel 5.0 and upper
-+
-+Copyright (C) 2008, Moxa Inc.
-+
-+Date: 01/21/2008
-+
-+.. Content
-+
-+   1. Introduction
-+   2. System Requirement
-+   3. Installation
-+      3.1 Hardware installation
-+      3.2 Driver files
-+      3.3 Device naming convention
-+      3.4 Module driver configuration
-+      3.5 Static driver configuration for Linux kernel 2.4.x and 2.6.x.
-+      3.6 Custom configuration
-+      3.7 Verify driver installation
-+   4. Utilities
-+   5. Setserial
-+   6. Troubleshooting
-+
-+1. Introduction
-+^^^^^^^^^^^^^^^
-+
-+   The Smartio/Industio/UPCI family Linux driver supports following multiport
-+   boards.
-+
-+    - 2 ports multiport board
-+	CP-102U, CP-102UL, CP-102UF
-+	CP-132U-I, CP-132UL,
-+	CP-132, CP-132I, CP132S, CP-132IS,
-+	CI-132, CI-132I, CI-132IS,
-+	(C102H, C102HI, C102HIS, C102P, CP-102, CP-102S)
-+
-+    - 4 ports multiport board
-+	CP-104EL,
-+	CP-104UL, CP-104JU,
-+	CP-134U, CP-134U-I,
-+	C104H/PCI, C104HS/PCI,
-+	CP-114, CP-114I, CP-114S, CP-114IS, CP-114UL,
-+	C104H, C104HS,
-+	CI-104J, CI-104JS,
-+	CI-134, CI-134I, CI-134IS,
-+	(C114HI, CT-114I, C104P),
-+	POS-104UL,
-+	CB-114,
-+	CB-134I
-+
-+    - 8 ports multiport board
-+	CP-118EL, CP-168EL,
-+	CP-118U, CP-168U,
-+	C168H/PCI,
-+	C168H, C168HS,
-+	(C168P),
-+	CB-108
-+
-+   This driver and installation procedure have been developed upon Linux Kernel
-+   2.4.x and 2.6.x. This driver supports Intel x86 hardware platform. In order
-+   to maintain compatibility, this version has also been properly tested with
-+   RedHat, Mandrake, Fedora and S.u.S.E Linux. However, if compatibility problem
-+   occurs, please contact Moxa at support@moxa.com.tw.
-+
-+   In addition to device driver, useful utilities are also provided in this
-+   version. They are:
-+
-+    - msdiag
-+		 Diagnostic program for displaying installed Moxa
-+                 Smartio/Industio boards.
-+    - msmon
-+		 Monitor program to observe data count and line status signals.
-+    - msterm     A simple terminal program which is useful in testing serial
-+	         ports.
-+    - io-irq.exe
-+		 Configuration program to setup ISA boards. Please note that
-+                 this program can only be executed under DOS.
-+
-+   All the drivers and utilities are published in form of source code under
-+   GNU General Public License in this version. Please refer to GNU General
-+   Public License announcement in each source code file for more detail.
-+
-+   In Moxa's Web sites, you may always find latest driver at http://www.moxa.com/.
-+
-+   This version of driver can be installed as Loadable Module (Module driver)
-+   or built-in into kernel (Static driver). You may refer to following
-+   installation procedure for suitable one. Before you install the driver,
-+   please refer to hardware installation procedure in the User's Manual.
-+
-+   We assume the user should be familiar with following documents.
-+
-+   - Serial-HOWTO
-+   - Kernel-HOWTO
-+
-+2. System Requirement
-+^^^^^^^^^^^^^^^^^^^^^
-+
-+   - Hardware platform: Intel x86 machine
-+   - Kernel version: 2.4.x or 2.6.x
-+   - gcc version 2.72 or later
-+   - Maximum 4 boards can be installed in combination
-+
-+3. Installation
-+^^^^^^^^^^^^^^^
-+
-+3.1 Hardware installation
-+=========================
-+
-+   There are two types of buses, ISA and PCI, for Smartio/Industio
-+   family multiport board.
-+
-+ISA board
-+---------
-+
-+   You'll have to configure CAP address, I/O address, Interrupt Vector
-+   as well as IRQ before installing this driver. Please refer to hardware
-+   installation procedure in User's Manual before proceed any further.
-+   Please make sure the JP1 is open after the ISA board is set properly.
-+
-+PCI/UPCI board
-+--------------
-+
-+   You may need to adjust IRQ usage in BIOS to avoid from IRQ conflict
-+   with other ISA devices. Please refer to hardware installation
-+   procedure in User's Manual in advance.
-+
-+PCI IRQ Sharing
-+---------------
-+
-+   Each port within the same multiport board shares the same IRQ. Up to
-+   4 Moxa Smartio/Industio PCI Family multiport boards can be installed
-+   together on one system and they can share the same IRQ.
-+
-+
-+3.2 Driver files
-+================
-+
-+   The driver file may be obtained from ftp, CD-ROM or floppy disk. The
-+   first step, anyway, is to copy driver file "mxser.tgz" into specified
-+   directory. e.g. /moxa. The execute commands as below::
-+
-+       # cd /
-+       # mkdir moxa
-+       # cd /moxa
-+       # tar xvf /dev/fd0
-+
-+or::
-+
-+       # cd /
-+       # mkdir moxa
-+       # cd /moxa
-+       # cp /mnt/cdrom/<driver directory>/mxser.tgz .
-+       # tar xvfz mxser.tgz
-+
-+
-+3.3 Device naming convention
-+============================
-+
-+   You may find all the driver and utilities files in /moxa/mxser.
-+   Following installation procedure depends on the model you'd like to
-+   run the driver. If you prefer module driver, please refer to 3.4.
-+   If static driver is required, please refer to 3.5.
-+
-+Dialin and callout port
-+-----------------------
-+
-+   This driver remains traditional serial device properties. There are
-+   two special file name for each serial port. One is dial-in port
-+   which is named "ttyMxx". For callout port, the naming convention
-+   is "cumxx".
-+
-+Device naming when more than 2 boards installed
-+-----------------------------------------------
-+
-+   Naming convention for each Smartio/Industio multiport board is
-+   pre-defined as below.
-+
-+   ============ ===============       ==============
-+   Board Num.	 Dial-in Port	      Callout port
-+   1st board	ttyM0  - ttyM7	      cum0  - cum7
-+   2nd board	ttyM8  - ttyM15       cum8  - cum15
-+   3rd board	ttyM16 - ttyM23       cum16 - cum23
-+   4th board	ttyM24 - ttym31       cum24 - cum31
-+   ============ ===============       ==============
-+
-+.. note::
-+
-+   Under Kernel 2.6 and upper, the cum Device is Obsolete. So use ttyM*
-+   device instead.
-+
-+Board sequence
-+--------------
-+
-+   This driver will activate ISA boards according to the parameter set
-+   in the driver. After all specified ISA board activated, PCI board
-+   will be installed in the system automatically driven.
-+   Therefore the board number is sorted by the CAP address of ISA boards.
-+   For PCI boards, their sequence will be after ISA boards and C168H/PCI
-+   has higher priority than C104H/PCI boards.
-+
-+3.4 Module driver configuration
-+===============================
-+
-+   Module driver is easiest way to install. If you prefer static driver
-+   installation, please skip this paragraph.
-+
-+
-+   ------------- Prepare to use the MOXA driver --------------------
-+
-+3.4.1 Create tty device with correct major number
-+-------------------------------------------------
-+
-+   Before using MOXA driver, your system must have the tty devices
-+   which are created with driver's major number. We offer one shell
-+   script "msmknod" to simplify the procedure.
-+   This step is only needed to be executed once. But you still
-+   need to do this procedure when:
-+
-+   a. You change the driver's major number. Please refer the "3.7"
-+      section.
-+   b. Your total installed MOXA boards number is changed. Maybe you
-+      add/delete one MOXA board.
-+   c. You want to change the tty name. This needs to modify the
-+      shell script "msmknod"
-+
-+   The procedure is::
-+
-+	 # cd /moxa/mxser/driver
-+	 # ./msmknod
-+
-+   This shell script will require the major number for dial-in
-+   device and callout device to create tty device. You also need
-+   to specify the total installed MOXA board number. Default major
-+   numbers for dial-in device and callout device are 30, 35. If
-+   you need to change to other number, please refer section "3.7"
-+   for more detailed procedure.
-+   Msmknod will delete any special files occupying the same device
-+   naming.
-+
-+3.4.2 Build the MOXA driver and utilities
-+-----------------------------------------
-+
-+   Before using the MOXA driver and utilities, you need compile the
-+   all the source code. This step is only need to be executed once.
-+   But you still re-compile the source code if you modify the source
-+   code. For example, if you change the driver's major number (see
-+   "3.7" section), then you need to do this step again.
-+
-+   Find "Makefile" in /moxa/mxser, then run
-+
-+	 # make clean; make install
-+
-+   ..note::
-+
-+	 For Red Hat 9, Red Hat Enterprise Linux AS3/ES3/WS3 & Fedora Core1:
-+	 # make clean; make installsp1
-+
-+	 For Red Hat Enterprise Linux AS4/ES4/WS4:
-+	 # make clean; make installsp2
-+
-+   The driver files "mxser.o" and utilities will be properly compiled
-+   and copied to system directories respectively.
-+
-+------------- Load MOXA driver--------------------
-+
-+3.4.3 Load the MOXA driver
-+--------------------------
-+
-+   ::
-+
-+	 # modprobe mxser <argument>
-+
-+   will activate the module driver. You may run "lsmod" to check
-+   if "mxser" is activated. If the MOXA board is ISA board, the
-+   <argument> is needed. Please refer to section "3.4.5" for more
-+   information.
-+
-+------------- Load MOXA driver on boot --------------------
-+
-+3.4.4 Load the mxser driver
-+---------------------------
-+
-+
-+   For the above description, you may manually execute
-+   "modprobe mxser" to activate this driver and run
-+   "rmmod mxser" to remove it.
-+
-+   However, it's better to have a boot time configuration to
-+   eliminate manual operation. Boot time configuration can be
-+   achieved by rc file. We offer one "rc.mxser" file to simplify
-+   the procedure under "moxa/mxser/driver".
-+
-+   But if you use ISA board, please modify the "modprobe ..." command
-+   to add the argument (see "3.4.5" section). After modifying the
-+   rc.mxser, please try to execute "/moxa/mxser/driver/rc.mxser"
-+   manually to make sure the modification is ok. If any error
-+   encountered, please try to modify again. If the modification is
-+   completed, follow the below step.
-+
-+   Run following command for setting rc files::
-+
-+	 # cd /moxa/mxser/driver
-+	 # cp ./rc.mxser /etc/rc.d
-+	 # cd /etc/rc.d
-+
-+   Check "rc.serial" is existed or not. If "rc.serial" doesn't exist,
-+   create it by vi, run "chmod 755 rc.serial" to change the permission.
-+
-+   Add "/etc/rc.d/rc.mxser" in last line.
-+
-+   Reboot and check if moxa.o activated by "lsmod" command.
-+
-+3.4.5. specify CAP address
-+--------------------------
-+
-+   If you'd like to drive Smartio/Industio ISA boards in the system,
-+   you'll have to add parameter to specify CAP address of given
-+   board while activating "mxser.o". The format for parameters are
-+   as follows.::
-+
-+	   modprobe mxser ioaddr=0x???,0x???,0x???,0x???
-+				  |  |  |    |
-+				  |  |  |    +- 4th ISA board
-+				  |  |  +------ 3rd ISA board
-+				  |  +------------ 2nd ISA board
-+				  +-------------------1st ISA board
-+
-+3.5 Static driver configuration for Linux kernel 2.4.x and 2.6.x
-+================================================================
-+
-+    Note:
-+          To use static driver, you must install the linux kernel
-+          source package.
-+
-+3.5.1 Backup the built-in driver in the kernel
-+----------------------------------------------
-+
-+    ::
-+
-+       # cd /usr/src/linux/drivers/char
-+       # mv mxser.c mxser.c.old
-+
-+       For Red Hat 7.x user, you need to create link:
-+       # cd /usr/src
-+       # ln -s linux-2.4 linux
-+
-+3.5.2 Create link
-+-----------------
-+    ::
-+
-+	  # cd /usr/src/linux/drivers/char
-+	  # ln -s /moxa/mxser/driver/mxser.c mxser.c
-+
-+3.5.3 Add CAP address list for ISA boards.
-+------------------------------------------
-+
-+    For PCI boards user, please skip this step.
-+
-+    In module mode, the CAP address for ISA board is given by
-+    parameter. In static driver configuration, you'll have to
-+    assign it within driver's source code. If you will not
-+    install any ISA boards, you may skip to next portion.
-+    The instructions to modify driver source code are as
-+    below.
-+
-+    a. run::
-+
-+	# cd /moxa/mxser/driver
-+	# vi mxser.c
-+
-+    b. Find the array mxserBoardCAP[] as below::
-+
-+	  static int mxserBoardCAP[] = {0x00, 0x00, 0x00, 0x00};
-+
-+    c. Change the address within this array using vi. For
-+       example, to driver 2 ISA boards with CAP address
-+       0x280 and 0x180 as 1st and 2nd board. Just to change
-+       the source code as follows::
-+
-+	  static int mxserBoardCAP[] = {0x280, 0x180, 0x00, 0x00};
-+
-+3.5.4 Setup kernel configuration
-+--------------------------------
-+
-+    Configure the kernel::
-+
-+      # cd /usr/src/linux
-+      # make menuconfig
-+
-+    You will go into a menu-driven system. Please select [Character
-+    devices][Non-standard serial port support], enable the [Moxa
-+    SmartIO support] driver with "[*]" for built-in (not "[M]"), then
-+    select [Exit] to exit this program.
-+
-+3.5.5 Rebuild kernel
-+--------------------
-+
-+    The following are for Linux kernel rebuilding, for your
-+    reference only.
-+
-+    For appropriate details, please refer to the Linux document:
-+
-+        a. Run the following commands::
-+
-+	     cd /usr/src/linux
-+	     make clean		     # take a few minutes
-+	     make dep		     # take a few minutes
-+	     make bzImage	     # take probably 10-20 minutes
-+	     make install	     # copy boot image to correct position
-+
-+	f. Please make sure the boot kernel (vmlinuz) is in the
-+	   correct position.
-+	g. If you use 'lilo' utility, you should check /etc/lilo.conf
-+	   'image' item specified the path which is the 'vmlinuz' path,
-+	   or you will load wrong (or old) boot kernel image (vmlinuz).
-+	   After checking /etc/lilo.conf, please run "lilo".
-+
-+	  Note that if the result of "make bzImage" is ERROR, then you have to
-+	  go back to Linux configuration Setup. Type "make menuconfig" in
-+          directory /usr/src/linux.
-+
-+
-+3.5.6 Make tty device and special file
-+--------------------------------------
-+
-+    ::
-+       # cd /moxa/mxser/driver
-+       # ./msmknod
-+
-+3.5.7 Make utility
-+------------------
-+
-+    ::
-+
-+	  # cd /moxa/mxser/utility
-+	  # make clean; make install
-+
-+3.5.8 Reboot
-+------------
-+
-+
-+
-+3.6 Custom configuration
-+========================
-+
-+    Although this driver already provides you default configuration, you
-+    still can change the device name and major number. The instruction to
-+    change these parameters are shown as below.
-+
-+a. Change Device name
-+
-+    If you'd like to use other device names instead of default naming
-+    convention, all you have to do is to modify the internal code
-+    within the shell script "msmknod". First, you have to open "msmknod"
-+    by vi. Locate each line contains "ttyM" and "cum" and change them
-+    to the device name you desired. "msmknod" creates the device names
-+    you need next time executed.
-+
-+b. Change Major number
-+
-+    If major number 30 and 35 had been occupied, you may have to select
-+    2 free major numbers for this driver. There are 3 steps to change
-+    major numbers.
-+
-+3.6.1 Find free major numbers
-+-----------------------------
-+
-+    In /proc/devices, you may find all the major numbers occupied
-+    in the system. Please select 2 major numbers that are available.
-+    e.g. 40, 45.
-+
-+3.6.2 Create special files
-+--------------------------
-+
-+   Run /moxa/mxser/driver/msmknod to create special files with
-+   specified major numbers.
-+
-+3.6.3 Modify driver with new major number
-+-----------------------------------------
-+
-+   Run vi to open /moxa/mxser/driver/mxser.c. Locate the line
-+   contains "MXSERMAJOR". Change the content as below::
-+
-+	  #define	  MXSERMAJOR		  40
-+	  #define	  MXSERCUMAJOR		  45
-+
-+    3.6.4 Run "make clean; make install" in /moxa/mxser/driver.
-+
-+3.7 Verify driver installation
-+==============================
-+
-+    You may refer to /var/log/messages to check the latest status
-+    log reported by this driver whenever it's activated.
-+
-+4. Utilities
-+^^^^^^^^^^^^
-+
-+   There are 3 utilities contained in this driver. They are msdiag, msmon and
-+   msterm. These 3 utilities are released in form of source code. They should
-+   be compiled into executable file and copied into /usr/bin.
-+
-+   Before using these utilities, please load driver (refer 3.4 & 3.5) and
-+   make sure you had run the "msmknod" utility.
-+
-+msdiag - Diagnostic
-+===================
-+
-+   This utility provides the function to display what Moxa Smartio/Industio
-+   board found by driver in the system.
-+
-+msmon - Port Monitoring
++++ b/Documentation/cdrom/cdrom-standard.txt
+@@ -0,0 +1,1063 @@
++=======================
++A Linux CD-ROM standard
 +=======================
 +
-+   This utility gives the user a quick view about all the MOXA ports'
-+   activities. One can easily learn each port's total received/transmitted
-+   (Rx/Tx) character count since the time when the monitoring is started.
-+
-+   Rx/Tx throughputs per second are also reported in interval basis (e.g.
-+   the last 5 seconds) and in average basis (since the time the monitoring
-+   is started). You can reset all ports' count by <HOME> key. <+> <->
-+   (plus/minus) keys to change the displaying time interval. Press <ENTER>
-+   on the port, that cursor stay, to view the port's communication
-+   parameters, signal status, and input/output queue.
-+
-+msterm - Terminal Emulation
-+===========================
-+
-+   This utility provides data sending and receiving ability of all tty ports,
-+   especially for MOXA ports. It is quite useful for testing simple
-+   application, for example, sending AT command to a modem connected to the
-+   port or used as a terminal for login purpose. Note that this is only a
-+   dumb terminal emulation without handling full screen operation.
-+
-+5. Setserial
-+^^^^^^^^^^^^
-+
-+   Supported Setserial parameters are listed as below.
-+
-+   ============== =========================================================
-+   uart		  set UART type(16450-->disable FIFO, 16550A-->enable FIFO)
-+   close_delay	  set the amount of time(in 1/100 of a second) that DTR
-+		  should be kept low while being closed.
-+   closing_wait   set the amount of time(in 1/100 of a second) that the
-+		  serial port should wait for data to be drained while
-+		  being closed, before the receiver is disable.
-+   spd_hi	  Use  57.6kb  when  the application requests 38.4kb.
-+   spd_vhi	  Use  115.2kb	when  the application requests 38.4kb.
-+   spd_shi	  Use  230.4kb	when  the application requests 38.4kb.
-+   spd_warp	  Use  460.8kb	when  the application requests 38.4kb.
-+   spd_normal	  Use  38.4kb  when  the application requests 38.4kb.
-+   spd_cust	  Use  the custom divisor to set the speed when  the
-+		  application requests 38.4kb.
-+   divisor	  This option set the custom division.
-+   baud_base	  This option set the base baud rate.
-+   ============== =========================================================
-+
-+6. Troubleshooting
-+^^^^^^^^^^^^^^^^^^
-+
-+   The boot time error messages and solutions are stated as clearly as
-+   possible. If all the possible solutions fail, please contact our technical
-+   support team to get more help.
++:Author: David van Leeuwen <david@ElseWare.cistron.nl>
++:Date: 12 March 1999
++:Updated by: Erik Andersen (andersee@debian.org)
++:Updated by: Jens Axboe (axboe@image.dk)
 +
 +
-+   Error msg:
-+	      More than 4 Moxa Smartio/Industio family boards found. Fifth board
-+              and after are ignored.
++Introduction
++============
 +
-+   Solution:
-+   To avoid this problem, please unplug fifth and after board, because Moxa
-+   driver supports up to 4 boards.
++Linux is probably the Unix-like operating system that supports
++the widest variety of hardware devices. The reasons for this are
++presumably
 +
-+   Error msg:
-+	      Request_irq fail, IRQ(?) may be conflict with another device.
++- The large list of hardware devices available for the many platforms
++  that Linux now supports (i.e., i386-PCs, Sparc Suns, etc.)
++- The open design of the operating system, such that anybody can write a
++  driver for Linux.
++- There is plenty of source code around as examples of how to write a driver.
 +
-+   Solution:
-+   Other PCI or ISA devices occupy the assigned IRQ. If you are not sure
-+   which device causes the situation, please check /proc/interrupts to find
-+   free IRQ and simply change another free IRQ for Moxa board.
++The openness of Linux, and the many different types of available
++hardware has allowed Linux to support many different hardware devices.
++Unfortunately, the very openness that has allowed Linux to support
++all these different devices has also allowed the behavior of each
++device driver to differ significantly from one device to another.
++This divergence of behavior has been very significant for CD-ROM
++devices; the way a particular drive reacts to a `standard` *ioctl()*
++call varies greatly from one device driver to another. To avoid making
++their drivers totally inconsistent, the writers of Linux CD-ROM
++drivers generally created new device drivers by understanding, copying,
++and then changing an existing one. Unfortunately, this practice did not
++maintain uniform behavior across all the Linux CD-ROM drivers.
 +
-+   Error msg:
-+	      Board #: C1xx Series(CAP=xxx) interrupt number invalid.
++This document describes an effort to establish Uniform behavior across
++all the different CD-ROM device drivers for Linux. This document also
++defines the various *ioctl()'s*, and how the low-level CD-ROM device
++drivers should implement them. Currently (as of the Linux 2.1.\ *x*
++development kernels) several low-level CD-ROM device drivers, including
++both IDE/ATAPI and SCSI, now use this Uniform interface.
 +
-+   Solution:
-+   Each port within the same multiport board shares the same IRQ. Please set
-+   one IRQ (IRQ doesn't equal to zero) for one Moxa board.
++When the CD-ROM was developed, the interface between the CD-ROM drive
++and the computer was not specified in the standards. As a result, many
++different CD-ROM interfaces were developed. Some of them had their
++own proprietary design (Sony, Mitsumi, Panasonic, Philips), other
++manufacturers adopted an existing electrical interface and changed
++the functionality (CreativeLabs/SoundBlaster, Teac, Funai) or simply
++adapted their drives to one or more of the already existing electrical
++interfaces (Aztech, Sanyo, Funai, Vertos, Longshine, Optics Storage and
++most of the `NoName` manufacturers). In cases where a new drive really
++brought its own interface or used its own command set and flow control
++scheme, either a separate driver had to be written, or an existing
++driver had to be enhanced. History has delivered us CD-ROM support for
++many of these different interfaces. Nowadays, almost all new CD-ROM
++drives are either IDE/ATAPI or SCSI, and it is very unlikely that any
++manufacturer will create a new interface. Even finding drives for the
++old proprietary interfaces is getting difficult.
 +
-+   Error msg:
-+	      No interrupt vector be set for Moxa ISA board(CAP=xxx).
++When (in the 1.3.70's) I looked at the existing software interface,
++which was expressed through `cdrom.h`, it appeared to be a rather wild
++set of commands and data formats [#f1]_. It seemed that many
++features of the software interface had been added to accommodate the
++capabilities of a particular drive, in an *ad hoc* manner. More
++importantly, it appeared that the behavior of the `standard` commands
++was different for most of the different drivers: e. g., some drivers
++close the tray if an *open()* call occurs when the tray is open, while
++others do not. Some drivers lock the door upon opening the device, to
++prevent an incoherent file system, but others don't, to allow software
++ejection. Undoubtedly, the capabilities of the different drives vary,
++but even when two drives have the same capability their drivers'
++behavior was usually different.
 +
-+   Solution:
-+   Moxa ISA board needs an interrupt vector.Please refer to user's manual
-+   "Hardware Installation" chapter to set interrupt vector.
++.. [#f1]
++   I cannot recollect what kernel version I looked at, then,
++   presumably 1.2.13 and 1.3.34 --- the latest kernel that I was
++   indirectly involved in.
 +
-+   Error msg:
-+              Couldn't install MOXA Smartio/Industio family driver!
++I decided to start a discussion on how to make all the Linux CD-ROM
++drivers behave more uniformly. I began by contacting the developers of
++the many CD-ROM drivers found in the Linux kernel. Their reactions
++encouraged me to write the Uniform CD-ROM Driver which this document is
++intended to describe. The implementation of the Uniform CD-ROM Driver is
++in the file `cdrom.c`. This driver is intended to be an additional software
++layer that sits on top of the low-level device drivers for each CD-ROM drive.
++By adding this additional layer, it is possible to have all the different
++CD-ROM devices behave **exactly** the same (insofar as the underlying
++hardware will allow).
 +
-+   Solution:
-+   Load Moxa driver fail, the major number may conflict with other devices.
-+   Please refer to previous section 3.7 to change a free major number for
-+   Moxa driver.
++The goal of the Uniform CD-ROM Driver is **not** to alienate driver developers
++whohave not yet taken steps to support this effort. The goal of Uniform CD-ROM
++Driver is simply to give people writing application programs for CD-ROM drives
++**one** Linux CD-ROM interface with consistent behavior for all
++CD-ROM devices. In addition, this also provides a consistent interface
++between the low-level device driver code and the Linux kernel. Care
++is taken that 100% compatibility exists with the data structures and
++programmer's interface defined in `cdrom.h`. This guide was written to
++help CD-ROM driver developers adapt their code to use the Uniform CD-ROM
++Driver code defined in `cdrom.c`.
 +
-+   Error msg:
-+              Couldn't install MOXA Smartio/Industio family callout driver!
++Personally, I think that the most important hardware interfaces are
++the IDE/ATAPI drives and, of course, the SCSI drives, but as prices
++of hardware drop continuously, it is also likely that people may have
++more than one CD-ROM drive, possibly of mixed types. It is important
++that these drives behave in the same way. In December 1994, one of the
++cheapest CD-ROM drives was a Philips cm206, a double-speed proprietary
++drive. In the months that I was busy writing a Linux driver for it,
++proprietary drives became obsolete and IDE/ATAPI drives became the
++standard. At the time of the last update to this document (November
++1997) it is becoming difficult to even **find** anything less than a
++16 speed CD-ROM drive, and 24 speed drives are common.
 +
-+   Solution:
-+   Load Moxa callout driver fail, the callout device major number may
-+   conflict with other devices. Please refer to previous section 3.7 to
-+   change a free callout device major number for Moxa driver.
-diff --git a/Documentation/serial/n_gsm.rst b/Documentation/serial/n_gsm.rst
-new file mode 100644
-index 000000000000..f3ad9fd26408
---- /dev/null
-+++ b/Documentation/serial/n_gsm.rst
-@@ -0,0 +1,103 @@
-+==============================
-+GSM 0710 tty multiplexor HOWTO
-+==============================
++.. _cdrom_api:
 +
-+This line discipline implements the GSM 07.10 multiplexing protocol
-+detailed in the following 3GPP document:
-+
-+	http://www.3gpp.org/ftp/Specs/archive/07_series/07.10/0710-720.zip
-+
-+This document give some hints on how to use this driver with GPRS and 3G
-+modems connected to a physical serial port.
-+
-+How to use it
-+-------------
-+1. initialize the modem in 0710 mux mode (usually AT+CMUX= command) through
-+   its serial port. Depending on the modem used, you can pass more or less
-+   parameters to this command,
-+2. switch the serial line to using the n_gsm line discipline by using
-+   TIOCSETD ioctl,
-+3. configure the mux using GSMIOC_GETCONF / GSMIOC_SETCONF ioctl,
-+
-+Major parts of the initialization program :
-+(a good starting point is util-linux-ng/sys-utils/ldattach.c)::
-+
-+  #include <linux/gsmmux.h>
-+  #define N_GSM0710	21	/* GSM 0710 Mux */
-+  #define DEFAULT_SPEED	B115200
-+  #define SERIAL_PORT	/dev/ttyS0
-+
-+	int ldisc = N_GSM0710;
-+	struct gsm_config c;
-+	struct termios configuration;
-+
-+	/* open the serial port connected to the modem */
-+	fd = open(SERIAL_PORT, O_RDWR | O_NOCTTY | O_NDELAY);
-+
-+	/* configure the serial port : speed, flow control ... */
-+
-+	/* send the AT commands to switch the modem to CMUX mode
-+	   and check that it's successful (should return OK) */
-+	write(fd, "AT+CMUX=0\r", 10);
-+
-+	/* experience showed that some modems need some time before
-+	   being able to answer to the first MUX packet so a delay
-+	   may be needed here in some case */
-+	sleep(3);
-+
-+	/* use n_gsm line discipline */
-+	ioctl(fd, TIOCSETD, &ldisc);
-+
-+	/* get n_gsm configuration */
-+	ioctl(fd, GSMIOC_GETCONF, &c);
-+	/* we are initiator and need encoding 0 (basic) */
-+	c.initiator = 1;
-+	c.encapsulation = 0;
-+	/* our modem defaults to a maximum size of 127 bytes */
-+	c.mru = 127;
-+	c.mtu = 127;
-+	/* set the new configuration */
-+	ioctl(fd, GSMIOC_SETCONF, &c);
-+
-+	/* and wait for ever to keep the line discipline enabled */
-+	daemon(0,0);
-+	pause();
-+
-+4. create the devices corresponding to the "virtual" serial ports (take care,
-+   each modem has its configuration and some DLC have dedicated functions,
-+   for example GPS), starting with minor 1 (DLC0 is reserved for the management
-+   of the mux)::
-+
-+     MAJOR=`cat /proc/devices |grep gsmtty | awk '{print $1}`
-+     for i in `seq 1 4`; do
-+	mknod /dev/ttygsm$i c $MAJOR $i
-+     done
-+
-+5. use these devices as plain serial ports.
-+
-+   for example, it's possible:
-+
-+   - and to use gnokii to send / receive SMS on ttygsm1
-+   - to use ppp to establish a datalink on ttygsm2
-+
-+6. first close all virtual ports before closing the physical port.
-+
-+   Note that after closing the physical port the modem is still in multiplexing
-+   mode. This may prevent a successful re-opening of the port later. To avoid
-+   this situation either reset the modem if your hardware allows that or send
-+   a disconnect command frame manually before initializing the multiplexing mode
-+   for the second time. The byte sequence for the disconnect command frame is::
-+
-+      0xf9, 0x03, 0xef, 0x03, 0xc3, 0x16, 0xf9.
-+
-+Additional Documentation
-+------------------------
-+More practical details on the protocol and how it's supported by industrial
-+modems can be found in the following documents :
-+
-+- http://www.telit.com/module/infopool/download.php?id=616
-+- http://www.u-blox.com/images/downloads/Product_Docs/LEON-G100-G200-MuxImplementation_ApplicationNote_%28GSM%20G1-CS-10002%29.pdf
-+- http://www.sierrawireless.com/Support/Downloads/AirPrime/WMP_Series/~/media/Support_Downloads/AirPrime/Application_notes/CMUX_Feature_Application_Note-Rev004.ashx
-+- http://wm.sim.com/sim/News/photo/2010721161442.pdf
-+
-+11-03-08 - Eric Bénard - <eric@eukrea.com>
-diff --git a/Documentation/serial/n_gsm.txt b/Documentation/serial/n_gsm.txt
-deleted file mode 100644
-index 875361bb7cb4..000000000000
---- a/Documentation/serial/n_gsm.txt
-+++ /dev/null
-@@ -1,96 +0,0 @@
--n_gsm.c GSM 0710 tty multiplexor HOWTO
--===================================================
--
--This line discipline implements the GSM 07.10 multiplexing protocol
--detailed in the following 3GPP document :
--http://www.3gpp.org/ftp/Specs/archive/07_series/07.10/0710-720.zip
--
--This document give some hints on how to use this driver with GPRS and 3G
--modems connected to a physical serial port.
--
--How to use it
---------------
--1- initialize the modem in 0710 mux mode (usually AT+CMUX= command) through
--its serial port. Depending on the modem used, you can pass more or less
--parameters to this command,
--2- switch the serial line to using the n_gsm line discipline by using
--TIOCSETD ioctl,
--3- configure the mux using GSMIOC_GETCONF / GSMIOC_SETCONF ioctl,
--
--Major parts of the initialization program :
--(a good starting point is util-linux-ng/sys-utils/ldattach.c)
--#include <linux/gsmmux.h>
--#define N_GSM0710	21	/* GSM 0710 Mux */
--#define DEFAULT_SPEED	B115200
--#define SERIAL_PORT	/dev/ttyS0
--
--	int ldisc = N_GSM0710;
--	struct gsm_config c;
--	struct termios configuration;
--
--	/* open the serial port connected to the modem */
--	fd = open(SERIAL_PORT, O_RDWR | O_NOCTTY | O_NDELAY);
--
--	/* configure the serial port : speed, flow control ... */
--
--	/* send the AT commands to switch the modem to CMUX mode
--	   and check that it's successful (should return OK) */
--	write(fd, "AT+CMUX=0\r", 10);
--
--	/* experience showed that some modems need some time before
--	   being able to answer to the first MUX packet so a delay
--	   may be needed here in some case */
--	sleep(3);
--
--	/* use n_gsm line discipline */
--	ioctl(fd, TIOCSETD, &ldisc);
--
--	/* get n_gsm configuration */
--	ioctl(fd, GSMIOC_GETCONF, &c);
--	/* we are initiator and need encoding 0 (basic) */
--	c.initiator = 1;
--	c.encapsulation = 0;
--	/* our modem defaults to a maximum size of 127 bytes */
--	c.mru = 127;
--	c.mtu = 127;
--	/* set the new configuration */
--	ioctl(fd, GSMIOC_SETCONF, &c);
--
--	/* and wait for ever to keep the line discipline enabled */
--	daemon(0,0);
--	pause();
--
--4- create the devices corresponding to the "virtual" serial ports (take care,
--each modem has its configuration and some DLC have dedicated functions,
--for example GPS), starting with minor 1 (DLC0 is reserved for the management
--of the mux)
--
--MAJOR=`cat /proc/devices |grep gsmtty | awk '{print $1}`
--for i in `seq 1 4`; do
--	mknod /dev/ttygsm$i c $MAJOR $i
--done
--
--5- use these devices as plain serial ports.
--for example, it's possible :
--- and to use gnokii to send / receive SMS on ttygsm1
--- to use ppp to establish a datalink on ttygsm2
--
--6- first close all virtual ports before closing the physical port.
--
--Note that after closing the physical port the modem is still in multiplexing
--mode. This may prevent a successful re-opening of the port later. To avoid
--this situation either reset the modem if your hardware allows that or send
--a disconnect command frame manually before initializing the multiplexing mode
--for the second time. The byte sequence for the disconnect command frame is:
--0xf9, 0x03, 0xef, 0x03, 0xc3, 0x16, 0xf9.
--
--Additional Documentation
--------------------------
--More practical details on the protocol and how it's supported by industrial
--modems can be found in the following documents :
--http://www.telit.com/module/infopool/download.php?id=616
--http://www.u-blox.com/images/downloads/Product_Docs/LEON-G100-G200-MuxImplementation_ApplicationNote_%28GSM%20G1-CS-10002%29.pdf
--http://www.sierrawireless.com/Support/Downloads/AirPrime/WMP_Series/~/media/Support_Downloads/AirPrime/Application_notes/CMUX_Feature_Application_Note-Rev004.ashx
--http://wm.sim.com/sim/News/photo/2010721161442.pdf
--
--11-03-08 - Eric Bénard - <eric@eukrea.com>
-diff --git a/Documentation/serial/rocket.txt b/Documentation/serial/rocket.rst
-similarity index 68%
-rename from Documentation/serial/rocket.txt
-rename to Documentation/serial/rocket.rst
-index 60b039891057..23761eae4282 100644
---- a/Documentation/serial/rocket.txt
-+++ b/Documentation/serial/rocket.rst
-@@ -1,20 +1,22 @@
--Comtrol(tm) RocketPort(R)/RocketModem(TM) Series 
-+================================================
-+Comtrol(tm) RocketPort(R)/RocketModem(TM) Series
-+================================================
-+
- Device Driver for the Linux Operating System
++Standardizing through another software level
 +============================================
- 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
--
--PRODUCT OVERVIEW
-+Product overview
- ----------------
- 
- This driver provides a loadable kernel driver for the Comtrol RocketPort
--and RocketModem PCI boards. These boards provide, 2, 4, 8, 16, or 32 
-+and RocketModem PCI boards. These boards provide, 2, 4, 8, 16, or 32
- high-speed serial ports or modems.  This driver supports up to a combination
- of four RocketPort or RocketModems boards in one machine simultaneously.
- This file assumes that you are using the RocketPort driver which is
--integrated into the kernel sources.  
-+integrated into the kernel sources.
- 
--The driver can also be installed as an external module using the usual 
--"make;make install" routine.  This external module driver, obtainable 
-+The driver can also be installed as an external module using the usual
-+"make;make install" routine.  This external module driver, obtainable
- from the Comtrol website listed below, is useful for updating the driver
- or installing it into kernels which do not have the driver configured
- into them.  Installations instructions for the external module
-@@ -29,57 +31,59 @@ information on how to set the DIP switches.
- 
- You pass the I/O port to the driver using the following module parameters:
- 
--board1 :	I/O port for the first ISA board
--board2 :	I/O port for the second ISA board
--board3 :	I/O port for the third ISA board
--board4 :	I/O port for the fourth ISA board
-+board1:
-+	I/O port for the first ISA board
-+board2:
-+	I/O port for the second ISA board
-+board3:
-+	I/O port for the third ISA board
-+board4:
-+	I/O port for the fourth ISA board
- 
- There is a set of utilities and scripts provided with the external driver
--( downloadable from http://www.comtrol.com ) that ease the configuration and
-+(downloadable from http://www.comtrol.com) that ease the configuration and
- setup of the ISA cards.
- 
- The RocketModem II PCI boards require firmware to be loaded into the card
- before it will function.  The driver has only been tested as a module for this
- board.
- 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
--
--INSTALLATION PROCEDURES
-+Installation Procedures
- -----------------------
- 
--RocketPort/RocketModem PCI cards require no driver configuration, they are 
-+RocketPort/RocketModem PCI cards require no driver configuration, they are
- automatically detected and configured.
- 
--The RocketPort driver can be installed as a module (recommended) or built 
-+The RocketPort driver can be installed as a module (recommended) or built
- into the kernel. This is selected, as for other drivers, through the `make config`
--command from the root of the Linux source tree during the kernel build process. 
-+command from the root of the Linux source tree during the kernel build process.
- 
- The RocketPort/RocketModem serial ports installed by this driver are assigned
--device major number 46, and will be named /dev/ttyRx, where x is the port number 
-+device major number 46, and will be named /dev/ttyRx, where x is the port number
- starting at zero (ex. /dev/ttyR0, /devttyR1, ...).  If you have multiple cards
- installed in the system, the mapping of port names to serial ports is displayed
- in the system log at /var/log/messages.
- 
- If installed as a module, the module must be loaded.  This can be done
- manually by entering "modprobe rocket".  To have the module loaded automatically
--upon system boot, edit a /etc/modprobe.d/*.conf file and add the line
-+upon system boot, edit a `/etc/modprobe.d/*.conf` file and add the line
- "alias char-major-46 rocket".
- 
- In order to use the ports, their device names (nodes) must be created with mknod.
--This is only required once, the system will retain the names once created.  To 
--create the RocketPort/RocketModem device names, use the command 
--"mknod /dev/ttyRx c 46 x" where x is the port number starting at zero.  For example:
-+This is only required once, the system will retain the names once created.  To
-+create the RocketPort/RocketModem device names, use the command
-+"mknod /dev/ttyRx c 46 x" where x is the port number starting at zero.
- 
-->mknod /dev/ttyR0 c 46 0
-->mknod /dev/ttyR1 c 46 1
-->mknod /dev/ttyR2 c 46 2  
-+For example::
 +
-+	> mknod /dev/ttyR0 c 46 0
-+	> mknod /dev/ttyR1 c 46 1
-+	> mknod /dev/ttyR2 c 46 2
- 
- The Linux script MAKEDEV will create the first 16 ttyRx device names (nodes)
--for you:
-+for you::
- 
-->/dev/MAKEDEV ttyR
--
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-+	>/dev/MAKEDEV ttyR
- 
- ISA Rocketport Boards
- ---------------------
-@@ -89,7 +93,7 @@ card before installing and using it.  This is done by setting a set of DIP
- switches on the Rocketport board.
- 
- 
--SETTING THE I/O ADDRESS
-+Setting the I/O address
- -----------------------
- 
- Before installing RocketPort(R) or RocketPort RA boards, you must find
-@@ -130,40 +134,36 @@ the first 4 bytes of that range are used by the first board.  You would
- need to set the second, third, or fourth board to one of the next available
- blocks such as 0x180.
- 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-+RocketPort and RocketPort RA SW1 Settings::
- 
--RocketPort and RocketPort RA SW1 Settings:
-+            +-------------------------------+
-+            | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
-+            +-------+-------+---------------+
-+            | Unused| Card  | I/O Port Block|
-+            +-------------------------------+
- 
--          +-------------------------------+
--          | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 |
--          +-------+-------+---------------+
--          | Unused| Card  | I/O Port Block|
--          +-------------------------------+
-+  DIP Switches                             DIP Switches
-+  7    8                                   6    5
-+  ===================                      ===================
-+  On   On   UNUSED, MUST BE ON.            On   On   First Card    <==== Default
-+                                           On   Off  Second Card
-+                                           Off  On   Third Card
-+                                           Off  Off  Fourth Card
- 
--DIP Switches                             DIP Switches
--7    8                                   6    5
--===================                      ===================
--On   On   UNUSED, MUST BE ON.            On   On   First Card    <==== Default
--                                         On   Off  Second Card
--                                         Off  On   Third Card
--                                         Off  Off  Fourth Card
-+  DIP Switches         I/O Address Range
-+  4    3    2    1     Used by the First Card
-+  =====================================
-+  On   Off  On   Off   100-143
-+  On   Off  Off  On    140-183
-+  On   Off  Off  Off   180-1C3       <==== Default
-+  Off  On   On   Off   200-243
-+  Off  On   Off  On    240-283
-+  Off  On   Off  Off   280-2C3
-+  Off  Off  On   Off   300-343
-+  Off  Off  Off  On    340-383
-+  Off  Off  Off  Off   380-3C3
- 
--DIP Switches         I/O Address Range
--4    3    2    1     Used by the First Card
--=====================================
--On   Off  On   Off   100-143
--On   Off  Off  On    140-183
--On   Off  Off  Off   180-1C3       <==== Default
--Off  On   On   Off   200-243
--Off  On   Off  On    240-283
--Off  On   Off  Off   280-2C3
--Off  Off  On   Off   300-343
--Off  Off  Off  On    340-383
--Off  Off  Off  Off   380-3C3
--
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
--
--REPORTING BUGS
-+Reporting Bugs
- --------------
- 
- For technical support, please provide the following
-@@ -171,19 +171,15 @@ information: Driver version, kernel release, distribution of
- kernel, and type of board you are using. Error messages and log
- printouts port configuration details are especially helpful.
- 
--USA
--    Phone: (612) 494-4100
--      FAX: (612) 494-4199
--    email: support@comtrol.com
-+USA:
-+    :Phone: (612) 494-4100
-+    :FAX: (612) 494-4199
-+    :email: support@comtrol.com
- 
--Comtrol Europe
--    Phone: +44 (0) 1 869 323-220
--      FAX: +44 (0) 1 869 323-211
--    email: support@comtrol.co.uk
-+Comtrol Europe:
-+    :Phone: +44 (0) 1 869 323-220
-+    :FAX: +44 (0) 1 869 323-211
-+    :email: support@comtrol.co.uk
- 
- Web:	http://www.comtrol.com
- FTP:	ftp.comtrol.com
--
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
--
--
-diff --git a/Documentation/serial/serial-iso7816.txt b/Documentation/serial/serial-iso7816.rst
-similarity index 85%
-rename from Documentation/serial/serial-iso7816.txt
-rename to Documentation/serial/serial-iso7816.rst
-index 3193d24a2b0f..d990143de0c6 100644
---- a/Documentation/serial/serial-iso7816.txt
-+++ b/Documentation/serial/serial-iso7816.rst
-@@ -1,11 +1,15 @@
--                        ISO7816 SERIAL COMMUNICATIONS
-+=============================
-+ISO7816 Serial Communications
-+=============================
- 
--1. INTRODUCTION
-+1. Introduction
-+===============
- 
-   ISO/IEC7816 is a series of standards specifying integrated circuit cards (ICC)
-   also known as smart cards.
- 
--2. HARDWARE-RELATED CONSIDERATIONS
-+2. Hardware-related considerations
-+==================================
- 
-   Some CPUs/UARTs (e.g., Microchip AT91) contain a built-in mode capable of
-   handling communication with a smart card.
-@@ -15,7 +19,8 @@
-   available at user-level to allow switching from one mode to the other, and
-   vice versa.
- 
--3. DATA STRUCTURES ALREADY AVAILABLE IN THE KERNEL
-+3. Data Structures Already Available in the Kernel
-+==================================================
- 
-   The Linux kernel provides the serial_iso7816 structure (see [1]) to handle
-   ISO7816 communications. This data structure is used to set and configure
-@@ -27,10 +32,11 @@
-   to TIOCGISO7816 and TIOCSISO7816 ioctls (see below). The iso7816_config
-   callback receives a pointer to struct serial_iso7816.
- 
--4. USAGE FROM USER-LEVEL
-+4. Usage from user-level
-+========================
- 
-   From user-level, ISO7816 configuration can be get/set using the previous
--  ioctls. For instance, to set ISO7816 you can use the following code:
-+  ioctls. For instance, to set ISO7816 you can use the following code::
- 
- 	#include <linux/serial.h>
- 
-@@ -78,6 +84,7 @@
- 		/* Error handling. See errno. */
- 	}
- 
--5. REFERENCES
-+5. References
-+=============
- 
-  [1]    include/uapi/linux/serial.h
-diff --git a/Documentation/serial/serial-rs485.txt b/Documentation/serial/serial-rs485.rst
-similarity index 89%
-rename from Documentation/serial/serial-rs485.txt
-rename to Documentation/serial/serial-rs485.rst
-index ce0c1a9b8aab..6bc824f948f9 100644
---- a/Documentation/serial/serial-rs485.txt
-+++ b/Documentation/serial/serial-rs485.rst
-@@ -1,6 +1,9 @@
--                        RS485 SERIAL COMMUNICATIONS
-+===========================
-+RS485 Serial Communications
-+===========================
- 
--1. INTRODUCTION
-+1. Introduction
-+===============
- 
-    EIA-485, also known as TIA/EIA-485 or RS-485, is a standard defining the
-    electrical characteristics of drivers and receivers for use in balanced
-@@ -9,7 +12,8 @@
-    because it can be used effectively over long distances and in electrically
-    noisy environments.
- 
--2. HARDWARE-RELATED CONSIDERATIONS
-+2. Hardware-related Considerations
-+==================================
- 
-    Some CPUs/UARTs (e.g., Atmel AT91 or 16C950 UART) contain a built-in
-    half-duplex mode capable of automatically controlling line direction by
-@@ -22,7 +26,8 @@
-    available at user-level to allow switching from one mode to the other, and
-    vice versa.
- 
--3. DATA STRUCTURES ALREADY AVAILABLE IN THE KERNEL
-+3. Data Structures Already Available in the Kernel
-+==================================================
- 
-    The Linux kernel provides the serial_rs485 structure (see [1]) to handle
-    RS485 communications. This data structure is used to set and configure RS485
-@@ -38,10 +43,11 @@
-    to TIOCSRS485 and TIOCGRS485 ioctls (see below). The rs485_config callback
-    receives a pointer to struct serial_rs485.
- 
--4. USAGE FROM USER-LEVEL
-+4. Usage from user-level
-+========================
- 
-    From user-level, RS485 configuration can be get/set using the previous
--   ioctls. For instance, to set RS485 you can use the following code:
-+   ioctls. For instance, to set RS485 you can use the following code::
- 
- 	#include <linux/serial.h>
- 
-@@ -89,7 +95,9 @@
- 		/* Error handling. See errno. */
- 	}
- 
--5. REFERENCES
-+5. References
-+=============
- 
-  [1]	include/uapi/linux/serial.h
++At the time this document was conceived, all drivers directly
++implemented the CD-ROM *ioctl()* calls through their own routines. This
++led to the danger of different drivers forgetting to do important things
++like checking that the user was giving the driver valid data. More
++importantly, this led to the divergence of behavior, which has already
++been discussed.
 +
-  [2]	Documentation/devicetree/bindings/serial/rs485.txt
-diff --git a/Documentation/serial/tty.txt b/Documentation/serial/tty.rst
-similarity index 74%
-rename from Documentation/serial/tty.txt
-rename to Documentation/serial/tty.rst
-index b48780977a68..dd972caacf3e 100644
---- a/Documentation/serial/tty.txt
-+++ b/Documentation/serial/tty.rst
-@@ -1,5 +1,6 @@
--
--			The Lockronomicon
-+=================
-+The Lockronomicon
-+=================
- 
- Your guide to the ancient and twisted locking policies of the tty layer and
- the warped logic behind them. Beware all ye who read on.
-@@ -9,12 +10,12 @@ Line Discipline
- ---------------
- 
- Line disciplines are registered with tty_register_ldisc() passing the
--discipline number and the ldisc structure. At the point of registration the 
-+discipline number and the ldisc structure. At the point of registration the
- discipline must be ready to use and it is possible it will get used before
- the call returns success. If the call returns an error then it won't get
- called. Do not re-use ldisc numbers as they are part of the userspace ABI
- and writing over an existing ldisc will cause demons to eat your computer.
--After the return the ldisc data has been copied so you may free your own 
-+After the return the ldisc data has been copied so you may free your own
- copy of the structure. You must not re-register over the top of the line
- discipline even with the same data or your computer again will be eaten by
- demons.
-@@ -26,7 +27,7 @@ code manages the module counts this should not usually be a concern.
- 
- Heed this warning: the reference count field of the registered copies of the
- tty_ldisc structure in the ldisc table counts the number of lines using this
--discipline. The reference count of the tty_ldisc structure within a tty 
-+discipline. The reference count of the tty_ldisc structure within a tty
- counts the number of active users of the ldisc at this instant. In effect it
- counts the number of threads of execution within an ldisc method (plus those
- about to enter and exit although this detail matters not).
-@@ -34,9 +35,11 @@ about to enter and exit although this detail matters not).
- Line Discipline Methods
- -----------------------
- 
--TTY side interfaces:
-+TTY side interfaces
-+^^^^^^^^^^^^^^^^^^^
- 
--open()		-	Called when the line discipline is attached to
-+======================= =======================================================
-+open()			Called when the line discipline is attached to
- 			the terminal. No other call into the line
- 			discipline for this tty will occur until it
- 			completes successfully. Should initialize any
-@@ -47,66 +50,69 @@ open()		-	Called when the line discipline is attached to
- 			Returning an error will prevent the ldisc from
- 			being attached. Can sleep.
- 
--close()		-	This is called on a terminal when the line
-+close()			This is called on a terminal when the line
- 			discipline is being unplugged. At the point of
- 			execution no further users will enter the
- 			ldisc code for this tty. Can sleep.
- 
--hangup()	-	Called when the tty line is hung up.
-+hangup()		Called when the tty line is hung up.
- 			The line discipline should cease I/O to the tty.
- 			No further calls into the ldisc code will occur.
- 			The return value is ignored. Can sleep.
- 
--read()		-	(optional) A process requests reading data from
-+read()			(optional) A process requests reading data from
- 			the line. Multiple read calls may occur in parallel
- 			and the ldisc must deal with serialization issues.
- 			If not defined, the process will receive an EIO
- 			error. May sleep.
- 
--write()		-	(optional) A process requests writing data to the
-+write()			(optional) A process requests writing data to the
- 			line. Multiple write calls are serialized by the
- 			tty layer for the ldisc. If not defined, the
- 			process will receive an EIO error. May sleep.
- 
--flush_buffer()	-	(optional) May be called at any point between
-+flush_buffer()		(optional) May be called at any point between
- 			open and close, and instructs the line discipline
- 			to empty its input buffer.
- 
--set_termios()	-	(optional) Called on termios structure changes.
-+set_termios()		(optional) Called on termios structure changes.
- 			The caller passes the old termios data and the
- 			current data is in the tty. Called under the
- 			termios semaphore so allowed to sleep. Serialized
- 			against itself only.
- 
--poll()		-	(optional) Check the status for the poll/select
-+poll()			(optional) Check the status for the poll/select
- 			calls. Multiple poll calls may occur in parallel.
- 			May sleep.
- 
--ioctl()		-	(optional) Called when an ioctl is handed to the
-+ioctl()			(optional) Called when an ioctl is handed to the
- 			tty layer that might be for the ldisc. Multiple
- 			ioctl calls may occur in parallel. May sleep.
- 
--compat_ioctl()	-	(optional) Called when a 32 bit ioctl is handed
-+compat_ioctl()		(optional) Called when a 32 bit ioctl is handed
- 			to the tty layer that might be for the ldisc.
- 			Multiple ioctl calls may occur in parallel.
- 			May sleep.
-+======================= =======================================================
- 
--Driver Side Interfaces:
-+Driver Side Interfaces
-+^^^^^^^^^^^^^^^^^^^^^^
- 
--receive_buf()	-	(optional) Called by the low-level driver to hand
-+======================= =======================================================
-+receive_buf()		(optional) Called by the low-level driver to hand
- 			a buffer of received bytes to the ldisc for
- 			processing. The number of bytes is guaranteed not
- 			to exceed the current value of tty->receive_room.
- 			All bytes must be processed.
- 
--receive_buf2()	-	(optional) Called by the low-level driver to hand
-+receive_buf2()		(optional) Called by the low-level driver to hand
- 			a buffer of received bytes to the ldisc for
- 			processing. Returns the number of bytes processed.
- 
- 			If both receive_buf() and receive_buf2() are
- 			defined, receive_buf2() should be preferred.
- 
--write_wakeup()	-	May be called at any point between open and close.
-+write_wakeup()		May be called at any point between open and close.
- 			The TTY_DO_WRITE_WAKEUP flag indicates if a call
- 			is needed but always races versus calls. Thus the
- 			ldisc must be careful about setting order and to
-@@ -117,17 +123,20 @@ write_wakeup()	-	May be called at any point between open and close.
- 			is permitted to call the driver write method from
- 			this function. In such a situation defer it.
- 
--dcd_change()	-	Report to the tty line the current DCD pin status
-+dcd_change()		Report to the tty line the current DCD pin status
- 			changes and the relative timestamp. The timestamp
- 			cannot be NULL.
-+======================= =======================================================
- 
- 
- Driver Access
-+^^^^^^^^^^^^^
- 
- Line discipline methods can call the following methods of the underlying
- hardware driver through the function pointers within the tty->driver
- structure:
- 
-+======================= =======================================================
- write()			Write a block of characters to the tty device.
- 			Returns the number of characters accepted. The
- 			character buffer passed to this method is already
-@@ -189,13 +198,16 @@ wait_until_sent()	Waits until the device has written out all of the
- 			characters in its transmitter FIFO.
- 
- send_xchar()		Send a high-priority XON/XOFF character to the device.
-+======================= =======================================================
- 
- 
- Flags
-+^^^^^
- 
- Line discipline methods have access to tty->flags field containing the
- following interesting flags:
- 
-+======================= =======================================================
- TTY_THROTTLED		Driver input is throttled. The ldisc should call
- 			tty->driver->unthrottle() in order to resume
- 			reception when it is ready to process more data.
-@@ -212,102 +224,105 @@ TTY_OTHER_CLOSED	Device is a pty and the other side has closed.
- 
- TTY_NO_WRITE_SPLIT	Prevent driver from splitting up writes into
- 			smaller chunks.
-+======================= =======================================================
- 
- 
- Locking
-+^^^^^^^
- 
- Callers to the line discipline functions from the tty layer are required to
- take line discipline locks. The same is true of calls from the driver side
- but not yet enforced.
- 
--Three calls are now provided
-+Three calls are now provided::
- 
- 	ldisc = tty_ldisc_ref(tty);
- 
- takes a handle to the line discipline in the tty and returns it. If no ldisc
- is currently attached or the ldisc is being closed and re-opened at this
- point then NULL is returned. While this handle is held the ldisc will not
--change or go away.
-+change or go away::
- 
- 	tty_ldisc_deref(ldisc)
- 
- Returns the ldisc reference and allows the ldisc to be closed. Returning the
- reference takes away your right to call the ldisc functions until you take
--a new reference.
-+a new reference::
- 
- 	ldisc = tty_ldisc_ref_wait(tty);
- 
- Performs the same function as tty_ldisc_ref except that it will wait for an
--ldisc change to complete and then return a reference to the new ldisc. 
-+ldisc change to complete and then return a reference to the new ldisc.
- 
- While these functions are slightly slower than the old code they should have
- minimal impact as most receive logic uses the flip buffers and they only
- need to take a reference when they push bits up through the driver.
- 
--A caution: The ldisc->open(), ldisc->close() and driver->set_ldisc 
-+A caution: The ldisc->open(), ldisc->close() and driver->set_ldisc
- functions are called with the ldisc unavailable. Thus tty_ldisc_ref will
- fail in this situation if used within these functions. Ldisc and driver
--code calling its own functions must be careful in this case. 
-+code calling its own functions must be careful in this case.
- 
- 
- Driver Interface
- ----------------
- 
--open()		-	Called when a device is opened. May sleep
-+======================= =======================================================
-+open()			Called when a device is opened. May sleep
- 
--close()		-	Called when a device is closed. At the point of
--			return from this call the driver must make no 
-+close()			Called when a device is closed. At the point of
-+			return from this call the driver must make no
- 			further ldisc calls of any kind. May sleep
- 
--write()		-	Called to write bytes to the device. May not
--			sleep. May occur in parallel in special cases. 
-+write()			Called to write bytes to the device. May not
-+			sleep. May occur in parallel in special cases.
- 			Because this includes panic paths drivers generally
- 			shouldn't try and do clever locking here.
- 
--put_char()	-	Stuff a single character onto the queue. The
-+put_char()		Stuff a single character onto the queue. The
- 			driver is guaranteed following up calls to
- 			flush_chars.
- 
--flush_chars()	-	Ask the kernel to write put_char queue
-+flush_chars()		Ask the kernel to write put_char queue
- 
--write_room()	-	Return the number of characters that can be stuffed
-+write_room()		Return the number of characters that can be stuffed
- 			into the port buffers without overflow (or less).
- 			The ldisc is responsible for being intelligent
-- 			about multi-threading of write_room/write calls
-+			about multi-threading of write_room/write calls
- 
--ioctl()		-	Called when an ioctl may be for the driver
-+ioctl()			Called when an ioctl may be for the driver
- 
--set_termios()	-	Called on termios change, serialized against
-+set_termios()		Called on termios change, serialized against
- 			itself by a semaphore. May sleep.
- 
--set_ldisc()	-	Notifier for discipline change. At the point this 
-+set_ldisc()		Notifier for discipline change. At the point this
- 			is done the discipline is not yet usable. Can now
- 			sleep (I think)
- 
--throttle()	-	Called by the ldisc to ask the driver to do flow
-+throttle()		Called by the ldisc to ask the driver to do flow
- 			control.  Serialization including with unthrottle
- 			is the job of the ldisc layer.
- 
--unthrottle()	-	Called by the ldisc to ask the driver to stop flow
-+unthrottle()		Called by the ldisc to ask the driver to stop flow
- 			control.
- 
--stop()		-	Ldisc notifier to the driver to stop output. As with
-+stop()			Ldisc notifier to the driver to stop output. As with
- 			throttle the serializations with start() are down
- 			to the ldisc layer.
- 
--start()		-	Ldisc notifier to the driver to start output.
-+start()			Ldisc notifier to the driver to start output.
- 
--hangup()	-	Ask the tty driver to cause a hangup initiated
-+hangup()		Ask the tty driver to cause a hangup initiated
- 			from the host side. [Can sleep ??]
- 
--break_ctl()	-	Send RS232 break. Can sleep. Can get called in
-+break_ctl()		Send RS232 break. Can sleep. Can get called in
- 			parallel, driver must serialize (for now), and
- 			with write calls.
- 
--wait_until_sent() -	Wait for characters to exit the hardware queue
-+wait_until_sent()	Wait for characters to exit the hardware queue
- 			of the driver. Can sleep
- 
--send_xchar()	  -	Send XON/XOFF and if possible jump the queue with
-+send_xchar()	  	Send XON/XOFF and if possible jump the queue with
- 			it in order to get fast flow control responses.
- 			Cannot sleep ??
--
-+======================= =======================================================
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8c0cb2aa4c00..7e600004f993 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10512,7 +10512,7 @@ F:	include/uapi/linux/meye.h
- MOXA SMARTIO/INDUSTIO/INTELLIO SERIAL CARD
- M:	Jiri Slaby <jirislaby@gmail.com>
- S:	Maintained
--F:	Documentation/serial/moxa-smartio
-+F:	Documentation/serial/moxa-smartio.rst
- F:	drivers/tty/mxser.*
- 
- MR800 AVERMEDIA USB FM RADIO DRIVER
-@@ -13396,7 +13396,7 @@ ROCKETPORT DRIVER
- P:	Comtrol Corp.
- W:	http://www.comtrol.com
- S:	Maintained
--F:	Documentation/serial/rocket.txt
-+F:	Documentation/serial/rocket.rst
- F:	drivers/tty/rocket*
- 
- ROCKETPORT EXPRESS/INFINITY DRIVER
-diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-index 9acf8ccdabf6..957db30b9ecb 100644
---- a/drivers/tty/Kconfig
-+++ b/drivers/tty/Kconfig
-@@ -176,7 +176,7 @@ config ROCKETPORT
- 	  This driver supports Comtrol RocketPort and RocketModem PCI boards.   
-           These boards provide 2, 4, 8, 16, or 32 high-speed serial ports or
-           modems.  For information about the RocketPort/RocketModem  boards
--          and this driver read <file:Documentation/serial/rocket.txt>.
-+          and this driver read <file:Documentation/serial/rocket.rst>.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called rocket.
-@@ -194,7 +194,7 @@ config CYCLADES
- 	  your Linux box, for instance in order to become a dial-in server.
- 
- 	  For information about the Cyclades-Z card, read
--	  <file:Documentation/serial/README.cycladesZ>.
-+	  <file:Documentation/serial/cyclades_z.rst>.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cyclades.
-diff --git a/drivers/tty/serial/ucc_uart.c b/drivers/tty/serial/ucc_uart.c
-index 2b6376e6e5ad..6e3c66ab0e62 100644
---- a/drivers/tty/serial/ucc_uart.c
-+++ b/drivers/tty/serial/ucc_uart.c
-@@ -1081,7 +1081,7 @@ static int qe_uart_verify_port(struct uart_port *port,
- }
- /* UART operations
-  *
-- * Details on these functions can be found in Documentation/serial/driver
-+ * Details on these functions can be found in Documentation/serial/driver.rst
-  */
- static const struct uart_ops qe_uart_pops = {
- 	.tx_empty       = qe_uart_tx_empty,
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 5fe2b037e833..fea2216a893f 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -45,7 +45,7 @@ struct device;
- 
- /*
-  * This structure describes all the operations that can be done on the
-- * physical hardware.  See Documentation/serial/driver for details.
-+ * physical hardware.  See Documentation/serial/driver.rst for details.
-  */
- struct uart_ops {
- 	unsigned int	(*tx_empty)(struct uart_port *);
++For this reason, the Uniform CD-ROM Driver was created to enforce consistent
++CD-ROM drive behavior, and to provide a common set of services to the various
++low-level CD-ROM device drivers. The Uniform CD-ROM Driver now provides another
++software-level, that separates the *ioctl()* and *open()* implementation
++from the actual hardware implementation. Note that this effort has
++made few changes which will affect a user's application programs. The
++greatest change involved moving the contents of the various low-level
++CD-ROM drivers\' header files to the kernel's cdrom directory. This was
++done to help ensure that the user is only presented with only one cdrom
++interface, the interface defined in `cdrom.h`.
++
++CD-ROM drives are specific enough (i. e., different from other
++block-devices such as floppy or hard disc drives), to define a set
++of common **CD-ROM device operations**, *<cdrom-device>_dops*.
++These operations are different from the classical block-device file
++operations, *<block-device>_fops*.
++
++The routines for the Uniform CD-ROM Driver interface level are implemented
++in the file `cdrom.c`. In this file, the Uniform CD-ROM Driver interfaces
++with the kernel as a block device by registering the following general
++*struct file_operations*::
++
++	struct file_operations cdrom_fops = {
++		NULL,			/∗ lseek ∗/
++		block _read ,		/∗ read—general block-dev read ∗/
++		block _write,		/∗ write—general block-dev write ∗/
++		NULL,			/∗ readdir ∗/
++		NULL,			/∗ select ∗/
++		cdrom_ioctl,		/∗ ioctl ∗/
++		NULL,			/∗ mmap ∗/
++		cdrom_open,		/∗ open ∗/
++		cdrom_release,		/∗ release ∗/
++		NULL,			/∗ fsync ∗/
++		NULL,			/∗ fasync ∗/
++		cdrom_media_changed,	/∗ media change ∗/
++		NULL			/∗ revalidate ∗/
++	};
++
++Every active CD-ROM device shares this *struct*. The routines
++declared above are all implemented in `cdrom.c`, since this file is the
++place where the behavior of all CD-ROM-devices is defined and
++standardized. The actual interface to the various types of CD-ROM
++hardware is still performed by various low-level CD-ROM-device
++drivers. These routines simply implement certain **capabilities**
++that are common to all CD-ROM (and really, all removable-media
++devices).
++
++Registration of a low-level CD-ROM device driver is now done through
++the general routines in `cdrom.c`, not through the Virtual File System
++(VFS) any more. The interface implemented in `cdrom.c` is carried out
++through two general structures that contain information about the
++capabilities of the driver, and the specific drives on which the
++driver operates. The structures are:
++
++cdrom_device_ops
++  This structure contains information about the low-level driver for a
++  CD-ROM device. This structure is conceptually connected to the major
++  number of the device (although some drivers may have different
++  major numbers, as is the case for the IDE driver).
++
++cdrom_device_info
++  This structure contains information about a particular CD-ROM drive,
++  such as its device name, speed, etc. This structure is conceptually
++  connected to the minor number of the device.
++
++Registering a particular CD-ROM drive with the Uniform CD-ROM Driver
++is done by the low-level device driver though a call to::
++
++	register_cdrom(struct cdrom_device_info * <device>_info)
++
++The device information structure, *<device>_info*, contains all the
++information needed for the kernel to interface with the low-level
++CD-ROM device driver. One of the most important entries in this
++structure is a pointer to the *cdrom_device_ops* structure of the
++low-level driver.
++
++The device operations structure, *cdrom_device_ops*, contains a list
++of pointers to the functions which are implemented in the low-level
++device driver. When `cdrom.c` accesses a CD-ROM device, it does it
++through the functions in this structure. It is impossible to know all
++the capabilities of future CD-ROM drives, so it is expected that this
++list may need to be expanded from time to time as new technologies are
++developed. For example, CD-R and CD-R/W drives are beginning to become
++popular, and support will soon need to be added for them. For now, the
++current *struct* is::
++
++	struct cdrom_device_ops {
++		int (*open)(struct cdrom_device_info *, int)
++		void (*release)(struct cdrom_device_info *);
++		int (*drive_status)(struct cdrom_device_info *, int);
++		unsigned int (*check_events)(struct cdrom_device_info *,
++					     unsigned int, int);
++		int (*media_changed)(struct cdrom_device_info *, int);
++		int (*tray_move)(struct cdrom_device_info *, int);
++		int (*lock_door)(struct cdrom_device_info *, int);
++		int (*select_speed)(struct cdrom_device_info *, int);
++		int (*select_disc)(struct cdrom_device_info *, int);
++		int (*get_last_session) (struct cdrom_device_info *,
++					 struct cdrom_multisession *);
++		int (*get_mcn)(struct cdrom_device_info *, struct cdrom_mcn *);
++		int (*reset)(struct cdrom_device_info *);
++		int (*audio_ioctl)(struct cdrom_device_info *,
++				   unsigned int, void *);
++		const int capability;		/* capability flags */
++		int (*generic_packet)(struct cdrom_device_info *,
++				      struct packet_command *);
++	};
++
++When a low-level device driver implements one of these capabilities,
++it should add a function pointer to this *struct*. When a particular
++function is not implemented, however, this *struct* should contain a
++NULL instead. The *capability* flags specify the capabilities of the
++CD-ROM hardware and/or low-level CD-ROM driver when a CD-ROM drive
++is registered with the Uniform CD-ROM Driver.
++
++Note that most functions have fewer parameters than their
++*blkdev_fops* counterparts. This is because very little of the
++information in the structures *inode* and *file* is used. For most
++drivers, the main parameter is the *struct* *cdrom_device_info*, from
++which the major and minor number can be extracted. (Most low-level
++CD-ROM drivers don't even look at the major and minor number though,
++since many of them only support one device.) This will be available
++through *dev* in *cdrom_device_info* described below.
++
++The drive-specific, minor-like information that is registered with
++`cdrom.c`, currently contains the following fields::
++
++  struct cdrom_device_info {
++	const struct cdrom_device_ops * ops; 	/* device operations for this major */
++	struct list_head list;			/* linked list of all device_info */
++	struct gendisk * disk;			/* matching block layer disk */
++	void *  handle;				/* driver-dependent data */
++
++	int mask; 				/* mask of capability: disables them */
++	int speed;				/* maximum speed for reading data */
++	int capacity;				/* number of discs in a jukebox */
++
++	unsigned int options:30;		/* options flags */
++	unsigned mc_flags:2;			/*  media-change buffer flags */
++	unsigned int vfs_events;		/*  cached events for vfs path */
++	unsigned int ioctl_events;		/*  cached events for ioctl path */
++	int use_count;				/*  number of times device is opened */
++	char name[20];				/*  name of the device type */
++
++	__u8 sanyo_slot : 2;			/*  Sanyo 3-CD changer support */
++	__u8 keeplocked : 1;			/*  CDROM_LOCKDOOR status */
++	__u8 reserved : 5;			/*  not used yet */
++	int cdda_method;			/*  see CDDA_* flags */
++	__u8 last_sense;			/*  saves last sense key */
++	__u8 media_written;			/*  dirty flag, DVD+RW bookkeeping */
++	unsigned short mmc3_profile;		/*  current MMC3 profile */
++	int for_data;				/*  unknown:TBD */
++	int (*exit)(struct cdrom_device_info *);/*  unknown:TBD */
++	int mrw_mode_page;			/*  which MRW mode page is in use */
++  };
++
++Using this *struct*, a linked list of the registered minor devices is
++built, using the *next* field. The device number, the device operations
++struct and specifications of properties of the drive are stored in this
++structure.
++
++The *mask* flags can be used to mask out some of the capabilities listed
++in *ops->capability*, if a specific drive doesn't support a feature
++of the driver. The value *speed* specifies the maximum head-rate of the
++drive, measured in units of normal audio speed (176kB/sec raw data or
++150kB/sec file system data). The parameters are declared *const*
++because they describe properties of the drive, which don't change after
++registration.
++
++A few registers contain variables local to the CD-ROM drive. The
++flags *options* are used to specify how the general CD-ROM routines
++should behave. These various flags registers should provide enough
++flexibility to adapt to the different users' wishes (and **not** the
++`arbitrary` wishes of the author of the low-level device driver, as is
++the case in the old scheme). The register *mc_flags* is used to buffer
++the information from *media_changed()* to two separate queues. Other
++data that is specific to a minor drive, can be accessed through *handle*,
++which can point to a data structure specific to the low-level driver.
++The fields *use_count*, *next*, *options* and *mc_flags* need not be
++initialized.
++
++The intermediate software layer that `cdrom.c` forms will perform some
++additional bookkeeping. The use count of the device (the number of
++processes that have the device opened) is registered in *use_count*. The
++function *cdrom_ioctl()* will verify the appropriate user-memory regions
++for read and write, and in case a location on the CD is transferred,
++it will `sanitize` the format by making requests to the low-level
++drivers in a standard format, and translating all formats between the
++user-software and low level drivers. This relieves much of the drivers'
++memory checking and format checking and translation. Also, the necessary
++structures will be declared on the program stack.
++
++The implementation of the functions should be as defined in the
++following sections. Two functions **must** be implemented, namely
++*open()* and *release()*. Other functions may be omitted, their
++corresponding capability flags will be cleared upon registration.
++Generally, a function returns zero on success and negative on error. A
++function call should return only after the command has completed, but of
++course waiting for the device should not use processor time.
++
++::
++
++	int open(struct cdrom_device_info *cdi, int purpose)
++
++*Open()* should try to open the device for a specific *purpose*, which
++can be either:
++
++- Open for reading data, as done by `mount()` (2), or the
++  user commands `dd` or `cat`.
++- Open for *ioctl* commands, as done by audio-CD playing programs.
++
++Notice that any strategic code (closing tray upon *open()*, etc.) is
++done by the calling routine in `cdrom.c`, so the low-level routine
++should only be concerned with proper initialization, such as spinning
++up the disc, etc.
++
++::
++
++	void release(struct cdrom_device_info *cdi)
++
++Device-specific actions should be taken such as spinning down the device.
++However, strategic actions such as ejection of the tray, or unlocking
++the door, should be left over to the general routine *cdrom_release()*.
++This is the only function returning type *void*.
++
++.. _cdrom_drive_status:
++
++::
++
++	int drive_status(struct cdrom_device_info *cdi, int slot_nr)
++
++The function *drive_status*, if implemented, should provide
++information on the status of the drive (not the status of the disc,
++which may or may not be in the drive). If the drive is not a changer,
++*slot_nr* should be ignored. In `cdrom.h` the possibilities are listed::
++
++
++	CDS_NO_INFO		/* no information available */
++	CDS_NO_DISC		/* no disc is inserted, tray is closed */
++	CDS_TRAY_OPEN		/* tray is opened */
++	CDS_DRIVE_NOT_READY	/* something is wrong, tray is moving? */
++	CDS_DISC_OK		/* a disc is loaded and everything is fine */
++
++::
++
++	int media_changed(struct cdrom_device_info *cdi, int disc_nr)
++
++This function is very similar to the original function in $struct
++file_operations*. It returns 1 if the medium of the device *cdi->dev*
++has changed since the last call, and 0 otherwise. The parameter
++*disc_nr* identifies a specific slot in a juke-box, it should be
++ignored for single-disc drives. Note that by `re-routing` this
++function through *cdrom_media_changed()*, we can implement separate
++queues for the VFS and a new *ioctl()* function that can report device
++changes to software (e. g., an auto-mounting daemon).
++
++::
++
++	int tray_move(struct cdrom_device_info *cdi, int position)
++
++This function, if implemented, should control the tray movement. (No
++other function should control this.) The parameter *position* controls
++the desired direction of movement:
++
++- 0 Close tray
++- 1 Open tray
++
++This function returns 0 upon success, and a non-zero value upon
++error. Note that if the tray is already in the desired position, no
++action need be taken, and the return value should be 0.
++
++::
++
++	int lock_door(struct cdrom_device_info *cdi, int lock)
++
++This function (and no other code) controls locking of the door, if the
++drive allows this. The value of *lock* controls the desired locking
++state:
++
++- 0 Unlock door, manual opening is allowed
++- 1 Lock door, tray cannot be ejected manually
++
++This function returns 0 upon success, and a non-zero value upon
++error. Note that if the door is already in the requested state, no
++action need be taken, and the return value should be 0.
++
++::
++
++	int select_speed(struct cdrom_device_info *cdi, int speed)
++
++Some CD-ROM drives are capable of changing their head-speed. There
++are several reasons for changing the speed of a CD-ROM drive. Badly
++pressed CD-ROM s may benefit from less-than-maximum head rate. Modern
++CD-ROM drives can obtain very high head rates (up to *24x* is
++common). It has been reported that these drives can make reading
++errors at these high speeds, reducing the speed can prevent data loss
++in these circumstances. Finally, some of these drives can
++make an annoyingly loud noise, which a lower speed may reduce.
++
++This function specifies the speed at which data is read or audio is
++played back. The value of *speed* specifies the head-speed of the
++drive, measured in units of standard cdrom speed (176kB/sec raw data
++or 150kB/sec file system data). So to request that a CD-ROM drive
++operate at 300kB/sec you would call the CDROM_SELECT_SPEED *ioctl*
++with *speed=2*. The special value `0` means `auto-selection`, i. e.,
++maximum data-rate or real-time audio rate. If the drive doesn't have
++this `auto-selection` capability, the decision should be made on the
++current disc loaded and the return value should be positive. A negative
++return value indicates an error.
++
++::
++
++	int select_disc(struct cdrom_device_info *cdi, int number)
++
++If the drive can store multiple discs (a juke-box) this function
++will perform disc selection. It should return the number of the
++selected disc on success, a negative value on error. Currently, only
++the ide-cd driver supports this functionality.
++
++::
++
++	int get_last_session(struct cdrom_device_info *cdi,
++			     struct cdrom_multisession *ms_info)
++
++This function should implement the old corresponding *ioctl()*. For
++device *cdi->dev*, the start of the last session of the current disc
++should be returned in the pointer argument *ms_info*. Note that
++routines in `cdrom.c` have sanitized this argument: its requested
++format will **always** be of the type *CDROM_LBA* (linear block
++addressing mode), whatever the calling software requested. But
++sanitization goes even further: the low-level implementation may
++return the requested information in *CDROM_MSF* format if it wishes so
++(setting the *ms_info->addr_format* field appropriately, of
++course) and the routines in `cdrom.c` will make the transformation if
++necessary. The return value is 0 upon success.
++
++::
++
++	int get_mcn(struct cdrom_device_info *cdi,
++		    struct cdrom_mcn *mcn)
++
++Some discs carry a `Media Catalog Number` (MCN), also called
++`Universal Product Code` (UPC). This number should reflect the number
++that is generally found in the bar-code on the product. Unfortunately,
++the few discs that carry such a number on the disc don't even use the
++same format. The return argument to this function is a pointer to a
++pre-declared memory region of type *struct cdrom_mcn*. The MCN is
++expected as a 13-character string, terminated by a null-character.
++
++::
++
++	int reset(struct cdrom_device_info *cdi)
++
++This call should perform a hard-reset on the drive (although in
++circumstances that a hard-reset is necessary, a drive may very well not
++listen to commands anymore). Preferably, control is returned to the
++caller only after the drive has finished resetting. If the drive is no
++longer listening, it may be wise for the underlying low-level cdrom
++driver to time out.
++
++::
++
++	int audio_ioctl(struct cdrom_device_info *cdi,
++			unsigned int cmd, void *arg)
++
++Some of the CD-ROM-\ *ioctl()*\ 's defined in `cdrom.h` can be
++implemented by the routines described above, and hence the function
++*cdrom_ioctl* will use those. However, most *ioctl()*\ 's deal with
++audio-control. We have decided to leave these to be accessed through a
++single function, repeating the arguments *cmd* and *arg*. Note that
++the latter is of type *void*, rather than *unsigned long int*.
++The routine *cdrom_ioctl()* does do some useful things,
++though. It sanitizes the address format type to *CDROM_MSF* (Minutes,
++Seconds, Frames) for all audio calls. It also verifies the memory
++location of *arg*, and reserves stack-memory for the argument. This
++makes implementation of the *audio_ioctl()* much simpler than in the
++old driver scheme. For example, you may look up the function
++*cm206_audio_ioctl()* `cm206.c` that should be updated with
++this documentation.
++
++An unimplemented ioctl should return *-ENOSYS*, but a harmless request
++(e. g., *CDROMSTART*) may be ignored by returning 0 (success). Other
++errors should be according to the standards, whatever they are. When
++an error is returned by the low-level driver, the Uniform CD-ROM Driver
++tries whenever possible to return the error code to the calling program.
++(We may decide to sanitize the return value in *cdrom_ioctl()* though, in
++order to guarantee a uniform interface to the audio-player software.)
++
++::
++
++	int dev_ioctl(struct cdrom_device_info *cdi,
++		      unsigned int cmd, unsigned long arg)
++
++Some *ioctl()'s* seem to be specific to certain CD-ROM drives. That is,
++they are introduced to service some capabilities of certain drives. In
++fact, there are 6 different *ioctl()'s* for reading data, either in some
++particular kind of format, or audio data. Not many drives support
++reading audio tracks as data, I believe this is because of protection
++of copyrights of artists. Moreover, I think that if audio-tracks are
++supported, it should be done through the VFS and not via *ioctl()'s*. A
++problem here could be the fact that audio-frames are 2352 bytes long,
++so either the audio-file-system should ask for 75264 bytes at once
++(the least common multiple of 512 and 2352), or the drivers should
++bend their backs to cope with this incoherence (to which I would be
++opposed). Furthermore, it is very difficult for the hardware to find
++the exact frame boundaries, since there are no synchronization headers
++in audio frames. Once these issues are resolved, this code should be
++standardized in `cdrom.c`.
++
++Because there are so many *ioctl()'s* that seem to be introduced to
++satisfy certain drivers [#f2]_, any non-standard *ioctl()*\ s
++are routed through the call *dev_ioctl()*. In principle, `private`
++*ioctl()*\ 's should be numbered after the device's major number, and not
++the general CD-ROM *ioctl* number, `0x53`. Currently the
++non-supported *ioctl()'s* are:
++
++	CDROMREADMODE1, CDROMREADMODE2, CDROMREADAUDIO, CDROMREADRAW,
++	CDROMREADCOOKED, CDROMSEEK, CDROMPLAY-BLK and CDROM-READALL
++
++.. [#f2]
++
++   Is there software around that actually uses these? I'd be interested!
++
++.. _cdrom_capabilities:
++
++CD-ROM capabilities
++-------------------
++
++Instead of just implementing some *ioctl* calls, the interface in
++`cdrom.c` supplies the possibility to indicate the **capabilities**
++of a CD-ROM drive. This can be done by ORing any number of
++capability-constants that are defined in `cdrom.h` at the registration
++phase. Currently, the capabilities are any of::
++
++	CDC_CLOSE_TRAY		/* can close tray by software control */
++	CDC_OPEN_TRAY		/* can open tray */
++	CDC_LOCK		/* can lock and unlock the door */
++	CDC_SELECT_SPEED	/* can select speed, in units of * sim*150 ,kB/s */
++	CDC_SELECT_DISC		/* drive is juke-box */
++	CDC_MULTI_SESSION	/* can read sessions *> rm1* */
++	CDC_MCN			/* can read Media Catalog Number */
++	CDC_MEDIA_CHANGED	/* can report if disc has changed */
++	CDC_PLAY_AUDIO		/* can perform audio-functions (play, pause, etc) */
++	CDC_RESET		/* hard reset device */
++	CDC_IOCTLS		/* driver has non-standard ioctls */
++	CDC_DRIVE_STATUS	/* driver implements drive status */
++
++The capability flag is declared *const*, to prevent drivers from
++accidentally tampering with the contents. The capability fags actually
++inform `cdrom.c` of what the driver can do. If the drive found
++by the driver does not have the capability, is can be masked out by
++the *cdrom_device_info* variable *mask*. For instance, the SCSI CD-ROM
++driver has implemented the code for loading and ejecting CD-ROM's, and
++hence its corresponding flags in *capability* will be set. But a SCSI
++CD-ROM drive might be a caddy system, which can't load the tray, and
++hence for this drive the *cdrom_device_info* struct will have set
++the *CDC_CLOSE_TRAY* bit in *mask*.
++
++In the file `cdrom.c` you will encounter many constructions of the type::
++
++	if (cdo->capability & ∼cdi->mask & CDC _⟨capability⟩) ...
++
++There is no *ioctl* to set the mask... The reason is that
++I think it is better to control the **behavior** rather than the
++**capabilities**.
++
++Options
++-------
++
++A final flag register controls the **behavior** of the CD-ROM
++drives, in order to satisfy different users' wishes, hopefully
++independently of the ideas of the respective author who happened to
++have made the drive's support available to the Linux community. The
++current behavior options are::
++
++	CDO_AUTO_CLOSE	/* try to close tray upon device open() */
++	CDO_AUTO_EJECT	/* try to open tray on last device close() */
++	CDO_USE_FFLAGS	/* use file_pointer->f_flags to indicate purpose for open() */
++	CDO_LOCK	/* try to lock door if device is opened */
++	CDO_CHECK_TYPE	/* ensure disc type is data if opened for data */
++
++The initial value of this register is
++`CDO_AUTO_CLOSE | CDO_USE_FFLAGS | CDO_LOCK`, reflecting my own view on user
++interface and software standards. Before you protest, there are two
++new *ioctl()'s* implemented in `cdrom.c`, that allow you to control the
++behavior by software. These are::
++
++	CDROM_SET_OPTIONS	/* set options specified in (int)arg */
++	CDROM_CLEAR_OPTIONS	/* clear options specified in (int)arg */
++
++One option needs some more explanation: *CDO_USE_FFLAGS*. In the next
++newsection we explain what the need for this option is.
++
++A software package `setcd`, available from the Debian distribution
++and `sunsite.unc.edu`, allows user level control of these flags.
++
++
++The need to know the purpose of opening the CD-ROM device
++=========================================================
++
++Traditionally, Unix devices can be used in two different `modes`,
++either by reading/writing to the device file, or by issuing
++controlling commands to the device, by the device's *ioctl()*
++call. The problem with CD-ROM drives, is that they can be used for
++two entirely different purposes. One is to mount removable
++file systems, CD-ROM's, the other is to play audio CD's. Audio commands
++are implemented entirely through *ioctl()\'s*, presumably because the
++first implementation (SUN?) has been such. In principle there is
++nothing wrong with this, but a good control of the `CD player` demands
++that the device can **always** be opened in order to give the
++*ioctl* commands, regardless of the state the drive is in.
++
++On the other hand, when used as a removable-media disc drive (what the
++original purpose of CD-ROM s is) we would like to make sure that the
++disc drive is ready for operation upon opening the device. In the old
++scheme, some CD-ROM drivers don't do any integrity checking, resulting
++in a number of i/o errors reported by the VFS to the kernel when an
++attempt for mounting a CD-ROM on an empty drive occurs. This is not a
++particularly elegant way to find out that there is no CD-ROM inserted;
++it more-or-less looks like the old IBM-PC trying to read an empty floppy
++drive for a couple of seconds, after which the system complains it
++can't read from it. Nowadays we can **sense** the existence of a
++removable medium in a drive, and we believe we should exploit that
++fact. An integrity check on opening of the device, that verifies the
++availability of a CD-ROM and its correct type (data), would be
++desirable.
++
++These two ways of using a CD-ROM drive, principally for data and
++secondarily for playing audio discs, have different demands for the
++behavior of the *open()* call. Audio use simply wants to open the
++device in order to get a file handle which is needed for issuing
++*ioctl* commands, while data use wants to open for correct and
++reliable data transfer. The only way user programs can indicate what
++their *purpose* of opening the device is, is through the *flags*
++parameter (see `open(2)`). For CD-ROM devices, these flags aren't
++implemented (some drivers implement checking for write-related flags,
++but this is not strictly necessary if the device file has correct
++permission flags). Most option flags simply don't make sense to
++CD-ROM devices: *O_CREAT*, *O_NOCTTY*, *O_TRUNC*, *O_APPEND*, and
++*O_SYNC* have no meaning to a CD-ROM.
++
++We therefore propose to use the flag *O_NONBLOCK* to indicate
++that the device is opened just for issuing *ioctl*
++commands. Strictly, the meaning of *O_NONBLOCK* is that opening and
++subsequent calls to the device don't cause the calling process to
++wait. We could interpret this as don't wait until someone has
++inserted some valid data-CD-ROM. Thus, our proposal of the
++implementation for the *open()* call for CD-ROM s is:
++
++- If no other flags are set than *O_RDONLY*, the device is opened
++  for data transfer, and the return value will be 0 only upon successful
++  initialization of the transfer. The call may even induce some actions
++  on the CD-ROM, such as closing the tray.
++- If the option flag *O_NONBLOCK* is set, opening will always be
++  successful, unless the whole device doesn't exist. The drive will take
++  no actions whatsoever.
++
++And what about standards?
++-------------------------
++
++You might hesitate to accept this proposal as it comes from the
++Linux community, and not from some standardizing institute. What
++about SUN, SGI, HP and all those other Unix and hardware vendors?
++Well, these companies are in the lucky position that they generally
++control both the hardware and software of their supported products,
++and are large enough to set their own standard. They do not have to
++deal with a dozen or more different, competing hardware
++configurations\ [#f3]_.
++
++.. [#f3]
++
++   Incidentally, I think that SUN's approach to mounting CD-ROM s is very
++   good in origin: under Solaris a volume-daemon automatically mounts a
++   newly inserted CD-ROM under `/cdrom/*<volume-name>*`.
++
++   In my opinion they should have pushed this
++   further and have **every** CD-ROM on the local area network be
++   mounted at the similar location, i. e., no matter in which particular
++   machine you insert a CD-ROM, it will always appear at the same
++   position in the directory tree, on every system. When I wanted to
++   implement such a user-program for Linux, I came across the
++   differences in behavior of the various drivers, and the need for an
++   *ioctl* informing about media changes.
++
++We believe that using *O_NONBLOCK* to indicate that a device is being opened
++for *ioctl* commands only can be easily introduced in the Linux
++community. All the CD-player authors will have to be informed, we can
++even send in our own patches to the programs. The use of *O_NONBLOCK*
++has most likely no influence on the behavior of the CD-players on
++other operating systems than Linux. Finally, a user can always revert
++to old behavior by a call to
++*ioctl(file_descriptor, CDROM_CLEAR_OPTIONS, CDO_USE_FFLAGS)*.
++
++The preferred strategy of *open()*
++----------------------------------
++
++The routines in `cdrom.c` are designed in such a way that run-time
++configuration of the behavior of CD-ROM devices (of **any** type)
++can be carried out, by the *CDROM_SET/CLEAR_OPTIONS* *ioctls*. Thus, various
++modes of operation can be set:
++
++`CDO_AUTO_CLOSE | CDO_USE_FFLAGS | CDO_LOCK`
++   This is the default setting. (With *CDO_CHECK_TYPE* it will be better, in
++   the future.) If the device is not yet opened by any other process, and if
++   the device is being opened for data (*O_NONBLOCK* is not set) and the
++   tray is found to be open, an attempt to close the tray is made. Then,
++   it is verified that a disc is in the drive and, if *CDO_CHECK_TYPE* is
++   set, that it contains tracks of type `data mode 1`. Only if all tests
++   are passed is the return value zero. The door is locked to prevent file
++   system corruption. If the drive is opened for audio (*O_NONBLOCK* is
++   set), no actions are taken and a value of 0 will be returned.
++
++`CDO_AUTO_CLOSE | CDO_AUTO_EJECT | CDO_LOCK`
++   This mimics the behavior of the current sbpcd-driver. The option flags are
++   ignored, the tray is closed on the first open, if necessary. Similarly,
++   the tray is opened on the last release, i. e., if a CD-ROM is unmounted,
++   it is automatically ejected, such that the user can replace it.
++
++We hope that these option can convince everybody (both driver
++maintainers and user program developers) to adopt the new CD-ROM
++driver scheme and option flag interpretation.
++
++Description of routines in `cdrom.c`
++====================================
++
++Only a few routines in `cdrom.c` are exported to the drivers. In this
++new section we will discuss these, as well as the functions that `take
++over' the CD-ROM interface to the kernel. The header file belonging
++to `cdrom.c` is called `cdrom.h`. Formerly, some of the contents of this
++file were placed in the file `ucdrom.h`, but this file has now been
++merged back into `cdrom.h`.
++
++::
++
++	struct file_operations cdrom_fops
++
++The contents of this structure were described in cdrom_api_.
++A pointer to this structure is assigned to the *fops* field
++of the *struct gendisk*.
++
++::
++
++	int register_cdrom(struct cdrom_device_info *cdi)
++
++This function is used in about the same way one registers *cdrom_fops*
++with the kernel, the device operations and information structures,
++as described in cdrom_api_, should be registered with the
++Uniform CD-ROM Driver::
++
++	register_cdrom(&<device>_info);
++
++
++This function returns zero upon success, and non-zero upon
++failure. The structure *<device>_info* should have a pointer to the
++driver's *<device>_dops*, as in::
++
++	struct cdrom_device_info <device>_info = {
++		<device>_dops;
++		...
++	}
++
++Note that a driver must have one static structure, *<device>_dops*, while
++it may have as many structures *<device>_info* as there are minor devices
++active. *Register_cdrom()* builds a linked list from these.
++
++
++::
++
++	void unregister_cdrom(struct cdrom_device_info *cdi)
++
++Unregistering device *cdi* with minor number *MINOR(cdi->dev)* removes
++the minor device from the list. If it was the last registered minor for
++the low-level driver, this disconnects the registered device-operation
++routines from the CD-ROM interface. This function returns zero upon
++success, and non-zero upon failure.
++
++::
++
++	int cdrom_open(struct inode * ip, struct file * fp)
++
++This function is not called directly by the low-level drivers, it is
++listed in the standard *cdrom_fops*. If the VFS opens a file, this
++function becomes active. A strategy is implemented in this routine,
++taking care of all capabilities and options that are set in the
++*cdrom_device_ops* connected to the device. Then, the program flow is
++transferred to the device_dependent *open()* call.
++
++::
++
++	void cdrom_release(struct inode *ip, struct file *fp)
++
++This function implements the reverse-logic of *cdrom_open()*, and then
++calls the device-dependent *release()* routine. When the use-count has
++reached 0, the allocated buffers are flushed by calls to *sync_dev(dev)*
++and *invalidate_buffers(dev)*.
++
++
++.. _cdrom_ioctl:
++
++::
++
++	int cdrom_ioctl(struct inode *ip, struct file *fp,
++			unsigned int cmd, unsigned long arg)
++
++This function handles all the standard *ioctl* requests for CD-ROM
++devices in a uniform way. The different calls fall into three
++categories: *ioctl()'s* that can be directly implemented by device
++operations, ones that are routed through the call *audio_ioctl()*, and
++the remaining ones, that are presumable device-dependent. Generally, a
++negative return value indicates an error.
++
++Directly implemented *ioctl()'s*
++--------------------------------
++
++The following `old` CD-ROM *ioctl()*\ 's are implemented by directly
++calling device-operations in *cdrom_device_ops*, if implemented and
++not masked:
++
++`CDROMMULTISESSION`
++	Requests the last session on a CD-ROM.
++`CDROMEJECT`
++	Open tray.
++`CDROMCLOSETRAY`
++	Close tray.
++`CDROMEJECT_SW`
++	If *arg\not=0*, set behavior to auto-close (close
++	tray on first open) and auto-eject (eject on last release), otherwise
++	set behavior to non-moving on *open()* and *release()* calls.
++`CDROM_GET_MCN`
++	Get the Media Catalog Number from a CD.
++
++*Ioctl*s routed through *audio_ioctl()*
++---------------------------------------
++
++The following set of *ioctl()'s* are all implemented through a call to
++the *cdrom_fops* function *audio_ioctl()*. Memory checks and
++allocation are performed in *cdrom_ioctl()*, and also sanitization of
++address format (*CDROM_LBA*/*CDROM_MSF*) is done.
++
++`CDROMSUBCHNL`
++	Get sub-channel data in argument *arg* of type
++	`struct cdrom_subchnl *`.
++`CDROMREADTOCHDR`
++	Read Table of Contents header, in *arg* of type
++	`struct cdrom_tochdr *`.
++`CDROMREADTOCENTRY`
++	Read a Table of Contents entry in *arg* and specified by *arg*
++	of type `struct cdrom_tocentry *`.
++`CDROMPLAYMSF`
++	Play audio fragment specified in Minute, Second, Frame format,
++	delimited by *arg* of type `struct cdrom_msf *`.
++`CDROMPLAYTRKIND`
++	Play audio fragment in track-index format delimited by *arg*
++	of type `struct cdrom_ti *`.
++`CDROMVOLCTRL`
++	Set volume specified by *arg* of type `struct cdrom_volctrl *`.
++`CDROMVOLREAD`
++	Read volume into by *arg* of type `struct cdrom_volctrl *`.
++`CDROMSTART`
++	Spin up disc.
++`CDROMSTOP`
++	Stop playback of audio fragment.
++`CDROMPAUSE`
++	Pause playback of audio fragment.
++`CDROMRESUME`
++	Resume playing.
++
++New *ioctl()'s* in `cdrom.c`
++----------------------------
++
++The following *ioctl()'s* have been introduced to allow user programs to
++control the behavior of individual CD-ROM devices. New *ioctl*
++commands can be identified by the underscores in their names.
++
++`CDROM_SET_OPTIONS`
++	Set options specified by *arg*. Returns the option flag register
++	after modification. Use *arg = \rm0* for reading the current flags.
++`CDROM_CLEAR_OPTIONS`
++	Clear options specified by *arg*. Returns the option flag register
++	after modification.
++`CDROM_SELECT_SPEED`
++	Select head-rate speed of disc specified as by *arg* in units
++	of standard cdrom speed (176\,kB/sec raw data or
++	150kB/sec file system data). The value 0 means `auto-select`,
++	i. e., play audio discs at real time and data discs at maximum speed.
++	The value *arg* is checked against the maximum head rate of the
++	drive found in the *cdrom_dops*.
++`CDROM_SELECT_DISC`
++	Select disc numbered *arg* from a juke-box.
++
++	First disc is numbered 0. The number *arg* is checked against the
++	maximum number of discs in the juke-box found in the *cdrom_dops*.
++`CDROM_MEDIA_CHANGED`
++	Returns 1 if a disc has been changed since the last call.
++	Note that calls to *cdrom_media_changed* by the VFS are treated
++	by an independent queue, so both mechanisms will detect a
++	media change once. For juke-boxes, an extra argument *arg*
++	specifies the slot for which the information is given. The special
++	value *CDSL_CURRENT* requests that information about the currently
++	selected slot be returned.
++`CDROM_DRIVE_STATUS`
++	Returns the status of the drive by a call to
++	*drive_status()*. Return values are defined in cdrom_drive_status_.
++	Note that this call doesn't return information on the
++	current playing activity of the drive; this can be polled through
++	an *ioctl* call to *CDROMSUBCHNL*. For juke-boxes, an extra argument
++	*arg* specifies the slot for which (possibly limited) information is
++	given. The special value *CDSL_CURRENT* requests that information
++	about the currently selected slot be returned.
++`CDROM_DISC_STATUS`
++	Returns the type of the disc currently in the drive.
++	It should be viewed as a complement to *CDROM_DRIVE_STATUS*.
++	This *ioctl* can provide *some* information about the current
++	disc that is inserted in the drive. This functionality used to be
++	implemented in the low level drivers, but is now carried out
++	entirely in Uniform CD-ROM Driver.
++
++	The history of development of the CD's use as a carrier medium for
++	various digital information has lead to many different disc types.
++	This *ioctl* is useful only in the case that CDs have \emph {only
++	one} type of data on them. While this is often the case, it is
++	also very common for CDs to have some tracks with data, and some
++	tracks with audio. Because this is an existing interface, rather
++	than fixing this interface by changing the assumptions it was made
++	under, thereby breaking all user applications that use this
++	function, the Uniform CD-ROM Driver implements this *ioctl* as
++	follows: If the CD in question has audio tracks on it, and it has
++	absolutely no CD-I, XA, or data tracks on it, it will be reported
++	as *CDS_AUDIO*. If it has both audio and data tracks, it will
++	return *CDS_MIXED*. If there are no audio tracks on the disc, and
++	if the CD in question has any CD-I tracks on it, it will be
++	reported as *CDS_XA_2_2*. Failing that, if the CD in question
++	has any XA tracks on it, it will be reported as *CDS_XA_2_1*.
++	Finally, if the CD in question has any data tracks on it,
++	it will be reported as a data CD (*CDS_DATA_1*).
++
++	This *ioctl* can return::
++
++		CDS_NO_INFO	/* no information available */
++		CDS_NO_DISC	/* no disc is inserted, or tray is opened */
++		CDS_AUDIO	/* Audio disc (2352 audio bytes/frame) */
++		CDS_DATA_1	/* data disc, mode 1 (2048 user bytes/frame) */
++		CDS_XA_2_1	/* mixed data (XA), mode 2, form 1 (2048 user bytes) */
++		CDS_XA_2_2	/* mixed data (XA), mode 2, form 1 (2324 user bytes) */
++		CDS_MIXED	/* mixed audio/data disc */
++
++	For some information concerning frame layout of the various disc
++	types, see a recent version of `cdrom.h`.
++
++`CDROM_CHANGER_NSLOTS`
++	Returns the number of slots in a juke-box.
++`CDROMRESET`
++	Reset the drive.
++`CDROM_GET_CAPABILITY`
++	Returns the *capability* flags for the drive. Refer to section
++	cdrom_capabilities_ for more information on these flags.
++`CDROM_LOCKDOOR`
++	 Locks the door of the drive. `arg == 0` unlocks the door,
++	 any other value locks it.
++`CDROM_DEBUG`
++	 Turns on debugging info. Only root is allowed to do this.
++	 Same semantics as CDROM_LOCKDOOR.
++
++
++Device dependent *ioctl()'s*
++----------------------------
++
++Finally, all other *ioctl()'s* are passed to the function *dev_ioctl()*,
++if implemented. No memory allocation or verification is carried out.
++
++How to update your driver
++=========================
++
++- Make a backup of your current driver.
++- Get hold of the files `cdrom.c` and `cdrom.h`, they should be in
++  the directory tree that came with this documentation.
++- Make sure you include `cdrom.h`.
++- Change the 3rd argument of *register_blkdev* from `&<your-drive>_fops`
++  to `&cdrom_fops`.
++- Just after that line, add the following to register with the Uniform
++  CD-ROM Driver::
++
++	register_cdrom(&<your-drive>_info);*
++
++  Similarly, add a call to *unregister_cdrom()* at the appropriate place.
++- Copy an example of the device-operations *struct* to your
++  source, e. g., from `cm206.c` *cm206_dops*, and change all
++  entries to names corresponding to your driver, or names you just
++  happen to like. If your driver doesn't support a certain function,
++  make the entry *NULL*. At the entry *capability* you should list all
++  capabilities your driver currently supports. If your driver
++  has a capability that is not listed, please send me a message.
++- Copy the *cdrom_device_info* declaration from the same example
++  driver, and modify the entries according to your needs. If your
++  driver dynamically determines the capabilities of the hardware, this
++  structure should also be declared dynamically.
++- Implement all functions in your `<device>_dops` structure,
++  according to prototypes listed in  `cdrom.h`, and specifications given
++  in cdrom_api_. Most likely you have already implemented
++  the code in a large part, and you will almost certainly need to adapt the
++  prototype and return values.
++- Rename your `<device>_ioctl()` function to *audio_ioctl* and
++  change the prototype a little. Remove entries listed in the first
++  part in cdrom_ioctl_, if your code was OK, these are
++  just calls to the routines you adapted in the previous step.
++- You may remove all remaining memory checking code in the
++  *audio_ioctl()* function that deals with audio commands (these are
++  listed in the second part of cdrom_ioctl_. There is no
++  need for memory allocation either, so most *case*s in the *switch*
++  statement look similar to::
++
++	case CDROMREADTOCENTRY:
++		get_toc_entry\bigl((struct cdrom_tocentry *) arg);
++
++- All remaining *ioctl* cases must be moved to a separate
++  function, *<device>_ioctl*, the device-dependent *ioctl()'s*. Note that
++  memory checking and allocation must be kept in this code!
++- Change the prototypes of *<device>_open()* and
++  *<device>_release()*, and remove any strategic code (i. e., tray
++  movement, door locking, etc.).
++- Try to recompile the drivers. We advise you to use modules, both
++  for `cdrom.o` and your driver, as debugging is much easier this
++  way.
++
++Thanks
++======
++
++Thanks to all the people involved. First, Erik Andersen, who has
++taken over the torch in maintaining `cdrom.c` and integrating much
++CD-ROM-related code in the 2.1-kernel. Thanks to Scott Snyder and
++Gerd Knorr, who were the first to implement this interface for SCSI
++and IDE-CD drivers and added many ideas for extension of the data
++structures relative to kernel~2.0. Further thanks to Heiko Eißfeldt,
++Thomas Quinot, Jon Tombs, Ken Pizzini, Eberhard Mönkeberg and Andrew Kroll,
++the Linux CD-ROM device driver developers who were kind
++enough to give suggestions and criticisms during the writing. Finally
++of course, I want to thank Linus Torvalds for making this possible in
++the first place.
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 933268b8d6a5..5d1e0a4a7d84 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -7,7 +7,7 @@
+    License.  See linux/COPYING for more information.
+ 
+    Uniform CD-ROM driver for Linux.
+-   See Documentation/cdrom/cdrom-standard.tex for usage information.
++   See Documentation/cdrom/cdrom-standard.txt for usage information.
+ 
+    The routines in the file provide a uniform interface between the
+    software that uses CD-ROMs and the various low-level drivers that
 -- 
 2.20.1
 
