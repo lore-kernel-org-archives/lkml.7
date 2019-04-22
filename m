@@ -2,92 +2,99 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4C1C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5499C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A40C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7543F20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nP1dp69v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfDVO5H (ORCPT
+        id S1727939AbfDVO6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 10:57:07 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2991 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726260AbfDVO5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 10:57:06 -0400
-Received: from dggemi406-hub.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 6C2F2CDAE404ADF4B314;
-        Mon, 22 Apr 2019 22:56:11 +0800 (CST)
-Received: from DGGEMI530-MBX.china.huawei.com ([169.254.7.146]) by
- dggemi406-hub.china.huawei.com ([10.3.17.144]) with mapi id 14.03.0399.000;
- Mon, 22 Apr 2019 22:56:06 +0800
-From:   weizhenliang <weizhenliang@huawei.com>
-To:     Christian Brauner <christian@brauner.io>
-CC:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "colona@arista.com" <colona@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] signal: trace_signal_deliver when signal_group_exit
-Thread-Topic: [PATCH v2] signal: trace_signal_deliver when signal_group_exit
-Thread-Index: AdT4/f2TUdzcmSVWTieuaenNlJkeog==
-Date:   Mon, 22 Apr 2019 14:56:05 +0000
-Message-ID: <AF4D908CC0E2A24EB308A26962C8C3BDEB152A@DGGEMI530-MBX.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.40.99.192]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 22 Apr 2019 10:58:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44329 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfDVO6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 10:58:34 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z16so1356469pgv.11;
+        Mon, 22 Apr 2019 07:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gm5SMZUgMkTV9ecwfINW1s9a9w+WILV3SsQGv+JtbrU=;
+        b=nP1dp69vd94fGg/oHXGbYhip2Q07o8sq+68IoyMu/0yx+N60Rn95pLyGhbZ+PCOSg5
+         uc2chYJQiHVEG4JFR8sn8q+x0A5PInQLxze1QM8Sw09PThjwJH1u+jCRNTuwdfTZ6dPU
+         JwqVlEaZOB4VXbMuzhOTJhrIV3b/ExeWRM1ZqoSwtwMwqIde2UlDNxa2M9BtMaS4Pfjb
+         43x6hTBiVZhOfqyt3wjY/lG1caBwyGWTL2YhjfvSjrzpzyeJJHVbI5wiRJjS8UrSqG15
+         jJ5w/sJxqeZyb7aLgw8yJRwWBTwTvyNrAtejDKgEC/sLP5SMViHF/iJf/pu10gN+n4Xl
+         kCTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gm5SMZUgMkTV9ecwfINW1s9a9w+WILV3SsQGv+JtbrU=;
+        b=PQdeKlQFbNrQBXKfH/PQJTQdRQa5t+TRr4h5v3eaMfyRqbn7qs4MlecZeMABHN8iPj
+         P4uIUnOpg8hB3UjybMBDGZ4S8Cscrl2lkrgUhb1+ySTWrA0DqI+k5zPfXp7JW78m+qkD
+         qU1EGm/cqBbh9rZWFd3TSjXT1LzbdO3GfDd6rf5hqAQ7W1vpOgoJJ1NeHjA51g7pw7UG
+         93X1G8aKsOv7XDFAXvnrZd5aoZvYWSbSr/0diTrk7Ym6EpkohOQsLQYeTAdux34McFI9
+         tekjr/JJiwy7PLYzjJ3BrcVQ+qkg5PSSTq+AulmIR9RgMb70KfIfd9hYvahfejPjZEJl
+         59ZA==
+X-Gm-Message-State: APjAAAWmsrbHmdRZ/W5gsKoNUc6mK9GI74TdrzQc5TyNK8siPme5fZ1P
+        r33jOTDG/5QJUFIfoUiaqBqAuN63
+X-Google-Smtp-Source: APXvYqzJEkSIE0HeS649WUFyH1dJHgl7Kh7atrVk1xp9qleDVyDsxd7Y9v+0dgaBCr9RPqs10VoO6A==
+X-Received: by 2002:a62:1815:: with SMTP id 21mr20989815pfy.107.1555945114253;
+        Mon, 22 Apr 2019 07:58:34 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:80e:6623:574:bedf? ([2601:282:800:fd80:80e:6623:574:bedf])
+        by smtp.googlemail.com with ESMTPSA id q77sm31283833pfi.45.2019.04.22.07.58.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 07:58:33 -0700 (PDT)
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     Stephen Suryaputra <ssuryaextr@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Julian Anastasov <ja@ssi.bg>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
+ <20190421204126.GA19213@ubuntu>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <458669e6-3d94-1daf-f80b-3c8d740790fa@gmail.com>
+Date:   Mon, 22 Apr 2019 08:58:31 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190421204126.GA19213@ubuntu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCBBcHIgMjIsIDIwMTkgYXQgNjozNyBQTSBDaHJpc3RpYW4gQnJhdW5lciA8bWFpbHRv
-OmNocmlzdGlhbkBicmF1bmVyLmlvPiB3cm90ZToNCj5PbiBNb24sIEFwciAyMiwgMjAxOSBhdCA4
-OjU3IEFNIFpoZW5saWFuZyBXZWkgPHdlaXpoZW5saWFuZ0BodWF3ZWkuY29tPiB3cm90ZToNCj4+
-DQo+PiBJbiB0aGUgZm9sbG93aW5nIGNvbW1pdCwgcmVtb3ZpbmcgU0lHS0lMTCBmcm9tIGVhY2gg
-dGhyZWFkIHNpZ25hbCBtYXNrIA0KPj4gYW5kIGV4ZWN1dGluZyAiZ290byBmYXRhbCIgZGlyZWN0
-bHkgd2lsbCBza2lwIHRoZSBjYWxsIHRvIA0KPj4gInRyYWNlX3NpZ25hbF9kZWxpdmVyIi4gQXQg
-dGhpcyBwb2ludCwgdGhlIGRlbGl2ZXJ5IHRyYWNraW5nIG9mIHRoZSANCj4+IFNJR0tJTEwgc2ln
-bmFsIHdpbGwgYmUgaW5hY2N1cmF0ZS4NCj4+DQo+PiBjb21taXQgY2Y0M2E3NTdmZDQ5NDQgKCJz
-aWduYWw6IFJlc3RvcmUgdGhlIHN0b3AgUFRSQUNFX0VWRU5UX0VYSVQiKQ0KPj4NCj4+IFRoZXJl
-Zm9yZSwgd2UgbmVlZCB0byBhZGQgdHJhY2Vfc2lnbmFsX2RlbGl2ZXIgYmVmb3JlICJnb3RvIGZh
-dGFsIg0KPj4gYWZ0ZXIgZXhlY3V0aW5nIHNpZ2RlbHNldC4NCj4+DQo+PiBOb3RlOiBUaGUgYWN0
-aW9uW1NJR0tJTExdIG11c3QgYmUgU0lHX0RGTCwgYW5kIFNFTkRfU0lHX05PSU5GTyBtYXRjaGVz
-IA0KPj4gdGhlIGZhY3QgdGhhdCBTSUdLSUxMIGRvZXNuJ3QgaGF2ZSBhbnkgaW5mby4NCj4+DQo+
-PiBTaWduZWQtb2ZmLWJ5OiBaaGVubGlhbmcgV2VpIDx3ZWl6aGVubGlhbmdAaHVhd2VpLmNvbT4N
-Cj4NCj5KdXN0IGEgbml0IGJlbG93IG90aGVyd2lzZQ0KPg0KPkFja2VkLWJ5OiBDaHJpc3RpYW4g
-QnJhdW5lciA8Y2hyaXN0aWFuQGJyYXVuZXIuaW8+DQo+DQo+WW91IHNob3VsZCBwcm9iYWJseSBt
-YWtlIHRoZSBsaW5lOg0KPmNvbW1pdCBjZjQzYTc1N2ZkNDk0NCAoInNpZ25hbDogUmVzdG9yZSB0
-aGUgc3RvcCBQVFJBQ0VfRVZFTlRfRVhJVCIpIGEgRml4ZXMtbGluZSByaWdodCBhYm92ZSB5b3Vy
-IGNvbW1pdDoNCj5GaXhlcyBjZjQzYTc1N2ZkNDk0NCAoInNpZ25hbDogUmVzdG9yZSB0aGUgc3Rv
-cCBQVFJBQ0VfRVZFTlRfRVhJVCIpDQo+DQo+PiAtLS0NCj4+ICBrZXJuZWwvc2lnbmFsLmMgfCAx
-ICsNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4+DQo+PiBkaWZmIC0tZ2l0
-IGEva2VybmVsL3NpZ25hbC5jIGIva2VybmVsL3NpZ25hbC5jIGluZGV4IA0KPj4gMjI3YmExNzAy
-OThlLi4wZjY5YWRhMzc2ZWYgMTAwNjQ0DQo+PiAtLS0gYS9rZXJuZWwvc2lnbmFsLmMNCj4+ICsr
-KyBiL2tlcm5lbC9zaWduYWwuYw0KPj4gQEAgLTI0NDEsNiArMjQ0MSw3IEBAIGJvb2wgZ2V0X3Np
-Z25hbChzdHJ1Y3Qga3NpZ25hbCAqa3NpZykNCj4+ICAgICAgICAgaWYgKHNpZ25hbF9ncm91cF9l
-eGl0KHNpZ25hbCkpIHsNCj4+ICAgICAgICAgICAgICAgICBrc2lnLT5pbmZvLnNpX3NpZ25vID0g
-c2lnbnIgPSBTSUdLSUxMOw0KPj4gICAgICAgICAgICAgICAgIHNpZ2RlbHNldCgmY3VycmVudC0+
-cGVuZGluZy5zaWduYWwsIFNJR0tJTEwpOw0KPj4gKyAgICAgICAgICAgICAgIHRyYWNlX3NpZ25h
-bF9kZWxpdmVyKFNJR0tJTEwsIFNFTkRfU0lHX05PSU5GTywgDQo+PiArIFNJR19ERkwpOw0KPj4g
-ICAgICAgICAgICAgICAgIHJlY2FsY19zaWdwZW5kaW5nKCk7DQo+PiAgICAgICAgICAgICAgICAg
-Z290byBmYXRhbDsNCj4+ICAgICAgICAgfQ0KPj4gLS0NCj4+IDIuMTQuMS53aW5kb3dzLjENCj4+
-DQo+Pg0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudHMsIEkgd2lsbCBhZGp1c3QgdGhlIGNvbW1p
-dCBtc2cgYW5kIHJlc2VuZCB0aGUgcGF0Y2ggYWNjb3JkaW5nIHRvIHlvdXIgc3VnZ2VzdGlvbnMu
-DQpJZiB0aGVyZSBhcmUgb3RoZXIgc3VnZ2VzdGlvbnMsIHBsZWFzZSBsZXQgbWUga25vdy4gVGhh
-bmtzIGFnYWlufg0KDQpaaGVubGlhbmcgV2VpLg0K
+On 4/21/19 2:41 PM, Stephen Suryaputra wrote:
+> Hi David,
+> 
+> I looked at patchwork. This patch hasn't been accepted. Is there a plan
+> to resubmit? It is very useful. I had to debug refcnt issues multiple
+> times for my employer.
+
+I think the inlined versions of dev_put and dev_hold are better for
+performance.
+
+I could submit it with a DEBUG config to enable. It has been invaluable
+to me over the past 3+ years debugging refcount problems.
