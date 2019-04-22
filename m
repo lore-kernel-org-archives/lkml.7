@@ -2,566 +2,765 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22511C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC538C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7E2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FB2218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555939704;
+	bh=zZTmyR9lW0/GHM+alob3ZsiNYuNtV3dp6FxKTLmUi2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ysVjJPt1DONh2+RLLMumdKgNgaV+zRsat50A03PnR3mzKDgBPBHwtVDEIrXJQzklW
+	 fUkmhkSY3k8ktm3PxA2Kt24fL/h1RwS9Ru37RLQGjCYU0sCZdhkVkV4/Oh6Puulfoo
+	 WYlEI4fAbp0wn4xHHhtt2aQA0FadcY0L6NEsHKJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfDVN2L (ORCPT
+        id S1727592AbfDVN2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:11 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32814 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfDVN2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 06:28:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,381,1549958400"; 
-   d="scan'208";a="317960953"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2019 06:28:06 -0700
-Received: from [10.254.87.30] (kliang2-mobl.ccr.corp.intel.com [10.254.87.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 89DF65803C2;
-        Mon, 22 Apr 2019 06:28:05 -0700 (PDT)
-Subject: Re: [PATCH 1/5] perf/x86/intel/uncore: Add uncore support for Snow
- Ridge server
-To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, eranian@google.com, ak@linux.intel.com
-References: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <0682949d-7098-aeda-666f-d60b7b531667@linux.intel.com>
-Date:   Mon, 22 Apr 2019 09:28:04 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 09:28:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36860 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDVN2P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:28:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=GAdLxM7p4FEHHI0wRCWPgpCgzg9KMS2TLKdOXRVH6mM=; b=sYa5VlTA4jsuaP/9qub+4D6RWX
+        EELe3xJGwhPEEVxFKYGLI4biGWXwEEtUhtftlWSeli2+3yAEhUnPppd5zdz2/XyFjmurGALv4GmDY
+        KxVdd31se+dCbbIpXzYS7iBNPGxlw+X8gLueo9p1ClfCx9ygobZExkVoGe0akaIdBnkopqaCfyNTI
+        cunFZ5HN1VMO19t7O9c6FHH0P49LZAD4y3972Ayldlf5sS0bG/IWDz2z5y24J3NHzVHd0jpZenybV
+        8LqCzVIidb15z02RpQs4JkYB2VvkfWrHS2+YYWQsvV9+VF3DgnG0P8bmZ06Q3YAugkbtmWHg1AEcH
+        hPZQZjiw==;
+Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hIYzU-0005Hk-RS; Mon, 22 Apr 2019 13:28:13 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hIYzS-0005km-O6; Mon, 22 Apr 2019 10:28:10 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: [PATCH v2 17/79] docs: infiniband: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:06 -0300
+Message-Id: <a9270afad7c7ee30b78c79c6e1fb371e15bad793.1555938376.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+The InfiniBand docs are plain text with no markups.
+So, all we needed to do were to add the title markups and
+some markup sequences in order to properly parse tables,
+lists and literal blocks.
 
-Have you got a chance to take a look at the series for Snow Ridge server?
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
-Here is the link for the document.
-https://cdrdv2.intel.com/v1/dl/getContent/611319
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ .../{core_locking.txt => core_locking.rst}    |  64 ++++++-----
+ Documentation/infiniband/index.rst            |  23 ++++
+ .../infiniband/{ipoib.txt => ipoib.rst}       |  24 ++--
+ .../infiniband/{opa_vnic.txt => opa_vnic.rst} | 108 +++++++++---------
+ .../infiniband/{sysfs.txt => sysfs.rst}       |   4 +-
+ .../{tag_matching.txt => tag_matching.rst}    |   5 +
+ .../infiniband/{user_mad.txt => user_mad.rst} |  33 ++++--
+ .../{user_verbs.txt => user_verbs.rst}        |  12 +-
+ drivers/infiniband/core/user_mad.c            |   2 +-
+ drivers/infiniband/ulp/ipoib/Kconfig          |   2 +-
+ 10 files changed, 174 insertions(+), 103 deletions(-)
+ rename Documentation/infiniband/{core_locking.txt => core_locking.rst} (78%)
+ create mode 100644 Documentation/infiniband/index.rst
+ rename Documentation/infiniband/{ipoib.txt => ipoib.rst} (90%)
+ rename Documentation/infiniband/{opa_vnic.txt => opa_vnic.rst} (63%)
+ rename Documentation/infiniband/{sysfs.txt => sysfs.rst} (69%)
+ rename Documentation/infiniband/{tag_matching.txt => tag_matching.rst} (98%)
+ rename Documentation/infiniband/{user_mad.txt => user_mad.rst} (90%)
+ rename Documentation/infiniband/{user_verbs.txt => user_verbs.rst} (93%)
 
-Thanks,
-Kan
+diff --git a/Documentation/infiniband/core_locking.txt b/Documentation/infiniband/core_locking.rst
+similarity index 78%
+rename from Documentation/infiniband/core_locking.txt
+rename to Documentation/infiniband/core_locking.rst
+index 4b1f36b6ada0..f34669beb4fe 100644
+--- a/Documentation/infiniband/core_locking.txt
++++ b/Documentation/infiniband/core_locking.rst
+@@ -1,4 +1,6 @@
+-INFINIBAND MIDLAYER LOCKING
++===========================
++InfiniBand Midlayer Locking
++===========================
+ 
+   This guide is an attempt to make explicit the locking assumptions
+   made by the InfiniBand midlayer.  It describes the requirements on
+@@ -6,45 +8,47 @@ INFINIBAND MIDLAYER LOCKING
+   protocols that use the midlayer.
+ 
+ Sleeping and interrupt context
++==============================
+ 
+   With the following exceptions, a low-level driver implementation of
+   all of the methods in struct ib_device may sleep.  The exceptions
+   are any methods from the list:
+ 
+-    create_ah
+-    modify_ah
+-    query_ah
+-    destroy_ah
+-    post_send
+-    post_recv
+-    poll_cq
+-    req_notify_cq
+-    map_phys_fmr
++    - create_ah
++    - modify_ah
++    - query_ah
++    - destroy_ah
++    - post_send
++    - post_recv
++    - poll_cq
++    - req_notify_cq
++    - map_phys_fmr
+ 
+   which may not sleep and must be callable from any context.
+ 
+   The corresponding functions exported to upper level protocol
+   consumers:
+ 
+-    ib_create_ah
+-    ib_modify_ah
+-    ib_query_ah
+-    ib_destroy_ah
+-    ib_post_send
+-    ib_post_recv
+-    ib_req_notify_cq
+-    ib_map_phys_fmr
++    - ib_create_ah
++    - ib_modify_ah
++    - ib_query_ah
++    - ib_destroy_ah
++    - ib_post_send
++    - ib_post_recv
++    - ib_req_notify_cq
++    - ib_map_phys_fmr
+ 
+   are therefore safe to call from any context.
+ 
+   In addition, the function
+ 
+-    ib_dispatch_event
++    - ib_dispatch_event
+ 
+   used by low-level drivers to dispatch asynchronous events through
+   the midlayer is also safe to call from any context.
+ 
+ Reentrancy
++----------
+ 
+   All of the methods in struct ib_device exported by a low-level
+   driver must be fully reentrant.  The low-level driver is required to
+@@ -62,6 +66,7 @@ Reentrancy
+   information between different calls of ib_poll_cq() is not defined.
+ 
+ Callbacks
++---------
+ 
+   A low-level driver must not perform a callback directly from the
+   same callchain as an ib_device method call.  For example, it is not
+@@ -74,18 +79,18 @@ Callbacks
+   completion event handlers for the same CQ are not called
+   simultaneously.  The driver must guarantee that only one CQ event
+   handler for a given CQ is running at a time.  In other words, the
+-  following situation is not allowed:
++  following situation is not allowed::
+ 
+-        CPU1                                    CPU2
++          CPU1                                    CPU2
+ 
+-  low-level driver ->
+-    consumer CQ event callback:
+-      /* ... */
+-      ib_req_notify_cq(cq, ...);
+-                                        low-level driver ->
+-      /* ... */                           consumer CQ event callback:
+-                                            /* ... */
+-      return from CQ event handler
++    low-level driver ->
++      consumer CQ event callback:
++        /* ... */
++        ib_req_notify_cq(cq, ...);
++                                          low-level driver ->
++        /* ... */                           consumer CQ event callback:
++                                              /* ... */
++        return from CQ event handler
+ 
+   The context in which completion event and asynchronous event
+   callbacks run is not defined.  Depending on the low-level driver, it
+@@ -93,6 +98,7 @@ Callbacks
+   Upper level protocol consumers may not sleep in a callback.
+ 
+ Hot-plug
++--------
+ 
+   A low-level driver announces that a device is ready for use by
+   consumers when it calls ib_register_device(), all initialization
+diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
+new file mode 100644
+index 000000000000..22eea64de722
+--- /dev/null
++++ b/Documentation/infiniband/index.rst
+@@ -0,0 +1,23 @@
++:orphan:
++
++==========
++InfiniBand
++==========
++
++.. toctree::
++   :maxdepth: 1
++
++   core_locking
++   ipoib
++   opa_vnic
++   sysfs
++   tag_matching
++   user_mad
++   user_verbs
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/infiniband/ipoib.txt b/Documentation/infiniband/ipoib.rst
+similarity index 90%
+rename from Documentation/infiniband/ipoib.txt
+rename to Documentation/infiniband/ipoib.rst
+index 47c1dd9818f2..0dd36154c0c9 100644
+--- a/Documentation/infiniband/ipoib.txt
++++ b/Documentation/infiniband/ipoib.rst
+@@ -1,4 +1,6 @@
+-IP OVER INFINIBAND
++==================
++IP over InfiniBand
++==================
+ 
+   The ib_ipoib driver is an implementation of the IP over InfiniBand
+   protocol as specified by RFC 4391 and 4392, issued by the IETF ipoib
+@@ -8,16 +10,17 @@ IP OVER INFINIBAND
+   masqueraded to the kernel as ethernet interfaces).
+ 
+ Partitions and P_Keys
++=====================
+ 
+   When the IPoIB driver is loaded, it creates one interface for each
+   port using the P_Key at index 0.  To create an interface with a
+   different P_Key, write the desired P_Key into the main interface's
+-  /sys/class/net/<intf name>/create_child file.  For example:
++  /sys/class/net/<intf name>/create_child file.  For example::
+ 
+     echo 0x8001 > /sys/class/net/ib0/create_child
+ 
+   This will create an interface named ib0.8001 with P_Key 0x8001.  To
+-  remove a subinterface, use the "delete_child" file:
++  remove a subinterface, use the "delete_child" file::
+ 
+     echo 0x8001 > /sys/class/net/ib0/delete_child
+ 
+@@ -28,6 +31,7 @@ Partitions and P_Keys
+   rtnl_link_ops, where children created using either way behave the same.
+ 
+ Datagram vs Connected modes
++===========================
+ 
+   The IPoIB driver supports two modes of operation: datagram and
+   connected.  The mode is set and read through an interface's
+@@ -51,6 +55,7 @@ Datagram vs Connected modes
+   networking stack to use the smaller UD MTU for these neighbours.
+ 
+ Stateless offloads
++==================
+ 
+   If the IB HW supports IPoIB stateless offloads, IPoIB advertises
+   TCP/IP checksum and/or Large Send (LSO) offloading capability to the
+@@ -60,9 +65,10 @@ Stateless offloads
+   on/off using ethtool calls.  Currently LRO is supported only for
+   checksum offload capable devices.
+ 
+-  Stateless offloads are supported only in datagram mode.  
++  Stateless offloads are supported only in datagram mode.
+ 
+ Interrupt moderation
++====================
+ 
+   If the underlying IB device supports CQ event moderation, one can
+   use ethtool to set interrupt mitigation parameters and thus reduce
+@@ -71,6 +77,7 @@ Interrupt moderation
+   moderation is supported.
+ 
+ Debugging Information
++=====================
+ 
+   By compiling the IPoIB driver with CONFIG_INFINIBAND_IPOIB_DEBUG set
+   to 'y', tracing messages are compiled into the driver.  They are
+@@ -79,7 +86,7 @@ Debugging Information
+   runtime through files in /sys/module/ib_ipoib/.
+ 
+   CONFIG_INFINIBAND_IPOIB_DEBUG also enables files in the debugfs
+-  virtual filesystem.  By mounting this filesystem, for example with
++  virtual filesystem.  By mounting this filesystem, for example with::
+ 
+     mount -t debugfs none /sys/kernel/debug
+ 
+@@ -96,10 +103,13 @@ Debugging Information
+   performance, because it adds tests to the fast path.
+ 
+ References
++==========
+ 
+   Transmission of IP over InfiniBand (IPoIB) (RFC 4391)
+-    http://ietf.org/rfc/rfc4391.txt 
++    http://ietf.org/rfc/rfc4391.txt
++
+   IP over InfiniBand (IPoIB) Architecture (RFC 4392)
+-    http://ietf.org/rfc/rfc4392.txt 
++    http://ietf.org/rfc/rfc4392.txt
++
+   IP over InfiniBand: Connected Mode (RFC 4755)
+     http://ietf.org/rfc/rfc4755.txt
+diff --git a/Documentation/infiniband/opa_vnic.txt b/Documentation/infiniband/opa_vnic.rst
+similarity index 63%
+rename from Documentation/infiniband/opa_vnic.txt
+rename to Documentation/infiniband/opa_vnic.rst
+index 282e17be798a..2f888d9ffec0 100644
+--- a/Documentation/infiniband/opa_vnic.txt
++++ b/Documentation/infiniband/opa_vnic.rst
+@@ -1,3 +1,7 @@
++=================================================================
++Intel Omni-Path (OPA) Virtual Network Interface Controller (VNIC)
++=================================================================
++
+ Intel Omni-Path (OPA) Virtual Network Interface Controller (VNIC) feature
+ supports Ethernet functionality over Omni-Path fabric by encapsulating
+ the Ethernet packets between HFI nodes.
+@@ -17,70 +21,72 @@ an independent Ethernet network. The configuration is performed by an
+ Ethernet Manager (EM) which is part of the trusted Fabric Manager (FM)
+ application. HFI nodes can have multiple VNICs each connected to a
+ different virtual Ethernet switch. The below diagram presents a case
+-of two virtual Ethernet switches with two HFI nodes.
++of two virtual Ethernet switches with two HFI nodes::
+ 
+-                             +-------------------+
+-                             |      Subnet/      |
+-                             |     Ethernet      |
+-                             |      Manager      |
+-                             +-------------------+
+-                                /          /
+-                              /           /
+-                            /            /
+-                          /             /
+-+-----------------------------+  +------------------------------+
+-|  Virtual Ethernet Switch    |  |  Virtual Ethernet Switch     |
+-|  +---------+    +---------+ |  | +---------+    +---------+   |
+-|  | VPORT   |    |  VPORT  | |  | |  VPORT  |    |  VPORT  |   |
+-+--+---------+----+---------+-+  +-+---------+----+---------+---+
+-         |                 \        /                 |
+-         |                   \    /                   |
+-         |                     \/                     |
+-         |                    /  \                    |
+-         |                  /      \                  |
+-     +-----------+------------+  +-----------+------------+
+-     |   VNIC    |    VNIC    |  |    VNIC   |    VNIC    |
+-     +-----------+------------+  +-----------+------------+
+-     |          HFI           |  |          HFI           |
+-     +------------------------+  +------------------------+
++                               +-------------------+
++                               |      Subnet/      |
++                               |     Ethernet      |
++                               |      Manager      |
++                               +-------------------+
++                                  /          /
++                                /           /
++                              /            /
++                            /             /
++  +-----------------------------+  +------------------------------+
++  |  Virtual Ethernet Switch    |  |  Virtual Ethernet Switch     |
++  |  +---------+    +---------+ |  | +---------+    +---------+   |
++  |  | VPORT   |    |  VPORT  | |  | |  VPORT  |    |  VPORT  |   |
++  +--+---------+----+---------+-+  +-+---------+----+---------+---+
++           |                 \        /                 |
++           |                   \    /                   |
++           |                     \/                     |
++           |                    /  \                    |
++           |                  /      \                  |
++       +-----------+------------+  +-----------+------------+
++       |   VNIC    |    VNIC    |  |    VNIC   |    VNIC    |
++       +-----------+------------+  +-----------+------------+
++       |          HFI           |  |          HFI           |
++       +------------------------+  +------------------------+
+ 
+ 
+ The Omni-Path encapsulated Ethernet packet format is as described below.
+ 
+-Bits          Field
+-------------------------------------
++==================== ================================
++Bits                 Field
++==================== ================================
+ Quad Word 0:
+-0-19      SLID (lower 20 bits)
+-20-30     Length (in Quad Words)
+-31        BECN bit
+-32-51     DLID (lower 20 bits)
+-52-56     SC (Service Class)
+-57-59     RC (Routing Control)
+-60        FECN bit
+-61-62     L2 (=10, 16B format)
+-63        LT (=1, Link Transfer Head Flit)
++0-19                 SLID (lower 20 bits)
++20-30                Length (in Quad Words)
++31                   BECN bit
++32-51                DLID (lower 20 bits)
++52-56                SC (Service Class)
++57-59                RC (Routing Control)
++60                   FECN bit
++61-62                L2 (=10, 16B format)
++63                   LT (=1, Link Transfer Head Flit)
+ 
+ Quad Word 1:
+-0-7       L4 type (=0x78 ETHERNET)
+-8-11      SLID[23:20]
+-12-15     DLID[23:20]
+-16-31     PKEY
+-32-47     Entropy
+-48-63     Reserved
++0-7                  L4 type (=0x78 ETHERNET)
++8-11                 SLID[23:20]
++12-15                DLID[23:20]
++16-31                PKEY
++32-47                Entropy
++48-63                Reserved
+ 
+ Quad Word 2:
+-0-15      Reserved
+-16-31     L4 header
+-32-63     Ethernet Packet
++0-15                 Reserved
++16-31                L4 header
++32-63                Ethernet Packet
+ 
+ Quad Words 3 to N-1:
+-0-63      Ethernet packet (pad extended)
++0-63                 Ethernet packet (pad extended)
+ 
+ Quad Word N (last):
+-0-23      Ethernet packet (pad extended)
+-24-55     ICRC
+-56-61     Tail
+-62-63     LT (=01, Link Transfer Tail Flit)
++0-23                 Ethernet packet (pad extended)
++24-55                ICRC
++56-61                Tail
++62-63                LT (=01, Link Transfer Tail Flit)
++==================== ================================
+ 
+ Ethernet packet is padded on the transmit side to ensure that the VNIC OPA
+ packet is quad word aligned. The 'Tail' field contains the number of bytes
+@@ -123,7 +129,7 @@ operation. It also handles the encapsulation of Ethernet packets with an
+ Omni-Path header in the transmit path. For each VNIC interface, the
+ information required for encapsulation is configured by the EM via VEMA MAD
+ interface. It also passes any control information to the HW dependent driver
+-by invoking the RDMA netdev control operations.
++by invoking the RDMA netdev control operations::
+ 
+         +-------------------+ +----------------------+
+         |                   | |       Linux          |
+diff --git a/Documentation/infiniband/sysfs.txt b/Documentation/infiniband/sysfs.rst
+similarity index 69%
+rename from Documentation/infiniband/sysfs.txt
+rename to Documentation/infiniband/sysfs.rst
+index 9fab5062f84b..f0abd6fa48f4 100644
+--- a/Documentation/infiniband/sysfs.txt
++++ b/Documentation/infiniband/sysfs.rst
+@@ -1,4 +1,6 @@
+-SYSFS FILES
++===========
++Sysfs files
++===========
+ 
+ The sysfs interface has moved to
+ Documentation/ABI/stable/sysfs-class-infiniband.
+diff --git a/Documentation/infiniband/tag_matching.txt b/Documentation/infiniband/tag_matching.rst
+similarity index 98%
+rename from Documentation/infiniband/tag_matching.txt
+rename to Documentation/infiniband/tag_matching.rst
+index d2a3bf819226..ef56ea585f92 100644
+--- a/Documentation/infiniband/tag_matching.txt
++++ b/Documentation/infiniband/tag_matching.rst
+@@ -1,12 +1,16 @@
++==================
+ Tag matching logic
++==================
+ 
+ The MPI standard defines a set of rules, known as tag-matching, for matching
+ source send operations to destination receives.  The following parameters must
+ match the following source and destination parameters:
++
+ *	Communicator
+ *	User tag - wild card may be specified by the receiver
+ *	Source rank – wild car may be specified by the receiver
+ *	Destination rank – wild
++
+ The ordering rules require that when more than one pair of send and receive
+ message envelopes may match, the pair that includes the earliest posted-send
+ and the earliest posted-receive is the pair that must be used to satisfy the
+@@ -35,6 +39,7 @@ the header to initiate an RDMA READ operation directly to the matching buffer.
+ A fin message needs to be received in order for the buffer to be reused.
+ 
+ Tag matching implementation
++===========================
+ 
+ There are two types of matching objects used, the posted receive list and the
+ unexpected message list. The application posts receive buffers through calls
+diff --git a/Documentation/infiniband/user_mad.txt b/Documentation/infiniband/user_mad.rst
+similarity index 90%
+rename from Documentation/infiniband/user_mad.txt
+rename to Documentation/infiniband/user_mad.rst
+index 7aca13a54a3a..d88abfc0e370 100644
+--- a/Documentation/infiniband/user_mad.txt
++++ b/Documentation/infiniband/user_mad.rst
+@@ -1,6 +1,9 @@
+-USERSPACE MAD ACCESS
++====================
++Userspace MAD access
++====================
+ 
+ Device files
++============
+ 
+   Each port of each InfiniBand device has a "umad" device and an
+   "issm" device attached.  For example, a two-port HCA will have two
+@@ -8,12 +11,13 @@ Device files
+   device of each type (for switch port 0).
+ 
+ Creating MAD agents
++===================
+ 
+   A MAD agent can be created by filling in a struct ib_user_mad_reg_req
+   and then calling the IB_USER_MAD_REGISTER_AGENT ioctl on a file
+   descriptor for the appropriate device file.  If the registration
+   request succeeds, a 32-bit id will be returned in the structure.
+-  For example:
++  For example::
+ 
+ 	struct ib_user_mad_reg_req req = { /* ... */ };
+ 	ret = ioctl(fd, IB_USER_MAD_REGISTER_AGENT, (char *) &req);
+@@ -26,12 +30,14 @@ Creating MAD agents
+   ioctl.  Also, all agents registered through a file descriptor will
+   be unregistered when the descriptor is closed.
+ 
+-  2014 -- a new registration ioctl is now provided which allows additional
++  2014
++       a new registration ioctl is now provided which allows additional
+        fields to be provided during registration.
+        Users of this registration call are implicitly setting the use of
+        pkey_index (see below).
+ 
+ Receiving MADs
++==============
+ 
+   MADs are received using read().  The receive side now supports
+   RMPP. The buffer passed to read() must be at least one
+@@ -41,7 +47,8 @@ Receiving MADs
+   MAD (RMPP), the errno is set to ENOSPC and the length of the
+   buffer needed is set in mad.length.
+ 
+-  Example for normal MAD (non RMPP) reads:
++  Example for normal MAD (non RMPP) reads::
++
+ 	struct ib_user_mad *mad;
+ 	mad = malloc(sizeof *mad + 256);
+ 	ret = read(fd, mad, sizeof *mad + 256);
+@@ -50,7 +57,8 @@ Receiving MADs
+ 		free(mad);
+ 	}
+ 
+-  Example for RMPP reads:
++  Example for RMPP reads::
++
+ 	struct ib_user_mad *mad;
+ 	mad = malloc(sizeof *mad + 256);
+ 	ret = read(fd, mad, sizeof *mad + 256);
+@@ -76,11 +84,12 @@ Receiving MADs
+   poll()/select() may be used to wait until a MAD can be read.
+ 
+ Sending MADs
++============
+ 
+   MADs are sent using write().  The agent ID for sending should be
+   filled into the id field of the MAD, the destination LID should be
+   filled into the lid field, and so on.  The send side does support
+-  RMPP so arbitrary length MAD can be sent. For example:
++  RMPP so arbitrary length MAD can be sent. For example::
+ 
+ 	struct ib_user_mad *mad;
+ 
+@@ -97,6 +106,7 @@ Sending MADs
+ 		perror("write");
+ 
+ Transaction IDs
++===============
+ 
+   Users of the umad devices can use the lower 32 bits of the
+   transaction ID field (that is, the least significant half of the
+@@ -105,6 +115,7 @@ Transaction IDs
+   the kernel and will be overwritten before a MAD is sent.
+ 
+ P_Key Index Handling
++====================
+ 
+   The old ib_umad interface did not allow setting the P_Key index for
+   MADs that are sent and did not provide a way for obtaining the P_Key
+@@ -119,6 +130,7 @@ P_Key Index Handling
+   default, and the IB_USER_MAD_ENABLE_PKEY ioctl will be removed.
+ 
+ Setting IsSM Capability Bit
++===========================
+ 
+   To set the IsSM capability bit for a port, simply open the
+   corresponding issm device file.  If the IsSM bit is already set,
+@@ -129,25 +141,26 @@ Setting IsSM Capability Bit
+   the issm file.
+ 
+ /dev files
++==========
+ 
+   To create the appropriate character device files automatically with
+-  udev, a rule like
++  udev, a rule like::
+ 
+     KERNEL=="umad*", NAME="infiniband/%k"
+     KERNEL=="issm*", NAME="infiniband/%k"
+ 
+-  can be used.  This will create device nodes named
++  can be used.  This will create device nodes named::
+ 
+     /dev/infiniband/umad0
+     /dev/infiniband/issm0
+ 
+   for the first port, and so on.  The InfiniBand device and port
+-  associated with these devices can be determined from the files
++  associated with these devices can be determined from the files::
+ 
+     /sys/class/infiniband_mad/umad0/ibdev
+     /sys/class/infiniband_mad/umad0/port
+ 
+-  and
++  and::
+ 
+     /sys/class/infiniband_mad/issm0/ibdev
+     /sys/class/infiniband_mad/issm0/port
+diff --git a/Documentation/infiniband/user_verbs.txt b/Documentation/infiniband/user_verbs.rst
+similarity index 93%
+rename from Documentation/infiniband/user_verbs.txt
+rename to Documentation/infiniband/user_verbs.rst
+index 47ebf2f80b2b..8ddc4b1cfef2 100644
+--- a/Documentation/infiniband/user_verbs.txt
++++ b/Documentation/infiniband/user_verbs.rst
+@@ -1,4 +1,6 @@
+-USERSPACE VERBS ACCESS
++======================
++Userspace verbs access
++======================
+ 
+   The ib_uverbs module, built by enabling CONFIG_INFINIBAND_USER_VERBS,
+   enables direct userspace access to IB hardware via "verbs," as
+@@ -13,6 +15,7 @@ USERSPACE VERBS ACCESS
+   libmthca userspace driver be installed.
+ 
+ User-kernel communication
++=========================
+ 
+   Userspace communicates with the kernel for slow path, resource
+   management operations via the /dev/infiniband/uverbsN character
+@@ -28,6 +31,7 @@ User-kernel communication
+   system call.
+ 
+ Resource management
++===================
+ 
+   Since creation and destruction of all IB resources is done by
+   commands passed through a file descriptor, the kernel can keep track
+@@ -41,6 +45,7 @@ Resource management
+   prevent one process from touching another process's resources.
+ 
+ Memory pinning
++==============
+ 
+   Direct userspace I/O requires that memory regions that are potential
+   I/O targets be kept resident at the same physical address.  The
+@@ -54,13 +59,14 @@ Memory pinning
+   number of pages pinned by a process.
+ 
+ /dev files
++==========
+ 
+   To create the appropriate character device files automatically with
+-  udev, a rule like
++  udev, a rule like::
+ 
+     KERNEL=="uverbs*", NAME="infiniband/%k"
+ 
+-  can be used.  This will create device nodes named
++  can be used.  This will create device nodes named::
+ 
+     /dev/infiniband/uverbs0
+ 
+diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
+index 56aa34206110..478018f74d35 100644
+--- a/drivers/infiniband/core/user_mad.c
++++ b/drivers/infiniband/core/user_mad.c
+@@ -744,7 +744,7 @@ static int ib_umad_reg_agent(struct ib_umad_file *file, void __user *arg,
+ 				"process %s did not enable P_Key index support.\n",
+ 				current->comm);
+ 			dev_warn(&file->port->dev,
+-				"   Documentation/infiniband/user_mad.txt has info on the new ABI.\n");
++				"   Documentation/infiniband/user_mad.rst has info on the new ABI.\n");
+ 		}
+ 	}
+ 
+diff --git a/drivers/infiniband/ulp/ipoib/Kconfig b/drivers/infiniband/ulp/ipoib/Kconfig
+index cda8eac55fff..569d614d0c41 100644
+--- a/drivers/infiniband/ulp/ipoib/Kconfig
++++ b/drivers/infiniband/ulp/ipoib/Kconfig
+@@ -6,7 +6,7 @@ config INFINIBAND_IPOIB
+ 	  transports IP packets over InfiniBand so you can use your IB
+ 	  device as a fancy NIC.
+ 
+-	  See Documentation/infiniband/ipoib.txt for more information
++	  See Documentation/infiniband/ipoib.rst for more information
+ 
+ config INFINIBAND_IPOIB_CM
+ 	bool "IP-over-InfiniBand Connected Mode support"
+-- 
+2.20.1
 
-On 4/15/2019 2:41 PM, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The uncore subsystem on Snow Ridge is similar as previous SKX server.
-> The uncore units on Snow Ridge include Ubox, Chabox, IIO, IRP, M2PCIE,
-> PCU, M2M, PCIE3 and IMC.
-> - The config register encoding and pci device IDs are changed.
-> - For CHA, the umask_ext and filter_tid fields are changed.
-> - For IIO, the ch_mask and fc_mask fields are changed.
-> - For M2M, the mask_ext field is changed.
-> - Add new PCIe3 unit for PCIe3 root port which provides the interface
->    between PCIe devices, plugged into the PCIe port, and the components
->    (in M2IOSF).
-> - IMC can only be accessed via MMIO on Snow Ridge now. Current common
->    code doesn't support it yet. IMC will be supported in following
->    patches.
-> - There are 9 free running counters for IIO CLOCKS and bandwidth In.
-> - Full uncore event list is not published yet. Event constrain is not
->    included in this patch. It will be added later separately.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->   arch/x86/events/intel/uncore.c       |   6 +
->   arch/x86/events/intel/uncore.h       |   2 +
->   arch/x86/events/intel/uncore_snbep.c | 403 +++++++++++++++++++++++++++++++++++
->   3 files changed, 411 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index fc40a14..ee23b50 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1372,6 +1372,11 @@ static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
->   	.pci_init = skl_uncore_pci_init,
->   };
->   
-> +static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
-> +	.cpu_init = snr_uncore_cpu_init,
-> +	.pci_init = snr_uncore_pci_init,
-> +};
-> +
->   static const struct x86_cpu_id intel_uncore_match[] __initconst = {
->   	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EP,	  nhm_uncore_init),
->   	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM,	  nhm_uncore_init),
-> @@ -1399,6 +1404,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
->   	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
->   	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
->   	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
-> +	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_X, snr_uncore_init),
->   	{},
->   };
->   
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index 28499e3..5e97e5e 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -538,6 +538,8 @@ int knl_uncore_pci_init(void);
->   void knl_uncore_cpu_init(void);
->   int skx_uncore_pci_init(void);
->   void skx_uncore_cpu_init(void);
-> +int snr_uncore_pci_init(void);
-> +void snr_uncore_cpu_init(void);
->   
->   /* uncore_nhmex.c */
->   void nhmex_uncore_cpu_init(void);
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index 8e4e8e4..5303c0d 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -324,12 +324,64 @@
->   #define SKX_M2M_PCI_PMON_CTR0		0x200
->   #define SKX_M2M_PCI_PMON_BOX_CTL	0x258
->   
-> +/* SNR Ubox */
-> +#define SNR_U_MSR_PMON_CTR0			0x1f98
-> +#define SNR_U_MSR_PMON_CTL0			0x1f91
-> +#define SNR_U_MSR_PMON_UCLK_FIXED_CTL		0x1f93
-> +#define SNR_U_MSR_PMON_UCLK_FIXED_CTR		0x1f94
-> +
-> +/* SNR CHA */
-> +#define SNR_CHA_RAW_EVENT_MASK_EXT		0x3ffffff
-> +#define SNR_CHA_MSR_PMON_CTL0			0x1c01
-> +#define SNR_CHA_MSR_PMON_CTR0			0x1c08
-> +#define SNR_CHA_MSR_PMON_BOX_CTL		0x1c00
-> +#define SNR_C0_MSR_PMON_BOX_FILTER0		0x1c05
-> +
-> +
-> +/* SNR IIO */
-> +#define SNR_IIO_MSR_PMON_CTL0			0x1e08
-> +#define SNR_IIO_MSR_PMON_CTR0			0x1e01
-> +#define SNR_IIO_MSR_PMON_BOX_CTL		0x1e00
-> +#define SNR_IIO_MSR_OFFSET			0x10
-> +#define SNR_IIO_PMON_RAW_EVENT_MASK_EXT		0x7ffff
-> +
-> +/* SNR IRP */
-> +#define SNR_IRP0_MSR_PMON_CTL0			0x1ea8
-> +#define SNR_IRP0_MSR_PMON_CTR0			0x1ea1
-> +#define SNR_IRP0_MSR_PMON_BOX_CTL		0x1ea0
-> +#define SNR_IRP_MSR_OFFSET			0x10
-> +
-> +/* SNR M2PCIE */
-> +#define SNR_M2PCIE_MSR_PMON_CTL0		0x1e58
-> +#define SNR_M2PCIE_MSR_PMON_CTR0		0x1e51
-> +#define SNR_M2PCIE_MSR_PMON_BOX_CTL		0x1e50
-> +#define SNR_M2PCIE_MSR_OFFSET			0x10
-> +
-> +/* SNR PCU */
-> +#define SNR_PCU_MSR_PMON_CTL0			0x1ef1
-> +#define SNR_PCU_MSR_PMON_CTR0			0x1ef8
-> +#define SNR_PCU_MSR_PMON_BOX_CTL		0x1ef0
-> +#define SNR_PCU_MSR_PMON_BOX_FILTER		0x1efc
-> +
-> +/* SNR M2M */
-> +#define SNR_M2M_PCI_PMON_CTL0			0x468
-> +#define SNR_M2M_PCI_PMON_CTR0			0x440
-> +#define SNR_M2M_PCI_PMON_BOX_CTL		0x438
-> +#define SNR_M2M_PCI_PMON_UMASK_EXT		0xff
-> +
-> +/* SNR PCIE3 */
-> +#define SNR_PCIE3_PCI_PMON_CTL0			0x508
-> +#define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
-> +#define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
-> +
->   DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
->   DEFINE_UNCORE_FORMAT_ATTR(event2, event, "config:0-6");
->   DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
->   DEFINE_UNCORE_FORMAT_ATTR(use_occ_ctr, use_occ_ctr, "config:7");
->   DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
->   DEFINE_UNCORE_FORMAT_ATTR(umask_ext, umask, "config:8-15,32-43,45-55");
-> +DEFINE_UNCORE_FORMAT_ATTR(umask_ext2, umask, "config:8-15,32-57");
-> +DEFINE_UNCORE_FORMAT_ATTR(umask_ext3, umask, "config:8-15,32-39");
->   DEFINE_UNCORE_FORMAT_ATTR(qor, qor, "config:16");
->   DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
->   DEFINE_UNCORE_FORMAT_ATTR(tid_en, tid_en, "config:19");
-> @@ -343,11 +395,14 @@ DEFINE_UNCORE_FORMAT_ATTR(occ_invert, occ_invert, "config:30");
->   DEFINE_UNCORE_FORMAT_ATTR(occ_edge, occ_edge, "config:14-51");
->   DEFINE_UNCORE_FORMAT_ATTR(occ_edge_det, occ_edge_det, "config:31");
->   DEFINE_UNCORE_FORMAT_ATTR(ch_mask, ch_mask, "config:36-43");
-> +DEFINE_UNCORE_FORMAT_ATTR(ch_mask2, ch_mask, "config:36-47");
->   DEFINE_UNCORE_FORMAT_ATTR(fc_mask, fc_mask, "config:44-46");
-> +DEFINE_UNCORE_FORMAT_ATTR(fc_mask2, fc_mask, "config:48-50");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_tid, filter_tid, "config1:0-4");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_tid2, filter_tid, "config1:0");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_tid3, filter_tid, "config1:0-5");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_tid4, filter_tid, "config1:0-8");
-> +DEFINE_UNCORE_FORMAT_ATTR(filter_tid5, filter_tid, "config1:0-9");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_cid, filter_cid, "config1:5");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_link, filter_link, "config1:5-8");
->   DEFINE_UNCORE_FORMAT_ATTR(filter_link2, filter_link, "config1:6-8");
-> @@ -3968,3 +4023,351 @@ int skx_uncore_pci_init(void)
->   }
->   
->   /* end of SKX uncore support */
-> +
-> +/* SNR uncore support */
-> +
-> +static struct intel_uncore_type snr_uncore_ubox = {
-> +	.name			= "ubox",
-> +	.num_counters		= 2,
-> +	.num_boxes		= 1,
-> +	.perf_ctr_bits		= 48,
-> +	.fixed_ctr_bits		= 48,
-> +	.perf_ctr		= SNR_U_MSR_PMON_CTR0,
-> +	.event_ctl		= SNR_U_MSR_PMON_CTL0,
-> +	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.fixed_ctr		= SNR_U_MSR_PMON_UCLK_FIXED_CTR,
-> +	.fixed_ctl		= SNR_U_MSR_PMON_UCLK_FIXED_CTL,
-> +	.ops			= &ivbep_uncore_msr_ops,
-> +	.format_group		= &ivbep_uncore_format_group,
-> +};
-> +
-> +static struct attribute *snr_uncore_cha_formats_attr[] = {
-> +	&format_attr_event.attr,
-> +	&format_attr_umask_ext2.attr,
-> +	&format_attr_edge.attr,
-> +	&format_attr_tid_en.attr,
-> +	&format_attr_inv.attr,
-> +	&format_attr_thresh8.attr,
-> +	&format_attr_filter_tid5.attr,
-> +	NULL,
-> +};
-> +static const struct attribute_group snr_uncore_chabox_format_group = {
-> +	.name = "format",
-> +	.attrs = snr_uncore_cha_formats_attr,
-> +};
-> +
-> +static int snr_cha_hw_config(struct intel_uncore_box *box, struct perf_event *event)
-> +{
-> +	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
-> +
-> +	reg1->reg = SNR_C0_MSR_PMON_BOX_FILTER0 +
-> +		    box->pmu->type->msr_offset * box->pmu->pmu_idx;
-> +	reg1->config = event->attr.config1 & SKX_CHA_MSR_PMON_BOX_FILTER_TID;
-> +	reg1->idx = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static void snr_cha_enable_event(struct intel_uncore_box *box,
-> +				   struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	struct hw_perf_event_extra *reg1 = &hwc->extra_reg;
-> +
-> +	if (reg1->idx != EXTRA_REG_NONE)
-> +		wrmsrl(reg1->reg, reg1->config);
-> +
-> +	wrmsrl(hwc->config_base, hwc->config | SNBEP_PMON_CTL_EN);
-> +}
-> +
-> +static struct intel_uncore_ops snr_uncore_chabox_ops = {
-> +	.init_box		= ivbep_uncore_msr_init_box,
-> +	.disable_box		= snbep_uncore_msr_disable_box,
-> +	.enable_box		= snbep_uncore_msr_enable_box,
-> +	.disable_event		= snbep_uncore_msr_disable_event,
-> +	.enable_event		= snr_cha_enable_event,
-> +	.read_counter		= uncore_msr_read_counter,
-> +	.hw_config		= snr_cha_hw_config,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_chabox = {
-> +	.name			= "cha",
-> +	.num_counters		= 4,
-> +	.num_boxes		= 6,
-> +	.perf_ctr_bits		= 48,
-> +	.event_ctl		= SNR_CHA_MSR_PMON_CTL0,
-> +	.perf_ctr		= SNR_CHA_MSR_PMON_CTR0,
-> +	.box_ctl		= SNR_CHA_MSR_PMON_BOX_CTL,
-> +	.msr_offset		= HSWEP_CBO_MSR_OFFSET,
-> +	.event_mask		= HSWEP_S_MSR_PMON_RAW_EVENT_MASK,
-> +	.event_mask_ext		= SNR_CHA_RAW_EVENT_MASK_EXT,
-> +	.ops			= &snr_uncore_chabox_ops,
-> +	.format_group		= &snr_uncore_chabox_format_group,
-> +};
-> +
-> +static struct attribute *snr_uncore_iio_formats_attr[] = {
-> +	&format_attr_event.attr,
-> +	&format_attr_umask.attr,
-> +	&format_attr_edge.attr,
-> +	&format_attr_inv.attr,
-> +	&format_attr_thresh9.attr,
-> +	&format_attr_ch_mask2.attr,
-> +	&format_attr_fc_mask2.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group snr_uncore_iio_format_group = {
-> +	.name = "format",
-> +	.attrs = snr_uncore_iio_formats_attr,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_iio = {
-> +	.name			= "iio",
-> +	.num_counters		= 4,
-> +	.num_boxes		= 5,
-> +	.perf_ctr_bits		= 48,
-> +	.event_ctl		= SNR_IIO_MSR_PMON_CTL0,
-> +	.perf_ctr		= SNR_IIO_MSR_PMON_CTR0,
-> +	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.event_mask_ext		= SNR_IIO_PMON_RAW_EVENT_MASK_EXT,
-> +	.box_ctl		= SNR_IIO_MSR_PMON_BOX_CTL,
-> +	.msr_offset		= SNR_IIO_MSR_OFFSET,
-> +	.ops			= &ivbep_uncore_msr_ops,
-> +	.format_group		= &snr_uncore_iio_format_group,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_irp = {
-> +	.name			= "irp",
-> +	.num_counters		= 2,
-> +	.num_boxes		= 5,
-> +	.perf_ctr_bits		= 48,
-> +	.event_ctl		= SNR_IRP0_MSR_PMON_CTL0,
-> +	.perf_ctr		= SNR_IRP0_MSR_PMON_CTR0,
-> +	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.box_ctl		= SNR_IRP0_MSR_PMON_BOX_CTL,
-> +	.msr_offset		= SNR_IRP_MSR_OFFSET,
-> +	.ops			= &ivbep_uncore_msr_ops,
-> +	.format_group		= &ivbep_uncore_format_group,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_m2pcie = {
-> +	.name		= "m2pcie",
-> +	.num_counters	= 4,
-> +	.num_boxes	= 5,
-> +	.perf_ctr_bits	= 48,
-> +	.event_ctl	= SNR_M2PCIE_MSR_PMON_CTL0,
-> +	.perf_ctr	= SNR_M2PCIE_MSR_PMON_CTR0,
-> +	.box_ctl	= SNR_M2PCIE_MSR_PMON_BOX_CTL,
-> +	.msr_offset	= SNR_M2PCIE_MSR_OFFSET,
-> +	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.ops		= &ivbep_uncore_msr_ops,
-> +	.format_group	= &ivbep_uncore_format_group,
-> +};
-> +
-> +static int snr_pcu_hw_config(struct intel_uncore_box *box, struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	struct hw_perf_event_extra *reg1 = &hwc->extra_reg;
-> +	int ev_sel = hwc->config & SNBEP_PMON_CTL_EV_SEL_MASK;
-> +
-> +	if (ev_sel >= 0xb && ev_sel <= 0xe) {
-> +		reg1->reg = SNR_PCU_MSR_PMON_BOX_FILTER;
-> +		reg1->idx = ev_sel - 0xb;
-> +		reg1->config = event->attr.config1 & (0xff << reg1->idx);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static struct intel_uncore_ops snr_uncore_pcu_ops = {
-> +	IVBEP_UNCORE_MSR_OPS_COMMON_INIT(),
-> +	.hw_config		= snr_pcu_hw_config,
-> +	.get_constraint		= snbep_pcu_get_constraint,
-> +	.put_constraint		= snbep_pcu_put_constraint,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_pcu = {
-> +	.name			= "pcu",
-> +	.num_counters		= 4,
-> +	.num_boxes		= 1,
-> +	.perf_ctr_bits		= 48,
-> +	.perf_ctr		= SNR_PCU_MSR_PMON_CTR0,
-> +	.event_ctl		= SNR_PCU_MSR_PMON_CTL0,
-> +	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.box_ctl		= SNR_PCU_MSR_PMON_BOX_CTL,
-> +	.num_shared_regs	= 1,
-> +	.ops			= &snr_uncore_pcu_ops,
-> +	.format_group		= &skx_uncore_pcu_format_group,
-> +};
-> +
-> +enum perf_uncore_snr_iio_freerunning_type_id {
-> +	SNR_IIO_MSR_IOCLK,
-> +	SNR_IIO_MSR_BW_IN,
-> +
-> +	SNR_IIO_FREERUNNING_TYPE_MAX,
-> +};
-> +
-> +static struct freerunning_counters snr_iio_freerunning[] = {
-> +	[SNR_IIO_MSR_IOCLK]	= { 0x1eac, 0x1, 0x10, 1, 48 },
-> +	[SNR_IIO_MSR_BW_IN]	= { 0x1f00, 0x1, 0x10, 8, 48 },
-> +};
-> +
-> +static struct uncore_event_desc snr_uncore_iio_freerunning_events[] = {
-> +	/* Free-Running IIO CLOCKS Counter */
-> +	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
-> +	/* Free-Running IIO BANDWIDTH IN Counters */
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
-> +	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
-> +	{ /* end: all zeroes */ },
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_iio_free_running = {
-> +	.name			= "iio_free_running",
-> +	.num_counters		= 9,
-> +	.num_boxes		= 5,
-> +	.num_freerunning_types	= SNR_IIO_FREERUNNING_TYPE_MAX,
-> +	.freerunning		= snr_iio_freerunning,
-> +	.ops			= &skx_uncore_iio_freerunning_ops,
-> +	.event_descs		= snr_uncore_iio_freerunning_events,
-> +	.format_group		= &skx_uncore_iio_freerunning_format_group,
-> +};
-> +
-> +static struct intel_uncore_type *snr_msr_uncores[] = {
-> +	&snr_uncore_ubox,
-> +	&snr_uncore_chabox,
-> +	&snr_uncore_iio,
-> +	&snr_uncore_irp,
-> +	&snr_uncore_m2pcie,
-> +	&snr_uncore_pcu,
-> +	&snr_uncore_iio_free_running,
-> +	NULL,
-> +};
-> +
-> +void snr_uncore_cpu_init(void)
-> +{
-> +	uncore_msr_uncores = snr_msr_uncores;
-> +}
-> +
-> +static void snr_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
-> +{
-> +	struct pci_dev *pdev = box->pci_dev;
-> +	int box_ctl = uncore_pci_box_ctl(box);
-> +
-> +	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-> +	pci_write_config_dword(pdev, box_ctl, IVBEP_PMON_BOX_CTL_INT);
-> +}
-> +
-> +static struct intel_uncore_ops snr_m2m_uncore_pci_ops = {
-> +	.init_box	= snr_m2m_uncore_pci_init_box,
-> +	.disable_box	= snbep_uncore_pci_disable_box,
-> +	.enable_box	= snbep_uncore_pci_enable_box,
-> +	.disable_event	= snbep_uncore_pci_disable_event,
-> +	.enable_event	= snbep_uncore_pci_enable_event,
-> +	.read_counter	= snbep_uncore_pci_read_counter,
-> +};
-> +
-> +static struct attribute *snr_m2m_uncore_formats_attr[] = {
-> +	&format_attr_event.attr,
-> +	&format_attr_umask_ext3.attr,
-> +	&format_attr_edge.attr,
-> +	&format_attr_inv.attr,
-> +	&format_attr_thresh8.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group snr_m2m_uncore_format_group = {
-> +	.name = "format",
-> +	.attrs = snr_m2m_uncore_formats_attr,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_m2m = {
-> +	.name		= "m2m",
-> +	.num_counters   = 4,
-> +	.num_boxes	= 1,
-> +	.perf_ctr_bits	= 48,
-> +	.perf_ctr	= SNR_M2M_PCI_PMON_CTR0,
-> +	.event_ctl	= SNR_M2M_PCI_PMON_CTL0,
-> +	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.event_mask_ext	= SNR_M2M_PCI_PMON_UMASK_EXT,
-> +	.box_ctl	= SNR_M2M_PCI_PMON_BOX_CTL,
-> +	.ops		= &snr_m2m_uncore_pci_ops,
-> +	.format_group	= &snr_m2m_uncore_format_group,
-> +};
-> +
-> +static struct intel_uncore_type snr_uncore_pcie3 = {
-> +	.name		= "pcie3",
-> +	.num_counters	= 4,
-> +	.num_boxes	= 1,
-> +	.perf_ctr_bits	= 48,
-> +	.perf_ctr	= SNR_PCIE3_PCI_PMON_CTR0,
-> +	.event_ctl	= SNR_PCIE3_PCI_PMON_CTL0,
-> +	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
-> +	.box_ctl	= SNR_PCIE3_PCI_PMON_BOX_CTL,
-> +	.ops		= &ivbep_uncore_pci_ops,
-> +	.format_group	= &ivbep_uncore_format_group,
-> +};
-> +
-> +enum {
-> +	SNR_PCI_UNCORE_M2M,
-> +	SNR_PCI_UNCORE_PCIE3,
-> +};
-> +
-> +static struct intel_uncore_type *snr_pci_uncores[] = {
-> +	[SNR_PCI_UNCORE_M2M]		= &snr_uncore_m2m,
-> +	[SNR_PCI_UNCORE_PCIE3]		= &snr_uncore_pcie3,
-> +	NULL,
-> +};
-> +
-> +static const struct pci_device_id snr_uncore_pci_ids[] = {
-> +	{ /* M2M */
-> +		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
-> +		.driver_data = UNCORE_PCI_DEV_FULL_DATA(12, 0, SNR_PCI_UNCORE_M2M, 0),
-> +	},
-> +	{ /* PCIe3 */
-> +		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a),
-> +		.driver_data = UNCORE_PCI_DEV_FULL_DATA(4, 0, SNR_PCI_UNCORE_PCIE3, 0),
-> +	},
-> +	{ /* end: all zeroes */ }
-> +};
-> +
-> +static struct pci_driver snr_uncore_pci_driver = {
-> +	.name		= "snr_uncore",
-> +	.id_table	= snr_uncore_pci_ids,
-> +};
-> +
-> +int snr_uncore_pci_init(void)
-> +{
-> +	/* SNR UBOX DID */
-> +	int ret = snbep_pci2phy_map_init(0x3460, SKX_CPUNODEID,
-> +					 SKX_GIDNIDMAP, true);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	uncore_pci_uncores = snr_pci_uncores;
-> +	uncore_pci_driver = &snr_uncore_pci_driver;
-> +	return 0;
-> +}
-> +
-> +/* end of SNR uncore support */
-> 
