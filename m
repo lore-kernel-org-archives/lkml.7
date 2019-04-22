@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F48C282E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E1DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEE82064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67282064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940145;
-	bh=7saec6T4HhSKSPAybuzkATaAI0fYwi152lhKmwlvs9E=;
+	s=default; t=1555940155;
+	bh=7+2QkNRifzOZ/YRm6R+pYuMCK6qKsd2r5rdXBZMR/CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T19Tg4RsTOBmcquXiAZ6iITKh5mBhm97Rcy3Y4bH2fuwtPl16pVLb2UtlWKJlpGhr
-	 oRMI4Rw7yXXm94ax9+ZtDWzXV0ObjuvOiA/43Mdqr6xZcoEeRxukNP1gVsUCGbrq17
-	 Go15Ij9YVtDxz6A0KOChFGpT1LN++I2joBeVYx18=
+	b=g+sIAHWMb+1qb7QrKc3+Gl6HXwEel90N78za71KVQeF/DMp1lqzYJNXrNzahBlLfh
+	 yKHYM7tgJxVGshTDUn7AEfVrtmi471UssMVw/h29QXFLUG9QrS6PgDwhLbFDW572jf
+	 JO2jYB0PFmOHhWR5Sz0xqtcIMtfdXgcMnHQEuASQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfDVNfo (ORCPT
+        id S1728227AbfDVNfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:35:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36958 "EHLO
+        Mon, 22 Apr 2019 09:35:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36974 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727419AbfDVN2P (ORCPT
+        with ESMTP id S1727426AbfDVN2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,33 +34,33 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=e+8+X/iT/lrWGh5Cv0wn4saEsqEmc5Hh5ao46kW56qc=; b=dgWT4ucoqFq/lNC8IiOnDarZMe
-        1QP/OlTbjbfsPVXwDQ7nP0GNP+fv+Ujl968DtgXZvvCITchM+omjRZw3fBlC1vvbrSLNRZHRWmMlW
-        p8qrwteZnDgX1m32IM5pWtWfGhqxq4uTlwNk9lv/GSRA0sQas0HVin0zOBwsCMCjhNqWT5O6qNEyo
-        qJ8ViuodNB/Z0+moMAi39QaPU+099+Rdo3amVuWhDWPvNl9XMSmQ+KHZEh7Ej2I08QJe/aJ7KREJ2
-        EWHHTozfwu66vcxSW5EsSLsWlOGCpkijGWWo7co0eHU9l/CX4FvbuGRNTOL/ySVuZzCwHB4mm+wh1
-        pxKbUBJQ==;
+        bh=C5EVQrj0GuSUjMGc7i0F21EF2opDnhMdOktxxczj01A=; b=OJV96kguWXWEeOkRrGWAcOYVib
+        egdly6fAK6dF8stknHaSx5KdbYpKca601iYpcbiWKdFrQcCstVJZXk/UpjwaLNO/g6g0d1kxv3jYy
+        +nDM0nZwgzfg04r517mS46qtjg84NEb+6bLXvUp610Gjz6T24ZL3gKp8AluCD6FEw5hmLMadtCOxP
+        N8FrDnkT7nd5tvGR9XYdLXDyLsNHN4E63nSyuj5zvmJOL0IFMF6vvoiLIxVJLX0w93IX7pTje5Cae
+        3nLhi9Bz+nbmUj2+jOBYPUDFISl/Y5jsqsoQ/FqjRbPQ0CKvxKj0frV+SnXvkSurl8VNtInZcuXMG
+        eIYMVhxQ==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzU-0005Hf-Ps; Mon, 22 Apr 2019 13:28:13 +0000
+        id 1hIYzV-0005I2-Q2; Mon, 22 Apr 2019 13:28:14 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzS-0005kJ-J8; Mon, 22 Apr 2019 10:28:10 -0300
+        id 1hIYzT-0005mH-Ag; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 12/79] docs: fault-injection: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:01 -0300
-Message-Id: <4a866538ad7527addac7797d7f6497d125af3fad.1555938376.git.mchehab+samsung@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Antti Palosaari <crope@iki.fi>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH v2 35/79] docs: timers: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:24 -0300
+Message-Id: <2adb3a9be93e8e1793192440c9bebdad2e538ce7.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -70,6 +71,10 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+The conversion here is really trivial: just a bunch of title
+markups and very few puntual changes is enough to make it to
+be parsed by Sphinx and generate a nice html.
 
 The conversion is actually:
   - add blank lines and identation in order to identify paragraphs;
@@ -83,532 +88,143 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- ...ault-injection.txt => fault-injection.rst} | 265 +++++++++---------
- Documentation/fault-injection/index.rst       |  20 ++
- ...r-inject.txt => notifier-error-inject.rst} |  18 +-
- .../fault-injection/nvme-fault-injection.rst  | 120 ++++++++
- .../fault-injection/nvme-fault-injection.txt  | 116 --------
- .../fault-injection/provoke-crashes.rst       |  48 ++++
- .../fault-injection/provoke-crashes.txt       |  38 ---
- Documentation/process/4.Coding.rst            |   2 +-
- .../translations/it_IT/process/4.Coding.rst   |   2 +-
- .../translations/zh_CN/process/4.Coding.rst   |   2 +-
- drivers/misc/lkdtm/core.c                     |   2 +-
- include/linux/fault-inject.h                  |   2 +-
- lib/Kconfig.debug                             |   2 +-
- tools/testing/fault-injection/failcmd.sh      |   2 +-
- 14 files changed, 344 insertions(+), 295 deletions(-)
- rename Documentation/fault-injection/{fault-injection.txt => fault-injection.rst} (68%)
- create mode 100644 Documentation/fault-injection/index.rst
- rename Documentation/fault-injection/{notifier-error-inject.txt => notifier-error-inject.rst} (83%)
- create mode 100644 Documentation/fault-injection/nvme-fault-injection.rst
- delete mode 100644 Documentation/fault-injection/nvme-fault-injection.txt
- create mode 100644 Documentation/fault-injection/provoke-crashes.rst
- delete mode 100644 Documentation/fault-injection/provoke-crashes.txt
+ .../timers/{highres.txt => highres.rst}       | 13 +++---
+ Documentation/timers/{hpet.txt => hpet.rst}   |  4 +-
+ .../timers/{hrtimers.txt => hrtimers.rst}     |  6 +--
+ Documentation/timers/index.rst                | 22 ++++++++++
+ Documentation/timers/{NO_HZ.txt => no_hz.rst} | 40 +++++++++++--------
+ .../{timekeeping.txt => timekeeping.rst}      |  3 +-
+ .../{timers-howto.txt => timers-howto.rst}    | 15 +++++--
+ MAINTAINERS                                   |  2 +-
+ drivers/media/usb/dvb-usb-v2/anysee.c         |  2 +-
+ drivers/regulator/core.c                      |  2 +-
+ include/linux/iopoll.h                        |  4 +-
+ include/linux/regmap.h                        |  4 +-
+ scripts/checkpatch.pl                         |  8 ++--
+ 13 files changed, 83 insertions(+), 42 deletions(-)
+ rename Documentation/timers/{highres.txt => highres.rst} (98%)
+ rename Documentation/timers/{hpet.txt => hpet.rst} (91%)
+ rename Documentation/timers/{hrtimers.txt => hrtimers.rst} (98%)
+ create mode 100644 Documentation/timers/index.rst
+ rename Documentation/timers/{NO_HZ.txt => no_hz.rst} (93%)
+ rename Documentation/timers/{timekeeping.txt => timekeeping.rst} (98%)
+ rename Documentation/timers/{timers-howto.txt => timers-howto.rst} (93%)
 
-diff --git a/Documentation/fault-injection/fault-injection.txt b/Documentation/fault-injection/fault-injection.rst
-similarity index 68%
-rename from Documentation/fault-injection/fault-injection.txt
-rename to Documentation/fault-injection/fault-injection.rst
-index a17517a083c3..f51bb21d20e4 100644
---- a/Documentation/fault-injection/fault-injection.txt
-+++ b/Documentation/fault-injection/fault-injection.rst
-@@ -1,3 +1,4 @@
+diff --git a/Documentation/timers/highres.txt b/Documentation/timers/highres.rst
+similarity index 98%
+rename from Documentation/timers/highres.txt
+rename to Documentation/timers/highres.rst
+index 8f9741592123..bde5eb7e5c9e 100644
+--- a/Documentation/timers/highres.txt
++++ b/Documentation/timers/highres.rst
+@@ -1,5 +1,6 @@
++=====================================================
+ High resolution timers and dynamic ticks design notes
+------------------------------------------------------
++=====================================================
+ 
+ Further information can be found in the paper of the OLS 2006 talk "hrtimers
+ and beyond". The paper is part of the OLS 2006 Proceedings Volume 1, which can
+@@ -30,11 +31,12 @@ hrtimer base infrastructure
+ ---------------------------
+ 
+ The hrtimer base infrastructure was merged into the 2.6.16 kernel. Details of
+-the base implementation are covered in Documentation/timers/hrtimers.txt. See
++the base implementation are covered in Documentation/timers/hrtimers.rst. See
+ also figure #2 (OLS slides p. 15)
+ 
+ The main differences to the timer wheel, which holds the armed timer_list type
+ timers are:
++
+        - time ordered enqueueing into a rb-tree
+        - independent of ticks (the processing is based on nanoseconds)
+ 
+@@ -55,7 +57,8 @@ merged into the 2.6.18 kernel.
+ 
+ Further information about the Generic Time Of Day framework is available in the
+ OLS 2005 Proceedings Volume 1:
+-http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
++
++	http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
+ 
+ The paper "We Are Not Getting Any Younger: A New Approach to Time and
+ Timers" was written by J. Stultz, D.V. Hart, & N. Aravamudan.
+@@ -100,6 +103,7 @@ accounting, profiling, and high resolution timers.
+ 
+ The management layer assigns one or more of the following functions to a clock
+ event device:
++
+       - system global periodic tick (jiffies update)
+       - cpu local update_process_times
+       - cpu local profiling
+@@ -244,6 +248,3 @@ extended to x86_64 and ARM already. Initial (work in progress) support is also
+ available for MIPS and PowerPC.
+ 
+ 	  Thomas, Ingo
+-
+-
+-
+diff --git a/Documentation/timers/hpet.txt b/Documentation/timers/hpet.rst
+similarity index 91%
+rename from Documentation/timers/hpet.txt
+rename to Documentation/timers/hpet.rst
+index 895345ec513b..c9d05d3caaca 100644
+--- a/Documentation/timers/hpet.txt
++++ b/Documentation/timers/hpet.rst
+@@ -1,4 +1,6 @@
+-		High Precision Event Timer Driver for Linux
 +===========================================
- Fault injection capabilities infrastructure
- ===========================================
- 
-@@ -7,36 +8,36 @@ See also drivers/md/md-faulty.c and "every_nth" module option for scsi_debug.
- Available fault injection capabilities
- --------------------------------------
- 
--o failslab
-+- failslab
- 
-   injects slab allocation failures. (kmalloc(), kmem_cache_alloc(), ...)
- 
--o fail_page_alloc
-+- fail_page_alloc
- 
-   injects page allocation failures. (alloc_pages(), get_free_pages(), ...)
- 
--o fail_futex
-+- fail_futex
- 
-   injects futex deadlock and uaddr fault errors.
- 
--o fail_make_request
-+- fail_make_request
- 
-   injects disk IO errors on devices permitted by setting
-   /sys/block/<device>/make-it-fail or
-   /sys/block/<device>/<partition>/make-it-fail. (generic_make_request())
- 
--o fail_mmc_request
-+- fail_mmc_request
- 
-   injects MMC data errors on devices permitted by setting
-   debugfs entries under /sys/kernel/debug/mmc0/fail_mmc_request
- 
--o fail_function
-+- fail_function
- 
-   injects error return on specific functions, which are marked by
-   ALLOW_ERROR_INJECTION() macro, by setting debugfs entries
-   under /sys/kernel/debug/fail_function. No boot option supported.
- 
--o NVMe fault injection
-+- NVMe fault injection
- 
-   inject NVMe status code and retry flag on devices permitted by setting
-   debugfs entries under /sys/kernel/debug/nvme*/fault_inject. The default
-@@ -47,7 +48,8 @@ o NVMe fault injection
- Configure fault-injection capabilities behavior
- -----------------------------------------------
- 
--o debugfs entries
-+debugfs entries
-+^^^^^^^^^^^^^^^
- 
- fault-inject-debugfs kernel module provides some debugfs entries for runtime
- configuration of fault-injection capabilities.
-@@ -55,6 +57,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail*/probability:
- 
- 	likelihood of failure injection, in percent.
-+
- 	Format: <percent>
- 
- 	Note that one-failure-per-hundred is a very high error rate
-@@ -83,6 +86,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail*/verbose
- 
- 	Format: { 0 | 1 | 2 }
-+
- 	specifies the verbosity of the messages when failure is
- 	injected.  '0' means no messages; '1' will print only a single
- 	log line per failure; '2' will print a call trace too -- useful
-@@ -91,14 +95,15 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail*/task-filter:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	A value of 'N' disables filtering by process (default).
- 	Any positive value limits failures to only processes indicated by
- 	/proc/<pid>/make-it-fail==1.
- 
--- /sys/kernel/debug/fail*/require-start:
--- /sys/kernel/debug/fail*/require-end:
--- /sys/kernel/debug/fail*/reject-start:
--- /sys/kernel/debug/fail*/reject-end:
-+- /sys/kernel/debug/fail*/require-start,
-+  /sys/kernel/debug/fail*/require-end,
-+  /sys/kernel/debug/fail*/reject-start,
-+  /sys/kernel/debug/fail*/reject-end:
- 
- 	specifies the range of virtual addresses tested during
- 	stacktrace walking.  Failure is injected only if some caller
-@@ -116,6 +121,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail_page_alloc/ignore-gfp-highmem:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	default is 'N', setting it to 'Y' won't inject failures into
- 	highmem/user allocations.
- 
-@@ -123,6 +129,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail_page_alloc/ignore-gfp-wait:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	default is 'N', setting it to 'Y' will inject failures
- 	only into non-sleep allocations (GFP_ATOMIC allocations).
- 
-@@ -134,12 +141,14 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail_futex/ignore-private:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	default is 'N', setting it to 'Y' will disable failure injections
- 	when dealing with private (address space) futexes.
- 
- - /sys/kernel/debug/fail_function/inject:
- 
- 	Format: { 'function-name' | '!function-name' | '' }
-+
- 	specifies the target function of error injection by name.
- 	If the function name leads '!' prefix, given function is
- 	removed from injection list. If nothing specified ('')
-@@ -160,10 +169,11 @@ configuration of fault-injection capabilities.
- 	function for given function. This will be created when
- 	user specifies new injection entry.
- 
--o Boot option
-+Boot option
-+^^^^^^^^^^^
- 
- In order to inject faults while debugfs is not available (early boot time),
--use the boot option:
-+use the boot option::
- 
- 	failslab=
- 	fail_page_alloc=
-@@ -171,10 +181,11 @@ use the boot option:
- 	fail_futex=
- 	mmc_core.fail_request=<interval>,<probability>,<space>,<times>
- 
--o proc entries
-+proc entries
-+^^^^^^^^^^^^
- 
--- /proc/<pid>/fail-nth:
--- /proc/self/task/<tid>/fail-nth:
-+- /proc/<pid>/fail-nth,
-+  /proc/self/task/<tid>/fail-nth:
- 
- 	Write to this file of integer N makes N-th call in the task fail.
- 	Read from this file returns a integer value. A value of '0' indicates
-@@ -191,16 +202,16 @@ o proc entries
- How to add new fault injection capability
- -----------------------------------------
- 
--o #include <linux/fault-inject.h>
-+- #include <linux/fault-inject.h>
- 
--o define the fault attributes
-+- define the fault attributes
- 
-   DECLARE_FAULT_ATTR(name);
- 
-   Please see the definition of struct fault_attr in fault-inject.h
-   for details.
- 
--o provide a way to configure fault attributes
-+- provide a way to configure fault attributes
- 
- - boot option
- 
-@@ -222,126 +233,126 @@ o provide a way to configure fault attributes
-   single kernel module, it is better to provide module parameters to
-   configure the fault attributes.
- 
--o add a hook to insert failures
-+- add a hook to insert failures
- 
--  Upon should_fail() returning true, client code should inject a failure.
-+  Upon should_fail() returning true, client code should inject a failure:
- 
- 	should_fail(attr, size);
- 
- Application Examples
- --------------------
- 
--o Inject slab allocation failures into module init/exit code
-+- Inject slab allocation failures into module init/exit code::
- 
--#!/bin/bash
-+    #!/bin/bash
- 
--FAILTYPE=failslab
--echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
--echo 10 > /sys/kernel/debug/$FAILTYPE/probability
--echo 100 > /sys/kernel/debug/$FAILTYPE/interval
--echo -1 > /sys/kernel/debug/$FAILTYPE/times
--echo 0 > /sys/kernel/debug/$FAILTYPE/space
--echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
--echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
-+    FAILTYPE=failslab
-+    echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
-+    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
-+    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
-+    echo -1 > /sys/kernel/debug/$FAILTYPE/times
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/space
-+    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
- 
--faulty_system()
--{
-+    faulty_system()
-+    {
- 	bash -c "echo 1 > /proc/self/make-it-fail && exec $*"
--}
-+    }
- 
--if [ $# -eq 0 ]
--then
-+    if [ $# -eq 0 ]
-+    then
- 	echo "Usage: $0 modulename [ modulename ... ]"
- 	exit 1
--fi
-+    fi
- 
--for m in $*
--do
-+    for m in $*
-+    do
- 	echo inserting $m...
- 	faulty_system modprobe $m
- 
- 	echo removing $m...
- 	faulty_system modprobe -r $m
--done
-+    done
- 
- ------------------------------------------------------------------------------
- 
--o Inject page allocation failures only for a specific module
-+- Inject page allocation failures only for a specific module::
- 
--#!/bin/bash
-+    #!/bin/bash
- 
--FAILTYPE=fail_page_alloc
--module=$1
-+    FAILTYPE=fail_page_alloc
-+    module=$1
- 
--if [ -z $module ]
--then
-+    if [ -z $module ]
-+    then
- 	echo "Usage: $0 <modulename>"
- 	exit 1
--fi
-+    fi
- 
--modprobe $module
-+    modprobe $module
- 
--if [ ! -d /sys/module/$module/sections ]
--then
-+    if [ ! -d /sys/module/$module/sections ]
-+    then
- 	echo Module $module is not loaded
- 	exit 1
--fi
-+    fi
- 
--cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
--cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
-+    cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
-+    cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
- 
--echo N > /sys/kernel/debug/$FAILTYPE/task-filter
--echo 10 > /sys/kernel/debug/$FAILTYPE/probability
--echo 100 > /sys/kernel/debug/$FAILTYPE/interval
--echo -1 > /sys/kernel/debug/$FAILTYPE/times
--echo 0 > /sys/kernel/debug/$FAILTYPE/space
--echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
--echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
--echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
--echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
-+    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
-+    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
-+    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
-+    echo -1 > /sys/kernel/debug/$FAILTYPE/times
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/space
-+    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
-+    echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
- 
--trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
-+    trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
- 
--echo "Injecting errors into the module $module... (interrupt to stop)"
--sleep 1000000
-+    echo "Injecting errors into the module $module... (interrupt to stop)"
-+    sleep 1000000
- 
- ------------------------------------------------------------------------------
- 
--o Inject open_ctree error while btrfs mount
-+- Inject open_ctree error while btrfs mount::
- 
--#!/bin/bash
-+    #!/bin/bash
- 
--rm -f testfile.img
--dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
--DEVICE=$(losetup --show -f testfile.img)
--mkfs.btrfs -f $DEVICE
--mkdir -p tmpmnt
-+    rm -f testfile.img
-+    dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
-+    DEVICE=$(losetup --show -f testfile.img)
-+    mkfs.btrfs -f $DEVICE
-+    mkdir -p tmpmnt
- 
--FAILTYPE=fail_function
--FAILFUNC=open_ctree
--echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
--echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
--echo N > /sys/kernel/debug/$FAILTYPE/task-filter
--echo 100 > /sys/kernel/debug/$FAILTYPE/probability
--echo 0 > /sys/kernel/debug/$FAILTYPE/interval
--echo -1 > /sys/kernel/debug/$FAILTYPE/times
--echo 0 > /sys/kernel/debug/$FAILTYPE/space
--echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
-+    FAILTYPE=fail_function
-+    FAILFUNC=open_ctree
-+    echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
-+    echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
-+    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
-+    echo 100 > /sys/kernel/debug/$FAILTYPE/probability
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/interval
-+    echo -1 > /sys/kernel/debug/$FAILTYPE/times
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/space
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
- 
--mount -t btrfs $DEVICE tmpmnt
--if [ $? -ne 0 ]
--then
-+    mount -t btrfs $DEVICE tmpmnt
-+    if [ $? -ne 0 ]
-+    then
- 	echo "SUCCESS!"
--else
-+    else
- 	echo "FAILED!"
- 	umount tmpmnt
--fi
-+    fi
- 
--echo > /sys/kernel/debug/$FAILTYPE/inject
-+    echo > /sys/kernel/debug/$FAILTYPE/inject
- 
--rmdir tmpmnt
--losetup -d $DEVICE
--rm testfile.img
-+    rmdir tmpmnt
-+    losetup -d $DEVICE
-+    rm testfile.img
- 
- 
- Tool to run command with failslab or fail_page_alloc
-@@ -354,43 +365,43 @@ see the following examples.
- Examples:
- 
- Run a command "make -C tools/testing/selftests/ run_tests" with injecting slab
--allocation failure.
-+allocation failure::
- 
- 	# ./tools/testing/fault-injection/failcmd.sh \
- 		-- make -C tools/testing/selftests/ run_tests
- 
- Same as above except to specify 100 times failures at most instead of one time
--at most by default.
-+at most by default::
- 
- 	# ./tools/testing/fault-injection/failcmd.sh --times=100 \
- 		-- make -C tools/testing/selftests/ run_tests
- 
- Same as above except to inject page allocation failure instead of slab
--allocation failure.
-+allocation failure::
- 
- 	# env FAILCMD_TYPE=fail_page_alloc \
- 		./tools/testing/fault-injection/failcmd.sh --times=100 \
--                -- make -C tools/testing/selftests/ run_tests
-+		-- make -C tools/testing/selftests/ run_tests
- 
- Systematic faults using fail-nth
- ---------------------------------
- 
- The following code systematically faults 0-th, 1-st, 2-nd and so on
--capabilities in the socketpair() system call.
-+capabilities in the socketpair() system call::
- 
--#include <sys/types.h>
--#include <sys/stat.h>
--#include <sys/socket.h>
--#include <sys/syscall.h>
--#include <fcntl.h>
--#include <unistd.h>
--#include <string.h>
--#include <stdlib.h>
--#include <stdio.h>
--#include <errno.h>
-+  #include <sys/types.h>
-+  #include <sys/stat.h>
-+  #include <sys/socket.h>
-+  #include <sys/syscall.h>
-+  #include <fcntl.h>
-+  #include <unistd.h>
-+  #include <string.h>
-+  #include <stdlib.h>
-+  #include <stdio.h>
-+  #include <errno.h>
- 
--int main()
--{
-+  int main()
-+  {
- 	int i, err, res, fail_nth, fds[2];
- 	char buf[128];
- 
-@@ -413,23 +424,23 @@ int main()
- 			break;
- 	}
- 	return 0;
--}
-+  }
- 
--An example output:
-+An example output::
- 
--1-th fault Y: res=-1/23
--2-th fault Y: res=-1/23
--3-th fault Y: res=-1/12
--4-th fault Y: res=-1/12
--5-th fault Y: res=-1/23
--6-th fault Y: res=-1/23
--7-th fault Y: res=-1/23
--8-th fault Y: res=-1/12
--9-th fault Y: res=-1/12
--10-th fault Y: res=-1/12
--11-th fault Y: res=-1/12
--12-th fault Y: res=-1/12
--13-th fault Y: res=-1/12
--14-th fault Y: res=-1/12
--15-th fault Y: res=-1/12
--16-th fault N: res=0/12
-+	1-th fault Y: res=-1/23
-+	2-th fault Y: res=-1/23
-+	3-th fault Y: res=-1/12
-+	4-th fault Y: res=-1/12
-+	5-th fault Y: res=-1/23
-+	6-th fault Y: res=-1/23
-+	7-th fault Y: res=-1/23
-+	8-th fault Y: res=-1/12
-+	9-th fault Y: res=-1/12
-+	10-th fault Y: res=-1/12
-+	11-th fault Y: res=-1/12
-+	12-th fault Y: res=-1/12
-+	13-th fault Y: res=-1/12
-+	14-th fault Y: res=-1/12
-+	15-th fault Y: res=-1/12
-+	16-th fault N: res=0/12
-diff --git a/Documentation/fault-injection/index.rst b/Documentation/fault-injection/index.rst
++High Precision Event Timer Driver for Linux
++===========================================
+ 
+ The High Precision Event Timer (HPET) hardware follows a specification
+ by Intel and Microsoft, revision 1.
+diff --git a/Documentation/timers/hrtimers.txt b/Documentation/timers/hrtimers.rst
+similarity index 98%
+rename from Documentation/timers/hrtimers.txt
+rename to Documentation/timers/hrtimers.rst
+index 588d85724f10..c1c20a693e8f 100644
+--- a/Documentation/timers/hrtimers.txt
++++ b/Documentation/timers/hrtimers.rst
+@@ -1,6 +1,6 @@
+-
++======================================================
+ hrtimers - subsystem for high-resolution kernel timers
+-----------------------------------------------------
++======================================================
+ 
+ This patch introduces a new subsystem for high-resolution kernel timers.
+ 
+@@ -146,7 +146,7 @@ the clock_getres() interface. This will return whatever real resolution
+ a given clock has - be it low-res, high-res, or artificially-low-res.
+ 
+ hrtimers - testing and verification
+-----------------------------------
++-----------------------------------
+ 
+ We used the high-resolution clock subsystem ontop of hrtimers to verify
+ the hrtimer implementation details in praxis, and we also ran the posix
+diff --git a/Documentation/timers/index.rst b/Documentation/timers/index.rst
 new file mode 100644
-index 000000000000..92b5639ed07a
+index 000000000000..91f6f8263c48
 --- /dev/null
-+++ b/Documentation/fault-injection/index.rst
-@@ -0,0 +1,20 @@
++++ b/Documentation/timers/index.rst
+@@ -0,0 +1,22 @@
 +:orphan:
 +
-+===============
-+fault-injection
-+===============
++======
++timers
++======
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    fault-injection
-+    notifier-error-inject
-+    nvme-fault-injection
-+    provoke-crashes
++    highres
++    hpet
++    hrtimers
++    no_hz
++    timekeeping
++    timers-howto
 +
 +.. only::  subproject and html
 +
@@ -616,516 +232,340 @@ index 000000000000..92b5639ed07a
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/fault-injection/notifier-error-inject.txt b/Documentation/fault-injection/notifier-error-inject.rst
-similarity index 83%
-rename from Documentation/fault-injection/notifier-error-inject.txt
-rename to Documentation/fault-injection/notifier-error-inject.rst
-index e861d761de24..1668b6e48d3a 100644
---- a/Documentation/fault-injection/notifier-error-inject.txt
-+++ b/Documentation/fault-injection/notifier-error-inject.rst
-@@ -14,7 +14,8 @@ modules that can be used to test the following notifiers.
- PM notifier error injection module
- ----------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
+diff --git a/Documentation/timers/NO_HZ.txt b/Documentation/timers/no_hz.rst
+similarity index 93%
+rename from Documentation/timers/NO_HZ.txt
+rename to Documentation/timers/no_hz.rst
+index 9591092da5e0..065db217cb04 100644
+--- a/Documentation/timers/NO_HZ.txt
++++ b/Documentation/timers/no_hz.rst
+@@ -1,4 +1,6 @@
+-		NO_HZ: Reducing Scheduling-Clock Ticks
++﻿======================================
++NO_HZ: Reducing Scheduling-Clock Ticks
++======================================
  
- Possible PM notifier events to be failed are:
  
-@@ -22,7 +23,7 @@ Possible PM notifier events to be failed are:
-  * PM_SUSPEND_PREPARE
-  * PM_RESTORE_PREPARE
+ This document describes Kconfig options and boot parameters that can
+@@ -28,7 +30,8 @@ by a third section on RCU-specific considerations, a fourth section
+ discussing testing, and a fifth and final section listing known issues.
  
--Example: Inject PM suspend error (-12 = -ENOMEM)
-+Example: Inject PM suspend error (-12 = -ENOMEM)::
  
- 	# cd /sys/kernel/debug/notifier-error-inject/pm/
- 	# echo -12 > actions/PM_SUSPEND_PREPARE/error
-@@ -32,14 +33,15 @@ Example: Inject PM suspend error (-12 = -ENOMEM)
- Memory hotplug notifier error injection module
- ----------------------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
+-NEVER OMIT SCHEDULING-CLOCK TICKS
++Never Omit Scheduling-Clock Ticks
++=================================
  
- Possible memory notifier events to be failed are:
+ Very old versions of Linux from the 1990s and the very early 2000s
+ are incapable of omitting scheduling-clock ticks.  It turns out that
+@@ -59,7 +62,8 @@ degrade your applications performance.  If this describes your workload,
+ you should read the following two sections.
  
-  * MEM_GOING_ONLINE
-  * MEM_GOING_OFFLINE
  
--Example: Inject memory hotplug offline error (-12 == -ENOMEM)
-+Example: Inject memory hotplug offline error (-12 == -ENOMEM)::
+-OMIT SCHEDULING-CLOCK TICKS FOR IDLE CPUs
++Omit Scheduling-Clock Ticks For Idle CPUs
++=========================================
  
- 	# cd /sys/kernel/debug/notifier-error-inject/memory
- 	# echo -12 > actions/MEM_GOING_OFFLINE/error
-@@ -49,7 +51,8 @@ Example: Inject memory hotplug offline error (-12 == -ENOMEM)
- powerpc pSeries reconfig notifier error injection module
- --------------------------------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
+ If a CPU is idle, there is little point in sending it a scheduling-clock
+ interrupt.  After all, the primary purpose of a scheduling-clock interrupt
+@@ -97,7 +101,8 @@ By default, CONFIG_NO_HZ_IDLE=y kernels boot with "nohz=on", enabling
+ dyntick-idle mode.
  
- Possible pSeries reconfig notifier events to be failed are:
  
-@@ -61,7 +64,8 @@ Possible pSeries reconfig notifier events to be failed are:
- Netdevice notifier error injection module
- ----------------------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
+-OMIT SCHEDULING-CLOCK TICKS FOR CPUs WITH ONLY ONE RUNNABLE TASK
++Omit Scheduling-Clock Ticks For CPUs With Only One Runnable Task
++================================================================
  
- Netdevice notifier events which can be failed are:
+ If a CPU has only one runnable task, there is little point in sending it
+ a scheduling-clock interrupt because there is no other task to switch to.
+@@ -174,7 +179,8 @@ However, the drawbacks listed above mean that adaptive ticks should not
+ (yet) be enabled by default.
  
-@@ -75,7 +79,7 @@ Netdevice notifier events which can be failed are:
-  * NETDEV_PRECHANGEUPPER
-  * NETDEV_CHANGEUPPER
  
--Example: Inject netdevice mtu change error (-22 == -EINVAL)
-+Example: Inject netdevice mtu change error (-22 == -EINVAL)::
+-RCU IMPLICATIONS
++RCU Implications
++================
  
- 	# cd /sys/kernel/debug/notifier-error-inject/netdev
- 	# echo -22 > actions/NETDEV_CHANGEMTU/error
-diff --git a/Documentation/fault-injection/nvme-fault-injection.rst b/Documentation/fault-injection/nvme-fault-injection.rst
-new file mode 100644
-index 000000000000..bbb1bf3e8650
---- /dev/null
-+++ b/Documentation/fault-injection/nvme-fault-injection.rst
-@@ -0,0 +1,120 @@
-+NVMe Fault Injection
-+====================
-+Linux's fault injection framework provides a systematic way to support
-+error injection via debugfs in the /sys/kernel/debug directory. When
-+enabled, the default NVME_SC_INVALID_OPCODE with no retry will be
-+injected into the nvme_end_request. Users can change the default status
-+code and no retry flag via the debugfs. The list of Generic Command
-+Status can be found in include/linux/nvme.h
-+
-+Following examples show how to inject an error into the nvme.
-+
-+First, enable CONFIG_FAULT_INJECTION_DEBUG_FS kernel config,
-+recompile the kernel. After booting up the kernel, do the
-+following.
-+
-+Example 1: Inject default status code with no retry
-+---------------------------------------------------
-+
-+::
-+
-+  mount /dev/nvme0n1 /mnt
-+  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
-+  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
-+  cp a.file /mnt
-+
-+Expected Result::
-+
-+  cp: cannot stat ‘/mnt/a.file’: Input/output error
-+
-+Message from dmesg::
-+
-+  FAULT_INJECTION: forcing a failure.
-+  name fault_inject, interval 1, probability 100, space 0, times 1
-+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
-+  Hardware name: innotek GmbH VirtualBox/VirtualBox,
-+  BIOS VirtualBox 12/01/2006
-+  Call Trace:
-+    <IRQ>
-+    dump_stack+0x5c/0x7d
-+    should_fail+0x148/0x170
-+    nvme_should_fail+0x2f/0x50 [nvme_core]
-+    nvme_process_cq+0xe7/0x1d0 [nvme]
-+    nvme_irq+0x1e/0x40 [nvme]
-+    __handle_irq_event_percpu+0x3a/0x190
-+    handle_irq_event_percpu+0x30/0x70
-+    handle_irq_event+0x36/0x60
-+    handle_fasteoi_irq+0x78/0x120
-+    handle_irq+0xa7/0x130
-+    ? tick_irq_enter+0xa8/0xc0
-+    do_IRQ+0x43/0xc0
-+    common_interrupt+0xa2/0xa2
-+    </IRQ>
-+  RIP: 0010:native_safe_halt+0x2/0x10
-+  RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
-+  RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
-+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-+  RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
-+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
-+  R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
-+    ? __sched_text_end+0x4/0x4
-+    default_idle+0x18/0xf0
-+    do_idle+0x150/0x1d0
-+    cpu_startup_entry+0x6f/0x80
-+    start_kernel+0x4c4/0x4e4
-+    ? set_init_arg+0x55/0x55
-+    secondary_startup_64+0xa5/0xb0
-+    print_req_error: I/O error, dev nvme0n1, sector 9240
-+  EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
-+  inode #2: comm cp: reading directory lblock 0
-+
-+Example 2: Inject default status code with retry
-+------------------------------------------------
-+
-+::
-+
-+  mount /dev/nvme0n1 /mnt
-+  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
-+  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
-+  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
-+  echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
-+
-+  cp a.file /mnt
-+
-+Expected Result::
-+
-+  command success without error
-+
-+Message from dmesg::
-+
-+  FAULT_INJECTION: forcing a failure.
-+  name fault_inject, interval 1, probability 100, space 0, times 1
-+  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
-+  Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-+  Call Trace:
-+    <IRQ>
-+    dump_stack+0x5c/0x7d
-+    should_fail+0x148/0x170
-+    nvme_should_fail+0x30/0x60 [nvme_core]
-+    nvme_loop_queue_response+0x84/0x110 [nvme_loop]
-+    nvmet_req_complete+0x11/0x40 [nvmet]
-+    nvmet_bio_done+0x28/0x40 [nvmet]
-+    blk_update_request+0xb0/0x310
-+    blk_mq_end_request+0x18/0x60
-+    flush_smp_call_function_queue+0x3d/0xf0
-+    smp_call_function_single_interrupt+0x2c/0xc0
-+    call_function_single_interrupt+0xa2/0xb0
-+    </IRQ>
-+  RIP: 0010:native_safe_halt+0x2/0x10
-+  RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
-+  RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
-+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-+  RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
-+  R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
-+  R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
-+    ? __sched_text_end+0x4/0x4
-+    default_idle+0x18/0xf0
-+    do_idle+0x150/0x1d0
-+    cpu_startup_entry+0x6f/0x80
-+    start_secondary+0x187/0x1e0
-+    secondary_startup_64+0xa5/0xb0
-diff --git a/Documentation/fault-injection/nvme-fault-injection.txt b/Documentation/fault-injection/nvme-fault-injection.txt
-deleted file mode 100644
-index 8fbf3bf60b62..000000000000
---- a/Documentation/fault-injection/nvme-fault-injection.txt
-+++ /dev/null
-@@ -1,116 +0,0 @@
--NVMe Fault Injection
--====================
--Linux's fault injection framework provides a systematic way to support
--error injection via debugfs in the /sys/kernel/debug directory. When
--enabled, the default NVME_SC_INVALID_OPCODE with no retry will be
--injected into the nvme_end_request. Users can change the default status
--code and no retry flag via the debugfs. The list of Generic Command
--Status can be found in include/linux/nvme.h
--
--Following examples show how to inject an error into the nvme.
--
--First, enable CONFIG_FAULT_INJECTION_DEBUG_FS kernel config,
--recompile the kernel. After booting up the kernel, do the
--following.
--
--Example 1: Inject default status code with no retry
-----------------------------------------------------
--
--mount /dev/nvme0n1 /mnt
--echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
--echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
--cp a.file /mnt
--
--Expected Result:
--
--cp: cannot stat ‘/mnt/a.file’: Input/output error
--
--Message from dmesg:
--
--FAULT_INJECTION: forcing a failure.
--name fault_inject, interval 1, probability 100, space 0, times 1
--CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
--Hardware name: innotek GmbH VirtualBox/VirtualBox,
--BIOS VirtualBox 12/01/2006
--Call Trace:
--  <IRQ>
--  dump_stack+0x5c/0x7d
--  should_fail+0x148/0x170
--  nvme_should_fail+0x2f/0x50 [nvme_core]
--  nvme_process_cq+0xe7/0x1d0 [nvme]
--  nvme_irq+0x1e/0x40 [nvme]
--  __handle_irq_event_percpu+0x3a/0x190
--  handle_irq_event_percpu+0x30/0x70
--  handle_irq_event+0x36/0x60
--  handle_fasteoi_irq+0x78/0x120
--  handle_irq+0xa7/0x130
--  ? tick_irq_enter+0xa8/0xc0
--  do_IRQ+0x43/0xc0
--  common_interrupt+0xa2/0xa2
--  </IRQ>
--RIP: 0010:native_safe_halt+0x2/0x10
--RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
--RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
--RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
--RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
--R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
--R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
--  ? __sched_text_end+0x4/0x4
--  default_idle+0x18/0xf0
--  do_idle+0x150/0x1d0
--  cpu_startup_entry+0x6f/0x80
--  start_kernel+0x4c4/0x4e4
--  ? set_init_arg+0x55/0x55
--  secondary_startup_64+0xa5/0xb0
--  print_req_error: I/O error, dev nvme0n1, sector 9240
--EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
--inode #2: comm cp: reading directory lblock 0
--
--Example 2: Inject default status code with retry
--------------------------------------------------
--
--mount /dev/nvme0n1 /mnt
--echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
--echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
--echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
--echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
--
--cp a.file /mnt
--
--Expected Result:
--
--command success without error
--
--Message from dmesg:
--
--FAULT_INJECTION: forcing a failure.
--name fault_inject, interval 1, probability 100, space 0, times 1
--CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
--Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
--Call Trace:
--  <IRQ>
--  dump_stack+0x5c/0x7d
--  should_fail+0x148/0x170
--  nvme_should_fail+0x30/0x60 [nvme_core]
--  nvme_loop_queue_response+0x84/0x110 [nvme_loop]
--  nvmet_req_complete+0x11/0x40 [nvmet]
--  nvmet_bio_done+0x28/0x40 [nvmet]
--  blk_update_request+0xb0/0x310
--  blk_mq_end_request+0x18/0x60
--  flush_smp_call_function_queue+0x3d/0xf0
--  smp_call_function_single_interrupt+0x2c/0xc0
--  call_function_single_interrupt+0xa2/0xb0
--  </IRQ>
--RIP: 0010:native_safe_halt+0x2/0x10
--RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
--RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
--RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
--RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
--R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
--R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
--  ? __sched_text_end+0x4/0x4
--  default_idle+0x18/0xf0
--  do_idle+0x150/0x1d0
--  cpu_startup_entry+0x6f/0x80
--  start_secondary+0x187/0x1e0
--  secondary_startup_64+0xa5/0xb0
-diff --git a/Documentation/fault-injection/provoke-crashes.rst b/Documentation/fault-injection/provoke-crashes.rst
-new file mode 100644
-index 000000000000..9279a3e12278
---- /dev/null
-+++ b/Documentation/fault-injection/provoke-crashes.rst
-@@ -0,0 +1,48 @@
-+===============
-+Provoke crashes
-+===============
-+
-+The lkdtm module provides an interface to crash or injure the kernel at
-+predefined crashpoints to evaluate the reliability of crash dumps obtained
-+using different dumping solutions. The module uses KPROBEs to instrument
-+crashing points, but can also crash the kernel directly without KRPOBE
-+support.
-+
-+
-+You can provide the way either through module arguments when inserting
-+the module, or through a debugfs interface.
-+
-+Usage::
-+
-+	insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
-+			[cpoint_count={>0}]
-+
-+recur_count
-+	Recursion level for the stack overflow test. Default is 10.
-+
-+cpoint_name
-+	Crash point where the kernel is to be crashed. It can be
-+	one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
-+	FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
-+	IDE_CORE_CP, DIRECT
-+
-+cpoint_type
-+	Indicates the action to be taken on hitting the crash point.
-+	It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
-+	CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
-+	WRITE_AFTER_FREE,
-+
-+cpoint_count
-+	Indicates the number of times the crash point is to be hit
-+	to trigger an action. The default is 10.
-+
-+You can also induce failures by mounting debugfs and writing the type to
-+<mountpoint>/provoke-crash/<crashpoint>. E.g.::
-+
-+  mount -t debugfs debugfs /mnt
-+  echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
-+
-+
-+A special file is `DIRECT` which will induce the crash directly without
-+KPROBE instrumentation. This mode is the only one available when the module
-+is built on a kernel without KPROBEs support.
-diff --git a/Documentation/fault-injection/provoke-crashes.txt b/Documentation/fault-injection/provoke-crashes.txt
-deleted file mode 100644
-index 7a9d3d81525b..000000000000
---- a/Documentation/fault-injection/provoke-crashes.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--The lkdtm module provides an interface to crash or injure the kernel at
--predefined crashpoints to evaluate the reliability of crash dumps obtained
--using different dumping solutions. The module uses KPROBEs to instrument
--crashing points, but can also crash the kernel directly without KRPOBE
--support.
--
--
--You can provide the way either through module arguments when inserting
--the module, or through a debugfs interface.
--
--Usage: insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
--				[cpoint_count={>0}]
--
--  recur_count : Recursion level for the stack overflow test. Default is 10.
--
--  cpoint_name : Crash point where the kernel is to be crashed. It can be
--	 one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
--	 FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
--	 IDE_CORE_CP, DIRECT
--
--  cpoint_type : Indicates the action to be taken on hitting the crash point.
--     It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
--     CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
--     WRITE_AFTER_FREE,
--
--  cpoint_count : Indicates the number of times the crash point is to be hit
--    to trigger an action. The default is 10.
--
--You can also induce failures by mounting debugfs and writing the type to
--<mountpoint>/provoke-crash/<crashpoint>. E.g.,
--
--  mount -t debugfs debugfs /mnt
--  echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
--
--
--A special file is `DIRECT' which will induce the crash directly without
--KPROBE instrumentation. This mode is the only one available when the module
--is built on a kernel without KPROBEs support.
-diff --git a/Documentation/process/4.Coding.rst b/Documentation/process/4.Coding.rst
-index 4b7a5ab3cec1..13dd893c9f88 100644
---- a/Documentation/process/4.Coding.rst
-+++ b/Documentation/process/4.Coding.rst
-@@ -298,7 +298,7 @@ enabled, a configurable percentage of memory allocations will be made to
- fail; these failures can be restricted to a specific range of code.
- Running with fault injection enabled allows the programmer to see how the
- code responds when things go badly.  See
--Documentation/fault-injection/fault-injection.txt for more information on
-+Documentation/fault-injection/fault-injection.rst for more information on
- how to use this facility.
+ There are situations in which idle CPUs cannot be permitted to
+ enter either dyntick-idle mode or adaptive-tick mode, the most
+@@ -199,7 +205,8 @@ scheduler will decide where to run them, which might or might not be
+ where you want them to run.
  
- Other kinds of errors can be found with the "sparse" static analysis tool.
-diff --git a/Documentation/translations/it_IT/process/4.Coding.rst b/Documentation/translations/it_IT/process/4.Coding.rst
-index c05b89e616dd..a5e36aa60448 100644
---- a/Documentation/translations/it_IT/process/4.Coding.rst
-+++ b/Documentation/translations/it_IT/process/4.Coding.rst
-@@ -314,7 +314,7 @@ di allocazione di memoria sarà destinata al fallimento; questi fallimenti
- possono essere ridotti ad uno specifico pezzo di codice.  Procedere con
- l'inserimento dei fallimenti attivo permette al programmatore di verificare
- come il codice risponde quando le cose vanno male.  Consultate:
--Documentation/fault-injection/fault-injection.txt per avere maggiori
-+Documentation/fault-injection/fault-injection.rst per avere maggiori
- informazioni su come utilizzare questo strumento.
  
- Altre tipologie di errori possono essere riscontrati con lo strumento di
-diff --git a/Documentation/translations/zh_CN/process/4.Coding.rst b/Documentation/translations/zh_CN/process/4.Coding.rst
-index 5301e9d55255..b8b6d4c8ef3c 100644
---- a/Documentation/translations/zh_CN/process/4.Coding.rst
-+++ b/Documentation/translations/zh_CN/process/4.Coding.rst
-@@ -205,7 +205,7 @@ Linus对这个问题给出了最佳答案:
- 启用故障注入后，内存分配的可配置百分比将失败；这些失败可以限制在特定的代码
- 范围内。在启用了故障注入的情况下运行，程序员可以看到当情况恶化时代码如何响
- 应。有关如何使用此工具的详细信息，请参阅
--Documentation/fault-injection/fault-injection.txt。
-+Documentation/fault-injection/fault-injection.rst。
+-TESTING
++Testing
++=======
  
- 使用“sparse”静态分析工具可以发现其他类型的错误。对于sparse，可以警告程序员
- 用户空间和内核空间地址之间的混淆、big endian和small endian数量的混合、在需
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index b51cf182b031..9c2f335b7023 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -28,7 +28,7 @@
+ So you enable all the OS-jitter features described in this document,
+ but do not see any change in your workload's behavior.  Is this because
+@@ -222,9 +229,10 @@ We do not currently have a good way to remove OS jitter from single-CPU
+ systems.
+ 
+ 
+-KNOWN ISSUES
++Known Issues
++============
+ 
+-o	Dyntick-idle slows transitions to and from idle slightly.
++*	Dyntick-idle slows transitions to and from idle slightly.
+ 	In practice, this has not been a problem except for the most
+ 	aggressive real-time workloads, which have the option of disabling
+ 	dyntick-idle mode, an option that most of them take.  However,
+@@ -248,13 +256,13 @@ o	Dyntick-idle slows transitions to and from idle slightly.
+ 		this parameter effectively disables Turbo Mode on Intel
+ 		CPUs, which can significantly reduce maximum performance.
+ 
+-o	Adaptive-ticks slows user/kernel transitions slightly.
++*	Adaptive-ticks slows user/kernel transitions slightly.
+ 	This is not expected to be a problem for computationally intensive
+ 	workloads, which have few such transitions.  Careful benchmarking
+ 	will be required to determine whether or not other workloads
+ 	are significantly affected by this effect.
+ 
+-o	Adaptive-ticks does not do anything unless there is only one
++*	Adaptive-ticks does not do anything unless there is only one
+ 	runnable task for a given CPU, even though there are a number
+ 	of other situations where the scheduling-clock tick is not
+ 	needed.  To give but one example, consider a CPU that has one
+@@ -275,7 +283,7 @@ o	Adaptive-ticks does not do anything unless there is only one
+ 
+ 	Better handling of these sorts of situations is future work.
+ 
+-o	A reboot is required to reconfigure both adaptive idle and RCU
++*	A reboot is required to reconfigure both adaptive idle and RCU
+ 	callback offloading.  Runtime reconfiguration could be provided
+ 	if needed, however, due to the complexity of reconfiguring RCU at
+ 	runtime, there would need to be an earthshakingly good reason.
+@@ -283,12 +291,12 @@ o	A reboot is required to reconfigure both adaptive idle and RCU
+ 	simply offloading RCU callbacks from all CPUs and pinning them
+ 	where you want them whenever you want them pinned.
+ 
+-o	Additional configuration is required to deal with other sources
++*	Additional configuration is required to deal with other sources
+ 	of OS jitter, including interrupts and system-utility tasks
+ 	and processes.  This configuration normally involves binding
+ 	interrupts and tasks to particular CPUs.
+ 
+-o	Some sources of OS jitter can currently be eliminated only by
++*	Some sources of OS jitter can currently be eliminated only by
+ 	constraining the workload.  For example, the only way to eliminate
+ 	OS jitter due to global TLB shootdowns is to avoid the unmapping
+ 	operations (such as kernel module unload operations) that
+@@ -299,17 +307,17 @@ o	Some sources of OS jitter can currently be eliminated only by
+ 	helpful, especially when combined with the mlock() and mlockall()
+ 	system calls.
+ 
+-o	Unless all CPUs are idle, at least one CPU must keep the
++*	Unless all CPUs are idle, at least one CPU must keep the
+ 	scheduling-clock interrupt going in order to support accurate
+ 	timekeeping.
+ 
+-o	If there might potentially be some adaptive-ticks CPUs, there
++*	If there might potentially be some adaptive-ticks CPUs, there
+ 	will be at least one CPU keeping the scheduling-clock interrupt
+ 	going, even if all CPUs are otherwise idle.
+ 
+ 	Better handling of this situation is ongoing work.
+ 
+-o	Some process-handling operations still require the occasional
++*	Some process-handling operations still require the occasional
+ 	scheduling-clock tick.	These operations include calculating CPU
+ 	load, maintaining sched average, computing CFS entity vruntime,
+ 	computing avenrun, and carrying out load balancing.  They are
+diff --git a/Documentation/timers/timekeeping.txt b/Documentation/timers/timekeeping.rst
+similarity index 98%
+rename from Documentation/timers/timekeeping.txt
+rename to Documentation/timers/timekeeping.rst
+index 2d1732b0a868..f83e98852e2c 100644
+--- a/Documentation/timers/timekeeping.txt
++++ b/Documentation/timers/timekeeping.rst
+@@ -1,5 +1,6 @@
++===========================================================
+ Clock sources, Clock events, sched_clock() and delay timers
+------------------------------------------------------------
++===========================================================
+ 
+ This document tries to briefly explain some basic kernel timekeeping
+ abstractions. It partly pertains to the drivers usually found in
+diff --git a/Documentation/timers/timers-howto.txt b/Documentation/timers/timers-howto.rst
+similarity index 93%
+rename from Documentation/timers/timers-howto.txt
+rename to Documentation/timers/timers-howto.rst
+index 038f8c77a076..7e3167bec2b1 100644
+--- a/Documentation/timers/timers-howto.txt
++++ b/Documentation/timers/timers-howto.rst
+@@ -1,5 +1,6 @@
++===================================================================
+ delays - Information on the various kernel delay / sleep mechanisms
+--------------------------------------------------------------------
++===================================================================
+ 
+ This document seeks to answer the common question: "What is the
+ RightWay (TM) to insert a delay?"
+@@ -17,7 +18,7 @@ code in an atomic context?"  This should be followed closely by "Does
+ it really need to delay in atomic context?" If so...
+ 
+ ATOMIC CONTEXT:
+-	You must use the *delay family of functions. These
++	You must use the `*delay` family of functions. These
+ 	functions use the jiffie estimation of clock speed
+ 	and will busy wait for enough loop cycles to achieve
+ 	the desired delay:
+@@ -35,21 +36,26 @@ ATOMIC CONTEXT:
+ 	be refactored to allow for the use of msleep.
+ 
+ NON-ATOMIC CONTEXT:
+-	You should use the *sleep[_range] family of functions.
++	You should use the `*sleep[_range]` family of functions.
+ 	There are a few more options here, while any of them may
+ 	work correctly, using the "right" sleep function will
+ 	help the scheduler, power management, and just make your
+ 	driver better :)
+ 
+ 	-- Backed by busy-wait loop:
++
+ 		udelay(unsigned long usecs)
++
+ 	-- Backed by hrtimers:
++
+ 		usleep_range(unsigned long min, unsigned long max)
++
+ 	-- Backed by jiffies / legacy_timers
++
+ 		msleep(unsigned long msecs)
+ 		msleep_interruptible(unsigned long msecs)
+ 
+-	Unlike the *delay family, the underlying mechanism
++	Unlike the `*delay` family, the underlying mechanism
+ 	driving each of these calls varies, thus there are
+ 	quirks you should be aware of.
+ 
+@@ -70,6 +76,7 @@ NON-ATOMIC CONTEXT:
+ 		- Why not msleep for (1ms - 20ms)?
+ 			Explained originally here:
+ 				http://lkml.org/lkml/2007/8/3/250
++
+ 			msleep(1~20) may not do what the caller intends, and
+ 			will often sleep longer (~20 ms actual sleep for any
+ 			value given in the 1~20ms range). In many cases this
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7e600004f993..8dfa2fa5101a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7127,7 +7127,7 @@ F:	drivers/net/ethernet/hp/hp100.*
+ HPET:	High Precision Event Timers driver
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ S:	Maintained
+-F:	Documentation/timers/hpet.txt
++F:	Documentation/timers/hpet.rst
+ F:	drivers/char/hpet.c
+ F:	include/linux/hpet.h
+ F:	include/uapi/linux/hpet.h
+diff --git a/drivers/media/usb/dvb-usb-v2/anysee.c b/drivers/media/usb/dvb-usb-v2/anysee.c
+index 0df7ad69e6c7..a4271f6c414a 100644
+--- a/drivers/media/usb/dvb-usb-v2/anysee.c
++++ b/drivers/media/usb/dvb-usb-v2/anysee.c
+@@ -65,7 +65,7 @@ static int anysee_ctrl_msg(struct dvb_usb_device *d,
+ 	/* TODO FIXME: dvb_usb_generic_rw() fails rarely with error code -32
+ 	 * (EPIPE, Broken pipe). Function supports currently msleep() as a
+ 	 * parameter but I would not like to use it, since according to
+-	 * Documentation/timers/timers-howto.txt it should not be used such
++	 * Documentation/timers/timers-howto.rst it should not be used such
+ 	 * short, under < 20ms, sleeps. Repeating failed message would be
+ 	 * better choice as not to add unwanted delays...
+ 	 * Fixing that correctly is one of those or both;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 186a37675b50..e67a98115d9d 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2308,7 +2308,7 @@ static int regulator_ena_gpio_ctrl(struct regulator_dev *rdev, bool enable)
   *
-  * Debugfs support added by Simon Kagstrom <simon.kagstrom@netinsight.net>
+  * Delay for the requested amount of time as per the guidelines in:
   *
-- * See Documentation/fault-injection/provoke-crashes.txt for instructions
-+ * See Documentation/fault-injection/provoke-crashes.rst for instructions
-  */
- #include "lkdtm.h"
- #include <linux/fs.h>
-diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
-index 7e6c77740413..e525f6957c49 100644
---- a/include/linux/fault-inject.h
-+++ b/include/linux/fault-inject.h
-@@ -11,7 +11,7 @@
+- *     Documentation/timers/timers-howto.txt
++ *     Documentation/timers/timers-howto.rst
+  *
+  * The assumption here is that regulators will never be enabled in
+  * atomic context and therefore sleeping functions can be used.
+diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
+index b1d861caca16..320bbc9761c8 100644
+--- a/include/linux/iopoll.h
++++ b/include/linux/iopoll.h
+@@ -30,7 +30,7 @@
+  * @cond: Break condition (usually involving @val)
+  * @sleep_us: Maximum time to sleep between reads in us (0
+  *            tight-loops).  Should be less than ~20ms since usleep_range
+- *            is used (see Documentation/timers/timers-howto.txt).
++ *            is used (see Documentation/timers/timers-howto.rst).
+  * @timeout_us: Timeout in us, 0 means never timeout
+  *
+  * Returns 0 on success and -ETIMEDOUT upon a timeout. In either
+@@ -69,7 +69,7 @@
+  * @cond: Break condition (usually involving @val)
+  * @delay_us: Time to udelay between reads in us (0 tight-loops).  Should
+  *            be less than ~10us since udelay is used (see
+- *            Documentation/timers/timers-howto.txt).
++ *            Documentation/timers/timers-howto.rst).
+  * @timeout_us: Timeout in us, 0 means never timeout
+  *
+  * Returns 0 on success and -ETIMEDOUT upon a timeout. In either
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index daeec7dbd65c..ed5e9d0a1285 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -112,7 +112,7 @@ struct reg_sequence {
+  * @cond: Break condition (usually involving @val)
+  * @sleep_us: Maximum time to sleep between reads in us (0
+  *            tight-loops).  Should be less than ~20ms since usleep_range
+- *            is used (see Documentation/timers/timers-howto.txt).
++ *            is used (see Documentation/timers/timers-howto.rst).
+  * @timeout_us: Timeout in us, 0 means never timeout
+  *
+  * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_read
+@@ -154,7 +154,7 @@ struct reg_sequence {
+  * @cond: Break condition (usually involving @val)
+  * @sleep_us: Maximum time to sleep between reads in us (0
+  *            tight-loops).  Should be less than ~20ms since usleep_range
+- *            is used (see Documentation/timers/timers-howto.txt).
++ *            is used (see Documentation/timers/timers-howto.rst).
+  * @timeout_us: Timeout in us, 0 means never timeout
+  *
+  * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_field_read
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 1c421ac42b07..d36598bbf1b0 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5714,7 +5714,7 @@ sub process {
+ 			# ignore udelay's < 10, however
+ 			if (! ($delay < 10) ) {
+ 				CHK("USLEEP_RANGE",
+-				    "usleep_range is preferred over udelay; see Documentation/timers/timers-howto.txt\n" . $herecurr);
++				    "usleep_range is preferred over udelay; see Documentation/timers/timers-howto.rst\n" . $herecurr);
+ 			}
+ 			if ($delay > 2000) {
+ 				WARN("LONG_UDELAY",
+@@ -5726,7 +5726,7 @@ sub process {
+ 		if ($line =~ /\bmsleep\s*\((\d+)\);/) {
+ 			if ($1 < 20) {
+ 				WARN("MSLEEP",
+-				     "msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.txt\n" . $herecurr);
++				     "msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.rst\n" . $herecurr);
+ 			}
+ 		}
  
- /*
-  * For explanation of the elements of this struct, see
-- * Documentation/fault-injection/fault-injection.txt
-+ * Documentation/fault-injection/fault-injection.rst
-  */
- struct fault_attr {
- 	unsigned long probability;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 3a9d41bd4d45..1b0129196e70 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1681,7 +1681,7 @@ config LKDTM
- 	called lkdtm.
+@@ -6117,11 +6117,11 @@ sub process {
+ 			my $max = $7;
+ 			if ($min eq $max) {
+ 				WARN("USLEEP_RANGE",
+-				     "usleep_range should not use min == max args; see Documentation/timers/timers-howto.txt\n" . "$here\n$stat\n");
++				     "usleep_range should not use min == max args; see Documentation/timers/timers-howto.rst\n" . "$here\n$stat\n");
+ 			} elsif ($min =~ /^\d+$/ && $max =~ /^\d+$/ &&
+ 				 $min > $max) {
+ 				WARN("USLEEP_RANGE",
+-				     "usleep_range args reversed, use min then max; see Documentation/timers/timers-howto.txt\n" . "$here\n$stat\n");
++				     "usleep_range args reversed, use min then max; see Documentation/timers/timers-howto.rst\n" . "$here\n$stat\n");
+ 			}
+ 		}
  
- 	Documentation on how to use the module can be found in
--	Documentation/fault-injection/provoke-crashes.txt
-+	Documentation/fault-injection/provoke-crashes.rst
- 
- config TEST_LIST_SORT
- 	tristate "Linked list sorting test"
-diff --git a/tools/testing/fault-injection/failcmd.sh b/tools/testing/fault-injection/failcmd.sh
-index 29a6c63c5a15..78dac34264be 100644
---- a/tools/testing/fault-injection/failcmd.sh
-+++ b/tools/testing/fault-injection/failcmd.sh
-@@ -42,7 +42,7 @@ OPTIONS
- 	--interval=value, --space=value, --verbose=value, --task-filter=value,
- 	--stacktrace-depth=value, --require-start=value, --require-end=value,
- 	--reject-start=value, --reject-end=value, --ignore-gfp-wait=value
--		See Documentation/fault-injection/fault-injection.txt for more
-+		See Documentation/fault-injection/fault-injection.rst for more
- 		information
- 
- 	failslab options:
 -- 
 2.20.1
 
