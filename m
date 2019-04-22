@@ -2,156 +2,166 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E2C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296AFC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D99D20685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBF520685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="wa4YJ9Nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfDVOh5 (ORCPT
+        id S1727810AbfDVOiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 10:37:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:44339 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfDVOh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 10:37:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 07:37:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,382,1549958400"; 
-   d="scan'208";a="317973609"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2019 07:37:56 -0700
-Received: from [10.252.13.149] (abudanko-mobl.ccr.corp.intel.com [10.252.13.149])
-        by linux.intel.com (Postfix) with ESMTP id D0D415803C2;
-        Mon, 22 Apr 2019 07:37:53 -0700 (PDT)
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v3] perf record: collect user registers set jointly with dwarf
- stacks
-Organization: Intel Corp.
-Message-ID: <b34d8f60-9163-beac-7faa-4fa5e897c0f7@linux.intel.com>
-Date:   Mon, 22 Apr 2019 17:37:52 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 10:38:16 -0400
+Received: from mail-eopbgr690076.outbound.protection.outlook.com ([40.107.69.76]:18348
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727780AbfDVOiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 10:38:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fm8WsAXPfCynyXxKqOCU0ry+V0kG4EI7cufT9LF4u/k=;
+ b=wa4YJ9NnS0vv3x8oUQcmj4BpQJbW+6theaBUyhH2ca/OIDmXiNP5Rmo3p2nCQQRLmmytNZ82x7iGMVVwuWxity5CoEwIUllqVvjn726VjEL0kJYgcfmGkCV/hfZVZc+wZWg/9KDxGAeclXFNRrydPxV2jkghjkpqI0OWYT4feVk=
+Received: from BL0PR02CA0034.namprd02.prod.outlook.com (2603:10b6:207:3c::47)
+ by SN6PR02MB4941.namprd02.prod.outlook.com (2603:10b6:805:99::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1813.14; Mon, 22 Apr
+ 2019 14:38:11 +0000
+Received: from CY1NAM02FT006.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by BL0PR02CA0034.outlook.office365.com
+ (2603:10b6:207:3c::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1813.12 via Frontend
+ Transport; Mon, 22 Apr 2019 14:38:11 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ CY1NAM02FT006.mail.protection.outlook.com (10.152.74.104) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1771.16
+ via Frontend Transport; Mon, 22 Apr 2019 14:38:09 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:58313 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1hIa5A-0004P0-Vq; Mon, 22 Apr 2019 07:38:08 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1hIa55-0002k7-SS; Mon, 22 Apr 2019 07:38:03 -0700
+Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x3MEbudN023909;
+        Mon, 22 Apr 2019 07:37:56 -0700
+Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <mnarani@xilinx.com>)
+        id 1hIa4y-0002Zh-AO; Mon, 22 Apr 2019 07:37:56 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
+        id 86D0F1214CF; Mon, 22 Apr 2019 20:07:55 +0530 (IST)
+From:   Manish Narani <manish.narani@xilinx.com>
+To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <michal.simek@xilinx.com>, <manish.narani@xilinx.com>,
+        <Jisheng.Zhang@synaptics.com>, <olof@lixom.net>,
+        <dinguyen@kernel.org>, <amit.kucheria@linaro.org>,
+        <stefan.popa@analog.com>, <dmurphy@ti.com>,
+        <marcus.folkesson@gmail.com>, <tmaimon77@gmail.com>,
+        <ricardo@ribalda.com>, <xc-racer2@live.ca>,
+        <contact@artur-rojek.eu>, <geert@linux-m68k.org>,
+        <smohanad@codeaurora.org>, <charles-antoine.couret@essensium.com>,
+        <stefan@agner.ch>, <max.krummenacher@toradex.com>,
+        <lee.jones@linaro.org>
+CC:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 3/3] arm64: zynqmp: DT: Add Xilinx AMS node
+Date:   Mon, 22 Apr 2019 20:07:50 +0530
+Message-ID: <1555943870-15353-4-git-send-email-manish.narani@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+In-Reply-To: <1555943870-15353-1-git-send-email-manish.narani@xilinx.com>
+References: <1555943870-15353-1-git-send-email-manish.narani@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(1496009)(2980300002)(189003)(199004)(51416003)(4326008)(36386004)(44832011)(52956003)(356004)(305945005)(426003)(6666004)(476003)(126002)(446003)(14444005)(6266002)(2616005)(11346002)(7416002)(2906002)(486006)(50226002)(76176011)(81156014)(81166006)(8676002)(8936002)(26005)(336012)(110136005)(90966002)(16586007)(5660300002)(103686004)(50466002)(54906003)(48376002)(106002)(42186006)(498600001)(47776003)(36756003)(2201001)(70206006)(186003)(63266004)(72206003)(70586007)(921003)(1121003)(83996005)(2101003)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4941;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 32915a8f-5199-476c-4f94-08d6c73024c4
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:SN6PR02MB4941;
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4941:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <SN6PR02MB494147DB5C2688B7B79BCDBFC1220@SN6PR02MB4941.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 00159D1518
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: PI6ptTXuqFdcWBW9qCqpymNWmBKovaaxv7uPE/MzUITo0fbfzdthv2gVGfUlk9LLJA23ugI8B5/UsV/P8Ye/lLAFx2Xo2kuzCoZKJxRCaZTQ7pM8zCZc23b/FpwAcpIsuhhc/6CNND9XgELmnQt2rNYcy2XxR8wlMarkWDq/cRTkXwdzm3zXG7fLGxDI+N9CNdv7aZlhWdV3uPYESIurewiVdOAfFlrJwqw7QABaSJ8lznD4Ua5OBw+JvKUfmMMN0DlSRjAZW1AP2F/+m5x3IJUo9TPLziSQOSemjPwkAsy8/pNXcFF5buMtPTW+p7194sBlZEEG+FbRoH/ZpPiSFSHFpjLbwxMzBHMZ4XCai3KVaGYaRkulQYDfILMGo2tcYuz58qs7wt4ME5lGTx6jC+oCJAh1/zFICco2CVzHZWY=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2019 14:38:09.5075
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32915a8f-5199-476c-4f94-08d6c73024c4
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4941
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Xilinx AMS includes an ADC as well as on-chip sensors that can be
+used to sample external and monitor on-die operating conditions, such as
+temperature and supply voltage levels.
 
-When dwarf stacks are collected jointly with user specified register
-set using --user-regs option like below the full register context is
-still captured on a sample:
-
-  $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.O3
-
-  188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
-  ... FP chain: nr:0
-  ... user regs: mask 0xff0fff ABI 64-bit
-  .... AX    0x53b
-  .... BX    0x7ffedbdd3cc0
-  .... CX    0xffffffff
-  .... DX    0x33d3a
-  .... SI    0x7f09b74c38d0
-  .... DI    0x0
-  .... BP    0x401260
-  .... SP    0x7ffedbdd3cc0
-  .... IP    0x401236
-  .... FLAGS 0x20a
-  .... CS    0x33
-  .... SS    0x2b
-  .... R8    0x7f09b74c3800
-  .... R9    0x7f09b74c2da0
-  .... R10   0xfffffffffffff3ce
-  .... R11   0x246
-  .... R12   0x401070
-  .... R13   0x7ffedbdd5db0
-  .... R14   0x0
-  .... R15   0x0
-  ... ustack: size 1024, offset 0xe0
-   . data_src: 0x5080021
-   ... thread: stack_test2.g.O:23828
-   ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-
-After applying the change suggested in the patch the sample data contain
-only user specified register values:
-
-  $ perf record -g --call-graph dwarf,1024 --user-regs=BP -- matrix.gcc.g.03
-
-  188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
-  ... FP chain: nr:0
-  ... user regs: mask 0x1c0 ABI 64-bit
-  .... BP    0x401260
-  .... SP    0x7ffd3d85cc20
-  .... IP    0x401236
-  ... ustack: size 1024, offset 0x58
-   . data_src: 0x5080021
-   ... thread: stack_test2.g.O:23839
-   ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-
-IP and SP registers (dwarf_regs) are collected anayways regardless of
-the --user-regs option value provided from the command line:
-
-  -g call-graph dwarf,K                         full_regs
-  -g call-graph dwarf,K --user-regs=user_regs	user_regs | dwarf_regs
-  --user-regs=user_regs                         user_regs
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 ---
-Changes in v3:
-- avoid changes in platform specific header files
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Changes in v2:
-- implemented dwarf register set to avoid corrupted trace 
-  when --user-regs option value omits IP,SP
-
----
- tools/perf/util/evsel.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 84cfb9fe2fc6..e5e61ee3c6e7 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -669,6 +669,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
- 	return ret;
- }
- 
-+#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
-+			 (1ULL << PERF_REG_SP))
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 9aa6734..f776913 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -625,5 +625,31 @@
+ 			reg = <0x0 0xfd4d0000 0x0 0x1000>;
+ 			timeout-sec = <10>;
+ 		};
 +
- static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
- 					   struct record_opts *opts,
- 					   struct callchain_param *param)
-@@ -702,7 +705,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
- 		if (!function) {
- 			perf_evsel__set_sample_bit(evsel, REGS_USER);
- 			perf_evsel__set_sample_bit(evsel, STACK_USER);
--			attr->sample_regs_user |= PERF_REGS_MASK;
-+			if (opts->sample_user_regs)
-+				attr->sample_regs_user |= DWARF_REGS_MASK;
-+			else
-+				attr->sample_regs_user |= PERF_REGS_MASK;
- 			attr->sample_stack_user = param->dump_size;
- 			attr->exclude_callchain_user = 1;
- 		} else {
++		xilinx_ams: ams@ffa50000 {
++			compatible = "xlnx,zynqmp-ams";
++			status = "disabled";
++			interrupt-parent = <&gic>;
++			interrupts = <0 56 4>;
++			interrupt-names = "ams-irq";
++			reg = <0x0 0xffa50000 0x0 0x800>;
++			reg-names = "ams-base";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			#io-channel-cells = <1>;
++			ranges = <0 0 0xffa50800 0x800>;
++
++			ams_ps: ams-ps@0,0 {
++				compatible = "xlnx,zynqmp-ams-ps";
++				status = "disabled";
++				reg = <0 0x400>;
++			};
++
++			ams_pl: ams-pl@1,0 {
++				compatible = "xlnx,zynqmp-ams-pl";
++				status = "disabled";
++				reg = <0x400 0x400>;
++			};
++		};
+ 	};
+ };
 -- 
-2.20.1
+2.1.1
 
