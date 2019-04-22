@@ -2,95 +2,149 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13BDC282CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969D5C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9913C206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461E0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:03:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="e4JoJDQx"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="idbqoSt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfDWCAB (ORCPT
+        id S1729727AbfDWCDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 22:00:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39919 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729603AbfDWCAB (ORCPT
+        Mon, 22 Apr 2019 22:03:03 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:44018 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729592AbfDWCDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 22:00:01 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l7so11965453ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 18:59:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Gp1rA/0P7mAB/pu8KddpyXzR0nOmw5sq4fc3I/JBBE=;
-        b=e4JoJDQxfMbIATBDxKMMC4AOcbJkPaMv6/80LGPWNStfcv8TTh+NQmp/UwRByBosaI
-         e8LGfFlg/D6+WXI3KvDy1KZJ+m8QEydQcK0NAVmzOxsK5xjr7E5cAGaySf9dhmVpcf8U
-         l/4adJdLSi7Ah7ObXIYKhQM79fDMzxdvxa0VA7acUZRf5Fkfub4iyKDGgMYiqp/6PX/z
-         tBMlHFYac+aifUHuci0IMC+RW/YhDW2dSQqyxY79Qnhcd6qQoRb1UwdBXZKhhzPXGNqQ
-         mMkv1+e4wlKtKYFfIpB5cqtXr7hK3XVjwFK7/mVUP/9sM+zhBqZEIiki8S/BIWbJiIRe
-         vN4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Gp1rA/0P7mAB/pu8KddpyXzR0nOmw5sq4fc3I/JBBE=;
-        b=B5KdPf0bJ6mb95xtU7znvtggjikcG96s8XCIGlgc24mG3uTOqe7AJ4KTYvG7XVSCyR
-         6koslQ1B2Sk9DEED18jVXiRXTT5vVv6fEe4wR5bfFKcEbUXiW7tpkiuwHO++3kEv8zuV
-         r/RrwLfA8nt+ctMS6/mUh0swzsq6TKvzyej/ZmahDSQLKcUw6422YqTfq1ehn12TMORO
-         PYeVpk7VkQAVxsQVcbLSy+Bb/uxhEFhPs/uEQHyNIoCZYkpUPDm7W1kopqNKUP9KRGIc
-         GrW5woN4W0ZjKUDKC0bRNw0XRpmHgSipXMh5jGNgfXPN4vybtq9RHC2mDKYZRAJZbuYv
-         9mvQ==
-X-Gm-Message-State: APjAAAXoq1t+g5GIm7BpyXxVsauhFUkECQ1h6Lrt1O7ajpQGy+0e/iA7
-        olbFHdZdROrj9ndsVHjmxk2vF2gezW6TtwGA62hR
-X-Google-Smtp-Source: APXvYqw+nisAqhxZuWlXrurzzEeBurRHeQVcGAan/T+SJXw2CYQjjrOi5CgLltRWUPwQwEw4B7BIkuLsQfCUiODNnP0=
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr11943236ljk.5.1555984798619;
- Mon, 22 Apr 2019 18:59:58 -0700 (PDT)
+        Mon, 22 Apr 2019 22:03:03 -0400
+X-Greylist: delayed 16397 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 22:03:02 EDT
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3MLKS9V032581;
+        Mon, 22 Apr 2019 17:29:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=bOr2E7L0ppFrR7wIZ2fRNL6PXT8mDF3RzIfYIYvp/qk=;
+ b=idbqoSt76g16kvi2uHNRP/NugNxDgorWVAphGamVsG4gqnGNElwCmwqKkraXReLjFlPO
+ 5FaT75NvK1nnP/629iTUU6k5ZuC14rzxTNWk/zAveh0XCeXX3nPU9Gwl8GKCdyh4lMZE
+ UEik5by6mYhPZh3tap/IzZgscAHTjwXtWzqUifQw/W6cvcCMz8kToQbEH3cgOezPuqDD
+ N26vMbaZNMSryxCfAj8Pm1aonvg+3+XxamBjCRopfax2FVN+TMQf2qyVD2kvAA+R1aES
+ WoWP3xXC6RWDa3Kx81ugIIE/IrgYDBqIFHH6yd2lkaa53fIImjRsBY5NkuLTlRc66RUT cw== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2ryxrg5nr5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Apr 2019 17:29:45 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3MLHiT1083187;
+        Mon, 22 Apr 2019 17:29:44 -0400
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0b-00154901.pphosted.com with ESMTP id 2s1kdusr71-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Apr 2019 17:29:44 -0400
+X-LoopCount0: from 10.166.137.67
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="345889032"
+From:   <Mario.Limonciello@dell.com>
+To:     <crag0715@gmail.com>, <linux-usb@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <hayeswang@realtek.com>,
+        <Crag.Wang@dell.com>, <davem@davemloft.net>, <sjg@chromium.org>,
+        <grundler@chromium.org>, <seanpaul@chromium.org>,
+        <David.Chen7@Dell.com>, <kai.heng.feng@canonical.com>,
+        <gustavo@embeddedor.com>,
+        <charles.hyde@dell.corp-partner.google.com>,
+        <bigeasy@linutronix.de>, <zhongjiang@huawei.com>
+Subject: RE: [PATCH v2 1/1] r8152: sync sa_family with the media type of
+ network device
+Thread-Topic: [PATCH v2 1/1] r8152: sync sa_family with the media type of
+ network device
+Thread-Index: AQHU+MjgKSyFOMW2wUS7aSLiRqzwkqZIstlw
+Date:   Mon, 22 Apr 2019 21:29:36 +0000
+Message-ID: <e6c274bbd120446fb58ceb6ba9528b4b@ausx13mpc124.AMER.DELL.COM>
+References: <20190422050344.24513-1-crag0715@gmail.com>
+In-Reply-To: <20190422050344.24513-1-crag0715@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190422210041.GA21711@archlinux-i9>
-In-Reply-To: <20190422210041.GA21711@archlinux-i9>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 22 Apr 2019 21:59:47 -0400
-Message-ID: <CAHC9VhTtz3OA3EchaZaAeg=DxoGoz_WFdj+Mi9nd9i+cmjmuJA@mail.gmail.com>
-Subject: Re: scripts/selinux build error in 4.14 after glibc update
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nicolas Iooss <nicolas.iooss@m4x.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-22_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904220161
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904220161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 5:00 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
-> Hi all,
->
-> After a glibc update to 2.29, my 4.14 builds started failing like so:
+> -----Original Message-----
+> From: crag0715@gmail.com <crag0715@gmail.com>
+> Sent: Monday, April 22, 2019 12:04 AM
+> To: linux-usb@vger.kernel.org; netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org; hayeswang@realtek.com; Limonciello, Mar=
+io;
+> crag0715@gmail.com; Wang, Crag; David S. Miller; Simon Glass; Grant Grund=
+ler;
+> Sean Paul; Chen7, David; Kai-Heng Feng; Gustavo A. R. Silva; Charles Hyde=
+;
+> Sebastian Andrzej Siewior; zhong jiang
+> Subject: [PATCH v2 1/1] r8152: sync sa_family with the media type of netw=
+ork
+> device
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> From: "Crag.Wang" <crag.wang@dell.com>
+>=20
+> Without this patch the socket address family sporadically gets wrong
+> value ends up the dev_set_mac_address() fails to set the desired MAC
+> address.
 
-...
+Ah yes, this is because of an uninitialized struct sockaddr, so random garb=
+age.
+I didn't catch it during my testing, good catch.
 
->   HOSTCC  scripts/selinux/genheaders/genheaders
-> In file included from scripts/selinux/genheaders/genheaders.c:19:
-> ./security/selinux/include/classmap.h:245:2: error: #error New address family defined, please update secclass_map.
->  #error New address family defined, please update secclass_map.
->   ^~~~~
+>=20
+> Signed-off-by: Crag.Wang <crag.wang@dell.com>
+> ---
+>  drivers/net/usb/r8152.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> index 4c63b40d5e00..41fb39ce69c9 100644
+> --- a/drivers/net/usb/r8152.c
+> +++ b/drivers/net/usb/r8152.c
+> @@ -1225,6 +1225,8 @@ static int determine_ethernet_addr(struct r8152 *tp=
+,
+> struct sockaddr *sa)
+>  	struct net_device *dev =3D tp->netdev;
+>  	int ret;
+>=20
+> +	sa->sa_family =3D dev->type;
+> +
+>  	if (tp->version =3D=3D RTL_VER_01) {
+>  		ret =3D pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
+>  	} else {
+> --
+> 2.20.1
 
-This is a known problem that has a fix in the selinux/next branch and
-will be going up to Linus during the next merge window.  The fix is
-quite small and should be relatively easy for you to backport to your
-kernel build if you are interested; the patch can be found at the
-archive link below:
-
-https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac
-
--- 
-paul moore
-www.paul-moore.com
+Reviewed-By: Mario Limonciello <mario.limonciello@dell.com>
