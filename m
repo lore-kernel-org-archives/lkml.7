@@ -2,104 +2,98 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECBEC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6A2C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFAD6206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555965718;
-	bh=Yf1MetlrvGfpLssBO3O9YJ+2t5+frfMmAYhuiSRLAxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D5UmRYES4vhPsBVETaDh6XtV/BovVTNq/VnUAW9X5jlsF/bO02d1atUWyPELBdayM
-	 A776SYawbvvkc/UNUQqAp+Btugw7PH28qSb/gT3Na45WsPa04O8bWzjWHxvsB54RuD
-	 GyWRw3lIOlTRK+igPpfsMDTHef8ps1gxtxuNoMZE=
+	by mail.kernel.org (Postfix) with ESMTP id 4AE1820693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QZJaTnPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbfDVUl5 (ORCPT
+        id S1728872AbfDVU5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54914 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:57:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47597 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfDVUl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 16:41:56 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726896AbfDVU5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 16:57:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECD420859;
-        Mon, 22 Apr 2019 20:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555965715;
-        bh=Yf1MetlrvGfpLssBO3O9YJ+2t5+frfMmAYhuiSRLAxk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rbc2ko9OSmPWqxiHk2Vt1iLbLdJygxdWZ0rkBgDk4sxjMDQGRGHxH6Z+rp3psxopj
-         dVbz/WmgQOVgGk/j7oTJL3u+8h5Qi/pNf1WjKKDT9tGJM0WuhYwuJqW3umkfd0y6D4
-         Y3SKd1EHz/4tgttKu2Q2JMFsG/BDfdVNurQExS38=
-Date:   Mon, 22 Apr 2019 22:41:52 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Zhenliang Wei <weizhenliang@huawei.com>
-Cc:     ebiederm@xmission.com, oleg@redhat.com, colona@arista.com,
-        akpm@linux-foundation.org, christian@brauner.io, arnd@arndb.de,
-        tglx@linutronix.de, deepa.kernel@gmail.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
-Message-ID: <20190422204152.GA5869@kroah.com>
-References: <20190422145950.78056-1-weizhenliang@huawei.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44nzRP0qKMz9s3Z;
+        Tue, 23 Apr 2019 06:57:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555966641;
+        bh=O8xO8xOzqvGpu6E+PtD1zfZFqznO9aWjyhZ6DUIbhNs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QZJaTnPZr/YhNvo2LX7c69tWyeDC9ewHiW33ZCr42LL1JzOk54JiQNGGzKoBIkLuS
+         3Qn6CA94QITNh7ZYtp4gnQOW3XFMlVvI+hZ+LLXHInT/CBXJEtuXQWQ5hVmRlA1/2e
+         qBS3CUO0A9pW/njjsVVDYJBrJW62BiQ6X9gjYFh211p7CIrHYKB35x6YUf55syRQqN
+         P2OKJAj5uEwvx3JSUfq9Ac3ThIK8xPfi3l/2qAmw91SKXYgzGIerl6gJEseXggvm/w
+         vuOFWT9ozzUSE+8i7LyOu4b/AsGb2MGzmFYtZvuAR1Tqaqggttf1P4heokBcbXRI/O
+         jp7tER6UClrAg==
+Date:   Tue, 23 Apr 2019 06:57:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guy Levi <guyle@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: linux-next: Fixes tag needs some work in the rdma-fixes tree
+Message-ID: <20190423065712.7d0556b7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422145950.78056-1-weizhenliang@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ediXCgdp=3VX2QzEgGD/S41"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 10:59:50PM +0800, Zhenliang Wei wrote:
-> In the fixes commit, removing SIGKILL from each thread signal mask
-> and executing "goto fatal" directly will skip the call to
-> "trace_signal_deliver". At this point, the delivery tracking of the SIGKILL
-> signal will be inaccurate.
-> 
-> Therefore, we need to add trace_signal_deliver before "goto fatal"
-> after executing sigdelset.
-> 
-> Note: The action[SIGKILL] must be SIG_DFL, and SEND_SIG_NOINFO matches
-> the fact that SIGKILL doesn't have any info.
-> 
-> Acked-by: Christian Brauner <christian@brauner.io>
-> Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
-> Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
-> ---
->  kernel/signal.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 227ba170298e..0f69ada376ef 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2441,6 +2441,7 @@ bool get_signal(struct ksignal *ksig)
->  	if (signal_group_exit(signal)) {
->  		ksig->info.si_signo = signr = SIGKILL;
->  		sigdelset(&current->pending.signal, SIGKILL);
-> +		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO, SIG_DFL);
->  		recalc_sigpending();
->  		goto fatal;
->  	}
-> -- 
-> 2.14.1.windows.1
-> 
-> 
+--Sig_/ediXCgdp=3VX2QzEgGD/S41
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-<formletter>
+Hi all,
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+In commit
 
-</formletter>
+  5efda3b6b122 ("IB/mlx5: Fix scatter to CQE in DCT QP creation")
+
+Fixes tag
+
+  Fixes: 5d6ff1babe ("IB/mlx5: Support scatter to CQE for DC transport type=
+")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ediXCgdp=3VX2QzEgGD/S41
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+KqgACgkQAVBC80lX
+0GwQxAf+JJ5wkBp7Q6O3j/mBPifO34ghfG60lN666idz/o6ToG4fxKvVnaviYD+Z
+CWfxxQksw/2dvWZl1M9jkb1pU5bBNZou8LWc3u0/Z0417wCdZvWZjC8Zsuu+PORC
+5H+BwZvCH5fLjN336Faek0UyBbMuFtK8s7whbiJq64X8nh0SmFEwcqbtIEnBC6Fp
+3fECQY0uKOk2oNwDqbZXhzFyX5QKLmnKEcTF9ToPfgvM0R/hbKKPGIFGs57knNGt
+TPszK2Y4NcjxiI1KcYuhrcjfW7vXCaulLqq1IGJ0kR4nX/FBmG4e7onAhbrBifAq
+4FNWOxVmg0Yq8wlMgCKsObFQPgkdbg==
+=Hz1f
+-----END PGP SIGNATURE-----
+
+--Sig_/ediXCgdp=3VX2QzEgGD/S41--
