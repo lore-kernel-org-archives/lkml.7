@@ -2,1538 +2,2418 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6136BC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C44FC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3F82064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCD52064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939853;
-	bh=dR4epI+QHLGUx72J33GvJVhYhJIyNo8PXLBT+ttkiPM=;
+	s=default; t=1555939859;
+	bh=wc/TobI1R0R/X42u8vpn5zttgjKXqEntoKq2OEdkX5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oW1ekPVTTZnxsAzAPLEo1TSxuXig22wCgVMO9ZaELunMf2eyx7Ailg7yyz+mroGTL
-	 ZMvJ+k4wTwTx1wH3N3V6Ow/DSF7m/nwrhM0cUkSjGq3Lrf9SwMzy4JgMeZ3gFyW0Pr
-	 P9CEn5Q0uRBc1r8I29WlKciGFdx9bRC1Hh7sQLgY=
+	b=nW6iASM//5be9Gdl8qonEoyXk3FgGKBE2JIqPyWvjLtV0Q/+9fWBUQJWVYRtFr0Ot
+	 qAjPcoYDXu0UOW5hF3MzTMBRYU4PKrCZ1rFguQSTwIegEGKaMFe7DTfDk9tlo1RQ3A
+	 rMe8EzesvekDwwLcsaUe2NkXwVqqcTxrV/Zcrzxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfDVNav (ORCPT
+        id S1727893AbfDVNat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:30:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37946 "EHLO
+        Mon, 22 Apr 2019 09:30:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37774 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbfDVN2W (ORCPT
+        with ESMTP id S1727557AbfDVN2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:22 -0400
+        Mon, 22 Apr 2019 09:28:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=t6inNauNjPPCej1ovpFm2Ab77+xC/0SMEw/tosu41TU=; b=gGzQo0FVIzL0z2sCBOc4F3gbxW
-        ucIINkYThke5tAImXWMmTVkoYZS//34Gcwt7ZYW1yDYWFNf/ejs+ZJlPCWvcHeY68Uo5Wc0Muaomj
-        7k+vUCa3rMoF9P9LADhiju911M4W5LzHz82AVd2f/CcCUuY+Ajy125kYOxWuOMlI/IxxPrZUW7DM1
-        +60wt9MDsOndB0P3yDg6ffgjOvabGGpURj8Bi1iAh+3yMoq4u0Ms8a14WWNRS5RzSyKWqNBsfa/uG
-        +nZoSEfmUXhkP1AZjpbb2wx32vE/n+IXO1ZYy6Oxfo2mdbtwREUF9Icz2e1EoVwjAtuawOIjn87zv
-        Qml4JRsg==;
+        bh=oc+D3O8jLpNo2z+6fTrVycyAdeQ7hRBezR5hvOFETrU=; b=OqXJubj8AOGV2P6ajjv4raHWie
+        yf73GLJ4LdVSAXQQCcp/ZvBvJ2FRK5IaDXSaD5EcfCfJC48OO1GczUT5uRti/8jyyaHKIqT5umamK
+        yAz5pSavjTUvT21XrzCHf5BTktFFmsMjstbrKm8WsXadL9+r8oWdjeIOsoUcpi94scG277tlsir5h
+        zvGrGlacRB0XKaklAU3NPG19jVCUUhB7Vc+0eIQ/aU9JZiz3k1brUKFaEYOUJJNd1L0TkUf+Ef2Mo
+        YOeDcPlx2MCH5vdbH+kOXF2VW7q7ntpUS75c1CadAWZTDifBNAkgVgsLHkKpFGa9rgVi53q+PkqEO
+        Mzpl25kg==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzd-0005HV-3q; Mon, 22 Apr 2019 13:28:21 +0000
+        id 1hIYzZ-0005Hq-ON; Mon, 22 Apr 2019 13:28:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005mW-DO; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzU-0005oO-6g; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 38/79] docs: scheduler: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:27 -0300
-Message-Id: <2a3b2b06459e0134a3af4fbf3e6f62e6d42c4d26.1555938376.git.mchehab+samsung@kernel.org>
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-leds@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org
+Subject: [PATCH v2 61/79] docs: leds: convert to ReST
+Date:   Mon, 22 Apr 2019 10:27:50 -0300
+Message-Id: <c8da7b666a127687471f38cbb5edc12d44814009.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to prepare to add them to the Kernel API book,
-convert the files to ReST format.
-
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+Rename the leds documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-kernel-uids   |   2 +-
- .../{completion.txt => completion.rst}        |  38 +--
- Documentation/scheduler/index.rst             |  29 ++
- .../{sched-arch.txt => sched-arch.rst}        |  18 +-
- .../{sched-bwc.txt => sched-bwc.rst}          |  30 +-
- ...{sched-deadline.txt => sched-deadline.rst} | 295 +++++++++---------
- ...ed-design-CFS.txt => sched-design-CFS.rst} |  15 +-
- .../{sched-domains.txt => sched-domains.rst}  |   8 +-
- .../{sched-energy.txt => sched-energy.rst}    |  47 +--
- ...-nice-design.txt => sched-nice-design.rst} |   6 +-
- ...{sched-rt-group.txt => sched-rt-group.rst} |  28 +-
- .../{sched-stats.txt => sched-stats.rst}      |  35 ++-
- Documentation/scheduler/text_files.rst        |   5 +
- Documentation/vm/numa.rst                     |   2 +-
- init/Kconfig                                  |   6 +-
- kernel/sched/deadline.c                       |   2 +-
- 16 files changed, 332 insertions(+), 234 deletions(-)
- rename Documentation/scheduler/{completion.txt => completion.rst} (94%)
- create mode 100644 Documentation/scheduler/index.rst
- rename Documentation/scheduler/{sched-arch.txt => sched-arch.rst} (81%)
- rename Documentation/scheduler/{sched-bwc.txt => sched-bwc.rst} (90%)
- rename Documentation/scheduler/{sched-deadline.txt => sched-deadline.rst} (88%)
- rename Documentation/scheduler/{sched-design-CFS.txt => sched-design-CFS.rst} (97%)
- rename Documentation/scheduler/{sched-domains.txt => sched-domains.rst} (97%)
- rename Documentation/scheduler/{sched-energy.txt => sched-energy.rst} (96%)
- rename Documentation/scheduler/{sched-nice-design.txt => sched-nice-design.rst} (98%)
- rename Documentation/scheduler/{sched-rt-group.txt => sched-rt-group.rst} (95%)
- rename Documentation/scheduler/{sched-stats.txt => sched-stats.rst} (91%)
- create mode 100644 Documentation/scheduler/text_files.rst
+ Documentation/laptops/thinkpad-acpi.txt       |   4 +-
+ Documentation/leds/index.rst                  |  25 ++
+ .../leds/{leds-blinkm.txt => leds-blinkm.rst} |  63 ++---
+ ...s-class-flash.txt => leds-class-flash.rst} |  49 ++--
+ .../leds/{leds-class.txt => leds-class.rst}   |  15 +-
+ .../leds/{leds-lm3556.txt => leds-lm3556.rst} | 100 ++++++--
+ .../leds/{leds-lp3944.txt => leds-lp3944.rst} |  23 +-
+ Documentation/leds/leds-lp5521.rst            | 115 +++++++++
+ Documentation/leds/leds-lp5521.txt            | 101 --------
+ Documentation/leds/leds-lp5523.rst            | 147 ++++++++++++
+ Documentation/leds/leds-lp5523.txt            | 130 ----------
+ Documentation/leds/leds-lp5562.rst            | 137 +++++++++++
+ Documentation/leds/leds-lp5562.txt            | 120 ----------
+ Documentation/leds/leds-lp55xx.rst            | 224 ++++++++++++++++++
+ Documentation/leds/leds-lp55xx.txt            | 194 ---------------
+ Documentation/leds/leds-mlxcpld.rst           | 118 +++++++++
+ Documentation/leds/leds-mlxcpld.txt           | 110 ---------
+ ...edtrig-oneshot.txt => ledtrig-oneshot.rst} |  11 +-
+ ...ig-transient.txt => ledtrig-transient.rst} |  63 +++--
+ ...edtrig-usbport.txt => ledtrig-usbport.rst} |  11 +-
+ Documentation/leds/{uleds.txt => uleds.rst}   |   5 +-
+ MAINTAINERS                                   |   2 +-
+ drivers/leds/trigger/Kconfig                  |   2 +-
+ drivers/leds/trigger/ledtrig-transient.c      |   2 +-
+ net/netfilter/Kconfig                         |   2 +-
+ 25 files changed, 996 insertions(+), 777 deletions(-)
+ create mode 100644 Documentation/leds/index.rst
+ rename Documentation/leds/{leds-blinkm.txt => leds-blinkm.rst} (56%)
+ rename Documentation/leds/{leds-class-flash.txt => leds-class-flash.rst} (74%)
+ rename Documentation/leds/{leds-class.txt => leds-class.rst} (92%)
+ rename Documentation/leds/{leds-lm3556.txt => leds-lm3556.rst} (70%)
+ rename Documentation/leds/{leds-lp3944.txt => leds-lp3944.rst} (78%)
+ create mode 100644 Documentation/leds/leds-lp5521.rst
+ delete mode 100644 Documentation/leds/leds-lp5521.txt
+ create mode 100644 Documentation/leds/leds-lp5523.rst
+ delete mode 100644 Documentation/leds/leds-lp5523.txt
+ create mode 100644 Documentation/leds/leds-lp5562.rst
+ delete mode 100644 Documentation/leds/leds-lp5562.txt
+ create mode 100644 Documentation/leds/leds-lp55xx.rst
+ delete mode 100644 Documentation/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/leds/leds-mlxcpld.rst
+ delete mode 100644 Documentation/leds/leds-mlxcpld.txt
+ rename Documentation/leds/{ledtrig-oneshot.txt => ledtrig-oneshot.rst} (90%)
+ rename Documentation/leds/{ledtrig-transient.txt => ledtrig-transient.rst} (81%)
+ rename Documentation/leds/{ledtrig-usbport.txt => ledtrig-usbport.rst} (86%)
+ rename Documentation/leds/{uleds.txt => uleds.rst} (95%)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-uids b/Documentation/ABI/testing/sysfs-kernel-uids
-index 28f14695a852..4182b7061816 100644
---- a/Documentation/ABI/testing/sysfs-kernel-uids
-+++ b/Documentation/ABI/testing/sysfs-kernel-uids
-@@ -11,4 +11,4 @@ Description:
- 		example would be, if User A has shares = 1024 and user
- 		B has shares = 2048, User B will get twice the CPU
- 		bandwidth user A will. For more details refer
--		Documentation/scheduler/sched-design-CFS.txt
-+		Documentation/scheduler/sched-design-CFS.rst
-diff --git a/Documentation/scheduler/completion.txt b/Documentation/scheduler/completion.rst
-similarity index 94%
-rename from Documentation/scheduler/completion.txt
-rename to Documentation/scheduler/completion.rst
-index e5b9df4d8078..9f039b4f4b09 100644
---- a/Documentation/scheduler/completion.txt
-+++ b/Documentation/scheduler/completion.rst
-@@ -1,3 +1,4 @@
-+================================================
- Completions - "wait for completion" barrier APIs
- ================================================
+diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
+index 3de3c95f01f6..65719384fc36 100644
+--- a/Documentation/laptops/thinkpad-acpi.txt
++++ b/Documentation/laptops/thinkpad-acpi.txt
+@@ -679,7 +679,7 @@ status as "unknown". The available commands are:
+ sysfs notes:
  
-@@ -46,7 +47,7 @@ it has to wait for it.
+ The ThinkLight sysfs interface is documented by the LED class
+-documentation, in Documentation/leds/leds-class.txt.  The ThinkLight LED name
++documentation, in Documentation/leds/leds-class.rst.  The ThinkLight LED name
+ is "tpacpi::thinklight".
  
- To use completions you need to #include <linux/completion.h> and
- create a static or dynamic variable of type 'struct completion',
--which has only two fields:
-+which has only two fields::
+ Due to limitations in the sysfs LED class, if the status of the ThinkLight
+@@ -779,7 +779,7 @@ All of the above can be turned on and off and can be made to blink.
+ sysfs notes:
  
- 	struct completion {
- 		unsigned int done;
-@@ -57,7 +58,7 @@ This provides the ->wait waitqueue to place tasks on for waiting (if any), and
- the ->done completion flag for indicating whether it's completed or not.
+ The ThinkPad LED sysfs interface is described in detail by the LED class
+-documentation, in Documentation/leds/leds-class.txt.
++documentation, in Documentation/leds/leds-class.rst.
  
- Completions should be named to refer to the event that is being synchronized on.
--A good example is:
-+A good example is::
- 
- 	wait_for_completion(&early_console_added);
- 
-@@ -81,7 +82,7 @@ have taken place, even if these wait functions return prematurely due to a timeo
- or a signal triggering.
- 
- Initializing of dynamically allocated completion objects is done via a call to
--init_completion():
-+init_completion()::
- 
- 	init_completion(&dynamic_object->done);
- 
-@@ -100,7 +101,8 @@ but be aware of other races.
- 
- For static declaration and initialization, macros are available.
- 
--For static (or global) declarations in file scope you can use DECLARE_COMPLETION():
-+For static (or global) declarations in file scope you can use
-+DECLARE_COMPLETION()::
- 
- 	static DECLARE_COMPLETION(setup_done);
- 	DECLARE_COMPLETION(setup_done);
-@@ -111,7 +113,7 @@ initialized to 'not done' and doesn't require an init_completion() call.
- When a completion is declared as a local variable within a function,
- then the initialization should always use DECLARE_COMPLETION_ONSTACK()
- explicitly, not just to make lockdep happy, but also to make it clear
--that limited scope had been considered and is intentional:
-+that limited scope had been considered and is intentional::
- 
- 	DECLARE_COMPLETION_ONSTACK(setup_done)
- 
-@@ -140,11 +142,11 @@ Waiting for completions:
- ------------------------
- 
- For a thread to wait for some concurrent activity to finish, it
--calls wait_for_completion() on the initialized completion structure:
-+calls wait_for_completion() on the initialized completion structure::
- 
- 	void wait_for_completion(struct completion *done)
- 
--A typical usage scenario is:
-+A typical usage scenario is::
- 
- 	CPU#1					CPU#2
- 
-@@ -192,17 +194,17 @@ A common problem that occurs is to have unclean assignment of return types,
- so take care to assign return-values to variables of the proper type.
- 
- Checking for the specific meaning of return values also has been found
--to be quite inaccurate, e.g. constructs like:
-+to be quite inaccurate, e.g. constructs like::
- 
- 	if (!wait_for_completion_interruptible_timeout(...))
- 
- ... would execute the same code path for successful completion and for the
--interrupted case - which is probably not what you want.
-+interrupted case - which is probably not what you want::
- 
- 	int wait_for_completion_interruptible(struct completion *done)
- 
- This function marks the task TASK_INTERRUPTIBLE while it is waiting.
--If a signal was received while waiting it will return -ERESTARTSYS; 0 otherwise.
-+If a signal was received while waiting it will return -ERESTARTSYS; 0 otherwise::
- 
- 	unsigned long wait_for_completion_timeout(struct completion *done, unsigned long timeout)
- 
-@@ -214,7 +216,7 @@ Timeouts are preferably calculated with msecs_to_jiffies() or usecs_to_jiffies()
- to make the code largely HZ-invariant.
- 
- If the returned timeout value is deliberately ignored a comment should probably explain
--why (e.g. see drivers/mfd/wm8350-core.c wm8350_read_auxadc()).
-+why (e.g. see drivers/mfd/wm8350-core.c wm8350_read_auxadc())::
- 
- 	long wait_for_completion_interruptible_timeout(struct completion *done, unsigned long timeout)
- 
-@@ -225,14 +227,14 @@ jiffies if completion occurred.
- 
- Further variants include _killable which uses TASK_KILLABLE as the
- designated tasks state and will return -ERESTARTSYS if it is interrupted,
--or 0 if completion was achieved.  There is a _timeout variant as well:
-+or 0 if completion was achieved.  There is a _timeout variant as well::
- 
- 	long wait_for_completion_killable(struct completion *done)
- 	long wait_for_completion_killable_timeout(struct completion *done, unsigned long timeout)
- 
- The _io variants wait_for_completion_io() behave the same as the non-_io
- variants, except for accounting waiting time as 'waiting on IO', which has
--an impact on how the task is accounted in scheduling/IO stats:
-+an impact on how the task is accounted in scheduling/IO stats::
- 
- 	void wait_for_completion_io(struct completion *done)
- 	unsigned long wait_for_completion_io_timeout(struct completion *done, unsigned long timeout)
-@@ -243,11 +245,11 @@ Signaling completions:
- 
- A thread that wants to signal that the conditions for continuation have been
- achieved calls complete() to signal exactly one of the waiters that it can
--continue:
-+continue::
- 
- 	void complete(struct completion *done)
- 
--... or calls complete_all() to signal all current and future waiters:
-+... or calls complete_all() to signal all current and future waiters::
- 
- 	void complete_all(struct completion *done)
- 
-@@ -268,7 +270,7 @@ probably are a design bug.
- 
- Signaling completion from IRQ context is fine as it will appropriately
- lock with spin_lock_irqsave()/spin_unlock_irqrestore() and it will never
--sleep. 
-+sleep.
- 
- 
- try_wait_for_completion()/completion_done():
-@@ -276,14 +278,14 @@ try_wait_for_completion()/completion_done():
- 
- The try_wait_for_completion() function will not put the thread on the wait
- queue but rather returns false if it would need to enqueue (block) the thread,
--else it consumes one posted completion and returns true.
-+else it consumes one posted completion and returns true::
- 
- 	bool try_wait_for_completion(struct completion *done)
- 
- Finally, to check the state of a completion without changing it in any way,
- call completion_done(), which returns false if there are no posted
- completions that were not yet consumed by waiters (implying that there are
--waiters) and true otherwise;
-+waiters) and true otherwise::
- 
- 	bool completion_done(struct completion *done)
- 
-diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
+ The LEDs are named (in LED ID order, from 0 to 12):
+ "tpacpi::power", "tpacpi:orange:batt", "tpacpi:green:batt",
+diff --git a/Documentation/leds/index.rst b/Documentation/leds/index.rst
 new file mode 100644
-index 000000000000..058be77a4c34
+index 000000000000..9885f7c1b75d
 --- /dev/null
-+++ b/Documentation/scheduler/index.rst
-@@ -0,0 +1,29 @@
++++ b/Documentation/leds/index.rst
+@@ -0,0 +1,25 @@
 +:orphan:
 +
-+===============
-+Linux Scheduler
-+===============
++====
++LEDs
++====
 +
 +.. toctree::
-+    :maxdepth: 1
++   :maxdepth: 1
 +
++   leds-class
++   leds-class-flash
++   ledtrig-oneshot
++   ledtrig-transient
++   ledtrig-usbport
 +
-+    completion
-+    sched-arch
-+    sched-bwc
-+    sched-deadline
-+    sched-design-CFS
-+    sched-domains
-+    sched-energy
-+    sched-nice-design
-+    sched-rt-group
-+    sched-stats
++   uleds
 +
-+    text_files
++   leds-blinkm
++   leds-lm3556
++   leds-lp3944
++   leds-lp5521
++   leds-lp5523
++   leds-lp5562
++   leds-lp55xx
++   leds-mlxcpld
+diff --git a/Documentation/leds/leds-blinkm.txt b/Documentation/leds/leds-blinkm.rst
+similarity index 56%
+rename from Documentation/leds/leds-blinkm.txt
+rename to Documentation/leds/leds-blinkm.rst
+index 9dd92f4cf4e1..4c970b7d21cd 100644
+--- a/Documentation/leds/leds-blinkm.txt
++++ b/Documentation/leds/leds-blinkm.rst
+@@ -1,3 +1,7 @@
++==================
++Leds BlinkM driver
++==================
 +
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/scheduler/sched-arch.txt b/Documentation/scheduler/sched-arch.rst
-similarity index 81%
-rename from Documentation/scheduler/sched-arch.txt
-rename to Documentation/scheduler/sched-arch.rst
-index a2f27bbf2cba..0eaec669790a 100644
---- a/Documentation/scheduler/sched-arch.txt
-+++ b/Documentation/scheduler/sched-arch.rst
-@@ -1,4 +1,6 @@
--	CPU Scheduler implementation hints for architecture specific code
-+=================================================================
-+CPU Scheduler implementation hints for architecture specific code
-+=================================================================
+ The leds-blinkm driver supports the devices of the BlinkM family.
  
- 	Nick Piggin, 2005
+ They are RGB-LED modules driven by a (AT)tiny microcontroller and
+@@ -14,35 +18,36 @@ The interface this driver provides is 2-fold:
+ a) LED class interface for use with triggers
+ ############################################
  
-@@ -35,9 +37,10 @@ Your cpu_idle routines need to obey the following rules:
- 4. The only time interrupts need to be disabled when checking
-    need_resched is if we are about to sleep the processor until
-    the next interrupt (this doesn't provide any protection of
--   need_resched, it prevents losing an interrupt).
-+   need_resched, it prevents losing an interrupt):
+-The registration follows the scheme:
+-blinkm-<i2c-bus-nr>-<i2c-device-nr>-<color>
++The registration follows the scheme::
+ 
+-$ ls -h /sys/class/leds/blinkm-6-*
+-/sys/class/leds/blinkm-6-9-blue:
+-brightness  device  max_brightness  power  subsystem  trigger  uevent
++  blinkm-<i2c-bus-nr>-<i2c-device-nr>-<color>
+ 
+-/sys/class/leds/blinkm-6-9-green:
+-brightness  device  max_brightness  power  subsystem  trigger  uevent
++  $ ls -h /sys/class/leds/blinkm-6-*
++  /sys/class/leds/blinkm-6-9-blue:
++  brightness  device  max_brightness  power  subsystem  trigger  uevent
+ 
+-/sys/class/leds/blinkm-6-9-red:
+-brightness  device  max_brightness  power  subsystem  trigger  uevent
++  /sys/class/leds/blinkm-6-9-green:
++  brightness  device  max_brightness  power  subsystem  trigger  uevent
 +
-+	4a. Common problem with this type of sleep appears to be::
++  /sys/class/leds/blinkm-6-9-red:
++  brightness  device  max_brightness  power  subsystem  trigger  uevent
  
--	4a. Common problem with this type of sleep appears to be:
- 	        local_irq_disable();
- 	        if (!need_resched()) {
- 	                local_irq_enable();
-@@ -51,10 +54,10 @@ Your cpu_idle routines need to obey the following rules:
-    although it may be reasonable to do some background work or enter
-    a low CPU priority.
+ (same is /sys/bus/i2c/devices/6-0009/leds)
  
--   	5a. If TIF_POLLING_NRFLAG is set, and we do decide to enter
--	    an interrupt sleep, it needs to be cleared then a memory
--	    barrier issued (followed by a test of need_resched with
--	    interrupts disabled, as explained in 3).
-+      - 5a. If TIF_POLLING_NRFLAG is set, and we do decide to enter
-+	an interrupt sleep, it needs to be cleared then a memory
-+	barrier issued (followed by a test of need_resched with
-+	interrupts disabled, as explained in 3).
+ We can control the colors separated into red, green and blue and
+ assign triggers on each color.
  
- arch/x86/kernel/process.c has examples of both polling and
- sleeping idle functions.
-@@ -71,4 +74,3 @@ sh64 - Is sleeping racy vs interrupts? (See #4a)
+-E.g.:
++E.g.::
  
- sparc - IRQs on at this point(?), change local_irq_save to _disable.
-       - TODO: needs secondary CPUs to disable preempt (See #1)
+-$ cat blinkm-6-9-blue/brightness
+-05
++  $ cat blinkm-6-9-blue/brightness
++  05
+ 
+-$ echo 200 > blinkm-6-9-blue/brightness
+-$
++  $ echo 200 > blinkm-6-9-blue/brightness
++  $
+ 
+-$ modprobe ledtrig-heartbeat
+-$ echo heartbeat > blinkm-6-9-green/trigger
+-$
++  $ modprobe ledtrig-heartbeat
++  $ echo heartbeat > blinkm-6-9-green/trigger
++  $
+ 
+ 
+ b) Sysfs group to control rgb, fade, hsb, scripts ...
+@@ -52,25 +57,25 @@ This extended interface is available as folder blinkm
+ in the sysfs folder of the I2C device.
+ E.g. below /sys/bus/i2c/devices/6-0009/blinkm
+ 
+-$ ls -h /sys/bus/i2c/devices/6-0009/blinkm/
+-blue  green  red  test
++  $ ls -h /sys/bus/i2c/devices/6-0009/blinkm/
++  blue  green  red  test
+ 
+ Currently supported is just setting red, green, blue
+ and a test sequence.
+ 
+-E.g.:
++E.g.::
+ 
+-$ cat *
+-00
+-00
+-00
+-#Write into test to start test sequence!#
++  $ cat *
++  00
++  00
++  00
++  #Write into test to start test sequence!#
+ 
+-$ echo 1 > test
+-$
++  $ echo 1 > test
++  $
+ 
+-$ echo 255 > red
+-$
++  $ echo 255 > red
++  $
+ 
+ 
+ 
+diff --git a/Documentation/leds/leds-class-flash.txt b/Documentation/leds/leds-class-flash.rst
+similarity index 74%
+rename from Documentation/leds/leds-class-flash.txt
+rename to Documentation/leds/leds-class-flash.rst
+index 8da3c6f4b60b..6ec12c5a1a0e 100644
+--- a/Documentation/leds/leds-class-flash.txt
++++ b/Documentation/leds/leds-class-flash.rst
+@@ -1,9 +1,9 @@
 -
-diff --git a/Documentation/scheduler/sched-bwc.txt b/Documentation/scheduler/sched-bwc.rst
++==============================
+ Flash LED handling under Linux
+ ==============================
+ 
+ Some LED devices provide two modes - torch and flash. In the LED subsystem
+-those modes are supported by LED class (see Documentation/leds/leds-class.txt)
++those modes are supported by LED class (see Documentation/leds/leds-class.rst)
+ and LED Flash class respectively. The torch mode related features are enabled
+ by default and the flash ones only if a driver declares it by setting
+ LED_DEV_CAP_FLASH flag.
+@@ -14,6 +14,7 @@ registered in the LED subsystem with led_classdev_flash_register function.
+ 
+ Following sysfs attributes are exposed for controlling flash LED devices:
+ (see Documentation/ABI/testing/sysfs-class-led-flash)
++
+ 	- flash_brightness
+ 	- max_flash_brightness
+ 	- flash_timeout
+@@ -31,30 +32,46 @@ be defined in the kernel config.
+ 
+ The driver must call the v4l2_flash_init function to get registered in the
+ V4L2 subsystem. The function takes six arguments:
+-- dev       : flash device, e.g. an I2C device
+-- of_node   : of_node of the LED, may be NULL if the same as device's
+-- fled_cdev : LED flash class device to wrap
+-- iled_cdev : LED flash class device representing indicator LED associated with
+-	      fled_cdev, may be NULL
+-- ops : V4L2 specific ops
+-	* external_strobe_set - defines the source of the flash LED strobe -
++
++- dev:
++	flash device, e.g. an I2C device
++- of_node:
++	of_node of the LED, may be NULL if the same as device's
++- fled_cdev:
++	LED flash class device to wrap
++- iled_cdev:
++	LED flash class device representing indicator LED associated with
++	fled_cdev, may be NULL
++- ops:
++	V4L2 specific ops
++
++	* external_strobe_set
++		defines the source of the flash LED strobe -
+ 		V4L2_CID_FLASH_STROBE control or external source, typically
+ 		a sensor, which makes it possible to synchronise the flash
+ 		strobe start with exposure start,
+-	* intensity_to_led_brightness and led_brightness_to_intensity - perform
++	* intensity_to_led_brightness and led_brightness_to_intensity
++		perform
+ 		enum led_brightness <-> V4L2 intensity conversion in a device
+ 		specific manner - they can be used for devices with non-linear
+ 		LED current scale.
+-- config : configuration for V4L2 Flash sub-device
+-	* dev_name - the name of the media entity, unique in the system,
+-	* flash_faults - bitmask of flash faults that the LED flash class
++- config:
++	configuration for V4L2 Flash sub-device
++
++	* dev_name
++		the name of the media entity, unique in the system,
++	* flash_faults
++		bitmask of flash faults that the LED flash class
+ 		device can report; corresponding LED_FAULT* bit definitions are
+ 		available in <linux/led-class-flash.h>,
+-	* torch_intensity - constraints for the LED in TORCH mode
++	* torch_intensity
++		constraints for the LED in TORCH mode
+ 		in microamperes,
+-	* indicator_intensity - constraints for the indicator LED
++	* indicator_intensity
++		constraints for the indicator LED
+ 		in microamperes,
+-	* has_external_strobe - determines whether the flash strobe source
++	* has_external_strobe
++		determines whether the flash strobe source
+ 		can be switched to external,
+ 
+ On remove the v4l2_flash_release function has to be called, which takes one
+diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.rst
+similarity index 92%
+rename from Documentation/leds/leds-class.txt
+rename to Documentation/leds/leds-class.rst
+index 8b39cc6b03ee..df0120a1ee3c 100644
+--- a/Documentation/leds/leds-class.txt
++++ b/Documentation/leds/leds-class.rst
+@@ -1,4 +1,4 @@
+-
++========================
+ LED handling under Linux
+ ========================
+ 
+@@ -43,7 +43,7 @@ LED Device Naming
+ 
+ Is currently of the form:
+ 
+-"devicename:colour:function"
++	"devicename:colour:function"
+ 
+ There have been calls for LED properties such as colour to be exported as
+ individual led class attributes. As a solution which doesn't incur as much
+@@ -57,9 +57,12 @@ Brightness setting API
+ 
+ LED subsystem core exposes following API for setting brightness:
+ 
+-    - led_set_brightness : it is guaranteed not to sleep, passing LED_OFF stops
++    - led_set_brightness:
++		it is guaranteed not to sleep, passing LED_OFF stops
+ 		blinking,
+-    - led_set_brightness_sync : for use cases when immediate effect is desired -
++
++    - led_set_brightness_sync:
++		for use cases when immediate effect is desired -
+ 		it can block the caller for the time required for accessing
+ 		device registers and can sleep, passing LED_OFF stops hardware
+ 		blinking, returns -EBUSY if software blink fallback is enabled.
+@@ -70,7 +73,7 @@ LED registration API
+ 
+ A driver wanting to register a LED classdev for use by other drivers /
+ userspace needs to allocate and fill a led_classdev struct and then call
+-[devm_]led_classdev_register. If the non devm version is used the driver
++`[devm_]led_classdev_register`. If the non devm version is used the driver
+ must call led_classdev_unregister from its remove function before
+ free-ing the led_classdev struct.
+ 
+@@ -94,7 +97,7 @@ with brightness value LED_OFF, which should stop any software
+ timers that may have been required for blinking.
+ 
+ The blink_set() function should choose a user friendly blinking value
+-if it is called with *delay_on==0 && *delay_off==0 parameters. In this
++if it is called with `*delay_on==0` && `*delay_off==0` parameters. In this
+ case the driver should give back the chosen value through delay_on and
+ delay_off parameters to the leds subsystem.
+ 
+diff --git a/Documentation/leds/leds-lm3556.txt b/Documentation/leds/leds-lm3556.rst
+similarity index 70%
+rename from Documentation/leds/leds-lm3556.txt
+rename to Documentation/leds/leds-lm3556.rst
+index 62278e871b50..1ef17d7d800e 100644
+--- a/Documentation/leds/leds-lm3556.txt
++++ b/Documentation/leds/leds-lm3556.rst
+@@ -1,68 +1,118 @@
++========================
+ Kernel driver for lm3556
+ ========================
+ 
+-*Texas Instrument:
+- 1.5 A Synchronous Boost LED Flash Driver w/ High-Side Current Source
++* Texas Instrument:
++  1.5 A Synchronous Boost LED Flash Driver w/ High-Side Current Source
+ * Datasheet: http://www.national.com/ds/LM/LM3556.pdf
+ 
+ Authors:
+-	Daniel Jeong
++      - Daniel Jeong
++
+ 	Contact:Daniel Jeong(daniel.jeong-at-ti.com, gshark.jeong-at-gmail.com)
+ 
+ Description
+ -----------
+ There are 3 functions in LM3556, Flash, Torch and Indicator.
+ 
+-FLASH MODE
++Flash Mode
++^^^^^^^^^^
++
+ In Flash Mode, the LED current source(LED) provides 16 target current levels
+ from 93.75 mA to 1500 mA.The Flash currents are adjusted via the CURRENT
+ CONTROL REGISTER(0x09).Flash mode is activated by the ENABLE REGISTER(0x0A),
+ or by pulling the STROBE pin HIGH.
++
+ LM3556 Flash can be controlled through sys/class/leds/flash/brightness file
++
+ * if STROBE pin is enabled, below example control brightness only, and
+-ON / OFF will be controlled by STROBE pin.
++  ON / OFF will be controlled by STROBE pin.
+ 
+ Flash Example:
+-OFF     : #echo 0 > sys/class/leds/flash/brightness
+-93.75 mA: #echo 1 > sys/class/leds/flash/brightness
+-... .....
+-1500  mA: #echo 16 > sys/class/leds/flash/brightness
+ 
+-TORCH MODE
++OFF::
++
++	#echo 0 > sys/class/leds/flash/brightness
++
++93.75 mA::
++
++	#echo 1 > sys/class/leds/flash/brightness
++
++...
++
++1500  mA::
++
++	#echo 16 > sys/class/leds/flash/brightness
++
++Torch Mode
++^^^^^^^^^^
++
+ In Torch Mode, the current source(LED) is programmed via the CURRENT CONTROL
+ REGISTER(0x09).Torch Mode is activated by the ENABLE REGISTER(0x0A) or by the
+ hardware TORCH input.
++
+ LM3556 torch can be controlled through sys/class/leds/torch/brightness file.
+ * if TORCH pin is enabled, below example control brightness only,
+ and ON / OFF will be controlled by TORCH pin.
+ 
+ Torch Example:
+-OFF     : #echo 0 > sys/class/leds/torch/brightness
+-46.88 mA: #echo 1 > sys/class/leds/torch/brightness
+-... .....
+-375 mA  : #echo 8 > sys/class/leds/torch/brightness
+ 
+-INDICATOR MODE
++OFF::
++
++	#echo 0 > sys/class/leds/torch/brightness
++
++46.88 mA::
++
++	#echo 1 > sys/class/leds/torch/brightness
++
++...
++
++375 mA::
++
++	#echo 8 > sys/class/leds/torch/brightness
++
++Indicator Mode
++^^^^^^^^^^^^^^
++
+ Indicator pattern can be set through sys/class/leds/indicator/pattern file,
+ and 4 patterns are pre-defined in indicator_pattern array.
++
+ According to N-lank, Pulse time and N Period values, different pattern wiill
+ be generated.If you want new patterns for your own device, change
+ indicator_pattern array with your own values and INDIC_PATTERN_SIZE.
++
+ Please refer datasheet for more detail about N-Blank, Pulse time and N Period.
+ 
+ Indicator pattern example:
+-pattern 0: #echo 0 > sys/class/leds/indicator/pattern
+-....
+-pattern 3: #echo 3 > sys/class/leds/indicator/pattern
++
++pattern 0::
++
++	#echo 0 > sys/class/leds/indicator/pattern
++
++...
++
++pattern 3::
++
++	#echo 3 > sys/class/leds/indicator/pattern
+ 
+ Indicator brightness can be controlled through
+ sys/class/leds/indicator/brightness file.
+ 
+ Example:
+-OFF      : #echo 0 > sys/class/leds/indicator/brightness
+-5.86 mA  : #echo 1 > sys/class/leds/indicator/brightness
+-........
+-46.875mA : #echo 8 > sys/class/leds/indicator/brightness
++
++OFF::
++
++	#echo 0 > sys/class/leds/indicator/brightness
++
++5.86 mA::
++
++	#echo 1 > sys/class/leds/indicator/brightness
++
++...
++
++46.875mA::
++
++	#echo 8 > sys/class/leds/indicator/brightness
+ 
+ Notes
+ -----
+@@ -70,7 +120,8 @@ Driver expects it is registered using the i2c_board_info mechanism.
+ To register the chip at address 0x63 on specific adapter, set the platform data
+ according to include/linux/platform_data/leds-lm3556.h, set the i2c board info
+ 
+-Example:
++Example::
++
+ 	static struct i2c_board_info board_i2c_ch4[] __initdata = {
+ 		{
+ 			 I2C_BOARD_INFO(LM3556_NAME, 0x63),
+@@ -80,6 +131,7 @@ Example:
+ 
+ and register it in the platform init function
+ 
+-Example:
++Example::
++
+ 	board_register_i2c_bus(4, 400,
+ 				board_i2c_ch4, ARRAY_SIZE(board_i2c_ch4));
+diff --git a/Documentation/leds/leds-lp3944.txt b/Documentation/leds/leds-lp3944.rst
+similarity index 78%
+rename from Documentation/leds/leds-lp3944.txt
+rename to Documentation/leds/leds-lp3944.rst
+index e88ac3b60c08..c2f87dc1a3a9 100644
+--- a/Documentation/leds/leds-lp3944.txt
++++ b/Documentation/leds/leds-lp3944.rst
+@@ -1,14 +1,20 @@
++====================
+ Kernel driver lp3944
+ ====================
+ 
+   * National Semiconductor LP3944 Fun-light Chip
++
+     Prefix: 'lp3944'
++
+     Addresses scanned: None (see the Notes section below)
+-    Datasheet: Publicly available at the National Semiconductor website
+-               http://www.national.com/pf/LP/LP3944.html
++
++    Datasheet:
++
++	Publicly available at the National Semiconductor website
++	http://www.national.com/pf/LP/LP3944.html
+ 
+ Authors:
+-        Antonio Ospite <ospite@studenti.unina.it>
++	Antonio Ospite <ospite@studenti.unina.it>
+ 
+ 
+ Description
+@@ -19,8 +25,11 @@ is used as a led controller.
+ 
+ The DIM modes are used to set _blink_ patterns for leds, the pattern is
+ specified supplying two parameters:
+-  - period: from 0s to 1.6s
+-  - duty cycle: percentage of the period the led is on, from 0 to 100
++
++  - period:
++	from 0s to 1.6s
++  - duty cycle:
++	percentage of the period the led is on, from 0 to 100
+ 
+ Setting a led in DIM0 or DIM1 mode makes it blink according to the pattern.
+ See the datasheet for details.
+@@ -35,7 +44,7 @@ The chip is used mainly in embedded contexts, so this driver expects it is
+ registered using the i2c_board_info mechanism.
+ 
+ To register the chip at address 0x60 on adapter 0, set the platform data
+-according to include/linux/leds-lp3944.h, set the i2c board info:
++according to include/linux/leds-lp3944.h, set the i2c board info::
+ 
+ 	static struct i2c_board_info a910_i2c_board_info[] __initdata = {
+ 		{
+@@ -44,7 +53,7 @@ according to include/linux/leds-lp3944.h, set the i2c board info:
+ 		},
+ 	};
+ 
+-and register it in the platform init function
++and register it in the platform init function::
+ 
+ 	i2c_register_board_info(0, a910_i2c_board_info,
+ 			ARRAY_SIZE(a910_i2c_board_info));
+diff --git a/Documentation/leds/leds-lp5521.rst b/Documentation/leds/leds-lp5521.rst
+new file mode 100644
+index 000000000000..0432615b083d
+--- /dev/null
++++ b/Documentation/leds/leds-lp5521.rst
+@@ -0,0 +1,115 @@
++========================
++Kernel driver for lp5521
++========================
++
++* National Semiconductor LP5521 led driver chip
++* Datasheet: http://www.national.com/pf/LP/LP5521.html
++
++Authors: Mathias Nyman, Yuri Zaporozhets, Samu Onkalo
++
++Contact: Samu Onkalo (samu.p.onkalo-at-nokia.com)
++
++Description
++-----------
++
++LP5521 can drive up to 3 channels. Leds can be controlled directly via
++the led class control interface. Channels have generic names:
++lp5521:channelx, where x is 0 .. 2
++
++All three channels can be also controlled using the engine micro programs.
++More details of the instructions can be found from the public data sheet.
++
++LP5521 has the internal program memory for running various LED patterns.
++There are two ways to run LED patterns.
++
++1) Legacy interface - enginex_mode and enginex_load
++   Control interface for the engines:
++
++   x is 1 .. 3
++
++   enginex_mode:
++	disabled, load, run
++   enginex_load:
++	store program (visible only in engine load mode)
++
++  Example (start to blink the channel 2 led)::
++
++	cd   /sys/class/leds/lp5521:channel2/device
++	echo "load" > engine3_mode
++	echo "037f4d0003ff6000" > engine3_load
++	echo "run" > engine3_mode
++
++  To stop the engine::
++
++	echo "disabled" > engine3_mode
++
++2) Firmware interface - LP55xx common interface
++
++For the details, please refer to 'firmware' section in leds-lp55xx.txt
++
++sysfs contains a selftest entry.
++
++The test communicates with the chip and checks that
++the clock mode is automatically set to the requested one.
++
++Each channel has its own led current settings.
++
++- /sys/class/leds/lp5521:channel0/led_current - RW
++- /sys/class/leds/lp5521:channel0/max_current - RO
++
++Format: 10x mA i.e 10 means 1.0 mA
++
++example platform data::
++
++  static struct lp55xx_led_config lp5521_led_config[] = {
++	  {
++		.name = "red",
++		  .chan_nr        = 0,
++		  .led_current    = 50,
++		.max_current    = 130,
++	  }, {
++		.name = "green",
++		  .chan_nr        = 1,
++		  .led_current    = 0,
++		.max_current    = 130,
++	  }, {
++		.name = "blue",
++		  .chan_nr        = 2,
++		  .led_current    = 0,
++		.max_current    = 130,
++	  }
++  };
++
++  static int lp5521_setup(void)
++  {
++	/* setup HW resources */
++  }
++
++  static void lp5521_release(void)
++  {
++	/* Release HW resources */
++  }
++
++  static void lp5521_enable(bool state)
++  {
++	/* Control of chip enable signal */
++  }
++
++  static struct lp55xx_platform_data lp5521_platform_data = {
++	  .led_config     = lp5521_led_config,
++	  .num_channels   = ARRAY_SIZE(lp5521_led_config),
++	  .clock_mode     = LP55XX_CLOCK_EXT,
++	  .setup_resources   = lp5521_setup,
++	  .release_resources = lp5521_release,
++	  .enable            = lp5521_enable,
++  };
++
++Note:
++  chan_nr can have values between 0 and 2.
++  The name of each channel can be configurable.
++  If the name field is not defined, the default name will be set to 'xxxx:channelN'
++  (XXXX : pdata->label or i2c client name, N : channel number)
++
++
++If the current is set to 0 in the platform data, that channel is
++disabled and it is not visible in the sysfs.
+diff --git a/Documentation/leds/leds-lp5521.txt b/Documentation/leds/leds-lp5521.txt
+deleted file mode 100644
+index d08d8c179f85..000000000000
+--- a/Documentation/leds/leds-lp5521.txt
++++ /dev/null
+@@ -1,101 +0,0 @@
+-Kernel driver for lp5521
+-========================
+-
+-* National Semiconductor LP5521 led driver chip
+-* Datasheet: http://www.national.com/pf/LP/LP5521.html
+-
+-Authors: Mathias Nyman, Yuri Zaporozhets, Samu Onkalo
+-Contact: Samu Onkalo (samu.p.onkalo-at-nokia.com)
+-
+-Description
+------------
+-
+-LP5521 can drive up to 3 channels. Leds can be controlled directly via
+-the led class control interface. Channels have generic names:
+-lp5521:channelx, where x is 0 .. 2
+-
+-All three channels can be also controlled using the engine micro programs.
+-More details of the instructions can be found from the public data sheet.
+-
+-LP5521 has the internal program memory for running various LED patterns.
+-There are two ways to run LED patterns.
+-
+-1) Legacy interface - enginex_mode and enginex_load
+-  Control interface for the engines:
+-  x is 1 .. 3
+-  enginex_mode : disabled, load, run
+-  enginex_load : store program (visible only in engine load mode)
+-
+-  Example (start to blink the channel 2 led):
+-  cd   /sys/class/leds/lp5521:channel2/device
+-  echo "load" > engine3_mode
+-  echo "037f4d0003ff6000" > engine3_load
+-  echo "run" > engine3_mode
+-
+-  To stop the engine:
+-  echo "disabled" > engine3_mode
+-
+-2) Firmware interface - LP55xx common interface
+-  For the details, please refer to 'firmware' section in leds-lp55xx.txt
+-
+-sysfs contains a selftest entry.
+-The test communicates with the chip and checks that
+-the clock mode is automatically set to the requested one.
+-
+-Each channel has its own led current settings.
+-/sys/class/leds/lp5521:channel0/led_current - RW
+-/sys/class/leds/lp5521:channel0/max_current - RO
+-Format: 10x mA i.e 10 means 1.0 mA
+-
+-example platform data:
+-
+-Note: chan_nr can have values between 0 and 2.
+-The name of each channel can be configurable.
+-If the name field is not defined, the default name will be set to 'xxxx:channelN'
+-(XXXX : pdata->label or i2c client name, N : channel number)
+-
+-static struct lp55xx_led_config lp5521_led_config[] = {
+-        {
+-		.name = "red",
+-                .chan_nr        = 0,
+-                .led_current    = 50,
+-		.max_current    = 130,
+-        }, {
+-		.name = "green",
+-                .chan_nr        = 1,
+-                .led_current    = 0,
+-		.max_current    = 130,
+-        }, {
+-		.name = "blue",
+-                .chan_nr        = 2,
+-                .led_current    = 0,
+-		.max_current    = 130,
+-        }
+-};
+-
+-static int lp5521_setup(void)
+-{
+-	/* setup HW resources */
+-}
+-
+-static void lp5521_release(void)
+-{
+-	/* Release HW resources */
+-}
+-
+-static void lp5521_enable(bool state)
+-{
+-	/* Control of chip enable signal */
+-}
+-
+-static struct lp55xx_platform_data lp5521_platform_data = {
+-        .led_config     = lp5521_led_config,
+-        .num_channels   = ARRAY_SIZE(lp5521_led_config),
+-        .clock_mode     = LP55XX_CLOCK_EXT,
+-        .setup_resources   = lp5521_setup,
+-        .release_resources = lp5521_release,
+-        .enable            = lp5521_enable,
+-};
+-
+-If the current is set to 0 in the platform data, that channel is
+-disabled and it is not visible in the sysfs.
+diff --git a/Documentation/leds/leds-lp5523.rst b/Documentation/leds/leds-lp5523.rst
+new file mode 100644
+index 000000000000..7d7362a1dd57
+--- /dev/null
++++ b/Documentation/leds/leds-lp5523.rst
+@@ -0,0 +1,147 @@
++========================
++Kernel driver for lp5523
++========================
++
++* National Semiconductor LP5523 led driver chip
++* Datasheet: http://www.national.com/pf/LP/LP5523.html
++
++Authors: Mathias Nyman, Yuri Zaporozhets, Samu Onkalo
++Contact: Samu Onkalo (samu.p.onkalo-at-nokia.com)
++
++Description
++-----------
++LP5523 can drive up to 9 channels. Leds can be controlled directly via
++the led class control interface.
++The name of each channel is configurable in the platform data - name and label.
++There are three options to make the channel name.
++
++a) Define the 'name' in the platform data
++
++To make specific channel name, then use 'name' platform data.
++
++- /sys/class/leds/R1               (name: 'R1')
++- /sys/class/leds/B1               (name: 'B1')
++
++b) Use the 'label' with no 'name' field
++
++For one device name with channel number, then use 'label'.
++- /sys/class/leds/RGB:channelN     (label: 'RGB', N: 0 ~ 8)
++
++c) Default
++
++If both fields are NULL, 'lp5523' is used by default.
++- /sys/class/leds/lp5523:channelN  (N: 0 ~ 8)
++
++LP5523 has the internal program memory for running various LED patterns.
++There are two ways to run LED patterns.
++
++1) Legacy interface - enginex_mode, enginex_load and enginex_leds
++
++  Control interface for the engines:
++
++  x is 1 .. 3
++
++  enginex_mode:
++	disabled, load, run
++  enginex_load:
++	microcode load
++  enginex_leds:
++	led mux control
++
++  ::
++
++	cd /sys/class/leds/lp5523:channel2/device
++	echo "load" > engine3_mode
++	echo "9d80400004ff05ff437f0000" > engine3_load
++	echo "111111111" > engine3_leds
++	echo "run" > engine3_mode
++
++  To stop the engine::
++
++	echo "disabled" > engine3_mode
++
++2) Firmware interface - LP55xx common interface
++
++For the details, please refer to 'firmware' section in leds-lp55xx.txt
++
++LP5523 has three master faders. If a channel is mapped to one of
++the master faders, its output is dimmed based on the value of the master
++fader.
++
++For example::
++
++  echo "123000123" > master_fader_leds
++
++creates the following channel-fader mappings::
++
++  channel 0,6 to master_fader1
++  channel 1,7 to master_fader2
++  channel 2,8 to master_fader3
++
++Then, to have 25% of the original output on channel 0,6::
++
++  echo 64 > master_fader1
++
++To have 0% of the original output (i.e. no output) channel 1,7::
++
++  echo 0 > master_fader2
++
++To have 100% of the original output (i.e. no dimming) on channel 2,8::
++
++  echo 255 > master_fader3
++
++To clear all master fader controls::
++
++  echo "000000000" > master_fader_leds
++
++Selftest uses always the current from the platform data.
++
++Each channel contains led current settings.
++- /sys/class/leds/lp5523:channel2/led_current - RW
++- /sys/class/leds/lp5523:channel2/max_current - RO
++
++Format: 10x mA i.e 10 means 1.0 mA
++
++Example platform data::
++
++	static struct lp55xx_led_config lp5523_led_config[] = {
++		{
++			.name		= "D1",
++			.chan_nr        = 0,
++			.led_current    = 50,
++			.max_current    = 130,
++		},
++	...
++		{
++			.chan_nr        = 8,
++			.led_current    = 50,
++			.max_current    = 130,
++		}
++	};
++
++	static int lp5523_setup(void)
++	{
++		/* Setup HW resources */
++	}
++
++	static void lp5523_release(void)
++	{
++		/* Release HW resources */
++	}
++
++	static void lp5523_enable(bool state)
++	{
++		/* Control chip enable signal */
++	}
++
++	static struct lp55xx_platform_data lp5523_platform_data = {
++		.led_config     = lp5523_led_config,
++		.num_channels   = ARRAY_SIZE(lp5523_led_config),
++		.clock_mode     = LP55XX_CLOCK_EXT,
++		.setup_resources   = lp5523_setup,
++		.release_resources = lp5523_release,
++		.enable            = lp5523_enable,
++	};
++
++Note
++  chan_nr can have values between 0 and 8.
+diff --git a/Documentation/leds/leds-lp5523.txt b/Documentation/leds/leds-lp5523.txt
+deleted file mode 100644
+index 0961a060fc4d..000000000000
+--- a/Documentation/leds/leds-lp5523.txt
++++ /dev/null
+@@ -1,130 +0,0 @@
+-Kernel driver for lp5523
+-========================
+-
+-* National Semiconductor LP5523 led driver chip
+-* Datasheet: http://www.national.com/pf/LP/LP5523.html
+-
+-Authors: Mathias Nyman, Yuri Zaporozhets, Samu Onkalo
+-Contact: Samu Onkalo (samu.p.onkalo-at-nokia.com)
+-
+-Description
+------------
+-LP5523 can drive up to 9 channels. Leds can be controlled directly via
+-the led class control interface.
+-The name of each channel is configurable in the platform data - name and label.
+-There are three options to make the channel name.
+-
+-a) Define the 'name' in the platform data
+-To make specific channel name, then use 'name' platform data.
+-/sys/class/leds/R1               (name: 'R1')
+-/sys/class/leds/B1               (name: 'B1')
+-
+-b) Use the 'label' with no 'name' field
+-For one device name with channel number, then use 'label'.
+-/sys/class/leds/RGB:channelN     (label: 'RGB', N: 0 ~ 8)
+-
+-c) Default
+-If both fields are NULL, 'lp5523' is used by default.
+-/sys/class/leds/lp5523:channelN  (N: 0 ~ 8)
+-
+-LP5523 has the internal program memory for running various LED patterns.
+-There are two ways to run LED patterns.
+-
+-1) Legacy interface - enginex_mode, enginex_load and enginex_leds
+-  Control interface for the engines:
+-  x is 1 .. 3
+-  enginex_mode : disabled, load, run
+-  enginex_load : microcode load
+-  enginex_leds : led mux control
+-
+-  cd /sys/class/leds/lp5523:channel2/device
+-  echo "load" > engine3_mode
+-  echo "9d80400004ff05ff437f0000" > engine3_load
+-  echo "111111111" > engine3_leds
+-  echo "run" > engine3_mode
+-
+-  To stop the engine:
+-  echo "disabled" > engine3_mode
+-
+-2) Firmware interface - LP55xx common interface
+-  For the details, please refer to 'firmware' section in leds-lp55xx.txt
+-
+-LP5523 has three master faders. If a channel is mapped to one of
+-the master faders, its output is dimmed based on the value of the master
+-fader.
+-
+-For example,
+-
+-  echo "123000123" > master_fader_leds
+-
+-creates the following channel-fader mappings:
+-
+-  channel 0,6 to master_fader1
+-  channel 1,7 to master_fader2
+-  channel 2,8 to master_fader3
+-
+-Then, to have 25% of the original output on channel 0,6:
+-
+-  echo 64 > master_fader1
+-
+-To have 0% of the original output (i.e. no output) channel 1,7:
+-
+-  echo 0 > master_fader2
+-
+-To have 100% of the original output (i.e. no dimming) on channel 2,8:
+-
+-  echo 255 > master_fader3
+-
+-To clear all master fader controls:
+-
+-  echo "000000000" > master_fader_leds
+-
+-Selftest uses always the current from the platform data.
+-
+-Each channel contains led current settings.
+-/sys/class/leds/lp5523:channel2/led_current - RW
+-/sys/class/leds/lp5523:channel2/max_current - RO
+-Format: 10x mA i.e 10 means 1.0 mA
+-
+-Example platform data:
+-
+-Note - chan_nr can have values between 0 and 8.
+-
+-static struct lp55xx_led_config lp5523_led_config[] = {
+-        {
+-		.name		= "D1",
+-                .chan_nr        = 0,
+-                .led_current    = 50,
+-		.max_current    = 130,
+-        },
+-...
+-        {
+-                .chan_nr        = 8,
+-                .led_current    = 50,
+-		.max_current    = 130,
+-        }
+-};
+-
+-static int lp5523_setup(void)
+-{
+-	/* Setup HW resources */
+-}
+-
+-static void lp5523_release(void)
+-{
+-	/* Release HW resources */
+-}
+-
+-static void lp5523_enable(bool state)
+-{
+-	/* Control chip enable signal */
+-}
+-
+-static struct lp55xx_platform_data lp5523_platform_data = {
+-        .led_config     = lp5523_led_config,
+-        .num_channels   = ARRAY_SIZE(lp5523_led_config),
+-        .clock_mode     = LP55XX_CLOCK_EXT,
+-        .setup_resources   = lp5523_setup,
+-        .release_resources = lp5523_release,
+-        .enable            = lp5523_enable,
+-};
+diff --git a/Documentation/leds/leds-lp5562.rst b/Documentation/leds/leds-lp5562.rst
+new file mode 100644
+index 000000000000..79bbb2487ff6
+--- /dev/null
++++ b/Documentation/leds/leds-lp5562.rst
+@@ -0,0 +1,137 @@
++========================
++Kernel driver for lp5562
++========================
++
++* TI LP5562 LED Driver
++
++Author: Milo(Woogyom) Kim <milo.kim@ti.com>
++
++Description
++===========
++
++  LP5562 can drive up to 4 channels. R/G/B and White.
++  LEDs can be controlled directly via the led class control interface.
++
++  All four channels can be also controlled using the engine micro programs.
++  LP5562 has the internal program memory for running various LED patterns.
++  For the details, please refer to 'firmware' section in leds-lp55xx.txt
++
++Device attribute
++================
++
++engine_mux
++  3 Engines are allocated in LP5562, but the number of channel is 4.
++  Therefore each channel should be mapped to the engine number.
++
++  Value: RGB or W
++
++  This attribute is used for programming LED data with the firmware interface.
++  Unlike the LP5521/LP5523/55231, LP5562 has unique feature for the engine mux,
++  so additional sysfs is required
++
++  LED Map
++
++  ===== === ===============================
++  Red   ... Engine 1 (fixed)
++  Green ... Engine 2 (fixed)
++  Blue  ... Engine 3 (fixed)
++  White ... Engine 1 or 2 or 3 (selective)
++  ===== === ===============================
++
++How to load the program data using engine_mux
++=============================================
++
++  Before loading the LP5562 program data, engine_mux should be written between
++  the engine selection and loading the firmware.
++  Engine mux has two different mode, RGB and W.
++  RGB is used for loading RGB program data, W is used for W program data.
++
++  For example, run blinking green channel pattern::
++
++    echo 2 > /sys/bus/i2c/devices/xxxx/select_engine     # 2 is for green channel
++    echo "RGB" > /sys/bus/i2c/devices/xxxx/engine_mux    # engine mux for RGB
++    echo 1 > /sys/class/firmware/lp5562/loading
++    echo "4000600040FF6000" > /sys/class/firmware/lp5562/data
++    echo 0 > /sys/class/firmware/lp5562/loading
++    echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
++
++  To run a blinking white pattern::
++
++    echo 1 or 2 or 3 > /sys/bus/i2c/devices/xxxx/select_engine
++    echo "W" > /sys/bus/i2c/devices/xxxx/engine_mux
++    echo 1 > /sys/class/firmware/lp5562/loading
++    echo "4000600040FF6000" > /sys/class/firmware/lp5562/data
++    echo 0 > /sys/class/firmware/lp5562/loading
++    echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
++
++How to load the predefined patterns
++===================================
++
++  Please refer to 'leds-lp55xx.txt"
++
++Setting Current of Each Channel
++===============================
++
++  Like LP5521 and LP5523/55231, LP5562 provides LED current settings.
++  The 'led_current' and 'max_current' are used.
++
++Example of Platform data
++========================
++
++::
++
++	static struct lp55xx_led_config lp5562_led_config[] = {
++		{
++			.name 		= "R",
++			.chan_nr	= 0,
++			.led_current	= 20,
++			.max_current	= 40,
++		},
++		{
++			.name 		= "G",
++			.chan_nr	= 1,
++			.led_current	= 20,
++			.max_current	= 40,
++		},
++		{
++			.name 		= "B",
++			.chan_nr	= 2,
++			.led_current	= 20,
++			.max_current	= 40,
++		},
++		{
++			.name 		= "W",
++			.chan_nr	= 3,
++			.led_current	= 20,
++			.max_current	= 40,
++		},
++	};
++
++	static int lp5562_setup(void)
++	{
++		/* setup HW resources */
++	}
++
++	static void lp5562_release(void)
++	{
++		/* Release HW resources */
++	}
++
++	static void lp5562_enable(bool state)
++	{
++		/* Control of chip enable signal */
++	}
++
++	static struct lp55xx_platform_data lp5562_platform_data = {
++		.led_config     = lp5562_led_config,
++		.num_channels   = ARRAY_SIZE(lp5562_led_config),
++		.setup_resources   = lp5562_setup,
++		.release_resources = lp5562_release,
++		.enable            = lp5562_enable,
++	};
++
++To configure the platform specific data, lp55xx_platform_data structure is used
++
++
++If the current is set to 0 in the platform data, that channel is
++disabled and it is not visible in the sysfs.
+diff --git a/Documentation/leds/leds-lp5562.txt b/Documentation/leds/leds-lp5562.txt
+deleted file mode 100644
+index 5a823ff6b393..000000000000
+--- a/Documentation/leds/leds-lp5562.txt
++++ /dev/null
+@@ -1,120 +0,0 @@
+-Kernel driver for LP5562
+-========================
+-
+-* TI LP5562 LED Driver
+-
+-Author: Milo(Woogyom) Kim <milo.kim@ti.com>
+-
+-Description
+-
+-  LP5562 can drive up to 4 channels. R/G/B and White.
+-  LEDs can be controlled directly via the led class control interface.
+-
+-  All four channels can be also controlled using the engine micro programs.
+-  LP5562 has the internal program memory for running various LED patterns.
+-  For the details, please refer to 'firmware' section in leds-lp55xx.txt
+-
+-Device attribute: engine_mux
+-
+-  3 Engines are allocated in LP5562, but the number of channel is 4.
+-  Therefore each channel should be mapped to the engine number.
+-  Value : RGB or W
+-
+-  This attribute is used for programming LED data with the firmware interface.
+-  Unlike the LP5521/LP5523/55231, LP5562 has unique feature for the engine mux,
+-  so additional sysfs is required.
+-
+-  LED Map
+-  Red   ... Engine 1 (fixed)
+-  Green ... Engine 2 (fixed)
+-  Blue  ... Engine 3 (fixed)
+-  White ... Engine 1 or 2 or 3 (selective)
+-
+-How to load the program data using engine_mux
+-
+-  Before loading the LP5562 program data, engine_mux should be written between
+-  the engine selection and loading the firmware.
+-  Engine mux has two different mode, RGB and W.
+-  RGB is used for loading RGB program data, W is used for W program data.
+-
+-  For example, run blinking green channel pattern,
+-  echo 2 > /sys/bus/i2c/devices/xxxx/select_engine     # 2 is for green channel
+-  echo "RGB" > /sys/bus/i2c/devices/xxxx/engine_mux    # engine mux for RGB
+-  echo 1 > /sys/class/firmware/lp5562/loading
+-  echo "4000600040FF6000" > /sys/class/firmware/lp5562/data
+-  echo 0 > /sys/class/firmware/lp5562/loading
+-  echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
+-
+-  To run a blinking white pattern,
+-  echo 1 or 2 or 3 > /sys/bus/i2c/devices/xxxx/select_engine
+-  echo "W" > /sys/bus/i2c/devices/xxxx/engine_mux
+-  echo 1 > /sys/class/firmware/lp5562/loading
+-  echo "4000600040FF6000" > /sys/class/firmware/lp5562/data
+-  echo 0 > /sys/class/firmware/lp5562/loading
+-  echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
+-
+-How to load the predefined patterns
+-
+-  Please refer to 'leds-lp55xx.txt"
+-
+-Setting Current of Each Channel
+-
+-  Like LP5521 and LP5523/55231, LP5562 provides LED current settings.
+-  The 'led_current' and 'max_current' are used.
+-
+-(Example of Platform data)
+-
+-To configure the platform specific data, lp55xx_platform_data structure is used.
+-
+-static struct lp55xx_led_config lp5562_led_config[] = {
+-	{
+-		.name 		= "R",
+-		.chan_nr	= 0,
+-		.led_current	= 20,
+-		.max_current	= 40,
+-	},
+-	{
+-		.name 		= "G",
+-		.chan_nr	= 1,
+-		.led_current	= 20,
+-		.max_current	= 40,
+-	},
+-	{
+-		.name 		= "B",
+-		.chan_nr	= 2,
+-		.led_current	= 20,
+-		.max_current	= 40,
+-	},
+-	{
+-		.name 		= "W",
+-		.chan_nr	= 3,
+-		.led_current	= 20,
+-		.max_current	= 40,
+-	},
+-};
+-
+-static int lp5562_setup(void)
+-{
+-	/* setup HW resources */
+-}
+-
+-static void lp5562_release(void)
+-{
+-	/* Release HW resources */
+-}
+-
+-static void lp5562_enable(bool state)
+-{
+-	/* Control of chip enable signal */
+-}
+-
+-static struct lp55xx_platform_data lp5562_platform_data = {
+-        .led_config     = lp5562_led_config,
+-        .num_channels   = ARRAY_SIZE(lp5562_led_config),
+-        .setup_resources   = lp5562_setup,
+-        .release_resources = lp5562_release,
+-        .enable            = lp5562_enable,
+-};
+-
+-If the current is set to 0 in the platform data, that channel is
+-disabled and it is not visible in the sysfs.
+diff --git a/Documentation/leds/leds-lp55xx.rst b/Documentation/leds/leds-lp55xx.rst
+new file mode 100644
+index 000000000000..632e41cec0b5
+--- /dev/null
++++ b/Documentation/leds/leds-lp55xx.rst
+@@ -0,0 +1,224 @@
++=================================================
++LP5521/LP5523/LP55231/LP5562/LP8501 Common Driver
++=================================================
++
++Authors: Milo(Woogyom) Kim <milo.kim@ti.com>
++
++Description
++-----------
++LP5521, LP5523/55231, LP5562 and LP8501 have common features as below.
++
++  Register access via the I2C
++  Device initialization/deinitialization
++  Create LED class devices for multiple output channels
++  Device attributes for user-space interface
++  Program memory for running LED patterns
++
++The LP55xx common driver provides these features using exported functions.
++
++  lp55xx_init_device() / lp55xx_deinit_device()
++  lp55xx_register_leds() / lp55xx_unregister_leds()
++  lp55xx_regsister_sysfs() / lp55xx_unregister_sysfs()
++
++( Driver Structure Data )
++
++In lp55xx common driver, two different data structure is used.
++
++* lp55xx_led
++    control multi output LED channels such as led current, channel index.
++* lp55xx_chip
++    general chip control such like the I2C and platform data.
++
++For example, LP5521 has maximum 3 LED channels.
++LP5523/55231 has 9 output channels::
++
++  lp55xx_chip for LP5521 ... lp55xx_led #1
++			     lp55xx_led #2
++			     lp55xx_led #3
++
++  lp55xx_chip for LP5523 ... lp55xx_led #1
++			     lp55xx_led #2
++				   .
++				   .
++			     lp55xx_led #9
++
++( Chip Dependent Code )
++
++To support device specific configurations, special structure
++'lpxx_device_config' is used.
++
++  - Maximum number of channels
++  - Reset command, chip enable command
++  - Chip specific initialization
++  - Brightness control register access
++  - Setting LED output current
++  - Program memory address access for running patterns
++  - Additional device specific attributes
++
++( Firmware Interface )
++
++LP55xx family devices have the internal program memory for running
++various LED patterns.
++
++This pattern data is saved as a file in the user-land or
++hex byte string is written into the memory through the I2C.
++
++LP55xx common driver supports the firmware interface.
++
++LP55xx chips have three program engines.
++
++To load and run the pattern, the programming sequence is following.
++
++  (1) Select an engine number (1/2/3)
++  (2) Mode change to load
++  (3) Write pattern data into selected area
++  (4) Mode change to run
++
++The LP55xx common driver provides simple interfaces as below.
++
++select_engine:
++	Select which engine is used for running program
++run_engine:
++	Start program which is loaded via the firmware interface
++firmware:
++	Load program data
++
++In case of LP5523, one more command is required, 'enginex_leds'.
++It is used for selecting LED output(s) at each engine number.
++In more details, please refer to 'leds-lp5523.txt'.
++
++For example, run blinking pattern in engine #1 of LP5521::
++
++	echo 1 > /sys/bus/i2c/devices/xxxx/select_engine
++	echo 1 > /sys/class/firmware/lp5521/loading
++	echo "4000600040FF6000" > /sys/class/firmware/lp5521/data
++	echo 0 > /sys/class/firmware/lp5521/loading
++	echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
++
++For example, run blinking pattern in engine #3 of LP55231
++
++Two LEDs are configured as pattern output channels::
++
++	echo 3 > /sys/bus/i2c/devices/xxxx/select_engine
++	echo 1 > /sys/class/firmware/lp55231/loading
++	echo "9d0740ff7e0040007e00a0010000" > /sys/class/firmware/lp55231/data
++	echo 0 > /sys/class/firmware/lp55231/loading
++	echo "000001100" > /sys/bus/i2c/devices/xxxx/engine3_leds
++	echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
++
++To start blinking patterns in engine #2 and #3 simultaneously::
++
++	for idx in 2 3
++	do
++	echo $idx > /sys/class/leds/red/device/select_engine
++	sleep 0.1
++	echo 1 > /sys/class/firmware/lp5521/loading
++	echo "4000600040FF6000" > /sys/class/firmware/lp5521/data
++	echo 0 > /sys/class/firmware/lp5521/loading
++	done
++	echo 1 > /sys/class/leds/red/device/run_engine
++
++Here is another example for LP5523.
++
++Full LED strings are selected by 'engine2_leds'::
++
++	echo 2 > /sys/bus/i2c/devices/xxxx/select_engine
++	echo 1 > /sys/class/firmware/lp5523/loading
++	echo "9d80400004ff05ff437f0000" > /sys/class/firmware/lp5523/data
++	echo 0 > /sys/class/firmware/lp5523/loading
++	echo "111111111" > /sys/bus/i2c/devices/xxxx/engine2_leds
++	echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
++
++As soon as 'loading' is set to 0, registered callback is called.
++Inside the callback, the selected engine is loaded and memory is updated.
++To run programmed pattern, 'run_engine' attribute should be enabled.
++
++The pattern sequence of LP8501 is similar to LP5523.
++
++However pattern data is specific.
++
++Ex 1) Engine 1 is used::
++
++	echo 1 > /sys/bus/i2c/devices/xxxx/select_engine
++	echo 1 > /sys/class/firmware/lp8501/loading
++	echo "9d0140ff7e0040007e00a001c000" > /sys/class/firmware/lp8501/data
++	echo 0 > /sys/class/firmware/lp8501/loading
++	echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
++
++Ex 2) Engine 2 and 3 are used at the same time::
++
++	echo 2 > /sys/bus/i2c/devices/xxxx/select_engine
++	sleep 1
++	echo 1 > /sys/class/firmware/lp8501/loading
++	echo "9d0140ff7e0040007e00a001c000" > /sys/class/firmware/lp8501/data
++	echo 0 > /sys/class/firmware/lp8501/loading
++	sleep 1
++	echo 3 > /sys/bus/i2c/devices/xxxx/select_engine
++	sleep 1
++	echo 1 > /sys/class/firmware/lp8501/loading
++	echo "9d0340ff7e0040007e00a001c000" > /sys/class/firmware/lp8501/data
++	echo 0 > /sys/class/firmware/lp8501/loading
++	sleep 1
++	echo 1 > /sys/class/leds/d1/device/run_engine
++
++( 'run_engine' and 'firmware_cb' )
++
++The sequence of running the program data is common.
++
++But each device has own specific register addresses for commands.
++
++To support this, 'run_engine' and 'firmware_cb' are configurable in each driver.
++
++run_engine:
++	Control the selected engine
++firmware_cb:
++	The callback function after loading the firmware is done.
++
++	Chip specific commands for loading and updating program memory.
++
++( Predefined pattern data )
++
++Without the firmware interface, LP55xx driver provides another method for
++loading a LED pattern. That is 'predefined' pattern.
++
++A predefined pattern is defined in the platform data and load it(or them)
++via the sysfs if needed.
++
++To use the predefined pattern concept, 'patterns' and 'num_patterns' should be
++configured.
++
++Example of predefined pattern data::
++
++  /* mode_1: blinking data */
++  static const u8 mode_1[] = {
++		0x40, 0x00, 0x60, 0x00, 0x40, 0xFF, 0x60, 0x00,
++		};
++
++  /* mode_2: always on */
++  static const u8 mode_2[] = { 0x40, 0xFF, };
++
++  struct lp55xx_predef_pattern board_led_patterns[] = {
++	{
++		.r = mode_1,
++		.size_r = ARRAY_SIZE(mode_1),
++	},
++	{
++		.b = mode_2,
++		.size_b = ARRAY_SIZE(mode_2),
++	},
++  }
++
++  struct lp55xx_platform_data lp5562_pdata = {
++  ...
++	.patterns      = board_led_patterns,
++	.num_patterns  = ARRAY_SIZE(board_led_patterns),
++  };
++
++Then, mode_1 and mode_2 can be run via through the sysfs::
++
++  echo 1 > /sys/bus/i2c/devices/xxxx/led_pattern    # red blinking LED pattern
++  echo 2 > /sys/bus/i2c/devices/xxxx/led_pattern    # blue LED always on
++
++To stop running pattern::
++
++  echo 0 > /sys/bus/i2c/devices/xxxx/led_pattern
+diff --git a/Documentation/leds/leds-lp55xx.txt b/Documentation/leds/leds-lp55xx.txt
+deleted file mode 100644
+index e23fa91ea722..000000000000
+--- a/Documentation/leds/leds-lp55xx.txt
++++ /dev/null
+@@ -1,194 +0,0 @@
+-LP5521/LP5523/LP55231/LP5562/LP8501 Common Driver
+-=================================================
+-
+-Authors: Milo(Woogyom) Kim <milo.kim@ti.com>
+-
+-Description
+------------
+-LP5521, LP5523/55231, LP5562 and LP8501 have common features as below.
+-
+-  Register access via the I2C
+-  Device initialization/deinitialization
+-  Create LED class devices for multiple output channels
+-  Device attributes for user-space interface
+-  Program memory for running LED patterns
+-
+-The LP55xx common driver provides these features using exported functions.
+-  lp55xx_init_device() / lp55xx_deinit_device()
+-  lp55xx_register_leds() / lp55xx_unregister_leds()
+-  lp55xx_regsister_sysfs() / lp55xx_unregister_sysfs()
+-
+-( Driver Structure Data )
+-
+-In lp55xx common driver, two different data structure is used.
+-
+-o lp55xx_led
+-  control multi output LED channels such as led current, channel index.
+-o lp55xx_chip
+-  general chip control such like the I2C and platform data.
+-
+-For example, LP5521 has maximum 3 LED channels.
+-LP5523/55231 has 9 output channels.
+-
+-lp55xx_chip for LP5521 ... lp55xx_led #1
+-                           lp55xx_led #2
+-                           lp55xx_led #3
+-
+-lp55xx_chip for LP5523 ... lp55xx_led #1
+-                           lp55xx_led #2
+-                                 .
+-                                 .
+-                           lp55xx_led #9
+-
+-( Chip Dependent Code )
+-
+-To support device specific configurations, special structure
+-'lpxx_device_config' is used.
+-
+-  Maximum number of channels
+-  Reset command, chip enable command
+-  Chip specific initialization
+-  Brightness control register access
+-  Setting LED output current
+-  Program memory address access for running patterns
+-  Additional device specific attributes
+-
+-( Firmware Interface )
+-
+-LP55xx family devices have the internal program memory for running
+-various LED patterns.
+-This pattern data is saved as a file in the user-land or
+-hex byte string is written into the memory through the I2C.
+-LP55xx common driver supports the firmware interface.
+-
+-LP55xx chips have three program engines.
+-To load and run the pattern, the programming sequence is following.
+-  (1) Select an engine number (1/2/3)
+-  (2) Mode change to load
+-  (3) Write pattern data into selected area
+-  (4) Mode change to run
+-
+-The LP55xx common driver provides simple interfaces as below.
+-select_engine : Select which engine is used for running program
+-run_engine    : Start program which is loaded via the firmware interface
+-firmware      : Load program data
+-
+-In case of LP5523, one more command is required, 'enginex_leds'.
+-It is used for selecting LED output(s) at each engine number.
+-In more details, please refer to 'leds-lp5523.txt'.
+-
+-For example, run blinking pattern in engine #1 of LP5521
+-echo 1 > /sys/bus/i2c/devices/xxxx/select_engine
+-echo 1 > /sys/class/firmware/lp5521/loading
+-echo "4000600040FF6000" > /sys/class/firmware/lp5521/data
+-echo 0 > /sys/class/firmware/lp5521/loading
+-echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
+-
+-For example, run blinking pattern in engine #3 of LP55231
+-Two LEDs are configured as pattern output channels.
+-echo 3 > /sys/bus/i2c/devices/xxxx/select_engine
+-echo 1 > /sys/class/firmware/lp55231/loading
+-echo "9d0740ff7e0040007e00a0010000" > /sys/class/firmware/lp55231/data
+-echo 0 > /sys/class/firmware/lp55231/loading
+-echo "000001100" > /sys/bus/i2c/devices/xxxx/engine3_leds
+-echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
+-
+-To start blinking patterns in engine #2 and #3 simultaneously,
+-for idx in 2 3
+-do
+-  echo $idx > /sys/class/leds/red/device/select_engine
+-  sleep 0.1
+-  echo 1 > /sys/class/firmware/lp5521/loading
+-  echo "4000600040FF6000" > /sys/class/firmware/lp5521/data
+-  echo 0 > /sys/class/firmware/lp5521/loading
+-done
+-echo 1 > /sys/class/leds/red/device/run_engine
+-
+-Here is another example for LP5523.
+-Full LED strings are selected by 'engine2_leds'.
+-echo 2 > /sys/bus/i2c/devices/xxxx/select_engine
+-echo 1 > /sys/class/firmware/lp5523/loading
+-echo "9d80400004ff05ff437f0000" > /sys/class/firmware/lp5523/data
+-echo 0 > /sys/class/firmware/lp5523/loading
+-echo "111111111" > /sys/bus/i2c/devices/xxxx/engine2_leds
+-echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
+-
+-As soon as 'loading' is set to 0, registered callback is called.
+-Inside the callback, the selected engine is loaded and memory is updated.
+-To run programmed pattern, 'run_engine' attribute should be enabled.
+-
+-The pattern sequence of LP8501 is similar to LP5523.
+-However pattern data is specific.
+-Ex 1) Engine 1 is used
+-echo 1 > /sys/bus/i2c/devices/xxxx/select_engine
+-echo 1 > /sys/class/firmware/lp8501/loading
+-echo "9d0140ff7e0040007e00a001c000" > /sys/class/firmware/lp8501/data
+-echo 0 > /sys/class/firmware/lp8501/loading
+-echo 1 > /sys/bus/i2c/devices/xxxx/run_engine
+-
+-Ex 2) Engine 2 and 3 are used at the same time
+-echo 2 > /sys/bus/i2c/devices/xxxx/select_engine
+-sleep 1
+-echo 1 > /sys/class/firmware/lp8501/loading
+-echo "9d0140ff7e0040007e00a001c000" > /sys/class/firmware/lp8501/data
+-echo 0 > /sys/class/firmware/lp8501/loading
+-sleep 1
+-echo 3 > /sys/bus/i2c/devices/xxxx/select_engine
+-sleep 1
+-echo 1 > /sys/class/firmware/lp8501/loading
+-echo "9d0340ff7e0040007e00a001c000" > /sys/class/firmware/lp8501/data
+-echo 0 > /sys/class/firmware/lp8501/loading
+-sleep 1
+-echo 1 > /sys/class/leds/d1/device/run_engine
+-
+-( 'run_engine' and 'firmware_cb' )
+-The sequence of running the program data is common.
+-But each device has own specific register addresses for commands.
+-To support this, 'run_engine' and 'firmware_cb' are configurable in each driver.
+-run_engine  : Control the selected engine
+-firmware_cb : The callback function after loading the firmware is done.
+-              Chip specific commands for loading and updating program memory.
+-
+-( Predefined pattern data )
+-
+-Without the firmware interface, LP55xx driver provides another method for
+-loading a LED pattern. That is 'predefined' pattern.
+-A predefined pattern is defined in the platform data and load it(or them)
+-via the sysfs if needed.
+-To use the predefined pattern concept, 'patterns' and 'num_patterns' should be
+-configured.
+-
+-  Example of predefined pattern data:
+-
+-  /* mode_1: blinking data */
+-  static const u8 mode_1[] = {
+-		0x40, 0x00, 0x60, 0x00, 0x40, 0xFF, 0x60, 0x00,
+-		};
+-
+-  /* mode_2: always on */
+-  static const u8 mode_2[] = { 0x40, 0xFF, };
+-
+-  struct lp55xx_predef_pattern board_led_patterns[] = {
+-	{
+-		.r = mode_1,
+-		.size_r = ARRAY_SIZE(mode_1),
+-	},
+-	{
+-		.b = mode_2,
+-		.size_b = ARRAY_SIZE(mode_2),
+-	},
+-  }
+-
+-  struct lp55xx_platform_data lp5562_pdata = {
+-  ...
+-	.patterns      = board_led_patterns,
+-	.num_patterns  = ARRAY_SIZE(board_led_patterns),
+-  };
+-
+-Then, mode_1 and mode_2 can be run via through the sysfs.
+-
+-  echo 1 > /sys/bus/i2c/devices/xxxx/led_pattern    # red blinking LED pattern
+-  echo 2 > /sys/bus/i2c/devices/xxxx/led_pattern    # blue LED always on
+-
+-To stop running pattern,
+-  echo 0 > /sys/bus/i2c/devices/xxxx/led_pattern
+diff --git a/Documentation/leds/leds-mlxcpld.rst b/Documentation/leds/leds-mlxcpld.rst
+new file mode 100644
+index 000000000000..528582429e0b
+--- /dev/null
++++ b/Documentation/leds/leds-mlxcpld.rst
+@@ -0,0 +1,118 @@
++=======================================
++Kernel driver for Mellanox systems LEDs
++=======================================
++
++Provide system LED support for the nex Mellanox systems:
++"msx6710", "msx6720", "msb7700", "msn2700", "msx1410",
++"msn2410", "msb7800", "msn2740", "msn2100".
++
++Description
++-----------
++Driver provides the following LEDs for the systems "msx6710", "msx6720",
++"msb7700", "msn2700", "msx1410", "msn2410", "msb7800", "msn2740":
++
++  - mlxcpld:fan1:green
++  - mlxcpld:fan1:red
++  - mlxcpld:fan2:green
++  - mlxcpld:fan2:red
++  - mlxcpld:fan3:green
++  - mlxcpld:fan3:red
++  - mlxcpld:fan4:green
++  - mlxcpld:fan4:red
++  - mlxcpld:psu:green
++  - mlxcpld:psu:red
++  - mlxcpld:status:green
++  - mlxcpld:status:red
++
++ "status"
++  - CPLD reg offset: 0x20
++  - Bits [3:0]
++
++ "psu"
++  - CPLD reg offset: 0x20
++  - Bits [7:4]
++
++ "fan1"
++  - CPLD reg offset: 0x21
++  - Bits [3:0]
++
++ "fan2"
++  - CPLD reg offset: 0x21
++  - Bits [7:4]
++
++ "fan3"
++  - CPLD reg offset: 0x22
++  - Bits [3:0]
++
++ "fan4"
++  - CPLD reg offset: 0x22
++  - Bits [7:4]
++
++ Color mask for all the above LEDs:
++
++  [bit3,bit2,bit1,bit0] or
++  [bit7,bit6,bit5,bit4]:
++
++	- [0,0,0,0] = LED OFF
++	- [0,1,0,1] = Red static ON
++	- [1,1,0,1] = Green static ON
++	- [0,1,1,0] = Red blink 3Hz
++	- [1,1,1,0] = Green blink 3Hz
++	- [0,1,1,1] = Red blink 6Hz
++	- [1,1,1,1] = Green blink 6Hz
++
++Driver provides the following LEDs for the system "msn2100":
++
++  - mlxcpld:fan:green
++  - mlxcpld:fan:red
++  - mlxcpld:psu1:green
++  - mlxcpld:psu1:red
++  - mlxcpld:psu2:green
++  - mlxcpld:psu2:red
++  - mlxcpld:status:green
++  - mlxcpld:status:red
++  - mlxcpld:uid:blue
++
++ "status"
++  - CPLD reg offset: 0x20
++  - Bits [3:0]
++
++ "fan"
++  - CPLD reg offset: 0x21
++  - Bits [3:0]
++
++ "psu1"
++  - CPLD reg offset: 0x23
++  - Bits [3:0]
++
++ "psu2"
++  - CPLD reg offset: 0x23
++  - Bits [7:4]
++
++ "uid"
++  - CPLD reg offset: 0x24
++  - Bits [3:0]
++
++ Color mask for all the above LEDs, excepted uid:
++
++  [bit3,bit2,bit1,bit0] or
++  [bit7,bit6,bit5,bit4]:
++
++	- [0,0,0,0] = LED OFF
++	- [0,1,0,1] = Red static ON
++	- [1,1,0,1] = Green static ON
++	- [0,1,1,0] = Red blink 3Hz
++	- [1,1,1,0] = Green blink 3Hz
++	- [0,1,1,1] = Red blink 6Hz
++	- [1,1,1,1] = Green blink 6Hz
++
++ Color mask for uid LED:
++  [bit3,bit2,bit1,bit0]:
++
++	- [0,0,0,0] = LED OFF
++	- [1,1,0,1] = Blue static ON
++	- [1,1,1,0] = Blue blink 3Hz
++	- [1,1,1,1] = Blue blink 6Hz
++
++Driver supports HW blinking at 3Hz and 6Hz frequency (50% duty cycle).
++For 3Hz duty cylce is about 167 msec, for 6Hz is about 83 msec.
+diff --git a/Documentation/leds/leds-mlxcpld.txt b/Documentation/leds/leds-mlxcpld.txt
+deleted file mode 100644
+index a0e8fd457117..000000000000
+--- a/Documentation/leds/leds-mlxcpld.txt
++++ /dev/null
+@@ -1,110 +0,0 @@
+-Kernel driver for Mellanox systems LEDs
+-=======================================
+-
+-Provide system LED support for the nex Mellanox systems:
+-"msx6710", "msx6720", "msb7700", "msn2700", "msx1410",
+-"msn2410", "msb7800", "msn2740", "msn2100".
+-
+-Description
+------------
+-Driver provides the following LEDs for the systems "msx6710", "msx6720",
+-"msb7700", "msn2700", "msx1410", "msn2410", "msb7800", "msn2740":
+-  mlxcpld:fan1:green
+-  mlxcpld:fan1:red
+-  mlxcpld:fan2:green
+-  mlxcpld:fan2:red
+-  mlxcpld:fan3:green
+-  mlxcpld:fan3:red
+-  mlxcpld:fan4:green
+-  mlxcpld:fan4:red
+-  mlxcpld:psu:green
+-  mlxcpld:psu:red
+-  mlxcpld:status:green
+-  mlxcpld:status:red
+-
+- "status"
+-  CPLD reg offset: 0x20
+-  Bits [3:0]
+-
+- "psu"
+-  CPLD reg offset: 0x20
+-  Bits [7:4]
+-
+- "fan1"
+-  CPLD reg offset: 0x21
+-  Bits [3:0]
+-
+- "fan2"
+-  CPLD reg offset: 0x21
+-  Bits [7:4]
+-
+- "fan3"
+-  CPLD reg offset: 0x22
+-  Bits [3:0]
+-
+- "fan4"
+-  CPLD reg offset: 0x22
+-  Bits [7:4]
+-
+- Color mask for all the above LEDs:
+-  [bit3,bit2,bit1,bit0] or
+-  [bit7,bit6,bit5,bit4]:
+-	[0,0,0,0] = LED OFF
+-	[0,1,0,1] = Red static ON
+-	[1,1,0,1] = Green static ON
+-	[0,1,1,0] = Red blink 3Hz
+-	[1,1,1,0] = Green blink 3Hz
+-	[0,1,1,1] = Red blink 6Hz
+-	[1,1,1,1] = Green blink 6Hz
+-
+-Driver provides the following LEDs for the system "msn2100":
+-  mlxcpld:fan:green
+-  mlxcpld:fan:red
+-  mlxcpld:psu1:green
+-  mlxcpld:psu1:red
+-  mlxcpld:psu2:green
+-  mlxcpld:psu2:red
+-  mlxcpld:status:green
+-  mlxcpld:status:red
+-  mlxcpld:uid:blue
+-
+- "status"
+-  CPLD reg offset: 0x20
+-  Bits [3:0]
+-
+- "fan"
+-  CPLD reg offset: 0x21
+-  Bits [3:0]
+-
+- "psu1"
+-  CPLD reg offset: 0x23
+-  Bits [3:0]
+-
+- "psu2"
+-  CPLD reg offset: 0x23
+-  Bits [7:4]
+-
+- "uid"
+-  CPLD reg offset: 0x24
+-  Bits [3:0]
+-
+- Color mask for all the above LEDs, excepted uid:
+-  [bit3,bit2,bit1,bit0] or
+-  [bit7,bit6,bit5,bit4]:
+-	[0,0,0,0] = LED OFF
+-	[0,1,0,1] = Red static ON
+-	[1,1,0,1] = Green static ON
+-	[0,1,1,0] = Red blink 3Hz
+-	[1,1,1,0] = Green blink 3Hz
+-	[0,1,1,1] = Red blink 6Hz
+-	[1,1,1,1] = Green blink 6Hz
+-
+- Color mask for uid LED:
+-  [bit3,bit2,bit1,bit0]:
+-	[0,0,0,0] = LED OFF
+-	[1,1,0,1] = Blue static ON
+-	[1,1,1,0] = Blue blink 3Hz
+-	[1,1,1,1] = Blue blink 6Hz
+-
+-Driver supports HW blinking at 3Hz and 6Hz frequency (50% duty cycle).
+-For 3Hz duty cylce is about 167 msec, for 6Hz is about 83 msec.
+diff --git a/Documentation/leds/ledtrig-oneshot.txt b/Documentation/leds/ledtrig-oneshot.rst
 similarity index 90%
-rename from Documentation/scheduler/sched-bwc.txt
-rename to Documentation/scheduler/sched-bwc.rst
-index f6b1873f68ab..3a9064219656 100644
---- a/Documentation/scheduler/sched-bwc.txt
-+++ b/Documentation/scheduler/sched-bwc.rst
-@@ -1,8 +1,9 @@
+rename from Documentation/leds/ledtrig-oneshot.txt
+rename to Documentation/leds/ledtrig-oneshot.rst
+index fe57474a12e2..69fa3ea1d554 100644
+--- a/Documentation/leds/ledtrig-oneshot.txt
++++ b/Documentation/leds/ledtrig-oneshot.rst
+@@ -1,3 +1,4 @@
++====================
+ One-shot LED Trigger
+ ====================
+ 
+@@ -17,27 +18,27 @@ additional "invert" property specifies if the LED has to stay off (normal) or
+ on (inverted) when not rearmed.
+ 
+ The trigger can be activated from user space on led class devices as shown
+-below:
++below::
+ 
+   echo oneshot > trigger
+ 
+ This adds sysfs attributes to the LED that are documented in:
+ Documentation/ABI/testing/sysfs-class-led-trigger-oneshot
+ 
+-Example use-case: network devices, initialization:
++Example use-case: network devices, initialization::
+ 
+   echo oneshot > trigger # set trigger for this led
+   echo 33 > delay_on     # blink at 1 / (33 + 33) Hz on continuous traffic
+   echo 33 > delay_off
+ 
+-interface goes up:
++interface goes up::
+ 
+   echo 1 > invert # set led as normally-on, turn the led on
+ 
+-packet received/transmitted:
++packet received/transmitted::
+ 
+   echo 1 > shot # led starts blinking, ignored if already blinking
+ 
+-interface goes down
++interface goes down::
+ 
+   echo 0 > invert # set led as normally-off, turn the led off
+diff --git a/Documentation/leds/ledtrig-transient.txt b/Documentation/leds/ledtrig-transient.rst
+similarity index 81%
+rename from Documentation/leds/ledtrig-transient.txt
+rename to Documentation/leds/ledtrig-transient.rst
+index 3bd38b487df1..d921dc830cd0 100644
+--- a/Documentation/leds/ledtrig-transient.txt
++++ b/Documentation/leds/ledtrig-transient.rst
+@@ -1,3 +1,4 @@
 +=====================
- CFS Bandwidth Control
+ LED Transient Trigger
  =====================
  
- [ This document only discusses CPU bandwidth control for SCHED_NORMAL.
--  The SCHED_RT case is covered in Documentation/scheduler/sched-rt-group.txt ]
-+  The SCHED_RT case is covered in Documentation/scheduler/sched-rt-group.rst ]
+@@ -62,12 +63,13 @@ non-transient state. When driver gets suspended, irrespective of the transient
+ state, the LED state changes to LED_OFF.
  
- CFS bandwidth control is a CONFIG_FAIR_GROUP_SCHED extension which allows the
- specification of the maximum CPU bandwidth available to a group or hierarchy.
-@@ -27,7 +28,8 @@ cpu.cfs_quota_us: the total available run-time within a period (in microseconds)
- cpu.cfs_period_us: the length of a period (in microseconds)
- cpu.stat: exports throttling statistics [explained further below]
+ Transient trigger can be enabled and disabled from user space on led class
+-devices, that support this trigger as shown below:
++devices, that support this trigger as shown below::
  
--The default values are:
-+The default values are::
+-echo transient > trigger
+-echo none > trigger
++	echo transient > trigger
++	echo none > trigger
+ 
+-NOTE: Add a new property trigger state to control the state.
++NOTE:
++	Add a new property trigger state to control the state.
+ 
+ This trigger exports three properties, activate, state, and duration. When
+ transient trigger is activated these properties are set to default values.
+@@ -79,7 +81,8 @@ transient trigger is activated these properties are set to default values.
+ - state allows user to specify a transient state to be held for the specified
+   duration.
+ 
+-	activate - one shot timer activate mechanism.
++	activate
++	      - one shot timer activate mechanism.
+ 		1 when activated, 0 when deactivated.
+ 		default value is zero when transient trigger is enabled,
+ 		to allow duration to be set.
+@@ -89,12 +92,14 @@ transient trigger is activated these properties are set to default values.
+ 		deactivated state indicates that there is no active timer
+ 		running.
+ 
+-	duration - one shot timer value. When activate is set, duration value
++	duration
++	      - one shot timer value. When activate is set, duration value
+ 		is used to start a timer that runs once. This value doesn't
+ 		get changed by the trigger unless user does a set via
+ 		echo new_value > duration
+ 
+-	state - transient state to be held. It has two values 0 or 1. 0 maps
++	state
++	      - transient state to be held. It has two values 0 or 1. 0 maps
+ 		to LED_OFF and 1 maps to LED_FULL. The specified state is
+ 		held for the duration of the one shot timer and then the
+ 		state gets changed to the non-transient state which is the
+@@ -114,39 +119,49 @@ When timer expires activate goes back to deactivated state, duration is left
+ at the set value to be used when activate is set at a future time. This will
+ allow user app to set the time once and activate it to run it once for the
+ specified value as needed. When timer expires, state is restored to the
+-non-transient state which is the inverse of the transient state.
++non-transient state which is the inverse of the transient state:
+ 
+-	echo 1 > activate - starts timer = duration when duration is not 0.
+-	echo 0 > activate - cancels currently running timer.
+-	echo n > duration - stores timer value to be used upon next
+-                            activate. Currently active timer if
+-                            any, continues to run for the specified time.
+-	echo 0 > duration - stores timer value to be used upon next
+-                            activate. Currently active timer if any,
+-                            continues to run for the specified time.
+-	echo 1 > state    - stores desired transient state LED_FULL to be
++	=================   ===============================================
++	echo 1 > activate   starts timer = duration when duration is not 0.
++	echo 0 > activate   cancels currently running timer.
++	echo n > duration   stores timer value to be used upon next
++			    activate. Currently active timer if
++			    any, continues to run for the specified time.
++	echo 0 > duration   stores timer value to be used upon next
++			    activate. Currently active timer if any,
++			    continues to run for the specified time.
++	echo 1 > state      stores desired transient state LED_FULL to be
+ 			    held for the specified duration.
+-	echo 0 > state    - stores desired transient state LED_OFF to be
++	echo 0 > state      stores desired transient state LED_OFF to be
+ 			    held for the specified duration.
++	=================   ===============================================
 +
- 	cpu.cfs_period_us=100ms
- 	cpu.cfs_quota=-1
- 
-@@ -55,7 +57,8 @@ For efficiency run-time is transferred between the global pool and CPU local
- on large systems.  The amount transferred each time such an update is required
- is described as the "slice".
- 
--This is tunable via procfs:
-+This is tunable via procfs::
-+
- 	/proc/sys/kernel/sched_cfs_bandwidth_slice_us (default=5ms)
- 
- Larger slice values will reduce transfer overheads, while smaller values allow
-@@ -66,6 +69,7 @@ Statistics
- A group's bandwidth statistics are exported via 3 fields in cpu.stat.
- 
- cpu.stat:
-+
- - nr_periods: Number of enforcement intervals that have elapsed.
- - nr_throttled: Number of times the group has been throttled/limited.
- - throttled_time: The total time duration (in nanoseconds) for which entities
-@@ -78,12 +82,15 @@ Hierarchical considerations
- The interface enforces that an individual entity's bandwidth is always
- attainable, that is: max(c_i) <= C. However, over-subscription in the
- aggregate case is explicitly allowed to enable work-conserving semantics
--within a hierarchy.
-+within a hierarchy:
-+
-   e.g. \Sum (c_i) may exceed C
-+
- [ Where C is the parent's bandwidth, and c_i its children ]
- 
- 
- There are two ways in which a group may become throttled:
-+
- 	a. it fully consumes its own quota within a period
- 	b. a parent's quota is fully consumed within its period
- 
-@@ -92,7 +99,7 @@ be allowed to until the parent's runtime is refreshed.
- 
- Examples
- --------
--1. Limit a group to 1 CPU worth of runtime.
-+1. Limit a group to 1 CPU worth of runtime::
- 
- 	If period is 250ms and quota is also 250ms, the group will get
- 	1 CPU worth of runtime every 250ms.
-@@ -100,10 +107,10 @@ Examples
- 	# echo 250000 > cpu.cfs_quota_us /* quota = 250ms */
- 	# echo 250000 > cpu.cfs_period_us /* period = 250ms */
- 
--2. Limit a group to 2 CPUs worth of runtime on a multi-CPU machine.
-+2. Limit a group to 2 CPUs worth of runtime on a multi-CPU machine
- 
--	With 500ms period and 1000ms quota, the group can get 2 CPUs worth of
--	runtime every 500ms.
-+   With 500ms period and 1000ms quota, the group can get 2 CPUs worth of
-+   runtime every 500ms::
- 
- 	# echo 1000000 > cpu.cfs_quota_us /* quota = 1000ms */
- 	# echo 500000 > cpu.cfs_period_us /* period = 500ms */
-@@ -112,11 +119,10 @@ Examples
- 
- 3. Limit a group to 20% of 1 CPU.
- 
--	With 50ms period, 10ms quota will be equivalent to 20% of 1 CPU.
-+   With 50ms period, 10ms quota will be equivalent to 20% of 1 CPU::
- 
- 	# echo 10000 > cpu.cfs_quota_us /* quota = 10ms */
- 	# echo 50000 > cpu.cfs_period_us /* period = 50ms */
- 
--	By using a small period here we are ensuring a consistent latency
--	response at the expense of burst capacity.
--
-+   By using a small period here we are ensuring a consistent latency
-+   response at the expense of burst capacity.
-diff --git a/Documentation/scheduler/sched-deadline.txt b/Documentation/scheduler/sched-deadline.rst
-similarity index 88%
-rename from Documentation/scheduler/sched-deadline.txt
-rename to Documentation/scheduler/sched-deadline.rst
-index a7514343b660..3391e86d810c 100644
---- a/Documentation/scheduler/sched-deadline.txt
-+++ b/Documentation/scheduler/sched-deadline.rst
-@@ -1,29 +1,29 @@
--			  Deadline Task Scheduling
--			  ------------------------
-+========================
-+Deadline Task Scheduling
-+========================
- 
--CONTENTS
--========
-+.. CONTENTS
- 
-- 0. WARNING
-- 1. Overview
-- 2. Scheduling algorithm
--   2.1 Main algorithm
--   2.2 Bandwidth reclaiming
-- 3. Scheduling Real-Time Tasks
--   3.1 Definitions
--   3.2 Schedulability Analysis for Uniprocessor Systems
--   3.3 Schedulability Analysis for Multiprocessor Systems
--   3.4 Relationship with SCHED_DEADLINE Parameters
-- 4. Bandwidth management
--   4.1 System-wide settings
--   4.2 Task interface
--   4.3 Default behavior
--   4.4 Behavior of sched_yield()
-- 5. Tasks CPU affinity
--   5.1 SCHED_DEADLINE and cpusets HOWTO
-- 6. Future plans
-- A. Test suite
-- B. Minimal main()
-+    0. WARNING
-+    1. Overview
-+    2. Scheduling algorithm
-+      2.1 Main algorithm
-+      2.2 Bandwidth reclaiming
-+    3. Scheduling Real-Time Tasks
-+      3.1 Definitions
-+      3.2 Schedulability Analysis for Uniprocessor Systems
-+      3.3 Schedulability Analysis for Multiprocessor Systems
-+      3.4 Relationship with SCHED_DEADLINE Parameters
-+    4. Bandwidth management
-+      4.1 System-wide settings
-+      4.2 Task interface
-+      4.3 Default behavior
-+      4.4 Behavior of sched_yield()
-+    5. Tasks CPU affinity
-+      5.1 SCHED_DEADLINE and cpusets HOWTO
-+    6. Future plans
-+    A. Test suite
-+    B. Minimal main()
- 
- 
- 0. WARNING
-@@ -44,7 +44,7 @@ CONTENTS
- 
- 
- 2. Scheduling algorithm
--==================
-+=======================
- 
- 2.1 Main algorithm
- ------------------
-@@ -80,7 +80,7 @@ CONTENTS
-     a "remaining runtime". These two parameters are initially set to 0;
- 
-   - When a SCHED_DEADLINE task wakes up (becomes ready for execution),
--    the scheduler checks if
-+    the scheduler checks if::
- 
-                  remaining runtime                  runtime
-         ----------------------------------    >    ---------
-@@ -97,7 +97,7 @@ CONTENTS
-     left unchanged;
- 
-   - When a SCHED_DEADLINE task executes for an amount of time t, its
--    remaining runtime is decreased as
-+    remaining runtime is decreased as::
- 
-          remaining runtime = remaining runtime - t
- 
-@@ -112,7 +112,7 @@ CONTENTS
- 
-   - When the current time is equal to the replenishment time of a
-     throttled task, the scheduling deadline and the remaining runtime are
--    updated as
-+    updated as::
- 
-          scheduling deadline = scheduling deadline + period
-          remaining runtime = remaining runtime + runtime
-@@ -129,7 +129,7 @@ CONTENTS
-  Reclamation of Unused Bandwidth) algorithm [15, 16, 17] and it is enabled
-  when flag SCHED_FLAG_RECLAIM is set.
- 
-- The following diagram illustrates the state names for tasks handled by GRUB:
-+ The following diagram illustrates the state names for tasks handled by GRUB::
- 
-                              ------------
-                  (d)        |   Active   |
-@@ -168,7 +168,7 @@ CONTENTS
-       breaking the real-time guarantees.
- 
-       The 0-lag time for a task entering the ActiveNonContending state is
--      computed as
-+      computed as::
- 
-                         (runtime * dl_period)
-              deadline - ---------------------
-@@ -183,7 +183,7 @@ CONTENTS
-       the task's utilization must be removed from the previous runqueue's active
-       utilization and must be added to the new runqueue's active utilization.
-       In order to avoid races between a task waking up on a runqueue while the
--       "inactive timer" is running on a different CPU, the "dl_non_contending"
-+      "inactive timer" is running on a different CPU, the "dl_non_contending"
-       flag is used to indicate that a task is not on a runqueue but is active
-       (so, the flag is set when the task blocks and is cleared when the
-       "inactive timer" fires or when the task  wakes up).
-@@ -222,36 +222,36 @@ CONTENTS
- 
- 
-  Let's now see a trivial example of two deadline tasks with runtime equal
-- to 4 and period equal to 8 (i.e., bandwidth equal to 0.5):
-+ to 4 and period equal to 8 (i.e., bandwidth equal to 0.5)::
- 
--     A            Task T1
--     |
--     |                               |
--     |                               |
--     |--------                       |----
--     |       |                       V
--     |---|---|---|---|---|---|---|---|--------->t
--     0   1   2   3   4   5   6   7   8
-+         A            Task T1
-+         |
-+         |                               |
-+         |                               |
-+         |--------                       |----
-+         |       |                       V
-+         |---|---|---|---|---|---|---|---|--------->t
-+         0   1   2   3   4   5   6   7   8
- 
- 
--     A            Task T2
--     |
--     |                               |
--     |                               |
--     |       ------------------------|
--     |       |                       V
--     |---|---|---|---|---|---|---|---|--------->t
--     0   1   2   3   4   5   6   7   8
-+         A            Task T2
-+         |
-+         |                               |
-+         |                               |
-+         |       ------------------------|
-+         |       |                       V
-+         |---|---|---|---|---|---|---|---|--------->t
-+         0   1   2   3   4   5   6   7   8
- 
- 
--     A            running_bw
--     |
--   1 -----------------               ------
--     |               |               |
--  0.5-               -----------------
--     |                               |
--     |---|---|---|---|---|---|---|---|--------->t
--     0   1   2   3   4   5   6   7   8
-+         A            running_bw
-+         |
-+       1 -----------------               ------
-+         |               |               |
-+      0.5-               -----------------
-+         |                               |
-+         |---|---|---|---|---|---|---|---|--------->t
-+         0   1   2   3   4   5   6   7   8
- 
- 
-   - Time t = 0:
-@@ -284,7 +284,7 @@ CONTENTS
- 
- 
- 2.3 Energy-aware scheduling
--------------------------
-+---------------------------
- 
-  When cpufreq's schedutil governor is selected, SCHED_DEADLINE implements the
-  GRUB-PA [19] algorithm, reducing the CPU operating frequency to the minimum
-@@ -299,15 +299,20 @@ CONTENTS
- 3. Scheduling Real-Time Tasks
- =============================
- 
-- * BIG FAT WARNING ******************************************************
-- *
-- * This section contains a (not-thorough) summary on classical deadline
-- * scheduling theory, and how it applies to SCHED_DEADLINE.
-- * The reader can "safely" skip to Section 4 if only interested in seeing
-- * how the scheduling policy can be used. Anyway, we strongly recommend
-- * to come back here and continue reading (once the urge for testing is
-- * satisfied :P) to be sure of fully understanding all technical details.
-- ************************************************************************
-+
-+
-+ ..  BIG FAT WARNING ******************************************************
-+
-+ .. warning::
-+
-+   This section contains a (not-thorough) summary on classical deadline
-+   scheduling theory, and how it applies to SCHED_DEADLINE.
-+   The reader can "safely" skip to Section 4 if only interested in seeing
-+   how the scheduling policy can be used. Anyway, we strongly recommend
-+   to come back here and continue reading (once the urge for testing is
-+   satisfied :P) to be sure of fully understanding all technical details.
-+
-+ .. ************************************************************************
- 
-  There are no limitations on what kind of task can exploit this new
-  scheduling discipline, even if it must be said that it is particularly
-@@ -329,6 +334,7 @@ CONTENTS
-  sporadic with minimum inter-arrival time P is r_{j+1} >= r_j + P. Finally,
-  d_j = r_j + D, where D is the task's relative deadline.
-  Summing up, a real-time task can be described as
-+
- 	Task = (WCET, D, P)
- 
-  The utilization of a real-time task is defined as the ratio between its
-@@ -352,13 +358,15 @@ CONTENTS
-  between the finishing time of a job and its absolute deadline).
-  More precisely, it can be proven that using a global EDF scheduler the
-  maximum tardiness of each task is smaller or equal than
-+
- 	((M − 1) · WCET_max − WCET_min)/(M − (M − 2) · U_max) + WCET_max
-+
-  where WCET_max = max{WCET_i} is the maximum WCET, WCET_min=min{WCET_i}
-  is the minimum WCET, and U_max = max{WCET_i/P_i} is the maximum
-  utilization[12].
- 
- 3.2 Schedulability Analysis for Uniprocessor Systems
--------------------------
-+----------------------------------------------------
- 
-  If M=1 (uniprocessor system), or in case of partitioned scheduling (each
-  real-time task is statically assigned to one and only one CPU), it is
-@@ -370,7 +378,9 @@ CONTENTS
-  a task as WCET_i/min{D_i,P_i}, and EDF is able to respect all the deadlines
-  of all the tasks running on a CPU if the sum of the densities of the tasks
-  running on such a CPU is smaller or equal than 1:
-+
- 	sum(WCET_i / min{D_i, P_i}) <= 1
-+
-  It is important to notice that this condition is only sufficient, and not
-  necessary: there are task sets that are schedulable, but do not respect the
-  condition. For example, consider the task set {Task_1,Task_2} composed by
-@@ -379,7 +389,9 @@ CONTENTS
-  (Task_1 is scheduled as soon as it is released, and finishes just in time
-  to respect its deadline; Task_2 is scheduled immediately after Task_1, hence
-  its response time cannot be larger than 50ms + 10ms = 60ms) even if
-+
- 	50 / min{50,100} + 10 / min{100, 100} = 50 / 50 + 10 / 100 = 1.1
-+
-  Of course it is possible to test the exact schedulability of tasks with
-  D_i != P_i (checking a condition that is both sufficient and necessary),
-  but this cannot be done by comparing the total utilization or density with
-@@ -399,7 +411,7 @@ CONTENTS
-  4 Linux uses an admission test based on the tasks' utilizations.
- 
- 3.3 Schedulability Analysis for Multiprocessor Systems
--------------------------
-+------------------------------------------------------
- 
-  On multiprocessor systems with global EDF scheduling (non partitioned
-  systems), a sufficient test for schedulability can not be based on the
-@@ -428,7 +440,9 @@ CONTENTS
-  between total utilization (or density) and a fixed constant. If all tasks
-  have D_i = P_i, a sufficient schedulability condition can be expressed in
-  a simple way:
-+
- 	sum(WCET_i / P_i) <= M - (M - 1) · U_max
-+
-  where U_max = max{WCET_i / P_i}[10]. Notice that for U_max = 1,
-  M - (M - 1) · U_max becomes M - M + 1 = 1 and this schedulability condition
-  just confirms the Dhall's effect. A more complete survey of the literature
-@@ -447,7 +461,7 @@ CONTENTS
-  the tasks are limited.
- 
- 3.4 Relationship with SCHED_DEADLINE Parameters
--------------------------
-+-----------------------------------------------
- 
-  Finally, it is important to understand the relationship between the
-  SCHED_DEADLINE scheduling parameters described in Section 2 (runtime,
-@@ -473,6 +487,7 @@ CONTENTS
-  this task, as it is not possible to respect its temporal constraints.
- 
-  References:
-+
-   1 - C. L. Liu and J. W. Layland. Scheduling algorithms for multiprogram-
-       ming in a hard-real-time environment. Journal of the Association for
-       Computing Machinery, 20(1), 1973.
-@@ -550,7 +565,7 @@ CONTENTS
-  The interface used to control the CPU bandwidth that can be allocated
-  to -deadline tasks is similar to the one already used for -rt
-  tasks with real-time group scheduling (a.k.a. RT-throttling - see
-- Documentation/scheduler/sched-rt-group.txt), and is based on readable/
-+ Documentation/scheduler/sched-rt-group.rst), and is based on readable/
-  writable control files located in procfs (for system wide settings).
-  Notice that per-group settings (controlled through cgroupfs) are still not
-  defined for -deadline tasks, because more discussion is needed in order to
-@@ -596,11 +611,13 @@ CONTENTS
-  Specifying a periodic/sporadic task that executes for a given amount of
-  runtime at each instance, and that is scheduled according to the urgency of
-  its own timing constraints needs, in general, a way of declaring:
-+
-   - a (maximum/typical) instance execution time,
-   - a minimum interval between consecutive instances,
-   - a time constraint by which each instance must be completed.
- 
-  Therefore:
-+
-   * a new struct sched_attr, containing all the necessary fields is
-     provided;
-   * the new scheduling related syscalls that manipulate it, i.e.,
-@@ -658,21 +675,21 @@ CONTENTS
- ------------------------------------
- 
-  An example of a simple configuration (pin a -deadline task to CPU0)
-- follows (rt-app is used to create a -deadline task).
-+ follows (rt-app is used to create a -deadline task)::
- 
-- mkdir /dev/cpuset
-- mount -t cgroup -o cpuset cpuset /dev/cpuset
-- cd /dev/cpuset
-- mkdir cpu0
-- echo 0 > cpu0/cpuset.cpus
-- echo 0 > cpu0/cpuset.mems
-- echo 1 > cpuset.cpu_exclusive
-- echo 0 > cpuset.sched_load_balance
-- echo 1 > cpu0/cpuset.cpu_exclusive
-- echo 1 > cpu0/cpuset.mem_exclusive
-- echo $$ > cpu0/tasks
-- rt-app -t 100000:10000:d:0 -D5 (it is now actually superfluous to specify
-- task affinity)
-+   mkdir /dev/cpuset
-+   mount -t cgroup -o cpuset cpuset /dev/cpuset
-+   cd /dev/cpuset
-+   mkdir cpu0
-+   echo 0 > cpu0/cpuset.cpus
-+   echo 0 > cpu0/cpuset.mems
-+   echo 1 > cpuset.cpu_exclusive
-+   echo 0 > cpuset.sched_load_balance
-+   echo 1 > cpu0/cpuset.cpu_exclusive
-+   echo 1 > cpu0/cpuset.mem_exclusive
-+   echo $$ > cpu0/tasks
-+   rt-app -t 100000:10000:d:0 -D5 # it is now actually superfluous to specify
-+				  # task affinity
- 
- 6. Future plans
- ===============
-@@ -711,7 +728,7 @@ Appendix A. Test suite
-  rt-app is available at: https://github.com/scheduler-tools/rt-app.
- 
-  Thread parameters can be specified from the command line, with something like
-- this:
-+ this::
- 
-   # rt-app -t 100000:10000:d -t 150000:20000:f:10 -D5
- 
-@@ -721,27 +738,27 @@ Appendix A. Test suite
-  of 5 seconds.
- 
-  More interestingly, configurations can be described with a json file that
-- can be passed as input to rt-app with something like this:
-+ can be passed as input to rt-app with something like this::
- 
-   # rt-app my_config.json
- 
-  The parameters that can be specified with the second method are a superset
-  of the command line options. Please refer to rt-app documentation for more
-- details (<rt-app-sources>/doc/*.json).
-+ details (`<rt-app-sources>/doc/*.json`).
- 
-  The second testing application is a modification of schedtool, called
-  schedtool-dl, which can be used to setup SCHED_DEADLINE parameters for a
-  certain pid/application. schedtool-dl is available at:
-  https://github.com/scheduler-tools/schedtool-dl.git.
- 
-- The usage is straightforward:
-+ The usage is straightforward::
- 
-   # schedtool -E -t 10000000:100000000 -e ./my_cpuhog_app
- 
-  With this, my_cpuhog_app is put to run inside a SCHED_DEADLINE reservation
-  of 10ms every 100ms (note that parameters are expressed in microseconds).
-  You can also use schedtool to create a reservation for an already running
-- application, given that you know its pid:
-+ application, given that you know its pid::
- 
-   # schedtool -E -t 10000000:100000000 my_app_pid
- 
-@@ -750,43 +767,43 @@ Appendix B. Minimal main()
- 
-  We provide in what follows a simple (ugly) self-contained code snippet
-  showing how SCHED_DEADLINE reservations can be created by a real-time
-- application developer.
--
-- #define _GNU_SOURCE
-- #include <unistd.h>
-- #include <stdio.h>
-- #include <stdlib.h>
-- #include <string.h>
-- #include <time.h>
-- #include <linux/unistd.h>
-- #include <linux/kernel.h>
-- #include <linux/types.h>
-- #include <sys/syscall.h>
-- #include <pthread.h>
--
-- #define gettid() syscall(__NR_gettid)
--
-- #define SCHED_DEADLINE	6
--
-- /* XXX use the proper syscall numbers */
-- #ifdef __x86_64__
-- #define __NR_sched_setattr		314
-- #define __NR_sched_getattr		315
-- #endif
--
-- #ifdef __i386__
-- #define __NR_sched_setattr		351
-- #define __NR_sched_getattr		352
-- #endif
--
-- #ifdef __arm__
-- #define __NR_sched_setattr		380
-- #define __NR_sched_getattr		381
-- #endif
--
-- static volatile int done;
--
-- struct sched_attr {
-+ application developer::
-+
-+   #define _GNU_SOURCE
-+   #include <unistd.h>
-+   #include <stdio.h>
-+   #include <stdlib.h>
-+   #include <string.h>
-+   #include <time.h>
-+   #include <linux/unistd.h>
-+   #include <linux/kernel.h>
-+   #include <linux/types.h>
-+   #include <sys/syscall.h>
-+   #include <pthread.h>
-+
-+   #define gettid() syscall(__NR_gettid)
-+
-+   #define SCHED_DEADLINE	6
-+
-+   /* XXX use the proper syscall numbers */
-+   #ifdef __x86_64__
-+   #define __NR_sched_setattr		314
-+   #define __NR_sched_getattr		315
-+   #endif
-+
-+   #ifdef __i386__
-+   #define __NR_sched_setattr		351
-+   #define __NR_sched_getattr		352
-+   #endif
-+
-+   #ifdef __arm__
-+   #define __NR_sched_setattr		380
-+   #define __NR_sched_getattr		381
-+   #endif
-+
-+   static volatile int done;
-+
-+   struct sched_attr {
- 	__u32 size;
- 
- 	__u32 sched_policy;
-@@ -802,25 +819,25 @@ Appendix B. Minimal main()
- 	__u64 sched_runtime;
- 	__u64 sched_deadline;
- 	__u64 sched_period;
-- };
-+   };
- 
-- int sched_setattr(pid_t pid,
-+   int sched_setattr(pid_t pid,
- 		  const struct sched_attr *attr,
- 		  unsigned int flags)
-- {
-+   {
- 	return syscall(__NR_sched_setattr, pid, attr, flags);
-- }
-+   }
- 
-- int sched_getattr(pid_t pid,
-+   int sched_getattr(pid_t pid,
- 		  struct sched_attr *attr,
- 		  unsigned int size,
- 		  unsigned int flags)
-- {
-+   {
- 	return syscall(__NR_sched_getattr, pid, attr, size, flags);
-- }
-+   }
- 
-- void *run_deadline(void *data)
-- {
-+   void *run_deadline(void *data)
-+   {
- 	struct sched_attr attr;
- 	int x = 0;
- 	int ret;
-@@ -851,10 +868,10 @@ Appendix B. Minimal main()
- 
- 	printf("deadline thread dies [%ld]\n", gettid());
- 	return NULL;
-- }
-+   }
- 
-- int main (int argc, char **argv)
-- {
-+   int main (int argc, char **argv)
-+   {
- 	pthread_t thread;
- 
- 	printf("main thread [%ld]\n", gettid());
-@@ -868,4 +885,4 @@ Appendix B. Minimal main()
- 
- 	printf("main dies [%ld]\n", gettid());
- 	return 0;
-- }
-+   }
-diff --git a/Documentation/scheduler/sched-design-CFS.txt b/Documentation/scheduler/sched-design-CFS.rst
-similarity index 97%
-rename from Documentation/scheduler/sched-design-CFS.txt
-rename to Documentation/scheduler/sched-design-CFS.rst
-index d1328890ef28..53b30d1967cf 100644
---- a/Documentation/scheduler/sched-design-CFS.txt
-+++ b/Documentation/scheduler/sched-design-CFS.rst
-@@ -1,9 +1,10 @@
--                      =============
--                      CFS Scheduler
--                      =============
-+=============
-+CFS Scheduler
-+=============
- 
- 
- 1.  OVERVIEW
-+============
- 
- CFS stands for "Completely Fair Scheduler," and is the new "desktop" process
- scheduler implemented by Ingo Molnar and merged in Linux 2.6.23.  It is the
-@@ -27,6 +28,7 @@ is its actual runtime normalized to the total number of running tasks.
- 
- 
- 2.  FEW IMPLEMENTATION DETAILS
-+==============================
- 
- In CFS the virtual runtime is expressed and tracked via the per-task
- p->se.vruntime (nanosec-unit) value.  This way, it's possible to accurately
-@@ -49,6 +51,7 @@ algorithm variants to recognize sleepers.
- 
- 
- 3.  THE RBTREE
-+==============
- 
- CFS's design is quite radical: it does not use the old data structures for the
- runqueues, but it uses a time-ordered rbtree to build a "timeline" of future
-@@ -84,6 +87,7 @@ picked and the current task is preempted.
- 
- 
- 4.  SOME FEATURES OF CFS
-+========================
- 
- CFS uses nanosecond granularity accounting and does not rely on any jiffies or
- other HZ detail.  Thus the CFS scheduler has no notion of "timeslices" in the
-@@ -113,6 +117,7 @@ result.
- 
- 
- 5. Scheduling policies
-+======================
- 
- CFS implements three scheduling policies:
- 
-@@ -137,6 +142,7 @@ SCHED_IDLE.
- 
- 
- 6.  SCHEDULING CLASSES
-+======================
- 
- The new CFS scheduler has been designed in such a way to introduce "Scheduling
- Classes," an extensible hierarchy of scheduler modules.  These modules
-@@ -197,6 +203,7 @@ This is the (partial) list of the hooks:
- 
- 
- 7.  GROUP SCHEDULER EXTENSIONS TO CFS
-+=====================================
- 
- Normally, the scheduler operates on individual tasks and strives to provide
- fair CPU time to each task.  Sometimes, it may be desirable to group tasks and
-@@ -219,7 +226,7 @@ SCHED_BATCH) tasks.
- 
- When CONFIG_FAIR_GROUP_SCHED is defined, a "cpu.shares" file is created for each
- group created using the pseudo filesystem.  See example steps below to create
--task groups and modify their CPU share using the "cgroups" pseudo filesystem.
-+task groups and modify their CPU share using the "cgroups" pseudo filesystem::
- 
- 	# mount -t tmpfs cgroup_root /sys/fs/cgroup
- 	# mkdir /sys/fs/cgroup/cpu
-diff --git a/Documentation/scheduler/sched-domains.txt b/Documentation/scheduler/sched-domains.rst
-similarity index 97%
-rename from Documentation/scheduler/sched-domains.txt
-rename to Documentation/scheduler/sched-domains.rst
-index 4af80b1c05aa..f7504226f445 100644
---- a/Documentation/scheduler/sched-domains.txt
-+++ b/Documentation/scheduler/sched-domains.rst
-@@ -1,3 +1,7 @@
-+=================
-+Scheduler Domains
-+=================
-+
- Each CPU has a "base" scheduling domain (struct sched_domain). The domain
- hierarchy is built from these base domains via the ->parent pointer. ->parent
- MUST be NULL terminated, and domain structures should be per-CPU as they are
-@@ -46,7 +50,9 @@ CPU's runqueue and the newly found busiest one and starts moving tasks from it
- to our runqueue. The exact number of tasks amounts to an imbalance previously
- computed while iterating over this sched domain's groups.
- 
--*** Implementing sched domains ***
-+Implementing sched domains
-+==========================
-+
- The "base" domain will "span" the first level of the hierarchy. In the case
- of SMT, you'll span all siblings of the physical CPU, with each group being
- a single virtual CPU.
-diff --git a/Documentation/scheduler/sched-energy.txt b/Documentation/scheduler/sched-energy.rst
-similarity index 96%
-rename from Documentation/scheduler/sched-energy.txt
-rename to Documentation/scheduler/sched-energy.rst
-index d97207b9accb..9580c57a52bc 100644
---- a/Documentation/scheduler/sched-energy.txt
-+++ b/Documentation/scheduler/sched-energy.rst
-@@ -1,6 +1,6 @@
--			   =======================
--			   Energy Aware Scheduling
--			   =======================
-+=======================
-+Energy Aware Scheduling
-+=======================
- 
- 1. Introduction
- ---------------
-@@ -12,7 +12,7 @@ with a minimal impact on throughput. This document aims at providing an
- introduction on how EAS works, what are the main design decisions behind it, and
- details what is needed to get it to run.
- 
--Before going any further, please note that at the time of writing:
-+Before going any further, please note that at the time of writing::
- 
-    /!\ EAS does not support platforms with symmetric CPU topologies /!\
- 
-@@ -33,13 +33,13 @@ To make it clear from the start:
-  - power = energy/time = [joule/second] = [watt]
- 
- The goal of EAS is to minimize energy, while still getting the job done. That
--is, we want to maximize:
-+is, we want to maximize::
- 
- 	performance [inst/s]
- 	--------------------
- 	    power [W]
- 
--which is equivalent to minimizing:
-+which is equivalent to minimizing::
- 
- 	energy [J]
- 	-----------
-@@ -97,7 +97,7 @@ domains can contain duplicate elements.
- 
- Example 1.
-     Let us consider a platform with 12 CPUs, split in 3 performance domains
--    (pd0, pd4 and pd8), organized as follows:
-+    (pd0, pd4 and pd8), organized as follows::
- 
- 	          CPUs:   0 1 2 3 4 5 6 7 8 9 10 11
- 	          PDs:   |--pd0--|--pd4--|---pd8---|
-@@ -108,6 +108,7 @@ Example 1.
-     containing 6 CPUs. The two root domains are denoted rd1 and rd2 in the
-     above figure. Since pd4 intersects with both rd1 and rd2, it will be
-     present in the linked list '->pd' attached to each of them:
-+
-        * rd1->pd: pd0 -> pd4
-        * rd2->pd: pd4 -> pd8
- 
-@@ -159,9 +160,9 @@ Example 2.
-     Each performance domain has three Operating Performance Points (OPPs).
-     The CPU capacity and power cost associated with each OPP is listed in
-     the Energy Model table. The util_avg of P is shown on the figures
--    below as 'PP'.
-+    below as 'PP'::
- 
--    CPU util.
-+     CPU util.
-       1024                 - - - - - - -              Energy Model
-                                                +-----------+-------------+
-                                                |  Little   |     Big     |
-@@ -188,8 +189,7 @@ Example 2.
-     (which is coherent with the behaviour of the schedutil CPUFreq
-     governor, see Section 6. for more details on this topic).
- 
--    Case 1. P is migrated to CPU1
--    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+    **Case 1. P is migrated to CPU1**::
- 
-       1024                 - - - - - - -
- 
-@@ -207,8 +207,7 @@ Example 2.
-             CPU0   CPU1     CPU2   CPU3
- 
- 
--    Case 2. P is migrated to CPU3
--    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+    **Case 2. P is migrated to CPU3**::
- 
-       1024                 - - - - - - -
- 
-@@ -226,8 +225,7 @@ Example 2.
-             CPU0   CPU1     CPU2   CPU3
- 
- 
--    Case 3. P stays on prev_cpu / CPU 0
--    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+    **Case 3. P stays on prev_cpu / CPU 0**::
- 
-       1024                 - - - - - - -
- 
-@@ -324,7 +322,9 @@ hardware properties and on other features of the kernel being enabled. This
- section lists these dependencies and provides hints as to how they can be met.
- 
- 
--  6.1 - Asymmetric CPU topology
-+6.1 - Asymmetric CPU topology
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
- 
- As mentioned in the introduction, EAS is only supported on platforms with
- asymmetric CPU topologies for now. This requirement is checked at run-time by
-@@ -347,7 +347,8 @@ significant savings on SMP platforms have been observed yet. This restriction
- could be amended in the future if proven otherwise.
- 
- 
--  6.2 - Energy Model presence
-+6.2 - Energy Model presence
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- EAS uses the EM of a platform to estimate the impact of scheduling decisions on
- energy. So, your platform must provide power cost tables to the EM framework in
-@@ -358,7 +359,8 @@ Please also note that the scheduling domains need to be re-built after the
- EM has been registered in order to start EAS.
- 
- 
--  6.3 - Energy Model complexity
-+6.3 - Energy Model complexity
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The task wake-up path is very latency-sensitive. When the EM of a platform is
- too complex (too many CPUs, too many performance domains, too many performance
-@@ -388,7 +390,8 @@ two possible options:
-        hence enabling it to cope with larger EMs in reasonable time.
- 
- 
--  6.4 - Schedutil governor
-+6.4 - Schedutil governor
-+^^^^^^^^^^^^^^^^^^^^^^^^
- 
- EAS tries to predict at which OPP will the CPUs be running in the close future
- in order to estimate their energy consumption. To do so, it is assumed that OPPs
-@@ -405,7 +408,8 @@ frequency requests and energy predictions.
- Using EAS with any other governor than schedutil is not supported.
- 
- 
--  6.5 Scale-invariant utilization signals
-+6.5 Scale-invariant utilization signals
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- In order to make accurate prediction across CPUs and for all performance
- states, EAS needs frequency-invariant and CPU-invariant PELT signals. These can
-@@ -416,7 +420,8 @@ Using EAS on a platform that doesn't implement these two callbacks is not
- supported.
- 
- 
--  6.6 Multithreading (SMT)
-+6.6 Multithreading (SMT)
-+^^^^^^^^^^^^^^^^^^^^^^^^
- 
- EAS in its current form is SMT unaware and is not able to leverage
- multithreaded hardware to save energy. EAS considers threads as independent
-diff --git a/Documentation/scheduler/sched-nice-design.txt b/Documentation/scheduler/sched-nice-design.rst
-similarity index 98%
-rename from Documentation/scheduler/sched-nice-design.txt
-rename to Documentation/scheduler/sched-nice-design.rst
-index 3ac1e46d5365..0571f1b47e64 100644
---- a/Documentation/scheduler/sched-nice-design.txt
-+++ b/Documentation/scheduler/sched-nice-design.rst
-@@ -1,3 +1,7 @@
++What is not supported
 +=====================
-+Scheduler Nice Design
-+=====================
+ 
+-What is not supported:
+-======================
+ - Timer activation is one shot and extending and/or shortening the timer
+   is not supported.
+ 
+-Example use-case 1:
++Examples
++========
 +
- This document explains the thinking about the revamped and streamlined
- nice-levels implementation in the new Linux scheduler.
++use-case 1::
++
+ 	echo transient > trigger
+ 	echo n > duration
+ 	echo 1 > state
+-repeat the following step as needed:
++
++repeat the following step as needed::
++
+ 	echo 1 > activate - start timer = duration to run once
+ 	echo 1 > activate - start timer = duration to run once
+ 	echo none > trigger
  
-@@ -14,7 +18,7 @@ much stronger than they were before in 2.4 (and people were happy about
- that change), and we also intentionally calibrated the linear timeslice
- rule so that nice +19 level would be _exactly_ 1 jiffy. To better
- understand it, the timeslice graph went like this (cheesy ASCII art
--alert!):
-+alert!)::
+ This trigger is intended to be used for for the following example use cases:
++
+  - Control of vibrate (phones, tablets etc.) hardware by user space app.
+  - Use of LED by user space app as activity indicator.
+  - Use of LED by user space app as a kind of watchdog indicator -- as
+-       long as the app is alive, it can keep the LED illuminated, if it dies
+-       the LED will be extinguished automatically.
++   long as the app is alive, it can keep the LED illuminated, if it dies
++   the LED will be extinguished automatically.
+  - Use by any user space app that needs a transient GPIO output.
+diff --git a/Documentation/leds/ledtrig-usbport.txt b/Documentation/leds/ledtrig-usbport.rst
+similarity index 86%
+rename from Documentation/leds/ledtrig-usbport.txt
+rename to Documentation/leds/ledtrig-usbport.rst
+index 69f54bfb4789..37c2505bfd57 100644
+--- a/Documentation/leds/ledtrig-usbport.txt
++++ b/Documentation/leds/ledtrig-usbport.rst
+@@ -1,3 +1,4 @@
++====================
+ USB port LED trigger
+ ====================
+ 
+@@ -10,14 +11,18 @@ listed as separated entries in a "ports" subdirectory. Selecting is handled by
+ echoing "1" to a chosen port.
+ 
+ Please note that this trigger allows selecting multiple USB ports for a single
+-LED. This can be useful in two cases:
++LED.
++
++This can be useful in two cases:
+ 
+ 1) Device with single USB LED and few physical ports
++====================================================
+ 
+ In such a case LED will be turned on as long as there is at least one connected
+ USB device.
+ 
+ 2) Device with a physical port handled by few controllers
++=========================================================
+ 
+ Some devices may have one controller per PHY standard. E.g. USB 3.0 physical
+ port may be handled by ohci-platform, ehci-platform and xhci-hcd. If there is
+@@ -25,14 +30,14 @@ only one LED user will most likely want to assign ports from all 3 hubs.
  
  
-                    A
-diff --git a/Documentation/scheduler/sched-rt-group.txt b/Documentation/scheduler/sched-rt-group.rst
+ This trigger can be activated from user space on led class devices as shown
+-below:
++below::
+ 
+   echo usbport > trigger
+ 
+ This adds sysfs attributes to the LED that are documented in:
+ Documentation/ABI/testing/sysfs-class-led-trigger-usbport
+ 
+-Example use-case:
++Example use-case::
+ 
+   echo usbport > trigger
+   echo 1 > ports/usb1-port1
+diff --git a/Documentation/leds/uleds.txt b/Documentation/leds/uleds.rst
 similarity index 95%
-rename from Documentation/scheduler/sched-rt-group.txt
-rename to Documentation/scheduler/sched-rt-group.rst
-index c09f7a3fee66..d27d3f3712fd 100644
---- a/Documentation/scheduler/sched-rt-group.txt
-+++ b/Documentation/scheduler/sched-rt-group.rst
-@@ -1,18 +1,18 @@
--				Real-Time group scheduling
--				--------------------------
-+==========================
-+Real-Time group scheduling
-+==========================
+rename from Documentation/leds/uleds.txt
+rename to Documentation/leds/uleds.rst
+index 13e375a580f9..83221098009c 100644
+--- a/Documentation/leds/uleds.txt
++++ b/Documentation/leds/uleds.rst
+@@ -1,3 +1,4 @@
++==============
+ Userspace LEDs
+ ==============
  
--CONTENTS
--========
-+.. CONTENTS
+@@ -10,12 +11,12 @@ Usage
  
--0. WARNING
--1. Overview
--  1.1 The problem
--  1.2 The solution
--2. The interface
--  2.1 System-wide settings
--  2.2 Default behaviour
--  2.3 Basis for grouping tasks
--3. Future plans
-+   0. WARNING
-+   1. Overview
-+     1.1 The problem
-+     1.2 The solution
-+   2. The interface
-+     2.1 System-wide settings
-+     2.2 Default behaviour
-+     2.3 Basis for grouping tasks
-+   3. Future plans
+ When the driver is loaded, a character device is created at /dev/uleds. To
+ create a new LED class device, open /dev/uleds and write a uleds_user_dev
+-structure to it (found in kernel public header file linux/uleds.h).
++structure to it (found in kernel public header file linux/uleds.h)::
  
+     #define LED_MAX_NAME_SIZE 64
  
- 0. WARNING
-@@ -159,9 +159,11 @@ Consider two sibling groups A and B; both have 50% bandwidth, but A's
- period is twice the length of B's.
+     struct uleds_user_dev {
+-        char name[LED_MAX_NAME_SIZE];
++	char name[LED_MAX_NAME_SIZE];
+     };
  
- * group A: period=100000us, runtime=50000us
-+
- 	- this runs for 0.05s once every 0.1s
+ A new LED class device will be created with the name given. The name can be
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddd526efcb46..6696779c0826 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10045,7 +10045,7 @@ L:	linux-leds@vger.kernel.org
+ S:	Supported
+ F:	drivers/leds/leds-mlxcpld.c
+ F:	drivers/leds/leds-mlxreg.c
+-F:	Documentation/leds/leds-mlxcpld.txt
++F:	Documentation/leds/leds-mlxcpld.rst
  
- * group B: period= 50000us, runtime=25000us
-+
- 	- this runs for 0.025s twice every 0.1s (or once every 0.05 sec).
+ MELLANOX PLATFORM DRIVER
+ M:	Vadim Pasternak <vadimp@mellanox.com>
+diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
+index 23cc85e2e0e5..24e36eef95d3 100644
+--- a/drivers/leds/trigger/Kconfig
++++ b/drivers/leds/trigger/Kconfig
+@@ -14,7 +14,7 @@ config LEDS_TRIGGER_TIMER
+ 	  This allows LEDs to be controlled by a programmable timer
+ 	  via sysfs. Some LED hardware can be programmed to start
+ 	  blinking the LED without any further software interaction.
+-	  For more details read Documentation/leds/leds-class.txt.
++	  For more details read Documentation/leds/leds-class.rst.
  
- This means that currently a while (1) loop in A will run for the full period of
-diff --git a/Documentation/scheduler/sched-stats.txt b/Documentation/scheduler/sched-stats.rst
-similarity index 91%
-rename from Documentation/scheduler/sched-stats.txt
-rename to Documentation/scheduler/sched-stats.rst
-index 8259b34a66ae..0cb0aa714545 100644
---- a/Documentation/scheduler/sched-stats.txt
-+++ b/Documentation/scheduler/sched-stats.rst
-@@ -1,3 +1,7 @@
-+====================
-+Scheduler Statistics
-+====================
-+
- Version 15 of schedstats dropped counters for some sched_yield:
- yld_exp_empty, yld_act_empty and yld_both_empty. Otherwise, it is
- identical to version 14.
-@@ -35,19 +39,23 @@ CPU statistics
- cpu<N> 1 2 3 4 5 6 7 8 9
+ 	  If unsure, say Y.
  
- First field is a sched_yield() statistic:
-+
-      1) # of times sched_yield() was called
+diff --git a/drivers/leds/trigger/ledtrig-transient.c b/drivers/leds/trigger/ledtrig-transient.c
+index a80bb82aacc2..80635183fac8 100644
+--- a/drivers/leds/trigger/ledtrig-transient.c
++++ b/drivers/leds/trigger/ledtrig-transient.c
+@@ -3,7 +3,7 @@
+ // LED Kernel Transient Trigger
+ //
+ // Transient trigger allows one shot timer activation. Please refer to
+-// Documentation/leds/ledtrig-transient.txt for details
++// Documentation/leds/ledtrig-transient.rst for details
+ // Copyright (C) 2012 Shuah Khan <shuahkhan@gmail.com>
+ //
+ // Based on Richard Purdie's ledtrig-timer.c and Atsushi Nemoto's
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index 1f4a4d9f80b4..21b13e75b0a9 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -905,7 +905,7 @@ config NETFILTER_XT_TARGET_LED
+ 	    echo netfilter-ssh > /sys/class/leds/<ledname>/trigger
  
- Next three are schedule() statistics:
-+
-      2) This field is a legacy array expiration count field used in the O(1)
- 	scheduler. We kept it for ABI compatibility, but it is always set to zero.
-      3) # of times schedule() was called
-      4) # of times schedule() left the processor idle
+ 	  For more information on the LEDs available on your system, see
+-	  Documentation/leds/leds-class.txt
++	  Documentation/leds/leds-class.rst
  
- Next two are try_to_wake_up() statistics:
-+
-      5) # of times try_to_wake_up() was called
-      6) # of times try_to_wake_up() was called to wake up the local cpu
- 
- Next three are statistics describing scheduling latency:
-+
-      7) sum of all time spent running by tasks on this processor (in jiffies)
-      8) sum of all time spent waiting to run by tasks on this processor (in
-         jiffies)
-@@ -67,24 +75,23 @@ The first field is a bit mask indicating what cpus this domain operates over.
- The next 24 are a variety of load_balance() statistics in grouped into types
- of idleness (idle, busy, and newly idle):
- 
--     1) # of times in this domain load_balance() was called when the
-+    1)  # of times in this domain load_balance() was called when the
-         cpu was idle
--     2) # of times in this domain load_balance() checked but found
-+    2)  # of times in this domain load_balance() checked but found
-         the load did not require balancing when the cpu was idle
--     3) # of times in this domain load_balance() tried to move one or
-+    3)  # of times in this domain load_balance() tried to move one or
-         more tasks and failed, when the cpu was idle
--     4) sum of imbalances discovered (if any) with each call to
-+    4)  sum of imbalances discovered (if any) with each call to
-         load_balance() in this domain when the cpu was idle
--     5) # of times in this domain pull_task() was called when the cpu
-+    5)  # of times in this domain pull_task() was called when the cpu
-         was idle
--     6) # of times in this domain pull_task() was called even though
-+    6)  # of times in this domain pull_task() was called even though
-         the target task was cache-hot when idle
--     7) # of times in this domain load_balance() was called but did
-+    7)  # of times in this domain load_balance() was called but did
-         not find a busier queue while the cpu was idle
--     8) # of times in this domain a busier queue was found while the
-+    8)  # of times in this domain a busier queue was found while the
-         cpu was idle but no busier group was found
--
--     9) # of times in this domain load_balance() was called when the
-+    9)  # of times in this domain load_balance() was called when the
-         cpu was busy
-     10) # of times in this domain load_balance() checked but found the
-         load did not require balancing when busy
-@@ -117,21 +124,25 @@ of idleness (idle, busy, and newly idle):
-         was just becoming idle but no busier group was found
- 
-    Next three are active_load_balance() statistics:
-+
-     25) # of times active_load_balance() was called
-     26) # of times active_load_balance() tried to move a task and failed
-     27) # of times active_load_balance() successfully moved a task
- 
-    Next three are sched_balance_exec() statistics:
-+
-     28) sbe_cnt is not used
-     29) sbe_balanced is not used
-     30) sbe_pushed is not used
- 
-    Next three are sched_balance_fork() statistics:
-+
-     31) sbf_cnt is not used
-     32) sbf_balanced is not used
-     33) sbf_pushed is not used
- 
-    Next three are try_to_wake_up() statistics:
-+
-     34) # of times in this domain try_to_wake_up() awoke a task that
-         last ran on a different cpu in this domain
-     35) # of times in this domain try_to_wake_up() moved a task to the
-@@ -139,10 +150,11 @@ of idleness (idle, busy, and newly idle):
-     36) # of times in this domain try_to_wake_up() started passive balancing
- 
- /proc/<pid>/schedstat
------------------
-+---------------------
- schedstats also adds a new /proc/<pid>/schedstat file to include some of
- the same information on a per-process level.  There are three fields in
- this file correlating for that process to:
-+
-      1) time spent on the cpu
-      2) time spent waiting on a runqueue
-      3) # of timeslices run on this cpu
-@@ -151,4 +163,5 @@ A program could be easily written to make use of these extra fields to
- report on how well a particular process or set of processes is faring
- under the scheduler's policies.  A simple version of such a program is
- available at
-+
-     http://eaglet.rain.com/rick/linux/schedstat/v12/latency.c
-diff --git a/Documentation/scheduler/text_files.rst b/Documentation/scheduler/text_files.rst
-new file mode 100644
-index 000000000000..0bc50307b241
---- /dev/null
-+++ b/Documentation/scheduler/text_files.rst
-@@ -0,0 +1,5 @@
-+Scheduler pelt c program
-+------------------------
-+
-+.. literalinclude:: sched-pelt.c
-+    :language: c
-diff --git a/Documentation/vm/numa.rst b/Documentation/vm/numa.rst
-index 0d830edae8fe..130f3cfa1c19 100644
---- a/Documentation/vm/numa.rst
-+++ b/Documentation/vm/numa.rst
-@@ -99,7 +99,7 @@ Local allocation will tend to keep subsequent access to the allocated memory
- as long as the task on whose behalf the kernel allocated some memory does not
- later migrate away from that memory.  The Linux scheduler is aware of the
- NUMA topology of the platform--embodied in the "scheduling domains" data
--structures [see Documentation/scheduler/sched-domains.txt]--and the scheduler
-+structures [see Documentation/scheduler/sched-domains.rst]--and the scheduler
- attempts to minimize task migration to distant scheduling domains.  However,
- the scheduler does not take a task's NUMA footprint into account directly.
- Thus, under sufficient imbalance, tasks can migrate between nodes, remote
-diff --git a/init/Kconfig b/init/Kconfig
-index 9b52c958fd92..70fa2d57ef49 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -725,7 +725,7 @@ menuconfig CGROUPS
- 	  use with process control subsystems such as Cpusets, CFS, memory
- 	  controls or device isolation.
- 	  See
--		- Documentation/scheduler/sched-design-CFS.txt	(CFS)
-+		- Documentation/scheduler/sched-design-CFS.rst	(CFS)
- 		- Documentation/cgroup-v1/ (features for grouping, isolation
- 					  and resource control)
- 
-@@ -826,7 +826,7 @@ config CFS_BANDWIDTH
- 	  tasks running within the fair group scheduler.  Groups with no limit
- 	  set are considered to be unconstrained and will run with no
- 	  restriction.
--	  See Documentation/scheduler/sched-bwc.txt for more information.
-+	  See Documentation/scheduler/sched-bwc.rst for more information.
- 
- config RT_GROUP_SCHED
- 	bool "Group scheduling for SCHED_RR/FIFO"
-@@ -837,7 +837,7 @@ config RT_GROUP_SCHED
- 	  to task groups. If enabled, it will also make it impossible to
- 	  schedule realtime tasks for non-root users until you allocate
- 	  realtime bandwidth for them.
--	  See Documentation/scheduler/sched-rt-group.txt for more information.
-+	  See Documentation/scheduler/sched-rt-group.rst for more information.
- 
- endif #CGROUP_SCHED
- 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 43901fa3f269..049d795ee9d3 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -726,7 +726,7 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se,
-  * refill the runtime and set the deadline a period in the future,
-  * because keeping the current (absolute) deadline of the task would
-  * result in breaking guarantees promised to other tasks (refer to
-- * Documentation/scheduler/sched-deadline.txt for more information).
-+ * Documentation/scheduler/sched-deadline.rst for more information).
-  *
-  * This function returns true if:
-  *
+ config NETFILTER_XT_TARGET_LOG
+ 	tristate "LOG target support"
 -- 
 2.20.1
 
