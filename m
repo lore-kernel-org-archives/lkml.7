@@ -6,49 +6,53 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD937C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4B4C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3D720811
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EA820874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555929995;
-	bh=VSsijdAi/P+KpbiDeudlQODER7NeAzvFbyG+WPDabEM=;
+	s=default; t=1555930109;
+	bh=erHdP+oBPZSeJqL39m8/SsQdX5DS7XHgupRVSoSNFRw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hBkd88Syp5pU7iRpBQhCXyT1QnyhK7iOy1acv2s2B1LOEmUwkMnLUCUeaB30/jR4O
-	 x8sof+HoK0PBQyJv1PLqLT9iHNJprj1cM4ki0jSQ8JEGXjtbnBw0VIq9D1SzhddKy6
-	 ShOesU/u+eyyRFsYpvYDeGhl/i3QQh/FtKHIB3T4=
+	b=Ckp0YPYyX+1OpqDG7yvOAylHPPZM6xL7QFf75LBX04XXHLL6FqFMEqN7P+F+kZx5M
+	 EyzIgNTbtzp7N8SlCSPZqOoA/zmxm0fFjKTR4E4Ej5nqLheF4UI1O2zy4Mq79CCPoD
+	 E1NQz8vShcDtlbYWYSdmodk9Vz8pVkF2NjeqLqf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfDVKqe (ORCPT
+        id S1727044AbfDVKs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 06:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 06:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfDVKqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 06:46:34 -0400
+        id S1726057AbfDVKs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 06:48:27 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C5720874;
-        Mon, 22 Apr 2019 10:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 385A620811;
+        Mon, 22 Apr 2019 10:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555929993;
-        bh=VSsijdAi/P+KpbiDeudlQODER7NeAzvFbyG+WPDabEM=;
+        s=default; t=1555930106;
+        bh=erHdP+oBPZSeJqL39m8/SsQdX5DS7XHgupRVSoSNFRw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AAck04Df6JUUBlkG9S0J4Q06QfIvdn/h/0meNM9iHITKAyql70dbqIy4w+GmLYGyQ
-         VvLhuHsMdhixvypmw9XRpZSZXV7DugIX6kGD5r9B7jeb5F1hu4cmoPCrrTnp64xzRD
-         Lt9lReu+nyDkVYqhm+Vbo6QVV9Xgzfglyx1iiCOg=
-Date:   Mon, 22 Apr 2019 11:46:28 +0100
+        b=xwxiCWXAKXfkbz7PZi41leF9++F8i1xQ6YhNILl6e/elRzoPo6tnG1yGuEfJJNjNV
+         ROqq77UB22LlOHJcNb813Oub8Ew4H0XHO6Y/vSdVJaoo1gNpuV+6mrnkAfIcq8oF1c
+         h7Qi5Gl4pGQ+xcgdXCuGFcMRpCzV9B3kCkrbunD8=
+Date:   Mon, 22 Apr 2019 11:48:21 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     Mohan Kumar <mohankumar718@gmail.com>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: iio: dummy_evgen: fix possible memleak in evgen init
-Message-ID: <20190422114628.03ab91a5@archlinux>
-In-Reply-To: <1555556576-6927-1-git-send-email-bianpan2016@163.com>
-References: <1555556576-6927-1-git-send-email-bianpan2016@163.com>
+Subject: Re: [PATCH] drivers: iio: proximity: This patch fix the following
+ checkpatch warning.
+Message-ID: <20190422114821.5955d4fa@archlinux>
+In-Reply-To: <CAJCx=gmi6=uXbydpE2gY2x-XijtAd=bfufoJ+gbO1KU1n++g3Q@mail.gmail.com>
+References: <1555524925-15450-1-git-send-email-mohankumar718@gmail.com>
+        <CAJCx=gmi6=uXbydpE2gY2x-XijtAd=bfufoJ+gbO1KU1n++g3Q@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,46 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019 11:02:56 +0800
-Pan Bian <bianpan2016@163.com> wrote:
+On Thu, 18 Apr 2019 16:23:51 -0700
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-> The memory allocated in the function iio_dummy_evgen_create is not
-> released if it fails to add the evgen device to device hierarchy. This
-> may result in a memory leak bug.
+> See comments inline
 > 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-Hi. Not sure why the patch doesn't have the standard [PATCH] prefix
-in the title.
-
-This issue has been there a long time, but as the driver is only
-a testing stub I'm not going to add a fixes tag or mark it for stable.
-That would just be noise I think.
-
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+> On Wed, Apr 17, 2019 at 11:15 AM Mohan Kumar <mohankumar718@gmail.com> wrote:
+> >
+> > As per Documentation/timers/timers-howto.txt Msleep < 20ms can sleep for
+> > up to 20ms. so use usleep_range.
+> >
+> > Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> > ---
+> >  drivers/iio/proximity/mb1232.c | 2 +-
+> >  drivers/iio/proximity/srf08.c  | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/iio/proximity/mb1232.c b/drivers/iio/proximity/mb1232.c
+> > index 166b3e6..74f7eae 100644
+> > --- a/drivers/iio/proximity/mb1232.c
+> > +++ b/drivers/iio/proximity/mb1232.c
+> > @@ -81,7 +81,7 @@ static s16 mb1232_read_distance(struct mb1232_data *data)
+> >                 }
+> >         } else {
+> >                 /* use simple sleep if announce irq is not connected */
+> > -               msleep(15);
+> > +               usleep_range(15000, 20000);  
+> 
+> This is actually less than ideal.. because usleep_range uses the
+> hrtimers which forces an interrupt.
+> 
+> Unless you actually need to read between 15ms and 20ms it is best just
+> to leave the msleep() as it is, and let it take a bit longer
+> if required.
+Good response.  Perhaps Mohan could follow up with a patch to add
+a comment to this effect to save anyone else trying to 'fix' this
+issue in future?
 
 Thanks,
 
 Jonathan
-
-> ---
->  drivers/iio/dummy/iio_dummy_evgen.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
-> index efd0005..f96c0a3 100644
-> --- a/drivers/iio/dummy/iio_dummy_evgen.c
-> +++ b/drivers/iio/dummy/iio_dummy_evgen.c
-> @@ -196,7 +196,10 @@ static __init int iio_dummy_evgen_init(void)
->  		return ret;
->  	device_initialize(&iio_evgen_dev);
->  	dev_set_name(&iio_evgen_dev, "iio_evgen");
-> -	return device_add(&iio_evgen_dev);
-> +	ret = device_add(&iio_evgen_dev);
-> +	if (ret)
-> +		put_device(&iio_evgen_dev);
-> +	return ret;
->  }
->  module_init(iio_dummy_evgen_init);
->  
+> - Matt
+> 
+> >         }
+> >
+> >         ret = i2c_master_recv(client, (char *)&buf, sizeof(buf));
+> > diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
+> > index f2bf783..605a582 100644
+> > --- a/drivers/iio/proximity/srf08.c
+> > +++ b/drivers/iio/proximity/srf08.c
+> > @@ -150,7 +150,7 @@ static int srf08_read_ranging(struct srf08_data *data)
+> >          * polling for not more than 20 ms should be enough
+> >          */
+> >         waittime = 1 + data->range_mm / 172;
+> > -       msleep(waittime);
+> > +       usleep_range(waittime * 1000, (waittime * 1000) + 2000);
+> >         for (i = 0; i < 4; i++) {
+> >                 ret = i2c_smbus_read_byte_data(data->client,
+> >                                                 SRF08_READ_SW_REVISION);
+> > @@ -158,7 +158,7 @@ static int srf08_read_ranging(struct srf08_data *data)
+> >                 /* check if a valid version number is read */
+> >                 if (ret < 255 && ret > 0)
+> >                         break;
+> > -               msleep(5);
+> > +               usleep_range(5000, 15000);
+> >         }
+> >
+> >         if (ret >= 255 || ret <= 0) {
+> > --
+> > 2.7.4
+> >  
 
