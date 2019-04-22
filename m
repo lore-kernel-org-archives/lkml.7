@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C7BC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76685C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A811218CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4687D218FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962635;
-	bh=4p1ViJP7nWF7GWckE1LCukqQ2Ye/qP7N7i4nnAQ8E2w=;
+	s=default; t=1555962640;
+	bh=/qcveRh5jOfqWowfOPgCA+EFZHx8linhRKhscyUN+GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjb2h3N2YlVFILnMiKzM7o8eCpqxKFKxpM/Q3rxU2WcGPBEF04IMlvBGF5a57230l
-	 g3N7GQz4zefxMiEUApQHNXxITqAWZSDIw9Oojhqs/N3Sc7hJAxu0kKYPsKRHe6mmYq
-	 /Bat5oTAlzy4OmmGlAxpTug0PS5koJqsbb7+ZM/s=
+	b=rqqyiQceHs9QsYz7ILOsoQnOPE420PjlOk+VyQWm206VJLnjWjHi8CWNhgGaF9Z+4
+	 WNMbsJz/3ZiV68AxRQzC52U1i/PrXL2ZykB6fvplBO//DqdxLlrKw9BmB/8B3OYKzZ
+	 aKTsPbX+z1RrnxTxtITmg2kOWFMemQPRbxbjmidY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbfDVTud (ORCPT
+        id S1731145AbfDVTui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54458 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:50:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbfDVTu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:27 -0400
+        id S1730420AbfDVTug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0413204EC;
-        Mon, 22 Apr 2019 19:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A9A20643;
+        Mon, 22 Apr 2019 19:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962626;
-        bh=4p1ViJP7nWF7GWckE1LCukqQ2Ye/qP7N7i4nnAQ8E2w=;
+        s=default; t=1555962635;
+        bh=/qcveRh5jOfqWowfOPgCA+EFZHx8linhRKhscyUN+GQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wR1dTadDnUlwVE7+14zkCUxx4NpSSotvOzw1rFjxExek2lffez6uEgPpH3eRZ6cpZ
-         Eg9Tq7Tb6d9yWANQjNOAs/BwDOnse+HnJ1XEyhJBuAHWaI1oNmBNLqXNELzqcA4p/w
-         ealkl1c0hFtwxFfvGdsEAJ4cnnrZeyJvFDPBs9/I=
+        b=1nyvwBBronCD+iKYlfJTMh2sX0o55TtKkwrH6RxA/s8WJaQCNwi4v+s0nO96QUmE6
+         2OVIiKUl7yCe6a0OEqhTbtEN+5wC5gk3j2ZOBcE6YK4jlYbt+IiutDAPQkV2kpx2cD
+         1N0bdF05WanaAU//rIfgSDF8wHaNebd/Ztt2yQQI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guido Kiener <guido@kiener-muenchen.de>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 02/15] usb: gadget: net2280: Fix overrun of OUT messages
-Date:   Mon, 22 Apr 2019 15:50:09 -0400
-Message-Id: <20190422195022.13760-2-sashal@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Nishanth Menon <nm@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 05/15] net: ks8851: Reassert reset pin if chip ID check fails
+Date:   Mon, 22 Apr 2019 15:50:12 -0400
+Message-Id: <20190422195022.13760-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422195022.13760-1-sashal@kernel.org>
 References: <20190422195022.13760-1-sashal@kernel.org>
@@ -59,62 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Kiener <guido@kiener-muenchen.de>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
+[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
 
-The OUT endpoint normally blocks (NAK) subsequent packets when a
-short packet was received and returns an incomplete queue entry to
-the gadget driver. Thereby the gadget driver can detect a short packet
-when reading queue entries with a length that is not equal to a
-multiple of packet size.
+Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
+reset gpio") amended the ks8851 driver to briefly assert the chip's
+reset pin on probe. It also amended the probe routine's error path to
+reassert the reset pin if a subsequent initialization step fails.
 
-The start_queue() function enables receiving OUT packets regardless of
-the content of the OUT FIFO. This results in a race: With the current
-code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
-& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
-packet will be received, and then start_queue() will call
-stop_out_naking(). That's what we don't want (OUT naking gets turned
-off while there is data in the FIFO) because then the next driver
-request might receive a mixture of old and new packets.
+However the commit misplaced reassertion of the reset pin in the error
+path such that it is not performed if the check of the Chip ID and
+Enable Register (CIDER) fails. The error path is therefore slightly
+asymmetrical to the probe routine's body. Fix it.
 
-With the patch, this race can't occur because the FIFO's state is
-tested after we know that OUT naking is already turned on, and OUT
-naking is stopped only when both of the conditions are met.  This
-ensures that all received data is delivered to the gadget driver,
-which can detect a short packet now before new packets are appended
-to the last short packet.
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 8d13337e2dde..931765208286 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -800,9 +800,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
- 	(void) readl(&ep->dev->pci->pcimstctl);
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 4a29e191819f..e218e45dcf35 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
+ 	free_irq(ndev->irq, ks);
  
- 	writel(BIT(DMA_START), &dma->dmastat);
--
--	if (!ep->is_in)
--		stop_out_naking(ep);
- }
- 
- static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
-@@ -841,6 +838,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
- 			writel(BIT(DMA_START), &dma->dmastat);
- 			return;
- 		}
-+		stop_out_naking(ep);
- 	}
- 
- 	tmp = dmactl_default;
+ err_irq:
++err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+-err_id:
+ 	regulator_disable(ks->vdd_reg);
+ err_reg:
+ 	regulator_disable(ks->vdd_io);
 -- 
 2.19.1
 
