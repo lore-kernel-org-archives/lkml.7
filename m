@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1900C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6BDC282E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C602190B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A30A2190C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962517;
-	bh=KJCnGZVovekhL6O0GlYGoOyunpqVoBZpEsHS5Li8ce4=;
+	s=default; t=1555962521;
+	bh=qPc81laImo6OBGPo4ZX2yGi09vauqHq/0jpEdsvvydU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=khA/an1j8HsZwb96jLpvAQH9jzW05X2ma4jKdBYJh+wNr45fo2wRxAD5K5gMmRfFO
-	 GRfsFiQpbVdCjh7xbeTmPlgwgYEzXQeURAq/E3saRwDKfPZJd2w8VPusYm9T316Scl
-	 k9e8M83mwhIoiUHvtdwVNqWSldD14djQhXg8bNZM=
+	b=OHN9MJq4wHEnkOio7PCMzV6hhItzdR1i02Gqas6+IN64IHQUxu+mkMG30JEj4ZhP/
+	 DuvPIjYw23+1XLp16E/hfEhzQOsDjqvYL9GcnWByNQjgLz8URjdTIukn5YhrlrvkD8
+	 p3aNmWOSP75R5rb+8Puo10M/BGnZ+T/7PmMIjXzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbfDVTsg (ORCPT
+        id S1730604AbfDVTsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51812 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbfDVTsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:48:32 -0400
+        id S1729371AbfDVTs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:48:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E7F42190B;
-        Mon, 22 Apr 2019 19:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E45B2190C;
+        Mon, 22 Apr 2019 19:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962511;
-        bh=KJCnGZVovekhL6O0GlYGoOyunpqVoBZpEsHS5Li8ce4=;
+        s=default; t=1555962509;
+        bh=qPc81laImo6OBGPo4ZX2yGi09vauqHq/0jpEdsvvydU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ura1SCZOZp+Yd2clOzTBfc78Qsont5I5cZd+4yUoPaKRKNHzvU7HFUy0j+g6Appj8
-         Ix0mhQqVLjFvcnjjsN75Yk9geLPxv3NNJhdSvWNHRc1Hw+s53+arTSGxm2tYKw5sM7
-         F1+yw+xuYNfpebCW5eyIrgJP/6NXuIpt202OoIVo=
+        b=f/qH0rhMd5B7OetBSrS5mCE04xxK5kq7Uk/8HKF0t7bFRknkPHCXb7efjLuqSyDud
+         W0FqnS1dtnhrLAjOxqf7HnuJLHMjR/CatPFXvQOMoqUnRc2ZywD7ocZs026a6bmfAJ
+         6tYb8F7ZvVmfHCgNygy3WMP/1ikzttynmUbX9EZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 32/43] scsi: qla4xxx: fix a potential NULL pointer dereference
-Date:   Mon, 22 Apr 2019 15:47:16 -0400
-Message-Id: <20190422194727.12495-32-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 30/43] drm/meson: Fix invalid pointer in meson_drv_unbind()
+Date:   Mon, 22 Apr 2019 15:47:14 -0400
+Message-Id: <20190422194727.12495-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
@@ -59,35 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
+[ Upstream commit 776e78677f514ecddd12dba48b9040958999bd5a ]
 
-In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
-pointer dereference.
+meson_drv_bind() registers a meson_drm struct as the device's privdata,
+but meson_drv_unbind() tries to retrieve a drm_device. This may cause a
+segfault on shutdown:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[ 5194.593429] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000197
+ ...
+[ 5194.788850] Call trace:
+[ 5194.791349]  drm_dev_unregister+0x1c/0x118 [drm]
+[ 5194.795848]  meson_drv_unbind+0x50/0x78 [meson_drm]
+
+Retrieve the right pointer in meson_drv_unbind().
+
+Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190322152657.13752-1-jean-philippe.brucker@arm.com
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/meson/meson_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 22dc70a2138e..630b7404843d 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -3207,6 +3207,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
- 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
- 		return -EINVAL;
- 	ep = iscsi_lookup_endpoint(transport_fd);
-+	if (!ep)
-+		return -EINVAL;
- 	conn = cls_conn->dd_data;
- 	qla_conn = conn->dd_data;
- 	qla_conn->qla_ep = ep->dd_data;
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index 5deb44ac6791..1a1b0b9cf1fa 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -294,8 +294,8 @@ static int meson_drv_bind(struct device *dev)
+ 
+ static void meson_drv_unbind(struct device *dev)
+ {
+-	struct drm_device *drm = dev_get_drvdata(dev);
+-	struct meson_drm *priv = drm->dev_private;
++	struct meson_drm *priv = dev_get_drvdata(dev);
++	struct drm_device *drm = priv->drm;
+ 
+ 	drm_dev_unregister(drm);
+ 	drm_kms_helper_poll_fini(drm);
 -- 
 2.19.1
 
