@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D802C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB07BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD4C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B552064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939985;
-	bh=gd1WiwESXBVq8pjx6C7+iyilFdsg8RZk17qv57Mni7k=;
+	s=default; t=1555939995;
+	bh=pcDNGytYNRVpqT1JzqhIipyUfrJEW224R9VpCyvDu28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPFFuAriOo49+yovCGtNQxShMFtZzo7wQOcUmqaSazMGUYEYUJt25Oic/wSDqBhHp
-	 OPdxu9P2k5ntM+2g55JS8pL1ySjCawQwCsZgnzaP9likw3Z5it7mHtK/Z3GdZyb74Y
-	 bhtcZT0nXJWHqbf0ikW271qtwoTYy5pXQ+ctzC5U=
+	b=o6zmlZ5piQaYm59uqEBU3q/zP6dHhq33RSn7eY8OnIOEy16pSpzBe1+lATdBxeuP6
+	 NougJWQikbOl5b7A6W95ko8YfG+kgLDgm9BQZdumEkBAoBWLP7hAnYeVVFOKoNFww0
+	 24raXzamOmki+8Z1bABmqnzBG1935P30+QbRnAHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfDVNdD (ORCPT
+        id S1728076AbfDVNdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:33:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37666 "EHLO
+        Mon, 22 Apr 2019 09:33:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37692 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727542AbfDVN2U (ORCPT
+        with ESMTP id S1727547AbfDVN2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,33 +33,29 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4jdYop9xHDkCl5xDqUF5Cu/QZJKlXeVRenYOK6DdkLQ=; b=LQUzxLcby8ZDVuhXMgrNch3N1x
-        PHu15kMtQ8d3EpazhdtSpX5xMQDpK++SYpd9A/5lGWQcI77D05mV0MShgosK4a+3dSBIRAzHI47qM
-        XioA2E7UP5ZWC7WyFA01zL9s68YBy89QRa/ySf4jjxpmPm2tgsdOW2S1hj2X98yLDzsX72zdxJAB1
-        ZmvBDJlPLt9cR1OV64gf6QdoKZgKrIvUX4tNTjxEF8FzP9vPO8YwVnaUBD8NyzU3M+omBqtptBiwn
-        QbQtfEiErQguUUmXDWBANEyYo9+zjhzW+pHMXDkSNmegMCN3mUU+RXV3qn96oAkWSCcNxhnv+b5nG
-        H+LE3O9A==;
+        bh=zvzvyVb+im44veXN4ZpUOwK9iqmuVXaqp+QMzzaaYqg=; b=i/MnSCYwhQaRAc1byPgDI9Yijw
+        Bpks9RbJW/DoJezqTb8V6ZWMWiuvLuhsk/2Dc9HsiRNGD3MiJc3OYBKd/q7iyXXxWYP7umxjPN9U+
+        kKKFmYZyuGUhzEpMIIXbYcUgJ+4F8zDrwWuuwP264PsEC2kMJ1ogDyjlzaVwAEwj1LdhFnkZp2cV3
+        23W/RvmNXSB00z0yGPHJKXnkbkIcqV6OXEP2M4FsNcj39uUDTBkfWqMDsH1c6m0vnBBBEoA2zmEQF
+        IEbrn6ugAnhE/HDaTN/vF1vnDuNHvYTs/nmSj107UEsjJaSBmiz3Gb5+3Qm0D+Cf/ZbZikQv0sU/t
+        YX0FCa0Q==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzZ-0005Hu-Qv; Mon, 22 Apr 2019 13:28:18 +0000
+        id 1hIYza-0005Ha-Uj; Mon, 22 Apr 2019 13:28:19 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005ph-QK; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzU-0005o5-1A; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 77/79] docs: perf: convert to ReST
-Date:   Mon, 22 Apr 2019 10:28:06 -0300
-Message-Id: <845362b2b956c7019e495d4117a7afe9948e61ca.1555938376.git.mchehab+samsung@kernel.org>
+        Balbir Singh <bsingharora@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+Subject: [PATCH v2 57/79] docs: accounting: convert to ReST
+Date:   Mon, 22 Apr 2019 10:27:46 -0300
+Message-Id: <13b52516ab787b9a9637e6b9adfec88ec1931b99.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -70,7 +66,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the perf documentation files to ReST, add an
+Rename the accounting documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
 
@@ -79,337 +75,462 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../perf/{arm-ccn.txt => arm-ccn.rst}         | 18 +++++-----
- .../perf/{arm_dsu_pmu.txt => arm_dsu_pmu.rst} |  5 +--
- .../perf/{hisi-pmu.txt => hisi-pmu.rst}       | 35 +++++++++++--------
- Documentation/perf/index.rst                  | 16 +++++++++
- .../perf/{qcom_l2_pmu.txt => qcom_l2_pmu.rst} |  3 +-
- .../perf/{qcom_l3_pmu.txt => qcom_l3_pmu.rst} |  3 +-
- .../{thunderx2-pmu.txt => thunderx2-pmu.rst}  | 25 ++++++-------
- .../perf/{xgene-pmu.txt => xgene-pmu.rst}     |  3 +-
- MAINTAINERS                                   |  4 +--
- drivers/perf/qcom_l3_pmu.c                    |  2 +-
- 10 files changed, 72 insertions(+), 42 deletions(-)
- rename Documentation/perf/{arm-ccn.txt => arm-ccn.rst} (86%)
- rename Documentation/perf/{arm_dsu_pmu.txt => arm_dsu_pmu.rst} (92%)
- rename Documentation/perf/{hisi-pmu.txt => hisi-pmu.rst} (73%)
- create mode 100644 Documentation/perf/index.rst
- rename Documentation/perf/{qcom_l2_pmu.txt => qcom_l2_pmu.rst} (94%)
- rename Documentation/perf/{qcom_l3_pmu.txt => qcom_l3_pmu.rst} (93%)
- rename Documentation/perf/{thunderx2-pmu.txt => thunderx2-pmu.rst} (73%)
- rename Documentation/perf/{xgene-pmu.txt => xgene-pmu.rst} (96%)
+ .../{cgroupstats.txt => cgroupstats.rst}      | 14 +++--
+ ...ay-accounting.txt => delay-accounting.rst} | 61 +++++++++++--------
+ Documentation/accounting/index.rst            | 14 +++++
+ Documentation/accounting/{psi.txt => psi.rst} | 40 ++++++------
+ ...kstats-struct.txt => taskstats-struct.rst} | 53 ++++++++++------
+ .../{taskstats.txt => taskstats.rst}          | 15 +++--
+ Documentation/admin-guide/cgroup-v2.rst       |  6 +-
+ init/Kconfig                                  |  2 +-
+ 8 files changed, 126 insertions(+), 79 deletions(-)
+ rename Documentation/accounting/{cgroupstats.txt => cgroupstats.rst} (77%)
+ rename Documentation/accounting/{delay-accounting.txt => delay-accounting.rst} (77%)
+ create mode 100644 Documentation/accounting/index.rst
+ rename Documentation/accounting/{psi.txt => psi.rst} (91%)
+ rename Documentation/accounting/{taskstats-struct.txt => taskstats-struct.rst} (90%)
+ rename Documentation/accounting/{taskstats.txt => taskstats.rst} (95%)
 
-diff --git a/Documentation/perf/arm-ccn.txt b/Documentation/perf/arm-ccn.rst
-similarity index 86%
-rename from Documentation/perf/arm-ccn.txt
-rename to Documentation/perf/arm-ccn.rst
-index 15cdb7bc57c3..832b0c64023a 100644
---- a/Documentation/perf/arm-ccn.txt
-+++ b/Documentation/perf/arm-ccn.rst
-@@ -1,3 +1,4 @@
-+==========================
- ARM Cache Coherent Network
- ==========================
- 
-@@ -29,6 +30,7 @@ Crosspoint watchpoint-based events (special "event" value 0xfe)
- require "xp" and "vc" as as above plus "port" (device port index),
- "dir" (transmit/receive direction), comparator values ("cmp_l"
- and "cmp_h") and "mask", being index of the comparator mask.
+diff --git a/Documentation/accounting/cgroupstats.txt b/Documentation/accounting/cgroupstats.rst
+similarity index 77%
+rename from Documentation/accounting/cgroupstats.txt
+rename to Documentation/accounting/cgroupstats.rst
+index d16a9849e60e..b9afc48f4ea2 100644
+--- a/Documentation/accounting/cgroupstats.txt
++++ b/Documentation/accounting/cgroupstats.rst
+@@ -1,3 +1,7 @@
++==================
++Control Groupstats
++==================
 +
- Masks are defined separately from the event description
- (due to limited number of the config values) in the "cmp_mask"
- directory, with first 8 configurable by user and additional
-@@ -44,16 +46,16 @@ request the events on this processor (if not, the perf_event->cpu value
- will be overwritten anyway). In case of this processor being offlined,
- the events are migrated to another one and the attribute is updated.
+ Control Groupstats is inspired by the discussion at
+ http://lkml.org/lkml/2007/4/11/187 and implements per cgroup statistics as
+ suggested by Andrew Morton in http://lkml.org/lkml/2007/4/11/263.
+@@ -19,9 +23,9 @@ about tasks blocked on I/O. If CONFIG_TASK_DELAY_ACCT is disabled, this
+ information will not be available.
  
--Example of perf tool use:
-+Example of perf tool use::
+ To extract cgroup statistics a utility very similar to getdelays.c
+-has been developed, the sample output of the utility is shown below
++has been developed, the sample output of the utility is shown below::
  
--/ # perf list | grep ccn
--  ccn/cycles/                                        [Kernel PMU event]
--<...>
--  ccn/xp_valid_flit,xp=?,port=?,vc=?,dir=?/          [Kernel PMU event]
--<...>
-+  / # perf list | grep ccn
-+    ccn/cycles/                                        [Kernel PMU event]
-+  <...>
-+    ccn/xp_valid_flit,xp=?,port=?,vc=?,dir=?/          [Kernel PMU event]
-+  <...>
+-~/balbir/cgroupstats # ./getdelays  -C "/sys/fs/cgroup/a"
+-sleeping 1, blocked 0, running 1, stopped 0, uninterruptible 0
+-~/balbir/cgroupstats # ./getdelays  -C "/sys/fs/cgroup"
+-sleeping 155, blocked 0, running 1, stopped 0, uninterruptible 2
++  ~/balbir/cgroupstats # ./getdelays  -C "/sys/fs/cgroup/a"
++  sleeping 1, blocked 0, running 1, stopped 0, uninterruptible 0
++  ~/balbir/cgroupstats # ./getdelays  -C "/sys/fs/cgroup"
++  sleeping 155, blocked 0, running 1, stopped 0, uninterruptible 2
+diff --git a/Documentation/accounting/delay-accounting.txt b/Documentation/accounting/delay-accounting.rst
+similarity index 77%
+rename from Documentation/accounting/delay-accounting.txt
+rename to Documentation/accounting/delay-accounting.rst
+index 042ea59b5853..7cc7f5852da0 100644
+--- a/Documentation/accounting/delay-accounting.txt
++++ b/Documentation/accounting/delay-accounting.rst
+@@ -1,5 +1,6 @@
++================
+ Delay accounting
+-----------------
++================
  
--/ # perf stat -a -e ccn/cycles/,ccn/xp_valid_flit,xp=1,port=0,vc=1,dir=1/ \
--                                                                       sleep 1
-+  / # perf stat -a -e ccn/cycles/,ccn/xp_valid_flit,xp=1,port=0,vc=1,dir=1/ \
-+                                                                         sleep 1
- 
- The driver does not support sampling, therefore "perf record" will
- not work. Per-task (without "-a") perf sessions are not supported.
-diff --git a/Documentation/perf/arm_dsu_pmu.txt b/Documentation/perf/arm_dsu_pmu.rst
-similarity index 92%
-rename from Documentation/perf/arm_dsu_pmu.txt
-rename to Documentation/perf/arm_dsu_pmu.rst
-index d611e15f5add..7fd34db75d13 100644
---- a/Documentation/perf/arm_dsu_pmu.txt
-+++ b/Documentation/perf/arm_dsu_pmu.rst
-@@ -1,3 +1,4 @@
-+==================================
- ARM DynamIQ Shared Unit (DSU) PMU
- ==================================
- 
-@@ -13,7 +14,7 @@ PMU doesn't support process specific events and cannot be used in sampling mode.
- The DSU provides a bitmap for a subset of implemented events via hardware
- registers. There is no way for the driver to determine if the other events
- are available or not. Hence the driver exposes only those events advertised
--by the DSU, in "events" directory under :
-+by the DSU, in "events" directory under::
- 
-   /sys/bus/event_sources/devices/arm_dsu_<N>/
- 
-@@ -23,6 +24,6 @@ and use the raw event code for the unlisted events.
- The driver also exposes the CPUs connected to the DSU instance in "associated_cpus".
- 
- 
--e.g usage :
-+e.g usage::
- 
- 	perf stat -a -e arm_dsu_0/cycles/
-diff --git a/Documentation/perf/hisi-pmu.txt b/Documentation/perf/hisi-pmu.rst
-similarity index 73%
-rename from Documentation/perf/hisi-pmu.txt
-rename to Documentation/perf/hisi-pmu.rst
-index 267a028b2741..404a5c3d9d00 100644
---- a/Documentation/perf/hisi-pmu.txt
-+++ b/Documentation/perf/hisi-pmu.rst
-@@ -1,5 +1,7 @@
-+======================================================
- HiSilicon SoC uncore Performance Monitoring Unit (PMU)
- ======================================================
+ Tasks encounter delays in execution when they wait
+ for some kernel resource to become available e.g. a
+@@ -39,7 +40,9 @@ in detail in a separate document in this directory. Taskstats returns a
+ generic data structure to userspace corresponding to per-pid and per-tgid
+ statistics. The delay accounting functionality populates specific fields of
+ this structure. See
 +
- The HiSilicon SoC chip includes various independent system device PMUs
- such as L3 cache (L3C), Hydra Home Agent (HHA) and DDRC. These PMUs are
- independent and have hardware logic to gather statistics and performance
-@@ -11,11 +13,13 @@ called Super CPU cluster (SCCL) and is made up of 6 CCLs. Each SCCL has
- two HHAs (0 - 1) and four DDRCs (0 - 3), respectively.
- 
- HiSilicon SoC uncore PMU driver
-----------------------------------------
-+-------------------------------
+      include/linux/taskstats.h
 +
- Each device PMU has separate registers for event counting, control and
- interrupt, and the PMU driver shall register perf PMU drivers like L3C,
- HHA and DDRC etc. The available events and configuration options shall
--be described in the sysfs, see :
-+be described in the sysfs, see:
-+
- /sys/devices/hisi_sccl{X}_<l3c{Y}/hha{Y}/ddrc{Y}>/, or
- /sys/bus/event_source/devices/hisi_sccl{X}_<l3c{Y}/hha{Y}/ddrc{Y}>.
- The "perf list" command shall list the available events from sysfs.
-@@ -24,27 +28,30 @@ Each L3C, HHA and DDRC is registered as a separate PMU with perf. The PMU
- name will appear in event listing as hisi_sccl<sccl-id>_module<index-id>.
- where "sccl-id" is the identifier of the SCCL and "index-id" is the index of
- module.
-+
- e.g. hisi_sccl3_l3c0/rd_hit_cpipe is READ_HIT_CPIPE event of L3C index #0 in
- SCCL ID #3.
-+
- e.g. hisi_sccl1_hha0/rx_operations is RX_OPERATIONS event of HHA index #0 in
- SCCL ID #1.
+ for a description of the fields pertaining to delay accounting.
+ It will generally be in the form of counters returning the cumulative
+ delay seen for cpu, sync block I/O, swapin, memory reclaim etc.
+@@ -61,13 +64,16 @@ also serves as an example of using the taskstats interface.
+ Usage
+ -----
  
- The driver also provides a "cpumask" sysfs attribute, which shows the CPU core
- ID used to count the uncore PMU event.
- 
--Example usage of perf:
--$# perf list
--hisi_sccl3_l3c0/rd_hit_cpipe/ [kernel PMU event]
--------------------------------------------
--hisi_sccl3_l3c0/wr_hit_cpipe/ [kernel PMU event]
--------------------------------------------
--hisi_sccl1_l3c0/rd_hit_cpipe/ [kernel PMU event]
--------------------------------------------
--hisi_sccl1_l3c0/wr_hit_cpipe/ [kernel PMU event]
--------------------------------------------
-+Example usage of perf::
- 
--$# perf stat -a -e hisi_sccl3_l3c0/rd_hit_cpipe/ sleep 5
--$# perf stat -a -e hisi_sccl3_l3c0/config=0x02/ sleep 5
-+  $# perf list
-+  hisi_sccl3_l3c0/rd_hit_cpipe/ [kernel PMU event]
-+  ------------------------------------------
-+  hisi_sccl3_l3c0/wr_hit_cpipe/ [kernel PMU event]
-+  ------------------------------------------
-+  hisi_sccl1_l3c0/rd_hit_cpipe/ [kernel PMU event]
-+  ------------------------------------------
-+  hisi_sccl1_l3c0/wr_hit_cpipe/ [kernel PMU event]
-+  ------------------------------------------
+-Compile the kernel with
++Compile the kernel with::
 +
-+  $# perf stat -a -e hisi_sccl3_l3c0/rd_hit_cpipe/ sleep 5
-+  $# perf stat -a -e hisi_sccl3_l3c0/config=0x02/ sleep 5
+ 	CONFIG_TASK_DELAY_ACCT=y
+ 	CONFIG_TASKSTATS=y
  
- The current driver does not support sampling. So "perf record" is unsupported.
- Also attach to a task is unsupported as the events are all uncore.
-diff --git a/Documentation/perf/index.rst b/Documentation/perf/index.rst
+ Delay accounting is enabled by default at boot up.
+-To disable, add
++To disable, add::
++
+    nodelayacct
++
+ to the kernel boot options. The rest of the instructions
+ below assume this has not been done.
+ 
+@@ -78,40 +84,43 @@ The utility also allows a given command to be
+ executed and the corresponding delays to be
+ seen.
+ 
+-General format of the getdelays command
++General format of the getdelays command::
+ 
+-getdelays [-t tgid] [-p pid] [-c cmd...]
++	getdelays [-t tgid] [-p pid] [-c cmd...]
+ 
+ 
+-Get delays, since system boot, for pid 10
+-# ./getdelays -p 10
+-(output similar to next case)
++Get delays, since system boot, for pid 10::
+ 
+-Get sum of delays, since system boot, for all pids with tgid 5
+-# ./getdelays -t 5
++	# ./getdelays -p 10
++	(output similar to next case)
+ 
++Get sum of delays, since system boot, for all pids with tgid 5::
+ 
+-CPU	count	real total	virtual total	delay total
+-	7876	92005750	100000000	24001500
+-IO	count	delay total
+-	0	0
+-SWAP	count	delay total
+-	0	0
+-RECLAIM	count	delay total
+-	0	0
++	# ./getdelays -t 5
+ 
+-Get delays seen in executing a given simple command
+-# ./getdelays -c ls /
+ 
+-bin   data1  data3  data5  dev  home  media  opt   root  srv        sys  usr
+-boot  data2  data4  data6  etc  lib   mnt    proc  sbin  subdomain  tmp  var
++	CPU	count	real total	virtual total	delay total
++		7876	92005750	100000000	24001500
++	IO	count	delay total
++		0	0
++	SWAP	count	delay total
++		0	0
++	RECLAIM	count	delay total
++		0	0
+ 
++Get delays seen in executing a given simple command::
+ 
+-CPU	count	real total	virtual total	delay total
++  # ./getdelays -c ls /
++
++  bin   data1  data3  data5  dev  home  media  opt   root  srv        sys  usr
++  boot  data2  data4  data6  etc  lib   mnt    proc  sbin  subdomain  tmp  var
++
++
++  CPU	count	real total	virtual total	delay total
+ 	6	4000250		4000000		0
+-IO	count	delay total
++  IO	count	delay total
+ 	0	0
+-SWAP	count	delay total
++  SWAP	count	delay total
+ 	0	0
+-RECLAIM	count	delay total
++  RECLAIM	count	delay total
+ 	0	0
+diff --git a/Documentation/accounting/index.rst b/Documentation/accounting/index.rst
 new file mode 100644
-index 000000000000..4bf848e27f26
+index 000000000000..e1f6284b5ff3
 --- /dev/null
-+++ b/Documentation/perf/index.rst
-@@ -0,0 +1,16 @@
++++ b/Documentation/accounting/index.rst
+@@ -0,0 +1,14 @@
 +:orphan:
 +
-+===========================
-+Performance monitor support
-+===========================
++==========
++Accounting
++==========
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   hisi-pmu
-+   qcom_l2_pmu
-+   qcom_l3_pmu
-+   arm-ccn
-+   xgene-pmu
-+   arm_dsu_pmu
-+   thunderx2-pmu
-diff --git a/Documentation/perf/qcom_l2_pmu.txt b/Documentation/perf/qcom_l2_pmu.rst
-similarity index 94%
-rename from Documentation/perf/qcom_l2_pmu.txt
-rename to Documentation/perf/qcom_l2_pmu.rst
-index b25b97659ab9..c130178a4a55 100644
---- a/Documentation/perf/qcom_l2_pmu.txt
-+++ b/Documentation/perf/qcom_l2_pmu.rst
-@@ -1,3 +1,4 @@
-+=====================================================================
- Qualcomm Technologies Level-2 Cache Performance Monitoring Unit (PMU)
- =====================================================================
++   cgroupstats
++   delay-accounting
++   psi
++   taskstats
++   taskstats-struct
+diff --git a/Documentation/accounting/psi.txt b/Documentation/accounting/psi.rst
+similarity index 91%
+rename from Documentation/accounting/psi.txt
+rename to Documentation/accounting/psi.rst
+index 5cbe5659e3b7..621111ce5740 100644
+--- a/Documentation/accounting/psi.txt
++++ b/Documentation/accounting/psi.rst
+@@ -35,14 +35,14 @@ Pressure interface
+ Pressure information for each resource is exported through the
+ respective file in /proc/pressure/ -- cpu, memory, and io.
  
-@@ -28,7 +29,7 @@ The driver provides a "cpumask" sysfs attribute which contains a mask
- consisting of one CPU per cluster which will be used to handle all the PMU
- events on that cluster.
+-The format for CPU is as such:
++The format for CPU is as such::
  
--Examples for use with perf:
-+Examples for use with perf::
+-some avg10=0.00 avg60=0.00 avg300=0.00 total=0
++	some avg10=0.00 avg60=0.00 avg300=0.00 total=0
  
-   perf stat -e l2cache_0/config=0x001/,l2cache_0/config=0x042/ -a sleep 1
+-and for memory and IO:
++and for memory and IO::
  
-diff --git a/Documentation/perf/qcom_l3_pmu.txt b/Documentation/perf/qcom_l3_pmu.rst
-similarity index 93%
-rename from Documentation/perf/qcom_l3_pmu.txt
-rename to Documentation/perf/qcom_l3_pmu.rst
-index 96b3a9444a0d..a3d014a46bfd 100644
---- a/Documentation/perf/qcom_l3_pmu.txt
-+++ b/Documentation/perf/qcom_l3_pmu.rst
-@@ -1,3 +1,4 @@
-+===========================================================================
- Qualcomm Datacenter Technologies L3 Cache Performance Monitoring Unit (PMU)
- ===========================================================================
+-some avg10=0.00 avg60=0.00 avg300=0.00 total=0
+-full avg10=0.00 avg60=0.00 avg300=0.00 total=0
++	some avg10=0.00 avg60=0.00 avg300=0.00 total=0
++	full avg10=0.00 avg60=0.00 avg300=0.00 total=0
  
-@@ -17,7 +18,7 @@ The hardware implements 32bit event counters and has a flat 8bit event space
- exposed via the "event" format attribute. In addition to the 32bit physical
- counters the driver supports virtual 64bit hardware counters by using hardware
- counter chaining. This feature is exposed via the "lc" (long counter) format
--flag. E.g.:
-+flag. E.g.::
+ The "some" line indicates the share of time in which at least some
+ tasks are stalled on a given resource.
+@@ -77,9 +77,9 @@ To register a trigger user has to open psi interface file under
+ /proc/pressure/ representing the resource to be monitored and write the
+ desired threshold and time window. The open file descriptor should be
+ used to wait for trigger events using select(), poll() or epoll().
+-The following format is used:
++The following format is used::
  
-   perf stat -e l3cache_0_0/read-miss,lc/
+-<some|full> <stall amount in us> <time window in us>
++	<some|full> <stall amount in us> <time window in us>
  
-diff --git a/Documentation/perf/thunderx2-pmu.txt b/Documentation/perf/thunderx2-pmu.rst
-similarity index 73%
-rename from Documentation/perf/thunderx2-pmu.txt
-rename to Documentation/perf/thunderx2-pmu.rst
-index dffc57143736..08e33675853a 100644
---- a/Documentation/perf/thunderx2-pmu.txt
-+++ b/Documentation/perf/thunderx2-pmu.rst
-@@ -1,3 +1,4 @@
-+=============================================================
- Cavium ThunderX2 SoC Performance Monitoring Unit (PMU UNCORE)
- =============================================================
+ For example writing "some 150000 1000000" into /proc/pressure/memory
+ would add 150ms threshold for partial memory stall measured within
+@@ -115,18 +115,20 @@ trigger  is closed.
+ Userspace monitor usage example
+ ===============================
  
-@@ -24,18 +25,18 @@ and configuration options under sysfs, see
- The driver does not support sampling, therefore "perf record" will not
- work. Per-task perf sessions are also not supported.
+-#include <errno.h>
+-#include <fcntl.h>
+-#include <stdio.h>
+-#include <poll.h>
+-#include <string.h>
+-#include <unistd.h>
++::
  
--Examples:
-+Examples::
+-/*
+- * Monitor memory partial stall with 1s tracking window size
+- * and 150ms threshold.
+- */
+-int main() {
++  #include <errno.h>
++  #include <fcntl.h>
++  #include <stdio.h>
++  #include <poll.h>
++  #include <string.h>
++  #include <unistd.h>
++
++  /*
++   * Monitor memory partial stall with 1s tracking window size
++   * and 150ms threshold.
++   */
++  int main() {
+ 	const char trig[] = "some 150000 1000000";
+ 	struct pollfd fds;
+ 	int n;
+@@ -165,7 +167,7 @@ int main() {
+ 	}
  
--# perf stat -a -e uncore_dmc_0/cnt_cycles/ sleep 1
-+  # perf stat -a -e uncore_dmc_0/cnt_cycles/ sleep 1
+ 	return 0;
+-}
++  }
  
--# perf stat -a -e \
--uncore_dmc_0/cnt_cycles/,\
--uncore_dmc_0/data_transfers/,\
--uncore_dmc_0/read_txns/,\
--uncore_dmc_0/write_txns/ sleep 1
-+  # perf stat -a -e \
-+  uncore_dmc_0/cnt_cycles/,\
-+  uncore_dmc_0/data_transfers/,\
-+  uncore_dmc_0/read_txns/,\
-+  uncore_dmc_0/write_txns/ sleep 1
+ Cgroup2 interface
+ =================
+diff --git a/Documentation/accounting/taskstats-struct.txt b/Documentation/accounting/taskstats-struct.rst
+similarity index 90%
+rename from Documentation/accounting/taskstats-struct.txt
+rename to Documentation/accounting/taskstats-struct.rst
+index e7512c061c15..6392d2966abd 100644
+--- a/Documentation/accounting/taskstats-struct.txt
++++ b/Documentation/accounting/taskstats-struct.rst
+@@ -1,5 +1,6 @@
++====================
+ The struct taskstats
+---------------------
++====================
  
--# perf stat -a -e \
--uncore_l3c_0/read_request/,\
--uncore_l3c_0/read_hit/,\
--uncore_l3c_0/inv_request/,\
--uncore_l3c_0/inv_hit/ sleep 1
-+  # perf stat -a -e \
-+  uncore_l3c_0/read_request/,\
-+  uncore_l3c_0/read_hit/,\
-+  uncore_l3c_0/inv_request/,\
-+  uncore_l3c_0/inv_hit/ sleep 1
-diff --git a/Documentation/perf/xgene-pmu.txt b/Documentation/perf/xgene-pmu.rst
-similarity index 96%
-rename from Documentation/perf/xgene-pmu.txt
-rename to Documentation/perf/xgene-pmu.rst
-index d7cff4454e5b..644f8ed89152 100644
---- a/Documentation/perf/xgene-pmu.txt
-+++ b/Documentation/perf/xgene-pmu.rst
-@@ -1,3 +1,4 @@
-+================================================
- APM X-Gene SoC Performance Monitoring Unit (PMU)
- ================================================
+ This document contains an explanation of the struct taskstats fields.
  
-@@ -33,7 +34,7 @@ each PMU, please refer to APM X-Gene User Manual.
- Each perf driver also provides a "cpumask" sysfs attribute, which contains a
- single CPU ID of the processor which will be used to handle all the PMU events.
+@@ -10,16 +11,24 @@ There are three different groups of fields in the struct taskstats:
+     the common fields and basic accounting fields are collected for
+     delivery at do_exit() of a task.
+ 2) Delay accounting fields
+-    These fields are placed between
+-    /* Delay accounting fields start */
+-    and
+-    /* Delay accounting fields end */
++    These fields are placed between::
++
++	/* Delay accounting fields start */
++
++    and::
++
++	/* Delay accounting fields end */
++
+     Their values are collected if CONFIG_TASK_DELAY_ACCT is set.
+ 3) Extended accounting fields
+-    These fields are placed between
+-    /* Extended accounting fields start */
+-    and
+-    /* Extended accounting fields end */
++    These fields are placed between::
++
++	/* Extended accounting fields start */
++
++    and::
++
++	/* Extended accounting fields end */
++
+     Their values are collected if CONFIG_TASK_XACCT is set.
  
--Example for perf tool use:
-+Example for perf tool use::
+ 4) Per-task and per-thread context switch count statistics
+@@ -31,10 +40,12 @@ There are three different groups of fields in the struct taskstats:
+ Future extension should add fields to the end of the taskstats struct, and
+ should not change the relative position of each field within the struct.
  
-  / # perf list | grep -e l3c -e iob -e mcb -e mc
-    l3c0/ackq-full/                                    [Kernel PMU event]
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3ed27c0c36d8..68d0070d18b6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1102,7 +1102,7 @@ APPLIED MICRO (APM) X-GENE SOC PMU
- M:	Khuong Dinh <khuong@os.amperecomputing.com>
- S:	Supported
- F:	drivers/perf/xgene_pmu.c
--F:	Documentation/perf/xgene-pmu.txt
-+F:	Documentation/perf/xgene-pmu.rst
- F:	Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
++::
  
- APTINA CAMERA SENSOR PLL
-@@ -7082,7 +7082,7 @@ M:	Shaokun Zhang <zhangshaokun@hisilicon.com>
- W:	http://www.hisilicon.com
- S:	Supported
- F:	drivers/perf/hisilicon
--F:	Documentation/perf/hisi-pmu.txt
-+F:	Documentation/perf/hisi-pmu.rst
+-struct taskstats {
++  struct taskstats {
++
++1) Common and basic accounting fields::
  
- HISILICON ROCE DRIVER
- M:	Lijun Ou <oulijun@huawei.com>
-diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-index 5d70646da8c7..bb5af9503084 100644
---- a/drivers/perf/qcom_l3_pmu.c
-+++ b/drivers/perf/qcom_l3_pmu.c
-@@ -7,7 +7,7 @@
-  * the slices. User space needs to aggregate to individual counts to provide
-  * a global picture.
-  *
-- * See Documentation/perf/qcom_l3_pmu.txt for more details.
-+ * See Documentation/perf/qcom_l3_pmu.rst for more details.
-  *
-  * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
-  *
+-1) Common and basic accounting fields:
+ 	/* The version number of this struct. This field is always set to
+ 	 * TAKSTATS_VERSION, which is defined in <linux/taskstats.h>.
+ 	 * Each time the struct is changed, the value should be incremented.
+@@ -83,7 +94,8 @@ struct taskstats {
+ 	__u64	ac_majflt;		/* Major Page Fault Count */
+ 
+ 
+-2) Delay accounting fields:
++2) Delay accounting fields::
++
+ 	/* Delay accounting fields start
+ 	 *
+ 	 * All values, until the comment "Delay accounting fields end" are
+@@ -134,7 +146,8 @@ struct taskstats {
+ 	/* version 1 ends here */
+ 
+ 
+-3) Extended accounting fields
++3) Extended accounting fields::
++
+ 	/* Extended accounting fields start */
+ 
+ 	/* Accumulated RSS usage in duration of a task, in MBytes-usecs.
+@@ -164,17 +177,23 @@ struct taskstats {
+ 
+ 	/* Extended accounting fields end */
+ 
+-4) Per-task and per-thread statistics
++4) Per-task and per-thread statistics::
++
+ 	__u64	nvcsw;			/* Context voluntary switch counter */
+ 	__u64	nivcsw;			/* Context involuntary switch counter */
+ 
+-5) Time accounting for SMT machines
++5) Time accounting for SMT machines::
++
+ 	__u64	ac_utimescaled;		/* utime scaled on frequency etc */
+ 	__u64	ac_stimescaled;		/* stime scaled on frequency etc */
+ 	__u64	cpu_scaled_run_real_total; /* scaled cpu_run_real_total */
+ 
+-6) Extended delay accounting fields for memory reclaim
++6) Extended delay accounting fields for memory reclaim::
++
+ 	/* Delay waiting for memory reclaim */
+ 	__u64	freepages_count;
+ 	__u64	freepages_delay_total;
+-}
++
++::
++
++  }
+diff --git a/Documentation/accounting/taskstats.txt b/Documentation/accounting/taskstats.rst
+similarity index 95%
+rename from Documentation/accounting/taskstats.txt
+rename to Documentation/accounting/taskstats.rst
+index ff06b738bb88..2a28b7f55c10 100644
+--- a/Documentation/accounting/taskstats.txt
++++ b/Documentation/accounting/taskstats.rst
+@@ -1,5 +1,6 @@
++=============================
+ Per-task statistics interface
+------------------------------
++=============================
+ 
+ 
+ Taskstats is a netlink-based interface for sending per-task and
+@@ -65,7 +66,7 @@ taskstats.h file.
+ 
+ The data exchanged between user and kernel space is a netlink message belonging
+ to the NETLINK_GENERIC family and using the netlink attributes interface.
+-The messages are in the format
++The messages are in the format::
+ 
+     +----------+- - -+-------------+-------------------+
+     | nlmsghdr | Pad |  genlmsghdr | taskstats payload |
+@@ -167,15 +168,13 @@ extended and the number of cpus grows large.
+ To avoid losing statistics, userspace should do one or more of the following:
+ 
+ - increase the receive buffer sizes for the netlink sockets opened by
+-listeners to receive exit data.
++  listeners to receive exit data.
+ 
+ - create more listeners and reduce the number of cpus being listened to by
+-each listener. In the extreme case, there could be one listener for each cpu.
+-Users may also consider setting the cpu affinity of the listener to the subset
+-of cpus to which it listens, especially if they are listening to just one cpu.
++  each listener. In the extreme case, there could be one listener for each cpu.
++  Users may also consider setting the cpu affinity of the listener to the subset
++  of cpus to which it listens, especially if they are listening to just one cpu.
+ 
+ Despite these measures, if the userspace receives ENOBUFS error messages
+ indicated overflow of receive buffers, it should take measures to handle the
+ loss of data.
+-
+-----
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 19c4e78666ff..123c87b75787 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -981,7 +981,7 @@ All time durations are in microseconds.
+ 	A read-only nested-key file which exists on non-root cgroups.
+ 
+ 	Shows pressure stall information for CPU. See
+-	Documentation/accounting/psi.txt for details.
++	Documentation/accounting/psi.rst for details.
+ 
+ 
+ Memory
+@@ -1318,7 +1318,7 @@ PAGE_SIZE multiple when read back.
+ 	A read-only nested-key file which exists on non-root cgroups.
+ 
+ 	Shows pressure stall information for memory. See
+-	Documentation/accounting/psi.txt for details.
++	Documentation/accounting/psi.rst for details.
+ 
+ 
+ Usage Guidelines
+@@ -1461,7 +1461,7 @@ IO Interface Files
+ 	A read-only nested-key file which exists on non-root cgroups.
+ 
+ 	Shows pressure stall information for IO. See
+-	Documentation/accounting/psi.txt for details.
++	Documentation/accounting/psi.rst for details.
+ 
+ 
+ Writeback
+diff --git a/init/Kconfig b/init/Kconfig
+index 448f8daa1204..4fb96464f0f2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -516,7 +516,7 @@ config PSI
+ 	  have cpu.pressure, memory.pressure, and io.pressure files,
+ 	  which aggregate pressure stalls for the grouped tasks only.
+ 
+-	  For more details see Documentation/accounting/psi.txt.
++	  For more details see Documentation/accounting/psi.rst.
+ 
+ 	  Say N if unsure.
+ 
 -- 
 2.20.1
 
