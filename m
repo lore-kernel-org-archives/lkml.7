@@ -2,125 +2,238 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA79C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE47C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80333214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="HARsNYU4"
+	by mail.kernel.org (Postfix) with ESMTP id 8B37B214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfDVQvA (ORCPT
+        id S1728190AbfDVQvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:51:00 -0400
-Received: from mail-it1-f170.google.com ([209.85.166.170]:51711 "EHLO
-        mail-it1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727378AbfDVQu7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:50:59 -0400
-Received: by mail-it1-f170.google.com with SMTP id s3so18797033itk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k2dbBBh9t0iowJHslezHA4ZI/3Wpcgqn3HcJk4izQPg=;
-        b=HARsNYU4REyrMUOR63OaCVeXUc4X+T6Cg+FPYkZKajRxHBjNiCnepMzS1MpLGG+SGY
-         kkRDJV8AP2z3txhL4VIBfdglXiH2GWO/P5GQQhvEqCK/oBxL1owsNA26bJrP4z+xgkV+
-         Kd7suDz7lP76CmaNgm+IqTt52MLiRq9mUJbrQpfStE1WwLNMkhA1rldnnMA7KPvCRWAW
-         85qAbeeKCS76BZHHE5KgYHeRJRwHYwPF7+bxes6qcPl888f4QMdbVEQsVlW2YB/Q4ans
-         aYye7O9f+kqPLLKwzS4TXf3ZlRHBtfSBKIh1kXg2RFrYNabcjjqc7IN4w2HdCd5h6aI+
-         obHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k2dbBBh9t0iowJHslezHA4ZI/3Wpcgqn3HcJk4izQPg=;
-        b=s8//k/8WdyjOmorSUOzp4E8bPn7Yd1h5TflqW5gzfEdO5CnQ2lXrSDrIKL8O4TKxYg
-         bd2MCx4lo8lzgkbUggInYNyBR4CeRPUQcms0lW0s6txGlyIBoC39XvRbiF2SrjOfCCDM
-         +3Qle/PJ7kvRDZQ4kfPVWtzjMDAl1OBXbHG05dAb6/NdCh7fBz7cZjd3i5C9nTu1+OJz
-         h9T1mWE8MiQm2jNh1Kz0tUKmVfAoIU+VYOWe1XCI4iD2eTqL2vvy/+KChbMRnrvT9GRc
-         5/xWKapfsFnw1J2shVi8a5cIplGelYJkix6hk8LhRHv/qt821f+qwNY3H9zenQOkmR5C
-         tYTQ==
-X-Gm-Message-State: APjAAAUYKWoJSH91wJPSNeEx/P4OIIQbERa4wjGgYPzoQc1KtE5xdGyq
-        4r892VaMOvglP4thaTklaze27A==
-X-Google-Smtp-Source: APXvYqyP1Axp3Ers5w70J7EzBKP3oGOF47aDrFAk4nmvE4iXG42mrgYyIcLa12prNynFIV6/wfzvCg==
-X-Received: by 2002:a24:ac45:: with SMTP id m5mr6373117iti.28.1555951858965;
-        Mon, 22 Apr 2019 09:50:58 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id p67sm6428046itb.11.2019.04.22.09.50.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:50:58 -0700 (PDT)
-Subject: Re: WARNING in percpu_ref_kill_and_confirm
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <00000000000043fe9c058720a5d3@google.com>
- <ad884b18-0e03-d6be-02b0-4e5273f068ce@kernel.dk>
- <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
- <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk>
- <cfa6be6d-4125-6d1e-8993-e9ec9dbaa7bb@kernel.dk>
- <CAHk-=wh=kKEb6qbuhnSWh5S55SbQBOE33991ULSFUgVrEnzivA@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4179bb56-0285-9e14-5ae9-7a16957b6210@kernel.dk>
-Date:   Mon, 22 Apr 2019 10:50:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wh=kKEb6qbuhnSWh5S55SbQBOE33991ULSFUgVrEnzivA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 22 Apr 2019 12:51:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55032 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727378AbfDVQvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:51:31 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D1891A0217;
+        Mon, 22 Apr 2019 18:51:28 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2029A1A0039;
+        Mon, 22 Apr 2019 18:51:28 +0200 (CEST)
+Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AF3ED205DD;
+        Mon, 22 Apr 2019 18:51:27 +0200 (CEST)
+From:   laurentiu.tudor@nxp.com
+To:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com,
+        iommu@lists.linux-foundation.org
+Cc:     leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [RFC PATCH] dma-mapping: create iommu mapping for newly allocated dma coherent mem
+Date:   Mon, 22 Apr 2019 19:51:25 +0300
+Message-Id: <20190422165125.21704-1-laurentiu.tudor@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/19 10:48 AM, Linus Torvalds wrote:
-> On Mon, Apr 22, 2019 at 9:38 AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> With the mutex change in, I can trigger it in a second or so. Just ran
->> the reproducer with that change reverted, and I'm not seeing any badness.
->> So I do wonder if the bisect results are accurate?
-> 
-> Looking at the syzbot report, it's syzbot being confused.
-> 
-> The actual WARNING in percpu_ref_kill_and_confirm() only happens with
-> recent kernels.
-> 
-> But then syzbot mixes it up with a completely different bug:
-> 
->    crash: BUG: MAX_STACK_TRACE_ENTRIES too low!
->    BUG: MAX_STACK_TRACE_ENTRIES too low!
-> 
-> and for some reason decides that *that* bug is the same thing entirely.
-> 
-> So yeah, I think the simple percpu_ref_is_dying() check is sufficient,
-> and that the syzbot bisection is completely bogus.
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Ah good, that makes me feel better. I'll queue the fix up, thanks.
+If possible / available call into the DMA API to get a proper iommu
+mapping and a dma address for the newly allocated coherent dma memory.
 
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+---
+ arch/arm/mm/dma-mapping-nommu.c |  3 ++-
+ include/linux/dma-mapping.h     | 12 ++++++---
+ kernel/dma/coherent.c           | 45 +++++++++++++++++++++++----------
+ kernel/dma/mapping.c            |  3 ++-
+ 4 files changed, 44 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
+index f304b10e23a4..2c42e83a6995 100644
+--- a/arch/arm/mm/dma-mapping-nommu.c
++++ b/arch/arm/mm/dma-mapping-nommu.c
+@@ -74,7 +74,8 @@ static void arm_nommu_dma_free(struct device *dev, size_t size,
+ 		dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
+ 	} else {
+ 		int ret = dma_release_from_global_coherent(get_order(size),
+-							   cpu_addr);
++							   cpu_addr, size,
++							   dma_addr);
+ 
+ 		WARN_ON_ONCE(ret == 0);
+ 	}
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 6309a721394b..cb23334608a7 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -161,19 +161,21 @@ static inline int is_device_dma_capable(struct device *dev)
+  */
+ int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
+ 				       dma_addr_t *dma_handle, void **ret);
+-int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr);
++int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr,
++				  ssize_t size, dma_addr_t dma_handle);
+ 
+ int dma_mmap_from_dev_coherent(struct device *dev, struct vm_area_struct *vma,
+ 			    void *cpu_addr, size_t size, int *ret);
+ 
+ void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle);
+-int dma_release_from_global_coherent(int order, void *vaddr);
++int dma_release_from_global_coherent(int order, void *vaddr, ssize_t size,
++				     dma_addr_t dma_handle);
+ int dma_mmap_from_global_coherent(struct vm_area_struct *vma, void *cpu_addr,
+ 				  size_t size, int *ret);
+ 
+ #else
+ #define dma_alloc_from_dev_coherent(dev, size, handle, ret) (0)
+-#define dma_release_from_dev_coherent(dev, order, vaddr) (0)
++#define dma_release_from_dev_coherent(dev, order, vaddr, size, dma_handle) (0)
+ #define dma_mmap_from_dev_coherent(dev, vma, vaddr, order, ret) (0)
+ 
+ static inline void *dma_alloc_from_global_coherent(ssize_t size,
+@@ -182,7 +184,9 @@ static inline void *dma_alloc_from_global_coherent(ssize_t size,
+ 	return NULL;
+ }
+ 
+-static inline int dma_release_from_global_coherent(int order, void *vaddr)
++static inline int dma_release_from_global_coherent(int order, void *vaddr
++						   ssize_t size,
++						   dma_addr_t dma_handle)
+ {
+ 	return 0;
+ }
+diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+index 29fd6590dc1e..b40439d6feaa 100644
+--- a/kernel/dma/coherent.c
++++ b/kernel/dma/coherent.c
+@@ -135,13 +135,15 @@ void dma_release_declared_memory(struct device *dev)
+ }
+ EXPORT_SYMBOL(dma_release_declared_memory);
+ 
+-static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
+-		ssize_t size, dma_addr_t *dma_handle)
++static void *__dma_alloc_from_coherent(struct device *dev,
++				       struct dma_coherent_mem *mem,
++				       ssize_t size, dma_addr_t *dma_handle)
+ {
+ 	int order = get_order(size);
+ 	unsigned long flags;
+ 	int pageno;
+ 	void *ret;
++	const struct dma_map_ops *ops = dev ? get_dma_ops(dev) : NULL;
+ 
+ 	spin_lock_irqsave(&mem->spinlock, flags);
+ 
+@@ -155,10 +157,16 @@ static void *__dma_alloc_from_coherent(struct dma_coherent_mem *mem,
+ 	/*
+ 	 * Memory was found in the coherent area.
+ 	 */
+-	*dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
+ 	ret = mem->virt_base + (pageno << PAGE_SHIFT);
+ 	spin_unlock_irqrestore(&mem->spinlock, flags);
+ 	memset(ret, 0, size);
++	if (ops && ops->map_resource)
++		*dma_handle = ops->map_resource(dev,
++						mem->device_base +
++							(pageno << PAGE_SHIFT),
++						size, DMA_BIDIRECTIONAL, 0);
++	else
++		*dma_handle = mem->device_base + (pageno << PAGE_SHIFT);
+ 	return ret;
+ err:
+ 	spin_unlock_irqrestore(&mem->spinlock, flags);
+@@ -187,7 +195,7 @@ int dma_alloc_from_dev_coherent(struct device *dev, ssize_t size,
+ 	if (!mem)
+ 		return 0;
+ 
+-	*ret = __dma_alloc_from_coherent(mem, size, dma_handle);
++	*ret = __dma_alloc_from_coherent(dev, mem, size, dma_handle);
+ 	return 1;
+ }
+ 
+@@ -196,18 +204,26 @@ void *dma_alloc_from_global_coherent(ssize_t size, dma_addr_t *dma_handle)
+ 	if (!dma_coherent_default_memory)
+ 		return NULL;
+ 
+-	return __dma_alloc_from_coherent(dma_coherent_default_memory, size,
+-			dma_handle);
++	return __dma_alloc_from_coherent(NULL, dma_coherent_default_memory,
++			size, dma_handle);
+ }
+ 
+-static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
+-				       int order, void *vaddr)
++static int __dma_release_from_coherent(struct device *dev,
++				       struct dma_coherent_mem *mem,
++				       int order, void *vaddr, ssize_t size,
++				       dma_addr_t dma_handle)
+ {
++	const struct dma_map_ops *ops = dev ? get_dma_ops(dev) : NULL;
++
+ 	if (mem && vaddr >= mem->virt_base && vaddr <
+ 		   (mem->virt_base + (mem->size << PAGE_SHIFT))) {
+ 		int page = (vaddr - mem->virt_base) >> PAGE_SHIFT;
+ 		unsigned long flags;
+ 
++		if (ops && ops->unmap_resource)
++			ops->unmap_resource(dev, dma_handle, size,
++					    DMA_BIDIRECTIONAL, 0);
++
+ 		spin_lock_irqsave(&mem->spinlock, flags);
+ 		bitmap_release_region(mem->bitmap, page, order);
+ 		spin_unlock_irqrestore(&mem->spinlock, flags);
+@@ -228,20 +244,23 @@ static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
+  * Returns 1 if we correctly released the memory, or 0 if the caller should
+  * proceed with releasing memory from generic pools.
+  */
+-int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr)
++int dma_release_from_dev_coherent(struct device *dev, int order, void *vaddr,
++				  ssize_t size, dma_addr_t dma_handle)
+ {
+ 	struct dma_coherent_mem *mem = dev_get_coherent_memory(dev);
+ 
+-	return __dma_release_from_coherent(mem, order, vaddr);
++	return __dma_release_from_coherent(dev, mem, order, vaddr, size,
++					   dma_handle);
+ }
+ 
+-int dma_release_from_global_coherent(int order, void *vaddr)
++int dma_release_from_global_coherent(int order, void *vaddr, ssize_t size,
++				     dma_addr_t dma_handle)
+ {
+ 	if (!dma_coherent_default_memory)
+ 		return 0;
+ 
+-	return __dma_release_from_coherent(dma_coherent_default_memory, order,
+-			vaddr);
++	return __dma_release_from_coherent(NULL, dma_coherent_default_memory,
++					   order, vaddr, size, dma_handle);
+ }
+ 
+ static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 685a53f2a793..398bf838b7d7 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -269,7 +269,8 @@ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
++	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr,
++					  size, dma_handle))
+ 		return;
+ 	/*
+ 	 * On non-coherent platforms which implement DMA-coherent buffers via
 -- 
-Jens Axboe
+2.17.1
 
