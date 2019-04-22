@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E964C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65995C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA22218D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F43321902
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962291;
-	bh=6wM28boM7DmkElAkYlnnMwuZhOlosHRCVJnaymUlxoQ=;
+	s=default; t=1555962296;
+	bh=qngFFHZ2SQ9w9v6kUVMUKUePoEZlcPSTmI8gIwu10zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LkAzjRrpKQJ7fVYq1ijOQ0F2B22TfP5BdMHJmlY1J91Z0iCZ60/LtutRKjH1Fg80d
-	 Xq5oVW2BFtImzbc/3TAJGIlxBsv0FtHZOasvOA5f8QmOiRLzlyvxMEio+NHsriV5vo
-	 nLImmCbvEw+GTO2QlDrsTldAT2PnLlT6yGPp56sw=
+	b=MHtBRKCvOQ3YTTS1pMqU02OsknS+VuQDxjHGYat1Wu654w0yMMVv8geVWxddt/y0p
+	 bGbl5AnKGziMzSW9E3Bjq6C6omApxK2MDjrmsBO1EytDDgbRvM873o5f13HKBtefeP
+	 ftFb1HM9oanDBDQcQZ8uDitf3sNFpRZTO/K1ZiMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfDVTou (ORCPT
+        id S1729610AbfDVToz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46012 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:44:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729572AbfDVToo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:44 -0400
+        id S1729094AbfDVTox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2808204EC;
-        Mon, 22 Apr 2019 19:44:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6259A218B0;
+        Mon, 22 Apr 2019 19:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962283;
-        bh=6wM28boM7DmkElAkYlnnMwuZhOlosHRCVJnaymUlxoQ=;
+        s=default; t=1555962293;
+        bh=qngFFHZ2SQ9w9v6kUVMUKUePoEZlcPSTmI8gIwu10zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asd87QxCKNPXMnBHeC2lEbaurCJ+2XuSIGY2BwTzCQ3p3NGXK2KqHfysdDBJVazmo
-         0SIdKL7x7C0oDK32apS+1ayR4tZjvQH3JU8GmCtemXBxLNvk0h4MxepFDPPrsTzNkM
-         K6C0ZHpqv45iIeunQbV4gHL2r2e1iUcRZ5NB6jaI=
+        b=M1lV0EfZQ46WNCoAQSvXt3djLpwSivgRS+H98KJ7d9KntOSDs+0/KtBRrWqDjfAOP
+         orajTDcjJx0WNg0hUIZqkWpmZ3jgzTg9JOqozo7TXcrbDUK0S4v8pmE+L1x4Pz8cHy
+         2P80i/UwEvcugci3PNsp4fjycDWWNte5uNg9+n+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 85/98] KVM: selftests: disable stack protector for all KVM tests
-Date:   Mon, 22 Apr 2019 15:41:52 -0400
-Message-Id: <20190422194205.10404-85-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 86/98] KVM: selftests: complete IO before migrating guest state
+Date:   Mon, 22 Apr 2019 15:41:53 -0400
+Message-Id: <20190422194205.10404-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -61,39 +61,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit ffac839d040619847217647434b2b02469926871 ]
+[ Upstream commit 0f73bbc851ed32d22bbd86be09e0365c460bcd2e ]
 
-Since 4.8.3, gcc has enabled -fstack-protector by default.  This is
-problematic for the KVM selftests as they do not configure fs or gs
-segments (the stack canary is pulled from fs:0x28).  With the default
-behavior, gcc will insert a stack canary on any function that creates
-buffers of 8 bytes or more.  As a result, ucall() will hit a triple
-fault shutdown due to reading a bad fs segment when inserting its
-stack canary, i.e. every test fails with an unexpected SHUTDOWN.
+Documentation/virtual/kvm/api.txt states:
 
-Fixes: 14c47b7530e2d ("kvm: selftests: introduce ucall")
+  NOTE: For KVM_EXIT_IO, KVM_EXIT_MMIO, KVM_EXIT_OSI, KVM_EXIT_PAPR and
+        KVM_EXIT_EPR the corresponding operations are complete (and guest
+        state is consistent) only after userspace has re-entered the
+        kernel with KVM_RUN.  The kernel side will first finish incomplete
+        operations and then check for pending signals.  Userspace can
+        re-enter the guest with an unmasked signal pending to complete
+        pending operations.
+
+Because guest state may be inconsistent, starting state migration after
+an IO exit without first completing IO may result in test failures, e.g.
+a proposed change to KVM's handling of %rip in its fast PIO handling[1]
+will cause the new VM, i.e. the post-migration VM, to have its %rip set
+to the IN instruction that triggered KVM_EXIT_IO, leading to a test
+assertion due to a stage mismatch.
+
+For simplicitly, require KVM_CAP_IMMEDIATE_EXIT to complete IO and skip
+the test if it's not available.  The addition of KVM_CAP_IMMEDIATE_EXIT
+predates the state selftest by more than a year.
+
+[1] https://patchwork.kernel.org/patch/10848545/
+
+Fixes: fa3899add1056 ("kvm: selftests: add basic test for state save and restore")
+Reported-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/include/kvm_util.h |  1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c     | 16 ++++++++++++++++
+ .../testing/selftests/kvm/x86_64/state_test.c  | 18 ++++++++++++++++--
+ 3 files changed, 33 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 212b8f0032ae..cb4a992d6dd3 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -28,8 +28,8 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
- INSTALL_HDR_PATH = $(top_srcdir)/usr
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
- LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
--CFLAGS += -O2 -g -std=gnu99 -no-pie -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
--LDFLAGS += -pthread
-+CFLAGS += -O2 -g -std=gnu99 -fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
-+LDFLAGS += -pthread -no-pie
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index a84785b02557..07b71ad9734a 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -102,6 +102,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva);
+ struct kvm_run *vcpu_state(struct kvm_vm *vm, uint32_t vcpuid);
+ void vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
+ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid);
++void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid);
+ void vcpu_set_mp_state(struct kvm_vm *vm, uint32_t vcpuid,
+ 		       struct kvm_mp_state *mp_state);
+ void vcpu_regs_get(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_regs *regs);
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index b52cfdefecbf..efa0aad8b3c6 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -1121,6 +1121,22 @@ int _vcpu_run(struct kvm_vm *vm, uint32_t vcpuid)
+ 	return rc;
+ }
  
- # After inclusion, $(OUTPUT) is defined and
- # $(TEST_GEN_PROGS) starts with $(OUTPUT)/
++void vcpu_run_complete_io(struct kvm_vm *vm, uint32_t vcpuid)
++{
++	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
++	int ret;
++
++	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
++
++	vcpu->state->immediate_exit = 1;
++	ret = ioctl(vcpu->fd, KVM_RUN, NULL);
++	vcpu->state->immediate_exit = 0;
++
++	TEST_ASSERT(ret == -1 && errno == EINTR,
++		    "KVM_RUN IOCTL didn't exit immediately, rc: %i, errno: %i",
++		    ret, errno);
++}
++
+ /*
+  * VM VCPU Set MP State
+  *
+diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
+index 4b3f556265f1..30f75856cf39 100644
+--- a/tools/testing/selftests/kvm/x86_64/state_test.c
++++ b/tools/testing/selftests/kvm/x86_64/state_test.c
+@@ -134,6 +134,11 @@ int main(int argc, char *argv[])
+ 
+ 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
+ 
++	if (!kvm_check_cap(KVM_CAP_IMMEDIATE_EXIT)) {
++		fprintf(stderr, "immediate_exit not available, skipping test\n");
++		exit(KSFT_SKIP);
++	}
++
+ 	/* Create VM */
+ 	vm = vm_create_default(VCPU_ID, 0, guest_code);
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+@@ -156,8 +161,6 @@ int main(int argc, char *argv[])
+ 			    stage, run->exit_reason,
+ 			    exit_reason_str(run->exit_reason));
+ 
+-		memset(&regs1, 0, sizeof(regs1));
+-		vcpu_regs_get(vm, VCPU_ID, &regs1);
+ 		switch (get_ucall(vm, VCPU_ID, &uc)) {
+ 		case UCALL_ABORT:
+ 			TEST_ASSERT(false, "%s at %s:%d", (const char *)uc.args[0],
+@@ -176,6 +179,17 @@ int main(int argc, char *argv[])
+ 			    uc.args[1] == stage, "Unexpected register values vmexit #%lx, got %lx",
+ 			    stage, (ulong)uc.args[1]);
+ 
++		/*
++		 * When KVM exits to userspace with KVM_EXIT_IO, KVM guarantees
++		 * guest state is consistent only after userspace re-enters the
++		 * kernel with KVM_RUN.  Complete IO prior to migrating state
++		 * to a new VM.
++		 */
++		vcpu_run_complete_io(vm, VCPU_ID);
++
++		memset(&regs1, 0, sizeof(regs1));
++		vcpu_regs_get(vm, VCPU_ID, &regs1);
++
+ 		state = vcpu_save_state(vm, VCPU_ID);
+ 		kvm_vm_release(vm);
+ 
 -- 
 2.19.1
 
