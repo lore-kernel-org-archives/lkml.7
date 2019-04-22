@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3172C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B522C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29A320643
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC29420643
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963374;
-	bh=fIhX/tNaCof+lPJyKim+YQEZAb2IukfLs34A9hCcUOU=;
+	s=default; t=1555963381;
+	bh=S+CvoNXiAqZgE3LfDz5kEpun8CaKRMNjQOlLvMpI5Hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=azTNm17WUsVReIwG2RXtoTpL46VCpnx3VChEg/uLsAZLU5UhlY8DW4RFh5Cl2EZ3W
-	 we+nYTgVf+eH/aZEPUy5CYrl87CQOzKb3hV9elta3lw1IACcNtc8g7qGOptqogwsZP
-	 nww5pqIqGxc0/GEP9nDJG+cG0Av9B6bOvUGOz6D0=
+	b=GdN+2c26MRbzcr6vV5sD4KNUjOmv1uWpySMrBbeKxPvWk/fVcQZ67dtt7JNyyGZrG
+	 FB1xl2EDbGt2fIQLhByg234pI97YbkEFlSVpgZZz/8YE0KHMc7zOGiPUUjYMpKmfsB
+	 JiWD5L9FV1G61EMPgFnx/+f9H0LnNDXkcC5DADyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbfDVUCx (ORCPT
+        id S1732087AbfDVUC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:02:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48580 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729935AbfDVTqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:46:20 -0400
+        id S1729948AbfDVTqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:46:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7570218FC;
-        Mon, 22 Apr 2019 19:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21B23218DA;
+        Mon, 22 Apr 2019 19:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962379;
-        bh=fIhX/tNaCof+lPJyKim+YQEZAb2IukfLs34A9hCcUOU=;
+        s=default; t=1555962374;
+        bh=S+CvoNXiAqZgE3LfDz5kEpun8CaKRMNjQOlLvMpI5Hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTTP5DID3bhdp4Bv29+4CZXgdfJNbVKuOqNXHD0huLFXzFuAwMzhkAidbd1DGOM/5
-         k3HtffcrxJ0LQmm1fqGJuMfIv21qkhEfwFJnihUqON2RXztDiHBSFwsA3fyw5XFEqc
-         KWfvJckoGFa7kdOoWT9pOZhi+8UzmCM2QUocFij4=
+        b=Xi89oqKxp34hk5bffg09RxWInOWplNfgNjTgJC1oWqAk6JBxXpr+OXnmsjN4uSWLf
+         o7nwsRNyAVpnrboml7ElJ6pxyLCeUP3es/93iUHlSBbs+iTW/0xkAV0vJFwv+Iyieh
+         L9GAy6r77VSk3NaXMzRMOsBfrmIqZR1GT6RrU+Pg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Nishanth Menon <nm@ti.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/68] net: ks8851: Set initial carrier state to down
-Date:   Mon, 22 Apr 2019 15:44:38 -0400
-Message-Id: <20190422194516.11634-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 28/68] net: ks8851: Reassert reset pin if chip ID check fails
+Date:   Mon, 22 Apr 2019 15:44:36 -0400
+Message-Id: <20190422194516.11634-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -63,52 +63,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
+[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
 
-The ks8851 chip's initial carrier state is down. A Link Change Interrupt
-is signaled once interrupts are enabled if the carrier is up.
+Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
+reset gpio") amended the ks8851 driver to briefly assert the chip's
+reset pin on probe. It also amended the probe routine's error path to
+reassert the reset pin if a subsequent initialization step fails.
 
-The ks8851 driver has it backwards by assuming that the initial carrier
-state is up. The state is therefore misrepresented if the interface is
-opened with no cable attached. Fix it.
-
-The Link Change interrupt is sometimes not signaled unless the P1MBSR
-register (which contains the Link Status bit) is read on ->ndo_open().
-This might be a hardware erratum. Read the register by calling
-mii_check_link(), which has the desirable side effect of setting the
-carrier state to down if the cable was detached while the interface was
-closed.
+However the commit misplaced reassertion of the reset pin in the error
+path such that it is not performed if the check of the Chip ID and
+Enable Register (CIDER) fails. The error path is therefore slightly
+asymmetrical to the probe routine's body. Fix it.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/micrel/ks8851.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index c9faec4c5b25..b83b070a9eec 100644
+index a93f8e842c07..1633fa5c709c 100644
 --- a/drivers/net/ethernet/micrel/ks8851.c
 +++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -858,6 +858,7 @@ static int ks8851_net_open(struct net_device *dev)
- 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
+@@ -1554,9 +1554,9 @@ static int ks8851_probe(struct spi_device *spi)
+ 	free_irq(ndev->irq, ks);
  
- 	mutex_unlock(&ks->lock);
-+	mii_check_link(&ks->mii);
- 	return 0;
- }
- 
-@@ -1519,6 +1520,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, ks);
- 
-+	netif_carrier_off(ks->netdev);
- 	ndev->if_port = IF_PORT_100BASET;
- 	ndev->netdev_ops = &ks8851_netdev_ops;
- 	ndev->irq = spi->irq;
+ err_irq:
++err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+-err_id:
+ 	regulator_disable(ks->vdd_reg);
+ err_reg:
+ 	regulator_disable(ks->vdd_io);
 -- 
 2.19.1
 
