@@ -2,93 +2,104 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C6CC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B8CC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302CC2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0562075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dXZZp6O5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dgu3eS3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfDVWpF (ORCPT
+        id S1729994AbfDVWtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 18:45:05 -0400
-Received: from ozlabs.org ([203.11.71.1]:57049 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfDVWpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 18:45:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44p1qf2bT4z9s7T;
-        Tue, 23 Apr 2019 08:45:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555973102;
-        bh=QpyJpH6+jEhVKLaKM66uyRpTCCiPhfker/bAhbACyRE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dXZZp6O5m88RtC6EC6ogZ4+WOS6VPyURKzQTSgaIWvdQ7gAkLNMJqlKuADNdOjJYx
-         qCpUwrL3bP9n6PDcLo3v83bF5F4SnNol9N3Pra2A1CgOtB3TG7DaOjRtT4R1S6/oMv
-         HggoYbY4U1wRvaDVu2QfY8zWTIz+pLww7ZtCYil/TrKDnVuIbg0ck3/kZI1d+/fBkH
-         U2BDl2quDFbSLZyQQoorW5/bmzLutWnXO1/KR2FALsxU+aHPqJLlP/0cnoA7a+WU4r
-         g5q558fQOTt1CS6nM6lxn986RPmXo+qQMY7Dl2TjkGiFQd1vZqr4FsSDCpfgavNHb5
-         SYsPCoILO1Tjg==
-Date:   Tue, 23 Apr 2019 08:45:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: linux-next: build failure after merge of the imx-mxs tree
-Message-ID: <20190423084501.15824b18@canb.auug.org.au>
+        Mon, 22 Apr 2019 18:49:15 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:40488 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728965AbfDVWtP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 18:49:15 -0400
+Received: by mail-ua1-f66.google.com with SMTP id b8so4117229uaq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P+QhsgyQznwjFUiayG7lQhTqPlSCXa8PxDOjCql3V1M=;
+        b=Dgu3eS3ZR4WVQyJUYWW6lInyMNK/ePH2bm6nl8G37BR1eVinyB6NjlblbgwTCvr8lo
+         SK0mR5emrix683WzfOgJ3cWs6wOsEkbLoje6PmCsdkcqBPt0e2I69hg0/eI2sUvWpCGs
+         OQmmvmhtWQfmWvVgH8QI3SHBADoIo2xS4CDSg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P+QhsgyQznwjFUiayG7lQhTqPlSCXa8PxDOjCql3V1M=;
+        b=Buf2VS38Fie0hyaaFeuRNwK748ReebxLpVwkjrdGr6Z3hsXRfWr7P7PCT4FoaMG3SX
+         7HyjYf3BgRbxSMvuhKoGAM1uYS/mFScCsrsK6IDd6FW+fzETPOy6WuPGGAvoYcoLfhBp
+         j0XXbiEBhG0wz6LigEANeLWK9IA7e6ie5B0yFwLBM17WTIbNOg8cJEaTLQ38Ubvl1JAY
+         elGr1HYa/vOoVmGqzRLN5EV0nmGFmYv8vP3ktpIppw2x/SPGa5vT4a3f5qn/22Fhz21m
+         z3ltKhc64hWwcxoNdMHWfydDlOME6neiyhi1dEaZTmpeZn26TSqpB55I2cb29SyEL5Ot
+         80rw==
+X-Gm-Message-State: APjAAAULH9NCmyEC5/zfZeHOweR1bSTgUASpIRlinLZpohMjp0YsyJho
+        De3GXECiELL7xK3JtG1oPs7GtF4rajs=
+X-Google-Smtp-Source: APXvYqxJglrYSz3w4KjlhPg+5zrarWYNKZ0mbUvKM6hjYJfcWIMiWE/ThrENBTdK3iNjfOE4gB+JOQ==
+X-Received: by 2002:ab0:21c5:: with SMTP id u5mr10493944uan.81.1555973353617;
+        Mon, 22 Apr 2019 15:49:13 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id h78sm4823997vka.48.2019.04.22.15.49.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 15:49:12 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id n16so4111159uae.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:49:11 -0700 (PDT)
+X-Received: by 2002:ab0:791:: with SMTP id c17mr715379uaf.96.1555973351413;
+ Mon, 22 Apr 2019 15:49:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/gEokQ+0QF4RgqbAyZFJpool"; protocol="application/pgp-signature"
+References: <20190416042320.GA36924@beast> <20190418145711.GA15549@roeck-us.net>
+In-Reply-To: <20190418145711.GA15549@roeck-us.net>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 22 Apr 2019 15:48:58 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJsaKU1O7GQG0oEQfnMGSdRE-QEfd8c1Gn6YuPA66K-nQ@mail.gmail.com>
+Message-ID: <CAGXu5jJsaKU1O7GQG0oEQfnMGSdRE-QEfd8c1Gn6YuPA66K-nQ@mail.gmail.com>
+Subject: Re: [PATCH] binfmt_elf: Move brk out of mmap when doing direct loader exec
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gEokQ+0QF4RgqbAyZFJpool
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 18, 2019 at 7:57 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Mon, Apr 15, 2019 at 09:23:20PM -0700, Kees Cook wrote:
+> > Commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
+> > made changes in the rare case when the ELF loader was directly invoked
+> > (e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
+> > the loader), by moving into the mmap region to avoid both ET_EXEC and PIE
+> > binaries. This had the effect of also moving the brk region into mmap,
+> > which could lead to the stack and brk being arbitrarily close to each
+> > other. An unlucky process wouldn't get its requested stack size and stack
+> > allocations could end up scribbling on the heap.
+> >
+>
+> This patch results in crashes of my xtensa boot tests.
+>
+> Run /sbin/init as init process
+> Kernel panic - not syncing: Attempted to kill init!  exitcode=0x0000000b
 
-Hi all,
+Thanks for finding this! I *think* the issue is that I needed to be
+testing for CONFIG_ARCH_HAS_ELF_RANDOMIZATION, which xtensa lacks.
+I'll get this fixed up and resent through -mm.
 
-After merging the imx-mxs tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
-
-arch/arm/boot/dts/imx7d-zii-rpu2.dts:46.12-50.4: Warning (io_channels_prope=
-rty): /iio-hwmon: Missing property '#io-channel-cells' in node /soc/aips-bu=
-s@30400000/adc@30610000 or bad phandle (referred from io-channels[0])
-
-Caused by commit
-
-  69ab5392f517 ("ARM: dts: Add support for ZII i.MX7 RPU2 board")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/gEokQ+0QF4RgqbAyZFJpool
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+Q+0ACgkQAVBC80lX
-0GyIsggAo75ay3PgqQ0OwkeFeB9Dq1ZztKdAc2wkfr6+bM3f19sNnzqyDMWhCY7M
-HUL4hFCLotb2Puj6KdtA1ygwSi6fB5t/d6Iq+OIWzlDU2smhXYeXMA/PGQ5DGFwY
-2KE+RbzCJvEPnCCPDqd2iKgHmK1RhpgsXPIXp244Bq03ekdl5AlkiPXQcVGuzPjc
-96pPI7cKwhvcBFDlxJ48LjJ8sRgJlAFCnlQQun2cc+N33QRJYjSF3l0XTnmQ60MM
-liHiKTGSOF9Uh7VRbpu6T3XDcUm4vcfrgiiZxkNK9x5v2kyBb8ebOEIlOPMdgIVx
-Gq5Y9kfp5lcn39SG0BQHVbP50uU3EQ==
-=u3EY
------END PGP SIGNATURE-----
-
---Sig_/gEokQ+0QF4RgqbAyZFJpool--
+-- 
+Kees Cook
