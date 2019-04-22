@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67052C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890D0C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B4520896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F876214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfDVVFh (ORCPT
+        id S1729329AbfDVVFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:05:37 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42914 "EHLO ale.deltatee.com"
+        Mon, 22 Apr 2019 17:05:42 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42934 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbfDVVFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:05:37 -0400
+        id S1729147AbfDVVFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:05:38 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hIg85-0004ia-Rp; Mon, 22 Apr 2019 15:05:35 -0600
+        id 1hIg85-0004id-Rs; Mon, 22 Apr 2019 15:05:36 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hIg82-0003zY-Lh; Mon, 22 Apr 2019 15:05:30 -0600
+        id 1hIg82-0003zh-UN; Mon, 22 Apr 2019 15:05:30 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
         linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
@@ -38,8 +38,8 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Apr 2019 15:05:20 -0600
-Message-Id: <20190422210528.15289-3-logang@deltatee.com>
+Date:   Mon, 22 Apr 2019 15:05:23 -0600
+Message-Id: <20190422210528.15289-6-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190422210528.15289-1-logang@deltatee.com>
 References: <20190422210528.15289-1-logang@deltatee.com>
@@ -48,7 +48,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-ntb@googlegroups.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, jdmason@kudzu.us, joro@8bytes.org, bhelgaas@google.com, dave.jiang@intel.com, allenbh@gmail.com, fancer.lancer@gmail.com, epilmore@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v4 02/10] PCI/switchtec: Add module parameter to request more interrupts
+Subject: [PATCH v4 05/10] NTB: Rename ntb.c to support multiple source files in the module
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,50 +56,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing the we want to use more interrupts in the NTB MSI code
-we need to be able allocate more (sometimes virtual) interrupts
-in the switchtec driver. Therefore add a module parameter to
-request to allocate additional interrupts.
+The kbuild system does not support having multiple source files in
+a module if one of those source files has the same name as the module.
 
-This puts virtually no limit on the number of MSI interrupts available
-to NTB clients.
+Therefore, we must rename ntb.c to core.c, while the module remains
+ntb.ko.
+
+This is similar to the way the nvme modules are structured.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jon Mason <jdmason@kudzu.us>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Allen Hubbe <allenbh@gmail.com>
 ---
- drivers/pci/switch/switchtec.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/ntb/Makefile          | 2 ++
+ drivers/ntb/{ntb.c => core.c} | 0
+ 2 files changed, 2 insertions(+)
+ rename drivers/ntb/{ntb.c => core.c} (100%)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index e22766c79fe9..8b1db78197d9 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -30,6 +30,10 @@ module_param(use_dma_mrpc, bool, 0644);
- MODULE_PARM_DESC(use_dma_mrpc,
- 		 "Enable the use of the DMA MRPC feature");
- 
-+static int nirqs = 32;
-+module_param(nirqs, int, 0644);
-+MODULE_PARM_DESC(nirqs, "number of interrupts to allocate (more may be useful for NTB applications)");
+diff --git a/drivers/ntb/Makefile b/drivers/ntb/Makefile
+index 1921dec1949d..537226f8e78d 100644
+--- a/drivers/ntb/Makefile
++++ b/drivers/ntb/Makefile
+@@ -1,2 +1,4 @@
+ obj-$(CONFIG_NTB) += ntb.o hw/ test/
+ obj-$(CONFIG_NTB_TRANSPORT) += ntb_transport.o
 +
- static dev_t switchtec_devt;
- static DEFINE_IDA(switchtec_minor_ida);
- 
-@@ -1247,8 +1251,12 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
- 	int dma_mrpc_irq;
- 	int rc;
- 
--	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, 4,
--				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
-+	if (nirqs < 4)
-+		nirqs = 4;
-+
-+	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, nirqs,
-+				      PCI_IRQ_MSIX | PCI_IRQ_MSI |
-+				      PCI_IRQ_VIRTUAL);
- 	if (nvecs < 0)
- 		return nvecs;
- 
++ntb-y := core.o
+diff --git a/drivers/ntb/ntb.c b/drivers/ntb/core.c
+similarity index 100%
+rename from drivers/ntb/ntb.c
+rename to drivers/ntb/core.c
 -- 
 2.20.1
 
