@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76685C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7805C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4687D218FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCEF2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962640;
-	bh=/qcveRh5jOfqWowfOPgCA+EFZHx8linhRKhscyUN+GQ=;
+	s=default; t=1555962644;
+	bh=K6dX4RqOYR9fSZsQsBEMT01w5cEIGbxRftSdC13OEXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqqyiQceHs9QsYz7ILOsoQnOPE420PjlOk+VyQWm206VJLnjWjHi8CWNhgGaF9Z+4
-	 WNMbsJz/3ZiV68AxRQzC52U1i/PrXL2ZykB6fvplBO//DqdxLlrKw9BmB/8B3OYKzZ
-	 aKTsPbX+z1RrnxTxtITmg2kOWFMemQPRbxbjmidY=
+	b=Y8uDutDGaqPeNbk/Rm85UOvE7UkLMBKVrjPRkeFDIGuC/3D2duleY6GQ6gt/qlOC5
+	 f9V1puIie//gVLbIipuxf42J5qT807lDgpBcx5akFLb/590fQc9xOciieFg8GBO2+W
+	 eiLPf0CYixyuTHueHB9GpF8EyBtX1fl89Zk8x1Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfDVTui (ORCPT
+        id S1731165AbfDVTum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54650 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:50:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbfDVTug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:36 -0400
+        id S1731142AbfDVTuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29A9A20643;
-        Mon, 22 Apr 2019 19:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18106218CD;
+        Mon, 22 Apr 2019 19:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962635;
-        bh=/qcveRh5jOfqWowfOPgCA+EFZHx8linhRKhscyUN+GQ=;
+        s=default; t=1555962638;
+        bh=K6dX4RqOYR9fSZsQsBEMT01w5cEIGbxRftSdC13OEXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1nyvwBBronCD+iKYlfJTMh2sX0o55TtKkwrH6RxA/s8WJaQCNwi4v+s0nO96QUmE6
-         2OVIiKUl7yCe6a0OEqhTbtEN+5wC5gk3j2ZOBcE6YK4jlYbt+IiutDAPQkV2kpx2cD
-         1N0bdF05WanaAU//rIfgSDF8wHaNebd/Ztt2yQQI=
+        b=eoL/fUh1X6OObCgYb0nvcNClreh1SW4nDJfXF5gMIR2ANlXvJTVO/gk+VB2RkUp6I
+         Q5IQSkgG43WzJ5zPzenwTb12LKdqBfuDsTrl1X1DUArKxZQo4CudWQyrqG36WUAzda
+         zk6mV4ArepVZQgPvzXo3jzCMscrork+pP9LPCK0g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Nishanth Menon <nm@ti.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 05/15] net: ks8851: Reassert reset pin if chip ID check fails
-Date:   Mon, 22 Apr 2019 15:50:12 -0400
-Message-Id: <20190422195022.13760-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 06/15] net: ks8851: Delay requesting IRQ until opened
+Date:   Mon, 22 Apr 2019 15:50:13 -0400
+Message-Id: <20190422195022.13760-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422195022.13760-1-sashal@kernel.org>
 References: <20190422195022.13760-1-sashal@kernel.org>
@@ -63,43 +62,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
+[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
 
-Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
-reset gpio") amended the ks8851 driver to briefly assert the chip's
-reset pin on probe. It also amended the probe routine's error path to
-reassert the reset pin if a subsequent initialization step fails.
+The ks8851 driver currently requests the IRQ before registering the
+net_device.  Because the net_device name is used as IRQ name and is
+still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
+apart if multiple ks8851 chips are present.  Most other drivers delay
+requesting the IRQ until the net_device is opened.  Do the same.
 
-However the commit misplaced reassertion of the reset pin in the error
-path such that it is not performed if the check of the Chip ID and
-Enable Register (CIDER) fails. The error path is therefore slightly
-asymmetrical to the probe routine's body. Fix it.
+The driver doesn't enable interrupts on the chip before opening the
+net_device and disables them when closing it, so there doesn't seem to
+be a need to request the IRQ already on probe.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Nishanth Menon <nm@ti.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index 4a29e191819f..e218e45dcf35 100644
+index e218e45dcf35..f90a1396535a 100644
 --- a/drivers/net/ethernet/micrel/ks8851.c
 +++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
- 	free_irq(ndev->irq, ks);
+@@ -797,6 +797,15 @@ static void ks8851_tx_work(struct work_struct *work)
+ static int ks8851_net_open(struct net_device *dev)
+ {
+ 	struct ks8851_net *ks = netdev_priv(dev);
++	int ret;
++
++	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
++				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++				   dev->name, ks);
++	if (ret < 0) {
++		netdev_err(dev, "failed to get irq\n");
++		return ret;
++	}
  
- err_irq:
-+err_id:
+ 	/* lock the card, even if we may not actually be doing anything
+ 	 * else at the moment */
+@@ -911,6 +920,8 @@ static int ks8851_net_stop(struct net_device *dev)
+ 		dev_kfree_skb(txb);
+ 	}
+ 
++	free_irq(dev->irq, ks);
++
+ 	return 0;
+ }
+ 
+@@ -1542,14 +1553,6 @@ static int ks8851_probe(struct spi_device *spi)
+ 	ks8851_read_selftest(ks);
+ 	ks8851_init_mac(ks);
+ 
+-	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
+-				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+-				   ndev->name, ks);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "failed to get irq\n");
+-		goto err_irq;
+-	}
+-
+ 	ret = register_netdev(ndev);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "failed to register network device\n");
+@@ -1562,11 +1565,7 @@ static int ks8851_probe(struct spi_device *spi)
+ 
+ 	return 0;
+ 
+-
+ err_netdev:
+-	free_irq(ndev->irq, ks);
+-
+-err_irq:
+ err_id:
  	if (gpio_is_valid(gpio))
  		gpio_set_value(gpio, 0);
--err_id:
- 	regulator_disable(ks->vdd_reg);
- err_reg:
- 	regulator_disable(ks->vdd_io);
+@@ -1587,7 +1586,6 @@ static int ks8851_remove(struct spi_device *spi)
+ 		dev_info(&spi->dev, "remove\n");
+ 
+ 	unregister_netdev(priv->netdev);
+-	free_irq(spi->irq, priv);
+ 	if (gpio_is_valid(priv->gpio))
+ 		gpio_set_value(priv->gpio, 0);
+ 	regulator_disable(priv->vdd_reg);
 -- 
 2.19.1
 
