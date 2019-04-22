@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79215C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A43EC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DF4218B0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C952E218FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962439;
-	bh=STXnvD7+O9XDC6PbZemY3Ed7xwcNi5uiHo5oLxd1/ts=;
+	s=default; t=1555962442;
+	bh=PCIVu1n1j+g6BGI70UthruE8q1IRMdJjK/wOID8PIng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QyqUJJugyzFhqzoDJh2Hgmov3rhhTaevMKLN6Y5PM5qNGWeghqoMwR8meRD4dVi7F
-	 nhRl8SoM9PDLycYqDZEBUNB+sXER9AuMGtIDiuFthYJu7RUJjwKKE/E1LBazzam73q
-	 R7x001iqwpjlFXVa66B3ug9E2T6wKB0isKqFuBcs=
+	b=NnxX/WDVqI2xslrGdREdL1kJJF37+YZsZSlDHrkB1iGXV+RuiZPCbFmkyAv76Ol7U
+	 V56kNM+cms1XLeWRCSguyNxHXa/Vc6uC/ONoPgOUJT1LgdW9ROXTr+zdExfsm/gnVP
+	 JXZCbyPWau7IodXNdAQwOVpgHj9qeej2LRsrZggk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfDVTrS (ORCPT
+        id S1730251AbfDVTrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbfDVTrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:14 -0400
+        id S1730235AbfDVTrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC09F21907;
-        Mon, 22 Apr 2019 19:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 423A721904;
+        Mon, 22 Apr 2019 19:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962433;
-        bh=STXnvD7+O9XDC6PbZemY3Ed7xwcNi5uiHo5oLxd1/ts=;
+        s=default; t=1555962437;
+        bh=PCIVu1n1j+g6BGI70UthruE8q1IRMdJjK/wOID8PIng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g4wjUE4zfTd9CTIXQ5tZGOQ0Foi9wndjVZMaVaTf1fQ9bPsiL0BaUzKzuMQ5tC6SK
-         O7aJghfStTbLAoUwlAXwZHylzw6WHpUXiYjdxm3ICOO/z7KHQueJJZSljbZjCj6VoW
-         pUYpYIZom9hc9h1ehL2ZGO9wSznTa35LMmDaDHTM=
+        b=YIz4hhqkTwKbjac9ZwXYQf0Nzc3A/mHeNYbcoeLDfze/qGrOAWUZV6+GBvCWPb2QW
+         SD9D1RuqrgBgPhw9tD4rQy2GFbrmFgoIfi9SArllNUmsE9SkjJIi+yFlyV5w5tB1OH
+         V+lvXINE3FGtqgQyed1BhznKbeFe96lynzdfEukM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 61/68] gpio: of: Fix of_gpiochip_add() error path
-Date:   Mon, 22 Apr 2019 15:45:09 -0400
-Message-Id: <20190422194516.11634-61-sashal@kernel.org>
+Cc:     Wei Li <liwei391@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Ahern <dsahern@gmail.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 63/68] perf machine: Update kernel map address and re-order properly
+Date:   Mon, 22 Apr 2019 15:45:11 -0400
+Message-Id: <20190422194516.11634-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -59,48 +64,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit f7299d441a4da8a5088e651ea55023525a793a13 ]
+[ Upstream commit 977c7a6d1e263ff1d755f28595b99e4bc0c48a9f ]
 
-If the call to of_gpiochip_scan_gpios() in of_gpiochip_add() fails, no
-error handling is performed.  This lead to the need of callers to call
-of_gpiochip_remove() on failure, which causes "BAD of_node_put() on ..."
-if the failure happened before the call to of_node_get().
+Since commit 1fb87b8e9599 ("perf machine: Don't search for active kernel
+start in __machine__create_kernel_maps"), the __machine__create_kernel_maps()
+just create a map what start and end are both zero. Though the address will be
+updated later, the order of map in the rbtree may be incorrect.
 
-Fix this by adding proper error handling.
+The commit ee05d21791db ("perf machine: Set main kernel end address properly")
+fixed the logic in machine__create_kernel_maps(), but it's still wrong in
+function machine__process_kernel_mmap_event().
 
-Note that calling gpiochip_remove_pin_ranges() multiple times causes no
-harm: subsequent calls are a no-op.
+To reproduce this issue, we need an environment which the module address
+is before the kernel text segment. I tested it on an aarch64 machine with
+kernel 4.19.25:
 
-Fixes: dfbd379ba9b7431e ("gpio: of: Return error if gpio hog configuration failed")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+  [root@localhost hulk]# grep _stext /proc/kallsyms
+  ffff000008081000 T _stext
+  [root@localhost hulk]# grep _etext /proc/kallsyms
+  ffff000009780000 R _etext
+  [root@localhost hulk]# tail /proc/modules
+  hisi_sas_v2_hw 77824 0 - Live 0xffff00000191d000
+  nvme_core 126976 7 nvme, Live 0xffff0000018b6000
+  mdio 20480 1 ixgbe, Live 0xffff0000018ab000
+  hisi_sas_main 106496 1 hisi_sas_v2_hw, Live 0xffff000001861000
+  hns_mdio 20480 2 - Live 0xffff000001822000
+  hnae 28672 3 hns_dsaf,hns_enet_drv, Live 0xffff000001815000
+  dm_mirror 40960 0 - Live 0xffff000001804000
+  dm_region_hash 32768 1 dm_mirror, Live 0xffff0000017f5000
+  dm_log 32768 2 dm_mirror,dm_region_hash, Live 0xffff0000017e7000
+  dm_mod 315392 17 dm_mirror,dm_log, Live 0xffff000001780000
+  [root@localhost hulk]#
+
+Before fix:
+
+  [root@localhost bin]# perf record sleep 3
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
+  [root@localhost bin]# perf buildid-list -i perf.data
+  4c4e46c971ca935f781e603a09b52a92e8bdfee8 [vdso]
+  [root@localhost bin]# perf buildid-list -i perf.data -H
+  0000000000000000000000000000000000000000 /proc/kcore
+  [root@localhost bin]#
+
+After fix:
+
+  [root@localhost tools]# ./perf/perf record sleep 3
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
+  [root@localhost tools]# ./perf/perf buildid-list -i perf.data
+  28a6c690262896dbd1b5e1011ed81623e6db0610 [kernel.kallsyms]
+  106c14ce6e4acea3453e484dc604d66666f08a2f [vdso]
+  [root@localhost tools]# ./perf/perf buildid-list -i perf.data -H
+  28a6c690262896dbd1b5e1011ed81623e6db0610 /proc/kcore
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Li Bin <huawei.libin@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190228092003.34071-1-liwei391@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/machine.c | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index d4e7a09598fa..e0f149bdf98f 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -646,7 +646,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 
- 	of_node_get(chip->of_node);
- 
--	return of_gpiochip_scan_gpios(chip);
-+	status = of_gpiochip_scan_gpios(chip);
-+	if (status) {
-+		of_node_put(chip->of_node);
-+		gpiochip_remove_pin_ranges(chip);
-+	}
-+
-+	return status;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index b1508ce3e412..076718a7b3ea 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1358,6 +1358,20 @@ static void machine__set_kernel_mmap(struct machine *machine,
+ 		machine->vmlinux_map->end = ~0ULL;
  }
  
- void of_gpiochip_remove(struct gpio_chip *chip)
++static void machine__update_kernel_mmap(struct machine *machine,
++				     u64 start, u64 end)
++{
++	struct map *map = machine__kernel_map(machine);
++
++	map__get(map);
++	map_groups__remove(&machine->kmaps, map);
++
++	machine__set_kernel_mmap(machine, start, end);
++
++	map_groups__insert(&machine->kmaps, map);
++	map__put(map);
++}
++
+ int machine__create_kernel_maps(struct machine *machine)
+ {
+ 	struct dso *kernel = machine__get_kernel(machine);
+@@ -1390,17 +1404,11 @@ int machine__create_kernel_maps(struct machine *machine)
+ 			goto out_put;
+ 		}
+ 
+-		/* we have a real start address now, so re-order the kmaps */
+-		map = machine__kernel_map(machine);
+-
+-		map__get(map);
+-		map_groups__remove(&machine->kmaps, map);
+-
+-		/* assume it's the last in the kmaps */
+-		machine__set_kernel_mmap(machine, addr, ~0ULL);
+-
+-		map_groups__insert(&machine->kmaps, map);
+-		map__put(map);
++		/*
++		 * we have a real start address now, so re-order the kmaps
++		 * assume it's the last in the kmaps
++		 */
++		machine__update_kernel_mmap(machine, addr, ~0ULL);
+ 	}
+ 
+ 	if (machine__create_extra_kernel_maps(machine, kernel))
+@@ -1536,7 +1544,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+ 		if (strstr(kernel->long_name, "vmlinux"))
+ 			dso__set_short_name(kernel, "[kernel.vmlinux]", false);
+ 
+-		machine__set_kernel_mmap(machine, event->mmap.start,
++		machine__update_kernel_mmap(machine, event->mmap.start,
+ 					 event->mmap.start + event->mmap.len);
+ 
+ 		/*
 -- 
 2.19.1
 
