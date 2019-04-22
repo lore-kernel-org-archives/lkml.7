@@ -2,144 +2,98 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C37C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F50EC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A180A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="MZnMJSvs"
+	by mail.kernel.org (Postfix) with ESMTP id C5589217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555962278;
+	bh=Wlb29ro/DiaP2u5L+KTeA2jOByJ/ULlqQoqPNhGLjgE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ia+yRfu+DIuvdXuctAlrCLWaxVoUSorcO2VIKCg93Ixtl1oQ8ZfBLCgVy6oG7xpva
+	 SuGphfUQLRK0OvX7M5eR0GO8sf/EjdnIgrpEL0UQ9VOU45RTNtdkHebjYPQWoPst9o
+	 ESOscB2BhkinmNNbTDxUt9spqm/evN6x5G6p97JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbfDVTof (ORCPT
+        id S1729535AbfDVToh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 22 Apr 2019 15:44:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbfDVTof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 15:44:35 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36563 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbfDVTod (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:33 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l203so9384578oia.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 12:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=be6f2f0XIlqFU7RHgEDNHdFLaZKAoDs5ON2xf3GreVs=;
-        b=MZnMJSvszGOJ69yW2f92BRR2//4YgYRkKKac5Gqy7Awh1bsWzu6rOOSWtZwJtx/tcG
-         eDw1eDkllfmunatVZlfYdB6E/H0sEhYx56nkD9/3BTyiQhK1cK3ohxtnncyN808QU9Ip
-         EHjb1faIflXV5qJO4U85TcW+zBgo6JUqMcJpYrNghYuo1YIWP/jnyZ0my2UTfw52gR0p
-         0x1xVJYtgpLLMZiiVV2/R/giaXcjlq2VvA7Z8shcCNAngnJ6VI6G+ScfLPtwzKJEy1HA
-         MzWZ1/YUvj5/eXdhJA+Ieta7O8ADe/tnz1YT0d9DikYe3aJrHMlfOTBTM/lY7uViDVxI
-         lLQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=be6f2f0XIlqFU7RHgEDNHdFLaZKAoDs5ON2xf3GreVs=;
-        b=US69COW6vqv2Cy46nWjkDNro3aLKp7XxYwRHKu+cEI9oTA2phqEVQw+qKou225dDbl
-         sdWf1hK9y7opQlPe+SvvQCjW0ktOgtqYq/jDq3Um8mDl/RzMxxXZhPyuZraON11CQ5ei
-         aSXPxOIZqtNxqj5Bv3vH5uZSIzRDQX5CXnfrAPf0cRNOXU2q3DA5HaofEYOdjb0Ui2LK
-         Jr21KwS//Z32iLU+N0zy6VwXckiuDzm3iJJQpvW4IiA/AGxA+S0X+/Htt3UXQYI7OAhW
-         mMS6WjvPcDzCBOop2Qjx6gPns3oWfFv5XgONc5cVIYmzNbdy0QVGeAlsRlaVv5jJZJuP
-         yG9w==
-X-Gm-Message-State: APjAAAUwWaWdoW/ng/1SYfl7BAz3M+/sM7GH6FgnDuy5pEtG4ka1hyMA
-        bhQkbEsrcoRR8+8WMj5KDXaDQZgmDhHGmhUn21V4GQ==
-X-Google-Smtp-Source: APXvYqy9oEwsfMU6Hmi4yVBnW8LZ4gUZmwS+KAWSnUmv484C2kN850KPfxFBG55AG8ix9yht3mk81r/aARykAzdCsRE=
-X-Received: by 2002:aca:f581:: with SMTP id t123mr11818692oih.0.1555962272101;
- Mon, 22 Apr 2019 12:44:32 -0700 (PDT)
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E62218B0;
+        Mon, 22 Apr 2019 19:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962275;
+        bh=Wlb29ro/DiaP2u5L+KTeA2jOByJ/ULlqQoqPNhGLjgE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qQVgjpPxPyLiu4C3bfcwk6kB41FzX8mZI2Faw7QyngVi6uQMRY9Qt1FhlUhvW7OsI
+         knIIcMkBhadFTFGoDoFG1xzC39iD/aKXqf/D4be2MbppAAqsz7UCL4vrjwSz69a8wS
+         5F9RrRGnMSjhdIqOKSYqne3v8fMBbZ/IMclxUthQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 81/98] kvm/x86: Move MSR_IA32_ARCH_CAPABILITIES to array emulated_msrs
+Date:   Mon, 22 Apr 2019 15:41:48 -0400
+Message-Id: <20190422194205.10404-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
- <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
- <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
- <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
- <20190418161833.GA22970@infradead.org> <CAPcyv4jPOF_+R6U17J_+88+X8LC-LSPCugA6gbKxuphuuFB2gg@mail.gmail.com>
- <x497ebm82d4.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x497ebm82d4.fsf@segfault.boston.devel.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 22 Apr 2019 12:44:21 -0700
-Message-ID: <CAPcyv4gGmN2LLMPy6BzWpYhRyV7fFNVgh=xAWSAdnnAWu5APtg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 8:59 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > On Thu, Apr 18, 2019 at 9:18 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >>
-> >> On Thu, Apr 18, 2019 at 09:05:05AM -0700, Dan Williams wrote:
-> >> > > > I'd either add a comment about avoiding retpoline overhead here or just
-> >> > > > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
-> >> > > > get confused by the code.
-> >> > >
-> >> > > Isn't this premature optimization?  I really don't like adding things
-> >> > > like this without some numbers to show it's worth it.
-> >> >
-> >> > I don't think it's premature given this optimization technique is
-> >> > already being deployed elsewhere, see:
-> >> >
-> >> > https://lwn.net/Articles/774347/
-> >>
-> >> For one this one was backed by numbers, and second after feedback
-> >> from Linux we switched to the NULL pointer check instead.
-> >
-> > Ok I should have noticed the switch to NULL pointer check. However,
-> > the question still stands do we want everyone to run numbers to
-> > justify this optimization, or make it a new common kernel coding
-> > practice to do:
-> >
-> >     if (!object->op)
-> >         generic_op(object);
-> >     else
-> >         object->op(object);
-> >
-> > ...in hot paths?
->
-> I don't think nvdimm_flush is a hot path.  Numbers of some
-> representative workload would prove one of us right.
+From: Xiaoyao Li <xiaoyao.li@linux.intel.com>
 
-I'd rather say that the if "if (!op) do_generic()" pattern is more
-readable in the general case, saves grepping for who set the op in the
-common case. The fact that it has the potential to be faster is gravy
-at that point.
+[ Upstream commit 2bdb76c015df7125783d8394d6339d181cb5bc30 ]
+
+Since MSR_IA32_ARCH_CAPABILITIES is emualted unconditionally even if
+host doesn't suppot it. We should move it to array emulated_msrs from
+arry msrs_to_save, to report to userspace that guest support this msr.
+
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ arch/x86/kvm/x86.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 7ee802a92bc8..8748789b9540 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1125,7 +1125,7 @@ static u32 msrs_to_save[] = {
+ #endif
+ 	MSR_IA32_TSC, MSR_IA32_CR_PAT, MSR_VM_HSAVE_PA,
+ 	MSR_IA32_FEATURE_CONTROL, MSR_IA32_BNDCFGS, MSR_TSC_AUX,
+-	MSR_IA32_SPEC_CTRL, MSR_IA32_ARCH_CAPABILITIES,
++	MSR_IA32_SPEC_CTRL,
+ 	MSR_IA32_RTIT_CTL, MSR_IA32_RTIT_STATUS, MSR_IA32_RTIT_CR3_MATCH,
+ 	MSR_IA32_RTIT_OUTPUT_BASE, MSR_IA32_RTIT_OUTPUT_MASK,
+ 	MSR_IA32_RTIT_ADDR0_A, MSR_IA32_RTIT_ADDR0_B,
+@@ -1158,6 +1158,7 @@ static u32 emulated_msrs[] = {
+ 
+ 	MSR_IA32_TSC_ADJUST,
+ 	MSR_IA32_TSCDEADLINE,
++	MSR_IA32_ARCH_CAPABILITIES,
+ 	MSR_IA32_MISC_ENABLE,
+ 	MSR_IA32_MCG_STATUS,
+ 	MSR_IA32_MCG_CTL,
+-- 
+2.19.1
+
