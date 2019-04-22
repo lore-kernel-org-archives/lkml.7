@@ -2,123 +2,147 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED66C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF48C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAD32075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427F420685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pEpJ7+By"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRiQ75S8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfDVJvl (ORCPT
+        id S1727072AbfDVJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:51:41 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34119 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfDVJvk (ORCPT
+        Mon, 22 Apr 2019 05:58:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39902 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDVJ6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:51:40 -0400
-Received: by mail-vs1-f66.google.com with SMTP id t78so5931293vsc.1;
-        Mon, 22 Apr 2019 02:51:40 -0700 (PDT)
+        Mon, 22 Apr 2019 05:58:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so13907354wmk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 02:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/8Ia0lr8SyGRhLNV/rp9b91j7HYQOCib8nOzsqqsR1w=;
-        b=pEpJ7+BypWkwhgcSpVHj0qLYBolMmeAMuAtX5eJAEm2Wn3Qf381fMH5Troh49WspWb
-         6kbK20Ha6eJQWH05TBiZbumKsJBsls3sfA9mKJXaabWvAvAUG+6nvSfhRCJjURjgvwoh
-         Kv+RNVhctOqkmrruS5cPLg7QiLwzk9eKz5ghmtZO68/b9qOqkasAzJXWLK5jqzr6Qbiq
-         cVrDkEhDtu+vMXDWOCiLvC44J4A7cQyqOZM5Be+wyDpXldYIm2KSg/JjKNqRHpxNgcMf
-         YjH1DS8BM8yELgO98GJE7ocPDrQhUPElc2CId+orI+69tOS8/PtiOii03XR0OzEDNCeN
-         DcIg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ucwYonw5RQpt1gbYnvW2qWKBm2os7Wce+2pDRtOlAM=;
+        b=VRiQ75S8Z2TdPdAlZBtp9B/Z3V2BIuYjijK3Y1DyAzE3jLXb1kIzzyF4e6hTXdYGiC
+         vdUvNestPI5ltdF78LGzLZ2Toznp6dgs6xW+65SWrJ9otbe/wrRZi/7CXNRDZIpuKVkB
+         kVG+fhyPbS2yIMVCcHomnH6TkUZOdAsH8oHrzAGMDQp/kZgZSe6U9mVIYw6vsqqeuKRI
+         QzkkYWvjOUHEjkWiX+YwUJkXg3Ep1ENXtku1+Vijaew/VZ8tDd0lBXsuEGXpUoer69nJ
+         rR0Y6pix0wUZ0hO7VPoFHA5yWbWqHzyeTNJ0VzSN/cisWE9U1xv7exIeHRK8EfTkgqoq
+         lWXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/8Ia0lr8SyGRhLNV/rp9b91j7HYQOCib8nOzsqqsR1w=;
-        b=tA0arxJxjj44vHVgKf4mW6PvmLtvLtWBe7gbsAOtJAC5sVzZAvrRuzmAEJjlzw+0bE
-         d4O9PjcX1Nucb6gShu1+2zDajiyr+mgtuuR294RIgLJGQrc+xWv4Veg2IBdzJCMqIIF7
-         fXAY1sZnz3WRjq8ISF74miH5YZhDNLKNYtFvgekv4f+1eIFtjFrAz5zvWOv1+IBMU1TY
-         gjmM5LTUpumJiYZBlVr+/w19YMQxyf2XRhr2onb1dCG8qACRJTsBPwZy3coFqWlR89wX
-         y8yYU8MssM54zU/NyiExZ2nT2jaAleooqes5/c/dkiNAbCX3C22Ypmgzr7YpkENkHZMW
-         Swvg==
-X-Gm-Message-State: APjAAAUKqvqHYobo0nOKXa0M8uzth8On/mZeRlxPbQsdLJHzWLxMYnSq
-        piAO+JgTznSn92lfYfylHbDiDb0I7hu5kjYXEQ==
-X-Google-Smtp-Source: APXvYqyYHHYWIkx3qkizLK5MKUvD4HclK5p6vLE9Frv//DrrPdtcawUUnjDjV8gOf0uk7v5NEN9SZJ5P5w6X779nLQ8=
-X-Received: by 2002:a67:e881:: with SMTP id x1mr9854243vsn.48.1555926699737;
- Mon, 22 Apr 2019 02:51:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ucwYonw5RQpt1gbYnvW2qWKBm2os7Wce+2pDRtOlAM=;
+        b=ZrVg7xtpZIkT39rrupMpU6OMmPufp/bYxvFKEpMmfXprapc/u7xVJ42p5x2Xvl8thQ
+         iOL+9jfoCYkO599j8TcpwVFqfDPu/3O3LGcEsV1p9R0cAt6PWjRYxvpJZzKI9uYxZP5x
+         5anIQjjq64dm24BtQDUYxOeA/0NR6XzsgxMDYYLd0wBmln4qAbCDfZUYTM+FfTPz5vVp
+         CmqRqJG4gZk+VQHiFnCIhaq76gTyRftlMfdgV9YtSrRcQ+h303SiBkPaMUwjLRVfebf1
+         rdDIMtKvsMZcLJN0Px9mSuGbNaECvLBXjCfok2mEFb+qM6Fd8ecNFsqLz9Zrm4dPLV8m
+         HgYw==
+X-Gm-Message-State: APjAAAUEMtrwEpPIzJR4rlN0fSPi/TfDv9a51gInR1mo2cgCgcz7hv+N
+        Y9S9aIj4iYtWdNQEmWmct+o=
+X-Google-Smtp-Source: APXvYqzkfdFm34bdn2fjoSwmEJ2RK7oSBKemKfa03VfFChQZs1DncjW8vSFNyeDcqzS+tBrkNy5JKQ==
+X-Received: by 2002:a1c:9991:: with SMTP id b139mr12268305wme.53.1555927114238;
+        Mon, 22 Apr 2019 02:58:34 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5abb88.dynamic.kabel-deutschland.de. [95.90.187.136])
+        by smtp.gmail.com with ESMTPSA id i17sm12923181wrs.44.2019.04.22.02.58.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 02:58:33 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/4] staging: rtl8188eu: add spaces around operators in rtw_ap.c
+Date:   Mon, 22 Apr 2019 11:58:23 +0200
+Message-Id: <20190422095826.3119-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190409065612.32652-1-rdong.ge@gmail.com> <20190422083339.ptkxqb66pombgy5g@salvia>
- <CAN1Lvyo1CVopsB7iV=e-dAN9JDFg-SmQ8g6H6RrgD7qACAd4hQ@mail.gmail.com> <20190422093502.36da6z3qf7zxpwny@breakpoint.cc>
-In-Reply-To: <20190422093502.36da6z3qf7zxpwny@breakpoint.cc>
-From:   Rundong Ge <rdong.ge@gmail.com>
-Date:   Mon, 22 Apr 2019 17:51:28 +0800
-Message-ID: <CAN1LvyrSWPbNSvzLquQAeK9kYK=YyqyJEm7zodd3O-QWAVTC4Q@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: fix dangling pointer access of fake_rtable
-To:     Florian Westphal <fw@strlen.de>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, kadlec@blackhole.kfki.hu,
-        Roopa Prabhu <roopa@cumulusnetworks.com>, davem@davemloft.net,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb->dev is munged in setup_prerouting() to be bridge or vlan device on
-top of bridge.
---Yes, but  br_nf_pre_routing_finish will set the skb->dev back to the phyi=
-ndev.
+Add spaces around '+', '-' and '|' to follow kernel coding style.
+Reported by checkpatch.
 
-Florian Westphal <fw@strlen.de> =E4=BA=8E2019=E5=B9=B44=E6=9C=8822=E6=97=A5=
-=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=885:35=E5=86=99=E9=81=93=EF=BC=9A
->
-> Rundong Ge <rdong.ge@gmail.com> wrote:
-> > br_nf_pre_routing will call the NF_INET_PRE_ROUTING hooks, at this
-> > time both entry->state.in and entry->state.out are not bridge device.
-> >
-> > NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
-> > skb->dev, NULL,
-> > br_nf_pre_routing_finish);
->
-> skb->dev is munged in setup_prerouting() to be bridge or vlan device on
-> top of bridge.
->
-> That being said, I think we need this fix at least:
->
-> diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
-> --- a/net/netfilter/nf_queue.c
-> +++ b/net/netfilter/nf_queue.c
-> @@ -197,8 +197,15 @@ static int __nf_queue(struct sk_buff *skb, const str=
-uct nf_hook_state *state,
->                 .size   =3D sizeof(*entry) + route_key_size,
->         };
->
-> +       if (skb_dst(skb)) {
-> +               skb_dst_force(skb);
-> +               if (!skb_dst(skb)) {
-> +                       status =3D -EHOSTUNREACH;
-> +                       goto err;
-> +               }
-> +       }
-> +
->         nf_queue_entry_get_refs(entry);
-> -       skb_dst_force(skb);
->
->         switch (entry->state.pf) {
->         case AF_INET:
->
->
-> Then, why not add, in dev_cmp:
->
->         dst =3D skb_dst(skb);
->         if (dst && dst->dev->index =3D=3D index ...
->
-> ?
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_ap.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/staging/rtl8188eu/core/rtw_ap.c b/drivers/staging/rtl8188eu/core/rtw_ap.c
+index c360856a86ec..9588ba2a16e4 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_ap.c
++++ b/drivers/staging/rtl8188eu/core/rtw_ap.c
+@@ -922,7 +922,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 
+ 		pht_cap->mcs.rx_mask[0] = 0xff;
+ 		pht_cap->mcs.rx_mask[1] = 0x0;
+-		memcpy(&pmlmepriv->htpriv.ht_cap, p+2, ie_len);
++		memcpy(&pmlmepriv->htpriv.ht_cap, p + 2, ie_len);
+ 	}
+ 
+ 	/* parsing HT_INFO_IE */
+@@ -1122,9 +1122,11 @@ static void update_bcn_erpinfo_ie(struct adapter *padapter)
+ 		struct ndis_802_11_var_ie *pIE = (struct ndis_802_11_var_ie *)p;
+ 
+ 		if (pmlmepriv->num_sta_non_erp == 1)
+-			pIE->data[0] |= RTW_ERP_INFO_NON_ERP_PRESENT|RTW_ERP_INFO_USE_PROTECTION;
++			pIE->data[0] |= RTW_ERP_INFO_NON_ERP_PRESENT |
++					RTW_ERP_INFO_USE_PROTECTION;
+ 		else
+-			pIE->data[0] &= ~(RTW_ERP_INFO_NON_ERP_PRESENT|RTW_ERP_INFO_USE_PROTECTION);
++			pIE->data[0] &= ~(RTW_ERP_INFO_NON_ERP_PRESENT |
++					  RTW_ERP_INFO_USE_PROTECTION);
+ 
+ 		if (pmlmepriv->num_sta_no_short_preamble > 0)
+ 			pIE->data[0] |= RTW_ERP_INFO_BARKER_PREAMBLE_MODE;
+@@ -1153,12 +1155,13 @@ static void update_bcn_wps_ie(struct adapter *padapter)
+ 	if (!pwps_ie_src)
+ 		return;
+ 
+-	pwps_ie = rtw_get_wps_ie(ie+_FIXED_IE_LENGTH_, ielen-_FIXED_IE_LENGTH_, NULL, &wps_ielen);
++	pwps_ie = rtw_get_wps_ie(ie + _FIXED_IE_LENGTH_,
++				 ielen - _FIXED_IE_LENGTH_, NULL, &wps_ielen);
+ 
+ 	if (!pwps_ie || wps_ielen == 0)
+ 		return;
+ 
+-	wps_offset = (uint)(pwps_ie-ie);
++	wps_offset = (uint)(pwps_ie - ie);
+ 
+ 	premainder_ie = pwps_ie + wps_ielen;
+ 
+@@ -1171,15 +1174,15 @@ static void update_bcn_wps_ie(struct adapter *padapter)
+ 	}
+ 
+ 	wps_ielen = (uint)pwps_ie_src[1];/* to get ie data len */
+-	if ((wps_offset+wps_ielen+2+remainder_ielen) <= MAX_IE_SZ) {
+-		memcpy(pwps_ie, pwps_ie_src, wps_ielen+2);
+-		pwps_ie += (wps_ielen+2);
++	if ((wps_offset + wps_ielen + 2 + remainder_ielen) <= MAX_IE_SZ) {
++		memcpy(pwps_ie, pwps_ie_src, wps_ielen + 2);
++		pwps_ie += (wps_ielen + 2);
+ 
+ 		if (pbackup_remainder_ie)
+ 			memcpy(pwps_ie, pbackup_remainder_ie, remainder_ielen);
+ 
+ 		/* update ie_length */
+-		pnetwork->ie_length = wps_offset + (wps_ielen+2) + remainder_ielen;
++		pnetwork->ie_length = wps_offset + (wps_ielen + 2) + remainder_ielen;
+ 	}
+ 
+ 	kfree(pbackup_remainder_ie);
+-- 
+2.21.0
+
