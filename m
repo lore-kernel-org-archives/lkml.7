@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB8C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75464C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155F620643
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5F6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962658;
-	bh=JnztbPP1v80AtpcMKXx2mm+bJeaWhfL1XfiYOvx6RaY=;
+	s=default; t=1555962664;
+	bh=Rkbw51f+Hkzhe11f+d9y+T/hMCkwOJF9Z/rCgDnWbHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JfZ5ryfOm5GxSFSW+pSoryd6nUdnlV1GyEvjyF2hmWff29OLr8pT7VG7I1bkEJQ4i
-	 9DsrRj9Pzs3X9yrRfdyB3QyPc1bXq1Sg6a2ClsBz/ISnAwT3dAKS8URYwHaQ5aqeyL
-	 g9XlQyBLdYfqym4KjajcsJA8fc0RtTvEuii86gkw=
+	b=2g1epYF8KqPpcYlXbL33StKVXwyhlDb9hjZTJQZi0CsCIUYfk/ZEZvptknSBdH+mL
+	 5iPa9JrWlx2lovo3h6REtlinEiKMJasWVptF6i+2rDNA4sPvxfyLMXoJIveyUVetCH
+	 7IZaul6Kv/6YNN1s+ecHSFsE5+2C7oTUrxnXRg/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbfDVTu4 (ORCPT
+        id S1731217AbfDVTuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731226AbfDVTuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:54 -0400
+        id S1731163AbfDVTur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7BC20643;
-        Mon, 22 Apr 2019 19:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC002177B;
+        Mon, 22 Apr 2019 19:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962653;
-        bh=JnztbPP1v80AtpcMKXx2mm+bJeaWhfL1XfiYOvx6RaY=;
+        s=default; t=1555962646;
+        bh=Rkbw51f+Hkzhe11f+d9y+T/hMCkwOJF9Z/rCgDnWbHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPn25aLEVnYki9dAW/k0cVrugVloW8Wq+lOyVJG3VflLId/A+tJM6XiZSCdAjxbqU
-         eTC8CEPlw5WkGkEwn1CQmyjwq6BxhGXd0WgPZYyfGKjQyPnNRUt/JGAbWBd7ywnfcA
-         OgYEfyiThTDu4nAdub+u8A74U1n9gfCM0bpmKiiY=
+        b=yo627wpARA721kWDXqoqu+Qc59pkwC8lzZ8OyOHkhUnW90W/FlH4V8arknIwUVOvv
+         uGPbRA9M23lbn3PRnY6VNoYf3by88wofXh3rLzf5Q+vwI6TtLJusija5m+GFIldS4o
+         VpaBiwb19Xx19k1WnrnAdLHw2pxCBbfZl6srTnq8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 15/15] kconfig/[mn]conf: handle backspace (^H) key
-Date:   Mon, 22 Apr 2019 15:50:22 -0400
-Message-Id: <20190422195022.13760-15-sashal@kernel.org>
+Cc:     Mukesh Ojha <mojha@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 10/15] usb: u132-hcd: fix resource leak
+Date:   Mon, 22 Apr 2019 15:50:17 -0400
+Message-Id: <20190422195022.13760-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422195022.13760-1-sashal@kernel.org>
 References: <20190422195022.13760-1-sashal@kernel.org>
@@ -58,65 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Mukesh Ojha <mojha@codeaurora.org>
 
-[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
+[ Upstream commit f276e002793cdb820862e8ea8f76769d56bba575 ]
 
-Backspace is not working on some terminal emulators which do not send the
-key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
-But currently only '^?' is handled. Let's also handle '^H' for those
-terminals.
+if platform_driver_register fails, cleanup the allocated resource
+gracefully.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- scripts/kconfig/lxdialog/inputbox.c | 3 ++-
- scripts/kconfig/nconf.c             | 2 +-
- scripts/kconfig/nconf.gui.c         | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/host/u132-hcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
-index d58de1dc5360..510049a7bd1d 100644
---- a/scripts/kconfig/lxdialog/inputbox.c
-+++ b/scripts/kconfig/lxdialog/inputbox.c
-@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
- 			case KEY_DOWN:
- 				break;
- 			case KEY_BACKSPACE:
--			case 127:
-+			case 8:   /* ^H */
-+			case 127: /* ^? */
- 				if (pos) {
- 					wattrset(dialog, dlg.inputbox.atr);
- 					if (input_x == 0) {
-diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-index 984489ef2b46..e570f6c9b3ad 100644
---- a/scripts/kconfig/nconf.c
-+++ b/scripts/kconfig/nconf.c
-@@ -1046,7 +1046,7 @@ static int do_match(int key, struct match_state *state, int *ans)
- 		state->match_direction = FIND_NEXT_MATCH_UP;
- 		*ans = get_mext_match(state->pattern,
- 				state->match_direction);
--	} else if (key == KEY_BACKSPACE || key == 127) {
-+	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
- 		state->pattern[strlen(state->pattern)-1] = '\0';
- 		adj_match_dir(&state->match_direction);
- 	} else
-diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
-index 4b2f44c20caf..9a65035cf787 100644
---- a/scripts/kconfig/nconf.gui.c
-+++ b/scripts/kconfig/nconf.gui.c
-@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
- 		case KEY_F(F_EXIT):
- 		case KEY_F(F_BACK):
- 			break;
--		case 127:
-+		case 8:   /* ^H */
-+		case 127: /* ^? */
- 		case KEY_BACKSPACE:
- 			if (cursor_position > 0) {
- 				memmove(&result[cursor_position-1],
+diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
+index ab5128755672..3d9ce725d1df 100644
+--- a/drivers/usb/host/u132-hcd.c
++++ b/drivers/usb/host/u132-hcd.c
+@@ -3234,6 +3234,9 @@ static int __init u132_hcd_init(void)
+ 	printk(KERN_INFO "driver %s\n", hcd_name);
+ 	workqueue = create_singlethread_workqueue("u132");
+ 	retval = platform_driver_register(&u132_platform_driver);
++	if (retval)
++		destroy_workqueue(workqueue);
++
+ 	return retval;
+ }
+ 
 -- 
 2.19.1
 
