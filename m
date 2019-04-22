@@ -2,262 +2,150 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BC5C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F145C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7529920857
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555925485;
-	bh=7HE6Ei9WMA0o+XSKb1qWctZsitK14uuE9OeCN320fmo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yenwiK3K62Glt8QWVzDK+WGC1SftWbEr9M9Ve7kVjfhIJ/F3OZ2EogNpYgYEDFsmw
-	 25wms17s3pI4/lwKKDlS2o7Bzo1hZud2Sp0fdhfYoH93zJHkegXIuYvYlgwwBHkk7z
-	 7H3YTcgkOe+o/aNrytJV297T3lCDSWlP2btx/55M=
+	by mail.kernel.org (Postfix) with ESMTP id EE12A206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfDVJbY (ORCPT
+        id S1726818AbfDVJeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbfDVJbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:31:24 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B0E206A3;
-        Mon, 22 Apr 2019 09:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555925480;
-        bh=7HE6Ei9WMA0o+XSKb1qWctZsitK14uuE9OeCN320fmo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KGydbsjtcFKEStSwigeW1LmFGDCh3Q0tjdocrw/CPmPsicZcaImC77C4duyAoece3
-         V5Sr0WyG80uFuo7KO2+Brqq2qKUcY5fq2CAt5BZFAKw8d7I55Tl+dC1FJBgfDRwjfm
-         yYh14a9bYPJyhS1jKuPkJVytszBdLvQQPCyvN0Zc=
-Date:   Mon, 22 Apr 2019 10:31:15 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@gmail.com>
-Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
-        Michael.Hennerich@analog.com, stefan.popa@analog.com,
-        lars@metafoo.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH] iio: dac: ad5758: Modifications for new revision
-Message-ID: <20190422103115.50e2e902@archlinux>
-In-Reply-To: <CAC+2QaGbUtoSRnkcD-LrHC27t-m1NBY_v86w2iAwdpkHisPrJQ@mail.gmail.com>
-References: <20190409133521.24828-1-mircea.caprioru@analog.com>
-        <20190414140220.75133382@archlinux>
-        <CAC+2QaGbUtoSRnkcD-LrHC27t-m1NBY_v86w2iAwdpkHisPrJQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 22 Apr 2019 05:34:07 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2936 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725817AbfDVJeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 05:34:06 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 21ED496658962B49F2C8;
+        Mon, 22 Apr 2019 17:33:59 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 22 Apr 2019 17:33:58 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 22 Apr 2019 17:33:58 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/2] f2fs: relocate chksum_offset for large_nat_bitmap feature
+Date:   Mon, 22 Apr 2019 17:33:53 +0800
+Message-ID: <20190422093353.61014-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190422093353.61014-1-yuchao0@huawei.com>
+References: <20190422093353.61014-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 13:36:55 +0300
-Mircea Caprioru <mircea.caprioru@gmail.com> wrote:
+For large_nat_bitmap feature, there is a design flaw:
 
-> Hi Jonathan,
-> 
-> 1. Any changes to functionality that might break users of the older
-> > revisions?
-> >  
-> From what i have found out there are no users of the older revision since
-> it has not been available for purchasing. Only this new revision.
-> 
-> > 2. Any userspace visible changes?
-> >  
-> There are no userspace visible changes.
-> 
-> > 3. Do we want to think about back porting to older kernels?
-> >  
-> This could be a benefit, but i don't think the impact will be significant.
-> 
-> > 4. Should we support this explicitly by detecting or describing the
-> >    hardware revision in some fashion?
-> >  
-> Yes I could use the CHIP_ID register to check the revision and do a V2.
-> Just wondering if it is needed if there are no older revision chips in use.
+Previous:
 
-Thanks for the info.  I've applied the patch as it stands with a line
-added to the description noting that no customers have the previous
-version so there is no need to support it going forwards.
+struct f2fs_checkpoint layout:
++--------------------------+  0x0000
+| checkpoint_ver           |
+| ......                   |
+| checksum_offset          |------+
+| ......                   |      |
+| sit_nat_version_bitmap[] |<-----|-------+
+| ......                   |      |       |
+| checksum_value           |<-----+       |
++--------------------------+  0x1000      |
+|                          |      nat_bitmap + sit_bitmap
+| payload blocks           |              |
+|                          |              |
++--------------------------|<-------------+
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+Obviously, if nat_bitmap size + sit_bitmap size is larger than
+MAX_BITMAP_SIZE_IN_CKPT, nat_bitmap or sit_bitmap may overlap
+checkpoint checksum's position, once checkpoint() is triggered
+from kernel, nat or sit bitmap will be damaged by checksum field.
 
-Thanks,
+In order to fix this, let's relocate checksum_value's position
+to the head of sit_nat_version_bitmap as below, then nat/sit
+bitmap and chksum value update will become safe.
 
-Jonathan
+After:
 
-> 
-> Thanks,
-> Mircea
-> 
-> On Sun, Apr 14, 2019 at 4:02 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> 
-> > On Tue, 9 Apr 2019 16:35:21 +0300
-> > Mircea Caprioru <mircea.caprioru@analog.com> wrote:
-> >  
-> > > This patch will ensure compatibility with the new revision of the AD5758
-> > > dac converter. The modifications consist of removing the  
-> > fault_prot_switch  
-> > > function since this option is no longer available, and enabling the
-> > > ENABLE_PPC_BUFFERS bit in ADC_CONFIG register before setting the PPC
-> > > current mode.
-> > >
-> > > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>  
-> > Hi Mircea,
-> >
-> > Talk me through the implications of this change.
-> >
-> > 1. Any changes to functionality that might break users of the older
-> > revisions?
-> >  
-> 2. Any userspace visible changes?
-> >  
-> 3. Do we want to think about back porting to older kernels?
-> >  
-> 4. Should we support this explicitly by detecting or describing the
-> >    hardware revision in some fashion?
-> >  
-> 
-> > Thanks,
-> >
-> > Jonathan
-> >
-> >
-> >  
-> > > ---
-> > >  drivers/iio/dac/ad5758.c | 55 +++++++++++++---------------------------
-> > >  1 file changed, 18 insertions(+), 37 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
-> > > index 2bdf1b0aee06..a513c70faefa 100644
-> > > --- a/drivers/iio/dac/ad5758.c
-> > > +++ b/drivers/iio/dac/ad5758.c
-> > > @@ -72,8 +72,6 @@
-> > >  #define AD5758_DCDC_CONFIG1_DCDC_VPROG_MODE(x)       (((x) & 0x1F) << 0)
-> > >  #define AD5758_DCDC_CONFIG1_DCDC_MODE_MSK    GENMASK(6, 5)
-> > >  #define AD5758_DCDC_CONFIG1_DCDC_MODE_MODE(x)        (((x) & 0x3) << 5)
-> > > -#define AD5758_DCDC_CONFIG1_PROT_SW_EN_MSK   BIT(7)
-> > > -#define AD5758_DCDC_CONFIG1_PROT_SW_EN_MODE(x)       (((x) & 0x1) << 7)
-> > >
-> > >  /* AD5758_DCDC_CONFIG2 */
-> > >  #define AD5758_DCDC_CONFIG2_ILIMIT_MSK               GENMASK(3, 1)
-> > > @@ -84,6 +82,10 @@
-> > >  /* AD5758_DIGITAL_DIAG_RESULTS */
-> > >  #define AD5758_CAL_MEM_UNREFRESHED_MSK               BIT(15)
-> > >
-> > > +/* AD5758_ADC_CONFIG */
-> > > +#define AD5758_ADC_CONFIG_PPC_BUF_EN(x)              (((x) & 0x1) << 11)
-> > > +#define AD5758_ADC_CONFIG_PPC_BUF_MSK                BIT(11)
-> > > +
-> > >  #define AD5758_WR_FLAG_MSK(x)                (0x80 | ((x) & 0x1F))
-> > >
-> > >  #define AD5758_FULL_SCALE_MICRO      65535000000ULL
-> > > @@ -315,6 +317,18 @@ static int ad5758_set_dc_dc_conv_mode(struct  
-> > ad5758_state *st,  
-> > >  {
-> > >       int ret;
-> > >
-> > > +     /*
-> > > +      * The ENABLE_PPC_BUFFERS bit must be set prior to enabling PPC  
-> > current  
-> > > +      * mode.
-> > > +      */
-> > > +     if (mode == AD5758_DCDC_MODE_PPC_CURRENT) {
-> > > +             ret  = ad5758_spi_write_mask(st, AD5758_ADC_CONFIG,
-> > > +                                 AD5758_ADC_CONFIG_PPC_BUF_MSK,
-> > > +                                 AD5758_ADC_CONFIG_PPC_BUF_EN(1));
-> > > +             if (ret < 0)
-> > > +                     return ret;
-> > > +     }
-> > > +
-> > >       ret = ad5758_spi_write_mask(st, AD5758_DCDC_CONFIG1,
-> > >                                   AD5758_DCDC_CONFIG1_DCDC_MODE_MSK,
-> > >  
-> >  AD5758_DCDC_CONFIG1_DCDC_MODE_MODE(mode));  
-> > > @@ -444,23 +458,6 @@ static int ad5758_set_out_range(struct ad5758_state  
-> > *st, int range)  
-> > >  
-> > AD5758_CAL_MEM_UNREFRESHED_MSK);  
-> > >  }
-> > >
-> > > -static int ad5758_fault_prot_switch_en(struct ad5758_state *st, bool  
-> > enable)  
-> > > -{
-> > > -     int ret;
-> > > -
-> > > -     ret = ad5758_spi_write_mask(st, AD5758_DCDC_CONFIG1,
-> > > -                     AD5758_DCDC_CONFIG1_PROT_SW_EN_MSK,
-> > > -                     AD5758_DCDC_CONFIG1_PROT_SW_EN_MODE(enable));
-> > > -     if (ret < 0)
-> > > -             return ret;
-> > > -     /*
-> > > -      * Poll the BUSY_3WI bit in the DCDC_CONFIG2 register until it is  
-> > 0.  
-> > > -      * This allows the 3-wire interface communication to complete.
-> > > -      */
-> > > -     return ad5758_wait_for_task_complete(st, AD5758_DCDC_CONFIG2,
-> > > -  
-> > AD5758_DCDC_CONFIG2_BUSY_3WI_MSK);  
-> > > -}
-> > > -
-> > >  static int ad5758_internal_buffers_en(struct ad5758_state *st, bool  
-> > enable)  
-> > >  {
-> > >       int ret;
-> > > @@ -585,8 +582,8 @@ static ssize_t ad5758_write_powerdown(struct iio_dev  
-> > *indio_dev,  
-> > >  {
-> > >       struct ad5758_state *st = iio_priv(indio_dev);
-> > >       bool pwr_down;
-> > > -     unsigned int dcdc_config1_mode, dc_dc_mode, dac_config_mode, val;
-> > > -     unsigned long int dcdc_config1_msk, dac_config_msk;
-> > > +     unsigned int dc_dc_mode, dac_config_mode, val;
-> > > +     unsigned long int dac_config_msk;
-> > >       int ret;
-> > >
-> > >       ret = kstrtobool(buf, &pwr_down);
-> > > @@ -602,17 +599,6 @@ static ssize_t ad5758_write_powerdown(struct  
-> > iio_dev *indio_dev,  
-> > >               val = 1;
-> > >       }
-> > >
-> > > -     dcdc_config1_mode = AD5758_DCDC_CONFIG1_DCDC_MODE_MODE(dc_dc_mode)  
-> > |  
-> > > -                         AD5758_DCDC_CONFIG1_PROT_SW_EN_MODE(val);
-> > > -     dcdc_config1_msk = AD5758_DCDC_CONFIG1_DCDC_MODE_MSK |
-> > > -                        AD5758_DCDC_CONFIG1_PROT_SW_EN_MSK;
-> > > -
-> > > -     ret = ad5758_spi_write_mask(st, AD5758_DCDC_CONFIG1,
-> > > -                                 dcdc_config1_msk,
-> > > -                                 dcdc_config1_mode);
-> > > -     if (ret < 0)
-> > > -             goto err_unlock;
-> > > -
-> > >       dac_config_mode = AD5758_DAC_CONFIG_OUT_EN_MODE(val) |
-> > >                         AD5758_DAC_CONFIG_INT_EN_MODE(val);
-> > >       dac_config_msk = AD5758_DAC_CONFIG_OUT_EN_MSK |
-> > > @@ -841,11 +827,6 @@ static int ad5758_init(struct ad5758_state *st)
-> > >                       return ret;
-> > >       }
-> > >
-> > > -     /* Enable the VIOUT fault protection switch (FPS is closed) */
-> > > -     ret = ad5758_fault_prot_switch_en(st, 1);
-> > > -     if (ret < 0)
-> > > -             return ret;
-> > > -
-> > >       /* Power up the DAC and internal (INT) amplifiers */
-> > >       ret = ad5758_internal_buffers_en(st, 1);
-> > >       if (ret < 0)  
-> >
-> >  
+struct f2fs_checkpoint layout:
++--------------------------+  0x0000
+| checkpoint_ver           |
+| ......                   |
+| checksum_offset          |------+
+| ......                   |      |
+| sit_nat_version_bitmap[] |<-----+
+| ......                   |<-------------+
+|                          |              |
++--------------------------+  0x1000      |
+|                          |      nat_bitmap + sit_bitmap
+| payload blocks           |              |
+|                          |              |
++--------------------------|<-------------+
+
+Related report and discussion:
+
+https://sourceforge.net/p/linux-f2fs/mailman/message/36642346/
+
+Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/checkpoint.c | 11 +++++++++++
+ fs/f2fs/f2fs.h       |  6 +++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a25556aef8cc..081eee9e3d92 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -831,6 +831,17 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
+ 		return -EINVAL;
+ 	}
+ 
++	if (__is_set_ckpt_flags(*cp_block, CP_LARGE_NAT_BITMAP_FLAG)) {
++		if (crc_offset != CP_MIN_CHKSUM_OFFSET) {
++			f2fs_put_page(*cp_page, 1);
++			f2fs_msg(sbi->sb, KERN_WARNING,
++				"layout of large_nat_bitmap is deprecated, "
++				"run fsck to repair, chksum_offset: %zu",
++				crc_offset);
++			return -EINVAL;
++		}
++	}
++
+ 	crc = f2fs_checkpoint_chksum(sbi, *cp_block);
+ 	if (crc != cur_cp_crc(*cp_block)) {
+ 		f2fs_put_page(*cp_page, 1);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 31531711e148..f5ffc09705eb 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1911,7 +1911,11 @@ static inline void *__bitmap_ptr(struct f2fs_sb_info *sbi, int flag)
+ 	if (is_set_ckpt_flags(sbi, CP_LARGE_NAT_BITMAP_FLAG)) {
+ 		offset = (flag == SIT_BITMAP) ?
+ 			le32_to_cpu(ckpt->nat_ver_bitmap_bytesize) : 0;
+-		return &ckpt->sit_nat_version_bitmap + offset;
++		/*
++		 * if large_nat_bitmap feature is enabled, leave checksum
++		 * protection for all nat/sit bitmaps.
++		 */
++		return &ckpt->sit_nat_version_bitmap + offset + sizeof(__le32);
+ 	}
+ 
+ 	if (__cp_payload(sbi) > 0) {
+-- 
+2.18.0.rc1
 
