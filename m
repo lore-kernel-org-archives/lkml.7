@@ -2,106 +2,134 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B60C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E92C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F2F214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEAA214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MjaOFfbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfDVQhq (ORCPT
+        id S1728321AbfDVQig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:37:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60922 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbfDVQhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:37:45 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 88806C0B615A;
-        Mon, 22 Apr 2019 16:37:45 +0000 (UTC)
-Received: from localhost.localdomain.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A742B600CC;
-        Mon, 22 Apr 2019 16:37:43 +0000 (UTC)
-From:   jglisse@redhat.com
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] mm/hmm: move THP and hugetlbfs code path behind #if KCONFIG
-Date:   Mon, 22 Apr 2019 12:37:41 -0400
-Message-Id: <20190422163741.13029-1-jglisse@redhat.com>
+        Mon, 22 Apr 2019 12:38:36 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38327 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfDVQif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:38:35 -0400
+Received: by mail-it1-f196.google.com with SMTP id q19so1016458itk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hMF4Llv/Z7HnWPfu2XvWsN+C90/8jjRyDuPzjCOXXM4=;
+        b=MjaOFfbedO013k2srZ8PF1vBifNNhn9MfMSoSQofF/cG66ZP5WdX1h+G1WlfFZlCFH
+         17EMInn5tLJ2wcevRz0uk5Eg2t8rcJo+6+Jxj9NFtZQEjruHrc+oYrE0hWB3PkgYkBH6
+         8fQXdJ6a6XV5d2bX73/HVNKZT08BIHlYq9TjzEWwwXJA7XuqN0k2OKO4it2LtmtgMWZk
+         iNc+hnGqSXIaBTDgRFODB4+JjCL/Fz4/mfS4guGDtmPAOK3D3WgSs+Q1/RAA7W8B7dsa
+         idY2tFKMtBb+M8pWTZ+yiKcGitzempUL29mSy5XCUikjl87Sz89IxlyRNuQlpxqhdNc5
+         7egA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hMF4Llv/Z7HnWPfu2XvWsN+C90/8jjRyDuPzjCOXXM4=;
+        b=Z3mHOob7Wgacie9nbZJe3uMJXASlT105bvzmzQl7se+bmXrtXU7/oBpfYGXp42kr6o
+         D1mViKOAxfvh8AIAipz0bYabqUPfGW5gMAcPnZQQr1GBAOMONg4z+vlanLdquRpjHyMw
+         R0W7MVlEd/8RrMdx3MPYJpBqcsg5arEEyKEingSGE8qzpsAnmmXs8PYxDspdZ/k9YHCp
+         Phum3zjhnrlKWTl8BIX0ttgMi9bOz8BUEiqTg7dj+BVbBQiHPq1QMRdfBeTxN8aKDcMk
+         v0WuiUredkHB6QGiqOAkbb9ArqU4PiHNbZ8mcU43NjRyEnKOWdGd4UKTubP+1nfriRlF
+         tTSA==
+X-Gm-Message-State: APjAAAVBv9zx88pgUl6t/ff/sIKwdi2E/5lel/mFp9LBpsA1srjYUv0t
+        1gNNfGWuukmuNxKjzq86MpRSCA==
+X-Google-Smtp-Source: APXvYqwIPwbX09YkmHtHNc+KynmoG+sKurlpWyeXPvC/lvF/Jb29guOOM3fFDP9wUeu5UsV/lvzcBA==
+X-Received: by 2002:a24:3246:: with SMTP id j67mr14307483ita.70.1555951115051;
+        Mon, 22 Apr 2019 09:38:35 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id b82sm6441693itd.12.2019.04.22.09.38.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 09:38:33 -0700 (PDT)
+Subject: Re: WARNING in percpu_ref_kill_and_confirm
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Anvin <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <00000000000043fe9c058720a5d3@google.com>
+ <ad884b18-0e03-d6be-02b0-4e5273f068ce@kernel.dk>
+ <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
+ <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk>
+Message-ID: <cfa6be6d-4125-6d1e-8993-e9ec9dbaa7bb@kernel.dk>
+Date:   Mon, 22 Apr 2019 10:38:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 22 Apr 2019 16:37:45 +0000 (UTC)
+In-Reply-To: <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+On 4/22/19 10:32 AM, Jens Axboe wrote:
+> On 4/22/19 10:27 AM, Linus Torvalds wrote:
+>> [ Crossed emails ]
+>>
+>> On Mon, Apr 22, 2019 at 9:23 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>>
+>>> I think the below should fix this. Very early versions of io_uring didn't
+>>> have this issue, since we did the percpu ref tryget for io_uring_register().
+>>
+>> Ok, so I like your patch better than mine, but note how syzbot
+>> bisected this to the initial merge of the io_uring code.
+> 
+> Yes, I did think about that too...
+> 
+>> I agree that code shouldn't have had this particular issue, but it
+>> looks like it does.
+>>
+>> Is there some way to race with io_ring_ctx_wait_and_kill(), which
+>> _also_ does that ref_kill() thing? I'm not seeing how that could
+>> happen, but maybe if the file ref counts get screwed up you have
+>> ->release() called early..
+> 
+> I just tried on the current code and it triggers easily, but that's
+> with that mutex patch in there. I agree it should not trigger before
+> that, unless something is wonky. I'll try and play around with it a bit
+> and see what is going on (or if I can trigger it at all with the mutex
+> change reverted).
 
-To avoid any undefined symbol build warning or error, move THP and
-hugetlbfs code behind kconfig #if/#else/#endif against appropriate
-Kconfig option.
+With the mutex change in, I can trigger it in a second or so. Just ran
+the reproducer with that change reverted, and I'm not seeing any badness.
+So I do wonder if the bisect results are accurate?
 
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- mm/hmm.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I think the dying check should cover it, and then marked with fixing
+that mutex commit.
 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index ecd16718285e..a8a950fe46b6 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -520,6 +520,7 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
- 			      uint64_t *pfns,
- 			      pmd_t pmd)
- {
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
- 	struct hmm_range *range = hmm_vma_walk->range;
- 	unsigned long pfn, npages, i;
-@@ -550,6 +551,10 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
- 	}
- 	hmm_vma_walk->last = end;
- 	return 0;
-+#else
-+	/* If THP is not enabled then we should never reach that code ! */
-+	return -EINVAL;
-+#endif
- }
- 
- static inline uint64_t pte_to_hmm_pfn_flags(struct hmm_range *range, pte_t pte)
-@@ -792,6 +797,7 @@ static int hmm_vma_walk_pud(pud_t *pudp,
- 			return hmm_vma_walk_hole_(addr, end, fault,
- 						write_fault, walk);
- 
-+#ifdef CONFIG_HUGETLB_PAGE
- 		pfn = pud_pfn(pud) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
- 		for (i = 0; i < npages; ++i, ++pfn) {
- 			hmm_vma_walk->pgmap = get_dev_pagemap(pfn,
-@@ -807,6 +813,9 @@ static int hmm_vma_walk_pud(pud_t *pudp,
- 		}
- 		hmm_vma_walk->last = end;
- 		return 0;
-+#else
-+		return -EINVAL;
-+#endif
- 	}
- 
- 	split_huge_pud(walk->vma, pudp, addr);
 -- 
-2.20.1
+Jens Axboe
 
