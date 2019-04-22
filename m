@@ -2,123 +2,108 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5CFC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2B9C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E56218C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Kkb+yrDo"
+	by mail.kernel.org (Postfix) with ESMTP id 9307A2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555928212;
+	bh=3TRFGMvJmSa/ZGijQzF5Eyf501z0S9bymkbnBQrSqUs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fbPRQVWp26ZbMvQv1o3xHhsZEqLSVlFXK5oxcgdsBsQuo/KbwJAQDJNxIwMcbsV5D
+	 vxxraGVyzTktF6K5haMn9jBBIWOhyEDgTVZ0mCNComfqwC/isJhwMpz/r6L3kfDaJa
+	 EEDDgc+8rLq5nCzbhtBCIV7e/Dj1YZ1iB8ycuTDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfDVKPh (ORCPT
+        id S1727218AbfDVKQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 06:15:37 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40365 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfDVKPf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 06:15:35 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d31so5655646pgl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 03:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AW0RHnKDHLN5TiGDQiHCeAcpbvq/vomWqBQhSmgvJvQ=;
-        b=Kkb+yrDo+VEZf2FB+y89KhJXl9wWj6MbvGDKg33LzHICLayfTU9bakJvDN4LBTKOsu
-         w1hSHonmbHdUmhCb8XsrD2TRxTlI0c6shQ+WTnS2jdgEsV1OEkYUv7+EOxOMjitLWNr5
-         DxQntt50I9ButDcsY70fuGhMv5A5goTs1692sOUTcAce4jVOxo0N/qRLQd50dR/eD99j
-         MzsQzV9PLT3QeVbGJZKaMpOyuDu2npOYFso78q6srpe67ZAfILGp/dN0/3wLcYN4KAHR
-         l4pPZrxHaZWoBJM8jvvsJr4wZHMp+gp/Yvpxti3qafzpR3VIz9lBLE4LL1NvL4RQdnfe
-         q1uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AW0RHnKDHLN5TiGDQiHCeAcpbvq/vomWqBQhSmgvJvQ=;
-        b=h24jSHnrhQ1q9yYLR8iWYk0zrsKET9jmibvTbFkLVX0iKbO979jLsNwi3J2WjD395N
-         3R9CGnWH6gTMAlnbivqW89m2DKafc1aDkatppXEcUKN9QQS+B/MRZsniiLM5WKS0QNt0
-         HYpHFDtM+2b17hDkpIFqRXzpbd+2xKW4FoK6b+E0IFbc1DFxaoUeywcXzI5NF/MisRNA
-         2AqvsBV4TWbslAMj9KakBfJGYf0U3buHhjXs+k1n8ieTjcxICZ8cNlYuWSA7TRR0zWLv
-         BZBiCeJ+iiSWSym6CKNq42Sn5pj/3aMkoo2XKiqunauQvF7XykmQcyfO2r8nsWECtDVc
-         EpOw==
-X-Gm-Message-State: APjAAAVCJDZsCrpe9cGcGbMp6/WOEd8cr1YE6i4S5XjkBRHCk9jIs4Q0
-        VCGhE4H8CcSKftLZgRbh5hsjow==
-X-Google-Smtp-Source: APXvYqw/jhhvtT9s+xrkM4w8A/k+a1WVd0RLgwa4rcTuB3OV9xDMLIjXufTu06bzaY1Uuc4MBU1Ouw==
-X-Received: by 2002:a63:2c4a:: with SMTP id s71mr18070680pgs.373.1555928135116;
-        Mon, 22 Apr 2019 03:15:35 -0700 (PDT)
-Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id 128sm14945573pgb.47.2019.04.22.03.15.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 03:15:34 -0700 (PDT)
-From:   Daniel Drake <drake@endlessm.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        len.brown@intel.com, rafael.j.wysocki@intel.com, linux@endlessm.com
-Subject: [PATCH 2/2] x86/tsc: set LAPIC timer frequency to crystal clock frequency
-Date:   Mon, 22 Apr 2019 18:15:26 +0800
-Message-Id: <20190422101526.28415-2-drake@endlessm.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190422101526.28415-1-drake@endlessm.com>
-References: <20190422101526.28415-1-drake@endlessm.com>
+        Mon, 22 Apr 2019 06:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfDVKQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 06:16:51 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF23206A3;
+        Mon, 22 Apr 2019 10:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555928210;
+        bh=3TRFGMvJmSa/ZGijQzF5Eyf501z0S9bymkbnBQrSqUs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DEMfSg12iVfykAD87dISJs+7YRgeHmOJPGgAQVxefp5CvJ8BfTGvCipmus7DuOaZl
+         w/dgiz3RSsUxWeo21LSqFHFZmG8glTSS5pAISRZMB2Or9GSqQZ+dgR3sdIAaUY5bff
+         TCfbenXSbTkbPW7L6jTbfJrXytBVoGyOYqMF1Fso=
+Date:   Mon, 22 Apr 2019 11:16:43 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <rdunlap@infradead.org>, <sfr@canb.auug.org.au>,
+        <benjamin.gaignard@linaro.org>, <linux-next@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
+Subject: Re: [PATCH 1/2] iio: adc: stm32-dfsdm: fix unmet direct
+ dependencies detected
+Message-ID: <20190422111643.0270fba6@archlinux>
+In-Reply-To: <1555333251-4422-2-git-send-email-fabrice.gasnier@st.com>
+References: <1555333251-4422-1-git-send-email-fabrice.gasnier@st.com>
+        <1555333251-4422-2-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The APIC timer calibration (calibrate_APIC_timer()) can be skipped
-in cases where we know the APIC timer frequency. On Intel SoCs,
-we believe that the APIC is fed by the crystal clock; this would make
-sense, and the crystal clock frequency has been verified against the
-APIC timer calibration result on ApolloLake, GeminiLake, Kabylake,
-CoffeeLake, WhiskeyLake and AmberLake.
+On Mon, 15 Apr 2019 15:00:50 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-Set lapic_timer_frequency based on the crystal clock frequency
-accordingly.
+> This fixes unmet direct dependencies seen when CONFIG_STM32_DFSDM_ADC
+> is selected:
+> 
+> WARNING: unmet direct dependencies detected for IIO_BUFFER_HW_CONSUMER
+>   Depends on [n]: IIO [=y] && IIO_BUFFER [=n]
+>   Selected by [y]:
+>   - STM32_DFSDM_ADC [=y] && IIO [=y] && (ARCH_STM32 [=y] && OF [=y] ||
+>     COMPILE_TEST [=n])
+> 
+> Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Hmm. I wonder how we never got this one from a rand config.
+Anyhow, give we are near the end of this cycle, I'll take this for
+the next merge window rather than rushing it through.
 
-APIC timer calibration would normally be skipped on modern CPUs
-by nature of the TSC deadline timer being used instead,
-however this change is still potentially useful, e.g. if the
-TSC deadline timer has been disabled with a kernel parameter.
-calibrate_APIC_timer() uses the legacy timer, but we are seeing
-new platforms that omit such legacy functionality, so avoiding
-such codepaths is becoming more important.
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-Link: https://lkml.kernel.org/r/20190419083533.32388-1-drake@endlessm.com
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
----
- arch/x86/kernel/tsc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Thanks,
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 3971c837584a..8750543287fc 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -665,6 +665,16 @@ unsigned long native_calibrate_tsc(void)
- 	if (boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT)
- 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- 
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	/*
-+	 * The local APIC appears to be fed by the core crystal clock
-+	 * (which sounds entirely sensible). We can set the global
-+	 * lapic_timer_frequency here to avoid having to calibrate the APIC
-+	 * timer later.
-+	 */
-+	lapic_timer_frequency = (crystal_khz * 1000) / HZ;
-+#endif
-+
- 	return crystal_khz * ebx_numerator / eax_denominator;
- }
- 
--- 
-2.19.1
+Jonathan
+
+> ---
+>  drivers/iio/adc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 846c7ac..b1b2bde 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -821,6 +821,7 @@ config STM32_DFSDM_ADC
+>  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+>  	select STM32_DFSDM_CORE
+>  	select REGMAP_MMIO
+> +	select IIO_BUFFER
+>  	select IIO_BUFFER_HW_CONSUMER
+>  	help
+>  	  Select this option to support ADCSigma delta modulator for
 
