@@ -2,81 +2,161 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BB1C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7E0C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B11720896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="aYWWVUmT"
+	by mail.kernel.org (Postfix) with ESMTP id 9A25A21738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555950400;
+	bh=JEMFjRO0Pa+ynEuxrcJbn2OMjypI2OJSx48qtGPrCtQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AjVFCwlNLUpq5z2uThAjhOJBFTKVE4qC+U7PKgk6CzDgWkJkEk5krrzxCm5DYTAda
+	 VsGP1lUjiCybs3hqDHVvQzZ6OofCaG7miHj3fjQmjVAX68vqDLqn2VbEq863gyyE7N
+	 gxiHZUmI7gGazQf9NvGUBzbYmo9eieJD2hTeqc+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfDVQ0M (ORCPT
+        id S1727797AbfDVQ0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:26:12 -0400
-Received: from smtpcmd11116.aruba.it ([62.149.156.116]:34022 "EHLO
-        smtpcmd11116.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfDVQ0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:26:11 -0400
-Received: from [192.168.1.41] ([93.146.66.165])
-        by smtpcmd11.ad.aruba.it with bizsmtp
-        id 3UK92000N3Zw7e501UK9sx; Mon, 22 Apr 2019 18:19:10 +0200
-Subject: Re: [PATCH v2 27/79] docs: pps.txt: convert to ReST and rename to
- pps.rst
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
- <d6ffab20421f56b72a596cc99197667ea6da99ff.1555938376.git.mchehab+samsung@kernel.org>
-From:   Rodolfo Giometti <giometti@enneenne.com>
-Message-ID: <d48b0aa4-2a22-933e-6e32-93405c5c7292@enneenne.com>
-Date:   Mon, 22 Apr 2019 18:19:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 12:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727014AbfDVQ0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:26:38 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C94218CD
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 16:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555950397;
+        bh=JEMFjRO0Pa+ynEuxrcJbn2OMjypI2OJSx48qtGPrCtQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gjoMnb6oimB1UXsP+q67JhT9/D0zS5v1UAcav8Jbc04y8VHhDSijqiHIVZPFgO4NB
+         hHgqrMALUnXhqapnqOzCQV899+aibi2rEi8de+l8w43aqsIm0IsA9oZx0FFUz7tZbW
+         WeHY2JENlcB6R1VU5x4CmTiXb3Te7gGeRrR+OysQ=
+Received: by mail-wr1-f54.google.com with SMTP id t17so16349160wrw.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:26:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAXak7wOIFnzGLGgfX6/TMi73MfrG5PtqyDpt2QKeT5CJ6wN0gdR
+        1Nwh6iwbCYy1oAJ06DqwbAf4M+hzpe2QkfXDwkg7Ug==
+X-Google-Smtp-Source: APXvYqwaVi+vNXltP2bE2dnmMdOSlfdSwesJN8KRUfOA7mCXt+en0NaYLY1S55edHS/S4oJ9g8vaYLFROh2X1WlG/18=
+X-Received: by 2002:a5d:474b:: with SMTP id o11mr7809394wrs.309.1555950395519;
+ Mon, 22 Apr 2019 09:26:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d6ffab20421f56b72a596cc99197667ea6da99ff.1555938376.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1555949950; bh=EK4nSe1YJWsvw1duFBAabXZBUkvpQ+dEm7Zr/3gBFS8=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=aYWWVUmThbT2LO5VqbwP+wy9HSTMvsupcaugs5oWLo18FcA16bTeGnjSNusK0tU0N
-         zizUE4QCFUCQARiU/cgwr/sxK77dpk/+jx/1AOKTuRVd/lL+Z3lOldoLodk0J8G7Bk
-         lik4QmGWxFR/Ek70935fHl4zfaVbFVPkmr9kWpWtcgqtVHZ2joeYa7S8YklqKBu/XL
-         mzsId+RHfb0taEw6V9i1kpt0NwBM5wJGtwlcF/QiwRDHYc2l5tIWm66orXS1xIYHmz
-         xyQgl9N50aA1VlV6t28Cc0V5OorosXc/4zi+gBeqbKTGLeCHiXajq9TXcHlZyXvm8l
-         yaQ+HK5Sq44aQ==
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190418171059.GA20819@wind.enjellic.com> <09ebfa1d-c03d-c1fe-ff0f-d99287b6ec3c@intel.com>
+ <20190419141732.GA2269@wind.enjellic.com> <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
+ <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com> <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+ <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
+ <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com> <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+ <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com> <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
+ <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com> <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
+ <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
+In-Reply-To: <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 22 Apr 2019 09:26:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+Message-ID: <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2019 15:27, Mauro Carvalho Chehab wrote:
-> This file is already in a good shape: just its title and
-> adding some literal block markups is needed for it to be
-> part of the document.
-> 
-> While it has a small chapter with sysfs stuff, most of
-> the document is focused on driver development.
-> 
-> As it describes a kernel API, move it to the driver-api
-> directory.
-> 
-> In order to avoid conflicts, let's add an :orphan: tag
-> to it, to be removed when added to the driver-api book.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> On Apr 19, 2019, at 2:56 PM, Jethro Beekman <jethro@fortanix.com> wrote:
+>
+>> On 2019-04-19 14:34, Thomas Gleixner wrote:
+>> And how so? You create writeable AND executable memory. That's a nono an=
+d
+>> you can argue in circles, that's not going to change with any of your
+>> proposed changes.
+>
+>> On 2019-04-19 14:38, Thomas Gleixner wrote:
+>> You are working around LSM nothing else and that's just not going to fly=
+.
+>
+> Based on your comments, I'm still unsure if we're on the same page with
+> regards to what I'm proposing.
+>
+> Here's a regular non-SGX flow that LSM would likely prevent:
+>
+> mmap(PROT_READ|PROT_WRITE)
+> memcpy()
+> mmap(PROT_READ|PROT_EXEC) <-- denied by LSM
+>
+> Or just something based on regular PT permissions:
+>
+> mmap(PROT_READ|PROT_EXEC)
+> memcpy() <-- SIGSEGV
+>
+> Now, the equivalent for SGX:
+>
+> mmap(PROT_READ|PROT_WRITE)
+> ioctl(EADD)
+> mmap(PROT_READ|PROT_EXEC) <-- denied by LSM
+>
+> This works fine with v20 as-is. However, consider the equivalent of the
+> PT-based flow:
+>
+> mmap(PROT_READ|PROT_EXEC)
+> ioctl(EADD) <-- no error!
 
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+Indeed!
 
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming                     skype:  rodolfo.giometti
+>
+> It's not me that's working around the LSM, it's the SGX driver! It's
+> writing to memory that's not marked writable! The fundamental issue here
+> is that the SGX instruction set has several instructions that bypass the
+> page table permission bits, and this is (naturally) confusing to any
+> kind of reference monitor like the LSM framework. You can come up with
+> similar scenarios that involve PROT_READ|PROT_WRITE|PROT_EXEC or
+> ptrace(PTRACE_POKETEXT). So, clearly, the proper way to fix this failure
+> of complete mediation is by enforcing appropriate page-table permissions
+> even on the SGX instructions that don't do it themselves. Just make any
+> implicit memory access look like a regular memory access and now
+> everyone is on the same page (pun intended).
+>
+
+I agree that we should do this.  But then what?  Once this gets fixed,
+the ioctl(EADD) fails and the driver becomes rather less useful, and
+we feel rather silly if we=E2=80=99ve merged it in this state.
+
+So I think we need a better EADD ioctl that explicitly does work on
+PROT_READ|PROT_EXEC enclave memory but makes up for by validating the
+*source* of the data.  The effect will be similar to mapping a
+labeled, appraised, etc file as PROT_EXEC.  Maybe, in extreme
+pseudocode:
+
+fd =3D open(=E2=80=9C/dev/sgx/enclave=E2=80=9D);
+ioctl(fd, SGX_CREATE_FROM_FILE, file_fd);
+// fd now inherits the LSM label from the file, or is otherwise marked.
+mmap(fd, PROT_READ|PROT_EXEC, ...);
+
+I suppose that an alternative would be to delegate all the EADD calls
+to a privileged daemon, but that=E2=80=99s nasty.
