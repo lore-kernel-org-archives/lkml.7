@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B05C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3764C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568BE204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EA1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963404;
-	bh=L1aehz1EFWzPIIRniZGjnB9/I8mVEb7GpixGNpjL9aA=;
+	s=default; t=1555963413;
+	bh=DIfGkywBu9T6LA7GbOyMGG1W1hZ6h9b1erECPu89G/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpXvWe9MTLak97iYvjFnfLo+bm4Md0J3T+fjFjnjpvbmom2Dl6ClOb9gv73YPerEr
-	 /qmf64njXo+2niPimVETIRgMfgw3CPEgufFS0x0GE0wobBhr0BpRfeB1wPu6nIwwbJ
-	 H4L6lAkRJSqIqWDkuotPisLtUR2dopFsUaVauxFQ=
+	b=bQCkU0132vsSuXBvS1ir7wujHw+UlZ5JP7Wmc2vBTyk0jpJtS4ksP1Cpp+GE44ZtR
+	 nph2A2JcL4fdz0geMPDQDgldsK3+V3aTWscCQGIQU5FL+5Kz3yYe+RorHWikiBjuaD
+	 4tfVMiKoGr6s0V5k5NzzSj0JRhR2dNMBIAcrQ4dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbfDVUDX (ORCPT
+        id S1732121AbfDVUDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48012 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729049AbfDVTqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:46:00 -0400
+        id S1729882AbfDVTp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A8E1218D9;
-        Mon, 22 Apr 2019 19:45:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1E08218B0;
+        Mon, 22 Apr 2019 19:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962359;
-        bh=L1aehz1EFWzPIIRniZGjnB9/I8mVEb7GpixGNpjL9aA=;
+        s=default; t=1555962355;
+        bh=DIfGkywBu9T6LA7GbOyMGG1W1hZ6h9b1erECPu89G/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCmPbVZj5FBnm5PTZZNbN7efRDx0qTUdwmdhjpUVThmWkOxnydb9ceb2VsRNSQWOl
-         9O3PvKU+hQCzgOPdE96gP3Y6Mq+eq9sFUH4T8rn5Pm9/Y83EST6xbQdt2hZBnASXDh
-         PzMktfML0ksx1UhNs0x0bZwIQmCbWLMXOM8uxRck=
+        b=1wAYvQ984vzNZL2X77ra2gFHNHeEFWdYPoURmf2HM6OCcp2qjf/0uM9EcvZtjQzHy
+         vARb83xHR9XBUzQcWr8TILKoE75fru6XPH2d26dUOzbDRmBwJD2Hc9JhZY/23Oo1rm
+         pbUJhhAeWSZmut5gFt3iUj6RKCugsFJs/YfIVXZw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guido Kiener <guido@kiener-muenchen.de>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/68] usb: gadget: net2280: Fix overrun of OUT messages
-Date:   Mon, 22 Apr 2019 15:44:30 -0400
-Message-Id: <20190422194516.11634-22-sashal@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.19 20/68] KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
+Date:   Mon, 22 Apr 2019 15:44:28 -0400
+Message-Id: <20190422194516.11634-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -59,62 +57,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Kiener <guido@kiener-muenchen.de>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
+[ Upstream commit 7494cec6cb3ba7385a6a223b81906384f15aae34 ]
 
-The OUT endpoint normally blocks (NAK) subsequent packets when a
-short packet was received and returns an incomplete queue entry to
-the gadget driver. Thereby the gadget driver can detect a short packet
-when reading queue entries with a length that is not equal to a
-multiple of packet size.
+Calling kvm_is_visible_gfn() implies that we're parsing the memslots,
+and doing this without the srcu lock is frown upon:
 
-The start_queue() function enables receiving OUT packets regardless of
-the content of the OUT FIFO. This results in a race: With the current
-code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
-& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
-packet will be received, and then start_queue() will call
-stop_out_naking(). That's what we don't want (OUT naking gets turned
-off while there is data in the FIFO) because then the next driver
-request might receive a mixture of old and new packets.
+[12704.164532] =============================
+[12704.164544] WARNING: suspicious RCU usage
+[12704.164560] 5.1.0-rc1-00008-g600025238f51-dirty #16 Tainted: G        W
+[12704.164573] -----------------------------
+[12704.164589] ./include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
+[12704.164602] other info that might help us debug this:
+[12704.164616] rcu_scheduler_active = 2, debug_locks = 1
+[12704.164631] 6 locks held by qemu-system-aar/13968:
+[12704.164644]  #0: 000000007ebdae4f (&kvm->lock){+.+.}, at: vgic_its_set_attr+0x244/0x3a0
+[12704.164691]  #1: 000000007d751022 (&its->its_lock){+.+.}, at: vgic_its_set_attr+0x250/0x3a0
+[12704.164726]  #2: 00000000219d2706 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164761]  #3: 00000000a760aecd (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164794]  #4: 000000000ef8e31d (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164827]  #5: 000000007a872093 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164861] stack backtrace:
+[12704.164878] CPU: 2 PID: 13968 Comm: qemu-system-aar Tainted: G        W         5.1.0-rc1-00008-g600025238f51-dirty #16
+[12704.164887] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+[12704.164896] Call trace:
+[12704.164910]  dump_backtrace+0x0/0x138
+[12704.164920]  show_stack+0x24/0x30
+[12704.164934]  dump_stack+0xbc/0x104
+[12704.164946]  lockdep_rcu_suspicious+0xcc/0x110
+[12704.164958]  gfn_to_memslot+0x174/0x190
+[12704.164969]  kvm_is_visible_gfn+0x28/0x70
+[12704.164980]  vgic_its_check_id.isra.0+0xec/0x1e8
+[12704.164991]  vgic_its_save_tables_v0+0x1ac/0x330
+[12704.165001]  vgic_its_set_attr+0x298/0x3a0
+[12704.165012]  kvm_device_ioctl_attr+0x9c/0xd8
+[12704.165022]  kvm_device_ioctl+0x8c/0xf8
+[12704.165035]  do_vfs_ioctl+0xc8/0x960
+[12704.165045]  ksys_ioctl+0x8c/0xa0
+[12704.165055]  __arm64_sys_ioctl+0x28/0x38
+[12704.165067]  el0_svc_common+0xd8/0x138
+[12704.165078]  el0_svc_handler+0x38/0x78
+[12704.165089]  el0_svc+0x8/0xc
 
-With the patch, this race can't occur because the FIFO's state is
-tested after we know that OUT naking is already turned on, and OUT
-naking is stopped only when both of the conditions are met.  This
-ensures that all received data is delivered to the gadget driver,
-which can detect a short packet now before new packets are appended
-to the last short packet.
+Make sure the lock is taken when doing this.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: bf308242ab98 ("KVM: arm/arm64: VGIC/ITS: protect kvm_read_guest() calls with SRCU lock")
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ virt/kvm/arm/vgic/vgic-its.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index b02ab2a8d927..c57046b1da0e 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -866,9 +866,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
- 	(void) readl(&ep->dev->pci->pcimstctl);
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index c1071ed888e2..621bb004067e 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -760,8 +760,9 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+ 	int l1_tbl_size = GITS_BASER_NR_PAGES(baser) * SZ_64K;
+ 	u64 indirect_ptr, type = GITS_BASER_TYPE(baser);
+ 	int esz = GITS_BASER_ENTRY_SIZE(baser);
+-	int index;
++	int index, idx;
+ 	gfn_t gfn;
++	bool ret;
  
- 	writel(BIT(DMA_START), &dma->dmastat);
--
--	if (!ep->is_in)
--		stop_out_naking(ep);
- }
+ 	switch (type) {
+ 	case GITS_BASER_TYPE_DEVICE:
+@@ -788,7 +789,8 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
  
- static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
-@@ -907,6 +904,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
- 			writel(BIT(DMA_START), &dma->dmastat);
- 			return;
- 		}
-+		stop_out_naking(ep);
+ 		if (eaddr)
+ 			*eaddr = addr;
+-		return kvm_is_visible_gfn(its->dev->kvm, gfn);
++
++		goto out;
  	}
  
- 	tmp = dmactl_default;
+ 	/* calculate and check the index into the 1st level */
+@@ -822,7 +824,12 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+ 
+ 	if (eaddr)
+ 		*eaddr = indirect_ptr;
+-	return kvm_is_visible_gfn(its->dev->kvm, gfn);
++
++out:
++	idx = srcu_read_lock(&its->dev->kvm->srcu);
++	ret = kvm_is_visible_gfn(its->dev->kvm, gfn);
++	srcu_read_unlock(&its->dev->kvm->srcu, idx);
++	return ret;
+ }
+ 
+ static int vgic_its_alloc_collection(struct vgic_its *its,
 -- 
 2.19.1
 
