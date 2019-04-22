@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E075C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79215C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A6021906
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DF4218B0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962430;
-	bh=okBKAVgy5/JgWzgyhzkFghh0wqimS1gM5WiB6aBHrIg=;
+	s=default; t=1555962439;
+	bh=STXnvD7+O9XDC6PbZemY3Ed7xwcNi5uiHo5oLxd1/ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HkP/kjQU8QdvBEVucWNVG6RGxqd8iuQg/LWx/+PxjaY8AdEhvJPrCxa6B1BLpAAji
-	 4G0fREbBRXAnR6P0N80i9EN25RHFBQnGCQAZIRM28osj0WrNX4nCvMHK6ORVsmoZK/
-	 b2SD1JPr8zXnmBcdON8L7TXBbAmIsUT6tKzCcopc=
+	b=QyqUJJugyzFhqzoDJh2Hgmov3rhhTaevMKLN6Y5PM5qNGWeghqoMwR8meRD4dVi7F
+	 nhRl8SoM9PDLycYqDZEBUNB+sXER9AuMGtIDiuFthYJu7RUJjwKKE/E1LBazzam73q
+	 R7x001iqwpjlFXVa66B3ug9E2T6wKB0isKqFuBcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbfDVTrJ (ORCPT
+        id S1730237AbfDVTrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49736 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729682AbfDVTrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:06 -0400
+        id S1730203AbfDVTrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39AF721908;
-        Mon, 22 Apr 2019 19:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC09F21907;
+        Mon, 22 Apr 2019 19:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962425;
-        bh=okBKAVgy5/JgWzgyhzkFghh0wqimS1gM5WiB6aBHrIg=;
+        s=default; t=1555962433;
+        bh=STXnvD7+O9XDC6PbZemY3Ed7xwcNi5uiHo5oLxd1/ts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MzDN3AWm+qo3JstQ38BmtziSbZInzvj7wNz3NyBUC9vcDZJn9+/HywJeTVmjFQ6QW
-         +g/Ul1ox38xjcgvjwOjAD+ldgFsIzo1CR9XzyB+TX8xaInha4aNnWpvAZR6Ce2cBJX
-         gBYET+LVggJ0DGMTZ+ppmYRYVVjn9tjjqJLtMfj4=
+        b=g4wjUE4zfTd9CTIXQ5tZGOQ0Foi9wndjVZMaVaTf1fQ9bPsiL0BaUzKzuMQ5tC6SK
+         O7aJghfStTbLAoUwlAXwZHylzw6WHpUXiYjdxm3ICOO/z7KHQueJJZSljbZjCj6VoW
+         pUYpYIZom9hc9h1ehL2ZGO9wSznTa35LMmDaDHTM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mukesh Ojha <mojha@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 55/68] usb: u132-hcd: fix resource leak
-Date:   Mon, 22 Apr 2019 15:45:03 -0400
-Message-Id: <20190422194516.11634-55-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 61/68] gpio: of: Fix of_gpiochip_add() error path
+Date:   Mon, 22 Apr 2019 15:45:09 -0400
+Message-Id: <20190422194516.11634-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -59,34 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mukesh Ojha <mojha@codeaurora.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit f276e002793cdb820862e8ea8f76769d56bba575 ]
+[ Upstream commit f7299d441a4da8a5088e651ea55023525a793a13 ]
 
-if platform_driver_register fails, cleanup the allocated resource
-gracefully.
+If the call to of_gpiochip_scan_gpios() in of_gpiochip_add() fails, no
+error handling is performed.  This lead to the need of callers to call
+of_gpiochip_remove() on failure, which causes "BAD of_node_put() on ..."
+if the failure happened before the call to of_node_get().
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by adding proper error handling.
+
+Note that calling gpiochip_remove_pin_ranges() multiple times causes no
+harm: subsequent calls are a no-op.
+
+Fixes: dfbd379ba9b7431e ("gpio: of: Return error if gpio hog configuration failed")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/host/u132-hcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpio/gpiolib-of.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index 5b8a3d9530c4..5cac83aaeac3 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -3202,6 +3202,9 @@ static int __init u132_hcd_init(void)
- 	printk(KERN_INFO "driver %s\n", hcd_name);
- 	workqueue = create_singlethread_workqueue("u132");
- 	retval = platform_driver_register(&u132_platform_driver);
-+	if (retval)
-+		destroy_workqueue(workqueue);
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index d4e7a09598fa..e0f149bdf98f 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -646,7 +646,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
+ 
+ 	of_node_get(chip->of_node);
+ 
+-	return of_gpiochip_scan_gpios(chip);
++	status = of_gpiochip_scan_gpios(chip);
++	if (status) {
++		of_node_put(chip->of_node);
++		gpiochip_remove_pin_ranges(chip);
++	}
 +
- 	return retval;
++	return status;
  }
  
+ void of_gpiochip_remove(struct gpio_chip *chip)
 -- 
 2.19.1
 
