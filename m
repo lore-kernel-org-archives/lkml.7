@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDBBC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2A2C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F6120652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263F92064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939970;
-	bh=t7Jacmlf4I6Ui8YKnW4olc3FHAlzxRhRlHG5l59z2Sk=;
+	s=default; t=1555939982;
+	bh=uHUmzN1AaBOOnYIGtGZrFxA0EsSAXM57Aje5uOiPDK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N/gIe1851zi1NEnjxbD9/hg0KAZ3ULDaNWxE+ZI4lj7NtqeezVNRqXaWxyOIxuxHu
-	 eaZs7zM4Qd4CnEgfU07U1cg+Q0pisvSE7lX9bUNgCZsCO8+5cWptYGgafrdTYQmzKq
-	 BzZXJzAg5IfQ4hPsH1z+lQf9rJBHCkEJ+OJnE+iE=
+	b=MIHGuLMeGVPh+1JknBG6Khvk4mgFwFk2b9O6891JMZrvfhF0JPOLrq3JwQ3rbSO7q
+	 ZIAyFLivBoEPsu3RIOsxJn/hlBHaa9zpHFIMbOLp1jzx5VIM7oXciDvnMZmImkYstd
+	 yaVpPOfMTeI9wcU5BWQ1X9SZGEL4ucGScOdrTaQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfDVNcs (ORCPT
+        id S1728048AbfDVNdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:32:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37702 "EHLO
+        Mon, 22 Apr 2019 09:33:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37670 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfDVN2U (ORCPT
+        with ESMTP id S1727543AbfDVN2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=l0Mb7EaBJ05dSedgj4g3fOhIZt4j0EgUMsTD8d8e0AI=; b=bRyHs95tpCYxWIr/O8Y87C5i/1
-        tiZrWQAAaow7BQ4BjJXbA17qglE+rX0l6qGXIaHYQi0Su6w2yAwVjxylYvjZnjWoFyopfebHq4CF0
-        rNGV77DwRgYWtObxLQt+LtkCW/aJKyBTMgiQ0irep0/4fx+/6LgBjsU6w4PdCxREBXMooaT7IUVb4
-        X+pUP4A20Gyu+epgej1BNw5gfY5GH6yWn4wW4pcyS64sPHeHTnHLnLOOczEEdU+8sUxsbIZhwATiz
-        KLxH6OlzYC4x3hed2FBFenu+CHjjn8N6O5sVY26p7Yze7mp0/nbMP1hJVdBoms2voNwAP4G/HE6yp
-        Kj5iKbBQ==;
+        bh=8AtlywBhNFhaiXWvW0RpsictjIm+Ov05njcMcbc4CYc=; b=sfCtvJfXhodwofxnxk2DIiba16
+        zesgQpsJyfDoNFdrGDJmnr7AfIp4gjEy3PD4pPkW3cA34PkCPg8ZMgkq9Rqe+ym79+WWeUHmbVOOJ
+        dkRJanmJy5UkOnqC0N6afWvbFUNq9kg/+P57QoKfnSZc40H/29hhrg0eYW4K/77DlIIAbQt87nhlq
+        vaFOIp2dP+PMShDgc6IV27+eq99EzYcxQr9Oq22PZYaxWGyNupTRvneUSizQ8ljO6cO6i2ZOHMN3N
+        ubuEXDGvAda+srNP7PzcF/b/5Qf0D37E04e9bvc+hTkJFbAWQyRNM2lsGPdLIm8b/ZrhvszcRiAxC
+        AvL+Hu8w==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYza-0005HW-MX; Mon, 22 Apr 2019 13:28:19 +0000
+        id 1hIYzZ-0005I4-T1; Mon, 22 Apr 2019 13:28:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005o9-2D; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzU-0005oK-5Y; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 58/79] docs: fmc: convert to ReST
-Date:   Mon, 22 Apr 2019 10:27:47 -0300
-Message-Id: <c63926a37499e9384270b91533aee052132ef4cd.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Pat Gefre <pfg@sgi.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Subject: [PATCH v2 60/79] docs: ia64: convert to ReST
+Date:   Mon, 22 Apr 2019 10:27:49 -0300
+Message-Id: <389e403feee75a3e8c3cb4877898998443838c1f.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -64,787 +69,2015 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the FMC documentation files to ReST, add an
+Rename the ia64 documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
 
-At least some of this files seemed to be using some markup
-language similar to ReST, but with a different markup for
-cross-references. Adjust those to use the ReST syntax.
+There are two upper case file names. Rename them to
+lower case, as we're working to avoid upper case file
+names at Documentation.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/fmc/{API.txt => api.rst}        | 10 +--
- .../fmc/{carrier.txt => carrier.rst}          | 65 ++++++++++---------
- .../fmc/{FMC-and-SDB.txt => fmc-and-sdb.rst}  | 19 ++++--
- .../fmc/{fmc-chardev.txt => fmc-chardev.rst}  |  9 +--
- .../fmc/{fmc-fakedev.txt => fmc-fakedev.rst}  | 13 ++--
- .../fmc/{fmc-trivial.txt => fmc-trivial.rst}  | 11 ++--
- ...-write-eeprom.txt => fmc-write-eeprom.rst} | 36 +++++-----
- .../fmc/{identifiers.txt => identifiers.rst}  | 20 +++---
- Documentation/fmc/index.rst                   | 21 ++++++
- .../fmc/{mezzanine.txt => mezzanine.rst}      | 34 +++++-----
- .../fmc/{parameters.txt => parameters.rst}    | 11 ++--
- 11 files changed, 147 insertions(+), 102 deletions(-)
- rename Documentation/fmc/{API.txt => api.rst} (87%)
- rename Documentation/fmc/{carrier.txt => carrier.rst} (91%)
- rename Documentation/fmc/{FMC-and-SDB.txt => fmc-and-sdb.rst} (88%)
- rename Documentation/fmc/{fmc-chardev.txt => fmc-chardev.rst} (96%)
- rename Documentation/fmc/{fmc-fakedev.txt => fmc-fakedev.rst} (85%)
- rename Documentation/fmc/{fmc-trivial.txt => fmc-trivial.rst} (69%)
- rename Documentation/fmc/{fmc-write-eeprom.txt => fmc-write-eeprom.rst} (79%)
- rename Documentation/fmc/{identifiers.txt => identifiers.rst} (93%)
- create mode 100644 Documentation/fmc/index.rst
- rename Documentation/fmc/{mezzanine.txt => mezzanine.rst} (87%)
- rename Documentation/fmc/{parameters.txt => parameters.rst} (96%)
+ .../ia64/{aliasing.txt => aliasing.rst}       |  71 ++--
+ Documentation/ia64/{efirtc.txt => efirtc.rst} |  86 +++--
+ .../ia64/{err_inject.txt => err_inject.rst}   | 347 +++++++++---------
+ Documentation/ia64/{fsys.txt => fsys.rst}     | 127 ++++---
+ Documentation/ia64/{README => ia64.rst}       |  26 +-
+ Documentation/ia64/index.rst                  |  18 +
+ .../ia64/{IRQ-redir.txt => irq-redir.rst}     |  30 +-
+ Documentation/ia64/{mca.txt => mca.rst}       |  10 +-
+ Documentation/ia64/{serial.txt => serial.rst} |  36 +-
+ Documentation/ia64/xen.rst                    | 206 +++++++++++
+ Documentation/ia64/xen.txt                    | 183 ---------
+ MAINTAINERS                                   |   2 +-
+ arch/ia64/kernel/efi.c                        |   2 +-
+ arch/ia64/kernel/fsys.S                       |   2 +-
+ arch/ia64/mm/ioremap.c                        |   2 +-
+ arch/ia64/pci/pci.c                           |   2 +-
+ 16 files changed, 642 insertions(+), 508 deletions(-)
+ rename Documentation/ia64/{aliasing.txt => aliasing.rst} (84%)
+ rename Documentation/ia64/{efirtc.txt => efirtc.rst} (76%)
+ rename Documentation/ia64/{err_inject.txt => err_inject.rst} (82%)
+ rename Documentation/ia64/{fsys.txt => fsys.rst} (76%)
+ rename Documentation/ia64/{README => ia64.rst} (61%)
+ create mode 100644 Documentation/ia64/index.rst
+ rename Documentation/ia64/{IRQ-redir.txt => irq-redir.rst} (86%)
+ rename Documentation/ia64/{mca.txt => mca.rst} (96%)
+ rename Documentation/ia64/{serial.txt => serial.rst} (87%)
+ create mode 100644 Documentation/ia64/xen.rst
+ delete mode 100644 Documentation/ia64/xen.txt
 
-diff --git a/Documentation/fmc/API.txt b/Documentation/fmc/api.rst
-similarity index 87%
-rename from Documentation/fmc/API.txt
-rename to Documentation/fmc/api.rst
-index 06b06b92c794..157a7343180c 100644
---- a/Documentation/fmc/API.txt
-+++ b/Documentation/fmc/api.rst
-@@ -2,7 +2,7 @@ Functions Exported by fmc.ko
- ****************************
+diff --git a/Documentation/ia64/aliasing.txt b/Documentation/ia64/aliasing.rst
+similarity index 84%
+rename from Documentation/ia64/aliasing.txt
+rename to Documentation/ia64/aliasing.rst
+index 5a4dea6abebd..b9c97189072a 100644
+--- a/Documentation/ia64/aliasing.txt
++++ b/Documentation/ia64/aliasing.rst
+@@ -1,20 +1,25 @@
+-	         MEMORY ATTRIBUTE ALIASING ON IA-64
++==================================
++Memory Attribute Aliasing on IA-64
++==================================
  
- The FMC core exports the usual 4 functions that are needed for a bus to
--work, and a few more:
-+work, and a few more::
+-			   Bjorn Helgaas
+-		       <bjorn.helgaas@hp.com>
+-			    May 4, 2006
++Bjorn Helgaas <bjorn.helgaas@hp.com>
  
-         int fmc_driver_register(struct fmc_driver *drv);
-         void fmc_driver_unregister(struct fmc_driver *drv);
-@@ -20,9 +20,9 @@ work, and a few more:
-         int fmc_reprogram(struct fmc_device *f, struct fmc_driver *d, char *gw,
-                           int sdb_entry);
++May 4, 2006
  
--The data structure that describe a device is detailed in *note FMC
--Device::, the one that describes a driver is detailed in *note FMC
--Driver::.  Please note that structures of type fmc_device must be
-+The data structure that describe a device is detailed in :ref:`fmc_device`,
-+the one that describes a driver is detailed in :ref:`fmc_driver`.
-+Please note that structures of type fmc_device must be
- allocated by the caller, but must not be released after unregistering.
- The fmc-bus itself takes care of releasing the structure when their use
- count reaches zero - actually, the device model does that in lieu of us.
-@@ -39,7 +39,7 @@ should register as a group only mezzanines that are driven by the same
- FPGA, for the reason outlined above.
- 
- Finally, the fmc_reprogram function calls the reprogram method (see
--*note The API Offered by Carriers:: and also scans the memory area for
-+:ref:`fmc_api_offered_by_carriers`) and also scans the memory area for
- an SDB tree. You can pass -1 as sdb_entry to disable such scan.
- Otherwise, the function fails if no tree is found at the specified
- entry point.  The function is meant to factorize common code, and by
-diff --git a/Documentation/fmc/carrier.txt b/Documentation/fmc/carrier.rst
-similarity index 91%
-rename from Documentation/fmc/carrier.txt
-rename to Documentation/fmc/carrier.rst
-index 5e4f1dd3e98b..06ba443441e1 100644
---- a/Documentation/fmc/carrier.txt
-+++ b/Documentation/fmc/carrier.rst
-@@ -1,5 +1,8 @@
-+.. _fmc_device:
+-MEMORY ATTRIBUTES
 +
-+==========
- FMC Device
--**********
++Memory Attributes
++=================
+ 
+     Itanium supports several attributes for virtual memory references.
+     The attribute is part of the virtual translation, i.e., it is
+     contained in the TLB entry.  The ones of most interest to the Linux
+     kernel are:
+ 
+-	WB		Write-back (cacheable)
++	==		======================
++        WB		Write-back (cacheable)
+ 	UC		Uncacheable
+ 	WC		Write-coalescing
++	==		======================
+ 
+     System memory typically uses the WB attribute.  The UC attribute is
+     used for memory-mapped I/O devices.  The WC attribute is uncacheable
+@@ -29,7 +34,8 @@ MEMORY ATTRIBUTES
+     support either WB or UC access to main memory, while others support
+     only WB access.
+ 
+-MEMORY MAP
++Memory Map
 +==========
  
- Within the Linux bus framework, the FMC device is created and
- registered by the carrier driver. For example, the PCI driver for the
-@@ -25,7 +28,7 @@ change for compatible changes (like a new flag) and the major number
- will increase when an incompatible change happens (for example, a
- change in layout of some fmc data structures).  Device writers should
- just set it to the value FMC_VERSION, and be ready to get back -EINVAL
--at registration time.
-+at registration time::
+     Platform firmware describes the physical memory map and the
+     supported attributes for each region.  At boot-time, the kernel uses
+@@ -55,7 +61,8 @@ MEMORY MAP
+     The efi_memmap table is preserved unmodified because the original
+     boot-time information is required for kexec.
  
-      struct fmc_device {
-              unsigned long version;
-@@ -123,13 +126,15 @@ As I write this, she SPEC carrier is already completely functional in
- the fmc-bus environment, and is a good reference to look at.
+-KERNEL IDENTITY MAPPINGS
++Kernel Identify Mappings
++========================
  
+     Linux/ia64 identity mappings are done with large pages, currently
+     either 16MB or 64MB, referred to as "granules."  Cacheable mappings
+@@ -74,17 +81,20 @@ KERNEL IDENTITY MAPPINGS
+     are only partially populated, or populated with a combination of UC
+     and WB regions.
  
-+.. _fmc_api_offered_by_carriers:
-+
- The API Offered by Carriers
- ===========================
+-USER MAPPINGS
++User Mappings
++=============
  
- The carrier provides a number of methods by means of the
--`fmc_operations' structure, which currently is defined like this
-+`fmc_operations` structure, which currently is defined like this
- (again, it is a moving target, please refer to the header rather than
--this document):
-+this document)::
+     User mappings are typically done with 16K or 64K pages.  The smaller
+     page size allows more flexibility because only 16K or 64K has to be
+     homogeneous with respect to memory attributes.
  
-      struct fmc_operations {
-              uint32_t (*readl)(struct fmc_device *fmc, int offset);
-@@ -148,8 +153,7 @@ this document):
+-POTENTIAL ATTRIBUTE ALIASING CASES
++Potential Attribute Aliasing Cases
++==================================
  
- The individual methods perform the following tasks:
+     There are several ways the kernel creates new mappings:
  
--`readl'
--`writel'
-+`readl`, `writel`
-      These functions access FPGA registers by whatever means the
-      carrier offers. They are not expected to fail, and most of the time
-      they will just make a memory access to the host bus. If the
-@@ -161,20 +165,20 @@ The individual methods perform the following tasks:
-      or other non-local carriers, error-management is still to be
-      defined.
+-    mmap of /dev/mem
++mmap of /dev/mem
++----------------
  
--`validate'
-+`validate`
-      Module parameters are used to manage different applications for
-      two or more boards of the same kind. Validation is based on the
-      busid module parameter, if provided, and returns the matching
--     index in the associated array. See *note Module Parameters:: in in
--     doubt. If no match is found, `-ENOENT' is returned; if the user
--     didn't pass `busid=', all devices will pass validation.  The value
-+     index in the associated array. See :ref:`fmc_module_parameters` in in
-+     doubt. If no match is found, `-ENOENT` is returned; if the user
-+     didn't pass `busid=`, all devices will pass validation.  The value
-      returned by the validate method can be used as index into other
--     parameters (for example, some drivers use the `lm32=' parameter in
--     this way). Such "generic parameters" are documented in *note
--     Module Parameters::, below. The validate method is used by
--     `fmc-trivial.ko', described in *note fmc-trivial::.
-+     parameters (for example, some drivers use the `lm32=` parameter in
-+     this way). Such "generic parameters" are documented in
-+     :ref:`fmc_module_parameters` below. The validate method is used by
-+     `fmc-trivial.ko`, described in :ref:`fmc_trivial`.
+ 	This uses remap_pfn_range(), which creates user mappings.  These
+ 	mappings may be either WB or UC.  If the region being mapped
+@@ -98,7 +108,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 	Since the EFI memory map does not describe MMIO on some
+ 	machines, this should use an uncacheable mapping as a fallback.
  
--`reprogram'
-+`reprogram`
-      The carrier enumerates FMC devices by loading a standard (or
-      golden) FPGA binary that allows EEPROM access. Each driver, then,
-      will need to reprogram the FPGA by calling this function.  If the
-@@ -182,31 +186,28 @@ The individual methods perform the following tasks:
-      binary. If the gateware name has been overridden through module
-      parameters (in a carrier-specific way) the file loaded will match
-      the parameters. Per-device gateware names can be specified using
--     the `gateware=' parameter, see *note Module Parameters::.  Note:
-+     the `gateware=` parameter, see :ref:`fmc_module_parameters`.  Note:
-      Clients should call rhe new helper, fmc_reprogram, which both
-      calls this method and parse the SDB tree of the FPGA.
+-    mmap of /sys/class/pci_bus/.../legacy_mem
++mmap of /sys/class/pci_bus/.../legacy_mem
++-----------------------------------------
  
--`irq_request'
--`irq_ack'
--`irq_free'
-+`irq_request`, `irq_ack`, `irq_free`
-      Interrupt management is carrier-specific, so it is abstracted as
-      operations. The interrupt number is listed in the device
-      structure, and for the mezzanine driver the number is only
-      informative.  The handler will receive the fmc pointer as dev_id;
-      the flags argument is passed to the Linux request_irq function,
-      but fmc-specific flags may be added in the future. You'll most
--     likely want to pass the `IRQF_SHARED' flag.
-+     likely want to pass the `IRQF_SHARED` flag.
+ 	This is very similar to mmap of /dev/mem, except that legacy_mem
+ 	only allows mmap of the one megabyte "legacy MMIO" area for a
+@@ -112,7 +123,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
  
--`gpio_config'
-+`gpio_config`
-      The method allows to configure a GPIO pin in the carrier, and read
--     its current value if it is configured as input. See *note The GPIO
--     Abstraction:: for details.
-+     its current value if it is configured as input. See
-+     :ref:`fmc_gpio_abstraction` for details.
+ 	The /dev/mem mmap constraints apply.
  
--`read_ee'
--`write_ee'
-+`read_ee`, `write_ee`
-      Read or write the EEPROM. The functions are expected to be only
-      called before reprogramming and the carrier should refuse them
--     with `ENODEV' after reprogramming.  The offset is expected to be
-+     with `ENODEV` after reprogramming.  The offset is expected to be
-      within 8kB (the current size), but addresses up to 1MB are
-      reserved to fit bigger I2C devices in the future. Carriers may
-      offer access to other internal flash memories using these same
-@@ -214,9 +215,9 @@ The individual methods perform the following tasks:
-      I2C memory is seen at offset 1M and the internal SPI flash is seen
-      at offset 16M.  This multiplexing of several flash memories in the
-      same address space is carrier-specific and should only be used
--     by a driver that has verified the `carrier_name' field.
--
-+     by a driver that has verified the `carrier_name` field.
+-    mmap of /proc/bus/pci/.../??.?
++mmap of /proc/bus/pci/.../??.?
++------------------------------
  
-+.. _fmc_gpio_abstraction:
+     	This is an MMIO mmap of PCI functions, which additionally may or
+ 	may not be requested as using the WC attribute.
+@@ -124,7 +136,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 	Otherwise, the user mapping must use the same attribute as the
+ 	kernel mapping.
  
- The GPIO Abstraction
- ====================
-@@ -230,7 +231,7 @@ some knowledge of the carrier itself.  For this reason, the specific
- driver can request to configure carrier-specific GPIO pins, numbered
- from 0 to at most 4095.  Configuration is performed by passing a
- pointer to an array of struct fmc_gpio items, as well as the length of
--the array. This is the data structure:
-+the array. This is the data structure::
+-    read/write of /dev/mem
++read/write of /dev/mem
++----------------------
  
-         struct fmc_gpio {
-                 char *carrier_name;
-@@ -254,7 +255,7 @@ pins, and expect one such configuration to succeed - if none succeeds
- it most likely means that the current carrier is a still-unknown one.
+ 	This uses copy_from_user(), which implicitly uses a kernel
+ 	identity mapping.  This is obviously safe for things in
+@@ -138,7 +151,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 	eight-byte accesses, and the copy_from_user() path doesn't allow
+ 	any control over the access size, so this would be dangerous.
  
- If, however, your GPIO pin has a specific known role, you can pass a
--special number in the gpio field, using one of the following macros:
-+special number in the gpio field, using one of the following macros::
+-    ioremap()
++ioremap()
++---------
  
-         #define FMC_GPIO_RAW(x)         (x)             /* 4096 of them */
-         #define FMC_GPIO_IRQ(x)         ((x) + 0x1000)  /*  256 of them */
-@@ -293,9 +294,9 @@ carriers.
+ 	This returns a mapping for use inside the kernel.
  
- The return value of gpio_config is defined as follows:
+@@ -155,9 +169,11 @@ POTENTIAL ATTRIBUTE ALIASING CASES
  
--   * If no pin in the array can be used by the carrier, `-ENODEV'.
-+   * If no pin in the array can be used by the carrier, `-ENODEV`.
+ 	Failing all of the above, we have to fall back to a UC mapping.
  
--   * If at least one virtual GPIO number cannot be mapped, `-ENOENT'.
-+   * If at least one virtual GPIO number cannot be mapped, `-ENOENT`.
- 
-    * On success, 0 or positive. The value returned is the number of
-      high input bits (if no input is configured, the value for success
-diff --git a/Documentation/fmc/FMC-and-SDB.txt b/Documentation/fmc/fmc-and-sdb.rst
-similarity index 88%
-rename from Documentation/fmc/FMC-and-SDB.txt
-rename to Documentation/fmc/fmc-and-sdb.rst
-index fa14e0b24521..e64c6104a241 100644
---- a/Documentation/fmc/FMC-and-SDB.txt
-+++ b/Documentation/fmc/fmc-and-sdb.rst
-@@ -1,3 +1,6 @@
-+============
-+Introduction
-+============
- 
- FMC (FPGA Mezzanine Card) is the standard we use for our I/O devices,
- in the context of White Rabbit and related hardware.
-@@ -18,12 +21,12 @@ submodule.
- The most up to date version of code and documentation is always
- available from the repository you can clone from:
- 
--        git://ohwr.org/fmc-projects/fmc-bus.git (read-only)
--        git@ohwr.org:fmc-projects/fmc-bus.git (read-write for developers)
-+        - git://ohwr.org/fmc-projects/fmc-bus.git (read-only)
-+        - git@ohwr.org:fmc-projects/fmc-bus.git (read-write for developers)
- 
- Selected versions of the documentation, as well as complete tar
- archives for selected revisions are placed to the Files section of the
--project: `http://www.ohwr.org/projects/fmc-bus/files'
-+project: `http://www.ohwr.org/projects/fmc-bus/files`
- 
- 
- What is FMC
-@@ -62,13 +65,15 @@ a filesystem inside the FMC EEPROM.
- SDB is not mandatory for use of this FMC kernel bus, but if you have SDB
- this package can make good use of it.  SDB itself is developed in the
- fpga-config-space OHWR project. The link to the repository is
--`git://ohwr.org/hdl-core-lib/fpga-config-space.git' and what is used in
-+`git://ohwr.org/hdl-core-lib/fpga-config-space.git` and what is used in
- this project lives in the sdbfs subdirectory in there.
- 
--SDB support for FMC is described in *note FMC Identification:: and
--*note SDB Support::
-+SDB support for FMC is described in :ref:`fmc_identification` and
-+:ref:`fmc_sdb_support`.
- 
- 
-+.. _fmc_sdb_support:
-+
- SDB Support
- ***********
- 
-@@ -79,7 +84,7 @@ memory image.
- The module exports the following functions, in the special header
- <linux/fmc-sdb.h>. The linux/ prefix in the name is there because we
- plan to submit it upstream in the future, and don't want to force
--changes on our drivers if that happens.
-+changes on our drivers if that happens::
- 
-          int fmc_scan_sdb_tree(struct fmc_device *fmc, unsigned long address);
-          void fmc_show_sdb_tree(struct fmc_device *fmc);
-diff --git a/Documentation/fmc/fmc-chardev.txt b/Documentation/fmc/fmc-chardev.rst
-similarity index 96%
-rename from Documentation/fmc/fmc-chardev.txt
-rename to Documentation/fmc/fmc-chardev.rst
-index d9ccb278e597..5aa77511e4d1 100644
---- a/Documentation/fmc/fmc-chardev.txt
-+++ b/Documentation/fmc/fmc-chardev.rst
-@@ -1,5 +1,6 @@
--fmc-chardev
--===========
-+================
-+Character device
-+================
- 
- This is a simple generic driver, that allows user access by means of a
- character device (actually, one for each mezzanine it takes hold of).
-@@ -27,7 +28,7 @@ arises.
- The example below shows raw access to a SPEC card programmed with its
- golden FPGA file, that features an SDB structure at offset 256 - i.e.
- 64 words.  The mezzanine's EEPROM in this case is not programmed, so the
--default name is fmc-<bus><devfn>, and there are two cards in the system:
-+default name is fmc-<bus><devfn>, and there are two cards in the system::
- 
-   spusa.root# insmod fmc-chardev.ko
-   [ 1073.339332] spec 0000:02:00.0: Driver has no ID: matches all
-@@ -52,7 +53,7 @@ repeated reading data is written to stdout; repeated writes read from
- stdin and the value argument is ignored.
- 
- The following examples show reading the SDB magic number and the first
--SDB record from a SPEC device programmed with its golden image:
-+SDB record from a SPEC device programmed with its golden image::
- 
-      spusa.root# ./fmc-mem /dev/fmc-0200 100
-      5344422d
-diff --git a/Documentation/fmc/fmc-fakedev.txt b/Documentation/fmc/fmc-fakedev.rst
-similarity index 85%
-rename from Documentation/fmc/fmc-fakedev.txt
-rename to Documentation/fmc/fmc-fakedev.rst
-index e85b74a4ae30..e9300e839eef 100644
---- a/Documentation/fmc/fmc-fakedev.txt
-+++ b/Documentation/fmc/fmc-fakedev.rst
-@@ -1,7 +1,10 @@
--fmc-fakedev
--===========
-+.. _fmc_fakedev:
- 
--This package includes a software-only device, called fmc-fakedev, which
-+=========================
-+Software-only Fake Device
-+=========================
-+
-+This package includes a software-only device, called **fmc-fakedev**, which
- is able to register up to 4 mezzanines (by default it registers one).
- Unlike the SPEC driver, which creates an FMC device for each PCI cards
- it manages, this module creates a single instance of its set of
-@@ -9,14 +12,14 @@ mezzanines.
- 
- It is meant as the simplest possible example of how a driver should be
- written, and it includes a fake EEPROM image (built using the tools
--described in *note FMC Identification::),, which by default is
-+described in :ref:`fmc_identification` which by default is
- replicated for each fake mezzanine.
- 
- You can also use this device to verify the match algorithms, by asking
- it to test your own EEPROM image. You can provide the image by means of
- the eeprom= module parameter: the new EEPROM image is loaded, as usual,
- by means of the firmware loader.  This example shows the defaults and a
--custom EEPROM image:
-+custom EEPROM image::
- 
-      spusa.root# insmod fmc-fakedev.ko
-      [   99.971247]  fake-fmc-carrier: mezzanine 0
-diff --git a/Documentation/fmc/fmc-trivial.txt b/Documentation/fmc/fmc-trivial.rst
-similarity index 69%
-rename from Documentation/fmc/fmc-trivial.txt
-rename to Documentation/fmc/fmc-trivial.rst
-index d1910bc67159..c98324f955ea 100644
---- a/Documentation/fmc/fmc-trivial.txt
-+++ b/Documentation/fmc/fmc-trivial.rst
-@@ -1,7 +1,9 @@
--fmc-trivial
--===========
-+.. _fmc_trivial:
- 
--The simple module fmc-trivial is just a simple client that registers an
-+FMC trivial driver
+-PAST PROBLEM CASES
++Past Problem Cases
 +==================
+ 
+-    mmap of various MMIO regions from /dev/mem by "X" on Intel platforms
++mmap of various MMIO regions from /dev/mem by "X" on Intel platforms
++--------------------------------------------------------------------
+ 
+       The EFI memory map may not report these MMIO regions.
+ 
+@@ -166,12 +182,16 @@ PAST PROBLEM CASES
+       succeed.  It may create either WB or UC user mappings, depending
+       on whether the region is in kern_memmap or the EFI memory map.
+ 
+-    mmap of 0x0-0x9FFFF /dev/mem by "hwinfo" on HP sx1000 with VGA enabled
++mmap of 0x0-0x9FFFF /dev/mem by "hwinfo" on HP sx1000 with VGA enabled
++----------------------------------------------------------------------
+ 
+       The EFI memory map reports the following attributes:
 +
-+The simple module **fmc-trivial** is just a simple client that registers an
- interrupt handler. I used it to verify the basic mechanism of the FMC
- bus and how interrupts worked.
++        =============== ======= ==================
+         0x00000-0x9FFFF WB only
+         0xA0000-0xBFFFF UC only (VGA frame buffer)
+         0xC0000-0xFFFFF WB only
++        =============== ======= ==================
  
-@@ -9,8 +11,7 @@ The module implements the generic FMC parameters, so it can program a
- different gateware file in each card. The whole list of parameters it
- accepts are:
+       This mmap is done with user pages, not kernel identity mappings,
+       so it is safe to use WB mappings.
+@@ -182,7 +202,8 @@ PAST PROBLEM CASES
+       never generate an uncacheable reference to the WB-only areas unless
+       the driver explicitly touches them.
  
--`busid='
--`gateware='
-+`busid=`, `gateware=`
-      Generic parameters. See mezzanine.txt
+-    mmap of 0x0-0xFFFFF legacy_mem by "X"
++mmap of 0x0-0xFFFFF legacy_mem by "X"
++-------------------------------------
  
+       If the EFI memory map reports that the entire range supports the
+       same attributes, we can allow the mmap (and we will prefer WB if
+@@ -197,15 +218,18 @@ PAST PROBLEM CASES
+       that doesn't report the VGA frame buffer at all), we should fail the
+       mmap and force the user to map just the specific region of interest.
  
-diff --git a/Documentation/fmc/fmc-write-eeprom.txt b/Documentation/fmc/fmc-write-eeprom.rst
-similarity index 79%
-rename from Documentation/fmc/fmc-write-eeprom.txt
-rename to Documentation/fmc/fmc-write-eeprom.rst
-index e0a9712156aa..45311bcc804a 100644
---- a/Documentation/fmc/fmc-write-eeprom.txt
-+++ b/Documentation/fmc/fmc-write-eeprom.rst
-@@ -1,9 +1,12 @@
--fmc-write-eeprom
-+.. _fmc_write_eeprom:
+-    mmap of 0xA0000-0xBFFFF legacy_mem by "X" on HP sx1000 with VGA disabled
++mmap of 0xA0000-0xBFFFF legacy_mem by "X" on HP sx1000 with VGA disabled
++------------------------------------------------------------------------
 +
-+================
-+FMC write eeprom
- ================
++      The EFI memory map reports the following attributes::
  
--This module is designed to load a binary file from /lib/firmware and to
--write it to the internal EEPROM of the mezzanine card. This driver uses
--the `busid' generic parameter.
-+The module **fmc-write-eeprom** is designed to load a binary file from
-+/lib/firmware and to write it to the internal EEPROM of the mezzanine card.
-+This driver uses the `busid` generic parameter.
+-      The EFI memory map reports the following attributes:
+         0x00000-0xFFFFF WB only (no VGA MMIO hole)
  
- Overwriting the EEPROM is not something you should do daily, and it is
- expected to only happen during manufacturing. For this reason, the
-@@ -11,36 +14,36 @@ module makes it unlikely for the random user to change a working EEPROM.
+       This is a special case of the previous case, and the mmap should
+       fail for the same reason as above.
  
- However, since the EEPROM may include application-specific information
- other than the identification, later versions of this packages added
--write-support through sysfs. See *note Accessing the EEPROM::.
-+write-support through sysfs. See :ref:`fmc_accessing_eeprom`.
+-    read of /sys/devices/.../rom
++read of /sys/devices/.../rom
++----------------------------
  
- To avoid damaging the EEPROM content, the module takes the following
- measures:
+       For VGA devices, this may cause an ioremap() of 0xC0000.  This
+       used to be done with a UC mapping, because the VGA frame buffer
+@@ -215,7 +239,8 @@ PAST PROBLEM CASES
+       We should use WB page table mappings to avoid covering the VGA
+       frame buffer.
  
--   * It accepts a `file=' argument (within /lib/firmware) and if no
-+   * It accepts a `file=` argument (within /lib/firmware) and if no
-      such argument is received, it doesn't write anything to EEPROM
-      (i.e. there is no default file name).
+-NOTES
++Notes
++=====
  
--   * If the file name ends with `.bin' it is written verbatim starting
-+   * If the file name ends with `.bin` it is written verbatim starting
-      at offset 0.
- 
--   * If the file name ends with `.tlv' it is interpreted as
-+   * If the file name ends with `.tlv` it is interpreted as
-      type-length-value (i.e., it allows writev(2)-like operation).
- 
-    * If the file name doesn't match any of the patterns above, it is
-      ignored and no write is performed.
- 
--   * Only cards listed with `busid=' are written to. If no busid is
-+   * Only cards listed with `busid=` are written to. If no busid is
-      specified, no programming is done (and the probe function of the
-      driver will fail).
- 
- 
- Each TLV tuple is formatted in this way: the header is 5 bytes,
--followed by data. The first byte is `w' for write, the next two bytes
-+followed by data. The first byte is `w` for write, the next two bytes
- represent the address, in little-endian byte order, and the next two
- represent the data length, in little-endian order. The length does not
- include the header (it is the actual number of bytes to be written).
- 
--This is a real example: that writes 5 bytes at position 0x110:
-+This is a real example: that writes 5 bytes at position 0x110::
- 
-         spusa.root# od -t x1 -Ax /lib/firmware/try.tlv
-         000000 77 10 01 05 00 30 31 32 33 34
-@@ -55,13 +58,13 @@ Rabbit environment. For this reason the TLV format is not expected to
- be used much and is not expected to be developed further.
- 
- If you want to try reflashing fake EEPROM devices, you can use the
--fmc-fakedev.ko module (see *note fmc-fakedev::).  Whenever you change
-+fmc-fakedev.ko module (see :ref:`fmc_fakedev`).  Whenever you change
- the image starting at offset 0, it will deregister and register again
- after two seconds.  Please note, however, that if fmc-write-eeprom is
- still loaded, the system will associate it to the new device, which
- will be reprogrammed and thus will be unloaded after two seconds.  The
- following example removes the module after it reflashed fakedev the
--first time.
-+first time::
- 
-      spusa.root# insmod fmc-fakedev.ko
-         [   72.984733]  fake-fmc: Manufacturer: fake-vendor
-@@ -74,12 +77,13 @@ first time.
-         [  132.895794]  fake-fmc: Manufacturer: CERN
-         [  132.899872]  fake-fmc: Product name: FmcDelay1ns4cha
- 
-+.. _fmc_accessing_eeprom:
- 
- Accessing the EEPROM
--=====================
-+====================
- 
- The bus creates a sysfs binary file called eeprom for each mezzanine it
--knows about:
-+knows about::
- 
-         spusa.root# cd /sys/bus/fmc/devices; ls -l */eeprom
-         -r--r--r-- 1 root root 8192 Feb 21 12:30 FmcAdc100m14b4cha-0800/eeprom
-@@ -94,5 +98,5 @@ the FPGA with a custom circuit, the carrier is unable to access the
- EEPROM and returns ENOTSUPP.
- 
- An alternative way to write the EEPROM is the mezzanine driver
--fmc-write-eeprom (See *note fmc-write-eeprom::), but the procedure is
-+fmc-write-eeprom (See :ref:`fmc_write_eeprom`), but the procedure is
- more complex.
-diff --git a/Documentation/fmc/identifiers.txt b/Documentation/fmc/identifiers.rst
-similarity index 93%
-rename from Documentation/fmc/identifiers.txt
-rename to Documentation/fmc/identifiers.rst
-index 3bb577ff0d52..01e6dde0996f 100644
---- a/Documentation/fmc/identifiers.txt
-+++ b/Documentation/fmc/identifiers.rst
-@@ -1,3 +1,5 @@
-+.. _fmc_identification:
+     [1] SDM rev 2.2, vol 2, sec 4.4.1.
+     [2] SDM rev 2.2, vol 2, sec 4.4.6.
+diff --git a/Documentation/ia64/efirtc.txt b/Documentation/ia64/efirtc.rst
+similarity index 76%
+rename from Documentation/ia64/efirtc.txt
+rename to Documentation/ia64/efirtc.rst
+index 057e6bebda8f..e4bc856e6875 100644
+--- a/Documentation/ia64/efirtc.txt
++++ b/Documentation/ia64/efirtc.rst
+@@ -1,9 +1,13 @@
++==========================
+ EFI Real Time Clock driver
+--------------------------------
++==========================
 +
- FMC Identification
- ******************
+ S. Eranian <eranian@hpl.hp.com>
++
+ March 2000
  
-@@ -19,7 +21,7 @@ package and SDB (part of the fpga-config-space package).
+-I/ Introduction
++1. Introduction
++===============
  
- The first sections are only interesting for manufacturers who need to
- write the EEPROM. If you are just a software developer writing an FMC
--device or driver, you may jump straight to *note SDB Support::.
-+device or driver, you may jump straight to :ref:`fmc_sdb_support`.
+ This document describes the efirtc.c driver has provided for
+ the IA-64 platform. 
+@@ -16,7 +20,8 @@ SetTime(), GetWakeupTime(), SetWakeupTime() which are all supported by this
+ driver. We describe those calls as well the design of the driver in the
+ following sections.
+ 
+-II/ Design Decisions
++2. Design Decisions
++===================
+ 
+ The original ideas was to provide a very simple driver to get access to, 
+ at first, the time of day service. This is required in order to access, in a 
+@@ -50,45 +55,53 @@ we have created the include/linux/rtc.h header file to contain only the
+ in include/linux/mc146818rtc.h.
+ 
+  
+-III/ Time of day service
++3. Time of day service
++======================
+ 
+ The part of the driver gives access to the time of day service of EFI.
+ Two ioctl()s, compatible with the legacy RTC calls:
+ 
+-	Read the CMOS clock: ioctl(d, RTC_RD_TIME, &rtc);
++	Read the CMOS clock::
+ 
+-	Write the CMOS clock: ioctl(d, RTC_SET_TIME, &rtc);
++		ioctl(d, RTC_RD_TIME, &rtc);
++
++	Write the CMOS clock::
++
++		ioctl(d, RTC_SET_TIME, &rtc);
+ 
+ The rtc is a pointer to a data structure defined in rtc.h which is close
+-to a struct tm:
++to a struct tm::
+ 
+-struct rtc_time {
+-        int tm_sec;
+-        int tm_min;
+-        int tm_hour;
+-        int tm_mday;
+-        int tm_mon;
+-        int tm_year;
+-        int tm_wday;
+-        int tm_yday;
+-        int tm_isdst;
+-};
++  struct rtc_time {
++          int tm_sec;
++          int tm_min;
++          int tm_hour;
++          int tm_mday;
++          int tm_mon;
++          int tm_year;
++          int tm_wday;
++          int tm_yday;
++          int tm_isdst;
++  };
+ 
+ The driver takes care of converting back an forth between the EFI time and
+ this format.
+ 
+ Those two ioctl()s can be exercised with the hwclock command:
+ 
+-For reading:
+-# /sbin/hwclock --show
+-Mon Mar  6 15:32:32 2000  -0.910248 seconds
++For reading::
+ 
+-For setting:
+-# /sbin/hwclock --systohc
++	# /sbin/hwclock --show
++	Mon Mar  6 15:32:32 2000  -0.910248 seconds
++
++For setting::
++
++	# /sbin/hwclock --systohc
+ 
+ Root privileges are required to be able to set the time of day.
+ 
+-IV/ Wakeup Alarm service
++4. Wakeup Alarm service
++=======================
+ 
+ EFI provides an API by which one can program when a machine should wakeup,
+ i.e. reboot. This is very different from the alarm provided by the legacy
+@@ -98,22 +111,24 @@ introduced 2 news ioctl()s to the interface of an RTC.
+ 
+ We have added 2 new ioctl()s that are specific to the EFI driver:
+ 
+-	Read the current state of the alarm
+-	ioctl(d, RTC_WKLAM_RD, &wkt)
++	Read the current state of the alarm::
+ 
+-	Set the alarm or change its status
+-	ioctl(d, RTC_WKALM_SET, &wkt)
++		ioctl(d, RTC_WKLAM_RD, &wkt)
++
++	Set the alarm or change its status::
++
++		ioctl(d, RTC_WKALM_SET, &wkt)
+ 
+ The wkt structure encapsulates a struct rtc_time + 2 extra fields to get 
+-status information:
++status information::
+ 	
+-struct rtc_wkalrm {
++  struct rtc_wkalrm {
+ 
+-        unsigned char enabled; /* =1 if alarm is enabled */
+-        unsigned char pending; /* =1 if alarm is pending  */
++          unsigned char enabled; /* =1 if alarm is enabled */
++          unsigned char pending; /* =1 if alarm is pending  */
+ 
+-        struct rtc_time time;
+-} 
++          struct rtc_time time;
++  }
+ 
+ As of today, none of the existing user-level apps supports this feature.
+ However writing such a program should be hard by simply using those two 
+@@ -121,7 +136,8 @@ ioctl().
+ 
+ Root privileges are required to be able to set the alarm.
+ 
+-V/ References.
++5. References
++=============
+ 
+ Checkout the following Web site for more information on EFI:
+ 
+diff --git a/Documentation/ia64/err_inject.txt b/Documentation/ia64/err_inject.rst
+similarity index 82%
+rename from Documentation/ia64/err_inject.txt
+rename to Documentation/ia64/err_inject.rst
+index 9f651c181429..b482a055095b 100644
+--- a/Documentation/ia64/err_inject.txt
++++ b/Documentation/ia64/err_inject.rst
+@@ -1,4 +1,4 @@
+-
++========================================
+ IPF Machine Check (MC) error inject tool
+ ========================================
+ 
+@@ -32,94 +32,94 @@ Errata: Itanium 2 Processors Specification Update lists some errata against
+ the pal_mc_error_inject PAL procedure. The following err.conf has been tested
+ on latest Montecito PAL.
+ 
+-err.conf:
++err.conf::
+ 
+-#This is configuration file for err_inject_tool.
+-#The format of the each line is:
+-#cpu, loop, interval, err_type_info, err_struct_info, err_data_buffer
+-#where
+-#	cpu: logical cpu number the error will be inject in.
+-#	loop: times the error will be injected.
+-#	interval: In second. every so often one error is injected.
+-#	err_type_info, err_struct_info: PAL parameters.
+-#
+-#Note: All values are hex w/o or w/ 0x prefix.
++  #This is configuration file for err_inject_tool.
++  #The format of the each line is:
++  #cpu, loop, interval, err_type_info, err_struct_info, err_data_buffer
++  #where
++  #	cpu: logical cpu number the error will be inject in.
++  #	loop: times the error will be injected.
++  #	interval: In second. every so often one error is injected.
++  #	err_type_info, err_struct_info: PAL parameters.
++  #
++  #Note: All values are hex w/o or w/ 0x prefix.
  
  
- Building the FRU Structure
-@@ -27,7 +29,7 @@ Building the FRU Structure
+-#On cpu2, inject only total 0x10 errors, interval 5 seconds
+-#corrected, data cache, hier-2, physical addr(assigned by tool code).
+-#working on Montecito latest PAL.
+-2, 10, 5, 4101, 95
++  #On cpu2, inject only total 0x10 errors, interval 5 seconds
++  #corrected, data cache, hier-2, physical addr(assigned by tool code).
++  #working on Montecito latest PAL.
++  2, 10, 5, 4101, 95
  
- If you want to know the internals of the FRU structure and despair, you
- can retrieve the document from
--`http://download.intel.com/design/servers/ipmi/FRU1011.pdf' .  The
-+`http://download.intel.com/design/servers/ipmi/FRU1011.pdf` .  The
- standard is awful and difficult without reason, so we only support the
- minimum mandatory subset - we create a simple structure and parse it
- back at run time, but we are not able to either generate or parse more
-@@ -43,13 +45,15 @@ line takes precedence)
- To make a long story short, in order to build a standard-compliant
- binary file to be burned in your EEPROM, you need the following items:
+-#On cpu4, inject and consume total 0x10 errors, interval 5 seconds
+-#corrected, data cache, hier-2, physical addr(assigned by tool code).
+-#working on Montecito latest PAL.
+-4, 10, 5, 4109, 95
++  #On cpu4, inject and consume total 0x10 errors, interval 5 seconds
++  #corrected, data cache, hier-2, physical addr(assigned by tool code).
++  #working on Montecito latest PAL.
++  4, 10, 5, 4109, 95
  
-+	===========    ===     =====================  ============
-         Environment    Opt     Official Name          Default
-----------------------------------------------------------------------
-+	===========    ===     =====================  ============
-         FRU_VENDOR     -v      "Board Manufacturer"   fmc-example
-         FRU_NAME       -n      "Board Product Name"   mezzanine
--        FRU_SERIAL     -s      `Board Serial Number"  0001
-+        FRU_SERIAL     -s      "Board Serial Number"  0001
-         FRU_PART       -p      "Board Part Number"    sample-part
-         FRU_OUTPUT     -o      not applicable         /dev/stdout
-+	===========    ===     =====================  ============
+-#On cpu15, inject and consume total 0x10 errors, interval 5 seconds
+-#recoverable, DTR0, hier-2.
+-#working on Montecito latest PAL.
+-0xf, 0x10, 5, 4249, 15
++  #On cpu15, inject and consume total 0x10 errors, interval 5 seconds
++  #recoverable, DTR0, hier-2.
++  #working on Montecito latest PAL.
++  0xf, 0x10, 5, 4249, 15
  
- The "Official Name" above is what you find in the FRU official
- documentation, chapter 11, page 7 ("Board Info Area Format").  The
-@@ -63,7 +67,7 @@ soon as I find some time for that.
+ The sample application source code:
  
- FIXME: consumption etc for FRU are here or in PTS?
+-err_injection_tool.c:
++err_injection_tool.c::
  
--The following example creates a binary image for a specific board:
-+The following example creates a binary image for a specific board::
+-/*
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+- * NON INFRINGEMENT.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- * Copyright (C) 2006 Intel Co
+- *	Fenghua Yu <fenghua.yu@intel.com>
+- *
+- */
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <stdio.h>
+-#include <sched.h>
+-#include <unistd.h>
+-#include <stdlib.h>
+-#include <stdarg.h>
+-#include <string.h>
+-#include <errno.h>
+-#include <time.h>
+-#include <sys/ipc.h>
+-#include <sys/sem.h>
+-#include <sys/wait.h>
+-#include <sys/mman.h>
+-#include <sys/shm.h>
++  /*
++   * This program is free software; you can redistribute it and/or modify
++   * it under the terms of the GNU General Public License as published by
++   * the Free Software Foundation; either version 2 of the License, or
++   * (at your option) any later version.
++   *
++   * This program is distributed in the hope that it will be useful, but
++   * WITHOUT ANY WARRANTY; without even the implied warranty of
++   * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
++   * NON INFRINGEMENT.  See the GNU General Public License for more
++   * details.
++   *
++   * You should have received a copy of the GNU General Public License
++   * along with this program; if not, write to the Free Software
++   * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++   *
++   * Copyright (C) 2006 Intel Co
++   *	Fenghua Yu <fenghua.yu@intel.com>
++   *
++   */
++  #include <sys/types.h>
++  #include <sys/stat.h>
++  #include <fcntl.h>
++  #include <stdio.h>
++  #include <sched.h>
++  #include <unistd.h>
++  #include <stdlib.h>
++  #include <stdarg.h>
++  #include <string.h>
++  #include <errno.h>
++  #include <time.h>
++  #include <sys/ipc.h>
++  #include <sys/sem.h>
++  #include <sys/wait.h>
++  #include <sys/mman.h>
++  #include <sys/shm.h>
  
-         ./tools/fru-generator -v CERN -n FmcAdc100m14b4cha \
-                -s HCCFFIA___-CR000003 -p EDA-02063-V5-0 > eeprom.bin
-@@ -71,7 +75,7 @@ The following example creates a binary image for a specific board:
- The following example shows a script that builds several binary EEPROM
- images for a series of boards, changing the serial number for each of
- them. The script uses a mix of environment variables and command line
--options, and uses the same string patterns shown above.
-+options, and uses the same string patterns shown above::
+-#define MAX_FN_SIZE 		256
+-#define MAX_BUF_SIZE 		256
+-#define DATA_BUF_SIZE 		256
+-#define NR_CPUS 		512
+-#define MAX_TASK_NUM		2048
+-#define MIN_INTERVAL		5	// seconds
+-#define	ERR_DATA_BUFFER_SIZE 	3	// Three 8-byte.
+-#define PARA_FIELD_NUM		5
+-#define MASK_SIZE		(NR_CPUS/64)
+-#define PATH_FORMAT "/sys/devices/system/cpu/cpu%d/err_inject/"
++  #define MAX_FN_SIZE 		256
++  #define MAX_BUF_SIZE 		256
++  #define DATA_BUF_SIZE 		256
++  #define NR_CPUS 		512
++  #define MAX_TASK_NUM		2048
++  #define MIN_INTERVAL		5	// seconds
++  #define	ERR_DATA_BUFFER_SIZE 	3	// Three 8-byte.
++  #define PARA_FIELD_NUM		5
++  #define MASK_SIZE		(NR_CPUS/64)
++  #define PATH_FORMAT "/sys/devices/system/cpu/cpu%d/err_inject/"
  
-         #!/bin/sh
+-int sched_setaffinity(pid_t pid, unsigned int len, unsigned long *mask);
++  int sched_setaffinity(pid_t pid, unsigned int len, unsigned long *mask);
  
-@@ -131,7 +135,7 @@ name. The IPMI-FRU name is not mandatory, but a strongly suggested
- choice; the name filename is mandatory, because this is the preferred
- short name used by the FMC core.  For example, a name of "fdelay" may
- supplement a Product Name like "FmcDelay1ns4cha" - exactly as
--demonstrated in `tools/sdbfs'.
-+demonstrated in `tools/sdbfs`.
+-int verbose;
+-#define vbprintf if (verbose) printf
++  int verbose;
++  #define vbprintf if (verbose) printf
  
- Note: SDB access to flash memory is not yet supported, so the short
- name currently in use is just the "Product Name" FRU string.
-@@ -139,7 +143,7 @@ name currently in use is just the "Product Name" FRU string.
- The example in tools/sdbfs includes an extra file, that is needed by
- the fine-delay driver, and must live at a known address of 0x1800.  By
- running gensdbfs on that directory you can output your binary EEPROM
--image (here below spusa$ is the shell prompt):
-+image (here below spusa$ is the shell prompt)::
+-int log_info(int cpu, const char *fmt, ...)
+-{
++  int log_info(int cpu, const char *fmt, ...)
++  {
+ 	FILE *log;
+ 	char fn[MAX_FN_SIZE];
+ 	char buf[MAX_BUF_SIZE];
+@@ -142,12 +142,12 @@ int log_info(int cpu, const char *fmt, ...)
+ 	fclose(log);
  
-         spusa$ ../fru-generator -v CERN -n FmcDelay1ns4cha -s proto-0 \
-                       -p EDA-02267-V3 > IPMI-FRU
-diff --git a/Documentation/fmc/index.rst b/Documentation/fmc/index.rst
+ 	return 0;
+-}
++  }
+ 
+-typedef unsigned long u64;
+-typedef unsigned int  u32;
++  typedef unsigned long u64;
++  typedef unsigned int  u32;
+ 
+-typedef union err_type_info_u {
++  typedef union err_type_info_u {
+ 	struct {
+ 		u64	mode		: 3,	/* 0-2 */
+ 			err_inj		: 3,	/* 3-5 */
+@@ -157,9 +157,9 @@ typedef union err_type_info_u {
+ 			reserved	: 48;	/* 16-63 */
+ 	} err_type_info_u;
+ 	u64	err_type_info;
+-} err_type_info_t;
++  } err_type_info_t;
+ 
+-typedef union err_struct_info_u {
++  typedef union err_struct_info_u {
+ 	struct {
+ 		u64	siv		: 1,	/* 0	 */
+ 			c_t		: 2,	/* 1-2	 */
+@@ -197,9 +197,9 @@ typedef union err_struct_info_u {
+ 		u64	reserved;
+ 	} err_struct_info_bus_processor_interconnect;
+ 	u64	err_struct_info;
+-} err_struct_info_t;
++  } err_struct_info_t;
+ 
+-typedef union err_data_buffer_u {
++  typedef union err_data_buffer_u {
+ 	struct {
+ 		u64	trigger_addr;		/* 0-63		*/
+ 		u64	inj_addr;		/* 64-127 	*/
+@@ -221,9 +221,9 @@ typedef union err_data_buffer_u {
+ 		u64	reserved;		/* 0-63		*/
+ 	} err_data_buffer_bus_processor_interconnect;
+ 	u64 err_data_buffer[ERR_DATA_BUFFER_SIZE];
+-} err_data_buffer_t;
++  } err_data_buffer_t;
+ 
+-typedef union capabilities_u {
++  typedef union capabilities_u {
+ 	struct {
+ 		u64	i		: 1,
+ 			d		: 1,
+@@ -276,9 +276,9 @@ typedef union capabilities_u {
+ 	struct {
+ 		u64	reserved;
+ 	} capabilities_bus_processor_interconnect;
+-} capabilities_t;
++  } capabilities_t;
+ 
+-typedef struct resources_s {
++  typedef struct resources_s {
+ 	u64	ibr0		: 1,
+ 		ibr2		: 1,
+ 		ibr4		: 1,
+@@ -288,24 +288,24 @@ typedef struct resources_s {
+ 		dbr4		: 1,
+ 		dbr6		: 1,
+ 		reserved	: 48;
+-} resources_t;
++  } resources_t;
+ 
+ 
+-long get_page_size(void)
+-{
++  long get_page_size(void)
++  {
+ 	long page_size=sysconf(_SC_PAGESIZE);
+ 	return page_size;
+-}
++  }
+ 
+-#define PAGE_SIZE (get_page_size()==-1?0x4000:get_page_size())
+-#define SHM_SIZE (2*PAGE_SIZE*NR_CPUS)
+-#define SHM_VA 0x2000000100000000
++  #define PAGE_SIZE (get_page_size()==-1?0x4000:get_page_size())
++  #define SHM_SIZE (2*PAGE_SIZE*NR_CPUS)
++  #define SHM_VA 0x2000000100000000
+ 
+-int shmid;
+-void *shmaddr;
++  int shmid;
++  void *shmaddr;
+ 
+-int create_shm(void)
+-{
++  int create_shm(void)
++  {
+ 	key_t key;
+ 	char fn[MAX_FN_SIZE];
+ 
+@@ -343,34 +343,34 @@ int create_shm(void)
+ 	mlock(shmaddr, SHM_SIZE);
+ 
+ 	return 0;
+-}
++  }
+ 
+-int free_shm()
+-{
++  int free_shm()
++  {
+ 	munlock(shmaddr, SHM_SIZE);
+-        shmdt(shmaddr);
++          shmdt(shmaddr);
+ 	semctl(shmid, 0, IPC_RMID);
+ 
+ 	return 0;
+-}
++  }
+ 
+-#ifdef _SEM_SEMUN_UNDEFINED
+-union semun
+-{
++  #ifdef _SEM_SEMUN_UNDEFINED
++  union semun
++  {
+ 	int val;
+ 	struct semid_ds *buf;
+ 	unsigned short int *array;
+ 	struct seminfo *__buf;
+-};
+-#endif
++  };
++  #endif
+ 
+-u32 mode=1; /* 1: physical mode; 2: virtual mode. */
+-int one_lock=1;
+-key_t key[NR_CPUS];
+-int semid[NR_CPUS];
++  u32 mode=1; /* 1: physical mode; 2: virtual mode. */
++  int one_lock=1;
++  key_t key[NR_CPUS];
++  int semid[NR_CPUS];
+ 
+-int create_sem(int cpu)
+-{
++  int create_sem(int cpu)
++  {
+ 	union semun arg;
+ 	char fn[MAX_FN_SIZE];
+ 	int sid;
+@@ -407,37 +407,37 @@ int create_sem(int cpu)
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-static int lock(int cpu)
+-{
++  static int lock(int cpu)
++  {
+ 	struct sembuf lock;
+ 
+ 	lock.sem_num = cpu;
+ 	lock.sem_op = 1;
+ 	semop(semid[cpu], &lock, 1);
+ 
+-        return 0;
+-}
++          return 0;
++  }
+ 
+-static int unlock(int cpu)
+-{
++  static int unlock(int cpu)
++  {
+ 	struct sembuf unlock;
+ 
+ 	unlock.sem_num = cpu;
+ 	unlock.sem_op = -1;
+ 	semop(semid[cpu], &unlock, 1);
+ 
+-        return 0;
+-}
++          return 0;
++  }
+ 
+-void free_sem(int cpu)
+-{
++  void free_sem(int cpu)
++  {
+ 	semctl(semid[cpu], 0, IPC_RMID);
+-}
++  }
+ 
+-int wr_multi(char *fn, unsigned long *data, int size)
+-{
++  int wr_multi(char *fn, unsigned long *data, int size)
++  {
+ 	int fd;
+ 	char buf[MAX_BUF_SIZE];
+ 	int ret;
+@@ -459,15 +459,15 @@ int wr_multi(char *fn, unsigned long *data, int size)
+ 	ret=write(fd, buf, sizeof(buf));
+ 	close(fd);
+ 	return ret;
+-}
++  }
+ 
+-int wr(char *fn, unsigned long data)
+-{
++  int wr(char *fn, unsigned long data)
++  {
+ 	return wr_multi(fn, &data, 1);
+-}
++  }
+ 
+-int rd(char *fn, unsigned long *data)
+-{
++  int rd(char *fn, unsigned long *data)
++  {
+ 	int fd;
+ 	char buf[MAX_BUF_SIZE];
+ 
+@@ -480,10 +480,10 @@ int rd(char *fn, unsigned long *data)
+ 	*data=strtoul(buf, NULL, 16);
+ 	close(fd);
+ 	return 0;
+-}
++  }
+ 
+-int rd_status(char *path, int *status)
+-{
++  int rd_status(char *path, int *status)
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	sprintf(fn, "%s/status", path);
+ 	if (rd(fn, (u64*)status)<0) {
+@@ -492,10 +492,10 @@ int rd_status(char *path, int *status)
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-int rd_capabilities(char *path, u64 *capabilities)
+-{
++  int rd_capabilities(char *path, u64 *capabilities)
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	sprintf(fn, "%s/capabilities", path);
+ 	if (rd(fn, capabilities)<0) {
+@@ -504,10 +504,10 @@ int rd_capabilities(char *path, u64 *capabilities)
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-int rd_all(char *path)
+-{
++  int rd_all(char *path)
++  {
+ 	unsigned long err_type_info, err_struct_info, err_data_buffer;
+ 	int status;
+ 	unsigned long capabilities, resources;
+@@ -556,11 +556,11 @@ int rd_all(char *path)
+ 	printf("resources=%lx\n", resources);
+ 
+ 	return 0;
+-}
++  }
+ 
+-int query_capabilities(char *path, err_type_info_t err_type_info,
++  int query_capabilities(char *path, err_type_info_t err_type_info,
+ 			u64 *capabilities)
+-{
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	err_struct_info_t err_struct_info;
+ 	err_data_buffer_t err_data_buffer;
+@@ -583,10 +583,10 @@ int query_capabilities(char *path, err_type_info_t err_type_info,
+ 		return -1;
+ 
+ 	return 0;
+-}
++  }
+ 
+-int query_all_capabilities()
+-{
++  int query_all_capabilities()
++  {
+ 	int status;
+ 	err_type_info_t err_type_info;
+ 	int err_sev, err_struct, struct_hier;
+@@ -629,12 +629,12 @@ int query_all_capabilities()
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-int err_inject(int cpu, char *path, err_type_info_t err_type_info,
++  int err_inject(int cpu, char *path, err_type_info_t err_type_info,
+ 		err_struct_info_t err_struct_info,
+ 		err_data_buffer_t err_data_buffer)
+-{
++  {
+ 	int status;
+ 	char fn[MAX_FN_SIZE];
+ 
+@@ -667,13 +667,13 @@ int err_inject(int cpu, char *path, err_type_info_t err_type_info,
+ 	}
+ 
+ 	return status;
+-}
++  }
+ 
+-static int construct_data_buf(char *path, err_type_info_t err_type_info,
++  static int construct_data_buf(char *path, err_type_info_t err_type_info,
+ 		err_struct_info_t err_struct_info,
+ 		err_data_buffer_t *err_data_buffer,
+ 		void *va1)
+-{
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	u64 virt_addr=0, phys_addr=0;
+ 
+@@ -710,22 +710,22 @@ static int construct_data_buf(char *path, err_type_info_t err_type_info,
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-typedef struct {
++  typedef struct {
+ 	u64 cpu;
+ 	u64 loop;
+ 	u64 interval;
+ 	u64 err_type_info;
+ 	u64 err_struct_info;
+ 	u64 err_data_buffer[ERR_DATA_BUFFER_SIZE];
+-} parameters_t;
++  } parameters_t;
+ 
+-parameters_t line_para;
+-int para;
++  parameters_t line_para;
++  int para;
+ 
+-static int empty_data_buffer(u64 *err_data_buffer)
+-{
++  static int empty_data_buffer(u64 *err_data_buffer)
++  {
+ 	int empty=1;
+ 	int i;
+ 
+@@ -734,10 +734,10 @@ static int empty_data_buffer(u64 *err_data_buffer)
+ 		empty=0;
+ 
+ 	return empty;
+-}
++  }
+ 
+-int err_inj()
+-{
++  int err_inj()
++  {
+ 	err_type_info_t err_type_info;
+ 	err_struct_info_t err_struct_info;
+ 	err_data_buffer_t err_data_buffer;
+@@ -951,10 +951,10 @@ int err_inj()
+ 	printf("All done.\n");
+ 
+ 	return 0;
+-}
++  }
+ 
+-void help()
+-{
++  void help()
++  {
+ 	printf("err_inject_tool:\n");
+ 	printf("\t-q: query all capabilities. default: off\n");
+ 	printf("\t-m: procedure mode. 1: physical 2: virtual. default: 1\n");
+@@ -977,10 +977,10 @@ void help()
+ 	printf("The tool will take err.conf file as ");
+ 	printf("input to inject single or multiple errors ");
+ 	printf("on one or multiple cpus in parallel.\n");
+-}
++  }
+ 
+-int main(int argc, char **argv)
+-{
++  int main(int argc, char **argv)
++  {
+ 	char c;
+ 	int do_err_inj=0;
+ 	int do_query_all=0;
+@@ -1064,5 +1064,4 @@ int main(int argc, char **argv)
+ 		help();
+ 
+ 	return 0;
+-}
+-
++  }
+diff --git a/Documentation/ia64/fsys.txt b/Documentation/ia64/fsys.rst
+similarity index 76%
+rename from Documentation/ia64/fsys.txt
+rename to Documentation/ia64/fsys.rst
+index 59dd689d9b86..a702d2cc94b6 100644
+--- a/Documentation/ia64/fsys.txt
++++ b/Documentation/ia64/fsys.rst
+@@ -1,9 +1,9 @@
+--*-Mode: outline-*-
+-
+-		Light-weight System Calls for IA-64
+-		-----------------------------------
++===================================
++Light-weight System Calls for IA-64
++===================================
+ 
+ 		        Started: 13-Jan-2003
++
+ 		    Last update: 27-Sep-2003
+ 
+ 	              David Mosberger-Tang
+@@ -52,12 +52,13 @@ privilege level is at level 0, this means that fsys-mode requires some
+ care (see below).
+ 
+ 
+-* How to tell fsys-mode
++How to tell fsys-mode
++=====================
+ 
+ Linux operates in fsys-mode when (a) the privilege level is 0 (most
+ privileged) and (b) the stacks have NOT been switched to kernel memory
+ yet.  For convenience, the header file <asm-ia64/ptrace.h> provides
+-three macros:
++three macros::
+ 
+ 	user_mode(regs)
+ 	user_stack(task,regs)
+@@ -70,11 +71,12 @@ to by "regs" was executing in user mode (privilege level 3).
+ user_stack() returns TRUE if the state pointed to by "regs" was
+ executing on the user-level stack(s).  Finally, fsys_mode() returns
+ TRUE if the CPU state pointed to by "regs" was executing in fsys-mode.
+-The fsys_mode() macro is equivalent to the expression:
++The fsys_mode() macro is equivalent to the expression::
+ 
+ 	!user_mode(regs) && user_stack(task,regs)
+ 
+-* How to write an fsyscall handler
++How to write an fsyscall handler
++================================
+ 
+ The file arch/ia64/kernel/fsys.S contains a table of fsyscall-handlers
+ (fsyscall_table).  This table contains one entry for each system call.
+@@ -87,66 +89,72 @@ of the getpid() system call.
+ 
+ The entry and exit-state of an fsyscall handler is as follows:
+ 
+-** Machine state on entry to fsyscall handler:
++Machine state on entry to fsyscall handler
++------------------------------------------
+ 
+- - r10	  = 0
+- - r11	  = saved ar.pfs (a user-level value)
+- - r15	  = system call number
+- - r16	  = "current" task pointer (in normal kernel-mode, this is in r13)
+- - r32-r39 = system call arguments
+- - b6	  = return address (a user-level value)
+- - ar.pfs = previous frame-state (a user-level value)
+- - PSR.be = cleared to zero (i.e., little-endian byte order is in effect)
+- - all other registers may contain values passed in from user-mode
++  ========= ===============================================================
++  r10	    0
++  r11	    saved ar.pfs (a user-level value)
++  r15	    system call number
++  r16	    "current" task pointer (in normal kernel-mode, this is in r13)
++  r32-r39   system call arguments
++  b6	    return address (a user-level value)
++  ar.pfs    previous frame-state (a user-level value)
++  PSR.be    cleared to zero (i.e., little-endian byte order is in effect)
++  -         all other registers may contain values passed in from user-mode
++  ========= ===============================================================
+ 
+-** Required machine state on exit to fsyscall handler:
++Required machine state on exit to fsyscall handler
++--------------------------------------------------
+ 
+- - r11	  = saved ar.pfs (as passed into the fsyscall handler)
+- - r15	  = system call number (as passed into the fsyscall handler)
+- - r32-r39 = system call arguments (as passed into the fsyscall handler)
+- - b6	  = return address (as passed into the fsyscall handler)
+- - ar.pfs = previous frame-state (as passed into the fsyscall handler)
++  ========= ===========================================================
++  r11	    saved ar.pfs (as passed into the fsyscall handler)
++  r15	    system call number (as passed into the fsyscall handler)
++  r32-r39   system call arguments (as passed into the fsyscall handler)
++  b6	    return address (as passed into the fsyscall handler)
++  ar.pfs    previous frame-state (as passed into the fsyscall handler)
++  ========= ===========================================================
+ 
+ Fsyscall handlers can execute with very little overhead, but with that
+ speed comes a set of restrictions:
+ 
+- o Fsyscall-handlers MUST check for any pending work in the flags
++ * Fsyscall-handlers MUST check for any pending work in the flags
+    member of the thread-info structure and if any of the
+    TIF_ALLWORK_MASK flags are set, the handler needs to fall back on
+    doing a full system call (by calling fsys_fallback_syscall).
+ 
+- o Fsyscall-handlers MUST preserve incoming arguments (r32-r39, r11,
++ * Fsyscall-handlers MUST preserve incoming arguments (r32-r39, r11,
+    r15, b6, and ar.pfs) because they will be needed in case of a
+    system call restart.  Of course, all "preserved" registers also
+    must be preserved, in accordance to the normal calling conventions.
+ 
+- o Fsyscall-handlers MUST check argument registers for containing a
++ * Fsyscall-handlers MUST check argument registers for containing a
+    NaT value before using them in any way that could trigger a
+    NaT-consumption fault.  If a system call argument is found to
+    contain a NaT value, an fsyscall-handler may return immediately
+    with r8=EINVAL, r10=-1.
+ 
+- o Fsyscall-handlers MUST NOT use the "alloc" instruction or perform
++ * Fsyscall-handlers MUST NOT use the "alloc" instruction or perform
+    any other operation that would trigger mandatory RSE
+    (register-stack engine) traffic.
+ 
+- o Fsyscall-handlers MUST NOT write to any stacked registers because
++ * Fsyscall-handlers MUST NOT write to any stacked registers because
+    it is not safe to assume that user-level called a handler with the
+    proper number of arguments.
+ 
+- o Fsyscall-handlers need to be careful when accessing per-CPU variables:
++ * Fsyscall-handlers need to be careful when accessing per-CPU variables:
+    unless proper safe-guards are taken (e.g., interruptions are avoided),
+    execution may be pre-empted and resumed on another CPU at any given
+    time.
+ 
+- o Fsyscall-handlers must be careful not to leak sensitive kernel'
++ * Fsyscall-handlers must be careful not to leak sensitive kernel'
+    information back to user-level.  In particular, before returning to
+    user-level, care needs to be taken to clear any scratch registers
+    that could contain sensitive information (note that the current
+    task pointer is not considered sensitive: it's already exposed
+    through ar.k6).
+ 
+- o Fsyscall-handlers MUST NOT access user-memory without first
++ * Fsyscall-handlers MUST NOT access user-memory without first
+    validating access-permission (this can be done typically via
+    probe.r.fault and/or probe.w.fault) and without guarding against
+    memory access exceptions (this can be done with the EX() macros
+@@ -162,7 +170,8 @@ fast system call execution (while fully preserving system call
+ semantics), but there is also a lot of flexibility in handling more
+ complicated cases.
+ 
+-* Signal handling
++Signal handling
++===============
+ 
+ The delivery of (asynchronous) signals must be delayed until fsys-mode
+ is exited.  This is accomplished with the help of the lower-privilege
+@@ -173,7 +182,8 @@ PSR.lp and returns immediately.  When fsys-mode is exited via the
+ occur.  The trap handler clears PSR.lp again and returns immediately.
+ The kernel exit path then checks for and delivers any pending signals.
+ 
+-* PSR Handling
++PSR Handling
++============
+ 
+ The "epc" instruction doesn't change the contents of PSR at all.  This
+ is in contrast to a regular interruption, which clears almost all
+@@ -181,6 +191,7 @@ bits.  Because of that, some care needs to be taken to ensure things
+ work as expected.  The following discussion describes how each PSR bit
+ is handled.
+ 
++======= =======================================================================
+ PSR.be	Cleared when entering fsys-mode.  A srlz.d instruction is used
+ 	to ensure the CPU is in little-endian mode before the first
+ 	load/store instruction is executed.  PSR.be is normally NOT
+@@ -202,7 +213,8 @@ PSR.pp	Unchanged.
+ PSR.di	Unchanged.
+ PSR.si	Unchanged.
+ PSR.db	Unchanged.  The kernel prevents user-level from setting a hardware
+-	breakpoint that triggers at any privilege level other than 3 (user-mode).
++	breakpoint that triggers at any privilege level other than
++	3 (user-mode).
+ PSR.lp	Unchanged.
+ PSR.tb	Lazy redirect.  If a taken-branch trap occurs while in
+ 	fsys-mode, the trap-handler modifies the saved machine state
+@@ -235,47 +247,52 @@ PSR.ed	Unchanged.  Note: This bit could only have an effect if an fsys-mode
+ PSR.bn	Unchanged.  Note: fsys-mode handlers may clear the bit, if needed.
+ 	Doing so requires clearing PSR.i and PSR.ic as well.
+ PSR.ia	Unchanged.  Note: the ia64 linux kernel never sets this bit.
++======= =======================================================================
+ 
+-* Using fast system calls
++Using fast system calls
++=======================
+ 
+ To use fast system calls, userspace applications need simply call
+ __kernel_syscall_via_epc().  For example
+ 
+ -- example fgettimeofday() call --
++
+ -- fgettimeofday.S --
+ 
+-#include <asm/asmmacro.h>
++::
+ 
+-GLOBAL_ENTRY(fgettimeofday)
+-.prologue
+-.save ar.pfs, r11
+-mov r11 = ar.pfs
+-.body 
++  #include <asm/asmmacro.h>
+ 
+-mov r2 = 0xa000000000020660;;  // gate address 
+-			       // found by inspection of System.map for the 
++  GLOBAL_ENTRY(fgettimeofday)
++  .prologue
++  .save ar.pfs, r11
++  mov r11 = ar.pfs
++  .body
++
++  mov r2 = 0xa000000000020660;;  // gate address
++			       // found by inspection of System.map for the
+ 			       // __kernel_syscall_via_epc() function.  See
+ 			       // below for how to do this for real.
+ 
+-mov b7 = r2
+-mov r15 = 1087		       // gettimeofday syscall
+-;;
+-br.call.sptk.many b6 = b7
+-;;
++  mov b7 = r2
++  mov r15 = 1087		       // gettimeofday syscall
++  ;;
++  br.call.sptk.many b6 = b7
++  ;;
+ 
+-.restore sp
++  .restore sp
+ 
+-mov ar.pfs = r11
+-br.ret.sptk.many rp;;	      // return to caller
+-END(fgettimeofday)
++  mov ar.pfs = r11
++  br.ret.sptk.many rp;;	      // return to caller
++  END(fgettimeofday)
+ 
+ -- end fgettimeofday.S --
+ 
+ In reality, getting the gate address is accomplished by two extra
+ values passed via the ELF auxiliary vector (include/asm-ia64/elf.h)
+ 
+- o AT_SYSINFO : is the address of __kernel_syscall_via_epc()
+- o AT_SYSINFO_EHDR : is the address of the kernel gate ELF DSO
++ * AT_SYSINFO : is the address of __kernel_syscall_via_epc()
++ * AT_SYSINFO_EHDR : is the address of the kernel gate ELF DSO
+ 
+ The ELF DSO is a pre-linked library that is mapped in by the kernel at
+ the gate page.  It is a proper ELF shared object so, with a dynamic
+diff --git a/Documentation/ia64/README b/Documentation/ia64/ia64.rst
+similarity index 61%
+rename from Documentation/ia64/README
+rename to Documentation/ia64/ia64.rst
+index aa17f2154cba..b725019a9492 100644
+--- a/Documentation/ia64/README
++++ b/Documentation/ia64/ia64.rst
+@@ -1,43 +1,49 @@
+-        Linux kernel release 2.4.xx for the IA-64 Platform
++===========================================
++Linux kernel release for the IA-64 Platform
++===========================================
+ 
+-   These are the release notes for Linux version 2.4 for IA-64
++   These are the release notes for Linux since version 2.4 for IA-64
+    platform.  This document provides information specific to IA-64
+    ONLY, to get additional information about the Linux kernel also
+    read the original Linux README provided with the kernel.
+ 
+-INSTALLING the kernel:
++Installing the Kernel
++=====================
+ 
+  - IA-64 kernel installation is the same as the other platforms, see
+    original README for details.
+ 
+ 
+-SOFTWARE REQUIREMENTS
++Software Requirements
++=====================
+ 
+    Compiling and running this kernel requires an IA-64 compliant GCC
+    compiler.  And various software packages also compiled with an
+    IA-64 compliant GCC compiler.
+ 
+ 
+-CONFIGURING the kernel:
++Configuring the Kernel
++======================
+ 
+    Configuration is the same, see original README for details.
+ 
+ 
+-COMPILING the kernel:
++Compiling the Kernel:
+ 
+  - Compiling this kernel doesn't differ from other platform so read
+    the original README for details BUT make sure you have an IA-64
+    compliant GCC compiler.
+ 
+-IA-64 SPECIFICS
++IA-64 Specifics
++===============
+ 
+  - General issues:
+ 
+-    o Hardly any performance tuning has been done. Obvious targets
++    * Hardly any performance tuning has been done. Obvious targets
+       include the library routines (IP checksum, etc.). Less
+       obvious targets include making sure we don't flush the TLB
+       needlessly, etc.
+ 
+-    o SMP locks cleanup/optimization
++    * SMP locks cleanup/optimization
+ 
+-    o IA32 support.  Currently experimental.  It mostly works.
++    * IA32 support.  Currently experimental.  It mostly works.
+diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
 new file mode 100644
-index 000000000000..a749cb04f39e
+index 000000000000..a3e3052ad6e2
 --- /dev/null
-+++ b/Documentation/fmc/index.rst
-@@ -0,0 +1,21 @@
++++ b/Documentation/ia64/index.rst
+@@ -0,0 +1,18 @@
 +:orphan:
 +
-+=========================
-+FMC (FPGA Mezzanine Card)
-+=========================
++==================
++IA-64 Architecture
++==================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   fmc-and-sdb
-+   carrier
-+   identifiers
-+   mezzanine
-+   parameters
++   ia64
++   aliasing
++   efirtc
++   err_inject
++   fsys
++   irq-redir
++   mca
++   serial
++   xen
+diff --git a/Documentation/ia64/IRQ-redir.txt b/Documentation/ia64/irq-redir.rst
+similarity index 86%
+rename from Documentation/ia64/IRQ-redir.txt
+rename to Documentation/ia64/irq-redir.rst
+index 364ce9879f54..eedb42aacead 100644
+--- a/Documentation/ia64/IRQ-redir.txt
++++ b/Documentation/ia64/irq-redir.rst
+@@ -1,6 +1,8 @@
++==============================
+ IRQ affinity on IA64 platforms
+-------------------------------
+-                           07.01.2002, Erich Focht <efocht@ess.nec.de>
++==============================
 +
-+   api
++07.01.2002, Erich Focht <efocht@ess.nec.de>
+ 
+ 
+ By writing to /proc/irq/IRQ#/smp_affinity the interrupt routing can be
+@@ -12,22 +14,27 @@ IRQ target is one particular CPU and cannot be a mask of several
+ CPUs. Only the first non-zero bit is taken into account.
+ 
+ 
+-Usage examples:
++Usage examples
++==============
+ 
+ The target CPU has to be specified as a hexadecimal CPU mask. The
+ first non-zero bit is the selected CPU. This format has been kept for
+ compatibility reasons with i386.
+ 
+ Set the delivery mode of interrupt 41 to fixed and route the
+-interrupts to CPU #3 (logical CPU number) (2^3=0x08):
++interrupts to CPU #3 (logical CPU number) (2^3=0x08)::
 +
-+   fmc-fakedev
-+   fmc-trivial
-+   fmc-write-eeprom
-+   fmc-chardev
-diff --git a/Documentation/fmc/mezzanine.txt b/Documentation/fmc/mezzanine.rst
-similarity index 87%
-rename from Documentation/fmc/mezzanine.txt
-rename to Documentation/fmc/mezzanine.rst
-index 87910dbfc91e..9a37147e8f14 100644
---- a/Documentation/fmc/mezzanine.txt
-+++ b/Documentation/fmc/mezzanine.rst
-@@ -1,5 +1,8 @@
-+.. _fmc_driver:
+      echo "8" >/proc/irq/41/smp_affinity
+ 
+ Set the default route for IRQ number 41 to CPU 6 in lowest priority
+-delivery mode (redirectable):
++delivery mode (redirectable)::
 +
-+==========
- FMC Driver
--**********
-+==========
+      echo "r 40" >/proc/irq/41/smp_affinity
  
- An FMC driver is concerned with the specific mezzanine and associated
- gateware. As such, it is expected to be independent of the carrier
-@@ -12,23 +15,23 @@ configured in the FPGA; the latter technique is used when the FPGA is
- already programmed when the device is registered to the bus core.
+-The output of the command
++The output of the command::
++
+      cat /proc/irq/IRQ#/smp_affinity
++
+ gives the target CPU mask for the specified interrupt vector. If the CPU
+ mask is preceded by the character "r", the interrupt is redirectable
+ (i.e. lowest priority mode routing is used), otherwise its route is
+@@ -35,7 +42,8 @@ fixed.
  
- In some special cases it is possible for a driver to directly access
--FPGA registers, by means of the `fpga_base' field of the device
-+FPGA registers, by means of the `fpga_base` field of the device
- structure. This may be needed for high-bandwidth peripherals like fast
- ADC cards. If the device module registered a remote device (for example
--by means of Etherbone), the `fpga_base' pointer will be NULL.
-+by means of Etherbone), the `fpga_base` pointer will be NULL.
- Therefore, drivers must be ready to deal with NULL base pointers, and
- fail gracefully.  Most driver, however, are not expected to access the
- pointer directly but run fmc_readl and fmc_writel instead, which will
- work in any case.
  
- In even more special cases, the driver may access carrier-specific
--functionality: the `carrier_name' string allows the driver to check
--which is the current carrier and make use of the `carrier_data'
-+functionality: the `carrier_name` string allows the driver to check
-+which is the current carrier and make use of the `carrier_data`
- pointer.  We chose to use carrier names rather than numeric identifiers
- for greater flexibility, but also to avoid a central registry within
--the `fmc.h' file - we hope other users will exploit our framework with
-+the `fmc.h` file - we hope other users will exploit our framework with
- their own carriers.  An example use of carrier names is in GPIO setup
--(see *note The GPIO Abstraction::), although the name match is not
-+(see :ref:`fmc_gpio_abstraction`), although the name match is not
- expected to be performed by the driver.  If you depend on specific
- carriers, please check the carrier name and fail gracefully if your
- driver finds it is running in a yet-unknown-to-it environment.
-@@ -44,7 +47,7 @@ their EEPROM or on the actual FPGA cores that can be enumerated.
- Therefore, we have two tables of identifiers.
  
- Matching of FRU information depends on two names, the manufacturer (or
--vendor) and the device (see *note FMC Identification::); for
-+vendor) and the device (see :ref:`fmc_identification`); for
- flexibility during production (i.e. before writing to the EEPROM) the
- bus supports a catch-all driver that specifies NULL strings. For this
- reason, the table is specified as pointer-and-length, not a a
-@@ -58,7 +61,7 @@ instantiated), and for consistency the list is passed as
- pointer-and-length.  Several similar devices can be driven by the same
- driver, and thus the driver specifies and array of such arrays.
+-Initialization and default behavior:
++Initialization and default behavior
++===================================
  
--The complete set of involved data structures is thus the following:
-+The complete set of involved data structures is thus the following::
+ If the platform features IRQ redirection (info provided by SAL) all
+ IO-SAPIC interrupts are initialized with CPU#0 as their default target
+@@ -43,9 +51,11 @@ and the routing is the so called "lowest priority mode" (actually
+ fixed SAPIC mode with hint). The XTP chipset registers are used as hints
+ for the IRQ routing. Currently in Linux XTP registers can have three
+ values:
++
+ 	- minimal for an idle task,
+ 	- normal if any other task runs,
+ 	- maximal if the CPU is going to be switched off.
++
+ The IRQ is routed to the CPU with lowest XTP register value, the
+ search begins at the default CPU. Therefore most of the interrupts
+ will be handled by CPU #0.
+@@ -53,12 +63,14 @@ will be handled by CPU #0.
+ If the platform doesn't feature interrupt redirection IOSAPIC fixed
+ routing is used. The target CPUs are distributed in a round robin
+ manner. IRQs will be routed only to the selected target CPUs. Check
+-with
++with::
++
+         cat /proc/interrupts
  
-         struct fmc_fru_id { char *manufacturer; char *product_name; };
-         struct fmc_sdb_one_id { uint64_t vendor; uint32_t device; };
-@@ -71,13 +74,14 @@ The complete set of involved data structures is thus the following:
  
- A better reference, with full explanation, is the <linux/fmc.h> header.
  
-+.. _fmc_module_parameters:
+-Comments:
++Comments
++========
  
- Module Parameters
- =================
- 
- Most of the FMC drivers need the same set of kernel parameters. This
- package includes support to implement common parameters by means of
--fields in the `fmc_driver' structure and simple macro definitions.
-+fields in the `fmc_driver` structure and simple macro definitions.
- 
- The parameters are carrier-specific, in that they rely on the busid
- concept, that varies among carriers. For the SPEC, the identifier is a
-@@ -88,20 +92,20 @@ and some code duplication is unavoidable.
- This is the list of parameters that are common to several modules to
- see how they are actually used, please look at spec-trivial.c.
- 
--`busid='
-+`busid=`
-      This is an array of integers, listing carrier-specific
--     identification numbers. For PIC, for example, `0x0400' represents
-+     identification numbers. For PIC, for example, `0x0400` represents
-      bus 4, slot 0.  If any such ID is specified, the driver will only
-      accept to drive cards that appear in the list (even if the FMC ID
-      matches). This is accomplished by the validate carrier method.
- 
--`gateware='
-+`gateware=`
-      The argument is an array of strings. If no busid= is specified,
-      the first string of gateware= is used for all cards; otherwise the
-      identifiers and gateware names are paired one by one, in the order
-      specified.
- 
--`show_sdb='
-+`show_sdb=`
-      For modules supporting it, this parameter asks to show the SDB
-      internal structure by means of kernel messages. It is disabled by
-      default because those lines tend to hide more important messages,
-@@ -113,7 +117,7 @@ see how they are actually used, please look at spec-trivial.c.
- For example, if you are using the trivial driver to load two different
- gateware files to two different cards, you can use the following
- parameters to load different binaries to the cards, after looking up
--the PCI identifiers. This has been tested with a SPEC carrier.
-+the PCI identifiers. This has been tested with a SPEC carrier::
- 
-         insmod fmc-trivial.ko \
-                               busid=0x0200,0x0400 \
-diff --git a/Documentation/fmc/parameters.txt b/Documentation/fmc/parameters.rst
+ On large (multi-node) systems it is recommended to route the IRQs to
+ the node to which the corresponding device is connected.
+diff --git a/Documentation/ia64/mca.txt b/Documentation/ia64/mca.rst
 similarity index 96%
-rename from Documentation/fmc/parameters.txt
-rename to Documentation/fmc/parameters.rst
-index 59edf088e3a4..bf4566967e9c 100644
---- a/Documentation/fmc/parameters.txt
-+++ b/Documentation/fmc/parameters.rst
-@@ -1,16 +1,17 @@
-+===========================
- Module Parameters in fmc.ko
--***************************
-+===========================
+rename from Documentation/ia64/mca.txt
+rename to Documentation/ia64/mca.rst
+index f097c60cba1b..08270bba44a4 100644
+--- a/Documentation/ia64/mca.txt
++++ b/Documentation/ia64/mca.rst
+@@ -1,5 +1,8 @@
+-An ad-hoc collection of notes on IA64 MCA and INIT processing.  Feel
+-free to update it with notes about any area that is not clear.
++=============================================================
++An ad-hoc collection of notes on IA64 MCA and INIT processing
++=============================================================
++
++Feel free to update it with notes about any area that is not clear.
  
- The core driver receives two module parameters, meant to help debugging
- client modules. Both parameters can be modified by writing to
- /sys/module/fmc/parameters/, because they are used when client drivers
- are devices are registered, not when fmc.ko is loaded.
+ ---
  
--`dump_eeprom='
-+`dump_eeprom=`
-      If not zero, the parameter asks the bus controller to dump the
-      EEPROM of any device that is registered, using printk.
+@@ -82,7 +85,8 @@ if we have a choice here.
+   own stack as running on that cpu.  Then a recursive error gets a
+   trace of the failing handler's "task".
  
--`dump_sdb='
-+`dump_sdb=`
-      If not zero, the parameter prints the SDB tree of every FPGA it is
-      loaded by fmc_reprogram(). If greater than one, it asks to dump
-      the binary content of SDB records.  This currently only dumps the
-@@ -19,7 +20,7 @@ are devices are registered, not when fmc.ko is loaded.
+-[1] My (Keith Owens) original design called for ia64 to separate its
++[1]
++    My (Keith Owens) original design called for ia64 to separate its
+     struct task and the kernel stacks.  Then the MCA/INIT data would be
+     chained stacks like i386 interrupt stacks.  But that required
+     radical surgery on the rest of ia64, plus extra hard wired TLB
+diff --git a/Documentation/ia64/serial.txt b/Documentation/ia64/serial.rst
+similarity index 87%
+rename from Documentation/ia64/serial.txt
+rename to Documentation/ia64/serial.rst
+index a63d2c54329b..1de70c305a79 100644
+--- a/Documentation/ia64/serial.txt
++++ b/Documentation/ia64/serial.rst
+@@ -1,4 +1,9 @@
+-SERIAL DEVICE NAMING
++==============
++Serial Devices
++==============
++
++Serial Device Naming
++====================
  
- EEPROM dumping avoids repeating lines, since most of the contents is
- usually empty and all bits are one or zero. This is an example of the
--output:
-+output::
+     As of 2.6.10, serial devices on ia64 are named based on the
+     order of ACPI and PCI enumeration.  The first device in the
+@@ -30,17 +35,21 @@ SERIAL DEVICE NAMING
+     (described in the ACPI namespace) plus an MP[2] (a PCI device) has
+     these ports:
  
-         [ 6625.850480] spec 0000:02:00.0: FPGA programming successful
-         [ 6626.139949] spec 0000:02:00.0: Manufacturer: CERN
-@@ -40,7 +41,7 @@ output:
+-                                  pre-2.6.10      pre-2.6.10
+-                    MMIO         (EFI console    (EFI console
+-                   address        on builtin)     on MP port)    2.6.10
+-                  ==========      ==========      ==========     ======
++      ==========  ==========     ============    ============   =======
++      Type        MMIO           pre-2.6.10      pre-2.6.10     2.6.10+
++		  address
++				 (EFI console    (EFI console
++                                 on builtin)     on MP port)
++      ==========  ==========     ============    ============   =======
+       builtin     0xff5e0000        ttyS0           ttyS1         ttyS0
+       MP UPS      0xf8031000        ttyS1           ttyS2         ttyS1
+       MP Console  0xf8030000        ttyS2           ttyS0         ttyS2
+       MP 2        0xf8030010        ttyS3           ttyS3         ttyS3
+       MP 3        0xf8030038        ttyS4           ttyS4         ttyS4
++      ==========  ==========     ============    ============   =======
  
- The dump of SDB looks like the following; the example shows the simple
- golden gateware for the SPEC card, removing the leading timestamps to
--fit the page:
-+fit the page::
+-CONSOLE SELECTION
++Console Selection
++=================
  
-         spec 0000:02:00.0: SDB: 00000651:e6a542c9 WB4-Crossbar-GSI
-         spec 0000:02:00.0: SDB: 0000ce42:ff07fc47 WR-Periph-Syscon (00000000-000000ff)
+     EFI knows what your console devices are, but it doesn't tell the
+     kernel quite enough to actually locate them.  The DIG64 HCDP
+@@ -67,7 +76,8 @@ CONSOLE SELECTION
+     entries in /etc/inittab (for getty) and /etc/securetty (to allow
+     root login).
+ 
+-EARLY SERIAL CONSOLE
++Early Serial Console
++====================
+ 
+     The kernel can't start using a serial console until it knows where
+     the device lives.  Normally this happens when the driver enumerates
+@@ -80,7 +90,8 @@ EARLY SERIAL CONSOLE
+     or if the EFI console path contains only a UART device and the
+     firmware supplies an HCDP.
+ 
+-TROUBLESHOOTING SERIAL CONSOLE PROBLEMS
++Troubleshooting Serial Console Problems
++=======================================
+ 
+     No kernel output after elilo prints "Uncompressing Linux... done":
+ 
+@@ -133,19 +144,22 @@ TROUBLESHOOTING SERIAL CONSOLE PROBLEMS
+ 
+ 
+ 
+-[1] http://www.dig64.org/specifications/agreement 
++[1]
++    http://www.dig64.org/specifications/agreement
+     The table was originally defined as the "HCDP" for "Headless
+     Console/Debug Port."  The current version is the "PCDP" for
+     "Primary Console and Debug Port Devices."
+ 
+-[2] The HP MP (management processor) is a PCI device that provides
++[2]
++    The HP MP (management processor) is a PCI device that provides
+     several UARTs.  One of the UARTs is often used as a console; the
+     EFI Boot Manager identifies it as "Acpi(HWP0002,700)/Pci(...)/Uart".
+     The external connection is usually a 25-pin connector, and a
+     special dongle converts that to three 9-pin connectors, one of
+     which is labelled "Console."
+ 
+-[3] EFI console devices are configured using the EFI Boot Manager
++[3]
++    EFI console devices are configured using the EFI Boot Manager
+     "Boot option maintenance" menu.  You may have to interrupt the
+     boot sequence to use this menu, and you will have to reset the
+     box after changing console configuration.
+diff --git a/Documentation/ia64/xen.rst b/Documentation/ia64/xen.rst
+new file mode 100644
+index 000000000000..831339c74441
+--- /dev/null
++++ b/Documentation/ia64/xen.rst
+@@ -0,0 +1,206 @@
++********************************************************
++Recipe for getting/building/running Xen/ia64 with pv_ops
++********************************************************
++This recipe describes how to get xen-ia64 source and build it,
++and run domU with pv_ops.
++
++Requirements
++============
++
++  - python
++  - mercurial
++    it (aka "hg") is an open-source source code
++    management software. See the below.
++    http://www.selenic.com/mercurial/wiki/
++  - git
++  - bridge-utils
++
++Getting and Building Xen and Dom0
++=================================
++
++  My environment is:
++
++    - Machine  : Tiger4
++    - Domain0 OS  : RHEL5
++    - DomainU OS  : RHEL5
++
++ 1. Download source::
++
++	# hg clone http://xenbits.xensource.com/ext/ia64/xen-unstable.hg
++	# cd xen-unstable.hg
++	# hg clone http://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
++
++ 2. # make world
++
++ 3. # make install-tools
++
++ 4. copy kernels and xen::
++
++	# cp xen/xen.gz /boot/efi/efi/redhat/
++	# cp build-linux-2.6.18-xen_ia64/vmlinux.gz \
++	/boot/efi/efi/redhat/vmlinuz-2.6.18.8-xen
++
++ 5. make initrd for Dom0/DomU::
++
++	# make -C linux-2.6.18-xen.hg ARCH=ia64 modules_install \
++          O=$(pwd)/build-linux-2.6.18-xen_ia64
++	# mkinitrd -f /boot/efi/efi/redhat/initrd-2.6.18.8-xen.img \
++	  2.6.18.8-xen --builtin mptspi --builtin mptbase \
++	  --builtin mptscsih --builtin uhci-hcd --builtin ohci-hcd \
++	  --builtin ehci-hcd
++
++Making a disk image for guest OS
++================================
++
++ 1. make file::
++
++      # dd if=/dev/zero of=/root/rhel5.img bs=1M seek=4096 count=0
++      # mke2fs -F -j /root/rhel5.img
++      # mount -o loop /root/rhel5.img /mnt
++      # cp -ax /{dev,var,etc,usr,bin,sbin,lib} /mnt
++      # mkdir /mnt/{root,proc,sys,home,tmp}
++
++      Note: You may miss some device files. If so, please create them
++      with mknod. Or you can use tar instead of cp.
++
++ 2. modify DomU's fstab::
++
++      # vi /mnt/etc/fstab
++         /dev/xvda1  /            ext3    defaults        1 1
++         none        /dev/pts     devpts  gid=5,mode=620  0 0
++         none        /dev/shm     tmpfs   defaults        0 0
++         none        /proc        proc    defaults        0 0
++         none        /sys         sysfs   defaults        0 0
++
++ 3. modify inittab
++
++    set runlevel to 3 to avoid X trying to start::
++
++      # vi /mnt/etc/inittab
++         id:3:initdefault:
++
++    Start a getty on the hvc0 console::
++
++       X0:2345:respawn:/sbin/mingetty hvc0
++
++    tty1-6 mingetty can be commented out
++
++ 4. add hvc0 into /etc/securetty::
++
++      # vi /mnt/etc/securetty (add hvc0)
++
++ 5. umount::
++
++      # umount /mnt
++
++FYI, virt-manager can also make a disk image for guest OS.
++It's GUI tools and easy to make it.
++
++Boot Xen & Domain0
++==================
++
++ 1. replace elilo
++    elilo of RHEL5 can boot Xen and Dom0.
++    If you use old elilo (e.g RHEL4), please download from the below
++    http://elilo.sourceforge.net/cgi-bin/blosxom
++    and copy into /boot/efi/efi/redhat/::
++
++      # cp elilo-3.6-ia64.efi /boot/efi/efi/redhat/elilo.efi
++
++ 2. modify elilo.conf (like the below)::
++
++      # vi /boot/efi/efi/redhat/elilo.conf
++      prompt
++      timeout=20
++      default=xen
++      relocatable
++
++      image=vmlinuz-2.6.18.8-xen
++             label=xen
++             vmm=xen.gz
++             initrd=initrd-2.6.18.8-xen.img
++             read-only
++             append=" -- rhgb root=/dev/sda2"
++
++The append options before "--" are for xen hypervisor,
++the options after "--" are for dom0.
++
++FYI, your machine may need console options like
++"com1=19200,8n1 console=vga,com1". For example,
++append="com1=19200,8n1 console=vga,com1 -- rhgb console=tty0 \
++console=ttyS0 root=/dev/sda2"
++
++Getting and Building domU with pv_ops
++=====================================
++
++ 1. get pv_ops tree::
++
++      # git clone http://people.valinux.co.jp/~yamahata/xen-ia64/linux-2.6-xen-ia64.git/
++
++ 2. git branch (if necessary)::
++
++      # cd linux-2.6-xen-ia64/
++      # git checkout -b your_branch origin/xen-ia64-domu-minimal-2008may19
++
++   Note:
++     The current branch is xen-ia64-domu-minimal-2008may19.
++     But you would find the new branch. You can see with
++     "git branch -r" to get the branch lists.
++
++       http://people.valinux.co.jp/~yamahata/xen-ia64/for_eagl/linux-2.6-ia64-pv-ops.git/
++
++     is also available.
++
++     The tree is based on
++
++      git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux-2.6 test)
++
++ 3. copy .config for pv_ops of domU::
++
++      # cp arch/ia64/configs/xen_domu_wip_defconfig .config
++
++ 4. make kernel with pv_ops::
++
++      # make oldconfig
++      # make
++
++ 5. install the kernel and initrd::
++
++      # cp vmlinux.gz /boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU
++      # make modules_install
++      # mkinitrd -f /boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img \
++        2.6.26-rc3xen-ia64-08941-g1b12161 --builtin mptspi \
++        --builtin mptbase --builtin mptscsih --builtin uhci-hcd \
++        --builtin ohci-hcd --builtin ehci-hcd
++
++Boot DomainU with pv_ops
++========================
++
++ 1. make config of DomU::
++
++     # vi /etc/xen/rhel5
++       kernel = "/boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU"
++       ramdisk = "/boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img"
++       vcpus = 1
++       memory = 512
++       name = "rhel5"
++       disk = [ 'file:/root/rhel5.img,xvda1,w' ]
++       root = "/dev/xvda1 ro"
++       extra= "rhgb console=hvc0"
++
++ 2. After boot xen and dom0, start xend::
++
++	# /etc/init.d/xend start
++
++   ( In the debugging case, `# XEND_DEBUG=1 xend trace_start` )
++
++ 3. start domU::
++
++	# xm create -c rhel5
++
++Reference
++=========
++- Wiki of Xen/IA64 upstream merge
++  http://wiki.xensource.com/xenwiki/XenIA64/UpstreamMerge
++
++Written by Akio Takebe <takebe_akio@jp.fujitsu.com> on 28 May 2008
+diff --git a/Documentation/ia64/xen.txt b/Documentation/ia64/xen.txt
+deleted file mode 100644
+index a12c74ce2773..000000000000
+--- a/Documentation/ia64/xen.txt
++++ /dev/null
+@@ -1,183 +0,0 @@
+-       Recipe for getting/building/running Xen/ia64 with pv_ops
+-       --------------------------------------------------------
+-
+-This recipe describes how to get xen-ia64 source and build it,
+-and run domU with pv_ops.
+-
+-============
+-Requirements
+-============
+-
+-  - python
+-  - mercurial
+-    it (aka "hg") is an open-source source code
+-    management software. See the below.
+-    http://www.selenic.com/mercurial/wiki/
+-  - git
+-  - bridge-utils
+-
+-=================================
+-Getting and Building Xen and Dom0
+-=================================
+-
+-  My environment is;
+-    Machine  : Tiger4
+-    Domain0 OS  : RHEL5
+-    DomainU OS  : RHEL5
+-
+- 1. Download source
+-    # hg clone http://xenbits.xensource.com/ext/ia64/xen-unstable.hg
+-    # cd xen-unstable.hg
+-    # hg clone http://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
+-
+- 2. # make world
+-
+- 3. # make install-tools
+-
+- 4. copy kernels and xen
+-    # cp xen/xen.gz /boot/efi/efi/redhat/
+-    # cp build-linux-2.6.18-xen_ia64/vmlinux.gz \
+-      /boot/efi/efi/redhat/vmlinuz-2.6.18.8-xen
+-
+- 5. make initrd for Dom0/DomU
+-    # make -C linux-2.6.18-xen.hg ARCH=ia64 modules_install \
+-      O=$(pwd)/build-linux-2.6.18-xen_ia64
+-    # mkinitrd -f /boot/efi/efi/redhat/initrd-2.6.18.8-xen.img \
+-      2.6.18.8-xen --builtin mptspi --builtin mptbase \
+-      --builtin mptscsih --builtin uhci-hcd --builtin ohci-hcd \
+-      --builtin ehci-hcd
+-
+-================================
+-Making a disk image for guest OS
+-================================
+-
+- 1. make file
+-    # dd if=/dev/zero of=/root/rhel5.img bs=1M seek=4096 count=0
+-    # mke2fs -F -j /root/rhel5.img
+-    # mount -o loop /root/rhel5.img /mnt
+-    # cp -ax /{dev,var,etc,usr,bin,sbin,lib} /mnt
+-    # mkdir /mnt/{root,proc,sys,home,tmp}
+-
+-    Note: You may miss some device files. If so, please create them
+-    with mknod. Or you can use tar instead of cp.
+-
+- 2. modify DomU's fstab
+-    # vi /mnt/etc/fstab
+-       /dev/xvda1  /            ext3    defaults        1 1
+-       none        /dev/pts     devpts  gid=5,mode=620  0 0
+-       none        /dev/shm     tmpfs   defaults        0 0
+-       none        /proc        proc    defaults        0 0
+-       none        /sys         sysfs   defaults        0 0
+-
+- 3. modify inittab
+-    set runlevel to 3 to avoid X trying to start
+-    # vi /mnt/etc/inittab
+-       id:3:initdefault:
+-    Start a getty on the hvc0 console
+-       X0:2345:respawn:/sbin/mingetty hvc0
+-    tty1-6 mingetty can be commented out
+-
+- 4. add hvc0 into /etc/securetty
+-    # vi /mnt/etc/securetty (add hvc0)
+-
+- 5. umount
+-    # umount /mnt
+-
+-FYI, virt-manager can also make a disk image for guest OS.
+-It's GUI tools and easy to make it.
+-
+-==================
+-Boot Xen & Domain0
+-==================
+-
+- 1. replace elilo
+-    elilo of RHEL5 can boot Xen and Dom0.
+-    If you use old elilo (e.g RHEL4), please download from the below
+-    http://elilo.sourceforge.net/cgi-bin/blosxom
+-    and copy into /boot/efi/efi/redhat/
+-    # cp elilo-3.6-ia64.efi /boot/efi/efi/redhat/elilo.efi
+-
+- 2. modify elilo.conf (like the below)
+-    # vi /boot/efi/efi/redhat/elilo.conf
+-     prompt
+-     timeout=20
+-     default=xen
+-     relocatable
+-
+-     image=vmlinuz-2.6.18.8-xen
+-             label=xen
+-             vmm=xen.gz
+-             initrd=initrd-2.6.18.8-xen.img
+-             read-only
+-             append=" -- rhgb root=/dev/sda2"
+-
+-The append options before "--" are for xen hypervisor,
+-the options after "--" are for dom0.
+-
+-FYI, your machine may need console options like
+-"com1=19200,8n1 console=vga,com1". For example,
+-append="com1=19200,8n1 console=vga,com1 -- rhgb console=tty0 \
+-console=ttyS0 root=/dev/sda2"
+-
+-=====================================
+-Getting and Building domU with pv_ops
+-=====================================
+-
+- 1. get pv_ops tree
+-    # git clone http://people.valinux.co.jp/~yamahata/xen-ia64/linux-2.6-xen-ia64.git/
+-
+- 2. git branch (if necessary)
+-    # cd linux-2.6-xen-ia64/
+-    # git checkout -b your_branch origin/xen-ia64-domu-minimal-2008may19
+-    (Note: The current branch is xen-ia64-domu-minimal-2008may19.
+-    But you would find the new branch. You can see with
+-    "git branch -r" to get the branch lists.
+-    http://people.valinux.co.jp/~yamahata/xen-ia64/for_eagl/linux-2.6-ia64-pv-ops.git/
+-    is also available. The tree is based on
+-    git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux-2.6 test)
+-
+-
+- 3. copy .config for pv_ops of domU
+-    # cp arch/ia64/configs/xen_domu_wip_defconfig .config
+-
+- 4. make kernel with pv_ops
+-    # make oldconfig
+-    # make
+-
+- 5. install the kernel and initrd
+-    # cp vmlinux.gz /boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU
+-    # make modules_install
+-    # mkinitrd -f /boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img \
+-      2.6.26-rc3xen-ia64-08941-g1b12161 --builtin mptspi \
+-      --builtin mptbase --builtin mptscsih --builtin uhci-hcd \
+-      --builtin ohci-hcd --builtin ehci-hcd
+-
+-========================
+-Boot DomainU with pv_ops
+-========================
+-
+- 1. make config of DomU
+-   # vi /etc/xen/rhel5
+-     kernel = "/boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU"
+-     ramdisk = "/boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img"
+-     vcpus = 1
+-     memory = 512
+-     name = "rhel5"
+-     disk = [ 'file:/root/rhel5.img,xvda1,w' ]
+-     root = "/dev/xvda1 ro"
+-     extra= "rhgb console=hvc0"
+-
+- 2. After boot xen and dom0, start xend
+-   # /etc/init.d/xend start
+-   ( In the debugging case, # XEND_DEBUG=1 xend trace_start )
+-
+- 3. start domU
+-   # xm create -c rhel5
+-
+-=========
+-Reference
+-=========
+-- Wiki of Xen/IA64 upstream merge
+-  http://wiki.xensource.com/xenwiki/XenIA64/UpstreamMerge
+-
+-Written by Akio Takebe <takebe_akio@jp.fujitsu.com> on 28 May 2008
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4e1e598a32d9..ddd526efcb46 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14083,7 +14083,7 @@ SGI SN-IA64 (Altix) SERIAL CONSOLE DRIVER
+ M:	Pat Gefre <pfg@sgi.com>
+ L:	linux-ia64@vger.kernel.org
+ S:	Supported
+-F:	Documentation/ia64/serial.txt
++F:	Documentation/ia64/serial.rst
+ F:	drivers/tty/serial/ioc?_serial.c
+ F:	include/linux/ioc?.h
+ 
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 8f106638913c..3795d18276c4 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -852,7 +852,7 @@ valid_phys_addr_range (phys_addr_t phys_addr, unsigned long size)
+ 	 * /dev/mem reads and writes use copy_to_user(), which implicitly
+ 	 * uses a granule-sized kernel identity mapping.  It's really
+ 	 * only safe to do this for regions in kern_memmap.  For more
+-	 * details, see Documentation/ia64/aliasing.txt.
++	 * details, see Documentation/ia64/aliasing.rst.
+ 	 */
+ 	attr = kern_mem_attribute(phys_addr, size);
+ 	if (attr & EFI_MEMORY_WB || attr & EFI_MEMORY_UC)
+diff --git a/arch/ia64/kernel/fsys.S b/arch/ia64/kernel/fsys.S
+index d80c99a5f55d..0750a716adc7 100644
+--- a/arch/ia64/kernel/fsys.S
++++ b/arch/ia64/kernel/fsys.S
+@@ -28,7 +28,7 @@
+ #include <asm/native/inst.h>
+ 
+ /*
+- * See Documentation/ia64/fsys.txt for details on fsyscalls.
++ * See Documentation/ia64/fsys.rst for details on fsyscalls.
+  *
+  * On entry to an fsyscall handler:
+  *   r10	= 0 (i.e., defaults to "successful syscall return")
+diff --git a/arch/ia64/mm/ioremap.c b/arch/ia64/mm/ioremap.c
+index 43964cde6214..c7da3376b6f8 100644
+--- a/arch/ia64/mm/ioremap.c
++++ b/arch/ia64/mm/ioremap.c
+@@ -45,7 +45,7 @@ ioremap (unsigned long phys_addr, unsigned long size)
+ 	/*
+ 	 * For things in kern_memmap, we must use the same attribute
+ 	 * as the rest of the kernel.  For more details, see
+-	 * Documentation/ia64/aliasing.txt.
++	 * Documentation/ia64/aliasing.rst.
+ 	 */
+ 	attr = kern_mem_attribute(phys_addr, size);
+ 	if (attr & EFI_MEMORY_WB)
+diff --git a/arch/ia64/pci/pci.c b/arch/ia64/pci/pci.c
+index 196a0dd7ff97..881dd5327752 100644
+--- a/arch/ia64/pci/pci.c
++++ b/arch/ia64/pci/pci.c
+@@ -449,7 +449,7 @@ pci_mmap_legacy_page_range(struct pci_bus *bus, struct vm_area_struct *vma,
+ 		return -ENOSYS;
+ 
+ 	/*
+-	 * Avoid attribute aliasing.  See Documentation/ia64/aliasing.txt
++	 * Avoid attribute aliasing.  See Documentation/ia64/aliasing.rst
+ 	 * for more details.
+ 	 */
+ 	if (!valid_mmap_phys_addr_range(vma->vm_pgoff, size))
 -- 
 2.20.1
 
