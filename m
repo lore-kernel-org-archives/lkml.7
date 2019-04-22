@@ -2,75 +2,66 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A37C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A580DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66B620652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353802064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940120;
-	bh=TclfmVyv8rLiOOMPl5wxGkBgu3fn5iMv1XcLT40ycL4=;
+	s=default; t=1555940131;
+	bh=hXrbXusdB3+E1408F1vj5bcD6qHTlUBZRNYOxqP3DFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rbGjRfisQh1P5xALQlz2EcWVVEhZ0ZadvDcxlQwHcxKU2tLxKYAIizYxdK7tEimgj
-	 R9LTbyMvwHSLcFMmxMmZH27xH10SosonyE/smcNHO81DoHEYFvbD+dKTunxeJav8BX
-	 2EffRqjQ3wJV8aABMkP4Y3ukwT4wJMRIA+Q8x3Fs=
+	b=jq0aHzfuVqRFf6/E9acY/9s/xO4PkiOYpjxgZliLH5EM7+2CjNnuBV4c09QrOS/i5
+	 DZM7dhyX3kM6U96tVw58cvwmgykgsnn2xMGT6Y/KnXhJOVvorFTojbdGaBBaeworRi
+	 PU9MEQwugGfPE57CTIuxB3iVCHu2N8QqJfiXvgJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfDVNfS (ORCPT
+        id S1728197AbfDVNfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:35:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37220 "EHLO
+        Mon, 22 Apr 2019 09:35:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37020 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727457AbfDVN2R (ORCPT
+        with ESMTP id S1727443AbfDVN2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:17 -0400
+        Mon, 22 Apr 2019 09:28:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8uXPVjyZ9Ybda5RnNatJw361S7SYue4thjnEDz18ZQU=; b=GZyfNw/IQOEixEwPA/OyGyZmwC
-        BHPllXXysWl71mVn0U8qAWXXPQ7ifqz5Hj6vqNYNrChY2qLNDVS3oEzH1UPI+k00/jwYqMA/lEFcA
-        JYkjAKGVwOWqOHuTJhj4AShs2CFIbm7bSNxG+1zy7xeltyNYW1ZcHWS12/gzQTnV0yrUMOtUummNo
-        9RUlFALm4psm+UoTfIrPMolAk8Q9Txu8nHcjKSbzyV7IlP8lLtBm7MLBLXsJ4vp5kv5wvDqW7XFfp
-        QH5cG5ZwUCX5ZPATBm1srMDXkg/kRBuubGAjb57Gg8YgJNOHZ9Z3n2NghFtpAgeij7tAVCZwNS7df
-        t7DlBqrA==;
+        bh=bhe8Pj7ubQvqmWNY04q8XaXTOLznyaqwKQzRGPIgP1s=; b=IRgHkW94qd/NFbW1hgskTw9p9c
+        BTKLt6bb9zTtsTsS4pbPTxGQU2nXzSEeG1LXKWClEv9Tt2kUyX3FhocE51GBOuUPGj+JtgV3X6zCy
+        MYNkL1g/wB7ovIsCqA4m/c+ZOrWurClYcijHQsFHRM1QV8Qr+335UyA2yBL1ooSf+5GwTf+jz1+9l
+        KYHd35AY4zvXF8BfCbdwC6BkDB4wTGXtUMB0UGio5yxgTK5RLHPRsi6Vql+TbKeZaNOjhQcBlfGEZ
+        wsK3FZ8wfKgINTiNW5R0SstppKkE09Tp54xICdRl2ZDUmTBQu4bIU4uMmzcq1f5WTfh6ZayIDBlQB
+        mG0Jj9Cw==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzV-0005Hv-DO; Mon, 22 Apr 2019 13:28:15 +0000
+        id 1hIYzV-0005Ho-70; Mon, 22 Apr 2019 13:28:15 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005lZ-1D; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzS-0005l7-SX; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 26/79] docs: powerpc: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:15 -0300
-Message-Id: <dbbfc37a221aa1a1320bdfbb34f593d8a76f643d.1555938376.git.mchehab+samsung@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 21/79] docs: locking: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:10 -0300
+Message-Id: <ea0bcb52e7d0f0a58e8b0d41acbce11230d7ceea.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -81,1454 +72,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert docs to ReST and add them to the arch-specific
-book.
+Convert the locking documents to ReST and add them to the
+kernel development book where it belongs.
 
-The conversion here was trivial, as almost every file there
-was already using an elegant format close to ReST standard.
+Most of the stuff here is just to make Sphinx to properly
+parse the text file, as they're already in good shape,
+not requiring massive changes in order to be parsed.
 
-The changes were mostly to mark literal blocks and add a few
-missing section title identifiers.
-
-One note with regards to "--": on Sphinx, this can't be used
-to identify a list, as it will format it badly. This can be
-used, however, to identify a long hyphen - and "---" is an
-even longer one.
+The conversion is actually:
+  - add blank lines and identation in order to identify paragraphs;
+  - fix tables markups;
+  - add some lists markups;
+  - mark literal blocks;
+  - adjust title markups.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/PCI/pci-error-recovery.txt      |   2 +-
- .../{bootwrapper.txt => bootwrapper.rst}      |  28 +++-
- .../{cpu_families.txt => cpu_families.rst}    |  23 +--
- .../{cpu_features.txt => cpu_features.rst}    |   6 +-
- Documentation/powerpc/{cxl.txt => cxl.rst}    |  46 ++++--
- .../powerpc/{cxlflash.txt => cxlflash.rst}    |  10 +-
- .../{DAWR-POWER9.txt => dawr-power9.rst}      |  10 +-
- Documentation/powerpc/{dscr.txt => dscr.rst}  |  18 +-
- ...ecovery.txt => eeh-pci-error-recovery.rst} | 108 ++++++------
- ...ed-dump.txt => firmware-assisted-dump.rst} | 117 +++++++------
- Documentation/powerpc/{hvcs.txt => hvcs.rst}  | 108 ++++++------
- Documentation/powerpc/index.rst               |  34 ++++
- Documentation/powerpc/isa-versions.rst        |  13 +-
- .../powerpc/{mpc52xx.txt => mpc52xx.rst}      |  12 +-
- ...nv.txt => pci_iov_resource_on_powernv.rst} |  15 +-
- .../powerpc/{pmu-ebb.txt => pmu-ebb.rst}      |   1 +
- Documentation/powerpc/ptrace.rst              | 156 ++++++++++++++++++
- Documentation/powerpc/ptrace.txt              | 151 -----------------
- .../{qe_firmware.txt => qe_firmware.rst}      |  37 +++--
- .../{syscall64-abi.txt => syscall64-abi.rst}  |  29 ++--
- ...al_memory.txt => transactional_memory.rst} |  45 ++---
- MAINTAINERS                                   |   6 +-
- arch/powerpc/kernel/exceptions-64s.S          |   2 +-
- drivers/soc/fsl/qe/qe.c                       |   2 +-
- drivers/tty/hvc/hvcs.c                        |   2 +-
- include/soc/fsl/qe/qe.h                       |   2 +-
- 26 files changed, 559 insertions(+), 424 deletions(-)
- rename Documentation/powerpc/{bootwrapper.txt => bootwrapper.rst} (93%)
- rename Documentation/powerpc/{cpu_families.txt => cpu_families.rst} (95%)
- rename Documentation/powerpc/{cpu_features.txt => cpu_features.rst} (97%)
- rename Documentation/powerpc/{cxl.txt => cxl.rst} (95%)
- rename Documentation/powerpc/{cxlflash.txt => cxlflash.rst} (98%)
- rename Documentation/powerpc/{DAWR-POWER9.txt => dawr-power9.rst} (95%)
- rename Documentation/powerpc/{dscr.txt => dscr.rst} (91%)
- rename Documentation/powerpc/{eeh-pci-error-recovery.txt => eeh-pci-error-recovery.rst} (82%)
- rename Documentation/powerpc/{firmware-assisted-dump.txt => firmware-assisted-dump.rst} (80%)
- rename Documentation/powerpc/{hvcs.txt => hvcs.rst} (91%)
- create mode 100644 Documentation/powerpc/index.rst
- rename Documentation/powerpc/{mpc52xx.txt => mpc52xx.rst} (91%)
- rename Documentation/powerpc/{pci_iov_resource_on_powernv.txt => pci_iov_resource_on_powernv.rst} (97%)
- rename Documentation/powerpc/{pmu-ebb.txt => pmu-ebb.rst} (99%)
- create mode 100644 Documentation/powerpc/ptrace.rst
- delete mode 100644 Documentation/powerpc/ptrace.txt
- rename Documentation/powerpc/{qe_firmware.txt => qe_firmware.rst} (95%)
- rename Documentation/powerpc/{syscall64-abi.txt => syscall64-abi.rst} (82%)
- rename Documentation/powerpc/{transactional_memory.txt => transactional_memory.rst} (93%)
+ Documentation/kernel-hacking/locking.rst      |   2 +-
+ Documentation/locking/index.rst               |  24 +++
+ ...{lockdep-design.txt => lockdep-design.rst} |  41 ++--
+ Documentation/locking/lockstat.rst            | 204 ++++++++++++++++++
+ Documentation/locking/lockstat.txt            | 183 ----------------
+ .../{locktorture.txt => locktorture.rst}      | 105 +++++----
+ .../{mutex-design.txt => mutex-design.rst}    |  26 ++-
+ ...t-mutex-design.txt => rt-mutex-design.rst} | 139 ++++++------
+ .../locking/{rt-mutex.txt => rt-mutex.rst}    |  30 +--
+ .../locking/{spinlocks.txt => spinlocks.rst}  |  32 ++-
+ ...w-mutex-design.txt => ww-mutex-design.rst} |  82 +++----
+ Documentation/pi-futex.txt                    |   2 +-
+ .../it_IT/kernel-hacking/locking.rst          |   2 +-
+ drivers/gpu/drm/drm_modeset_lock.c            |   2 +-
+ include/linux/lockdep.h                       |   2 +-
+ include/linux/mutex.h                         |   2 +-
+ include/linux/rwsem.h                         |   2 +-
+ kernel/locking/mutex.c                        |   2 +-
+ kernel/locking/rtmutex.c                      |   2 +-
+ lib/Kconfig.debug                             |   4 +-
+ 20 files changed, 506 insertions(+), 382 deletions(-)
+ create mode 100644 Documentation/locking/index.rst
+ rename Documentation/locking/{lockdep-design.txt => lockdep-design.rst} (93%)
+ create mode 100644 Documentation/locking/lockstat.rst
+ delete mode 100644 Documentation/locking/lockstat.txt
+ rename Documentation/locking/{locktorture.txt => locktorture.rst} (57%)
+ rename Documentation/locking/{mutex-design.txt => mutex-design.rst} (94%)
+ rename Documentation/locking/{rt-mutex-design.txt => rt-mutex-design.rst} (91%)
+ rename Documentation/locking/{rt-mutex.txt => rt-mutex.rst} (71%)
+ rename Documentation/locking/{spinlocks.txt => spinlocks.rst} (89%)
+ rename Documentation/locking/{ww-mutex-design.txt => ww-mutex-design.rst} (93%)
 
-diff --git a/Documentation/PCI/pci-error-recovery.txt b/Documentation/PCI/pci-error-recovery.txt
-index 0b6bb3ef449e..1ba6a89cf92f 100644
---- a/Documentation/PCI/pci-error-recovery.txt
-+++ b/Documentation/PCI/pci-error-recovery.txt
-@@ -389,7 +389,7 @@ platforms aren't supposed to share interrupts between many devices
- anyway :)
- 
- >>> Implementation details for the powerpc platform are discussed in
-->>> the file Documentation/powerpc/eeh-pci-error-recovery.txt
-+>>> the file Documentation/powerpc/eeh-pci-error-recovery.rst
- 
- >>> As of this writing, there is a growing list of device drivers with
- >>> patches implementing error recovery. Not all of these patches are in
-diff --git a/Documentation/powerpc/bootwrapper.txt b/Documentation/powerpc/bootwrapper.rst
-similarity index 93%
-rename from Documentation/powerpc/bootwrapper.txt
-rename to Documentation/powerpc/bootwrapper.rst
-index d60fced5e1cc..a6292afba573 100644
---- a/Documentation/powerpc/bootwrapper.txt
-+++ b/Documentation/powerpc/bootwrapper.rst
-@@ -1,5 +1,7 @@
-+========================
- The PowerPC boot wrapper
--------------------------
-+========================
-+
- Copyright (C) Secret Lab Technologies Ltd.
- 
- PowerPC image targets compresses and wraps the kernel image (vmlinux) with
-@@ -21,6 +23,7 @@ it uses the wrapper script (arch/powerpc/boot/wrapper) to generate target
- image.  The details of the build system is discussed in the next section.
- Currently, the following image format targets exist:
- 
-+   ==================== ========================================================
-    cuImage.%:		Backwards compatible uImage for older version of
- 			U-Boot (for versions that don't understand the device
- 			tree).  This image embeds a device tree blob inside
-@@ -29,31 +32,36 @@ Currently, the following image format targets exist:
- 			with boot wrapper code that extracts data from the old
- 			bd_info structure and loads the data into the device
- 			tree before jumping into the kernel.
--			  Because of the series of #ifdefs found in the
-+
-+			Because of the series of #ifdefs found in the
- 			bd_info structure used in the old U-Boot interfaces,
- 			cuImages are platform specific.  Each specific
- 			U-Boot platform has a different platform init file
- 			which populates the embedded device tree with data
- 			from the platform specific bd_info file.  The platform
- 			specific cuImage platform init code can be found in
--			arch/powerpc/boot/cuboot.*.c.  Selection of the correct
-+			`arch/powerpc/boot/cuboot.*.c`. Selection of the correct
- 			cuImage init code for a specific board can be found in
- 			the wrapper structure.
-+
-    dtbImage.%:		Similar to zImage, except device tree blob is embedded
- 			inside the image instead of provided by firmware.  The
- 			output image file can be either an elf file or a flat
- 			binary depending on the platform.
--			  dtbImages are used on systems which do not have an
-+
-+			dtbImages are used on systems which do not have an
- 			interface for passing a device tree directly.
- 			dtbImages are similar to simpleImages except that
- 			dtbImages have platform specific code for extracting
- 			data from the board firmware, but simpleImages do not
- 			talk to the firmware at all.
--			  PlayStation 3 support uses dtbImage.  So do Embedded
-+
-+			PlayStation 3 support uses dtbImage.  So do Embedded
- 			Planet boards using the PlanetCore firmware.  Board
- 			specific initialization code is typically found in a
- 			file named arch/powerpc/boot/<platform>.c; but this
- 			can be overridden by the wrapper script.
-+
-    simpleImage.%:	Firmware independent compressed image that does not
- 			depend on any particular firmware interface and embeds
- 			a device tree blob.  This image is a flat binary that
-@@ -61,14 +69,16 @@ Currently, the following image format targets exist:
- 			Firmware cannot pass any configuration data to the
- 			kernel with this image type and it depends entirely on
- 			the embedded device tree for all information.
--			  The simpleImage is useful for booting systems with
-+
-+			The simpleImage is useful for booting systems with
- 			an unknown firmware interface or for booting from
- 			a debugger when no firmware is present (such as on
- 			the Xilinx Virtex platform).  The only assumption that
- 			simpleImage makes is that RAM is correctly initialized
- 			and that the MMU is either off or has RAM mapped to
- 			base address 0.
--			  simpleImage also supports inserting special platform
-+
-+			simpleImage also supports inserting special platform
- 			specific initialization code to the start of the bootup
- 			sequence.  The virtex405 platform uses this feature to
- 			ensure that the cache is invalidated before caching
-@@ -81,9 +91,11 @@ Currently, the following image format targets exist:
- 			named (virtex405-<board>.dts).  Search the wrapper
- 			script for 'virtex405' and see the file
- 			arch/powerpc/boot/virtex405-head.S for details.
-+
-    treeImage.%;		Image format for used with OpenBIOS firmware found
- 			on some ppc4xx hardware.  This image embeds a device
- 			tree blob inside the image.
-+
-    uImage:		Native image format used by U-Boot.  The uImage target
- 			does not add any boot code.  It just wraps a compressed
- 			vmlinux in the uImage data structure.  This image
-@@ -91,12 +103,14 @@ Currently, the following image format targets exist:
- 			a device tree to the kernel at boot.  If using an older
- 			version of U-Boot, then you need to use a cuImage
- 			instead.
-+
-    zImage.%:		Image format which does not embed a device tree.
- 			Used by OpenFirmware and other firmware interfaces
- 			which are able to supply a device tree.  This image
- 			expects firmware to provide the device tree at boot.
- 			Typically, if you have general purpose PowerPC
- 			hardware then you want this image format.
-+   ==================== ========================================================
- 
- Image types which embed a device tree blob (simpleImage, dtbImage, treeImage,
- and cuImage) all generate the device tree blob from a file in the
-diff --git a/Documentation/powerpc/cpu_families.txt b/Documentation/powerpc/cpu_families.rst
-similarity index 95%
-rename from Documentation/powerpc/cpu_families.txt
-rename to Documentation/powerpc/cpu_families.rst
-index fc08e22feb1a..1e063c5440c3 100644
---- a/Documentation/powerpc/cpu_families.txt
-+++ b/Documentation/powerpc/cpu_families.rst
-@@ -1,3 +1,4 @@
-+============
- CPU Families
- ============
- 
-@@ -8,8 +9,8 @@ and are supported by arch/powerpc.
- Book3S (aka sPAPR)
- ------------------
- 
-- - Hash MMU
-- - Mix of 32 & 64 bit
-+- Hash MMU
-+- Mix of 32 & 64 bit::
- 
-    +--------------+                 +----------------+
-    |  Old POWER   | --------------> | RS64 (threads) |
-@@ -108,8 +109,8 @@ Book3S (aka sPAPR)
- IBM BookE
- ---------
- 
-- - Software loaded TLB.
-- - All 32 bit
-+- Software loaded TLB.
-+- All 32 bit::
- 
-    +--------------+
-    |     401      |
-@@ -155,8 +156,8 @@ IBM BookE
- Motorola/Freescale 8xx
- ----------------------
- 
-- - Software loaded with hardware assist.
-- - All 32 bit
-+- Software loaded with hardware assist.
-+- All 32 bit::
- 
-    +-------------+
-    | MPC8xx Core |
-@@ -166,9 +167,9 @@ Motorola/Freescale 8xx
- Freescale BookE
- ---------------
- 
-- - Software loaded TLB.
-- - e6500 adds HW loaded indirect TLB entries.
-- - Mix of 32 & 64 bit
-+- Software loaded TLB.
-+- e6500 adds HW loaded indirect TLB entries.
-+- Mix of 32 & 64 bit::
- 
-    +--------------+
-    |     e200     |
-@@ -207,8 +208,8 @@ Freescale BookE
- IBM A2 core
- -----------
- 
-- - Book3E, software loaded TLB + HW loaded indirect TLB entries.
-- - 64 bit
-+- Book3E, software loaded TLB + HW loaded indirect TLB entries.
-+- 64 bit::
- 
-    +--------------+     +----------------+
-    |   A2 core    | --> |      WSP       |
-diff --git a/Documentation/powerpc/cpu_features.txt b/Documentation/powerpc/cpu_features.rst
-similarity index 97%
-rename from Documentation/powerpc/cpu_features.txt
-rename to Documentation/powerpc/cpu_features.rst
-index ae09df8722c8..b7bcdd2f41bb 100644
---- a/Documentation/powerpc/cpu_features.txt
-+++ b/Documentation/powerpc/cpu_features.rst
-@@ -1,3 +1,7 @@
-+============
-+CPU Features
-+============
-+
- Hollis Blanchard <hollis@austin.ibm.com>
- 5 Jun 2002
- 
-@@ -32,7 +36,7 @@ anyways).
- After detecting the processor type, the kernel patches out sections of code
- that shouldn't be used by writing nop's over it. Using cpufeatures requires
- just 2 macros (found in arch/powerpc/include/asm/cputable.h), as seen in head.S
--transfer_to_handler:
-+transfer_to_handler::
- 
- 	#ifdef CONFIG_ALTIVEC
- 	BEGIN_FTR_SECTION
-diff --git a/Documentation/powerpc/cxl.txt b/Documentation/powerpc/cxl.rst
-similarity index 95%
-rename from Documentation/powerpc/cxl.txt
-rename to Documentation/powerpc/cxl.rst
-index c5e8d5098ed3..99e704afb09d 100644
---- a/Documentation/powerpc/cxl.txt
-+++ b/Documentation/powerpc/cxl.rst
-@@ -1,3 +1,4 @@
-+====================================
- Coherent Accelerator Interface (CXL)
- ====================================
- 
-@@ -21,6 +22,8 @@ Introduction
- Hardware overview
- =================
- 
-+    ::
-+
-          POWER8/9             FPGA
-        +----------+        +---------+
-        |          |        |         |
-@@ -59,14 +62,16 @@ Hardware overview
-     the fault. The context to which this fault is serviced is based on
-     who owns that acceleration function.
- 
--    POWER8 <-----> PSL Version 8 is compliant to the CAIA Version 1.0.
--    POWER9 <-----> PSL Version 9 is compliant to the CAIA Version 2.0.
-+    - POWER8 <------> PSL Version 8 is compliant to the CAIA Version 1.0.
-+    - POWER9 <------> PSL Version 9 is compliant to the CAIA Version 2.0.
-+
-     This PSL Version 9 provides new features such as:
-+
-     * Interaction with the nest MMU on the P9 chip.
-     * Native DMA support.
-     * Supports sending ASB_Notify messages for host thread wakeup.
-     * Supports Atomic operations.
--    * ....
-+    * etc.
- 
-     Cards with a PSL9 won't work on a POWER8 system and cards with a
-     PSL8 won't work on a POWER9 system.
-@@ -147,7 +152,9 @@ User API
-     master devices.
- 
-     A userspace library libcxl is available here:
-+
- 	https://github.com/ibm-capi/libcxl
-+
-     This provides a C interface to this kernel API.
- 
- open
-@@ -165,7 +172,8 @@ open
-     When all available contexts are allocated the open call will fail
-     and return -ENOSPC.
- 
--    Note: IRQs need to be allocated for each context, which may limit
-+    Note:
-+	  IRQs need to be allocated for each context, which may limit
-           the number of contexts that can be created, and therefore
-           how many times the device can be opened. The POWER8 CAPP
-           supports 2040 IRQs and 3 are used by the kernel, so 2037 are
-@@ -186,7 +194,9 @@ ioctl
-         updated as userspace allocates and frees memory. This ioctl
-         returns once the AFU context is started.
- 
--        Takes a pointer to a struct cxl_ioctl_start_work:
-+        Takes a pointer to a struct cxl_ioctl_start_work
-+
-+            ::
- 
-                 struct cxl_ioctl_start_work {
-                         __u64 flags;
-@@ -269,7 +279,7 @@ read
-     The buffer passed to read() must be at least 4K bytes.
- 
-     The result of the read will be a buffer of one or more events,
--    each event is of type struct cxl_event, of varying size.
-+    each event is of type struct cxl_event, of varying size::
- 
-             struct cxl_event {
-                     struct cxl_event_header header;
-@@ -280,7 +290,9 @@ read
-                     };
-             };
- 
--    The struct cxl_event_header is defined as:
-+    The struct cxl_event_header is defined as
-+
-+        ::
- 
-             struct cxl_event_header {
-                     __u16 type;
-@@ -307,7 +319,9 @@ read
-             For future extensions and padding.
- 
-     If the event type is CXL_EVENT_AFU_INTERRUPT then the event
--    structure is defined as:
-+    structure is defined as
-+
-+        ::
- 
-             struct cxl_event_afu_interrupt {
-                     __u16 flags;
-@@ -326,7 +340,9 @@ read
-             For future extensions and padding.
- 
-     If the event type is CXL_EVENT_DATA_STORAGE then the event
--    structure is defined as:
-+    structure is defined as
-+
-+        ::
- 
-             struct cxl_event_data_storage {
-                     __u16 flags;
-@@ -356,7 +372,9 @@ read
-             For future extensions
- 
-     If the event type is CXL_EVENT_AFU_ERROR then the event structure
--    is defined as:
-+    is defined as
-+
-+        ::
- 
-             struct cxl_event_afu_error {
-                     __u16 flags;
-@@ -393,15 +411,15 @@ open
- ioctl
- -----
- 
--CXL_IOCTL_DOWNLOAD_IMAGE:
--CXL_IOCTL_VALIDATE_IMAGE:
-+CXL_IOCTL_DOWNLOAD_IMAGE / CXL_IOCTL_VALIDATE_IMAGE:
-     Starts and controls flashing a new FPGA image. Partial
-     reconfiguration is not supported (yet), so the image must contain
-     a copy of the PSL and AFU(s). Since an image can be quite large,
-     the caller may have to iterate, splitting the image in smaller
-     chunks.
- 
--    Takes a pointer to a struct cxl_adapter_image:
-+    Takes a pointer to a struct cxl_adapter_image::
-+
-         struct cxl_adapter_image {
-             __u64 flags;
-             __u64 data;
-@@ -442,7 +460,7 @@ Udev rules
-     The following udev rules could be used to create a symlink to the
-     most logical chardev to use in any programming mode (afuX.Yd for
-     dedicated, afuX.Ys for afu directed), since the API is virtually
--    identical for each:
-+    identical for each::
- 
- 	SUBSYSTEM=="cxl", ATTRS{mode}=="dedicated_process", SYMLINK="cxl/%b"
- 	SUBSYSTEM=="cxl", ATTRS{mode}=="afu_directed", \
-diff --git a/Documentation/powerpc/cxlflash.txt b/Documentation/powerpc/cxlflash.rst
-similarity index 98%
-rename from Documentation/powerpc/cxlflash.txt
-rename to Documentation/powerpc/cxlflash.rst
-index a64bdaa0a1cf..cea67931b3b9 100644
---- a/Documentation/powerpc/cxlflash.txt
-+++ b/Documentation/powerpc/cxlflash.rst
-@@ -1,3 +1,7 @@
-+================================
-+Coherent Accelerator (CXL) Flash
-+================================
-+
- Introduction
- ============
- 
-@@ -28,7 +32,7 @@ Introduction
-     responsible for the initialization of the adapter, setting up the
-     special path for user space access, and performing error recovery. It
-     communicates directly the Flash Accelerator Functional Unit (AFU)
--    as described in Documentation/powerpc/cxl.txt.
-+    as described in Documentation/powerpc/cxl.rst.
- 
-     The cxlflash driver supports two, mutually exclusive, modes of
-     operation at the device (LUN) level:
-@@ -58,7 +62,7 @@ Overview
- 
-     The CXL Flash Adapter Driver establishes a master context with the
-     AFU. It uses memory mapped I/O (MMIO) for this control and setup. The
--    Adapter Problem Space Memory Map looks like this:
-+    Adapter Problem Space Memory Map looks like this::
- 
-                      +-------------------------------+
-                      |    512 * 64 KB User MMIO      |
-@@ -375,7 +379,7 @@ CXL Flash Driver Host IOCTLs
-     Each host adapter instance that is supported by the cxlflash driver
-     has a special character device associated with it to enable a set of
-     host management function. These character devices are hosted in a
--    class dedicated for cxlflash and can be accessed via /dev/cxlflash/*.
-+    class dedicated for cxlflash and can be accessed via `/dev/cxlflash/*`.
- 
-     Applications can be written to perform various functions using the
-     host ioctl APIs below.
-diff --git a/Documentation/powerpc/DAWR-POWER9.txt b/Documentation/powerpc/dawr-power9.rst
-similarity index 95%
-rename from Documentation/powerpc/DAWR-POWER9.txt
-rename to Documentation/powerpc/dawr-power9.rst
-index 2feaa6619658..882e5af02b9c 100644
---- a/Documentation/powerpc/DAWR-POWER9.txt
-+++ b/Documentation/powerpc/dawr-power9.rst
-@@ -1,10 +1,11 @@
-+=====================
- DAWR issues on POWER9
--============================
-+=====================
- 
- On POWER9 the DAWR can cause a checkstop if it points to cache
- inhibited (CI) memory. Currently Linux has no way to disinguish CI
- memory when configuring the DAWR, so (for now) the DAWR is disabled by
--this commit:
-+this commit::
- 
-     commit 9654153158d3e0684a1bdb76dbababdb7111d5a0
-     Author: Michael Neuling <mikey@neuling.org>
-@@ -12,7 +13,7 @@ this commit:
-     powerpc: Disable DAWR in the base POWER9 CPU features
- 
- Technical Details:
--============================
-+==================
- 
- DAWR has 6 different ways of being set.
- 1) ptrace
-@@ -37,7 +38,7 @@ DAWR on the migration.
- For xmon, the 'bd' command will return an error on P9.
- 
- Consequences for users
--============================
-+======================
- 
- For GDB watchpoints (ie 'watch' command) on POWER9 bare metal , GDB
- will accept the command. Unfortunately since there is no hardware
-@@ -55,4 +56,3 @@ guest is migrated to a POWER9 host, the watchpoint will be lost on the
- POWER9. Loads and stores to the watchpoint locations will not be
- trapped in GDB. The watchpoint is remembered, so if the guest is
- migrated back to the POWER8 host, it will start working again.
--
-diff --git a/Documentation/powerpc/dscr.txt b/Documentation/powerpc/dscr.rst
-similarity index 91%
-rename from Documentation/powerpc/dscr.txt
-rename to Documentation/powerpc/dscr.rst
-index ece300c64f76..2ab99006014c 100644
---- a/Documentation/powerpc/dscr.txt
-+++ b/Documentation/powerpc/dscr.rst
-@@ -1,5 +1,6 @@
--			DSCR (Data Stream Control Register)
--		================================================
-+===================================
-+DSCR (Data Stream Control Register)
-+===================================
- 
- DSCR register in powerpc allows user to have some control of prefetch of data
- stream in the processor. Please refer to the ISA documents or related manual
-@@ -10,14 +11,17 @@ user interface.
- 
- (A) Data Structures:
- 
--	(1) thread_struct:
-+	(1) thread_struct::
-+
- 		dscr		/* Thread DSCR value */
- 		dscr_inherit	/* Thread has changed default DSCR */
- 
--	(2) PACA:
-+	(2) PACA::
-+
- 		dscr_default	/* per-CPU DSCR default value */
- 
--	(3) sysfs.c:
-+	(3) sysfs.c::
-+
- 		dscr_default	/* System DSCR default value */
- 
- (B) Scheduler Changes:
-@@ -35,8 +39,8 @@ user interface.
- 
- (C) SYSFS Interface:
- 
--	Global DSCR default:		/sys/devices/system/cpu/dscr_default
--	CPU specific DSCR default:	/sys/devices/system/cpu/cpuN/dscr
-+	- Global DSCR default:		/sys/devices/system/cpu/dscr_default
-+	- CPU specific DSCR default:	/sys/devices/system/cpu/cpuN/dscr
- 
- 	Changing the global DSCR default in the sysfs will change all the CPU
- 	specific DSCR defaults immediately in their PACA structures. Again if
-diff --git a/Documentation/powerpc/eeh-pci-error-recovery.txt b/Documentation/powerpc/eeh-pci-error-recovery.rst
-similarity index 82%
-rename from Documentation/powerpc/eeh-pci-error-recovery.txt
-rename to Documentation/powerpc/eeh-pci-error-recovery.rst
-index 678189280bb4..438a87ebc095 100644
---- a/Documentation/powerpc/eeh-pci-error-recovery.txt
-+++ b/Documentation/powerpc/eeh-pci-error-recovery.rst
-@@ -1,10 +1,10 @@
-+==========================
-+PCI Bus EEH Error Recovery
-+==========================
- 
-+Linas Vepstas <linas@austin.ibm.com>
- 
--                      PCI Bus EEH Error Recovery
--                      --------------------------
--                           Linas Vepstas
--                       <linas@austin.ibm.com>
--                          12 January 2005
-+12 January 2005
- 
- 
- Overview:
-@@ -143,17 +143,17 @@ seen in /proc/ppc64/eeh (subject to change).  Normally, almost
- all of these occur during boot, when the PCI bus is scanned, where
- a large number of 0xff reads are part of the bus scan procedure.
- 
--If a frozen slot is detected, code in 
--arch/powerpc/platforms/pseries/eeh.c will print a stack trace to 
--syslog (/var/log/messages).  This stack trace has proven to be very 
--useful to device-driver authors for finding out at what point the EEH 
--error was detected, as the error itself usually occurs slightly 
-+If a frozen slot is detected, code in
-+arch/powerpc/platforms/pseries/eeh.c will print a stack trace to
-+syslog (/var/log/messages).  This stack trace has proven to be very
-+useful to device-driver authors for finding out at what point the EEH
-+error was detected, as the error itself usually occurs slightly
- beforehand.
- 
- Next, it uses the Linux kernel notifier chain/work queue mechanism to
- allow any interested parties to find out about the failure.  Device
- drivers, or other parts of the kernel, can use
--eeh_register_notifier(struct notifier_block *) to find out about EEH
-+`eeh_register_notifier(struct notifier_block *)` to find out about EEH
- events.  The event will include a pointer to the pci device, the
- device node and some state info.  Receivers of the event can "do as
- they wish"; the default handler will be described further in this
-@@ -162,10 +162,13 @@ section.
- To assist in the recovery of the device, eeh.c exports the
- following functions:
- 
--rtas_set_slot_reset() -- assert the  PCI #RST line for 1/8th of a second
--rtas_configure_bridge() -- ask firmware to configure any PCI bridges
-+rtas_set_slot_reset()
-+   assert the  PCI #RST line for 1/8th of a second
-+rtas_configure_bridge()
-+   ask firmware to configure any PCI bridges
-    located topologically under the pci slot.
--eeh_save_bars() and eeh_restore_bars(): save and restore the PCI
-+eeh_save_bars() and eeh_restore_bars():
-+   save and restore the PCI
-    config-space info for a device and any devices under it.
- 
- 
-@@ -191,7 +194,7 @@ events get delivered to user-space scripts.
- 
- Following is an example sequence of events that cause a device driver
- close function to be called during the first phase of an EEH reset.
--The following sequence is an example of the pcnet32 device driver.
-+The following sequence is an example of the pcnet32 device driver::
- 
-     rpa_php_unconfig_pci_adapter (struct slot *)  // in rpaphp_pci.c
-     {
-@@ -241,53 +244,54 @@ The following sequence is an example of the pcnet32 device driver.
-      }}}}}}
- 
- 
--    in drivers/pci/pci_driver.c,
--    struct device_driver->remove() is just pci_device_remove()
--    which calls struct pci_driver->remove() which is pcnet32_remove_one()
--    which calls unregister_netdev()  (in net/core/dev.c)
--    which calls dev_close()  (in net/core/dev.c)
--    which calls dev->stop() which is pcnet32_close()
--    which then does the appropriate shutdown.
-+in drivers/pci/pci_driver.c,
-+struct device_driver->remove() is just pci_device_remove()
-+which calls struct pci_driver->remove() which is pcnet32_remove_one()
-+which calls unregister_netdev()  (in net/core/dev.c)
-+which calls dev_close()  (in net/core/dev.c)
-+which calls dev->stop() which is pcnet32_close()
-+which then does the appropriate shutdown.
- 
- ---
-+
- Following is the analogous stack trace for events sent to user-space
--when the pci device is unconfigured.
-+when the pci device is unconfigured::
- 
--rpa_php_unconfig_pci_adapter() {             // in rpaphp_pci.c
--  calls
--  pci_remove_bus_device (struct pci_dev *) { // in /drivers/pci/remove.c
-+  rpa_php_unconfig_pci_adapter() {             // in rpaphp_pci.c
-     calls
--    pci_destroy_dev (struct pci_dev *) {
-+    pci_remove_bus_device (struct pci_dev *) { // in /drivers/pci/remove.c
-       calls
--      device_unregister (&dev->dev) {        // in /drivers/base/core.c
-+      pci_destroy_dev (struct pci_dev *) {
-         calls
--        device_del(struct device * dev) {    // in /drivers/base/core.c
-+        device_unregister (&dev->dev) {        // in /drivers/base/core.c
-           calls
--          kobject_del() {                    //in /libs/kobject.c
-+          device_del(struct device * dev) {    // in /drivers/base/core.c
-             calls
--            kobject_uevent() {               // in /libs/kobject.c
-+            kobject_del() {                    //in /libs/kobject.c
-               calls
--              kset_uevent() {                // in /lib/kobject.c
-+              kobject_uevent() {               // in /libs/kobject.c
-                 calls
--                kset->uevent_ops->uevent()   // which is really just
--                a call to
--                dev_uevent() {               // in /drivers/base/core.c
-+                kset_uevent() {                // in /lib/kobject.c
-                   calls
--                  dev->bus->uevent() which is really just a call to
--                  pci_uevent () {            // in drivers/pci/hotplug.c
--                    which prints device name, etc....
-+                  kset->uevent_ops->uevent()   // which is really just
-+                  a call to
-+                  dev_uevent() {               // in /drivers/base/core.c
-+                    calls
-+                    dev->bus->uevent() which is really just a call to
-+                    pci_uevent () {            // in drivers/pci/hotplug.c
-+                      which prints device name, etc....
-+                   }
-                  }
--               }
--               then kobject_uevent() sends a netlink uevent to userspace
--               --> userspace uevent
--               (during early boot, nobody listens to netlink events and
--               kobject_uevent() executes uevent_helper[], which runs the
--               event process /sbin/hotplug)
-+                 then kobject_uevent() sends a netlink uevent to userspace
-+                 --> userspace uevent
-+                 (during early boot, nobody listens to netlink events and
-+                 kobject_uevent() executes uevent_helper[], which runs the
-+                 event process /sbin/hotplug)
-+             }
-            }
--         }
--         kobject_del() then calls sysfs_remove_dir(), which would
--         trigger any user-space daemon that was watching /sysfs,
--         and notice the delete event.
-+           kobject_del() then calls sysfs_remove_dir(), which would
-+           trigger any user-space daemon that was watching /sysfs,
-+           and notice the delete event.
- 
- 
- Pro's and Con's of the Current Design
-@@ -299,12 +303,12 @@ individual device drivers, so that the current design throws a wide net.
- The biggest negative of the design is that it potentially disturbs
- network daemons and file systems that didn't need to be disturbed.
- 
---- A minor complaint is that resetting the network card causes
-+-  A minor complaint is that resetting the network card causes
-    user-space back-to-back ifdown/ifup burps that potentially disturb
-    network daemons, that didn't need to even know that the pci
-    card was being rebooted.
- 
---- A more serious concern is that the same reset, for SCSI devices,
-+-  A more serious concern is that the same reset, for SCSI devices,
-    causes havoc to mounted file systems.  Scripts cannot post-facto
-    unmount a file system without flushing pending buffers, but this
-    is impossible, because I/O has already been stopped.  Thus,
-@@ -322,7 +326,7 @@ network daemons and file systems that didn't need to be disturbed.
-    from the block layer.  It would be very natural to add an EEH
-    reset into this chain of events.
- 
---- If a SCSI error occurs for the root device, all is lost unless
-+-  If a SCSI error occurs for the root device, all is lost unless
-    the sysadmin had the foresight to run /bin, /sbin, /etc, /var
-    and so on, out of ramdisk/tmpfs.
- 
-@@ -330,5 +334,3 @@ network daemons and file systems that didn't need to be disturbed.
- Conclusions
- -----------
- There's forward progress ...
--
--
-diff --git a/Documentation/powerpc/firmware-assisted-dump.txt b/Documentation/powerpc/firmware-assisted-dump.rst
-similarity index 80%
-rename from Documentation/powerpc/firmware-assisted-dump.txt
-rename to Documentation/powerpc/firmware-assisted-dump.rst
-index 0c41d6d463f3..d7fa7c35dd12 100644
---- a/Documentation/powerpc/firmware-assisted-dump.txt
-+++ b/Documentation/powerpc/firmware-assisted-dump.rst
-@@ -1,7 +1,8 @@
-+======================
-+Firmware-Assisted Dump
-+======================
- 
--                   Firmware-Assisted Dump
--                   ------------------------
--                       July 2011
-+July 2011
- 
- The goal of firmware-assisted dump is to enable the dump of
- a crashed system, and to do so from a fully-reset system, and
-@@ -27,11 +28,11 @@ in production use.
- Comparing with kdump or other strategies, firmware-assisted
- dump offers several strong, practical advantages:
- 
---- Unlike kdump, the system has been reset, and loaded
-+-  Unlike kdump, the system has been reset, and loaded
-    with a fresh copy of the kernel.  In particular,
-    PCI and I/O devices have been reinitialized and are
-    in a clean, consistent state.
---- Once the dump is copied out, the memory that held the dump
-+-  Once the dump is copied out, the memory that held the dump
-    is immediately available to the running kernel. And therefore,
-    unlike kdump, fadump doesn't need a 2nd reboot to get back
-    the system to the production configuration.
-@@ -40,17 +41,18 @@ The above can only be accomplished by coordination with,
- and assistance from the Power firmware. The procedure is
- as follows:
- 
---- The first kernel registers the sections of memory with the
-+-  The first kernel registers the sections of memory with the
-    Power firmware for dump preservation during OS initialization.
-    These registered sections of memory are reserved by the first
-    kernel during early boot.
- 
---- When a system crashes, the Power firmware will save
-+-  When a system crashes, the Power firmware will save
-    the low memory (boot memory of size larger of 5% of system RAM
-    or 256MB) of RAM to the previous registered region. It will
-    also save system registers, and hardware PTE's.
- 
--   NOTE: The term 'boot memory' means size of the low memory chunk
-+   NOTE:
-+         The term 'boot memory' means size of the low memory chunk
-          that is required for a kernel to boot successfully when
-          booted with restricted memory. By default, the boot memory
-          size will be the larger of 5% of system RAM or 256MB.
-@@ -64,12 +66,12 @@ as follows:
-          as fadump uses a predefined offset to reserve memory
-          for boot memory dump preservation in case of a crash.
- 
---- After the low memory (boot memory) area has been saved, the
-+-  After the low memory (boot memory) area has been saved, the
-    firmware will reset PCI and other hardware state.  It will
-    *not* clear the RAM. It will then launch the bootloader, as
-    normal.
- 
---- The freshly booted kernel will notice that there is a new
-+-  The freshly booted kernel will notice that there is a new
-    node (ibm,dump-kernel) in the device tree, indicating that
-    there is crash data available from a previous boot. During
-    the early boot OS will reserve rest of the memory above
-@@ -77,17 +79,18 @@ as follows:
-    size. This will make sure that the second kernel will not
-    touch any of the dump memory area.
- 
---- User-space tools will read /proc/vmcore to obtain the contents
-+-  User-space tools will read /proc/vmcore to obtain the contents
-    of memory, which holds the previous crashed kernel dump in ELF
-    format. The userspace tools may copy this info to disk, or
-    network, nas, san, iscsi, etc. as desired.
- 
---- Once the userspace tool is done saving dump, it will echo
-+-  Once the userspace tool is done saving dump, it will echo
-    '1' to /sys/kernel/fadump_release_mem to release the reserved
-    memory back to general use, except the memory required for
-    next firmware-assisted dump registration.
- 
--   e.g.
-+   e.g.::
-+
-      # echo 1 > /sys/kernel/fadump_release_mem
- 
- Please note that the firmware-assisted dump feature
-@@ -95,7 +98,7 @@ is only available on Power6 and above systems with recent
- firmware versions.
- 
- Implementation details:
------------------------
-+-----------------------
- 
- During boot, a check is made to see if firmware supports
- this feature on that particular machine. If it does, then
-@@ -121,7 +124,7 @@ Allocator (CMA) for memory reservation if CMA is configured for kernel.
- With CMA reservation this memory will be available for applications to
- use it, while kernel is prevented from using it. With this fadump will
- still be able to capture all of the kernel memory and most of the user
--space memory except the user pages that were present in CMA region.
-+space memory except the user pages that were present in CMA region::
- 
-   o Memory Reservation during first kernel
- 
-@@ -166,7 +169,7 @@ The tools to examine the dump will be same as the ones
- used for kdump.
- 
- How to enable firmware-assisted dump (fadump):
---------------------------------------
-+----------------------------------------------
- 
- 1. Set config option CONFIG_FA_DUMP=y and build kernel.
- 2. Boot into linux kernel with 'fadump=on' kernel cmdline option.
-@@ -177,19 +180,20 @@ How to enable firmware-assisted dump (fadump):
-    to specify size of the memory to reserve for boot memory dump
-    preservation.
- 
--NOTE: 1. 'fadump_reserve_mem=' parameter has been deprecated. Instead
--         use 'crashkernel=' to specify size of the memory to reserve
--         for boot memory dump preservation.
--      2. If firmware-assisted dump fails to reserve memory then it
--         will fallback to existing kdump mechanism if 'crashkernel='
--         option is set at kernel cmdline.
--      3. if user wants to capture all of user space memory and ok with
--         reserved memory not available to production system, then
--         'fadump=nocma' kernel parameter can be used to fallback to
--         old behaviour.
-+NOTE:
-+     1. 'fadump_reserve_mem=' parameter has been deprecated. Instead
-+        use 'crashkernel=' to specify size of the memory to reserve
-+        for boot memory dump preservation.
-+     2. If firmware-assisted dump fails to reserve memory then it
-+        will fallback to existing kdump mechanism if 'crashkernel='
-+        option is set at kernel cmdline.
-+     3. if user wants to capture all of user space memory and ok with
-+        reserved memory not available to production system, then
-+        'fadump=nocma' kernel parameter can be used to fallback to
-+        old behaviour.
- 
- Sysfs/debugfs files:
--------------
-+--------------------
- 
- Firmware-assisted dump feature uses sysfs file system to hold
- the control files and debugfs file to display memory reserved region.
-@@ -197,20 +201,20 @@ the control files and debugfs file to display memory reserved region.
- Here is the list of files under kernel sysfs:
- 
-  /sys/kernel/fadump_enabled
--
-     This is used to display the fadump status.
--    0 = fadump is disabled
--    1 = fadump is enabled
-+
-+    - 0 = fadump is disabled
-+    - 1 = fadump is enabled
- 
-     This interface can be used by kdump init scripts to identify if
-     fadump is enabled in the kernel and act accordingly.
- 
-  /sys/kernel/fadump_registered
--
-     This is used to display the fadump registration status as well
-     as to control (start/stop) the fadump registration.
--    0 = fadump is not registered.
--    1 = fadump is registered and ready to handle system crash.
-+
-+    - 0 = fadump is not registered.
-+    - 1 = fadump is registered and ready to handle system crash.
- 
-     To register fadump echo 1 > /sys/kernel/fadump_registered and
-     echo 0 > /sys/kernel/fadump_registered for un-register and stop the
-@@ -219,13 +223,12 @@ Here is the list of files under kernel sysfs:
-     easily integrated with kdump service start/stop.
- 
-  /sys/kernel/fadump_release_mem
--
-     This file is available only when fadump is active during
-     second kernel. This is used to release the reserved memory
-     region that are held for saving crash dump. To release the
--    reserved memory echo 1 to it:
-+    reserved memory echo 1 to it::
- 
--    echo 1  > /sys/kernel/fadump_release_mem
-+	echo 1  > /sys/kernel/fadump_release_mem
- 
-     After echo 1, the content of the /sys/kernel/debug/powerpc/fadump_region
-     file will change to reflect the new memory reservations.
-@@ -238,38 +241,39 @@ Here is the list of files under powerpc debugfs:
- (Assuming debugfs is mounted on /sys/kernel/debug directory.)
- 
-  /sys/kernel/debug/powerpc/fadump_region
--
-     This file shows the reserved memory regions if fadump is
-     enabled otherwise this file is empty. The output format
--    is:
--    <region>: [<start>-<end>] <reserved-size> bytes, Dumped: <dump-size>
-+    is::
-+
-+      <region>: [<start>-<end>] <reserved-size> bytes, Dumped: <dump-size>
- 
-     e.g.
--    Contents when fadump is registered during first kernel
-+    Contents when fadump is registered during first kernel::
- 
--    # cat /sys/kernel/debug/powerpc/fadump_region
--    CPU : [0x0000006ffb0000-0x0000006fff001f] 0x40020 bytes, Dumped: 0x0
--    HPTE: [0x0000006fff0020-0x0000006fff101f] 0x1000 bytes, Dumped: 0x0
--    DUMP: [0x0000006fff1020-0x0000007fff101f] 0x10000000 bytes, Dumped: 0x0
-+      # cat /sys/kernel/debug/powerpc/fadump_region
-+      CPU : [0x0000006ffb0000-0x0000006fff001f] 0x40020 bytes, Dumped: 0x0
-+      HPTE: [0x0000006fff0020-0x0000006fff101f] 0x1000 bytes, Dumped: 0x0
-+      DUMP: [0x0000006fff1020-0x0000007fff101f] 0x10000000 bytes, Dumped: 0x0
- 
--    Contents when fadump is active during second kernel
-+    Contents when fadump is active during second kernel::
- 
--    # cat /sys/kernel/debug/powerpc/fadump_region
--    CPU : [0x0000006ffb0000-0x0000006fff001f] 0x40020 bytes, Dumped: 0x40020
--    HPTE: [0x0000006fff0020-0x0000006fff101f] 0x1000 bytes, Dumped: 0x1000
--    DUMP: [0x0000006fff1020-0x0000007fff101f] 0x10000000 bytes, Dumped: 0x10000000
--        : [0x00000010000000-0x0000006ffaffff] 0x5ffb0000 bytes, Dumped: 0x5ffb0000
-+      # cat /sys/kernel/debug/powerpc/fadump_region
-+      CPU : [0x0000006ffb0000-0x0000006fff001f] 0x40020 bytes, Dumped: 0x40020
-+      HPTE: [0x0000006fff0020-0x0000006fff101f] 0x1000 bytes, Dumped: 0x1000
-+      DUMP: [0x0000006fff1020-0x0000007fff101f] 0x10000000 bytes, Dumped: 0x10000000
-+          : [0x00000010000000-0x0000006ffaffff] 0x5ffb0000 bytes, Dumped: 0x5ffb0000
- 
--NOTE: Please refer to Documentation/filesystems/debugfs.txt on
-+NOTE:
-+      Please refer to Documentation/filesystems/debugfs.txt on
-       how to mount the debugfs filesystem.
- 
- 
- TODO:
- -----
-- o Need to come up with the better approach to find out more
-+ - Need to come up with the better approach to find out more
-    accurate boot memory size that is required for a kernel to
-    boot successfully when booted with restricted memory.
-- o The fadump implementation introduces a fadump crash info structure
-+ - The fadump implementation introduces a fadump crash info structure
-    in the scratch area before the ELF core header. The idea of introducing
-    this structure is to pass some important crash info data to the second
-    kernel which will help second kernel to populate ELF core header with
-@@ -277,7 +281,9 @@ TODO:
-    design implementation does not address a possibility of introducing
-    additional fields (in future) to this structure without affecting
-    compatibility. Need to come up with the better approach to address this.
-+
-    The possible approaches are:
-+
- 	1. Introduce version field for version tracking, bump up the version
- 	whenever a new field is added to the structure in future. The version
- 	field can be used to find out what fields are valid for the current
-@@ -285,8 +291,11 @@ TODO:
- 	2. Reserve the area of predefined size (say PAGE_SIZE) for this
- 	structure and have unused area as reserved (initialized to zero)
- 	for future field additions.
-+
-    The advantage of approach 1 over 2 is we don't need to reserve extra space.
-----
-+
- Author: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-+
- This document is based on the original documentation written for phyp
-+
- assisted dump by Linas Vepstas and Manish Ahuja.
-diff --git a/Documentation/powerpc/hvcs.txt b/Documentation/powerpc/hvcs.rst
-similarity index 91%
-rename from Documentation/powerpc/hvcs.txt
-rename to Documentation/powerpc/hvcs.rst
-index a730ca5a07f8..6808acde672f 100644
---- a/Documentation/powerpc/hvcs.txt
-+++ b/Documentation/powerpc/hvcs.rst
-@@ -1,19 +1,22 @@
--===========================================================================
--				   HVCS
--	IBM "Hypervisor Virtual Console Server" Installation Guide
--			  for Linux Kernel 2.6.4+
--		    Copyright (C) 2004 IBM Corporation
-+===============================================================
-+HVCS IBM "Hypervisor Virtual Console Server" Installation Guide
-+===============================================================
- 
--===========================================================================
--NOTE:Eight space tabs are the optimum editor setting for reading this file.
--===========================================================================
-+for Linux Kernel 2.6.4+
- 
--	       Author(s) :  Ryan S. Arnold <rsa@us.ibm.com>
--		       Date Created: March, 02, 2004
--		       Last Changed: August, 24, 2004
-+Copyright (C) 2004 IBM Corporation
- 
-----------------------------------------------------------------------------
--Table of contents:
-+.. ===========================================================================
-+.. NOTE:Eight space tabs are the optimum editor setting for reading this file.
-+.. ===========================================================================
-+
-+
-+Author(s): Ryan S. Arnold <rsa@us.ibm.com>
-+
-+Date Created: March, 02, 2004
-+Last Changed: August, 24, 2004
-+
-+.. Table of contents:
- 
- 	1.  Driver Introduction:
- 	2.  System Requirements
-@@ -27,8 +30,8 @@ Table of contents:
- 	8.  Questions & Answers:
- 	9.  Reporting Bugs:
- 
-----------------------------------------------------------------------------
- 1. Driver Introduction:
-+=======================
- 
- This is the device driver for the IBM Hypervisor Virtual Console Server,
- "hvcs".  The IBM hvcs provides a tty driver interface to allow Linux user
-@@ -38,8 +41,8 @@ ppc64 system.  Physical hardware consoles per partition are not practical
- on this hardware so system consoles are accessed by this driver using
- firmware interfaces to virtual terminal devices.
- 
-----------------------------------------------------------------------------
- 2. System Requirements:
-+=======================
- 
- This device driver was written using 2.6.4 Linux kernel APIs and will only
- build and run on kernels of this version or later.
-@@ -52,8 +55,8 @@ Sysfs must be mounted on the system so that the user can determine which
- major and minor numbers are associated with each vty-server.  Directions
- for sysfs mounting are outside the scope of this document.
- 
-----------------------------------------------------------------------------
- 3. Build Options:
-+=================
- 
- The hvcs driver registers itself as a tty driver.  The tty layer
- dynamically allocates a block of major and minor numbers in a quantity
-@@ -65,11 +68,11 @@ If the default number of device entries is adequate then this driver can be
- built into the kernel.  If not, the default can be over-ridden by inserting
- the driver as a module with insmod parameters.
- 
-----------------------------------------------------------------------------
- 3.1 Built-in:
-+-------------
- 
- The following menuconfig example demonstrates selecting to build this
--driver into the kernel.
-+driver into the kernel::
- 
- 	Device Drivers  --->
- 		Character devices  --->
-@@ -77,11 +80,11 @@ driver into the kernel.
- 
- Begin the kernel make process.
- 
-----------------------------------------------------------------------------
- 3.2 Module:
-+-----------
- 
- The following menuconfig example demonstrates selecting to build this
--driver as a kernel module.
-+driver as a kernel module::
- 
- 	Device Drivers  --->
- 		Character devices  --->
-@@ -89,11 +92,11 @@ driver as a kernel module.
- 
- The make process will build the following kernel modules:
- 
--	hvcs.ko
--	hvcserver.ko
-+	- hvcs.ko
-+	- hvcserver.ko
- 
- To insert the module with the default allocation execute the following
--commands in the order they appear:
-+commands in the order they appear::
- 
- 	insmod hvcserver.ko
- 	insmod hvcs.ko
-@@ -103,7 +106,7 @@ be inserted first, otherwise the hvcs module will not find some of the
- symbols it expects.
- 
- To override the default use an insmod parameter as follows (requesting 4
--tty devices as an example):
-+tty devices as an example)::
- 
- 	insmod hvcs.ko hvcs_parm_num_devs=4
- 
-@@ -115,31 +118,31 @@ source file before building.
- NOTE: The length of time it takes to insmod the driver seems to be related
- to the number of tty interfaces the registering driver requests.
- 
--In order to remove the driver module execute the following command:
-+In order to remove the driver module execute the following command::
- 
- 	rmmod hvcs.ko
- 
- The recommended method for installing hvcs as a module is to use depmod to
- build a current modules.dep file in /lib/modules/`uname -r` and then
--execute:
-+execute::
- 
--modprobe hvcs hvcs_parm_num_devs=4
-+	modprobe hvcs hvcs_parm_num_devs=4
- 
- The modules.dep file indicates that hvcserver.ko needs to be inserted
- before hvcs.ko and modprobe uses this file to smartly insert the modules in
- the proper order.
- 
- The following modprobe command is used to remove hvcs and hvcserver in the
--proper order:
-+proper order::
- 
--modprobe -r hvcs
-+	modprobe -r hvcs
- 
-----------------------------------------------------------------------------
- 4. Installation:
-+================
- 
- The tty layer creates sysfs entries which contain the major and minor
- numbers allocated for the hvcs driver.  The following snippet of "tree"
--output of the sysfs directory shows where these numbers are presented:
-+output of the sysfs directory shows where these numbers are presented::
- 
- 	sys/
- 	|-- *other sysfs base dirs*
-@@ -164,7 +167,7 @@ output of the sysfs directory shows where these numbers are presented:
- 	|-- *other sysfs base dirs*
- 
- For the above examples the following output is a result of cat'ing the
--"dev" entry in the hvcs directory:
-+"dev" entry in the hvcs directory::
- 
- 	Pow5:/sys/class/tty/hvcs0/ # cat dev
- 	254:0
-@@ -184,7 +187,7 @@ systems running hvcs will already have the device entries created or udev
- will do it automatically.
- 
- Given the example output above, to manually create a /dev/hvcs* node entry
--mknod can be used as follows:
-+mknod can be used as follows::
- 
- 	mknod /dev/hvcs0 c 254 0
- 	mknod /dev/hvcs1 c 254 1
-@@ -195,15 +198,15 @@ Using mknod to manually create the device entries makes these device nodes
- persistent.  Once created they will exist prior to the driver insmod.
- 
- Attempting to connect an application to /dev/hvcs* prior to insertion of
--the hvcs module will result in an error message similar to the following:
-+the hvcs module will result in an error message similar to the following::
- 
- 	"/dev/hvcs*: No such device".
- 
- NOTE: Just because there is a device node present doesn't mean that there
- is a vty-server device configured for that node.
- 
-----------------------------------------------------------------------------
- 5. Connection
-+=============
- 
- Since this driver controls devices that provide a tty interface a user can
- interact with the device node entries using any standard tty-interactive
-@@ -249,7 +252,7 @@ vty-server adapter is associated with which /dev/hvcs* node a special sysfs
- attribute has been added to each vty-server sysfs entry.  This entry is
- called "index" and showing it reveals an integer that refers to the
- /dev/hvcs* entry to use to connect to that device.  For instance cating the
--index attribute of vty-server adapter 30000004 shows the following.
-+index attribute of vty-server adapter 30000004 shows the following::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000004 # cat index
- 	2
-@@ -262,8 +265,8 @@ system the /dev/hvcs* entry that interacts with a particular vty-server
- adapter is not guaranteed to remain the same across system reboots.  Look
- in the Q & A section for more on this issue.
- 
-----------------------------------------------------------------------------
- 6. Disconnection
-+================
- 
- As a security feature to prevent the delivery of stale data to an
- unintended target the Power5 system firmware disables the fetching of data
-@@ -305,7 +308,7 @@ connection between the vty-server and target vty ONLY if the vterm_state
- previously read '1'.  The write directive is ignored if the vterm_state
- read '0' or if any value other than '0' was written to the vterm_state
- attribute.  The following example will show the method used for verifying
--the vty-server connection status and disconnecting a vty-server connection.
-+the vty-server connection status and disconnecting a vty-server connection::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000004 # cat vterm_state
- 	1
-@@ -318,12 +321,12 @@ the vty-server connection status and disconnecting a vty-server connection.
- All vty-server connections are automatically terminated when the device is
- hotplug removed and when the module is removed.
- 
-----------------------------------------------------------------------------
- 7. Configuration
-+================
- 
- Each vty-server has a sysfs entry in the /sys/devices/vio directory, which
- is symlinked in several other sysfs tree directories, notably under the
--hvcs driver entry, which looks like the following example:
-+hvcs driver entry, which looks like the following example::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs # ls
- 	.  ..  30000003  30000004  rescan
-@@ -344,7 +347,7 @@ completed or was never executed.
- 
- Vty-server entries in this directory are a 32 bit partition unique unit
- address that is created by firmware.  An example vty-server sysfs entry
--looks like the following:
-+looks like the following::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000004 # ls
- 	.   current_vty   devspec       name          partner_vtys
-@@ -352,21 +355,21 @@ looks like the following:
- 
- Each entry is provided, by default with a "name" attribute.  Reading the
- "name" attribute will reveal the device type as shown in the following
--example:
-+example::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000003 # cat name
- 	vty-server
- 
- Each entry is also provided, by default, with a "devspec" attribute which
- reveals the full device specification when read, as shown in the following
--example:
-+example::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000004 # cat devspec
- 	/vdevice/vty-server@30000004
- 
- Each vty-server sysfs dir is provided with two read-only attributes that
- provide lists of easily parsed partner vty data: "partner_vtys" and
--"partner_clcs".
-+"partner_clcs"::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000004 # cat partner_vtys
- 	30000000
-@@ -396,7 +399,7 @@ A vty-server can only be connected to a single vty at a time.  The entry,
- read.
- 
- The current_vty can be changed by writing a valid partner clc to the entry
--as in the following example:
-+as in the following example::
- 
- 	Pow5:/sys/bus/vio/drivers/hvcs/30000004 # echo U5112.428.10304
- 	8A-V4-C0 > current_vty
-@@ -408,9 +411,9 @@ currently open connection is freed.
- Information on the "vterm_state" attribute was covered earlier on the
- chapter entitled "disconnection".
- 
-----------------------------------------------------------------------------
- 8. Questions & Answers:
--===========================================================================
-+=======================
-+
- Q: What are the security concerns involving hvcs?
- 
- A: There are three main security concerns:
-@@ -429,6 +432,7 @@ A: There are three main security concerns:
- 	partition) will experience the previously logged in session.
- 
- ---------------------------------------------------------------------------
-+
- Q: How do I multiplex a console that I grab through hvcs so that other
- people can see it:
- 
-@@ -440,6 +444,7 @@ term type "screen" to others.  This means that curses based programs may
- not display properly in screen sessions.
- 
- ---------------------------------------------------------------------------
-+
- Q: Why are the colors all messed up?
- Q: Why are the control characters acting strange or not working?
- Q: Why is the console output all strange and unintelligible?
-@@ -455,6 +460,7 @@ disconnect from the console.  This will ensure that the next user gets
- their own TERM type set when they login.
- 
- ---------------------------------------------------------------------------
-+
- Q: When I try to CONNECT kermit to an hvcs device I get:
- "Sorry, can't open connection: /dev/hvcs*"What is happening?
- 
-@@ -490,6 +496,7 @@ A: There is not a corresponding vty-server device that maps to an existing
- /dev/hvcs* entry.
- 
- ---------------------------------------------------------------------------
-+
- Q: When I try to CONNECT kermit to an hvcs device I get:
- "Sorry, write access to UUCP lockfile directory denied."
- 
-@@ -497,6 +504,7 @@ A: The /dev/hvcs* entry you have specified doesn't exist where you said it
- does?  Maybe you haven't inserted the module (on systems with udev).
- 
- ---------------------------------------------------------------------------
-+
- Q: If I already have one Linux partition installed can I use hvcs on said
- partition to provide the console for the install of a second Linux
- partition?
-@@ -505,6 +513,7 @@ A: Yes granted that your are connected to the /dev/hvcs* device using
- kermit or cu or some other program that doesn't provide terminal emulation.
- 
- ---------------------------------------------------------------------------
-+
- Q: Can I connect to more than one partition's console at a time using this
- driver?
- 
-@@ -512,6 +521,7 @@ A: Yes.  Of course this means that there must be more than one vty-server
- configured for this partition and each must point to a disconnected vty.
- 
- ---------------------------------------------------------------------------
-+
- Q: Does the hvcs driver support dynamic (hotplug) addition of devices?
- 
- A: Yes, if you have dlpar and hotplug enabled for your system and it has
-@@ -519,6 +529,7 @@ been built into the kernel the hvcs drivers is configured to dynamically
- handle additions of new devices and removals of unused devices.
- 
- ---------------------------------------------------------------------------
-+
- Q: For some reason /dev/hvcs* doesn't map to the same vty-server adapter
- after a reboot.  What happened?
- 
-@@ -533,6 +544,7 @@ on how to determine which vty-server goes with which /dev/hvcs* node.
- Hint; look at the sysfs "index" attribute for the vty-server.
- 
- ---------------------------------------------------------------------------
-+
- Q: Can I use /dev/hvcs* as a conduit to another partition and use a tty
- device on that partition as the other end of the pipe?
- 
-@@ -554,7 +566,9 @@ read or write to /dev/hvcs*.  Now you have a tty conduit between two
- partitions.
- 
- ---------------------------------------------------------------------------
-+
- 9. Reporting Bugs:
-+==================
- 
- The proper channel for reporting bugs is either through the Linux OS
- distribution company that provided your OS or by posting issues to the
-diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
+diff --git a/Documentation/kernel-hacking/locking.rst b/Documentation/kernel-hacking/locking.rst
+index 519673df0e82..71a843464ec2 100644
+--- a/Documentation/kernel-hacking/locking.rst
++++ b/Documentation/kernel-hacking/locking.rst
+@@ -1364,7 +1364,7 @@ Futex API reference
+ Further reading
+ ===============
+ 
+--  ``Documentation/locking/spinlocks.txt``: Linus Torvalds' spinlocking
++-  ``Documentation/locking/spinlocks.rst``: Linus Torvalds' spinlocking
+    tutorial in the kernel sources.
+ 
+ -  Unix Systems for Modern Architectures: Symmetric Multiprocessing and
+diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
 new file mode 100644
-index 000000000000..1ff17268db46
+index 000000000000..ef5da7fe9aac
 --- /dev/null
-+++ b/Documentation/powerpc/index.rst
-@@ -0,0 +1,34 @@
++++ b/Documentation/locking/index.rst
+@@ -0,0 +1,24 @@
 +:orphan:
 +
 +=======
-+powerpc
++locking
 +=======
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    bootwrapper
-+    cpu_families
-+    cpu_features
-+    cxl
-+    cxlflash
-+    dawr-power9
-+    dscr
-+    eeh-pci-error-recovery
-+    firmware-assisted-dump
-+    hvcs
-+    isa-versions
-+    mpc52xx
-+    pci_iov_resource_on_powernv
-+    pmu-ebb
-+    ptrace
-+    qe_firmware
-+    syscall64-abi
-+    transactional_memory
++    lockdep-design
++    lockstat
++    locktorture
++    mutex-design
++    rt-mutex-design
++    rt-mutex
++    spinlocks
++    ww-mutex-design
 +
 +.. only::  subproject and html
 +
@@ -1536,846 +166,1680 @@ index 000000000000..1ff17268db46
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/powerpc/isa-versions.rst b/Documentation/powerpc/isa-versions.rst
-index 812e20cc898c..a363d8c1603c 100644
---- a/Documentation/powerpc/isa-versions.rst
-+++ b/Documentation/powerpc/isa-versions.rst
-@@ -1,11 +1,12 @@
-+==========================
- CPU to ISA Version Mapping
- ==========================
+diff --git a/Documentation/locking/lockdep-design.txt b/Documentation/locking/lockdep-design.rst
+similarity index 93%
+rename from Documentation/locking/lockdep-design.txt
+rename to Documentation/locking/lockdep-design.rst
+index 39fae143c9cb..49707a5029c5 100644
+--- a/Documentation/locking/lockdep-design.txt
++++ b/Documentation/locking/lockdep-design.rst
+@@ -2,6 +2,7 @@ Runtime locking correctness validator
+ =====================================
  
- Mapping of some CPU versions to relevant ISA versions.
- 
--========= ====================
-+========= ====================================================================
- CPU       Architecture version
--========= ====================
-+========= ====================================================================
- Power9    Power ISA v3.0B
- Power8    Power ISA v2.07
- Power7    Power ISA v2.06
-@@ -22,7 +23,7 @@ PPC970    - PowerPC User Instruction Set Architecture Book I v2.01
-           - PowerPC Virtual Environment Architecture Book II v2.01
-           - PowerPC Operating Environment Architecture Book III v2.01
-           - Plus Altivec/VMX ~= 2.03
--========= ====================
-+========= ====================================================================
- 
- 
- Key Features
-@@ -58,9 +59,9 @@ Power5     No
- PPC970     No
- ========== ====
- 
--========== ====================
-+========== ====================================
- CPU        Transactional Memory
--========== ====================
-+========== ====================================
- Power9     Yes (* see transactional_memory.txt)
- Power8     Yes
- Power7     No
-@@ -71,4 +72,4 @@ Power5++   No
- Power5+    No
- Power5     No
- PPC970     No
--========== ====================
-+========== ====================================
-diff --git a/Documentation/powerpc/mpc52xx.txt b/Documentation/powerpc/mpc52xx.rst
-similarity index 91%
-rename from Documentation/powerpc/mpc52xx.txt
-rename to Documentation/powerpc/mpc52xx.rst
-index 0d540a31ea1a..8676ac63e077 100644
---- a/Documentation/powerpc/mpc52xx.txt
-+++ b/Documentation/powerpc/mpc52xx.rst
-@@ -1,11 +1,13 @@
-+=============================
- Linux 2.6.x on MPC52xx family
-------------------------------
-+=============================
- 
- For the latest info, go to http://www.246tNt.com/mpc52xx/
- 
- To compile/use :
- 
--  - U-Boot:
-+  - U-Boot::
+ started by Ingo Molnar <mingo@redhat.com>
 +
-      # <edit Makefile to set ARCH=ppc & CROSS_COMPILE=... ( also EXTRAVERSION
-         if you wish to ).
-      # make lite5200_defconfig
-@@ -16,7 +18,8 @@ To compile/use :
-      => tftpboot 400000 pRamdisk
-      => bootm 200000 400000
+ additions by Arjan van de Ven <arjan@linux.intel.com>
  
--  - DBug:
-+  - DBug::
-+
-      # <edit Makefile to set ARCH=ppc & CROSS_COMPILE=... ( also EXTRAVERSION
-         if you wish to ).
-      # make lite5200_defconfig
-@@ -28,7 +31,8 @@ To compile/use :
-      DBug> dn -i zImage.initrd.lite5200
+ Lock-class
+@@ -42,7 +43,7 @@ Where STATE can be either one of (kernel/locking/lockdep_states.h)
+ - 'ever used'                                       [ == !unused        ]
  
+ When locking rules are violated, these state bits are presented in the
+-locking error messages, inside curlies. A contrived example:
++locking error messages, inside curlies. A contrived example::
  
--Some remarks :
-+Some remarks:
-+
-  - The port is named mpc52xxx, and config options are PPC_MPC52xx. The MGT5100
-    is not supported, and I'm not sure anyone is interesting in working on it
-    so. I didn't took 5xxx because there's apparently a lot of 5xxx that have
-diff --git a/Documentation/powerpc/pci_iov_resource_on_powernv.txt b/Documentation/powerpc/pci_iov_resource_on_powernv.rst
-similarity index 97%
-rename from Documentation/powerpc/pci_iov_resource_on_powernv.txt
-rename to Documentation/powerpc/pci_iov_resource_on_powernv.rst
-index b55c5cd83f8d..f5a5793e1613 100644
---- a/Documentation/powerpc/pci_iov_resource_on_powernv.txt
-+++ b/Documentation/powerpc/pci_iov_resource_on_powernv.rst
-@@ -1,6 +1,13 @@
-+===================================================
-+PCI Express I/O Virtualization Resource on Powerenv
-+===================================================
-+
- Wei Yang <weiyang@linux.vnet.ibm.com>
-+
- Benjamin Herrenschmidt <benh@au1.ibm.com>
-+
- Bjorn Helgaas <bhelgaas@google.com>
-+
- 26 Aug 2014
+    modprobe/2287 is trying to acquire lock:
+     (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
+@@ -54,10 +55,12 @@ locking error messages, inside curlies. A contrived example:
+ The bit position indicates STATE, STATE-read, for each of the states listed
+ above, and the character displayed in each indicates:
  
- This document describes the requirement from hardware for PCI MMIO resource
-@@ -10,6 +17,7 @@ Endpoints and the implementation on P8 (IODA2). The next two sections talks
- about considerations on enabling SRIOV on IODA2.
++   ===  ===================================================
+    '.'  acquired while irqs disabled and not in irq context
+    '-'  acquired in irq context
+    '+'  acquired with irqs enabled
+    '?'  acquired in irq context with irqs enabled.
++   ===  ===================================================
  
- 1. Introduction to Partitionable Endpoints
-+==========================================
+ Unused mutexes cannot be part of the cause of an error.
  
- A Partitionable Endpoint (PE) is a way to group the various resources
- associated with a device or a set of devices to provide isolation between
-@@ -35,6 +43,7 @@ is a completely separate HW entity that replicates the entire logic, so has
- its own set of PEs, etc.
+@@ -67,7 +70,7 @@ Single-lock state rules:
  
- 2. Implementation of Partitionable Endpoints on P8 (IODA2)
-+==========================================================
+ A softirq-unsafe lock-class is automatically hardirq-unsafe as well. The
+ following states are exclusive, and only one of them is allowed to be
+-set for any lock-class:
++set for any lock-class::
  
- P8 supports up to 256 Partitionable Endpoints per PHB.
+  <hardirq-safe> and <hardirq-unsafe>
+  <softirq-safe> and <softirq-unsafe>
+@@ -81,7 +84,7 @@ Multi-lock dependency rules:
+ The same lock-class must not be acquired twice, because this could lead
+ to lock recursion deadlocks.
  
-@@ -149,6 +158,7 @@ P8 supports up to 256 Partitionable Endpoints per PHB.
-     sense, but we haven't done it yet.
+-Furthermore, two locks may not be taken in different order:
++Furthermore, two locks may not be taken in different order::
  
- 3. Considerations for SR-IOV on PowerKVM
-+========================================
+  <L1> -> <L2>
+  <L2> -> <L1>
+@@ -92,7 +95,7 @@ other locking sequence between the acquire-lock operations, the
+ validator will still track all dependencies between locks.)
  
-   * SR-IOV Background
+ Furthermore, the following usage based lock dependencies are not allowed
+-between any two lock-classes:
++between any two lock-classes::
  
-@@ -224,7 +234,7 @@ P8 supports up to 256 Partitionable Endpoints per PHB.
-   IODA supports 256 PEs, so segmented windows contain 256 segments, so if
-   total_VFs is less than 256, we have the situation in Figure 1.0, where
-   segments [total_VFs, 255] of the M64 window may map to some MMIO range on
--  other devices:
-+  other devices::
+    <hardirq-safe>   ->  <hardirq-unsafe>
+    <softirq-safe>   ->  <softirq-unsafe>
+@@ -148,16 +151,16 @@ the ordering is not static.
+ In order to teach the validator about this correct usage model, new
+ versions of the various locking primitives were added that allow you to
+ specify a "nesting level". An example call, for the block device mutex,
+-looks like this:
++looks like this::
  
-      0      1                     total_VFs - 1
-      +------+------+-     -+------+------+
-@@ -243,7 +253,7 @@ P8 supports up to 256 Partitionable Endpoints per PHB.
- 		Figure 1.0 Direct map VF(n) BAR space
- 
-   Our current solution is to allocate 256 segments even if the VF(n) BAR
--  space doesn't need that much, as shown in Figure 1.1:
-+  space doesn't need that much, as shown in Figure 1.1::
- 
-      0      1                     total_VFs - 1                255
-      +------+------+-     -+------+------+-      -+------+------+
-@@ -269,6 +279,7 @@ P8 supports up to 256 Partitionable Endpoints per PHB.
-   responds to segments [total_VFs, 255].
- 
- 4. Implications for the Generic PCI Code
-+========================================
- 
- The PCIe SR-IOV spec requires that the base of the VF(n) BAR space be
- aligned to the size of an individual VF BAR.
-diff --git a/Documentation/powerpc/pmu-ebb.txt b/Documentation/powerpc/pmu-ebb.rst
-similarity index 99%
-rename from Documentation/powerpc/pmu-ebb.txt
-rename to Documentation/powerpc/pmu-ebb.rst
-index 73cd163dbfb8..4f474758eb55 100644
---- a/Documentation/powerpc/pmu-ebb.txt
-+++ b/Documentation/powerpc/pmu-ebb.rst
-@@ -1,3 +1,4 @@
-+========================
- PMU Event Based Branches
- ========================
- 
-diff --git a/Documentation/powerpc/ptrace.rst b/Documentation/powerpc/ptrace.rst
-new file mode 100644
-index 000000000000..864d4b6dddd1
---- /dev/null
-+++ b/Documentation/powerpc/ptrace.rst
-@@ -0,0 +1,156 @@
-+======
-+Ptrace
-+======
-+
-+GDB intends to support the following hardware debug features of BookE
-+processors:
-+
-+4 hardware breakpoints (IAC)
-+2 hardware watchpoints (read, write and read-write) (DAC)
-+2 value conditions for the hardware watchpoints (DVC)
-+
-+For that, we need to extend ptrace so that GDB can query and set these
-+resources. Since we're extending, we're trying to create an interface
-+that's extendable and that covers both BookE and server processors, so
-+that GDB doesn't need to special-case each of them. We added the
-+following 3 new ptrace requests.
-+
-+1. PTRACE_PPC_GETHWDEBUGINFO
-+============================
-+
-+Query for GDB to discover the hardware debug features. The main info to
-+be returned here is the minimum alignment for the hardware watchpoints.
-+BookE processors don't have restrictions here, but server processors have
-+an 8-byte alignment restriction for hardware watchpoints. We'd like to avoid
-+adding special cases to GDB based on what it sees in AUXV.
-+
-+Since we're at it, we added other useful info that the kernel can return to
-+GDB: this query will return the number of hardware breakpoints, hardware
-+watchpoints and whether it supports a range of addresses and a condition.
-+The query will fill the following structure provided by the requesting process::
-+
-+  struct ppc_debug_info {
-+       unit32_t version;
-+       unit32_t num_instruction_bps;
-+       unit32_t num_data_bps;
-+       unit32_t num_condition_regs;
-+       unit32_t data_bp_alignment;
-+       unit32_t sizeof_condition; /* size of the DVC register */
-+       uint64_t features; /* bitmask of the individual flags */
-+  };
-+
-+features will have bits indicating whether there is support for::
-+
-+  #define PPC_DEBUG_FEATURE_INSN_BP_RANGE		0x1
-+  #define PPC_DEBUG_FEATURE_INSN_BP_MASK		0x2
-+  #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x4
-+  #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x8
-+  #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x10
-+
-+2. PTRACE_SETHWDEBUG
-+
-+Sets a hardware breakpoint or watchpoint, according to the provided structure::
-+
-+  struct ppc_hw_breakpoint {
-+        uint32_t version;
-+  #define PPC_BREAKPOINT_TRIGGER_EXECUTE  0x1
-+  #define PPC_BREAKPOINT_TRIGGER_READ     0x2
-+ #define PPC_BREAKPOINT_TRIGGER_WRITE    0x4
-+        uint32_t trigger_type;       /* only some combinations allowed */
-+  #define PPC_BREAKPOINT_MODE_EXACT               0x0
-+  #define PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE     0x1
-+  #define PPC_BREAKPOINT_MODE_RANGE_EXCLUSIVE     0x2
-+  #define PPC_BREAKPOINT_MODE_MASK                0x3
-+        uint32_t addr_mode;          /* address match mode */
-+
-+  #define PPC_BREAKPOINT_CONDITION_MODE   0x3
-+  #define PPC_BREAKPOINT_CONDITION_NONE   0x0
-+  #define PPC_BREAKPOINT_CONDITION_AND    0x1
-+  #define PPC_BREAKPOINT_CONDITION_EXACT  0x1	/* different name for the same thing as above */
-+  #define PPC_BREAKPOINT_CONDITION_OR     0x2
-+  #define PPC_BREAKPOINT_CONDITION_AND_OR 0x3
-+  #define PPC_BREAKPOINT_CONDITION_BE_ALL 0x00ff0000	/* byte enable bits */
-+  #define PPC_BREAKPOINT_CONDITION_BE(n)  (1<<((n)+16))
-+        uint32_t condition_mode;     /* break/watchpoint condition flags */
-+
-+        uint64_t addr;
-+        uint64_t addr2;
-+        uint64_t condition_value;
-+  };
-+
-+A request specifies one event, not necessarily just one register to be set.
-+For instance, if the request is for a watchpoint with a condition, both the
-+DAC and DVC registers will be set in the same request.
-+
-+With this GDB can ask for all kinds of hardware breakpoints and watchpoints
-+that the BookE supports. COMEFROM breakpoints available in server processors
-+are not contemplated, but that is out of the scope of this work.
-+
-+ptrace will return an integer (handle) uniquely identifying the breakpoint or
-+watchpoint just created. This integer will be used in the PTRACE_DELHWDEBUG
-+request to ask for its removal. Return -ENOSPC if the requested breakpoint
-+can't be allocated on the registers.
-+
-+Some examples of using the structure to:
-+
-+- set a breakpoint in the first breakpoint register::
-+
-+    p.version         = PPC_DEBUG_CURRENT_VERSION;
-+    p.trigger_type    = PPC_BREAKPOINT_TRIGGER_EXECUTE;
-+    p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
-+    p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
-+    p.addr            = (uint64_t) address;
-+    p.addr2           = 0;
-+    p.condition_value = 0;
-+
-+- set a watchpoint which triggers on reads in the second watchpoint register::
-+
-+    p.version         = PPC_DEBUG_CURRENT_VERSION;
-+    p.trigger_type    = PPC_BREAKPOINT_TRIGGER_READ;
-+    p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
-+    p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
-+    p.addr            = (uint64_t) address;
-+    p.addr2           = 0;
-+    p.condition_value = 0;
-+
-+- set a watchpoint which triggers only with a specific value::
-+
-+    p.version         = PPC_DEBUG_CURRENT_VERSION;
-+    p.trigger_type    = PPC_BREAKPOINT_TRIGGER_READ;
-+    p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
-+    p.condition_mode  = PPC_BREAKPOINT_CONDITION_AND | PPC_BREAKPOINT_CONDITION_BE_ALL;
-+    p.addr            = (uint64_t) address;
-+    p.addr2           = 0;
-+    p.condition_value = (uint64_t) condition;
-+
-+- set a ranged hardware breakpoint::
-+
-+    p.version         = PPC_DEBUG_CURRENT_VERSION;
-+    p.trigger_type    = PPC_BREAKPOINT_TRIGGER_EXECUTE;
-+    p.addr_mode       = PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE;
-+    p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
-+    p.addr            = (uint64_t) begin_range;
-+    p.addr2           = (uint64_t) end_range;
-+    p.condition_value = 0;
-+
-+- set a watchpoint in server processors (BookS)::
-+
-+    p.version         = 1;
-+    p.trigger_type    = PPC_BREAKPOINT_TRIGGER_RW;
-+    p.addr_mode       = PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE;
-+    or
-+    p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
-+
-+    p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
-+    p.addr            = (uint64_t) begin_range;
-+    /* For PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE addr2 needs to be specified, where
-+     * addr2 - addr <= 8 Bytes.
-+     */
-+    p.addr2           = (uint64_t) end_range;
-+    p.condition_value = 0;
-+
-+3. PTRACE_DELHWDEBUG
-+
-+Takes an integer which identifies an existing breakpoint or watchpoint
-+(i.e., the value returned from PTRACE_SETHWDEBUG), and deletes the
-+corresponding breakpoint or watchpoint..
-diff --git a/Documentation/powerpc/ptrace.txt b/Documentation/powerpc/ptrace.txt
-deleted file mode 100644
-index 99c5ce88d0fe..000000000000
---- a/Documentation/powerpc/ptrace.txt
-+++ /dev/null
-@@ -1,151 +0,0 @@
--GDB intends to support the following hardware debug features of BookE
--processors:
--
--4 hardware breakpoints (IAC)
--2 hardware watchpoints (read, write and read-write) (DAC)
--2 value conditions for the hardware watchpoints (DVC)
--
--For that, we need to extend ptrace so that GDB can query and set these
--resources. Since we're extending, we're trying to create an interface
--that's extendable and that covers both BookE and server processors, so
--that GDB doesn't need to special-case each of them. We added the
--following 3 new ptrace requests.
--
--1. PTRACE_PPC_GETHWDEBUGINFO
--
--Query for GDB to discover the hardware debug features. The main info to
--be returned here is the minimum alignment for the hardware watchpoints.
--BookE processors don't have restrictions here, but server processors have
--an 8-byte alignment restriction for hardware watchpoints. We'd like to avoid
--adding special cases to GDB based on what it sees in AUXV.
--
--Since we're at it, we added other useful info that the kernel can return to
--GDB: this query will return the number of hardware breakpoints, hardware
--watchpoints and whether it supports a range of addresses and a condition.
--The query will fill the following structure provided by the requesting process:
--
--struct ppc_debug_info {
--       unit32_t version;
--       unit32_t num_instruction_bps;
--       unit32_t num_data_bps;
--       unit32_t num_condition_regs;
--       unit32_t data_bp_alignment;
--       unit32_t sizeof_condition; /* size of the DVC register */
--       uint64_t features; /* bitmask of the individual flags */
--};
--
--features will have bits indicating whether there is support for:
--
--#define PPC_DEBUG_FEATURE_INSN_BP_RANGE		0x1
--#define PPC_DEBUG_FEATURE_INSN_BP_MASK		0x2
--#define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x4
--#define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x8
--#define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x10
--
--2. PTRACE_SETHWDEBUG
--
--Sets a hardware breakpoint or watchpoint, according to the provided structure:
--
--struct ppc_hw_breakpoint {
--        uint32_t version;
--#define PPC_BREAKPOINT_TRIGGER_EXECUTE  0x1
--#define PPC_BREAKPOINT_TRIGGER_READ     0x2
--#define PPC_BREAKPOINT_TRIGGER_WRITE    0x4
--        uint32_t trigger_type;       /* only some combinations allowed */
--#define PPC_BREAKPOINT_MODE_EXACT               0x0
--#define PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE     0x1
--#define PPC_BREAKPOINT_MODE_RANGE_EXCLUSIVE     0x2
--#define PPC_BREAKPOINT_MODE_MASK                0x3
--        uint32_t addr_mode;          /* address match mode */
--
--#define PPC_BREAKPOINT_CONDITION_MODE   0x3
--#define PPC_BREAKPOINT_CONDITION_NONE   0x0
--#define PPC_BREAKPOINT_CONDITION_AND    0x1
--#define PPC_BREAKPOINT_CONDITION_EXACT  0x1	/* different name for the same thing as above */
--#define PPC_BREAKPOINT_CONDITION_OR     0x2
--#define PPC_BREAKPOINT_CONDITION_AND_OR 0x3
--#define PPC_BREAKPOINT_CONDITION_BE_ALL 0x00ff0000	/* byte enable bits */
--#define PPC_BREAKPOINT_CONDITION_BE(n)  (1<<((n)+16))
--        uint32_t condition_mode;     /* break/watchpoint condition flags */
--
--        uint64_t addr;
--        uint64_t addr2;
--        uint64_t condition_value;
--};
--
--A request specifies one event, not necessarily just one register to be set.
--For instance, if the request is for a watchpoint with a condition, both the
--DAC and DVC registers will be set in the same request.
--
--With this GDB can ask for all kinds of hardware breakpoints and watchpoints
--that the BookE supports. COMEFROM breakpoints available in server processors
--are not contemplated, but that is out of the scope of this work.
--
--ptrace will return an integer (handle) uniquely identifying the breakpoint or
--watchpoint just created. This integer will be used in the PTRACE_DELHWDEBUG
--request to ask for its removal. Return -ENOSPC if the requested breakpoint
--can't be allocated on the registers.
--
--Some examples of using the structure to:
--
--- set a breakpoint in the first breakpoint register
--
--  p.version         = PPC_DEBUG_CURRENT_VERSION;
--  p.trigger_type    = PPC_BREAKPOINT_TRIGGER_EXECUTE;
--  p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
--  p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
--  p.addr            = (uint64_t) address;
--  p.addr2           = 0;
--  p.condition_value = 0;
--
--- set a watchpoint which triggers on reads in the second watchpoint register
--
--  p.version         = PPC_DEBUG_CURRENT_VERSION;
--  p.trigger_type    = PPC_BREAKPOINT_TRIGGER_READ;
--  p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
--  p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
--  p.addr            = (uint64_t) address;
--  p.addr2           = 0;
--  p.condition_value = 0;
--
--- set a watchpoint which triggers only with a specific value
--
--  p.version         = PPC_DEBUG_CURRENT_VERSION;
--  p.trigger_type    = PPC_BREAKPOINT_TRIGGER_READ;
--  p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
--  p.condition_mode  = PPC_BREAKPOINT_CONDITION_AND | PPC_BREAKPOINT_CONDITION_BE_ALL;
--  p.addr            = (uint64_t) address;
--  p.addr2           = 0;
--  p.condition_value = (uint64_t) condition;
--
--- set a ranged hardware breakpoint
--
--  p.version         = PPC_DEBUG_CURRENT_VERSION;
--  p.trigger_type    = PPC_BREAKPOINT_TRIGGER_EXECUTE;
--  p.addr_mode       = PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE;
--  p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
--  p.addr            = (uint64_t) begin_range;
--  p.addr2           = (uint64_t) end_range;
--  p.condition_value = 0;
--
--- set a watchpoint in server processors (BookS)
--
--  p.version         = 1;
--  p.trigger_type    = PPC_BREAKPOINT_TRIGGER_RW;
--  p.addr_mode       = PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE;
--  or
--  p.addr_mode       = PPC_BREAKPOINT_MODE_EXACT;
--
--  p.condition_mode  = PPC_BREAKPOINT_CONDITION_NONE;
--  p.addr            = (uint64_t) begin_range;
--  /* For PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE addr2 needs to be specified, where
--   * addr2 - addr <= 8 Bytes.
--   */
--  p.addr2           = (uint64_t) end_range;
--  p.condition_value = 0;
--
--3. PTRACE_DELHWDEBUG
--
--Takes an integer which identifies an existing breakpoint or watchpoint
--(i.e., the value returned from PTRACE_SETHWDEBUG), and deletes the
--corresponding breakpoint or watchpoint..
-diff --git a/Documentation/powerpc/qe_firmware.txt b/Documentation/powerpc/qe_firmware.rst
-similarity index 95%
-rename from Documentation/powerpc/qe_firmware.txt
-rename to Documentation/powerpc/qe_firmware.rst
-index e7ac24aec4ff..42f5103140c9 100644
---- a/Documentation/powerpc/qe_firmware.txt
-+++ b/Documentation/powerpc/qe_firmware.rst
-@@ -1,23 +1,23 @@
--	   Freescale QUICC Engine Firmware Uploading
--	   -----------------------------------------
-+=========================================
-+Freescale QUICC Engine Firmware Uploading
-+=========================================
- 
- (c) 2007 Timur Tabi <timur at freescale.com>,
-     Freescale Semiconductor
- 
--Table of Contents
--=================
-+.. Table of Contents
- 
--  I - Software License for Firmware
-+   I - Software License for Firmware
- 
--  II - Microcode Availability
-+   II - Microcode Availability
- 
--  III - Description and Terminology
-+   III - Description and Terminology
- 
--  IV - Microcode Programming Details
-+   IV - Microcode Programming Details
- 
--  V - Firmware Structure Layout
-+   V - Firmware Structure Layout
- 
--  VI - Sample Code for Creating Firmware Files
-+   VI - Sample Code for Creating Firmware Files
- 
- Revision Information
- ====================
-@@ -39,7 +39,7 @@ http://opensource.freescale.com.  For other firmware files, please contact
- your Freescale representative or your operating system vendor.
- 
- III - Description and Terminology
--================================
-+=================================
- 
- In this document, the term 'microcode' refers to the sequence of 32-bit
- integers that compose the actual QE microcode.
-@@ -89,7 +89,7 @@ being fixed in the RAM package utilizing they should be activated.  This data
- structure signals the microcode which of these virtual traps is active.
- 
- This structure contains 6 words that the application should copy to some
--specific been defined.  This table describes the structure.
-+specific been defined.  This table describes the structure::
- 
- 	---------------------------------------------------------------
- 	| Offset in |                  | Destination Offset | Size of |
-@@ -119,7 +119,7 @@ Extended Modes
- This is a double word bit array (64 bits) that defines special functionality
- which has an impact on the software drivers.  Each bit has its own impact
- and has special instructions for the s/w associated with it.  This structure is
--described in this table:
-+described in this table::
- 
- 	-----------------------------------------------------------------------
- 	| Bit #  |     Name     |   Description                               |
-@@ -220,7 +220,8 @@ The 'model' field is a 16-bit number that matches the actual SOC. The
- 'major' and 'minor' fields are the major and minor revision numbers,
- respectively, of the SOC.
- 
--For example, to match the 8323, revision 1.0:
-+For example, to match the 8323, revision 1.0::
-+
-      soc.model = 8323
-      soc.major = 1
-      soc.minor = 0
-@@ -273,10 +274,10 @@ library and available to any driver that calles qe_get_firmware_info().
- 	'reserved'.
- 
- After the last microcode is a 32-bit CRC.  It can be calculated using
--this algorithm:
-+this algorithm::
- 
--u32 crc32(const u8 *p, unsigned int len)
+-enum bdev_bd_mutex_lock_class
 -{
-+  u32 crc32(const u8 *p, unsigned int len)
++  enum bdev_bd_mutex_lock_class
 +  {
- 	unsigned int i;
- 	u32 crc = 0;
+        BD_MUTEX_NORMAL,
+        BD_MUTEX_WHOLE,
+        BD_MUTEX_PARTITION
+-};
++  };
  
-@@ -286,7 +287,7 @@ u32 crc32(const u8 *p, unsigned int len)
- 		   crc = (crc >> 1) ^ ((crc & 1) ? 0xedb88320 : 0);
- 	}
- 	return crc;
+- mutex_lock_nested(&bdev->bd_contains->bd_mutex, BD_MUTEX_PARTITION);
++mutex_lock_nested(&bdev->bd_contains->bd_mutex, BD_MUTEX_PARTITION);
+ 
+ In this case the locking is done on a bdev object that is known to be a
+ partition.
+@@ -178,7 +181,7 @@ must be held: lockdep_assert_held*(&lock) and lockdep_*pin_lock(&lock).
+ As the name suggests, lockdep_assert_held* family of macros assert that a
+ particular lock is held at a certain time (and generate a WARN() otherwise).
+ This annotation is largely used all over the kernel, e.g. kernel/sched/
+-core.c
++core.c::
+ 
+   void update_rq_clock(struct rq *rq)
+   {
+@@ -197,7 +200,7 @@ out to be especially helpful to debug code with callbacks, where an upper
+ layer assumes a lock remains taken, but a lower layer thinks it can maybe drop
+ and reacquire the lock ("unwittingly" introducing races). lockdep_pin_lock()
+ returns a 'struct pin_cookie' that is then used by lockdep_unpin_lock() to check
+-that nobody tampered with the lock, e.g. kernel/sched/sched.h
++that nobody tampered with the lock, e.g. kernel/sched/sched.h::
+ 
+   static inline void rq_pin_lock(struct rq *rq, struct rq_flags *rf)
+   {
+@@ -224,7 +227,7 @@ correctness) in the sense that for every simple, standalone single-task
+ locking sequence that occurred at least once during the lifetime of the
+ kernel, the validator proves it with a 100% certainty that no
+ combination and timing of these locking sequences can cause any class of
+-lock related deadlock. [*]
++lock related deadlock. [1]_
+ 
+ I.e. complex multi-CPU and multi-task locking scenarios do not have to
+ occur in practice to prove a deadlock: only the simple 'component'
+@@ -243,7 +246,9 @@ possible combination of locking interaction between CPUs, combined with
+ every possible hardirq and softirq nesting scenario (which is impossible
+ to do in practice).
+ 
+-[*] assuming that the validator itself is 100% correct, and no other
++.. [1]
++
++    assuming that the validator itself is 100% correct, and no other
+     part of the system corrupts the state of the validator in any way.
+     We also assume that all NMI/SMM paths [which could interrupt
+     even hardirq-disabled codepaths] are correct and do not interfere
+@@ -254,7 +259,7 @@ to do in practice).
+ Performance:
+ ------------
+ 
+-The above rules require _massive_ amounts of runtime checking. If we did
++The above rules require **massive** amounts of runtime checking. If we did
+ that for every lock taken and for every irqs-enable event, it would
+ render the system practically unusably slow. The complexity of checking
+ is O(N^2), so even with just a few hundred lock-classes we'd have to do
+@@ -313,17 +318,17 @@ be harder to do than to say.
+ 
+ Of course, if you do run out of lock classes, the next thing to do is
+ to find the offending lock classes.  First, the following command gives
+-you the number of lock classes currently in use along with the maximum:
++you the number of lock classes currently in use along with the maximum::
+ 
+ 	grep "lock-classes" /proc/lockdep_stats
+ 
+-This command produces the following output on a modest system:
++This command produces the following output on a modest system::
+ 
+-	 lock-classes:                          748 [max: 8191]
++	lock-classes:                          748 [max: 8191]
+ 
+ If the number allocated (748 above) increases continually over time,
+ then there is likely a leak.  The following command can be used to
+-identify the leaking lock classes:
++identify the leaking lock classes::
+ 
+ 	grep "BD" /proc/lockdep
+ 
+diff --git a/Documentation/locking/lockstat.rst b/Documentation/locking/lockstat.rst
+new file mode 100644
+index 000000000000..536eab8dbd99
+--- /dev/null
++++ b/Documentation/locking/lockstat.rst
+@@ -0,0 +1,204 @@
++===============
++Lock Statistics
++===============
++
++What
++====
++
++As the name suggests, it provides statistics on locks.
++
++
++Why
++===
++
++Because things like lock contention can severely impact performance.
++
++How
++===
++
++Lockdep already has hooks in the lock functions and maps lock instances to
++lock classes. We build on that (see Documentation/locking/lockdep-design.rst).
++The graph below shows the relation between the lock functions and the various
++hooks therein::
++
++        __acquire
++            |
++           lock _____
++            |        \
++            |    __contended
++            |         |
++            |       <wait>
++            | _______/
++            |/
++            |
++       __acquired
++            |
++            .
++          <hold>
++            .
++            |
++       __release
++            |
++         unlock
++
++  lock, unlock	- the regular lock functions
++  __*		- the hooks
++  <> 		- states
++
++With these hooks we provide the following statistics:
++
++ con-bounces
++	- number of lock contention that involved x-cpu data
++ contentions
++	- number of lock acquisitions that had to wait
++ wait time
++     min
++	- shortest (non-0) time we ever had to wait for a lock
++     max
++	- longest time we ever had to wait for a lock
++     total
++	- total time we spend waiting on this lock
++     avg
++	- average time spent waiting on this lock
++ acq-bounces
++	- number of lock acquisitions that involved x-cpu data
++ acquisitions
++	- number of times we took the lock
++ hold time
++     min
++	- shortest (non-0) time we ever held the lock
++     max
++	- longest time we ever held the lock
++     total
++	- total time this lock was held
++     avg
++	- average time this lock was held
++
++These numbers are gathered per lock class, per read/write state (when
++applicable).
++
++It also tracks 4 contention points per class. A contention point is a call site
++that had to wait on lock acquisition.
++
++Configuration
++-------------
++
++Lock statistics are enabled via CONFIG_LOCK_STAT.
++
++Usage
++-----
++
++Enable collection of statistics::
++
++	# echo 1 >/proc/sys/kernel/lock_stat
++
++Disable collection of statistics::
++
++	# echo 0 >/proc/sys/kernel/lock_stat
++
++Look at the current lock statistics::
++
++  ( line numbers not part of actual output, done for clarity in the explanation
++    below )
++
++  # less /proc/lock_stat
++
++  01 lock_stat version 0.4
++  02-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++  03                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
++  04-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++  05
++  06                         &mm->mmap_sem-W:            46             84           0.26         939.10       16371.53         194.90          47291        2922365           0.16     2220301.69 17464026916.32        5975.99
++  07                         &mm->mmap_sem-R:            37            100           1.31      299502.61      325629.52        3256.30         212344       34316685           0.10        7744.91    95016910.20           2.77
++  08                         ---------------
++  09                           &mm->mmap_sem              1          [<ffffffff811502a7>] khugepaged_scan_mm_slot+0x57/0x280
++  10                           &mm->mmap_sem             96          [<ffffffff815351c4>] __do_page_fault+0x1d4/0x510
++  11                           &mm->mmap_sem             34          [<ffffffff81113d77>] vm_mmap_pgoff+0x87/0xd0
++  12                           &mm->mmap_sem             17          [<ffffffff81127e71>] vm_munmap+0x41/0x80
++  13                         ---------------
++  14                           &mm->mmap_sem              1          [<ffffffff81046fda>] dup_mmap+0x2a/0x3f0
++  15                           &mm->mmap_sem             60          [<ffffffff81129e29>] SyS_mprotect+0xe9/0x250
++  16                           &mm->mmap_sem             41          [<ffffffff815351c4>] __do_page_fault+0x1d4/0x510
++  17                           &mm->mmap_sem             68          [<ffffffff81113d77>] vm_mmap_pgoff+0x87/0xd0
++  18
++  19.............................................................................................................................................................................................................................
++  20
++  21                         unix_table_lock:           110            112           0.21          49.24         163.91           1.46          21094          66312           0.12         624.42       31589.81           0.48
++  22                         ---------------
++  23                         unix_table_lock             45          [<ffffffff8150ad8e>] unix_create1+0x16e/0x1b0
++  24                         unix_table_lock             47          [<ffffffff8150b111>] unix_release_sock+0x31/0x250
++  25                         unix_table_lock             15          [<ffffffff8150ca37>] unix_find_other+0x117/0x230
++  26                         unix_table_lock              5          [<ffffffff8150a09f>] unix_autobind+0x11f/0x1b0
++  27                         ---------------
++  28                         unix_table_lock             39          [<ffffffff8150b111>] unix_release_sock+0x31/0x250
++  29                         unix_table_lock             49          [<ffffffff8150ad8e>] unix_create1+0x16e/0x1b0
++  30                         unix_table_lock             20          [<ffffffff8150ca37>] unix_find_other+0x117/0x230
++  31                         unix_table_lock              4          [<ffffffff8150a09f>] unix_autobind+0x11f/0x1b0
++
++
++This excerpt shows the first two lock class statistics. Line 01 shows the
++output version - each time the format changes this will be updated. Line 02-04
++show the header with column descriptions. Lines 05-18 and 20-31 show the actual
++statistics. These statistics come in two parts; the actual stats separated by a
++short separator (line 08, 13) from the contention points.
++
++Lines 09-12 show the first 4 recorded contention points (the code
++which tries to get the lock) and lines 14-17 show the first 4 recorded
++contended points (the lock holder). It is possible that the max
++con-bounces point is missing in the statistics.
++
++The first lock (05-18) is a read/write lock, and shows two lines above the
++short separator. The contention points don't match the column descriptors,
++they have two: contentions and [<IP>] symbol. The second set of contention
++points are the points we're contending with.
++
++The integer part of the time values is in us.
++
++Dealing with nested locks, subclasses may appear::
++
++  32...........................................................................................................................................................................................................................
++  33
++  34                               &rq->lock:       13128          13128           0.43         190.53      103881.26           7.91          97454        3453404           0.00         401.11    13224683.11           3.82
++  35                               ---------
++  36                               &rq->lock          645          [<ffffffff8103bfc4>] task_rq_lock+0x43/0x75
++  37                               &rq->lock          297          [<ffffffff8104ba65>] try_to_wake_up+0x127/0x25a
++  38                               &rq->lock          360          [<ffffffff8103c4c5>] select_task_rq_fair+0x1f0/0x74a
++  39                               &rq->lock          428          [<ffffffff81045f98>] scheduler_tick+0x46/0x1fb
++  40                               ---------
++  41                               &rq->lock           77          [<ffffffff8103bfc4>] task_rq_lock+0x43/0x75
++  42                               &rq->lock          174          [<ffffffff8104ba65>] try_to_wake_up+0x127/0x25a
++  43                               &rq->lock         4715          [<ffffffff8103ed4b>] double_rq_lock+0x42/0x54
++  44                               &rq->lock          893          [<ffffffff81340524>] schedule+0x157/0x7b8
++  45
++  46...........................................................................................................................................................................................................................
++  47
++  48                             &rq->lock/1:        1526          11488           0.33         388.73      136294.31          11.86          21461          38404           0.00          37.93      109388.53           2.84
++  49                             -----------
++  50                             &rq->lock/1        11526          [<ffffffff8103ed58>] double_rq_lock+0x4f/0x54
++  51                             -----------
++  52                             &rq->lock/1         5645          [<ffffffff8103ed4b>] double_rq_lock+0x42/0x54
++  53                             &rq->lock/1         1224          [<ffffffff81340524>] schedule+0x157/0x7b8
++  54                             &rq->lock/1         4336          [<ffffffff8103ed58>] double_rq_lock+0x4f/0x54
++  55                             &rq->lock/1          181          [<ffffffff8104ba65>] try_to_wake_up+0x127/0x25a
++
++Line 48 shows statistics for the second subclass (/1) of &rq->lock class
++(subclass starts from 0), since in this case, as line 50 suggests,
++double_rq_lock actually acquires a nested lock of two spinlocks.
++
++View the top contending locks::
++
++  # grep : /proc/lock_stat | head
++			clockevents_lock:       2926159        2947636           0.15       46882.81  1784540466.34         605.41        3381345        3879161           0.00        2260.97    53178395.68          13.71
++		     tick_broadcast_lock:        346460         346717           0.18        2257.43    39364622.71         113.54        3642919        4242696           0.00        2263.79    49173646.60          11.59
++		  &mapping->i_mmap_mutex:        203896         203899           3.36      645530.05 31767507988.39      155800.21        3361776        8893984           0.17        2254.15    14110121.02           1.59
++			       &rq->lock:        135014         136909           0.18         606.09      842160.68           6.15        1540728       10436146           0.00         728.72    17606683.41           1.69
++	       &(&zone->lru_lock)->rlock:         93000          94934           0.16          59.18      188253.78           1.98        1199912        3809894           0.15         391.40     3559518.81           0.93
++			 tasklist_lock-W:         40667          41130           0.23        1189.42      428980.51          10.43         270278         510106           0.16         653.51     3939674.91           7.72
++			 tasklist_lock-R:         21298          21305           0.20        1310.05      215511.12          10.12         186204         241258           0.14        1162.33     1179779.23           4.89
++			      rcu_node_1:         47656          49022           0.16         635.41      193616.41           3.95         844888        1865423           0.00         764.26     1656226.96           0.89
++       &(&dentry->d_lockref.lock)->rlock:         39791          40179           0.15        1302.08       88851.96           2.21        2790851       12527025           0.10        1910.75     3379714.27           0.27
++			      rcu_node_0:         29203          30064           0.16         786.55     1555573.00          51.74          88963         244254           0.00         398.87      428872.51           1.76
++
++Clear the statistics::
++
++  # echo 0 > /proc/lock_stat
+diff --git a/Documentation/locking/lockstat.txt b/Documentation/locking/lockstat.txt
+deleted file mode 100644
+index fdbeb0c45ef3..000000000000
+--- a/Documentation/locking/lockstat.txt
++++ /dev/null
+@@ -1,183 +0,0 @@
+-
+-LOCK STATISTICS
+-
+-- WHAT
+-
+-As the name suggests, it provides statistics on locks.
+-
+-- WHY
+-
+-Because things like lock contention can severely impact performance.
+-
+-- HOW
+-
+-Lockdep already has hooks in the lock functions and maps lock instances to
+-lock classes. We build on that (see Documentation/locking/lockdep-design.txt).
+-The graph below shows the relation between the lock functions and the various
+-hooks therein.
+-
+-        __acquire
+-            |
+-           lock _____
+-            |        \
+-            |    __contended
+-            |         |
+-            |       <wait>
+-            | _______/
+-            |/
+-            |
+-       __acquired
+-            |
+-            .
+-          <hold>
+-            .
+-            |
+-       __release
+-            |
+-         unlock
+-
+-lock, unlock	- the regular lock functions
+-__*		- the hooks
+-<> 		- states
+-
+-With these hooks we provide the following statistics:
+-
+- con-bounces       - number of lock contention that involved x-cpu data
+- contentions       - number of lock acquisitions that had to wait
+- wait time min     - shortest (non-0) time we ever had to wait for a lock
+-           max     - longest time we ever had to wait for a lock
+-	   total   - total time we spend waiting on this lock
+-	   avg     - average time spent waiting on this lock
+- acq-bounces       - number of lock acquisitions that involved x-cpu data
+- acquisitions      - number of times we took the lock
+- hold time min     - shortest (non-0) time we ever held the lock
+-	   max     - longest time we ever held the lock
+-	   total   - total time this lock was held
+-	   avg     - average time this lock was held
+-
+-These numbers are gathered per lock class, per read/write state (when
+-applicable).
+-
+-It also tracks 4 contention points per class. A contention point is a call site
+-that had to wait on lock acquisition.
+-
+- - CONFIGURATION
+-
+-Lock statistics are enabled via CONFIG_LOCK_STAT.
+-
+- - USAGE
+-
+-Enable collection of statistics:
+-
+-# echo 1 >/proc/sys/kernel/lock_stat
+-
+-Disable collection of statistics:
+-
+-# echo 0 >/proc/sys/kernel/lock_stat
+-
+-Look at the current lock statistics:
+-
+-( line numbers not part of actual output, done for clarity in the explanation
+-  below )
+-
+-# less /proc/lock_stat
+-
+-01 lock_stat version 0.4
+-02-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-03                              class name    con-bounces    contentions   waittime-min   waittime-max waittime-total   waittime-avg    acq-bounces   acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+-04-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-05
+-06                         &mm->mmap_sem-W:            46             84           0.26         939.10       16371.53         194.90          47291        2922365           0.16     2220301.69 17464026916.32        5975.99
+-07                         &mm->mmap_sem-R:            37            100           1.31      299502.61      325629.52        3256.30         212344       34316685           0.10        7744.91    95016910.20           2.77
+-08                         ---------------
+-09                           &mm->mmap_sem              1          [<ffffffff811502a7>] khugepaged_scan_mm_slot+0x57/0x280
+-10                           &mm->mmap_sem             96          [<ffffffff815351c4>] __do_page_fault+0x1d4/0x510
+-11                           &mm->mmap_sem             34          [<ffffffff81113d77>] vm_mmap_pgoff+0x87/0xd0
+-12                           &mm->mmap_sem             17          [<ffffffff81127e71>] vm_munmap+0x41/0x80
+-13                         ---------------
+-14                           &mm->mmap_sem              1          [<ffffffff81046fda>] dup_mmap+0x2a/0x3f0
+-15                           &mm->mmap_sem             60          [<ffffffff81129e29>] SyS_mprotect+0xe9/0x250
+-16                           &mm->mmap_sem             41          [<ffffffff815351c4>] __do_page_fault+0x1d4/0x510
+-17                           &mm->mmap_sem             68          [<ffffffff81113d77>] vm_mmap_pgoff+0x87/0xd0
+-18
+-19.............................................................................................................................................................................................................................
+-20
+-21                         unix_table_lock:           110            112           0.21          49.24         163.91           1.46          21094          66312           0.12         624.42       31589.81           0.48
+-22                         ---------------
+-23                         unix_table_lock             45          [<ffffffff8150ad8e>] unix_create1+0x16e/0x1b0
+-24                         unix_table_lock             47          [<ffffffff8150b111>] unix_release_sock+0x31/0x250
+-25                         unix_table_lock             15          [<ffffffff8150ca37>] unix_find_other+0x117/0x230
+-26                         unix_table_lock              5          [<ffffffff8150a09f>] unix_autobind+0x11f/0x1b0
+-27                         ---------------
+-28                         unix_table_lock             39          [<ffffffff8150b111>] unix_release_sock+0x31/0x250
+-29                         unix_table_lock             49          [<ffffffff8150ad8e>] unix_create1+0x16e/0x1b0
+-30                         unix_table_lock             20          [<ffffffff8150ca37>] unix_find_other+0x117/0x230
+-31                         unix_table_lock              4          [<ffffffff8150a09f>] unix_autobind+0x11f/0x1b0
+-
+-
+-This excerpt shows the first two lock class statistics. Line 01 shows the
+-output version - each time the format changes this will be updated. Line 02-04
+-show the header with column descriptions. Lines 05-18 and 20-31 show the actual
+-statistics. These statistics come in two parts; the actual stats separated by a
+-short separator (line 08, 13) from the contention points.
+-
+-Lines 09-12 show the first 4 recorded contention points (the code
+-which tries to get the lock) and lines 14-17 show the first 4 recorded
+-contended points (the lock holder). It is possible that the max
+-con-bounces point is missing in the statistics.
+-
+-The first lock (05-18) is a read/write lock, and shows two lines above the
+-short separator. The contention points don't match the column descriptors,
+-they have two: contentions and [<IP>] symbol. The second set of contention
+-points are the points we're contending with.
+-
+-The integer part of the time values is in us.
+-
+-Dealing with nested locks, subclasses may appear:
+-
+-32...........................................................................................................................................................................................................................
+-33
+-34                               &rq->lock:       13128          13128           0.43         190.53      103881.26           7.91          97454        3453404           0.00         401.11    13224683.11           3.82
+-35                               ---------
+-36                               &rq->lock          645          [<ffffffff8103bfc4>] task_rq_lock+0x43/0x75
+-37                               &rq->lock          297          [<ffffffff8104ba65>] try_to_wake_up+0x127/0x25a
+-38                               &rq->lock          360          [<ffffffff8103c4c5>] select_task_rq_fair+0x1f0/0x74a
+-39                               &rq->lock          428          [<ffffffff81045f98>] scheduler_tick+0x46/0x1fb
+-40                               ---------
+-41                               &rq->lock           77          [<ffffffff8103bfc4>] task_rq_lock+0x43/0x75
+-42                               &rq->lock          174          [<ffffffff8104ba65>] try_to_wake_up+0x127/0x25a
+-43                               &rq->lock         4715          [<ffffffff8103ed4b>] double_rq_lock+0x42/0x54
+-44                               &rq->lock          893          [<ffffffff81340524>] schedule+0x157/0x7b8
+-45
+-46...........................................................................................................................................................................................................................
+-47
+-48                             &rq->lock/1:        1526          11488           0.33         388.73      136294.31          11.86          21461          38404           0.00          37.93      109388.53           2.84
+-49                             -----------
+-50                             &rq->lock/1        11526          [<ffffffff8103ed58>] double_rq_lock+0x4f/0x54
+-51                             -----------
+-52                             &rq->lock/1         5645          [<ffffffff8103ed4b>] double_rq_lock+0x42/0x54
+-53                             &rq->lock/1         1224          [<ffffffff81340524>] schedule+0x157/0x7b8
+-54                             &rq->lock/1         4336          [<ffffffff8103ed58>] double_rq_lock+0x4f/0x54
+-55                             &rq->lock/1          181          [<ffffffff8104ba65>] try_to_wake_up+0x127/0x25a
+-
+-Line 48 shows statistics for the second subclass (/1) of &rq->lock class
+-(subclass starts from 0), since in this case, as line 50 suggests,
+-double_rq_lock actually acquires a nested lock of two spinlocks.
+-
+-View the top contending locks:
+-
+-# grep : /proc/lock_stat | head
+-			clockevents_lock:       2926159        2947636           0.15       46882.81  1784540466.34         605.41        3381345        3879161           0.00        2260.97    53178395.68          13.71
+-		     tick_broadcast_lock:        346460         346717           0.18        2257.43    39364622.71         113.54        3642919        4242696           0.00        2263.79    49173646.60          11.59
+-		  &mapping->i_mmap_mutex:        203896         203899           3.36      645530.05 31767507988.39      155800.21        3361776        8893984           0.17        2254.15    14110121.02           1.59
+-			       &rq->lock:        135014         136909           0.18         606.09      842160.68           6.15        1540728       10436146           0.00         728.72    17606683.41           1.69
+-	       &(&zone->lru_lock)->rlock:         93000          94934           0.16          59.18      188253.78           1.98        1199912        3809894           0.15         391.40     3559518.81           0.93
+-			 tasklist_lock-W:         40667          41130           0.23        1189.42      428980.51          10.43         270278         510106           0.16         653.51     3939674.91           7.72
+-			 tasklist_lock-R:         21298          21305           0.20        1310.05      215511.12          10.12         186204         241258           0.14        1162.33     1179779.23           4.89
+-			      rcu_node_1:         47656          49022           0.16         635.41      193616.41           3.95         844888        1865423           0.00         764.26     1656226.96           0.89
+-       &(&dentry->d_lockref.lock)->rlock:         39791          40179           0.15        1302.08       88851.96           2.21        2790851       12527025           0.10        1910.75     3379714.27           0.27
+-			      rcu_node_0:         29203          30064           0.16         786.55     1555573.00          51.74          88963         244254           0.00         398.87      428872.51           1.76
+-
+-Clear the statistics:
+-
+-# echo 0 > /proc/lock_stat
+diff --git a/Documentation/locking/locktorture.txt b/Documentation/locking/locktorture.rst
+similarity index 57%
+rename from Documentation/locking/locktorture.txt
+rename to Documentation/locking/locktorture.rst
+index 6a8df4cd19bf..e79eeeca3ac6 100644
+--- a/Documentation/locking/locktorture.txt
++++ b/Documentation/locking/locktorture.rst
+@@ -1,6 +1,9 @@
++==================================
+ Kernel Lock Torture Test Operation
++==================================
+ 
+ CONFIG_LOCK_TORTURE_TEST
++========================
+ 
+ The CONFIG LOCK_TORTURE_TEST config option provides a kernel module
+ that runs torture tests on core kernel locking primitives. The kernel
+@@ -18,61 +21,77 @@ can be simulated by either enlarging this critical region hold time and/or
+ creating more kthreads.
+ 
+ 
+-MODULE PARAMETERS
++Module Parameters
++=================
+ 
+ This module has the following parameters:
+ 
+ 
+-	    ** Locktorture-specific **
++Locktorture-specific
++--------------------
+ 
+-nwriters_stress   Number of kernel threads that will stress exclusive lock
++nwriters_stress
++		  Number of kernel threads that will stress exclusive lock
+ 		  ownership (writers). The default value is twice the number
+ 		  of online CPUs.
+ 
+-nreaders_stress   Number of kernel threads that will stress shared lock
++nreaders_stress
++		  Number of kernel threads that will stress shared lock
+ 		  ownership (readers). The default is the same amount of writer
+ 		  locks. If the user did not specify nwriters_stress, then
+ 		  both readers and writers be the amount of online CPUs.
+ 
+-torture_type	  Type of lock to torture. By default, only spinlocks will
++torture_type
++		  Type of lock to torture. By default, only spinlocks will
+ 		  be tortured. This module can torture the following locks,
+ 		  with string values as follows:
+ 
+-		     o "lock_busted": Simulates a buggy lock implementation.
++		     - "lock_busted":
++				Simulates a buggy lock implementation.
+ 
+-		     o "spin_lock": spin_lock() and spin_unlock() pairs.
++		     - "spin_lock":
++				spin_lock() and spin_unlock() pairs.
+ 
+-		     o "spin_lock_irq": spin_lock_irq() and spin_unlock_irq()
+-					pairs.
++		     - "spin_lock_irq":
++				spin_lock_irq() and spin_unlock_irq() pairs.
+ 
+-		     o "rw_lock": read/write lock() and unlock() rwlock pairs.
++		     - "rw_lock":
++				read/write lock() and unlock() rwlock pairs.
+ 
+-		     o "rw_lock_irq": read/write lock_irq() and unlock_irq()
+-				      rwlock pairs.
++		     - "rw_lock_irq":
++				read/write lock_irq() and unlock_irq()
++				rwlock pairs.
+ 
+-		     o "mutex_lock": mutex_lock() and mutex_unlock() pairs.
++		     - "mutex_lock":
++				mutex_lock() and mutex_unlock() pairs.
+ 
+-		     o "rtmutex_lock": rtmutex_lock() and rtmutex_unlock()
+-				       pairs. Kernel must have CONFIG_RT_MUTEX=y.
++		     - "rtmutex_lock":
++				rtmutex_lock() and rtmutex_unlock() pairs.
++				Kernel must have CONFIG_RT_MUTEX=y.
+ 
+-		     o "rwsem_lock": read/write down() and up() semaphore pairs.
++		     - "rwsem_lock":
++				read/write down() and up() semaphore pairs.
+ 
+ 
+-	    ** Torture-framework (RCU + locking) **
++Torture-framework (RCU + locking)
++---------------------------------
+ 
+-shutdown_secs	  The number of seconds to run the test before terminating
++shutdown_secs
++		  The number of seconds to run the test before terminating
+ 		  the test and powering off the system.  The default is
+ 		  zero, which disables test termination and system shutdown.
+ 		  This capability is useful for automated testing.
+ 
+-onoff_interval	  The number of seconds between each attempt to execute a
++onoff_interval
++		  The number of seconds between each attempt to execute a
+ 		  randomly selected CPU-hotplug operation.  Defaults
+ 		  to zero, which disables CPU hotplugging.  In
+ 		  CONFIG_HOTPLUG_CPU=n kernels, locktorture will silently
+ 		  refuse to do any CPU-hotplug operations regardless of
+ 		  what value is specified for onoff_interval.
+ 
+-onoff_holdoff	  The number of seconds to wait until starting CPU-hotplug
++onoff_holdoff
++		  The number of seconds to wait until starting CPU-hotplug
+ 		  operations.  This would normally only be used when
+ 		  locktorture was built into the kernel and started
+ 		  automatically at boot time, in which case it is useful
+@@ -80,53 +99,59 @@ onoff_holdoff	  The number of seconds to wait until starting CPU-hotplug
+ 		  coming and going. This parameter is only useful if
+ 		  CONFIG_HOTPLUG_CPU is enabled.
+ 
+-stat_interval	  Number of seconds between statistics-related printk()s.
++stat_interval
++		  Number of seconds between statistics-related printk()s.
+ 		  By default, locktorture will report stats every 60 seconds.
+ 		  Setting the interval to zero causes the statistics to
+ 		  be printed -only- when the module is unloaded, and this
+ 		  is the default.
+ 
+-stutter		  The length of time to run the test before pausing for this
++stutter
++		  The length of time to run the test before pausing for this
+ 		  same period of time.  Defaults to "stutter=5", so as
+ 		  to run and pause for (roughly) five-second intervals.
+ 		  Specifying "stutter=0" causes the test to run continuously
+ 		  without pausing, which is the old default behavior.
+ 
+-shuffle_interval  The number of seconds to keep the test threads affinitied
++shuffle_interval
++		  The number of seconds to keep the test threads affinitied
+ 		  to a particular subset of the CPUs, defaults to 3 seconds.
+ 		  Used in conjunction with test_no_idle_hz.
+ 
+-verbose		  Enable verbose debugging printing, via printk(). Enabled
++verbose
++		  Enable verbose debugging printing, via printk(). Enabled
+ 		  by default. This extra information is mostly related to
+ 		  high-level errors and reports from the main 'torture'
+ 		  framework.
+ 
+ 
+-STATISTICS
++Statistics
++==========
+ 
+-Statistics are printed in the following format:
++Statistics are printed in the following format::
+ 
+-spin_lock-torture: Writes:  Total: 93746064  Max/Min: 0/0   Fail: 0
+-   (A)		    (B)		   (C)		  (D)	       (E)
++  spin_lock-torture: Writes:  Total: 93746064  Max/Min: 0/0   Fail: 0
++     (A)		    (B)		   (C)		  (D)	       (E)
+ 
+-(A): Lock type that is being tortured -- torture_type parameter.
++  (A): Lock type that is being tortured -- torture_type parameter.
+ 
+-(B): Number of writer lock acquisitions. If dealing with a read/write primitive
+-     a second "Reads" statistics line is printed.
++  (B): Number of writer lock acquisitions. If dealing with a read/write
++       primitive a second "Reads" statistics line is printed.
+ 
+-(C): Number of times the lock was acquired.
++  (C): Number of times the lock was acquired.
+ 
+-(D): Min and max number of times threads failed to acquire the lock.
++  (D): Min and max number of times threads failed to acquire the lock.
+ 
+-(E): true/false values if there were errors acquiring the lock. This should
+-     -only- be positive if there is a bug in the locking primitive's
+-     implementation. Otherwise a lock should never fail (i.e., spin_lock()).
+-     Of course, the same applies for (C), above. A dummy example of this is
+-     the "lock_busted" type.
++  (E): true/false values if there were errors acquiring the lock. This should
++       -only- be positive if there is a bug in the locking primitive's
++       implementation. Otherwise a lock should never fail (i.e., spin_lock()).
++       Of course, the same applies for (C), above. A dummy example of this is
++       the "lock_busted" type.
+ 
+-USAGE
++Usage
++=====
+ 
+-The following script may be used to torture locks:
++The following script may be used to torture locks::
+ 
+ 	#!/bin/sh
+ 
+diff --git a/Documentation/locking/mutex-design.txt b/Documentation/locking/mutex-design.rst
+similarity index 94%
+rename from Documentation/locking/mutex-design.txt
+rename to Documentation/locking/mutex-design.rst
+index 818aca19612f..4d8236b81fa5 100644
+--- a/Documentation/locking/mutex-design.txt
++++ b/Documentation/locking/mutex-design.rst
+@@ -1,6 +1,9 @@
++=======================
+ Generic Mutex Subsystem
++=======================
+ 
+ started by Ingo Molnar <mingo@redhat.com>
++
+ updated by Davidlohr Bueso <davidlohr@hp.com>
+ 
+ What are mutexes?
+@@ -23,7 +26,7 @@ Implementation
+ Mutexes are represented by 'struct mutex', defined in include/linux/mutex.h
+ and implemented in kernel/locking/mutex.c. These locks use an atomic variable
+ (->owner) to keep track of the lock state during its lifetime.  Field owner
+-actually contains 'struct task_struct *' to the current lock owner and it is
++actually contains `struct task_struct *` to the current lock owner and it is
+ therefore NULL if not currently owned. Since task_struct pointers are aligned
+ at at least L1_CACHE_BYTES, low bits (3) are used to store extra state (e.g.,
+ if waiter list is non-empty).  In its most basic form it also includes a
+@@ -101,29 +104,36 @@ features that make lock debugging easier and faster:
+ 
+ Interfaces
+ ----------
+-Statically define the mutex:
++Statically define the mutex::
++
+    DEFINE_MUTEX(name);
+ 
+-Dynamically initialize the mutex:
++Dynamically initialize the mutex::
++
+    mutex_init(mutex);
+ 
+-Acquire the mutex, uninterruptible:
++Acquire the mutex, uninterruptible::
++
+    void mutex_lock(struct mutex *lock);
+    void mutex_lock_nested(struct mutex *lock, unsigned int subclass);
+    int  mutex_trylock(struct mutex *lock);
+ 
+-Acquire the mutex, interruptible:
++Acquire the mutex, interruptible::
++
+    int mutex_lock_interruptible_nested(struct mutex *lock,
+ 				       unsigned int subclass);
+    int mutex_lock_interruptible(struct mutex *lock);
+ 
+-Acquire the mutex, interruptible, if dec to 0:
++Acquire the mutex, interruptible, if dec to 0::
++
+    int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock);
+ 
+-Unlock the mutex:
++Unlock the mutex::
++
+    void mutex_unlock(struct mutex *lock);
+ 
+-Test if the mutex is taken:
++Test if the mutex is taken::
++
+    int mutex_is_locked(struct mutex *lock);
+ 
+ Disadvantages
+diff --git a/Documentation/locking/rt-mutex-design.txt b/Documentation/locking/rt-mutex-design.rst
+similarity index 91%
+rename from Documentation/locking/rt-mutex-design.txt
+rename to Documentation/locking/rt-mutex-design.rst
+index 3d7b865539cc..59c2a64efb21 100644
+--- a/Documentation/locking/rt-mutex-design.txt
++++ b/Documentation/locking/rt-mutex-design.rst
+@@ -1,14 +1,15 @@
+-#
+-# Copyright (c) 2006 Steven Rostedt
+-# Licensed under the GNU Free Documentation License, Version 1.2
+-#
+-
++==============================
+ RT-mutex implementation design
+-------------------------------
++==============================
++
++Copyright (c) 2006 Steven Rostedt
++
++Licensed under the GNU Free Documentation License, Version 1.2
++
+ 
+ This document tries to describe the design of the rtmutex.c implementation.
+ It doesn't describe the reasons why rtmutex.c exists. For that please see
+-Documentation/locking/rt-mutex.txt.  Although this document does explain problems
++Documentation/locking/rt-mutex.rst.  Although this document does explain problems
+ that happen without this code, but that is in the concept to understand
+ what the code actually is doing.
+ 
+@@ -41,17 +42,17 @@ to release the lock, because for all we know, B is a CPU hog and will
+ never give C a chance to release the lock.  This is called unbounded priority
+ inversion.
+ 
+-Here's a little ASCII art to show the problem.
++Here's a little ASCII art to show the problem::
+ 
+-   grab lock L1 (owned by C)
+-     |
+-A ---+
+-        C preempted by B
+-          |
+-C    +----+
++     grab lock L1 (owned by C)
++       |
++  A ---+
++          C preempted by B
++            |
++  C    +----+
+ 
+-B         +-------->
+-                B now keeps A from running.
++  B         +-------->
++                  B now keeps A from running.
+ 
+ 
+ Priority Inheritance (PI)
+@@ -75,24 +76,29 @@ Terminology
+ Here I explain some terminology that is used in this document to help describe
+ the design that is used to implement PI.
+ 
+-PI chain - The PI chain is an ordered series of locks and processes that cause
++PI chain
++         - The PI chain is an ordered series of locks and processes that cause
+            processes to inherit priorities from a previous process that is
+            blocked on one of its locks.  This is described in more detail
+            later in this document.
+ 
+-mutex    - In this document, to differentiate from locks that implement
++mutex
++         - In this document, to differentiate from locks that implement
+            PI and spin locks that are used in the PI code, from now on
+            the PI locks will be called a mutex.
+ 
+-lock     - In this document from now on, I will use the term lock when
++lock
++         - In this document from now on, I will use the term lock when
+            referring to spin locks that are used to protect parts of the PI
+            algorithm.  These locks disable preemption for UP (when
+            CONFIG_PREEMPT is enabled) and on SMP prevents multiple CPUs from
+            entering critical sections simultaneously.
+ 
+-spin lock - Same as lock above.
++spin lock
++         - Same as lock above.
+ 
+-waiter   - A waiter is a struct that is stored on the stack of a blocked
++waiter
++         - A waiter is a struct that is stored on the stack of a blocked
+            process.  Since the scope of the waiter is within the code for
+            a process being blocked on the mutex, it is fine to allocate
+            the waiter on the process's stack (local variable).  This
+@@ -104,14 +110,18 @@ waiter   - A waiter is a struct that is stored on the stack of a blocked
+            waiter is sometimes used in reference to the task that is waiting
+            on a mutex. This is the same as waiter->task.
+ 
+-waiters  - A list of processes that are blocked on a mutex.
++waiters
++         - A list of processes that are blocked on a mutex.
+ 
+-top waiter - The highest priority process waiting on a specific mutex.
++top waiter
++         - The highest priority process waiting on a specific mutex.
+ 
+-top pi waiter - The highest priority process waiting on one of the mutexes
++top pi waiter
++              - The highest priority process waiting on one of the mutexes
+                 that a specific process owns.
+ 
+-Note:  task and process are used interchangeably in this document, mostly to
++Note:
++       task and process are used interchangeably in this document, mostly to
+        differentiate between two processes that are being described together.
+ 
+ 
+@@ -123,7 +133,7 @@ inheritance to take place.  Multiple chains may converge, but a chain
+ would never diverge, since a process can't be blocked on more than one
+ mutex at a time.
+ 
+-Example:
++Example::
+ 
+    Process:  A, B, C, D, E
+    Mutexes:  L1, L2, L3, L4
+@@ -137,21 +147,21 @@ Example:
+                          D owns L4
+                                 E blocked on L4
+ 
+-The chain would be:
++The chain would be::
+ 
+    E->L4->D->L3->C->L2->B->L1->A
+ 
+ To show where two chains merge, we could add another process F and
+ another mutex L5 where B owns L5 and F is blocked on mutex L5.
+ 
+-The chain for F would be:
++The chain for F would be::
+ 
+    F->L5->B->L1->A
+ 
+ Since a process may own more than one mutex, but never be blocked on more than
+ one, the chains merge.
+ 
+-Here we show both chains:
++Here we show both chains::
+ 
+    E->L4->D->L3->C->L2-+
+                        |
+@@ -165,12 +175,12 @@ than the processes to the left or below in the chain.
+ 
+ Also since a mutex may have more than one process blocked on it, we can
+ have multiple chains merge at mutexes.  If we add another process G that is
+-blocked on mutex L2:
++blocked on mutex L2::
+ 
+   G->L2->B->L1->A
+ 
+ And once again, to show how this can grow I will show the merging chains
+-again.
++again::
+ 
+    E->L4->D->L3->C-+
+                    +->L2-+
+@@ -184,7 +194,7 @@ the chain (A and B in this example), must have their priorities increased
+ to that of G.
+ 
+ Mutex Waiters Tree
+------------------
++------------------
+ 
+ Every mutex keeps track of all the waiters that are blocked on itself. The
+ mutex has a rbtree to store these waiters by priority.  This tree is protected
+@@ -219,19 +229,19 @@ defined.  But is very complex to figure it out, since it depends on all
+ the nesting of mutexes.  Let's look at the example where we have 3 mutexes,
+ L1, L2, and L3, and four separate functions func1, func2, func3 and func4.
+ The following shows a locking order of L1->L2->L3, but may not actually
+-be directly nested that way.
++be directly nested that way::
+ 
+-void func1(void)
+-{
++  void func1(void)
++  {
+ 	mutex_lock(L1);
+ 
+ 	/* do anything */
+ 
+ 	mutex_unlock(L1);
 -}
 +  }
  
- VI - Sample Code for Creating Firmware Files
- ============================================
-diff --git a/Documentation/powerpc/syscall64-abi.txt b/Documentation/powerpc/syscall64-abi.rst
-similarity index 82%
-rename from Documentation/powerpc/syscall64-abi.txt
-rename to Documentation/powerpc/syscall64-abi.rst
-index fa716a0d88bd..e49f69f941b9 100644
---- a/Documentation/powerpc/syscall64-abi.txt
-+++ b/Documentation/powerpc/syscall64-abi.rst
-@@ -5,12 +5,12 @@ Power Architecture 64-bit Linux system call ABI
- syscall
- =======
+-void func2(void)
+-{
++  void func2(void)
++  {
+ 	mutex_lock(L1);
+ 	mutex_lock(L2);
  
--syscall calling sequence[*] matches the Power Architecture 64-bit ELF ABI
-+syscall calling sequence\ [1]_ matches the Power Architecture 64-bit ELF ABI
- specification C function calling sequence, including register preservation
- rules, with the following differences.
+@@ -239,10 +249,10 @@ void func2(void)
  
--[*] Some syscalls (typically low-level management functions) may have
--    different calling sequences (e.g., rt_sigreturn).
-+.. [1] Some syscalls (typically low-level management functions) may have
-+       different calling sequences (e.g., rt_sigreturn).
+ 	mutex_unlock(L2);
+ 	mutex_unlock(L1);
+-}
++  }
  
- Parameters and return value
- ---------------------------
-@@ -33,12 +33,14 @@ Register preservation rules
- Register preservation rules match the ELF ABI calling sequence with the
- following differences:
+-void func3(void)
+-{
++  void func3(void)
++  {
+ 	mutex_lock(L2);
+ 	mutex_lock(L3);
  
--r0:         Volatile.   (System call number.)
--r3:         Volatile.   (Parameter 1, and return value.)
--r4-r8:      Volatile.   (Parameters 2-6.)
--cr0:        Volatile    (cr0.SO is the return error condition)
--cr1, cr5-7: Nonvolatile.
--lr:         Nonvolatile.
-+=========== ============= ========================================
-+r0          Volatile      (System call number.)
-+r3          Volatile      (Parameter 1, and return value.)
-+r4-r8       Volatile      (Parameters 2-6.)
-+cr0         Volatile      (cr0.SO is the return error condition)
-+cr1, cr5-7  Nonvolatile
-+lr          Nonvolatile
-+=========== ============= ========================================
+@@ -250,30 +260,30 @@ void func3(void)
  
- All floating point and vector data registers as well as control and status
- registers are nonvolatile.
-@@ -90,9 +92,12 @@ The vsyscall may or may not use the caller's stack frame save areas.
+ 	mutex_unlock(L3);
+ 	mutex_unlock(L2);
+-}
++  }
  
- Register preservation rules
- ---------------------------
--r0: Volatile.
--cr1, cr5-7: Volatile.
--lr: Volatile.
+-void func4(void)
+-{
++  void func4(void)
++  {
+ 	mutex_lock(L3);
+ 
+ 	/* do something again */
+ 
+ 	mutex_unlock(L3);
+-}
++  }
+ 
+ Now we add 4 processes that run each of these functions separately.
+ Processes A, B, C, and D which run functions func1, func2, func3 and func4
+ respectively, and such that D runs first and A last.  With D being preempted
+-in func4 in the "do something again" area, we have a locking that follows:
++in func4 in the "do something again" area, we have a locking that follows::
+ 
+-D owns L3
+-       C blocked on L3
+-       C owns L2
+-              B blocked on L2
+-              B owns L1
+-                     A blocked on L1
++  D owns L3
++         C blocked on L3
++         C owns L2
++                B blocked on L2
++                B owns L1
++                       A blocked on L1
+ 
+-And thus we have the chain A->L1->B->L2->C->L3->D.
++  And thus we have the chain A->L1->B->L2->C->L3->D.
+ 
+ This gives us a PI depth of 4 (four processes), but looking at any of the
+ functions individually, it seems as though they only have at most a locking
+@@ -298,7 +308,7 @@ not true, the rtmutex.c code will be broken!), this allows for the least
+ significant bit to be used as a flag.  Bit 0 is used as the "Has Waiters"
+ flag. It's set whenever there are waiters on a mutex.
+ 
+-See Documentation/locking/rt-mutex.txt for further details.
++See Documentation/locking/rt-mutex.rst for further details.
+ 
+ cmpxchg Tricks
+ --------------
+@@ -307,17 +317,17 @@ Some architectures implement an atomic cmpxchg (Compare and Exchange).  This
+ is used (when applicable) to keep the fast path of grabbing and releasing
+ mutexes short.
+ 
+-cmpxchg is basically the following function performed atomically:
++cmpxchg is basically the following function performed atomically::
+ 
+-unsigned long _cmpxchg(unsigned long *A, unsigned long *B, unsigned long *C)
+-{
++  unsigned long _cmpxchg(unsigned long *A, unsigned long *B, unsigned long *C)
++  {
+ 	unsigned long T = *A;
+ 	if (*A == *B) {
+ 		*A = *C;
+ 	}
+ 	return T;
+-}
+-#define cmpxchg(a,b,c) _cmpxchg(&a,&b,&c)
++  }
++  #define cmpxchg(a,b,c) _cmpxchg(&a,&b,&c)
+ 
+ This is really nice to have, since it allows you to only update a variable
+ if the variable is what you expect it to be.  You know if it succeeded if
+@@ -352,9 +362,10 @@ Then rt_mutex_setprio is called to adjust the priority of the task to the
+ new priority. Note that rt_mutex_setprio is defined in kernel/sched/core.c
+ to implement the actual change in priority.
+ 
+-(Note:  For the "prio" field in task_struct, the lower the number, the
++Note:
++	For the "prio" field in task_struct, the lower the number, the
+ 	higher the priority. A "prio" of 5 is of higher priority than a
+-	"prio" of 10.)
++	"prio" of 10.
+ 
+ It is interesting to note that rt_mutex_adjust_prio can either increase
+ or decrease the priority of the task.  In the case that a higher priority
+@@ -439,6 +450,7 @@ wait_lock, which this code currently holds. So setting the "Has Waiters" flag
+ forces the current owner to synchronize with this code.
+ 
+ The lock is taken if the following are true:
 +
-+=========== ========
-+r0          Volatile
-+cr1, cr5-7  Volatile
-+lr          Volatile
-+=========== ========
+    1) The lock has no owner
+    2) The current task is the highest priority against all other
+       waiters of the lock
+@@ -546,10 +558,13 @@ Credits
+ -------
  
- Invocation
- ----------
-diff --git a/Documentation/powerpc/transactional_memory.txt b/Documentation/powerpc/transactional_memory.rst
+ Author:  Steven Rostedt <rostedt@goodmis.org>
++
+ Updated: Alex Shi <alex.shi@linaro.org>	- 7/6/2017
+ 
+-Original Reviewers:  Ingo Molnar, Thomas Gleixner, Thomas Duetsch, and
++Original Reviewers:
++		     Ingo Molnar, Thomas Gleixner, Thomas Duetsch, and
+ 		     Randy Dunlap
++
+ Update (7/6/2017) Reviewers: Steven Rostedt and Sebastian Siewior
+ 
+ Updates
+diff --git a/Documentation/locking/rt-mutex.txt b/Documentation/locking/rt-mutex.rst
+similarity index 71%
+rename from Documentation/locking/rt-mutex.txt
+rename to Documentation/locking/rt-mutex.rst
+index 35793e003041..c365dc302081 100644
+--- a/Documentation/locking/rt-mutex.txt
++++ b/Documentation/locking/rt-mutex.rst
+@@ -1,5 +1,6 @@
++==================================
+ RT-mutex subsystem with PI support
+-----------------------------------
++==================================
+ 
+ RT-mutexes with priority inheritance are used to support PI-futexes,
+ which enable pthread_mutex_t priority inheritance attributes
+@@ -46,27 +47,30 @@ The state of the rt-mutex is tracked via the owner field of the rt-mutex
+ structure:
+ 
+ lock->owner holds the task_struct pointer of the owner. Bit 0 is used to
+-keep track of the "lock has waiters" state.
++keep track of the "lock has waiters" state:
+ 
+- owner        bit0
++ ============ ======= ================================================
++ owner        bit0    Notes
++ ============ ======= ================================================
+  NULL         0       lock is free (fast acquire possible)
+  NULL         1       lock is free and has waiters and the top waiter
+-			is going to take the lock*
++		      is going to take the lock [1]_
+  taskpointer  0       lock is held (fast release possible)
+- taskpointer  1       lock is held and has waiters**
++ taskpointer  1       lock is held and has waiters [2]_
++ ============ ======= ================================================
+ 
+ The fast atomic compare exchange based acquire and release is only
+ possible when bit 0 of lock->owner is 0.
+ 
+-(*) It also can be a transitional state when grabbing the lock
+-with ->wait_lock is held. To prevent any fast path cmpxchg to the lock,
+-we need to set the bit0 before looking at the lock, and the owner may be
+-NULL in this small time, hence this can be a transitional state.
++.. [1] It also can be a transitional state when grabbing the lock
++       with ->wait_lock is held. To prevent any fast path cmpxchg to the lock,
++       we need to set the bit0 before looking at the lock, and the owner may
++       be NULL in this small time, hence this can be a transitional state.
+ 
+-(**) There is a small time when bit 0 is set but there are no
+-waiters. This can happen when grabbing the lock in the slow path.
+-To prevent a cmpxchg of the owner releasing the lock, we need to
+-set this bit before looking at the lock.
++.. [2] There is a small time when bit 0 is set but there are no
++       waiters. This can happen when grabbing the lock in the slow path.
++       To prevent a cmpxchg of the owner releasing the lock, we need to
++       set this bit before looking at the lock.
+ 
+ BTW, there is still technically a "Pending Owner", it's just not called
+ that anymore. The pending owner happens to be the top_waiter of a lock
+diff --git a/Documentation/locking/spinlocks.txt b/Documentation/locking/spinlocks.rst
+similarity index 89%
+rename from Documentation/locking/spinlocks.txt
+rename to Documentation/locking/spinlocks.rst
+index ff35e40bdf5b..098107fb7d86 100644
+--- a/Documentation/locking/spinlocks.txt
++++ b/Documentation/locking/spinlocks.rst
+@@ -1,8 +1,13 @@
++===============
++Locking lessons
++===============
++
+ Lesson 1: Spin locks
++====================
+ 
+-The most basic primitive for locking is spinlock.
++The most basic primitive for locking is spinlock::
+ 
+-static DEFINE_SPINLOCK(xxx_lock);
++  static DEFINE_SPINLOCK(xxx_lock);
+ 
+ 	unsigned long flags;
+ 
+@@ -19,23 +24,25 @@ worry about UP vs SMP issues: the spinlocks work correctly under both.
+    NOTE! Implications of spin_locks for memory are further described in:
+ 
+      Documentation/memory-barriers.txt
++
+        (5) LOCK operations.
++
+        (6) UNLOCK operations.
+ 
+ The above is usually pretty simple (you usually need and want only one
+ spinlock for most things - using more than one spinlock can make things a
+ lot more complex and even slower and is usually worth it only for
+-sequences that you _know_ need to be split up: avoid it at all cost if you
++sequences that you **know** need to be split up: avoid it at all cost if you
+ aren't sure).
+ 
+ This is really the only really hard part about spinlocks: once you start
+ using spinlocks they tend to expand to areas you might not have noticed
+ before, because you have to make sure the spinlocks correctly protect the
+-shared data structures _everywhere_ they are used. The spinlocks are most
++shared data structures **everywhere** they are used. The spinlocks are most
+ easily added to places that are completely independent of other code (for
+ example, internal driver data structures that nobody else ever touches).
+ 
+-   NOTE! The spin-lock is safe only when you _also_ use the lock itself
++   NOTE! The spin-lock is safe only when you **also** use the lock itself
+    to do locking across CPU's, which implies that EVERYTHING that
+    touches a shared variable has to agree about the spinlock they want
+    to use.
+@@ -43,6 +50,7 @@ example, internal driver data structures that nobody else ever touches).
+ ----
+ 
+ Lesson 2: reader-writer spinlocks.
++==================================
+ 
+ If your data accesses have a very natural pattern where you usually tend
+ to mostly read from the shared variables, the reader-writer locks
+@@ -54,7 +62,7 @@ to change the variables it has to get an exclusive write lock.
+    simple spinlocks.  Unless the reader critical section is long, you
+    are better off just using spinlocks.
+ 
+-The routines look the same as above:
++The routines look the same as above::
+ 
+    rwlock_t xxx_lock = __RW_LOCK_UNLOCKED(xxx_lock);
+ 
+@@ -71,7 +79,7 @@ The routines look the same as above:
+ The above kind of lock may be useful for complex data structures like
+ linked lists, especially searching for entries without changing the list
+ itself.  The read lock allows many concurrent readers.  Anything that
+-_changes_ the list will have to get the write lock.
++**changes** the list will have to get the write lock.
+ 
+    NOTE! RCU is better for list traversal, but requires careful
+    attention to design detail (see Documentation/RCU/listRCU.txt).
+@@ -87,10 +95,11 @@ to get the write-lock at the very beginning.
+ ----
+ 
+ Lesson 3: spinlocks revisited.
++==============================
+ 
+ The single spin-lock primitives above are by no means the only ones. They
+ are the most safe ones, and the ones that work under all circumstances,
+-but partly _because_ they are safe they are also fairly slow. They are slower
++but partly **because** they are safe they are also fairly slow. They are slower
+ than they'd need to be, because they do have to disable interrupts
+ (which is just a single instruction on a x86, but it's an expensive one -
+ and on other architectures it can be worse).
+@@ -98,7 +107,7 @@ and on other architectures it can be worse).
+ If you have a case where you have to protect a data structure across
+ several CPU's and you want to use spinlocks you can potentially use
+ cheaper versions of the spinlocks. IFF you know that the spinlocks are
+-never used in interrupt handlers, you can use the non-irq versions:
++never used in interrupt handlers, you can use the non-irq versions::
+ 
+ 	spin_lock(&lock);
+ 	...
+@@ -110,7 +119,7 @@ This is useful if you know that the data in question is only ever
+ manipulated from a "process context", ie no interrupts involved.
+ 
+ The reasons you mustn't use these versions if you have interrupts that
+-play with the spinlock is that you can get deadlocks:
++play with the spinlock is that you can get deadlocks::
+ 
+ 	spin_lock(&lock);
+ 	...
+@@ -147,9 +156,10 @@ indeed), while write-locks need to protect themselves against interrupts.
+ ----
+ 
+ Reference information:
++======================
+ 
+ For dynamic initialization, use spin_lock_init() or rwlock_init() as
+-appropriate:
++appropriate::
+ 
+    spinlock_t xxx_lock;
+    rwlock_t xxx_rw_lock;
+diff --git a/Documentation/locking/ww-mutex-design.txt b/Documentation/locking/ww-mutex-design.rst
 similarity index 93%
-rename from Documentation/powerpc/transactional_memory.txt
-rename to Documentation/powerpc/transactional_memory.rst
-index 52c023e14f26..09955103acb4 100644
---- a/Documentation/powerpc/transactional_memory.txt
-+++ b/Documentation/powerpc/transactional_memory.rst
+rename from Documentation/locking/ww-mutex-design.txt
+rename to Documentation/locking/ww-mutex-design.rst
+index f0ed7c30e695..1846c199da23 100644
+--- a/Documentation/locking/ww-mutex-design.txt
++++ b/Documentation/locking/ww-mutex-design.rst
 @@ -1,3 +1,4 @@
-+============================
- Transactional Memory support
- ============================
++======================================
+ Wound/Wait Deadlock-Proof Mutex Design
+ ======================================
  
-@@ -17,29 +18,29 @@ instructions are presented to delimit transactions; transactions are
- guaranteed to either complete atomically or roll back and undo any partial
- changes.
+@@ -85,6 +86,7 @@ Furthermore there are three different class of w/w lock acquire functions:
+   no deadlock potential and hence the ww_mutex_lock call will block and not
+   prematurely return -EDEADLK. The advantage of the _slow functions is in
+   interface safety:
++
+   - ww_mutex_lock has a __must_check int return type, whereas ww_mutex_lock_slow
+     has a void return type. Note that since ww mutex code needs loops/retries
+     anyway the __must_check doesn't result in spurious warnings, even though the
+@@ -115,36 +117,36 @@ expect the number of simultaneous competing transactions to be typically small,
+ and you want to reduce the number of rollbacks.
  
--A simple transaction looks like this:
-+A simple transaction looks like this::
+ Three different ways to acquire locks within the same w/w class. Common
+-definitions for methods #1 and #2:
++definitions for methods #1 and #2::
  
--begin_move_money:
--  tbegin
--  beq   abort_handler
-+  begin_move_money:
-+    tbegin
-+    beq   abort_handler
+-static DEFINE_WW_CLASS(ww_class);
++  static DEFINE_WW_CLASS(ww_class);
  
--  ld    r4, SAVINGS_ACCT(r3)
--  ld    r5, CURRENT_ACCT(r3)
--  subi  r5, r5, 1
--  addi  r4, r4, 1
--  std   r4, SAVINGS_ACCT(r3)
--  std   r5, CURRENT_ACCT(r3)
-+    ld    r4, SAVINGS_ACCT(r3)
-+    ld    r5, CURRENT_ACCT(r3)
-+    subi  r5, r5, 1
-+    addi  r4, r4, 1
-+    std   r4, SAVINGS_ACCT(r3)
-+    std   r5, CURRENT_ACCT(r3)
+-struct obj {
++  struct obj {
+ 	struct ww_mutex lock;
+ 	/* obj data */
+-};
++  };
  
--  tend
-+    tend
+-struct obj_entry {
++  struct obj_entry {
+ 	struct list_head head;
+ 	struct obj *obj;
+-};
++  };
  
--  b     continue
-+    b     continue
+ Method 1, using a list in execbuf->buffers that's not allowed to be reordered.
+ This is useful if a list of required objects is already tracked somewhere.
+ Furthermore the lock helper can use propagate the -EALREADY return code back to
+ the caller as a signal that an object is twice on the list. This is useful if
+ the list is constructed from userspace input and the ABI requires userspace to
+-not have duplicate entries (e.g. for a gpu commandbuffer submission ioctl).
++not have duplicate entries (e.g. for a gpu commandbuffer submission ioctl)::
  
--abort_handler:
--  ... test for odd failures ...
-+  abort_handler:
-+    ... test for odd failures ...
+-int lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
+-{
++  int lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
++  {
+ 	struct obj *res_obj = NULL;
+ 	struct obj_entry *contended_entry = NULL;
+ 	struct obj_entry *entry;
  
--  /* Retry the transaction if it failed because it conflicted with
--   * someone else: */
--  b     begin_move_money
-+    /* Retry the transaction if it failed because it conflicted with
-+     * someone else: */
-+    b     begin_move_money
+ 	ww_acquire_init(ctx, &ww_class);
  
+-retry:
++  retry:
+ 	list_for_each_entry (entry, list, head) {
+ 		if (entry->obj == res_obj) {
+ 			res_obj = NULL;
+@@ -160,7 +162,7 @@ retry:
+ 	ww_acquire_done(ctx);
+ 	return 0;
  
- The 'tbegin' instruction denotes the start point, and 'tend' the end point.
-@@ -123,7 +124,7 @@ Transaction-aware signal handlers can read the transactional register state
- from the second ucontext.  This will be necessary for crash handlers to
- determine, for example, the address of the instruction causing the SIGSEGV.
+-err:
++  err:
+ 	list_for_each_entry_continue_reverse (entry, list, head)
+ 		ww_mutex_unlock(&entry->obj->lock);
  
--Example signal handler:
-+Example signal handler::
+@@ -176,14 +178,14 @@ err:
+ 	ww_acquire_fini(ctx);
  
-     void crash_handler(int sig, siginfo_t *si, void *uc)
-     {
-@@ -133,9 +134,9 @@ Example signal handler:
-       if (ucp_link) {
-         u64 msr = ucp->uc_mcontext.regs->msr;
-         /* May have transactional ucontext! */
--#ifndef __powerpc64__
-+  #ifndef __powerpc64__
-         msr |= ((u64)transactional_ucp->uc_mcontext.regs->msr) << 32;
--#endif
-+  #endif
-         if (MSR_TM_ACTIVE(msr)) {
-            /* Yes, we crashed during a transaction.  Oops. */
-    fprintf(stderr, "Transaction to be restarted at 0x%llx, but "
-@@ -176,6 +177,7 @@ Failure cause codes used by kernel
- These are defined in <asm/reg.h>, and distinguish different reasons why the
- kernel aborted a transaction:
+ 	return ret;
+-}
++  }
  
-+ ====================== ================================
-  TM_CAUSE_RESCHED       Thread was rescheduled.
-  TM_CAUSE_TLBI          Software TLB invalid.
-  TM_CAUSE_FAC_UNAV      FP/VEC/VSX unavailable trap.
-@@ -184,6 +186,7 @@ kernel aborted a transaction:
-  TM_CAUSE_MISC          Currently unused.
-  TM_CAUSE_ALIGNMENT     Alignment fault.
-  TM_CAUSE_EMULATE       Emulation that touched memory.
-+ ====================== ================================
+ Method 2, using a list in execbuf->buffers that can be reordered. Same semantics
+ of duplicate entry detection using -EALREADY as method 1 above. But the
+-list-reordering allows for a bit more idiomatic code.
++list-reordering allows for a bit more idiomatic code::
  
- These can be checked by the user program's abort handler as TEXASR[0:7].  If
- bit 7 is set, it indicates that the error is consider persistent.  For example
-@@ -203,7 +206,7 @@ POWER9
- ======
+-int lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
+-{
++  int lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
++  {
+ 	struct obj_entry *entry, *entry2;
  
- TM on POWER9 has issues with storing the complete register state. This
--is described in this commit:
-+is described in this commit::
+ 	ww_acquire_init(ctx, &ww_class);
+@@ -216,24 +218,25 @@ int lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
  
-     commit 4bb3c7a0208fc13ca70598efd109901a7cd45ae7
-     Author: Paul Mackerras <paulus@ozlabs.org>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 518b73924d7e..5badbf8fa37b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4326,7 +4326,7 @@ F:	arch/powerpc/platforms/powernv/pci-cxl.c
- F:	drivers/misc/cxl/
- F:	include/misc/cxl*
- F:	include/uapi/misc/cxl.h
--F:	Documentation/powerpc/cxl.txt
-+F:	Documentation/powerpc/cxl.rst
- F:	Documentation/ABI/testing/sysfs-class-cxl
+ 	ww_acquire_done(ctx);
+ 	return 0;
+-}
++  }
  
- CXLFLASH (IBM Coherent Accelerator Processor Interface CAPI Flash) SCSI DRIVER
-@@ -4337,7 +4337,7 @@ L:	linux-scsi@vger.kernel.org
- S:	Supported
- F:	drivers/scsi/cxlflash/
- F:	include/uapi/scsi/cxlflash_ioctl.h
--F:	Documentation/powerpc/cxlflash.txt
-+F:	Documentation/powerpc/cxlflash.rst
+-Unlocking works the same way for both methods #1 and #2:
++Unlocking works the same way for both methods #1 and #2::
  
- CYBERPRO FB DRIVER
- M:	Russell King <linux@armlinux.org.uk>
-@@ -12048,7 +12048,7 @@ F:	Documentation/PCI/pci-error-recovery.txt
- F:	drivers/pci/pcie/aer.c
- F:	drivers/pci/pcie/dpc.c
- F:	drivers/pci/pcie/err.c
--F:	Documentation/powerpc/eeh-pci-error-recovery.txt
-+F:	Documentation/powerpc/eeh-pci-error-recovery.rst
- F:	arch/powerpc/kernel/eeh*.c
- F:	arch/powerpc/platforms/*/eeh*.c
- F:	arch/powerpc/include/*/eeh*.h
-diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index 9481a117e242..9b9c463e55d1 100644
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -903,7 +903,7 @@ EXC_COMMON(trap_0b_common, 0xb00, unknown_exception)
+-void unlock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
+-{
++  void unlock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
++  {
+ 	struct obj_entry *entry;
+ 
+ 	list_for_each_entry (entry, list, head)
+ 		ww_mutex_unlock(&entry->obj->lock);
+ 
+ 	ww_acquire_fini(ctx);
+-}
++  }
+ 
+ Method 3 is useful if the list of objects is constructed ad-hoc and not upfront,
+ e.g. when adjusting edges in a graph where each node has its own ww_mutex lock,
+ and edges can only be changed when holding the locks of all involved nodes. w/w
+ mutexes are a natural fit for such a case for two reasons:
++
+ - They can handle lock-acquisition in any order which allows us to start walking
+   a graph from a starting point and then iteratively discovering new edges and
+   locking down the nodes those edges connect to.
+@@ -243,6 +246,7 @@ mutexes are a natural fit for such a case for two reasons:
+   as a starting point).
+ 
+ Note that this approach differs in two important ways from the above methods:
++
+ - Since the list of objects is dynamically constructed (and might very well be
+   different when retrying due to hitting the -EDEADLK die condition) there's
+   no need to keep any object on a persistent list when it's not locked. We can
+@@ -260,17 +264,17 @@ any interface misuse for these cases.
+ 
+ Also, method 3 can't fail the lock acquisition step since it doesn't return
+ -EALREADY. Of course this would be different when using the _interruptible
+-variants, but that's outside of the scope of these examples here.
++variants, but that's outside of the scope of these examples here::
+ 
+-struct obj {
++  struct obj {
+ 	struct ww_mutex ww_mutex;
+ 	struct list_head locked_list;
+-};
++  };
+ 
+-static DEFINE_WW_CLASS(ww_class);
++  static DEFINE_WW_CLASS(ww_class);
+ 
+-void __unlock_objs(struct list_head *list)
+-{
++  void __unlock_objs(struct list_head *list)
++  {
+ 	struct obj *entry, *temp;
+ 
+ 	list_for_each_entry_safe (entry, temp, list, locked_list) {
+@@ -279,15 +283,15 @@ void __unlock_objs(struct list_head *list)
+ 		list_del(&entry->locked_list);
+ 		ww_mutex_unlock(entry->ww_mutex)
+ 	}
+-}
++  }
+ 
+-void lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
+-{
++  void lock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
++  {
+ 	struct obj *obj;
+ 
+ 	ww_acquire_init(ctx, &ww_class);
+ 
+-retry:
++  retry:
+ 	/* re-init loop start state */
+ 	loop {
+ 		/* magic code which walks over a graph and decides which objects
+@@ -312,13 +316,13 @@ retry:
+ 
+ 	ww_acquire_done(ctx);
+ 	return 0;
+-}
++  }
+ 
+-void unlock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
+-{
++  void unlock_objs(struct list_head *list, struct ww_acquire_ctx *ctx)
++  {
+ 	__unlock_objs(list);
+ 	ww_acquire_fini(ctx);
+-}
++  }
+ 
+ Method 4: Only lock one single objects. In that case deadlock detection and
+ prevention is obviously overkill, since with grabbing just one lock you can't
+@@ -329,11 +333,14 @@ Implementation Details
+ ----------------------
+ 
+ Design:
++^^^^^^^
++
+   ww_mutex currently encapsulates a struct mutex, this means no extra overhead for
+   normal mutex locks, which are far more common. As such there is only a small
+   increase in code size if wait/wound mutexes are not used.
+ 
+   We maintain the following invariants for the wait list:
++
+   (1) Waiters with an acquire context are sorted by stamp order; waiters
+       without an acquire context are interspersed in FIFO order.
+   (2) For Wait-Die, among waiters with contexts, only the first one can have
+@@ -355,6 +362,8 @@ Design:
+   therefore be directed towards the uncontended cases.
+ 
+ Lockdep:
++^^^^^^^^
++
+   Special care has been taken to warn for as many cases of api abuse
+   as possible. Some common api abuses will be caught with
+   CONFIG_DEBUG_MUTEXES, but CONFIG_PROVE_LOCKING is recommended.
+@@ -379,5 +388,6 @@ Lockdep:
+      having called ww_acquire_fini on the first.
+    - 'normal' deadlocks that can occur.
+ 
+-FIXME: Update this section once we have the TASK_DEADLOCK task state flag magic
+-implemented.
++FIXME:
++  Update this section once we have the TASK_DEADLOCK task state flag magic
++  implemented.
+diff --git a/Documentation/pi-futex.txt b/Documentation/pi-futex.txt
+index b154f6c0c36e..c33ba2befbf8 100644
+--- a/Documentation/pi-futex.txt
++++ b/Documentation/pi-futex.txt
+@@ -119,4 +119,4 @@ properties of futexes, and all four combinations are possible: futex,
+ robust-futex, PI-futex, robust+PI-futex.
+ 
+ More details about priority inheritance can be found in
+-Documentation/locking/rt-mutex.txt.
++Documentation/locking/rt-mutex.rst.
+diff --git a/Documentation/translations/it_IT/kernel-hacking/locking.rst b/Documentation/translations/it_IT/kernel-hacking/locking.rst
+index 0ef31666663b..75d9b86fcc50 100644
+--- a/Documentation/translations/it_IT/kernel-hacking/locking.rst
++++ b/Documentation/translations/it_IT/kernel-hacking/locking.rst
+@@ -1404,7 +1404,7 @@ Riferimento per l'API dei Futex
+ Approfondimenti
+ ===============
+ 
+--  ``Documentation/locking/spinlocks.txt``: la guida di Linus Torvalds agli
++-  ``Documentation/locking/spinlocks.rst``: la guida di Linus Torvalds agli
+    spinlock del kernel.
+ 
+ -  Unix Systems for Modern Architectures: Symmetric Multiprocessing and
+diff --git a/drivers/gpu/drm/drm_modeset_lock.c b/drivers/gpu/drm/drm_modeset_lock.c
+index 81dd11901ffd..cb5671d32ada 100644
+--- a/drivers/gpu/drm/drm_modeset_lock.c
++++ b/drivers/gpu/drm/drm_modeset_lock.c
+@@ -36,7 +36,7 @@
+  * of extra utility/tracking out of our acquire-ctx.  This is provided
+  * by &struct drm_modeset_lock and &struct drm_modeset_acquire_ctx.
   *
-  * Call convention:
+- * For basic principles of &ww_mutex, see: Documentation/locking/ww-mutex-design.txt
++ * For basic principles of &ww_mutex, see: Documentation/locking/ww-mutex-design.rst
   *
-- * syscall register convention is in Documentation/powerpc/syscall64-abi.txt
-+ * syscall register convention is in Documentation/powerpc/syscall64-abi.rst
+  * The basic usage pattern is to::
   *
-  * For hypercalls, the register convention is as follows:
-  * r0 volatile
-diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-index 612d9c551be5..53c6778518ac 100644
---- a/drivers/soc/fsl/qe/qe.c
-+++ b/drivers/soc/fsl/qe/qe.c
-@@ -423,7 +423,7 @@ static void qe_upload_microcode(const void *base,
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 79c3873d58ac..4c6296aaeefb 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -5,7 +5,7 @@
+  *  Copyright (C) 2006,2007 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
+  *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
+  *
+- * see Documentation/locking/lockdep-design.txt for more details.
++ * see Documentation/locking/lockdep-design.rst for more details.
+  */
+ #ifndef __LINUX_LOCKDEP_H
+ #define __LINUX_LOCKDEP_H
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 3093dd162424..dcd03fee6e01 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -151,7 +151,7 @@ static inline bool mutex_is_locked(struct mutex *lock)
+ 
  /*
-  * Upload a microcode to the I-RAM at a specific address.
-  *
-- * See Documentation/powerpc/qe_firmware.txt for information on QE microcode
-+ * See Documentation/powerpc/qe_firmware.rst for information on QE microcode
-  * uploading.
-  *
-  * Currently, only version 1 is supported, so the 'version' field must be
-diff --git a/drivers/tty/hvc/hvcs.c b/drivers/tty/hvc/hvcs.c
-index cb4db1b3ca3c..5fb214e67d73 100644
---- a/drivers/tty/hvc/hvcs.c
-+++ b/drivers/tty/hvc/hvcs.c
-@@ -47,7 +47,7 @@
-  * using the 2.6 Linux kernel kref construct.
-  *
-  * For direction on installation and usage of this driver please reference
-- * Documentation/powerpc/hvcs.txt.
-+ * Documentation/powerpc/hvcs.rst.
+  * See kernel/locking/mutex.c for detailed documentation of these APIs.
+- * Also see Documentation/locking/mutex-design.txt.
++ * Also see Documentation/locking/mutex-design.rst.
   */
- 
- #include <linux/device.h>
-diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
-index b3d1aff5e8ad..7afc6b1df77a 100644
---- a/include/soc/fsl/qe/qe.h
-+++ b/include/soc/fsl/qe/qe.h
-@@ -263,7 +263,7 @@ static inline int qe_alive_during_sleep(void)
- 
- /* Structure that defines QE firmware binary files.
-  *
-- * See Documentation/powerpc/qe_firmware.txt for a description of these
-+ * See Documentation/powerpc/qe_firmware.rst for a description of these
-  * fields.
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ extern void mutex_lock_nested(struct mutex *lock, unsigned int subclass);
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 2ea18a3def04..61a084ae17ac 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -158,7 +158,7 @@ extern void downgrade_write(struct rw_semaphore *sem);
+  * static then another method for expressing nested locking is
+  * the explicit definition of lock class keys and the use of
+  * lockdep_set_class() at lock initialization time.
+- * See Documentation/locking/lockdep-design.txt for more details.)
++ * See Documentation/locking/lockdep-design.rst for more details.)
   */
- struct qe_firmware {
+ extern void down_read_nested(struct rw_semaphore *sem, int subclass);
+ extern void down_write_nested(struct rw_semaphore *sem, int subclass);
+diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+index db578783dd36..5ec20b3cdbe5 100644
+--- a/kernel/locking/mutex.c
++++ b/kernel/locking/mutex.c
+@@ -15,7 +15,7 @@
+  *    by Steven Rostedt, based on work by Gregory Haskins, Peter Morreale
+  *    and Sven Dietrich.
+  *
+- * Also see Documentation/locking/mutex-design.txt.
++ * Also see Documentation/locking/mutex-design.rst.
+  */
+ #include <linux/mutex.h>
+ #include <linux/ww_mutex.h>
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 978d63a8261c..8630bb99eec7 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -8,7 +8,7 @@
+  *  Copyright (C) 2005 Kihon Technologies Inc., Steven Rostedt
+  *  Copyright (C) 2006 Esben Nielsen
+  *
+- *  See Documentation/locking/rt-mutex-design.txt for details.
++ *  See Documentation/locking/rt-mutex-design.rst for details.
+  */
+ #include <linux/spinlock.h>
+ #include <linux/export.h>
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 1b0129196e70..aa05f47f5762 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1112,7 +1112,7 @@ config PROVE_LOCKING
+ 	 the proof of observed correctness is also maintained for an
+ 	 arbitrary combination of these separate locking variants.
+ 
+-	 For more details, see Documentation/locking/lockdep-design.txt.
++	 For more details, see Documentation/locking/lockdep-design.rst.
+ 
+ config LOCK_STAT
+ 	bool "Lock usage statistics"
+@@ -1126,7 +1126,7 @@ config LOCK_STAT
+ 	help
+ 	 This feature enables tracking lock contention points
+ 
+-	 For more details, see Documentation/locking/lockstat.txt
++	 For more details, see Documentation/locking/lockstat.rst
+ 
+ 	 This also enables lock events required by "perf lock",
+ 	 subcommand of perf.
 -- 
 2.20.1
 
