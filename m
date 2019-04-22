@@ -6,52 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A43EC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79550C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C952E218FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490FE218FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962442;
-	bh=PCIVu1n1j+g6BGI70UthruE8q1IRMdJjK/wOID8PIng=;
+	s=default; t=1555962446;
+	bh=SWLbllo8DxeoSqq5pqLlUBhpVqixTFUZacJ0l7z86bM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnxX/WDVqI2xslrGdREdL1kJJF37+YZsZSlDHrkB1iGXV+RuiZPCbFmkyAv76Ol7U
-	 V56kNM+cms1XLeWRCSguyNxHXa/Vc6uC/ONoPgOUJT1LgdW9ROXTr+zdExfsm/gnVP
-	 JXZCbyPWau7IodXNdAQwOVpgHj9qeej2LRsrZggk=
+	b=vf80iYLaEHMQJqgjWdcOQLPjapirb9QCiQGg+eeINj3KwyA9ozOGFx26IrvIL2eKx
+	 QZtJmk9mF+MujMnlpJGDdz6yk9Ab2mN+Y+cMnLxR6ySkRRzQSOPRNFqe6aHqtC+GGX
+	 xfRl5i9KvyEUyYJOYTSFidqQKqS9ekkSbHYN1T/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbfDVTrV (ORCPT
+        id S1730263AbfDVTrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbfDVTrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:19 -0400
+        id S1730245AbfDVTrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 423A721904;
-        Mon, 22 Apr 2019 19:47:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B5B21906;
+        Mon, 22 Apr 2019 19:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962437;
-        bh=PCIVu1n1j+g6BGI70UthruE8q1IRMdJjK/wOID8PIng=;
+        s=default; t=1555962440;
+        bh=SWLbllo8DxeoSqq5pqLlUBhpVqixTFUZacJ0l7z86bM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIz4hhqkTwKbjac9ZwXYQf0Nzc3A/mHeNYbcoeLDfze/qGrOAWUZV6+GBvCWPb2QW
-         SD9D1RuqrgBgPhw9tD4rQy2GFbrmFgoIfi9SArllNUmsE9SkjJIi+yFlyV5w5tB1OH
-         V+lvXINE3FGtqgQyed1BhznKbeFe96lynzdfEukM=
+        b=pFpylcyOyelgnnGrIJ3Z/rWvYOF23TnDBAyIzKvNh8vQ/bESB0HljZEmAr98/BmC/
+         1ZyCM8uHZBUC6AbPHGWpfnE2/bK3Y46PvrI5MbYBDuuqeNSI7jjaHu9bgwwzBuBUkL
+         Az+dFBylK27D55aXM/FYo7NESiue81Sim/SW26TU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Li <liwei391@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 63/68] perf machine: Update kernel map address and re-order properly
-Date:   Mon, 22 Apr 2019 15:45:11 -0400
-Message-Id: <20190422194516.11634-63-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 65/68] iommu/amd: Reserve exclusion range in iova-domain
+Date:   Mon, 22 Apr 2019 15:45:13 -0400
+Message-Id: <20190422194516.11634-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -64,135 +57,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 977c7a6d1e263ff1d755f28595b99e4bc0c48a9f ]
+[ Upstream commit 8aafaaf2212192012f5bae305bb31cdf7681d777 ]
 
-Since commit 1fb87b8e9599 ("perf machine: Don't search for active kernel
-start in __machine__create_kernel_maps"), the __machine__create_kernel_maps()
-just create a map what start and end are both zero. Though the address will be
-updated later, the order of map in the rbtree may be incorrect.
+If a device has an exclusion range specified in the IVRS
+table, this region needs to be reserved in the iova-domain
+of that device. This hasn't happened until now and can cause
+data corruption on data transfered with these devices.
 
-The commit ee05d21791db ("perf machine: Set main kernel end address properly")
-fixed the logic in machine__create_kernel_maps(), but it's still wrong in
-function machine__process_kernel_mmap_event().
+Treat exclusion ranges as reserved regions in the iommu-core
+to fix the problem.
 
-To reproduce this issue, we need an environment which the module address
-is before the kernel text segment. I tested it on an aarch64 machine with
-kernel 4.19.25:
-
-  [root@localhost hulk]# grep _stext /proc/kallsyms
-  ffff000008081000 T _stext
-  [root@localhost hulk]# grep _etext /proc/kallsyms
-  ffff000009780000 R _etext
-  [root@localhost hulk]# tail /proc/modules
-  hisi_sas_v2_hw 77824 0 - Live 0xffff00000191d000
-  nvme_core 126976 7 nvme, Live 0xffff0000018b6000
-  mdio 20480 1 ixgbe, Live 0xffff0000018ab000
-  hisi_sas_main 106496 1 hisi_sas_v2_hw, Live 0xffff000001861000
-  hns_mdio 20480 2 - Live 0xffff000001822000
-  hnae 28672 3 hns_dsaf,hns_enet_drv, Live 0xffff000001815000
-  dm_mirror 40960 0 - Live 0xffff000001804000
-  dm_region_hash 32768 1 dm_mirror, Live 0xffff0000017f5000
-  dm_log 32768 2 dm_mirror,dm_region_hash, Live 0xffff0000017e7000
-  dm_mod 315392 17 dm_mirror,dm_log, Live 0xffff000001780000
-  [root@localhost hulk]#
-
-Before fix:
-
-  [root@localhost bin]# perf record sleep 3
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
-  [root@localhost bin]# perf buildid-list -i perf.data
-  4c4e46c971ca935f781e603a09b52a92e8bdfee8 [vdso]
-  [root@localhost bin]# perf buildid-list -i perf.data -H
-  0000000000000000000000000000000000000000 /proc/kcore
-  [root@localhost bin]#
-
-After fix:
-
-  [root@localhost tools]# ./perf/perf record sleep 3
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
-  [root@localhost tools]# ./perf/perf buildid-list -i perf.data
-  28a6c690262896dbd1b5e1011ed81623e6db0610 [kernel.kallsyms]
-  106c14ce6e4acea3453e484dc604d66666f08a2f [vdso]
-  [root@localhost tools]# ./perf/perf buildid-list -i perf.data -H
-  28a6c690262896dbd1b5e1011ed81623e6db0610 /proc/kcore
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Li Bin <huawei.libin@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190228092003.34071-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: be2a022c0dd0 ('x86, AMD IOMMU: add functions to parse IOMMU memory mapping requirements for devices')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Gary R Hook <gary.hook@amd.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- tools/perf/util/machine.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ drivers/iommu/amd_iommu.c       | 9 ++++++---
+ drivers/iommu/amd_iommu_init.c  | 7 ++++---
+ drivers/iommu/amd_iommu_types.h | 2 ++
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b1508ce3e412..076718a7b3ea 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1358,6 +1358,20 @@ static void machine__set_kernel_mmap(struct machine *machine,
- 		machine->vmlinux_map->end = ~0ULL;
- }
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 0b3877681e4a..8d9920ff4134 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -3119,21 +3119,24 @@ static void amd_iommu_get_resv_regions(struct device *dev,
+ 		return;
  
-+static void machine__update_kernel_mmap(struct machine *machine,
-+				     u64 start, u64 end)
-+{
-+	struct map *map = machine__kernel_map(machine);
+ 	list_for_each_entry(entry, &amd_iommu_unity_map, list) {
++		int type, prot = 0;
+ 		size_t length;
+-		int prot = 0;
+ 
+ 		if (devid < entry->devid_start || devid > entry->devid_end)
+ 			continue;
+ 
++		type   = IOMMU_RESV_DIRECT;
+ 		length = entry->address_end - entry->address_start;
+ 		if (entry->prot & IOMMU_PROT_IR)
+ 			prot |= IOMMU_READ;
+ 		if (entry->prot & IOMMU_PROT_IW)
+ 			prot |= IOMMU_WRITE;
++		if (entry->prot & IOMMU_UNITY_MAP_FLAG_EXCL_RANGE)
++			/* Exclusion range */
++			type = IOMMU_RESV_RESERVED;
+ 
+ 		region = iommu_alloc_resv_region(entry->address_start,
+-						 length, prot,
+-						 IOMMU_RESV_DIRECT);
++						 length, prot, type);
+ 		if (!region) {
+ 			pr_err("Out of memory allocating dm-regions for %s\n",
+ 				dev_name(dev));
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index e062ab9687c7..be3801d43d48 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -2001,6 +2001,9 @@ static int __init init_unity_map_range(struct ivmd_header *m)
+ 	if (e == NULL)
+ 		return -ENOMEM;
+ 
++	if (m->flags & IVMD_FLAG_EXCL_RANGE)
++		init_exclusion_range(m);
 +
-+	map__get(map);
-+	map_groups__remove(&machine->kmaps, map);
+ 	switch (m->type) {
+ 	default:
+ 		kfree(e);
+@@ -2047,9 +2050,7 @@ static int __init init_memory_definitions(struct acpi_table_header *table)
+ 
+ 	while (p < end) {
+ 		m = (struct ivmd_header *)p;
+-		if (m->flags & IVMD_FLAG_EXCL_RANGE)
+-			init_exclusion_range(m);
+-		else if (m->flags & IVMD_FLAG_UNITY_MAP)
++		if (m->flags & (IVMD_FLAG_UNITY_MAP | IVMD_FLAG_EXCL_RANGE))
+ 			init_unity_map_range(m);
+ 
+ 		p += m->length;
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index e2b342e65a7b..69f3d4c95b53 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -373,6 +373,8 @@
+ #define IOMMU_PROT_IR 0x01
+ #define IOMMU_PROT_IW 0x02
+ 
++#define IOMMU_UNITY_MAP_FLAG_EXCL_RANGE	(1 << 2)
 +
-+	machine__set_kernel_mmap(machine, start, end);
-+
-+	map_groups__insert(&machine->kmaps, map);
-+	map__put(map);
-+}
-+
- int machine__create_kernel_maps(struct machine *machine)
- {
- 	struct dso *kernel = machine__get_kernel(machine);
-@@ -1390,17 +1404,11 @@ int machine__create_kernel_maps(struct machine *machine)
- 			goto out_put;
- 		}
- 
--		/* we have a real start address now, so re-order the kmaps */
--		map = machine__kernel_map(machine);
--
--		map__get(map);
--		map_groups__remove(&machine->kmaps, map);
--
--		/* assume it's the last in the kmaps */
--		machine__set_kernel_mmap(machine, addr, ~0ULL);
--
--		map_groups__insert(&machine->kmaps, map);
--		map__put(map);
-+		/*
-+		 * we have a real start address now, so re-order the kmaps
-+		 * assume it's the last in the kmaps
-+		 */
-+		machine__update_kernel_mmap(machine, addr, ~0ULL);
- 	}
- 
- 	if (machine__create_extra_kernel_maps(machine, kernel))
-@@ -1536,7 +1544,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 		if (strstr(kernel->long_name, "vmlinux"))
- 			dso__set_short_name(kernel, "[kernel.vmlinux]", false);
- 
--		machine__set_kernel_mmap(machine, event->mmap.start,
-+		machine__update_kernel_mmap(machine, event->mmap.start,
- 					 event->mmap.start + event->mmap.len);
- 
- 		/*
+ /* IOMMU capabilities */
+ #define IOMMU_CAP_IOTLB   24
+ #define IOMMU_CAP_NPCACHE 26
 -- 
 2.19.1
 
