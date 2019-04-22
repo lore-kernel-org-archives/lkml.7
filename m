@@ -6,236 +6,292 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82707C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91F8C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448AE20685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B8A20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940058;
-	bh=nQEAu9teFDxtRoTuLuKpJQOQuUKlRepqoS11epoK240=;
+	s=default; t=1555940063;
+	bh=VGoPb688KGqyWXGa/v3afwGoTDPZSxoYf5qeq2+7xU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T8D4xSWgnqoC2xKyczR0PgQYDXBfWK7EEsDL0GVbbI2rhAQ8TU08qqKEIgCxdt5T6
-	 sb9+Uuk6G4Wfw3tr+az3/4vZhzut/Wcu2Vos4/wchOoV14XH0HpiDHTirVp088AkRE
-	 rgPEAFIkuTHNk1AU1sHD11XVwIkYJ6c9kmrgacjs=
+	b=gh5VdLoUF6ndmQu8+vfX19z6F66JpA9ptd4uOSgQCmgt2PJ9JzoxPKcIBnvOpw4sm
+	 LxiHK4A0hmiyABP57OhAr+t2P0xVa+LYBnk2xJnnfsJO6pBkDzKoMUxUoaENXo5bT9
+	 zKl5Mc+RmtX3Rpvdf6n9Dqd4m2YzQGobxw7Y3Uhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfDVNeP (ORCPT
+        id S1728130AbfDVNeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:34:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37522 "EHLO
+        Mon, 22 Apr 2019 09:34:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37566 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbfDVN2T (ORCPT
+        with ESMTP id S1727514AbfDVN2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AfHjuqQwnX76uUZKJYqO9EVlf2Is7kmbpQnAkbukqhU=; b=XAFk6k+6UhedQ+FLCu3ly4Un3k
-        svrSQnipqPuN8s2smeWTtrFs+KMkV7AQsAH6/EfAHhjZkg1F2yNMYkqgxWGRb1MjvPzkjTxsbnNzS
-        xzhEvFYN00Ia1YTHvlWi4a+Imn0D9ivLkpAajonSuWdEkqM4t+J5MyZGeEkoE0l27dgXUSAFow1sY
-        Jwroc0JG/EcF989kEgtG5XgyA4mrFK6JD/WJ23bwJ41o6fiKF7A7NK2dI6ML6HUfG2tKcVZuw3t2Y
-        zu3qGMHj+CNTSBIckxRBmU4xrURPedI8arVG7DSlyBuFgdVHLajDbeyxT/Sxaf5H1sjfNrW7xcq6q
-        Kby0kGrw==;
+        bh=chQseRVUcs1PrOUelscVQ4BrUhO7B+KwTQKv4ZvvUVA=; b=r+7uz5vse5efZXPfSRA6Svf6Ox
+        e1zZFeWY8Vb/Ylu826w+CF3XYh/771feEklJ5oSJ4Qr8OxUu+WnWi/MGgWv+dQIZYbgidgXwvW5Uz
+        fI8XzCoxFwH7nfmUFt7bytBX06l0XrteRWPME+wLnFAPm/ogbupw8aAlSCaqPa+6G7D0htYRoQmRW
+        jFSPLeNmzaRt7Rk3dJzrXXAzt3pZ+/t0S9cO1StrTdilZ0EAZbQQntmY93b2cV7VcLDfw7GX3lwtN
+        C/IVDG88PnL8kzOjmmfA75Ee2IVOw/7YtuDLTrN6o25Grz0MWxtgGUEgnpH2Aj/ImP3TpuHG57dHp
+        5rD+o0Hw==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzZ-0005Hl-VF; Mon, 22 Apr 2019 13:28:17 +0000
+        id 1hIYzZ-0005Hf-Jt; Mon, 22 Apr 2019 13:28:17 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005nZ-Pr; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzU-0005oX-9e; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 51/79] docs: xen-tpmfront.txt: convert it to .rst
-Date:   Mon, 22 Apr 2019 10:27:40 -0300
-Message-Id: <ecdd57aeb9d0854fc6a1205bcf64ef37992624c1.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH v2 63/79] docs: iio: convert to ReST
+Date:   Mon, 22 Apr 2019 10:27:52 -0300
+Message-Id: <41bbbddf74ffb1e557ac6c924dac5054d6650950.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to be able to add this file to the security book,
-we need first to convert it to reST.
+Rename the iio documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
-While this is not part of any book, mark it as :orphan:, in order
-to avoid build warnings.
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{xen-tpmfront.txt => xen-tpmfront.rst}    | 103 ++++++++++--------
- 1 file changed, 58 insertions(+), 45 deletions(-)
- rename Documentation/security/tpm/{xen-tpmfront.txt => xen-tpmfront.rst} (66%)
+ .../iio/{ep93xx_adc.txt => ep93xx_adc.rst}    | 15 +++++-
+ .../{iio_configfs.txt => iio_configfs.rst}    | 52 +++++++++++--------
+ Documentation/iio/index.rst                   | 12 +++++
+ drivers/iio/Kconfig                           |  2 +-
+ 4 files changed, 56 insertions(+), 25 deletions(-)
+ rename Documentation/iio/{ep93xx_adc.txt => ep93xx_adc.rst} (71%)
+ rename Documentation/iio/{iio_configfs.txt => iio_configfs.rst} (73%)
+ create mode 100644 Documentation/iio/index.rst
 
-diff --git a/Documentation/security/tpm/xen-tpmfront.txt b/Documentation/security/tpm/xen-tpmfront.rst
-similarity index 66%
-rename from Documentation/security/tpm/xen-tpmfront.txt
-rename to Documentation/security/tpm/xen-tpmfront.rst
-index 69346de87ff3..98a16ab87360 100644
---- a/Documentation/security/tpm/xen-tpmfront.txt
-+++ b/Documentation/security/tpm/xen-tpmfront.rst
-@@ -1,4 +1,8 @@
+diff --git a/Documentation/iio/ep93xx_adc.txt b/Documentation/iio/ep93xx_adc.rst
+similarity index 71%
+rename from Documentation/iio/ep93xx_adc.txt
+rename to Documentation/iio/ep93xx_adc.rst
+index 23053e7817bd..4fd8dea3f6b8 100644
+--- a/Documentation/iio/ep93xx_adc.txt
++++ b/Documentation/iio/ep93xx_adc.rst
+@@ -1,12 +1,16 @@
+-Cirrus Logic EP93xx ADC driver.
++==============================
++Cirrus Logic EP93xx ADC driver
++==============================
+ 
+ 1. Overview
++===========
+ 
+ The driver is intended to work on both low-end (EP9301, EP9302) devices with
+ 5-channel ADC and high-end (EP9307, EP9312, EP9315) devices with 10-channel
+ touchscreen/ADC module.
+ 
+ 2. Channel numbering
++====================
+ 
+ Numbering scheme for channels 0..4 is defined in EP9301 and EP9302 datasheets.
+ EP9307, EP9312 and EP9312 have 3 channels more (total 8), but the numbering is
+@@ -17,13 +21,20 @@ Assuming ep93xx_adc is IIO device0, you'd find the following entries under
+ 
+   +-----------------+---------------+
+   | sysfs entry     | ball/pin name |
+-  +-----------------+---------------+
++  +=================+===============+
+   | in_voltage0_raw | YM            |
++  +-----------------+---------------+
+   | in_voltage1_raw | SXP           |
++  +-----------------+---------------+
+   | in_voltage2_raw | SXM           |
++  +-----------------+---------------+
+   | in_voltage3_raw | SYP           |
++  +-----------------+---------------+
+   | in_voltage4_raw | SYM           |
++  +-----------------+---------------+
+   | in_voltage5_raw | XP            |
++  +-----------------+---------------+
+   | in_voltage6_raw | XM            |
++  +-----------------+---------------+
+   | in_voltage7_raw | YP            |
+   +-----------------+---------------+
+diff --git a/Documentation/iio/iio_configfs.txt b/Documentation/iio/iio_configfs.rst
+similarity index 73%
+rename from Documentation/iio/iio_configfs.txt
+rename to Documentation/iio/iio_configfs.rst
+index 4e5f101837a8..ecbfdb3afef7 100644
+--- a/Documentation/iio/iio_configfs.txt
++++ b/Documentation/iio/iio_configfs.rst
+@@ -1,6 +1,9 @@
++===============================
+ Industrial IIO configfs support
++===============================
+ 
+ 1. Overview
++===========
+ 
+ Configfs is a filesystem-based manager of kernel objects. IIO uses some
+ objects that could be easily configured using configfs (e.g.: devices,
+@@ -10,20 +13,22 @@ See Documentation/filesystems/configfs/configfs.txt for more information
+ about how configfs works.
+ 
+ 2. Usage
++========
+ 
+ In order to use configfs support in IIO we need to select it at compile
+ time via CONFIG_IIO_CONFIGFS config option.
+ 
+-Then, mount the configfs filesystem (usually under /config directory):
++Then, mount the configfs filesystem (usually under /config directory)::
+ 
+-$ mkdir /config
+-$ mount -t configfs none /config
++  $ mkdir /config
++  $ mount -t configfs none /config
+ 
+ At this point, all default IIO groups will be created and can be accessed
+ under /config/iio. Next chapters will describe available IIO configuration
+ objects.
+ 
+ 3. Software triggers
++====================
+ 
+ One of the IIO default configfs groups is the "triggers" group. It is
+ automagically accessible when the configfs is mounted and can be found
+@@ -31,40 +36,40 @@ under /config/iio/triggers.
+ 
+ IIO software triggers implementation offers support for creating multiple
+ trigger types. A new trigger type is usually implemented as a separate
+-kernel module following the interface in include/linux/iio/sw_trigger.h:
++kernel module following the interface in include/linux/iio/sw_trigger.h::
+ 
+-/*
+- * drivers/iio/trigger/iio-trig-sample.c
+- * sample kernel module implementing a new trigger type
+- */
+-#include <linux/iio/sw_trigger.h>
++  /*
++   * drivers/iio/trigger/iio-trig-sample.c
++   * sample kernel module implementing a new trigger type
++   */
++  #include <linux/iio/sw_trigger.h>
+ 
+ 
+-static struct iio_sw_trigger *iio_trig_sample_probe(const char *name)
+-{
++  static struct iio_sw_trigger *iio_trig_sample_probe(const char *name)
++  {
+ 	/*
+ 	 * This allocates and registers an IIO trigger plus other
+ 	 * trigger type specific initialization.
+ 	 */
+-}
++  }
+ 
+-static int iio_trig_hrtimer_remove(struct iio_sw_trigger *swt)
+-{
++  static int iio_trig_hrtimer_remove(struct iio_sw_trigger *swt)
++  {
+ 	/*
+ 	 * This undoes the actions in iio_trig_sample_probe
+ 	 */
+-}
++  }
+ 
+-static const struct iio_sw_trigger_ops iio_trig_sample_ops = {
++  static const struct iio_sw_trigger_ops iio_trig_sample_ops = {
+ 	.probe		= iio_trig_sample_probe,
+ 	.remove		= iio_trig_sample_remove,
+-};
++  };
+ 
+-static struct iio_sw_trigger_type iio_trig_sample = {
++  static struct iio_sw_trigger_type iio_trig_sample = {
+ 	.name = "trig-sample",
+ 	.owner = THIS_MODULE,
+ 	.ops = &iio_trig_sample_ops,
+-};
++  };
+ 
+ module_iio_sw_trigger_driver(iio_trig_sample);
+ 
+@@ -73,21 +78,24 @@ iio-trig-sample module will create 'trig-sample' trigger type directory
+ /config/iio/triggers/trig-sample.
+ 
+ We support the following interrupt sources (trigger types):
++
+ 	* hrtimer, uses high resolution timers as interrupt source
+ 
+ 3.1 Hrtimer triggers creation and destruction
++---------------------------------------------
+ 
+ Loading iio-trig-hrtimer module will register hrtimer trigger types allowing
+ users to create hrtimer triggers under /config/iio/triggers/hrtimer.
+ 
+-e.g:
++e.g::
+ 
+-$ mkdir /config/iio/triggers/hrtimer/instance1
+-$ rmdir /config/iio/triggers/hrtimer/instance1
++  $ mkdir /config/iio/triggers/hrtimer/instance1
++  $ rmdir /config/iio/triggers/hrtimer/instance1
+ 
+ Each trigger can have one or more attributes specific to the trigger type.
+ 
+ 3.2 "hrtimer" trigger types attributes
++--------------------------------------
+ 
+ "hrtimer" trigger type doesn't have any configurable attribute from /config dir.
+ It does introduce the sampling_frequency attribute to trigger directory.
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+new file mode 100644
+index 000000000000..0593dca89a94
+--- /dev/null
++++ b/Documentation/iio/index.rst
+@@ -0,0 +1,12 @@
 +:orphan:
 +
-+﻿=============================
- Virtual TPM interface for Xen
-+=============================
++==============
++Industrial I/O
++==============
++
++.. toctree::
++   :maxdepth: 1
++
++   iio_configfs
++
++   ep93xx_adc
+diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+index 014006d1cbb6..c1aa87db19ff 100644
+--- a/drivers/iio/Kconfig
++++ b/drivers/iio/Kconfig
+@@ -28,7 +28,7 @@ config IIO_CONFIGFS
+ 	help
+ 	  This allows configuring various IIO bits through configfs
+ 	  (e.g. software triggers). For more info see
+-	  Documentation/iio/iio_configfs.txt.
++	  Documentation/iio/iio_configfs.rst.
  
- Authors: Matthew Fioravante (JHUAPL), Daniel De Graaf (NSA)
- 
-@@ -6,7 +10,8 @@ This document describes the virtual Trusted Platform Module (vTPM) subsystem for
- Xen. The reader is assumed to have familiarity with building and installing Xen,
- Linux, and a basic understanding of the TPM and vTPM concepts.
- 
--INTRODUCTION
-+Introduction
-+------------
- 
- The goal of this work is to provide a TPM functionality to a virtual guest
- operating system (in Xen terms, a DomU).  This allows programs to interact with
-@@ -24,81 +29,89 @@ This mini-os vTPM subsystem was built on top of the previous vTPM work done by
- IBM and Intel corporation.
- 
- 
--DESIGN OVERVIEW
-+Design Overview
- ---------------
- 
--The architecture of vTPM is described below:
-+The architecture of vTPM is described below::
- 
--+------------------+
--|    Linux DomU    | ...
--|       |  ^       |
--|       v  |       |
--|   xen-tpmfront   |
--+------------------+
--        |  ^
--        v  |
--+------------------+
--| mini-os/tpmback  |
--|       |  ^       |
--|       v  |       |
--|  vtpm-stubdom    | ...
--|       |  ^       |
--|       v  |       |
--| mini-os/tpmfront |
--+------------------+
--        |  ^
--        v  |
--+------------------+
--| mini-os/tpmback  |
--|       |  ^       |
--|       v  |       |
--| vtpmmgr-stubdom  |
--|       |  ^       |
--|       v  |       |
--| mini-os/tpm_tis  |
--+------------------+
--        |  ^
--        v  |
--+------------------+
--|   Hardware TPM   |
--+------------------+
-+  +------------------+
-+  |    Linux DomU    | ...
-+  |       |  ^       |
-+  |       v  |       |
-+  |   xen-tpmfront   |
-+  +------------------+
-+          |  ^
-+          v  |
-+  +------------------+
-+  | mini-os/tpmback  |
-+  |       |  ^       |
-+  |       v  |       |
-+  |  vtpm-stubdom    | ...
-+  |       |  ^       |
-+  |       v  |       |
-+  | mini-os/tpmfront |
-+  +------------------+
-+          |  ^
-+          v  |
-+  +------------------+
-+  | mini-os/tpmback  |
-+  |       |  ^       |
-+  |       v  |       |
-+  | vtpmmgr-stubdom  |
-+  |       |  ^       |
-+  |       v  |       |
-+  | mini-os/tpm_tis  |
-+  +------------------+
-+          |  ^
-+          v  |
-+  +------------------+
-+  |   Hardware TPM   |
-+  +------------------+
- 
-- * Linux DomU: The Linux based guest that wants to use a vTPM. There may be
-+* Linux DomU:
-+	       The Linux based guest that wants to use a vTPM. There may be
- 	       more than one of these.
- 
-- * xen-tpmfront.ko: Linux kernel virtual TPM frontend driver. This driver
-+* xen-tpmfront.ko:
-+		    Linux kernel virtual TPM frontend driver. This driver
-                     provides vTPM access to a Linux-based DomU.
- 
-- * mini-os/tpmback: Mini-os TPM backend driver. The Linux frontend driver
-+* mini-os/tpmback:
-+		    Mini-os TPM backend driver. The Linux frontend driver
- 		    connects to this backend driver to facilitate communications
- 		    between the Linux DomU and its vTPM. This driver is also
- 		    used by vtpmmgr-stubdom to communicate with vtpm-stubdom.
- 
-- * vtpm-stubdom: A mini-os stub domain that implements a vTPM. There is a
-+* vtpm-stubdom:
-+		 A mini-os stub domain that implements a vTPM. There is a
- 		 one to one mapping between running vtpm-stubdom instances and
-                  logical vtpms on the system. The vTPM Platform Configuration
-                  Registers (PCRs) are normally all initialized to zero.
- 
-- * mini-os/tpmfront: Mini-os TPM frontend driver. The vTPM mini-os domain
-+* mini-os/tpmfront:
-+		     Mini-os TPM frontend driver. The vTPM mini-os domain
- 		     vtpm-stubdom uses this driver to communicate with
- 		     vtpmmgr-stubdom. This driver is also used in mini-os
- 		     domains such as pv-grub that talk to the vTPM domain.
- 
-- * vtpmmgr-stubdom: A mini-os domain that implements the vTPM manager. There is
-+* vtpmmgr-stubdom:
-+		    A mini-os domain that implements the vTPM manager. There is
- 		    only one vTPM manager and it should be running during the
- 		    entire lifetime of the machine.  This domain regulates
- 		    access to the physical TPM on the system and secures the
- 		    persistent state of each vTPM.
- 
-- * mini-os/tpm_tis: Mini-os TPM version 1.2 TPM Interface Specification (TIS)
-+* mini-os/tpm_tis:
-+		    Mini-os TPM version 1.2 TPM Interface Specification (TIS)
-                     driver. This driver used by vtpmmgr-stubdom to talk directly to
-                     the hardware TPM. Communication is facilitated by mapping
-                     hardware memory pages into vtpmmgr-stubdom.
- 
-- * Hardware TPM: The physical TPM that is soldered onto the motherboard.
-+* Hardware TPM:
-+		The physical TPM that is soldered onto the motherboard.
- 
- 
--INTEGRATION WITH XEN
-+Integration With Xen
- --------------------
- 
- Support for the vTPM driver was added in Xen using the libxl toolstack in Xen
+ config IIO_TRIGGER
+ 	bool "Enable triggered sampling support"
 -- 
 2.20.1
 
