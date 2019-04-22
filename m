@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB40C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F171CC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC33D21905
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD66D218FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962543;
-	bh=3wMv66B/kPfrE0wRiJ/VF/2KtStpr+lHJtxHbtC58oM=;
+	s=default; t=1555962547;
+	bh=ncTTy5MLwAyNHkaa7rAJ4dHZbEPDcAFiZGorQVTG798=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wviBdUxz4jYXiKPJ5l4gnwW1siEsb3/kVnPt9yoaJ/0H3PCEBdbKyHa8swTBunCl/
-	 5q9t6vgJeA7qL4wEE3BDgZIOr20JjLODIfirFpl24mivfYDXVLcHu//kGf7CsglKH8
-	 3nPvILpu3zEJhUNSNm8CT8uPY1pXLRkpuflU2R6M=
+	b=xvT3+Hy0VFHo9Si1PNnN82QfHzLQb//g3MuN2jD9+U8K69KDTiT3qdu3ejuHUsRO4
+	 S/AeOCDnHz9POqFjxB2cPhhIJtQbQQJhROArc2CScG9PViEn0wA3BunGFN/vlXd1ao
+	 NRqPOHicmtEz2n5ICmNKapstlchJk5dOfecrsx9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfDVTtC (ORCPT
+        id S1730732AbfDVTtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730706AbfDVTtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:00 -0400
+        id S1730706AbfDVTtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC69721902;
-        Mon, 22 Apr 2019 19:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C09218FD;
+        Mon, 22 Apr 2019 19:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962538;
-        bh=3wMv66B/kPfrE0wRiJ/VF/2KtStpr+lHJtxHbtC58oM=;
+        s=default; t=1555962544;
+        bh=ncTTy5MLwAyNHkaa7rAJ4dHZbEPDcAFiZGorQVTG798=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qkL/2WSgk8cZ/IulHLAZxP+t8zosQmj+uE6RXDBwyujXAkCVzFjYaI3/sXCOhYPZH
-         ugfPAgunQbppoNie1hEkwzjJM+RaQFxGMxwmNazsM+20hah+SJe0cKfmyh/2fpZVgk
-         Ww6rlqYOOwpOG6N3XzAsCUwdytFGOWBMZGY0bYeg=
+        b=LUq6OwwKiI0pK8ojwjQD09LxTdy1/2akcxPyWIKA+ZfXHCJHVKbtpP7kD2uzqEZKd
+         cQUNbla4Vg2WExVPQ8H0tsX5Nb4hbOEvFc6qc62EzVWacD7lvEzK4aGHItK+ujhQe3
+         DPHbclX7h+19L9H3SReFbtrSyDEvVkhZaQEd/Wug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andrey Batyiev <batyiev@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 07/29] serial: ar933x_uart: Fix build failure with disabled console
-Date:   Mon, 22 Apr 2019 15:48:26 -0400
-Message-Id: <20190422194848.13049-7-sashal@kernel.org>
+Cc:     Guido Kiener <guido@kiener-muenchen.de>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/29] usb: gadget: net2280: Fix net2280_dequeue()
+Date:   Mon, 22 Apr 2019 15:48:28 -0400
+Message-Id: <20190422194848.13049-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
 References: <20190422194848.13049-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,99 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Štetiar <ynezz@true.cz>
+From: Guido Kiener <guido@kiener-muenchen.de>
 
-[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
+[ Upstream commit f1d3fba17cd4eeea20397f1324b7b9c69a6a935c ]
 
-Andrey has reported on OpenWrt's bug tracking system[1], that he
-currently can't use ar93xx_uart as pure serial UART without console
-(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
-because compilation ends with following error:
+When a request must be dequeued with net2280_dequeue() e.g. due
+to a device clear action and the same request is finished by the
+function scan_dma_completions() then the function net2280_dequeue()
+does not find the request in the following search loop and
+returns the error -EINVAL without restoring the status ep->stopped.
+Thus the endpoint keeps blocked and does not receive any data
+anymore.
+This fix restores the status and does not issue an error message.
 
- ar933x_uart.c: In function 'ar933x_uart_console_write':
- ar933x_uart.c:550:14: error: 'struct uart_port' has no
-                               member named 'sysrq'
-
-So this patch moves all the code related to console handling behind
-series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
-
-1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Andrey Batyiev <batyiev@gmail.com>
-Reported-by: Andrey Batyiev <batyiev@gmail.com>
-Tested-by: Andrey Batyiev <batyiev@gmail.com>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/usb/gadget/udc/net2280.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index 73137f4aac20..d4462512605b 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -52,11 +52,6 @@ struct ar933x_uart_port {
- 	struct clk		*clk;
- };
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index 57b88f4f49c5..dfaed8e8cc52 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -1277,9 +1277,9 @@ static int net2280_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+-		dev_err(&ep->dev->pdev->dev, "%s: Request mismatch\n",
+-								__func__);
++		ep_dbg(ep->dev, "%s: Request mismatch\n", __func__);
+ 		return -EINVAL;
+ 	}
  
--static inline bool ar933x_uart_console_enabled(void)
--{
--	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
--}
--
- static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
- 					    int offset)
- {
-@@ -511,6 +506,7 @@ static struct uart_ops ar933x_uart_ops = {
- 	.verify_port	= ar933x_uart_verify_port,
- };
- 
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
- static struct ar933x_uart_port *
- ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
- 
-@@ -607,14 +603,7 @@ static struct console ar933x_uart_console = {
- 	.index		= -1,
- 	.data		= &ar933x_uart_driver,
- };
--
--static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
--{
--	if (!ar933x_uart_console_enabled())
--		return;
--
--	ar933x_console_ports[up->port.line] = up;
--}
-+#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
- 
- static struct uart_driver ar933x_uart_driver = {
- 	.owner		= THIS_MODULE,
-@@ -703,7 +692,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
- 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
- 
--	ar933x_uart_add_console_port(up);
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_console_ports[up->port.line] = up;
-+#endif
- 
- 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
- 	if (ret)
-@@ -752,8 +743,9 @@ static int __init ar933x_uart_init(void)
- {
- 	int ret;
- 
--	if (ar933x_uart_console_enabled())
--		ar933x_uart_driver.cons = &ar933x_uart_console;
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_uart_driver.cons = &ar933x_uart_console;
-+#endif
- 
- 	ret = uart_register_driver(&ar933x_uart_driver);
- 	if (ret)
 -- 
 2.19.1
 
