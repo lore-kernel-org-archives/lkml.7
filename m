@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4433C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00988C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85ACB2087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3E52087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940214;
-	bh=MDrdlBzQBgz4CJ3SpzJUm96lnJcESY0wNkuvJKmWMFU=;
+	s=default; t=1555940217;
+	bh=qKGkZy0wckgbd8u0jxZj2/BOAOwYeccxNRctW54KYtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IhRn+aCBPSQyM1dxdX4y2fuEHibXFjm2Fa462+2zov1Lmjb4jMTgYj7kz3eh8HNQP
-	 UIQGyRuyYcvH9RXp8uF2oEqYEWDSDJH0IcYVx4//EmsGidfTAi8CexET0Dy6qeyCnD
-	 +5TYYfv/lviWQNrWZXGuh69CrcPaxDzZrAoc7Zi0=
+	b=eRJ20ZHB1R2s8AmTHvkMN5+v1EJtuSsT+Xbj/Qh8eYhjSj3m02GBLwC1k+/1Gk6pz
+	 1nTGhVr6FINh52RPrMbosKjzcV2b3JkgY1nH10WgTYrfzfXEIWhXAPaV77gdoVQGmY
+	 i5zZGSuPjRPUjCZPe5PgzHioae9uGlFMtgZhUhqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfDVNgs (ORCPT
+        id S1728259AbfDVNgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:36:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36814 "EHLO
+        Mon, 22 Apr 2019 09:36:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36838 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfDVN2N (ORCPT
+        with ESMTP id S1727387AbfDVN2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:13 -0400
+        Mon, 22 Apr 2019 09:28:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LknHlP8O80qHE1WCh8WxWrtnHyrgma3TZ5Je3ultqgs=; b=S/sucOVHPYUdGATx3TbiajJgkN
-        oxeB7igzj3QwP6vUEA6GcI1uKwZYJsIukbOxvflCPRBh8W7qpY7yspXZZBBFb8UuoWfitWN9znld5
-        YyhSRuA7gTQwbFkl0CkBK80IL2lzWSgbm6NwvtWlpoymdMbyzawSmON4R34i+pqwK/bfXo7rXTJL9
-        XRLyBUVf6+vb1HHhK97eo8rLvvjYH7WCSU66mDOD1oFck3Qyu4/0n1GM7YdWEuKJQq8hta/BC5gqR
-        ZVQy1NmKuTNwZqgWk3wzkjJYOGqCrAxwQ+vH7KzpQu54aCmvtt0nJY4W59q4TkCldJzcOM7cL0tA2
-        V4QuSBKQ==;
+        bh=hlM64J+ST8GRbucxLotQuBavmDhT3Ciw0I0bthGxh70=; b=rHvm7aCoH+VU5m179Ru4TZ5JJR
+        PB916wps82ZNzDQemjFRDgm0JgDPprbtsLTmPgYE567zcD/AobFiBbhhWbZ1OFnUCTv1Vjv7HCDnr
+        nC19bOJtYfmG+rBhHuV5b/eeOApCgV3hPB+/8JThrmBNiFOrY9RXxhN/17aW1Bh5aFF6mt1oN9/XG
+        vARUtVys+LtEmTuy52lykakzEyG0HMi3q8tPpgf7C4OneY7VU9En4p/5mx+x3vFcGC/NXJFHAik8m
+        JMQwmD0BMjYxki9hkgFsulJ/UPVHCydSSba8OwBAVdvPLIyjU13H0UUhTbhnc4zbXe7wF+ZqPFJyp
+        3O7tu+EA==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzU-0005HT-Il; Mon, 22 Apr 2019 13:28:12 +0000
+        id 1hIYzV-0005Hm-3M; Mon, 22 Apr 2019 13:28:13 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzS-0005jd-AJ; Mon, 22 Apr 2019 10:28:10 -0300
+        id 1hIYzS-0005lA-TW; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 03/79] scripts/documentation-file-ref-check: don't parse Next/ dir
-Date:   Mon, 22 Apr 2019 10:26:52 -0300
-Message-Id: <64012d057b5cf2b75192fb75ef5d2547254ccf06.1555938375.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH v2 22/79] docs: mic: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:11 -0300
+Message-Id: <c9342b7180ecd0b170758b02cc78012c757f7cf3.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -63,31 +66,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If one tries to run this script under linux-next, it would
-hit lots of false-positives, due to the tree merges that
-are stored under the Next/ directory.
+Convert Intel Many Integrated Core architecture docs to ReST.
 
-So, add a logic to ignore it.
+The conversion is trivial: just add title and literal block
+markups, and adjust some identation.
+
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/documentation-file-ref-check | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/mic/index.rst                   | 18 ++++++
+ .../{mic_overview.txt => mic_overview.rst}    |  6 +-
+ .../{scif_overview.txt => scif_overview.rst}  | 58 +++++++++++--------
+ 3 files changed, 57 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/mic/index.rst
+ rename Documentation/mic/{mic_overview.txt => mic_overview.rst} (96%)
+ rename Documentation/mic/{scif_overview.txt => scif_overview.rst} (76%)
 
-diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index ad9db6821824..bd7d9ab63941 100755
---- a/scripts/documentation-file-ref-check
-+++ b/scripts/documentation-file-ref-check
-@@ -38,6 +38,9 @@ while (<IN>) {
- 	my $f = $1;
- 	my $ln = $2;
- 
-+	# On linux-next, discard the Next/ directory
-+	next if ($f =~ m,^Next/,);
+diff --git a/Documentation/mic/index.rst b/Documentation/mic/index.rst
+new file mode 100644
+index 000000000000..082fa8f6a260
+--- /dev/null
++++ b/Documentation/mic/index.rst
+@@ -0,0 +1,18 @@
++:orphan:
 +
- 	# Makefiles and scripts contain nasty expressions to parse docs
- 	next if ($f =~ m/Makefile/ || $f =~ m/\.sh$/);
++=============================================
++Intel Many Integrated Core (MIC) architecture
++=============================================
++
++.. toctree::
++    :maxdepth: 1
++
++    mic_overview
++    scif_overview
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/mic/mic_overview.txt b/Documentation/mic/mic_overview.rst
+similarity index 96%
+rename from Documentation/mic/mic_overview.txt
+rename to Documentation/mic/mic_overview.rst
+index 074adbdf83a4..17d956bdaf7c 100644
+--- a/Documentation/mic/mic_overview.txt
++++ b/Documentation/mic/mic_overview.rst
+@@ -1,3 +1,7 @@
++======================================================
++Intel Many Integrated Core (MIC) architecture overview
++======================================================
++
+ An Intel MIC X100 device is a PCIe form factor add-in coprocessor
+ card based on the Intel Many Integrated Core (MIC) architecture
+ that runs a Linux OS. It is a PCIe endpoint in a platform and therefore
+@@ -45,7 +49,7 @@ Here is a block diagram of the various components described above. The
+ virtio backends are situated on the host rather than the card given better
+ single threaded performance for the host compared to MIC, the ability of
+ the host to initiate DMA's to/from the card using the MIC DMA engine and
+-the fact that the virtio block storage backend can only be on the host.
++the fact that the virtio block storage backend can only be on the host::
  
+                +----------+           |             +----------+
+                | Card OS  |           |             | Host OS  |
+diff --git a/Documentation/mic/scif_overview.txt b/Documentation/mic/scif_overview.rst
+similarity index 76%
+rename from Documentation/mic/scif_overview.txt
+rename to Documentation/mic/scif_overview.rst
+index 0a280d986731..4c8ad9e43706 100644
+--- a/Documentation/mic/scif_overview.txt
++++ b/Documentation/mic/scif_overview.rst
+@@ -1,3 +1,7 @@
++========================================
++Symmetric Communication Interface (SCIF)
++========================================
++
+ The Symmetric Communication Interface (SCIF (pronounced as skiff)) is a low
+ level communications API across PCIe currently implemented for MIC. Currently
+ SCIF provides inter-node communication within a single host platform, where a
+@@ -8,8 +12,11 @@ is to deliver the maximum possible performance given the communication
+ abilities of the hardware. SCIF has been used to implement an offload compiler
+ runtime and OFED support for MPI implementations for MIC coprocessors.
+ 
+-==== SCIF API Components ====
++SCIF API Components
++===================
++
+ The SCIF API has the following parts:
++
+ 1. Connection establishment using a client server model
+ 2. Byte stream messaging intended for short messages
+ 3. Node enumeration to determine online nodes
+@@ -28,9 +35,12 @@ can also register local memory which is followed by data transfer using either
+ DMA, CPU copies or remote memory mapping via mmap. SCIF supports both user and
+ kernel mode clients which are functionally equivalent.
+ 
+-==== SCIF Performance for MIC ====
++SCIF Performance for MIC
++========================
++
+ DMA bandwidth comparison between the TCP (over ethernet over PCIe) stack versus
+-SCIF shows the performance advantages of SCIF for HPC applications and runtimes.
++SCIF shows the performance advantages of SCIF for HPC applications and
++runtimes::
+ 
+              Comparison of TCP and SCIF based BW
+ 
+@@ -66,33 +76,33 @@ space API similar to the kernel API in scif.h. The SCIF user space library
+ is distributed @ https://software.intel.com/en-us/mic-developer
+ 
+ Here is some pseudo code for an example of how two applications on two PCIe
+-nodes would typically use the SCIF API:
++nodes would typically use the SCIF API::
+ 
+-Process A (on node A)			Process B (on node B)
++  Process A (on node A)			Process B (on node B)
+ 
+-/* get online node information */
+-scif_get_node_ids(..)			scif_get_node_ids(..)
+-scif_open(..)				scif_open(..)
+-scif_bind(..)				scif_bind(..)
+-scif_listen(..)
+-scif_accept(..)				scif_connect(..)
+-/* SCIF connection established */
++  /* get online node information */
++  scif_get_node_ids(..)			scif_get_node_ids(..)
++  scif_open(..)				scif_open(..)
++  scif_bind(..)				scif_bind(..)
++  scif_listen(..)
++  scif_accept(..)				scif_connect(..)
++  /* SCIF connection established */
+ 
+-/* Send and receive short messages */
+-scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
++  /* Send and receive short messages */
++  scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
+ 
+-/* Register memory */
+-scif_register(..)			scif_register(..)
++  /* Register memory */
++  scif_register(..)			scif_register(..)
+ 
+-/* RDMA */
+-scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
++  /* RDMA */
++  scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
+ 
+-/* Fence DMAs */
+-scif_fence_signal(..)			scif_fence_signal(..)
++  /* Fence DMAs */
++  scif_fence_signal(..)			scif_fence_signal(..)
+ 
+-mmap(..)				mmap(..)
++  mmap(..)				mmap(..)
+ 
+-/* Access remote registered memory */
++  /* Access remote registered memory */
+ 
+-/* Close the endpoints */
+-scif_close(..)				scif_close(..)
++  /* Close the endpoints */
++  scif_close(..)				scif_close(..)
 -- 
 2.20.1
 
