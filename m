@@ -2,126 +2,72 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B0C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659F2C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87BA2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D85C2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555895807;
+	bh=nWDDTriAaRe8hRAPjiq8CbyMD1BWfWokKdGAQCcP7Uo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=suUzhwr3DeCTMYakmzK7PfcDe/12q0jdCWCLLj2f8m2VM4q8XtLuv49UGlgnvUkTk
+	 9jhNWxXy0bxuMk+uwZeKg+rnORemn7yrLkz5feEw5xY/g3q1mnt5y/I6XUDblRMWuF
+	 w+iFs+pgSZf3vM2HLbDGJS/WfsCYx5vJjAYamH1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfDVBNc (ORCPT
+        id S1726279AbfDVBQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 21:13:32 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:47964 "EHLO mail5.wrs.com"
+        Sun, 21 Apr 2019 21:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbfDVBNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 21:13:32 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3M1CPDa012152
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Sun, 21 Apr 2019 18:12:51 -0700
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 21 Apr
- 2019 18:12:41 -0700
-Subject: Re: Bug report: A commit about serial8250 cause the output disorderly
- at the phase of startup
-To:     <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        <john.ogness@linutronix.de>, <bigeasy@linutronix.de>
-References: <5f1398dd-d505-dd8a-0ea1-8186618d56d3@windriver.com>
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-Message-ID: <82793501-9ddf-11ec-3f91-73872bf3bd54@windriver.com>
-Date:   Mon, 22 Apr 2019 09:12:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1725869AbfDVBQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 21:16:45 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDDAA2075A;
+        Mon, 22 Apr 2019 01:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555895805;
+        bh=nWDDTriAaRe8hRAPjiq8CbyMD1BWfWokKdGAQCcP7Uo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HyFVMnYA2ZTH9Ya2eLld8yBh0YBAGTaqU01awUWlImmSmg+ShLqytw6ZTVVju9mjB
+         9XyWt+fY8Bvyferyf5OBSdFnPng8EXnzFDAF1YiI2+WHY2WXLvEQAbkjBarJzGzzvc
+         v5c2ZS5Z8Q0FEgNBk5CQ9IPkfXRfKjUP5MpvmXBw=
+Date:   Mon, 22 Apr 2019 09:16:30 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: vf610-zii-dev: Mark i2c0 SCL as
+ GPIO_OPEN_DRAIN
+Message-ID: <20190422011629.GM19962@dragon>
+References: <20190414183558.25750-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5f1398dd-d505-dd8a-0ea1-8186618d56d3@windriver.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190414183558.25750-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Sun, Apr 14, 2019 at 11:35:57AM -0700, Andrey Smirnov wrote:
+> Mark i2c0 SCL as GPIO_OPEN_DRAIN to fix the following warning:
+> 
+> gpio-36 (scl): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-kernel@vger.kernel.org
 
-Anyone notice this issue?
-
-
---Hongzhi
-
-
-On 4/19/19 10:24 AM, Hongzhi, Song wrote:
-> 1. Issue description:
->
-> Boot kernel( >= linux-rt-devel-v5.0.3 ) with qemu.
-> Then qemu will print following disorderly messages.
->
-> At the beginning, the messages are disorderly. But then it becomes 
-> normally from printing "[    0.000000] 000: Linux version..."
->
-> --------------------------------------------------
-> [    0.019000] 000: tsc: Unable to calibrate against PIT
-> [    0.002583] 000: 6199.83 BogoMIPS (lpj=3099918)
-> [    0.521247] 000: Intel(R) Core(TM)2 Duo CPU     T7700  @ 2.40GHz
-> [    0.521247] 000:  (family: 0x6, model: 0xf
-> [    0.521247] 000: , stepping: 0xb)
-> [    0.533126] 000: unsupported p6 CPU model 15
-> [    0.533318] 000: no PMU driver, software events only.
-> [    0.765082] 000: 1 ACPI AML tables successfully acquired and loaded
-> [    0.765274] 000:
-> [    0.785903] 000: Enabled 2 GPEs in block 00 to 0F
-> [    0.786128] 000:
-> [    0.835675] 000: acpi PNP0A03:00: fail to add MMCONFIG information, 
-> can't access extended PCI configuration space under this bridge.
-> [    0.892056] 000:  5
-> [    0.892289] 000:  *10
-> [    0.892416] 000:  11
-> [    0.892527] 000: )
-> [    0.892661] 000:
->
-> /* skip some repeated contents */
->
-> [    5.052149] 000: , 512kB Cache
-> [    0.000000] 000: Linux version 5.0.3-yocto-preempt-rt+ 
-> (hsong@pek-lpggp1) (gcc version 8.3.0 (GCC)) #24 SMP PREEMPT Thu Apr 
-> 18 03:29:58 EDT 2019
-> [    0.000000] 000: Command line: root=/dev/vda rw highres=off 
-> console=ttyS0 mem=256M ip=192.168.7.4::192.168.7.3:255.255.255.0 vga=0 
-> uvesafb.mode_opti0
-> [    0.000000] 000: x86/fpu: x87 FPU will use FXSAVE
-> [    0.000000] 000: BIOS-provided physical RAM map:
-> [    0.000000] 000: BIOS-e820: [mem 
-> 0x0000000000000000-0x000000000009fbff]
-> [    0.000000] 000: BIOS-e820: [mem 
-> 0x000000000009fc00-0x000000000009ffff]
-> [    0.000000] 000: BIOS-e820: [mem 
-> 0x00000000000f0000-0x00000000000fffff]
-> [    0.000000] 000: BIOS-e820: [mem 
-> 0x0000000000100000-0x000000000ffdbfff]
->
-> --------------------------------------------------
->
-> 2. Reproduce:
-> (1)build kernel: (Attachment is my .config)
-> make ARCH=x86_64 
-> CROSS_COMPILE=[path-to-my-cross-toolchain]/x86_64-wrs-linux-
->
-> (2)boot kernel with qemu:
->
-> qemu-system-x86_64 \
-> -drive file=qemux86-64.rootfs.ext4,if=virtio,format=raw \
-> -nographic \
-> -kernel arch/x86/boot/bzImage \
-> -append 'root=/dev/vda rw highres=off  console=ttyS0 mem=256M ip=dhcp'
->
-> 3. Analysis:
-> I find the following commit from >=linux-rt-devel-v5.0.3. cause the 
-> issue.
->
-> b9d460e serial: 8250: implement write_atomic
->
+Applied both, thanks.
