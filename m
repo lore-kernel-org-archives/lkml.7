@@ -2,180 +2,134 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAADC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7B4C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFA1214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7D420859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Qlb6Ka8j"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qoaKDLJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbfDVQoL (ORCPT
+        id S1728375AbfDVQoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:44:11 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43504 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfDVQoL (ORCPT
+        Mon, 22 Apr 2019 12:44:16 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38541 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbfDVQoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:44:11 -0400
-Received: by mail-lf1-f67.google.com with SMTP id i68so9429368lfi.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:44:09 -0700 (PDT)
+        Mon, 22 Apr 2019 12:44:14 -0400
+Received: by mail-ed1-f68.google.com with SMTP id c1so3974649edk.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:44:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ms0rfvZRl0q7nQ2JjG0gB/4aq7m4g4BAWeD/32kGdqg=;
-        b=Qlb6Ka8jzhKp6KmakCpuNsNkyLWhHvTiov1ihZVaaVdKamd9IQ/m2y6LwsFhEdoQnJ
-         mYSzr+1ZCRJmbijqp//eJkFy249IY+dBMp+4pBOhKcmWyNmbGZWJX1L4Z2QHSTXBQGBR
-         esMa2AtIiOjVa/5N02637M9NulFgKACiBIK17ft2CT4ROMvlGKvAVHfHYgHajDeqWEze
-         2k7qpR0ufA0giD4UPfmnj5QY3v+SpGNS0efAiyNEm1VjwIRNOvxRn0ZrqyYIwJcehEr0
-         XvCYC8X1sYH2c4eZCNJEC/RHDPuRswFEIa+72lAFdXiCsxDAR3mUpvXj8edSgBV1nfGa
-         L+xA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ebT1zd4br27smf6EZfBkxJgHdh7UMLcjjUXNrZyZOT8=;
+        b=qoaKDLJKDRDOLrUU1AMfafnGpgw5ntc5sL4OzwAdUD9UBmbl7AExjhkEGTNfY6XeU0
+         QQz5nKk/lTZnDs1SPLSXvCfySEq8bMWDBtdnYpckG33aRLTmmzae/a/9d/aff78DXQyI
+         ns3VXRWSR/ZycgsZVnPpeuYksYLvN1TxZNuEXIHPslOPQ3Q9FJJXzul+gh+z3j7U+Wjp
+         TjZ/Ccxg4j1GFxgdHsmv/QTrk8z3O7p5C6USfDs/xxrjPUNZV4PNIAO3GRDjo3dSpjti
+         Js/nGX73UByJQlxW/0RpL/88hum1P+lztKC3LfJUnlaKaCzO3gsKC/stEA+rV2pUKnap
+         2W1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ms0rfvZRl0q7nQ2JjG0gB/4aq7m4g4BAWeD/32kGdqg=;
-        b=cgsQ/N77WJBIjc2Lqsw5u3U7wToriFoNmjT6S/bJyxHP2qOyl4h512RVM0EkBxMgye
-         duPXMNUHq8/qTk4G0z9gBgOZxOIBqCPGD0V0R6rYfEe+o0ALK5Oo58MXPKnEsXudE+ym
-         zzo6p67k1homA9VZcB2IGp4bDy3790+0LLwwFaWJ+Zi7e4G8zAnfWx5jS/8qyYYRRVX9
-         wxkkJdmnL/fqFJ0OLtatuhe+Rz80fgc8mm6+GSW7ze0Q3GvVo26ZqAK/+tY2ACm+XIcM
-         MMP8vzHwRak9UE7WJgyYrrrlbuhl0Z0wxSuNFr4F+Znl/4mYtpKYKzOQ5gaGl6KJemdi
-         Oocw==
-X-Gm-Message-State: APjAAAW9k5KgtMIU7PFiWg6z4B1oO3q7vrkTh+JBGbA5IvDgPDKQiwhs
-        0tLtVSOia2n0ifb8L4T97P4tQafWvaI=
-X-Google-Smtp-Source: APXvYqyu6LlvcRCKE1SgKe5HFaDWfmwDK3BUWPZMJztLtiS5TjVT7IoHQHjK2Vkw7VdHQhV5lzAgpw==
-X-Received: by 2002:ac2:5609:: with SMTP id v9mr10489369lfd.159.1555951448427;
-        Mon, 22 Apr 2019 09:44:08 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.82.98])
-        by smtp.gmail.com with ESMTPSA id n10sm3425619ljh.36.2019.04.22.09.44.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:44:06 -0700 (PDT)
-Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
-        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        zhengxunli@mxic.com.tw
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
- <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
- <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
- <cdee3d53-6ee3-4435-117e-8ba4a58ca72b@cogentembedded.com>
- <OF82CE76E9.E6395EF7-ON482583DD.000E37D7-482583DD.000E5077@mxic.com.tw>
- <3d334751-8fd4-7db1-9deb-e6c94936df13@cogentembedded.com>
- <OF4ABCC306.B053BA23-ON482583E0.000F480C-482583E0.000FAD4A@mxic.com.tw>
- <3971c669-9095-9d18-d029-37f9663a54b2@cogentembedded.com>
- <OF58AAFF49.C4593DEB-ON482583E1.001D551E-482583E1.001F089D@LocalDomain>
- <OFE74649D4.F69BB5EF-ON482583E1.0033F73F-482583E1.00344ED2@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <529fe004-63e2-43c3-0382-9aaa86d0c3a9@cogentembedded.com>
-Date:   Mon, 22 Apr 2019 19:44:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ebT1zd4br27smf6EZfBkxJgHdh7UMLcjjUXNrZyZOT8=;
+        b=RQsb2RB/RJ8YrcYJxVr26WEfyxKsi7bd9XWUMLfdA3XhdEo7NUotuAX9fbfRI/58ug
+         1pJpNZWvreYAbmsh6tFsENFQGtrn++b2XgsZk9m/6y7SxZKgKv9O/AuhGYtRoGN4GWjk
+         rGiVrnYwlmSgVtIM0PkoKxZfhisrMEM44Nf20OPt/3DNMx68IXESFN80lh5UGIx3Tbct
+         AwB7hx4TU6BwDmsUFVaMNZQW126Ik4DqeJuRN/kyI6Sf8WZHSG5W0jU2d+z0pM74jxEo
+         yYqcM+SrnBbH1mePEZW28y2tOy4RqDzdWnsQVZYyzHV4RiJ65PYSXVXd5h8NvaJ7uRwN
+         Yuhg==
+X-Gm-Message-State: APjAAAVXHpGK/WKjMWiqG30ut4VAZAan0t34UdRUazDDnEyDKpeavrMN
+        x766s3afbLPlddsEa5X6cr7cbF6SJjoh1EeGdoITHg==
+X-Google-Smtp-Source: APXvYqy8WG5Ky42+WKuzAypEhyjWGI+ixmX4Ua2v+4AbrT0/ud6RhLx9M3ZifZz7+ve/4miI62XJdAaBebiUOJfu02o=
+X-Received: by 2002:a17:906:4b10:: with SMTP id y16mr10098502eju.19.1555951452181;
+ Mon, 22 Apr 2019 09:44:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <OFE74649D4.F69BB5EF-ON482583E1.0033F73F-482583E1.00344ED2@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+References: <20190416170701.50333-1-wvw@google.com> <1555923800.26198.30.camel@intel.com>
+In-Reply-To: <1555923800.26198.30.camel@intel.com>
+From:   Wei Wang <wvw@google.com>
+Date:   Mon, 22 Apr 2019 09:44:01 -0700
+Message-ID: <CAGXk5yoXgzYyK9eJMHietgqPqyT_QHXAby6+G_fSwXL-tKfd=Q@mail.gmail.com>
+Subject: Re: [PATCH] thermal: core: skip update disabled thermal zones after suspend
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/19/2019 12:31 PM, masonccyang@mxic.com.tw wrote:
+On Mon, Apr 22, 2019 at 2:03 AM Zhang Rui <rui.zhang@intel.com> wrote:
+>
+> On =E4=BA=8C, 2019-04-16 at 10:07 -0700, Wei Wang wrote:
+> > It is unnecessary to update disabled thermal zones post suspend and
+> > sometimes leads error/warning in bad behaved thermal drivers.
+> >
+> a good catch, and in fact, there are more issues about thermal handling
+> for disabled thermal zones, like we're able to read the temperature of
+> disabled thermal zones, either via sysfs or via function calls like
+> thermal_zone_device_update.
+Thanks Rui for following up. Yes, we noticed the same behavior. Right
+now, individual thermal driver can still respect set_mode and present
+value meaningful or return error when thermal zone disabled, and
+that's what we do locally.
+Currently, sysfs-api documents "Preventing kernel thermal zone driver
+actions upon trip points so that user application can take full charge
+of the thermal management.", so is it intended for some other agents
+in kernel or user land polling temperature with function call or sysfs
+respectively?
 
->> > Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
->> >
->> > On 04/18/2019 05:51 AM, masonccyang@mxic.com.tw wrote:
->> >
->> > >> >> >> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
->> > >> >> >>
->> > >> >> >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> > >> >> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> > >> >> > [...]
->> > >> >> >> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-
->> > >> renesas-rpc.c
->> > >> >> >> new file mode 100644
->> > >> >> >> index 0000000..037f273
->> > >> >> >> --- /dev/null
->> > >> >> >> +++ b/drivers/spi/spi-renesas-rpc.c
->> > >> >> > [...]
->> > >> >> >> +static int rpc_spi_probe(struct platform_device *pdev)
->> > >> >> >> +{
->> > >> >> >> +   struct spi_controller *ctlr;
->> > >> >> >> +   struct rpc_mfd *rpc_mfd = dev_get_drvdata(pdev->dev.parent);
->> > >> >> >> +   struct rpc_spi *rpc;
->> > >> >> >> +   int ret;
->> > >> >> >> +
->> > >> >> >> +   ctlr = spi_alloc_master(&pdev->dev, sizeof(*rpc));
->> > >> >> >> +   if (!ctlr)
->> > >> >> >> +      return -ENOMEM;
->> > >> >> >> +
->> > >> >> >> +   platform_set_drvdata(pdev, ctlr);
->> > >> >> >> +
->> > >> >> >> +   rpc = spi_controller_get_devdata(ctlr);
->> > >> >> >> +
->> > >> >> >> +   ctlr->dev.of_node = pdev->dev.of_node;
->> > >> >> > [...]
->> > >> >> >> +
->> > >> >> >> +   pm_runtime_enable(&pdev->dev);
->> > >> >> >> +   ctlr->auto_runtime_pm = true;
->> > >> >> >
->> > >> >> >    I think this line no longer works as expected with the new
->> > >> >> probing scheme.
->> > >>
->> > >>    That's because we added another (SPI) device under our MFD.
->> > >
->> > > Do you mean just to remove one line
->> > > ctlr->auto_runtime_pm = true;
->> > > ?
-> 
->> how did you test it ?
->> what is your testing flow ?
-
-   I think I've patched drivers/spi/spi-mem.c to get spi_mem_access_{start|end}()
-to be called with ctlr->dev.parent->parent as an arg...
-
->> >    No, you should explicitly call RPM for the MFD (not the SPI device).
->>
->> okay, patch RPM to RPC MFD and will remove SPI RPM enable part.
-> 
-> wait! I test it ok.
-> 
-> Don't need to patch RPM to RPC MFD, just keep RPM in SPI.
-> 
-> root@draak:/sys/power# echo mem > state
-> [  135.848711] PM: suspend entry (s2idle)
-> [  135.852777] PM: Syncing filesystems ... done.
-> [  135.869468] Freezing user space processes ... (elapsed 0.002 seconds) done.
-> [  135.879962] OOM killer disabled.
-> [  135.883257] Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
-> [  135.893474] Suspending console(s) (use no_console_suspend to debug)
-> [  135.910946] [Mason] rpc_spi_suspend
-> [  135.986022] PM: suspend devices took 0.084 seconds
-> [  135.986047] PM: suspend debug: Waiting for 5 second(s).
-> [  141.142024] [Mason] rpc_spi_resume
-> [  141.220859] PM: resume devices took 0.116 seconds
-> [  141.243179] OOM killer enabled.
-> [  141.246417] Restarting tasks ... done.
-> [  141.266579] PM: suspend exit
-> root@draak:/sys/power#
-
-   That's not *runtime* PM, it's the *plain* PM you're testing here...
-
-> thanks & best regards,
-> Mason
-
-MBR, Sergei
+Thanks!
+-Wei
+> For this patch, I will take it as it fixes one of the problem.
+>
+> thanks,
+> rui
+>
+> > Signed-off-by: Wei Wang <wvw@google.com>
+> > ---
+> >  drivers/thermal/thermal_core.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/thermal/thermal_core.c
+> > b/drivers/thermal/thermal_core.c
+> > index 6590bb5cb688..5baf5cfab999 100644
+> > --- a/drivers/thermal/thermal_core.c
+> > +++ b/drivers/thermal/thermal_core.c
+> > @@ -1494,6 +1494,7 @@ static int thermal_pm_notify(struct
+> > notifier_block *nb,
+> >                            unsigned long mode, void *_unused)
+> >  {
+> >       struct thermal_zone_device *tz;
+> > +     enum thermal_device_mode tz_mode;
+> >
+> >       switch (mode) {
+> >       case PM_HIBERNATION_PREPARE:
+> > @@ -1506,6 +1507,13 @@ static int thermal_pm_notify(struct
+> > notifier_block *nb,
+> >       case PM_POST_SUSPEND:
+> >               atomic_set(&in_suspend, 0);
+> >               list_for_each_entry(tz, &thermal_tz_list, node) {
+> > +                     tz_mode =3D THERMAL_DEVICE_ENABLED;
+> > +                     if (tz->ops->get_mode)
+> > +                             tz->ops->get_mode(tz, &tz_mode);
+> > +
+> > +                     if (tz_mode =3D=3D THERMAL_DEVICE_DISABLED)
+> > +                             continue;
+> > +
+> >                       thermal_zone_device_init(tz);
+> >                       thermal_zone_device_update(tz,
+> >                                                  THERMAL_EVENT_UNS
+> > PECIFIED);
