@@ -4,49 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93228C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C702FC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0D6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC31204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963612;
-	bh=PZ7if4JgjNIy4CiddinObM/lzLXVDEkNB7Cd19rk6W8=;
+	s=default; t=1555963616;
+	bh=6Jgx9YpbHstl/xcSD121vWXM28lK2hGsq9iqOgm/BXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s6B2yBz8ghXMq+PpBYUND/K+QpKITzpDwDOWsB+6kdb8A7BP3isqxFZpcAqQ7usvD
-	 hYfaisVbA3SfPNdFojklcJtrJteRkaBiNQudEckbmO0sNuZSv2d6uhh5pJHjb/9wyd
-	 /vQtG0n/M3mw5Z79j6a3hwORRDt6seYzKMIKHoWU=
+	b=kju4dQ76j9xJfUUna3XxbzJp4hx7g+Asxj35MRuF+c0XRSxZLry4BKCrJVEXpbppe
+	 BGavsePUElxqsJPDV36FlHmZn9FgMgKAOqqrwMnubO/TIqMC0jztn55f6xoSckFPMs
+	 o1BgSbaOP1WMYJr2+kxXuRHgejIkOQ4SZapQin04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732330AbfDVUGq (ORCPT
+        id S1732354AbfDVUGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45580 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728922AbfDVTo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:29 -0400
+        id S1729456AbfDVTo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD196218DA;
-        Mon, 22 Apr 2019 19:44:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B17F218E0;
+        Mon, 22 Apr 2019 19:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962268;
-        bh=PZ7if4JgjNIy4CiddinObM/lzLXVDEkNB7Cd19rk6W8=;
+        s=default; t=1555962265;
+        bh=6Jgx9YpbHstl/xcSD121vWXM28lK2hGsq9iqOgm/BXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ckw6qB7if7MU4ygDWXLOHH5vBdcRqI4dB3TSAe+dBdEXtMpJak1I8ilCMcLD0ODLY
-         xsCOPEzwxjv0mRdkP/vGo2LJDISF0STIMF/2nfCvhu+WjjKi47RBhB8bdiHyxdNb22
-         8YAhwDxo78099hkhq3kPfYkkFRfKjhNl2dxsi0OY=
+        b=Gi57aGyW621HzEJMbGCdzG5ECc99rBx6iGyVq5DaTJGJ/Bxx41GVhQSeNr6QTZafQ
+         4HuJlIzGYYRsZpP+nChUTti4RN7HEUjKyAyWug1Ip8vTgVm39KERwHKdjbzWSsd/b0
+         TbopuZDiee1Gzp5qxXGJ9mU2YD4DTuu+6LnieMqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Craig Bergstrom <craigb@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 76/98] afs: Fix StoreData op marshalling
-Date:   Mon, 22 Apr 2019 15:41:43 -0400
-Message-Id: <20190422194205.10404-76-sashal@kernel.org>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sander Eikelenboom <linux@eikelenboom.it>,
+        Sean Young <sean@mess.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 73/98] x86/mm: Don't exceed the valid physical address space
+Date:   Mon, 22 Apr 2019 15:41:40 -0400
+Message-Id: <20190422194205.10404-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -59,117 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-[ Upstream commit 8c7ae38d1ce12a0eaeba655df8562552b3596c7f ]
+[ Upstream commit 92c77f7c4d5dfaaf45b2ce19360e69977c264766 ]
 
-The marshalling of AFS.StoreData, AFS.StoreData64 and YFS.StoreData64 calls
-generated by ->setattr() ops for the purpose of expanding a file is
-incorrect due to older documentation incorrectly describing the way the RPC
-'FileLength' parameter is meant to work.
+valid_phys_addr_range() is used to sanity check the physical address range
+of an operation, e.g., access to /dev/mem. It uses __pa(high_memory)
+internally.
 
-The older documentation says that this is the length the file is meant to
-end up at the end of the operation; however, it was never implemented this
-way in any of the servers, but rather the file is truncated down to this
-before the write operation is effected, and never expanded to it (and,
-indeed, it was renamed to 'TruncPos' in 2014).
+If memory is populated at the end of the physical address space, then
+__pa(high_memory) is outside of the physical address space because:
 
-Fix this by setting the position parameter to the new file length and doing
-a zero-lengh write there.
+   high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
-The bug causes Xwayland to SIGBUS due to unexpected non-expansion of a file
-it then mmaps.  This can be tested by giving the following test program a
-filename in an AFS directory:
+For the comparison in valid_phys_addr_range() this is not an issue, but if
+CONFIG_DEBUG_VIRTUAL is enabled, __pa() maps to __phys_addr(), which
+verifies that the resulting physical address is within the valid physical
+address space of the CPU. So in the case that memory is populated at the
+end of the physical address space, this is not true and triggers a
+VIRTUAL_BUG_ON().
 
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <unistd.h>
-	#include <fcntl.h>
-	#include <sys/mman.h>
-	int main(int argc, char *argv[])
-	{
-		char *p;
-		int fd;
-		if (argc != 2) {
-			fprintf(stderr,
-				"Format: test-trunc-mmap <file>\n");
-			exit(2);
-		}
-		fd = open(argv[1], O_RDWR | O_CREAT | O_TRUNC);
-		if (fd < 0) {
-			perror(argv[1]);
-			exit(1);
-		}
-		if (ftruncate(fd, 0x140008) == -1) {
-			perror("ftruncate");
-			exit(1);
-		}
-		p = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
-			 MAP_SHARED, fd, 0);
-		if (p == MAP_FAILED) {
-			perror("mmap");
-			exit(1);
-		}
-		p[0] = 'a';
-		if (munmap(p, 4096) < 0) {
-			perror("munmap");
-			exit(1);
-		}
-		if (close(fd) < 0) {
-			perror("close");
-			exit(1);
-		}
-		exit(0);
-	}
+Use __pa(high_memory - 1) to prevent the conversion from going beyond
+the end of valid physical addresses.
 
-Fixes: 31143d5d515e ("AFS: implement basic file write support")
-Reported-by: Jonathan Billings <jsbillin@umich.edu>
-Tested-by: Jonathan Billings <jsbillin@umich.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: be62a3204406 ("x86/mm: Limit mmap() of /dev/mem to valid physical addresses")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Craig Bergstrom <craigb@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sander Eikelenboom <linux@eikelenboom.it>
+Cc: Sean Young <sean@mess.org>
+
+Link: https://lkml.kernel.org/r/20190326001817.15413-2-rcampbell@nvidia.com
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/afs/fsclient.c  | 6 +++---
- fs/afs/yfsclient.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/mm/mmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index ca08c83168f5..0b37867b5c20 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -1515,8 +1515,8 @@ static int afs_fs_setattr_size64(struct afs_fs_cursor *fc, struct iattr *attr)
+diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
+index db3165714521..dc726e07d8ba 100644
+--- a/arch/x86/mm/mmap.c
++++ b/arch/x86/mm/mmap.c
+@@ -230,7 +230,7 @@ bool mmap_address_hint_valid(unsigned long addr, unsigned long len)
+ /* Can we access it for direct reading/writing? Must be RAM: */
+ int valid_phys_addr_range(phys_addr_t addr, size_t count)
+ {
+-	return addr + count <= __pa(high_memory);
++	return addr + count - 1 <= __pa(high_memory - 1);
+ }
  
- 	xdr_encode_AFS_StoreStatus(&bp, attr);
- 
--	*bp++ = 0;				/* position of start of write */
--	*bp++ = 0;
-+	*bp++ = htonl(attr->ia_size >> 32);	/* position of start of write */
-+	*bp++ = htonl((u32) attr->ia_size);
- 	*bp++ = 0;				/* size of write */
- 	*bp++ = 0;
- 	*bp++ = htonl(attr->ia_size >> 32);	/* new file length */
-@@ -1564,7 +1564,7 @@ static int afs_fs_setattr_size(struct afs_fs_cursor *fc, struct iattr *attr)
- 
- 	xdr_encode_AFS_StoreStatus(&bp, attr);
- 
--	*bp++ = 0;				/* position of start of write */
-+	*bp++ = htonl(attr->ia_size);		/* position of start of write */
- 	*bp++ = 0;				/* size of write */
- 	*bp++ = htonl(attr->ia_size);		/* new file length */
- 
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 5aa57929e8c2..6e97a42d24d1 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -1514,7 +1514,7 @@ static int yfs_fs_setattr_size(struct afs_fs_cursor *fc, struct iattr *attr)
- 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
- 	bp = xdr_encode_YFSFid(bp, &vnode->fid);
- 	bp = xdr_encode_YFS_StoreStatus(bp, attr);
--	bp = xdr_encode_u64(bp, 0);		/* position of start of write */
-+	bp = xdr_encode_u64(bp, attr->ia_size);	/* position of start of write */
- 	bp = xdr_encode_u64(bp, 0);		/* size of write */
- 	bp = xdr_encode_u64(bp, attr->ia_size);	/* new file length */
- 	yfs_check_req(call, bp);
+ /* Can we access it through mmap? Must be a valid physical address: */
 -- 
 2.19.1
 
