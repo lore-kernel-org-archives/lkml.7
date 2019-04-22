@@ -6,52 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFEAC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4694FC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39251204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12440204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963477;
-	bh=rF6XTEBf5a0m4ame5jPAzGC8IEM8zF6ECoNu3KnOFm8=;
+	s=default; t=1555963482;
+	bh=zcXJdbVkQ9dCRjuZ4c2PifO78xgR1cg0tfG5s/ThGjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D5FY5sVEAYbJwRVStVpLQrhYhSCuvffNpY4LdonoHPGy/ZP7ShTooRrxbCFawlvyk
-	 pOZanxLY+BDma2pjwHW15Ab/nAWDFTePyQ0FgA7z5+rBWFA4f8VVdsbuIV5DOFfxpX
-	 /jOMd2e0QtbqFvySu2U4TJtQkzW/Q4qurvNxTwcM=
+	b=VhSe8hdPvoWpWYLhHjGqAQq8yBDg9+G436OQX0FBFVoBw2n/EanqncjbRFIWTxmMZ
+	 Z4d4gChAcl4SO2s/yODmAA58a7XXO92egRxNMFG10IsINGu6OLoVYgwJ5KXF0R7f/k
+	 zGJ+iCLlQoC5ikUJ5uD9WgvxJuj38yBtWGL9POWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732212AbfDVUEg (ORCPT
+        id S1732201AbfDVUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:04:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729755AbfDVTpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:30 -0400
+        id S1729771AbfDVTpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E363A218D9;
-        Mon, 22 Apr 2019 19:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C2F218B0;
+        Mon, 22 Apr 2019 19:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962328;
-        bh=rF6XTEBf5a0m4ame5jPAzGC8IEM8zF6ECoNu3KnOFm8=;
+        s=default; t=1555962332;
+        bh=zcXJdbVkQ9dCRjuZ4c2PifO78xgR1cg0tfG5s/ThGjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MMceJbhdYZSVZnIbmzy/4y2A6aGIol2955FUa/CtRXIzxgcVSDUYiPHu0GP/fRnHt
-         gO2NyUP0EWNAEK82TIF8yb7C3yxO+0zFA0oQpCXAO3ignmqlEwadV/wn9cynqPGiff
-         hpaCS+ohSNe5lvBPV09dn3tId00G0d7PBu5wB2Ts=
+        b=IyeI1bhu7FuAAooLtczqbNTMuWy2SBnGxvBmkxKTa1jwVwN773b9VddsoQyDqD3eI
+         yTqYMRQWaKvTauYfdMLttjoHnchHkriv8b8tM8ZSbUPkBVhng361oPBbyO8xykOEFW
+         iebcHKbSAnr6cS3c5zPYTn/38osHMuNFyM+IR1WE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/68] xsk: fix umem memory leak on cleanup
-Date:   Mon, 22 Apr 2019 15:44:15 -0400
-Message-Id: <20190422194516.11634-7-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 08/68] staging: axis-fifo: add CONFIG_OF dependency
+Date:   Mon, 22 Apr 2019 15:44:16 -0400
+Message-Id: <20190422194516.11634-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,107 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 044175a06706d516aa42874bb44dbbfc3c4d20eb ]
+[ Upstream commit 1beea6204e2304dd11600791d8dad8e7350af6ad ]
 
-When the umem is cleaned up, the task that created it might already be
-gone. If the task was gone, the xdp_umem_release function did not free
-the pages member of struct xdp_umem.
+When building without CONFIG_OF, the compiler loses track of the flow
+control in axis_fifo_probe(), and thinks that many variables are used
+without an initialization even though we actually leave the function
+before the first use:
 
-It turned out that the task lookup was not needed at all; The code was
-a left-over when we moved from task accounting to user accounting [1].
+drivers/staging/axis-fifo/axis-fifo.c: In function 'axis_fifo_probe':
+drivers/staging/axis-fifo/axis-fifo.c:900:5: error: 'rxd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (rxd_tdata_width != 32) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:907:5: error: 'txd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (txd_tdata_width != 32) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:914:5: error: 'has_tdest' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  if (has_tdest) {
+     ^
+drivers/staging/axis-fifo/axis-fifo.c:919:5: error: 'has_tid' may be used uninitialized in this function [-Werror=maybe-uninitialized]
 
-This patch fixes the memory leak by removing the task lookup logic
-completely.
+When CONFIG_OF is set, this does not happen, and since the driver cannot
+work without it, just add that option as a Kconfig dependency.
 
-[1] https://lore.kernel.org/netdev/20180131135356.19134-3-bjorn.topel@gmail.com/
-
-Link: https://lore.kernel.org/netdev/c1cb2ca8-6a14-3980-8672-f3de0bb38dfd@suse.cz/
-Fixes: c0c77d8fb787 ("xsk: add user memory registration support sockopt")
-Reported-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- include/net/xdp_sock.h |  1 -
- net/xdp/xdp_umem.c     | 19 +------------------
- 2 files changed, 1 insertion(+), 19 deletions(-)
+ drivers/staging/axis-fifo/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
-index 7161856bcf9c..c2c10cc9ffa0 100644
---- a/include/net/xdp_sock.h
-+++ b/include/net/xdp_sock.h
-@@ -34,7 +34,6 @@ struct xdp_umem {
- 	u32 headroom;
- 	u32 chunk_size_nohr;
- 	struct user_struct *user;
--	struct pid *pid;
- 	unsigned long address;
- 	refcount_t users;
- 	struct work_struct work;
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index bfe2dbea480b..a3b037fbfecd 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -152,9 +152,6 @@ static void xdp_umem_unaccount_pages(struct xdp_umem *umem)
- 
- static void xdp_umem_release(struct xdp_umem *umem)
- {
--	struct task_struct *task;
--	struct mm_struct *mm;
--
- 	xdp_umem_clear_dev(umem);
- 
- 	if (umem->fq) {
-@@ -169,21 +166,10 @@ static void xdp_umem_release(struct xdp_umem *umem)
- 
- 	xdp_umem_unpin_pages(umem);
- 
--	task = get_pid_task(umem->pid, PIDTYPE_PID);
--	put_pid(umem->pid);
--	if (!task)
--		goto out;
--	mm = get_task_mm(task);
--	put_task_struct(task);
--	if (!mm)
--		goto out;
--
--	mmput(mm);
- 	kfree(umem->pages);
- 	umem->pages = NULL;
- 
- 	xdp_umem_unaccount_pages(umem);
--out:
- 	kfree(umem);
- }
- 
-@@ -312,7 +298,6 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 	if (size_chk < 0)
- 		return -EINVAL;
- 
--	umem->pid = get_task_pid(current, PIDTYPE_PID);
- 	umem->address = (unsigned long)addr;
- 	umem->props.chunk_mask = ~((u64)chunk_size - 1);
- 	umem->props.size = size;
-@@ -328,7 +313,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 
- 	err = xdp_umem_account_pages(umem);
- 	if (err)
--		goto out;
-+		return err;
- 
- 	err = xdp_umem_pin_pages(umem);
- 	if (err)
-@@ -347,8 +332,6 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 
- out_account:
- 	xdp_umem_unaccount_pages(umem);
--out:
--	put_pid(umem->pid);
- 	return err;
- }
- 
+diff --git a/drivers/staging/axis-fifo/Kconfig b/drivers/staging/axis-fifo/Kconfig
+index 687537203d9c..d9725888af6f 100644
+--- a/drivers/staging/axis-fifo/Kconfig
++++ b/drivers/staging/axis-fifo/Kconfig
+@@ -3,6 +3,7 @@
+ #
+ config XIL_AXIS_FIFO
+ 	tristate "Xilinx AXI-Stream FIFO IP core driver"
++	depends on OF
+ 	default n
+ 	help
+ 	  This adds support for the Xilinx AXI-Stream
 -- 
 2.19.1
 
