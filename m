@@ -2,125 +2,98 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B161C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E9EC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5B3214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1NfduaH9"
+	by mail.kernel.org (Postfix) with ESMTP id C7A35214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfDVQcg (ORCPT
+        id S1728274AbfDVQdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:32:36 -0400
-Received: from mail-it1-f171.google.com ([209.85.166.171]:39434 "EHLO
-        mail-it1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbfDVQcf (ORCPT
+        Mon, 22 Apr 2019 12:33:45 -0400
+Received: from gateway30.websitewelcome.com ([192.185.145.3]:31509 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727334AbfDVQdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:32:35 -0400
-Received: by mail-it1-f171.google.com with SMTP id 139so19087136ita.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T5gNEUpY6UvQF7xoppj/WgrZVl4YlLjgakn5tQ80U34=;
-        b=1NfduaH9VjN3m+4+TDMr2Esgd93LfzIGD1ebDYHdg0xah9blEqq3DkBt5X1LB3LPm4
-         gnQ3uQCDLS65yNQ7l3IZdAyuXGSOeRw344Jh5yL8os5Xq1PE66QB5AdCZLJUTvhsX+XQ
-         PwZTKw95HUbxnRBdYbnqunfFh7gOyKOlVFd90IOX6Rnq5/At0ikw64deMHiXe8zqGgI6
-         JYPEbn4/nKnfjJFtMkuQcV8GGmqhA4Yjgy/vAqeTtpE+VQ41UUnU6gFPolNxSqRenSSy
-         nJxxXeC0qK4eEtX6aeurfLSqUATKd2wm0DElL2XUfMKoXr7uOFBqpg/2hIAUbRZOIF73
-         mqJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=T5gNEUpY6UvQF7xoppj/WgrZVl4YlLjgakn5tQ80U34=;
-        b=gHyUihOuvjI3TSrVAPIhNWPkW/4Wl7YQ/FKJ7W7ysZT6SdyOLQk1mXi5qpbtzlgU51
-         pcJfpw9K1kjEeMdgloGltU6gWPqDNLsdK73luyvulNwNcsQSATNjnr6Vdwzrq9u+oEav
-         NGFRt99nBo1UEsQlu3UcFg+hqOfCdeZZQdX0tMRfS289N7ii+qQrpXAR24ePZ0kF7dm/
-         M6Xwo2Qqw1pr/MUALHcTi0uwjO1x3reb/rjoHmcoLmSrlokpDHmxkkzm0KyO6cXikdsM
-         oOB/tD7YDKmQD4bKbIQmk3c+7TsTUQ1ZyJ3r8xza7qhYC0x1LbmUjyT4pjUjFxa06wgD
-         3jxQ==
-X-Gm-Message-State: APjAAAWEPX/ts0z+8QqqoNdssReYUOedsLy/FP8D5tMU0v6kIhq4IelW
-        kCBEstMyon6/QsFeiYE8tGPmdw==
-X-Google-Smtp-Source: APXvYqzEsPPb6pe5G6YSbBS5DFCCjIAs9gvpOGwWW/pmaYLOKHSgVB2LtNsiZE/mUG6oYXnq8YYQ2Q==
-X-Received: by 2002:a24:2244:: with SMTP id o65mr13582805ito.126.1555950754781;
-        Mon, 22 Apr 2019 09:32:34 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id 64sm6111169ite.42.2019.04.22.09.32.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:32:33 -0700 (PDT)
-Subject: Re: WARNING in percpu_ref_kill_and_confirm
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <00000000000043fe9c058720a5d3@google.com>
- <ad884b18-0e03-d6be-02b0-4e5273f068ce@kernel.dk>
- <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk>
-Date:   Mon, 22 Apr 2019 10:32:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 12:33:45 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 32F691B522
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 11:33:44 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Ibt2hJL5rYTGMIbt2hPm1C; Mon, 22 Apr 2019 11:33:44 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.103] (port=39318 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hIbt1-001f7W-A9; Mon, 22 Apr 2019 11:33:43 -0500
+Date:   Mon, 22 Apr 2019 11:33:42 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] gdbstub: Replace strcpy() by strscpy()
+Message-ID: <20190422163342.GA682@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.103
+X-Source-L: No
+X-Exim-ID: 1hIbt1-001f7W-A9
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.104.103]:39318
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 19
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/19 10:27 AM, Linus Torvalds wrote:
-> [ Crossed emails ]
-> 
-> On Mon, Apr 22, 2019 at 9:23 AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> I think the below should fix this. Very early versions of io_uring didn't
->> have this issue, since we did the percpu ref tryget for io_uring_register().
-> 
-> Ok, so I like your patch better than mine, but note how syzbot
-> bisected this to the initial merge of the io_uring code.
+The strcpy() function is being deprecated. Replace it by the safer
+strscpy() and fix the following Coverity warning:
 
-Yes, I did think about that too...
+"You might overrun the 1024-character fixed-size string remcom_in_buffer
+by copying cmd without checking the length."
 
-> I agree that code shouldn't have had this particular issue, but it
-> looks like it does.
-> 
-> Is there some way to race with io_ring_ctx_wait_and_kill(), which
-> _also_ does that ref_kill() thing? I'm not seeing how that could
-> happen, but maybe if the file ref counts get screwed up you have
-> ->release() called early..
+Addresses-Coverity-ID: 138999 ("Copy into fixed size buffer")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ kernel/debug/gdbstub.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I just tried on the current code and it triggers easily, but that's
-with that mutex patch in there. I agree it should not trigger before
-that, unless something is wonky. I'll try and play around with it a bit
-and see what is going on (or if I can trigger it at all with the mutex
-change reverted).
-
+diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
+index 7510dc687c0d..316cc599dc09 100644
+--- a/kernel/debug/gdbstub.c
++++ b/kernel/debug/gdbstub.c
+@@ -1094,10 +1094,10 @@ int gdbstub_state(struct kgdb_state *ks, char *cmd)
+ 		return error;
+ 	case 's':
+ 	case 'c':
+-		strcpy(remcom_in_buffer, cmd);
++		strscpy(remcom_in_buffer, cmd, sizeof(remcom_in_buffer));
+ 		return 0;
+ 	case '$':
+-		strcpy(remcom_in_buffer, cmd);
++		strscpy(remcom_in_buffer, cmd, sizeof(remcom_in_buffer));
+ 		gdbstub_use_prev_in_buf = strlen(remcom_in_buffer);
+ 		gdbstub_prev_in_buf_pos = 0;
+ 		return 0;
 -- 
-Jens Axboe
+2.21.0
 
