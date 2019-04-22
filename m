@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B79C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB70C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319BA2177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81ED220896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963498;
-	bh=0NHLvwfoKQMlaQaxzUsbEC/SYdZ/fTDhC2rT8mW3vRE=;
+	s=default; t=1555963511;
+	bh=3thwNhU9wWzxyaOnplzcDqjz1+lmuPcL/tkQJ0lATxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cv+HzV6lT7gb0+XXuST1Yo0NViQJm1QvQSZK0jUUFmT67Si8rzMt97VA6q34ACRvW
-	 KX97BNdJopPbuYTYxNjWyRxQ85rd6OWEhdDmU/z1k29G9gyL706fKS5aATm7i6Jq0s
-	 HRujKQwEp00oU/IHKTkGUw3VkqIAWsh5jO3d0/RU=
+	b=EC7Izvh/LYdHp057QatgFpIvup3gLi4I2fug6Fo4/nmQLLUDpTYPKCKCH/7eGGPky
+	 DlZgM5iyUEhcT2eQ4y8cx5NRTcZppHZ5ZAixS4/lgo21nqkilHVLhh0tkq4Ko+ehc/
+	 LgwxWxI9/pRsKjiXE7VMnbZve8GWCQWdIpjE4b38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbfDVUE5 (ORCPT
+        id S1732239AbfDVUFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbfDVTpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:23 -0400
+        id S1729701AbfDVTpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B459E21901;
-        Mon, 22 Apr 2019 19:45:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB86218D9;
+        Mon, 22 Apr 2019 19:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962322;
-        bh=0NHLvwfoKQMlaQaxzUsbEC/SYdZ/fTDhC2rT8mW3vRE=;
+        s=default; t=1555962315;
+        bh=3thwNhU9wWzxyaOnplzcDqjz1+lmuPcL/tkQJ0lATxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUarLLJw8gmFXjQ0ukmIsR9vcv5R+wcpZ5pXk6RmOabN/FFt8fN7zG9ooH7/9NdRC
-         Xzyzguyes5vUNE3HWOlIC4Amyyu+2183V9q91xcgZeA4Zqeydq/+eDJY0R5I75KfxJ
-         E3HGnqktuez+DsGOidDxH8jcV1B3B7gx3v4ftVCI=
+        b=dsDtcMDohjkfeQ543egdgeQzqlimCpxSptyBfLOD5vJwxo/4qz6oSjYfgzWZl9AoD
+         XcGFlsHRW5o+qqdRgKM+eMMK1iebIxh5o8yuAslNb09mfc6Em6hgN5vJuVRO55C9l4
+         i4mdkSJmziCGG9GWRSD3W3FmbvgYd+vOBniL3m+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/68] s390: limit brk randomization to 32MB
-Date:   Mon, 22 Apr 2019 15:44:10 -0400
-Message-Id: <20190422194516.11634-2-sashal@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 98/98] leds: trigger: netdev: use memcpy in device_name_store
+Date:   Mon, 22 Apr 2019 15:42:05 -0400
+Message-Id: <20190422194205.10404-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
-References: <20190422194516.11634-1-sashal@kernel.org>
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,47 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit cd479eccd2e057116d504852814402a1e68ead80 ]
+[ Upstream commit 909346433064b8d840dc82af26161926b8d37558 ]
 
-For a 64-bit process the randomization of the program break is quite
-large with 1GB. That is as big as the randomization of the anonymous
-mapping base, for a test case started with '/lib/ld64.so.1 <exec>'
-it can happen that the heap is placed after the stack. To avoid
-this limit the program break randomization to 32MB for 64-bit and
-keep 8MB for 31-bit.
+If userspace doesn't end the input with a newline (which can easily
+happen if the write happens from a C program that does write(fd,
+iface, strlen(iface))), we may end up including garbage from a
+previous, longer value in the device_name. For example
 
-Reported-by: Stefan Liebler <stli@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+# cat device_name
+
+# printf 'eth12' > device_name
+# cat device_name
+eth12
+# printf 'eth3' > device_name
+# cat device_name
+eth32
+
+I highly doubt anybody is relying on this behaviour, so switch to
+simply copying the bytes (we've already checked that size is <
+IFNAMSIZ) and unconditionally zero-terminate it; of course, we also
+still have to strip a trailing newline.
+
+This is also preparation for future patches.
+
+Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/s390/include/asm/elf.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/leds/trigger/ledtrig-netdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/elf.h b/arch/s390/include/asm/elf.h
-index 7d22a474a040..f74639a05f0f 100644
---- a/arch/s390/include/asm/elf.h
-+++ b/arch/s390/include/asm/elf.h
-@@ -252,11 +252,14 @@ do {								\
+diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+index 167a94c02d05..136f86a1627d 100644
+--- a/drivers/leds/trigger/ledtrig-netdev.c
++++ b/drivers/leds/trigger/ledtrig-netdev.c
+@@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *dev,
+ 		trigger_data->net_dev = NULL;
+ 	}
  
- /*
-  * Cache aliasing on the latest machines calls for a mapping granularity
-- * of 512KB. For 64-bit processes use a 512KB alignment and a randomization
-- * of up to 1GB. For 31-bit processes the virtual address space is limited,
-- * use no alignment and limit the randomization to 8MB.
-+ * of 512KB for the anonymous mapping base. For 64-bit processes use a
-+ * 512KB alignment and a randomization of up to 1GB. For 31-bit processes
-+ * the virtual address space is limited, use no alignment and limit the
-+ * randomization to 8MB.
-+ * For the additional randomization of the program break use 32MB for
-+ * 64-bit and 8MB for 31-bit.
-  */
--#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ffffUL)
-+#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x1fffUL)
- #define MMAP_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ff80UL)
- #define MMAP_ALIGN_MASK	(is_compat_task() ? 0 : 0x7fUL)
- #define STACK_RND_MASK	MMAP_RND_MASK
+-	strncpy(trigger_data->device_name, buf, size);
++	memcpy(trigger_data->device_name, buf, size);
++	trigger_data->device_name[size] = 0;
+ 	if (size > 0 && trigger_data->device_name[size - 1] == '\n')
+ 		trigger_data->device_name[size - 1] = 0;
+ 
 -- 
 2.19.1
 
