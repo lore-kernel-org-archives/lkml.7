@@ -4,568 +4,1217 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E1DC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834ABC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67282064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6CC20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940155;
-	bh=7+2QkNRifzOZ/YRm6R+pYuMCK6qKsd2r5rdXBZMR/CI=;
+	s=default; t=1555940161;
+	bh=2gDd//IF0eliFNzcJnow+2+FHww6fPAoXjM+0WO1nD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+sIAHWMb+1qb7QrKc3+Gl6HXwEel90N78za71KVQeF/DMp1lqzYJNXrNzahBlLfh
-	 yKHYM7tgJxVGshTDUn7AEfVrtmi471UssMVw/h29QXFLUG9QrS6PgDwhLbFDW572jf
-	 JO2jYB0PFmOHhWR5Sz0xqtcIMtfdXgcMnHQEuASQ=
+	b=M1P4z0ZT7FEn9U3C76e8ftpF7L18m0vnR+tO++EmBcrb/bpGfu85l6Lo1sr9PTfqH
+	 QrdQOPQSrw5P2uYgaMKiLIy8TkngdvV9Z0WwYjMXyoXELA2PcIUcutE2U11Oz9dxj3
+	 O9uen5evKsqMmY3JNqWBpYKRlnrTFcbjgwyYudf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfDVNfy (ORCPT
+        id S1728244AbfDVNf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:35:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36974 "EHLO
+        Mon, 22 Apr 2019 09:35:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36940 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfDVN2P (ORCPT
+        with ESMTP id S1727410AbfDVN2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=C5EVQrj0GuSUjMGc7i0F21EF2opDnhMdOktxxczj01A=; b=OJV96kguWXWEeOkRrGWAcOYVib
-        egdly6fAK6dF8stknHaSx5KdbYpKca601iYpcbiWKdFrQcCstVJZXk/UpjwaLNO/g6g0d1kxv3jYy
-        +nDM0nZwgzfg04r517mS46qtjg84NEb+6bLXvUp610Gjz6T24ZL3gKp8AluCD6FEw5hmLMadtCOxP
-        N8FrDnkT7nd5tvGR9XYdLXDyLsNHN4E63nSyuj5zvmJOL0IFMF6vvoiLIxVJLX0w93IX7pTje5Cae
-        3nLhi9Bz+nbmUj2+jOBYPUDFISl/Y5jsqsoQ/FqjRbPQ0CKvxKj0frV+SnXvkSurl8VNtInZcuXMG
-        eIYMVhxQ==;
+        bh=ouxzGDyR2cOLtgx6lDXkFDM9khcYdFpKWyQGUCf0esc=; b=uohG4DPtD9sixp/i/E5WkSGJKL
+        SNYSuFMGiBKlzc4ZysQVLnRNwHR9y9v7sqlaveHehC9/ZRpe6McTz9eIPg8WMTI6QMX7STpX+fn3+
+        1sWxyHTDKO6Aaj5dnlBXi4fr/+B5vm0LUc3hLqJv3xGAb9T8z3bEHCvKBLXGGg2cNxiNMIXAFkVDH
+        xR0Q5AGSjt2JMp4qc4nssVx7ssE/Vg9efH1Ys6xy6hZDI7VdUGOEhnZd8RTq4wsEsNhRuf//3J35i
+        abMsPQNfEsStyAvZUarfviP/oweSEVzetbHQyIDpllEoV3pyR7OOr0/ZrzGBO0pbkOdnUMZSBmdXR
+        i28jI7eg==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzV-0005I2-Q2; Mon, 22 Apr 2019 13:28:14 +0000
+        id 1hIYzV-0005Hz-JH; Mon, 22 Apr 2019 13:28:14 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005mH-Ag; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzT-0005m2-7G; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Antti Palosaari <crope@iki.fi>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v2 35/79] docs: timers: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:24 -0300
-Message-Id: <2adb3a9be93e8e1793192440c9bebdad2e538ce7.1555938376.git.mchehab+samsung@kernel.org>
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v2 32/79] s390: include/asm/debug.h add kerneldoc markups
+Date:   Mon, 22 Apr 2019 10:27:21 -0300
+Message-Id: <72c962ac804048c90b123af5cab9e463b63129b5.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion here is really trivial: just a bunch of title
-markups and very few puntual changes is enough to make it to
-be parsed by Sphinx and generate a nice html.
+Instead of keeping the documentation inside s390dbf.rst,
+move them to arch/s390/include/asm/debug.h, using standard
+kernel-doc markups.
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+Keeping the documentation close to the code helps to keep it
+updated. It also makes easier to document other stuff inside
+debug.h, as all it needs is to add kernel-doc markups inside
+it, as the file will be already be included at the produced
+documentation.
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+-
+
+Those were converted to kerneldoc using this script specially
+designed to parse ths file, and manually editted:
+
+<script>
+use strict;
+
+my $mode = "";
+my $parameter = "";
+my $ret = "";
+my $descr = "";
+
+sub add_var($)
+{
+	my $ln = shift;
+
+	$ln =~ s/^\s+//;
+	$ln =~ s/\s+$//;
+
+	return if ($ln eq "");
+
+	$ln =~ s/^(\S+)\s+/$1\t/;
+
+	print " * \@$ln\n";
+}
+
+sub add_return($)
+{
+	my $ln = shift;
+
+	print " *\n * Return:\n" if ($mode ne "Return Value:");
+
+	$ln =~ s/^\s+//;
+	$ln =~ s/\s+$//;
+
+	return if ($ln eq "");
+
+	print " * -   $ln\n";
+}
+
+sub add_description($)
+{
+	my $ln = shift;
+
+	print " *\n * \n" if ($mode ne "Description:");
+
+	$ln =~ s/^\s+//;
+	$ln =~ s/\s+$//;
+
+	return if ($ln eq "");
+
+	print " * $ln\n";
+}
+
+sub flush_results()
+{
+	print " */\n\n";
+}
+
+while (<>) {
+	if (m/^[\-]+$/) {
+		flush_results();
+		$mode = "";
+		$parameter = "";
+		$ret = "";
+		$descr = "";
+		next;
+	}
+	if (m/(Parameter:)(.*)/) {
+		print " *\n" if ($mode eq "func");
+		add_var($2);
+		$mode = $1;
+		next;
+	}
+	if (m/(Return Value:)(.*)/) {
+		add_return($2);
+		$mode = $1;
+		next;
+	}
+	if (m/(Description:)(.*)/) {
+		add_description($2);
+		$mode = $1;
+		next;
+	}
+	if ($mode eq "Parameter:") {
+		add_var($_);
+		next;
+	}
+	if ($mode eq "Return Value:") {
+		add_return($_);
+		next;
+	}
+	if ($mode eq "Description:") {
+		add_description($_);
+		next;
+	}
+	next if (m/^\s*$/);
+
+	if (m/^\S+.*\s\*?(\S+)\s*\(/) {
+		if ($mode eq "") {
+			print "/**\n * $1()\n";
+		} else {
+			print " * $1()\n";
+		}
+		$mode="func";
+	}
+}
+flush_results();
+</script>
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../timers/{highres.txt => highres.rst}       | 13 +++---
- Documentation/timers/{hpet.txt => hpet.rst}   |  4 +-
- .../timers/{hrtimers.txt => hrtimers.rst}     |  6 +--
- Documentation/timers/index.rst                | 22 ++++++++++
- Documentation/timers/{NO_HZ.txt => no_hz.rst} | 40 +++++++++++--------
- .../{timekeeping.txt => timekeeping.rst}      |  3 +-
- .../{timers-howto.txt => timers-howto.rst}    | 15 +++++--
- MAINTAINERS                                   |  2 +-
- drivers/media/usb/dvb-usb-v2/anysee.c         |  2 +-
- drivers/regulator/core.c                      |  2 +-
- include/linux/iopoll.h                        |  4 +-
- include/linux/regmap.h                        |  4 +-
- scripts/checkpatch.pl                         |  8 ++--
- 13 files changed, 83 insertions(+), 42 deletions(-)
- rename Documentation/timers/{highres.txt => highres.rst} (98%)
- rename Documentation/timers/{hpet.txt => hpet.rst} (91%)
- rename Documentation/timers/{hrtimers.txt => hrtimers.rst} (98%)
- create mode 100644 Documentation/timers/index.rst
- rename Documentation/timers/{NO_HZ.txt => no_hz.rst} (93%)
- rename Documentation/timers/{timekeeping.txt => timekeeping.rst} (98%)
- rename Documentation/timers/{timers-howto.txt => timers-howto.rst} (93%)
+ Documentation/s390/s390dbf.rst | 672 +--------------------------------
+ arch/s390/include/asm/debug.h  | 231 ++++++++++++
+ 2 files changed, 232 insertions(+), 671 deletions(-)
 
-diff --git a/Documentation/timers/highres.txt b/Documentation/timers/highres.rst
-similarity index 98%
-rename from Documentation/timers/highres.txt
-rename to Documentation/timers/highres.rst
-index 8f9741592123..bde5eb7e5c9e 100644
---- a/Documentation/timers/highres.txt
-+++ b/Documentation/timers/highres.rst
-@@ -1,5 +1,6 @@
-+=====================================================
- High resolution timers and dynamic ticks design notes
-------------------------------------------------------
-+=====================================================
+diff --git a/Documentation/s390/s390dbf.rst b/Documentation/s390/s390dbf.rst
+index ec2a1faa414b..d2595b548879 100644
+--- a/Documentation/s390/s390dbf.rst
++++ b/Documentation/s390/s390dbf.rst
+@@ -104,684 +104,14 @@ the "debug_stoppable" sysctl. If you set "debug_stoppable" to 0 the debug
+ feature cannot be stopped. If the debug feature is already stopped, it
+ will stay deactivated.
  
- Further information can be found in the paper of the OLS 2006 talk "hrtimers
- and beyond". The paper is part of the OLS 2006 Proceedings Volume 1, which can
-@@ -30,11 +31,12 @@ hrtimer base infrastructure
- ---------------------------
+-----------------------------------------------------------------------------
+-
+ Kernel Interfaces:
+ ------------------
  
- The hrtimer base infrastructure was merged into the 2.6.16 kernel. Details of
--the base implementation are covered in Documentation/timers/hrtimers.txt. See
-+the base implementation are covered in Documentation/timers/hrtimers.rst. See
- also figure #2 (OLS slides p. 15)
- 
- The main differences to the timer wheel, which holds the armed timer_list type
- timers are:
-+
-        - time ordered enqueueing into a rb-tree
-        - independent of ticks (the processing is based on nanoseconds)
- 
-@@ -55,7 +57,8 @@ merged into the 2.6.18 kernel.
- 
- Further information about the Generic Time Of Day framework is available in the
- OLS 2005 Proceedings Volume 1:
--http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
-+
-+	http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
- 
- The paper "We Are Not Getting Any Younger: A New Approach to Time and
- Timers" was written by J. Stultz, D.V. Hart, & N. Aravamudan.
-@@ -100,6 +103,7 @@ accounting, profiling, and high resolution timers.
- 
- The management layer assigns one or more of the following functions to a clock
- event device:
-+
-       - system global periodic tick (jiffies update)
-       - cpu local update_process_times
-       - cpu local profiling
-@@ -244,6 +248,3 @@ extended to x86_64 and ARM already. Initial (work in progress) support is also
- available for MIPS and PowerPC.
- 
- 	  Thomas, Ingo
+-::
+-
+-  debug_info_t *debug_register(char *name, int pages, int nr_areas,
+-			       int buf_size);
+-
+-Parameter:
+-	      name:
+-			   Name of debug log (e.g. used for debugfs entry)
+-	      pages:
+-			   Number of pages, which will be allocated per area
+-	      nr_areas:
+-			   Number of debug areas
+-	      buf_size:
+-			   Size of data area in each debug entry
+-
+-Return Value:
+-	Handle for generated debug area
+-
+-	  NULL if register failed
+-
+-Description:  Allocates memory for a debug log
+-	      Must not be called within an interrupt handler
+-
+-----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_info_t *debug_register_mode(char *name, int pages, int nr_areas,
+-				    int buf_size, mode_t mode, uid_t uid,
+-				    gid_t gid);
+-
+-Parameter:
+-	      name:
+-			   Name of debug log (e.g. used for debugfs entry)
+-	      pages:
+-			   Number of pages, which will be allocated per area
+-	      nr_areas:
+-			   Number of debug areas
+-	      buf_size:
+-			   Size of data area in each debug entry
+-	      mode:
+-			   File mode for debugfs files. E.g. S_IRWXUGO
+-	      uid:
+-			   User ID for debugfs files. Currently only 0 is
+-			   supported.
+-	      gid:
+-			   Group ID for debugfs files. Currently only 0 is
+-			   supported.
+-
+-Return Value:
+-	      Handle for generated debug area
+-
+-		NULL if register failed
+-
+-Description:
+-	      Allocates memory for a debug log
+-	      Must not be called within an interrupt handler
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  void debug_unregister (debug_info_t * id);
+-
+-Parameter:
+-	       id:
+-		    handle for debug log
+-
+-Return Value:
+-	       none
+-
+-Description:
+-	       frees memory for a debug log and removes all registered debug
+-	       views.
+-
+-	       Must not be called within an interrupt handler
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  void debug_set_level (debug_info_t * id, int new_level);
+-
+-Parameter:     id:        handle for debug log
+-	       new_level: new debug level
+-
+-Return Value:
+-	       none
+-
+-Description:
+-	       Sets new actual debug level if new_level is valid.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  bool debug_level_enabled (debug_info_t * id, int level);
+-
+-Parameter:
+-	      id:
+-			  handle for debug log
+-	      level:
+-			  debug level
+-
+-Return Value:
+-	      True if level is less or equal to the current debug level.
+-
+-Description:
+-	      Returns true if debug events for the specified level would be
+-	      logged. Otherwise returns false.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  void debug_stop_all(void);
+-
+-Parameter:
+-	       none
+-
+-Return Value:
+-	       none
+-
+-Description:
+-	       stops the debug feature if stopping is allowed. Currently
+-	       used in case of a kernel oops.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_event (debug_info_t* id, int level, void* data,
+-			      int length);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       pointer to data for debug entry
+-	       length:
+-		       length of data in bytes
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry to active debug area (if level <= actual
+-	       debug level)
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_int_event (debug_info_t * id, int level,
+-				  unsigned int data);
+-  debug_entry_t* debug_long_event(debug_info_t * id, int level,
+-				  unsigned long data);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       integer value for debug entry
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry to active debug area (if level <= actual
+-	       debug level)
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_text_event (debug_info_t * id, int level,
+-				   const char* data);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       string for debug entry
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry in ascii format to active debug area
+-	       (if level <= actual debug level)
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_sprintf_event (debug_info_t * id, int level,
+-				      char* string,...);
+-
+-Parameter:
+-	       id:
+-		      handle for debug log
+-	       level:
+-		      debug level
+-	       string:
+-		      format string for debug entry
+-	       ...:
+-		      varargs used as in sprintf()
+-
+-Return Value:  Address of written debug entry
+-
+-Description:
+-	       writes debug entry with format string and varargs (longs) to
+-	       active debug area (if level $<=$ actual debug level).
+-	       floats and long long datatypes cannot be used as varargs.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_exception (debug_info_t* id, int level, void* data,
+-				  int length);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       pointer to data for debug entry
+-	       length:
+-		       length of data in bytes
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry to active debug area (if level <= actual
+-	       debug level) and switches to next debug area
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_int_exception (debug_info_t * id, int level,
+-				      unsigned int data);
+-  debug_entry_t* debug_long_exception(debug_info_t * id, int level,
+-				      unsigned long data);
+-
+-Parameter:     id:     handle for debug log
+-	       level:  debug level
+-	       data:   integer value for debug entry
+-
+-Return Value:  Address of written debug entry
+-
+-Description:   writes debug entry to active debug area (if level <= actual
+-	       debug level) and switches to next debug area
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_text_exception (debug_info_t * id, int level,
+-				       const char* data);
+-
+-Parameter:     id:     handle for debug log
+-	       level:  debug level
+-	       data:   string for debug entry
+-
+-Return Value:  Address of written debug entry
+-
+-Description:   writes debug entry in ascii format to active debug area
+-	       (if level <= actual debug level) and switches to next debug
+-	       area
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_sprintf_exception (debug_info_t * id, int level,
+-					  char* string,...);
+-
+-Parameter:     id:    handle for debug log
+-	       level: debug level
+-	       string: format string for debug entry
+-	       ...: varargs used as in sprintf()
+-
+-Return Value:  Address of written debug entry
+-
+-Description:   writes debug entry with format string and varargs (longs) to
+-	       active debug area (if level $<=$ actual debug level) and
+-	       switches to next debug area.
+-	       floats and long long datatypes cannot be used as varargs.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  int debug_register_view (debug_info_t * id, struct debug_view *view);
+-
+-Parameter:     id:    handle for debug log
+-	       view:  pointer to debug view struct
+-
+-Return Value:  0  : ok
+-	       < 0: Error
+-
+-Description:   registers new debug view and creates debugfs dir entry
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  int debug_unregister_view (debug_info_t * id, struct debug_view *view);
+-
+-Parameter:     id:    handle for debug log
+-	       view:  pointer to debug view struct
+-
+-Return Value:  0  : ok
+-	       < 0: Error
+-
+-Description:   unregisters debug view and removes debugfs dir entry
 -
 -
++.. kernel-doc:: arch/s390/include/asm/debug.h
+ 
+ Predefined views:
+ -----------------
+ 
+-extern struct debug_view debug_hex_ascii_view;
 -
-diff --git a/Documentation/timers/hpet.txt b/Documentation/timers/hpet.rst
-similarity index 91%
-rename from Documentation/timers/hpet.txt
-rename to Documentation/timers/hpet.rst
-index 895345ec513b..c9d05d3caaca 100644
---- a/Documentation/timers/hpet.txt
-+++ b/Documentation/timers/hpet.rst
-@@ -1,4 +1,6 @@
--		High Precision Event Timer Driver for Linux
-+===========================================
-+High Precision Event Timer Driver for Linux
-+===========================================
- 
- The High Precision Event Timer (HPET) hardware follows a specification
- by Intel and Microsoft, revision 1.
-diff --git a/Documentation/timers/hrtimers.txt b/Documentation/timers/hrtimers.rst
-similarity index 98%
-rename from Documentation/timers/hrtimers.txt
-rename to Documentation/timers/hrtimers.rst
-index 588d85724f10..c1c20a693e8f 100644
---- a/Documentation/timers/hrtimers.txt
-+++ b/Documentation/timers/hrtimers.rst
-@@ -1,6 +1,6 @@
+-extern struct debug_view debug_raw_view;
 -
-+======================================================
- hrtimers - subsystem for high-resolution kernel timers
------------------------------------------------------
-+======================================================
+-extern struct debug_view debug_sprintf_view;
+-
+-Examples
+---------
+-
+-::
+-
+-  /*
+-   * hex_ascii- + raw-view Example
+-   */
+-
+-  #include <linux/init.h>
+-  #include <asm/debug.h>
+-
+-  static debug_info_t* debug_info;
+-
+-  static int init(void)
+-  {
+-      /* register 4 debug areas with one page each and 4 byte data field */
+-
+-      debug_info = debug_register ("test", 1, 4, 4 );
+-      debug_register_view(debug_info,&debug_hex_ascii_view);
+-      debug_register_view(debug_info,&debug_raw_view);
+-
+-      debug_text_event(debug_info, 4 , "one ");
+-      debug_int_exception(debug_info, 4, 4711);
+-      debug_event(debug_info, 3, &debug_info, 4);
+-
+-      return 0;
+-  }
+-
+-  static void cleanup(void)
+-  {
+-      debug_unregister (debug_info);
+-  }
+-
+-  module_init(init);
+-  module_exit(cleanup);
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  /*
+-   * sprintf-view Example
+-   */
+-
+-  #include <linux/init.h>
+-  #include <asm/debug.h>
+-
+-  static debug_info_t* debug_info;
+-
+-  static int init(void)
+-  {
+-      /* register 4 debug areas with one page each and data field for */
+-      /* format string pointer + 2 varargs (= 3 * sizeof(long))       */
+-
+-      debug_info = debug_register ("test", 1, 4, sizeof(long) * 3);
+-      debug_register_view(debug_info,&debug_sprintf_view);
+-
+-      debug_sprintf_event(debug_info, 2 , "first event in %s:%i\n",__FILE__,__LINE__);
+-      debug_sprintf_exception(debug_info, 1, "pointer to debug info: %p\n",&debug_info);
+-
+-      return 0;
+-  }
+-
+-  static void cleanup(void)
+-  {
+-      debug_unregister (debug_info);
+-  }
+-
+-  module_init(init);
+-  module_exit(cleanup);
+-
+-Debugfs Interface
+------------------
+-Views to the debug logs can be investigated through reading the corresponding
+-debugfs-files:
+-
+-Example::
+-
+-  > ls /sys/kernel/debug/s390dbf/dasd
+-  flush  hex_ascii  level pages raw
+-  > cat /sys/kernel/debug/s390dbf/dasd/hex_ascii | sort -k2,2 -s
+-  00 00974733272:680099 2 - 02 0006ad7e  07 ea 4a 90 | ....
+-  00 00974733272:682210 2 - 02 0006ade6  46 52 45 45 | FREE
+-  00 00974733272:682213 2 - 02 0006adf6  07 ea 4a 90 | ....
+-  00 00974733272:682281 1 * 02 0006ab08  41 4c 4c 43 | EXCP
+-  01 00974733272:682284 2 - 02 0006ab16  45 43 4b 44 | ECKD
+-  01 00974733272:682287 2 - 02 0006ab28  00 00 00 04 | ....
+-  01 00974733272:682289 2 - 02 0006ab3e  00 00 00 20 | ...
+-  01 00974733272:682297 2 - 02 0006ad7e  07 ea 4a 90 | ....
+-  01 00974733272:684384 2 - 00 0006ade6  46 52 45 45 | FREE
+-  01 00974733272:684388 2 - 00 0006adf6  07 ea 4a 90 | ....
+-
+-See section about predefined views for explanation of the above output!
+-
+-Changing the debug level
+-------------------------
+-
+-Example::
+-
+-
+-  > cat /sys/kernel/debug/s390dbf/dasd/level
+-  3
+-  > echo "5" > /sys/kernel/debug/s390dbf/dasd/level
+-  > cat /sys/kernel/debug/s390dbf/dasd/level
+-  5
+-
+-Flushing debug areas
+---------------------
+-Debug areas can be flushed with piping the number of the desired
+-area (0...n) to the debugfs file "flush". When using "-" all debug areas
+-are flushed.
+-
+-Examples:
+-
+-1. Flush debug area 0::
+-
+-     > echo "0" > /sys/kernel/debug/s390dbf/dasd/flush
+-
+-2. Flush all debug areas::
+-
+-     > echo "-" > /sys/kernel/debug/s390dbf/dasd/flush
+-
+-Changing the size of debug areas
+-------------------------------------
+-It is possible the change the size of debug areas through piping
+-the number of pages to the debugfs file "pages". The resize request will
+-also flush the debug areas.
+-
+-Example:
+-
+-Define 4 pages for the debug areas of debug feature "dasd"::
+-
+-  > echo "4" > /sys/kernel/debug/s390dbf/dasd/pages
+-
+-Stooping the debug feature
+---------------------------
+-Example:
+-
+-1. Check if stopping is allowed::
+-
+-     > cat /proc/sys/s390dbf/debug_stoppable
+-
+-2. Stop debug feature::
+-
+-     > echo 0 > /proc/sys/s390dbf/debug_active
+-
+-lcrash Interface
+-----------------
+-It is planned that the dump analysis tool lcrash gets an additional command
+-'s390dbf' to display all the debug logs. With this tool it will be possible
+-to investigate the debug logs on a live system and with a memory dump after
+-a system crash.
+-
+-Investigating raw memory
+-------------------------
+-One last possibility to investigate the debug logs at a live
+-system and after a system crash is to look at the raw memory
+-under VM or at the Service Element.
+-It is possible to find the anker of the debug-logs through
+-the 'debug_area_first' symbol in the System map. Then one has
+-to follow the correct pointers of the data-structures defined
+-in debug.h and find the debug-areas in memory.
+-Normally modules which use the debug feature will also have
+-a global variable with the pointer to the debug-logs. Following
+-this pointer it will also be possible to find the debug logs in
+-memory.
+-
+-For this method it is recommended to use '16 * x + 4' byte (x = 0..n)
+-for the length of the data field in debug_register() in
+-order to see the debug entries well formatted.
+-
+-
+-Predefined Views
+-----------------
+-
+-There are three predefined views: hex_ascii, raw and sprintf.
+-The hex_ascii view shows the data field in hex and ascii representation
+-(e.g. '45 43 4b 44 | ECKD').
+-The raw view returns a bytestream as the debug areas are stored in memory.
+-
+-The sprintf view formats the debug entries in the same way as the sprintf
+-function would do. The sprintf event/exception functions write to the
+-debug entry a pointer to the format string (size = sizeof(long))
+-and for each vararg a long value. So e.g. for a debug entry with a format
+-string plus two varargs one would need to allocate a (3 * sizeof(long))
+-byte data area in the debug_register() function.
+-
+-IMPORTANT:
+-  Using "%s" in sprintf event functions is dangerous. You can only
+-  use "%s" in the sprintf event functions, if the memory for the passed string
+-  is available as long as the debug feature exists. The reason behind this is
+-  that due to performance considerations only a pointer to the string is stored
+-  in  the debug feature. If you log a string that is freed afterwards, you will
+-  get an OOPS when inspecting the debug feature, because then the debug feature
+-  will access the already freed memory.
+-
+-NOTE:
+-  If using the sprintf view do NOT use other event/exception functions
+-  than the sprintf-event and -exception functions.
+-
+-The format of the hex_ascii and sprintf view is as follows:
+-
+-- Number of area
+-- Timestamp (formatted as seconds and microseconds since 00:00:00 Coordinated
+-  Universal Time (UTC), January 1, 1970)
+-- level of debug entry
+-- Exception flag (* = Exception)
+-- Cpu-Number of calling task
+-- Return Address to caller
+-- data field
+-
+-The format of the raw view is:
+-
+-- Header as described in debug.h
+-- datafield
+-
+-A typical line of the hex_ascii view will look like the following (first line
+-is only for explanation and will not be displayed when 'cating' the view):
+-
+-area  time           level exception cpu caller    data (hex + ascii)
+---------------------------------------------------------------------------
+-00    00964419409:440690 1 -         00  88023fe
+-
+-
+-Defining views
+---------------
+-
+-Views are specified with the 'debug_view' structure. There are defined
+-callback functions which are used for reading and writing the debugfs files::
+-
+-  struct debug_view {
+-	char name[DEBUG_MAX_PROCF_LEN];
+-	debug_prolog_proc_t* prolog_proc;
+-	debug_header_proc_t* header_proc;
+-	debug_format_proc_t* format_proc;
+-	debug_input_proc_t*  input_proc;
+-	void*                private_data;
+-  };
+-
+-where::
+-
+-  typedef int (debug_header_proc_t) (debug_info_t* id,
+-				     struct debug_view* view,
+-				     int area,
+-				     debug_entry_t* entry,
+-				     char* out_buf);
+-
+-  typedef int (debug_format_proc_t) (debug_info_t* id,
+-				     struct debug_view* view, char* out_buf,
+-				     const char* in_buf);
+-  typedef int (debug_prolog_proc_t) (debug_info_t* id,
+-				     struct debug_view* view,
+-				     char* out_buf);
+-  typedef int (debug_input_proc_t) (debug_info_t* id,
+-				    struct debug_view* view,
+-				    struct file* file, const char* user_buf,
+-				    size_t in_buf_size, loff_t* offset);
+-
+-
+-The "private_data" member can be used as pointer to view specific data.
+-It is not used by the debug feature itself.
+-
+-The output when reading a debugfs file is structured like this::
+-
+-  "prolog_proc output"
+-
+-  "header_proc output 1"  "format_proc output 1"
+-  "header_proc output 2"  "format_proc output 2"
+-  "header_proc output 3"  "format_proc output 3"
+-  ...
+-
+-When a view is read from the debugfs, the Debug Feature calls the
+-'prolog_proc' once for writing the prolog.
+-Then 'header_proc' and 'format_proc' are called for each
+-existing debug entry.
+-
+-The input_proc can be used to implement functionality when it is written to
+-the view (e.g. like with 'echo "0" > /sys/kernel/debug/s390dbf/dasd/level).
+-
+-For header_proc there can be used the default function
+-debug_dflt_header_fn() which is defined in debug.h.
+-and which produces the same header output as the predefined views.
+-E.g::
+-
+-  00 00964419409:440761 2 - 00 88023ec
+-
+-In order to see how to use the callback functions check the implementation
+-of the default views!
+-
+-Example::
+-
+-  #include <asm/debug.h>
+-
+-  #define UNKNOWNSTR "data: %08x"
+-
+-  const char* messages[] =
+-  {"This error...........\n",
+-   "That error...........\n",
+-   "Problem..............\n",
+-   "Something went wrong.\n",
+-   "Everything ok........\n",
+-   NULL
+-  };
+-
+-  static int debug_test_format_fn(
+-     debug_info_t * id, struct debug_view *view,
+-     char *out_buf, const char *in_buf
+-  )
+-  {
+-    int i, rc = 0;
+-
+-    if(id->buf_size >= 4) {
+-       int msg_nr = *((int*)in_buf);
+-       if(msg_nr < sizeof(messages)/sizeof(char*) - 1)
+-	  rc += sprintf(out_buf, "%s", messages[msg_nr]);
+-       else
+-	  rc += sprintf(out_buf, UNKNOWNSTR, msg_nr);
+-    }
+-   out:
+-     return rc;
+-  }
+-
+-  struct debug_view debug_test_view = {
+-    "myview",                 /* name of view */
+-    NULL,                     /* no prolog */
+-    &debug_dflt_header_fn,    /* default header for each entry */
+-    &debug_test_format_fn,    /* our own format function */
+-    NULL,                     /* no input function */
+-    NULL                      /* no private data */
+-  };
+-
+-test:
+-=====
+-
+ ::
  
- This patch introduces a new subsystem for high-resolution kernel timers.
+   debug_info_t *debug_info;
+diff --git a/arch/s390/include/asm/debug.h b/arch/s390/include/asm/debug.h
+index b94783f71322..b55486f70deb 100644
+--- a/arch/s390/include/asm/debug.h
++++ b/arch/s390/include/asm/debug.h
+@@ -95,25 +95,106 @@ debug_entry_t *debug_exception_common(debug_info_t *id, int level,
  
-@@ -146,7 +146,7 @@ the clock_getres() interface. This will return whatever real resolution
- a given clock has - be it low-res, high-res, or artificially-low-res.
+ /* Debug Feature API: */
  
- hrtimers - testing and verification
------------------------------------
-+-----------------------------------
++/**
++ * debug_register() - allocates memory for a debug log.
++ *
++ * @name:        Name of debug log (e.g. used for debugfs entry)
++ * @pages:       Number of pages, which will be allocated per area
++ * @nr_areas:    Number of debug areas
++ * @buf_size:    Size of data area in each debug entry
++ *
++ * Return:
++ * - Handler for generated debug area
++ * - %NULL if register failed
++ *
++ * Must not be called within an interrupt handler.
++ */
+ debug_info_t *debug_register(const char *name, int pages, int nr_areas,
+ 			     int buf_size);
  
- We used the high-resolution clock subsystem ontop of hrtimers to verify
- the hrtimer implementation details in praxis, and we also ran the posix
-diff --git a/Documentation/timers/index.rst b/Documentation/timers/index.rst
-new file mode 100644
-index 000000000000..91f6f8263c48
---- /dev/null
-+++ b/Documentation/timers/index.rst
-@@ -0,0 +1,22 @@
-+:orphan:
++/**
++ * debug_register_mode() - allocates memory for a debug log.
++ *
++ * @name:	Name of debug log (e.g. used for debugfs entry)
++ * @pages:	Number of pages, which will be allocated per area
++ * @nr_areas:	Number of debug areas
++ * @buf_size:	Size of data area in each debug entry
++ * @mode:	File mode for debugfs files. E.g. S_IRWXUGO
++ * @uid:	User ID for debugfs files. Currently only 0 is supported.
++ * @gid:	Group ID for debugfs files. Currently only 0 is supported.
++ *
++ * Return:
++ * - Handler for generated debug area
++ * - %NULL if register failed
++ *
++ * Must not be called within an interrupt handler
++ */
+ debug_info_t *debug_register_mode(const char *name, int pages, int nr_areas,
+ 				  int buf_size, umode_t mode, uid_t uid,
+ 				  gid_t gid);
+ 
++/**
++ * debug_unregister() - frees memory for a debug log and removes all
++ *			registered debug
++ * views.
++ *
++ * @id:		handle for debug log
++ *
++ * Return:
++ *    none
++ *
++ * Must not be called within an interrupt handler
++ */
+ void debug_unregister(debug_info_t *id);
+ 
++/**
++ * debug_set_level() -  Sets new actual debug level if new_level is valid.
++ *
++ * @id:		handle for debug log
++ * @new_level:	new debug level
++ *
++ * Return:
++ *    none
++ */
+ void debug_set_level(debug_info_t *id, int new_level);
+ 
+ void debug_set_critical(void);
 +
-+======
-+timers
-+======
++/**
++ * debug_stop_all() - stops the debug feature if stopping is allowed.
++ *
++ * Return:
++ * -   none
++ */
+ void debug_stop_all(void);
+ 
++/**
++ * debug_level_enabled() - Returns true if debug events for the specified
++ *			   level would be logged. Otherwise returns false.
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ *
++ * Return:
++ * - %true if level is less or equal to the current debug level.
++ */
+ static inline bool debug_level_enabled(debug_info_t *id, int level)
+ {
+ 	return level <= id->level;
+ }
+ 
++/**
++ * debug_event() - writes debug entry to active debug area
++ *		   (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @data:	pointer to data for debug entry
++ * @length:	length of data in bytes
++ *
++ * Return:
++ * - Address of written debug entry
++ */
+ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
+ 					 void *data, int length)
+ {
+@@ -122,6 +203,18 @@ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
+ 	return debug_event_common(id, level, data, length);
+ }
+ 
++/**
++ * debug_int_event() - writes debug entry to active debug area
++ * 		       (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
+ 					     unsigned int tag)
+ {
+@@ -132,6 +225,18 @@ static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
+ 	return debug_event_common(id, level, &t, sizeof(unsigned int));
+ }
+ 
++/**
++ * debug_long_event() - writes debug entry to active debug area
++ * 		       (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
+ 					      unsigned long tag)
+ {
+@@ -142,6 +247,18 @@ static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
+ 	return debug_event_common(id, level, &t, sizeof(unsigned long));
+ }
+ 
++/**
++ * debug_text_event() - writes debug entry in ascii format to active
++ *			debug area (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @txt:	string for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_text_event(debug_info_t *id, int level,
+ 					      const char *txt)
+ {
+@@ -158,6 +275,22 @@ extern debug_entry_t *
+ __debug_sprintf_event(debug_info_t *id, int level, char *string, ...)
+ 	__attribute__ ((format(printf, 3, 4)));
+ 
++/**
++ * debug_sprintf_event() - writes debug entry with format string
++ *			   and varargs (longs) to active debug area
++ *			   (if level $<=$ actual debug level).
++ *
++ * @_id:	handle for debug log
++ * @_level:	debug level
++ * @_fmt:	format string for debug entry
++ * @...:	varargs used as in sprintf()
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ *
++ * floats and long long datatypes cannot be used as varargs.
++ */
+ #define debug_sprintf_event(_id, _level, _fmt, ...)			\
+ ({									\
+ 	debug_entry_t *__ret;						\
+@@ -172,6 +305,20 @@ __debug_sprintf_event(debug_info_t *id, int level, char *string, ...)
+ 	__ret;								\
+ })
+ 
++/**
++ * debug_exception() - writes debug entry to active debug area
++ *		       (if level <= actual debug level) and switches
++ *		       to next debug area
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @data:	pointer to data for debug entry
++ * @length:	length of data in bytes
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
+ 					     void *data, int length)
+ {
+@@ -180,6 +327,19 @@ static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
+ 	return debug_exception_common(id, level, data, length);
+ }
+ 
++/**
++ * debug_int_exception() - writes debug entry to active debug area
++ *			   (if level <= actual debug level)
++ *			   and switches to next debug area
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
+ 						 unsigned int tag)
+ {
+@@ -190,6 +350,19 @@ static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
+ 	return debug_exception_common(id, level, &t, sizeof(unsigned int));
+ }
+ 
++/**
++ * debug_long_exception() - writes debug entry to active debug area
++ *			   (if level <= actual debug level)
++ *			   and switches to next debug area
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
+ 						   unsigned long tag)
+ {
+@@ -200,6 +373,20 @@ static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
+ 	return debug_exception_common(id, level, &t, sizeof(unsigned long));
+ }
+ 
++/**
++ * debug_text_exception() - writes debug entry in ascii format to active
++ *			    debug area (if level <= actual debug level)
++ *			    and switches to next debug
++ * area
++ *
++ * @id:	handle for debug log
++ * @level:	debug level
++ * @txt:	string for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_text_exception(debug_info_t *id, int level,
+ 						  const char *txt)
+ {
+@@ -216,6 +403,24 @@ extern debug_entry_t *
+ __debug_sprintf_exception(debug_info_t *id, int level, char *string, ...)
+ 	__attribute__ ((format(printf, 3, 4)));
+ 
 +
-+.. toctree::
-+    :maxdepth: 1
++/**
++ * debug_sprintf_exception() - writes debug entry with format string and
++ *			       varargs (longs) to active debug area
++ * 			       (if level $<=$ actual debug level)
++ *			       and switches to next debug area.
++ *
++ * @_id:	handle for debug log
++ * @_level:	debug level
++ * @_fmt:	format string for debug entry
++ * @...:	varargs used as in sprintf()
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ *
++ * floats and long long datatypes cannot be used as varargs.
++ */
+ #define debug_sprintf_exception(_id, _level, _fmt, ...)			\
+ ({									\
+ 	debug_entry_t *__ret;						\
+@@ -230,7 +435,33 @@ __debug_sprintf_exception(debug_info_t *id, int level, char *string, ...)
+ 	__ret;								\
+ })
+ 
++/**
++ * debug_register_view() - registers new debug view and creates debugfs
++ *			   dir entry
++ *
++ * @id:	handle for debug log
++ * @view:	pointer to debug view struct
++ *
++ * Return:
++ * -   0  : ok
++ * -   < 0: Error
++ */
+ int debug_register_view(debug_info_t *id, struct debug_view *view);
 +
-+    highres
-+    hpet
-+    hrtimers
-+    no_hz
-+    timekeeping
-+    timers-howto
++/**
++ * debug_unregister_view()
++ *
++ * @id:	handle for debug log
++ * @view:	pointer to debug view struct
++ *
++ * Return:
++ * -   0  : ok
++ * -   < 0: Error
++ *
++ *
++ * unregisters debug view and removes debugfs dir entry
++ */
 +
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/timers/NO_HZ.txt b/Documentation/timers/no_hz.rst
-similarity index 93%
-rename from Documentation/timers/NO_HZ.txt
-rename to Documentation/timers/no_hz.rst
-index 9591092da5e0..065db217cb04 100644
---- a/Documentation/timers/NO_HZ.txt
-+++ b/Documentation/timers/no_hz.rst
-@@ -1,4 +1,6 @@
--		NO_HZ: Reducing Scheduling-Clock Ticks
-+﻿======================================
-+NO_HZ: Reducing Scheduling-Clock Ticks
-+======================================
+ int debug_unregister_view(debug_info_t *id, struct debug_view *view);
  
- 
- This document describes Kconfig options and boot parameters that can
-@@ -28,7 +30,8 @@ by a third section on RCU-specific considerations, a fourth section
- discussing testing, and a fifth and final section listing known issues.
- 
- 
--NEVER OMIT SCHEDULING-CLOCK TICKS
-+Never Omit Scheduling-Clock Ticks
-+=================================
- 
- Very old versions of Linux from the 1990s and the very early 2000s
- are incapable of omitting scheduling-clock ticks.  It turns out that
-@@ -59,7 +62,8 @@ degrade your applications performance.  If this describes your workload,
- you should read the following two sections.
- 
- 
--OMIT SCHEDULING-CLOCK TICKS FOR IDLE CPUs
-+Omit Scheduling-Clock Ticks For Idle CPUs
-+=========================================
- 
- If a CPU is idle, there is little point in sending it a scheduling-clock
- interrupt.  After all, the primary purpose of a scheduling-clock interrupt
-@@ -97,7 +101,8 @@ By default, CONFIG_NO_HZ_IDLE=y kernels boot with "nohz=on", enabling
- dyntick-idle mode.
- 
- 
--OMIT SCHEDULING-CLOCK TICKS FOR CPUs WITH ONLY ONE RUNNABLE TASK
-+Omit Scheduling-Clock Ticks For CPUs With Only One Runnable Task
-+================================================================
- 
- If a CPU has only one runnable task, there is little point in sending it
- a scheduling-clock interrupt because there is no other task to switch to.
-@@ -174,7 +179,8 @@ However, the drawbacks listed above mean that adaptive ticks should not
- (yet) be enabled by default.
- 
- 
--RCU IMPLICATIONS
-+RCU Implications
-+================
- 
- There are situations in which idle CPUs cannot be permitted to
- enter either dyntick-idle mode or adaptive-tick mode, the most
-@@ -199,7 +205,8 @@ scheduler will decide where to run them, which might or might not be
- where you want them to run.
- 
- 
--TESTING
-+Testing
-+=======
- 
- So you enable all the OS-jitter features described in this document,
- but do not see any change in your workload's behavior.  Is this because
-@@ -222,9 +229,10 @@ We do not currently have a good way to remove OS jitter from single-CPU
- systems.
- 
- 
--KNOWN ISSUES
-+Known Issues
-+============
- 
--o	Dyntick-idle slows transitions to and from idle slightly.
-+*	Dyntick-idle slows transitions to and from idle slightly.
- 	In practice, this has not been a problem except for the most
- 	aggressive real-time workloads, which have the option of disabling
- 	dyntick-idle mode, an option that most of them take.  However,
-@@ -248,13 +256,13 @@ o	Dyntick-idle slows transitions to and from idle slightly.
- 		this parameter effectively disables Turbo Mode on Intel
- 		CPUs, which can significantly reduce maximum performance.
- 
--o	Adaptive-ticks slows user/kernel transitions slightly.
-+*	Adaptive-ticks slows user/kernel transitions slightly.
- 	This is not expected to be a problem for computationally intensive
- 	workloads, which have few such transitions.  Careful benchmarking
- 	will be required to determine whether or not other workloads
- 	are significantly affected by this effect.
- 
--o	Adaptive-ticks does not do anything unless there is only one
-+*	Adaptive-ticks does not do anything unless there is only one
- 	runnable task for a given CPU, even though there are a number
- 	of other situations where the scheduling-clock tick is not
- 	needed.  To give but one example, consider a CPU that has one
-@@ -275,7 +283,7 @@ o	Adaptive-ticks does not do anything unless there is only one
- 
- 	Better handling of these sorts of situations is future work.
- 
--o	A reboot is required to reconfigure both adaptive idle and RCU
-+*	A reboot is required to reconfigure both adaptive idle and RCU
- 	callback offloading.  Runtime reconfiguration could be provided
- 	if needed, however, due to the complexity of reconfiguring RCU at
- 	runtime, there would need to be an earthshakingly good reason.
-@@ -283,12 +291,12 @@ o	A reboot is required to reconfigure both adaptive idle and RCU
- 	simply offloading RCU callbacks from all CPUs and pinning them
- 	where you want them whenever you want them pinned.
- 
--o	Additional configuration is required to deal with other sources
-+*	Additional configuration is required to deal with other sources
- 	of OS jitter, including interrupts and system-utility tasks
- 	and processes.  This configuration normally involves binding
- 	interrupts and tasks to particular CPUs.
- 
--o	Some sources of OS jitter can currently be eliminated only by
-+*	Some sources of OS jitter can currently be eliminated only by
- 	constraining the workload.  For example, the only way to eliminate
- 	OS jitter due to global TLB shootdowns is to avoid the unmapping
- 	operations (such as kernel module unload operations) that
-@@ -299,17 +307,17 @@ o	Some sources of OS jitter can currently be eliminated only by
- 	helpful, especially when combined with the mlock() and mlockall()
- 	system calls.
- 
--o	Unless all CPUs are idle, at least one CPU must keep the
-+*	Unless all CPUs are idle, at least one CPU must keep the
- 	scheduling-clock interrupt going in order to support accurate
- 	timekeeping.
- 
--o	If there might potentially be some adaptive-ticks CPUs, there
-+*	If there might potentially be some adaptive-ticks CPUs, there
- 	will be at least one CPU keeping the scheduling-clock interrupt
- 	going, even if all CPUs are otherwise idle.
- 
- 	Better handling of this situation is ongoing work.
- 
--o	Some process-handling operations still require the occasional
-+*	Some process-handling operations still require the occasional
- 	scheduling-clock tick.	These operations include calculating CPU
- 	load, maintaining sched average, computing CFS entity vruntime,
- 	computing avenrun, and carrying out load balancing.  They are
-diff --git a/Documentation/timers/timekeeping.txt b/Documentation/timers/timekeeping.rst
-similarity index 98%
-rename from Documentation/timers/timekeeping.txt
-rename to Documentation/timers/timekeeping.rst
-index 2d1732b0a868..f83e98852e2c 100644
---- a/Documentation/timers/timekeeping.txt
-+++ b/Documentation/timers/timekeeping.rst
-@@ -1,5 +1,6 @@
-+===========================================================
- Clock sources, Clock events, sched_clock() and delay timers
-------------------------------------------------------------
-+===========================================================
- 
- This document tries to briefly explain some basic kernel timekeeping
- abstractions. It partly pertains to the drivers usually found in
-diff --git a/Documentation/timers/timers-howto.txt b/Documentation/timers/timers-howto.rst
-similarity index 93%
-rename from Documentation/timers/timers-howto.txt
-rename to Documentation/timers/timers-howto.rst
-index 038f8c77a076..7e3167bec2b1 100644
---- a/Documentation/timers/timers-howto.txt
-+++ b/Documentation/timers/timers-howto.rst
-@@ -1,5 +1,6 @@
-+===================================================================
- delays - Information on the various kernel delay / sleep mechanisms
---------------------------------------------------------------------
-+===================================================================
- 
- This document seeks to answer the common question: "What is the
- RightWay (TM) to insert a delay?"
-@@ -17,7 +18,7 @@ code in an atomic context?"  This should be followed closely by "Does
- it really need to delay in atomic context?" If so...
- 
- ATOMIC CONTEXT:
--	You must use the *delay family of functions. These
-+	You must use the `*delay` family of functions. These
- 	functions use the jiffie estimation of clock speed
- 	and will busy wait for enough loop cycles to achieve
- 	the desired delay:
-@@ -35,21 +36,26 @@ ATOMIC CONTEXT:
- 	be refactored to allow for the use of msleep.
- 
- NON-ATOMIC CONTEXT:
--	You should use the *sleep[_range] family of functions.
-+	You should use the `*sleep[_range]` family of functions.
- 	There are a few more options here, while any of them may
- 	work correctly, using the "right" sleep function will
- 	help the scheduler, power management, and just make your
- 	driver better :)
- 
- 	-- Backed by busy-wait loop:
-+
- 		udelay(unsigned long usecs)
-+
- 	-- Backed by hrtimers:
-+
- 		usleep_range(unsigned long min, unsigned long max)
-+
- 	-- Backed by jiffies / legacy_timers
-+
- 		msleep(unsigned long msecs)
- 		msleep_interruptible(unsigned long msecs)
- 
--	Unlike the *delay family, the underlying mechanism
-+	Unlike the `*delay` family, the underlying mechanism
- 	driving each of these calls varies, thus there are
- 	quirks you should be aware of.
- 
-@@ -70,6 +76,7 @@ NON-ATOMIC CONTEXT:
- 		- Why not msleep for (1ms - 20ms)?
- 			Explained originally here:
- 				http://lkml.org/lkml/2007/8/3/250
-+
- 			msleep(1~20) may not do what the caller intends, and
- 			will often sleep longer (~20 ms actual sleep for any
- 			value given in the 1~20ms range). In many cases this
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7e600004f993..8dfa2fa5101a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7127,7 +7127,7 @@ F:	drivers/net/ethernet/hp/hp100.*
- HPET:	High Precision Event Timers driver
- M:	Clemens Ladisch <clemens@ladisch.de>
- S:	Maintained
--F:	Documentation/timers/hpet.txt
-+F:	Documentation/timers/hpet.rst
- F:	drivers/char/hpet.c
- F:	include/linux/hpet.h
- F:	include/uapi/linux/hpet.h
-diff --git a/drivers/media/usb/dvb-usb-v2/anysee.c b/drivers/media/usb/dvb-usb-v2/anysee.c
-index 0df7ad69e6c7..a4271f6c414a 100644
---- a/drivers/media/usb/dvb-usb-v2/anysee.c
-+++ b/drivers/media/usb/dvb-usb-v2/anysee.c
-@@ -65,7 +65,7 @@ static int anysee_ctrl_msg(struct dvb_usb_device *d,
- 	/* TODO FIXME: dvb_usb_generic_rw() fails rarely with error code -32
- 	 * (EPIPE, Broken pipe). Function supports currently msleep() as a
- 	 * parameter but I would not like to use it, since according to
--	 * Documentation/timers/timers-howto.txt it should not be used such
-+	 * Documentation/timers/timers-howto.rst it should not be used such
- 	 * short, under < 20ms, sleeps. Repeating failed message would be
- 	 * better choice as not to add unwanted delays...
- 	 * Fixing that correctly is one of those or both;
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 186a37675b50..e67a98115d9d 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -2308,7 +2308,7 @@ static int regulator_ena_gpio_ctrl(struct regulator_dev *rdev, bool enable)
-  *
-  * Delay for the requested amount of time as per the guidelines in:
-  *
-- *     Documentation/timers/timers-howto.txt
-+ *     Documentation/timers/timers-howto.rst
-  *
-  * The assumption here is that regulators will never be enabled in
-  * atomic context and therefore sleeping functions can be used.
-diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
-index b1d861caca16..320bbc9761c8 100644
---- a/include/linux/iopoll.h
-+++ b/include/linux/iopoll.h
-@@ -30,7 +30,7 @@
-  * @cond: Break condition (usually involving @val)
-  * @sleep_us: Maximum time to sleep between reads in us (0
-  *            tight-loops).  Should be less than ~20ms since usleep_range
-- *            is used (see Documentation/timers/timers-howto.txt).
-+ *            is used (see Documentation/timers/timers-howto.rst).
-  * @timeout_us: Timeout in us, 0 means never timeout
-  *
-  * Returns 0 on success and -ETIMEDOUT upon a timeout. In either
-@@ -69,7 +69,7 @@
-  * @cond: Break condition (usually involving @val)
-  * @delay_us: Time to udelay between reads in us (0 tight-loops).  Should
-  *            be less than ~10us since udelay is used (see
-- *            Documentation/timers/timers-howto.txt).
-+ *            Documentation/timers/timers-howto.rst).
-  * @timeout_us: Timeout in us, 0 means never timeout
-  *
-  * Returns 0 on success and -ETIMEDOUT upon a timeout. In either
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index daeec7dbd65c..ed5e9d0a1285 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -112,7 +112,7 @@ struct reg_sequence {
-  * @cond: Break condition (usually involving @val)
-  * @sleep_us: Maximum time to sleep between reads in us (0
-  *            tight-loops).  Should be less than ~20ms since usleep_range
-- *            is used (see Documentation/timers/timers-howto.txt).
-+ *            is used (see Documentation/timers/timers-howto.rst).
-  * @timeout_us: Timeout in us, 0 means never timeout
-  *
-  * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_read
-@@ -154,7 +154,7 @@ struct reg_sequence {
-  * @cond: Break condition (usually involving @val)
-  * @sleep_us: Maximum time to sleep between reads in us (0
-  *            tight-loops).  Should be less than ~20ms since usleep_range
-- *            is used (see Documentation/timers/timers-howto.txt).
-+ *            is used (see Documentation/timers/timers-howto.rst).
-  * @timeout_us: Timeout in us, 0 means never timeout
-  *
-  * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_field_read
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 1c421ac42b07..d36598bbf1b0 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5714,7 +5714,7 @@ sub process {
- 			# ignore udelay's < 10, however
- 			if (! ($delay < 10) ) {
- 				CHK("USLEEP_RANGE",
--				    "usleep_range is preferred over udelay; see Documentation/timers/timers-howto.txt\n" . $herecurr);
-+				    "usleep_range is preferred over udelay; see Documentation/timers/timers-howto.rst\n" . $herecurr);
- 			}
- 			if ($delay > 2000) {
- 				WARN("LONG_UDELAY",
-@@ -5726,7 +5726,7 @@ sub process {
- 		if ($line =~ /\bmsleep\s*\((\d+)\);/) {
- 			if ($1 < 20) {
- 				WARN("MSLEEP",
--				     "msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.txt\n" . $herecurr);
-+				     "msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.rst\n" . $herecurr);
- 			}
- 		}
- 
-@@ -6117,11 +6117,11 @@ sub process {
- 			my $max = $7;
- 			if ($min eq $max) {
- 				WARN("USLEEP_RANGE",
--				     "usleep_range should not use min == max args; see Documentation/timers/timers-howto.txt\n" . "$here\n$stat\n");
-+				     "usleep_range should not use min == max args; see Documentation/timers/timers-howto.rst\n" . "$here\n$stat\n");
- 			} elsif ($min =~ /^\d+$/ && $max =~ /^\d+$/ &&
- 				 $min > $max) {
- 				WARN("USLEEP_RANGE",
--				     "usleep_range args reversed, use min then max; see Documentation/timers/timers-howto.txt\n" . "$here\n$stat\n");
-+				     "usleep_range args reversed, use min then max; see Documentation/timers/timers-howto.rst\n" . "$here\n$stat\n");
- 			}
- 		}
- 
+ /*
 -- 
 2.20.1
 
