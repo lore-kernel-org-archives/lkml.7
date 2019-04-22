@@ -2,78 +2,64 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3E1C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B161C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60226214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555950748;
-	bh=UJRO1Oi3ulhye3OpRl6c52a1PNJfYnOMeAX3mVXNJCY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cAoUYR3lv0chA9fo/HBblWlGncSWbJ1EtmZbyp2W1kc2S9Ijf2odePShd4tislXbm
-	 mNeUrcoj5t7V2cy6+/+oIB0FmhjufVGrOKyFYLXjYr0kSVlhGOqWZXYwQNVVaI7COI
-	 cbHCjJgW+kFIH9tz9rKjfo+VjN7fijgor8KqHkM4=
+	by mail.kernel.org (Postfix) with ESMTP id DF5B3214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1NfduaH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfDVQc1 (ORCPT
+        id S1728272AbfDVQcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:32:27 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43595 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727294AbfDVQc0 (ORCPT
+        Mon, 22 Apr 2019 12:32:36 -0400
+Received: from mail-it1-f171.google.com ([209.85.166.171]:39434 "EHLO
+        mail-it1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbfDVQcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:32:26 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f18so10793251lja.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:32:25 -0700 (PDT)
+        Mon, 22 Apr 2019 12:32:35 -0400
+Received: by mail-it1-f171.google.com with SMTP id 139so19087136ita.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6xSQ2HaBp4VGGOaQ5AmjairlFsxNFXDYMnHC9JTDLQA=;
-        b=Z/pQMMBUlGyOB8H85WuIeuwHzg6mopT5yJKnUmy71VmGvnPUI8qHmOEaXVPHjw1UuX
-         74v2FHJ84fP3N75pJ0VHJAf23tGCxgFUDbATwWP9Ikz6+ZBZnZz+Rk9/EGEZzc1oR86A
-         d6KibssRcIiW9xsYi8AfO7IFTOIdA5/YHiFsU=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T5gNEUpY6UvQF7xoppj/WgrZVl4YlLjgakn5tQ80U34=;
+        b=1NfduaH9VjN3m+4+TDMr2Esgd93LfzIGD1ebDYHdg0xah9blEqq3DkBt5X1LB3LPm4
+         gnQ3uQCDLS65yNQ7l3IZdAyuXGSOeRw344Jh5yL8os5Xq1PE66QB5AdCZLJUTvhsX+XQ
+         PwZTKw95HUbxnRBdYbnqunfFh7gOyKOlVFd90IOX6Rnq5/At0ikw64deMHiXe8zqGgI6
+         JYPEbn4/nKnfjJFtMkuQcV8GGmqhA4Yjgy/vAqeTtpE+VQ41UUnU6gFPolNxSqRenSSy
+         nJxxXeC0qK4eEtX6aeurfLSqUATKd2wm0DElL2XUfMKoXr7uOFBqpg/2hIAUbRZOIF73
+         mqJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6xSQ2HaBp4VGGOaQ5AmjairlFsxNFXDYMnHC9JTDLQA=;
-        b=hzj5p6B/lNfc03NhjCGErTXylFqUAkezcrsxHMGsusU/om4qucsmCo96l7hmP6oOno
-         vmsSw7CAumynnxasaB0hbPWN463T19woyccmP9gVPGBEzym3dsqsX2bMLsLDFz0IMO4j
-         KTXp5147fTmLkK0gFjEBmNNM4+IMMAXFNgGb/615ErHbT9VWTnGujA+HBYEfW+Nacxu/
-         cwAo/wZK9IZZ/wKLlZ+/jicAci+Ko2Bak5T65XmZRFqi6Bm4Ntf0n5te8m51u+8umH96
-         RrWjuPLASbYYqLB4L90OtkHLDN1J88yxo0WCbhaUn6mCFbWbyDkhQxZCcSMskwnSeMcC
-         nHjg==
-X-Gm-Message-State: APjAAAU1NjO5eW30Ksp+ET50b51rZKSg8fTxHF5FBVAKxI75cyoDSGkW
-        yAflYdcm1/TmSe74eHpHngTHhYYqH50=
-X-Google-Smtp-Source: APXvYqyyct6oH9N07ZeLZbZHj2lAfxFRE9LX4x9PFtrsVN/z/KZE71Y+mfantnULx7dN6QxhDqUCnw==
-X-Received: by 2002:a2e:8050:: with SMTP id p16mr10707471ljg.160.1555950744195;
-        Mon, 22 Apr 2019 09:32:24 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id w2sm3552417lfa.63.2019.04.22.09.32.23
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T5gNEUpY6UvQF7xoppj/WgrZVl4YlLjgakn5tQ80U34=;
+        b=gHyUihOuvjI3TSrVAPIhNWPkW/4Wl7YQ/FKJ7W7ysZT6SdyOLQk1mXi5qpbtzlgU51
+         pcJfpw9K1kjEeMdgloGltU6gWPqDNLsdK73luyvulNwNcsQSATNjnr6Vdwzrq9u+oEav
+         NGFRt99nBo1UEsQlu3UcFg+hqOfCdeZZQdX0tMRfS289N7ii+qQrpXAR24ePZ0kF7dm/
+         M6Xwo2Qqw1pr/MUALHcTi0uwjO1x3reb/rjoHmcoLmSrlokpDHmxkkzm0KyO6cXikdsM
+         oOB/tD7YDKmQD4bKbIQmk3c+7TsTUQ1ZyJ3r8xza7qhYC0x1LbmUjyT4pjUjFxa06wgD
+         3jxQ==
+X-Gm-Message-State: APjAAAWEPX/ts0z+8QqqoNdssReYUOedsLy/FP8D5tMU0v6kIhq4IelW
+        kCBEstMyon6/QsFeiYE8tGPmdw==
+X-Google-Smtp-Source: APXvYqzEsPPb6pe5G6YSbBS5DFCCjIAs9gvpOGwWW/pmaYLOKHSgVB2LtNsiZE/mUG6oYXnq8YYQ2Q==
+X-Received: by 2002:a24:2244:: with SMTP id o65mr13582805ito.126.1555950754781;
+        Mon, 22 Apr 2019 09:32:34 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id 64sm6111169ite.42.2019.04.22.09.32.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:32:23 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id l7so10826691ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:32:23 -0700 (PDT)
-X-Received: by 2002:a2e:9213:: with SMTP id k19mr10159740ljg.118.1555950249750;
- Mon, 22 Apr 2019 09:24:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000043fe9c058720a5d3@google.com>
-In-Reply-To: <00000000000043fe9c058720a5d3@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Apr 2019 09:23:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgC5mNgPN5excXyTNtFpOyF4+9jk3tLiC+s-VezgGbVTA@mail.gmail.com>
-Message-ID: <CAHk-=wgC5mNgPN5excXyTNtFpOyF4+9jk3tLiC+s-VezgGbVTA@mail.gmail.com>
+        Mon, 22 Apr 2019 09:32:33 -0700 (PDT)
 Subject: Re: WARNING in percpu_ref_kill_and_confirm
-To:     syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Borislav Petkov <bp@alien8.de>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Anvin <hpa@zytor.com>,
@@ -89,58 +75,52 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
         syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        the arch/x86 maintainers <x86@kernel.org>
+References: <00000000000043fe9c058720a5d3@google.com>
+ <ad884b18-0e03-d6be-02b0-4e5273f068ce@kernel.dk>
+ <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk>
+Date:   Mon, 22 Apr 2019 10:32:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 9:06 AM syzbot
-<syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com> wrote:
->
->
-> The bug was bisected to:
->
-> commit 38e7571c07be01f9f19b355a9306a4e3d5cb0f5b
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Fri Mar 8 22:48:40 2019 +0000
->
->      Merge tag 'io_uring-2019-03-06' of git://git.kernel.dk/linux-block
->
-> percpu_ref_kill_and_confirm called more than once on io_ring_ctx_ref_free!
+On 4/22/19 10:27 AM, Linus Torvalds wrote:
+> [ Crossed emails ]
+> 
+> On Mon, Apr 22, 2019 at 9:23 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> I think the below should fix this. Very early versions of io_uring didn't
+>> have this issue, since we did the percpu ref tryget for io_uring_register().
+> 
+> Ok, so I like your patch better than mine, but note how syzbot
+> bisected this to the initial merge of the io_uring code.
 
-So I don't see how that happens in the original code (because
-__io_uring_register() is called with the uring_lock held), but let's
-see.
+Yes, I did think about that too...
 
-HOWEVER.
+> I agree that code shouldn't have had this particular issue, but it
+> looks like it does.
+> 
+> Is there some way to race with io_ring_ctx_wait_and_kill(), which
+> _also_ does that ref_kill() thing? I'm not seeing how that could
+> happen, but maybe if the file ref counts get screwed up you have
+> ->release() called early..
 
-I do see how it happens now as of the latest kernel as of commit
-b19062a56726 ("io_uring: fix possible deadlock between
-io_uring_{enter,register}") where the code explicitly drops the mutex
-in order to wait for other uring users to finish.
+I just tried on the current code and it triggers easily, but that's
+with that mutex patch in there. I agree it should not trigger before
+that, unless something is wonky. I'll try and play around with it a bit
+and see what is going on (or if I can trigger it at all with the mutex
+change reverted).
 
-So Jens, I think that commit was buggy. I suspect that
-io_uring_register() should perhaps do something like
+-- 
+Jens Axboe
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2934,7 +2934,10 @@ static int __io_uring_register(struct
-io_ring_ctx *ctx, unsigned opcode,
- {
-        int ret;
-
-+       if (!percpu_ref_tryget(&ctx->refs))
-+               return -EBUSY;
-        percpu_ref_kill(&ctx->refs);
-+       percpu_ref_put(&ctx->refs);
-
-        /*
-         * Drop uring mutex before waiting for references to exit. If another
-
-to guarantee that it's the *only* case of io_uring_register() doing that kill.
-
-Hmm?
-
-                Linus
