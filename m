@@ -2,110 +2,134 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9FBC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088B9C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DC1204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962787;
-	bh=zRAtWrRRBAeqM/E6Elu8YNGq/2tWRVwbATpsG4hRzZE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZvM6/Rqgz6byv+0k07+909StYZRGZeYVHbNtevWpNzCkVRihc+qQw/noKi/KGKICT
-	 WoYPCem0KXntld64Pfsrw2kMmKBKGBwrFdA/sabpPJvfKa7IfnDBN/Rwlg0jQPpth5
-	 5qB8QSZByAv2WSDDvOeVRZKSMQJcx7yjiTProWeA=
+	by mail.kernel.org (Postfix) with ESMTP id CEBF7204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfDVTxG (ORCPT
+        id S1731392AbfDVTxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54010 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:53:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34836 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731024AbfDVTuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729892AbfDVTxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:53:11 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 746AC2075A;
-        Mon, 22 Apr 2019 19:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962608;
-        bh=zRAtWrRRBAeqM/E6Elu8YNGq/2tWRVwbATpsG4hRzZE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HWk8a0Ew2gMARnwqSTTG6+MPvpkTcRvpkb8qACppgz91IS6RKkQbpAU0rpznpiWGe
-         DaLh6frj4Z9k4HEyPYGo5PxQ/IforX9ksuyrTkEpC84WEH/tdQfrLSrQ2BLWPJM8b8
-         1/nNGQMks/nQt1I34EnTl0WdjGDTvavJwmT7hek8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Anirudha Sarangi <anirudh@xilinx.com>,
-        John Linn <John.Linn@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 12/21] net: xilinx: fix possible object reference leak
-Date:   Mon, 22 Apr 2019 15:49:32 -0400
-Message-Id: <20190422194941.13433-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
-References: <20190422194941.13433-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 669C7CA1DF;
+        Mon, 22 Apr 2019 19:53:09 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA92F10816BC;
+        Mon, 22 Apr 2019 19:53:05 +0000 (UTC)
+Date:   Mon, 22 Apr 2019 15:53:04 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
+        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
+        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        haren@linux.vnet.ibm.com, npiggin@gmail.com,
+        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH v12 12/31] mm: protect SPF handler against anon_vma
+ changes
+Message-ID: <20190422195303.GC14666@redhat.com>
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <20190416134522.17540-13-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190416134522.17540-13-ldufour@linux.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 22 Apr 2019 19:53:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+On Tue, Apr 16, 2019 at 03:45:03PM +0200, Laurent Dufour wrote:
+> The speculative page fault handler must be protected against anon_vma
+> changes. This is because page_add_new_anon_rmap() is called during the
+> speculative path.
+> 
+> In addition, don't try speculative page fault if the VMA don't have an
+> anon_vma structure allocated because its allocation should be
+> protected by the mmap_sem.
+> 
+> In __vma_adjust() when importer->anon_vma is set, there is no need to
+> protect against speculative page faults since speculative page fault
+> is aborted if the vma->anon_vma is not set.
+> 
+> When calling page_add_new_anon_rmap() vma->anon_vma is necessarily
+> valid since we checked for it when locking the pte and the anon_vma is
+> removed once the pte is unlocked. So even if the speculative page
+> fault handler is running concurrently with do_unmap(), as the pte is
+> locked in unmap_region() - through unmap_vmas() - and the anon_vma
+> unlinked later, because we check for the vma sequence counter which is
+> updated in unmap_page_range() before locking the pte, and then in
+> free_pgtables() so when locking the pte the change will be detected.
+> 
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 
-[ Upstream commit fa3a419d2f674b431d38748cb58fb7da17ee8949 ]
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
-
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/xilinx/xilinx_axienet_main.c:1624:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1569, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Anirudha Sarangi <anirudh@xilinx.com>
-Cc: John Linn <John.Linn@xilinx.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 4684644703cc..58ba579793f8 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1595,12 +1595,14 @@ static int axienet_probe(struct platform_device *pdev)
- 	ret = of_address_to_resource(np, 0, &dmares);
- 	if (ret) {
- 		dev_err(&pdev->dev, "unable to get DMA resource\n");
-+		of_node_put(np);
- 		goto free_netdev;
- 	}
- 	lp->dma_regs = devm_ioremap_resource(&pdev->dev, &dmares);
- 	if (IS_ERR(lp->dma_regs)) {
- 		dev_err(&pdev->dev, "could not map DMA regs\n");
- 		ret = PTR_ERR(lp->dma_regs);
-+		of_node_put(np);
- 		goto free_netdev;
- 	}
- 	lp->rx_irq = irq_of_parse_and_map(np, 1);
--- 
-2.19.1
-
+> ---
+>  mm/memory.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 423fa8ea0569..2cf7b6185daa 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -377,7 +377,9 @@ void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>  		 * Hide vma from rmap and truncate_pagecache before freeing
+>  		 * pgtables
+>  		 */
+> +		vm_write_begin(vma);
+>  		unlink_anon_vmas(vma);
+> +		vm_write_end(vma);
+>  		unlink_file_vma(vma);
+>  
+>  		if (is_vm_hugetlb_page(vma)) {
+> @@ -391,7 +393,9 @@ void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>  			       && !is_vm_hugetlb_page(next)) {
+>  				vma = next;
+>  				next = vma->vm_next;
+> +				vm_write_begin(vma);
+>  				unlink_anon_vmas(vma);
+> +				vm_write_end(vma);
+>  				unlink_file_vma(vma);
+>  			}
+>  			free_pgd_range(tlb, addr, vma->vm_end,
+> -- 
+> 2.21.0
+> 
