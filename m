@@ -2,30 +2,29 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B196BC282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29719C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656962064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71982064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939799;
-	bh=fqwR22YpNnaVf8fhZqMRMujuyRfbSFq3eU7U9fPQTy4=;
+	s=default; t=1555939803;
+	bh=CRHpzCrIAGeVEoe52vT0adsHBlbFxuZ2/Ggdc0S7tOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDQ+IQ+SWfYEMAdEi+G/geGiUozvTrGIc8Eo4uxbK/nL6pkE/Ms5QG5JZMwh5pxWv
-	 g4DW6zgPnVHgZEXKHY94FyKTxuG4lNNCReT6As+S+QD/CTRBZzg00fWWRq4gD3i5dZ
-	 B2gM2REC9dRph23rDgAJdvHOtlsW1x9AWjJbTP/w=
+	b=x4in2QcxbKe2RoR4HDtukpiyVg/Ph9OGL5mrlPiN2njGuYEBp2gFdR1Qi7/QrlDXW
+	 yPhiOT3qcBBUGuFNfzlNAn47yNaaxNIfzgOkgWoBjadWw9rvWLcRJU+g9ik1xhfLV4
+	 kftnKJxAIWsMf9rpdvmqMHwGXccKvyQJuoxDTeS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfDVN22 (ORCPT
+        id S1727649AbfDVN20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36916 "EHLO
+        Mon, 22 Apr 2019 09:28:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36892 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbfDVN2P (ORCPT
+        with ESMTP id S1727401AbfDVN2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,33 +33,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oPG5Chwp9mxYRRTZcnB1/MLaUvJI2smfunnhYsN/cUw=; b=JWNXpyUkYRzX4Dt8FIZ0xSa6Mp
-        BuGv4Kj4pf3MQRUCWZmboTYzfCJzVCrfwZX8A7jnXpoXXDSooOht1vQ8oDQidDjmaPSzWeluHxRK1
-        GFDWg9FgMV6Bfjycn1c8wYFFkv+ppxmHSy7L5/iEGYFU+6gRiB1VhLPj7xibC3dvYP/h2oVYpk8wg
-        wX6xOteueY9KNcivjAT+xOfZrXdbvYfLzgq0DXETLZNnbhD3NF61/ErfMJ3S06KZIMg3jlDwg2Vgd
-        ZBJSKt4x8BWoieG8MLfkSFhKqIlf/qaMl+cCDcvqtN50/EAB+XdhgUB6kCrzL5380RX/nrOKa7xm4
-        ck1WGDfg==;
+        bh=ymqOIFwuW6QIeBqOL3PLM0YGGItO6eMrlYDdHVPp7L0=; b=nxzDih+EZRpeZSKtAchbXr+sAc
+        jLmiZbrDdEke8lsQ+3fWrgME8oqTdSRdIDcM6lm/4ETk0GIOFdWOTWqs5KMW1faG0LTTh7yLL/fsE
+        viD96fXlaEHBB+2YA93fsOg5MwJNa2AJk2F3GxbRjSWhI7/VEZVleqplOPHsrW4lcoq0Liz9fGdPs
+        /FDm6cyPlnWEfejCGIiRzTeO6J5AC2twy3HSFXon3/kBNPHgV9oNjRanI2locAr1GJz5uZjvVp0Xb
+        IoPRQgXC6T+bfJ6HWDhRgnLn7eKmIe9qWwFk92aL528Pw60szIQabyH+GHzYjfpxY0yCn+Gwgd0s/
+        fFMjBSSA==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzV-0005Hl-21; Mon, 22 Apr 2019 13:28:14 +0000
+        id 1hIYzU-0005Hj-QL; Mon, 22 Apr 2019 13:28:13 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzS-0005l1-RU; Mon, 22 Apr 2019 10:28:10 -0300
+        id 1hIYzS-0005kg-NE; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        live-patching@vger.kernel.org
-Subject: [PATCH v2 20/79] docs: livepatch: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:09 -0300
-Message-Id: <ed6b33aa15f9bf7f5dd54ce936b9f1aa4de64a3d.1555938376.git.mchehab+samsung@kernel.org>
+        Borislav Petkov <bp@alien8.de>, Jens Axboe <axboe@kernel.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-ide@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: [PATCH v2 16/79] docs: ide: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:05 -0300
+Message-Id: <990303426b8d75b98531731246d704e3b1a49f9e.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -71,18 +67,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert livepatch documentation to ReST format. The changes
-are mostly trivial, as the documents are already on a good
-shape. Just a few markup changes are needed for Sphinx to
-properly parse the docs.
-
 The conversion is actually:
   - add blank lines and identation in order to identify paragraphs;
   - fix tables markups;
   - add some lists markups;
   - mark literal blocks;
-  - The in-file TOC becomes a comment, in order to skip it from the
-    output, as Sphinx already generates an index there.
   - adjust title markups.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
@@ -90,145 +79,455 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../ABI/testing/sysfs-kernel-livepatch        |   2 +-
- .../{callbacks.txt => callbacks.rst}          |  12 +-
- ...ive-patches.txt => cumulative-patches.rst} |  14 +-
- Documentation/livepatch/index.rst             |  21 ++
- .../{livepatch.txt => livepatch.rst}          |  60 ++---
- ...e-elf-format.txt => module-elf-format.rst} | 211 ++++++++++--------
- .../{shadow-vars.txt => shadow-vars.rst}      |  65 ++++--
- .../Documentation/stack-validation.txt        |   2 +-
- 8 files changed, 224 insertions(+), 163 deletions(-)
- rename Documentation/livepatch/{callbacks.txt => callbacks.rst} (94%)
- rename Documentation/livepatch/{cumulative-patches.txt => cumulative-patches.rst} (89%)
- create mode 100644 Documentation/livepatch/index.rst
- rename Documentation/livepatch/{livepatch.txt => livepatch.rst} (93%)
- rename Documentation/livepatch/{module-elf-format.txt => module-elf-format.rst} (68%)
- rename Documentation/livepatch/{shadow-vars.txt => shadow-vars.rst} (87%)
+ .../admin-guide/kernel-parameters.txt         |   2 +-
+ Documentation/cdrom/ide-cd.rst                |  18 +--
+ Documentation/ide/changelogs.rst              |  17 ++
+ .../ide/{ide-tape.txt => ide-tape.rst}        |  23 +--
+ Documentation/ide/{ide.txt => ide.rst}        | 147 ++++++++++--------
+ Documentation/ide/index.rst                   |  21 +++
+ ...arm-plug-howto.txt => warm-plug-howto.rst} |  10 +-
+ arch/m68k/q40/README                          |   2 +-
+ drivers/ide/Kconfig                           |  20 +--
+ 9 files changed, 155 insertions(+), 105 deletions(-)
+ create mode 100644 Documentation/ide/changelogs.rst
+ rename Documentation/ide/{ide-tape.txt => ide-tape.rst} (83%)
+ rename Documentation/ide/{ide.txt => ide.rst} (72%)
+ create mode 100644 Documentation/ide/index.rst
+ rename Documentation/ide/{warm-plug-howto.txt => warm-plug-howto.rst} (61%)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-livepatch b/Documentation/ABI/testing/sysfs-kernel-livepatch
-index 85db352f68f9..bea7bd5a1d5f 100644
---- a/Documentation/ABI/testing/sysfs-kernel-livepatch
-+++ b/Documentation/ABI/testing/sysfs-kernel-livepatch
-@@ -45,7 +45,7 @@ Description:
- 		use this feature without a clearance from a patch
- 		distributor. Removal (rmmod) of patch modules is permanently
- 		disabled when the feature is used. See
--		Documentation/livepatch/livepatch.txt for more information.
-+		Documentation/livepatch/livepatch.rst for more information.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fce382aebf60..bfe926a7b15f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1504,7 +1504,7 @@
+ 			Format: =0.0 to prevent dma on hda, =0.1 hdb =1.0 hdc
+ 			.vlb_clock .pci_clock .noflush .nohpa .noprobe .nowerr
+ 			.cdrom .chs .ignore_cable are additional options
+-			See Documentation/ide/ide.txt.
++			See Documentation/ide/ide.rst.
  
- What:		/sys/kernel/livepatch/<patch>/<object>
- Date:		Nov 2014
-diff --git a/Documentation/livepatch/callbacks.txt b/Documentation/livepatch/callbacks.rst
-similarity index 94%
-rename from Documentation/livepatch/callbacks.txt
-rename to Documentation/livepatch/callbacks.rst
-index 182e31d4abce..d76d1f0d9fcf 100644
---- a/Documentation/livepatch/callbacks.txt
-+++ b/Documentation/livepatch/callbacks.rst
-@@ -30,16 +30,20 @@ be patched, irrespective of the target klp_object's current state.
+ 	ide-generic.probe-mask= [HW] (E)IDE subsystem
+ 			Format: <int>
+diff --git a/Documentation/cdrom/ide-cd.rst b/Documentation/cdrom/ide-cd.rst
+index dadc94ef6b6c..bdccb74fc92d 100644
+--- a/Documentation/cdrom/ide-cd.rst
++++ b/Documentation/cdrom/ide-cd.rst
+@@ -47,7 +47,7 @@ This driver provides the following features:
+ ---------------
  
- Callbacks can be registered for the following livepatch actions:
+ 0. The ide-cd relies on the ide disk driver.  See
+-   Documentation/ide/ide.txt for up-to-date information on the ide
++   Documentation/ide/ide.rst for up-to-date information on the ide
+    driver.
  
--  * Pre-patch    - before a klp_object is patched
-+  * Pre-patch
-+                 - before a klp_object is patched
+ 1. Make sure that the ide and ide-cd drivers are compiled into the
+@@ -62,7 +62,7 @@ This driver provides the following features:
  
--  * Post-patch   - after a klp_object has been patched and is active
-+  * Post-patch
-+                 - after a klp_object has been patched and is active
-                    across all tasks
+    Depending on what type of IDE interface you have, you may need to
+    specify additional configuration options.  See
+-   Documentation/ide/ide.txt.
++   Documentation/ide/ide.rst.
  
--  * Pre-unpatch  - before a klp_object is unpatched (ie, patched code is
-+  * Pre-unpatch
-+                 - before a klp_object is unpatched (ie, patched code is
-                    active), used to clean up post-patch callback
-                    resources
+ 2. You should also ensure that the iso9660 filesystem is either
+    compiled into the kernel or available as a loadable module.  You
+@@ -82,7 +82,7 @@ This driver provides the following features:
+    on the primary IDE interface are called `hda` and `hdb`,
+    respectively.  The drives on the secondary interface are called
+    `hdc` and `hdd`.  (Interfaces at other locations get other letters
+-   in the third position; see Documentation/ide/ide.txt.)
++   in the third position; see Documentation/ide/ide.rst.)
  
--  * Post-unpatch - after a klp_object has been patched, all code has
-+  * Post-unpatch
-+                 - after a klp_object has been patched, all code has
-                    been restored and no tasks are running patched code,
-                    used to cleanup pre-patch callback resources
+    If you want your CDROM drive to be found automatically by the
+    driver, you should make sure your IDE interface uses either the
+@@ -91,7 +91,7 @@ This driver provides the following features:
+    be jumpered as `master`.  (If for some reason you cannot configure
+    your system in this manner, you can probably still use the driver.
+    You may have to pass extra configuration information to the kernel
+-   when you boot, however.  See Documentation/ide/ide.txt for more
++   when you boot, however.  See Documentation/ide/ide.rst for more
+    information.)
  
-diff --git a/Documentation/livepatch/cumulative-patches.txt b/Documentation/livepatch/cumulative-patches.rst
-similarity index 89%
-rename from Documentation/livepatch/cumulative-patches.txt
-rename to Documentation/livepatch/cumulative-patches.rst
-index 0012808e8d44..1931f318976a 100644
---- a/Documentation/livepatch/cumulative-patches.txt
-+++ b/Documentation/livepatch/cumulative-patches.rst
-@@ -18,7 +18,7 @@ Usage
- -----
+ 4. Boot the system.  If the drive is recognized, you should see a
+@@ -163,7 +163,7 @@ to change.  If the slot number is -1, the drive is unloaded.
+ This section discusses some common problems encountered when trying to
+ use the driver, and some possible solutions.  Note that if you are
+ experiencing problems, you should probably also review
+-Documentation/ide/ide.txt for current information about the underlying
++Documentation/ide/ide.rst for current information about the underlying
+ IDE support code.  Some of these items apply only to earlier versions
+ of the driver, but are mentioned here for completeness.
  
- The atomic replace can be enabled by setting "replace" flag in struct klp_patch,
--for example:
-+for example::
+@@ -173,7 +173,7 @@ from the driver.
+ a. Drive is not detected during booting.
  
- 	static struct klp_patch patch = {
- 		.mod = THIS_MODULE,
-@@ -49,19 +49,19 @@ Features
+    - Review the configuration instructions above and in
+-     Documentation/ide/ide.txt, and check how your hardware is
++     Documentation/ide/ide.rst, and check how your hardware is
+      configured.
  
- The atomic replace allows:
+    - If your drive is the only device on an IDE interface, it should
+@@ -181,7 +181,7 @@ a. Drive is not detected during booting.
  
--  + Atomically revert some functions in a previous patch while
-+  - Atomically revert some functions in a previous patch while
-     upgrading other functions.
+    - If your IDE interface is not at the standard addresses of 0x170
+      or 0x1f0, you'll need to explicitly inform the driver using a
+-     lilo option.  See Documentation/ide/ide.txt.  (This feature was
++     lilo option.  See Documentation/ide/ide.rst.  (This feature was
+      added around kernel version 1.3.30.)
  
--  + Remove eventual performance impact caused by core redirection
-+  - Remove eventual performance impact caused by core redirection
-     for functions that are no longer patched.
+    - If the autoprobing is not finding your drive, you can tell the
+@@ -207,7 +207,7 @@ a. Drive is not detected during booting.
+      Support for some interfaces needing extra initialization is
+      provided in later 1.3.x kernels.  You may need to turn on
+      additional kernel configuration options to get them to work;
+-     see Documentation/ide/ide.txt.
++     see Documentation/ide/ide.rst.
  
--  + Decrease user confusion about dependencies between livepatches.
-+  - Decrease user confusion about dependencies between livepatches.
+      Even if support is not available for your interface, you may be
+      able to get it to work with the following procedure.  First boot
+@@ -261,7 +261,7 @@ c. System hangups.
+     be worked around by specifying the `serialize` option when
+     booting.  Recent kernels should be able to detect the need for
+     this automatically in most cases, but the detection is not
+-    foolproof.  See Documentation/ide/ide.txt for more information
++    foolproof.  See Documentation/ide/ide.rst for more information
+     about the `serialize` option and the CMD640B.
  
- 
- Limitations:
- ------------
- 
--  + Once the operation finishes, there is no straightforward way
-+  - Once the operation finishes, there is no straightforward way
-     to reverse it and restore the replaced patches atomically.
- 
-     A good practice is to set .replace flag in any released livepatch.
-@@ -74,7 +74,7 @@ Limitations:
-     only when the transition was not forced.
- 
- 
--  + Only the (un)patching callbacks from the _new_ cumulative livepatch are
-+  - Only the (un)patching callbacks from the _new_ cumulative livepatch are
-     executed. Any callbacks from the replaced patches are ignored.
- 
-     In other words, the cumulative patch is responsible for doing any actions
-@@ -93,7 +93,7 @@ Limitations:
-     enabled patches were called.
- 
- 
--  + There is no special handling of shadow variables. Livepatch authors
-+  - There is no special handling of shadow variables. Livepatch authors
-     must create their own rules how to pass them from one cumulative
-     patch to the other. Especially that they should not blindly remove
-     them in module_exit() functions.
-diff --git a/Documentation/livepatch/index.rst b/Documentation/livepatch/index.rst
+   - Note that many MS-DOS CDROM drivers will work with such buggy
+diff --git a/Documentation/ide/changelogs.rst b/Documentation/ide/changelogs.rst
 new file mode 100644
-index 000000000000..edd291d51847
+index 000000000000..fdf9d0fb8027
 --- /dev/null
-+++ b/Documentation/livepatch/index.rst
++++ b/Documentation/ide/changelogs.rst
+@@ -0,0 +1,17 @@
++Changelog for ide cd
++--------------------
++
++ .. include:: ChangeLog.ide-cd.1994-2004
++    :literal:
++
++Changelog for ide floppy
++------------------------
++
++ .. include:: ChangeLog.ide-floppy.1996-2002
++    :literal:
++
++Changelog for ide tape
++----------------------
++
++ .. include:: ChangeLog.ide-tape.1995-2002
++    :literal:
+diff --git a/Documentation/ide/ide-tape.txt b/Documentation/ide/ide-tape.rst
+similarity index 83%
+rename from Documentation/ide/ide-tape.txt
+rename to Documentation/ide/ide-tape.rst
+index 3f348a0b21d8..3e061d9c0e38 100644
+--- a/Documentation/ide/ide-tape.txt
++++ b/Documentation/ide/ide-tape.rst
+@@ -1,4 +1,6 @@
+-IDE ATAPI streaming tape driver.
++===============================
++IDE ATAPI streaming tape driver
++===============================
+ 
+ This driver is a part of the Linux ide driver.
+ 
+@@ -10,14 +12,14 @@ to the request-list of the block device, and waits for their completion.
+ The block device major and minor numbers are determined from the
+ tape's relative position in the ide interfaces, as explained in ide.c.
+ 
+-The character device interface consists of the following devices:
++The character device interface consists of the following devices::
+ 
+-ht0		major 37, minor 0	first  IDE tape, rewind on close.
+-ht1		major 37, minor 1	second IDE tape, rewind on close.
+-...
+-nht0		major 37, minor 128	first  IDE tape, no rewind on close.
+-nht1		major 37, minor 129	second IDE tape, no rewind on close.
+-...
++  ht0		major 37, minor 0	first  IDE tape, rewind on close.
++  ht1		major 37, minor 1	second IDE tape, rewind on close.
++  ...
++  nht0		major 37, minor 128	first  IDE tape, no rewind on close.
++  nht1		major 37, minor 129	second IDE tape, no rewind on close.
++  ...
+ 
+ The general magnetic tape commands compatible interface, as defined by
+ include/linux/mtio.h, is accessible through the character device.
+@@ -40,9 +42,10 @@ Testing was done with a 2 GB CONNER CTMA 4000 IDE ATAPI Streaming Tape Drive.
+ Here are some words from the first releases of hd.c, which are quoted
+ in ide.c and apply here as well:
+ 
+-| Special care is recommended.  Have Fun!
++* Special care is recommended.  Have Fun!
+ 
+-Possible improvements:
++Possible improvements
++=====================
+ 
+ 1. Support for the ATAPI overlap protocol.
+ 
+diff --git a/Documentation/ide/ide.txt b/Documentation/ide/ide.rst
+similarity index 72%
+rename from Documentation/ide/ide.txt
+rename to Documentation/ide/ide.rst
+index 7aca987c23d9..88bdcba92f7d 100644
+--- a/Documentation/ide/ide.txt
++++ b/Documentation/ide/ide.rst
+@@ -1,41 +1,43 @@
+-
+-	Information regarding the Enhanced IDE drive in Linux 2.6
+-
+-==============================================================================
+-
++============================================
++Information regarding the Enhanced IDE drive
++============================================
+ 
+    The hdparm utility can be used to control various IDE features on a
+    running system. It is packaged separately.  Please Look for it on popular
+    linux FTP sites.
+ 
++-------------------------------------------------------------------------------
+ 
++.. important::
+ 
+-***  IMPORTANT NOTICES:  BUGGY IDE CHIPSETS CAN CORRUPT DATA!!
+-***  =================
+-***  PCI versions of the CMD640 and RZ1000 interfaces are now detected
+-***  automatically at startup when PCI BIOS support is configured.
+-***
+-***  Linux disables the "prefetch" ("readahead") mode of the RZ1000
+-***  to prevent data corruption possible due to hardware design flaws.
+-***
+-***  For the CMD640, linux disables "IRQ unmasking" (hdparm -u1) on any
+-***  drive for which the "prefetch" mode of the CMD640 is turned on.
+-***  If "prefetch" is disabled (hdparm -p8), then "IRQ unmasking" can be
+-***  used again.
+-***
+-***  For the CMD640, linux disables "32bit I/O" (hdparm -c1) on any drive
+-***  for which the "prefetch" mode of the CMD640 is turned off.
+-***  If "prefetch" is enabled (hdparm -p9), then "32bit I/O" can be
+-***  used again.
+-***
+-***  The CMD640 is also used on some Vesa Local Bus (VLB) cards, and is *NOT*
+-***  automatically detected by Linux.  For safe, reliable operation with such
+-***  interfaces, one *MUST* use the "cmd640.probe_vlb" kernel option.
+-***
+-***  Use of the "serialize" option is no longer necessary.
+-
+-================================================================================
+-Common pitfalls:
++   BUGGY IDE CHIPSETS CAN CORRUPT DATA!!
++
++    PCI versions of the CMD640 and RZ1000 interfaces are now detected
++    automatically at startup when PCI BIOS support is configured.
++
++    Linux disables the "prefetch" ("readahead") mode of the RZ1000
++    to prevent data corruption possible due to hardware design flaws.
++
++    For the CMD640, linux disables "IRQ unmasking" (hdparm -u1) on any
++    drive for which the "prefetch" mode of the CMD640 is turned on.
++    If "prefetch" is disabled (hdparm -p8), then "IRQ unmasking" can be
++    used again.
++
++    For the CMD640, linux disables "32bit I/O" (hdparm -c1) on any drive
++    for which the "prefetch" mode of the CMD640 is turned off.
++    If "prefetch" is enabled (hdparm -p9), then "32bit I/O" can be
++    used again.
++
++    The CMD640 is also used on some Vesa Local Bus (VLB) cards, and is *NOT*
++    automatically detected by Linux.  For safe, reliable operation with such
++    interfaces, one *MUST* use the "cmd640.probe_vlb" kernel option.
++
++    Use of the "serialize" option is no longer necessary.
++
++-------------------------------------------------------------------------------
++
++Common pitfalls
++===============
+ 
+ - 40-conductor IDE cables are capable of transferring data in DMA modes up to
+   udma2, but no faster.
+@@ -49,19 +51,18 @@ Common pitfalls:
+ - Even better try to stick to the same vendor and device type on the same
+   cable.
+ 
+-================================================================================
+-
+-This is the multiple IDE interface driver, as evolved from hd.c.
++This is the multiple IDE interface driver, as evolved from hd.c
++===============================================================
+ 
+ It supports up to 9 IDE interfaces per default, on one or more IRQs (usually
+-14 & 15).  There can be up to two drives per interface, as per the ATA-6 spec.
++14 & 15).  There can be up to two drives per interface, as per the ATA-6 spec.::
+ 
+-Primary:    ide0, port 0x1f0; major=3;  hda is minor=0; hdb is minor=64
+-Secondary:  ide1, port 0x170; major=22; hdc is minor=0; hdd is minor=64
+-Tertiary:   ide2, port 0x1e8; major=33; hde is minor=0; hdf is minor=64
+-Quaternary: ide3, port 0x168; major=34; hdg is minor=0; hdh is minor=64
+-fifth..     ide4, usually PCI, probed
+-sixth..     ide5, usually PCI, probed
++  Primary:    ide0, port 0x1f0; major=3;  hda is minor=0; hdb is minor=64
++  Secondary:  ide1, port 0x170; major=22; hdc is minor=0; hdd is minor=64
++  Tertiary:   ide2, port 0x1e8; major=33; hde is minor=0; hdf is minor=64
++  Quaternary: ide3, port 0x168; major=34; hdg is minor=0; hdh is minor=64
++  fifth..     ide4, usually PCI, probed
++  sixth..     ide5, usually PCI, probed
+ 
+ To access devices on interfaces > ide0, device entries please make sure that
+ device files for them are present in /dev.  If not, please create such
+@@ -80,12 +81,15 @@ seldom occurs.  Be careful, and if in doubt, don't do it!
+ 
+ Drives are normally found by auto-probing and/or examining the CMOS/BIOS data.
+ For really weird situations, the apparent (fdisk) geometry can also be specified
+-on the kernel "command line" using LILO.  The format of such lines is:
++on the kernel "command line" using LILO.  The format of such lines is::
+ 
+ 	ide_core.chs=[interface_number.device_number]:cyls,heads,sects
+-or	ide_core.cdrom=[interface_number.device_number]
+ 
+-For example:
++or::
++
++	ide_core.cdrom=[interface_number.device_number]
++
++For example::
+ 
+ 	ide_core.chs=1.0:1050,32,64  ide_core.cdrom=1.1
+ 
+@@ -96,10 +100,12 @@ geometry for partitioning purposes (fdisk).
+ If the auto-probing during boot time confuses a drive (ie. the drive works
+ with hd.c but not with ide.c), then an command line option may be specified
+ for each drive for which you'd like the drive to skip the hardware
+-probe/identification sequence.  For example:
++probe/identification sequence.  For example::
+ 
+ 	ide_core.noprobe=0.1
+-or
++
++or::
++
+ 	ide_core.chs=1.0:768,16,32
+ 	ide_core.noprobe=1.0
+ 
+@@ -115,22 +121,24 @@ Such drives will be identified at boot time, just like a hard disk.
+ 
+ If for some reason your cdrom drive is *not* found at boot time, you can force
+ the probe to look harder by supplying a kernel command line parameter
+-via LILO, such as:
++via LILO, such as:::
+ 
+ 	ide_core.cdrom=1.0	/* "master" on second interface (hdc) */
+-or
++
++or::
++
+ 	ide_core.cdrom=1.1	/* "slave" on second interface (hdd) */
+ 
+ For example, a GW2000 system might have a hard drive on the primary
+ interface (/dev/hda) and an IDE cdrom drive on the secondary interface
+-(/dev/hdc).  To mount a CD in the cdrom drive, one would use something like:
++(/dev/hdc).  To mount a CD in the cdrom drive, one would use something like::
+ 
+ 	ln -sf /dev/hdc /dev/cdrom
+ 	mkdir /mnt/cdrom
+ 	mount /dev/cdrom /mnt/cdrom -t iso9660 -o ro
+ 
+ If, after doing all of the above, mount doesn't work and you see
+-errors from the driver (with dmesg) complaining about `status=0xff',
++errors from the driver (with dmesg) complaining about `status=0xff`,
+ this means that the hardware is not responding to the driver's attempts
+ to read it.  One of the following is probably the problem:
+ 
+@@ -165,7 +173,7 @@ drivers can always be compiled as loadable modules, the chipset drivers
+ can only be compiled into the kernel, and the core code (ide.c) can be
+ compiled as a loadable module provided no chipset support is needed.
+ 
+-When using ide.c as a module in combination with kmod, add:
++When using ide.c as a module in combination with kmod, add::
+ 
+ 	alias block-major-3 ide-probe
+ 
+@@ -176,10 +184,8 @@ driver using the "options=" keyword to insmod, while replacing any ',' with
+ ';'.
+ 
+ 
+-================================================================================
+-
+ Summary of ide driver parameters for kernel command line
+---------------------------------------------------------
++========================================================
+ 
+ For legacy IDE VLB host drivers (ali14xx/dtc2278/ht6560b/qd65xx/umc8672)
+ you need to explicitly enable probing by using "probe" kernel parameter,
+@@ -226,28 +232,31 @@ Other kernel parameters for ide_core are:
+ 
+ * "chs=[interface_number.device_number]" to force device as a disk (using CHS)
+ 
+-================================================================================
+ 
+ Some Terminology
+-----------------
+-IDE = Integrated Drive Electronics, meaning that each drive has a built-in
+-controller, which is why an "IDE interface card" is not a "controller card".
++================
+ 
+-ATA = AT (the old IBM 286 computer) Attachment Interface, a draft American
+-National Standard for connecting hard drives to PCs.  This is the official
+-name for "IDE".
++IDE
++  Integrated Drive Electronics, meaning that each drive has a built-in
++  controller, which is why an "IDE interface card" is not a "controller card".
+ 
+-The latest standards define some enhancements, known as the ATA-6 spec,
+-which grew out of vendor-specific "Enhanced IDE" (EIDE) implementations.
++ATA
++  AT (the old IBM 286 computer) Attachment Interface, a draft American
++  National Standard for connecting hard drives to PCs.  This is the official
++  name for "IDE".
+ 
+-ATAPI = ATA Packet Interface, a new protocol for controlling the drives,
+-similar to SCSI protocols, created at the same time as the ATA2 standard.
+-ATAPI is currently used for controlling CDROM, TAPE and FLOPPY (ZIP or
+-LS120/240) devices, removable R/W cartridges, and for high capacity hard disk
+-drives.
++  The latest standards define some enhancements, known as the ATA-6 spec,
++  which grew out of vendor-specific "Enhanced IDE" (EIDE) implementations.
++
++ATAPI
++  ATA Packet Interface, a new protocol for controlling the drives,
++  similar to SCSI protocols, created at the same time as the ATA2 standard.
++  ATAPI is currently used for controlling CDROM, TAPE and FLOPPY (ZIP or
++  LS120/240) devices, removable R/W cartridges, and for high capacity hard disk
++  drives.
+ 
+ mlord@pobox.com
+---
++
+ 
+ Wed Apr 17 22:52:44 CEST 2002 edited by Marcin Dalecki, the current
+ maintainer.
+diff --git a/Documentation/ide/index.rst b/Documentation/ide/index.rst
+new file mode 100644
+index 000000000000..45bc12d3957f
+--- /dev/null
++++ b/Documentation/ide/index.rst
 @@ -0,0 +1,21 @@
 +:orphan:
 +
-+===================
-+Kernel Livepatching
-+===================
++==================================
++Integrated Drive Electronics (IDE)
++==================================
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    livepatch
-+    callbacks
-+    cumulative-patches
-+    module-elf-format
-+    shadow-vars
++    ide
++    ide-tape
++    warm-plug-howto
++
++    changelogs
 +
 +.. only::  subproject and html
 +
@@ -236,626 +535,138 @@ index 000000000000..edd291d51847
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/livepatch/livepatch.txt b/Documentation/livepatch/livepatch.rst
-similarity index 93%
-rename from Documentation/livepatch/livepatch.txt
-rename to Documentation/livepatch/livepatch.rst
-index 4627b41ff02e..c2c598c4ead8 100644
---- a/Documentation/livepatch/livepatch.txt
-+++ b/Documentation/livepatch/livepatch.rst
-@@ -4,22 +4,22 @@ Livepatch
- 
- This document outlines basic information about kernel livepatching.
- 
--Table of Contents:
-+.. Table of Contents:
- 
--1. Motivation
--2. Kprobes, Ftrace, Livepatching
--3. Consistency model
--4. Livepatch module
--   4.1. New functions
--   4.2. Metadata
--5. Livepatch life-cycle
--   5.1. Loading
--   5.2. Enabling
--   5.3. Replacing
--   5.4. Disabling
--   5.5. Removing
--6. Sysfs
--7. Limitations
-+    1. Motivation
-+    2. Kprobes, Ftrace, Livepatching
-+    3. Consistency model
-+    4. Livepatch module
-+       4.1. New functions
-+       4.2. Metadata
-+    5. Livepatch life-cycle
-+       5.1. Loading
-+       5.2. Enabling
-+       5.3. Replacing
-+       5.4. Disabling
-+       5.5. Removing
-+    6. Sysfs
-+    7. Limitations
- 
- 
- 1. Motivation
-@@ -40,14 +40,14 @@ There are multiple mechanisms in the Linux kernel that are directly related
- to redirection of code execution; namely: kernel probes, function tracing,
- and livepatching:
- 
--  + The kernel probes are the most generic. The code can be redirected by
-+  - The kernel probes are the most generic. The code can be redirected by
-     putting a breakpoint instruction instead of any instruction.
- 
--  + The function tracer calls the code from a predefined location that is
-+  - The function tracer calls the code from a predefined location that is
-     close to the function entry point. This location is generated by the
-     compiler using the '-pg' gcc option.
- 
--  + Livepatching typically needs to redirect the code at the very beginning
-+  - Livepatching typically needs to redirect the code at the very beginning
-     of the function entry before the function parameters or the stack
-     are in any way modified.
- 
-@@ -249,7 +249,7 @@ The patch contains only functions that are really modified. But they
- might want to access functions or data from the original source file
- that may only be locally accessible. This can be solved by a special
- relocation section in the generated livepatch module, see
--Documentation/livepatch/module-elf-format.txt for more details.
-+Documentation/livepatch/module-elf-format.rst for more details.
- 
- 
- 4.2. Metadata
-@@ -258,7 +258,7 @@ Documentation/livepatch/module-elf-format.txt for more details.
- The patch is described by several structures that split the information
- into three levels:
- 
--  + struct klp_func is defined for each patched function. It describes
-+  - struct klp_func is defined for each patched function. It describes
-     the relation between the original and the new implementation of a
-     particular function.
- 
-@@ -275,7 +275,7 @@ into three levels:
-     only for a particular object ( vmlinux or a kernel module ). Note that
-     kallsyms allows for searching symbols according to the object name.
- 
--  + struct klp_object defines an array of patched functions (struct
-+  - struct klp_object defines an array of patched functions (struct
-     klp_func) in the same object. Where the object is either vmlinux
-     (NULL) or a module name.
- 
-@@ -285,7 +285,7 @@ into three levels:
-     only when they are available.
- 
- 
--  + struct klp_patch defines an array of patched objects (struct
-+  - struct klp_patch defines an array of patched objects (struct
-     klp_object).
- 
-     This structure handles all patched functions consistently and eventually,
-@@ -337,14 +337,16 @@ operation fails.
- Second, livepatch enters into a transition state where tasks are converging
- to the patched state. If an original function is patched for the first
- time, a function specific struct klp_ops is created and an universal
--ftrace handler is registered[*]. This stage is indicated by a value of '1'
-+ftrace handler is registered\ [#]_. This stage is indicated by a value of '1'
- in /sys/kernel/livepatch/<name>/transition. For more information about
- this process, see the "Consistency model" section.
- 
- Finally, once all tasks have been patched, the 'transition' value changes
- to '0'.
- 
--[*] Note that functions might be patched multiple times. The ftrace handler
-+.. [#]
-+
-+    Note that functions might be patched multiple times. The ftrace handler
-     is registered only once for a given function. Further patches just add
-     an entry to the list (see field `func_stack`) of the struct klp_ops.
-     The right implementation is selected by the ftrace handler, see
-@@ -368,7 +370,7 @@ the ftrace handler is unregistered and the struct klp_ops is
- freed when the related function is not modified by the new patch
- and func_stack list becomes empty.
- 
--See Documentation/livepatch/cumulative-patches.txt for more details.
-+See Documentation/livepatch/cumulative-patches.rst for more details.
- 
- 
- 5.4. Disabling
-@@ -421,7 +423,7 @@ See Documentation/ABI/testing/sysfs-kernel-livepatch for more details.
- 
- The current Livepatch implementation has several limitations:
- 
--  + Only functions that can be traced could be patched.
-+  - Only functions that can be traced could be patched.
- 
-     Livepatch is based on the dynamic ftrace. In particular, functions
-     implementing ftrace or the livepatch ftrace handler could not be
-@@ -431,7 +433,7 @@ The current Livepatch implementation has several limitations:
- 
- 
- 
--  + Livepatch works reliably only when the dynamic ftrace is located at
-+  - Livepatch works reliably only when the dynamic ftrace is located at
-     the very beginning of the function.
- 
-     The function need to be redirected before the stack or the function
-@@ -445,7 +447,7 @@ The current Livepatch implementation has several limitations:
-     this is handled on the ftrace level.
- 
- 
--  + Kretprobes using the ftrace framework conflict with the patched
-+  - Kretprobes using the ftrace framework conflict with the patched
-     functions.
- 
-     Both kretprobes and livepatches use a ftrace handler that modifies
-@@ -453,7 +455,7 @@ The current Livepatch implementation has several limitations:
-     is rejected when the handler is already in use by the other.
- 
- 
--  + Kprobes in the original function are ignored when the code is
-+  - Kprobes in the original function are ignored when the code is
-     redirected to the new implementation.
- 
-     There is a work in progress to add warnings about this situation.
-diff --git a/Documentation/livepatch/module-elf-format.txt b/Documentation/livepatch/module-elf-format.rst
-similarity index 68%
-rename from Documentation/livepatch/module-elf-format.txt
-rename to Documentation/livepatch/module-elf-format.rst
-index f21a5289a09c..7f557c6f6deb 100644
---- a/Documentation/livepatch/module-elf-format.txt
-+++ b/Documentation/livepatch/module-elf-format.rst
-@@ -4,29 +4,29 @@ Livepatch module Elf format
- 
- This document outlines the Elf format requirements that livepatch modules must follow.
- 
-------------------
--Table of Contents
-------------------
--0. Background and motivation
--1. Livepatch modinfo field
--2. Livepatch relocation sections
--   2.1 What are livepatch relocation sections?
--   2.2 Livepatch relocation section format
--       2.2.1 Required flags
--       2.2.2 Required name format
--       2.2.3 Example livepatch relocation section names
--       2.2.4 Example `readelf --sections` output
--       2.2.5 Example `readelf --relocs` output
--3. Livepatch symbols
--   3.1 What are livepatch symbols?
--   3.2 A livepatch module's symbol table
--   3.3 Livepatch symbol format
--       3.3.1 Required flags
--       3.3.2 Required name format
--       3.3.3 Example livepatch symbol names
--       3.3.4 Example `readelf --symbols` output
--4. Architecture-specific sections
--5. Symbol table and Elf section access
-+
-+.. Table of Contents
-+
-+   0. Background and motivation
-+   1. Livepatch modinfo field
-+   2. Livepatch relocation sections
-+      2.1 What are livepatch relocation sections?
-+      2.2 Livepatch relocation section format
-+          2.2.1 Required flags
-+          2.2.2 Required name format
-+          2.2.3 Example livepatch relocation section names
-+          2.2.4 Example `readelf --sections` output
-+          2.2.5 Example `readelf --relocs` output
-+   3. Livepatch symbols
-+      3.1 What are livepatch symbols?
-+      3.2 A livepatch module's symbol table
-+      3.3 Livepatch symbol format
-+          3.3.1 Required flags
-+          3.3.2 Required name format
-+          3.3.3 Example livepatch symbol names
-+          3.3.4 Example `readelf --symbols` output
-+   4. Architecture-specific sections
-+   5. Symbol table and Elf section access
- 
- ----------------------------
- 0. Background and motivation
-@@ -89,12 +89,15 @@ used by the kernel module loader to identify livepatch modules.
- 
- Example modinfo output:
- -----------------------
--% modinfo livepatch-meminfo.ko
--filename:		livepatch-meminfo.ko
--livepatch:		Y
--license:		GPL
--depends:
--vermagic:		4.3.0+ SMP mod_unload
-+
-+::
-+
-+	% modinfo livepatch-meminfo.ko
-+	filename:		livepatch-meminfo.ko
-+	livepatch:		Y
-+	license:		GPL
-+	depends:
-+	vermagic:		4.3.0+ SMP mod_unload
- 
- --------------------------------
- 2. Livepatch relocation sections
-@@ -142,17 +145,18 @@ be copied into memory along with the other SHF_ALLOC sections).
- 
- 2.2.2 Required name format
- --------------------------
--The name of a livepatch relocation section must conform to the following format:
-+The name of a livepatch relocation section must conform to the following
-+format::
- 
--.klp.rela.objname.section_name
--^        ^^     ^ ^          ^
--|________||_____| |__________|
--   [A]      [B]        [C]
-+  .klp.rela.objname.section_name
-+  ^        ^^     ^ ^          ^
-+  |________||_____| |__________|
-+     [A]      [B]        [C]
- 
--[A] The relocation section name is prefixed with the string ".klp.rela."
--[B] The name of the object (i.e. "vmlinux" or name of module) to
--    which the relocation section belongs follows immediately after the prefix.
--[C] The actual name of the section to which this relocation section applies.
-+  [A] The relocation section name is prefixed with the string ".klp.rela."
-+  [B] The name of the object (i.e. "vmlinux" or name of module) to
-+      which the relocation section belongs follows immediately after the prefix.
-+  [C] The actual name of the section to which this relocation section applies.
- 
- 2.2.3 Example livepatch relocation section names:
- -------------------------------------------------
-@@ -162,6 +166,9 @@ The name of a livepatch relocation section must conform to the following format:
- 2.2.4 Example `readelf --sections` output for a patch
- module that patches vmlinux and modules 9p, btrfs, ext4:
- --------------------------------------------------------
-+
-+::
-+
-   Section Headers:
-   [Nr] Name                          Type                    Address          Off    Size   ES Flg Lk Inf Al
-   [ snip ]
-@@ -175,23 +182,26 @@ module that patches vmlinux and modules 9p, btrfs, ext4:
-   [ snip ]                                       ^                                             ^
-                                                  |                                             |
-                                                 [*]                                           [*]
--[*] Livepatch relocation sections are SHT_RELA sections but with a few special
--characteristics. Notice that they are marked SHF_ALLOC ("A") so that they will
--not be discarded when the module is loaded into memory, as well as with the
--SHF_RELA_LIVEPATCH flag ("o" - for OS-specific).
-+  [*] Livepatch relocation sections are SHT_RELA sections but with a few special
-+  characteristics. Notice that they are marked SHF_ALLOC ("A") so that they will
-+  not be discarded when the module is loaded into memory, as well as with the
-+  SHF_RELA_LIVEPATCH flag ("o" - for OS-specific).
- 
- 2.2.5 Example `readelf --relocs` output for a patch module:
- -----------------------------------------------------------
--Relocation section '.klp.rela.btrfs.text.btrfs_feature_attr_show' at offset 0x2ba0 contains 4 entries:
--    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
--000000000000001f  0000005e00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.printk,0 - 4
--0000000000000028  0000003d0000000b R_X86_64_32S           0000000000000000 .klp.sym.btrfs.btrfs_ktype,0 + 0
--0000000000000036  0000003b00000002 R_X86_64_PC32          0000000000000000 .klp.sym.btrfs.can_modify_feature.isra.3,0 - 4
--000000000000004c  0000004900000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.snprintf,0 - 4
--[ snip ]                                                                   ^
--                                                                           |
-+
-+::
-+
-+  Relocation section '.klp.rela.btrfs.text.btrfs_feature_attr_show' at offset 0x2ba0 contains 4 entries:
-+      Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-+  000000000000001f  0000005e00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.printk,0 - 4
-+  0000000000000028  0000003d0000000b R_X86_64_32S           0000000000000000 .klp.sym.btrfs.btrfs_ktype,0 + 0
-+  0000000000000036  0000003b00000002 R_X86_64_PC32          0000000000000000 .klp.sym.btrfs.can_modify_feature.isra.3,0 - 4
-+  000000000000004c  0000004900000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.snprintf,0 - 4
-+  [ snip ]                                                                   ^
-+                                                                             |
-                                                                           [*]
--[*] Every symbol referenced by a relocation is a livepatch symbol.
-+  [*] Every symbol referenced by a relocation is a livepatch symbol.
- 
- --------------------
- 3. Livepatch symbols
-@@ -231,18 +241,19 @@ relocation section refer to their respective symbols with their symbol indices,
- and the original symbol indices (and thus the symtab ordering) must be
- preserved in order for apply_relocate_add() to find the right symbol.
- 
--For example, take this particular rela from a livepatch module:
--Relocation section '.klp.rela.btrfs.text.btrfs_feature_attr_show' at offset 0x2ba0 contains 4 entries:
--    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
--000000000000001f  0000005e00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.printk,0 - 4
-+For example, take this particular rela from a livepatch module:::
- 
--This rela refers to the symbol '.klp.sym.vmlinux.printk,0', and the symbol index is encoded
--in 'Info'. Here its symbol index is 0x5e, which is 94 in decimal, which refers to the
--symbol index 94.
--And in this patch module's corresponding symbol table, symbol index 94 refers to that very symbol:
--[ snip ]
--94: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.printk,0
--[ snip ]
-+  Relocation section '.klp.rela.btrfs.text.btrfs_feature_attr_show' at offset 0x2ba0 contains 4 entries:
-+      Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-+  000000000000001f  0000005e00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.printk,0 - 4
-+
-+  This rela refers to the symbol '.klp.sym.vmlinux.printk,0', and the symbol index is encoded
-+  in 'Info'. Here its symbol index is 0x5e, which is 94 in decimal, which refers to the
-+  symbol index 94.
-+  And in this patch module's corresponding symbol table, symbol index 94 refers to that very symbol:
-+  [ snip ]
-+  94: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.printk,0
-+  [ snip ]
- 
- ---------------------------
- 3.3 Livepatch symbol format
-@@ -256,42 +267,48 @@ See include/uapi/linux/elf.h for the actual definitions.
- 
- 3.3.2 Required name format
- --------------------------
--Livepatch symbol names must conform to the following format:
-+Livepatch symbol names must conform to the following format::
- 
--.klp.sym.objname.symbol_name,sympos
--^       ^^     ^ ^         ^ ^
--|_______||_____| |_________| |
--   [A]     [B]       [C]    [D]
-+  .klp.sym.objname.symbol_name,sympos
-+  ^       ^^     ^ ^         ^ ^
-+  |_______||_____| |_________| |
-+     [A]     [B]       [C]    [D]
- 
--[A] The symbol name is prefixed with the string ".klp.sym."
--[B] The name of the object (i.e. "vmlinux" or name of module) to
--    which the symbol belongs follows immediately after the prefix.
--[C] The actual name of the symbol.
--[D] The position of the symbol in the object (as according to kallsyms)
--    This is used to differentiate duplicate symbols within the same
--    object. The symbol position is expressed numerically (0, 1, 2...).
--    The symbol position of a unique symbol is 0.
-+  [A] The symbol name is prefixed with the string ".klp.sym."
-+  [B] The name of the object (i.e. "vmlinux" or name of module) to
-+      which the symbol belongs follows immediately after the prefix.
-+  [C] The actual name of the symbol.
-+  [D] The position of the symbol in the object (as according to kallsyms)
-+      This is used to differentiate duplicate symbols within the same
-+      object. The symbol position is expressed numerically (0, 1, 2...).
-+      The symbol position of a unique symbol is 0.
- 
- 3.3.3 Example livepatch symbol names:
- -------------------------------------
--.klp.sym.vmlinux.snprintf,0
--.klp.sym.vmlinux.printk,0
--.klp.sym.btrfs.btrfs_ktype,0
-+
-+::
-+
-+	.klp.sym.vmlinux.snprintf,0
-+	.klp.sym.vmlinux.printk,0
-+	.klp.sym.btrfs.btrfs_ktype,0
- 
- 3.3.4 Example `readelf --symbols` output for a patch module:
- ------------------------------------------------------------
--Symbol table '.symtab' contains 127 entries:
--   Num:    Value          Size Type    Bind   Vis     Ndx         Name
--   [ snip ]
--    73: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.snprintf,0
--    74: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.capable,0
--    75: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.find_next_bit,0
--    76: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.si_swapinfo,0
--  [ snip ]                                               ^
--                                                         |
--                                                        [*]
--[*] Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
--    "OS" means OS-specific.
-+
-+::
-+
-+  Symbol table '.symtab' contains 127 entries:
-+     Num:    Value          Size Type    Bind   Vis     Ndx         Name
-+     [ snip ]
-+      73: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.snprintf,0
-+      74: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.capable,0
-+      75: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.find_next_bit,0
-+      76: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.si_swapinfo,0
-+    [ snip ]                                               ^
-+                                                           |
-+                                                          [*]
-+  [*] Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
-+      "OS" means OS-specific.
- 
- ---------------------------------
- 4. Architecture-specific sections
-@@ -313,11 +330,11 @@ Since apply_relocate_add() requires access to a module's section headers,
- symbol table, and relocation section indices, Elf information is preserved for
- livepatch modules and is made accessible by the module loader through
- module->klp_info, which is a klp_modinfo struct. When a livepatch module loads,
--this struct is filled in by the module loader. Its fields are documented below:
-+this struct is filled in by the module loader. Its fields are documented below::
- 
--struct klp_modinfo {
--	Elf_Ehdr hdr; /* Elf header */
--	Elf_Shdr *sechdrs; /* Section header table */
--	char *secstrings; /* String table for the section headers */
--	unsigned int symndx; /* The symbol table section index */
--};
-+	struct klp_modinfo {
-+		Elf_Ehdr hdr; /* Elf header */
-+		Elf_Shdr *sechdrs; /* Section header table */
-+		char *secstrings; /* String table for the section headers */
-+		unsigned int symndx; /* The symbol table section index */
-+	};
-diff --git a/Documentation/livepatch/shadow-vars.txt b/Documentation/livepatch/shadow-vars.rst
-similarity index 87%
-rename from Documentation/livepatch/shadow-vars.txt
-rename to Documentation/livepatch/shadow-vars.rst
-index ecc09a7be5dd..c05715aeafa4 100644
---- a/Documentation/livepatch/shadow-vars.txt
-+++ b/Documentation/livepatch/shadow-vars.rst
-@@ -27,10 +27,13 @@ A hashtable references all shadow variables.  These references are
- stored and retrieved through a <obj, id> pair.
- 
- * The klp_shadow variable data structure encapsulates both tracking
--meta-data and shadow-data:
-+  meta-data and shadow-data:
-+
-   - meta-data
-+
-     - obj - pointer to parent object
-     - id - data identifier
-+
-   - data[] - storage for shadow data
- 
- It is important to note that the klp_shadow_alloc() and
-@@ -47,31 +50,43 @@ to do actions that can be done only once when a new variable is allocated.
- 
- * klp_shadow_alloc() - allocate and add a new shadow variable
-   - search hashtable for <obj, id> pair
-+
-   - if exists
-+
-     - WARN and return NULL
-+
-   - if <obj, id> doesn't already exist
-+
-     - allocate a new shadow variable
-     - initialize the variable using a custom constructor and data when provided
-     - add <obj, id> to the global hashtable
- 
- * klp_shadow_get_or_alloc() - get existing or alloc a new shadow variable
-   - search hashtable for <obj, id> pair
-+
-   - if exists
-+
-     - return existing shadow variable
-+
-   - if <obj, id> doesn't already exist
-+
-     - allocate a new shadow variable
-     - initialize the variable using a custom constructor and data when provided
-     - add <obj, id> pair to the global hashtable
- 
- * klp_shadow_free() - detach and free a <obj, id> shadow variable
-   - find and remove a <obj, id> reference from global hashtable
-+
-     - if found
-+
-       - call destructor function if defined
-       - free shadow variable
- 
- * klp_shadow_free_all() - detach and free all <*, id> shadow variables
-   - find and remove any <*, id> references from global hashtable
-+
-     - if found
-+
-       - call destructor function if defined
-       - free shadow variable
- 
-@@ -102,12 +117,12 @@ parent "goes live" (ie, any shadow variable get-API requests are made
- for this <obj, id> pair.)
- 
- For commit 1d147bfa6429, when a parent sta_info structure is allocated,
--allocate a shadow copy of the ps_lock pointer, then initialize it:
-+allocate a shadow copy of the ps_lock pointer, then initialize it::
- 
--#define PS_LOCK 1
--struct sta_info *sta_info_alloc(struct ieee80211_sub_if_data *sdata,
--				const u8 *addr, gfp_t gfp)
--{
-+  #define PS_LOCK 1
-+  struct sta_info *sta_info_alloc(struct ieee80211_sub_if_data *sdata,
-+				  const u8 *addr, gfp_t gfp)
-+  {
- 	struct sta_info *sta;
- 	spinlock_t *ps_lock;
- 
-@@ -123,10 +138,10 @@ struct sta_info *sta_info_alloc(struct ieee80211_sub_if_data *sdata,
- 	...
- 
- When requiring a ps_lock, query the shadow variable API to retrieve one
--for a specific struct sta_info:
-+for a specific struct sta_info:::
- 
--void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
--{
-+  void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
-+  {
- 	spinlock_t *ps_lock;
- 
- 	/* sync with ieee80211_tx_h_unicast_ps_buf */
-@@ -136,10 +151,10 @@ void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
- 	...
- 
- When the parent sta_info structure is freed, first free the shadow
--variable:
-+variable::
- 
--void sta_info_free(struct ieee80211_local *local, struct sta_info *sta)
--{
-+  void sta_info_free(struct ieee80211_local *local, struct sta_info *sta)
-+  {
- 	klp_shadow_free(sta, PS_LOCK, NULL);
- 	kfree(sta);
- 	...
-@@ -155,19 +170,19 @@ these cases, the klp_shadow_get_or_alloc() call can be used to attach
- shadow variables to parents already in-flight.
- 
- For commit 1d147bfa6429, a good spot to allocate a shadow spinlock is
--inside ieee80211_sta_ps_deliver_wakeup():
-+inside ieee80211_sta_ps_deliver_wakeup()::
- 
--int ps_lock_shadow_ctor(void *obj, void *shadow_data, void *ctor_data)
--{
-+  int ps_lock_shadow_ctor(void *obj, void *shadow_data, void *ctor_data)
-+  {
- 	spinlock_t *lock = shadow_data;
- 
- 	spin_lock_init(lock);
- 	return 0;
--}
-+  }
- 
--#define PS_LOCK 1
--void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
--{
-+  #define PS_LOCK 1
-+  void ieee80211_sta_ps_deliver_wakeup(struct sta_info *sta)
-+  {
- 	spinlock_t *ps_lock;
- 
- 	/* sync with ieee80211_tx_h_unicast_ps_buf */
-@@ -200,10 +215,12 @@ suggests how to handle the parent object.
- =============
- 
- * https://github.com/dynup/kpatch
--The livepatch implementation is based on the kpatch version of shadow
--variables.
-+
-+  The livepatch implementation is based on the kpatch version of shadow
-+  variables.
- 
- * http://files.mkgnu.net/files/dynamos/doc/papers/dynamos_eurosys_07.pdf
--Dynamic and Adaptive Updates of Non-Quiescent Subsystems in Commodity
--Operating System Kernels (Kritis Makris, Kyung Dong Ryu 2007) presented
--a datatype update technique called "shadow data structures".
-+
-+  Dynamic and Adaptive Updates of Non-Quiescent Subsystems in Commodity
-+  Operating System Kernels (Kritis Makris, Kyung Dong Ryu 2007) presented
-+  a datatype update technique called "shadow data structures".
-diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
-index 3995735a878f..8df526c80b65 100644
---- a/tools/objtool/Documentation/stack-validation.txt
-+++ b/tools/objtool/Documentation/stack-validation.txt
-@@ -111,7 +111,7 @@ c) Higher live patching compatibility rate
-    be detectable).  Objtool makes that possible.
- 
-    For more details, see the livepatch documentation in the Linux kernel
--   source tree at Documentation/livepatch/livepatch.txt.
-+   source tree at Documentation/livepatch/livepatch.rst.
- 
- Rules
- -----
+diff --git a/Documentation/ide/warm-plug-howto.txt b/Documentation/ide/warm-plug-howto.rst
+similarity index 61%
+rename from Documentation/ide/warm-plug-howto.txt
+rename to Documentation/ide/warm-plug-howto.rst
+index 98152bcd515a..c245242ef2f1 100644
+--- a/Documentation/ide/warm-plug-howto.txt
++++ b/Documentation/ide/warm-plug-howto.rst
+@@ -1,14 +1,14 @@
+-
++===================
+ IDE warm-plug HOWTO
+ ===================
+ 
+-To warm-plug devices on a port 'idex':
++To warm-plug devices on a port 'idex'::
+ 
+-# echo -n "1" > /sys/class/ide_port/idex/delete_devices
++	# echo -n "1" > /sys/class/ide_port/idex/delete_devices
+ 
+-unplug old device(s) and plug new device(s)
++unplug old device(s) and plug new device(s)::
+ 
+-# echo -n "1" > /sys/class/ide_port/idex/scan
++	# echo -n "1" > /sys/class/ide_port/idex/scan
+ 
+ done
+ 
+diff --git a/arch/m68k/q40/README b/arch/m68k/q40/README
+index 93f4c4cd3c45..a4991d2d8af6 100644
+--- a/arch/m68k/q40/README
++++ b/arch/m68k/q40/README
+@@ -31,7 +31,7 @@ drivers used by the Q40, apart from the very obvious (console etc.):
+ 		char/joystick/*		# most of this should work, not
+ 				        # in default config.in
+ 	        block/q40ide.c		# startup for ide
+-		      ide*		# see Documentation/ide/ide.txt
++		      ide*		# see Documentation/ide/ide.rst
+ 		      floppy.c		# normal PC driver, DMA emu in asm/floppy.h
+ 					# and arch/m68k/kernel/entry.S
+ 					# see drivers/block/README.fd
+diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
+index 19fcd0756f46..6683010b59cb 100644
+--- a/drivers/ide/Kconfig
++++ b/drivers/ide/Kconfig
+@@ -24,13 +24,13 @@ menuconfig IDE
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ide-core.
+ 
+-	  For further information, please read <file:Documentation/ide/ide.txt>.
++	  For further information, please read <file:Documentation/ide/ide.rst>.
+ 
+ 	  If unsure, say N.
+ 
+ if IDE
+ 
+-comment "Please see Documentation/ide/ide.txt for help/info on IDE drives"
++comment "Please see Documentation/ide/ide.rst for help/info on IDE drives"
+ 
+ config IDE_XFER_MODE
+ 	bool
+@@ -162,7 +162,7 @@ config BLK_DEV_IDETAPE
+ 	  along with other IDE devices, as "hdb" or "hdc", or something
+ 	  similar, and will be mapped to a character device such as "ht0"
+ 	  (check the boot messages with dmesg).  Be sure to consult the
+-	  <file:drivers/ide/ide-tape.c> and <file:Documentation/ide/ide.txt>
++	  <file:drivers/ide/ide-tape.c> and <file:Documentation/ide/ide.rst>
+ 	  files for usage information.
+ 
+ 	  To compile this driver as a module, choose M here: the
+@@ -250,7 +250,7 @@ config BLK_DEV_CMD640
+ 
+ 	  The CMD640 chip is also used on add-in cards by Acculogic, and on
+ 	  the "CSA-6400E PCI to IDE controller" that some people have. For
+-	  details, read <file:Documentation/ide/ide.txt>.
++	  details, read <file:Documentation/ide/ide.rst>.
+ 
+ config BLK_DEV_CMD640_ENHANCED
+ 	bool "CMD640 enhanced support"
+@@ -258,7 +258,7 @@ config BLK_DEV_CMD640_ENHANCED
+ 	help
+ 	  This option includes support for setting/autotuning PIO modes and
+ 	  prefetch on CMD640 IDE interfaces.  For details, read
+-	  <file:Documentation/ide/ide.txt>. If you have a CMD640 IDE interface
++	  <file:Documentation/ide/ide.rst>. If you have a CMD640 IDE interface
+ 	  and your BIOS does not already do this for you, then say Y here.
+ 	  Otherwise say N.
+ 
+@@ -818,7 +818,7 @@ config BLK_DEV_ALI14XX
+ 	  boot parameter.  It enables support for the secondary IDE interface
+ 	  of the ALI M1439/1443/1445/1487/1489 chipsets, and permits faster
+ 	  I/O speeds to be set as well.
+-	  See the files <file:Documentation/ide/ide.txt> and
++	  See the files <file:Documentation/ide/ide.rst> and
+ 	  <file:drivers/ide/ali14xx.c> for more info.
+ 
+ config BLK_DEV_DTC2278
+@@ -829,7 +829,7 @@ config BLK_DEV_DTC2278
+ 	  This driver is enabled at runtime using the "dtc2278.probe" kernel
+ 	  boot parameter. It enables support for the secondary IDE interface
+ 	  of the DTC-2278 card, and permits faster I/O speeds to be set as
+-	  well. See the <file:Documentation/ide/ide.txt> and
++	  well. See the <file:Documentation/ide/ide.rst> and
+ 	  <file:drivers/ide/dtc2278.c> files for more info.
+ 
+ config BLK_DEV_HT6560B
+@@ -840,7 +840,7 @@ config BLK_DEV_HT6560B
+ 	  This driver is enabled at runtime using the "ht6560b.probe" kernel
+ 	  boot parameter. It enables support for the secondary IDE interface
+ 	  of the Holtek card, and permits faster I/O speeds to be set as well.
+-	  See the <file:Documentation/ide/ide.txt> and
++	  See the <file:Documentation/ide/ide.rst> and
+ 	  <file:drivers/ide/ht6560b.c> files for more info.
+ 
+ config BLK_DEV_QD65XX
+@@ -850,7 +850,7 @@ config BLK_DEV_QD65XX
+ 	help
+ 	  This driver is enabled at runtime using the "qd65xx.probe" kernel
+ 	  boot parameter.  It permits faster I/O speeds to be set.  See the
+-	  <file:Documentation/ide/ide.txt> and <file:drivers/ide/qd65xx.c>
++	  <file:Documentation/ide/ide.rst> and <file:drivers/ide/qd65xx.c>
+ 	  for more info.
+ 
+ config BLK_DEV_UMC8672
+@@ -861,7 +861,7 @@ config BLK_DEV_UMC8672
+ 	  This driver is enabled at runtime using the "umc8672.probe" kernel
+ 	  boot parameter. It enables support for the secondary IDE interface
+ 	  of the UMC-8672, and permits faster I/O speeds to be set as well.
+-	  See the files <file:Documentation/ide/ide.txt> and
++	  See the files <file:Documentation/ide/ide.rst> and
+ 	  <file:drivers/ide/umc8672.c> for more info.
+ 
+ endif
 -- 
 2.20.1
 
