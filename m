@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5EC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C59EC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5019C218FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FCB218B0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962356;
-	bh=szBkXxqiqCEEnOvkzWxbI2WmligjzE5ZDcccd/LXTqk=;
+	s=default; t=1555962359;
+	bh=kr6NEBRC3SUDRwcr/4esG9qxP7e3B4jMzbyLkYa2n+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRvk4oXGh7A3bRJdiD45vS8JB/MOsymywMLuJrwGwWVFyO/8oV0f2FnMNBeYDlQwv
-	 JEXCThFn5fldaFbtnr5CL5bc3tIWS0KDwv6KpjFU0tgrlNENeSh68391TMBbmfjAOf
-	 UoqTRAnebdUyHY58Nu5t4BHoTuVHSB7ayfKCgpWg=
+	b=cvJx7YNb9gD0qPaxpyKyYvUbo9ls6yZb9nU/FW1SDV47La0gdHUNDvd02l0lzcSnm
+	 so7RtjSqA2hXrhNYQD+ANzixSxFqrqwrCopphWfnlQtnbbDZPW1YUM3zaso59vvsRR
+	 EipXceK8BoyLM+n7x0yO+jEe3ESYYt2SNdFk08D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbfDVTpy (ORCPT
+        id S1729891AbfDVTp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbfDVTpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:42 -0400
+        id S1729859AbfDVTpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3D6A218B0;
-        Mon, 22 Apr 2019 19:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04863218D9;
+        Mon, 22 Apr 2019 19:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962341;
-        bh=szBkXxqiqCEEnOvkzWxbI2WmligjzE5ZDcccd/LXTqk=;
+        s=default; t=1555962349;
+        bh=kr6NEBRC3SUDRwcr/4esG9qxP7e3B4jMzbyLkYa2n+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aELPiK+Zm0fFUVwyjxFclWUMXZv4grKe1maZfPN5JFN0O649/6BJroYC4NE3y3X7D
-         1iyWN4gJiyOLao9BiYY19mGoD1Axt8QbISgW0+vsFiZF6rO7om9Hwl0wpwVCdgcK+h
-         /7Y+jaBntHlw0huehfYIiyHIgDu7wn4+0Wz1NPeM=
+        b=CTaPR5PndZziuSDTsjJNmKqqCNvGp/YgxbawpkAjYMRZFQFzjn6LUvNLA51i4jNJp
+         SLjHqPiU3rXFqqRr0qUBXtr6g2v24ih1xlL7Fkn3YGTpdUSf6ejbT0JsVP9b4dGRYq
+         68jkG8iOoEPnl2gaQooT9Wj7Qk2zPdzPwUi85ARA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/68] netfilter: ip6t_srh: fix NULL pointer dereferences
-Date:   Mon, 22 Apr 2019 15:44:21 -0400
-Message-Id: <20190422194516.11634-13-sashal@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.19 18/68] KVM: arm64: Reset the PMU in preemptible context
+Date:   Mon, 22 Apr 2019 15:44:26 -0400
+Message-Id: <20190422194516.11634-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -60,54 +57,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit 6d65561f3d5ec933151939c543d006b79044e7a6 ]
+[ Upstream commit ebff0b0e3d3c862c16c487959db5e0d879632559 ]
 
-skb_header_pointer may return NULL. The current code dereference
-its return values without a NULL check.
+We've become very cautious to now always reset the vcpu when nothing
+is loaded on the physical CPU. To do so, we now disable preemption
+and do a kvm_arch_vcpu_put() to make sure we have all the state
+in memory (and that it won't be loaded behind out back).
 
-The fix inserts the checks to avoid NULL pointer dereferences.
+This now causes issues with resetting the PMU, which calls into perf.
+Perf itself uses mutexes, which clashes with the lack of preemption.
+It is worth realizing that the PMU is fully emulated, and that
+no PMU state is ever loaded on the physical CPU. This means we can
+perfectly reset the PMU outside of the non-preemptible section.
 
-Fixes: 202a8ff545cc ("netfilter: add IPv6 segment routing header 'srh' match")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: e761a927bc9a ("KVM: arm/arm64: Reset the VCPU without preemption and vcpu state loaded")
+Reported-by: Julien Grall <julien.grall@arm.com>
+Tested-by: Julien Grall <julien.grall@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/ipv6/netfilter/ip6t_srh.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/kvm/reset.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv6/netfilter/ip6t_srh.c b/net/ipv6/netfilter/ip6t_srh.c
-index 1059894a6f4c..4cb83fb69844 100644
---- a/net/ipv6/netfilter/ip6t_srh.c
-+++ b/net/ipv6/netfilter/ip6t_srh.c
-@@ -210,6 +210,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		psidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
- 			  ((srh->segments_left + 1) * sizeof(struct in6_addr));
- 		psid = skb_header_pointer(skb, psidoff, sizeof(_psid), &_psid);
-+		if (!psid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
- 				ipv6_masked_addr_cmp(psid, &srhinfo->psid_msk,
- 						     &srhinfo->psid_addr)))
-@@ -223,6 +225,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		nsidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
- 			  ((srh->segments_left - 1) * sizeof(struct in6_addr));
- 		nsid = skb_header_pointer(skb, nsidoff, sizeof(_nsid), &_nsid);
-+		if (!nsid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
- 				ipv6_masked_addr_cmp(nsid, &srhinfo->nsid_msk,
- 						     &srhinfo->nsid_addr)))
-@@ -233,6 +237,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 	if (srhinfo->mt_flags & IP6T_SRH_LSID) {
- 		lsidoff = srhoff + sizeof(struct ipv6_sr_hdr);
- 		lsid = skb_header_pointer(skb, lsidoff, sizeof(_lsid), &_lsid);
-+		if (!lsid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
- 				ipv6_masked_addr_cmp(lsid, &srhinfo->lsid_msk,
- 						     &srhinfo->lsid_addr)))
+diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+index 18b9a522a2b3..0688816f19e2 100644
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -117,6 +117,9 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 	int ret = -EINVAL;
+ 	bool loaded;
+ 
++	/* Reset PMU outside of the non-preemptible section */
++	kvm_pmu_vcpu_reset(vcpu);
++
+ 	preempt_disable();
+ 	loaded = (vcpu->cpu != -1);
+ 	if (loaded)
+@@ -164,9 +167,6 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.reset_state.reset = false;
+ 	}
+ 
+-	/* Reset PMU */
+-	kvm_pmu_vcpu_reset(vcpu);
+-
+ 	/* Default workaround setup is enabled (if supported) */
+ 	if (kvm_arm_have_ssbd() == KVM_SSBD_KERNEL)
+ 		vcpu->arch.workaround_flags |= VCPU_WORKAROUND_2_FLAG;
 -- 
 2.19.1
 
