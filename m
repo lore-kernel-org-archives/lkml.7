@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375F3C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23334C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D102177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E581820B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PQ2BwSxw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="stYUQZbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfDVSBV (ORCPT
+        id S1728714AbfDVSB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 14:01:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41044 "EHLO
+        Mon, 22 Apr 2019 14:01:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41536 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728668AbfDVSBR (ORCPT
+        with ESMTP id S1728702AbfDVSBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 14:01:17 -0400
+        Mon, 22 Apr 2019 14:01:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dhCUWD64BeUjD2vxZh2RXAdgcjrp6GCWGGT30DrvbbY=; b=PQ2BwSxwTv3RsjjecSGjDN3Ae7
-        6JZcv4O/yK2+MhMebT5c+2G+twsvRs8IS7ixO0j/gGK7D0csyaRUQ4cpwvnjbDml/jSM65/kkf/EL
-        BFaku0QcvbOPPMWZKBgm/kqUOiKcUDB4rFhT/DN2kxzJmmltgBVKPWLuY9MEDc2Un2QCh6sy6LKIm
-        0rE857QvsYOx5/xF47umXA8aOyaIjscc1RSUGrOJbgVDTMyE9nSQ4J5QPyirO7cxi10tqlhJf5QP0
-        PUpDTNFuoJaTTYJg9AGxZOcYRLmBrIE4gyog0doZy2ADB2SOWwNznw565KIlZqVFsVBUBL6b5pDPy
-        n+GNLXIg==;
+        bh=epcL474plX5Tqq4Z9roZGZCCSctpIuMbTtYaT9PqkGg=; b=stYUQZbQABy9vNEXyBGBx+Ayj0
+        8Z4dsUte7YgcIbDbKvgmL74K3JXwqGE2jXqBzDOE99cT0JpNjaWh3DvlrLsSJ60zYID64H71Dvx5B
+        Up2MnaVI/Rp8oCrm4Thl/QsB16cbQTQaw1oWbplosR6mvj+JBjij1Beqfco9jJHuvSwJDP5aHGUHR
+        Dru+zAeIW1wv5RRVkARVipCrx4zFRlOxbUB1lY+6FlTIUw4+0uwdBuLymRluvf0iQ6pbJOvrXr5h0
+        XVkraC/JC7CQaLV4YRi6c7uFwyODDNh0fbg+cHcx5rGr9TOikVXU5gtM1diNMvEILl4jU1o4UYoNB
+        +swPZeow==;
 Received: from 213-225-37-80.nat.highway.a1.net ([213.225.37.80] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIdFe-0002hO-KJ; Mon, 22 Apr 2019 18:01:12 +0000
+        id 1hIdFl-0002o3-BX; Mon, 22 Apr 2019 18:01:18 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Joerg Roedel <joro@8bytes.org>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 24/26] iommu/dma: Switch copyright boilerplace to SPDX
-Date:   Mon, 22 Apr 2019 19:59:40 +0200
-Message-Id: <20190422175942.18788-25-hch@lst.de>
+Subject: [PATCH 26/26] arm64: trim includes in dma-mapping.c
+Date:   Mon, 22 Apr 2019 19:59:42 +0200
+Message-Id: <20190422175942.18788-27-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190422175942.18788-1-hch@lst.de>
 References: <20190422175942.18788-1-hch@lst.de>
@@ -59,64 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/iommu/dma-iommu.c | 13 +------------
- include/linux/dma-iommu.h | 13 +------------
- 2 files changed, 2 insertions(+), 24 deletions(-)
+With most of the previous functionality now elsewhere a lot of the
+headers included in this file are not needed.
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 278a9a960107..b6bc342a8163 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * A fairly generic DMA-API to IOMMU-API glue layer.
-  *
-@@ -5,18 +6,6 @@
-  *
-  * based in part on arch/arm/mm/dma-mapping.c:
-  * Copyright (C) 2000-2004 Russell King
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm64/mm/dma-mapping.c | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+index 184ef9ccd69d..15bd768ceb7e 100644
+--- a/arch/arm64/mm/dma-mapping.c
++++ b/arch/arm64/mm/dma-mapping.c
+@@ -5,20 +5,9 @@
   */
  
- #include <linux/acpi_iort.h>
-diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-index dadf4383f555..3fc76918e9bf 100644
---- a/include/linux/dma-iommu.h
-+++ b/include/linux/dma-iommu.h
-@@ -1,17 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2014-2015 ARM Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- #ifndef __DMA_IOMMU_H
- #define __DMA_IOMMU_H
+ #include <linux/gfp.h>
+-#include <linux/acpi.h>
+-#include <linux/memblock.h>
+ #include <linux/cache.h>
+-#include <linux/export.h>
+-#include <linux/slab.h>
+-#include <linux/genalloc.h>
+-#include <linux/dma-direct.h>
+ #include <linux/dma-noncoherent.h>
+-#include <linux/dma-contiguous.h>
+ #include <linux/dma-iommu.h>
+-#include <linux/vmalloc.h>
+-#include <linux/swiotlb.h>
+-#include <linux/pci.h>
+-
+ #include <asm/cacheflush.h>
+ 
+ pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
 -- 
 2.20.1
 
