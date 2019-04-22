@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3326FC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78343C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA53A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43031204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963159;
-	bh=2aHGkX89auTJONCNP1G7Ry9w4/jFDkD/L6QCf9959+Y=;
+	s=default; t=1555963163;
+	bh=dLP6w9/tALpsZnV0WfYXd/WRDaIRYd6Lb5TXRLJA7Co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7riXkHzWrIfccYSTzA8TXQDjHqIasyZLmLTYVVnctDPCvSWEltX92/Zn5YmHM41I
-	 hZ7YZwSqfCjszM6i2eeUAxA6HS+dioP5YKBq6Hr5Z6osvLvGauWwdIMtpL3UT5MIYW
-	 pvsJd2WlN5rH8fwOsqvECUId4GLW1ceM5Wy5VBGc=
+	b=MjzA/HoB8sPwTaZ3PXa++eTgnItjaGPpLq+62MG7khQ6n7kFXqZWPHFeqxlM805JZ
+	 Qd0Jdh4aAZMZ8vUB6mgrC29kEAZTRD4kbMbhE1N9A3oGWHJpOtMqzK7RGF0wA9Hc6L
+	 yg81y1TuBYW7BJ7LNhhO/i6ciKnZk+KuD/kYApF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfDVTrp (ORCPT
+        id S1731822AbfDVT7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbfDVTrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:37 -0400
+        id S1729869AbfDVTro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E436A21902;
-        Mon, 22 Apr 2019 19:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B87321904;
+        Mon, 22 Apr 2019 19:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962456;
-        bh=2aHGkX89auTJONCNP1G7Ry9w4/jFDkD/L6QCf9959+Y=;
+        s=default; t=1555962463;
+        bh=dLP6w9/tALpsZnV0WfYXd/WRDaIRYd6Lb5TXRLJA7Co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNwIDb4u9Wu1fiGAhublFDVmUPJ7hSYi7z4T3rxcEh0L1+3BNpU4p9e/5DMwfRiUG
-         GfHdNhjfKmNJtuzZP42Ue6kDlh4mh0d8eQ8fULrtE7fOzbssdUQjh9/Zo0ep/SDCpP
-         Mn9+vMFK82sthcMN8XgUsR5A4NmdV6/bKdsG8l2k=
+        b=fiqr7zl5DPR+Chr6uOYRTDpqbLR3FkVleKeyxhwMZRfP527SQ+U3GsWcpNF28TnTa
+         VOLEh5vi0fauHSvrmOARQmumpBbvGu7PhH65NAieke+xhU7TVa7S5El8Ny1mQJlxaB
+         pA44pYhw+5QwMYMcQHqeme3Fq7cMe1LcpUneByRk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/43] s390/qeth: fix race when initializing the IP address table
-Date:   Mon, 22 Apr 2019 15:46:50 -0400
-Message-Id: <20190422194727.12495-6-sashal@kernel.org>
+Cc:     Guido Kiener <guido@kiener-muenchen.de>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/43] usb: gadget: net2280: Fix overrun of OUT messages
+Date:   Mon, 22 Apr 2019 15:46:54 -0400
+Message-Id: <20190422194727.12495-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
@@ -58,42 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Guido Kiener <guido@kiener-muenchen.de>
 
-[ Upstream commit 7221b727f0079a32aca91f657141e1de564d4b97 ]
+[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
 
-The ucast IP table is utilized by some of the L3-specific sysfs attributes
-that qeth_l3_create_device_attributes() provides. So initialize the table
-_before_ registering the attributes.
+The OUT endpoint normally blocks (NAK) subsequent packets when a
+short packet was received and returns an incomplete queue entry to
+the gadget driver. Thereby the gadget driver can detect a short packet
+when reading queue entries with a length that is not equal to a
+multiple of packet size.
 
-Fixes: ebccc7397e4a ("s390/qeth: add missing hash table initializations")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The start_queue() function enables receiving OUT packets regardless of
+the content of the OUT FIFO. This results in a race: With the current
+code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
+& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
+packet will be received, and then start_queue() will call
+stop_out_naking(). That's what we don't want (OUT naking gets turned
+off while there is data in the FIFO) because then the next driver
+request might receive a mixture of old and new packets.
+
+With the patch, this race can't occur because the FIFO's state is
+tested after we know that OUT naking is already turned on, and OUT
+naking is stopped only when both of the conditions are met.  This
+ensures that all received data is delivered to the gadget driver,
+which can detect a short packet now before new packets are appended
+to the last short packet.
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l3_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/net2280.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index a19f2dc69e8a..d9830c86d0c1 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -3022,12 +3022,14 @@ static int qeth_l3_probe_device(struct ccwgroup_device *gdev)
- 	struct qeth_card *card = dev_get_drvdata(&gdev->dev);
- 	int rc;
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index 9cbb061582a7..a071ab0c163b 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -870,9 +870,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
+ 	(void) readl(&ep->dev->pci->pcimstctl);
  
-+	hash_init(card->ip_htable);
-+
- 	if (gdev->dev.type == &qeth_generic_devtype) {
- 		rc = qeth_l3_create_device_attributes(&gdev->dev);
- 		if (rc)
- 			return rc;
+ 	writel(BIT(DMA_START), &dma->dmastat);
+-
+-	if (!ep->is_in)
+-		stop_out_naking(ep);
+ }
+ 
+ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
+@@ -911,6 +908,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
+ 			writel(BIT(DMA_START), &dma->dmastat);
+ 			return;
+ 		}
++		stop_out_naking(ep);
  	}
--	hash_init(card->ip_htable);
-+
- 	hash_init(card->ip_mc_htable);
- 	card->options.layer2 = 0;
- 	card->info.hwtrap = 0;
+ 
+ 	tmp = dmactl_default;
 -- 
 2.19.1
 
