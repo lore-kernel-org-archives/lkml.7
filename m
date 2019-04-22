@@ -2,169 +2,108 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B155C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966A9C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01F120896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF8E20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oLnlTenx"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bX2JsWi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfDVTc1 (ORCPT
+        id S1727871AbfDVTgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:32:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59108 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfDVTc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:32:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3MJUDBB049863;
-        Mon, 22 Apr 2019 19:30:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=WH/Ljdr8TJUTrAi5oLGMpFDZ+oLv/QGAaimWLH/RF5Y=;
- b=oLnlTenxF7nnPodU74CKxVdtTdurZTHC2c+IYDHYu4ConBppy1DQR5ZRD2yjJFvZgGWr
- s4yQwwuUvTu9u+sFyoVUu0Ps8OuhhW0poWi1ZMLvaVC5TBbAF1wwcZr5XAReyOOTF+by
- uC0TnLDiZT5r3TKE6PPp1vUjAz4Kig9RayQOAPeSyneDjrd8g3giZqr3VY0DWHpHGibW
- +Tp8jlms4x1+K3jD0LKvfWig3toDL2oxHG0Gk75UGHP6ZXqvAC5kZivppkWtzcLz1h9X
- XEAwsf7cBrXzU2kQ/Ajn/P/r+v3zskWbTDpMTbY0n+hrjLQtUDBZ3bbfv/WSjVOTlFLG 6g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2ryv2q001q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Apr 2019 19:30:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3MJUfFP107047;
-        Mon, 22 Apr 2019 19:30:52 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2s0dwdv8c5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Apr 2019 19:30:52 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3MJUjCf011034;
-        Mon, 22 Apr 2019 19:30:46 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 22 Apr 2019 12:30:45 -0700
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-To:     Kees Cook <keescook@google.com>, Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juerg Haefliger <juergh@gmail.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Julian Stecklina <jsteckli@amazon.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris hyser <chris.hyser@oracle.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Jon Masters <jcm@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <cover.1554248001.git.khalid.aziz@oracle.com>
- <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
- <20190417161042.GA43453@gmail.com>
- <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
- <20190417170918.GA68678@gmail.com>
- <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com>
- <20190417172632.GA95485@gmail.com>
- <063753CC-5D83-4789-B594-019048DE22D9@gmail.com>
- <alpine.DEB.2.21.1904172317460.3174@nanos.tec.linutronix.de>
- <CAHk-=wgBMg9P-nYQR2pS0XwVdikPCBqLsMFqR9nk=wSmAd4_5g@mail.gmail.com>
- <alpine.DEB.2.21.1904180129000.3174@nanos.tec.linutronix.de>
- <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
- <CALCETrXm9PuUTEEmzA8bQJmg=PHC_2XSywECittVhXbMJS1rSA@mail.gmail.com>
- <CAGXu5jL-qJtW7eH8S2yhqciE+J+FWz8HHzTrGJTgVUbd55n6dQ@mail.gmail.com>
- <8f9d059d-e720-cd24-faa6-45493fc012e0@oracle.com>
-Organization: Oracle Corp
-Message-ID: <302e3d5b-d2fd-3c25-335b-466ba83035c5@oracle.com>
-Date:   Mon, 22 Apr 2019 13:30:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <8f9d059d-e720-cd24-faa6-45493fc012e0@oracle.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 22 Apr 2019 15:36:37 -0400
+Received: from mail-eopbgr50085.outbound.protection.outlook.com ([40.107.5.85]:46957
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726260AbfDVTgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:36:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iPCiOZL/E9ahtFPgEQmiaIDbjupg3LKtyuLtkayLq8o=;
+ b=bX2JsWi58nQ79XtY+CJbuZRqbtmP0Qw4b988bjQCTG/ATJSOwimaRFZSHdUba/ZqNLAEceRQVtknxy2/qDrbmnNaY3/IniQEr9em/5uyymYsMDNWb6X5JgTEfSbfN6uukSj7wtezHQ6x8htxEWHevhm05ULjOWqZRf88kibynwQ=
+Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
+ VI1PR0402MB2861.eurprd04.prod.outlook.com (10.175.23.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Mon, 22 Apr 2019 19:35:59 +0000
+Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
+ ([fe80::c16b:662d:9299:6be6]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
+ ([fe80::c16b:662d:9299:6be6%6]) with mapi id 15.20.1813.017; Mon, 22 Apr 2019
+ 19:35:59 +0000
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/2] Enable wm8524 codec on i.MX8MM EVK
+Thread-Topic: [PATCH v2 0/2] Enable wm8524 codec on i.MX8MM EVK
+Thread-Index: AQHU+UKcr+wyzOSsv0KzOf+0LVklgA==
+Date:   Mon, 22 Apr 2019 19:35:58 +0000
+Message-ID: <20190422193542.2853-1-daniel.baluta@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904220147
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904220147
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR06CA0109.eurprd06.prod.outlook.com
+ (2603:10a6:803:8c::38) To VI1PR0402MB3357.eurprd04.prod.outlook.com
+ (2603:10a6:803:2::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3149411b-c529-47bb-50e7-08d6c759bed3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2861;
+x-ms-traffictypediagnostic: VI1PR0402MB2861:
+x-microsoft-antispam-prvs: <VI1PR0402MB2861CD1E78D3629F91DA3C6EF9220@VI1PR0402MB2861.eurprd04.prod.outlook.com>
+x-forefront-prvs: 00159D1518
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(346002)(376002)(396003)(199004)(189003)(102836004)(6116002)(3846002)(54906003)(2616005)(386003)(2906002)(6506007)(476003)(25786009)(4326008)(97736004)(26005)(186003)(44832011)(36756003)(73956011)(5660300002)(2501003)(5640700003)(1076003)(71190400001)(71200400001)(66946007)(86362001)(66476007)(66066001)(64756008)(66446008)(66556008)(99286004)(478600001)(7736002)(68736007)(6436002)(52116002)(6486002)(6916009)(256004)(53936002)(6512007)(486006)(316002)(14454004)(4744005)(305945005)(8676002)(2351001)(81166006)(81156014)(50226002)(1730700003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2861;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hwJFsLkzw9LBLjs81K7NOFjuHXbgY5YMn3CgTZ4sWU6gXZy8+F0Lb0sFTZ3g7o/2xv7BYmASa/19ABQ7BODOK/m/80UvG9B7Qyuq/Z7oVFeVgkNN2VCdNEYzYN9wewIM0Cc5rqH/MFFCRGyIX7SHZMPKiM8mnECF8rpfG6zrpKG1jT6S3fYRmRYAz7wq6Z2izWrp9JVkzxCWodJjMonYStpAXMh3RFyaDDKUvoj/yJAW7shc36sGkNIkp0ketCDnx4i3CubiJHjjhfEXOtB1YS+S3J81Xtkp/wP64KuhdtnI53Pz1JL2c+22apSxz5pQ4t7AP5/HBKd8K5izkWbIpqsHTXdBC/csewBVltmnDlRu4CNKXSvcZk29vtQ6pZkn1GG2qyB7hD6f9qr46vgYqT7iAN5h4skFDbmk9Qyw12A=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3149411b-c529-47bb-50e7-08d6c759bed3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 19:35:58.9732
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2861
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/19 8:34 AM, Khalid Aziz wrote:
-> On 4/17/19 11:41 PM, Kees Cook wrote:
->> On Wed, Apr 17, 2019 at 11:41 PM Andy Lutomirski <luto@kernel.org> wro=
-te:
->>> I don't think this type of NX goof was ever the argument for XPFO.
->>> The main argument I've heard is that a malicious user program writes =
-a
->>> ROP payload into user memory (regular anonymous user memory) and then=
-
->>> gets the kernel to erroneously set RSP (*not* RIP) to point there.
->>
->> Well, more than just ROP. Any of the various attack primitives. The NX=
-
->> stuff is about moving RIP: SMEP-bypassing. But there is still basic
->> SMAP-bypassing for putting a malicious structure in userspace and
->> having the kernel access it via the linear mapping, etc.
->>
->>> I find this argument fairly weak for a couple reasons.  First, if
->>> we're worried about this, let's do in-kernel CFI, not XPFO, to
->>
->> CFI is getting much closer. Getting the kernel happy under Clang, LTO,=
-
->> and CFI is under active development. (It's functional for arm64
->> already, and pieces have been getting upstreamed.)
->>
->=20
-> CFI theoretically offers protection with fairly low overhead. I have no=
-t
-> played much with CFI in clang. I agree with Linus that probability of
-> bugs in XPFO implementation itself is a cause of concern. If CFI in
-> Clang can provide us the same level of protection as XPFO does, I
-> wouldn't want to push for an expensive change like XPFO.
->=20
-> If Clang/CFI can't get us there for extended period of time, does it
-> make sense to continue to poke at XPFO?
-
-Any feedback on continued effort on XPFO? If it makes sense to have XPFO
-available as a solution for ret2dir issue in case Clang/CFI does not
-work out, I will continue to refine it.
-
---
-Khalid
-
+VGhpcyBwYXRjaCBzZXJpZXMgaW50cm9kdWNlcyB0aGUgU0FJIG5vZGVzIG9uIGkuTVg4TU0gRVZL
+IHRoZW4NCmNyZWF0ZXMgdGhlIHdtODUyNCBjb2RlYyBub2RlIGFuZCBmaW5hbGx5IHVzZXMgc2lt
+cGxlIGNhcmQgbWFjaGluZQ0KZHJpdmVyIHRvIGNyZWF0ZSBhIHNvdW5kIGNhcmQuDQoNCkNoYW5n
+ZXMgc2luY2UgdjE6DQoJLSB1c2UgImZzbCxpbXg4bW0tc2FpIiwgImZzbCxpbXg4bXEtc2FpIiBj
+b21wYXRiaWxlIHN0cmluZ3MgYW5kDQoJICByZW1vdmUgImZzbCxpbXg2c3gtc2FpIiBiZWNhdXNl
+IFNBSSBtb2R1bGUgb24gaS5NWDhNIGlzIG5vdA0KCSAgY29tcGF0YmlsZSB3aXRoIFNBSSBtb2R1
+bGVzIGZvcm0gaS5NWDYNCg0KRGFuaWVsIEJhbHV0YSAoMik6DQogIGFybTY0OiBkdHM6IGlteDht
+bTogQWRkIFNBSSBub2Rlcw0KICBhcm02NDogZHRzOiBpbXg4bW0tZXZrOiBFbmFibGUgYXVkaW8g
+Y29kZWMgd204NTI0DQoNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0tZXZr
+LmR0cyB8IDQ4ICsrKysrKysrKysrKysNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
+bXg4bW0uZHRzaSAgICB8IDcxICsrKysrKysrKysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2Vk
+LCAxMTkgaW5zZXJ0aW9ucygrKQ0KDQotLSANCjIuMTcuMQ0KDQo=
