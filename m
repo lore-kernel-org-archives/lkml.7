@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C673C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB8C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9E520643
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155F620643
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962655;
-	bh=7eGJNN2Vw6ksdo41dqTC3G+17TCl0ZYpnH5QQTLu64I=;
+	s=default; t=1555962658;
+	bh=JnztbPP1v80AtpcMKXx2mm+bJeaWhfL1XfiYOvx6RaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R07uhPcWbhA/AzL3NtFLN3OzTtRDopLxMnyJaUXfTqGaYYD/gjn6B9P2ViW5Bqmn9
-	 KKKjL9/ehLhLzKQN+HqnUQLooYEOgMPfucpsy68f0EqiymwiI4+Jrx4IdkCK8NkIp7
-	 YupxI1YvQOMuKPcIHw8U3t95YhOAFOnAxpPXOgKE=
+	b=JfZ5ryfOm5GxSFSW+pSoryd6nUdnlV1GyEvjyF2hmWff29OLr8pT7VG7I1bkEJQ4i
+	 9DsrRj9Pzs3X9yrRfdyB3QyPc1bXq1Sg6a2ClsBz/ISnAwT3dAKS8URYwHaQ5aqeyL
+	 g9XlQyBLdYfqym4KjajcsJA8fc0RtTvEuii86gkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbfDVTux (ORCPT
+        id S1731241AbfDVTu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54916 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731199AbfDVTut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:49 -0400
+        id S1731226AbfDVTuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291472177B;
-        Mon, 22 Apr 2019 19:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF7BC20643;
+        Mon, 22 Apr 2019 19:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962648;
-        bh=7eGJNN2Vw6ksdo41dqTC3G+17TCl0ZYpnH5QQTLu64I=;
+        s=default; t=1555962653;
+        bh=JnztbPP1v80AtpcMKXx2mm+bJeaWhfL1XfiYOvx6RaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jK9CVBoz6ajge0RH8zRaQTJlw3QCGNlx0FQHy07mD+kWZBRKYhRvBLhao14svIoYt
-         LEExoGtfWDhMJQChuYdseFi6qiUGnomK+sE408Yt3zE9JiVhsl8rj9gTbFivtqS7IA
-         dM7c4OiDGdgwkDNKa+JY/ziZ54mquSrC1qkf7BZ4=
+        b=dPn25aLEVnYki9dAW/k0cVrugVloW8Wq+lOyVJG3VflLId/A+tJM6XiZSCdAjxbqU
+         eTC8CEPlw5WkGkEwn1CQmyjwq6BxhGXd0WgPZYyfGKjQyPnNRUt/JGAbWBd7ywnfcA
+         OgYEfyiThTDu4nAdub+u8A74U1n9gfCM0bpmKiiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 12/15] ceph: fix use-after-free on symlink traversal
-Date:   Mon, 22 Apr 2019 15:50:19 -0400
-Message-Id: <20190422195022.13760-12-sashal@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 15/15] kconfig/[mn]conf: handle backspace (^H) key
+Date:   Mon, 22 Apr 2019 15:50:22 -0400
+Message-Id: <20190422195022.13760-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422195022.13760-1-sashal@kernel.org>
 References: <20190422195022.13760-1-sashal@kernel.org>
@@ -58,42 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit daf5cc27eed99afdea8d96e71b89ba41f5406ef6 ]
+[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+Backspace is not working on some terminal emulators which do not send the
+key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+But currently only '^?' is handled. Let's also handle '^H' for those
+terminals.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+ scripts/kconfig/nconf.c             | 2 +-
+ scripts/kconfig/nconf.gui.c         | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 7a1df90c7771..7641fcf83ac8 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -472,6 +472,7 @@ static void ceph_i_callback(struct rcu_head *head)
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 
-+	kfree(ci->i_symlink);
- 	kmem_cache_free(ceph_inode_cachep, ci);
- }
- 
-@@ -503,7 +504,6 @@ void ceph_destroy_inode(struct inode *inode)
- 		ceph_put_snap_realm(mdsc, realm);
- 	}
- 
--	kfree(ci->i_symlink);
- 	while ((n = rb_first(&ci->i_fragtree)) != NULL) {
- 		frag = rb_entry(n, struct ceph_inode_frag, node);
- 		rb_erase(n, &ci->i_fragtree);
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index d58de1dc5360..510049a7bd1d 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+ 			case KEY_DOWN:
+ 				break;
+ 			case KEY_BACKSPACE:
+-			case 127:
++			case 8:   /* ^H */
++			case 127: /* ^? */
+ 				if (pos) {
+ 					wattrset(dialog, dlg.inputbox.atr);
+ 					if (input_x == 0) {
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index 984489ef2b46..e570f6c9b3ad 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1046,7 +1046,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+ 		state->match_direction = FIND_NEXT_MATCH_UP;
+ 		*ans = get_mext_match(state->pattern,
+ 				state->match_direction);
+-	} else if (key == KEY_BACKSPACE || key == 127) {
++	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+ 		state->pattern[strlen(state->pattern)-1] = '\0';
+ 		adj_match_dir(&state->match_direction);
+ 	} else
+diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+index 4b2f44c20caf..9a65035cf787 100644
+--- a/scripts/kconfig/nconf.gui.c
++++ b/scripts/kconfig/nconf.gui.c
+@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
+ 		case KEY_F(F_EXIT):
+ 		case KEY_F(F_BACK):
+ 			break;
+-		case 127:
++		case 8:   /* ^H */
++		case 127: /* ^? */
+ 		case KEY_BACKSPACE:
+ 			if (cursor_position > 0) {
+ 				memmove(&result[cursor_position-1],
 -- 
 2.19.1
 
