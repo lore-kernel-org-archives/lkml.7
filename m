@@ -2,120 +2,96 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFE4C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C9C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2E0214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555951712;
-	bh=8dBuTMuCKP2mILmHiOtnnnXNuiXQZ9Do67D/ZzGwocY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qVnWDSVP+UWUBL4hHDUMmTqjsOrWAB0D4NfC7hy70nyCwME302q+slJ/g2d4OlPrx
-	 ruJOKIs/SgP+zxI01+fWpwrNfftK0Y8uq6h66R6fk86OJsgGYEXI9JiBqUjToW7hB/
-	 MZ1FUy5QSTDvTfAeKboYLzzff1/w1topWFnbAHz8=
+	by mail.kernel.org (Postfix) with ESMTP id B7415214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfDVQsb (ORCPT
+        id S1728391AbfDVQsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:48:31 -0400
-Received: from mail-lj1-f171.google.com ([209.85.208.171]:46867 "EHLO
-        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727425AbfDVQsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:48:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:62086 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728215AbfDVQsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 12:48:30 -0400
-Received: by mail-lj1-f171.google.com with SMTP id h21so10833240ljk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:48:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WSrB0Et0D+AV5ELkYZg39V1gZm27DaKVPxoadzxyXZs=;
-        b=bWVK4FYnD/qyeZ81E2zzaVoAmJJcvcVuH09eiO5Xn3W3kdua0mcLavKZhUa1pmynHv
-         B/RicnrvR2h4G6KFl+InQfcPhPVWX+U1e5UqtwlzcuS+CnwxFAUuFT/TbQ21uuSgUHix
-         SPzkCWmAHTeAf7B42XOYtbBKnXmgzXfmN4K/c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WSrB0Et0D+AV5ELkYZg39V1gZm27DaKVPxoadzxyXZs=;
-        b=ETgF+LBul0BA+8Aq6NSKtJh66k0SOR4u9mYEjQA/YIAR8fXcVPJkjGNPN4LX+R9TYj
-         V42KD9/GBFvv/RFp8jWtYVQBvh5P1AQZrq8TAtos55gXhMDwUZbmmcgNBiFuZ/P2lZ3h
-         Ahx8VNH6Cs8hXhfsAadqkpmRGSfN3YdcYd0da9amv70n6DFbdKBuB/04xpRJSr0ECOkR
-         TG5cXHtwr4a1NtDeHwZF7+vMHw1c5jDLu4zOvtsLtnIQET9cZ6Q7/bCDIDv2OUvQplFQ
-         DsSNOitfrjNdjpHS0qnjfLC61h6fwkz5MirIUmFaOBf1DTSzv+RYVyVwxxs1rjuk/U4S
-         CXPA==
-X-Gm-Message-State: APjAAAXQlpjqUnJCUO+RVYMUiYQg6S+u6BNWBoKGK2cndMAlIh+AmD1O
-        6ZZtjv6bWtVEWi/Jec80M2rkGcF34sQ=
-X-Google-Smtp-Source: APXvYqwe6IodoeLW+pcVkjqcQr6uP2VK6WpHArFszcEJ9i0VR3sV0gIqujg7jJhynxAbt6tzzT/6MA==
-X-Received: by 2002:a2e:5bcc:: with SMTP id m73mr11011698lje.100.1555951706956;
-        Mon, 22 Apr 2019 09:48:26 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id r20sm2742894ljj.22.2019.04.22.09.48.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:48:25 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id a28so9424656lfo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:48:24 -0700 (PDT)
-X-Received: by 2002:a19:f50e:: with SMTP id j14mr9831758lfb.11.1555951704551;
- Mon, 22 Apr 2019 09:48:24 -0700 (PDT)
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 09:48:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,382,1549958400"; 
+   d="scan'208";a="339732309"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Apr 2019 09:48:28 -0700
+Date:   Mon, 22 Apr 2019 09:48:27 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190422164827.GC1236@linux.intel.com>
+References: <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+ <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
+ <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
+ <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com>
+ <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
+ <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
+ <alpine.DEB.2.21.1904200727410.3174@nanos.tec.linutronix.de>
+ <20190420160247.GA17291@wind.enjellic.com>
+ <20190422150119.GA1236@linux.intel.com>
+ <20190422162411.GA27389@wind.enjellic.com>
 MIME-Version: 1.0
-References: <00000000000043fe9c058720a5d3@google.com> <ad884b18-0e03-d6be-02b0-4e5273f068ce@kernel.dk>
- <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
- <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk> <cfa6be6d-4125-6d1e-8993-e9ec9dbaa7bb@kernel.dk>
-In-Reply-To: <cfa6be6d-4125-6d1e-8993-e9ec9dbaa7bb@kernel.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Apr 2019 09:48:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh=kKEb6qbuhnSWh5S55SbQBOE33991ULSFUgVrEnzivA@mail.gmail.com>
-Message-ID: <CAHk-=wh=kKEb6qbuhnSWh5S55SbQBOE33991ULSFUgVrEnzivA@mail.gmail.com>
-Subject: Re: WARNING in percpu_ref_kill_and_confirm
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422162411.GA27389@wind.enjellic.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 9:38 AM Jens Axboe <axboe@kernel.dk> wrote:
->
-> With the mutex change in, I can trigger it in a second or so. Just ran
-> the reproducer with that change reverted, and I'm not seeing any badness.
-> So I do wonder if the bisect results are accurate?
+On Mon, Apr 22, 2019 at 11:24:11AM -0500, Dr. Greg wrote:
+> On Mon, Apr 22, 2019 at 08:01:19AM -0700, Sean Christopherson wrote:
+> 
+> Good morning to everyone, I hope the week is starting well.
+> 
+> > On Sat, Apr 20, 2019 at 11:02:47AM -0500, Dr. Greg wrote:
+> > > We understand and support the need for the LSM to trap these
+> > > events, but what does LSM provenance mean if the platform is
+> > > compromised?  That is, technically, the target application for SGX
+> > > technology.
+> 
+> > No, it's not.  Protecting the kernel/platform from a malicious
+> > entity is outside the scope of SGX.
+> 
+> You must have misinterpreted my statement, providing security
+> guarantees in the face of a compromised platform is exactly what SGX
+> was designed to do and is how Intel is marketing the technology.
 
-Looking at the syzbot report, it's syzbot being confused.
-
-The actual WARNING in percpu_ref_kill_and_confirm() only happens with
-recent kernels.
-
-But then syzbot mixes it up with a completely different bug:
-
-   crash: BUG: MAX_STACK_TRACE_ENTRIES too low!
-   BUG: MAX_STACK_TRACE_ENTRIES too low!
-
-and for some reason decides that *that* bug is the same thing entirely.
-
-So yeah, I think the simple percpu_ref_is_dying() check is sufficient,
-and that the syzbot bisection is completely bogus.
-
-                Linus
+Right, and loading a malicious enclave doesn't change those guarantees
+(for other enclaves).  Ergo, restricting which enclaves can execute is
+orthogonal to the security provided by SGX.
