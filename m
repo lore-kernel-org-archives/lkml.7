@@ -2,282 +2,89 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873BC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5946C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374CD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MG7deAZ/"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC62204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555963208;
+	bh=o9w4bZK8Awm3X8QDXqg6sUDad1n96xZhOVpE9KQi8Bg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OasuhhPp2N9zdPYfDpcC0nIXjcbWVx2VdLyHtkEsaFtzHGX7O1zxZHNRyR2I9FmqO
+	 3KFWgXHPkSagsgPohjuit/mHPaHF2vSvyMbY+tL1O/bfg8R7xneOLV+tfr0mcYK28H
+	 D9e/RURwImL2TjSK21/A3GugRI7o8Cc8WML9xatU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfDVT76 (ORCPT
+        id S1731886AbfDVUAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:59:58 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:40040 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731860AbfDVT7v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:59:51 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Mon, 22 Apr 2019 16:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730281AbfDVTra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1CB17C1D59;
-        Mon, 22 Apr 2019 19:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555963192; bh=0pzuSZDe+YDVHBQl+rZ9SNNaa+nSK4zrMGUGaRn5lNo=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=MG7deAZ/XzWPKNxC/T+M1kTlvXiiqPGga1HTwHnIcXIfAhCQfZDH3hqs+POWLLiJ2
-         FD0MmQneon9sjkEmO7zKCam0yQGTebCDGzP5JvuUEBSzesq/Yl2MemT/RgOdUCiWny
-         cEJHeWoy+RRVZE/JhYoKehscAa77Y/EnNqsE9jahFWZFWl3gKLzPkH6czDZxXdMeD5
-         I5Fcw6Wq73HdpDLHr4iogzvu5numm3v7zwt/kWzOqMSU/NIAEi/+Aw6LCsiTZ3Td09
-         YtKiX797YoCyQ197gtzZLGqWcOqFQyoc4F9jUlZeJ5+2wGx5oiO58JwMSb7hjZ81jJ
-         ur1iQDaxW3nVA==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 2C56DA005D;
-        Mon, 22 Apr 2019 19:59:49 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 22 Apr 2019 12:59:49 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 22 Apr 2019 21:59:47 +0200
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Vitor Soares <Vitor.Soares@synopsys.com>
-CC:     "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "joao.pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] i3c: fix i2c and i3c scl rate by bus mode
-Thread-Topic: [PATCH 1/3] i3c: fix i2c and i3c scl rate by bus mode
-Thread-Index: AQHU87sLhgtQ1+d000+4YAeSeMHzMaY+J6iAgACom0D//+7fAIAJjifg///0oYCAADajAP//8I4AAAU08HA=
-Date:   Mon, 22 Apr 2019 19:59:46 +0000
-Message-ID: <13D59CF9CEBAF94592A12E8AE55501350A61C658@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
-        <05fdeea79db83970e9ecb0d7045b4dd98f206f06.1555350118.git.vitor.soares@synopsys.com>
-        <20190416075041.22f8e849@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350A61596D@DE02WEMBXB.internal.synopsys.com>
-        <20190416165250.0606e5a2@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350A61B3B4@DE02WEMBXB.internal.synopsys.com>
-        <20190422180715.40abe1b9@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350A61C415@DE02WEMBXB.internal.synopsys.com>
- <20190422202732.0d539af3@collabora.com>
-In-Reply-To: <20190422202732.0d539af3@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc29hcmVzXGFw?=
- =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
- =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctMjlmOTIyZmItNjUzOS0xMWU5LTgyM2ItZDQ4MWQ3?=
- =?us-ascii?Q?ODUxODBmXGFtZS10ZXN0XDI5ZjkyMmZjLTY1MzktMTFlOS04MjNiLWQ0ODFk?=
- =?us-ascii?Q?Nzg1MTgwZmJvZHkudHh0IiBzej0iNDc5MSIgdD0iMTMyMDA0MzY3ODIzNDY4?=
- =?us-ascii?Q?MTIyIiBoPSJFbTZRa2lmZDJTSHZBQ3BZUysyWHRkTnBRbGM9IiBpZD0iIiBi?=
- =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFCUUpBQUJh?=
- =?us-ascii?Q?OXVyc1JmblVBUklOdjNrUnloS2NFZzIvZVJIS0Vwd09BQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDa0NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBUUFCQUFBQVZ6ZGhHZ0FBQUFBQUFBQUFBQUFBQUo0QUFBQm1BR2tBYmdC?=
- =?us-ascii?Q?aEFHNEFZd0JsQUY4QWNBQnNBR0VBYmdCdUFHa0FiZ0JuQUY4QWR3QmhBSFFB?=
- =?us-ascii?Q?WlFCeUFHMEFZUUJ5QUdzQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
- =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FYd0J3?=
- =?us-ascii?Q?QUdFQWNnQjBBRzRBWlFCeUFITUFYd0JuQUdZQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
- =?us-ascii?Q?QUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJnQmxB?=
- =?us-ascii?Q?SElBY3dCZkFITUFZUUJ0QUhNQWRRQnVBR2NBWHdCakFHOEFiZ0JtQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFHOEFk?=
- =?us-ascii?Q?UUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBY3dCaEFH?=
- =?us-ascii?Q?MEFjd0IxQUc0QVp3QmZBSElBWlFCekFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
- =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QnpBRzBBYVFCakFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
- =?us-ascii?Q?bEFISUFjd0JmQUhNQWRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
- =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFkQUJ6?=
- =?us-ascii?Q?QUcwQVl3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
- =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCMUFHMEFZd0FBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
- =?us-ascii?Q?QUFBQUFBQ2VBQUFBWndCMEFITUFYd0J3QUhJQWJ3QmtBSFVBWXdCMEFGOEFk?=
- =?us-ascii?Q?QUJ5QUdFQWFRQnVBR2tBYmdCbkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpB?=
- =?us-ascii?Q?R0VBYkFCbEFITUFYd0JoQUdNQVl3QnZBSFVBYmdCMEFGOEFjQUJzQUdFQWJn?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhNQVlRQnNBR1VBY3dCZkFI?=
- =?us-ascii?Q?RUFkUUJ2QUhRQVpRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
- =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFjd0J1QUhBQWN3QmZBR3dBYVFCakFHVUFiZ0J6QUdV?=
- =?us-ascii?Q?QVh3QjBBR1VBY2dCdEFGOEFNUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
- =?us-ascii?Q?ekFHNEFjQUJ6QUY4QWJBQnBBR01BWlFCdUFITUFaUUJmQUhRQVpRQnlBRzBB?=
- =?us-ascii?Q?WHdCekFIUUFkUUJrQUdVQWJnQjBBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSFlBWndCZkFHc0FaUUI1?=
- =?us-ascii?Q?QUhjQWJ3QnlBR1FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
- =?us-ascii?Q?QUFBQ0FBQUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
-x-originating-ip: [10.13.178.24]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id F253E218FD;
+        Mon, 22 Apr 2019 19:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962449;
+        bh=o9w4bZK8Awm3X8QDXqg6sUDad1n96xZhOVpE9KQi8Bg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ESdzq5pyJxGZU7+sdX1gcShUaQ/34M+8Lxeej058XqkRy1AEv1h6896ku+DfPJoKb
+         /uFBcB0LCeBjUCU8h9afC3qG2Rv9zaCMagzo+re7ondWhChuzh/kzGzUU3eR1wbB4o
+         1597SGJWPSTrQI9v7ih376HEubqMrWkfldxko0bA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Eric Anholt <eric@anholt.net>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/43] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+Date:   Mon, 22 Apr 2019 15:46:45 -0400
+Message-Id: <20190422194727.12495-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Mon, Apr 22, 2019 at 19:27:32
+From: Helen Koike <helen.koike@collabora.com>
 
-> On Mon, 22 Apr 2019 17:54:29 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->=20
-> > > > > > >      =20
-> > > > > > > >  {
-> > > > > > > >  	i3cbus->mode =3D mode;
-> > > > > > > > =20
-> > > > > > > > -	if (!i3cbus->scl_rate.i3c)
-> > > > > > > > -		i3cbus->scl_rate.i3c =3D I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > > > > > -
-> > > > > > > > -	if (!i3cbus->scl_rate.i2c) {
-> > > > > > > > -		if (i3cbus->mode =3D=3D I3C_BUS_MODE_MIXED_SLOW)
-> > > > > > > > -			i3cbus->scl_rate.i2c =3D I3C_BUS_I2C_FM_SCL_RATE;
-> > > > > > > > -		else
-> > > > > > > > -			i3cbus->scl_rate.i2c =3D I3C_BUS_I2C_FM_PLUS_SCL_RATE;
-> > > > > > > > +	switch (i3cbus->mode) {
-> > > > > > > > +	case I3C_BUS_MODE_PURE:
-> > > > > > > > +		if (!i3cbus->scl_rate.i3c)
-> > > > > > > > +			i3cbus->scl_rate.i3c =3D I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > > > > > +		break;
-> > > > > > > > +	case I3C_BUS_MODE_MIXED_FAST:
-> > > > > > > > +		if (!i3cbus->scl_rate.i3c)
-> > > > > > > > +			i3cbus->scl_rate.i3c =3D I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > > > > > +		if (!i3cbus->scl_rate.i2c)
-> > > > > > > > +			i3cbus->scl_rate.i2c =3D i2c_scl_rate;
-> > > > > > > > +		break;
-> > > > > > > > +	case I3C_BUS_MODE_MIXED_SLOW:
-> > > > > > > > +		if (!i3cbus->scl_rate.i2c)
-> > > > > > > > +			i3cbus->scl_rate.i2c =3D i2c_scl_rate;
-> > > > > > > > +		i3cbus->scl_rate.i3c =3D i3cbus->scl_rate.i2c;     =20
-> > > > > > >=20
-> > > > > > > Maybe we should do
-> > > > > > >=20
-> > > > > > > 		if (!i3cbus->scl_rate.i3c ||
-> > > > > > > 		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
-> > > > > > > 			i3cbus->scl_rate.i3c =3D i3cbus->scl_rate.i2c;
-> > > > > > > 					  =20
-> > > > > > > Just in case the I3C rate forced by the user is lower than th=
-e max I2C
-> > > > > > > rate.     =20
-> > > > > >=20
-> > > > > > That was something that I considered but TBH it isn't a real us=
-e case.   =20
-> > > > >=20
-> > > > > Add a WARN_ON() to at least catch such inconsistencies. And maybe=
- we
-> > > > > should add a dev_warn() when the user-defined rates do not match
-> > > > > the mode/LVR constraints. It's easy to do a mistake when writing =
-a dts.   =20
-> > > >=20
-> > > > I think the WARN_ON() is too evasive on the screen and won't provid=
-e the=20
-> > > > information we want.
-> > > > The dev_warn() should work perfectly here.
-> > > >=20
-> > > > 		if (i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c)
-> > > > 			dev_warn(&i3cbus->cur_master->dev->dev,
-> > > > 				     "%s: i3c-scl-hz lower then i2c-scl-hz\n",  __func__); =20
-> > >=20
-> > > Using dev_warn() sounds good, though I don't think you need the
-> > > __func__ here. Also, please print the i2c/i3c rates in the message, a=
-nd
-> > > align the second line on the open parens.
-> > >  =20
-> > > > 		if (i3cbus->scl_rate.i2c !=3D I3C_BUS_I2C_FM_SCL_RATE ||
-> > > > 		    i3cbus->scl_rate.i2c !=3D I3C_BUS_I2C_FM_PLUS_SCL_RATE)
-> > > > 			dev_warn(&i3cbus->cur_master->dev->dev,
-> > > > 				     "%s: i2c-scl-hz not defined according MIPI I3C spec\n",=20
-> > > > 				     __func__); =20
-> > >=20
-> > > Is that really a problem? Having an i2c rate that is less than FM spe=
-ed
-> > > sounds like a valid case to me. =20
-> >=20
-> > I'm addressing the spec constrains.
->=20
-> "Table 57 I3C Timing Requirements When Communicating With I2C Legacy
-> Devices" says that freq can be between 0 and 400KHz when operating in
-> slow(FM) mode.
+[ Upstream commit 544e784188f1dd7c797c70b213385e67d92005b6 ]
 
-That is the definition of Fast-mode:
-"Fast-mode devices can receive and transmit at up to 400kbit/s" as per=20
-i2c spec.
-So this way the slaves can be connected to Standard Mode bus... you=20
-already know that.
+Raspberry pi board model B revison 2 have the hot plug detector gpio
+active high (and not low as it was in the dts).
 
-For the FM requirements in I3C bus, please refer to I3C FAQ Q2.2 and=20
-table 56 of I3C v1.0 basic spec.
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Fixes: 49ac67e0c39c ("ARM: bcm2835: Add VC4 to the device tree.")
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Yes, maximum rate when not specified otherwise is
-> 400Khz,=20
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 4bc70efe43d6..3178a5664942 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -93,7 +93,7 @@
+ };
+ 
+ &hdmi {
+-	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
++	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &uart0 {
+-- 
+2.19.1
 
-By default you will have always FM or FM+ due the LVR register be=20
-mandatory.
-
-> but the point of overloading the max I2C/I3C spec is to allow
-> custom rates when the default/spec ones are not achievable, so I'm not
-> sure complaining in that case is legitimate.
->=20
-
-Well, if the users aren't able to achieve at least FM is because=20
-something is not correct.
-
-> We should definitely complain when one tries to set a maximum rate that
-> is higher than what devices can do (i3cbus->scl_rate.i2c >
-> max_i2c_scl_rate).
->=20
-
-I can put another if() for such cases.
-
-> Same goes for I3C communications, we shouldn't care when the forced rate
-> is lower than what the bus is capable of, what's important is to
-> complain when it's higher than what's supported.
-
-The point is complain when scl_rate.i3c < scl_rate.i2c because it can be=20
-error from user.
-
-Best regards,
-Vitor Soares
