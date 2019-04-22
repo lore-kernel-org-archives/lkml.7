@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C05C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B79C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD93218FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F0D218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962248;
-	bh=HgbRiQHbznqR23OU23XjoPKyit57ua5Jb438F8Azuq8=;
+	s=default; t=1555962253;
+	bh=/5rFM4ws/Ncm0eZbxq4IxZB2/4HtWhMNvmaLbccqTDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kCs+vagnuPGJFmDLta6Ya2kHbvXAYBs1YDjDP7LoN1II3LrXPg7twIpUTUnAvHPGs
-	 ZwP5vcffAIMI/7Q3lVbMnjOSzCEcLe9Z4pe4w+uUNXQHcPlsCqM7EZtT/UMSBFL5Sl
-	 hiiYzg90giUQ3myohbey1dmwqi9PwMEH2Dj8DEB4=
+	b=I7fj/eCj99q7wKdaI9U58Uao1Hv7OfVr1Vwb5QM7Xq3PmK77nly/CK9dKYGSLaETX
+	 2arRbiuBtXCOJnU+HsjZj+jxKxnU+OAAEEizfFdI5EU2KMkEpXhI+pddObdS+EOZsn
+	 q6+zGtzux6HfpcEKqPNDpwUBtfsoKGdhUITenKrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfDVToH (ORCPT
+        id S1729396AbfDVToM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbfDVToE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:04 -0400
+        id S1729377AbfDVToK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8488218FE;
-        Mon, 22 Apr 2019 19:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EF9C21901;
+        Mon, 22 Apr 2019 19:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962244;
-        bh=HgbRiQHbznqR23OU23XjoPKyit57ua5Jb438F8Azuq8=;
+        s=default; t=1555962250;
+        bh=/5rFM4ws/Ncm0eZbxq4IxZB2/4HtWhMNvmaLbccqTDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CoZBhX6kFahhmpVSFFMTxwXzZzgGBzXMMGEHJQfDOMjY2h1CkbsdtJK6tLnXAUXLW
-         0JREGm24SJP5ELc+9WQIVmxoOAItTBJwCmuafFtEr5+SC0mzu7hcBoZPVS2dshGv1u
-         Fq+3XZRVSzhqCcJaPFALgqPqv8zvTvWkn0kkxauw=
+        b=1y1G7GtH0ZSuOHllfi0nDplxGCLuljR/1PeT5xhlOoMMkfarN9z6ijA8GAjH0e+kP
+         9PxYsdiDLJR1JgusCVFG6AOLwigo2GRDwkiKEdgbKYUeE2dUiYO/uAsu9B2/BPKGlt
+         qVW35XCiaTG+WwDWDmmPxY0A3MzjjzC5SGyLSfOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     Aditya Pakki <pakki001@umn.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.0 60/98] staging: vc04_services: Fix an error code in vchiq_probe()
-Date:   Mon, 22 Apr 2019 15:41:27 -0400
-Message-Id: <20190422194205.10404-60-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 65/98] usb: usb251xb: fix to avoid potential NULL pointer dereference
+Date:   Mon, 22 Apr 2019 15:41:32 -0400
+Message-Id: <20190422194205.10404-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -58,48 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 9b9c87cf51783cbe7140c51472762094033cfeab ]
+[ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
 
-We need to set "err" on this error path.
+of_match_device in usb251xb_probe can fail and returns a NULL pointer.
+The patch avoids a potential NULL pointer dereference in this scenario.
 
-Fixes: 187ac53e590c ("staging: vchiq_arm: rework probe and init functions")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- .../staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/misc/usb251xb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index 804daf83be35..064d0db4c51e 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -3513,6 +3513,7 @@ static int vchiq_probe(struct platform_device *pdev)
- 	struct device_node *fw_node;
- 	const struct of_device_id *of_id;
- 	struct vchiq_drvdata *drvdata;
-+	struct device *vchiq_dev;
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index a6efb9a72939..5f7734c729b1 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -601,7 +601,7 @@ static int usb251xb_probe(struct usb251xb *hub)
+ 							   dev);
  	int err;
  
- 	of_id = of_match_node(vchiq_of_match, pdev->dev.of_node);
-@@ -3547,9 +3548,12 @@ static int vchiq_probe(struct platform_device *pdev)
- 		goto failed_platform_init;
- 	}
- 
--	if (IS_ERR(device_create(vchiq_class, &pdev->dev, vchiq_devid,
--				 NULL, "vchiq")))
-+	vchiq_dev = device_create(vchiq_class, &pdev->dev, vchiq_devid, NULL,
-+				  "vchiq");
-+	if (IS_ERR(vchiq_dev)) {
-+		err = PTR_ERR(vchiq_dev);
- 		goto failed_device_create;
-+	}
- 
- 	vchiq_debugfs_init();
- 
+-	if (np) {
++	if (np && of_id) {
+ 		err = usb251xb_get_ofdata(hub,
+ 					  (struct usb251xb_data *)of_id->data);
+ 		if (err) {
 -- 
 2.19.1
 
