@@ -7,89 +7,168 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F9CC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E59CC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8AC20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290802075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szjpaQv9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgYOR77C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfDVWEe (ORCPT
+        id S1730229AbfDVWJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 18:04:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44763 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbfDVWEe (ORCPT
+        Mon, 22 Apr 2019 18:09:52 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39423 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbfDVWJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 18:04:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c5so8562564wrs.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:04:33 -0700 (PDT)
+        Mon, 22 Apr 2019 18:09:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n25so16068784wmk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:09:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=mk/aeqDyjVubC22vG+Tnj0+IUdzO2mmBQHViP+VJ06s=;
-        b=szjpaQv92lzbMiKOj0TAIoB9rr7VMgOQoKv4yzw6lMIIm/aFTsHcgCP+VIi2vdv11s
-         ZH9mYh7+FXHPjjftyvGhs2pdVhD+PvKYCLObmtaCMVyo8HW7ZFREGtvVfpbd9SwY/R37
-         tJTaDD4jb5deb6mVNjPXoJHAZK161PwpFUvMMsca/XYlBVcB37phcoiL3wysP1X5p/w3
-         6S6B1BrPQZXuW7Vcl3uDH8gcVEGBOEuBR0Jd2JD3B0J79tQyQ+LIWEojK+/8iCf1rJkw
-         8IUf0U0s9gKy7eUnDZpzhvtOsVAWokEPYfU/nSBgCHenS1uChKKXEnIKYInaGdrwQFiB
-         0yOg==
+        bh=U8XMOAbFPcRWzCl5EAqV4Jxp+w9p90qZdgQkYs5X0YU=;
+        b=cgYOR77CmJ0Bo4MI2S8GjtP3DUSrs2t0/2VYAe7eX6U+aL7e1226i7xtpzsRaNvJHF
+         lIJIW1KGyOD1OHROFf7Cr+RMuzEWAYN9qF8ST6bf94qL+LNTFiYV7mMXi1yMeuXIeECa
+         pZ9rJ0oEQZfwGV35RvV7IHvzlT1nmVpLWlIeILCejvTTcw8lp43WqnyqjAscysW1KXEf
+         oSRGb0r0pETy71sm4RkfkjJMcYYNrqG3MZ+UQ1iKKCp5n2TLuVBun2hHo7va9DyYuC7r
+         B0rHzcHY+nJHOpgPzkVAIW5QzKuhlq31b+KfFslNsqe5QMARPJa1aNTg891NGy3VinnR
+         V2sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mk/aeqDyjVubC22vG+Tnj0+IUdzO2mmBQHViP+VJ06s=;
-        b=Q7QqB3GQB1tpEYhd+BXIfNEkMDgdVKmLub/KbJldAxRMbN67jWtEWwKdPoIan8qUu/
-         XhGu8mMmwUwLnoK4k7cX64m83/nQuDxsNmWHfdrFRmxfjRiCIYx2y5hd2mnx8J+xUWBf
-         YPyg5TQWTCkid9gTh6tT8MdQ2th+nhdxRKV+44jjKsjbqIBLpBsRSFdAeSgyQOe7RTPb
-         H69mBHYxPtouH3f3+TIuO8D5rAcbUUoKS6N7A524oI3N8ZAj1XFfEr+HCg/WCdye5MSa
-         Jz/mVsZTKe5HEizSwJ9LI95pxyWhVE0RXnl22nXySaTktt67SPgj3qnjISmaD+wbamhM
-         2ePA==
-X-Gm-Message-State: APjAAAX4HzDVgFjakJ+XYBvnNh7lyLbru5IacK/ikUuPPGwwePck/bov
-        AEpbGHFLpl6Sb5fpERaNWQ==
-X-Google-Smtp-Source: APXvYqy630KUEPGKRP/IBGTaFuoUXtyW+9jQ66apq0UaG/On3dO+kw6NvhLguM6jJ8LcLxOFetMXyA==
-X-Received: by 2002:a5d:5346:: with SMTP id t6mr15598952wrv.59.1555970672564;
-        Mon, 22 Apr 2019 15:04:32 -0700 (PDT)
+        bh=U8XMOAbFPcRWzCl5EAqV4Jxp+w9p90qZdgQkYs5X0YU=;
+        b=NM+IyLKIYYB81Jf8Gc6OI+pQOjKYchBN16HkVPl2Ss5Kl/9IEulIhqEExOiUOA0DxA
+         gWV8t0mFgFD3GnA7tVqdk9WAVm61oj8832Hyhs0YYZfNchbpVSNhUY6+woILiYlxShES
+         Tw3CNQEY9lbdr7XnwqTkAZ4dWtN3OxlSKuOvucTceAx15ZE2SfXxIO0WbDSofw4HFTzc
+         F++xzX4FRZ3iXelKAqGxvZtCUMv0Exhqcg+myPtT+BM6yBZx+Ra6TIUtMtMEYXPMsyK9
+         DuD2h660sm1lQq0qHNVb5V6RKYON3ygWq1EPgx3usnZw/JzN7hRfGC1hUVwNfHaFkqJQ
+         QAIw==
+X-Gm-Message-State: APjAAAUT7RIyJvIiXGSS+GJ6PqA82/x1XGZwNwZE/4uekltdN/8/zt/x
+        7RXZDhQ5aFoTla2StoZ1/Q==
+X-Google-Smtp-Source: APXvYqy8u/0Zkm4u4hsZuMeFgpRIy4ca+vuYS+YFw+Qr+Guvl2O4HaGMnIs9fmterjGK+1QFRB+dfw==
+X-Received: by 2002:a1c:5f08:: with SMTP id t8mr230795wmb.65.1555970991210;
+        Mon, 22 Apr 2019 15:09:51 -0700 (PDT)
 Received: from avx2 ([46.53.240.81])
-        by smtp.gmail.com with ESMTPSA id 62sm12287029wrm.18.2019.04.22.15.04.31
+        by smtp.gmail.com with ESMTPSA id l19sm26366288wrf.35.2019.04.22.15.09.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 15:04:31 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 01:04:29 +0300
+        Mon, 22 Apr 2019 15:09:50 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 01:09:48 +0300
 From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Ingo Molnar <mingo@kernel.org>, hpa@zytor.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>
 Subject: Re: [PATCH] x86_64: uninline TASK_SIZE
-Message-ID: <20190422220429.GA26031@avx2>
+Message-ID: <20190422220948.GB26031@avx2>
 References: <20190421160600.GA31092@avx2>
  <20190421182842.GD35603@gmail.com>
  <8B42CD57-9343-4234-A96D-80337BFFDF0E@zytor.com>
  <20190421211007.GA30444@avx2>
  <20190422103449.GA75723@gmail.com>
+ <BFD71398-0BDC-4045-91E9-C70A22FF6E73@amacapital.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190422103449.GA75723@gmail.com>
+In-Reply-To: <BFD71398-0BDC-4045-91E9-C70A22FF6E73@amacapital.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 12:34:49PM +0200, Ingo Molnar wrote:
+On Mon, Apr 22, 2019 at 07:30:40AM -0700, Andy Lutomirski wrote:
+> 
+> 
+> > On Apr 22, 2019, at 3:34 AM, Ingo Molnar <mingo@kernel.org> wrote:
+> > 
+> > 
+> > * Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> > 
+> >>>>> +++ b/arch/x86/kernel/task_size_64.c
+> >>>>> @@ -0,0 +1,9 @@
+> >>>>> +#include <linux/export.h>
+> >>>>> +#include <linux/sched.h>
+> >>>>> +#include <linux/thread_info.h>
+> >>>>> +
+> >>>>> +unsigned long _task_size(void)
+> >>>>> +{
+> >>>>> +    return test_thread_flag(TIF_ADDR32) ? IA32_PAGE_OFFSET :
+> >>>> TASK_SIZE_MAX;
+> >>>>> +}
+> >>>>> +EXPORT_SYMBOL(_task_size);
+> >>>> 
+> >>>> Good idea - but instead of adding yet another compilation unit, why not
+> >>>> 
+> >>>> stick _task_size() into arch/x86/kernel/process_64.c, which is the 
+> >>>> canonical place for process management related arch functions?
+> >>>> 
+> >>>> Thanks,
+> >>>> 
+> >>>>    Ingo
+> >>> 
+> >>> Better yet... since TIF_ADDR32 isn't something that changes randomly, 
+> >>> perhaps this should be a separate variable?
+> >> 
+> >> Maybe. I only thought about putting every 32-bit related flag under 
+> >> CONFIG_COMPAT to further eradicate bloat (and force everyone else to 
+> >> keep an eye on it, ha-ha).
+> > 
+> > Basically TIF_ADDR32 is only set for a task if set_personality_ia32() is 
+> > called, which function is called in the following circumstances:
+> > 
+> > - arch/x86/ia32/ia32_aout.c:load_aout_binary()
+> > 
+> >   This is in exec(), when a new binary is loaded for the current task, 
+> >   via search_binary_handler() and exec_binprm(). Ordering is 
+> >   synchronous, AFAICS there can be no race between TASK_SIZE users and 
+> >   the set_personality_ia32() call which is always for the current task.
+> > 
+> > - in COMPAT_SET_PERSONALITY(), which through macro detours ends up being 
+> >   in SET_PERSONALITY2(), which is used in fs/compat_binfmt_elf.c's 
+> >   load_elf_binary(), used in a similar fashion in exec() as the AOUT 
+> >   case above. One particular macro detour of note is that 
+> >   fs/compat_binfmt_elf.c #includes fs/binfmt_elf.c and re-defines the 
+> >   personality setting method to map to set_personality_ia32().
+> > 
+> > When set_personality_ia32() is called then TIF_ADDR32 is set 
+> > unconditionally, without any Kconfig variations.
+> > 
+> > TIF_ADDR32 is cleared:
+> > 
+> > - In set_personality_64bit(), when a 64-bit binary is loaded via 
+> >   fs/binfmt_elf.c.
+> > 
+> > - It also defaults to clear in the init task, which is inherited by the 
+> >   initial kernel threads and any user-space task they might end up 
+> >   executing.
+> > 
+> > So the conclusion is that IMO we can safely put TASK_SIZE into a new 
+> > thread_info()->task_size field, and:
+> > 
+> > - change ->task_size to the 32-bit address space in 
+> >   set_personality_ia32()
+> > 
+> > - change ->task_size to teh 64-bit address space in the init task and in 
+> >   set_personality_64bit().
+> > 
+> > This should cover it I think, unless I missed something.
+> > 
+> 
+> Are there really enough TASK_SIZE users to justify any of this?
 
-> When set_personality_ia32() is called then TIF_ADDR32 is set 
-> unconditionally, without any Kconfig variations.
+Saving 2KB on a defconfig is quite a lot.
+If put into thread_info, ->task_size can be pulled using just RAX which
+in turn allows to do
 
-Indeed.
+	asm volatile "call %P" ...  "=a" (...)
 
-	personality(PER_LINUX32) = 0 (PER_LINUX)
+saving even more space.
 
-I only wasted about half an evening ifdefing TIF_ flags.
-Thanks for saving a lot of time!
+But it is late here so don't quote me.
