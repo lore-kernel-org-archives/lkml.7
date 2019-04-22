@@ -2,98 +2,292 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6A2C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAF6C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE1820693
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:57:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QZJaTnPZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8A34620693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfDVU5Y (ORCPT
+        id S1728949AbfDVU5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:57:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47597 "EHLO ozlabs.org"
+        Mon, 22 Apr 2019 16:57:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41026 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfDVU5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 16:57:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726896AbfDVU52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 16:57:28 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44nzRP0qKMz9s3Z;
-        Tue, 23 Apr 2019 06:57:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555966641;
-        bh=O8xO8xOzqvGpu6E+PtD1zfZFqznO9aWjyhZ6DUIbhNs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QZJaTnPZr/YhNvo2LX7c69tWyeDC9ewHiW33ZCr42LL1JzOk54JiQNGGzKoBIkLuS
-         3Qn6CA94QITNh7ZYtp4gnQOW3XFMlVvI+hZ+LLXHInT/CBXJEtuXQWQ5hVmRlA1/2e
-         qBS3CUO0A9pW/njjsVVDYJBrJW62BiQ6X9gjYFh211p7CIrHYKB35x6YUf55syRQqN
-         P2OKJAj5uEwvx3JSUfq9Ac3ThIK8xPfi3l/2qAmw91SKXYgzGIerl6gJEseXggvm/w
-         vuOFWT9ozzUSE+8i7LyOu4b/AsGb2MGzmFYtZvuAR1Tqaqggttf1P4heokBcbXRI/O
-         jp7tER6UClrAg==
-Date:   Tue, 23 Apr 2019 06:57:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guy Levi <guyle@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: linux-next: Fixes tag needs some work in the rdma-fixes tree
-Message-ID: <20190423065712.7d0556b7@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 57A783086214;
+        Mon, 22 Apr 2019 20:57:27 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E14117F20;
+        Mon, 22 Apr 2019 20:57:23 +0000 (UTC)
+Date:   Mon, 22 Apr 2019 16:57:21 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
+        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
+        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        haren@linux.vnet.ibm.com, npiggin@gmail.com,
+        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH v12 21/31] mm: Introduce find_vma_rcu()
+Message-ID: <20190422205721.GL14666@redhat.com>
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <20190416134522.17540-22-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/ediXCgdp=3VX2QzEgGD/S41"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190416134522.17540-22-ldufour@linux.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 22 Apr 2019 20:57:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ediXCgdp=3VX2QzEgGD/S41
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 16, 2019 at 03:45:12PM +0200, Laurent Dufour wrote:
+> This allows to search for a VMA structure without holding the mmap_sem.
+> 
+> The search is repeated while the mm seqlock is changing and until we found
+> a valid VMA.
+> 
+> While under the RCU protection, a reference is taken on the VMA, so the
+> caller must call put_vma() once it not more need the VMA structure.
+> 
+> At the time a VMA is inserted in the MM RB tree, in vma_rb_insert(), a
+> reference is taken to the VMA by calling get_vma().
+> 
+> When removing a VMA from the MM RB tree, the VMA is not release immediately
+> but at the end of the RCU grace period through vm_rcu_put(). This ensures
+> that the VMA remains allocated until the end the RCU grace period.
+> 
+> Since the vm_file pointer, if valid, is released in put_vma(), there is no
+> guarantee that the file pointer will be valid on the returned VMA.
+> 
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 
-Hi all,
+Minor comments about comment (i love recursion :)) see below.
 
-In commit
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
 
-  5efda3b6b122 ("IB/mlx5: Fix scatter to CQE in DCT QP creation")
+> ---
+>  include/linux/mm_types.h |  1 +
+>  mm/internal.h            |  5 ++-
+>  mm/mmap.c                | 76 ++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 78 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 6a6159e11a3f..9af6694cb95d 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -287,6 +287,7 @@ struct vm_area_struct {
+>  
+>  #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+>  	atomic_t vm_ref_count;
+> +	struct rcu_head vm_rcu;
+>  #endif
+>  	struct rb_node vm_rb;
+>  
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 302382bed406..1e368e4afe3c 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -55,7 +55,10 @@ static inline void put_vma(struct vm_area_struct *vma)
+>  		__free_vma(vma);
+>  }
+>  
+> -#else
+> +extern struct vm_area_struct *find_vma_rcu(struct mm_struct *mm,
+> +					   unsigned long addr);
+> +
+> +#else /* CONFIG_SPECULATIVE_PAGE_FAULT */
+>  
+>  static inline void get_vma(struct vm_area_struct *vma)
+>  {
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index c106440dcae7..34bf261dc2c8 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -179,6 +179,18 @@ static inline void mm_write_sequnlock(struct mm_struct *mm)
+>  {
+>  	write_sequnlock(&mm->mm_seq);
+>  }
+> +
+> +static void __vm_rcu_put(struct rcu_head *head)
+> +{
+> +	struct vm_area_struct *vma = container_of(head, struct vm_area_struct,
+> +						  vm_rcu);
+> +	put_vma(vma);
+> +}
+> +static void vm_rcu_put(struct vm_area_struct *vma)
+> +{
+> +	VM_BUG_ON_VMA(!RB_EMPTY_NODE(&vma->vm_rb), vma);
+> +	call_rcu(&vma->vm_rcu, __vm_rcu_put);
+> +}
+>  #else
+>  static inline void mm_write_seqlock(struct mm_struct *mm)
+>  {
+> @@ -190,6 +202,8 @@ static inline void mm_write_sequnlock(struct mm_struct *mm)
+>  
+>  void __free_vma(struct vm_area_struct *vma)
+>  {
+> +	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT))
+> +		VM_BUG_ON_VMA(!RB_EMPTY_NODE(&vma->vm_rb), vma);
+>  	mpol_put(vma_policy(vma));
+>  	vm_area_free(vma);
+>  }
+> @@ -197,11 +211,24 @@ void __free_vma(struct vm_area_struct *vma)
+>  /*
+>   * Close a vm structure and free it, returning the next.
+>   */
+> -static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
+> +static struct vm_area_struct *__remove_vma(struct vm_area_struct *vma)
+>  {
+>  	struct vm_area_struct *next = vma->vm_next;
+>  
+>  	might_sleep();
+> +	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT) &&
+> +	    !RB_EMPTY_NODE(&vma->vm_rb)) {
+> +		/*
+> +		 * If the VMA is still linked in the RB tree, we must release
+> +		 * that reference by calling put_vma().
+> +		 * This should only happen when called from exit_mmap().
+> +		 * We forcely clear the node to satisfy the chec in
+                                                        ^
+Typo: chec -> check
 
-Fixes tag
+> +		 * __free_vma(). This is safe since the RB tree is not walked
+> +		 * anymore.
+> +		 */
+> +		RB_CLEAR_NODE(&vma->vm_rb);
+> +		put_vma(vma);
+> +	}
+>  	if (vma->vm_ops && vma->vm_ops->close)
+>  		vma->vm_ops->close(vma);
+>  	if (vma->vm_file)
+> @@ -211,6 +238,13 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
+>  	return next;
+>  }
+>  
+> +static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
+> +{
+> +	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT))
+> +		VM_BUG_ON_VMA(!RB_EMPTY_NODE(&vma->vm_rb), vma);
 
-  Fixes: 5d6ff1babe ("IB/mlx5: Support scatter to CQE for DC transport type=
-")
+Adding a comment here explaining the BUG_ON so people can understand
+what is wrong if that happens. For instance:
 
-has these problem(s):
+/*
+ * remove_vma() should be call only once a vma have been remove from the rbtree
+ * at which point the vma->vm_rb is an empty node. The exception is when vmas
+ * are destroy through exit_mmap() in which case we do not bother updating the
+ * rbtree (see comment in __remove_vma()).
+ */
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ediXCgdp=3VX2QzEgGD/S41
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+KqgACgkQAVBC80lX
-0GwQxAf+JJ5wkBp7Q6O3j/mBPifO34ghfG60lN666idz/o6ToG4fxKvVnaviYD+Z
-CWfxxQksw/2dvWZl1M9jkb1pU5bBNZou8LWc3u0/Z0417wCdZvWZjC8Zsuu+PORC
-5H+BwZvCH5fLjN336Faek0UyBbMuFtK8s7whbiJq64X8nh0SmFEwcqbtIEnBC6Fp
-3fECQY0uKOk2oNwDqbZXhzFyX5QKLmnKEcTF9ToPfgvM0R/hbKKPGIFGs57knNGt
-TPszK2Y4NcjxiI1KcYuhrcjfW7vXCaulLqq1IGJ0kR4nX/FBmG4e7onAhbrBifAq
-4FNWOxVmg0Yq8wlMgCKsObFQPgkdbg==
-=Hz1f
------END PGP SIGNATURE-----
-
---Sig_/ediXCgdp=3VX2QzEgGD/S41--
+> +	return __remove_vma(vma);
+> +}
+> +
+>  static int do_brk_flags(unsigned long addr, unsigned long request, unsigned long flags,
+>  		struct list_head *uf);
+>  SYSCALL_DEFINE1(brk, unsigned long, brk)
+> @@ -475,7 +509,7 @@ static inline void vma_rb_insert(struct vm_area_struct *vma,
+>  
+>  	/* All rb_subtree_gap values must be consistent prior to insertion */
+>  	validate_mm_rb(root, NULL);
+> -
+> +	get_vma(vma);
+>  	rb_insert_augmented(&vma->vm_rb, root, &vma_gap_callbacks);
+>  }
+>  
+> @@ -491,6 +525,14 @@ static void __vma_rb_erase(struct vm_area_struct *vma, struct mm_struct *mm)
+>  	mm_write_seqlock(mm);
+>  	rb_erase_augmented(&vma->vm_rb, root, &vma_gap_callbacks);
+>  	mm_write_sequnlock(mm);	/* wmb */
+> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+> +	/*
+> +	 * Ensure the removal is complete before clearing the node.
+> +	 * Matched by vma_has_changed()/handle_speculative_fault().
+> +	 */
+> +	RB_CLEAR_NODE(&vma->vm_rb);
+> +	vm_rcu_put(vma);
+> +#endif
+>  }
+>  
+>  static __always_inline void vma_rb_erase_ignore(struct vm_area_struct *vma,
+> @@ -2331,6 +2373,34 @@ struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long addr)
+>  
+>  EXPORT_SYMBOL(find_vma);
+>  
+> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+> +/*
+> + * Like find_vma() but under the protection of RCU and the mm sequence counter.
+> + * The vma returned has to be relaesed by the caller through the call to
+> + * put_vma()
+> + */
+> +struct vm_area_struct *find_vma_rcu(struct mm_struct *mm, unsigned long addr)
+> +{
+> +	struct vm_area_struct *vma = NULL;
+> +	unsigned int seq;
+> +
+> +	do {
+> +		if (vma)
+> +			put_vma(vma);
+> +
+> +		seq = read_seqbegin(&mm->mm_seq);
+> +
+> +		rcu_read_lock();
+> +		vma = find_vma(mm, addr);
+> +		if (vma)
+> +			get_vma(vma);
+> +		rcu_read_unlock();
+> +	} while (read_seqretry(&mm->mm_seq, seq));
+> +
+> +	return vma;
+> +}
+> +#endif
+> +
+>  /*
+>   * Same as find_vma, but also return a pointer to the previous VMA in *pprev.
+>   */
+> @@ -3231,7 +3301,7 @@ void exit_mmap(struct mm_struct *mm)
+>  	while (vma) {
+>  		if (vma->vm_flags & VM_ACCOUNT)
+>  			nr_accounted += vma_pages(vma);
+> -		vma = remove_vma(vma);
+> +		vma = __remove_vma(vma);
+>  	}
+>  	vm_unacct_memory(nr_accounted);
+>  }
+> -- 
+> 2.21.0
+> 
