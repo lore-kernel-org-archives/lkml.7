@@ -2,139 +2,104 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3459CC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67052C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036FA214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B4520896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfDVVEF (ORCPT
+        id S1729237AbfDVVFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:04:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39908 "EHLO mx1.redhat.com"
+        Mon, 22 Apr 2019 17:05:37 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42914 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbfDVVEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:04:04 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4E1C5882EA;
-        Mon, 22 Apr 2019 21:04:03 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D7F260141;
-        Mon, 22 Apr 2019 21:03:51 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
+        id S1728996AbfDVVFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:05:37 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hIg85-0004ia-Rp; Mon, 22 Apr 2019 15:05:35 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hIg82-0003zY-Lh; Mon, 22 Apr 2019 15:05:30 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>
-Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
-References: <20190410040826.24371-1-pagupta@redhat.com>
-        <20190410040826.24371-2-pagupta@redhat.com>
-        <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
-        <20190412083230.GA29850@quack2.suse.cz>
-        <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
-        <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
-        <20190418161833.GA22970@infradead.org>
-        <CAPcyv4jPOF_+R6U17J_+88+X8LC-LSPCugA6gbKxuphuuFB2gg@mail.gmail.com>
-        <x497ebm82d4.fsf@segfault.boston.devel.redhat.com>
-        <CAPcyv4gGmN2LLMPy6BzWpYhRyV7fFNVgh=xAWSAdnnAWu5APtg@mail.gmail.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Mon, 22 Apr 2019 17:03:50 -0400
-In-Reply-To: <CAPcyv4gGmN2LLMPy6BzWpYhRyV7fFNVgh=xAWSAdnnAWu5APtg@mail.gmail.com>
-        (Dan Williams's message of "Mon, 22 Apr 2019 12:44:21 -0700")
-Message-ID: <x49ef5t7nwp.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Serge Semin <fancer.lancer@gmail.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Mon, 22 Apr 2019 15:05:20 -0600
+Message-Id: <20190422210528.15289-3-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190422210528.15289-1-logang@deltatee.com>
+References: <20190422210528.15289-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 22 Apr 2019 21:04:04 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-ntb@googlegroups.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, jdmason@kudzu.us, joro@8bytes.org, bhelgaas@google.com, dave.jiang@intel.com, allenbh@gmail.com, fancer.lancer@gmail.com, epilmore@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v4 02/10] PCI/switchtec: Add module parameter to request more interrupts
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+Seeing the we want to use more interrupts in the NTB MSI code
+we need to be able allocate more (sometimes virtual) interrupts
+in the switchtec driver. Therefore add a module parameter to
+request to allocate additional interrupts.
 
-> On Mon, Apr 22, 2019 at 8:59 AM Jeff Moyer <jmoyer@redhat.com> wrote:
->>
->> Dan Williams <dan.j.williams@intel.com> writes:
->>
->> > On Thu, Apr 18, 2019 at 9:18 AM Christoph Hellwig <hch@infradead.org> wrote:
->> >>
->> >> On Thu, Apr 18, 2019 at 09:05:05AM -0700, Dan Williams wrote:
->> >> > > > I'd either add a comment about avoiding retpoline overhead here or just
->> >> > > > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
->> >> > > > get confused by the code.
->> >> > >
->> >> > > Isn't this premature optimization?  I really don't like adding things
->> >> > > like this without some numbers to show it's worth it.
->> >> >
->> >> > I don't think it's premature given this optimization technique is
->> >> > already being deployed elsewhere, see:
->> >> >
->> >> > https://lwn.net/Articles/774347/
->> >>
->> >> For one this one was backed by numbers, and second after feedback
->> >> from Linux we switched to the NULL pointer check instead.
->> >
->> > Ok I should have noticed the switch to NULL pointer check. However,
->> > the question still stands do we want everyone to run numbers to
->> > justify this optimization, or make it a new common kernel coding
->> > practice to do:
->> >
->> >     if (!object->op)
->> >         generic_op(object);
->> >     else
->> >         object->op(object);
->> >
->> > ...in hot paths?
->>
->> I don't think nvdimm_flush is a hot path.  Numbers of some
->> representative workload would prove one of us right.
->
-> I'd rather say that the if "if (!op) do_generic()" pattern is more
-> readable in the general case, saves grepping for who set the op in the
-> common case. The fact that it has the potential to be faster is gravy
-> at that point.
+This puts virtually no limit on the number of MSI interrupts available
+to NTB clients.
 
-If the primary motivation is performance, then I'd expect performance
-numbers to back it up.  If that isn't the primary motivation, then
-choose whichever way you feel is appropriate.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/switch/switchtec.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Cheers,
-Jeff
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index e22766c79fe9..8b1db78197d9 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -30,6 +30,10 @@ module_param(use_dma_mrpc, bool, 0644);
+ MODULE_PARM_DESC(use_dma_mrpc,
+ 		 "Enable the use of the DMA MRPC feature");
+ 
++static int nirqs = 32;
++module_param(nirqs, int, 0644);
++MODULE_PARM_DESC(nirqs, "number of interrupts to allocate (more may be useful for NTB applications)");
++
+ static dev_t switchtec_devt;
+ static DEFINE_IDA(switchtec_minor_ida);
+ 
+@@ -1247,8 +1251,12 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
+ 	int dma_mrpc_irq;
+ 	int rc;
+ 
+-	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, 4,
+-				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
++	if (nirqs < 4)
++		nirqs = 4;
++
++	nvecs = pci_alloc_irq_vectors(stdev->pdev, 1, nirqs,
++				      PCI_IRQ_MSIX | PCI_IRQ_MSI |
++				      PCI_IRQ_VIRTUAL);
+ 	if (nvecs < 0)
+ 		return nvecs;
+ 
+-- 
+2.20.1
+
