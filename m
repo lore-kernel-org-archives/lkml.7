@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC2EC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF26C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995442177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0E72177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962195;
-	bh=0aOGSShikwhv7hLnbXCgOfbupt8Kq3tjNQFQg9NkC/s=;
+	s=default; t=1555962199;
+	bh=AnIoBIBEzcHVFwqfNpbyFlvJCgq+EYuLA6Mxe5Oz4PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZwJ5rHnrOEf2Erpr1lrMLk/S1opgzfb8IDM+VqsnTzolG3Skf0uKgRPRNEQ/w403
-	 bI8/OKRGH6pojlL459R+kCD+OmkclmeAsDOQ9NDqSX/kz/CtbvhOmEopqRfv4qib+6
-	 CbYnPMwtgmtrPJZMYJL0T3jm0xmyK1UI3JtLTORQ=
+	b=dei9yw8SzHaYy0+POTbXyF8/EAo/AS1Hw0an+qz+M+xaLT70mbppEMI2PYsxuqPNF
+	 4Lzq/q3LubGBUpxw6XXO+mRFeEDPe4feUuWNibzwhb/9xWz3u18IMnrP8rHpi0YTIN
+	 nDzGIDXO3NfH6jYgcINU7G768d7ppYEqvRfhDMs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfDVTnN (ORCPT
+        id S1729151AbfDVTnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:43:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729112AbfDVTnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:43:11 -0400
+        id S1729128AbfDVTnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:43:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45FE2177B;
-        Mon, 22 Apr 2019 19:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CBB421738;
+        Mon, 22 Apr 2019 19:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962189;
-        bh=0aOGSShikwhv7hLnbXCgOfbupt8Kq3tjNQFQg9NkC/s=;
+        s=default; t=1555962193;
+        bh=AnIoBIBEzcHVFwqfNpbyFlvJCgq+EYuLA6Mxe5Oz4PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nqmB2Uvh9Sjy+XOTMjFmMRSOGq2TRhC6prYL8JiPxoiAME9e7ON3rfOhXyVZnBXf
-         9bF0lvYJkYykGNG+0DdoAoOxqFAT/yy7BW6Zg+biWTye86ixM/4LwsvItiO31gku9j
-         JhKrkodvrUIoCUCLa8ZVbcB+e+Hpoe0lgK1lwA5o=
+        b=XWkJ1/wwQjY5szR66R9RAPvBZv5Pt1F9YV58h0skLzcIDA3rNxlXCm6JvLKqlfGHj
+         gRDVtd/rHQB3MKiEfEFhbsJpEYGhyx+Ip68+kGgaeH1mMmemjSgTawB7/NlSoL34ox
+         DV9I/gDsMl2lhqf9ulNjWpmFI20GApKQxEdCH79U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zheng Xiang <zhengxiang9@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 5.0 36/98] KVM: arm/arm64: Fix handling of stage2 huge mappings
-Date:   Mon, 22 Apr 2019 15:41:03 -0400
-Message-Id: <20190422194205.10404-36-sashal@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 37/98] net: ks8851: Dequeue RX packets explicitly
+Date:   Mon, 22 Apr 2019 15:41:04 -0400
+Message-Id: <20190422194205.10404-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -61,156 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 3c3736cd32bf5197aed1410ae826d2d254a5b277 ]
+[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
 
-We rely on the mmu_notifier call backs to handle the split/merge
-of huge pages and thus we are guaranteed that, while creating a
-block mapping, either the entire block is unmapped at stage2 or it
-is missing permission.
+The ks8851 driver lets the chip auto-dequeue received packets once they
+have been read in full. It achieves that by setting the ADRFE flag in
+the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
 
-However, we miss a case where the block mapping is split for dirty
-logging case and then could later be made block mapping, if we cancel the
-dirty logging. This not only creates inconsistent TLB entries for
-the pages in the the block, but also leakes the table pages for
-PMD level.
+However if allocation of a packet's socket buffer or retrieval of the
+packet over the SPI bus fails, the packet will not have been read in
+full and is not auto-dequeued. Such partial retrieval of a packet
+confuses the chip's RX queue management:  On the next RX interrupt,
+the first packet read from the queue will be the one left there
+previously and this one can be retrieved without issues. But for any
+newly received packets, the frame header status and byte count registers
+(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
 
-Handle this corner case for the huge mappings at stage2 by
-unmapping the non-huge mapping for the block. This could potentially
-release the upper level table. So we need to restart the table walk
-once we unmap the range.
+The chip allows explicitly dequeueing a packet from the RX queue by
+setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
+This could be used to dequeue the packet in case of an error, but if
+that error is a failed SPI transfer, it is unknown if the packet was
+transferred in full and was auto-dequeued or if it was only transferred
+in part and requires an explicit dequeue. The safest approach is thus
+to always dequeue packets explicitly and forgo auto-dequeueing.
 
-Fixes : ad361f093c1e31d ("KVM: ARM: Support hugetlbfs backed huge pages")
-Reported-by: Zheng Xiang <zhengxiang9@huawei.com>
-Cc: Zheng Xiang <zhengxiang9@huawei.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Without this change, I've witnessed packet retrieval break completely
+when an SPI DMA transfer fails, requiring a chip reset. Explicit
+dequeueing magically fixes this and makes packet retrieval absolutely
+robust for me.
+
+The chip's documentation suggests auto-dequeuing and uses the RRXEF
+flag only to dequeue error frames which the driver doesn't want to
+retrieve. But that seems to be a fair-weather approach.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/include/asm/stage2_pgtable.h |  2 +
- virt/kvm/arm/mmu.c                    | 59 +++++++++++++++++++--------
- 2 files changed, 45 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/include/asm/stage2_pgtable.h b/arch/arm/include/asm/stage2_pgtable.h
-index de2089501b8b..9e11dce55e06 100644
---- a/arch/arm/include/asm/stage2_pgtable.h
-+++ b/arch/arm/include/asm/stage2_pgtable.h
-@@ -75,6 +75,8 @@ static inline bool kvm_stage2_has_pud(struct kvm *kvm)
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index bd6e9014bc74..a93f8e842c07 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -535,9 +535,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 		/* set dma read address */
+ 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
  
- #define S2_PMD_MASK				PMD_MASK
- #define S2_PMD_SIZE				PMD_SIZE
-+#define S2_PUD_MASK				PUD_MASK
-+#define S2_PUD_SIZE				PUD_SIZE
+-		/* start the packet dma process, and set auto-dequeue rx */
+-		ks8851_wrreg16(ks, KS_RXQCR,
+-			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
++		/* start DMA access */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
  
- static inline bool kvm_stage2_has_pmd(struct kvm *kvm)
- {
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 6dccb36465e6..7a0f9eeea68c 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1060,25 +1060,43 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- {
- 	pmd_t *pmd, old_pmd;
+ 		if (rxlen > 4) {
+ 			unsigned int rxalign;
+@@ -568,7 +567,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 			}
+ 		}
  
-+retry:
- 	pmd = stage2_get_pmd(kvm, cache, addr);
- 	VM_BUG_ON(!pmd);
+-		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
++		/* end DMA access and dequeue packet */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
+ 	}
+ }
  
- 	old_pmd = *pmd;
-+	/*
-+	 * Multiple vcpus faulting on the same PMD entry, can
-+	 * lead to them sequentially updating the PMD with the
-+	 * same value. Following the break-before-make
-+	 * (pmd_clear() followed by tlb_flush()) process can
-+	 * hinder forward progress due to refaults generated
-+	 * on missing translations.
-+	 *
-+	 * Skip updating the page table if the entry is
-+	 * unchanged.
-+	 */
-+	if (pmd_val(old_pmd) == pmd_val(*new_pmd))
-+		return 0;
-+
- 	if (pmd_present(old_pmd)) {
- 		/*
--		 * Multiple vcpus faulting on the same PMD entry, can
--		 * lead to them sequentially updating the PMD with the
--		 * same value. Following the break-before-make
--		 * (pmd_clear() followed by tlb_flush()) process can
--		 * hinder forward progress due to refaults generated
--		 * on missing translations.
-+		 * If we already have PTE level mapping for this block,
-+		 * we must unmap it to avoid inconsistent TLB state and
-+		 * leaking the table page. We could end up in this situation
-+		 * if the memory slot was marked for dirty logging and was
-+		 * reverted, leaving PTE level mappings for the pages accessed
-+		 * during the period. So, unmap the PTE level mapping for this
-+		 * block and retry, as we could have released the upper level
-+		 * table in the process.
- 		 *
--		 * Skip updating the page table if the entry is
--		 * unchanged.
-+		 * Normal THP split/merge follows mmu_notifier callbacks and do
-+		 * get handled accordingly.
- 		 */
--		if (pmd_val(old_pmd) == pmd_val(*new_pmd))
--			return 0;
--
-+		if (!pmd_thp_or_huge(old_pmd)) {
-+			unmap_stage2_range(kvm, addr & S2_PMD_MASK, S2_PMD_SIZE);
-+			goto retry;
-+		}
- 		/*
- 		 * Mapping in huge pages should only happen through a
- 		 * fault.  If a page is merged into a transparent huge
-@@ -1090,8 +1108,7 @@ static int stage2_set_pmd_huge(struct kvm *kvm, struct kvm_mmu_memory_cache
- 		 * should become splitting first, unmapped, merged,
- 		 * and mapped back in on-demand.
- 		 */
--		VM_BUG_ON(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
--
-+		WARN_ON_ONCE(pmd_pfn(old_pmd) != pmd_pfn(*new_pmd));
- 		pmd_clear(pmd);
- 		kvm_tlb_flush_vmid_ipa(kvm, addr);
- 	} else {
-@@ -1107,6 +1124,7 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
- {
- 	pud_t *pudp, old_pud;
- 
-+retry:
- 	pudp = stage2_get_pud(kvm, cache, addr);
- 	VM_BUG_ON(!pudp);
- 
-@@ -1114,14 +1132,23 @@ static int stage2_set_pud_huge(struct kvm *kvm, struct kvm_mmu_memory_cache *cac
- 
- 	/*
- 	 * A large number of vcpus faulting on the same stage 2 entry,
--	 * can lead to a refault due to the
--	 * stage2_pud_clear()/tlb_flush(). Skip updating the page
--	 * tables if there is no change.
-+	 * can lead to a refault due to the stage2_pud_clear()/tlb_flush().
-+	 * Skip updating the page tables if there is no change.
- 	 */
- 	if (pud_val(old_pud) == pud_val(*new_pudp))
- 		return 0;
- 
- 	if (stage2_pud_present(kvm, old_pud)) {
-+		/*
-+		 * If we already have table level mapping for this block, unmap
-+		 * the range for this block and retry.
-+		 */
-+		if (!stage2_pud_huge(kvm, old_pud)) {
-+			unmap_stage2_range(kvm, addr & S2_PUD_MASK, S2_PUD_SIZE);
-+			goto retry;
-+		}
-+
-+		WARN_ON_ONCE(kvm_pud_pfn(old_pud) != kvm_pud_pfn(*new_pudp));
- 		stage2_pud_clear(kvm, pudp);
- 		kvm_tlb_flush_vmid_ipa(kvm, addr);
- 	} else {
 -- 
 2.19.1
 
