@@ -2,125 +2,98 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E34C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52152C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9612073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555972823;
-	bh=pWYNOxpuildrZ7gyqTZSgxCmXISULAhZNGxQEDvE2pk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Mlu/rVmuvRkUuS8/oj3oKN14UcaSAh4Lm+UODALlmr6eEGjHdCEYyLr3HbCJsEXe2
-	 KF49X0O9x9wLErI2aXTnqlSkPOHDDHsdugEHZ20H3yHhDgWd/sIXi9xR2X7mmmlyJY
-	 O9jpQreXpPfgLVkSX/JunBKdAUCqWZdWJSvrPUvU=
+	by mail.kernel.org (Postfix) with ESMTP id 1DFB420811
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:40:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hgX6wGFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbfDVWkW (ORCPT
+        id S1729798AbfDVWkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 18:40:22 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33795 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728965AbfDVWkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 18:40:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y16so840442ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u4+uIj7flcxGFYwj/tSELT+9Omb2XPMc6XJsVtpD7rM=;
-        b=RxxH0fkU/TvgkBeVGHr1NeVrwv1sCkt3Lv8R0pHGRYrVi3TSay2ZUu5f8wEptb5i1/
-         VsBgIRAi0mIzTvUEMoZ/6sCE+vA11AN1tuItLytFfErPkcy7z+CMRAwkqhMFYisWPW19
-         SEGKgfH6yqS/Ea0zjmHGg1l6o51jENsOkRl/Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u4+uIj7flcxGFYwj/tSELT+9Omb2XPMc6XJsVtpD7rM=;
-        b=V1V7VdyuPFOhQoZIkwREYVCx6CinFc2Gt24RhkWqxmbRJkoRtE50017llAxSe4UQZX
-         FKNAAQAjcgJw6AzFZBqcpvDIVEzS1HRRk8uIsn7QB0umCo0WnxuRhe4JHNATeqXujMRB
-         sLSBIiW1LXw77t0PR2My7tYxq29xZqA8W5KputqxcO4dKUJeP0NA0ZxMWB9Di+QuIVSd
-         oWnR49uvUdbLyS26dzDizp5N1YFC6DWMUafBTpzlcAmKYvU96chkNXS9kzyIap+F7U0U
-         vRNQdHgVFLrJvV2rpQrMC4lldTye9a4sr3VJpUmXhxpK6uefDL+kOOIDN+Qo9kFrBw0P
-         8kvQ==
-X-Gm-Message-State: APjAAAU61FxMjEhFyROIqi1H+aJN0qAwhruczY/D1D9uV6LCGQMWJOMf
-        /MUleDPAipCJNCnk1onWChz7I6nv4y4=
-X-Google-Smtp-Source: APXvYqxXihHRcy4yjE66kJ6HIw+3j6y9VDR7f0wycGELD48nM8AAW2Epzlg5FfZeafIXLnbFlz8bAw==
-X-Received: by 2002:a2e:8684:: with SMTP id l4mr12225528lji.121.1555972818914;
-        Mon, 22 Apr 2019 15:40:18 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id s64sm2962411lje.49.2019.04.22.15.40.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 15:40:17 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id h16so11620732ljg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:40:17 -0700 (PDT)
-X-Received: by 2002:a2e:9213:: with SMTP id k19mr11005423ljg.118.1555972817211;
- Mon, 22 Apr 2019 15:40:17 -0700 (PDT)
+        Mon, 22 Apr 2019 18:40:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:43225 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728965AbfDVWks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 18:40:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44p1kh28xVz9s7T;
+        Tue, 23 Apr 2019 08:40:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555972846;
+        bh=6w/xfxRMU+HgAigY7XYa1avpShbpahKC+Ohd6gOt780=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hgX6wGFxy5gPoab8q0XIhpsB2o2iZJxcRY1XFlcayrKPzAxvXtNg2E4qg9KlOFiDY
+         ijrjsQE2tprFQoXOzbS6ZSPzgN4sZ6lUQlQv4qJOeABTJtuw1i0spZNu/yZ9lFlDD1
+         N+mVhSQf3NPkkHx3d0vwBN/r7Qg/QPfRzIFbi5Ux3DuiZSXwXOJ4Xyn6jrua/fksNL
+         Jvb84bodL48OkEQy9CpLIyyvjJcV0zc+ESvIWs8gGNGQZM0C8Fzv09xKpJIpkBvY7K
+         PJxoibx0CcpsP55RM6RfxXlw5SXB3ulJ2fpPFHFA9paOc+0PY2+XK8hksCQHLybq6L
+         ErKpd8M/CoKJw==
+Date:   Tue, 23 Apr 2019 08:40:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Nicolas Ferre <nicolas.ferre@atmel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: linux-next: build failure after merge of the at91 tree
+Message-ID: <20190423084042.29fd9c03@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190421160600.GA31092@avx2>
-In-Reply-To: <20190421160600.GA31092@avx2>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Apr 2019 15:40:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wijYb1Ci2Sx2xxggxdqHuMT4HJ5WtW+eGJP-+Fa9b1YtA@mail.gmail.com>
-Message-ID: <CAHk-=wijYb1Ci2Sx2xxggxdqHuMT4HJ5WtW+eGJP-+Fa9b1YtA@mail.gmail.com>
-Subject: Re: [PATCH] x86_64: uninline TASK_SIZE
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/viFDtRPHsDztPYGKC4FRGVu"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 9:06 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
->
-> TASK_SIZE macro is quite deceptive: it looks like a constant but in fact
-> compiles to 50+ bytes.
+--Sig_/viFDtRPHsDztPYGKC4FRGVu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Honestly, if you are interested in improving TASK_SIZE, I'd really
-like to see you try to go even further than this.
+Hi all,
 
-TASK_SIZE _used_ to just be a fixed constant, which is why it has that
-name and why the usage patterns are what they are.
+After merging the at91 tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-But since that isn't true any more, I'd much rather fix the _name_,
-and I'd much rather fix the nasty complex hidden behavior, rather than
-just keep the name and keep the behavior, but turning it from an
-inline macro to a function call.
+arch/arm/mach-at91/pm_suspend.S:17:10: fatal error: pm_data-offsets.h: No s=
+uch file or directory
+ #include "pm_data-offsets.h"
+          ^~~~~~~~~~~~~~~~~~~
 
-And as Ingo points out, we should be able to just make it a field of
-its own, instead of that complex dance of TIF_ADDR32 etc.
+Caused by commit
 
-However, I think it would be better if that field would be in "struct
-mm_struct" instead of Ingo's suggestion of the thread. Because while
-it's currently a per-thread flag, I think it is only set by execve(),
-so it always ends up being the same per-mm. No?
+  ab690fa1eb4b ("ARM: at91: move platform-specific asm-offset.h to arch/arm=
+/mach-at91")
 
-Also, we could/should just make the existing *users* of TASK_SIZE know
-that it's no longer a simple constant, so all those functions that use
-it many times could just do
+I used the version of the at91 tree from next-20190418 for today.
 
-        unsigned long task_size = TASK_SIZE;
+--=20
+Cheers,
+Stephen Rothwell
 
-rather than re-compute it multiple times like they do now.
+--Sig_/viFDtRPHsDztPYGKC4FRGVu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-In fact, making it a function call in many ways makes things *worse*,
-although maybe we could at least mark the function "pure" so that gcc
-would be able to cache the end result. But that would actually be
-wrong for the sequences that maybe do change the thread flags, so I
-hate that idea too.
+-----BEGIN PGP SIGNATURE-----
 
-Much better to just cache it explicitly in the cases where we see that
-it's currently generating bad code.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+QuoACgkQAVBC80lX
+0GxptQf/eh89qqrmdmAN/MG1zs5M+JFtIoqW6ZJqnhPjnNWSObuz7rImFfprQTWQ
+84CK2p3OKS6V6JubBQfuSE30aADj+bgfsEReaUxeCko53GbZ6Zu5mUQAq7SP7inK
+p6VOvk05cM8csKVADQE/3Ri1v8pt/FI3c3+oBG07fABssx69Ghs5LuT/b88NJRyB
+gCVy+2L+kgI4uHg0ArGGuwbvemYfJpIWasmzJhJXI/LyEbm7wdyl/BQYuM15hyNb
+YMdNnCufYj7Z5Uq7Lll7IVkJWf320Y4oHXRs/aIxukubsHVtFdEYaLYlnUFcl1FR
+8Loim0X1oxD8bd+tBWElxHOMA/ACJw==
+=aW8/
+-----END PGP SIGNATURE-----
 
-                Linus
+--Sig_/viFDtRPHsDztPYGKC4FRGVu--
