@@ -2,910 +2,797 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326F5C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF77C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB42D2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3951C20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939757;
-	bh=g8KiVocoivt8JHdJKySdxphLzsNZp/a0ZYmNwk7VlRo=;
+	s=default; t=1555939768;
+	bh=y7gbZnu/YhE5TQSWxf7P9+cHpA0Yn5qwJIyyBziWjbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kkU48PxhvWlGJ1b5I01k25fxhghzw9xfqriVv+TaYK/rM1qutMVSz1cE0eiNW5l1s
-	 O23it65uH2huLPLxHpDLVfbTeo5xC5u2NgEp3CXw+wNs6IfUA2rGuYX94f6LsEONyN
-	 9222pLZUXlodkh0WLgAdOzN3cndkHTH2eqWhRNKU=
+	b=megn0yrJ9yEnb+7UoSrCLZ9LoGXP9dZ1aKnz1zpyijarOCjPuj2rK8o1bZt8Ei/ks
+	 Txk/UJUVjxIDKgZNCJJMbA5WfCy1lfQyD64df7PheidJ0NJirxYvrywMUVBfOBNi95
+	 DCa7fZOCZIQMjbZ6goxy1tbdFn41E+sjA/1TC4Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfDVN2i (ORCPT
+        id S1727735AbfDVN2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37590 "EHLO
+        Mon, 22 Apr 2019 09:28:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37244 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbfDVN2U (ORCPT
+        with ESMTP id S1727459AbfDVN2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:20 -0400
+        Mon, 22 Apr 2019 09:28:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=c9hvBVWbeWJ4RLzDwr52vWPvu5JGiNgeGSQ5paSWv+M=; b=S3TODf1NIrkEmM/woVfAMfqiIJ
-        4LNKZpGmVFKM02yqGWC2Wat9aFIccfNUZW2FTouqxrzLUUx6DMsdHXH56kYF9rSyEbyP/auKFUPtJ
-        aIZ4v87JTExJGl4kRvgTRw+qeM6RXjUdpnrtKvQn8YUen6x1LyyThFQhvzPwrfOofKWm37lZ9y83J
-        DNF6SJjwfV9oVq2T5bZzZ57JLR86xpO0UU2XhWYhfFyoipZT+1GDcWEXslMQcPzeGvOIiomA63OSb
-        mzatLaMSG4+9wVk5ekc2zgj9V4mOZ2+Z7sX1SS4v/sAWaxauBWsx6l8jt3iVJC/lHXkiiehcTFliW
-        g8FtzEiA==;
+        bh=xDp/p34klvvR7e+URqkihOxCWQElIExjT7fpwSw9Vto=; b=mGR4B5Fg0sWFUHAyjVJ+zsUnfz
+        AvFN5n5TXaX3uMW0om5vZbxtO2l8Ouu6MKEiaHOK2G6Rc7Rh3feotm3ITvGMc3PwyciGMrvvx7c3I
+        odRBzx46U3lAoBk/O3KJ5Fjs4VPu/FI/ifQO8DNU91J+AgFeNxdJeHca4i0gbOdt3+n27V0qtrKMt
+        Cyf90t4swVMkebGVashOZW+NCMbqKIBEUFQL4jwAu/JKDhUn/LZe+PWDN1YJrJgr5PnWEacifkfdD
+        hQ/xlKkcIfkqsLUGtNhKTu5Brf0HNtS+y7SmaNhfU77CEP8lVGqSEPsI2k0NfRyGn9Dx0j22lvycz
+        W5BOMDzw==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzY-0005Hi-QS; Mon, 22 Apr 2019 13:28:17 +0000
+        id 1hIYzV-0005Hn-2j; Mon, 22 Apr 2019 13:28:13 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005p4-HT; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzS-0005kx-QZ; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH v2 69/79] docs: mtd: convert to ReST
-Date:   Mon, 22 Apr 2019 10:27:58 -0300
-Message-Id: <d2bf7c8f5cc2aa1c65fbd92760ae2e33f0f4c248.1555938376.git.mchehab+samsung@kernel.org>
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+Subject: [PATCH v2 19/79] docs: kdump: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:08 -0300
+Message-Id: <9141ffcad8c415b883bfa368581a3aa885a92f7a.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the mtd documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+Convert kdump documentation to ReST and add it to the
+user faced manual, as the documents are mainly focused on
+sysadmins that would be enabling kdump.
 
-It should be noticed that Sphinx doesn't handle very well
-URLs with dots in the middle. Thankfully, internally, the '.'
-char is translated to %2E, so we can jus use %2E instead of
-dots, and this will work fine on both text and processed files.
+Note: the vmcoreinfo.rst has one very long title on one of its
+sub-sections:
+
+	PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
+
+I opted to break this one, into two entries with the same content,
+in order to make it easier to display after being parsed in html and PDF.
+
+The conversion is actually:
+  - add blank lines and identation in order to identify paragraphs;
+  - fix tables markups;
+  - add some lists markups;
+  - mark literal blocks;
+  - adjust title markups.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/mtd/index.rst                   |  12 +
- .../mtd/{intel-spi.txt => intel-spi.rst}      |  46 +-
- .../mtd/{nand_ecc.txt => nand_ecc.rst}        | 481 ++++++++++--------
- .../mtd/{spi-nor.txt => spi-nor.rst}          |   7 +-
- drivers/mtd/nand/raw/nand_ecc.c               |   2 +-
- 5 files changed, 306 insertions(+), 242 deletions(-)
- create mode 100644 Documentation/mtd/index.rst
- rename Documentation/mtd/{intel-spi.txt => intel-spi.rst} (71%)
- rename Documentation/mtd/{nand_ecc.txt => nand_ecc.rst} (67%)
- rename Documentation/mtd/{spi-nor.txt => spi-nor.rst} (94%)
+ Documentation/admin-guide/bug-hunting.rst     |   2 +-
+ .../admin-guide/kernel-parameters.txt         |   6 +-
+ Documentation/kdump/index.rst                 |  21 +++
+ Documentation/kdump/{kdump.txt => kdump.rst}  | 131 +++++++++++-------
+ .../kdump/{vmcoreinfo.txt => vmcoreinfo.rst}  |  59 ++++----
+ .../powerpc/firmware-assisted-dump.txt        |   2 +-
+ .../translations/zh_CN/oops-tracing.txt       |   2 +-
+ Documentation/watchdog/hpwdt.txt              |   2 +-
+ arch/arm/Kconfig                              |   2 +-
+ arch/arm64/Kconfig                            |   2 +-
+ arch/sh/Kconfig                               |   2 +-
+ arch/x86/Kconfig                              |   4 +-
+ 12 files changed, 137 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/kdump/index.rst
+ rename Documentation/kdump/{kdump.txt => kdump.rst} (91%)
+ rename Documentation/kdump/{vmcoreinfo.txt => vmcoreinfo.rst} (95%)
 
-diff --git a/Documentation/mtd/index.rst b/Documentation/mtd/index.rst
+diff --git a/Documentation/admin-guide/bug-hunting.rst b/Documentation/admin-guide/bug-hunting.rst
+index f278b289e260..b761aa2a51d2 100644
+--- a/Documentation/admin-guide/bug-hunting.rst
++++ b/Documentation/admin-guide/bug-hunting.rst
+@@ -90,7 +90,7 @@ the disk is not available then you have three options:
+     run a null modem to a second machine and capture the output there
+     using your favourite communication program.  Minicom works well.
+ 
+-(3) Use Kdump (see Documentation/kdump/kdump.txt),
++(3) Use Kdump (see Documentation/kdump/kdump.rst),
+     extract the kernel ring buffer from old memory with using dmesg
+     gdbmacro in Documentation/kdump/gdbmacros.txt.
+ 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index bfe926a7b15f..a4e8e6435fff 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -705,14 +705,14 @@
+ 			memory region [offset, offset + size] for that kernel
+ 			image. If '@offset' is omitted, then a suitable offset
+ 			is selected automatically. Check
+-			Documentation/kdump/kdump.txt for further details.
++			Documentation/kdump/kdump.rst for further details.
+ 
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+ 			[KNL] Same as above, but depends on the memory
+ 			in the running system. The syntax of range is
+ 			start-[end] where start and end are both
+ 			a memory unit (amount[KMG]). See also
+-			Documentation/kdump/kdump.txt for an example.
++			Documentation/kdump/kdump.rst for an example.
+ 
+ 	crashkernel=size[KMG],high
+ 			[KNL, x86_64] range could be above 4G. Allow kernel
+@@ -1206,7 +1206,7 @@
+ 			Specifies physical address of start of kernel core
+ 			image elf header and optionally the size. Generally
+ 			kexec loader will pass this option to capture kernel.
+-			See Documentation/kdump/kdump.txt for details.
++			See Documentation/kdump/kdump.rst for details.
+ 
+ 	enable_mtrr_cleanup [X86]
+ 			The kernel tries to adjust MTRR layout from continuous
+diff --git a/Documentation/kdump/index.rst b/Documentation/kdump/index.rst
 new file mode 100644
-index 000000000000..4fdae418ac97
+index 000000000000..2b17fcf6867a
 --- /dev/null
-+++ b/Documentation/mtd/index.rst
-@@ -0,0 +1,12 @@
++++ b/Documentation/kdump/index.rst
+@@ -0,0 +1,21 @@
 +:orphan:
 +
-+==============================
-+Memory Technology Device (MTD)
-+==============================
++================================================================
++Documentation for Kdump - The kexec-based Crash Dumping Solution
++================================================================
++
++This document includes overview, setup and installation, and analysis
++information.
 +
 +.. toctree::
-+   :maxdepth: 1
++    :maxdepth: 1
 +
-+   intel-spi
-+   nand_ecc
-+   spi-nor
-diff --git a/Documentation/mtd/intel-spi.txt b/Documentation/mtd/intel-spi.rst
-similarity index 71%
-rename from Documentation/mtd/intel-spi.txt
-rename to Documentation/mtd/intel-spi.rst
-index bc357729c2cb..0e6d9cd5388d 100644
---- a/Documentation/mtd/intel-spi.txt
-+++ b/Documentation/mtd/intel-spi.rst
-@@ -1,5 +1,6 @@
-+==============================
- Upgrading BIOS using intel-spi
--------------------------------
-+==============================
- 
- Many Intel CPUs like Baytrail and Braswell include SPI serial flash host
- controller which is used to hold BIOS and other platform specific data.
-@@ -36,45 +37,45 @@ Linux.
-     module parameter to modprobe).
- 
-  4) Once the board is up and running again, find the right MTD partition
--    (it is named as "BIOS"):
-+    (it is named as "BIOS")::
- 
--    # cat /proc/mtd
--    dev:    size   erasesize  name
--    mtd0: 00800000 00001000 "BIOS"
-+	# cat /proc/mtd
-+	dev:    size   erasesize  name
-+	mtd0: 00800000 00001000 "BIOS"
- 
-     So here it will be /dev/mtd0 but it may vary.
- 
-- 5) Make backup of the existing image first:
-+ 5) Make backup of the existing image first::
- 
--    # dd if=/dev/mtd0ro of=bios.bak
--    16384+0 records in
--    16384+0 records out
--    8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
-+	# dd if=/dev/mtd0ro of=bios.bak
-+	16384+0 records in
-+	16384+0 records out
-+	8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
- 
-- 6) Verify the backup
-+ 6) Verify the backup:
- 
--    # sha1sum /dev/mtd0ro bios.bak
--    fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
--    fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
-+	# sha1sum /dev/mtd0ro bios.bak
-+	fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
-+	fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
- 
-     The SHA1 sums must match. Otherwise do not continue any further!
- 
-  7) Erase the SPI serial flash. After this step, do not reboot the
--    board! Otherwise it will not start anymore.
-+    board! Otherwise it will not start anymore::
- 
--    # flash_erase /dev/mtd0 0 0
--    Erasing 4 Kibyte @ 7ff000 -- 100 % complete
-+	# flash_erase /dev/mtd0 0 0
-+	Erasing 4 Kibyte @ 7ff000 -- 100 % complete
- 
-  8) Once completed without errors you can write the new BIOS image:
- 
-     # dd if=MNW2MAX1.X64.0092.R01.1605221712.bin of=/dev/mtd0
- 
-  9) Verify that the new content of the SPI serial flash matches the new
--    BIOS image:
-+    BIOS image::
- 
--    # sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
--    9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
--    9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
-+	# sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
-+	9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
-+	9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
- 
-     The SHA1 sums should match.
- 
-@@ -84,5 +85,6 @@ Linux.
- References
- ----------
- 
--[1] https://firmware.intel.com/sites/default/files/MinnowBoard.MAX_.X64.92.R01.zip
-+[1] https://firmware.intel.com/sites/default/files/MinnowBoard%2EMAX_%2EX64%2E92%2ER01%2Ezip
++    kdump
++    vmcoreinfo
 +
- [2] http://www.linux-mtd.infradead.org/
-diff --git a/Documentation/mtd/nand_ecc.txt b/Documentation/mtd/nand_ecc.rst
-similarity index 67%
-rename from Documentation/mtd/nand_ecc.txt
-rename to Documentation/mtd/nand_ecc.rst
-index f8c3284bf6a7..e8d3c53a5056 100644
---- a/Documentation/mtd/nand_ecc.txt
-+++ b/Documentation/mtd/nand_ecc.rst
-@@ -1,3 +1,7 @@
-+==========================
-+NAND Error-correction Code
-+==========================
++.. only::  subproject and html
 +
- Introduction
- ============
- 
-@@ -37,63 +41,79 @@ sometimes also referred to as xor. In C the operator for xor is ^
- Back to ecc.
- Let's give a small figure:
- 
-+=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
- byte   0:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp4 ... rp14
- byte   1:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp2 rp4 ... rp14
- byte   2:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp4 ... rp14
- byte   3:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp4 ... rp14
- byte   4:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp5 ... rp14
--....
-+...
- byte 254:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp5 ... rp15
- byte 255:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp5 ... rp15
-            cp1  cp0  cp1  cp0  cp1  cp0  cp1  cp0
-            cp3  cp3  cp2  cp2  cp3  cp3  cp2  cp2
-            cp5  cp5  cp5  cp5  cp4  cp4  cp4  cp4
-+=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
- 
- This figure represents a sector of 256 bytes.
- cp is my abbreviation for column parity, rp for row parity.
- 
- Let's start to explain column parity.
--cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
--so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
++   Indices
++   =======
 +
-+- cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
++   * :ref:`genindex`
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.rst
+similarity index 91%
+rename from Documentation/kdump/kdump.txt
+rename to Documentation/kdump/kdump.rst
+index 51814450a7f8..1da2d7b765f6 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.rst
+@@ -71,9 +71,8 @@ This is a symlink to the latest version.
+ 
+ The latest kexec-tools git tree is available at:
+ 
+-git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+-and
+-http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
++- git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
++- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+ 
+ There is also a gitweb interface available at
+ http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+@@ -81,25 +80,25 @@ http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+ More information about kexec-tools can be found at
+ http://horms.net/projects/kexec/
+ 
+-3) Unpack the tarball with the tar command, as follows:
++3) Unpack the tarball with the tar command, as follows::
+ 
+-   tar xvpzf kexec-tools.tar.gz
++	tar xvpzf kexec-tools.tar.gz
+ 
+-4) Change to the kexec-tools directory, as follows:
++4) Change to the kexec-tools directory, as follows::
+ 
+-   cd kexec-tools-VERSION
++	cd kexec-tools-VERSION
+ 
+-5) Configure the package, as follows:
++5) Configure the package, as follows::
+ 
+-   ./configure
++	./configure
+ 
+-6) Compile the package, as follows:
++6) Compile the package, as follows::
+ 
+-   make
++	make
+ 
+-7) Install the package, as follows:
++7) Install the package, as follows::
+ 
+-   make install
++	make install
+ 
+ 
+ Build the system and dump-capture kernels
+@@ -126,25 +125,25 @@ dump-capture kernels for enabling kdump support.
+ System kernel config options
+ ----------------------------
+ 
+-1) Enable "kexec system call" in "Processor type and features."
++1) Enable "kexec system call" in "Processor type and features."::
+ 
+-   CONFIG_KEXEC=y
++	CONFIG_KEXEC=y
+ 
+ 2) Enable "sysfs file system support" in "Filesystem" -> "Pseudo
+-   filesystems." This is usually enabled by default.
++   filesystems." This is usually enabled by default::
+ 
+-   CONFIG_SYSFS=y
++	CONFIG_SYSFS=y
+ 
+    Note that "sysfs file system support" might not appear in the "Pseudo
+    filesystems" menu if "Configure standard kernel features (for small
+    systems)" is not enabled in "General Setup." In this case, check the
+-   .config file itself to ensure that sysfs is turned on, as follows:
++   .config file itself to ensure that sysfs is turned on, as follows::
+ 
+-   grep 'CONFIG_SYSFS' .config
++	grep 'CONFIG_SYSFS' .config
+ 
+-3) Enable "Compile the kernel with debug info" in "Kernel hacking."
++3) Enable "Compile the kernel with debug info" in "Kernel hacking."::
+ 
+-   CONFIG_DEBUG_INFO=Y
++	CONFIG_DEBUG_INFO=Y
+ 
+    This causes the kernel to be built with debug symbols. The dump
+    analysis tools require a vmlinux with debug symbols in order to read
+@@ -154,29 +153,32 @@ Dump-capture kernel config options (Arch Independent)
+ -----------------------------------------------------
+ 
+ 1) Enable "kernel crash dumps" support under "Processor type and
+-   features":
++   features"::
+ 
+-   CONFIG_CRASH_DUMP=y
++	CONFIG_CRASH_DUMP=y
+ 
+-2) Enable "/proc/vmcore support" under "Filesystems" -> "Pseudo filesystems".
++2) Enable "/proc/vmcore support" under "Filesystems" -> "Pseudo filesystems"::
 +
-+  so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
++	CONFIG_PROC_VMCORE=y
+ 
+-   CONFIG_PROC_VMCORE=y
+    (CONFIG_PROC_VMCORE is set by default when CONFIG_CRASH_DUMP is selected.)
+ 
+ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
+ --------------------------------------------------------------------
+ 
+ 1) On i386, enable high memory support under "Processor type and
+-   features":
++   features"::
+ 
+-   CONFIG_HIGHMEM64G=y
+-   or
+-   CONFIG_HIGHMEM4G
++	CONFIG_HIGHMEM64G=y
 +
- Similarly cp1 is the sum of all bit1, bit3, bit5 and bit7.
--cp2 is the parity over bit0, bit1, bit4 and bit5
--cp3 is the parity over bit2, bit3, bit6 and bit7.
--cp4 is the parity over bit0, bit1, bit2 and bit3.
--cp5 is the parity over bit4, bit5, bit6 and bit7.
++   or::
 +
-+- cp2 is the parity over bit0, bit1, bit4 and bit5
-+- cp3 is the parity over bit2, bit3, bit6 and bit7.
-+- cp4 is the parity over bit0, bit1, bit2 and bit3.
-+- cp5 is the parity over bit4, bit5, bit6 and bit7.
++	CONFIG_HIGHMEM4G
+ 
+ 2) On i386 and x86_64, disable symmetric multi-processing support
+-   under "Processor type and features":
++   under "Processor type and features"::
+ 
+-   CONFIG_SMP=n
++	CONFIG_SMP=n
+ 
+    (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
+    when loading the dump-capture kernel, see section "Load the Dump-capture
+@@ -184,9 +186,9 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
+ 
+ 3) If one wants to build and use a relocatable kernel,
+    Enable "Build a relocatable kernel" support under "Processor type and
+-   features"
++   features"::
+ 
+-   CONFIG_RELOCATABLE=y
++	CONFIG_RELOCATABLE=y
+ 
+ 4) Use a suitable value for "Physical address where the kernel is
+    loaded" (under "Processor type and features"). This only appears when
+@@ -211,13 +213,13 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
+ Dump-capture kernel config options (Arch Dependent, ppc64)
+ ----------------------------------------------------------
+ 
+-1) Enable "Build a kdump crash kernel" support under "Kernel" options:
++1) Enable "Build a kdump crash kernel" support under "Kernel" options::
+ 
+-   CONFIG_CRASH_DUMP=y
++	CONFIG_CRASH_DUMP=y
+ 
+-2)   Enable "Build a relocatable kernel" support
++2)   Enable "Build a relocatable kernel" support::
+ 
+-   CONFIG_RELOCATABLE=y
++	CONFIG_RELOCATABLE=y
+ 
+    Make and install the kernel and its modules.
+ 
+@@ -231,11 +233,13 @@ Dump-capture kernel config options (Arch Dependent, ia64)
+ 
+   The crashkernel region can be automatically placed by the system
+   kernel at run time. This is done by specifying the base address as 0,
+-  or omitting it all together.
++  or omitting it all together::
+ 
+-  crashkernel=256M@0
+-  or
+-  crashkernel=256M
++	crashkernel=256M@0
 +
- Note that each of cp0 .. cp5 is exactly one bit.
- 
- Row parity actually works almost the same.
--rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
--rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
--rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
--(so handle two bytes, then skip 2 bytes).
--rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
--for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
--so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
--and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
++  or::
 +
-+- rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
-+- rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
-+- rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
-+  (so handle two bytes, then skip 2 bytes).
-+- rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
-+- for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
++	crashkernel=256M
+ 
+   If the start address is specified, note that the start address of the
+   kernel will be aligned to 64Mb, so if the start address is not then
+@@ -245,9 +249,9 @@ Dump-capture kernel config options (Arch Dependent, arm)
+ ----------------------------------------------------------
+ 
+ -   To use a relocatable kernel,
+-    Enable "AUTO_ZRELADDR" support under "Boot" options:
++    Enable "AUTO_ZRELADDR" support under "Boot" options::
+ 
+-    AUTO_ZRELADDR=y
++	AUTO_ZRELADDR=y
+ 
+ Dump-capture kernel config options (Arch Dependent, arm64)
+ ----------------------------------------------------------
+@@ -265,12 +269,12 @@ on the value of System RAM -- that's mostly for distributors that pre-setup
+ the kernel command line to avoid a unbootable system after some memory has
+ been removed from the machine.
+ 
+-The syntax is:
++The syntax is::
+ 
+     crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+     range=start-[end]
+ 
+-For example:
++For example::
+ 
+     crashkernel=512M-2G:64M,2G-:128M
+ 
+@@ -326,35 +330,46 @@ can choose to load the uncompressed vmlinux or compressed bzImage/vmlinuz
+ of dump-capture kernel. Following is the summary.
+ 
+ For i386 and x86_64:
 +
-+  so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
-+- and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
+ 	- Use vmlinux if kernel is not relocatable.
+ 	- Use bzImage/vmlinuz if kernel is relocatable.
 +
- The story now becomes quite boring. I guess you get the idea.
--rp6 covers 8 bytes then skips 8 etc
--rp7 skips 8 bytes then covers 8 etc
--rp8 covers 16 bytes then skips 16 etc
--rp9 skips 16 bytes then covers 16 etc
--rp10 covers 32 bytes then skips 32 etc
--rp11 skips 32 bytes then covers 32 etc
--rp12 covers 64 bytes then skips 64 etc
--rp13 skips 64 bytes then covers 64 etc
--rp14 covers 128 bytes then skips 128
--rp15 skips 128 bytes then covers 128
+ For ppc64:
 +
-+- rp6 covers 8 bytes then skips 8 etc
-+- rp7 skips 8 bytes then covers 8 etc
-+- rp8 covers 16 bytes then skips 16 etc
-+- rp9 skips 16 bytes then covers 16 etc
-+- rp10 covers 32 bytes then skips 32 etc
-+- rp11 skips 32 bytes then covers 32 etc
-+- rp12 covers 64 bytes then skips 64 etc
-+- rp13 skips 64 bytes then covers 64 etc
-+- rp14 covers 128 bytes then skips 128
-+- rp15 skips 128 bytes then covers 128
- 
- In the end the parity bits are grouped together in three bytes as
- follows:
+ 	- Use vmlinux
 +
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- ECC    Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- ECC 0   rp07  rp06  rp05  rp04  rp03  rp02  rp01  rp00
- ECC 1   rp15  rp14  rp13  rp12  rp11  rp10  rp09  rp08
- ECC 2   cp5   cp4   cp3   cp2   cp1   cp0      1     1
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- 
- I detected after writing this that ST application note AN1823
- (http://www.st.com/stonline/) gives a much
- nicer picture.(but they use line parity as term where I use row parity)
- Oh well, I'm graphically challenged, so suffer with me for a moment :-)
+ For ia64:
 +
- And I could not reuse the ST picture anyway for copyright reasons.
- 
- 
-@@ -101,9 +121,10 @@ Attempt 0
- =========
- 
- Implementing the parity calculation is pretty simple.
--In C pseudocode:
--for (i = 0; i < 256; i++)
--{
-+In C pseudocode::
+ 	- Use vmlinux or vmlinuz.gz
 +
-+  for (i = 0; i < 256; i++)
-+  {
-     if (i & 0x01)
-        rp1 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ bit3 ^ bit2 ^ bit1 ^ bit0 ^ rp1;
-     else
-@@ -142,7 +163,7 @@ for (i = 0; i < 256; i++)
-     cp3 = bit7 ^ bit6 ^ bit3 ^ bit2 ^ cp3
-     cp4 = bit3 ^ bit2 ^ bit1 ^ bit0 ^ cp4
-     cp5 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ cp5
--}
-+  }
- 
- 
- Analysis 0
-@@ -167,82 +188,84 @@ This leads to:
- Attempt 1
- =========
- 
--const char parity[256] = {
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
--};
-+::
- 
--void ecc1(const unsigned char *buf, unsigned char *code)
--{
--    int i;
--    const unsigned char *bp = buf;
--    unsigned char cur;
--    unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
--    unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
--    unsigned char par;
-+  const char parity[256] = {
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
-+  };
- 
--    par = 0;
--    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
--    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
--    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
--    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+  void ecc1(const unsigned char *buf, unsigned char *code)
-+  {
-+      int i;
-+      const unsigned char *bp = buf;
-+      unsigned char cur;
-+      unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
-+      unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
-+      unsigned char par;
- 
--    for (i = 0; i < 256; i++)
--    {
--        cur = *bp++;
--        par ^= cur;
--        if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
--        if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
--        if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
--    }
--    code[0] =
--        (parity[rp7] << 7) |
--        (parity[rp6] << 6) |
--        (parity[rp5] << 5) |
--        (parity[rp4] << 4) |
--        (parity[rp3] << 3) |
--        (parity[rp2] << 2) |
--        (parity[rp1] << 1) |
--        (parity[rp0]);
--    code[1] =
--        (parity[rp15] << 7) |
--        (parity[rp14] << 6) |
--        (parity[rp13] << 5) |
--        (parity[rp12] << 4) |
--        (parity[rp11] << 3) |
--        (parity[rp10] << 2) |
--        (parity[rp9]  << 1) |
--        (parity[rp8]);
--    code[2] =
--        (parity[par & 0xf0] << 7) |
--        (parity[par & 0x0f] << 6) |
--        (parity[par & 0xcc] << 5) |
--        (parity[par & 0x33] << 4) |
--        (parity[par & 0xaa] << 3) |
--        (parity[par & 0x55] << 2);
--    code[0] = ~code[0];
--    code[1] = ~code[1];
--    code[2] = ~code[2];
--}
-+      par = 0;
-+      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
-+      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
-+      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
-+      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
+ For s390x:
 +
-+      for (i = 0; i < 256; i++)
-+      {
-+          cur = *bp++;
-+          par ^= cur;
-+          if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
-+          if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
-+          if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
-+      }
-+      code[0] =
-+          (parity[rp7] << 7) |
-+          (parity[rp6] << 6) |
-+          (parity[rp5] << 5) |
-+          (parity[rp4] << 4) |
-+          (parity[rp3] << 3) |
-+          (parity[rp2] << 2) |
-+          (parity[rp1] << 1) |
-+          (parity[rp0]);
-+      code[1] =
-+          (parity[rp15] << 7) |
-+          (parity[rp14] << 6) |
-+          (parity[rp13] << 5) |
-+          (parity[rp12] << 4) |
-+          (parity[rp11] << 3) |
-+          (parity[rp10] << 2) |
-+          (parity[rp9]  << 1) |
-+          (parity[rp8]);
-+      code[2] =
-+          (parity[par & 0xf0] << 7) |
-+          (parity[par & 0x0f] << 6) |
-+          (parity[par & 0xcc] << 5) |
-+          (parity[par & 0x33] << 4) |
-+          (parity[par & 0xaa] << 3) |
-+          (parity[par & 0x55] << 2);
-+      code[0] = ~code[0];
-+      code[1] = ~code[1];
-+      code[2] = ~code[2];
-+  }
- 
- Still pretty straightforward. The last three invert statements are there to
- give a checksum of 0xff 0xff 0xff for an empty flash. In an empty flash
-@@ -293,88 +316,90 @@ Let's give it a try...
- Attempt 2
- =========
- 
--extern const char parity[256];
-+::
- 
--void ecc2(const unsigned char *buf, unsigned char *code)
--{
--    int i;
--    const unsigned long *bp = (unsigned long *)buf;
--    unsigned long cur;
--    unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
--    unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
--    unsigned long par;
-+  extern const char parity[256];
- 
--    par = 0;
--    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
--    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
--    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
--    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+  void ecc2(const unsigned char *buf, unsigned char *code)
-+  {
-+      int i;
-+      const unsigned long *bp = (unsigned long *)buf;
-+      unsigned long cur;
-+      unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
-+      unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
-+      unsigned long par;
- 
--    for (i = 0; i < 64; i++)
--    {
--        cur = *bp++;
--        par ^= cur;
--        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
--    }
--    /*
--       we need to adapt the code generation for the fact that rp vars are now
--       long; also the column parity calculation needs to be changed.
--       we'll bring rp4 to 15 back to single byte entities by shifting and
--       xoring
--    */
--    rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
--    rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
--    rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
--    rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
--    rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
--    rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
--    rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
--    rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
--    rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
--    rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
--    rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
--    rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
--    rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
--    rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
--    par ^= (par >> 16);
--    rp1 = (par >> 8); rp1 &= 0xff;
--    rp0 = (par & 0xff);
--    par ^= (par >> 8); par &= 0xff;
-+      par = 0;
-+      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
-+      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
-+      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
-+      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
- 
--    code[0] =
--        (parity[rp7] << 7) |
--        (parity[rp6] << 6) |
--        (parity[rp5] << 5) |
--        (parity[rp4] << 4) |
--        (parity[rp3] << 3) |
--        (parity[rp2] << 2) |
--        (parity[rp1] << 1) |
--        (parity[rp0]);
--    code[1] =
--        (parity[rp15] << 7) |
--        (parity[rp14] << 6) |
--        (parity[rp13] << 5) |
--        (parity[rp12] << 4) |
--        (parity[rp11] << 3) |
--        (parity[rp10] << 2) |
--        (parity[rp9]  << 1) |
--        (parity[rp8]);
--    code[2] =
--        (parity[par & 0xf0] << 7) |
--        (parity[par & 0x0f] << 6) |
--        (parity[par & 0xcc] << 5) |
--        (parity[par & 0x33] << 4) |
--        (parity[par & 0xaa] << 3) |
--        (parity[par & 0x55] << 2);
--    code[0] = ~code[0];
--    code[1] = ~code[1];
--    code[2] = ~code[2];
--}
-+      for (i = 0; i < 64; i++)
-+      {
-+          cur = *bp++;
-+          par ^= cur;
-+          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
-+      }
-+      /*
-+         we need to adapt the code generation for the fact that rp vars are now
-+         long; also the column parity calculation needs to be changed.
-+         we'll bring rp4 to 15 back to single byte entities by shifting and
-+         xoring
-+      */
-+      rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
-+      rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
-+      rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
-+      rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
-+      rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
-+      rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
-+      rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
-+      rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
-+      rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
-+      rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
-+      rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
-+      rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
-+      rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
-+      rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
-+      par ^= (par >> 16);
-+      rp1 = (par >> 8); rp1 &= 0xff;
-+      rp0 = (par & 0xff);
-+      par ^= (par >> 8); par &= 0xff;
+ 	- Use image or bzImage
 +
-+      code[0] =
-+          (parity[rp7] << 7) |
-+          (parity[rp6] << 6) |
-+          (parity[rp5] << 5) |
-+          (parity[rp4] << 4) |
-+          (parity[rp3] << 3) |
-+          (parity[rp2] << 2) |
-+          (parity[rp1] << 1) |
-+          (parity[rp0]);
-+      code[1] =
-+          (parity[rp15] << 7) |
-+          (parity[rp14] << 6) |
-+          (parity[rp13] << 5) |
-+          (parity[rp12] << 4) |
-+          (parity[rp11] << 3) |
-+          (parity[rp10] << 2) |
-+          (parity[rp9]  << 1) |
-+          (parity[rp8]);
-+      code[2] =
-+          (parity[par & 0xf0] << 7) |
-+          (parity[par & 0x0f] << 6) |
-+          (parity[par & 0xcc] << 5) |
-+          (parity[par & 0x33] << 4) |
-+          (parity[par & 0xaa] << 3) |
-+          (parity[par & 0x55] << 2);
-+      code[0] = ~code[0];
-+      code[1] = ~code[1];
-+      code[2] = ~code[2];
-+  }
- 
- The parity array is not shown any more. Note also that for these
- examples I kinda deviated from my regular programming style by allowing
-@@ -403,28 +428,32 @@ lookups
- Attempt 3
- =========
- 
--Odd replaced:
--        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
--with
--        if (i & 0x01) rp5 ^= cur;
--        if (i & 0x02) rp7 ^= cur;
--        if (i & 0x04) rp9 ^= cur;
--        if (i & 0x08) rp11 ^= cur;
--        if (i & 0x10) rp13 ^= cur;
--        if (i & 0x20) rp15 ^= cur;
-+Odd replaced::
- 
--        and outside the loop added:
--        rp4  = par ^ rp5;
--        rp6  = par ^ rp7;
--        rp8  = par ^ rp9;
--        rp10  = par ^ rp11;
--        rp12  = par ^ rp13;
--        rp14  = par ^ rp15;
-+          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
+ For arm:
 +
-+with::
+ 	- Use zImage
 +
-+          if (i & 0x01) rp5 ^= cur;
-+          if (i & 0x02) rp7 ^= cur;
-+          if (i & 0x04) rp9 ^= cur;
-+          if (i & 0x08) rp11 ^= cur;
-+          if (i & 0x10) rp13 ^= cur;
-+          if (i & 0x20) rp15 ^= cur;
+ For arm64:
 +
-+and outside the loop added::
-+
-+          rp4  = par ^ rp5;
-+          rp6  = par ^ rp7;
-+          rp8  = par ^ rp9;
-+          rp10  = par ^ rp11;
-+          rp12  = par ^ rp13;
-+          rp14  = par ^ rp15;
+ 	- Use vmlinux or Image
  
- And after that the code takes about 30% more time, although the number of
- statements is reduced. This is also reflected in the assembly code.
-@@ -448,7 +477,7 @@ Attempt 4
- =========
+ If you are using an uncompressed vmlinux image then use following command
+-to load dump-capture kernel.
++to load dump-capture kernel::
  
- Unrolled the loop 1, 2, 3 and 4 times.
--For 4 the code starts with:
-+For 4 the code starts with::
+    kexec -p <dump-capture-kernel-vmlinux-image> \
+    --initrd=<initrd-for-dump-capture-kernel> --args-linux \
+    --append="root=<root-dev> <arch-specific-options>"
  
-     for (i = 0; i < 4; i++)
-     {
-@@ -471,8 +500,11 @@ Analysis 4
- ==========
+ If you are using a compressed bzImage/vmlinuz, then use following command
+-to load dump-capture kernel.
++to load dump-capture kernel::
  
- Unrolling once gains about 15%
+    kexec -p <dump-capture-kernel-bzImage> \
+    --initrd=<initrd-for-dump-capture-kernel> \
+    --append="root=<root-dev> <arch-specific-options>"
+ 
+ If you are using a compressed zImage, then use following command
+-to load dump-capture kernel.
++to load dump-capture kernel::
+ 
+    kexec --type zImage -p <dump-capture-kernel-bzImage> \
+    --initrd=<initrd-for-dump-capture-kernel> \
+@@ -362,7 +377,7 @@ to load dump-capture kernel.
+    --append="root=<root-dev> <arch-specific-options>"
+ 
+ If you are using an uncompressed Image, then use following command
+-to load dump-capture kernel.
++to load dump-capture kernel::
+ 
+    kexec -p <dump-capture-kernel-Image> \
+    --initrd=<initrd-for-dump-capture-kernel> \
+@@ -376,18 +391,23 @@ Following are the arch specific command line options to be used while
+ loading dump-capture kernel.
+ 
+ For i386, x86_64 and ia64:
 +
- Unrolling twice keeps the gain at about 15%
-+
- Unrolling three times gives a gain of 30% compared to attempt 2.
-+
- Unrolling four times gives a marginal improvement compared to unrolling
- three times.
+ 	"1 irqpoll maxcpus=1 reset_devices"
  
-@@ -492,8 +524,10 @@ Attempt 5
- 
- Effectively so all odd digit rp assignments in the loop were removed.
- This included the else clause of the if statements.
--Of course after the loop we need to correct things by adding code like:
-+Of course after the loop we need to correct things by adding code like::
+ For ppc64:
 +
-     rp5 = par ^ rp4;
-+
- Also the initial assignments (rp5 = 0; etc) could be removed.
- Along the line I also removed the initialisation of rp0/1/2/3.
+ 	"1 maxcpus=1 noirqdistrib reset_devices"
  
-@@ -513,7 +547,7 @@ statement. Time for yet another version!
- Attempt 6
- =========
- 
--THe code within the for loop was changed to:
-+THe code within the for loop was changed to::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -564,13 +598,17 @@ million iterations in order not to lose too much accuracy. This one
- definitely seemed to be the jackpot!
- 
- There is a little bit more room for improvement though. There are three
--places with statements:
--rp4 ^= cur; rp6 ^= cur;
-+places with statements::
+ For s390x:
 +
-+	rp4 ^= cur; rp6 ^= cur;
-+
- It seems more efficient to also maintain a variable rp4_6 in the while
- loop; This eliminates 3 statements per loop. Of course after the loop we
--need to correct by adding:
--    rp4 ^= rp4_6;
--    rp6 ^= rp4_6
-+need to correct by adding::
-+
-+	rp4 ^= rp4_6;
-+	rp6 ^= rp4_6
-+
- Furthermore there are 4 sequential assignments to rp8. This can be
- encoded slightly more efficiently by saving tmppar before those 4 lines
- and later do rp8 = rp8 ^ tmppar ^ notrp8;
-@@ -582,7 +620,7 @@ Time for a new test!
- Attempt 7
- =========
+ 	"1 maxcpus=1 cgroup_disable=memory"
  
--The new code now looks like:
-+The new code now looks like::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -644,9 +682,12 @@ Although it seems that the code within the loop cannot be optimised
- further there is still room to optimize the generation of the ecc codes.
- We can simply calculate the total parity. If this is 0 then rp4 = rp5
- etc. If the parity is 1, then rp4 = !rp5;
+ For arm:
 +
- But if rp4 = rp5 we do not need rp5 etc. We can just write the even bits
--in the result byte and then do something like
-+in the result byte and then do something like::
-+
-     code[0] |= (code[0] << 1);
-+
- Lets test this.
+ 	"1 maxcpus=1 reset_devices"
  
- 
-@@ -657,11 +698,13 @@ Changed the code but again this slightly degrades performance. Tried all
- kind of other things, like having dedicated parity arrays to avoid the
- shift after parity[rp7] << 7; No gain.
- Change the lookup using the parity array by using shift operators (e.g.
--replace parity[rp7] << 7 with:
--rp7 ^= (rp7 << 4);
--rp7 ^= (rp7 << 2);
--rp7 ^= (rp7 << 1);
--rp7 &= 0x80;
-+replace parity[rp7] << 7 with::
+ For arm64:
 +
-+	rp7 ^= (rp7 << 4);
-+	rp7 ^= (rp7 << 2);
-+	rp7 ^= (rp7 << 1);
-+	rp7 &= 0x80;
+ 	"1 maxcpus=1 reset_devices"
+ 
+ Notes on loading the dump-capture kernel:
+@@ -464,7 +484,7 @@ Write Out the Dump File
+ =======================
+ 
+ After the dump-capture kernel is booted, write out the dump file with
+-the following command:
++the following command::
+ 
+    cp /proc/vmcore <dump-file>
+ 
+@@ -476,7 +496,7 @@ Before analyzing the dump image, you should reboot into a stable kernel.
+ 
+ You can do limited analysis using GDB on the dump file copied out of
+ /proc/vmcore. Use the debug vmlinux built with -g and run the following
+-command:
++command::
+ 
+    gdb vmlinux <dump-file>
+ 
+@@ -504,6 +524,11 @@ to achieve the same behaviour.
+ Contact
+ =======
+ 
+-Vivek Goyal (vgoyal@redhat.com)
+-Maneesh Soni (maneesh@in.ibm.com)
++- Vivek Goyal (vgoyal@redhat.com)
++- Maneesh Soni (maneesh@in.ibm.com)
+ 
++GDB macros
++==========
 +
- No gain.
++.. include:: gdbmacros.txt
++   :literal:
+diff --git a/Documentation/kdump/vmcoreinfo.txt b/Documentation/kdump/vmcoreinfo.rst
+similarity index 95%
+rename from Documentation/kdump/vmcoreinfo.txt
+rename to Documentation/kdump/vmcoreinfo.rst
+index bb94a4bd597a..007a6b86e0ee 100644
+--- a/Documentation/kdump/vmcoreinfo.txt
++++ b/Documentation/kdump/vmcoreinfo.rst
+@@ -1,8 +1,7 @@
+-================================================================
+-			VMCOREINFO
+-================================================================
++==========
++VMCOREINFO
++==========
  
- The only marginal change was inverting the parity bits, so we can remove
-@@ -683,13 +726,16 @@ Correcting errors
+-===========
+ What is it?
+ ===========
  
- For correcting errors I again used the ST application note as a starter,
- but I also peeked at the existing code.
+@@ -12,7 +11,6 @@ values, field offsets, etc. These data are packed into an ELF note
+ section and used by user-space tools like crash and makedumpfile to
+ analyze a kernel's memory layout.
+ 
+-================
+ Common variables
+ ================
+ 
+@@ -49,7 +47,7 @@ in a system, one bit position per node number. Used to keep track of
+ which nodes are in the system and online.
+ 
+ swapper_pg_dir
+--------------
++--------------
+ 
+ The global page directory pointer of the kernel. Used to translate
+ virtual to physical addresses.
+@@ -132,16 +130,14 @@ nodemask_t
+ The size of a nodemask_t type. Used to compute the number of online
+ nodes.
+ 
+-(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|
+-       compound_order|compound_head)
+--------------------------------------------------------------------
++(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|compound_order|compound_head)
++-------------------------------------------------------------------------------------------------
+ 
+ User-space tools compute their values based on the offset of these
+ variables. The variables are used when excluding unnecessary pages.
+ 
+-(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_
+-              spanned_pages|node_id)
+--------------------------------------------------------------------
++(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_spanned_pages|node_id)
++-----------------------------------------------------------------------------------------
+ 
+ On NUMA machines, each NUMA node has a pg_data_t to describe its memory
+ layout. On UMA machines there is a single pglist_data which describes the
+@@ -245,21 +241,25 @@ NR_FREE_PAGES
+ On linux-2.6.21 or later, the number of free pages is in
+ vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
+ 
+-PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision
+-|PG_head_mask|PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)
+-|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
+------------------------------------------------------------------
++PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask
++------------------------------------------------------------------------------
+ 
+ Page attributes. These flags are used to filter various unnecessary for
+ dumping pages.
+ 
++PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
++-----------------------------------------------------------------------------
 +
- The algorithm itself is pretty straightforward. Just xor the given and
- the calculated ecc. If all bytes are 0 there is no problem. If 11 bits
- are 1 we have one correctable bit error. If there is 1 bit 1, we have an
- error in the given ecc code.
++More page attributes. These flags are used to filter various unnecessary for
++dumping pages.
 +
- It proved to be fastest to do some table lookups. Performance gain
- introduced by this is about a factor 2 on my system when a repair had to
- be done, and 1% or so if no repair had to be done.
 +
- Code size increased from 330 bytes to 686 bytes for this function.
- (gcc 4.2, -O3)
+ HUGETLB_PAGE_DTOR
+ -----------------
  
-@@ -700,8 +746,10 @@ Conclusion
- The gain when calculating the ecc is tremendous. Om my development hardware
- a speedup of a factor of 18 for ecc calculation was achieved. On a test on an
- embedded system with a MIPS core a factor 7 was obtained.
+ The HUGETLB_PAGE_DTOR flag denotes hugetlbfs pages. Makedumpfile
+ excludes these pages.
+ 
+-======
+ x86_64
+ ======
+ 
+@@ -318,12 +318,12 @@ address.
+ Currently, sme_mask stores the value of the C-bit position. If needed,
+ additional SME-relevant info can be placed in that variable.
+ 
+-For example:
+-[ misc	        ][ enc bit  ][ other misc SME info       ]
+-0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_..._0000
+-63   59   55   51   47   43   39   35   31   27   ... 3
++For example::
 +
- On a test with a Linksys NSLU2 (ARMv5TE processor) the speedup was a factor
- 5 (big endian mode, gcc 4.1.2, -O3)
-+
- For correction not much gain could be obtained (as bitflips are rare). Then
- again there are also much less cycles spent there.
++  [ misc	        ][ enc bit  ][ other misc SME info       ]
++  0000_0000_0000_0000_1000_0000_0000_0000_0000_0000_..._0000
++  63   59   55   51   47   43   39   35   31   27   ... 3
  
-@@ -711,4 +759,5 @@ out of it with an assembler program, but due to pipeline behaviour etc
- this is very tricky (at least for intel hw).
+-======
+ x86_32
+ ======
  
- Author: Frans Meulenbroeks
-+
- Copyright (C) 2008 Koninklijke Philips Electronics NV.
-diff --git a/Documentation/mtd/spi-nor.txt b/Documentation/mtd/spi-nor.rst
-similarity index 94%
-rename from Documentation/mtd/spi-nor.txt
-rename to Documentation/mtd/spi-nor.rst
-index da1fbff5a24c..f5333e3bf486 100644
---- a/Documentation/mtd/spi-nor.txt
-+++ b/Documentation/mtd/spi-nor.rst
-@@ -1,5 +1,6 @@
--                          SPI NOR framework
--               ============================================
-+=================
-+SPI NOR framework
-+=================
+@@ -335,7 +335,6 @@ of a higher page table lookup overhead, and also consumes more page
+ table space per process. Used to check whether PAE was enabled in the
+ crash kernel when converting virtual addresses to physical addresses.
  
- Part I - Why do we need this framework?
- ---------------------------------------
-@@ -23,7 +24,7 @@ This framework just adds a new layer between the MTD and the SPI bus driver.
- With this new layer, the SPI NOR controller driver does not depend on the
- m25p80 code anymore.
+-====
+ ia64
+ ====
  
--   Before this framework, the layer is like:
-+Before this framework, the layer is like::
+@@ -366,7 +365,6 @@ PGTABLE_3|PGTABLE_4
+ User-space tools need to know whether the crash kernel was in 3-level or
+ 4-level paging mode. Used to distinguish the page table.
  
-                    MTD
-          ------------------------
-diff --git a/drivers/mtd/nand/raw/nand_ecc.c b/drivers/mtd/nand/raw/nand_ecc.c
-index 4f4347533058..7d60e1e4ff4d 100644
---- a/drivers/mtd/nand/raw/nand_ecc.c
-+++ b/drivers/mtd/nand/raw/nand_ecc.c
-@@ -10,7 +10,7 @@
-  *   Thomas Gleixner (tglx@linutronix.de)
-  *
-  * Information on how this algorithm works and how it was developed
-- * can be found in Documentation/mtd/nand_ecc.txt
-+ * can be found in Documentation/mtd/nand_ecc.rst
-  *
-  * This file is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
+-=====
+ ARM64
+ =====
+ 
+@@ -395,9 +393,8 @@ KERNELOFFSET
+ The kernel randomization offset. Used to compute the page offset. If
+ KASLR is disabled, this value is zero.
+ 
+-====
+ arm
+-====
++===
+ 
+ ARM_LPAE
+ --------
+@@ -405,12 +402,11 @@ ARM_LPAE
+ It indicates whether the crash kernel supports large physical address
+ extensions. Used to translate virtual to physical addresses.
+ 
+-====
+ s390
+ ====
+ 
+ lowcore_ptr
+-----------
++-----------
+ 
+ An array with a pointer to the lowcore of every CPU. Used to print the
+ psw and all registers information.
+@@ -425,7 +421,6 @@ Used to get the vmalloc_start address from the high_memory symbol.
+ 
+ The maximum number of CPUs.
+ 
+-=======
+ powerpc
+ =======
+ 
+@@ -460,9 +455,8 @@ Page size definitions, i.e. 4k, 64k, or 16M.
+ 
+ Used to make vtop translations.
+ 
+-vmemmap_backing|(vmemmap_backing, list)|(vmemmap_backing, phys)|
+-(vmemmap_backing, virt_addr)
+-----------------------------------------------------------------
++vmemmap_backing|(vmemmap_backing, list)|(vmemmap_backing, phys)|(vmemmap_backing, virt_addr)
++--------------------------------------------------------------------------------------------
+ 
+ The vmemmap virtual address space management does not have a traditional
+ page table to track which virtual struct pages are backed by a physical
+@@ -480,7 +474,6 @@ member.
+ 
+ Used in vtop translations.
+ 
+-==
+ sh
+ ==
+ 
+diff --git a/Documentation/powerpc/firmware-assisted-dump.txt b/Documentation/powerpc/firmware-assisted-dump.txt
+index 18c5feef2577..0c41d6d463f3 100644
+--- a/Documentation/powerpc/firmware-assisted-dump.txt
++++ b/Documentation/powerpc/firmware-assisted-dump.txt
+@@ -59,7 +59,7 @@ as follows:
+          the default calculated size. Use this option if default
+          boot memory size is not sufficient for second kernel to
+          boot successfully. For syntax of crashkernel= parameter,
+-         refer to Documentation/kdump/kdump.txt. If any offset is
++         refer to Documentation/kdump/kdump.rst. If any offset is
+          provided in crashkernel= parameter, it will be ignored
+          as fadump uses a predefined offset to reserve memory
+          for boot memory dump preservation in case of a crash.
+diff --git a/Documentation/translations/zh_CN/oops-tracing.txt b/Documentation/translations/zh_CN/oops-tracing.txt
+index 93fa061cf9e4..368ddd05b304 100644
+--- a/Documentation/translations/zh_CN/oops-tracing.txt
++++ b/Documentation/translations/zh_CN/oops-tracing.txt
+@@ -53,7 +53,7 @@ cat /proc/kmsg > file， 然而你必须介入中止传输， kmsg是一个“
+ （2）用串口终端启动（请参看Documentation/admin-guide/serial-console.rst），运行一个null
+ modem到另一台机器并用你喜欢的通讯工具获取输出。Minicom工作地很好。
+ 
+-（3）使用Kdump（请参看Documentation/kdump/kdump.txt），
++（3）使用Kdump（请参看Documentation/kdump/kdump.rst），
+ 使用在Documentation/kdump/gdbmacros.txt中定义的dmesg gdb宏，从旧的内存中提取内核
+ 环形缓冲区。
+ 
+diff --git a/Documentation/watchdog/hpwdt.txt b/Documentation/watchdog/hpwdt.txt
+index 55df692c5595..aaa9e4b4bdcd 100644
+--- a/Documentation/watchdog/hpwdt.txt
++++ b/Documentation/watchdog/hpwdt.txt
+@@ -51,7 +51,7 @@ Last reviewed: 08/20/2018
+  and loop forever.  This is generally not what a watchdog user wants.
+ 
+  For those wishing to learn more please see:
+-	Documentation/kdump/kdump.txt
++	Documentation/kdump/kdump.rst
+ 	Documentation/admin-guide/kernel-parameters.txt (panic=)
+ 	Your Linux Distribution specific documentation.
+ 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index b509cd338219..c81ee94e8256 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -2007,7 +2007,7 @@ config CRASH_DUMP
+ 	  kdump/kexec. The crash dump kernel must be compiled to a
+ 	  memory address not used by the main kernel
+ 
+-	  For more details see Documentation/kdump/kdump.txt
++	  For more details see Documentation/kdump/kdump.rst
+ 
+ config AUTO_ZRELADDR
+ 	bool "Auto calculation of the decompressed kernel image address"
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 8e33203e3583..e67ad4dad1cf 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -974,7 +974,7 @@ config CRASH_DUMP
+ 	  reserved region and then later executed after a crash by
+ 	  kdump/kexec.
+ 
+-	  For more details see Documentation/kdump/kdump.txt
++	  For more details see Documentation/kdump/kdump.rst
+ 
+ config XEN_DOM0
+ 	def_bool y
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 2a77033e1e7c..9883516e682c 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -624,7 +624,7 @@ config CRASH_DUMP
+ 	  to a memory address not used by the main kernel using
+ 	  PHYSICAL_START.
+ 
+-	  For more details see Documentation/kdump/kdump.txt
++	  For more details see Documentation/kdump/kdump.rst
+ 
+ config KEXEC_JUMP
+ 	bool "kexec jump (EXPERIMENTAL)"
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 17f01a0800b3..bd8dea466b04 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2038,7 +2038,7 @@ config CRASH_DUMP
+ 	  to a memory address not used by the main kernel or BIOS using
+ 	  PHYSICAL_START, or it must be built as a relocatable image
+ 	  (CONFIG_RELOCATABLE=y).
+-	  For more details see Documentation/kdump/kdump.txt
++	  For more details see Documentation/kdump/kdump.rst
+ 
+ config KEXEC_JUMP
+ 	bool "kexec jump"
+@@ -2075,7 +2075,7 @@ config PHYSICAL_START
+ 	  the reserved region.  In other words, it can be set based on
+ 	  the "X" value as specified in the "crashkernel=YM@XM"
+ 	  command line boot parameter passed to the panic-ed
+-	  kernel. Please take a look at Documentation/kdump/kdump.txt
++	  kernel. Please take a look at Documentation/kdump/kdump.rst
+ 	  for more details about crash dumps.
+ 
+ 	  Usage of bzImage for capturing the crash dump is recommended as
 -- 
 2.20.1
 
