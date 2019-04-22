@@ -2,72 +2,101 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659F2C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC31C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D85C2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555895807;
-	bh=nWDDTriAaRe8hRAPjiq8CbyMD1BWfWokKdGAQCcP7Uo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=suUzhwr3DeCTMYakmzK7PfcDe/12q0jdCWCLLj2f8m2VM4q8XtLuv49UGlgnvUkTk
-	 9jhNWxXy0bxuMk+uwZeKg+rnORemn7yrLkz5feEw5xY/g3q1mnt5y/I6XUDblRMWuF
-	 w+iFs+pgSZf3vM2HLbDGJS/WfsCYx5vJjAYamH1s=
+	by mail.kernel.org (Postfix) with ESMTP id EEEF82075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1+8h9SI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfDVBQq (ORCPT
+        id S1726307AbfDVBUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 21:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbfDVBQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 21:16:45 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDDAA2075A;
-        Mon, 22 Apr 2019 01:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555895805;
-        bh=nWDDTriAaRe8hRAPjiq8CbyMD1BWfWokKdGAQCcP7Uo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HyFVMnYA2ZTH9Ya2eLld8yBh0YBAGTaqU01awUWlImmSmg+ShLqytw6ZTVVju9mjB
-         9XyWt+fY8Bvyferyf5OBSdFnPng8EXnzFDAF1YiI2+WHY2WXLvEQAbkjBarJzGzzvc
-         v5c2ZS5Z8Q0FEgNBk5CQ9IPkfXRfKjUP5MpvmXBw=
-Date:   Mon, 22 Apr 2019 09:16:30 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: dts: vf610-zii-dev: Mark i2c0 SCL as
- GPIO_OPEN_DRAIN
-Message-ID: <20190422011629.GM19962@dragon>
-References: <20190414183558.25750-1-andrew.smirnov@gmail.com>
+        Sun, 21 Apr 2019 21:20:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32905 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfDVBUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 21:20:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k19so5099684pgh.0
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 18:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+4T9osTIaYcEG3Jpu+4MnJ8Kx526Y6fIP1TYF6wab5o=;
+        b=E1+8h9SIN6TOR8HthrY4iVTKnGaRoSKmf917JfgPybxyIqlcABLTgmCYyH8rPcI8b5
+         BRnN9YnRoaLSNENo1qleqNfAT0tsVGf+2CDuhGXz1ByWvk6Fx1sZWpGeTfJW+diNbTDb
+         jXNs8wXKXRTes24cvXjnLaGRHi1fNMMslgRqQg6lEGDl+ySpWaBy6ujfSo9/2iOHIPyb
+         uOEjDx+S7Cbeu/2fwlj4qddf5dAf6YnWjzrLgB3PaR7alUuEZtRbLTLItnW4pGs0buOH
+         W9XC1cyOWNUvDiE4MI7h6LQyiohcOm2IsrVW3OL+2Um1lZaM54HPsCnPmB6CV1NAgfJ5
+         gRBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+4T9osTIaYcEG3Jpu+4MnJ8Kx526Y6fIP1TYF6wab5o=;
+        b=bJdhdRe1gDcuWYgYxTNtZ4jLTxcNJv/NpLKzGOHKyAT//+W9wZueYJsHg9tNKBRVnS
+         VKWQPKbIJHS/f3k5mcpoAND+guuZwZMDxZY160GfPT1kyo/TcIjMdThHB3NnuH6XqAF6
+         zNJxGDaTriDeYxUgv+0PsxU7M4WGuBHGCO9A2NiGX4F02KDCrmabk/pEP/dIfoqgSGOQ
+         cTXtIx1wHUwqhTxFDxuAiaXuPqeI2NoGjsvvEyF/psofZnFq00kZvKAFU1oefgkGxlYO
+         YpjkF4vxCqF95NITWLHoQadNgoatqXszLQlBngK/uhR4s1aZJ627X34KMic85/eHqNBI
+         saQg==
+X-Gm-Message-State: APjAAAWiXfXmYd+YV87zZp/eMLPFtVLotTFEGWOVLgIcXlfL9lXzlgYp
+        wp7SQYWiX+GcPb80SulWgiYvLHue
+X-Google-Smtp-Source: APXvYqxNTUGam6v9UkbLLk79znfD79PeYEHi8gq7z71DBmfiF74Y3imut97y2oSm8Nv6lZ5X3dCjOQ==
+X-Received: by 2002:aa7:8c13:: with SMTP id c19mr17273412pfd.225.1555896022323;
+        Sun, 21 Apr 2019 18:20:22 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id d11sm12672773pgq.6.2019.04.21.18.20.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Apr 2019 18:20:22 -0700 (PDT)
+Date:   Sun, 21 Apr 2019 18:20:17 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 3/3 v3] ASoC: fsl_sai: Move clock operation to PM runtime
+Message-ID: <20190422012017.GC8364@Asurada>
+References: <20190421193853.10188-1-daniel.baluta@nxp.com>
+ <20190421193853.10188-4-daniel.baluta@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190414183558.25750-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190421193853.10188-4-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 11:35:57AM -0700, Andrey Smirnov wrote:
-> Mark i2c0 SCL as GPIO_OPEN_DRAIN to fix the following warning:
+On Sun, Apr 21, 2019 at 07:39:10PM +0000, Daniel Baluta wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
 > 
-> gpio-36 (scl): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+> Turn off/on clocks when device enters suspend/resume. This
+> can help saving power.
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: linux-kernel@vger.kernel.org
+> As a further optimization, we turn off/on mclk only when SAI
+> is in master mode because otherwise mclk is externally provided.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Applied both, thanks.
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Thanks
