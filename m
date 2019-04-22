@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49948C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2C5C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134DD2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCE72064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963815;
-	bh=m2VyGhpKaiCFUUZIItae6YUpt6d1B42+QDdg8sO8vAc=;
+	s=default; t=1555963824;
+	bh=tqK+R6rlTVH9d6Ht/tYIxodCwnmmz3yGQULYjgYFRUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+xkv213T48rZ/EV2nJfMnOrYHQORrqgU+zG0cYAEDGZo2651CP2JlWu//0UGUjTv
-	 BVyawIPmx36LLZcYYzizOa/P65jr8XP1RARiIM0bn5DrpjhNMKMEuBvoh9FEoVtOXx
-	 P4huVXKa8et/MtXDJ8ZTwpD0tafFbbz+hcHPI9QU=
+	b=Ns1YLXSw8SpdIksPMfZnVzj5Etu3cMTRHpiGM0ZyLPx3ANLrR1i4Wifu9hFbaxg++
+	 ohSwpcydsHqGkX2ZN/8EuKFQwUCtLSWIq1+Yt3Mc9A6rmbZFDlwPYn1iMlaerZAQ2i
+	 47U1WfcKaSJSn7HELfnWXuI1xUlRO0PXGQ+nlxeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732541AbfDVUKN (ORCPT
+        id S1732551AbfDVUKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbfDVTmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:51 -0400
+        id S1728940AbfDVTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842FE2177B;
-        Mon, 22 Apr 2019 19:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 014982175B;
+        Mon, 22 Apr 2019 19:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962170;
-        bh=m2VyGhpKaiCFUUZIItae6YUpt6d1B42+QDdg8sO8vAc=;
+        s=default; t=1555962162;
+        bh=tqK+R6rlTVH9d6Ht/tYIxodCwnmmz3yGQULYjgYFRUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwlva7ioz1HPLTxl8ENCv2D7Hl8cKfVozbDLlppehFXSIHHoE4UqgnJ2rzU3yeGNE
-         pfi7xDgSO4T23fWfNoJMi2h8Sd72ocW7BYgV7RHPnEckuH2eurKJc9QgfybwlJtwvn
-         ZjUIOFz1RizXVFK5vXs0RoI3OOW0UQPP+62mfjbU=
+        b=VqqSRRnyYRdc7DKXtwPHMsbJm4EfLhmFgpuUovlbonf3gaBnTe+DAaHfroUOACinm
+         tskk9AE6qC3HXs0VCUNzhJ84OfiV6SU58JJNa7cA5e/UJJ9II0Hvh2NU9FS6pIy8xY
+         rJ8huhjOX1AYBpKgxo/sA1sGEzAQMIHYL8pglKRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 5.0 28/98] KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
-Date:   Mon, 22 Apr 2019 15:40:55 -0400
-Message-Id: <20190422194205.10404-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 26/98] arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled
+Date:   Mon, 22 Apr 2019 15:40:53 -0400
+Message-Id: <20190422194205.10404-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -59,96 +59,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit 7494cec6cb3ba7385a6a223b81906384f15aae34 ]
+[ Upstream commit ca71228b42a96908eca7658861eafacd227856c9 ]
 
-Calling kvm_is_visible_gfn() implies that we're parsing the memslots,
-and doing this without the srcu lock is frown upon:
+The normal interrupt flow is not to enable the vgic when no virtual
+interrupt is to be injected (i.e. the LRs are empty). But when a guest
+is likely to use GICv4 for LPIs, we absolutely need to switch it on
+at all times. Otherwise, VLPIs only get delivered when there is something
+in the LRs, which doesn't happen very often.
 
-[12704.164532] =============================
-[12704.164544] WARNING: suspicious RCU usage
-[12704.164560] 5.1.0-rc1-00008-g600025238f51-dirty #16 Tainted: G        W
-[12704.164573] -----------------------------
-[12704.164589] ./include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
-[12704.164602] other info that might help us debug this:
-[12704.164616] rcu_scheduler_active = 2, debug_locks = 1
-[12704.164631] 6 locks held by qemu-system-aar/13968:
-[12704.164644]  #0: 000000007ebdae4f (&kvm->lock){+.+.}, at: vgic_its_set_attr+0x244/0x3a0
-[12704.164691]  #1: 000000007d751022 (&its->its_lock){+.+.}, at: vgic_its_set_attr+0x250/0x3a0
-[12704.164726]  #2: 00000000219d2706 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164761]  #3: 00000000a760aecd (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164794]  #4: 000000000ef8e31d (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164827]  #5: 000000007a872093 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164861] stack backtrace:
-[12704.164878] CPU: 2 PID: 13968 Comm: qemu-system-aar Tainted: G        W         5.1.0-rc1-00008-g600025238f51-dirty #16
-[12704.164887] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
-[12704.164896] Call trace:
-[12704.164910]  dump_backtrace+0x0/0x138
-[12704.164920]  show_stack+0x24/0x30
-[12704.164934]  dump_stack+0xbc/0x104
-[12704.164946]  lockdep_rcu_suspicious+0xcc/0x110
-[12704.164958]  gfn_to_memslot+0x174/0x190
-[12704.164969]  kvm_is_visible_gfn+0x28/0x70
-[12704.164980]  vgic_its_check_id.isra.0+0xec/0x1e8
-[12704.164991]  vgic_its_save_tables_v0+0x1ac/0x330
-[12704.165001]  vgic_its_set_attr+0x298/0x3a0
-[12704.165012]  kvm_device_ioctl_attr+0x9c/0xd8
-[12704.165022]  kvm_device_ioctl+0x8c/0xf8
-[12704.165035]  do_vfs_ioctl+0xc8/0x960
-[12704.165045]  ksys_ioctl+0x8c/0xa0
-[12704.165055]  __arm64_sys_ioctl+0x28/0x38
-[12704.165067]  el0_svc_common+0xd8/0x138
-[12704.165078]  el0_svc_handler+0x38/0x78
-[12704.165089]  el0_svc+0x8/0xc
-
-Make sure the lock is taken when doing this.
-
-Fixes: bf308242ab98 ("KVM: arm/arm64: VGIC/ITS: protect kvm_read_guest() calls with SRCU lock")
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Reported-by: Nianyao Tang <tangnianyao@huawei.com>
+Tested-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
 Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-its.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ virt/kvm/arm/hyp/vgic-v3-sr.c |  4 ++--
+ virt/kvm/arm/vgic/vgic.c      | 14 ++++++++++----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index c41e11fd841c..fcb2fceaa4a5 100644
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -754,8 +754,9 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
- 	u64 indirect_ptr, type = GITS_BASER_TYPE(baser);
- 	phys_addr_t base = GITS_BASER_ADDR_48_to_52(baser);
- 	int esz = GITS_BASER_ENTRY_SIZE(baser);
--	int index;
-+	int index, idx;
- 	gfn_t gfn;
-+	bool ret;
- 
- 	switch (type) {
- 	case GITS_BASER_TYPE_DEVICE:
-@@ -782,7 +783,8 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
- 
- 		if (eaddr)
- 			*eaddr = addr;
--		return kvm_is_visible_gfn(its->dev->kvm, gfn);
-+
-+		goto out;
+diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
+index 9652c453480f..3c3f7cda95c7 100644
+--- a/virt/kvm/arm/hyp/vgic-v3-sr.c
++++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
+@@ -222,7 +222,7 @@ void __hyp_text __vgic_v3_save_state(struct kvm_vcpu *vcpu)
+ 		}
  	}
  
- 	/* calculate and check the index into the 1st level */
-@@ -812,7 +814,12 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+-	if (used_lrs) {
++	if (used_lrs || cpu_if->its_vpe.its_vm) {
+ 		int i;
+ 		u32 elrsr;
  
- 	if (eaddr)
- 		*eaddr = indirect_ptr;
--	return kvm_is_visible_gfn(its->dev->kvm, gfn);
-+
-+out:
-+	idx = srcu_read_lock(&its->dev->kvm->srcu);
-+	ret = kvm_is_visible_gfn(its->dev->kvm, gfn);
-+	srcu_read_unlock(&its->dev->kvm->srcu, idx);
-+	return ret;
- }
+@@ -247,7 +247,7 @@ void __hyp_text __vgic_v3_restore_state(struct kvm_vcpu *vcpu)
+ 	u64 used_lrs = vcpu->arch.vgic_cpu.used_lrs;
+ 	int i;
  
- static int vgic_its_alloc_collection(struct vgic_its *its,
+-	if (used_lrs) {
++	if (used_lrs || cpu_if->its_vpe.its_vm) {
+ 		write_gicreg(cpu_if->vgic_hcr, ICH_HCR_EL2);
+ 
+ 		for (i = 0; i < used_lrs; i++)
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index abd9c7352677..3af69f2a3866 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -867,15 +867,21 @@ void kvm_vgic_flush_hwstate(struct kvm_vcpu *vcpu)
+ 	 * either observe the new interrupt before or after doing this check,
+ 	 * and introducing additional synchronization mechanism doesn't change
+ 	 * this.
++	 *
++	 * Note that we still need to go through the whole thing if anything
++	 * can be directly injected (GICv4).
+ 	 */
+-	if (list_empty(&vcpu->arch.vgic_cpu.ap_list_head))
++	if (list_empty(&vcpu->arch.vgic_cpu.ap_list_head) &&
++	    !vgic_supports_direct_msis(vcpu->kvm))
+ 		return;
+ 
+ 	DEBUG_SPINLOCK_BUG_ON(!irqs_disabled());
+ 
+-	raw_spin_lock(&vcpu->arch.vgic_cpu.ap_list_lock);
+-	vgic_flush_lr_state(vcpu);
+-	raw_spin_unlock(&vcpu->arch.vgic_cpu.ap_list_lock);
++	if (!list_empty(&vcpu->arch.vgic_cpu.ap_list_head)) {
++		raw_spin_lock(&vcpu->arch.vgic_cpu.ap_list_lock);
++		vgic_flush_lr_state(vcpu);
++		raw_spin_unlock(&vcpu->arch.vgic_cpu.ap_list_lock);
++	}
+ 
+ 	if (can_access_vgic_from_kernel())
+ 		vgic_restore_state(vcpu);
 -- 
 2.19.1
 
