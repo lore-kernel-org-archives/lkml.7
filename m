@@ -2,98 +2,101 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	TVD_PH_BODY_ACCOUNTS_PRE autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52152C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBB9C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFB420811
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:40:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hgX6wGFx"
+	by mail.kernel.org (Postfix) with ESMTP id D0FB12075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfDVWkt (ORCPT
+        id S1730423AbfDVWne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 18:40:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:43225 "EHLO ozlabs.org"
+        Mon, 22 Apr 2019 18:43:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51068 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfDVWks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 18:40:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728965AbfDVWne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 18:43:34 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44p1kh28xVz9s7T;
-        Tue, 23 Apr 2019 08:40:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555972846;
-        bh=6w/xfxRMU+HgAigY7XYa1avpShbpahKC+Ohd6gOt780=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hgX6wGFxy5gPoab8q0XIhpsB2o2iZJxcRY1XFlcayrKPzAxvXtNg2E4qg9KlOFiDY
-         ijrjsQE2tprFQoXOzbS6ZSPzgN4sZ6lUQlQv4qJOeABTJtuw1i0spZNu/yZ9lFlDD1
-         N+mVhSQf3NPkkHx3d0vwBN/r7Qg/QPfRzIFbi5Ux3DuiZSXwXOJ4Xyn6jrua/fksNL
-         Jvb84bodL48OkEQy9CpLIyyvjJcV0zc+ESvIWs8gGNGQZM0C8Fzv09xKpJIpkBvY7K
-         PJxoibx0CcpsP55RM6RfxXlw5SXB3ulJ2fpPFHFA9paOc+0PY2+XK8hksCQHLybq6L
-         ErKpd8M/CoKJw==
-Date:   Tue, 23 Apr 2019 08:40:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Nicolas Ferre <nicolas.ferre@atmel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: linux-next: build failure after merge of the at91 tree
-Message-ID: <20190423084042.29fd9c03@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 2E5B23091786;
+        Mon, 22 Apr 2019 22:43:34 +0000 (UTC)
+Received: from gimli.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D3095C28D;
+        Mon, 22 Apr 2019 22:43:30 +0000 (UTC)
+Subject: [PATCH] PCI/LINK: Account for BW notification in vector calculation
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     bhelgaas@google.com, helgaas@kernel.org, mr.nuke.me@gmail.com,
+        linux-pci@vger.kernel.org
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 22 Apr 2019 16:43:30 -0600
+Message-ID: <155597243666.19387.1205950870601742062.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/viFDtRPHsDztPYGKC4FRGVu"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 22 Apr 2019 22:43:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/viFDtRPHsDztPYGKC4FRGVu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On systems that don't support any PCIe services other than bandwidth
+notification, pcie_message_numbers() can return zero vectors, causing
+the vector reallocation in pcie_port_enable_irq_vec() to retry with
+zero, which fails, resulting in fallback to INTx (which might be
+broken) for the bandwidth notification service.  This can resolve
+spurious interrupt faults due to this service on some systems.
 
-Hi all,
+Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
 
-After merging the at91 tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+However, the system is still susceptible to random spew in dmesg
+depending on how the root port handles downstream device managed link
+speed changes.  For example, GPUs like to scale their link speed for
+power management when idle.  A GPU assigned to a VM through vfio-pci
+can generate link bandwidth notification every time the link is
+scaled down, ex:
 
-arch/arm/mach-at91/pm_suspend.S:17:10: fatal error: pm_data-offsets.h: No s=
-uch file or directory
- #include "pm_data-offsets.h"
-          ^~~~~~~~~~~~~~~~~~~
+[  329.725607] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
+limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
+GT/s x16 link)
+[  708.151488] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
+limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
+GT/s x16 link)
+[  718.262959] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
+limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
+GT/s x16 link)
+[ 1138.124932] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
+limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
+GT/s x16 link)
 
-Caused by commit
+What is the value of this nagging?
 
-  ab690fa1eb4b ("ARM: at91: move platform-specific asm-offset.h to arch/arm=
-/mach-at91")
+ drivers/pci/pcie/portdrv_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I used the version of the at91 tree from next-20190418 for today.
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 7d04f9d087a6..1b330129089f 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -55,7 +55,8 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
+ 	 * 7.8.2, 7.10.10, 7.31.2.
+ 	 */
+ 
+-	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP)) {
++	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
++		    PCIE_PORT_SERVICE_BWNOTIF)) {
+ 		pcie_capability_read_word(dev, PCI_EXP_FLAGS, &reg16);
+ 		*pme = (reg16 & PCI_EXP_FLAGS_IRQ) >> 9;
+ 		nvec = *pme + 1;
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/viFDtRPHsDztPYGKC4FRGVu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+QuoACgkQAVBC80lX
-0GxptQf/eh89qqrmdmAN/MG1zs5M+JFtIoqW6ZJqnhPjnNWSObuz7rImFfprQTWQ
-84CK2p3OKS6V6JubBQfuSE30aADj+bgfsEReaUxeCko53GbZ6Zu5mUQAq7SP7inK
-p6VOvk05cM8csKVADQE/3Ri1v8pt/FI3c3+oBG07fABssx69Ghs5LuT/b88NJRyB
-gCVy+2L+kgI4uHg0ArGGuwbvemYfJpIWasmzJhJXI/LyEbm7wdyl/BQYuM15hyNb
-YMdNnCufYj7Z5Uq7Lll7IVkJWf320Y4oHXRs/aIxukubsHVtFdEYaLYlnUFcl1FR
-8Loim0X1oxD8bd+tBWElxHOMA/ACJw==
-=aW8/
------END PGP SIGNATURE-----
-
---Sig_/viFDtRPHsDztPYGKC4FRGVu--
