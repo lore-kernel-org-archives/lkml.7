@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177BEC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3326FC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EFF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA53A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963150;
-	bh=sz7OagvtNhtqgk7F/jFsTo57WbQrdJIp37sbWI9R1bc=;
+	s=default; t=1555963159;
+	bh=2aHGkX89auTJONCNP1G7Ry9w4/jFDkD/L6QCf9959+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ic3hfCC+Ue+uCE/ouUmWVs/M/nBGGHFeOPzhc+h5btYn1STogyfng4EiBCvD8tICl
-	 OH9y1c3qNrW7xAgKcBmxyVe+XFc7ZpkZzj/55es8OCeMYg9Fb4Z7ocdBk9EloEWV7p
-	 vKEWbZZ1KBPZAX+la/f18HSjFFXRY6boUObOxvQo=
+	b=h7riXkHzWrIfccYSTzA8TXQDjHqIasyZLmLTYVVnctDPCvSWEltX92/Zn5YmHM41I
+	 hZ7YZwSqfCjszM6i2eeUAxA6HS+dioP5YKBq6Hr5Z6osvLvGauWwdIMtpL3UT5MIYW
+	 pvsJd2WlN5rH8fwOsqvECUId4GLW1ceM5Wy5VBGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfDVT7J (ORCPT
+        id S1729883AbfDVTrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730368AbfDVTrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:51 -0400
+        id S1730314AbfDVTrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A584B21904;
-        Mon, 22 Apr 2019 19:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E436A21902;
+        Mon, 22 Apr 2019 19:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962470;
-        bh=sz7OagvtNhtqgk7F/jFsTo57WbQrdJIp37sbWI9R1bc=;
+        s=default; t=1555962456;
+        bh=2aHGkX89auTJONCNP1G7Ry9w4/jFDkD/L6QCf9959+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLe8MKSJ5XU4cYtLpMHhiyAmbcRChjQqWKdCRxwWVf+cIEFrbLtsk9IinmjNG2pZ8
-         SPgyYAOP5CJ7x0TtWzDuqurSck7HAU6t8cEHypsAIVJfDZyLb6MZqmtopyk8nCkH1F
-         uvtk+uQTuqKZPY/2YhH1Tvt1ZcfaRbm8F0AdO8SQ=
+        b=SNwIDb4u9Wu1fiGAhublFDVmUPJ7hSYi7z4T3rxcEh0L1+3BNpU4p9e/5DMwfRiUG
+         GfHdNhjfKmNJtuzZP42Ue6kDlh4mh0d8eQ8fULrtE7fOzbssdUQjh9/Zo0ep/SDCpP
+         Mn9+vMFK82sthcMN8XgUsR5A4NmdV6/bKdsG8l2k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Stefan Christ <s.christ@phytec.de>,
-        Christian Hemp <c.hemp@phytec.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/43] ARM: dts: pfla02: increase phy reset duration
-Date:   Mon, 22 Apr 2019 15:46:57 -0400
-Message-Id: <20190422194727.12495-13-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/43] s390/qeth: fix race when initializing the IP address table
+Date:   Mon, 22 Apr 2019 15:46:50 -0400
+Message-Id: <20190422194727.12495-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
@@ -61,48 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
+[ Upstream commit 7221b727f0079a32aca91f657141e1de564d4b97 ]
 
-Increase the reset duration to ensure correct phy functionality. The
-reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-pfla02: use long enough reset for ethernet phy"):
+The ucast IP table is utilized by some of the L3-specific sysfs attributes
+that qeth_l3_create_device_attributes() provides. So initialize the table
+_before_ registering the attributes.
 
-  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-  small percentage of modules have 'transmission timeouts' errors like
-
-  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-  eth0: 1000Mbps full duplex link detected
-  eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-
-Cc: Stefan Christ <s.christ@phytec.de>
-Cc: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: ebccc7397e4a ("s390/qeth: add missing hash table initializations")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/net/qeth_l3_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index d81b0078a100..25b0704c6054 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -89,6 +89,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
-+	phy-reset-duration = <10>; /* in msecs */
- 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
- 	phy-supply = <&vdd_eth_io_reg>;
- 	status = "disabled";
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index a19f2dc69e8a..d9830c86d0c1 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -3022,12 +3022,14 @@ static int qeth_l3_probe_device(struct ccwgroup_device *gdev)
+ 	struct qeth_card *card = dev_get_drvdata(&gdev->dev);
+ 	int rc;
+ 
++	hash_init(card->ip_htable);
++
+ 	if (gdev->dev.type == &qeth_generic_devtype) {
+ 		rc = qeth_l3_create_device_attributes(&gdev->dev);
+ 		if (rc)
+ 			return rc;
+ 	}
+-	hash_init(card->ip_htable);
++
+ 	hash_init(card->ip_mc_htable);
+ 	card->options.layer2 = 0;
+ 	card->info.hwtrap = 0;
 -- 
 2.19.1
 
