@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656A9C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16671C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1086D20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBAE2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940074;
-	bh=cxRRma81UxWvuVYKXdTfF2GPZ32w9zq1YNm6g58O3XI=;
+	s=default; t=1555940083;
+	bh=ZgEhB22+3Mpp6UWpUks49xwaBDeBwLFyuIMMeRNgGnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJyHT04QfEkAWV/4SujZdBA4wBujxB1/u06qrBMtY9dTwIRmQhLEGaqHiMgBFVLJM
-	 e2uJqbOBHKCdgUCwLS1Y8TtF4RTsRwoe4KRfDgL5Z9g3YXSSrAkqIjEFi8gGyUGqPR
-	 7SZWLBgLuRCvnPP0gZn5XUkKRSaDtgF+JinC722c=
+	b=q6RIrWnN/wcr5bOLwKVemhvJ5hDH8tg07VSHGW2c6wiL9G76yfExZY8kxxkfuRcP1
+	 8H0rkD6bgWuPLYSPSpSJ6g2otp9BK9jzcVK83AUT4NWAQ1J3erxEfk94pebf8lqTw4
+	 rJVWTYU8bL2YR3elC02uHRm7Pmdvb9I6CBN7kBJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfDVNec (ORCPT
+        id S1728017AbfDVNem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:34:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37490 "EHLO
+        Mon, 22 Apr 2019 09:34:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37472 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbfDVN2S (ORCPT
+        with ESMTP id S1727483AbfDVN2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,26 +33,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yznAi7eifJeJR9oN/+x111TS8HL+/Pl+fa1+//+IrYM=; b=sOaPBElymyYgRr+rdS4ubdQQ5j
-        2rMDLWFPgSQU0CQ5+1DPRmce41PgaLdIndH3vDXtb6opK3xdFLKFCVR8XuTdH2edcjCKXSE+HiKVD
-        0oa2gXkEP+/cmkscCCOmq8bF3LNN691dhXElu/ihBQIcR47daps/kd5/ewUlZoySf4dlA+ABKxIdj
-        s5qd2RBOwDGes4NAyq/F4hBVDvObesXvNm6Hm3kKqPtWvDy3owCYxxfyjANV2MXVUGfRdcp+A7/nO
-        tbrOci4HsDrHye/tSMBmnuPvABYXx18ZvhFSS/K/tqK7HI+Bo4z/pMNy3ienCiXmnIjxo3/nopRkj
-        ch+X7SBw==;
+        bh=gdSJGy4yadqVvI8gq4YA9aqS9a3CA3ecHZ7Izvg6NGI=; b=LDZfkQ14YzgXCzD6nHwqTIsxoD
+        UdOPMmogRkWu68yjGaz3jjTIPl+cXVwGyMsNEg1WpLmS4VJAomvfIoPUwjFliwQo2UlXUzyyNCHBz
+        gVQYWYElPGMgsMN1PjHXteDcsP3U3gWZIspC1zhiyT8tj+YdbhuQF4gtOwqVWTZFGcnzlfmtVViw3
+        SnqCCCr88LnL3OljZlNidfTFYQ5EuigfAtXjFaITmKu62DM4gdlKrKPgYQov6rIp6SixHwVWeFDnO
+        K51WEp7b9HXiEiDfK6AmWWZXhilzIouMVqWenaHk7drPSIuv3RFUoJcmPYLbNAMl3D/6Ef0NqgdM/
+        vhZ7sHxw==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzZ-0005HY-3I; Mon, 22 Apr 2019 13:28:17 +0000
+        id 1hIYzY-0005Hg-S0; Mon, 22 Apr 2019 13:28:17 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005or-Ev; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzU-0005pY-O4; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 67/79] docs: nfc: convert to ReST
-Date:   Mon, 22 Apr 2019 10:27:56 -0300
-Message-Id: <f39d007337e06cfd702adbffdd57ae336e0237f6.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>
+Subject: [PATCH v2 75/79] docs: rapidio: convert to ReST
+Date:   Mon, 22 Apr 2019 10:28:04 -0300
+Message-Id: <28cc285931ac302d0fddd2e094196c17a2ff46c0.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -63,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the nfc documentation files to ReST, add an
+Rename the rapidio documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
 
@@ -72,329 +74,591 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/nfc/index.rst                   |  11 ++
- .../nfc/{nfc-hci.txt => nfc-hci.rst}          | 163 ++++++++++--------
- .../nfc/{nfc-pn544.txt => nfc-pn544.rst}      |   6 +-
- 3 files changed, 107 insertions(+), 73 deletions(-)
- create mode 100644 Documentation/nfc/index.rst
- rename Documentation/nfc/{nfc-hci.txt => nfc-hci.rst} (71%)
- rename Documentation/nfc/{nfc-pn544.txt => nfc-pn544.rst} (82%)
+ Documentation/rapidio/index.rst               | 15 +++++
+ .../{mport_cdev.txt => mport_cdev.rst}        | 47 ++++++-------
+ .../rapidio/{rapidio.txt => rapidio.rst}      | 39 +++++++----
+ .../rapidio/{rio_cm.txt => rio_cm.rst}        | 66 ++++++++++++-------
+ .../rapidio/{sysfs.txt => sysfs.rst}          |  4 ++
+ .../rapidio/{tsi721.txt => tsi721.rst}        | 45 ++++++++-----
+ drivers/rapidio/Kconfig                       |  2 +-
+ 7 files changed, 141 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/rapidio/index.rst
+ rename Documentation/rapidio/{mport_cdev.txt => mport_cdev.rst} (84%)
+ rename Documentation/rapidio/{rapidio.txt => rapidio.rst} (97%)
+ rename Documentation/rapidio/{rio_cm.txt => rio_cm.rst} (76%)
+ rename Documentation/rapidio/{sysfs.txt => sysfs.rst} (75%)
+ rename Documentation/rapidio/{tsi721.txt => tsi721.rst} (79%)
 
-diff --git a/Documentation/nfc/index.rst b/Documentation/nfc/index.rst
+diff --git a/Documentation/rapidio/index.rst b/Documentation/rapidio/index.rst
 new file mode 100644
-index 000000000000..4f4947fce80d
+index 000000000000..ab7b5541b346
 --- /dev/null
-+++ b/Documentation/nfc/index.rst
-@@ -0,0 +1,11 @@
++++ b/Documentation/rapidio/index.rst
+@@ -0,0 +1,15 @@
 +:orphan:
 +
-+========================
-+Near Field Communication
-+========================
++===========================
++The Linux RapidIO Subsystem
++===========================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   nfc-hci
-+   nfc-pn544
-diff --git a/Documentation/nfc/nfc-hci.txt b/Documentation/nfc/nfc-hci.rst
-similarity index 71%
-rename from Documentation/nfc/nfc-hci.txt
-rename to Documentation/nfc/nfc-hci.rst
-index 0dc078cab972..eb8a1a14e919 100644
---- a/Documentation/nfc/nfc-hci.txt
-+++ b/Documentation/nfc/nfc-hci.rst
-@@ -1,7 +1,9 @@
-+========================
- HCI backend for NFC Core
-+========================
- 
--Author: Eric Lapuyade, Samuel Ortiz
--Contact: eric.lapuyade@intel.com, samuel.ortiz@intel.com
-+- Author: Eric Lapuyade, Samuel Ortiz
-+- Contact: eric.lapuyade@intel.com, samuel.ortiz@intel.com
- 
- General
- -------
-@@ -24,12 +26,13 @@ HCI events can also be received from the host controller. They will be handled
- and a translation will be forwarded to NFC Core as needed. There are hooks to
- let the HCI driver handle proprietary events or override standard behavior.
- HCI uses 2 execution contexts:
++   rapidio
++   sysfs
 +
- - one for executing commands : nfc_hci_msg_tx_work(). Only one command
--can be executing at any given moment.
-+  can be executing at any given moment.
- - one for dispatching received events and commands : nfc_hci_msg_rx_work().
++   tsi721
++   mport_cdev
++   rio_cm
+diff --git a/Documentation/rapidio/mport_cdev.txt b/Documentation/rapidio/mport_cdev.rst
+similarity index 84%
+rename from Documentation/rapidio/mport_cdev.txt
+rename to Documentation/rapidio/mport_cdev.rst
+index a53f786ee2e9..df77a7f7be7d 100644
+--- a/Documentation/rapidio/mport_cdev.txt
++++ b/Documentation/rapidio/mport_cdev.rst
+@@ -1,13 +1,9 @@
++==================================================================
+ RapidIO subsystem mport character device driver (rio_mport_cdev.c)
+ ==================================================================
  
--HCI Session initialization:
+-Version History:
+-----------------
+-  1.0.0 - Initial driver release.
+-
+-==================================================================
+-
+-I. Overview
++1. Overview
++===========
+ 
+ This device driver is the result of collaboration within the RapidIO.org
+ Software Task Group (STG) between Texas Instruments, Freescale,
+@@ -29,40 +25,41 @@ Using available set of ioctl commands user-space applications can perform
+ following RapidIO bus and subsystem operations:
+ 
+ - Reads and writes from/to configuration registers of mport devices
+-    (RIO_MPORT_MAINT_READ_LOCAL/RIO_MPORT_MAINT_WRITE_LOCAL)
++  (RIO_MPORT_MAINT_READ_LOCAL/RIO_MPORT_MAINT_WRITE_LOCAL)
+ - Reads and writes from/to configuration registers of remote RapidIO devices.
+   This operations are defined as RapidIO Maintenance reads/writes in RIO spec.
+-    (RIO_MPORT_MAINT_READ_REMOTE/RIO_MPORT_MAINT_WRITE_REMOTE)
++  (RIO_MPORT_MAINT_READ_REMOTE/RIO_MPORT_MAINT_WRITE_REMOTE)
+ - Set RapidIO Destination ID for mport devices (RIO_MPORT_MAINT_HDID_SET)
+ - Set RapidIO Component Tag for mport devices (RIO_MPORT_MAINT_COMPTAG_SET)
+ - Query logical index of mport devices (RIO_MPORT_MAINT_PORT_IDX_GET)
+ - Query capabilities and RapidIO link configuration of mport devices
+-    (RIO_MPORT_GET_PROPERTIES)
++  (RIO_MPORT_GET_PROPERTIES)
+ - Enable/Disable reporting of RapidIO doorbell events to user-space applications
+-    (RIO_ENABLE_DOORBELL_RANGE/RIO_DISABLE_DOORBELL_RANGE)
++  (RIO_ENABLE_DOORBELL_RANGE/RIO_DISABLE_DOORBELL_RANGE)
+ - Enable/Disable reporting of RIO port-write events to user-space applications
+-    (RIO_ENABLE_PORTWRITE_RANGE/RIO_DISABLE_PORTWRITE_RANGE)
++  (RIO_ENABLE_PORTWRITE_RANGE/RIO_DISABLE_PORTWRITE_RANGE)
+ - Query/Control type of events reported through this driver: doorbells,
+   port-writes or both (RIO_SET_EVENT_MASK/RIO_GET_EVENT_MASK)
+ - Configure/Map mport's outbound requests window(s) for specific size,
+   RapidIO destination ID, hopcount and request type
+-    (RIO_MAP_OUTBOUND/RIO_UNMAP_OUTBOUND)
++  (RIO_MAP_OUTBOUND/RIO_UNMAP_OUTBOUND)
+ - Configure/Map mport's inbound requests window(s) for specific size,
+   RapidIO base address and local memory base address
+-    (RIO_MAP_INBOUND/RIO_UNMAP_INBOUND)
++  (RIO_MAP_INBOUND/RIO_UNMAP_INBOUND)
+ - Allocate/Free contiguous DMA coherent memory buffer for DMA data transfers
+   to/from remote RapidIO devices (RIO_ALLOC_DMA/RIO_FREE_DMA)
+ - Initiate DMA data transfers to/from remote RapidIO devices (RIO_TRANSFER).
+   Supports blocking, asynchronous and posted (a.k.a 'fire-and-forget') data
+   transfer modes.
+ - Check/Wait for completion of asynchronous DMA data transfer
+-    (RIO_WAIT_FOR_ASYNC)
++  (RIO_WAIT_FOR_ASYNC)
+ - Manage device objects supported by RapidIO subsystem (RIO_DEV_ADD/RIO_DEV_DEL).
+   This allows implementation of various RapidIO fabric enumeration algorithms
+   as user-space applications while using remaining functionality provided by
+   kernel RapidIO subsystem.
+ 
+-II. Hardware Compatibility
++2. Hardware Compatibility
++=========================
+ 
+ This device driver uses standard interfaces defined by kernel RapidIO subsystem
+ and therefore it can be used with any mport device driver registered by RapidIO
+@@ -78,29 +75,35 @@ functionality of their platform when planning to use this driver:
+   specific DMA engine support and therefore DMA data transfers mport_cdev driver
+   are not available.
+ 
+-III. Module parameters
++3. Module parameters
++====================
+ 
+-- 'dma_timeout' - DMA transfer completion timeout (in msec, default value 3000).
++- 'dma_timeout'
++      - DMA transfer completion timeout (in msec, default value 3000).
+         This parameter set a maximum completion wait time for SYNC mode DMA
+         transfer requests and for RIO_WAIT_FOR_ASYNC ioctl requests.
+ 
+-- 'dbg_level' - This parameter allows to control amount of debug information
++- 'dbg_level'
++      - This parameter allows to control amount of debug information
+         generated by this device driver. This parameter is formed by set of
+         bit masks that correspond to the specific functional blocks.
+         For mask definitions see 'drivers/rapidio/devices/rio_mport_cdev.c'
+         This parameter can be changed dynamically.
+         Use CONFIG_RAPIDIO_DEBUG=y to enable debug output at the top level.
+ 
+-IV. Known problems
++4. Known problems
++=================
+ 
+   None.
+ 
+-V. User-space Applications and API
++5. User-space Applications and API
++==================================
+ 
+ API library and applications that use this device driver are available from
+ RapidIO.org.
+ 
+-VI. TODO List
++6. TODO List
++============
+ 
+ - Add support for sending/receiving "raw" RapidIO messaging packets.
+ - Add memory mapped DMA data transfers as an option when RapidIO-specific DMA
+diff --git a/Documentation/rapidio/rapidio.txt b/Documentation/rapidio/rapidio.rst
+similarity index 97%
+rename from Documentation/rapidio/rapidio.txt
+rename to Documentation/rapidio/rapidio.rst
+index 28fbd877f85a..fb8942d3ba85 100644
+--- a/Documentation/rapidio/rapidio.txt
++++ b/Documentation/rapidio/rapidio.rst
+@@ -1,6 +1,6 @@
+-                          The Linux RapidIO Subsystem
+-
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++============
++Introduction
++============
+ 
+ The RapidIO standard is a packet-based fabric interconnect standard designed for
+ use in embedded systems. Development of the RapidIO standard is directed by the
+@@ -11,7 +11,7 @@ This document describes the basics of the Linux RapidIO subsystem and provides
+ information on its major components.
+ 
+ 1 Overview
+-----------
++==========
+ 
+ Because the RapidIO subsystem follows the Linux device model it is integrated
+ into the kernel similarly to other buses by defining RapidIO-specific device and
+@@ -22,7 +22,7 @@ architecture-specific interfaces that provide support for common RapidIO
+ subsystem operations.
+ 
+ 2. Core Components
+-------------------
++==================
+ 
+ A typical RapidIO network is a combination of endpoints and switches.
+ Each of these components is represented in the subsystem by an associated data
+@@ -30,6 +30,7 @@ structure. The core logical components of the RapidIO subsystem are defined
+ in include/linux/rio.h file.
+ 
+ 2.1 Master Port
++---------------
+ 
+ A master port (or mport) is a RapidIO interface controller that is local to the
+ processor executing the Linux code. A master port generates and receives RapidIO
+@@ -46,6 +47,7 @@ includes rio_ops data structure which contains pointers to hardware specific
+ implementations of RapidIO functions.
+ 
+ 2.2 Device
++----------
+ 
+ A RapidIO device is any endpoint (other than mport) or switch in the network.
+ All devices are presented in the RapidIO subsystem by corresponding rio_dev data
+@@ -53,6 +55,7 @@ structure. Devices form one global device list and per-network device lists
+ (depending on number of available mports and networks).
+ 
+ 2.3 Switch
++----------
+ 
+ A RapidIO switch is a special class of device that routes packets between its
+ ports towards their final destination. The packet destination port within a
+@@ -66,6 +69,7 @@ specific switch drivers that are designed to provide hardware-specific
+ implementation of common switch management routines.
+ 
+ 2.4 Network
++-----------
+ 
+ A RapidIO network is a combination of interconnected endpoint and switch devices.
+ Each RapidIO network known to the system is represented by corresponding rio_net
+@@ -74,11 +78,13 @@ ports that form the same network. It also contains a pointer to the default
+ master port that is used to communicate with devices within the network.
+ 
+ 2.5 Device Drivers
++------------------
+ 
+ RapidIO device-specific drivers follow Linux Kernel Driver Model and are
+ intended to support specific RapidIO devices attached to the RapidIO network.
+ 
+ 2.6 Subsystem Interfaces
++------------------------
+ 
+ RapidIO interconnect specification defines features that may be used to provide
+ one or more common service layers for all participating RapidIO devices. These
+@@ -90,7 +96,7 @@ subsystem interfaces. This allows to have multiple common services attached to
+ the same device without blocking attachment of a device-specific driver.
+ 
+ 3. Subsystem Initialization
 ----------------------------
-+HCI Session initialization
-+--------------------------
++===========================
  
- The Session initialization is an HCI standard which must unfortunately
- support proprietary gates. This is the reason why the driver will pass a list
-@@ -58,9 +61,9 @@ HCI Management
- --------------
+ In order to initialize the RapidIO subsystem, a platform must initialize and
+ register at least one master port within the RapidIO network. To register mport
+@@ -105,7 +111,7 @@ RapidIO subsystem can be configured to be built as a statically linked or
+ modular component of the kernel (see details below).
  
- A driver would normally register itself with HCI and provide the following
--entry points:
-+entry points::
+ 4. Enumeration and Discovery
+-----------------------------
++============================
  
--struct nfc_hci_ops {
-+  struct nfc_hci_ops {
- 	int (*open)(struct nfc_hci_dev *hdev);
- 	void (*close)(struct nfc_hci_dev *hdev);
- 	int (*hci_ready) (struct nfc_hci_dev *hdev);
-@@ -82,38 +85,38 @@ struct nfc_hci_ops {
- 			      struct nfc_target *target);
- 	int (*event_received)(struct nfc_hci_dev *hdev, u8 gate, u8 event,
- 			      struct sk_buff *skb);
--};
-+  };
- 
- - open() and close() shall turn the hardware on and off.
- - hci_ready() is an optional entry point that is called right after the hci
--session has been set up. The driver can use it to do additional initialization
--that must be performed using HCI commands.
-+  session has been set up. The driver can use it to do additional initialization
-+  that must be performed using HCI commands.
- - xmit() shall simply write a frame to the physical link.
- - start_poll() is an optional entrypoint that shall set the hardware in polling
--mode. This must be implemented only if the hardware uses proprietary gates or a
--mechanism slightly different from the HCI standard.
-+  mode. This must be implemented only if the hardware uses proprietary gates or a
-+  mechanism slightly different from the HCI standard.
- - dep_link_up() is called after a p2p target has been detected, to finish
--the p2p connection setup with hardware parameters that need to be passed back
--to nfc core.
-+  the p2p connection setup with hardware parameters that need to be passed back
-+  to nfc core.
- - dep_link_down() is called to bring the p2p link down.
- - target_from_gate() is an optional entrypoint to return the nfc protocols
--corresponding to a proprietary gate.
-+  corresponding to a proprietary gate.
- - complete_target_discovered() is an optional entry point to let the driver
--perform additional proprietary processing necessary to auto activate the
--discovered target.
-+  perform additional proprietary processing necessary to auto activate the
-+  discovered target.
- - im_transceive() must be implemented by the driver if proprietary HCI commands
--are required to send data to the tag. Some tag types will require custom
--commands, others can be written to using the standard HCI commands. The driver
--can check the tag type and either do proprietary processing, or return 1 to ask
--for standard processing. The data exchange command itself must be sent
--asynchronously.
-+  are required to send data to the tag. Some tag types will require custom
-+  commands, others can be written to using the standard HCI commands. The driver
-+  can check the tag type and either do proprietary processing, or return 1 to ask
-+  for standard processing. The data exchange command itself must be sent
-+  asynchronously.
- - tm_send() is called to send data in the case of a p2p connection
- - check_presence() is an optional entry point that will be called regularly
--by the core to check that an activated tag is still in the field. If this is
--not implemented, the core will not be able to push tag_lost events to the user
--space
-+  by the core to check that an activated tag is still in the field. If this is
-+  not implemented, the core will not be able to push tag_lost events to the user
-+  space
- - event_received() is called to handle an event coming from the chip. Driver
--can handle the event or return 1 to let HCI attempt standard processing.
-+  can handle the event or return 1 to let HCI attempt standard processing.
- 
- On the rx path, the driver is responsible to push incoming HCP frames to HCI
- using nfc_hci_recv_frame(). HCI will take care of re-aggregation and handling
-@@ -122,20 +125,23 @@ This must be done from a context that can sleep.
- PHY Management
- --------------
- 
--The physical link (i2c, ...) management is defined by the following structure:
-+The physical link (i2c, ...) management is defined by the following structure::
- 
--struct nfc_phy_ops {
-+  struct nfc_phy_ops {
- 	int (*write)(void *dev_id, struct sk_buff *skb);
- 	int (*enable)(void *dev_id);
- 	void (*disable)(void *dev_id);
--};
-+  };
- 
--enable(): turn the phy on (power on), make it ready to transfer data
--disable(): turn the phy off
--write(): Send a data frame to the chip. Note that to enable higher
--layers such as an llc to store the frame for re-emission, this function must
--not alter the skb. It must also not return a positive result (return 0 for
--success, negative for failure).
-+enable():
-+	turn the phy on (power on), make it ready to transfer data
-+disable():
-+	turn the phy off
-+write():
-+	Send a data frame to the chip. Note that to enable higher
-+	layers such as an llc to store the frame for re-emission, this
-+	function must not alter the skb. It must also not return a positive
-+	result (return 0 for success, negative for failure).
- 
- Data coming from the chip shall be sent directly to nfc_hci_recv_frame().
- 
-@@ -145,9 +151,9 @@ LLC
- Communication between the CPU and the chip often requires some link layer
- protocol. Those are isolated as modules managed by the HCI layer. There are
- currently two modules : nop (raw transfert) and shdlc.
--A new llc must implement the following functions:
-+A new llc must implement the following functions::
- 
--struct nfc_llc_ops {
-+  struct nfc_llc_ops {
- 	void *(*init) (struct nfc_hci_dev *hdev, xmit_to_drv_t xmit_to_drv,
- 		       rcv_to_hci_t rcv_to_hci, int tx_headroom,
- 		       int tx_tailroom, int *rx_headroom, int *rx_tailroom,
-@@ -157,17 +163,25 @@ struct nfc_llc_ops {
- 	int (*stop) (struct nfc_llc *llc);
- 	void (*rcv_from_drv) (struct nfc_llc *llc, struct sk_buff *skb);
- 	int (*xmit_from_hci) (struct nfc_llc *llc, struct sk_buff *skb);
--};
-+  };
- 
--- init() : allocate and init your private storage
--- deinit() : cleanup
--- start() : establish the logical connection
--- stop () : terminate the logical connection
--- rcv_from_drv() : handle data coming from the chip, going to HCI
--- xmit_from_hci() : handle data sent by HCI, going to the chip
-+init():
-+	allocate and init your private storage
-+deinit():
-+	cleanup
-+start():
-+	establish the logical connection
-+stop ():
-+	terminate the logical connection
-+rcv_from_drv():
-+	handle data coming from the chip, going to HCI
-+xmit_from_hci():
-+	handle data sent by HCI, going to the chip
- 
- The llc must be registered with nfc before it can be used. Do that by
--calling nfc_llc_register(const char *name, struct nfc_llc_ops *ops);
-+calling::
+ 4.1 Overview
+ ------------
+@@ -168,14 +174,16 @@ on RapidIO subsystem build configuration:
+   (b) If the RapidIO subsystem core is built as a loadable module, in addition
+   to the method shown above, the host destination ID(s) can be specified using
+   traditional methods of passing module parameter "hdid=" during its loading:
 +
-+	nfc_llc_register(const char *name, struct nfc_llc_ops *ops);
+   - from command line: "modprobe rapidio hdid=-1,7", or
+   - from modprobe configuration file using configuration command "options",
+     like in this example: "options rapidio hdid=-1,7". An example of modprobe
+     configuration file is provided in the section below.
  
- Again, note that the llc does not handle the physical link. It is thus very
- easy to mix any physical link with any llc for a given chip driver.
-@@ -187,26 +201,32 @@ fast, cannot sleep. sends incoming frames to HCI where they are passed to
- the current llc. In case of shdlc, the frame is queued in shdlc rx queue.
- 
- - SHDLC State Machine worker (SMW)
--Only when llc_shdlc is used: handles shdlc rx & tx queues.
--Dispatches HCI cmd responses.
+-  NOTES:
++NOTES:
+   (i) if "hdid=" parameter is omitted all available mport will be assigned
+   destination ID = -1;
 +
-+  Only when llc_shdlc is used: handles shdlc rx & tx queues.
+   (ii) the "hdid=" parameter in systems with multiple mports can have
+   destination ID assignments omitted from the end of list (default = -1).
+ 
+@@ -317,8 +325,7 @@ must ensure that they are loaded before the enumeration/discovery starts.
+ This process can be automated by specifying pre- or post- dependencies in the
+ RapidIO-specific modprobe configuration file as shown in the example below.
+ 
+-  File /etc/modprobe.d/rapidio.conf:
+-  ----------------------------------
++File /etc/modprobe.d/rapidio.conf::
+ 
+   # Configure RapidIO subsystem modules
+ 
+@@ -335,17 +342,21 @@ RapidIO-specific modprobe configuration file as shown in the example below.
+ 
+   --------------------------
+ 
+-NOTE: In the example above, one of "softdep" commands must be removed or
+-commented out to keep required module loading sequence.
++NOTE:
++  In the example above, one of "softdep" commands must be removed or
++  commented out to keep required module loading sequence.
+ 
+-A. References
+--------------
++5. References
++=============
+ 
+ [1] RapidIO Trade Association. RapidIO Interconnect Specifications.
+     http://www.rapidio.org.
 +
-+  Dispatches HCI cmd responses.
- 
- - HCI Tx Cmd worker (MSGTXWQ)
--Serializes execution of HCI commands. Completes execution in case of response
--timeout.
+ [2] Rapidio TA. Technology Comparisons.
+     http://www.rapidio.org/education/technology_comparisons/
 +
-+  Serializes execution of HCI commands.
+ [3] RapidIO support for Linux.
+     http://lwn.net/Articles/139118/
 +
-+  Completes execution in case of response timeout.
+ [4] Matt Porter. RapidIO for Linux. Ottawa Linux Symposium, 2005
+     http://www.kernel.org/doc/ols/2005/ols2005v2-pages-43-56.pdf
+diff --git a/Documentation/rapidio/rio_cm.txt b/Documentation/rapidio/rio_cm.rst
+similarity index 76%
+rename from Documentation/rapidio/rio_cm.txt
+rename to Documentation/rapidio/rio_cm.rst
+index 27aa401f1126..5294430a7a74 100644
+--- a/Documentation/rapidio/rio_cm.txt
++++ b/Documentation/rapidio/rio_cm.rst
+@@ -1,13 +1,10 @@
++==========================================================================
+ RapidIO subsystem Channelized Messaging character device driver (rio_cm.c)
+ ==========================================================================
  
- - HCI Rx worker (MSGRXWQ)
--Dispatches incoming HCI commands or events.
+-Version History:
+-----------------
+-  1.0.0 - Initial driver release.
+ 
+-==========================================================================
+-
+-I. Overview
++1. Overview
++===========
+ 
+ This device driver is the result of collaboration within the RapidIO.org
+ Software Task Group (STG) between Texas Instruments, Prodrive Technologies,
+@@ -41,79 +38,98 @@ in /dev directory common for all registered RapidIO mport devices.
+ 
+ Following ioctl commands are available to user-space applications:
+ 
+-- RIO_CM_MPORT_GET_LIST : Returns to caller list of local mport devices that
++- RIO_CM_MPORT_GET_LIST:
++    Returns to caller list of local mport devices that
+     support messaging operations (number of entries up to RIO_MAX_MPORTS).
+     Each list entry is combination of mport's index in the system and RapidIO
+     destination ID assigned to the port.
+-- RIO_CM_EP_GET_LIST_SIZE : Returns number of messaging capable remote endpoints
++- RIO_CM_EP_GET_LIST_SIZE:
++    Returns number of messaging capable remote endpoints
+     in a RapidIO network associated with the specified mport device.
+-- RIO_CM_EP_GET_LIST : Returns list of RapidIO destination IDs for messaging
++- RIO_CM_EP_GET_LIST:
++    Returns list of RapidIO destination IDs for messaging
+     capable remote endpoints (peers) available in a RapidIO network associated
+     with the specified mport device.
+-- RIO_CM_CHAN_CREATE : Creates RapidIO message exchange channel data structure
++- RIO_CM_CHAN_CREATE:
++    Creates RapidIO message exchange channel data structure
+     with channel ID assigned automatically or as requested by a caller.
+-- RIO_CM_CHAN_BIND : Binds the specified channel data structure to the specified
++- RIO_CM_CHAN_BIND:
++    Binds the specified channel data structure to the specified
+     mport device.
+-- RIO_CM_CHAN_LISTEN : Enables listening for connection requests on the specified
++- RIO_CM_CHAN_LISTEN:
++    Enables listening for connection requests on the specified
+     channel.
+-- RIO_CM_CHAN_ACCEPT : Accepts a connection request from peer on the specified
++- RIO_CM_CHAN_ACCEPT:
++    Accepts a connection request from peer on the specified
+     channel. If wait timeout for this request is specified by a caller it is
+     a blocking call. If timeout set to 0 this is non-blocking call - ioctl
+     handler checks for a pending connection request and if one is not available
+     exits with -EGAIN error status immediately.
+-- RIO_CM_CHAN_CONNECT : Sends a connection request to a remote peer/channel.
+-- RIO_CM_CHAN_SEND : Sends a data message through the specified channel.
++- RIO_CM_CHAN_CONNECT:
++    Sends a connection request to a remote peer/channel.
++- RIO_CM_CHAN_SEND:
++    Sends a data message through the specified channel.
+     The handler for this request assumes that message buffer specified by
+     a caller includes the reserved space for a packet header required by
+     this driver.
+-- RIO_CM_CHAN_RECEIVE : Receives a data message through a connected channel.
++- RIO_CM_CHAN_RECEIVE:
++    Receives a data message through a connected channel.
+     If the channel does not have an incoming message ready to return this ioctl
+     handler will wait for new message until timeout specified by a caller
+     expires. If timeout value is set to 0, ioctl handler uses a default value
+     defined by MAX_SCHEDULE_TIMEOUT.
+-- RIO_CM_CHAN_CLOSE : Closes a specified channel and frees associated buffers.
++- RIO_CM_CHAN_CLOSE:
++    Closes a specified channel and frees associated buffers.
+     If the specified channel is in the CONNECTED state, sends close notification
+     to the remote peer.
+ 
+ The ioctl command codes and corresponding data structures intended for use by
+ user-space applications are defined in 'include/uapi/linux/rio_cm_cdev.h'.
+ 
+-II. Hardware Compatibility
++2. Hardware Compatibility
++=========================
+ 
+ This device driver uses standard interfaces defined by kernel RapidIO subsystem
+ and therefore it can be used with any mport device driver registered by RapidIO
+ subsystem with limitations set by available mport HW implementation of messaging
+ mailboxes.
+ 
+-III. Module parameters
++3. Module parameters
++====================
+ 
+-- 'dbg_level' - This parameter allows to control amount of debug information
++- 'dbg_level'
++      - This parameter allows to control amount of debug information
+         generated by this device driver. This parameter is formed by set of
+         bit masks that correspond to the specific functional block.
+         For mask definitions see 'drivers/rapidio/devices/rio_cm.c'
+         This parameter can be changed dynamically.
+         Use CONFIG_RAPIDIO_DEBUG=y to enable debug output at the top level.
+ 
+-- 'cmbox' - Number of RapidIO mailbox to use (default value is 1).
++- 'cmbox'
++      - Number of RapidIO mailbox to use (default value is 1).
+         This parameter allows to set messaging mailbox number that will be used
+         within entire RapidIO network. It can be used when default mailbox is
+         used by other device drivers or is not supported by some nodes in the
+         RapidIO network.
+ 
+-- 'chstart' - Start channel number for dynamic assignment. Default value - 256.
++- 'chstart'
++      - Start channel number for dynamic assignment. Default value - 256.
+         Allows to exclude channel numbers below this parameter from dynamic
+         allocation to avoid conflicts with software components that use
+         reserved predefined channel numbers.
+ 
+-IV. Known problems
++4. Known problems
++=================
+ 
+   None.
+ 
+-V. User-space Applications and API Library
++5. User-space Applications and API Library
++==========================================
+ 
+ Messaging API library and applications that use this device driver are available
+ from RapidIO.org.
+ 
+-VI. TODO List
++6. TODO List
++============
+ 
+ - Add support for system notification messages (reserved channel 0).
+diff --git a/Documentation/rapidio/sysfs.txt b/Documentation/rapidio/sysfs.rst
+similarity index 75%
+rename from Documentation/rapidio/sysfs.txt
+rename to Documentation/rapidio/sysfs.rst
+index a1adac888e6e..540f72683496 100644
+--- a/Documentation/rapidio/sysfs.txt
++++ b/Documentation/rapidio/sysfs.rst
+@@ -1,3 +1,7 @@
++=============
++Sysfs entries
++=============
 +
-+  Dispatches incoming HCI commands or events.
+ The RapidIO sysfs files have moved to:
+ Documentation/ABI/testing/sysfs-bus-rapidio and
+ Documentation/ABI/testing/sysfs-class-rapidio
+diff --git a/Documentation/rapidio/tsi721.txt b/Documentation/rapidio/tsi721.rst
+similarity index 79%
+rename from Documentation/rapidio/tsi721.txt
+rename to Documentation/rapidio/tsi721.rst
+index cd2a2935d51d..42aea438cd20 100644
+--- a/Documentation/rapidio/tsi721.txt
++++ b/Documentation/rapidio/tsi721.rst
+@@ -1,7 +1,9 @@
++=========================================================================
+ RapidIO subsystem mport driver for IDT Tsi721 PCI Express-to-SRIO bridge.
+ =========================================================================
  
- - Syscall context from a userspace call (SYSCALL)
--Any entrypoint in HCI called from NFC Core
+-I. Overview
++1. Overview
++===========
+ 
+ This driver implements all currently defined RapidIO mport callback functions.
+ It supports maintenance read and write operations, inbound and outbound RapidIO
+@@ -17,7 +19,9 @@ into the corresponding message queue. Messaging callbacks are implemented to be
+ fully compatible with RIONET driver (Ethernet over RapidIO messaging services).
+ 
+ 1. Module parameters:
+-- 'dbg_level' - This parameter allows to control amount of debug information
 +
-+  Any entrypoint in HCI called from NFC Core
++- 'dbg_level'
++      - This parameter allows to control amount of debug information
+         generated by this device driver. This parameter is formed by set of
+         This parameter can be changed bit masks that correspond to the specific
+         functional block.
+@@ -25,37 +29,44 @@ fully compatible with RIONET driver (Ethernet over RapidIO messaging services).
+         This parameter can be changed dynamically.
+         Use CONFIG_RAPIDIO_DEBUG=y to enable debug output at the top level.
  
- Workflow executing an HCI command (using shdlc)
- -----------------------------------------------
+-- 'dma_desc_per_channel' - This parameter defines number of hardware buffer
++- 'dma_desc_per_channel'
++      - This parameter defines number of hardware buffer
+         descriptors allocated for each registered Tsi721 DMA channel.
+         Its default value is 128.
  
- Executing an HCI command can easily be performed synchronously using the
--following API:
-+following API::
+-- 'dma_txqueue_sz' - DMA transactions queue size. Defines number of pending
++- 'dma_txqueue_sz'
++      - DMA transactions queue size. Defines number of pending
+         transaction requests that can be accepted by each DMA channel.
+         Default value is 16.
  
--int nfc_hci_send_cmd (struct nfc_hci_dev *hdev, u8 gate, u8 cmd,
-+  int nfc_hci_send_cmd (struct nfc_hci_dev *hdev, u8 gate, u8 cmd,
- 			const u8 *param, size_t param_len, struct sk_buff **skb)
+-- 'dma_sel' - DMA channel selection mask. Bitmask that defines which hardware
++- 'dma_sel'
++      - DMA channel selection mask. Bitmask that defines which hardware
+         DMA channels (0 ... 6) will be registered with DmaEngine core.
+         If bit is set to 1, the corresponding DMA channel will be registered.
+         DMA channels not selected by this mask will not be used by this device
+         driver. Default value is 0x7f (use all channels).
  
- The API must be invoked from a context that can sleep. Most of the time, this
-@@ -234,11 +254,11 @@ waiting command execution. Response processing involves invoking the completion
- callback that was provided by nfc_hci_msg_tx_work() when it sent the command.
- The completion callback will then wake the syscall context.
+-- 'pcie_mrrs' - override value for PCIe Maximum Read Request Size (MRRS).
++- 'pcie_mrrs'
++      - override value for PCIe Maximum Read Request Size (MRRS).
+         This parameter gives an ability to override MRRS value set during PCIe
+         configuration process. Tsi721 supports read request sizes up to 4096B.
+         Value for this parameter must be set as defined by PCIe specification:
+         0 = 128B, 1 = 256B, 2 = 512B, 3 = 1024B, 4 = 2048B and 5 = 4096B.
+         Default value is '-1' (= keep platform setting).
  
--It is also possible to execute the command asynchronously using this API:
-+It is also possible to execute the command asynchronously using this API::
+-- 'mbox_sel' - RIO messaging MBOX selection mask. This is a bitmask that defines
++- 'mbox_sel'
++      - RIO messaging MBOX selection mask. This is a bitmask that defines
+         messaging MBOXes are managed by this device driver. Mask bits 0 - 3
+         correspond to MBOX0 - MBOX3. MBOX is under driver's control if the
+         corresponding bit is set to '1'. Default value is 0x0f (= all).
  
--static int nfc_hci_execute_cmd_async(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
--			       const u8 *param, size_t param_len,
--			       data_exchange_cb_t cb, void *cb_context)
-+  static int nfc_hci_execute_cmd_async(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
-+				       const u8 *param, size_t param_len,
-+				       data_exchange_cb_t cb, void *cb_context)
+-II. Known problems
++2. Known problems
++=================
  
- The workflow is the same, except that the API call returns immediately, and
- the callback will be called with the result from the SMW context.
-@@ -268,23 +288,24 @@ went wrong below and know that expected events will probably never happen.
- Handling of these errors is done as follows:
+   None.
  
- - driver (pn544) fails to deliver an incoming frame: it stores the error such
--that any subsequent call to the driver will result in this error. Then it calls
--the standard nfc_shdlc_recv_frame() with a NULL argument to report the problem
--above. shdlc stores a EREMOTEIO sticky status, which will trigger SMW to
--report above in turn.
-+  that any subsequent call to the driver will result in this error. Then it
-+  calls the standard nfc_shdlc_recv_frame() with a NULL argument to report the
-+  problem above. shdlc stores a EREMOTEIO sticky status, which will trigger
-+  SMW to report above in turn.
+-III. DMA Engine Support
++3. DMA Engine Support
++=====================
  
- - SMW is basically a background thread to handle incoming and outgoing shdlc
--frames. This thread will also check the shdlc sticky status and report to HCI
--when it discovers it is not able to run anymore because of an unrecoverable
--error that happened within shdlc or below. If the problem occurs during shdlc
--connection, the error is reported through the connect completion.
-+  frames. This thread will also check the shdlc sticky status and report to HCI
-+  when it discovers it is not able to run anymore because of an unrecoverable
-+  error that happened within shdlc or below. If the problem occurs during shdlc
-+  connection, the error is reported through the connect completion.
+ Tsi721 mport driver supports DMA data transfers between local system memory and
+ remote RapidIO devices. This functionality is implemented according to SLAVE
+@@ -68,17 +79,21 @@ One BDMA channel is reserved for generation of maintenance read/write requests.
  
- - HCI: if an internal HCI error happens (frame is lost), or HCI is reported an
--error from a lower layer, HCI will either complete the currently executing
--command with that error, or notify NFC Core directly if no command is executing.
-+  error from a lower layer, HCI will either complete the currently executing
-+  command with that error, or notify NFC Core directly if no command is
-+  executing.
- 
- - NFC Core: when NFC Core is notified of an error from below and polling is
--active, it will send a tag discovered event with an empty tag list to the user
--space to let it know that the poll operation will never be able to detect a tag.
--If polling is not active and the error was sticky, lower levels will return it
--at next invocation.
-+  active, it will send a tag discovered event with an empty tag list to the user
-+  space to let it know that the poll operation will never be able to detect a
-+  tag. If polling is not active and the error was sticky, lower levels will
-+  return it at next invocation.
-diff --git a/Documentation/nfc/nfc-pn544.txt b/Documentation/nfc/nfc-pn544.rst
-similarity index 82%
-rename from Documentation/nfc/nfc-pn544.txt
-rename to Documentation/nfc/nfc-pn544.rst
-index b36ca14ca2d6..6b2d8aae0c4e 100644
---- a/Documentation/nfc/nfc-pn544.txt
-+++ b/Documentation/nfc/nfc-pn544.rst
-@@ -1,5 +1,7 @@
--Kernel driver for the NXP Semiconductors PN544 Near Field
--Communication chip
-+============================================================================
-+Kernel driver for the NXP Semiconductors PN544 Near Field Communication chip
-+============================================================================
+ If Tsi721 mport driver have been built with RAPIDIO_DMA_ENGINE support included,
+ this driver will accept DMA-specific module parameter:
+-  "dma_desc_per_channel" - defines number of hardware buffer descriptors used by
 +
++  "dma_desc_per_channel"
++			 - defines number of hardware buffer descriptors used by
+                            each BDMA channel of Tsi721 (by default - 128).
  
- General
- -------
+-IV. Version History
++4. Version History
+ 
+-  1.1.0 - DMA operations re-worked to support data scatter/gather lists larger
++  =====   ====================================================================
++  1.1.0   DMA operations re-worked to support data scatter/gather lists larger
+           than hardware buffer descriptors ring.
+-  1.0.0 - Initial driver release.
++  1.0.0   Initial driver release.
++  =====   ====================================================================
+ 
+-V.  License
+------------------------------------------------
++5.  License
++===========
+ 
+   Copyright(c) 2011 Integrated Device Technology, Inc. All rights reserved.
+ 
+diff --git a/drivers/rapidio/Kconfig b/drivers/rapidio/Kconfig
+index e3d8fe41b50c..2f82bb50f8db 100644
+--- a/drivers/rapidio/Kconfig
++++ b/drivers/rapidio/Kconfig
+@@ -85,7 +85,7 @@ config RAPIDIO_CHMAN
+ 	  This option includes RapidIO channelized messaging driver which
+ 	  provides socket-like interface to allow sharing of single RapidIO
+ 	  messaging mailbox between multiple user-space applications.
+-	  See "Documentation/rapidio/rio_cm.txt" for driver description.
++	  See "Documentation/rapidio/rio_cm.rst" for driver description.
+ 
+ config RAPIDIO_MPORT_CDEV
+ 	tristate "RapidIO /dev mport device driver"
 -- 
 2.20.1
 
