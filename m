@@ -6,49 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11794C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65759C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA4421906
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2841821906
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962452;
-	bh=3thwNhU9wWzxyaOnplzcDqjz1+lmuPcL/tkQJ0lATxY=;
+	s=default; t=1555962457;
+	bh=XT1k/uhoLQ7FrR5InreJN+naH+JneXwmT1v6Lddt2YE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h38LX3zxPZyHqBDy9j3Iuode3vnZ+r3ZqzQl5/DxfOqw/iWAVmTen/sJt0kDQs4vw
-	 DmyXWR3++NLAR72P8J+EvkkQFDfe3BQJJG4Ecf9cx3FOvRXIdId/w6mn+MvtG43224
-	 1l4P0T4qsb79cFtWVSjMTU0wzBJ8P1wdPCQu2NDU=
+	b=llErn73gZ7835xVKnMFStgUNOmhY5rQw124wztVB6Vo6ojiqVOGi6syGJHEwswJeM
+	 E8f4mnjLTuFcn+l0OU8AROOuSOXpceBcC6708xfdS9WRTBg7vhpDw+UoI0xO2scTb4
+	 DnhhCj8o1AQNGvmkM9PJnEz0N7Jl4y1Cwf4uqpf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbfDVTrb (ORCPT
+        id S1730307AbfDVTrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730276AbfDVTr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:28 -0400
+        id S1730276AbfDVTrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A6C521904;
-        Mon, 22 Apr 2019 19:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD8C21904;
+        Mon, 22 Apr 2019 19:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962447;
-        bh=3thwNhU9wWzxyaOnplzcDqjz1+lmuPcL/tkQJ0lATxY=;
+        s=default; t=1555962451;
+        bh=XT1k/uhoLQ7FrR5InreJN+naH+JneXwmT1v6Lddt2YE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qeXvDGoDvRICXEc2p1A7T45SmrC7qznd77EoaB7I/IWg34UK76WeeuF32EFZaVchs
-         nx//57eKqOeZpIev6ZgRImEuBPhpKiLq7TvxcNTzk7qW8tyZScRw0h64QdEy7Axvyw
-         cvK/uEnszdmJ3PpsuDgmtDPERhmWok1FVdgEYePA=
+        b=WSGdCvZEB93KrEpQhfmMaiRYUgbefSPCKYMmkhKcMDxH9veyfgCZ7I8obqqW0k2zy
+         oLYO75AVvBMvkrtofc8bK1mW9guAtM0bsdXUU9IdbMFiYFfCpPSW4eIBGhw7GwgEcF
+         wWUIe2MbtBPl9vj7FF7jYXfgRYMwSW9zSMHP3xJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 68/68] leds: trigger: netdev: use memcpy in device_name_store
-Date:   Mon, 22 Apr 2019 15:45:16 -0400
-Message-Id: <20190422194516.11634-68-sashal@kernel.org>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/43] s390: limit brk randomization to 32MB
+Date:   Mon, 22 Apr 2019 15:46:46 -0400
+Message-Id: <20190422194727.12495-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
-References: <20190422194516.11634-1-sashal@kernel.org>
+In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
+References: <20190422194727.12495-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,54 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-[ Upstream commit 909346433064b8d840dc82af26161926b8d37558 ]
+[ Upstream commit cd479eccd2e057116d504852814402a1e68ead80 ]
 
-If userspace doesn't end the input with a newline (which can easily
-happen if the write happens from a C program that does write(fd,
-iface, strlen(iface))), we may end up including garbage from a
-previous, longer value in the device_name. For example
+For a 64-bit process the randomization of the program break is quite
+large with 1GB. That is as big as the randomization of the anonymous
+mapping base, for a test case started with '/lib/ld64.so.1 <exec>'
+it can happen that the heap is placed after the stack. To avoid
+this limit the program break randomization to 32MB for 64-bit and
+keep 8MB for 31-bit.
 
-# cat device_name
-
-# printf 'eth12' > device_name
-# cat device_name
-eth12
-# printf 'eth3' > device_name
-# cat device_name
-eth32
-
-I highly doubt anybody is relying on this behaviour, so switch to
-simply copying the bytes (we've already checked that size is <
-IFNAMSIZ) and unconditionally zero-terminate it; of course, we also
-still have to strip a trailing newline.
-
-This is also preparation for future patches.
-
-Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Reported-by: Stefan Liebler <stli@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/leds/trigger/ledtrig-netdev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/elf.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-index 167a94c02d05..136f86a1627d 100644
---- a/drivers/leds/trigger/ledtrig-netdev.c
-+++ b/drivers/leds/trigger/ledtrig-netdev.c
-@@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *dev,
- 		trigger_data->net_dev = NULL;
- 	}
+diff --git a/arch/s390/include/asm/elf.h b/arch/s390/include/asm/elf.h
+index 1a61b1b997f2..3055c030f765 100644
+--- a/arch/s390/include/asm/elf.h
++++ b/arch/s390/include/asm/elf.h
+@@ -252,11 +252,14 @@ do {								\
  
--	strncpy(trigger_data->device_name, buf, size);
-+	memcpy(trigger_data->device_name, buf, size);
-+	trigger_data->device_name[size] = 0;
- 	if (size > 0 && trigger_data->device_name[size - 1] == '\n')
- 		trigger_data->device_name[size - 1] = 0;
- 
+ /*
+  * Cache aliasing on the latest machines calls for a mapping granularity
+- * of 512KB. For 64-bit processes use a 512KB alignment and a randomization
+- * of up to 1GB. For 31-bit processes the virtual address space is limited,
+- * use no alignment and limit the randomization to 8MB.
++ * of 512KB for the anonymous mapping base. For 64-bit processes use a
++ * 512KB alignment and a randomization of up to 1GB. For 31-bit processes
++ * the virtual address space is limited, use no alignment and limit the
++ * randomization to 8MB.
++ * For the additional randomization of the program break use 32MB for
++ * 64-bit and 8MB for 31-bit.
+  */
+-#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ffffUL)
++#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x1fffUL)
+ #define MMAP_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ff80UL)
+ #define MMAP_ALIGN_MASK	(is_compat_task() ? 0 : 0x7fUL)
+ #define STACK_RND_MASK	MMAP_RND_MASK
 -- 
 2.19.1
 
