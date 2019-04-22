@@ -2,154 +2,99 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768ECC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4C2C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6EF2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE592075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555963794;
+	bh=6Ui+mNxebeUcMct9JOd+3C8FA4FTpDJkta54H57FEFU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VjEogJ4Dr6x0X08WXyVxCL/okBYmpxfvWGYmJyaHrBzryMq0ioq4+zo6Y9gek/WeW
+	 MXHSr2VsDiYZR2qqPrBjLwgrwkJXNn0Wli5HS39ypum2EPlnAa1sZ16HvoR88e5p50
+	 v5s5mIW3RaudE6R2bLpG8vAp2mJ/DK0lFarCENpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfDVUJu (ORCPT
+        id S1729088AbfDVTnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:09:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39460 "EHLO mx1.redhat.com"
+        Mon, 22 Apr 2019 15:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbfDVUJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 16:09:47 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729036AbfDVTnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:43:03 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1D7CC59468;
-        Mon, 22 Apr 2019 20:09:47 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6880917CFF;
-        Mon, 22 Apr 2019 20:09:43 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 16:09:36 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 14/31] mm/migrate: Pass vm_fault pointer to
- migrate_misplaced_page()
-Message-ID: <20190422200936.GE14666@redhat.com>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-15-ldufour@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 964AA2177B;
+        Mon, 22 Apr 2019 19:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962182;
+        bh=6Ui+mNxebeUcMct9JOd+3C8FA4FTpDJkta54H57FEFU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xCo2EyAJbBX6mRHRTT5gNJWPin2OaEA6NujyGkkmZc6ZYiUHpHVIcf41vLRhfrSQe
+         Ar1dEXDdph8oBR8amastyOnZn4Y1eKXPZLabw02ncCI43vExAc3rVrXPYtTNZxbvRJ
+         JgXBSFzm/96URLPfKCXbaXBEAeLXnpMMdlQ+m4Z0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Guido Kiener <guido@kiener-muenchen.de>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 33/98] usb: gadget: net2272: Fix net2272_dequeue()
+Date:   Mon, 22 Apr 2019 15:41:00 -0400
+Message-Id: <20190422194205.10404-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190416134522.17540-15-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 22 Apr 2019 20:09:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:45:05PM +0200, Laurent Dufour wrote:
-> migrate_misplaced_page() is only called during the page fault handling so
-> it's better to pass the pointer to the struct vm_fault instead of the vma.
-> 
-> This way during the speculative page fault path the saved vma->vm_flags
-> could be used.
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+From: Guido Kiener <guido@kiener-muenchen.de>
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+[ Upstream commit 091dacc3cc10979ab0422f0a9f7fcc27eee97e69 ]
 
-> ---
->  include/linux/migrate.h | 4 ++--
->  mm/memory.c             | 2 +-
->  mm/migrate.c            | 4 ++--
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> index e13d9bf2f9a5..0197e40325f8 100644
-> --- a/include/linux/migrate.h
-> +++ b/include/linux/migrate.h
-> @@ -125,14 +125,14 @@ static inline void __ClearPageMovable(struct page *page)
->  #ifdef CONFIG_NUMA_BALANCING
->  extern bool pmd_trans_migrating(pmd_t pmd);
->  extern int migrate_misplaced_page(struct page *page,
-> -				  struct vm_area_struct *vma, int node);
-> +				  struct vm_fault *vmf, int node);
->  #else
->  static inline bool pmd_trans_migrating(pmd_t pmd)
->  {
->  	return false;
->  }
->  static inline int migrate_misplaced_page(struct page *page,
-> -					 struct vm_area_struct *vma, int node)
-> +					 struct vm_fault *vmf, int node)
->  {
->  	return -EAGAIN; /* can't migrate now */
->  }
-> diff --git a/mm/memory.c b/mm/memory.c
-> index d0de58464479..56802850e72c 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3747,7 +3747,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
->  	}
->  
->  	/* Migrate to the requested node */
-> -	migrated = migrate_misplaced_page(page, vma, target_nid);
-> +	migrated = migrate_misplaced_page(page, vmf, target_nid);
->  	if (migrated) {
->  		page_nid = target_nid;
->  		flags |= TNF_MIGRATED;
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index a9138093a8e2..633bd9abac54 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1938,7 +1938,7 @@ bool pmd_trans_migrating(pmd_t pmd)
->   * node. Caller is expected to have an elevated reference count on
->   * the page that will be dropped by this function before returning.
->   */
-> -int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
-> +int migrate_misplaced_page(struct page *page, struct vm_fault *vmf,
->  			   int node)
->  {
->  	pg_data_t *pgdat = NODE_DATA(node);
-> @@ -1951,7 +1951,7 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
->  	 * with execute permissions as they are probably shared libraries.
->  	 */
->  	if (page_mapcount(page) != 1 && page_is_file_cache(page) &&
-> -	    (vma->vm_flags & VM_EXEC))
-> +	    (vmf->vma_flags & VM_EXEC))
->  		goto out;
->  
->  	/*
-> -- 
-> 2.21.0
-> 
+Restore the status of ep->stopped in function net2272_dequeue().
+
+When the given request is not found in the endpoint queue
+the function returns -EINVAL without restoring the state of
+ep->stopped. Thus the endpoint keeps blocked and does not transfer
+any data anymore.
+
+This fix is only compile-tested, since we do not have a
+corresponding hardware. An analogous fix was tested in the sibling
+driver. See "usb: gadget: net2280: Fix net2280_dequeue()"
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ drivers/usb/gadget/udc/net2272.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index b77f3126580e..c2011cd7df8c 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -945,6 +945,7 @@ net2272_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+ 		return -EINVAL;
+ 	}
+-- 
+2.19.1
+
