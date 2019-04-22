@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A700C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48E0C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608E52075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31392075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962853;
-	bh=jSUcl9FTy+Z9gNbafOdV5Z13QHtEpu7pdFsb7L8gVsQ=;
+	s=default; t=1555962859;
+	bh=jgl/0Rm0oY0FqYNqkJiUAL5IXivB8YHwyyJMgMNkj0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eB7XaYFoL1LtUkQpdJUJZcZQMwJ7S47zaDeKpo/Xy8m7MQ79baMHrJ+ezGEfCDhJD
-	 0cO5fq2RTePllDV1RvunRWfmhjZTVGYjslQ/O53pASZkM5JzZ4UrTUujwRZgKDC/Bk
-	 EWp4OhinELenUPI/hZTjSwxNtoxaQFe+4Ecoj8Cc=
+	b=ATNn6DSykGgBUYuTVOwwmkBSVfdYEXYTArBggmLu8xep9cIPAy08208lq4mAMl52d
+	 6hDcgZMvqZ+uFo4rTQuPoRfiaSLYu6OTaAoNVYQ68KxCRjc+3CwClmebRjzpJ0oTTz
+	 i2TlcLCBeYRN6WyoRqN/rPcgf5uPU901K+CJdVQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731456AbfDVTyL (ORCPT
+        id S1731477AbfDVTyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:54:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730928AbfDVTtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:47 -0400
+        id S1730923AbfDVTtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D9CD218CD;
-        Mon, 22 Apr 2019 19:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52622204EC;
+        Mon, 22 Apr 2019 19:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962586;
-        bh=jSUcl9FTy+Z9gNbafOdV5Z13QHtEpu7pdFsb7L8gVsQ=;
+        s=default; t=1555962585;
+        bh=jgl/0Rm0oY0FqYNqkJiUAL5IXivB8YHwyyJMgMNkj0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMMRIMMsFQ/RFezg/z6y2NvyA/nMdYIMgVDKHx+os0VtzZaGy7rGW/vCyGFBWA2Zn
-         yNLRAu00DfWguzZgAQVq8NJcoZZ6NGP3p8QbZCXlzzA8D6GsW2a4vKGwQv7ub4KbjP
-         ikFe6xHHCDlmObTH2VMsgWSMj7PxtU9PlCMxrCuo=
+        b=0ZJSqXA87c/E4CU7jq7I/oWlVHins7kMTdMsNRAeI8QHYO0FSGFuWQJAXHcc1syl3
+         EEOBB7JmTP/VcbRipCTCZ70GTpzrml7W48d74QIzIFPW3jZVC/yubQEHdrXQCdoF+V
+         BdhBJxYHM1rP8nBh7/yydo/Ybe2akKooaEH9/zvA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 03/21] sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
-Date:   Mon, 22 Apr 2019 15:49:23 -0400
-Message-Id: <20190422194941.13433-3-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/21] netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
+Date:   Mon, 22 Apr 2019 15:49:22 -0400
+Message-Id: <20190422194941.13433-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
 References: <20190422194941.13433-1-sashal@kernel.org>
@@ -58,54 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit ac0cdb3d990108df795b676cd0d0e65ac34b2273 ]
+[ Upstream commit e166e4fdaced850bee3d5ee12a5740258fb30587 ]
 
-Add the missing uart_unregister_driver() and i2c_del_driver() before return
-from sc16is7xx_init() in the error handling case.
+Since Commit 21d1196a35f5 ("ipv4: set transport header earlier"),
+skb->transport_header has been always set before entering INET
+netfilter. This patch is to set skb->transport_header for bridge
+before entering INET netfilter by bridge-nf-call-iptables.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It also fixes an issue that sctp_error() couldn't compute a right
+csum due to unset skb->transport_header.
+
+Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
+Reported-by: Li Shuang <shuali@redhat.com>
+Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/serial/sc16is7xx.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ net/bridge/br_netfilter_hooks.c | 1 +
+ net/bridge/br_netfilter_ipv6.c  | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 17a22073d226..032f3c13b8c4 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1448,7 +1448,7 @@ static int __init sc16is7xx_init(void)
- 	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
- 	if (ret < 0) {
- 		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
--		return ret;
-+		goto err_i2c;
- 	}
- #endif
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index 6def85d75b1d..5365486f1f2b 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -507,6 +507,7 @@ static unsigned int br_nf_pre_routing(void *priv,
+ 	nf_bridge->ipv4_daddr = ip_hdr(skb)->daddr;
  
-@@ -1456,10 +1456,18 @@ static int __init sc16is7xx_init(void)
- 	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
- 	if (ret < 0) {
- 		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
--		return ret;
-+		goto err_spi;
- 	}
- #endif
- 	return ret;
+ 	skb->protocol = htons(ETH_P_IP);
++	skb->transport_header = skb->network_header + ip_hdr(skb)->ihl * 4;
+ 
+ 	NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
+ 		skb->dev, NULL,
+diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
+index 69dfd212e50d..f94c83f5cc37 100644
+--- a/net/bridge/br_netfilter_ipv6.c
++++ b/net/bridge/br_netfilter_ipv6.c
+@@ -237,6 +237,8 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
+ 	nf_bridge->ipv6_daddr = ipv6_hdr(skb)->daddr;
+ 
+ 	skb->protocol = htons(ETH_P_IPV6);
++	skb->transport_header = skb->network_header + sizeof(struct ipv6hdr);
 +
-+err_spi:
-+#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
-+	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
-+#endif
-+err_i2c:
-+	uart_unregister_driver(&sc16is7xx_uart);
-+	return ret;
- }
- module_init(sc16is7xx_init);
- 
+ 	NF_HOOK(NFPROTO_IPV6, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
+ 		skb->dev, NULL,
+ 		br_nf_pre_routing_finish_ipv6);
 -- 
 2.19.1
 
