@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16671C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4304C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBAE2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BEC2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940083;
-	bh=ZgEhB22+3Mpp6UWpUks49xwaBDeBwLFyuIMMeRNgGnk=;
+	s=default; t=1555940085;
+	bh=ZPNscQBvVkGt30J6g9dpd0ZSoa78/tTnnxmDObXdeG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6RIrWnN/wcr5bOLwKVemhvJ5hDH8tg07VSHGW2c6wiL9G76yfExZY8kxxkfuRcP1
-	 8H0rkD6bgWuPLYSPSpSJ6g2otp9BK9jzcVK83AUT4NWAQ1J3erxEfk94pebf8lqTw4
-	 rJVWTYU8bL2YR3elC02uHRm7Pmdvb9I6CBN7kBJM=
+	b=NxDBG+X9IsHxVLLQqINjqvrofgcdAVyfZVP7Kq2gBzS8hzLsRfXmj0Us6jXZQFWht
+	 u/oKwLgEv+3YGh5eCqFXkzeAwM/NIpQACAa1sA3QXjSBl3eTSecjSHvtVsVJPxQIpl
+	 m6SN48vkmsKsMv9KDOXqS21Vx74YwU+ZWQwEuKcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfDVNem (ORCPT
+        id S1728165AbfDVNen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:34:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37472 "EHLO
+        Mon, 22 Apr 2019 09:34:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37476 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfDVN2S (ORCPT
+        with ESMTP id S1727481AbfDVN2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,28 +33,29 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gdSJGy4yadqVvI8gq4YA9aqS9a3CA3ecHZ7Izvg6NGI=; b=LDZfkQ14YzgXCzD6nHwqTIsxoD
-        UdOPMmogRkWu68yjGaz3jjTIPl+cXVwGyMsNEg1WpLmS4VJAomvfIoPUwjFliwQo2UlXUzyyNCHBz
-        gVQYWYElPGMgsMN1PjHXteDcsP3U3gWZIspC1zhiyT8tj+YdbhuQF4gtOwqVWTZFGcnzlfmtVViw3
-        SnqCCCr88LnL3OljZlNidfTFYQ5EuigfAtXjFaITmKu62DM4gdlKrKPgYQov6rIp6SixHwVWeFDnO
-        K51WEp7b9HXiEiDfK6AmWWZXhilzIouMVqWenaHk7drPSIuv3RFUoJcmPYLbNAMl3D/6Ef0NqgdM/
-        vhZ7sHxw==;
+        bh=vzVW1Ye9T2pK3w63CxFm2LR4m/K/B+PZGC77O5kTnck=; b=MdhSdkh3fgPHZ2Hv64sQWBO6KG
+        GzIk3F0BAoaXe8x1qx6G+SRuLJbeb7TkiaD+ZOWxY3XgQzCTY8w533q6ZVRnMzZfQJm+mlCIKPsUF
+        EOSX/z6/bBqnVly1yqzlksXprR7Sbe9Gwd06Jn//gfB2yQd/E4JO9rOi3svTsz+ANZUnm4BRrguZf
+        Pp7eZnNqQbMhAZULNjTaEeGI/q+77ipZw0fL/VQGIRvU6emNIlxqlCuzXAKFTWEO00m8LkW6OQqNq
+        BAFZ1ys43ryMqPDUJ/eRibXszetuPTPYOReyT9vZ2p8arvFotP/6kSwvthhphl9hiiV/B1iByWQIo
+        jLTxorJw==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzY-0005Hg-S0; Mon, 22 Apr 2019 13:28:17 +0000
+        id 1hIYzY-0005HT-Oz; Mon, 22 Apr 2019 13:28:17 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005pY-O4; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzU-0005pD-JG; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>
-Subject: [PATCH v2 75/79] docs: rapidio: convert to ReST
-Date:   Mon, 22 Apr 2019 10:28:04 -0300
-Message-Id: <28cc285931ac302d0fddd2e094196c17a2ff46c0.1555938376.git.mchehab+samsung@kernel.org>
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH v2 71/79] docs: xtensa: convert to ReST
+Date:   Mon, 22 Apr 2019 10:28:00 -0300
+Message-Id: <1456b80eb12c3f2769aa096d67fd377949ac4235.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -65,7 +66,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the rapidio documentation files to ReST, add an
+Rename the xtensa documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
 
@@ -74,591 +75,513 @@ the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/rapidio/index.rst               | 15 +++++
- .../{mport_cdev.txt => mport_cdev.rst}        | 47 ++++++-------
- .../rapidio/{rapidio.txt => rapidio.rst}      | 39 +++++++----
- .../rapidio/{rio_cm.txt => rio_cm.rst}        | 66 ++++++++++++-------
- .../rapidio/{sysfs.txt => sysfs.rst}          |  4 ++
- .../rapidio/{tsi721.txt => tsi721.rst}        | 45 ++++++++-----
- drivers/rapidio/Kconfig                       |  2 +-
- 7 files changed, 141 insertions(+), 77 deletions(-)
- create mode 100644 Documentation/rapidio/index.rst
- rename Documentation/rapidio/{mport_cdev.txt => mport_cdev.rst} (84%)
- rename Documentation/rapidio/{rapidio.txt => rapidio.rst} (97%)
- rename Documentation/rapidio/{rio_cm.txt => rio_cm.rst} (76%)
- rename Documentation/rapidio/{sysfs.txt => sysfs.rst} (75%)
- rename Documentation/rapidio/{tsi721.txt => tsi721.rst} (79%)
+ .../xtensa/{atomctl.txt => atomctl.rst}       |  13 +-
+ .../xtensa/{booting.txt => booting.rst}       |   5 +-
+ Documentation/xtensa/index.rst                |  12 ++
+ Documentation/xtensa/mmu.rst                  | 195 ++++++++++++++++++
+ Documentation/xtensa/mmu.txt                  | 189 -----------------
+ arch/xtensa/include/asm/initialize_mmu.h      |   2 +-
+ 6 files changed, 222 insertions(+), 194 deletions(-)
+ rename Documentation/xtensa/{atomctl.txt => atomctl.rst} (81%)
+ rename Documentation/xtensa/{booting.txt => booting.rst} (91%)
+ create mode 100644 Documentation/xtensa/index.rst
+ create mode 100644 Documentation/xtensa/mmu.rst
+ delete mode 100644 Documentation/xtensa/mmu.txt
 
-diff --git a/Documentation/rapidio/index.rst b/Documentation/rapidio/index.rst
+diff --git a/Documentation/xtensa/atomctl.txt b/Documentation/xtensa/atomctl.rst
+similarity index 81%
+rename from Documentation/xtensa/atomctl.txt
+rename to Documentation/xtensa/atomctl.rst
+index 1da783ac200c..1ecbd0ba9a2e 100644
+--- a/Documentation/xtensa/atomctl.txt
++++ b/Documentation/xtensa/atomctl.rst
+@@ -1,3 +1,7 @@
++===========================================
++Atomic Operation Control (ATOMCTL) Register
++===========================================
++
+ We Have Atomic Operation Control (ATOMCTL) Register.
+ This register determines the effect of using a S32C1I instruction
+ with various combinations of:
+@@ -8,7 +12,7 @@ with various combinations of:
+      2. With and without An Intelligent Memory Controller which
+         can do Atomic Transactions itself.
+ 
+-The Core comes up with a default value of for the three types of cache ops:
++The Core comes up with a default value of for the three types of cache ops::
+ 
+       0x28: (WB: Internal, WT: Internal, BY:Exception)
+ 
+@@ -30,15 +34,18 @@ CUSTOMER-WARNING:
+ Developers might find using RCW in Bypass mode convenient when testing
+ with the cache being bypassed; for example studying cache alias problems.
+ 
+-See Section 4.3.12.4 of ISA; Bits:
++See Section 4.3.12.4 of ISA; Bits::
+ 
+                              WB     WT      BY
+                            5   4 | 3   2 | 1   0
++
++=========    ==================      ==================      ===============
+   2 Bit
+   Field
+   Values     WB - Write Back         WT - Write Thru         BY - Bypass
+----------    ---------------         -----------------     ----------------
++=========    ==================      ==================      ===============
+     0        Exception               Exception               Exception
+     1        RCW Transaction         RCW Transaction         RCW Transaction
+     2        Internal Operation      Internal Operation      Reserved
+     3        Reserved                Reserved                Reserved
++=========    ==================      ==================      ===============
+diff --git a/Documentation/xtensa/booting.txt b/Documentation/xtensa/booting.rst
+similarity index 91%
+rename from Documentation/xtensa/booting.txt
+rename to Documentation/xtensa/booting.rst
+index 402b33a2619f..e1b83707e5b6 100644
+--- a/Documentation/xtensa/booting.txt
++++ b/Documentation/xtensa/booting.rst
+@@ -1,10 +1,13 @@
+-Passing boot parameters to the kernel.
++=====================================
++Passing boot parameters to the kernel
++=====================================
+ 
+ Boot parameters are represented as a TLV list in the memory. Please see
+ arch/xtensa/include/asm/bootparam.h for definition of the bp_tag structure and
+ tag value constants. First entry in the list must have type BP_TAG_FIRST, last
+ entry must have type BP_TAG_LAST. The address of the first list entry is
+ passed to the kernel in the register a2. The address type depends on MMU type:
++
+ - For configurations without MMU, with region protection or with MPU the
+   address must be the physical address.
+ - For configurations with region translarion MMU or with MMUv3 and CONFIG_MMU=n
+diff --git a/Documentation/xtensa/index.rst b/Documentation/xtensa/index.rst
 new file mode 100644
-index 000000000000..ab7b5541b346
+index 000000000000..5a24e365e35f
 --- /dev/null
-+++ b/Documentation/rapidio/index.rst
-@@ -0,0 +1,15 @@
++++ b/Documentation/xtensa/index.rst
+@@ -0,0 +1,12 @@
 +:orphan:
 +
-+===========================
-+The Linux RapidIO Subsystem
-+===========================
++===================
++Xtensa Architecture
++===================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   rapidio
-+   sysfs
++   atomctl
++   booting
++   mmu
+diff --git a/Documentation/xtensa/mmu.rst b/Documentation/xtensa/mmu.rst
+new file mode 100644
+index 000000000000..e52a12960fdc
+--- /dev/null
++++ b/Documentation/xtensa/mmu.rst
+@@ -0,0 +1,195 @@
++=============================
++MMUv3 initialization sequence
++=============================
 +
-+   tsi721
-+   mport_cdev
-+   rio_cm
-diff --git a/Documentation/rapidio/mport_cdev.txt b/Documentation/rapidio/mport_cdev.rst
-similarity index 84%
-rename from Documentation/rapidio/mport_cdev.txt
-rename to Documentation/rapidio/mport_cdev.rst
-index a53f786ee2e9..df77a7f7be7d 100644
---- a/Documentation/rapidio/mport_cdev.txt
-+++ b/Documentation/rapidio/mport_cdev.rst
-@@ -1,13 +1,9 @@
-+==================================================================
- RapidIO subsystem mport character device driver (rio_mport_cdev.c)
- ==================================================================
- 
--Version History:
------------------
--  1.0.0 - Initial driver release.
--
--==================================================================
--
--I. Overview
-+1. Overview
-+===========
- 
- This device driver is the result of collaboration within the RapidIO.org
- Software Task Group (STG) between Texas Instruments, Freescale,
-@@ -29,40 +25,41 @@ Using available set of ioctl commands user-space applications can perform
- following RapidIO bus and subsystem operations:
- 
- - Reads and writes from/to configuration registers of mport devices
--    (RIO_MPORT_MAINT_READ_LOCAL/RIO_MPORT_MAINT_WRITE_LOCAL)
-+  (RIO_MPORT_MAINT_READ_LOCAL/RIO_MPORT_MAINT_WRITE_LOCAL)
- - Reads and writes from/to configuration registers of remote RapidIO devices.
-   This operations are defined as RapidIO Maintenance reads/writes in RIO spec.
--    (RIO_MPORT_MAINT_READ_REMOTE/RIO_MPORT_MAINT_WRITE_REMOTE)
-+  (RIO_MPORT_MAINT_READ_REMOTE/RIO_MPORT_MAINT_WRITE_REMOTE)
- - Set RapidIO Destination ID for mport devices (RIO_MPORT_MAINT_HDID_SET)
- - Set RapidIO Component Tag for mport devices (RIO_MPORT_MAINT_COMPTAG_SET)
- - Query logical index of mport devices (RIO_MPORT_MAINT_PORT_IDX_GET)
- - Query capabilities and RapidIO link configuration of mport devices
--    (RIO_MPORT_GET_PROPERTIES)
-+  (RIO_MPORT_GET_PROPERTIES)
- - Enable/Disable reporting of RapidIO doorbell events to user-space applications
--    (RIO_ENABLE_DOORBELL_RANGE/RIO_DISABLE_DOORBELL_RANGE)
-+  (RIO_ENABLE_DOORBELL_RANGE/RIO_DISABLE_DOORBELL_RANGE)
- - Enable/Disable reporting of RIO port-write events to user-space applications
--    (RIO_ENABLE_PORTWRITE_RANGE/RIO_DISABLE_PORTWRITE_RANGE)
-+  (RIO_ENABLE_PORTWRITE_RANGE/RIO_DISABLE_PORTWRITE_RANGE)
- - Query/Control type of events reported through this driver: doorbells,
-   port-writes or both (RIO_SET_EVENT_MASK/RIO_GET_EVENT_MASK)
- - Configure/Map mport's outbound requests window(s) for specific size,
-   RapidIO destination ID, hopcount and request type
--    (RIO_MAP_OUTBOUND/RIO_UNMAP_OUTBOUND)
-+  (RIO_MAP_OUTBOUND/RIO_UNMAP_OUTBOUND)
- - Configure/Map mport's inbound requests window(s) for specific size,
-   RapidIO base address and local memory base address
--    (RIO_MAP_INBOUND/RIO_UNMAP_INBOUND)
-+  (RIO_MAP_INBOUND/RIO_UNMAP_INBOUND)
- - Allocate/Free contiguous DMA coherent memory buffer for DMA data transfers
-   to/from remote RapidIO devices (RIO_ALLOC_DMA/RIO_FREE_DMA)
- - Initiate DMA data transfers to/from remote RapidIO devices (RIO_TRANSFER).
-   Supports blocking, asynchronous and posted (a.k.a 'fire-and-forget') data
-   transfer modes.
- - Check/Wait for completion of asynchronous DMA data transfer
--    (RIO_WAIT_FOR_ASYNC)
-+  (RIO_WAIT_FOR_ASYNC)
- - Manage device objects supported by RapidIO subsystem (RIO_DEV_ADD/RIO_DEV_DEL).
-   This allows implementation of various RapidIO fabric enumeration algorithms
-   as user-space applications while using remaining functionality provided by
-   kernel RapidIO subsystem.
- 
--II. Hardware Compatibility
-+2. Hardware Compatibility
-+=========================
- 
- This device driver uses standard interfaces defined by kernel RapidIO subsystem
- and therefore it can be used with any mport device driver registered by RapidIO
-@@ -78,29 +75,35 @@ functionality of their platform when planning to use this driver:
-   specific DMA engine support and therefore DMA data transfers mport_cdev driver
-   are not available.
- 
--III. Module parameters
-+3. Module parameters
-+====================
- 
--- 'dma_timeout' - DMA transfer completion timeout (in msec, default value 3000).
-+- 'dma_timeout'
-+      - DMA transfer completion timeout (in msec, default value 3000).
-         This parameter set a maximum completion wait time for SYNC mode DMA
-         transfer requests and for RIO_WAIT_FOR_ASYNC ioctl requests.
- 
--- 'dbg_level' - This parameter allows to control amount of debug information
-+- 'dbg_level'
-+      - This parameter allows to control amount of debug information
-         generated by this device driver. This parameter is formed by set of
-         bit masks that correspond to the specific functional blocks.
-         For mask definitions see 'drivers/rapidio/devices/rio_mport_cdev.c'
-         This parameter can be changed dynamically.
-         Use CONFIG_RAPIDIO_DEBUG=y to enable debug output at the top level.
- 
--IV. Known problems
-+4. Known problems
-+=================
- 
-   None.
- 
--V. User-space Applications and API
-+5. User-space Applications and API
-+==================================
- 
- API library and applications that use this device driver are available from
- RapidIO.org.
- 
--VI. TODO List
-+6. TODO List
-+============
- 
- - Add support for sending/receiving "raw" RapidIO messaging packets.
- - Add memory mapped DMA data transfers as an option when RapidIO-specific DMA
-diff --git a/Documentation/rapidio/rapidio.txt b/Documentation/rapidio/rapidio.rst
-similarity index 97%
-rename from Documentation/rapidio/rapidio.txt
-rename to Documentation/rapidio/rapidio.rst
-index 28fbd877f85a..fb8942d3ba85 100644
---- a/Documentation/rapidio/rapidio.txt
-+++ b/Documentation/rapidio/rapidio.rst
-@@ -1,6 +1,6 @@
--                          The Linux RapidIO Subsystem
--
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+============
-+Introduction
-+============
- 
- The RapidIO standard is a packet-based fabric interconnect standard designed for
- use in embedded systems. Development of the RapidIO standard is directed by the
-@@ -11,7 +11,7 @@ This document describes the basics of the Linux RapidIO subsystem and provides
- information on its major components.
- 
- 1 Overview
------------
-+==========
- 
- Because the RapidIO subsystem follows the Linux device model it is integrated
- into the kernel similarly to other buses by defining RapidIO-specific device and
-@@ -22,7 +22,7 @@ architecture-specific interfaces that provide support for common RapidIO
- subsystem operations.
- 
- 2. Core Components
--------------------
-+==================
- 
- A typical RapidIO network is a combination of endpoints and switches.
- Each of these components is represented in the subsystem by an associated data
-@@ -30,6 +30,7 @@ structure. The core logical components of the RapidIO subsystem are defined
- in include/linux/rio.h file.
- 
- 2.1 Master Port
-+---------------
- 
- A master port (or mport) is a RapidIO interface controller that is local to the
- processor executing the Linux code. A master port generates and receives RapidIO
-@@ -46,6 +47,7 @@ includes rio_ops data structure which contains pointers to hardware specific
- implementations of RapidIO functions.
- 
- 2.2 Device
-+----------
- 
- A RapidIO device is any endpoint (other than mport) or switch in the network.
- All devices are presented in the RapidIO subsystem by corresponding rio_dev data
-@@ -53,6 +55,7 @@ structure. Devices form one global device list and per-network device lists
- (depending on number of available mports and networks).
- 
- 2.3 Switch
-+----------
- 
- A RapidIO switch is a special class of device that routes packets between its
- ports towards their final destination. The packet destination port within a
-@@ -66,6 +69,7 @@ specific switch drivers that are designed to provide hardware-specific
- implementation of common switch management routines.
- 
- 2.4 Network
-+-----------
- 
- A RapidIO network is a combination of interconnected endpoint and switch devices.
- Each RapidIO network known to the system is represented by corresponding rio_net
-@@ -74,11 +78,13 @@ ports that form the same network. It also contains a pointer to the default
- master port that is used to communicate with devices within the network.
- 
- 2.5 Device Drivers
-+------------------
- 
- RapidIO device-specific drivers follow Linux Kernel Driver Model and are
- intended to support specific RapidIO devices attached to the RapidIO network.
- 
- 2.6 Subsystem Interfaces
-+------------------------
- 
- RapidIO interconnect specification defines features that may be used to provide
- one or more common service layers for all participating RapidIO devices. These
-@@ -90,7 +96,7 @@ subsystem interfaces. This allows to have multiple common services attached to
- the same device without blocking attachment of a device-specific driver.
- 
- 3. Subsystem Initialization
-----------------------------
-+===========================
- 
- In order to initialize the RapidIO subsystem, a platform must initialize and
- register at least one master port within the RapidIO network. To register mport
-@@ -105,7 +111,7 @@ RapidIO subsystem can be configured to be built as a statically linked or
- modular component of the kernel (see details below).
- 
- 4. Enumeration and Discovery
------------------------------
++The code in the initialize_mmu macro sets up MMUv3 memory mapping
++identically to MMUv2 fixed memory mapping. Depending on
++CONFIG_INITIALIZE_XTENSA_MMU_INSIDE_VMLINUX symbol this code is
++located in addresses it was linked for (symbol undefined), or not
++(symbol defined), so it needs to be position-independent.
++
++The code has the following assumptions:
++
++  - This code fragment is run only on an MMU v3.
++  - TLBs are in their reset state.
++  - ITLBCFG and DTLBCFG are zero (reset state).
++  - RASID is 0x04030201 (reset state).
++  - PS.RING is zero (reset state).
++  - LITBASE is zero (reset state, PC-relative literals); required to be PIC.
++
++TLB setup proceeds along the following steps.
++
++  Legend:
++
++    - VA = virtual address (two upper nibbles of it);
++    - PA = physical address (two upper nibbles of it);
++    - pc = physical range that contains this code;
++
++After step 2, we jump to virtual address in the range 0x40000000..0x5fffffff
++or 0x00000000..0x1fffffff, depending on whether the kernel was loaded below
++0x40000000 or above. That address corresponds to next instruction to execute
++in this code. After step 4, we jump to intended (linked) address of this code.
++The scheme below assumes that the kernel is loaded below 0x40000000.
++
++ ====== =====  =====  =====  =====   ====== =====  =====
++ -      Step0  Step1  Step2  Step3          Step4  Step5
++
++   VA      PA     PA     PA     PA     VA      PA     PA
++ ====== =====  =====  =====  =====   ====== =====  =====
++ E0..FF -> E0  -> E0  -> E0          F0..FF -> F0  -> F0
++ C0..DF -> C0  -> C0  -> C0          E0..EF -> F0  -> F0
++ A0..BF -> A0  -> A0  -> A0          D8..DF -> 00  -> 00
++ 80..9F -> 80  -> 80  -> 80          D0..D7 -> 00  -> 00
++ 60..7F -> 60  -> 60  -> 60
++ 40..5F -> 40         -> pc  -> pc   40..5F -> pc
++ 20..3F -> 20  -> 20  -> 20
++ 00..1F -> 00  -> 00  -> 00
++ ====== =====  =====  =====  =====   ====== =====  =====
++
++The default location of IO peripherals is above 0xf0000000. This may be changed
++using a "ranges" property in a device tree simple-bus node. See the Devicetree
++Specification, section 4.5 for details on the syntax and semantics of
++simple-bus nodes. The following limitations apply:
++
++1. Only top level simple-bus nodes are considered
++
++2. Only one (first) simple-bus node is considered
++
++3. Empty "ranges" properties are not supported
++
++4. Only the first triplet in the "ranges" property is considered
++
++5. The parent-bus-address value is rounded down to the nearest 256MB boundary
++
++6. The IO area covers the entire 256MB segment of parent-bus-address; the
++   "ranges" triplet length field is ignored
++
++
++MMUv3 address space layouts.
 +============================
- 
- 4.1 Overview
- ------------
-@@ -168,14 +174,16 @@ on RapidIO subsystem build configuration:
-   (b) If the RapidIO subsystem core is built as a loadable module, in addition
-   to the method shown above, the host destination ID(s) can be specified using
-   traditional methods of passing module parameter "hdid=" during its loading:
 +
-   - from command line: "modprobe rapidio hdid=-1,7", or
-   - from modprobe configuration file using configuration command "options",
-     like in this example: "options rapidio hdid=-1,7". An example of modprobe
-     configuration file is provided in the section below.
- 
--  NOTES:
-+NOTES:
-   (i) if "hdid=" parameter is omitted all available mport will be assigned
-   destination ID = -1;
++Default MMUv2-compatible layout::
 +
-   (ii) the "hdid=" parameter in systems with multiple mports can have
-   destination ID assignments omitted from the end of list (default = -1).
- 
-@@ -317,8 +325,7 @@ must ensure that they are loaded before the enumeration/discovery starts.
- This process can be automated by specifying pre- or post- dependencies in the
- RapidIO-specific modprobe configuration file as shown in the example below.
- 
--  File /etc/modprobe.d/rapidio.conf:
--  ----------------------------------
-+File /etc/modprobe.d/rapidio.conf::
- 
-   # Configure RapidIO subsystem modules
- 
-@@ -335,17 +342,21 @@ RapidIO-specific modprobe configuration file as shown in the example below.
- 
-   --------------------------
- 
--NOTE: In the example above, one of "softdep" commands must be removed or
--commented out to keep required module loading sequence.
-+NOTE:
-+  In the example above, one of "softdep" commands must be removed or
-+  commented out to keep required module loading sequence.
- 
--A. References
---------------
-+5. References
-+=============
- 
- [1] RapidIO Trade Association. RapidIO Interconnect Specifications.
-     http://www.rapidio.org.
++                        Symbol                   VADDR       Size
++  +------------------+
++  | Userspace        |                           0x00000000  TASK_SIZE
++  +------------------+                           0x40000000
++  +------------------+
++  | Page table       |  XCHAL_PAGE_TABLE_VADDR   0x80000000  XCHAL_PAGE_TABLE_SIZE
++  +------------------+
++  | KASAN shadow map |  KASAN_SHADOW_START       0x80400000  KASAN_SHADOW_SIZE
++  +------------------+                           0x8e400000
++  +------------------+
++  | VMALLOC area     |  VMALLOC_START            0xc0000000  128MB - 64KB
++  +------------------+  VMALLOC_END
++  | Cache aliasing   |  TLBTEMP_BASE_1           0xc7ff0000  DCACHE_WAY_SIZE
++  | remap area 1     |
++  +------------------+
++  | Cache aliasing   |  TLBTEMP_BASE_2                       DCACHE_WAY_SIZE
++  | remap area 2     |
++  +------------------+
++  +------------------+
++  | KMAP area        |  PKMAP_BASE                           PTRS_PER_PTE *
++  |                  |                                       DCACHE_N_COLORS *
++  |                  |                                       PAGE_SIZE
++  |                  |                                       (4MB * DCACHE_N_COLORS)
++  +------------------+
++  | Atomic KMAP area |  FIXADDR_START                        KM_TYPE_NR *
++  |                  |                                       NR_CPUS *
++  |                  |                                       DCACHE_N_COLORS *
++  |                  |                                       PAGE_SIZE
++  +------------------+  FIXADDR_TOP              0xcffff000
++  +------------------+
++  | Cached KSEG      |  XCHAL_KSEG_CACHED_VADDR  0xd0000000  128MB
++  +------------------+
++  | Uncached KSEG    |  XCHAL_KSEG_BYPASS_VADDR  0xd8000000  128MB
++  +------------------+
++  | Cached KIO       |  XCHAL_KIO_CACHED_VADDR   0xe0000000  256MB
++  +------------------+
++  | Uncached KIO     |  XCHAL_KIO_BYPASS_VADDR   0xf0000000  256MB
++  +------------------+
 +
- [2] Rapidio TA. Technology Comparisons.
-     http://www.rapidio.org/education/technology_comparisons/
 +
- [3] RapidIO support for Linux.
-     http://lwn.net/Articles/139118/
++256MB cached + 256MB uncached layout::
 +
- [4] Matt Porter. RapidIO for Linux. Ottawa Linux Symposium, 2005
-     http://www.kernel.org/doc/ols/2005/ols2005v2-pages-43-56.pdf
-diff --git a/Documentation/rapidio/rio_cm.txt b/Documentation/rapidio/rio_cm.rst
-similarity index 76%
-rename from Documentation/rapidio/rio_cm.txt
-rename to Documentation/rapidio/rio_cm.rst
-index 27aa401f1126..5294430a7a74 100644
---- a/Documentation/rapidio/rio_cm.txt
-+++ b/Documentation/rapidio/rio_cm.rst
-@@ -1,13 +1,10 @@
-+==========================================================================
- RapidIO subsystem Channelized Messaging character device driver (rio_cm.c)
- ==========================================================================
- 
--Version History:
------------------
--  1.0.0 - Initial driver release.
- 
--==========================================================================
++                        Symbol                   VADDR       Size
++  +------------------+
++  | Userspace        |                           0x00000000  TASK_SIZE
++  +------------------+                           0x40000000
++  +------------------+
++  | Page table       |  XCHAL_PAGE_TABLE_VADDR   0x80000000  XCHAL_PAGE_TABLE_SIZE
++  +------------------+
++  | KASAN shadow map |  KASAN_SHADOW_START       0x80400000  KASAN_SHADOW_SIZE
++  +------------------+                           0x8e400000
++  +------------------+
++  | VMALLOC area     |  VMALLOC_START            0xa0000000  128MB - 64KB
++  +------------------+  VMALLOC_END
++  | Cache aliasing   |  TLBTEMP_BASE_1           0xa7ff0000  DCACHE_WAY_SIZE
++  | remap area 1     |
++  +------------------+
++  | Cache aliasing   |  TLBTEMP_BASE_2                       DCACHE_WAY_SIZE
++  | remap area 2     |
++  +------------------+
++  +------------------+
++  | KMAP area        |  PKMAP_BASE                           PTRS_PER_PTE *
++  |                  |                                       DCACHE_N_COLORS *
++  |                  |                                       PAGE_SIZE
++  |                  |                                       (4MB * DCACHE_N_COLORS)
++  +------------------+
++  | Atomic KMAP area |  FIXADDR_START                        KM_TYPE_NR *
++  |                  |                                       NR_CPUS *
++  |                  |                                       DCACHE_N_COLORS *
++  |                  |                                       PAGE_SIZE
++  +------------------+  FIXADDR_TOP              0xaffff000
++  +------------------+
++  | Cached KSEG      |  XCHAL_KSEG_CACHED_VADDR  0xb0000000  256MB
++  +------------------+
++  | Uncached KSEG    |  XCHAL_KSEG_BYPASS_VADDR  0xc0000000  256MB
++  +------------------+
++  +------------------+
++  | Cached KIO       |  XCHAL_KIO_CACHED_VADDR   0xe0000000  256MB
++  +------------------+
++  | Uncached KIO     |  XCHAL_KIO_BYPASS_VADDR   0xf0000000  256MB
++  +------------------+
++
++
++512MB cached + 512MB uncached layout::
++
++                        Symbol                   VADDR       Size
++  +------------------+
++  | Userspace        |                           0x00000000  TASK_SIZE
++  +------------------+                           0x40000000
++  +------------------+
++  | Page table       |  XCHAL_PAGE_TABLE_VADDR   0x80000000  XCHAL_PAGE_TABLE_SIZE
++  +------------------+
++  | KASAN shadow map |  KASAN_SHADOW_START       0x80400000  KASAN_SHADOW_SIZE
++  +------------------+                           0x8e400000
++  +------------------+
++  | VMALLOC area     |  VMALLOC_START            0x90000000  128MB - 64KB
++  +------------------+  VMALLOC_END
++  | Cache aliasing   |  TLBTEMP_BASE_1           0x97ff0000  DCACHE_WAY_SIZE
++  | remap area 1     |
++  +------------------+
++  | Cache aliasing   |  TLBTEMP_BASE_2                       DCACHE_WAY_SIZE
++  | remap area 2     |
++  +------------------+
++  +------------------+
++  | KMAP area        |  PKMAP_BASE                           PTRS_PER_PTE *
++  |                  |                                       DCACHE_N_COLORS *
++  |                  |                                       PAGE_SIZE
++  |                  |                                       (4MB * DCACHE_N_COLORS)
++  +------------------+
++  | Atomic KMAP area |  FIXADDR_START                        KM_TYPE_NR *
++  |                  |                                       NR_CPUS *
++  |                  |                                       DCACHE_N_COLORS *
++  |                  |                                       PAGE_SIZE
++  +------------------+  FIXADDR_TOP              0x9ffff000
++  +------------------+
++  | Cached KSEG      |  XCHAL_KSEG_CACHED_VADDR  0xa0000000  512MB
++  +------------------+
++  | Uncached KSEG    |  XCHAL_KSEG_BYPASS_VADDR  0xc0000000  512MB
++  +------------------+
++  | Cached KIO       |  XCHAL_KIO_CACHED_VADDR   0xe0000000  256MB
++  +------------------+
++  | Uncached KIO     |  XCHAL_KIO_BYPASS_VADDR   0xf0000000  256MB
++  +------------------+
+diff --git a/Documentation/xtensa/mmu.txt b/Documentation/xtensa/mmu.txt
+deleted file mode 100644
+index 318114de63f3..000000000000
+--- a/Documentation/xtensa/mmu.txt
++++ /dev/null
+@@ -1,189 +0,0 @@
+-MMUv3 initialization sequence.
 -
--I. Overview
-+1. Overview
-+===========
- 
- This device driver is the result of collaboration within the RapidIO.org
- Software Task Group (STG) between Texas Instruments, Prodrive Technologies,
-@@ -41,79 +38,98 @@ in /dev directory common for all registered RapidIO mport devices.
- 
- Following ioctl commands are available to user-space applications:
- 
--- RIO_CM_MPORT_GET_LIST : Returns to caller list of local mport devices that
-+- RIO_CM_MPORT_GET_LIST:
-+    Returns to caller list of local mport devices that
-     support messaging operations (number of entries up to RIO_MAX_MPORTS).
-     Each list entry is combination of mport's index in the system and RapidIO
-     destination ID assigned to the port.
--- RIO_CM_EP_GET_LIST_SIZE : Returns number of messaging capable remote endpoints
-+- RIO_CM_EP_GET_LIST_SIZE:
-+    Returns number of messaging capable remote endpoints
-     in a RapidIO network associated with the specified mport device.
--- RIO_CM_EP_GET_LIST : Returns list of RapidIO destination IDs for messaging
-+- RIO_CM_EP_GET_LIST:
-+    Returns list of RapidIO destination IDs for messaging
-     capable remote endpoints (peers) available in a RapidIO network associated
-     with the specified mport device.
--- RIO_CM_CHAN_CREATE : Creates RapidIO message exchange channel data structure
-+- RIO_CM_CHAN_CREATE:
-+    Creates RapidIO message exchange channel data structure
-     with channel ID assigned automatically or as requested by a caller.
--- RIO_CM_CHAN_BIND : Binds the specified channel data structure to the specified
-+- RIO_CM_CHAN_BIND:
-+    Binds the specified channel data structure to the specified
-     mport device.
--- RIO_CM_CHAN_LISTEN : Enables listening for connection requests on the specified
-+- RIO_CM_CHAN_LISTEN:
-+    Enables listening for connection requests on the specified
-     channel.
--- RIO_CM_CHAN_ACCEPT : Accepts a connection request from peer on the specified
-+- RIO_CM_CHAN_ACCEPT:
-+    Accepts a connection request from peer on the specified
-     channel. If wait timeout for this request is specified by a caller it is
-     a blocking call. If timeout set to 0 this is non-blocking call - ioctl
-     handler checks for a pending connection request and if one is not available
-     exits with -EGAIN error status immediately.
--- RIO_CM_CHAN_CONNECT : Sends a connection request to a remote peer/channel.
--- RIO_CM_CHAN_SEND : Sends a data message through the specified channel.
-+- RIO_CM_CHAN_CONNECT:
-+    Sends a connection request to a remote peer/channel.
-+- RIO_CM_CHAN_SEND:
-+    Sends a data message through the specified channel.
-     The handler for this request assumes that message buffer specified by
-     a caller includes the reserved space for a packet header required by
-     this driver.
--- RIO_CM_CHAN_RECEIVE : Receives a data message through a connected channel.
-+- RIO_CM_CHAN_RECEIVE:
-+    Receives a data message through a connected channel.
-     If the channel does not have an incoming message ready to return this ioctl
-     handler will wait for new message until timeout specified by a caller
-     expires. If timeout value is set to 0, ioctl handler uses a default value
-     defined by MAX_SCHEDULE_TIMEOUT.
--- RIO_CM_CHAN_CLOSE : Closes a specified channel and frees associated buffers.
-+- RIO_CM_CHAN_CLOSE:
-+    Closes a specified channel and frees associated buffers.
-     If the specified channel is in the CONNECTED state, sends close notification
-     to the remote peer.
- 
- The ioctl command codes and corresponding data structures intended for use by
- user-space applications are defined in 'include/uapi/linux/rio_cm_cdev.h'.
- 
--II. Hardware Compatibility
-+2. Hardware Compatibility
-+=========================
- 
- This device driver uses standard interfaces defined by kernel RapidIO subsystem
- and therefore it can be used with any mport device driver registered by RapidIO
- subsystem with limitations set by available mport HW implementation of messaging
- mailboxes.
- 
--III. Module parameters
-+3. Module parameters
-+====================
- 
--- 'dbg_level' - This parameter allows to control amount of debug information
-+- 'dbg_level'
-+      - This parameter allows to control amount of debug information
-         generated by this device driver. This parameter is formed by set of
-         bit masks that correspond to the specific functional block.
-         For mask definitions see 'drivers/rapidio/devices/rio_cm.c'
-         This parameter can be changed dynamically.
-         Use CONFIG_RAPIDIO_DEBUG=y to enable debug output at the top level.
- 
--- 'cmbox' - Number of RapidIO mailbox to use (default value is 1).
-+- 'cmbox'
-+      - Number of RapidIO mailbox to use (default value is 1).
-         This parameter allows to set messaging mailbox number that will be used
-         within entire RapidIO network. It can be used when default mailbox is
-         used by other device drivers or is not supported by some nodes in the
-         RapidIO network.
- 
--- 'chstart' - Start channel number for dynamic assignment. Default value - 256.
-+- 'chstart'
-+      - Start channel number for dynamic assignment. Default value - 256.
-         Allows to exclude channel numbers below this parameter from dynamic
-         allocation to avoid conflicts with software components that use
-         reserved predefined channel numbers.
- 
--IV. Known problems
-+4. Known problems
-+=================
- 
-   None.
- 
--V. User-space Applications and API Library
-+5. User-space Applications and API Library
-+==========================================
- 
- Messaging API library and applications that use this device driver are available
- from RapidIO.org.
- 
--VI. TODO List
-+6. TODO List
-+============
- 
- - Add support for system notification messages (reserved channel 0).
-diff --git a/Documentation/rapidio/sysfs.txt b/Documentation/rapidio/sysfs.rst
-similarity index 75%
-rename from Documentation/rapidio/sysfs.txt
-rename to Documentation/rapidio/sysfs.rst
-index a1adac888e6e..540f72683496 100644
---- a/Documentation/rapidio/sysfs.txt
-+++ b/Documentation/rapidio/sysfs.rst
-@@ -1,3 +1,7 @@
-+=============
-+Sysfs entries
-+=============
-+
- The RapidIO sysfs files have moved to:
- Documentation/ABI/testing/sysfs-bus-rapidio and
- Documentation/ABI/testing/sysfs-class-rapidio
-diff --git a/Documentation/rapidio/tsi721.txt b/Documentation/rapidio/tsi721.rst
-similarity index 79%
-rename from Documentation/rapidio/tsi721.txt
-rename to Documentation/rapidio/tsi721.rst
-index cd2a2935d51d..42aea438cd20 100644
---- a/Documentation/rapidio/tsi721.txt
-+++ b/Documentation/rapidio/tsi721.rst
-@@ -1,7 +1,9 @@
-+=========================================================================
- RapidIO subsystem mport driver for IDT Tsi721 PCI Express-to-SRIO bridge.
- =========================================================================
- 
--I. Overview
-+1. Overview
-+===========
- 
- This driver implements all currently defined RapidIO mport callback functions.
- It supports maintenance read and write operations, inbound and outbound RapidIO
-@@ -17,7 +19,9 @@ into the corresponding message queue. Messaging callbacks are implemented to be
- fully compatible with RIONET driver (Ethernet over RapidIO messaging services).
- 
- 1. Module parameters:
--- 'dbg_level' - This parameter allows to control amount of debug information
-+
-+- 'dbg_level'
-+      - This parameter allows to control amount of debug information
-         generated by this device driver. This parameter is formed by set of
-         This parameter can be changed bit masks that correspond to the specific
-         functional block.
-@@ -25,37 +29,44 @@ fully compatible with RIONET driver (Ethernet over RapidIO messaging services).
-         This parameter can be changed dynamically.
-         Use CONFIG_RAPIDIO_DEBUG=y to enable debug output at the top level.
- 
--- 'dma_desc_per_channel' - This parameter defines number of hardware buffer
-+- 'dma_desc_per_channel'
-+      - This parameter defines number of hardware buffer
-         descriptors allocated for each registered Tsi721 DMA channel.
-         Its default value is 128.
- 
--- 'dma_txqueue_sz' - DMA transactions queue size. Defines number of pending
-+- 'dma_txqueue_sz'
-+      - DMA transactions queue size. Defines number of pending
-         transaction requests that can be accepted by each DMA channel.
-         Default value is 16.
- 
--- 'dma_sel' - DMA channel selection mask. Bitmask that defines which hardware
-+- 'dma_sel'
-+      - DMA channel selection mask. Bitmask that defines which hardware
-         DMA channels (0 ... 6) will be registered with DmaEngine core.
-         If bit is set to 1, the corresponding DMA channel will be registered.
-         DMA channels not selected by this mask will not be used by this device
-         driver. Default value is 0x7f (use all channels).
- 
--- 'pcie_mrrs' - override value for PCIe Maximum Read Request Size (MRRS).
-+- 'pcie_mrrs'
-+      - override value for PCIe Maximum Read Request Size (MRRS).
-         This parameter gives an ability to override MRRS value set during PCIe
-         configuration process. Tsi721 supports read request sizes up to 4096B.
-         Value for this parameter must be set as defined by PCIe specification:
-         0 = 128B, 1 = 256B, 2 = 512B, 3 = 1024B, 4 = 2048B and 5 = 4096B.
-         Default value is '-1' (= keep platform setting).
- 
--- 'mbox_sel' - RIO messaging MBOX selection mask. This is a bitmask that defines
-+- 'mbox_sel'
-+      - RIO messaging MBOX selection mask. This is a bitmask that defines
-         messaging MBOXes are managed by this device driver. Mask bits 0 - 3
-         correspond to MBOX0 - MBOX3. MBOX is under driver's control if the
-         corresponding bit is set to '1'. Default value is 0x0f (= all).
- 
--II. Known problems
-+2. Known problems
-+=================
- 
-   None.
- 
--III. DMA Engine Support
-+3. DMA Engine Support
-+=====================
- 
- Tsi721 mport driver supports DMA data transfers between local system memory and
- remote RapidIO devices. This functionality is implemented according to SLAVE
-@@ -68,17 +79,21 @@ One BDMA channel is reserved for generation of maintenance read/write requests.
- 
- If Tsi721 mport driver have been built with RAPIDIO_DMA_ENGINE support included,
- this driver will accept DMA-specific module parameter:
--  "dma_desc_per_channel" - defines number of hardware buffer descriptors used by
-+
-+  "dma_desc_per_channel"
-+			 - defines number of hardware buffer descriptors used by
-                            each BDMA channel of Tsi721 (by default - 128).
- 
--IV. Version History
-+4. Version History
- 
--  1.1.0 - DMA operations re-worked to support data scatter/gather lists larger
-+  =====   ====================================================================
-+  1.1.0   DMA operations re-worked to support data scatter/gather lists larger
-           than hardware buffer descriptors ring.
--  1.0.0 - Initial driver release.
-+  1.0.0   Initial driver release.
-+  =====   ====================================================================
- 
--V.  License
-------------------------------------------------
-+5.  License
-+===========
- 
-   Copyright(c) 2011 Integrated Device Technology, Inc. All rights reserved.
- 
-diff --git a/drivers/rapidio/Kconfig b/drivers/rapidio/Kconfig
-index e3d8fe41b50c..2f82bb50f8db 100644
---- a/drivers/rapidio/Kconfig
-+++ b/drivers/rapidio/Kconfig
-@@ -85,7 +85,7 @@ config RAPIDIO_CHMAN
- 	  This option includes RapidIO channelized messaging driver which
- 	  provides socket-like interface to allow sharing of single RapidIO
- 	  messaging mailbox between multiple user-space applications.
--	  See "Documentation/rapidio/rio_cm.txt" for driver description.
-+	  See "Documentation/rapidio/rio_cm.rst" for driver description.
- 
- config RAPIDIO_MPORT_CDEV
- 	tristate "RapidIO /dev mport device driver"
+-The code in the initialize_mmu macro sets up MMUv3 memory mapping
+-identically to MMUv2 fixed memory mapping. Depending on
+-CONFIG_INITIALIZE_XTENSA_MMU_INSIDE_VMLINUX symbol this code is
+-located in addresses it was linked for (symbol undefined), or not
+-(symbol defined), so it needs to be position-independent.
+-
+-The code has the following assumptions:
+-  This code fragment is run only on an MMU v3.
+-  TLBs are in their reset state.
+-  ITLBCFG and DTLBCFG are zero (reset state).
+-  RASID is 0x04030201 (reset state).
+-  PS.RING is zero (reset state).
+-  LITBASE is zero (reset state, PC-relative literals); required to be PIC.
+-
+-TLB setup proceeds along the following steps.
+-
+-  Legend:
+-    VA = virtual address (two upper nibbles of it);
+-    PA = physical address (two upper nibbles of it);
+-    pc = physical range that contains this code;
+-
+-After step 2, we jump to virtual address in the range 0x40000000..0x5fffffff
+-or 0x00000000..0x1fffffff, depending on whether the kernel was loaded below
+-0x40000000 or above. That address corresponds to next instruction to execute
+-in this code. After step 4, we jump to intended (linked) address of this code.
+-The scheme below assumes that the kernel is loaded below 0x40000000.
+-
+-        Step0  Step1  Step2  Step3          Step4  Step5
+-        =====  =====  =====  =====          =====  =====
+-   VA      PA     PA     PA     PA     VA      PA     PA
+- ------    --     --     --     --   ------    --     --
+- E0..FF -> E0  -> E0  -> E0          F0..FF -> F0  -> F0
+- C0..DF -> C0  -> C0  -> C0          E0..EF -> F0  -> F0
+- A0..BF -> A0  -> A0  -> A0          D8..DF -> 00  -> 00
+- 80..9F -> 80  -> 80  -> 80          D0..D7 -> 00  -> 00
+- 60..7F -> 60  -> 60  -> 60
+- 40..5F -> 40         -> pc  -> pc   40..5F -> pc
+- 20..3F -> 20  -> 20  -> 20
+- 00..1F -> 00  -> 00  -> 00
+-
+-The default location of IO peripherals is above 0xf0000000. This may be changed
+-using a "ranges" property in a device tree simple-bus node. See the Devicetree
+-Specification, section 4.5 for details on the syntax and semantics of
+-simple-bus nodes. The following limitations apply:
+-
+-1. Only top level simple-bus nodes are considered
+-
+-2. Only one (first) simple-bus node is considered
+-
+-3. Empty "ranges" properties are not supported
+-
+-4. Only the first triplet in the "ranges" property is considered
+-
+-5. The parent-bus-address value is rounded down to the nearest 256MB boundary
+-
+-6. The IO area covers the entire 256MB segment of parent-bus-address; the
+-   "ranges" triplet length field is ignored
+-
+-
+-MMUv3 address space layouts.
+-============================
+-
+-Default MMUv2-compatible layout.
+-
+-                      Symbol                   VADDR       Size
+-+------------------+
+-| Userspace        |                           0x00000000  TASK_SIZE
+-+------------------+                           0x40000000
+-+------------------+
+-| Page table       |  XCHAL_PAGE_TABLE_VADDR   0x80000000  XCHAL_PAGE_TABLE_SIZE
+-+------------------+
+-| KASAN shadow map |  KASAN_SHADOW_START       0x80400000  KASAN_SHADOW_SIZE
+-+------------------+                           0x8e400000
+-+------------------+
+-| VMALLOC area     |  VMALLOC_START            0xc0000000  128MB - 64KB
+-+------------------+  VMALLOC_END
+-| Cache aliasing   |  TLBTEMP_BASE_1           0xc7ff0000  DCACHE_WAY_SIZE
+-| remap area 1     |
+-+------------------+
+-| Cache aliasing   |  TLBTEMP_BASE_2                       DCACHE_WAY_SIZE
+-| remap area 2     |
+-+------------------+
+-+------------------+
+-| KMAP area        |  PKMAP_BASE                           PTRS_PER_PTE *
+-|                  |                                       DCACHE_N_COLORS *
+-|                  |                                       PAGE_SIZE
+-|                  |                                       (4MB * DCACHE_N_COLORS)
+-+------------------+
+-| Atomic KMAP area |  FIXADDR_START                        KM_TYPE_NR *
+-|                  |                                       NR_CPUS *
+-|                  |                                       DCACHE_N_COLORS *
+-|                  |                                       PAGE_SIZE
+-+------------------+  FIXADDR_TOP              0xcffff000
+-+------------------+
+-| Cached KSEG      |  XCHAL_KSEG_CACHED_VADDR  0xd0000000  128MB
+-+------------------+
+-| Uncached KSEG    |  XCHAL_KSEG_BYPASS_VADDR  0xd8000000  128MB
+-+------------------+
+-| Cached KIO       |  XCHAL_KIO_CACHED_VADDR   0xe0000000  256MB
+-+------------------+
+-| Uncached KIO     |  XCHAL_KIO_BYPASS_VADDR   0xf0000000  256MB
+-+------------------+
+-
+-
+-256MB cached + 256MB uncached layout.
+-
+-                      Symbol                   VADDR       Size
+-+------------------+
+-| Userspace        |                           0x00000000  TASK_SIZE
+-+------------------+                           0x40000000
+-+------------------+
+-| Page table       |  XCHAL_PAGE_TABLE_VADDR   0x80000000  XCHAL_PAGE_TABLE_SIZE
+-+------------------+
+-| KASAN shadow map |  KASAN_SHADOW_START       0x80400000  KASAN_SHADOW_SIZE
+-+------------------+                           0x8e400000
+-+------------------+
+-| VMALLOC area     |  VMALLOC_START            0xa0000000  128MB - 64KB
+-+------------------+  VMALLOC_END
+-| Cache aliasing   |  TLBTEMP_BASE_1           0xa7ff0000  DCACHE_WAY_SIZE
+-| remap area 1     |
+-+------------------+
+-| Cache aliasing   |  TLBTEMP_BASE_2                       DCACHE_WAY_SIZE
+-| remap area 2     |
+-+------------------+
+-+------------------+
+-| KMAP area        |  PKMAP_BASE                           PTRS_PER_PTE *
+-|                  |                                       DCACHE_N_COLORS *
+-|                  |                                       PAGE_SIZE
+-|                  |                                       (4MB * DCACHE_N_COLORS)
+-+------------------+
+-| Atomic KMAP area |  FIXADDR_START                        KM_TYPE_NR *
+-|                  |                                       NR_CPUS *
+-|                  |                                       DCACHE_N_COLORS *
+-|                  |                                       PAGE_SIZE
+-+------------------+  FIXADDR_TOP              0xaffff000
+-+------------------+
+-| Cached KSEG      |  XCHAL_KSEG_CACHED_VADDR  0xb0000000  256MB
+-+------------------+
+-| Uncached KSEG    |  XCHAL_KSEG_BYPASS_VADDR  0xc0000000  256MB
+-+------------------+
+-+------------------+
+-| Cached KIO       |  XCHAL_KIO_CACHED_VADDR   0xe0000000  256MB
+-+------------------+
+-| Uncached KIO     |  XCHAL_KIO_BYPASS_VADDR   0xf0000000  256MB
+-+------------------+
+-
+-
+-512MB cached + 512MB uncached layout.
+-
+-                      Symbol                   VADDR       Size
+-+------------------+
+-| Userspace        |                           0x00000000  TASK_SIZE
+-+------------------+                           0x40000000
+-+------------------+
+-| Page table       |  XCHAL_PAGE_TABLE_VADDR   0x80000000  XCHAL_PAGE_TABLE_SIZE
+-+------------------+
+-| KASAN shadow map |  KASAN_SHADOW_START       0x80400000  KASAN_SHADOW_SIZE
+-+------------------+                           0x8e400000
+-+------------------+
+-| VMALLOC area     |  VMALLOC_START            0x90000000  128MB - 64KB
+-+------------------+  VMALLOC_END
+-| Cache aliasing   |  TLBTEMP_BASE_1           0x97ff0000  DCACHE_WAY_SIZE
+-| remap area 1     |
+-+------------------+
+-| Cache aliasing   |  TLBTEMP_BASE_2                       DCACHE_WAY_SIZE
+-| remap area 2     |
+-+------------------+
+-+------------------+
+-| KMAP area        |  PKMAP_BASE                           PTRS_PER_PTE *
+-|                  |                                       DCACHE_N_COLORS *
+-|                  |                                       PAGE_SIZE
+-|                  |                                       (4MB * DCACHE_N_COLORS)
+-+------------------+
+-| Atomic KMAP area |  FIXADDR_START                        KM_TYPE_NR *
+-|                  |                                       NR_CPUS *
+-|                  |                                       DCACHE_N_COLORS *
+-|                  |                                       PAGE_SIZE
+-+------------------+  FIXADDR_TOP              0x9ffff000
+-+------------------+
+-| Cached KSEG      |  XCHAL_KSEG_CACHED_VADDR  0xa0000000  512MB
+-+------------------+
+-| Uncached KSEG    |  XCHAL_KSEG_BYPASS_VADDR  0xc0000000  512MB
+-+------------------+
+-| Cached KIO       |  XCHAL_KIO_CACHED_VADDR   0xe0000000  256MB
+-+------------------+
+-| Uncached KIO     |  XCHAL_KIO_BYPASS_VADDR   0xf0000000  256MB
+-+------------------+
+diff --git a/arch/xtensa/include/asm/initialize_mmu.h b/arch/xtensa/include/asm/initialize_mmu.h
+index 10e9852b2fb4..f75f7f8fc93e 100644
+--- a/arch/xtensa/include/asm/initialize_mmu.h
++++ b/arch/xtensa/include/asm/initialize_mmu.h
+@@ -46,7 +46,7 @@
+ #if XCHAL_HAVE_S32C1I && (XCHAL_HW_MIN_VERSION >= XTENSA_HWVERSION_RC_2009_0)
+ /*
+  * We Have Atomic Operation Control (ATOMCTL) Register; Initialize it.
+- * For details see Documentation/xtensa/atomctl.txt
++ * For details see Documentation/xtensa/atomctl.rst
+  */
+ #if XCHAL_DCACHE_IS_COHERENT
+ 	movi	a3, 0x25	/* For SMP/MX -- internal for writeback,
 -- 
 2.20.1
 
