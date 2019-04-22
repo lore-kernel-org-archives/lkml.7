@@ -7,60 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6C6C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2F3C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C1D20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F0F20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+oA+leN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSjbp2R3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfDVKKN (ORCPT
+        id S1727104AbfDVKKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 06:10:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42557 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfDVKKN (ORCPT
+        Mon, 22 Apr 2019 06:10:17 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34345 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfDVKKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 06:10:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g3so15246398wrx.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 03:10:11 -0700 (PDT)
+        Mon, 22 Apr 2019 06:10:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r186so13798577wmf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 03:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JC4hWZcbjeS3SRdxWazevYDpsx2C0ooIBNLLgiI/PSU=;
-        b=c+oA+leN2IZSrFNvWrpR3dpu8yUkUMHKgqokR7Wz7KjPzvGoBuzVHA2hqPUITuV3ye
-         gsAT2iRUAp5MZ+RoyW/us3IJzzZG4tWcG1jT2KlJMajVwAlWrZJA/AsNuIW6wmYbDV/4
-         vFMS3qWKAdjX4/QZC53uvE/UeZulyOxF012usd6jz/nqyvXGK1wyEHSF9NwxyZxOcXnT
-         wuymlQKiM39ojHXO72qW9tLATl2IcGJo88O0nyHmiW2ORAxFwf0X9LHahC953Q0JexVd
-         7fsjqlKkxx5bQjnVEh3YPHWjIFd3+JMEHv0t8owXnw0iRdgvnmDgZyQYAyXXCBvxOaNO
-         QEhg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yoa/fXmFxQL77CV4PGcsIWnDd0sRC4dxmU1LMsMdjCc=;
+        b=gSjbp2R3HMOUXADYIga2uSNYspu357JUTRJ3a04fpDpvyY8NI10BwIjIdZBtqCcRMY
+         /pk1ZIwoxt/d2mHy0XWbp/aIhW0Rndhc8EGCVmBjwi5hI36cbyKeMpaeh3rOSU/tgAPL
+         a19PQ7EV8UROaX4kBEHzo+WQh5MzJMHmpez07S4UxuWnvROkBbzpsmk1dnyuS1ngwACQ
+         yq0c9vXLapyrsykeM7XYh+/fwJ3Tf0izz62caQHUOBQi/pJpWvZsfa1U9X3Ba8Mobsl5
+         4c6jwkPUJoDEi4PsQNfOa6SJTeJEoBgfSXUbWRyXVWWfvnjDjMnzRv5C5j/o7fDTKnun
+         IqAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JC4hWZcbjeS3SRdxWazevYDpsx2C0ooIBNLLgiI/PSU=;
-        b=iznAPCnJtkTynwOvcrJpGGtd0cEwteUko2iKdEUr1tdELf2h8E7fW4ve0qM3Zwad6e
-         6xjj7COn+tN4YFJA9ekVXmIEeIPjsaKIfKCIsTAfmMnGQ4xNP4uzon1kQlHTMTAWeL63
-         vp7n51f6zRxuBHSM0rizWPzrxRKmk876qwRuwX/UV7GHh19DRkEMvEQJlNagf6n0TB3l
-         HSJqVhHuNQU+XOat8qVMndZyDBL1+rk1jBCE/rb/0pxm6ziOs2PJL/uQSWL7Vi6nw+hX
-         LnixeXgk5H1R6iEnzKuVIBxGQknvQllF1BY5uPcnUg5IdX+VONj22ajxW2PS64kHVOPp
-         EL4g==
-X-Gm-Message-State: APjAAAWvGvQ0EnP/a/js6+uxM8LT5PtR9+8Y9aJdV90/lYkG5tqwNXXM
-        zmB4tHuecsQlsxCZbu3Tb5WNV0xm
-X-Google-Smtp-Source: APXvYqxCyLbGm/bu+W+tXrW5+Z/mFRdgqSWiVgtOfoPUps1B+n1wrufFpeZtx3yKGsNm7vgiRGqBbg==
-X-Received: by 2002:a5d:400e:: with SMTP id n14mr7444346wrp.317.1555927810444;
-        Mon, 22 Apr 2019 03:10:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yoa/fXmFxQL77CV4PGcsIWnDd0sRC4dxmU1LMsMdjCc=;
+        b=Y/qkK7ZZbXCwjNI0eQ5wv1qDCxqApMsBwFRwDZiik+LoImVeFjxFCcfJWXZo9uecCS
+         +WNM+GCnHpeY+ZTSDDSO1xrcVgjB6QSnl/DhLKzGh8RAMf4VhsuRzSQXkO6ELOBrqfi8
+         abPR0rCOvk7Js9c50eaUWX3qaLYffcWZ8RhRh75HGgPNQd0BkpQc19MbwlUCvBSjp3Yw
+         ebzWBpdch109K+YLKmpr2kUAprowm8frvu40ge1grzyPG/+KVS7XPfK2SZOTP94BK4dL
+         isJ4jeM4YfoHyOtQKkD289yZIIwiwqy8dbDQcRL5YueIBLK4T/a3HBiMAVb+Xy3ngYDd
+         gxNQ==
+X-Gm-Message-State: APjAAAX1VJK0CqRBlbvFLliF9b/hZgnh5+gk5qQydgIOVEm1gZwqUFLo
+        sZh3fTTHWD4PzJbHnY+UDA3LM20f
+X-Google-Smtp-Source: APXvYqxJjVKyZEtsop+0dG46w3HqnR8PBize4sTlCvT1HaKH+lgVo42MSTqSY9PPS7I6Ts4Lmx1QlA==
+X-Received: by 2002:a1c:35c3:: with SMTP id c186mr12550826wma.135.1555927811401;
+        Mon, 22 Apr 2019 03:10:11 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id r9sm15670301wrv.82.2019.04.22.03.10.09
+        by smtp.gmail.com with ESMTPSA id r9sm15670301wrv.82.2019.04.22.03.10.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 03:10:09 -0700 (PDT)
+        Mon, 22 Apr 2019 03:10:10 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: use ASIC functions interface for rreg/wreg
-Date:   Mon, 22 Apr 2019 13:10:07 +0300
-Message-Id: <20190422101008.5346-1-oded.gabbay@gmail.com>
+Subject: [PATCH v2] habanalabs: use ASIC functions interface for rreg/wreg
+Date:   Mon, 22 Apr 2019 13:10:08 +0300
+Message-Id: <20190422101008.5346-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190422101008.5346-1-oded.gabbay@gmail.com>
+References: <20190422101008.5346-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,10 +88,6 @@ simulator and therefore, should not be defined as static.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
-Changes in v2:
-  - Remove static from some functions as goya.c as they are now called
-    from the simulator code (which is not upstreamed).
- 
  drivers/misc/habanalabs/goya/goya.c  | 32 +++++++++++------------
  drivers/misc/habanalabs/goya/goyaP.h | 38 +++++++++++++++++++---------
  drivers/misc/habanalabs/habanalabs.h | 32 ++++++++++++++++++-----
