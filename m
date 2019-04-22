@@ -2,97 +2,114 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92960C282E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A823FC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636EA2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB752075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfDVJDZ (ORCPT
+        id S1727019AbfDVJKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:03:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:4545 "EHLO mga04.intel.com"
+        Mon, 22 Apr 2019 05:10:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51520 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbfDVJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:03:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 02:03:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,381,1549958400"; 
-   d="scan'208";a="142561435"
-Received: from rzhang-dell-9360.sh.intel.com ([10.239.161.125])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2019 02:03:22 -0700
-Message-ID: <1555923800.26198.30.camel@intel.com>
-Subject: Re: [PATCH] thermal: core: skip update disabled thermal zones after
- suspend
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 22 Apr 2019 17:03:20 +0800
-In-Reply-To: <20190416170701.50333-1-wvw@google.com>
-References: <20190416170701.50333-1-wvw@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1725914AbfDVJKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 05:10:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 547603082B0E;
+        Mon, 22 Apr 2019 09:10:49 +0000 (UTC)
+Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07A975D9C8;
+        Mon, 22 Apr 2019 09:10:47 +0000 (UTC)
+Date:   Mon, 22 Apr 2019 17:10:45 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, kirill.shutemov@linux.intel.com,
+        keescook@chromium.org, peterz@infradead.org, thgarnie@google.com,
+        herbert@gondor.apana.org.au, mike.travis@hpe.com,
+        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
+Subject: [PATCH v3 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap section
+Message-ID: <20190422091045.GB3584@localhost.localdomain>
+References: <20190414072804.12560-1-bhe@redhat.com>
+ <20190414072804.12560-3-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190414072804.12560-3-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 22 Apr 2019 09:10:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 二, 2019-04-16 at 10:07 -0700, Wei Wang wrote:
-> It is unnecessary to update disabled thermal zones post suspend and
-> sometimes leads error/warning in bad behaved thermal drivers.
-> 
-a good catch, and in fact, there are more issues about thermal handling
-for disabled thermal zones, like we're able to read the temperature of
-disabled thermal zones, either via sysfs or via function calls like
-thermal_zone_device_update.
-For this patch, I will take it as it fixes one of the problem.
+kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
+to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
 
-thanks,
-rui
+However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
+stamping into the following cpu_entry_area section, if KASLR puts vmemmap
+very close to cpu_entry_area , and the actual area of vmemmap is much bigger
+than 1 TB.
 
-> Signed-off-by: Wei Wang <wvw@google.com>
-> ---
->  drivers/thermal/thermal_core.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/thermal/thermal_core.c
-> b/drivers/thermal/thermal_core.c
-> index 6590bb5cb688..5baf5cfab999 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -1494,6 +1494,7 @@ static int thermal_pm_notify(struct
-> notifier_block *nb,
->  			     unsigned long mode, void *_unused)
->  {
->  	struct thermal_zone_device *tz;
-> +	enum thermal_device_mode tz_mode;
->  
->  	switch (mode) {
->  	case PM_HIBERNATION_PREPARE:
-> @@ -1506,6 +1507,13 @@ static int thermal_pm_notify(struct
-> notifier_block *nb,
->  	case PM_POST_SUSPEND:
->  		atomic_set(&in_suspend, 0);
->  		list_for_each_entry(tz, &thermal_tz_list, node) {
-> +			tz_mode = THERMAL_DEVICE_ENABLED;
-> +			if (tz->ops->get_mode)
-> +				tz->ops->get_mode(tz, &tz_mode);
-> +
-> +			if (tz_mode == THERMAL_DEVICE_DISABLED)
-> +				continue;
-> +
->  			thermal_zone_device_init(tz);
->  			thermal_zone_device_update(tz,
->  						   THERMAL_EVENT_UNS
-> PECIFIED);
+So here calculate the actual size of vmemmap region, then align up to 1 TB
+boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
+The current code reserves 0.5 PB for vmemmap in 5-level. In this new method,
+the left space can be saved to join randomization to increase the entropy.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v2->v3:
+  Fix typo Boris pointed out. 
+
+ arch/x86/mm/kaslr.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 387d4ed25d7c..4679a0075048 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
+ } kaslr_regions[] = {
+ 	{ &page_offset_base, 0 },
+ 	{ &vmalloc_base, 0 },
+-	{ &vmemmap_base, 1 },
++	{ &vmemmap_base, 0 },
+ };
+ 
+ /* Get size in bytes used by the memory region */
+@@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
+ 	unsigned long rand, memory_tb;
+ 	struct rnd_state rand_state;
+ 	unsigned long remain_entropy;
++	unsigned long vmemmap_size;
+ 
+ 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+ 	vaddr = vaddr_start;
+@@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
+ 	if (memory_tb < kaslr_regions[0].size_tb)
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
++	/**
++	 * Calculate how many TB vmemmap region needs, and aligned to
++	 * 1TB boundary.
++	 */
++	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
++		sizeof(struct page);
++	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
++
+ 	/* Calculate entropy available between regions */
+ 	remain_entropy = vaddr_end - vaddr_start;
+ 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
+-- 
+2.17.2
+
