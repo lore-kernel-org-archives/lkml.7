@@ -2,109 +2,128 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CADC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C7BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F3820685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xw05QP52"
+	by mail.kernel.org (Postfix) with ESMTP id 307CF20685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfDVNrI (ORCPT
+        id S1727680AbfDVNsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:47:08 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40296 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfDVNrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:47:08 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q66so10346008ljq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 06:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=CW0rqAbogseVL//is426DQ3OzikK37DSAbjjE1/dEMI=;
-        b=Xw05QP52BbqnsOxbWieAgtEZrL2+76zcY8QKc4LP4V4DaQAlgs3boJlH+kenYZxabV
-         BcQ0iVlDY1DUYgUyS5TdFEbm6A2f2v47y7RfEVtPh6ycvRi1bhNuz70znjTrAd0cf2Ha
-         +JRUDYG0r/GINNe4ODhQdIb8z2VzFtpQj4+YQ5GAz5C7JOkH6yibC8xB+YT6ndMw06SX
-         OT+XXKJcvnXXZJc3/vGftCY4H5NKKHJbYCow2dqaio7STTwX/0WxdJNCf64C6pUm3SoZ
-         hyDO7lxwhd36q8502caspq0/Y6X9wSeF5mV3uN9pG3jM40ng27ylnvZL4WEC7D4DoO9S
-         ZzKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=CW0rqAbogseVL//is426DQ3OzikK37DSAbjjE1/dEMI=;
-        b=E9BOGK87Omna2DrJgQBXJ/+q5/UN8+itTaNyh5dL1dlmc9kM37XMqg1y2xm6l+4GM1
-         Z9Mc4yUtm+ecFYFTeadBcAGQyCRpUBDuEFHPiVhJyq5QCF/8R4ObyyIeBLtBtKulW8V4
-         Fhs3S/P+STgf5C7IL/n4L9uhf03NzNCuiQHTLOmkue/lTVkYF5nkxA13bd8nDnwx6pVL
-         Tn9ANpp0sorV2og1vEvs9Jrn9guK4X3zwi79nyNLO6bLZmoI+iuFbFzTxVH+C0WO5yjM
-         TvmvyZcsxvT2pvDrV7pE96tuwvvzQP4p1vxoW5pV9OamEEM8rH0OIl4ejcfrn36Y5Z+j
-         PrFA==
-X-Gm-Message-State: APjAAAX5/cUWe11rEVDtXXnwvMp1a4R1dIotT/YFhE/nxNDv8JGI1XLj
-        SD9E+BewkhYUPbrzZnXPkiqrS7T+bWx+tET0UnI/SA==
-X-Google-Smtp-Source: APXvYqzpwl67uXk3ShqkrN7zXEFynnAj2riG1gSP6jG+C+v379vseXLlZ4+kTbG13+nOpnNWc23JtgGl+t9LbQM12W8=
-X-Received: by 2002:a2e:5bdb:: with SMTP id m88mr10350626lje.9.1555940825758;
- Mon, 22 Apr 2019 06:47:05 -0700 (PDT)
+        Mon, 22 Apr 2019 09:48:21 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6673 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726994AbfDVNsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:48:21 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9A56A18D478F1B4272A7;
+        Mon, 22 Apr 2019 21:48:16 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 22 Apr 2019
+ 21:48:06 +0800
+Subject: Re: [PATCH] net: phy: marvell: add new default led configure for
+ m88e151x
+From:   tanhuazhong <tanhuazhong@huawei.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+References: <1555936693-29260-1-git-send-email-tanhuazhong@huawei.com>
+Message-ID: <56e2bc0f-d480-4f38-60cd-38f4110d988d@huawei.com>
+Date:   Mon, 22 Apr 2019 21:48:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 22 Apr 2019 19:16:54 +0530
-Message-ID: <CA+G9fYvy8gcJO2hLZpwtTjD10Aw8G-eawLjOKi68dTfrmM2KAw@mail.gmail.com>
-Subject: Beagle x15: perf test -v hangs on Linux 4.9 and 4.14
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-omap@vger.kernel.org
-Cc:     lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1555936693-29260-1-git-send-email-tanhuazhong@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Perf test -v hangs on beagle x15 device running Linux version stable
-4.9 and 4.14 kernel. ( gcc version 7.3.0).
+sorry, please ignore this patch, will resend it later.
 
-X15
-----
-Test breakpoint overflow signal handler: FAILED
-Test breakpoint overflow sampling                        :
---- start ---
-test child forked, pid 381
-***Hangs Forever***
+On 2019/4/22 20:38, Huazhong Tan wrote:
+> From: Jian Shen <shenjian15@huawei.com>
+> 
+> The default m88e151x LED configuration is 0x1177, used LED[0]
+> for 1000M link, LED[1] for 100M link, and LED[2] for active.
+> But for some boards, which use LED[0] for link, and LED[1] for
+> active, prefer to be 0x1040. To be compatible with this case,
+> this patch defines a new dev_flag, and set it before connect
+> phy in HNS3 driver. When phy initializing, using the new
+> LED configuration if the dev_flag set.
+> 
+> Signed-off-by: Jian Shen <shenjian15@huawei.com>
+> ---
+>   drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c | 3 +++
+>   drivers/net/phy/marvell.c                               | 6 +++++-
+>   include/linux/marvell_phy.h                             | 1 +
+>   3 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+> index 12be4e2..1e81348 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c
+> @@ -3,6 +3,7 @@
+>   
+>   #include <linux/etherdevice.h>
+>   #include <linux/kernel.h>
+> +#include <linux/marvell_phy.h>
+>   
+>   #include "hclge_cmd.h"
+>   #include "hclge_main.h"
+> @@ -209,6 +210,8 @@ int hclge_mac_connect_phy(struct hnae3_handle *handle)
+>   
+>   	linkmode_clear_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, phydev->supported);
+>   
+> +	phydev->dev_flags |= MARVELL_PHY_LED0_LINK_LED1_ACTIVE;
+> +
+>   	ret = phy_connect_direct(netdev, phydev,
+>   				 hclge_mac_adjust_link,
+>   				 PHY_INTERFACE_MODE_SGMII);
+> diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+> index 8754cb8..a7e8c81 100644
+> --- a/drivers/net/phy/marvell.c
+> +++ b/drivers/net/phy/marvell.c
+> @@ -137,6 +137,7 @@
+>   #define MII_PHY_LED_CTRL	        16
+>   #define MII_88E1121_PHY_LED_DEF		0x0030
+>   #define MII_88E1510_PHY_LED_DEF		0x1177
+> +#define MII_88E1510_PHY_LED0_LINK_LED1_ACTIVE	0x1040
+>   
+>   #define MII_M1011_PHY_STATUS		0x11
+>   #define MII_M1011_PHY_STATUS_1000	0x8000
+> @@ -633,7 +634,10 @@ static void marvell_config_led(struct phy_device *phydev)
+>   	 * LED[2] .. Blink, Activity
+>   	 */
+>   	case MARVELL_PHY_FAMILY_ID(MARVELL_PHY_ID_88E1510):
+> -		def_config = MII_88E1510_PHY_LED_DEF;
+> +		if (phydev->dev_flags & MARVELL_PHY_LED0_LINK_LED1_ACTIVE)
+> +			def_config = MII_88E1510_PHY_LED0_LINK_LED1_ACTIVE;
+> +		else
+> +			def_config = MII_88E1510_PHY_LED_DEF;
+>   		break;
+>   	default:
+>   		return;
+> diff --git a/include/linux/marvell_phy.h b/include/linux/marvell_phy.h
+> index 73d0474..af6b11d 100644
+> --- a/include/linux/marvell_phy.h
+> +++ b/include/linux/marvell_phy.h
+> @@ -34,5 +34,6 @@
+>   /* struct phy_device dev_flags definitions */
+>   #define MARVELL_PHY_M1145_FLAGS_RESISTANCE	0x00000001
+>   #define MARVELL_PHY_M1118_DNS323_LEDS		0x00000002
+> +#define MARVELL_PHY_LED0_LINK_LED1_ACTIVE	0x00000004
+>   
+>   #endif /* _MARVELL_PHY_H */
+> 
 
-Debug log with strace output,
-
-strace -f perf test -v
-...
-[pid   346] perf_event_open({type=PERF_TYPE_BREAKPOINT,
-size=PERF_ATTR_SIZE_VER5, config=0, ...}, 0, -1, -1,
-PERF_FLAG_FD_CLOEXEC) = 3
-[pid   346] fcntl64(3, F_SETFL, O_RDWR|O_NONBLOCK|O_ASYNC) = 0
-[pid   346] fcntl64(3, F_SETSIG, SIGIO) = 0
-[pid   346] getpid()                    = 346
-[pid   346] fcntl64(3, F_SETOWN, 346)   = 0
-[pid   346] ioctl(3, PERF_EVENT_IOC_RESET, 0) = 0
-[pid   346] ioctl(3, PERF_EVENT_IOC_ENABLE, 0) = 0
-[pid   346] --- SIGIO {si_signo=SIGIO, si_code=POLL_IN, si_band=65} ---
-[pid   346] rt_sigreturn({mask=[WINCH]}) = 0
-...
-popping up this log continuesly
-....
-[pid   346] --- SIGIO {si_signo=SIGIO, si_code=POLL_IN, si_band=65} ---
-[pid   346] rt_sigreturn({mask=[WINCH]}) = 0"}
-
-Ref:
-Juno/x15: perf: Test breakpoint overflow sampling and test hangs
-https://bugs.linaro.org/show_bug.cgi?id=4321
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/655038#L1794
-Kernel Config,
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-stable-rc-4.9/524/config
-
-Best regards
-Naresh Kamboju
