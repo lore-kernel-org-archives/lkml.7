@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B888AC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D6DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CE320652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B18520685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940111;
-	bh=+n4o0bYnMjFb+XXNFBS0wTEmDBcODf8Zu+JXIY8CV7g=;
+	s=default; t=1555940116;
+	bh=XQ6yzN/u1t+GCRyL/ZXiB35SNG7OfY7C42yhiZfCd7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pzhWMhEVWx++bPFeWevox49RWDtSm6JKKVRVKqYBPoYGIS9/1NhlYG6Xu1+zy5vcS
-	 wToU346xF+EnjyxabWcO0VJfKerF0VACdqkjgynD63BSAOdtetfqIJzIxz1sgVnqwE
-	 G527qcQi8b1moKtcxlvvfw/4+Ob1MCQ9sht7Buus=
+	b=JQqBy8VP3xM4kMBsc2ESGyws+dL/Bh/MFwbLk29SHJ3fn2NJd3Qjf94bE203wF28h
+	 bx3jj/j7pwB+PV8SjLiVjkcOJA4paKtaXkD+Ly0BsiWC7N/rtsvUEWRdUTLTyyr3KI
+	 LuN3B/29V6cc45TH6sZDLz4eRTFnXlYAQcUdSp54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfDVNfK (ORCPT
+        id S1727467AbfDVN2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:35:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37438 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfDVN2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36808 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfDVN2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:28:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lKplnLPP+Ke7yGkfsStl2Ys/5zkfNT7d5HVlqGAdajk=; b=k2gPHSa76fE0hJvgdMWmmXLsp+
-        URHoWSya59fwjn0k7wgEcwOE/hyNF3ibw8fx0n2McUaOx30Y6dNBpjpdwvo5EEzOS8B5XGfP02Qqz
-        4Z/2K0BB/uYMV8Q6ZcFn+s/b34MB7O5XOAp0OlG4GsMNy6Rx/xaVOh0SbvSCp0vSz0uRTz7eUu4Bx
-        uJ8rvYmtfYy1xECI01k2AWw3NCY3H6UEs8JASs7ZWsrupCeI1EZLDwrlcwXngFQ941dVKBKtncwvB
-        yt/KDckxznFDPBfovM79bHX4US7/DFOaIHJNqifCjoM8IFpAZMUBEIVCD5Cn12CcxcWZht8e2A2RS
-        KhCp+few==;
+        bh=4jPg5SBmwMZUCmAGir71RBysjFB9d//84iaAGU/28zM=; b=s/3Kk5jqzM9zkN+D3VPfwTJRnF
+        StaInjD5ZoZaj4mifr/i87pvBdRHdN3GnQw9N+y5NvqtXmn9Nx169AvJJSDBkejYspZLvrBzCULa9
+        fK/LY07mnjgJoj7bXCzXMyycvsJ+9ksygmJW0t/i8THfpoopmbflUJV31rXh/I3uDhn+/X1wMPq+3
+        +SeR/qbsPIeVp1M8c4s6Xau1nWiWmYARnxDFCS/Bz0XasSEx5xG5mmZPYaoIU++Hlr1tqbfN/XBnH
+        WmC4B5SFAz2RXpTAjg5tS5h0kLYRz6ogEcnXOtw3vYCv0kJSbx/ebrvy6aO7TpWxFGxkG7ptZ4lBo
+        boVqzH7w==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzZ-0005Hj-6V; Mon, 22 Apr 2019 13:28:17 +0000
+        id 1hIYzU-0005HX-KS; Mon, 22 Apr 2019 13:28:12 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005on-Dv; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzS-0005k1-G2; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 66/79] docs: namespaces: convert to ReST
-Date:   Mon, 22 Apr 2019 10:27:55 -0300
-Message-Id: <77a8a92a31103a49a167fc73d2f4404f8a587e3e.1555938376.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 09/79] docs: cgroup-v1/blkio-controller.rst: add a note about CFQ scheduler
+Date:   Mon, 22 Apr 2019 10:26:58 -0300
+Message-Id: <9ab0a2c2c084dce030fe8944e2441df14cab3a6a.1555938375.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -63,92 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the namespaces documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+The CFQ scheduler was removed on this changeset:
 
-There are two upper case file names. Rename them to
-lower case, as we're working to avoid upper case file
-names at Documentation.
+  commit f382fb0bcef4c37dc049e9f6963e3baf204d815c
+  Author: Jens Axboe <axboe@kernel.dk>
+  Date:   Fri Oct 12 10:14:46 2018 -0600
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+    block: remove legacy IO schedulers
+
+    Retain the deadline documentation, as that carries over to mq-deadline
+    as well.
+
+    Tested-by: Ming Lei <ming.lei@redhat.com>
+    Reviewed-by: Omar Sandoval <osandov@fb.com>
+    Signed-off-by: Jens Axboe <axboe@kernel.dk>
+
+However, the cgroups-v1 documentation still mentions it and points
+to a removed file that used to belong to such scheduler.
+
+Add a note about that, as someone needs to fix the document pointing
+to another scheduler, if cgroups-v1 blockio is not dependent of
+CFQ scheduler.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- ...{compatibility-list.txt => compatibility-list.rst} |  9 +++++++--
- Documentation/namespaces/index.rst                    | 11 +++++++++++
- .../{resource-control.txt => resource-control.rst}    |  4 ++++
- 3 files changed, 22 insertions(+), 2 deletions(-)
- rename Documentation/namespaces/{compatibility-list.txt => compatibility-list.rst} (86%)
- create mode 100644 Documentation/namespaces/index.rst
- rename Documentation/namespaces/{resource-control.txt => resource-control.rst} (89%)
+ Documentation/cgroup-v1/blkio-controller.rst | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/namespaces/compatibility-list.txt b/Documentation/namespaces/compatibility-list.rst
-similarity index 86%
-rename from Documentation/namespaces/compatibility-list.txt
-rename to Documentation/namespaces/compatibility-list.rst
-index defc5589bfcd..3af5b05156e7 100644
---- a/Documentation/namespaces/compatibility-list.txt
-+++ b/Documentation/namespaces/compatibility-list.rst
-@@ -1,4 +1,6 @@
--	Namespaces compatibility list
-+=============================
-+Namespaces compatibility list
-+=============================
+diff --git a/Documentation/cgroup-v1/blkio-controller.rst b/Documentation/cgroup-v1/blkio-controller.rst
+index 2c1b907afc14..2836c2c31e63 100644
+--- a/Documentation/cgroup-v1/blkio-controller.rst
++++ b/Documentation/cgroup-v1/blkio-controller.rst
+@@ -17,6 +17,13 @@ one is throttling policy which can be used to specify upper IO rate limits
+ on devices. This policy is implemented in generic block layer and can be
+ used on leaf nodes as well as higher level logical devices like device mapper.
  
- This document contains the information about the problems user
- may have when creating tasks living in different namespaces.
-@@ -7,13 +9,16 @@ Here's the summary. This matrix shows the known problems, that
- occur when tasks share some namespace (the columns) while living
- in different other namespaces (the rows):
- 
--	UTS	IPC	VFS	PID	User	Net
-+====	===	===	===	===	====	===
-+-	UTS	IPC	VFS	PID	User	Net
-+====	===	===	===	===	====	===
- UTS	 X
- IPC		 X	 1
- VFS			 X
- PID		 1	 1	 X
- User		 2	 2		 X
- Net						 X
-+====	===	===	===	===	====	===
- 
- 1. Both the IPC and the PID namespaces provide IDs to address
-    object inside the kernel. E.g. semaphore with IPCID or
-diff --git a/Documentation/namespaces/index.rst b/Documentation/namespaces/index.rst
-new file mode 100644
-index 000000000000..bf40625dd11a
---- /dev/null
-+++ b/Documentation/namespaces/index.rst
-@@ -0,0 +1,11 @@
-+:orphan:
++.. note::
 +
-+==========
-+Namespaces
-+==========
++   While this document mentions the CFQ scheduler, it got removed at
++   Kernel 4.20, as there are other schedulers that are more efficient.
 +
-+.. toctree::
-+   :maxdepth: 1
++   Someone needs to update this file in order to reflect such change.
 +
-+   compatibility-list
-+   resource-control
-diff --git a/Documentation/namespaces/resource-control.txt b/Documentation/namespaces/resource-control.rst
-similarity index 89%
-rename from Documentation/namespaces/resource-control.txt
-rename to Documentation/namespaces/resource-control.rst
-index abc13c394738..369556e00f0c 100644
---- a/Documentation/namespaces/resource-control.txt
-+++ b/Documentation/namespaces/resource-control.rst
-@@ -1,3 +1,7 @@
-+===========================
-+Namespaces research control
-+===========================
-+
- There are a lot of kinds of objects in the kernel that don't have
- individual limits or that have limits that are ineffective when a set
- of processes is allowed to switch user ids.  With user namespaces
+ HOWTO
+ =====
+ Proportional Weight division of bandwidth
 -- 
 2.20.1
 
