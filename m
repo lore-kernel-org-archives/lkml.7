@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E56C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B46DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19CB20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D8D218C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SVfnibJk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O0ioONp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfDVSB3 (ORCPT
+        id S1728685AbfDVSBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 14:01:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41268 "EHLO
+        Mon, 22 Apr 2019 14:01:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40900 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728694AbfDVSBU (ORCPT
+        with ESMTP id S1728639AbfDVSBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 14:01:20 -0400
+        Mon, 22 Apr 2019 14:01:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7VRDIL83+ypRClRgxnOrRjLEIAVbztTq6oqvp65Upks=; b=SVfnibJkgbARoq4wnaPhDwDo5O
-        fwEflU6bHrb4q+DucDWJFo837R+RC/HYIGO9zoe1bWAj3pRNa2nlJ2zHnA8RhLV/1Ig1uSeT4Sgta
-        jXFQCHoxL+Z0kT8An5dCx6NeIxJfyWrdNSfRiCcZpGraj93tz6PY+o8y3j15Pq3OXlb+5cHar3Lcz
-        vhDEdRO0veFWUowzij8ZbVBn6Tr6goStk+UrabJ/i+imOg/w+pYJhpvwiFMKGKXdmRnIIiqrBxA4q
-        t9TuImAX7onBUAHnK0hy0WTdbFc+kMV2U7Af8FWwwBshOx+NSvT9S/MvhlnGqSwKfFI5Ceq9mKpNm
-        S/d3r0Lw==;
+        bh=KNBSxELbXU0pku+vbXf0mb5CVZS4m7+aLZgrSaKjimg=; b=O0ioONp68hRSEfHTIvDbiBW+UG
+        6xt9MiBDMbZdcEyZKNvizAjpXal9ZI9GDFJZ2JfQ+8kiBmXr6TZFiOngdD3TyFrdgPum5i2ilOllA
+        5RGyskhfAghx9+0HAgERrj4mw8+QrJ1uwDr0W+6Ft/19cUThg7FiDRc2PCneNNh0HRQd1W0lmteUy
+        JqMO+ZaOgXq3MAwCAdwZjriNwQa8ZEhq9PX1A7Q4UvepVGLXVPCjgMRRkjOXtMdTF0AAo/GM4pbzx
+        +3JCJGL0WPLMf5wW02NEg6jE7MNZho+irCTuQtuRnHDAIUBT9VcKbhUHUlOTJBJMUmSxiZyMp1QfK
+        MOPp332w==;
 Received: from 213-225-37-80.nat.highway.a1.net ([213.225.37.80] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIdFi-0002kn-D6; Mon, 22 Apr 2019 18:01:15 +0000
+        id 1hIdFc-0002ed-0p; Mon, 22 Apr 2019 18:01:08 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Joerg Roedel <joro@8bytes.org>,
@@ -44,11 +44,10 @@ Cc:     Joerg Roedel <joro@8bytes.org>,
         Will Deacon <will.deacon@arm.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH 25/26] arm64: switch copyright boilerplace to SPDX in dma-mapping.c
-Date:   Mon, 22 Apr 2019 19:59:41 +0200
-Message-Id: <20190422175942.18788-26-hch@lst.de>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 23/26] iommu/dma: Don't depend on CONFIG_DMA_DIRECT_REMAP
+Date:   Mon, 22 Apr 2019 19:59:39 +0200
+Message-Id: <20190422175942.18788-24-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190422175942.18788-1-hch@lst.de>
 References: <20190422175942.18788-1-hch@lst.de>
@@ -60,39 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
----
- arch/arm64/mm/dma-mapping.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+For entirely dma coherent architectures there is no requirement to ever
+remap dma coherent allocation.  Move all the remap and pool code under
+IS_ENABLED() checks and drop the Kconfig dependency.
 
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index d1661f78eb4d..184ef9ccd69d 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -1,20 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-- * SWIOTLB-based DMA API implementation
-- *
-  * Copyright (C) 2012 ARM Ltd.
-  * Author: Catalin Marinas <catalin.marinas@arm.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/iommu/Kconfig     |  1 -
+ drivers/iommu/dma-iommu.c | 16 +++++++++-------
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index bdc14baf2ee5..6f07f3b21816 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -95,7 +95,6 @@ config IOMMU_DMA
+ 	select IOMMU_API
+ 	select IOMMU_IOVA
+ 	select NEED_SG_DMA_LENGTH
+-	depends on DMA_DIRECT_REMAP
  
- #include <linux/gfp.h>
+ config FSL_PAMU
+ 	bool "Freescale IOMMU support"
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 8fc6098c1eeb..278a9a960107 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -923,10 +923,11 @@ static void __iommu_dma_free(struct device *dev, size_t size, void *cpu_addr)
+ 	struct page *page = NULL;
+ 
+ 	/* Non-coherent atomic allocation? Easy */
+-	if (dma_free_from_pool(cpu_addr, alloc_size))
++	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
++	    dma_free_from_pool(cpu_addr, alloc_size))
+ 		return;
+ 
+-	if (is_vmalloc_addr(cpu_addr)) {
++	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
+ 		/*
+ 		 * If it the address is remapped, then it's either non-coherent
+ 		 * or highmem CMA, or an iommu_dma_alloc_remap() construction.
+@@ -972,7 +973,7 @@ static void *iommu_dma_alloc_pages(struct device *dev, size_t size,
+ 	if (!page)
+ 		return NULL;
+ 
+-	if (!coherent || PageHighMem(page)) {
++	if (IS_ENABLED(CONFIG_DMA_REMAP) && (!coherent || PageHighMem(page))) {
+ 		pgprot_t prot = arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs);
+ 
+ 		cpu_addr = dma_common_contiguous_remap(page, alloc_size,
+@@ -1005,11 +1006,12 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+ 
+ 	gfp |= __GFP_ZERO;
+ 
+-	if (gfpflags_allow_blocking(gfp) &&
++	if (IS_ENABLED(CONFIG_DMA_REMAP) && gfpflags_allow_blocking(gfp) &&
+ 	    !(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
+ 		return iommu_dma_alloc_remap(dev, size, handle, gfp, attrs);
+ 
+-	if (!gfpflags_allow_blocking(gfp) && !coherent)
++	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
++	    !gfpflags_allow_blocking(gfp) && !coherent)
+ 		cpu_addr = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
+ 	else
+ 		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
+@@ -1041,7 +1043,7 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+ 	if (off >= nr_pages || vma_pages(vma) > nr_pages - off)
+ 		return -ENXIO;
+ 
+-	if (is_vmalloc_addr(cpu_addr)) {
++	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
+ 		struct page **pages = __iommu_dma_get_pages(cpu_addr);
+ 
+ 		if (pages)
+@@ -1063,7 +1065,7 @@ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
+ 	struct page *page;
+ 	int ret;
+ 
+-	if (is_vmalloc_addr(cpu_addr)) {
++	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
+ 		struct page **pages = __iommu_dma_get_pages(cpu_addr);
+ 
+ 		if (pages) {
 -- 
 2.20.1
 
