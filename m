@@ -2,175 +2,138 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E24C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3D5C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133BA214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F0820874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfDVQSK (ORCPT
+        id S1728102AbfDVQSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:18:10 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:37822 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726098AbfDVQSK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:18:10 -0400
-Received: (qmail 5437 invoked by uid 2102); 22 Apr 2019 12:18:09 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 22 Apr 2019 12:18:09 -0400
-Date:   Mon, 22 Apr 2019 12:18:09 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 3/3] tools: memory-model: Add data-race detection
-Message-ID: <Pine.LNX.4.44L0.1904221214370.1384-100000@iolanthe.rowland.org>
+        Mon, 22 Apr 2019 12:18:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:40436 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbfDVQSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:18:33 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 0C73668AFE; Mon, 22 Apr 2019 18:18:15 +0200 (CEST)
+Date:   Mon, 22 Apr 2019 18:18:14 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     guoren@kernel.org
+Cc:     ren_guo@c-sky.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        tech-privileged@lists.riscv.org,
+        Andrew Waterman <andrew@sifive.com>,
+        Anup Patel <anup.patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Greentime Hu <green.hu@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Scott Wood <swood@redhat.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>
+Subject: Re: [PATCH] riscv: Support non-coherency memory model
+Message-ID: <20190422161814.GA30694@lst.de>
+References: <1555947870-23014-1-git-send-email-guoren@kernel.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555947870-23014-1-git-send-email-guoren@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds data-race detection to the Linux-Kernel Memory Model.
-As part of this effort, support is added for:
+On Mon, Apr 22, 2019 at 11:44:30PM +0800, guoren@kernel.org wrote:
+>  - Add _PAGE_COHERENCY bit in current page table entry attributes. The bit
+>    designates a coherence for this page mapping. Software set the bit to
+>    tell the hardware that the region of the page's memory area must be
+>    coherent with IOs devices in SOC system by PMA settings.
+>    If IOs and CPU are already coherent in SOC system, CPU just ignore
+>    this bit.
+> 
+>    PTE format:
+>    | XLEN-1  10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
+>          PFN      C  RSW  D   A   G   U   X   W   R   V
+>                   ^
+>    BIT(9): Coherence attribute bit
+>           0: hardware needn't keep the page coherenct and software will
+>              maintain the coherence with cache clear/invalid operations.
+>           1: hardware must keep the page coherenct and software needn't
+>              maintain the coherence.
+>    BIT(8): Reserved for software and now it's _PAGE_SPECIAL in linux
+> 
+>    Add a new hardware bit in PTE also need to modify Privileged
+>    Architecture Supervisor-Level ISA:
+>    https://github.com/riscv/riscv-isa-manual/pull/374
+> 
+>  - Add SBI_FENCE_DMA 9 in riscv-sbi.
+>    sbi_fence_dma(start, size, dir) could synchronize CPU cache data with
+>    DMA device in non-coherency memory model. The third param's definition
+>    is the same with linux's in include/linux/dma-direction.h:
 
-	compiler barriers (the barrier() function), and
+Please don't make this an SBI call.  We need a proper instruction
+for cache flushing and invalidation.  We'll also need that for pmem
+support for example.  I heard at least one other vendor already
+had an instruction, and we really need to get this into the privileged
+spec ASAP (yesterday in fact).
 
-	a new Preserved Program Order term: (addr ; [Plain] ; wmb)
+If you have your own instructions already we can probably binary
+patch those in using the Linux alternatives mechanism once we have
+a standardized way in the privileged spec.
 
-Data races are marked with a special Flag warning in herd.  It is
-not guaranteed that the model will provide accurate predictions when a
-data race is present.
+We should probably start a working group for this ASAP unless we can
+get another working group to help taking care of it.
 
-The patch does not include documentation for the data-race detection
-facility.  The basic design has been explained in various emails, and
-a separate documentation patch will be submitted later.
+> +#define pgprot_noncached pgprot_noncached
+> +static inline pgprot_t pgprot_noncached(pgprot_t _prot)
+> +{
+> +	unsigned long prot = pgprot_val(_prot);
+> +
+> +	prot |= _PAGE_COHERENCY;
+> +
+> +	return __pgprot(prot);
 
-This work is based on an earlier formulation of data races for the
-LKMM by Andrea Parri.
+Nitpick: this can be shortened to
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+	return __pgprot(pgprot_val(prot) | _PAGE_COHERENCY));
 
----
+Also is this really a coherent flag, or an 'uncached' flag like in
+many other architectures?
 
+> +++ b/arch/riscv/mm/dma-mapping.c
 
- tools/memory-model/linux-kernel.bell |    1 
- tools/memory-model/linux-kernel.cat  |   50 ++++++++++++++++++++++++++++++++++-
- tools/memory-model/linux-kernel.def  |    1 
- 3 files changed, 51 insertions(+), 1 deletion(-)
+This should probably be called dma-noncoherent.c
 
-Index: usb-devel/tools/memory-model/linux-kernel.bell
-===================================================================
---- usb-devel.orig/tools/memory-model/linux-kernel.bell
-+++ usb-devel/tools/memory-model/linux-kernel.bell
-@@ -24,6 +24,7 @@ instructions RMW[{'once,'acquire,'releas
- enum Barriers = 'wmb (*smp_wmb*) ||
- 		'rmb (*smp_rmb*) ||
- 		'mb (*smp_mb*) ||
-+		'barrier (*barrier*) ||
- 		'rcu-lock (*rcu_read_lock*)  ||
- 		'rcu-unlock (*rcu_read_unlock*) ||
- 		'sync-rcu (*synchronize_rcu*) ||
-Index: usb-devel/tools/memory-model/linux-kernel.cat
-===================================================================
---- usb-devel.orig/tools/memory-model/linux-kernel.cat
-+++ usb-devel/tools/memory-model/linux-kernel.cat
-@@ -46,6 +46,9 @@ let strong-fence = mb | gp
- 
- let nonrw-fence = strong-fence | po-rel | acq-po
- let fence = nonrw-fence | wmb | rmb
-+let barrier = fencerel(Barrier | Rmb | Wmb | Mb | Sync-rcu | Sync-srcu |
-+		Before-atomic | After-atomic | Acquire | Release) |
-+	(po ; [Release]) | ([Acquire] ; po)
- 
- (**********************************)
- (* Fundamental coherence ordering *)
-@@ -66,7 +69,7 @@ empty rmw & (fre ; coe) as atomic
- let dep = addr | data
- let rwdep = (dep | ctrl) ; [W]
- let overwrite = co | fr
--let to-w = rwdep | (overwrite & int)
-+let to-w = rwdep | (overwrite & int) | (addr ; [Plain] ; wmb)
- let to-r = addr | (dep ; [Marked] ; rfi)
- let ppo = to-r | to-w | fence | (po-unlock-rf-lock-po & int)
- 
-@@ -149,3 +152,48 @@ irreflexive rb as rcu
-  * let xb = hb | pb | rb
-  * acyclic xb as executes-before
-  *)
-+
-+(*********************************)
-+(* Plain accesses and data races *)
-+(*********************************)
-+
-+(* Warn about plain writes and marked accesses in the same region *)
-+let mixed-accesses = ([Plain & W] ; (po-loc \ barrier) ; [Marked]) |
-+	([Marked] ; (po-loc \ barrier) ; [Plain & W])
-+flag ~empty mixed-accesses as mixed-accesses
-+
-+(* Executes-before and visibility *)
-+let xbstar = (hb | pb | rb)*
-+let full-fence = strong-fence | (po ; rcu-fence ; po?)
-+let vis = cumul-fence* ; rfe? ; [Marked] ;
-+	((full-fence ; [Marked] ; xbstar) | (xbstar & int))
-+
-+(* Boundaries for lifetimes of plain accesses *)
-+let w-pre-bounded = [Marked] ; (addr | fence)?
-+let r-pre-bounded = [Marked] ; (addr | nonrw-fence |
-+	([R4rmb] ; fencerel(Rmb) ; [~Noreturn]))?
-+let w-post-bounded = fence? ; [Marked]
-+let r-post-bounded = (nonrw-fence | ([~Noreturn] ; fencerel(Rmb) ; [R4rmb]))? ;
-+	[Marked]
-+
-+(* Visibility and executes-before for plain accesses *)
-+let ww-vis = w-post-bounded ; vis ; w-pre-bounded
-+let wr-vis = w-post-bounded ; vis ; r-pre-bounded
-+let rw-xbstar = r-post-bounded ; xbstar ; w-pre-bounded
-+
-+(* Potential races *)
-+let pre-race = ext & ((Plain * M) | ((M \ IW) * Plain))
-+
-+(* Coherence requirements for plain accesses *)
-+let wr-incoh = pre-race & rf & rw-xbstar^-1
-+let rw-incoh = pre-race & fr & wr-vis^-1
-+let ww-incoh = pre-race & co & ww-vis^-1
-+empty (wr-incoh | rw-incoh | ww-incoh) as plain-coherence
-+
-+(* Actual races *)
-+let ww-nonrace = ww-vis & ((Marked * W) | rw-xbstar) & ((W * Marked) | wr-vis)
-+let ww-race = (pre-race & co) \ ww-nonrace
-+let wr-race = (pre-race & (co? ; rf)) \ wr-vis
-+let rw-race = (pre-race & fr) \ rw-xbstar
-+
-+flag ~empty (ww-race | wr-race | rw-race) as data-race
-Index: usb-devel/tools/memory-model/linux-kernel.def
-===================================================================
---- usb-devel.orig/tools/memory-model/linux-kernel.def
-+++ usb-devel/tools/memory-model/linux-kernel.def
-@@ -24,6 +24,7 @@ smp_mb__before_atomic() { __fence{before
- smp_mb__after_atomic() { __fence{after-atomic}; }
- smp_mb__after_spinlock() { __fence{after-spinlock}; }
- smp_mb__after_unlock_lock() { __fence{after-unlock-lock}; }
-+barrier() { __fence{barrier}; }
- 
- // Exchange
- xchg(X,V)  __xchg{mb}(X,V)
+It should also have a user visible config option so that we don't
+have to build it for fully coherent systems.
 
+> +void arch_dma_prep_coherent(struct page *page, size_t size)
+> +{
+> +	memset(page_address(page), 0, size);
 
+No need for this memset, the caller takes care of it.
+
+> diff --git a/arch/riscv/mm/ioremap.c b/arch/riscv/mm/ioremap.c
+> index bd2f2db..f6aaf1e 100644
+> --- a/arch/riscv/mm/ioremap.c
+> +++ b/arch/riscv/mm/ioremap.c
+> @@ -73,7 +73,7 @@ static void __iomem *__ioremap_caller(phys_addr_t addr, size_t size,
+>   */
+>  void __iomem *ioremap(phys_addr_t offset, unsigned long size)
+>  {
+> -	return __ioremap_caller(offset, size, PAGE_KERNEL,
+> +	return __ioremap_caller(offset, size, PAGE_KERNEL_COHERENCY,
+>  		__builtin_return_address(0));
+>  }
+>  EXPORT_SYMBOL(ioremap);
+
+I think ioremap is a different story, and should be a separate patch.
