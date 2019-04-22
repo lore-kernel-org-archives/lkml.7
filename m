@@ -6,49 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BA9C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A3F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830352075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962599;
-	bh=k5+fulfP+RLmd3CsE181bxaKbgPjLoSW+vjOFrf8BAQ=;
+	s=default; t=1555962606;
+	bh=IDz3KsstZMTDrJTfR72WbWxkRwIFdVVkKOamKo9NKcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPK+mtcsph6BezZKYLR1AQNUKCF3Q7B2Mx4vl79WJ1BvErigpyx7HePZ+QEgUmhJr
-	 GTG/p5Q4e88T5hRVQNqrqJJYa2n3NzB1/s7lVSBiucgS5QE7mbda1l7YyYUbfYsovx
-	 ANwvvz28u1AEI4VEybcw6g/E53NEs+ubAo475zt8=
+	b=k4keaUObQzJZbzfyYRZkUsLRyK4i4GvCr2q6Tr5acadZog4panPZ+VF2bxf6nHru4
+	 7J42V1X+uYKk9tMyEzU3pVnIAncbFS/YGDANYIq2Z2StBXnzX8vlZhsR3k+xorfqMf
+	 P9vpEP/n7NFKjcMc9AHotK5tb3ReQ7l58uEneJU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfDVTt6 (ORCPT
+        id S1731006AbfDVTuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730908AbfDVTtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:42 -0400
+        id S1730983AbfDVTuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B71921738;
-        Mon, 22 Apr 2019 19:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B781204EC;
+        Mon, 22 Apr 2019 19:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962581;
-        bh=k5+fulfP+RLmd3CsE181bxaKbgPjLoSW+vjOFrf8BAQ=;
+        s=default; t=1555962601;
+        bh=IDz3KsstZMTDrJTfR72WbWxkRwIFdVVkKOamKo9NKcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UBKczZUUR5Goe6uc2Zn9Y53SNh9xslORxj72tjKcA3//bdO+762u18mXs3Lip0kuQ
-         Ejhrw+2xb/W2NnGzrBJTSTOcv4AayDMZ6dch8jykWmO1Nr2Jw/+ZzMfDImEpgFAhEw
-         6EggVxFmVOTYPcTjw7TIcdie4PRMeUg6rPZRZGG0=
+        b=sQyEXIGrky7yXdVjtSWzh035So0kb2R0cwUCeEIKS5NiMjOA+ddZoEriTIxXPHpJO
+         UxZsrcODr/sbWKNUMzmUCEXO+fi/zGstSrQK+mAHE3VbOmJSt4qgJi++k5qd26iLlp
+         bLnc1/pC0DQT08rQrutCBTXzj/lz/IKjynFNm/KU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 29/29] leds: pca9532: fix a potential NULL pointer dereference
-Date:   Mon, 22 Apr 2019 15:48:48 -0400
-Message-Id: <20190422194848.13049-29-sashal@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Nishanth Menon <nm@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/21] net: ks8851: Reassert reset pin if chip ID check fails
+Date:   Mon, 22 Apr 2019 15:49:29 -0400
+Message-Id: <20190422194941.13433-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
-References: <20190422194848.13049-1-sashal@kernel.org>
+In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
+References: <20190422194941.13433-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,47 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 0aab8e4df4702b31314a27ec4b0631dfad0fae0a ]
+[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
 
-In case of_match_device cannot find a match, return -EINVAL to avoid
-NULL pointer dereference.
+Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
+reset gpio") amended the ks8851 driver to briefly assert the chip's
+reset pin on probe. It also amended the probe routine's error path to
+reassert the reset pin if a subsequent initialization step fails.
 
-Fixes: fa4191a609f2 ("leds: pca9532: Add device tree support")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+However the commit misplaced reassertion of the reset pin in the error
+path such that it is not performed if the check of the Chip ID and
+Enable Register (CIDER) fails. The error path is therefore slightly
+asymmetrical to the probe routine's body. Fix it.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/leds/leds-pca9532.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index 09a7cffbc46f..896b38f6f9c0 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -488,6 +488,7 @@ static int pca9532_probe(struct i2c_client *client,
- 	const struct i2c_device_id *id)
- {
- 	int devid;
-+	const struct of_device_id *of_id;
- 	struct pca9532_data *data = i2c_get_clientdata(client);
- 	struct pca9532_platform_data *pca9532_pdata =
- 			dev_get_platdata(&client->dev);
-@@ -503,8 +504,11 @@ static int pca9532_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "no platform data\n");
- 			return -EINVAL;
- 		}
--		devid = (int)(uintptr_t)of_match_device(
--			of_pca9532_leds_match, &client->dev)->data;
-+		of_id = of_match_device(of_pca9532_leds_match,
-+				&client->dev);
-+		if (unlikely(!of_id))
-+			return -EINVAL;
-+		devid = (int)(uintptr_t) of_id->data;
- 	} else {
- 		devid = id->driver_data;
- 	}
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 247a3377b951..a8c5641ff955 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
+ 	free_irq(ndev->irq, ks);
+ 
+ err_irq:
++err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+-err_id:
+ 	regulator_disable(ks->vdd_reg);
+ err_reg:
+ 	regulator_disable(ks->vdd_io);
 -- 
 2.19.1
 
