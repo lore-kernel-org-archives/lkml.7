@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6EEC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1CBC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECA3204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C332054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963754;
-	bh=d3aVzVOZCiHSVip17vUI78pTlExo1cGf3iqgelxIjuk=;
+	s=default; t=1555963763;
+	bh=q3eTyYFCg4fB0Wq0cmXNiQkcNJslOln2flJIX546+aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOciqCwfGZmF72BT46ajTQgDF0M/eaIV9QDlRVs+NnW/giLtEXkjYRINJSTmw+KAj
-	 BN2YL1CN+j0Y+LikMOvCV2TMGuGxvAP355R1euFqklLPjQWwBJhg7ks+GoRB9HSgE2
-	 7UcnTN9mYpdubmb6yOU60JIfS1MoDwVticFpBd5M=
+	b=wlH7uAYY600TmJ1c5NtYu+OmLX07K1qcdH/fhKYZWeVi9L36uG7YW5gLCRyMGtN/2
+	 IlHkIMb5WM93zZIngP/OpAv+YeabhBSm/rymAOxjccc4gKfyo5mjnBeoXT1rwTUwVw
+	 daYvxMmzNuvTMM7CaVCsOPM2/moBDO7SFxMSEieo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732510AbfDVUJM (ORCPT
+        id S1729221AbfDVTnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44346 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:43:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729235AbfDVTnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:43:45 -0400
+        id S1729198AbfDVTnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:43:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BC8218B0;
-        Mon, 22 Apr 2019 19:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA736218B0;
+        Mon, 22 Apr 2019 19:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962224;
-        bh=d3aVzVOZCiHSVip17vUI78pTlExo1cGf3iqgelxIjuk=;
+        s=default; t=1555962219;
+        bh=q3eTyYFCg4fB0Wq0cmXNiQkcNJslOln2flJIX546+aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kDcJEaE+5VX/oy7wRywamcAZrEkCB5G7SiXXLgcH75cJZt8uWPDDM89Y+WjU+X6Uk
-         lInQfYOAJYgfaT5QWEdC5+1nQo8YL23r14/otoQGdNHNT+YN9SBjYEC3TZ4H7bYMJ3
-         Yh8rXOvt30mxuo4JXDTMZK6cos+M5FaEnZ6m2kq8=
+        b=y8hm+7e/Rpf3sjxIR800ifonP0BxCYIQcfvQbfFaxchBwdg7MBEtvQNsehPhgUi1O
+         FK8zURRbXO0eWOGHvSCzeO1UVJ0LtT4DWt8uGIV1UvXmWl9TvOyMpUY0/eaXrP2koB
+         H5KybtJcdrdm034ieEWFfzOrlTjYobqzz+WfjoV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harini Katakam <harini.katakam@xilinx.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 46/98] net: macb: Add null check for PCLK and HCLK
-Date:   Mon, 22 Apr 2019 15:41:13 -0400
-Message-Id: <20190422194205.10404-46-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.0 43/98] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+Date:   Mon, 22 Apr 2019 15:41:10 -0400
+Message-Id: <20190422194205.10404-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -58,50 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit cd5afa91f078c0787be0a62b5ef90301c00b0271 ]
+[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
 
-Both PCLK and HCLK are "required" clocks according to macb devicetree
-documentation. There is a chance that devm_clk_get doesn't return a
-negative error but just a NULL clock structure instead. In such a case
-the driver proceeds as usual and uses pclk value 0 to calculate MDC
-divisor which is incorrect. Hence fix the same in clock initialization.
+Colin King reported a bug in read_bbreg_hdl():
 
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+
+The problem is that "val" is uninitialized.
+
+This code is obviously not useful, but so far as I can tell
+"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
+either.  For now the easiest fix is to just call r8712_free_cmd_obj()
+and return.
+
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
+ drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 2b2882615e8b..6cbe515bfdeb 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3318,14 +3318,20 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
- 		*hclk = devm_clk_get(&pdev->dev, "hclk");
- 	}
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
+index 1920d02f7c9f..8c36acedf507 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.c
++++ b/drivers/staging/rtl8712/rtl8712_cmd.c
+@@ -147,17 +147,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
  
--	if (IS_ERR(*pclk)) {
-+	if (IS_ERR_OR_NULL(*pclk)) {
- 		err = PTR_ERR(*pclk);
-+		if (!err)
-+			err = -ENODEV;
-+
- 		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
- 		return err;
- 	}
+ static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ {
+-	u32 val;
+-	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
+ 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
  
--	if (IS_ERR(*hclk)) {
-+	if (IS_ERR_OR_NULL(*hclk)) {
- 		err = PTR_ERR(*hclk);
-+		if (!err)
-+			err = -ENODEV;
-+
- 		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
- 		return err;
- 	}
+-	if (pcmd->rsp && pcmd->rspsz > 0)
+-		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+-	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
+-	if (!pcmd_callback)
+-		r8712_free_cmd_obj(pcmd);
+-	else
+-		pcmd_callback(padapter, pcmd);
++	r8712_free_cmd_obj(pcmd);
+ 	return H2C_SUCCESS;
+ }
+ 
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
+index 92fb77666d44..1ef86b8c592f 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.h
++++ b/drivers/staging/rtl8712/rtl8712_cmd.h
+@@ -140,7 +140,7 @@ enum rtl8712_h2c_cmd {
+ static struct _cmd_callback	cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_Write_MACREG), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_Read_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
 -- 
 2.19.1
 
