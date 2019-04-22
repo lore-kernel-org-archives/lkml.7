@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9CC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DB4C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAA921901
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CA920874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939725;
-	bh=KAc5ubX1O9poASCyTPw/gDBZKmkGE8x6iZ4bu8w0dog=;
+	s=default; t=1555939728;
+	bh=X61fYrYX9nuOu0ME5S/93psSBLfHWPzN/D1rPG+Mwg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5bXHQeoU6aSFavMurPHzwmD/gT+KIsEFPy4LaZKxmlA1G5SFSSWqPbTeq7jchkdB
-	 8Jg9CVcxsRTbwoYMBr9kKP/z1oFRXWKbgmcojLD3bOvdbDCp2ZSznZ5BmYzKGnGVRa
-	 qnTPZN5MPPth4rr2zZAPfNds9wA9CS/z9VpVKDQk=
+	b=QbLY8btR1SfvJaaT55web9cBlOWle1IOyaT+UgB0iiZ+4iacMMt7tTBcgFT/DB9i2
+	 lI0/HiBXAl3rpAIdDfAXGTbNjzQRmJ3wGsSHI/7y8thiXfq1lpUeYOfDibJuemgg/U
+	 qdCClC5Q+h9A54DnocYBVnKoy5BPAsCCCDORXSgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfDVN2n (ORCPT
+        id S1727856AbfDVN2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37920 "EHLO
+        Mon, 22 Apr 2019 09:28:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37898 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfDVN2W (ORCPT
+        with ESMTP id S1727574AbfDVN2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,26 +33,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1dDWA920E0jHK8Xl4rWxMIjw2QMlLRUOZpuMfOc4ziA=; b=Xmn07UOAOBR84joMegImpWhxq1
-        KbgLEktiWog1igY9hrnHSzd39dScvhFRVFzeaowOgzKapvVKE+IQ1PmWMg95QtHa0V7uveepiTt6R
-        8uB/VYeMUW6BQd42j/6x7J3xCR3WtRM1s6FYGEfQhvy1ZMqdNsWd6y45eUAfgbuUiHcBQFPMXySmQ
-        0itMbi4feK2/0dVLK6dJB5Juw6RXlkWG1T4GqWrbQO3Q9LrmAiOG79wfgg3jixF3eovVvdhi78Vdm
-        AeDVckw25jWoiouHQ+Gcl+AiWGmyRMO/iIEbh6eRMKquqR9Tx/K2sX/BV5WIXmDut5x5+i3Yzw3fm
-        MjN38wbw==;
+        bh=2sTY6y/pj7j8ZKDgFJ/saI9zL6+USwEQ077cqF8cOAo=; b=QS5q/bF3s/JlcF8bfXrqihbTV5
+        44WuocUYMi4+pS7a8atN/Trkour/6mCtF9jjp/8nK7QM/2bZrIgmozXVWPeeitRLjhCEJPLcNGab8
+        BigWhQEGieadyeA/eLGhqU6CB/PyT2dqcBl3UM0CiutSsfUGObUFxI/VjqYR7jGQ6DmFuhRefP2fy
+        xAvi08nu0MXj2vng3TqK9iGu8+yFNyw3yzeR8pZ4PBXKbOlo6OFtc4F3vLx7At8OXBs4h/RfQEKP8
+        om3gk2f4KQCP7hJWOn+INF7Srz04qkwhH5IQsbvpOJhGD9ZYIa6PC27g+rl/fB2T+kbbBCmlQn6MV
+        62YXUPNQ==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzc-0005HS-Te; Mon, 22 Apr 2019 13:28:20 +0000
+        id 1hIYzd-0005HT-2T; Mon, 22 Apr 2019 13:28:21 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005mm-Fv; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzT-0005mc-EF; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 41/79] docs: lcd-panel-cgram.txt: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:30 -0300
-Message-Id: <673c4a648a98823080b13e4677bb9a6ddd5551d2.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 39/79] docs: EDID/HOWTO.txt: convert it and rename to howto.rst
+Date:   Mon, 22 Apr 2019 10:27:28 -0300
+Message-Id: <7f90aab265747729f25ae644a5017a6d73f10f16.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -63,64 +68,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This small text file describes the usage of parallel port LCD
-displays from userspace PoV. So, a good candidate for the
-admin guide.
+Sphinx need to know when a paragraph ends. So, do some adjustments
+at the file for it to be properly parsed.
 
-While this is not part of the admin-guide book, mark it as
-:orphan:, in order to avoid build warnings.
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
+
+that's said, I believe that this file should be moved to the
+GPU/DRM documentation.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{lcd-panel-cgram.txt => lcd-panel-cgram.rst}         | 9 +++++++--
- MAINTAINERS                                              | 2 +-
- 2 files changed, 8 insertions(+), 3 deletions(-)
- rename Documentation/auxdisplay/{lcd-panel-cgram.txt => lcd-panel-cgram.rst} (88%)
+ Documentation/EDID/{HOWTO.txt => howto.rst}   | 31 ++++++++++++-------
+ .../admin-guide/kernel-parameters.txt         |  2 +-
+ drivers/gpu/drm/Kconfig                       |  2 +-
+ 3 files changed, 22 insertions(+), 13 deletions(-)
+ rename Documentation/EDID/{HOWTO.txt => howto.rst} (83%)
 
-diff --git a/Documentation/auxdisplay/lcd-panel-cgram.txt b/Documentation/auxdisplay/lcd-panel-cgram.rst
-similarity index 88%
-rename from Documentation/auxdisplay/lcd-panel-cgram.txt
-rename to Documentation/auxdisplay/lcd-panel-cgram.rst
-index 7f82c905763d..dfef50286018 100644
---- a/Documentation/auxdisplay/lcd-panel-cgram.txt
-+++ b/Documentation/auxdisplay/lcd-panel-cgram.rst
+diff --git a/Documentation/EDID/HOWTO.txt b/Documentation/EDID/howto.rst
+similarity index 83%
+rename from Documentation/EDID/HOWTO.txt
+rename to Documentation/EDID/howto.rst
+index 539871c3b785..725fd49a88ca 100644
+--- a/Documentation/EDID/HOWTO.txt
++++ b/Documentation/EDID/howto.rst
 @@ -1,3 +1,9 @@
 +:orphan:
 +
-+======================================
-+Parallel port LCD/Keypad Panel support
-+======================================
++====
++EDID
++====
 +
- Some LCDs allow you to define up to 8 characters, mapped to ASCII
- characters 0 to 7. The escape code to define a new character is
- '\e[LG' followed by one digit from 0 to 7, representing the character
-@@ -7,7 +13,7 @@ illuminated pixel with LSB on the right. Lines are numbered from the
- top of the character to the bottom. On a 5x7 matrix, only the 5 lower
- bits of the 7 first bytes are used for each character. If the string
- is incomplete, only complete lines will be redefined. Here are some
--examples :
-+examples::
+ In the good old days when graphics parameters were configured explicitly
+ in a file called xorg.conf, even broken hardware could be managed.
  
-   printf "\e[LG0010101050D1F0C04;"  => 0 = [enter]
-   printf "\e[LG1040E1F0000000000;"  => 1 = [up]
-@@ -21,4 +27,3 @@ examples :
-   printf "\e[LG00002061E1E060200;"  => small speaker
+@@ -34,16 +40,19 @@ Makefile. Please note that the EDID data structure expects the timing
+ values in a different way as compared to the standard X11 format.
  
- Willy
--
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 24c52307361f..c40b6a876f2d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11773,7 +11773,7 @@ PARALLEL LCD/KEYPAD PANEL DRIVER
- M:	Willy Tarreau <willy@haproxy.com>
- M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
- S:	Odd Fixes
--F:	Documentation/auxdisplay/lcd-panel-cgram.txt
-+F:	Documentation/auxdisplay/lcd-panel-cgram.rst
- F:	drivers/auxdisplay/panel.c
+ X11:
+-HTimings:  hdisp hsyncstart hsyncend htotal
+-VTimings:  vdisp vsyncstart vsyncend vtotal
++  HTimings:
++    hdisp hsyncstart hsyncend htotal
++  VTimings:
++    vdisp vsyncstart vsyncend vtotal
  
- PARALLEL PORT SUBSYSTEM
+-EDID:
+-#define XPIX hdisp
+-#define XBLANK htotal-hdisp
+-#define XOFFSET hsyncstart-hdisp
+-#define XPULSE hsyncend-hsyncstart
++EDID::
+ 
+-#define YPIX vdisp
+-#define YBLANK vtotal-vdisp
+-#define YOFFSET vsyncstart-vdisp
+-#define YPULSE vsyncend-vsyncstart
++  #define XPIX hdisp
++  #define XBLANK htotal-hdisp
++  #define XOFFSET hsyncstart-hdisp
++  #define XPULSE hsyncend-hsyncstart
++
++  #define YPIX vdisp
++  #define YBLANK vtotal-vdisp
++  #define YOFFSET vsyncstart-vdisp
++  #define YPULSE vsyncend-vsyncstart
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 5006f876cf0e..4a2260eac131 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -929,7 +929,7 @@
+ 			edid/1680x1050.bin, or edid/1920x1080.bin is given
+ 			and no file with the same name exists. Details and
+ 			instructions how to build your own EDID data are
+-			available in Documentation/EDID/HOWTO.txt. An EDID
++			available in Documentation/EDID/howto.rst. An EDID
+ 			data set will only be used for a particular connector,
+ 			if its name and a colon are prepended to the EDID
+ 			name. Each connector may use a unique EDID data
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 39d5f7562f1c..bc5658d7a84b 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -140,7 +140,7 @@ config DRM_LOAD_EDID_FIRMWARE
+ 	  monitor are unable to provide appropriate EDID data. Since this
+ 	  feature is provided as a workaround for broken hardware, the
+ 	  default case is N. Details and instructions how to build your own
+-	  EDID data are given in Documentation/EDID/HOWTO.txt.
++	  EDID data are given in Documentation/EDID/howto.rst.
+ 
+ config DRM_DP_CEC
+ 	bool "Enable DisplayPort CEC-Tunneling-over-AUX HDMI support"
 -- 
 2.20.1
 
