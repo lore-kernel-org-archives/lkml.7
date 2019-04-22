@@ -2,127 +2,157 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40129C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3857C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F4220896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD85F20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u72uE3d7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="E5HfDJqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfDVQJg (ORCPT
+        id S1727657AbfDVQNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:09:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44071 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfDVQJf (ORCPT
+        Mon, 22 Apr 2019 12:13:13 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56582 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfDVQNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:09:35 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y13so5914929pfm.11;
-        Mon, 22 Apr 2019 09:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=75VFUzhLBbZYSNlGyBfH4fDoJgiF5PjQye02mlG/7pM=;
-        b=u72uE3d7p1vaP1N2IgElIcvf6X9J+Uy6bH6ZiyP9rM/7cHjUUN5JwVjWoc3Nl2mNzW
-         wqqgTVtP8jqSs5wxLLGiBeiscKld3FER8FViGmoYiVgWBVWfBeokV0wgNDsxSohd18L/
-         EIotd0NHACbmeGjRTp/85w9Bh1sgxd+gfMZ1D0kUhjEer/a4ng5p+NzmCkjkYQhKQ5xA
-         4l/hAch7KUmQn1mquLvDa5uvp9T60pIsAwRkOSTBk2BiOYo2YpPly3KHke4sgBHygaMb
-         GpQOyDA8A0JU/0Fv5J9bMQ42w2pYyu7P/1xhhHtzj5QYoj6Olna/pFVIuX1B8rsabKx2
-         kawA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=75VFUzhLBbZYSNlGyBfH4fDoJgiF5PjQye02mlG/7pM=;
-        b=trGA2tUWVVMhxTLjgg7iJsXsyYdN4peHehIJUIvc3FrXsSY1aDnMidk1tznN7Vx+oB
-         M6j6ksf1GDCMV2ZMncF9POO7yuef8/bZDpa5HP70yYfKPbBuhScE3oOZ6Rooqi9VOjH1
-         bSIRv1dwQlBAoQhkrJ/tb/dcoqXkqBb5ivGEtfvLBnwBjeJH2YfLebXmQHPaehaPh5QJ
-         tjfGrgLU3YQp8PH6AnScelJQ89X0tk5Ru5GnKptUAphmjRTXP5qYnwJyyo22um+4RDmG
-         RaVNdknaiR0v9AUv/6BfWFlroNcuYNX3WJrF5prppF/4iRJX+btgw5P2PQpx3A/sUgvF
-         xDDw==
-X-Gm-Message-State: APjAAAViuuQlLhDgrrdUDYc1hGOw9/a5qJDwfP+L49nZpYiQkGR0i7/y
-        wjSt6hnjLcCUA229feupnQ0IlWPU
-X-Google-Smtp-Source: APXvYqxUOQF3sKyMR+ujTjAAmunnwEV+Afs6651FqwqjxwtU0CWJr1RanXfhCp0HdXqz2VvL1lhIiw==
-X-Received: by 2002:a65:6205:: with SMTP id d5mr19826947pgv.61.1555949374719;
-        Mon, 22 Apr 2019 09:09:34 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id t9sm13389833pgp.66.2019.04.22.09.09.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:09:33 -0700 (PDT)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     David Ahern <dsahern@gmail.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Julian Anastasov <ja@ssi.bg>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
- <20190421204126.GA19213@ubuntu>
- <458669e6-3d94-1daf-f80b-3c8d740790fa@gmail.com>
- <925fe55a-918e-e899-6f3c-43731712e369@gmail.com>
-Message-ID: <3bf46fd2-1b7b-c380-a588-eadfd521ce19@gmail.com>
-Date:   Mon, 22 Apr 2019 09:09:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 22 Apr 2019 12:13:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1555949588; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AgYqFhHK9+KEdoRaW0HT5/Jpbx15R9mKS2eYOPHyvQU=;
+        b=E5HfDJqOG/dKz5uh7mOGylwgUlc5MSDOmxwoLxV3ytrQ6rZo3uBZ0Zlpyy6xOSiSx8I8c5
+        MlEnkQdSxXIMDXaxULwWIbYS1Qs1Kh/lHA1gCFYAkdahEmM0QUlNkKy9c+sf7YK+RMsrpd
+        mTWOV5fLJCoyJHX1aJzVBWnLG5VlvPc=
+Date:   Mon, 22 Apr 2019 18:13:02 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver
+ bindings
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, od@zcrc.me,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1555949582.1483.0@crapouillou.net>
+In-Reply-To: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
+References: <20190414200824.28348-1-paul@crapouillou.net>
+        <20190414200824.28348-2-paul@crapouillou.net>
+        <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
+        <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <925fe55a-918e-e899-6f3c-43731712e369@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+Le sam. 20 avril 2019 =E0 14:23, Ezequiel Garcia=20
+<ezequiel@vanguardiasur.com.ar> a =E9crit :
+> On Wed, 17 Apr 2019 at 10:48, Rob Herring <robh+dt@kernel.org> wrote:
+>>=20
+>>  On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil=20
+>> <paul@crapouillou.net> wrote:
+>>  >
+>>  > Add macros that can be used with the ingenic,lcd-mode property in=20
+>> the
+>>  > devicetree node that corresponds to the ingenic-drm driver.
+>>=20
+>>  DRM is a Linuxism.
+>>=20
+>>  >
+>>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  > Tested-by: Artur Rojek <contact@artur-rojek.eu>
+>>  > ---
+>>  >
+>>  > Notes:
+>>  >     v2: No change
+>>  >
+>>  >     v3: s/_DRM//
+>>  >
+>>  >  include/dt-bindings/display/ingenic,drm.h | 28=20
+>> ++++++++++++++++++++++++++++
+>>=20
+>>  DRM is a Linuxism...
+>>=20
+>>  >  1 file changed, 28 insertions(+)
+>>  >  create mode 100644 include/dt-bindings/display/ingenic,drm.h
+>>  >
+>>  > diff --git a/include/dt-bindings/display/ingenic,drm.h=20
+>> b/include/dt-bindings/display/ingenic,drm.h
+>>  > new file mode 100644
+>>  > index 000000000000..c749b8c346fc
+>>  > --- /dev/null
+>>  > +++ b/include/dt-bindings/display/ingenic,drm.h
+>>  > @@ -0,0 +1,28 @@
+>>  > +/* SPDX-License-Identifier: GPL-2.0 */
+>>  > +/*
+>>  > + *  Ingenic JZ47xx KMS driver
+>>=20
+>>  Pretty sure this file is not a KMS driver.
+>>=20
+>>  > + *
+>>  > + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
+>>  > + */
+>>  > +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+>>  > +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
+>>  > +
+>>  > +#define JZ_LCD_GENERIC_16BIT                   0
+>>  > +#define JZ_LCD_GENERIC_18BIT                   16
+>>=20
+>>  We have some generic properties for defining the bus width already.
+>>  Plus, in many cases this can be implied by the panel compatible. The
+>>  exceptions are cases such as when both the ctrlr and panel support
+>>  multiple modes.
+>>=20
+>=20
+> In the same direction as Rob's comment, I'd like to see these=20
+> decoupled
+> from the register value.
+>=20
+> Ideally, we'd like to reuse this driver and its bindings for JZ4780,
+> and these values are already different.
 
-On 04/22/2019 09:04 AM, Eric Dumazet wrote:
-> 
-> 
-> On 04/22/2019 07:58 AM, David Ahern wrote:
->> On 4/21/19 2:41 PM, Stephen Suryaputra wrote:
->>> Hi David,
->>>
->>> I looked at patchwork. This patch hasn't been accepted. Is there a plan
->>> to resubmit? It is very useful. I had to debug refcnt issues multiple
->>> times for my employer.
->>
->> I think the inlined versions of dev_put and dev_hold are better for
->> performance.
+Well they are not any different on the JZ4780, I just checked on the=20
+manual.
+But yes, I don't mind getting rid of that devicetree property and its
+corresponding bindings file.
 
-However I do not really see dev_put()/dev_hold() being in very hot code paths.
+The major problem is that we don't have a way to map some of the values=20
+there
+to DRM macros. I sumitted a PR to add a MEDIA_BUS_FMT_RGB888_3X8_BE bus=20
+format
+(that I could detect to support 8-bit serial TFT panels, which is what=20
+the
+Ben Nanonote uses), but I miss a way to detect the special* TFT panels.
+I will leave these aside for now, but I want to support them eventually.
 
+Thanks,
+-Paul
 
->>
->> I could submit it with a DEBUG config to enable. It has been invaluable
->> to me over the past 3+ years debugging refcount problems.
->>
-> 
-> Sounds a good plan to me :)
-> 
+* "special" TFT panels have extra pins (CLS, SPL, REV, PS) and seem to=20
+be a
+thing from Sharp. Ingenic SoCs (as well as i.MX SoCs) have the required
+hardware to drive these panels.
 
-Another idea would be to track of all dev_hold(), by allocating an unique cookie
-and providing the cookie at the corresponding dev_put()
+> Thanks!
+> --
+> Ezequiel Garc=EDa, VanguardiaSur
+> www.vanguardiasur.com.ar
 
-The cookie would also keep track of the stack trace.
-
-This would allow for an automatic finding of the missing release, but at extra cost of course.
-
-This infrastructure would of course being a debug option at kernel build.
-
+=
 
