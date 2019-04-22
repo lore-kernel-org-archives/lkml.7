@@ -2,104 +2,153 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91641C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8AEC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9542064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555970240;
-	bh=dY1Su9dQmYiUkU6AHwXA6nOYPbk1wnTltNut4Yp7R+E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ND9bdFafoMQSvMTGCsQQnwGBRR2GCP/xwra+0YADgs7NpDMJUrRXvDR6yiELLxrfV
-	 AwB+MiYhq0uWCk0PxV6NgdotEOFZBGzRr5TQHu8e64MyRgRMlSLydR3hNTFrTCBdX8
-	 7j5e3mz0VFEfFvo+Q8TE6gPfVbHn7KwGSlWDk4JE=
+	by mail.kernel.org (Postfix) with ESMTP id 33A772064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbfDVV5T (ORCPT
+        id S1730191AbfDVV6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:57:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41967 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728619AbfDVV5R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:57:17 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k8so11569830lja.8
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 14:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4YlKYa3TQ1kuoOrxS+gPcL63NFPtXMSxMgiFITTKoOg=;
-        b=ETNwPb1rfyoao4c9RzXoOH/cx7pgjLwiwAP5qP1C5hzfEX18s5fW1edRr41PQbWByx
-         KzhtCB8ORq7GgFu1cr+C0FbEhbN4dR763atOiLl/2RTj0FWO5cDrXbm4NP4dq/ZRVKak
-         eArbmgAeiN+Y/Cz+HP5NM8L6L1O3Excecq3cM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4YlKYa3TQ1kuoOrxS+gPcL63NFPtXMSxMgiFITTKoOg=;
-        b=ltlpHYgl8EKXKD5RSx3flqo8DQznopZaHU2esIdUXST4tOmGresVEtYdInA6L/XFHh
-         JZ3K4adkae+4oRUSESLOFabNnQcY78bli284lUp4mzSzpGKOAtAuH4PUZQ6lrrTmWTif
-         O5wprf8z6r+nccISMG4nKGL/K3c+voEpTMQarbIw1dND0sNAY1OkVBEZXFU3BDdf8ipm
-         Pqv3oRWNycBoa+fPPhg6C2FDMbxNTywG2tPLe7kSwG5VKHOMmPFR1g4H8gAS4+fprG1C
-         fPJihURmC7pHIvmxn2Jd4FS0Y3SIqVscDw+D7GuGpHHB/l/R4rRUKnTn6s91jTiE2rl0
-         Rs/w==
-X-Gm-Message-State: APjAAAWso+Dl1QFaICNXIpqRQTvInJnlZxDSu5K1WNxAwTu5WA1CxVKQ
-        M1/8IuFxwP0rhbM6ektnKLPD6JUmE1M=
-X-Google-Smtp-Source: APXvYqz8wjCZYYXWe0fNhMVIzhs86obUJvq4yeOinz95jsYDqvYWH1BL7vxBQID8rpRnKAdEWA9PyA==
-X-Received: by 2002:a2e:8618:: with SMTP id a24mr11371058lji.192.1555970234936;
-        Mon, 22 Apr 2019 14:57:14 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id n4sm3216761lfe.15.2019.04.22.14.57.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 14:57:13 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id j20so10074791lfh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 14:57:13 -0700 (PDT)
-X-Received: by 2002:a19:ca02:: with SMTP id a2mr11388505lfg.88.1555970233102;
- Mon, 22 Apr 2019 14:57:13 -0700 (PDT)
+        Mon, 22 Apr 2019 17:58:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2223 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728619AbfDVV6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:58:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 14:58:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,383,1549958400"; 
+   d="scan'208";a="225739933"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga001.jf.intel.com with ESMTP; 22 Apr 2019 14:58:31 -0700
+Date:   Mon, 22 Apr 2019 14:58:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190422215831.GL1236@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-References: <20190416174900.GT2217@ZenIV.linux.org.uk> <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
- <20190416175340.21068-60-viro@ZenIV.linux.org.uk> <CAOg9mSQppnRWPnSg9eAm0NeW3XEm0LZ74Aw651QTBx0Gm1jpQA@mail.gmail.com>
-In-Reply-To: <CAOg9mSQppnRWPnSg9eAm0NeW3XEm0LZ74Aw651QTBx0Gm1jpQA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Apr 2019 14:56:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whjK_n2wZX3kZNgkK=wBrw+K5PvMowJ4rYDiDSrmV_aYw@mail.gmail.com>
-Message-ID: <CAHk-=whjK_n2wZX3kZNgkK=wBrw+K5PvMowJ4rYDiDSrmV_aYw@mail.gmail.com>
-Subject: Re: [RFC PATCH 60/62] orangefs: make use of ->free_inode()
-To:     Mike Marshall <hubcap@omnibond.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Martin Brandenburg <martin@omnibond.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 2:14 PM Mike Marshall <hubcap@omnibond.com> wrote:
->
-> I applied your "new inode method: ->free_inode()" and
-> "orangefs: make use of ->free_inode()" to our pagecache
-> branch (I hope to get it pulled in the next merge window).
++Cc Jethro
 
-Actually, please don't.
+On Wed, Apr 17, 2019 at 01:39:25PM +0300, Jarkko Sakkinen wrote:
+> Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
+> can be used by applications to set aside private regions of code and
+> data. The code outside the enclave is disallowed to access the memory
+> inside the enclave by the CPU access control.
+> 
+> This commit adds the Linux SGX Enclave Driver that provides an ioctl API
+> to manage enclaves. The address range for an enclave, commonly referred
+> as ELRANGE in the documentation (e.g. Intel SDM), is reserved with
+> mmap() against /dev/sgx/enclave. After that a set ioctls is used to
+> build the enclave to the ELRANGE.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Serge Ayoun <serge.ayoun@intel.com>
+> Signed-off-by: Serge Ayoun <serge.ayoun@intel.com>
+> Co-developed-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
+> Signed-off-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
+> Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
+> Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
+> ---
 
-Exactly because this needs that common vfs patch, I'd really prefer to
-get it all through Al's tree, rather than have individual filesystems
-apply their own copies of the common infrastructure commit, and then
-apply their changes on top of that.
+...
 
-I can easily handle any trivial conflicts this causes, so that's not a
-reason to have each filesystem do it either.
+> +#ifdef CONFIG_ACPI
+> +static struct acpi_device_id sgx_device_ids[] = {
+> +	{"INT0E0C", 0},
+> +	{"", 0},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, sgx_device_ids);
+> +#endif
+> +
+> +static struct platform_driver sgx_drv = {
+> +	.probe = sgx_drv_probe,
+> +	.remove = sgx_drv_remove,
+> +	.driver = {
+> +		.name			= "sgx",
+> +		.acpi_match_table	= ACPI_PTR(sgx_device_ids),
+> +	},
+> +};
 
-So if this is at the top of your tree, can you just "git reset" it
-away and I'll get all the filesystems (and the common infrastructure
-commit) all together from Al.
+Where do we stand on removing the ACPI and platform_driver dependencies?
+Can we get rid of them sooner rather than later?
 
-                 Linus
+Now that the core SGX code is approaching stability, I'd like to start
+sending RFCs for the EPC virtualization and KVM bits to hash out that side
+of things.  The ACPI crud is the last chunk of code that would require
+non-trivial changes to the core SGX code for the proposed virtualization
+implementation.  I'd strongly prefer to get it out of the way before
+sending the KVM RFCs.
+
+> +static int __init sgx_drv_subsys_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = bus_register(&sgx_bus_type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = alloc_chrdev_region(&sgx_devt, 0, SGX_DRV_NR_DEVICES, "sgx");
+> +	if (ret < 0) {
+> +		bus_unregister(&sgx_bus_type);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void sgx_drv_subsys_exit(void)
+> +{
+> +	bus_unregister(&sgx_bus_type);
+> +	unregister_chrdev_region(sgx_devt, SGX_DRV_NR_DEVICES);
+> +}
+> +
+> +static int __init sgx_drv_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = sgx_drv_subsys_init();
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = platform_driver_register(&sgx_drv);
+> +	if (ret)
+> +		sgx_drv_subsys_exit();
+> +
+> +	return ret;
+> +}
+> +module_init(sgx_drv_init);
+> +
+> +static void __exit sgx_drv_exit(void)
+> +{
+> +	platform_driver_unregister(&sgx_drv);
+> +	sgx_drv_subsys_exit();
+> +}
+> +module_exit(sgx_drv_exit);
