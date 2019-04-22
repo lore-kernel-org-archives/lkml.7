@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A610C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661ECC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D733218FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BC721903
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962364;
-	bh=AugjpwPcIUqsJmF/AYrlVBLBuSDQk+fEb5wdIVgnD0Q=;
+	s=default; t=1555962368;
+	bh=j6yeyVD+1tbV3hxfCLXAfvN5O6IhzeGm9btec9OKgkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5gfvJnKgJkbijxsGXZZLeI9dVcgC6AOvgEvb8Onpm/L1d0WYNmg8j4ebk0dBEgoO
-	 fOfS0GhHKk9IQ0vdqGo7/Z2vI3c4K2YEWa+VV9OBCMkEZa6orhN0z8On5vJbewT6rO
-	 i7KrWthAR6vLZFzSu0JKyasy+3rh8AeLTpQL6a4g=
+	b=MjMucuaiQeVJYEm9RCVIu2F+TozmdtETosQ0C6S40oHGomO9tz4pHq9u4uQWri7QB
+	 JALeB7vTShOM5HvdQnLV1dd3UYMEo/l+siTGPx0ptVsAOSc6ECGP+eI4kNBjuf83YN
+	 /8rexBpA9t7B/+l/6xLniLY2qvkjuqafbc3zPdAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfDVTqC (ORCPT
+        id S1729918AbfDVTqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:46:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729885AbfDVTp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:57 -0400
+        id S1729904AbfDVTqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:46:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0552F21901;
-        Mon, 22 Apr 2019 19:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 474A2218B0;
+        Mon, 22 Apr 2019 19:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962356;
-        bh=AugjpwPcIUqsJmF/AYrlVBLBuSDQk+fEb5wdIVgnD0Q=;
+        s=default; t=1555962362;
+        bh=j6yeyVD+1tbV3hxfCLXAfvN5O6IhzeGm9btec9OKgkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6W5/egX7EFhvX0f0cir7y7PXCzV5nnDf1YGOWan+/xLNfOzTvEpOaAxdN7V7WVLp
-         P8imiUI89GZuP6pLOvNWcPyJUzphd3QPnr9xXDr+zIDwzf7hMjaUUPxCO8U5uQ3ugC
-         SkjZC1B4cgNgBid40HHjL0ulRhOY4BwEiHyE+uZk=
+        b=VP9svqd/q298+H627hu6ZXYrM9mn5k5mgrsVVOLba/ZzR2P9IIbq2CLhQ+C2PAlGc
+         JjfdoHA6hffOkvxA6gVp1wKtcQpPdUbUX5m6UclMBf9wRl1nacUtfg/R5jUV+OdAax
+         w7W6cVvjQ2yDEz/ezgbbpuRkRV2d4SrE5sO6MkQ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+Cc:     Guido Kiener <guido@kiener-muenchen.de>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/68] usb: dwc3: pci: add support for Comet Lake PCH ID
-Date:   Mon, 22 Apr 2019 15:44:29 -0400
-Message-Id: <20190422194516.11634-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/68] usb: gadget: net2280: Fix net2280_dequeue()
+Date:   Mon, 22 Apr 2019 15:44:31 -0400
+Message-Id: <20190422194516.11634-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -57,39 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: Guido Kiener <guido@kiener-muenchen.de>
 
-[ Upstream commit 7ae622c978db6b2e28b4fced6ecd2a174492059d ]
+[ Upstream commit f1d3fba17cd4eeea20397f1324b7b9c69a6a935c ]
 
-This patch simply adds a new PCI Device ID
+When a request must be dequeued with net2280_dequeue() e.g. due
+to a device clear action and the same request is finished by the
+function scan_dma_completions() then the function net2280_dequeue()
+does not find the request in the following search loop and
+returns the error -EINVAL without restoring the status ep->stopped.
+Thus the endpoint keeps blocked and does not receive any data
+anymore.
+This fix restores the status and does not issue an error message.
 
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/gadget/udc/net2280.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index fdc6e4e403e8..8cced3609e24 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -29,6 +29,7 @@
- #define PCI_DEVICE_ID_INTEL_BXT_M		0x1aaa
- #define PCI_DEVICE_ID_INTEL_APL			0x5aaa
- #define PCI_DEVICE_ID_INTEL_KBP			0xa2b0
-+#define PCI_DEVICE_ID_INTEL_CMLH		0x02ee
- #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
-@@ -305,6 +306,9 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
- 	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
- 
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_SPTLP),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index c57046b1da0e..ee872cad5270 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -1273,9 +1273,9 @@ static int net2280_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+-		dev_err(&ep->dev->pdev->dev, "%s: Request mismatch\n",
+-								__func__);
++		ep_dbg(ep->dev, "%s: Request mismatch\n", __func__);
+ 		return -EINVAL;
+ 	}
  
 -- 
 2.19.1
