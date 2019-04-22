@@ -4,61 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31340C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A295C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7DD221900
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C14218D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962306;
-	bh=vVszk48zb7rcNd8exr3HZ1ozvbVDgkQiQF6O+xzrBTA=;
+	s=default; t=1555962311;
+	bh=XDO05OiU7HVVW90RgruyC+uNZMIoHSDsuY6yyzBQTYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j/sy74o7N8Mg1kzH4ytQ/W0IgsodFILgn7p3hIXW73DBmzs74Baao9zV5VF6CP5PZ
-	 Jjc61FZQP2FbBCN+yJnbeq9SXV1WBzW5ntJj31W/eIeWmAtVIpUnynZohaLXvH70ZC
-	 YcUdVhVKftIOFtbRu3pIUcblsmIY8SG/TEQoeVfM=
+	b=2P8v1atdcPknh9ZMKwgAwciJ2E1mfaHVwADgL0tEf+VmoIDiQJs+lpCZLa7ZX15oX
+	 WQIfbW/9B+WCW9RsDZVR8tqhGid4Q08qcpGAsb8W1nqXU95F7kt/gt7wPXqgdD7Am0
+	 qdoF1rXCv+fDhlRw18gaviQNxJL5Llg6+Kicx54c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbfDVTpE (ORCPT
+        id S1729672AbfDVTpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbfDVTpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:02 -0400
+        id S1729604AbfDVTpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED51218B0;
-        Mon, 22 Apr 2019 19:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7089A218D9;
+        Mon, 22 Apr 2019 19:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962300;
-        bh=vVszk48zb7rcNd8exr3HZ1ozvbVDgkQiQF6O+xzrBTA=;
+        s=default; t=1555962306;
+        bh=XDO05OiU7HVVW90RgruyC+uNZMIoHSDsuY6yyzBQTYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrQp/HJXBz6cbTZ83EM/ZfQFhEtKCHRSUOtho2AI3zP9oA2sDkBBHjO+PcsM9k3pK
-         6yYwE5dgAOiUvR6TAsGozlz4mSK5U337cPdfdSVNsglNeWxTvDANKGaNxT07HCPbw5
-         eBsOYcNk0VzeEqB7YJ+R3jlx1g5byMFF/PxDZRyY=
+        b=1Fj3Z3cl5kL/rI66iZzSBxf0OT21eYV47sGISHo0sfRV7xrjq6FzKuzSLRpE7NGct
+         uI7th2t9b78wePJygmF1NZAkXZRnBy9LuDfO7+pLUOErYPU4+3IVD9SLFY4KyQgs0q
+         qldrUZUHQK5Ouhkk9LqcxjRUVHZDbidbbmzzZM40=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Solomon Tan <solomonbobstoner@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Suzuki K Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 91/98] perf cs-etm: Add missing case value
-Date:   Mon, 22 Apr 2019 15:41:58 -0400
-Message-Id: <20190422194205.10404-91-sashal@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 93/98] kconfig/[mn]conf: handle backspace (^H) key
+Date:   Mon, 22 Apr 2019 15:42:00 -0400
+Message-Id: <20190422194205.10404-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,72 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Solomon Tan <solomonbobstoner@gmail.com>
+From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit c8fa7a807f3c5f946bd92076fbaf7826edb650dc ]
+[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
 
-The following error was thrown when compiling `tools/perf` using OpenCSD
-v0.11.1. This patch fixes said error.
+Backspace is not working on some terminal emulators which do not send the
+key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+But currently only '^?' is handled. Let's also handle '^H' for those
+terminals.
 
-    CC       util/intel-pt-decoder/intel-pt-log.o
-    CC       util/cs-etm-decoder/cs-etm-decoder.o
-  util/cs-etm-decoder/cs-etm-decoder.c: In function
-  ‘cs_etm_decoder__buffer_range’:
-  util/cs-etm-decoder/cs-etm-decoder.c:370:2: error: enumeration value
-  ‘OCSD_INSTR_WFI_WFE’ not handled in switch [-Werror=switch-enum]
-    switch (elem->last_i_type) {
-    ^~~~~~
-    CC       util/intel-pt-decoder/intel-pt-decoder.o
-  cc1: all warnings being treated as errors
-
-Because `OCSD_INSTR_WFI_WFE` case was added only in v0.11.0, the minimum
-required OpenCSD library version for this patch is no longer v0.10.0.
-
-Signed-off-by: Solomon Tan <solomonbobstoner@gmail.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190322052255.GA4809@w-OptiPlex-7050
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- tools/build/feature/test-libopencsd.c           | 4 ++--
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+ scripts/kconfig/nconf.c             | 2 +-
+ scripts/kconfig/nconf.gui.c         | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/build/feature/test-libopencsd.c b/tools/build/feature/test-libopencsd.c
-index d68eb4fb40cc..2b0e02c38870 100644
---- a/tools/build/feature/test-libopencsd.c
-+++ b/tools/build/feature/test-libopencsd.c
-@@ -4,9 +4,9 @@
- /*
-  * Check OpenCSD library version is sufficient to provide required features
-  */
--#define OCSD_MIN_VER ((0 << 16) | (10 << 8) | (0))
-+#define OCSD_MIN_VER ((0 << 16) | (11 << 8) | (0))
- #if !defined(OCSD_VER_NUM) || (OCSD_VER_NUM < OCSD_MIN_VER)
--#error "OpenCSD >= 0.10.0 is required"
-+#error "OpenCSD >= 0.11.0 is required"
- #endif
- 
- int main(void)
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 8c155575c6c5..2a8bf6b45a30 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -374,6 +374,7 @@ cs_etm_decoder__buffer_range(struct cs_etm_decoder *decoder,
- 		break;
- 	case OCSD_INSTR_ISB:
- 	case OCSD_INSTR_DSB_DMB:
-+	case OCSD_INSTR_WFI_WFE:
- 	case OCSD_INSTR_OTHER:
- 	default:
- 		packet->last_instr_taken_branch = false;
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index 611945611bf8..1dcfb288ee63 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -113,7 +113,8 @@ do_resize:
+ 			case KEY_DOWN:
+ 				break;
+ 			case KEY_BACKSPACE:
+-			case 127:
++			case 8:   /* ^H */
++			case 127: /* ^? */
+ 				if (pos) {
+ 					wattrset(dialog, dlg.inputbox.atr);
+ 					if (input_x == 0) {
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index a4670f4e825a..ac92c0ded6c5 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1048,7 +1048,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+ 		state->match_direction = FIND_NEXT_MATCH_UP;
+ 		*ans = get_mext_match(state->pattern,
+ 				state->match_direction);
+-	} else if (key == KEY_BACKSPACE || key == 127) {
++	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+ 		state->pattern[strlen(state->pattern)-1] = '\0';
+ 		adj_match_dir(&state->match_direction);
+ 	} else
+diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+index 7be620a1fcdb..77f525a8617c 100644
+--- a/scripts/kconfig/nconf.gui.c
++++ b/scripts/kconfig/nconf.gui.c
+@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
+ 		case KEY_F(F_EXIT):
+ 		case KEY_F(F_BACK):
+ 			break;
+-		case 127:
++		case 8:   /* ^H */
++		case 127: /* ^? */
+ 		case KEY_BACKSPACE:
+ 			if (cursor_position > 0) {
+ 				memmove(&result[cursor_position-1],
 -- 
 2.19.1
 
