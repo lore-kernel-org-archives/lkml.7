@@ -2,115 +2,149 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E767C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A6AC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DC020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD5B20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FMHNpjnr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HP46O8oI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfDVPR1 (ORCPT
+        id S1727458AbfDVPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:17:27 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57036 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbfDVPR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:17:27 -0400
-Received: from zn.tnic (p200300EC2F07AE00B522724F4D48BE41.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:ae00:b522:724f:4d48:be41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 77A091EC027B;
-        Mon, 22 Apr 2019 17:17:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555946245;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=JFpPLtfkepV9r9+lHEYcsdq9WsB7wkVB6MPpylxpGW8=;
-        b=FMHNpjnrXbYmVyRsNnRzG136ACapGj3qe3EoZZCyU6ah8CwfJmNoLsf8xx+9Wx62M7AvWR
-        WXRCQ1LwEsyIAx7IPhGgYEYYw1fR1XoSbGhSNPCAineeJYnAfRujXlRrwHGjlIZ04v7iQ6
-        HNFp7ZD/aGj6aZ85f6LoUlSaCQdNqeI=
-Date:   Mon, 22 Apr 2019 17:17:23 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>, dyoung@redhat.com,
-        Kairui Song <kasong@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
- mapping before accessing it
-Message-ID: <20190422151723.GD21457@zn.tnic>
-References: <20190419101733.GA10324@zn.tnic>
- <20190419105014.GE11060@MiWiFi-R3L-srv>
- <20190419112801.GB10324@zn.tnic>
- <20190419113621.GD10324@zn.tnic>
- <20190422143346.GD3584@localhost.localdomain>
+        Mon, 22 Apr 2019 11:21:42 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46366 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfDVPVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 11:21:42 -0400
+Received: by mail-vs1-f65.google.com with SMTP id e2so6395942vsc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 08:21:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jo4QnBFvCI2pSHJjt+WPg9GxNe4IYci0262Mc3uaeAs=;
+        b=HP46O8oItxx97YrVVEwduwNQuCIzdcSk2DQTaaBQwOeSRtttO73+dUOYaPxAf1Ny18
+         ETS3YeHtwlYUBEGcWEW/skIgQBGKGC5RsOSYTglryb9V/0nk10CGB5dLbs8OKTNJWlsj
+         9J9ZukCuBgs882Ewzbap7mIB0wN7Mbxncq23k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jo4QnBFvCI2pSHJjt+WPg9GxNe4IYci0262Mc3uaeAs=;
+        b=ozPQGfWOmehw4o0cPH+qO3PE0cxtwXBwej5RLsBv8tNEc5kQlEjRtAZHObCo74OHVi
+         zdyUJ6WAaPjbZs7v1fKcc7GQLxNfsG+JMJ+669/tGH2wR9W86JT41C2CRFM4mztq6Poq
+         s+oG4U7yzJh5pxJAxc1d82z1eqmfwpjCgDWLHu9y76T+oMkDhAgf6/PSK9G8G854zSO6
+         i8tFcfJckahtZfZ0U6Wf/v3nHy9vbMgw6PQFQV3C9veWU2pjZUSEvIotPXDorFYdEFSX
+         CXE4n0HaDgXo3OoImDF0QnOkT8ncqZNSrN8ZPEPfZEcIHsOEXwvX+Hmar2oo6GRpwCZ0
+         B65A==
+X-Gm-Message-State: APjAAAUdXdwVw0yFPAEUJ0bJZ9m7HL7Ex18uPN0MrPg04LvTvHQzi900
+        SzOI2g5aX3wTasJ3730ZiJaAObppql4=
+X-Google-Smtp-Source: APXvYqygvPi/EJzlO+32CqgQjhs03wgKP4tZUFpBuvcMvaFdbdbwAS8CqVOj9cr8tsNnLPJxqx+KrA==
+X-Received: by 2002:a67:ed0b:: with SMTP id l11mr10175587vsp.55.1555946500737;
+        Mon, 22 Apr 2019 08:21:40 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id g15sm405924uah.11.2019.04.22.08.21.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 08:21:39 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id j184so6396451vsd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 08:21:39 -0700 (PDT)
+X-Received: by 2002:a67:c812:: with SMTP id u18mr9580850vsk.87.1555946498770;
+ Mon, 22 Apr 2019 08:21:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190422143346.GD3584@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190410221237.160856-1-dianders@chromium.org>
+In-Reply-To: <20190410221237.160856-1-dianders@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 22 Apr 2019 08:21:27 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Wm+T+W=LWTSiwBT3UQWG7YKQdGuL2+BmAFQhk8CYY1mQ@mail.gmail.com>
+Message-ID: <CAD=FV=Wm+T+W=LWTSiwBT3UQWG7YKQdGuL2+BmAFQhk8CYY1mQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: Disable SDIO interrupts while suspended to
+ fix suspend/resume
+To:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>, stable@vger.kernel.org,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ hpa
+Hi,
 
-On Mon, Apr 22, 2019 at 10:33:46PM +0800, Baoquan He wrote:
-> On 04/19/19 at 01:36pm, Borislav Petkov wrote:
-> > On Fri, Apr 19, 2019 at 01:28:01PM +0200, Borislav Petkov wrote:
-> > > Read again what I said: "should all be passed through boot_params".
-> > > Which means, boot_params should be extended with a field of a flag to
-> > > say: "this is a kexec'ed kernel".
-> > 
-> > And by that I mean similar to the XLF_EFI_KEXEC mechanism. The first
-> > kernel or kexec(1) should prepare the info needed by the kexec'ed
-> > kernel.
-> 
-> We have set the loader type to '0x0D << 4' for kexec specifically, in both
-> kexec_load and kexec_file_load. We can check this to identify if it's
-> kexec-ed kernel or not.
-> 
-> Update patch with it?
-> 
-> static void *bzImage64_load(struct kimage *image, char *kernel,
->                             unsigned long kernel_len, char *initrd,
->                             unsigned long initrd_len, char *cmdline,
->                             unsigned long cmdline_len)
-> {
-> 
-> 	...
-> 	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
->         params->hdr.type_of_loader = 0x0D << 4;
+On Wed, Apr 10, 2019 at 3:13 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Processing SDIO interrupts while dw_mmc is suspended (or partly
+> suspended) seems like a bad idea.  We really don't want to be
+> processing them until we've gotten ourselves fully powered up.
+>
+> You might be wondering how it's even possible to become suspended when
+> an SDIO interrupt is active.  As can be seen in
+> dw_mci_enable_sdio_irq(), we explicitly keep dw_mmc out of runtime
+> suspend when the SDIO interrupt is enabled.  ...but even though we
+> stop normal runtime suspend transitions when SDIO interrupts are
+> enabled, the dw_mci_runtime_suspend() can still get called for a full
+> system suspend.
+>
+> Let's handle all this by explicitly masking SDIO interrupts in the
+> suspend call and unmasking them later in the resume call.  To do this
+> cleanly I'll keep track of whether the client requested that SDIO
+> interrupts be enabled so that we can reliably restore them regardless
+> of whether we're masking them for one reason or another.
+>
+> Without this fix it can be seen that rk3288-veyron Chromebooks with
+> Marvell WiFi would sometimes fail to resume WiFi even after picking my
+> recent mwifiex patch [1].  Specifically you'd see messages like this:
+>   mwifiex_sdio mmc1:0001:1: Firmware wakeup failed
+>   mwifiex_sdio mmc1:0001:1: PREP_CMD: FW in reset state
+>
+> ...and tracing through the resume code in the failing cases showed
+> that we were processing a SDIO interrupt really early in the resume
+> call.
+>
+> NOTE: downstream in Chrome OS 3.14 and 3.18 kernels (both of which
+> support the Marvell SDIO WiFi card) we had a patch ("CHROMIUM: sdio:
+> Defer SDIO interrupt handling until after resume") [2].  Presumably
+> this is the same problem that was solved by that patch.
+>
+> [1] https://lkml.kernel.org/r/20190404040106.40519-1-dianders@chromium.org
+> [2] https://crrev.com/c/230765
+>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> I didn't put any "Fixes" tag here, but presumably this could be
+> backported to whichever kernels folks found it useful for.  I have at
+> least confirmed that kernels v4.14 and v4.19 (as well as v5.1-rc2)
+> show the problem.  It is very easy to pick this to v4.19 and it
+> definitely fixes the problem there.
+>
+> I haven't spent the time to pick this to 4.14 myself, but presumably
+> it wouldn't be too hard to backport this as far as v4.13 since that
+> contains commit 32dba73772f8 ("mmc: dw_mmc: Convert to use
+> MMC_CAP2_SDIO_IRQ_NOTHREAD for SDIO IRQs").  Prior to that it might
+> make sense for anyone experiencing this problem to just pick the old
+> CHROMIUM patch to fix them.
+>
+>  drivers/mmc/host/dw_mmc.c | 24 ++++++++++++++++++++----
+>  drivers/mmc/host/dw_mmc.h |  3 +++
+>  2 files changed, 23 insertions(+), 4 deletions(-)
 
-That's already documented in Documentation/x86/boot.txt
+Jaehoon / Shawn: any thoughts on this patch?
 
-Field name:     type_of_loader
-Type:           write (obligatory)
-Offset/size:    0x210/1
-Protocol:       2.00+
-
-	...
-
-        D  kexec-tools
-
-And yes, the question in the code is still valid: do we need a separate ID.
-
-I'd say no and we'll simply call 0xD all kernels loaded using a
-kexec-type syscall.
-
-IMO.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+-Doug
