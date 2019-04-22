@@ -2,129 +2,84 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59CBC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F02EC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E3920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591A620B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfDVQHU (ORCPT
+        id S1727925AbfDVQHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:07:20 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47944 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVQHU (ORCPT
+        Mon, 22 Apr 2019 12:07:25 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:37696 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726801AbfDVQHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 12:07:20 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6F132280AE6;
-        Mon, 22 Apr 2019 17:07:18 +0100 (BST)
-Date:   Mon, 22 Apr 2019 18:07:15 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "joao.pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] i3c: fix i2c and i3c scl rate by bus mode
-Message-ID: <20190422180715.40abe1b9@collabora.com>
-In-Reply-To: <13D59CF9CEBAF94592A12E8AE55501350A61B3B4@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
-        <05fdeea79db83970e9ecb0d7045b4dd98f206f06.1555350118.git.vitor.soares@synopsys.com>
-        <20190416075041.22f8e849@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350A61596D@DE02WEMBXB.internal.synopsys.com>
-        <20190416165250.0606e5a2@collabora.com>
-        <13D59CF9CEBAF94592A12E8AE55501350A61B3B4@DE02WEMBXB.internal.synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+Received: (qmail 5353 invoked by uid 2102); 22 Apr 2019 12:07:19 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 Apr 2019 12:07:19 -0400
+Date:   Mon, 22 Apr 2019 12:07:19 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <rafael@kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in __dev_printk
+In-Reply-To: <000000000000b3f4390587207d78@google.com>
+Message-ID: <Pine.LNX.4.44L0.1904221206170.1384-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Apr 2019 15:54:33 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+On Mon, 22 Apr 2019, syzbot wrote:
 
-
-> > > >     
-> > > > >  {
-> > > > >  	i3cbus->mode = mode;
-> > > > >  
-> > > > > -	if (!i3cbus->scl_rate.i3c)
-> > > > > -		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > > -
-> > > > > -	if (!i3cbus->scl_rate.i2c) {
-> > > > > -		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
-> > > > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
-> > > > > -		else
-> > > > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
-> > > > > +	switch (i3cbus->mode) {
-> > > > > +	case I3C_BUS_MODE_PURE:
-> > > > > +		if (!i3cbus->scl_rate.i3c)
-> > > > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > > +		break;
-> > > > > +	case I3C_BUS_MODE_MIXED_FAST:
-> > > > > +		if (!i3cbus->scl_rate.i3c)
-> > > > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > > > > +		if (!i3cbus->scl_rate.i2c)
-> > > > > +			i3cbus->scl_rate.i2c = i2c_scl_rate;
-> > > > > +		break;
-> > > > > +	case I3C_BUS_MODE_MIXED_SLOW:
-> > > > > +		if (!i3cbus->scl_rate.i2c)
-> > > > > +			i3cbus->scl_rate.i2c = i2c_scl_rate;
-> > > > > +		i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;    
-> > > > 
-> > > > Maybe we should do
-> > > > 
-> > > > 		if (!i3cbus->scl_rate.i3c ||
-> > > > 		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
-> > > > 			i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;
-> > > > 					   
-> > > > Just in case the I3C rate forced by the user is lower than the max I2C
-> > > > rate.    
-> > > 
-> > > That was something that I considered but TBH it isn't a real use case.  
-> > 
-> > Add a WARN_ON() to at least catch such inconsistencies. And maybe we
-> > should add a dev_warn() when the user-defined rates do not match
-> > the mode/LVR constraints. It's easy to do a mistake when writing a dts.  
+> Hello,
 > 
-> I think the WARN_ON() is too evasive on the screen and won't provide the 
-> information we want.
-> The dev_warn() should work perfectly here.
-> 
-> 		if (i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c)
-> 			dev_warn(&i3cbus->cur_master->dev->dev,
-> 				     "%s: i3c-scl-hz lower then i2c-scl-hz\n",  __func__);
+> syzbot tried to test the proposed patch but build/boot failed:
 
-Using dev_warn() sounds good, though I don't think you need the
-__func__ here. Also, please print the i2c/i3c rates in the message, and
-align the second line on the open parens.
+Typo in the patch (missing comma).  Let's try again.
 
-> 		if (i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_SCL_RATE ||
-> 		    i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_PLUS_SCL_RATE)
-> 			dev_warn(&i3cbus->cur_master->dev->dev,
-> 				     "%s: i2c-scl-hz not defined according MIPI I3C spec\n", 
-> 				     __func__);
+Alan Stern
 
-Is that really a problem? Having an i2c rate that is less than FM speed
-sounds like a valid case to me.
 
-> 
-> Maybe it make more sense to do this check on of_populate_i3c_bus(), what 
-> do you think?
-> 
+#syz test: https://github.com/google/kasan.git usb-fuzzer
 
-No, we really want to have this check here, because we might support
-other HW description formats at some point (board-files, ACPI, ...).
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -178,6 +178,10 @@ static void yurex_interrupt(struct urb *
+ 	}
+ 
+ exit:
++	if (!usb_get_intfdata(dev->interface)) {
++		dev_info(&dev->interface->dev, "%s unbound\n", __func__);
++		return;
++	}
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
+@@ -309,11 +313,15 @@ static void yurex_disconnect(struct usb_
+ 
+ 	dev = usb_get_intfdata(interface);
+ 	usb_set_intfdata(interface, NULL);
++	dev_info(&interface->dev, "%s\n", __func__);
+ 
+ 	/* give back our minor */
+ 	usb_deregister_dev(interface, &yurex_class);
+ 
+ 	/* prevent more I/O from starting */
++	dev_info(&interface->dev, "Before poison\n");
++	usb_poison_urb(dev->urb);
++	dev_info(&interface->dev, "After poison\n");
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
+
