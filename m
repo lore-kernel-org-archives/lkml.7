@@ -2,94 +2,157 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC97C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271CBC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198C420881
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:32:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="1Vsd5mi/"
+	by mail.kernel.org (Postfix) with ESMTP id E3B4720874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfDVPc6 (ORCPT
+        id S1727509AbfDVPhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:32:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40906 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVPc6 (ORCPT
+        Mon, 22 Apr 2019 11:37:15 -0400
+Received: from gateway30.websitewelcome.com ([192.185.152.11]:17467 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726098AbfDVPhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:32:58 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q66so10641146ljq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 08:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E04feIBZvZgiVWqwgFV5BaACVYyGdJMCpkpJ4kHAwQY=;
-        b=1Vsd5mi/YJTV9ZRCuC03jJyZGvAuIlKF6gnlH0Z1xoWogH2lYJGWIw56UP1mqxEOts
-         V2gFjPoOUGC3BYD+TPBFKt+HE0NkBGagMhWOk5ujwVSNmmNrR6e3tvBL12wHYuQ9IiL1
-         z+09RRonafiWrJaEk/EvvOT/wXXD0uoDSdBIfULzbVNL+f9zB8+KK7qDniY1AssCwBhk
-         XpRl3DvCckhurWFPhH5kZnhWVTxLglwAeFFQnk35+3h5tyhdNBV5VNvqI98NkvZwdrsV
-         zJB/cvMv22ZN7Veg+2GvnOD4i5+GxMGpDuxG+I5fyNFsKijIifI0A2w4Z1rOPbBgeOpG
-         gOWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E04feIBZvZgiVWqwgFV5BaACVYyGdJMCpkpJ4kHAwQY=;
-        b=UDdDY2JouGdCCoIArB58fEiVatR61Hhn5x530zpgT2tYrVJTHKjYzWjxVCep0F9/Ot
-         cWSAI5teTqCjTYDeqrkg7tZ8JeIazHVIAbQM1Q5MtfOWjFrv2djPJ/tlrRFVS7jc/wOL
-         5bz4zv2EtJ1t4bUZFOGJcb3onfVZEzgxXqw9Od05iqbWmcQP1NjENaq4kkv59WVNPBe4
-         NEUvF6gARABOshH1ah0sN3zlri7qckFPr64zUDARHVqSN7oTqJHfJCEOUsVu8r9t53um
-         dMNQnbnLL5E2zoxcf1iniQvukOAzbATMehlsfDq9d4XNuKqhEJYVj6cPKgKhcTl1dXyz
-         CQ9w==
-X-Gm-Message-State: APjAAAW97Htw1UBpjpYvdSEPu9RGylS2oCP8ob1Lgp1N1S91kByockUJ
-        H5AzcFxFejKAvgz46tNmTps9bHsBVb1fEGaG8zyh
-X-Google-Smtp-Source: APXvYqxm4QvCJjkdKj/9cXI5AYMznijDBv2jwQmA6fBtM4LC3GKLYwn+JHXpsw7wqCM4Smg7nczBsNU7+3Y13R7zZw4=
-X-Received: by 2002:a2e:91d2:: with SMTP id u18mr10619599ljg.161.1555947175731;
- Mon, 22 Apr 2019 08:32:55 -0700 (PDT)
+        Mon, 22 Apr 2019 11:37:15 -0400
+X-Greylist: delayed 1380 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 11:37:13 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id D65343216
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:14:12 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Iae4hKHZhdnCeIae4h66ML; Mon, 22 Apr 2019 10:14:12 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.103] (port=34874 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hIae4-000pH0-Bg; Mon, 22 Apr 2019 10:14:12 -0500
+Subject: Re: [PATCH] perf script: Fix memory leaks in list_scripts()
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190408162748.GA21008@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <567a492a-08fd-7580-24fa-b07a1ebf532e@embeddedor.com>
+Date:   Mon, 22 Apr 2019 10:14:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1555724969-15300-1-git-send-email-wang6495@umn.edu>
-In-Reply-To: <1555724969-15300-1-git-send-email-wang6495@umn.edu>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 22 Apr 2019 11:32:44 -0400
-Message-ID: <CAHC9VhTu4dmCaivFw5zv-znx-KyhJadW21WVdgss5Aw5BEpcsw@mail.gmail.com>
-Subject: Re: [PATCH v3] audit: fix a memory leak bug
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Eric Paris <eparis@redhat.com>,
-        "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190408162748.GA21008@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.103
+X-Source-L: No
+X-Exim-ID: 1hIae4-000pH0-Bg
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.103]:34874
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 9:49 PM Wenwen Wang <wang6495@umn.edu> wrote:
-> In audit_rule_change(), audit_data_to_entry() is firstly invoked to
-> translate the payload data to the kernel's rule representation. In
-> audit_data_to_entry(), depending on the audit field type, an audit tree may
-> be created in audit_make_tree(), which eventually invokes kmalloc() to
-> allocate the tree.  Since this tree is a temporary tree, it will be then
-> freed in the following execution, e.g., audit_add_rule() if the message
-> type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
-> AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
-> AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
-> temporary tree is not freed.
->
-> To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
-> or AUDIT_DEL_RULE.
->
-> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Hi all,
+
+Friendly ping:
+
+Who can take this?
+
+Thanks
+
+On 4/8/19 11:27 AM, Gustavo A. R. Silva wrote:
+> In case memory resources for *buf* and *paths* were allocated,
+> jump to *out* and release them before return.
+> 
+> Addresses-Coverity-ID: 1444328 ("Resource leak")
+> Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  kernel/auditfilter.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-
-Merged into audit/next - thanks!
-
--- 
-paul moore
-www.paul-moore.com
+>  tools/perf/ui/browsers/scripts.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+> index 27cf3ab88d13..f4edb18f67ec 100644
+> --- a/tools/perf/ui/browsers/scripts.c
+> +++ b/tools/perf/ui/browsers/scripts.c
+> @@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
+>  		int key = ui_browser__input_window("perf script command",
+>  				"Enter perf script command line (without perf script prefix)",
+>  				script_args, "", 0);
+> -		if (key != K_ENTER)
+> -			return -1;
+> +		if (key != K_ENTER) {
+> +			ret = -1;
+> +			goto out;
+> +		}
+>  		sprintf(script_name, "%s script %s", perf, script_args);
+>  	} else if (choice < num + max_std) {
+>  		strcpy(script_name, paths[choice]);
+> 
