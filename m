@@ -2,151 +2,121 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5690AC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFBAC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F1820859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903172077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGHiR6tV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfDVEKO (ORCPT
+        id S1726450AbfDVEZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 00:10:14 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:7235 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725903AbfDVEKN (ORCPT
+        Mon, 22 Apr 2019 00:25:28 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43943 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfDVEZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 00:10:13 -0400
-X-UUID: ad8ab2db20d942e38c1fb2e243bceb12-20190422
-X-UUID: ad8ab2db20d942e38c1fb2e243bceb12-20190422
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 339008067; Mon, 22 Apr 2019 12:10:05 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 22 Apr 2019 12:10:03 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 22 Apr 2019 12:10:03 +0800
-Message-ID: <1555906203.26524.1.camel@mtksdaap41>
-Subject: Re: [PATCH v4 07/12] soc: mediatek: cmdq: clear the event in cmdq
- initial flow
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mon, 22 Apr 2019 00:25:28 -0400
+Received: by mail-pl1-f194.google.com with SMTP id n8so5193824plp.10;
+        Sun, 21 Apr 2019 21:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LgVpHhZnASfuRCS+c0R9jxeOE6l0uajXoRX2DmClENs=;
+        b=jGHiR6tVvPxNUj8YYvuMJM+meJG8qnE4iuQs9vQ13tk2bJGHQ6T/yfoOns9zlr0J0D
+         yPsHITuuA4H+NacmqF9ccCqEOVfbaO8R6ORQFWrxl8GxqgV+RQeEsOTHaZsRnJVFtgHO
+         v2Pup5gcRTUpnpIYsUnF6ZHEO287z1otclNVoXGGE2+N5GKYzdS/6mXGBgtw46scXszw
+         PjrJYS8qz3I4pr3Q0xa8aJTCcwGkh43SSQhTeKGdWu8xZTee6YeQQK/QOR8bbaOmRxPP
+         BLuS1fE6Vb1ydI6JW2LEY3Wo+qAZV9mj7fqSPWz4zsNQ3Cs5EnE7aAP8R0wFYYKNx1wC
+         tghA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LgVpHhZnASfuRCS+c0R9jxeOE6l0uajXoRX2DmClENs=;
+        b=Zt7+ry3tUMWqKwH1Ronc0rEv+CFFNAdviA2h+TB0Bd3+ewq5E224XfeLvADY60aD4a
+         A2nIMTY7wmwfIFppYm3JdOqmEijxa7fvMUgahxlwip06pI2+ix2bFazJy96VffWAgVud
+         QJ2hwPZdDvuJ3tpxZOMfnAC0U4oStfpViJYQGH/HydO5MVeOBkTlwKL/oeN8v0DgXp9C
+         mSBOhZCMFmYQWcyamxIXW68KMPQQylGosQZVszONRhiJGZ8nCRKBNORmXbmt/kMby1TG
+         WtlIfVyeJSnydg2SEOSQtA/Dbe8uJ+cmbig/CuEjAw/TEn+gn8M/+5cRfFDyLoiDV6eq
+         MQxQ==
+X-Gm-Message-State: APjAAAV5g/QMhJOhibsu2z1Osjgt1AmUWDGWK5T79xWqmU1QOKujP4VB
+        SO4I+dyRCyIu2OAnD5zRgMU=
+X-Google-Smtp-Source: APXvYqxTKugQGWfVu1bLTkffozSkuF5sJNMOsGX76y54k1minWbE0w4ZWJ9JmpBJc+FURcsC2USYpw==
+X-Received: by 2002:a17:902:31c3:: with SMTP id x61mr17900960plb.143.1555907127555;
+        Sun, 21 Apr 2019 21:25:27 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id k3sm9285633pfb.175.2019.04.21.21.25.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Apr 2019 21:25:26 -0700 (PDT)
+Date:   Sun, 21 Apr 2019 21:25:20 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Date:   Mon, 22 Apr 2019 12:10:03 +0800
-In-Reply-To: <20190415125833.38704-8-bibby.hsieh@mediatek.com>
-References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
-         <20190415125833.38704-8-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx: Add mclk0 clock for SAI
+Message-ID: <20190422042519.GA4304@Asurada>
+References: <VE1PR04MB647951B20E0F334FF1CC3B7AE3220@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 9632806C88DE6EC941CA60DE75FC4B3860D273C66FE5D1ED7C6009E339C8EE6D2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB647951B20E0F334FF1CC3B7AE3220@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
-
-On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
-> GCE hardware stored event information in own internal sysram,
-> if the initial value in those sysram is not zero value
-> it will cause a situation that gce can wait the event immediately
-> after client ask gce to wait event but not really trigger the
-> corresponding hardware.
+On Mon, Apr 22, 2019 at 03:30:26AM +0000, S.j. Wang wrote:
+> > > SAI has 4 clock sources, which can be selected using MSEL bit of SAI
+> > > TCR2 register.
+> > 
+> > I have a doubt at this statement. As far as I can understand, this MSEL is
+> > probably used by its internal clock MUX, so it's not really proving that SAI
+> > has 4 MCLK inputs. What I know is that SAI block itself only has 3 MCLK
+> > inputs as we defined in DT. It's just internally connects bus clock or MCLK1
+> > to input0 of clock MUX's and connects MCLK[1-3] to input[1-3]. So adding an
+> > MCLK0 here doesn't sound a right way to me. Unless someone can justify
+> > for it, I think we should just fix it from driver side.
+> > 
+> > Thanks
+> > Nicolin
+> >
 > 
-> In order to make sure that the wait event function is
-> exactly correct, we need to clear the sysram value in
-> cmdq initial flow.
-> 
-> Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+> The MSEL bit width is 2 bit, so there is 4 options,  the MCLK0 maybe the same input as
+> MCLK1 or bus clock as you said, so we think may be better to show this relation in DT, 
+> And this is DT's capability.  Driver don't care about which clock connect to MCLK0, 
+> it only need to know there is 4 MCLK from DT. 
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+I know what it is. But it feels weird that we add an MCLK0 just
+because of what a register filed has, and there's no "MCLK0" be
+mentioned in the RM at all. My point is that if SAI doesn't have
+a port named "MCLK0", I don't feel it's that convincing to have
+it in the DT.
 
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
->  include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
->  3 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> index 6db1e2dd2dea..4e744cf2c3fb 100644
-> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -33,6 +33,7 @@
->  #define CMDQ_THR_END_ADDR		0x24
->  #define CMDQ_THR_WAIT_TOKEN		0x30
->  #define CMDQ_THR_PRIORITY		0x40
-> +#define CMDQ_SYNC_TOKEN_UPDATE		0x68
->  
->  #define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
->  #define CMDQ_THR_ENABLED		0x1
-> @@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
->  
->  static void cmdq_init(struct cmdq *cmdq)
->  {
-> +	int i;
-> +
->  	WARN_ON(clk_enable(cmdq->clock) < 0);
->  	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-> +	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-> +		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
->  	clk_disable(cmdq->clock);
->  }
->  
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index ccb73422c2fa..911475da7a53 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -19,6 +19,8 @@
->  #define CMDQ_WFE_UPDATE			BIT(31)
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
-> +/** cmdq event maximum */
-> +#define CMDQ_MAX_EVENT			0x3ff
->  
->  /*
->   * CMDQ_CODE_MASK:
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 54ade13a9b15..4e8899972db4 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -13,9 +13,6 @@
->  
->  #define CMDQ_NO_TIMEOUT		0xffffffffu
->  
-> -/** cmdq event maximum */
-> -#define CMDQ_MAX_EVENT				0x3ff
-> -
->  struct cmdq_pkt;
->  
->  struct cmdq_client {
-
-
+Usually in DT we define the clock sources of an entire IP block
+in audio use cases, not for an internal clock MUX. But taking a
+step back, it might not be really wrong to do so, since the MUX
+is a part of the hardware. If we redefine the MCLK[0-4] as "four
+clock sources of SAI's clock MUX selecting a clock for bit clock
+and frame clock providing" in the binding doc, I feel it'd make
+a lot of sense.
