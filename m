@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D15C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BFEC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C599A20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F56204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962745;
-	bh=0TFdt5e2GrVfmjW27liBsJAlnO5tybBaKGbRn2Anp3E=;
+	s=default; t=1555962750;
+	bh=RZHhLtnbYR92Tt2A5Oo+4YI0+QJ9PPVF76ew02vkmuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R8Q1jh5RFRdJpAnAnSYSiKdIFi67AQwWNEL2dZPGzEXYUKR4kbc12JkBz9yXCmo2I
-	 BjqqjLm6M5i98XsXiMoaUkIW+CkuTzaCadI3JY0uQEtx1xhaouySd5XqVcSLbnCly3
-	 s//ZN63PPkFeAnbnYL4gofcWl8bs1pReBixCVpu4=
+	b=W6RZDIsUm4R8xJvIVEOoIvreYm8rKhmOotkU9xNZuCKkyUp/6ENFp/2TeqNuaQc6D
+	 CRqwiV/8qZZ9FmMhijXtGSeNYiPRtFGuirJ/2Y4FAi5oYtgTkHJtmmgUVf5Fte1gh3
+	 rmnGpCrqnt+OjNSsvhT/KUKtQJM046ClxsgJFfDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfDVTuU (ORCPT
+        id S1731316AbfDVTw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54134 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:52:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730551AbfDVTuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:15 -0400
+        id S1731054AbfDVTuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2C020643;
-        Mon, 22 Apr 2019 19:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89EB021928;
+        Mon, 22 Apr 2019 19:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962614;
-        bh=0TFdt5e2GrVfmjW27liBsJAlnO5tybBaKGbRn2Anp3E=;
+        s=default; t=1555962619;
+        bh=RZHhLtnbYR92Tt2A5Oo+4YI0+QJ9PPVF76ew02vkmuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGg4ej73xt3QQCoT8FKVjsI286IRL26S0xWZqdlnNRRPZEjU3sN8RoR5TPpcj1m7u
-         HWzOtsiE0XIpfV08t1KeNW66kx1LMqCG078tlds46scEmg4XRvfwFa+upUnJ9AAuon
-         svZOtg2/WYIupNbMf/1vMALO1/ilNfdq8G/YLqmE=
+        b=aASy+LBjC5AYsk/+2DqVUlxQEHUbLAHWy81ofreA2RqTsKWJxVBlN3cqIT8WWywOt
+         TtLQKgfP+LzyRSyDXtymkYrNhoM6kyTlOzyDvfaaw0vRYfxEB9dXd23neV77tyGuWg
+         HzUtjm3rKkWuv6mVUIUln3RpDNqx4pnQDUWWecoA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mukesh Ojha <mojha@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 16/21] usb: u132-hcd: fix resource leak
-Date:   Mon, 22 Apr 2019 15:49:36 -0400
-Message-Id: <20190422194941.13433-16-sashal@kernel.org>
+Cc:     raymond pang <raymondpangxd@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 20/21] libata: fix using DMA buffers on stack
+Date:   Mon, 22 Apr 2019 15:49:40 -0400
+Message-Id: <20190422194941.13433-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
 References: <20190422194941.13433-1-sashal@kernel.org>
@@ -59,34 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mukesh Ojha <mojha@codeaurora.org>
+From: raymond pang <raymondpangxd@gmail.com>
 
-[ Upstream commit f276e002793cdb820862e8ea8f76769d56bba575 ]
+[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
 
-if platform_driver_register fails, cleanup the allocated resource
-gracefully.
+When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
+a stack virtual address. Stack DMA buffers must be avoided.
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: raymond pang <raymondpangxd@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/host/u132-hcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index d5434e7a3b2e..86f9944f337d 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -3214,6 +3214,9 @@ static int __init u132_hcd_init(void)
- 	printk(KERN_INFO "driver %s\n", hcd_name);
- 	workqueue = create_singlethread_workqueue("u132");
- 	retval = platform_driver_register(&u132_platform_driver);
-+	if (retval)
-+		destroy_workqueue(workqueue);
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 0ad96c647541..7017a81d53cf 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -51,38 +51,52 @@ static int eject_tray(struct ata_device *dev)
+ /* Per the spec, only slot type and drawer type ODD can be supported */
+ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ {
+-	char buf[16];
++	char *buf;
+ 	unsigned int ret;
+-	struct rm_feature_desc *desc = (void *)(buf + 8);
++	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+ 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-			0, sizeof(buf),
++			0, 16,
+ 			0, 0, 0,
+ 	};
+ 
++	buf = kzalloc(16, GFP_KERNEL);
++	if (!buf)
++		return ODD_MECH_TYPE_UNSUPPORTED;
++	desc = (void *)(buf + 8);
 +
- 	return retval;
+ 	ata_tf_init(dev, &tf);
+ 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
+ 	tf.command = ATA_CMD_PACKET;
+ 	tf.protocol = ATAPI_PROT_PIO;
+-	tf.lbam = sizeof(buf);
++	tf.lbam = 16;
+ 
+ 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
+-				buf, sizeof(buf), 0);
+-	if (ret)
++				buf, 16, 0);
++	if (ret) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (be16_to_cpu(desc->feature_code) != 3)
++	if (be16_to_cpu(desc->feature_code) != 3) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
++	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_SLOT;
+-	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
++	} else if (desc->mech_type == 1 && desc->load == 0 &&
++		   desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_DRAWER;
+-	else
++	} else {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
  }
  
+ /* Test if ODD is zero power ready by sense code */
 -- 
 2.19.1
 
