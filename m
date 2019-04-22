@@ -2,150 +2,113 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913AC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79552C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5492120693
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555938826;
-	bh=GfKXT+ZuhRm5Jn9euYKis3qNlZMgAnLXskTaqP5QHWY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SBLHAeOcZSh9xdqXivTN2rSDZkudtmYv0BbmmkUxgboheng3dhQZiuPhWZbcUQ/DF
-	 ETwxSWrBpjXMxQUGfE+Y2evybxD1+U0FBnL8tafGpjOi+uWvji5ER/yirwwpl5Mfdc
-	 Nz2f8WblVhFUN+9Yp1IRAPkCN3c4buhgON3FI1G0=
+	by mail.kernel.org (Postfix) with ESMTP id 5551520693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfDVNNo (ORCPT
+        id S1727391AbfDVNOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfDVNNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:13:44 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1AD20874;
-        Mon, 22 Apr 2019 13:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555938822;
-        bh=GfKXT+ZuhRm5Jn9euYKis3qNlZMgAnLXskTaqP5QHWY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZG9bTDFzNkvt/TJR5dfwtLs3PWMCVJTAmaK7JQyYzvSDqd/Ug2CmjjzTL8E9O2OBc
-         SwlQlF5LmIWAwYcTqqwdiSLiJr6hic067OODyBTgRm3Dy/eeo8nbDdGIBpiX5/B2zJ
-         Pr+BAaKmZacbR9vidrDEuPlstodpheHsPAsWGZ0g=
-Received: by mail-qk1-f177.google.com with SMTP id w73so4178246qkb.13;
-        Mon, 22 Apr 2019 06:13:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAX5Y+OE8nZtp/MznUv4MGM5p8FeKstkMLJJOmY2Wv8dDkZ+4thL
-        BX4UsN+/M/XZ24ZPQdgkDSDCgEL8C4ArjrjDJQ==
-X-Google-Smtp-Source: APXvYqzJYG+geuHAg6kTRjqKLRTQTE5eJnRiE83Vm6KlY6wH8aAMezPzFmY1PFRTiRVSGI1WRy10cBl3QZkSCyxz1qU=
-X-Received: by 2002:a37:9186:: with SMTP id t128mr14431012qkd.326.1555938821856;
- Mon, 22 Apr 2019 06:13:41 -0700 (PDT)
+        Mon, 22 Apr 2019 09:14:02 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:5243 "EHLO spam2.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726057AbfDVNOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:14:01 -0400
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam2.hygon.cn with ESMTP id x3MDBMM1020867;
+        Mon, 22 Apr 2019 21:11:22 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id x3MDB4Ct016123;
+        Mon, 22 Apr 2019 21:11:04 +0800 (GMT-8)
+        (envelope-from puwen@hygon.cn)
+Received: from pw-vbox.hygon.cn (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 22 Apr
+ 2019 21:11:18 +0800
+From:   Pu Wen <puwen@hygon.cn>
+To:     <jdelvare@suse.com>, <bp@alien8.de>
+CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
+Subject: [RFC PATCH RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
+Date:   Mon, 22 Apr 2019 21:10:07 +0800
+Message-ID: <1555938607-2865-1-git-send-email-puwen@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190420122333.23662-1-luca@z3ntu.xyz>
-In-Reply-To: <20190420122333.23662-1-luca@z3ntu.xyz>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 22 Apr 2019 08:13:29 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+EJpRFRzh-dmZAJUQ84iMm6rs=sNTYstpQJzsbSboUqg@mail.gmail.com>
-Message-ID: <CAL_Jsq+EJpRFRzh-dmZAJUQ84iMm6rs=sNTYstpQJzsbSboUqg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: input: add GPIO controllable vibrator
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam2.hygon.cn x3MDBMM1020867
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 7:24 AM Luca Weiss <luca@z3ntu.xyz> wrote:
->
-> Provide a simple driver for GPIO controllable vibrators.
-> It will be used by the Fairphone 2.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
-> Changes from v3:
-> - Convert .txt based doc to the new yaml based format
->
->  .../bindings/input/gpio-vibrator.yaml         | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.yaml
->
-> diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> new file mode 100644
-> index 000000000000..bca1b6ea07a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/input/gpio-vibrator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO vibrator
-> +
-> +maintainers:
-> +  - Luca Weiss <luca@z3ntu.xyz>
-> +
-> +description: |+
-> +  Registers a GPIO device as vibrator, where the on/off capability is controlled by a GPIO.
-> +
-> +properties:
-> +  compatible:
+The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
+which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
+to the i2c-piix4 driver by using the code path of AMD.
 
-> +    items:
-> +      - const: gpio-vibrator
+Cc: <stable@vger.kernel.org> # v5.0+
+Signed-off-by: Pu Wen <puwen@hygon.cn>
+---
+ drivers/i2c/busses/i2c-piix4.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-These 2 lines can be simplified to just 'const: gpio-vibrator'.
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 90946a8..9db9d9d 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -289,6 +289,9 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
+ 	     PIIX4_dev->revision >= 0x41) ||
+ 	    (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD &&
+ 	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
++	     PIIX4_dev->revision >= 0x49) ||
++	    (PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON &&
++	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
+ 	     PIIX4_dev->revision >= 0x49))
+ 		smb_en = 0x00;
+ 	else
+@@ -361,7 +364,8 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
+ 		 piix4_smba, i2ccfg >> 4);
+ 
+ 	/* Find which register is used for port selection */
+-	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
++	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
++	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
+ 		switch (PIIX4_dev->device) {
+ 		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
+@@ -794,6 +798,7 @@ static const struct pci_device_id piix4_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_SBX00_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_HYGON, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
+ 		     PCI_DEVICE_ID_SERVERWORKS_OSB4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
+@@ -904,11 +909,13 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
+ 	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
+ 	     dev->revision >= 0x40) ||
+-	    dev->vendor == PCI_VENDOR_ID_AMD) {
++	    dev->vendor == PCI_VENDOR_ID_AMD ||
++	    dev->vendor == PCI_VENDOR_ID_HYGON) {
+ 		bool notify_imc = false;
+ 		is_sb800 = true;
+ 
+-		if (dev->vendor == PCI_VENDOR_ID_AMD &&
++		if ((dev->vendor == PCI_VENDOR_ID_AMD ||
++		     dev->vendor == PCI_VENDOR_ID_HYGON) &&
+ 		    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
+ 			u8 imc;
+ 
+-- 
+2.7.4
 
-> +
-> +  enable-gpios:
-> +    maxItems: 1
-> +
-> +  vcc-supply:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-This isn't necessary as we can do this for every occurrence of
-'*-supply'. I'll add that to the core schema.
-
-With those 2 changes:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +    description: Regulator that provides power
-> +
-> +required:
-> +  - compatible
-> +  - enable-gpios
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    vibrator {
-> +        compatible = "gpio-vibrator";
-> +        enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
-> +        vcc-supply = <&pm8941_l18>;
-> +    };
-> --
-> 2.21.0
->
