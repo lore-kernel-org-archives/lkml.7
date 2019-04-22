@@ -2,151 +2,95 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ED3C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E410C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D08206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2777B206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnD1MrCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfDVJeS (ORCPT
+        id S1727189AbfDVJee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:34:18 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2985 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725817AbfDVJeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:34:18 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 6E5BEA21F127DF58985B;
-        Mon, 22 Apr 2019 17:34:01 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 22 Apr 2019 17:33:58 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 22 Apr 2019 17:33:58 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 1/2] f2fs: allow unfixed f2fs_checkpoint.checksum_offset
-Date:   Mon, 22 Apr 2019 17:33:52 +0800
-Message-ID: <20190422093353.61014-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme701-chm.china.huawei.com (10.1.199.97) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+        Mon, 22 Apr 2019 05:34:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33624 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDVJed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 05:34:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h5so5463609pfo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 02:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uyd2xviN2IvXkdq2AdoL+zoAvgNajflM6YruKctg5AY=;
+        b=fnD1MrCusBq9asUNdB0n028WwQODeb3jovYP+lzBG/grzxKOwr1OZqeP9/LznKbASU
+         aFZDAKyJm4cTfaShXhpZXW+HH0bZRH5xFgNVyUnpTKjTB7i0Pjxrkr56UrF2T9fWVOuR
+         U3hSGHfXVrF82E0hIlKZt2UuLdJh4IRj5wgVnOPjJwPl3VtnLLarqOV4OI+JFi3Cyv68
+         iBXXbV5ZAZCoSvioa3aWYCzhP0TgWxZZ631WpM2b8OWSHaKWUB7Cv6U2gQPEgKZz0V9m
+         BB6mdZCFIdW9mUHiD2fWwiKGeNLnaBT79l2WXX/iJ88JgO11ocYsvFQqWWt5a/KpeuWn
+         p76g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uyd2xviN2IvXkdq2AdoL+zoAvgNajflM6YruKctg5AY=;
+        b=F2dLZ44eeKbPnBL/FP1ys8U2Dd9x5DVY63vAN80wRIAlbRaOt7C8mx12KElmcGFBpC
+         O/4mcXNr19kLR6dpqO/oapMxzPTZf9R+QN3HxsIh1N7NVLi3DEdAFSp6VLT9XoB7wmlU
+         5si6I/xTeh3gK8rl5h4GYcsi7KzAaP49vr9DNB5qbzaszWjlzCfOcWqgVM/kL+wQx8hq
+         GfO3Y5NcPOMMpAqrtEkyfzS/2jn2p9L5Iinur5O2al6ZDxBuoSRQ8xkT7aKh+D8TjLhZ
+         VT3In98oidKE1IicuMfuVifkaMtkmTH/pKvysYYQVuSVTjxTULXqJbQSG7SzF1NF/suM
+         RMpw==
+X-Gm-Message-State: APjAAAW0KgPdzrkpvFcdZEHkVBkdOa/B9XqhywwRYacDZXlKErn92UYO
+        AEfa10C0zGTCbXX8MZQ9O2nZ7zWCeiuAFQ==
+X-Google-Smtp-Source: APXvYqyBpmXPHrW9M7yQVFzl4tTIoktehAC1rdtZ+v+LWlRSStmIM0VxDOwtPHxQleOUNeKNRyzw7Q==
+X-Received: by 2002:a62:6086:: with SMTP id u128mr19852822pfb.148.1555925673117;
+        Mon, 22 Apr 2019 02:34:33 -0700 (PDT)
+Received: from localhost.localdomain (ch.ptr162.ptrcloud.net. [153.122.97.60])
+        by smtp.gmail.com with ESMTPSA id x8sm14609477pgp.48.2019.04.22.02.34.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 02:34:31 -0700 (PDT)
+From:   Weikang shi <swkhack@gmail.com>
+To:     john.stultz@linaro.org
+Cc:     tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
+        swkhack@qq.com, swkhack <swkhack@gmail.com>
+Subject: [PATCH] time: fix a assignment error in ntp module
+Date:   Mon, 22 Apr 2019 17:34:21 +0800
+Message-Id: <20190422093421.47896-1-swkhack@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously, f2fs_checkpoint.checksum_offset points fixed position of
-f2fs_checkpoint structure:
+From: swkhack <swkhack@gmail.com>
 
-"#define CP_CHKSUM_OFFSET	4092"
+It is meanless to check a 64bit(txc->constant) value is postive 
+when the value has to be assigned to a 32 bit variable(*time_tai).
+So I make a temp type conversion before the compare.
 
-It is unnecessary, and it breaks the consecutiveness of nat and sit
-bitmap stored across checkpoint park block and payload blocks.
-
-This patch allows f2fs to handle unfixed .checksum_offset.
-
-In addition, for the case checksum value is stored in the middle of
-checkpoint park, calculating checksum value with superposition method
-like we did for inode_checksum.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: swkhack <swkhack@gmail.com>
 ---
- fs/f2fs/checkpoint.c    | 27 +++++++++++++++++++++------
- include/linux/f2fs_fs.h |  4 ++++
- 2 files changed, 25 insertions(+), 6 deletions(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 441814607b13..a25556aef8cc 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -794,13 +794,27 @@ static void write_orphan_inodes(struct f2fs_sb_info *sbi, block_t start_blk)
- 	}
- }
- 
-+static __u32 f2fs_checkpoint_chksum(struct f2fs_sb_info *sbi,
-+						struct f2fs_checkpoint *ckpt)
-+{
-+	unsigned int chksum_ofs = le32_to_cpu(ckpt->checksum_offset);
-+	__u32 chksum;
-+
-+	chksum = f2fs_crc32(sbi, ckpt, chksum_ofs);
-+	if (chksum_ofs < CP_CHKSUM_OFFSET) {
-+		chksum_ofs += sizeof(chksum);
-+		chksum = f2fs_chksum(sbi, chksum, (__u8 *)ckpt + chksum_ofs,
-+						F2FS_BLKSIZE - chksum_ofs);
-+	}
-+	return chksum;
-+}
-+
- static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
- 		struct f2fs_checkpoint **cp_block, struct page **cp_page,
- 		unsigned long long *version)
- {
--	unsigned long blk_size = sbi->blocksize;
- 	size_t crc_offset = 0;
--	__u32 crc = 0;
-+	__u32 crc;
- 
- 	*cp_page = f2fs_get_meta_page(sbi, cp_addr);
- 	if (IS_ERR(*cp_page))
-@@ -809,15 +823,16 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
- 	*cp_block = (struct f2fs_checkpoint *)page_address(*cp_page);
- 
- 	crc_offset = le32_to_cpu((*cp_block)->checksum_offset);
--	if (crc_offset > (blk_size - sizeof(__le32))) {
-+	if (crc_offset < CP_MIN_CHKSUM_OFFSET ||
-+			crc_offset > CP_CHKSUM_OFFSET) {
- 		f2fs_put_page(*cp_page, 1);
- 		f2fs_msg(sbi->sb, KERN_WARNING,
- 			"invalid crc_offset: %zu", crc_offset);
- 		return -EINVAL;
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 92a90014a..6b454eafc 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -690,7 +690,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
+ 		time_constant = max(time_constant, 0l);
  	}
  
--	crc = cur_cp_crc(*cp_block);
--	if (!f2fs_crc_valid(sbi, crc, *cp_block, crc_offset)) {
-+	crc = f2fs_checkpoint_chksum(sbi, *cp_block);
-+	if (crc != cur_cp_crc(*cp_block)) {
- 		f2fs_put_page(*cp_page, 1);
- 		f2fs_msg(sbi->sb, KERN_WARNING, "invalid crc value");
- 		return -EINVAL;
-@@ -1425,7 +1440,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	get_sit_bitmap(sbi, __bitmap_ptr(sbi, SIT_BITMAP));
- 	get_nat_bitmap(sbi, __bitmap_ptr(sbi, NAT_BITMAP));
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && (int)txc->constant > 0)
+ 		*time_tai = txc->constant;
  
--	crc32 = f2fs_crc32(sbi, ckpt, le32_to_cpu(ckpt->checksum_offset));
-+	crc32 = f2fs_checkpoint_chksum(sbi, ckpt);
- 	*((__le32 *)((unsigned char *)ckpt +
- 				le32_to_cpu(ckpt->checksum_offset)))
- 				= cpu_to_le32(crc32);
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index 55da9abed023..65559900d4d7 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -164,6 +164,10 @@ struct f2fs_checkpoint {
- 	unsigned char sit_nat_version_bitmap[1];
- } __packed;
- 
-+#define CP_CHKSUM_OFFSET	4092	/* default chksum offset in checkpoint */
-+#define CP_MIN_CHKSUM_OFFSET						\
-+	(offsetof(struct f2fs_checkpoint, sit_nat_version_bitmap))
-+
- /*
-  * For orphan inode management
-  */
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
-2.18.0.rc1
+2.17.1
 
