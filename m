@@ -2,112 +2,152 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247F6C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B53C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E911520859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOfdJFYT"
+	by mail.kernel.org (Postfix) with ESMTP id 6A51F20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfDVQF3 (ORCPT
+        id S1727560AbfDVQGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:05:29 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46549 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVQF3 (ORCPT
+        Mon, 22 Apr 2019 12:06:06 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:56500 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfDVQGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:05:29 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w26so5858307qto.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lqe5T/IHGzM/3+cSrJc7hY3YX15Dn1UASNLwG/n7aNU=;
-        b=HOfdJFYTVowlR4tf9AJysITXeJFAozu9WQhBheF5lRuilQzhC9QlPlVNA12ORJ04H7
-         ZHW8imyjJWNc6woE4cnUd6ohPAVODfaHztUWHBC+xAMRsgRuMYQ3DjCQKeGkRYUb1hYK
-         JdGnUChhS1AJUO6trjkanJBiT+Z5gCQlDwKwZxlT2BOMfmcmGz17nfJ7bjj7HDY1UkY4
-         v6Unyont4OS7r27Z+5oz9dsN7Bu4pLq+E91Xn8vW+LeK0/wWi5h2dIgV3J1PS3813st6
-         iKa0L4jeDd7oK92MfwtzW9sHFVzK3pBnItK3hrWefZyKwh5EAjpYlQsBnE0GYDAloAKb
-         hcBw==
+        Mon, 22 Apr 2019 12:06:05 -0400
+Received: by mail-it1-f197.google.com with SMTP id s21so12888286ite.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:06:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lqe5T/IHGzM/3+cSrJc7hY3YX15Dn1UASNLwG/n7aNU=;
-        b=Ukqtm6C3XOeZ9p0x4NM7bT5+b3NlHqIujVtokZbdzhxnHH+OCmE070lldFo5YJI5ju
-         IZY5QNE7rZzj1bHStGrdgZA4sUXQmgtzvSffLFVJTmXSmgvJ8sKugxC9Z3JKuYrUJ/iM
-         eTztTsbq3JIc0s0CmD46PpGxVd8U1dElJfgKFPP5K5oCMCr95p75aaiMA8QbFOytoe1y
-         Ho3qFSg4gOkPDmhaQr6D6px0zvm+RAXdrHgneSXLkPnuOZa4SAlqDSJExzdGSioRyEqb
-         TvIJ6liVBjrtn2ubQTquWFMvG8SHZZ56YFDDC7+EUnbVO5n2xmXe/bTBRCBsWeNlkS9H
-         EdUQ==
-X-Gm-Message-State: APjAAAUJ/tjmTCLLuEGbL0ofHlXY5j07T6on+vfJqs8BBz7QG1EBDGH7
-        7unWaRvedXassK9Qy1cC+iE9xvml
-X-Google-Smtp-Source: APXvYqwpVod+ytk0hi3EOaoqeoO3mu8KX9cQ+0DfnTbLNpG3OrRQ3PT2wH0uiDtZt6a0v/jRNX+2IQ==
-X-Received: by 2002:ac8:1a6d:: with SMTP id q42mr16477686qtk.129.1555949127832;
-        Mon, 22 Apr 2019 09:05:27 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (189-94-129-110.3g.claro.net.br. [189.94.129.110])
-        by smtp.gmail.com with ESMTPSA id h27sm8247415qtc.1.2019.04.22.09.05.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Apr 2019 09:05:26 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 76EE0403EB; Mon, 22 Apr 2019 13:05:23 -0300 (-03)
-Date:   Mon, 22 Apr 2019 13:05:23 -0300
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf bpf: Fix lock/unlock imbalance in
- perf_env__find_btf() info
-Message-ID: <20190422160523.GC11750@kernel.org>
-References: <20190422151056.GA24665@embeddedor>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7f2B0qDJ0NGKdfmC5nRFEVu9THrNzuuLQq94MmJHVqQ=;
+        b=sw10Ut5WoF8+b225mwEnMZGtwdkctAmePrcyoIKnr/Ee32/rFHNIMcDWoi4nmhpB6+
+         ex45Yq5eE4ayYO3W/+nvdT/UqzpNJkfbvj81KdYrKzL88X1VFhiYhm0YuFqNB61bhiP1
+         hDW8yF9PK1T70QATOj5kiniM6kvLoYvqqj3Su6b2S9dCsLe/noOzYYjAHc0GSd2Mv/Ot
+         KEpeh0jhmUu90okeAH7RtUmIp1rC9rMqjb022R3VmxALwCPdCcaaecSn5pKhr4jbh4IS
+         GnkJZhTzpeljGtJTZjvchwi80b0eGQDWwWf3MV4nlnUPpIycr55iBfeZ58OINN1v3I9N
+         zLjw==
+X-Gm-Message-State: APjAAAU3HBwtlHGxP8aI/O7BeUw4ka/CjP3sUuwHgfT7EJXCWiUZe2+B
+        beOf8nngF3iqMboKU8Pbov0PV0HE+FKyd90n1xoCfduMKNvS
+X-Google-Smtp-Source: APXvYqyiIeoejZHRLVRlzClbMGkAsacRLzUQppmw76boahG2dDk+oC18efBUJJNOKiFhJBEwHtznRpbtZ4fOUGfVJRgHUYp5P7ni
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422151056.GA24665@embeddedor>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Received: by 2002:a05:6602:2109:: with SMTP id x9mr6515182iox.94.1555949164951;
+ Mon, 22 Apr 2019 09:06:04 -0700 (PDT)
+Date:   Mon, 22 Apr 2019 09:06:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000043fe9c058720a5d3@google.com>
+Subject: WARNING in percpu_ref_kill_and_confirm
+From:   syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, axboe@kernel.dk, bp@alien8.de,
+        darrick.wong@oracle.com, gregkh@linuxfoundation.org, hpa@zytor.com,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org,
+        mathieu.desnoyers@efficios.com, mingo@redhat.com,
+        mpe@ellerman.id.au, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 22, 2019 at 10:10:56AM -0500, Gustavo A. R. Silva escreveu:
-> Fix lock/unlock imbalance by moving the call to up_read() just after
-> the *out* label.
-> 
-> Addresses-Coverity-ID: 1444762 ("Missing unlock")
-> Fixes: 2db7b1e0bd49 ("perf bpf: Return NULL when RB tree lookup fails in perf_env__find_btf()")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  tools/perf/util/env.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 9494f9dc61ec..6a3eaf7d9353 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -115,8 +115,8 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
->  	}
->  	node = NULL;
->  
-> -	up_read(&env->bpf_progs.lock);
->  out:
-> +	up_read(&env->bpf_progs.lock);
->  	return node;
->  }
+Hello,
 
-too late, this was fixed already, also detected by coverity :-)
+syzbot found the following crash on:
 
-- Arnaldo
+HEAD commit:    9e5de623 Merge tag 'nfs-for-5.1-5' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15624257200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=10d25e23199614b7721f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ff39f3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15758647200000
+
+The bug was bisected to:
+
+commit 38e7571c07be01f9f19b355a9306a4e3d5cb0f5b
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Mar 8 22:48:40 2019 +0000
+
+     Merge tag 'io_uring-2019-03-06' of git://git.kernel.dk/linux-block
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1736bc57200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14b6bc57200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b6bc57200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com
+Fixes: 38e7571c07be ("Merge tag 'io_uring-2019-03-06' of  
+git://git.kernel.dk/linux-block")
+
+------------[ cut here ]------------
+percpu_ref_kill_and_confirm called more than once on io_ring_ctx_ref_free!
+WARNING: CPU: 1 PID: 7815 at lib/percpu-refcount.c:335  
+percpu_ref_kill_and_confirm+0x341/0x3b0 lib/percpu-refcount.c:335
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7815 Comm: syz-executor269 Not tainted 5.1.0-rc5+ #77
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:percpu_ref_kill_and_confirm+0x341/0x3b0 lib/percpu-refcount.c:335
+Code: 42 e0 2a 06 01 48 89 fa 48 c1 ea 03 80 3c 02 00 75 76 49 8b 54 24 10  
+48 c7 c6 a0 71 a1 87 48 c7 c7 40 71 a1 87 e8 ad 92 13 fe <0f> 0b 48 b8 00  
+00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 80 3c 02
+RSP: 0018:ffff8880a96cfce0 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000607f5142e35b RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815afcf6 RDI: ffffed10152d9f8e
+RBP: ffff8880a96cfd10 R08: ffff8880a85c40c0 R09: fffffbfff1133639
+R10: fffffbfff1133638 R11: ffffffff8899b1c3 R12: ffff88809ee571c0
+R13: ffff88809ee571c8 R14: 0000000000000286 R15: 0000000000000000
+  percpu_ref_kill include/linux/percpu-refcount.h:128 [inline]
+  __io_uring_register+0xa7/0x1fe0 fs/io_uring.c:2937
+  __do_sys_io_uring_register fs/io_uring.c:2998 [inline]
+  __se_sys_io_uring_register fs/io_uring.c:2980 [inline]
+  __ia32_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2980
+  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f16869
+Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90  
+90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f7ef11ec EFLAGS: 00000296 ORIG_RAX: 00000000000001ab
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
