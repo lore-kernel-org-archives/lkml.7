@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0DEC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3702C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672A52175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682472175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962579;
-	bh=sAT42loiEBT5SpKi7duPEpAEsnnRodxopyhTazZscpM=;
+	s=default; t=1555962583;
+	bh=5yrX+NZnk/srg8xIsuMK1Wz8yeCcevL7p2sb+rBER+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OS3jByPh5+FkY9MBqYaKL0Ze28QRaEyv5gXyqJewwAURuJOENO55M8AMdxd3rNea0
-	 spYZF3VHdjR8lsn97v4ApuPdblrjj190vfx6q/vi2WwPS1N+K/3bzPAAS0qezMKcu9
-	 wcamTLNTM5F5XuL49dyvadjMRwkgrQFNrJGHXbfU=
+	b=yjzVTb7kI8X0sUOcvk/7SBCCB71gUzSxUkRvMmN9KUR4mTBMJTJcSdtHcSOzqU2xV
+	 4TeNCGV46APEYBUdgpLJ9iZuzqW6Ldr6CzZFiOb9MjVaUhG+ZTyXk/o4eZqsRPmOng
+	 8zSPeXltKBbjeZ7Evoku3d4K5P3JAJ2dcpAEYGeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfDVTti (ORCPT
+        id S1730914AbfDVTtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53360 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730872AbfDVTte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:34 -0400
+        id S1730867AbfDVTtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDC621738;
-        Mon, 22 Apr 2019 19:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C90E2175B;
+        Mon, 22 Apr 2019 19:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962573;
-        bh=sAT42loiEBT5SpKi7duPEpAEsnnRodxopyhTazZscpM=;
+        s=default; t=1555962572;
+        bh=5yrX+NZnk/srg8xIsuMK1Wz8yeCcevL7p2sb+rBER+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=17XIhOURVqHAJNYKIBLPxjsvvVpXF84FA8BPTVr7EqeME5Ysdp+pJq49m81Ya5Mgj
-         AwhoZ7KseRfh+0dd1eDonv3SLnKwdaTv0KkR9GhN3K6HK//qMgcyaVRIpRPM3Rvrep
-         GU0tW3NA7ds1bo6vDKhSkQbutBUBGsBg8pCePdiY=
+        b=uPs4c35i4ZfOrUSJbPuqe5xgAZTATVS5d5E1iMKLM7k1i77JyY9u0dMLE2eXkIccL
+         IuTpdUK5k1cIsLhgl6s+kT7kgFngJkHxYL2LqunI3PKFuH5vktxv49DQlzORUgB1QB
+         lJCwRzFACS6A/8Tj10MIHQpabFPERb8oaEXwa1nM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+Cc:     Mukesh Ojha <mojha@codeaurora.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 23/29] tty: fix NULL pointer issue when tty_port ops is not set
-Date:   Mon, 22 Apr 2019 15:48:42 -0400
-Message-Id: <20190422194848.13049-23-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 22/29] usb: u132-hcd: fix resource leak
+Date:   Mon, 22 Apr 2019 15:48:41 -0400
+Message-Id: <20190422194848.13049-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
 References: <20190422194848.13049-1-sashal@kernel.org>
@@ -58,70 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabien Dessenne <fabien.dessenne@st.com>
+From: Mukesh Ojha <mojha@codeaurora.org>
 
-[ Upstream commit f4e68d58cf2b20a581759bbc7228052534652673 ]
+[ Upstream commit f276e002793cdb820862e8ea8f76769d56bba575 ]
 
-Unlike 'client_ops' which is initialized to 'default_client_ops', the
-port operations 'ops' may be left to NULL.
-Check the 'ops' value before checking the 'ops->x' value.
+if platform_driver_register fails, cleanup the allocated resource
+gracefully.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/tty_port.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/host/u132-hcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 7f2f20b74d1d..06ba9dbbd610 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -213,7 +213,7 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
- 		if (tty && C_HUPCL(tty))
- 			tty_port_lower_dtr_rts(port);
- 
--		if (port->ops->shutdown)
-+		if (port->ops && port->ops->shutdown)
- 			port->ops->shutdown(port);
- 	}
- out:
-@@ -293,7 +293,7 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
- 
- int tty_port_carrier_raised(struct tty_port *port)
- {
--	if (port->ops->carrier_raised == NULL)
-+	if (!port->ops || !port->ops->carrier_raised)
- 		return 1;
- 	return port->ops->carrier_raised(port);
+diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
+index 43618976d68a..3efb7b0e8269 100644
+--- a/drivers/usb/host/u132-hcd.c
++++ b/drivers/usb/host/u132-hcd.c
+@@ -3208,6 +3208,9 @@ static int __init u132_hcd_init(void)
+ 	printk(KERN_INFO "driver %s\n", hcd_name);
+ 	workqueue = create_singlethread_workqueue("u132");
+ 	retval = platform_driver_register(&u132_platform_driver);
++	if (retval)
++		destroy_workqueue(workqueue);
++
+ 	return retval;
  }
-@@ -310,7 +310,7 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
  
- void tty_port_raise_dtr_rts(struct tty_port *port)
- {
--	if (port->ops->dtr_rts)
-+	if (port->ops && port->ops->dtr_rts)
- 		port->ops->dtr_rts(port, 1);
- }
- EXPORT_SYMBOL(tty_port_raise_dtr_rts);
-@@ -326,7 +326,7 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
- 
- void tty_port_lower_dtr_rts(struct tty_port *port)
- {
--	if (port->ops->dtr_rts)
-+	if (port->ops && port->ops->dtr_rts)
- 		port->ops->dtr_rts(port, 0);
- }
- EXPORT_SYMBOL(tty_port_lower_dtr_rts);
-@@ -582,7 +582,7 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
- 
- 	if (!tty_port_initialized(port)) {
- 		clear_bit(TTY_IO_ERROR, &tty->flags);
--		if (port->ops->activate) {
-+		if (port->ops && port->ops->activate) {
- 			int retval = port->ops->activate(port, tty);
- 			if (retval) {
- 				mutex_unlock(&port->mutex);
 -- 
 2.19.1
 
