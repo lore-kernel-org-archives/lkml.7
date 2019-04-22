@@ -6,31 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C7C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9A6C282E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D74206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8E5206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:38:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="l4Y3M3NJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="wBQl5kJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfDVJiH (ORCPT
+        id S1727324AbfDVJiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:38:07 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36124 "EHLO
+        Mon, 22 Apr 2019 05:38:08 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36112 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfDVJiC (ORCPT
+        with ESMTP id S1726164AbfDVJiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 05:38:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1555925879; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1555925877; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TdFMc2ArZeHfvknO6GPoLqWKLIOciaw3wht0zLdPaAc=;
-        b=l4Y3M3NJVGRr7ainKhT7VrOVuRLUGr4GtsKm4KQpqnajV8IMRtsw/TaF8t+FYt/uUKGNTF
-        dYEzHM5Cs5yAOYOr3CaV5XYPp6x3YrzozQNf+whdWRz0oSCdwFEQlqN1Uo1B69j29K3Sf8
-        xk8GpB2eOih++NlxD/fVcWSETD5AtUQ=
+         in-reply-to:references; bh=dsYdwrfjR8Xa/HInZFEBIwpWVxZnM8GKttL3gx6ZIpg=;
+        b=wBQl5kJdAng8w6aoUq3LXOycW0PEEwkgJxIh55xS846IUVBpH2wk58Ydk493Ks/TFWtnQ+
+        Dhm/as5jO9n00nhRVigFNGEZnuCnk3a1TqKTSpX4+CJkDN1uSJ45iCozWhAKyAoa48t0se
+        RxLhkW/lOp+srtvHVRfwEIPd/77eRPU=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -38,12 +37,11 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Hans Verkuil <hansverk@cisco.com>
 Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 2/3] media: uapi: Add RGB bus formats for the GiantPlus GPM940B0 panel
-Date:   Mon, 22 Apr 2019 11:37:21 +0200
-Message-Id: <20190422093722.4344-2-paul@crapouillou.net>
-In-Reply-To: <20190422093722.4344-1-paul@crapouillou.net>
-References: <20190422093722.4344-1-paul@crapouillou.net>
+        linux-media@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/3] dt-bindings: display: Add GiantPlus GPM940B0 panel documentation
+Date:   Mon, 22 Apr 2019 11:37:20 +0200
+Message-Id: <20190422093722.4344-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,42 +49,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GiantPlus GPM940B0 is a 24-bit TFT panel where the RGB components
-are transferred sequentially on a 8-bit bus.
+The GPM940B0 is a 3.0" 320x240 24-bit TFT LCD panel.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
     v2: New patch
     
-    v3: No change
+    v3: Add Rob's ack
 
- include/uapi/linux/media-bus-format.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../bindings/display/panel/giantplus,gpm940b0.txt    | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
 
-diff --git a/include/uapi/linux/media-bus-format.h b/include/uapi/linux/media-bus-format.h
-index d6a5a3bfe6c4..f31724d6cd40 100644
---- a/include/uapi/linux/media-bus-format.h
-+++ b/include/uapi/linux/media-bus-format.h
-@@ -34,7 +34,7 @@
- 
- #define MEDIA_BUS_FMT_FIXED			0x0001
- 
--/* RGB - next is	0x101b */
-+/* RGB - next is	0x101d */
- #define MEDIA_BUS_FMT_RGB444_1X12		0x1016
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_BE	0x1001
- #define MEDIA_BUS_FMT_RGB444_2X8_PADHI_LE	0x1002
-@@ -54,6 +54,8 @@
- #define MEDIA_BUS_FMT_RGB888_1X24		0x100a
- #define MEDIA_BUS_FMT_RGB888_2X12_BE		0x100b
- #define MEDIA_BUS_FMT_RGB888_2X12_LE		0x100c
-+#define MEDIA_BUS_FMT_RGB888_3X8_BE		0x101b
-+#define MEDIA_BUS_FMT_RGB888_3X8_LE		0x101c
- #define MEDIA_BUS_FMT_RGB888_1X7X4_SPWG		0x1011
- #define MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA	0x1012
- #define MEDIA_BUS_FMT_ARGB8888_1X32		0x100d
+diff --git a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+new file mode 100644
+index 000000000000..3dab52f92c26
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+@@ -0,0 +1,12 @@
++GiantPlus 3.0" (320x240 pixels) 24-bit TFT LCD panel
++
++Required properties:
++- compatible: should be "giantplus,gpm940b0"
++- power-supply: as specified in the base binding
++
++Optional properties:
++- backlight: as specified in the base binding
++- enable-gpios: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 -- 
 2.21.0.593.g511ec345e18
 
