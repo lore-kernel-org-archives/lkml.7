@@ -2,198 +2,156 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35374C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5192C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C4D21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF172175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EWXLAik9"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rFF7YRwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfDVRyZ (ORCPT
+        id S1728334AbfDVR4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 13:54:25 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:46923 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfDVRyZ (ORCPT
+        Mon, 22 Apr 2019 13:56:31 -0400
+Received: from mail.efficios.com ([167.114.142.138]:60984 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfDVR4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 13:54:25 -0400
-Received: by mail-yb1-f201.google.com with SMTP id d193so10246716ybh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:54:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=9YVB8fdkLopCxdifBnQcYBFkzaoHF/WFJeGhNgDoYnk=;
-        b=EWXLAik9zBK+zprNwt4ntx9u8HnshJqb39SD13hNQiQnsd7gbvkR8Qx3J5eJJg8gR4
-         Jh1Dhoa5t07ZTgwy6IenqxWApZTEUxNJbkfWdvaSMswLZx48RCc75OJ3bPy4y9nQCh3h
-         so2HKNZY3XePkZR64RGZ9QVebGQcomMsOBN1T+XzosvSmrU7a3/dqYvEGkiDH//IKcMX
-         jU2Tc6lCx7+R8GnQtOAYaYc68qNgX85NdEdvCfIJzrKl6oW0FRH1M021Aj8CIh6wuSZV
-         HTXrnFvgzT0wweAo2vsN4qjfPHdf9OMIOQ/hEga5DfdxEYHWfiGq/azmqIx4Kq0B0KPl
-         aRog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=9YVB8fdkLopCxdifBnQcYBFkzaoHF/WFJeGhNgDoYnk=;
-        b=XUdAFgT/inpnO6YGsXDaTHV9IlHwgDwwVYCh6HCGAfs/RjEouBO6FQtWJALvXfY8kI
-         dsJig6dl3UahpbnC80vrfekVoyQW7OCcHG/BKvRW42CongZL9ATPc8ch0FZY4riTmyZl
-         VhrBTUTjgk7RLHO3p+uHryyOGf+woj1cqPu00ugk1n7oTguNldkQOQZnjrqqBy7ovoPM
-         Fwk2hlzfaLVbXS3oENKU/rjHRa/RsPTSrCG6CUF9RO6Il6U4njPyK1JqRF/heY9Wx4on
-         Ug28VPbs+X2PXfo+YcndO7VarC8hakCtlMffgQDehDmhajbLfdjcOJFGDcp9KGgduB3W
-         7Zdg==
-X-Gm-Message-State: APjAAAWMkoXN6PLYkkfwJN1JmdotyvFPOiw4YIcKW9kgRaX7voMfDyyI
-        xPixjgP2BD+GsvG2/BvOX9kOT1lChQ9M
-X-Google-Smtp-Source: APXvYqx6Ab/84FHOjVrW01ph7oQS2rfIQ6a0PH3ocmJxRbyeVHmBD7PucYtZpxOJNVkAUYH7Sj4BGTk8gS6Z
-X-Received: by 2002:a0d:e84a:: with SMTP id r71mr13975022ywe.270.1555955664128;
- Mon, 22 Apr 2019 10:54:24 -0700 (PDT)
-Date:   Mon, 22 Apr 2019 10:54:19 -0700
-Message-Id: <20190422175419.189895-1-venture@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v2] soc: add aspeed folder and misc drivers
-From:   Patrick Venture <venture@google.com>
-To:     venture@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
-        joel@jms.id.au, andrew@aj.id.au
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 22 Apr 2019 13:56:31 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 755851A84BA;
+        Mon, 22 Apr 2019 13:56:29 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id nXkOo807CDQR; Mon, 22 Apr 2019 13:56:28 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C70651A84B7;
+        Mon, 22 Apr 2019 13:56:28 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C70651A84B7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555955788;
+        bh=gv9OMDSdXRCRrMDv4Oz+jp2qdf5RTtVFqawCqcGlMjw=;
+        h=From:To:Date:Message-Id;
+        b=rFF7YRwEE7JM1PioivBOsCo/uLvV/gKFtgi3yoOfb2Njep7d1tJ5BZgM3zrtg2s3Z
+         oz+K+0t5KjKeYnVeATWM1rolDG5OaNRbN3TSijL+V2il1G6sLyclWv7CGapRRn67vw
+         1gOPenF+MK3qvF1koOmHe29RowkE4wji4ETagyld5/T7p66VqZFAmS3x7GKrbBI3vn
+         oiQGNBbI9FHKW+sYp1fr+NEqdJ8nFOYBLTC/VJJ9OG7YP6kse5I5ZDRA5SmD7gduix
+         /AmdBY6aphk7InRxBkfciA9GYDuIta462tG/1btGavHR9dzwniFBtCYqnxecs2zxCW
+         KgpGsJiHMlR+Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id iyWlgBmdTTEP; Mon, 22 Apr 2019 13:56:28 -0400 (EDT)
+Received: from localhost.localdomain (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
+        by mail.efficios.com (Postfix) with ESMTPSA id E00F11A848F;
+        Mon, 22 Apr 2019 13:56:27 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 2/5] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v3)
+Date:   Mon, 22 Apr 2019 13:56:20 -0400
+Message-Id: <20190422175623.6134-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190422175623.6134-1-mathieu.desnoyers@efficios.com>
+References: <20190422175623.6134-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a SoC folder for the ASPEED parts and place the misc drivers
-currently present into this folder.  These drivers are not generic part
-drivers, but rather only apply to the ASPEED SoCs.
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 
-Signed-off-by: Patrick Venture <venture@google.com>
----
-v2:
- Added configuration option for ASPEED to soc/Makefile
----
- drivers/misc/Kconfig                          | 16 ----------------
- drivers/misc/Makefile                         |  2 --
- drivers/soc/Kconfig                           |  1 +
- drivers/soc/Makefile                          |  1 +
- drivers/soc/aspeed/Kconfig                    | 19 +++++++++++++++++++
- drivers/soc/aspeed/Makefile                   |  2 ++
- .../{misc => soc/aspeed}/aspeed-lpc-ctrl.c    |  0
- .../{misc => soc/aspeed}/aspeed-lpc-snoop.c   |  0
- 8 files changed, 23 insertions(+), 18 deletions(-)
- create mode 100644 drivers/soc/aspeed/Kconfig
- create mode 100644 drivers/soc/aspeed/Makefile
- rename drivers/{misc => soc/aspeed}/aspeed-lpc-ctrl.c (100%)
- rename drivers/{misc => soc/aspeed}/aspeed-lpc-snoop.c (100%)
+Benchmarks:
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 42ab8ec92a04..b80cb6af0cb4 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -496,22 +496,6 @@ config VEXPRESS_SYSCFG
- 	  bus. System Configuration interface is one of the possible means
- 	  of generating transactions on this bus.
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
+
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+---
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
+
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+---
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index fb0d317f83..167976fab7 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -24,8 +24,8 @@
+ #endif
+ #include <sysdep-vdso.h>
  
--config ASPEED_LPC_CTRL
--	depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
--	tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
--	---help---
--	  Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
--	  ioctl()s, the driver also provides a read/write interface to a BMC ram
--	  region where the host LPC read/write region can be buffered.
--
--config ASPEED_LPC_SNOOP
--	tristate "Aspeed ast2500 HOST LPC snoop support"
--	depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
--	help
--	  Provides a driver to control the LPC snoop interface which
--	  allows the BMC to listen on and save the data written by
--	  the host to an arbitrary LPC I/O port.
--
- config PCI_ENDPOINT_TEST
- 	depends on PCI
- 	select CRC32
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index d5b7d3404dc7..b9affcdaa3d6 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -54,8 +54,6 @@ obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
- obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
- obj-$(CONFIG_CXL_BASE)		+= cxl/
--obj-$(CONFIG_ASPEED_LPC_CTRL)	+= aspeed-lpc-ctrl.o
--obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
- obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
- obj-$(CONFIG_OCXL)		+= ocxl/
- obj-y				+= cardreader/
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-index c07b4a85253f..b750a88547c7 100644
---- a/drivers/soc/Kconfig
-+++ b/drivers/soc/Kconfig
-@@ -2,6 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
- 
- source "drivers/soc/actions/Kconfig"
- source "drivers/soc/amlogic/Kconfig"
-+source "drivers/soc/aspeed/Kconfig"
- source "drivers/soc/atmel/Kconfig"
- source "drivers/soc/bcm/Kconfig"
- source "drivers/soc/fsl/Kconfig"
-diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-index 90b686e586c6..814128fe479f 100644
---- a/drivers/soc/Makefile
-+++ b/drivers/soc/Makefile
-@@ -4,6 +4,7 @@
- #
- 
- obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
-+obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
- obj-$(CONFIG_ARCH_AT91)		+= atmel/
- obj-y				+= bcm/
- obj-$(CONFIG_ARCH_DOVE)		+= dove/
-diff --git a/drivers/soc/aspeed/Kconfig b/drivers/soc/aspeed/Kconfig
-new file mode 100644
-index 000000000000..457282cd1da5
---- /dev/null
-+++ b/drivers/soc/aspeed/Kconfig
-@@ -0,0 +1,19 @@
-+menu "Aspeed SoC drivers"
+-int
+-sched_getcpu (void)
++static int
++vsyscall_sched_getcpu (void)
+ {
+ #ifdef __NR_getcpu
+   unsigned int cpu;
+@@ -37,3 +37,23 @@ sched_getcpu (void)
+   return -1;
+ #endif
+ }
 +
-+config ASPEED_LPC_CTRL
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-+	tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
-+	---help---
-+	  Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
-+	  ioctl()s, the driver also provides a read/write interface to a BMC ram
-+	  region where the host LPC read/write region can be buffered.
++#ifdef __NR_rseq
++#include <sys/rseq.h>
++#endif
 +
-+config ASPEED_LPC_SNOOP
-+	tristate "Aspeed ast2500 HOST LPC snoop support"
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-+	help
-+	  Provides a driver to control the LPC snoop interface which
-+	  allows the BMC to listen on and save the data written by
-+	  the host to an arbitrary LPC I/O port.
++#if defined __NR_rseq && defined RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = __rseq_abi.cpu_id;
 +
-+
-diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
-new file mode 100644
-index 000000000000..cfaa9adc67b5
---- /dev/null
-+++ b/drivers/soc/aspeed/Makefile
-@@ -0,0 +1,2 @@
-+obj-$(CONFIG_ASPEED_LPC_CTRL)	+= aspeed-lpc-ctrl.o
-+obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
-diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-similarity index 100%
-rename from drivers/misc/aspeed-lpc-ctrl.c
-rename to drivers/soc/aspeed/aspeed-lpc-ctrl.c
-diff --git a/drivers/misc/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-similarity index 100%
-rename from drivers/misc/aspeed-lpc-snoop.c
-rename to drivers/soc/aspeed/aspeed-lpc-snoop.c
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
 -- 
-2.21.0.593.g511ec345e18-goog
+2.17.1
 
