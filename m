@@ -2,136 +2,115 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ACAC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E767C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A592E20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DC020859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FMHNpjnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfDVPQ6 (ORCPT
+        id S1728103AbfDVPR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:16:58 -0400
-Received: from mout1.freenet.de ([195.4.92.91]:47266 "EHLO mout1.freenet.de"
+        Mon, 22 Apr 2019 11:17:27 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57036 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbfDVPQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:16:58 -0400
-X-Greylist: delayed 1972 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 11:16:56 EDT
-Received: from [195.4.92.164] (helo=mjail1.freenet.de)
-        by mout1.freenet.de with esmtpa (ID andihartmann@freenet.de) (port 25) (Exim 4.90_1 #2)
-        id 1hIaAs-0004YC-F3; Mon, 22 Apr 2019 16:44:02 +0200
-Received: from [::1] (port=57776 helo=mjail1.freenet.de)
-        by mjail1.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.90_1 #2)
-        id 1hIaAs-00008P-EJ; Mon, 22 Apr 2019 16:44:02 +0200
-Received: from sub5.freenet.de ([195.4.92.124]:50614)
-        by mjail1.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.90_1 #2)
-        id 1hIa8u-0007Vf-S0; Mon, 22 Apr 2019 16:42:00 +0200
-Received: from p2e5b8614.dip0.t-ipconnect.de ([46.91.134.20]:35588 helo=mail.maya.org)
-        by sub5.freenet.de with esmtpsa (ID andihartmann@freenet.de) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (port 465) (Exim 4.90_1 #2)
-        id 1hIa8u-0007mu-LW; Mon, 22 Apr 2019 16:42:00 +0200
-Received: internal info suppressed
-From:   Andreas Hartmann <andihartmann@01019freenet.de>
-To:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        linux-kernel@vger.kernel.org
-References: <20190121134913.924726465@linuxfoundation.org>
- <20190121134914.421023706@linuxfoundation.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andihartmann@01019freenet.de; keydata=
- mQGiBDz/vtQRBAC+OSpes1p57fA8ENLYy3Nl/CpEvtRoDdhy7DPyc1+adE57vpK52naRfaZB
- f0RSMvIZwJYggMio+emiN5Du7kL9y2IEjmHBvp/1x68dEwswHP9X4hJmHmyOJL3IB2WsvEdh
- QF97913bWX34MYCeuOoSJ1OWvBLGfNs0zv70HOTfJwCgricyy8N1itEryLwoeu5HWz0SmDED
- /2IiuDhPZ332i0Ylp40RQb2Wb0xBvpscVeRZDItsYYbJ/Sgmso1sn93sFFWmmrvGUyg3MNCt
- +u+7P8Wg3VXte8cHbNwdzNtXHTfYyTcgZXC4xJN2akZt4pdR531mXyP2kFxmKtAEmW6bNpvV
- oNnkgZVWvoT4BHLloLzA62JUEgFJA/9dHilAVS3Ezv5ECB02Lt2vNNzMvPlyNbxBhWnrb6VC
- mFMCRg9bOK2io1zYb8C4gEpJ33wl8hEBxOWfCOEEKesAUCjViosNvxqGNtGWjk5p1O2QBWE2
- D6u5+itACQRqhmmgNl+dK6Of2yGG9GxOYWozIELEfL9ZB4xQ7A2tDFR0ZrRHQW5kcmVhcyBI
- YXJ0bWFubiAod2VpbCBkZXIgUmVjaG5lciBuZXUgaGVpc3N0KSA8YW5kcmVhc0BkdWFsYy5t
- YXlhLm9yZz6IYAQTEQIAIAUCTMsY3gIbAwYLCQgHAwIEFQIIAwQWAgMBAh4BAheAAAoJEBhU
- mcTgYeNVT1QAoJ4cJ2jl6Jgmi+PmWCXPk4m8lgAGAKCjkxgK/PjE3+cNsLa/xEpReqYwRrkB
- DQQ8/77WEAQAqBBex8oxPC1srpaSFbq8NCM/Gy7SKucKsQPqG/De46WQESbmnMElVft2xCBC
- rOJ7E02k10h/twe0yQnNdXMJDMDM0w0EEyX9ljekIr3SFbXpU2S4wUl3C6CW2hizUgOyLsg0
- chpfGMB9+wiVycyjZahafoc14wuuDj5BqWEOCccAAwcD/14lh1PTPKx4hs7ITtFZh5TI6+5f
- xAWIBBUeQL+GEt+CKwyNc/hWp8YTPJ3SAedmDrEMX+2yPO95KeIfg6bnnIVvI/aTR/vJFsWK
- GKMx+KaKx+IEwuhCpNIMUASpJWRvVlo3lMIvqAMJIBj79uKq/X9fppblcJst29QVO6aWf3Gh
- iEYEGBECAAYFAjz/vtYACgkQGFSZxOBh41VBAgCfZRiPCQ+jNvdT5iR2fEblqTtBrF0An0nb
- M8B1Lpkm44214BbtIQKneVrYiEYEGBECAAYFAjz/vtcACgkQGFSZxOBh41UjjgCgoua1QYf+
- FcHpxrRgoioO3D7ddkUAnAkRf8FH9i94x8f6LfS4npozycQc
-Subject: Re: [PATCH 4.19 13/99] netfilter: nf_conncount: fix argument order to
- find_next_bit
-Message-ID: <f55ad830-dd61-8ce2-7fa0-d33fb93c0b9c@01019freenet.de>
-Date:   Mon, 22 Apr 2019 16:41:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728077AbfDVPR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 11:17:27 -0400
+Received: from zn.tnic (p200300EC2F07AE00B522724F4D48BE41.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:ae00:b522:724f:4d48:be41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 77A091EC027B;
+        Mon, 22 Apr 2019 17:17:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555946245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JFpPLtfkepV9r9+lHEYcsdq9WsB7wkVB6MPpylxpGW8=;
+        b=FMHNpjnrXbYmVyRsNnRzG136ACapGj3qe3EoZZCyU6ah8CwfJmNoLsf8xx+9Wx62M7AvWR
+        WXRCQ1LwEsyIAx7IPhGgYEYYw1fR1XoSbGhSNPCAineeJYnAfRujXlRrwHGjlIZ04v7iQ6
+        HNFp7ZD/aGj6aZ85f6LoUlSaCQdNqeI=
+Date:   Mon, 22 Apr 2019 17:17:23 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>, dyoung@redhat.com,
+        Kairui Song <kasong@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [RFC PATCH] kexec, x86/boot: map systab region in identity
+ mapping before accessing it
+Message-ID: <20190422151723.GD21457@zn.tnic>
+References: <20190419101733.GA10324@zn.tnic>
+ <20190419105014.GE11060@MiWiFi-R3L-srv>
+ <20190419112801.GB10324@zn.tnic>
+ <20190419113621.GD10324@zn.tnic>
+ <20190422143346.GD3584@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20190121134914.421023706@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originated-At: 46.91.134.20!35588
+Content-Disposition: inline
+In-Reply-To: <20190422143346.GD3584@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
++ hpa
 
-Since 4.19.17, I'm facing problems during streaming of videos I've never seen before. This means:
-
-- video from internet stutters although enough data flow can be seen in bmon.
-- gpu is locked:
-  radeon 0000:0a:00.0: ring 0 stalled for more than 14084msec
-  radeon 0000:0a:00.0: GPU lockup (current fence id 0x0000000000053ed7 last fence id 0x0000000000053f0f on ring 0)
-- The connection of videos streamed locally by the machine for a TV suddenly breaks (upnp - serviio as server).
-
-After very long time of testing, I detected, that removing the complete patch series for 4.19.17 regarding netfilter: nf_conncount makes the problem disappear.
-
-Please remove / fix this patchset!
-
-
-Thanks
-Andreas Hartmann
-
-
-On 21.01.19 at 14:48 Greg Kroah-Hartman wrote:
-> 4.19-stable review patch.  If anyone has any objections, please let me know.
+On Mon, Apr 22, 2019 at 10:33:46PM +0800, Baoquan He wrote:
+> On 04/19/19 at 01:36pm, Borislav Petkov wrote:
+> > On Fri, Apr 19, 2019 at 01:28:01PM +0200, Borislav Petkov wrote:
+> > > Read again what I said: "should all be passed through boot_params".
+> > > Which means, boot_params should be extended with a field of a flag to
+> > > say: "this is a kexec'ed kernel".
+> > 
+> > And by that I mean similar to the XLF_EFI_KEXEC mechanism. The first
+> > kernel or kexec(1) should prepare the info needed by the kexec'ed
+> > kernel.
 > 
-> ------------------
+> We have set the loader type to '0x0D << 4' for kexec specifically, in both
+> kexec_load and kexec_file_load. We can check this to identify if it's
+> kexec-ed kernel or not.
 > 
-> From: Florian Westphal <fw@strlen.de>
+> Update patch with it?
 > 
-> commit a007232066f6839d6f256bab21e825d968f1a163 upstream.
+> static void *bzImage64_load(struct kimage *image, char *kernel,
+>                             unsigned long kernel_len, char *initrd,
+>                             unsigned long initrd_len, char *cmdline,
+>                             unsigned long cmdline_len)
+> {
 > 
-> Size and 'next bit' were swapped, this bug could cause worker to
-> reschedule itself even if system was idle.
-> 
-> Fixes: 5c789e131cbb9 ("netfilter: nf_conncount: Add list lock and gc worker, and RCU for init tree search")
-> Reviewed-by: Shawn Bohrer <sbohrer@cloudflare.com>
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  net/netfilter/nf_conncount.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/net/netfilter/nf_conncount.c
-> +++ b/net/netfilter/nf_conncount.c
-> @@ -488,7 +488,7 @@ next:
->  	clear_bit(tree, data->pending_trees);
->  
->  	next_tree = (tree + 1) % CONNCOUNT_SLOTS;
-> -	next_tree = find_next_bit(data->pending_trees, next_tree, CONNCOUNT_SLOTS);
-> +	next_tree = find_next_bit(data->pending_trees, CONNCOUNT_SLOTS, next_tree);
->  
->  	if (next_tree < CONNCOUNT_SLOTS) {
->  		data->gc_tree = next_tree;
-> 
-> 
-> 
+> 	...
+> 	/* bootloader info. Do we need a separate ID for kexec kernel loader? */
+>         params->hdr.type_of_loader = 0x0D << 4;
 
+That's already documented in Documentation/x86/boot.txt
 
+Field name:     type_of_loader
+Type:           write (obligatory)
+Offset/size:    0x210/1
+Protocol:       2.00+
 
+	...
+
+        D  kexec-tools
+
+And yes, the question in the code is still valid: do we need a separate ID.
+
+I'd say no and we'll simply call 0xD all kernels loaded using a
+kexec-type syscall.
+
+IMO.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
