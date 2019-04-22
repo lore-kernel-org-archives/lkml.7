@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ABBC282E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C281BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB592177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A5B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962986;
-	bh=i/Hk42MjRmEKOufWAx5j5IUON21NA4y3ONE3MnQ3DZU=;
+	s=default; t=1555962994;
+	bh=PNut+wlX2Y4S8hM2KiINdf9BYS4IcDNxtcGw2aKTh58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZitNnR+BtoK4imqc7ZGpPNYgwi1qSNorbdwA6nAC/LxDFjlZP9dg5ehhHzcbSONhZ
-	 uix7K85VxUl4QFe7InzUHLdZVSK8lO/rgCnZCfIfyOAXI5k2n1njMoS/Fi+lwLHhM4
-	 ApjSj0ZM0D63BAO0CpnIWd+RXk4dPgjmKdz9K0wo=
+	b=z9XaeC9+wKMsBte6CEEBLIbN06y6oI7HwUHp/aVCaJHhrc7ozukxoagxcoS6YiHbx
+	 lqYdoex79kUj4BDTTfn+4daI8U+FDfG3n9+L/jE/5cQkGzqx42ubKx0YFa9d3WW56v
+	 yEUO5jpy5Kr2xbOQ+oYZHmfKLtqdO0PH/Mp0hWy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfDVTs5 (ORCPT
+        id S1731634AbfDVT4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730654AbfDVTsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:48:54 -0400
+        id S1730684AbfDVTs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:48:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F1821907;
-        Mon, 22 Apr 2019 19:48:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2A421907;
+        Mon, 22 Apr 2019 19:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962533;
-        bh=i/Hk42MjRmEKOufWAx5j5IUON21NA4y3ONE3MnQ3DZU=;
+        s=default; t=1555962536;
+        bh=PNut+wlX2Y4S8hM2KiINdf9BYS4IcDNxtcGw2aKTh58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nM9CwnGsyW5UHyEIj5Bh5u/PZB/lYQkFHc21xFBVfwOJW+kvO+h+bt34Nv1X0Udag
-         85EJROX6RJwlv1wDS2iG/EEVkyYS4Zslf/61nvv5DEONfpKASuTxQ5oTkVH+aXL43T
-         AQaeNUOPVYykfHukJKA8ZPGxLa8y6yIDGQne1x9w=
+        b=NfFvThqJ5jKfdn4qhP4wnnawOED5x5IXORZVm7DAwF1S5GH5KaTYyIyucMWHIwIfY
+         IDdZTc8YAZRYDfCcEAfrjFsM3S4D4d6Y0INhphNKUCY0nydLFX4xOSClyu3Mz4KfRE
+         Z0pN8Eo+nBmXHOjgXdSEWtte7NAsUclJT8wTfWL0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/29] qlcnic: Avoid potential NULL pointer dereference
-Date:   Mon, 22 Apr 2019 15:48:22 -0400
-Message-Id: <20190422194848.13049-3-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/29] netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
+Date:   Mon, 22 Apr 2019 15:48:24 -0400
+Message-Id: <20190422194848.13049-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
 References: <20190422194848.13049-1-sashal@kernel.org>
@@ -59,33 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
+[ Upstream commit e166e4fdaced850bee3d5ee12a5740258fb30587 ]
 
-netdev_alloc_skb can fail and return a NULL pointer which is
-dereferenced without a check. The patch avoids such a scenario.
+Since Commit 21d1196a35f5 ("ipv4: set transport header earlier"),
+skb->transport_header has been always set before entering INET
+netfilter. This patch is to set skb->transport_header for bridge
+before entering INET netfilter by bridge-nf-call-iptables.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It also fixes an issue that sctp_error() couldn't compute a right
+csum due to unset skb->transport_header.
+
+Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
+Reported-by: Li Shuang <shuali@redhat.com>
+Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/bridge/br_netfilter_hooks.c | 1 +
+ net/bridge/br_netfilter_ipv6.c  | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-index 0a2318cad34d..63ebc491057b 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-@@ -1038,6 +1038,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index 38865deab3ac..0c96773d1829 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -512,6 +512,7 @@ static unsigned int br_nf_pre_routing(void *priv,
+ 	nf_bridge->ipv4_daddr = ip_hdr(skb)->daddr;
  
- 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
- 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
-+		if (!skb)
-+			break;
- 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
- 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
- 		adapter->ahw->diag_cnt = 0;
+ 	skb->protocol = htons(ETH_P_IP);
++	skb->transport_header = skb->network_header + ip_hdr(skb)->ihl * 4;
+ 
+ 	NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
+ 		skb->dev, NULL,
+diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
+index a1b57cb07f1e..8c08dd07419f 100644
+--- a/net/bridge/br_netfilter_ipv6.c
++++ b/net/bridge/br_netfilter_ipv6.c
+@@ -235,6 +235,8 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
+ 	nf_bridge->ipv6_daddr = ipv6_hdr(skb)->daddr;
+ 
+ 	skb->protocol = htons(ETH_P_IPV6);
++	skb->transport_header = skb->network_header + sizeof(struct ipv6hdr);
++
+ 	NF_HOOK(NFPROTO_IPV6, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
+ 		skb->dev, NULL,
+ 		br_nf_pre_routing_finish_ipv6);
 -- 
 2.19.1
 
