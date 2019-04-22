@@ -2,169 +2,156 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51C4C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 11:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CED3C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 11:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7936D2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 11:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB902064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 11:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rMJwTEgp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dh7H/qQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfDVLGS (ORCPT
+        id S1727174AbfDVLIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 07:06:18 -0400
-Received: from mail-eopbgr50055.outbound.protection.outlook.com ([40.107.5.55]:44674
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726173AbfDVLGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 07:06:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HqW7gkRlsxh+s/U2USZA8gQcOJc0hczHMoyWRDGcp1w=;
- b=rMJwTEgpnjXe08XtmjTPRN4vNSxgc7kE9PILOU1DQA9ZKZuwONXIic/zN2zXFYvA6DSwfr3wV5iWdP2FXIOTMW+r86WDLO4b7ynWHjRWnQ4QDNM0XoDItjd/Qhdzmobfu4dbshuCvvvV9Obdvs97cETPOmkkO1FAUOPi6qPdP/c=
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
- VI1PR04MB4046.eurprd04.prod.outlook.com (10.171.182.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Mon, 22 Apr 2019 11:06:13 +0000
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1813.017; Mon, 22 Apr 2019
- 11:06:12 +0000
-From:   Viorel Suman <viorel.suman@nxp.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH 3/3 v3] ASoC: fsl_sai: Move clock operation to PM runtime
-Thread-Topic: [PATCH 3/3 v3] ASoC: fsl_sai: Move clock operation to PM runtime
-Thread-Index: AQHU+HnlxGRnmGIL1Um6QDOPF3aqQKZIBdYA
-Date:   Mon, 22 Apr 2019 11:06:12 +0000
-Message-ID: <1555931172.31656.6.camel@nxp.com>
-References: <20190421193853.10188-1-daniel.baluta@nxp.com>
-         <20190421193853.10188-4-daniel.baluta@nxp.com>
-In-Reply-To: <20190421193853.10188-4-daniel.baluta@nxp.com>
-Reply-To: Viorel Suman <viorel.suman@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=viorel.suman@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04dd2089-3b58-43d9-9942-08d6c7128852
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4046;
-x-ms-traffictypediagnostic: VI1PR04MB4046:
-x-microsoft-antispam-prvs: <VI1PR04MB40469DC0066DC215EB6E7B0D92220@VI1PR04MB4046.eurprd04.prod.outlook.com>
-x-forefront-prvs: 00159D1518
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(396003)(346002)(199004)(189003)(2501003)(97736004)(256004)(6246003)(3450700001)(14444005)(36756003)(4326008)(6512007)(99286004)(53936002)(2906002)(43066004)(44832011)(6436002)(7416002)(8936002)(476003)(2616005)(486006)(5660300002)(6486002)(446003)(11346002)(102836004)(7736002)(6506007)(305945005)(76116006)(26005)(73956011)(66476007)(66556008)(14454004)(64756008)(66446008)(68736007)(229853002)(66946007)(6116002)(3846002)(86362001)(25786009)(316002)(110136005)(54906003)(66066001)(478600001)(76176011)(103116003)(71190400001)(71200400001)(8676002)(186003)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4046;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1GKh8hd2tmgAFeUo3ys+4cfVpb9aOTaHtBH0/IfxaU+2eRLtiQOJKO4YzsAIlhzfKIh9YCv6aXfHY4GfXH1NORfVVKRiB3k7NE2SZuQvCO36aUT/nvGAfAUKYuhYD4RwAk48N02FU4GjtXA8yq3MccaAWc4XTzbdT5ToCPeSf2tXUtGpRC88wXoGBRhACSVd7fS1hsCh3aMFpz8BqDQekPoaaCPjLqAfit65yfCJNCgBVGF5pfb4yIuoQ3KcAPaKVBVMSp3KpP3/rc2HT8tMQSL8lXDH05HoEoj01ftE+yK2462CuaDDCTMmxbX2TT6BcPxRxozQ40KCFMaGuCv3ojmmbZpAmjSXnfqVnhBWE4UIP9cssCdSQScqHyugptCC3071SjSkXQ8mGzo3Z/WEsHEHxBleq1cAbEZeG6VO4s0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E4EF202FE8D88542B4AA75DF110B1FA5@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 22 Apr 2019 07:08:16 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34610 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfDVLIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 07:08:16 -0400
+Received: by mail-yw1-f65.google.com with SMTP id u14so2343463ywe.1;
+        Mon, 22 Apr 2019 04:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wzn2kZUNMTXZ00Yns3rv3rVNZZF5U8eI12+m33bJrvU=;
+        b=Dh7H/qQYZmdfCPB6rw1Cthl+jm2VX/+BYsZivsjZ3aJJmBhWlZNs9FwKKM/rXh86tU
+         yAYGYtiirJ5K/xrGY8S+CWijbce5yJ44yZW4/jFbPPaKIYFqjvd4Kt2HrIK7bpBG88mv
+         zWgcRnNxahHXAbF2YB7jsDC2iQ6DeTr9RBRxnE0mvyKAQmtZ6+SdMk5lIF2sK5v68Wzi
+         N0jjod1qdFWkUOXbYpNAP/R0jwqhKkIgWtLcklUtcCBNNy0ZGdCM3TBRWNMyn71UyKbo
+         Pd+mfyZIh8f0IJhxNdoew826ewjd1i0hRVw93vvVj6vd30VeX+RCupJpkm+xdHUatn+o
+         xXdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wzn2kZUNMTXZ00Yns3rv3rVNZZF5U8eI12+m33bJrvU=;
+        b=CY8on2pKwKjgTvTD0ziu2U/fFrLHqx4SwYXM92bKFpsUcl084l7GrL1cciUxYR1Ers
+         +9f+4nQeH9uWHIuGYPDBDiBNM5oCeV8WntSaA8WsaLS+WqtPGwB61JqTW0d7P9Zn4AgS
+         qMHhrZraQUR764iJlhXzN3rkaM3CFg8LuupLd2/M43RGzRyjVeKpuUjD/WaD2aph2frE
+         z3cLEiEUnY6mR282oDr07KygjKgDb228BBZuvH5bjlkIMehre0v6V8Gd1Plm1htqYr0/
+         +unXoRwkc5g+pbPmNCmOLBABo0PV9RxdJbGzJ/YkPDVwhdj9mVf954//TkE1Ri6ao6P5
+         99lQ==
+X-Gm-Message-State: APjAAAXV+fHkS0K9pfO1FuQ+ws4HPV52Ji+MMFb266+0fAZ9pLkFlmyD
+        udk5MMInkLjeJ54ffupAGAuuFX+y1DiBAiJEE28=
+X-Google-Smtp-Source: APXvYqyA9Or6ouddse5nJxkVJAiS6Br96xlnrV4fm88b1pvwr8Dr8gTdkvpWmWwlUI7F0T9rKFXeTUXi5B9Usv7DauI=
+X-Received: by 2002:a0d:ff82:: with SMTP id p124mr15936292ywf.409.1555931294871;
+ Mon, 22 Apr 2019 04:08:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04dd2089-3b58-43d9-9942-08d6c7128852
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 11:06:12.9226
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4046
+References: <000000000000064bcf057a59e3b9@google.com> <0000000000004f7f7c0584fe33c0@google.com>
+ <CAOQ4uxjOm+VFyTbm=2k1d0774qu2tK5gzEgKNnRPjd0GvMnihA@mail.gmail.com> <CACT4Y+bcm2PuX0=1miyXa4pSb2jU0nvp+9eyYwmavVncxB5JXQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+bcm2PuX0=1miyXa4pSb2jU0nvp+9eyYwmavVncxB5JXQ@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 22 Apr 2019 14:08:03 +0300
+Message-ID: <CAOQ4uxhyn8-FWRx4kSW4WZWHUTigJH0ATMQQLq6QSCCCYhZibg@mail.gmail.com>
+Subject: Re: WARNING in ovl_instantiate
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiBEdSwgMjAxOS0wNC0yMSBhdCAxOTozOSArMDAwMCwgRGFuaWVsIEJh
-bHV0YSB3cm90ZToNCj4gRnJvbTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29t
-Pg0KPiANCj4gVHVybiBvZmYvb24gY2xvY2tzIHdoZW4gZGV2aWNlIGVudGVycyBzdXNwZW5kL3Jl
-c3VtZS4gVGhpcw0KPiBjYW4gaGVscCBzYXZpbmcgcG93ZXIuDQo+IA0KPiBBcyBhIGZ1cnRoZXIg
-b3B0aW1pemF0aW9uLCB3ZSB0dXJuIG9mZi9vbiBtY2xrIG9ubHkgd2hlbiBTQUkNCj4gaXMgaW4g
-bWFzdGVyIG1vZGUgYmVjYXVzZSBvdGhlcndpc2UgbWNsayBpcyBleHRlcm5hbGx5IHByb3ZpZGVk
-Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU2hlbmdqaXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAu
-Y29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5j
-b20+DQo+IC0tLQ0KPiDCoHNvdW5kL3NvYy9mc2wvZnNsX3NhaS5jIHwgNjAgKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gwqAxIGZpbGUgY2hhbmdlZCwgNTAgaW5z
-ZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29j
-L2ZzbC9mc2xfc2FpLmMgYi9zb3VuZC9zb2MvZnNsL2ZzbF9zYWkuYw0KPiBpbmRleCA4NjIzYjdm
-ODgyYjkuLjEzYTQ2MjM2MGVkMyAxMDA2NDQNCj4gLS0tIGEvc291bmQvc29jL2ZzbC9mc2xfc2Fp
-LmMNCj4gKysrIGIvc291bmQvc29jL2ZzbC9mc2xfc2FpLmMNCj4gQEAgLTU5NiwxNSArNTk2LDgg
-QEAgc3RhdGljIGludCBmc2xfc2FpX3N0YXJ0dXAoc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpz
-dWJzdHJlYW0sDQo+IMKgew0KPiDCoAlzdHJ1Y3QgZnNsX3NhaSAqc2FpID0gc25kX3NvY19kYWlf
-Z2V0X2RydmRhdGEoY3B1X2RhaSk7DQo+IMKgCWJvb2wgdHggPSBzdWJzdHJlYW0tPnN0cmVhbSA9
-PSBTTkRSVl9QQ01fU1RSRUFNX1BMQVlCQUNLOw0KPiAtCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZz
-YWktPnBkZXYtPmRldjsNCj4gwqAJaW50IHJldDsNCj4gwqANCj4gLQlyZXQgPSBjbGtfcHJlcGFy
-ZV9lbmFibGUoc2FpLT5idXNfY2xrKTsNCj4gLQlpZiAocmV0KSB7DQo+IC0JCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIGVuYWJsZSBidXMgY2xvY2s6ICVkXG4iLCByZXQpOw0KPiAtCQlyZXR1cm4g
-cmV0Ow0KPiAtCX0NCj4gLQ0KPiDCoAlyZWdtYXBfdXBkYXRlX2JpdHMoc2FpLT5yZWdtYXAsIEZT
-TF9TQUlfeENSMyh0eCksIEZTTF9TQUlfQ1IzX1RSQ0UsDQo+IMKgCQkJwqDCoMKgRlNMX1NBSV9D
-UjNfVFJDRSk7DQo+IMKgDQo+IEBAIC02MjEsOCArNjE0LDYgQEAgc3RhdGljIHZvaWQgZnNsX3Nh
-aV9zaHV0ZG93bihzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwNCj4gwqAJYm9v
-bCB0eCA9IHN1YnN0cmVhbS0+c3RyZWFtID09IFNORFJWX1BDTV9TVFJFQU1fUExBWUJBQ0s7DQo+
-IMKgDQo+IMKgCXJlZ21hcF91cGRhdGVfYml0cyhzYWktPnJlZ21hcCwgRlNMX1NBSV94Q1IzKHR4
-KSwgRlNMX1NBSV9DUjNfVFJDRSwgMCk7DQo+IC0NCj4gLQljbGtfZGlzYWJsZV91bnByZXBhcmUo
-c2FpLT5idXNfY2xrKTsNCj4gwqB9DQo+IMKgDQo+IMKgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRf
-c29jX2RhaV9vcHMgZnNsX3NhaV9wY21fZGFpX29wcyA9IHsNCj4gQEAgLTkzMiw2ICs5MjMsMTYg
-QEAgc3RhdGljIGludCBmc2xfc2FpX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYp
-DQo+IMKgew0KPiDCoAlzdHJ1Y3QgZnNsX3NhaSAqc2FpID0gZGV2X2dldF9kcnZkYXRhKGRldik7
-DQo+IMKgDQo+ICsJaWYgKCFzYWktPmlzX3NsYXZlX21vZGUpIHsNClRoaXMgY2hlY2sgaXMgcmVk
-dW5kYW50IGFzIHRoZSBiaXRzIGluwqBzYWktPm1jbGtfc3RyZWFtcyBhcmUgc2V0L3Vuc2V0IGZv
-ciBtYXN0ZXINCm1vZGUgb25seSwgcGxlYXNlIGNoZWNrwqBmc2xfc2FpX2h3X3BhcmFtcyBhbmTC
-oGZzbF9zYWlfaHdfZnJlZSBmdW5jdGlvbnMuDQoNCj4gKwkJaWYgKHNhaS0+bWNsa19zdHJlYW1z
-ICYgQklUKFNORFJWX1BDTV9TVFJFQU1fQ0FQVFVSRSkpDQo+ICsJCQljbGtfZGlzYWJsZV91bnBy
-ZXBhcmUoc2FpLT5tY2xrX2Nsa1tzYWktPm1jbGtfaWRbMF1dKTsNCj4gKw0KPiArCQlpZiAoc2Fp
-LT5tY2xrX3N0cmVhbXMgJiBCSVQoU05EUlZfUENNX1NUUkVBTV9QTEFZQkFDSykpDQo+ICsJCQlj
-bGtfZGlzYWJsZV91bnByZXBhcmUoc2FpLT5tY2xrX2Nsa1tzYWktPm1jbGtfaWRbMV1dKTsNCj4g
-Kwl9DQo+ICsNCj4gKwljbGtfZGlzYWJsZV91bnByZXBhcmUoc2FpLT5idXNfY2xrKTsNCj4gKw0K
-PiDCoAlyZWdjYWNoZV9jYWNoZV9vbmx5KHNhaS0+cmVnbWFwLCB0cnVlKTsNCj4gwqAJcmVnY2Fj
-aGVfbWFya19kaXJ0eShzYWktPnJlZ21hcCk7DQo+IMKgDQo+IEBAIC05NDEsNiArOTQyLDI3IEBA
-IHN0YXRpYyBpbnQgZnNsX3NhaV9ydW50aW1lX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0K
-PiDCoHN0YXRpYyBpbnQgZnNsX3NhaV9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYp
-DQo+IMKgew0KPiDCoAlzdHJ1Y3QgZnNsX3NhaSAqc2FpID0gZGV2X2dldF9kcnZkYXRhKGRldik7
-DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShzYWktPmJ1
-c19jbGspOw0KPiArCWlmIChyZXQpIHsNCj4gKwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZW5h
-YmxlIGJ1cyBjbG9jazogJWRcbiIsIHJldCk7DQo+ICsJCXJldHVybiByZXQ7DQo+ICsJfQ0KPiAr
-DQo+ICsJaWYgKCFzYWktPmlzX3NsYXZlX21vZGUpIHsNCj4gKwkJaWYgKHNhaS0+bWNsa19zdHJl
-YW1zICYgQklUKFNORFJWX1BDTV9TVFJFQU1fUExBWUJBQ0spKSB7DQo+ICsJCQlyZXQgPSBjbGtf
-cHJlcGFyZV9lbmFibGUoc2FpLT5tY2xrX2Nsa1tzYWktPm1jbGtfaWRbMV1dKTsNCj4gKwkJCWlm
-IChyZXQpDQo+ICsJCQkJZ290byBkaXNhYmxlX2J1c19jbGs7DQo+ICsJCX0NCj4gKw0KPiArCQlp
-ZiAoc2FpLT5tY2xrX3N0cmVhbXMgJiBCSVQoU05EUlZfUENNX1NUUkVBTV9DQVBUVVJFKSkgew0K
-PiArCQkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHNhaS0+bWNsa19jbGtbc2FpLT5tY2xrX2lk
-WzBdXSk7DQo+ICsJCQlpZiAocmV0KQ0KPiArCQkJCWdvdG8gZGlzYWJsZV90eF9jbGs7DQo+ICsJ
-CX0NCj4gKwl9DQo+IMKgDQo+IMKgCXJlZ2NhY2hlX2NhY2hlX29ubHkoc2FpLT5yZWdtYXAsIGZh
-bHNlKTsNCj4gwqAJcmVnbWFwX3dyaXRlKHNhaS0+cmVnbWFwLCBGU0xfU0FJX1RDU1IsIEZTTF9T
-QUlfQ1NSX1NSKTsNCj4gQEAgLTk0OCw3ICs5NzAsMjUgQEAgc3RhdGljIGludCBmc2xfc2FpX3J1
-bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gwqAJdXNsZWVwX3JhbmdlKDEwMDAs
-IDIwMDApOw0KPiDCoAlyZWdtYXBfd3JpdGUoc2FpLT5yZWdtYXAsIEZTTF9TQUlfVENTUiwgMCk7
-DQo+IMKgCXJlZ21hcF93cml0ZShzYWktPnJlZ21hcCwgRlNMX1NBSV9SQ1NSLCAwKTsNCj4gLQly
-ZXR1cm4gcmVnY2FjaGVfc3luYyhzYWktPnJlZ21hcCk7DQo+ICsNCj4gKwlyZXQgPSByZWdjYWNo
-ZV9zeW5jKHNhaS0+cmVnbWFwKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlnb3RvIGRpc2FibGVfcnhf
-Y2xrOw0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICsNCj4gK2Rpc2FibGVfcnhfY2xrOg0KPiArCWlm
-ICghc2FpLT5pc19zbGF2ZV9tb2RlICYmDQo+ICsJwqDCoMKgwqAoc2FpLT5tY2xrX3N0cmVhbXMg
-JiBCSVQoU05EUlZfUENNX1NUUkVBTV9DQVBUVVJFKSkpDQo+ICsJCWNsa19kaXNhYmxlX3VucHJl
-cGFyZShzYWktPm1jbGtfY2xrW3NhaS0+bWNsa19pZFswXV0pOw0KPiArZGlzYWJsZV90eF9jbGs6
-DQo+ICsJaWYgKCFzYWktPmlzX3NsYXZlX21vZGUgJiYNCj4gKwnCoMKgwqDCoChzYWktPm1jbGtf
-c3RyZWFtcyAmIEJJVChTTkRSVl9QQ01fU1RSRUFNX1BMQVlCQUNLKSkpDQo+ICsJCWNsa19kaXNh
-YmxlX3VucHJlcGFyZShzYWktPm1jbGtfY2xrW3NhaS0+bWNsa19pZFsxXV0pOw0KPiArZGlzYWJs
-ZV9idXNfY2xrOg0KPiArCWNsa19kaXNhYmxlX3VucHJlcGFyZShzYWktPmJ1c19jbGspOw0KPiAr
-DQo+ICsJcmV0dXJuIHJldDsNCj4gwqB9DQo+IMKgI2VuZGlmIC8qIENPTkZJR19QTSAqLw0KPiDC
-oA0KPiAtLcKgDQo+IDIuMTcuMQ0KPiA=
+On Mon, Apr 22, 2019 at 1:12 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Fri, Apr 19, 2019 at 11:21 AM Amir Goldstein <amir73il@gmail.com> wrote:
+> >
+> > On Tue, Mar 26, 2019 at 2:10 PM syzbot
+> > <syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com> wrote:
+> > >
+> > > syzbot has bisected this bug to:
+> > >
+> > > commit 01b39dcc95680b04c7af5de7f39f577e9c4865e3
+> > > Author: Amir Goldstein <amir73il@gmail.com>
+> > > Date:   Fri May 11 08:15:15 2018 +0000
+> > >
+> > >      ovl: use inode_insert5() to hash a newly created inode
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176da0cd200000
+> > > start commit:   de6629eb Merge tag 'pci-v5.0-fixes-1' of git://git.kernel...
+> > > git tree:       upstream
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=14eda0cd200000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=10eda0cd200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=edf1c3031097c304
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=9c69c282adc4edd2b540
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c7a94f400000
+> > >
+> > > Reported-by: syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com
+> > > Fixes: 01b39dcc9568 ("ovl: use inode_insert5() to hash a newly created
+> > > inode")
+> > >
+> >
+> > Dmitry,
+> >
+> > The root cause of this bug is that repro is mounting overlapping overlay
+> > layers (i.e. upperdir=./file0,lowerdir=.:file0).
+> > Miklos claimed that the fix should be to fail such mounts.
+> > Below is a patch to test:
+> >
+> > #syz test: https://github.com/amir73il/linux.git ovl-check-overlap
+> >
+> > However, I see that this specific overlapping layers mount has already
+> > mutated to several other repros out there, like the ones in this bug:
+> >
+> > https://syzkaller.appspot.com/bug?extid=a55ccfc8a853d3cff213
+> >
+> > I believe that disallowing overlapping layers will silence some
+> > bugs, whose root cause may be different.
+> >
+> > Besides doing the overlapping layers mount, this repro family also
+> > does extensive access to overlay underlying layers concurrently
+> > with overlay access and *that* is the root cause for most of these
+> > "possible deadlock" bugs (some false positives and some real).
+> >
+> > Assuming that ovl-check-overlap will get merged, you may need to
+> > hint syzkaller that overlapping layers is no longer a valid input or
+> > maybe it will figure it out on its own?...
+>
+> Hi Amir,
+>
+> It should figure it out on its own, it's coverage-guided fuzzer. And
+> unlearning things is easier then learning them :) But thanks for
+> thinking about this.
+> But maybe there is something else important in overlayfs that's not
+> covered. Here you can see the current coverage of overlayfs:
+> https://storage.googleapis.com/syzkaller/cover/ci-upstream-linux-next-kasan-gce-root.html#e2f448f0ca2e4397fd609ff8c42d4cd118411148
+
+That's nice, but the actual possible deadlocks that syzbot has currently
+unveiled are not strictly by covering overlayfs code but rather by covering
+VFS code that is *also* used by overlayfs.
+
+See this thread for example:
+https://lore.kernel.org/lkml/CAJfpegvt6eVhX8v5faMP76K0LEkqKFDQE8gyNOinxonRdjq3eA@mail.gmail.com/
+
+Documentation/filesystems/overlayfs.txt says:
+"Changes to the underlying filesystems while part of a mounted overlay
+filesystem are not allowed.  If the underlying filesystem is changed,
+the behavior of the overlay is undefined, though it will not result in
+a crash or deadlock."
+
+The part of "will not result in crash or deadlock" is only proven
+empirically, so long as syzbot is not reproducing a crash or deadlock...
+
+Thanks,
+Amir.
