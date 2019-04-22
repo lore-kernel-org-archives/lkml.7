@@ -2,70 +2,106 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C353FC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ED1C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F4D214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555967173;
-	bh=KmqNI8XiNhOoM2KPNxmzHiSUDuinjjS0Rwt5IpK/1AQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eaK8E/uKZSVfMCCCRXVfu6ZZnhEfOt019Pta/zj+ot/UR7oXbLRJiy0+yiPJ7BsRM
-	 bsUgoMjfOyr2cxwxqdHLLEYoPSu4lmCeFV+lcfhP7y0KW7DXUbImoSSBco/4Iot05y
-	 xr4TpsvxI7okBrZERQpZvjL1CJ+IltcIOji3XEg4=
+	by mail.kernel.org (Postfix) with ESMTP id 26227214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfDVVGM (ORCPT
+        id S1729643AbfDVVGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 17:06:18 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42984 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfDVVGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:06:10 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507BB20896;
-        Mon, 22 Apr 2019 21:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555967169;
-        bh=KmqNI8XiNhOoM2KPNxmzHiSUDuinjjS0Rwt5IpK/1AQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1GyfGxAgF3fg8hafSuM2XLDR4QGq/JZ8J+mfSK7WGauvsQb7BhlasyF6WwVSEikSA
-         mbhAcWQuZFxi7yb4rEtR536JJ6EzPVR9bv8gyMxTXuKjyGzMyyhvDzKyrkFvTTAbkY
-         dYG/Kj0UjQgt0mcNSaMYCk3Yb2VG1a0ZdM6EsUUk=
-Date:   Mon, 22 Apr 2019 23:06:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, namhyung@kernel.org,
-        mingo@kernel.org
-Subject: Re: [PATCH 1/2] lib: add __sysfs_match_string_with_gaps() helper
-Message-ID: <20190422210606.GA8805@kroah.com>
-References: <20190422083257.21805-1-alexandru.ardelean@analog.com>
+        id S1729257AbfDVVFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:05:39 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hIg88-0004in-LP; Mon, 22 Apr 2019 15:05:37 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hIg83-0003zw-EZ; Mon, 22 Apr 2019 15:05:31 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Mon, 22 Apr 2019 15:05:28 -0600
+Message-Id: <20190422210528.15289-11-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190422210528.15289-1-logang@deltatee.com>
+References: <20190422210528.15289-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422083257.21805-1-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-ntb@googlegroups.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, jdmason@kudzu.us, joro@8bytes.org, bhelgaas@google.com, dave.jiang@intel.com, allenbh@gmail.com, fancer.lancer@gmail.com, epilmore@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v4 10/10] NTB: Describe the ntb_msi_test client in the documentation.
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 11:32:56AM +0300, Alexandru Ardelean wrote:
-> This helper is similar to __sysfs_match_string() with the exception that it
-> ignores NULL elements within the array.
+Add a blurb in Documentation/ntb.txt to describe the ntb_msi_test tool's
+debugfs interface. Similar to the (out of date) ntb_tool description.
 
-sysfs is "one value per file", why are you trying to write multiple
-things on a single line to a single sysfs file?
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ Documentation/ntb.txt | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Is IIO really that messy?  :)
+diff --git a/Documentation/ntb.txt b/Documentation/ntb.txt
+index a043854d28df..802a539f1592 100644
+--- a/Documentation/ntb.txt
++++ b/Documentation/ntb.txt
+@@ -194,6 +194,33 @@ Debugfs Files:
+ 	This file is used to read and write peer scratchpads.  See
+ 	*spad* for details.
+ 
++NTB MSI Test Client (ntb\_msi\_test)
++------------------------------------
++
++The MSI test client serves to test and debug the MSI library which
++allows for passing MSI interrupts across NTB memory windows. The
++test client is interacted with through the debugfs filesystem:
++
++* *debugfs*/ntb\_tool/*hw*/
++	A directory in debugfs will be created for each
++	NTB device probed by the tool.  This directory is shortened to *hw*
++	below.
++* *hw*/port
++	This file describes the local port number
++* *hw*/irq*_occurrences
++	One occurrences file exists for each interrupt and, when read,
++	returns the number of times the interrupt has been triggered.
++* *hw*/peer*/port
++	This file describes the port number for each peer
++* *hw*/peer*/count
++	This file describes the number of interrupts that can be
++	triggered on each peer
++* *hw*/peer*/trigger
++	Writing an interrupt number (any number less than the value
++	specified in count) will trigger the interrupt on the
++	specified peer. That peer's interrupt's occurrence file
++	should be incremented.
++
+ NTB Hardware Drivers
+ ====================
+ 
+-- 
+2.20.1
 
-thanks,
-
-greg k-h
