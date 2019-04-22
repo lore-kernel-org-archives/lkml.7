@@ -6,51 +6,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85062C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95348C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529592064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA4D2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963844;
-	bh=szBkXxqiqCEEnOvkzWxbI2WmligjzE5ZDcccd/LXTqk=;
+	s=default; t=1555963867;
+	bh=H86e+lStrRZKhajCPeb7VDtyZ59uJd+VmGD0zTJ1U0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GfIpcgdQHJn8cL+xx9K2gPXaNANsg7DIO24e2XJ5LL5rUPOQg7ax5hK7sEQeoASdQ
-	 z5w+7PE020PxHyv3Z//Mf7k5+TxF5xei2WSrUdc5/nkZBFZUv+gI1aiDSHZZ/PLEij
-	 R3N4KG4NasDsFPQVa4uK976e3QCqjLWUlnyNzE7Q=
+	b=IH0hnTqpOPDDAyyFVLdv/zCNP917IXJBEDOMnsbNb448eiLQI3qEi5qKUQ4r511Q8
+	 G/f5C86C0ILaQbCgPM7J4si6muoF1g7WnbXFfBxKyFoppIEBEaukpw2uoX4fKPTWie
+	 VN69mC2kraAz1RFk0BLtdpG5gYtKoOUO23M0NJZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732598AbfDVUKm (ORCPT
+        id S1732610AbfDVULG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:11:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfDVTm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:29 -0400
+        id S1728776AbfDVTmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2AFA2075A;
-        Mon, 22 Apr 2019 19:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84260214AE;
+        Mon, 22 Apr 2019 19:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962148;
-        bh=szBkXxqiqCEEnOvkzWxbI2WmligjzE5ZDcccd/LXTqk=;
+        s=default; t=1555962144;
+        bh=H86e+lStrRZKhajCPeb7VDtyZ59uJd+VmGD0zTJ1U0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRYqMi2pdZAZBs8ZTX5C1LtDCOnYaIZtSac6rcPtyR4+0O6Mj1W9iymvPdIgekZdw
-         SHKjpVUSw7WXQm7kUFKz68TpmmxVypNPEQ9+75woSgrH6ldjUQScxh3DmBgZy7JjV8
-         LS3rTphJnym355J+Kkt5ugv/eFJkHv9kznzt+vG0=
+        b=J+SP4rTxznTgbjdtezMQ+qfuWwBhcBDbyYLqbuI6g+jnJng4pni193NXyXENuUy4h
+         YINV9Q+n/Fqk04ZWibMrcCasTm6oWPQr/jsrIT+b/EjCA86C6zBAv56RPTYbvGck8P
+         Ol7fLOv2NNkvG0hPrr8L+Bu5TivVtiiy+vHwmtUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 19/98] netfilter: ip6t_srh: fix NULL pointer dereferences
-Date:   Mon, 22 Apr 2019 15:40:46 -0400
-Message-Id: <20190422194205.10404-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 16/98] netfilter: nft_set_rbtree: check for inactive element after flag mismatch
+Date:   Mon, 22 Apr 2019 15:40:43 -0400
+Message-Id: <20190422194205.10404-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,54 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 6d65561f3d5ec933151939c543d006b79044e7a6 ]
+[ Upstream commit 05b7639da55f5555b9866a1f4b7e8995232a6323 ]
 
-skb_header_pointer may return NULL. The current code dereference
-its return values without a NULL check.
+Otherwise, we hit bogus ENOENT when removing elements.
 
-The fix inserts the checks to avoid NULL pointer dereferences.
-
-Fixes: 202a8ff545cc ("netfilter: add IPv6 segment routing header 'srh' match")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
+Reported-by: Václav Zindulka <vaclav.zindulka@tlapnet.cz>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/ipv6/netfilter/ip6t_srh.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/netfilter/nft_set_rbtree.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv6/netfilter/ip6t_srh.c b/net/ipv6/netfilter/ip6t_srh.c
-index 1059894a6f4c..4cb83fb69844 100644
---- a/net/ipv6/netfilter/ip6t_srh.c
-+++ b/net/ipv6/netfilter/ip6t_srh.c
-@@ -210,6 +210,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		psidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
- 			  ((srh->segments_left + 1) * sizeof(struct in6_addr));
- 		psid = skb_header_pointer(skb, psidoff, sizeof(_psid), &_psid);
-+		if (!psid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
- 				ipv6_masked_addr_cmp(psid, &srhinfo->psid_msk,
- 						     &srhinfo->psid_addr)))
-@@ -223,6 +225,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		nsidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
- 			  ((srh->segments_left - 1) * sizeof(struct in6_addr));
- 		nsid = skb_header_pointer(skb, nsidoff, sizeof(_nsid), &_nsid);
-+		if (!nsid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
- 				ipv6_masked_addr_cmp(nsid, &srhinfo->nsid_msk,
- 						     &srhinfo->nsid_addr)))
-@@ -233,6 +237,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 	if (srhinfo->mt_flags & IP6T_SRH_LSID) {
- 		lsidoff = srhoff + sizeof(struct ipv6_sr_hdr);
- 		lsid = skb_header_pointer(skb, lsidoff, sizeof(_lsid), &_lsid);
-+		if (!lsid)
-+			return false;
- 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
- 				ipv6_masked_addr_cmp(lsid, &srhinfo->lsid_msk,
- 						     &srhinfo->lsid_addr)))
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index fa61208371f8..321a0036fdf5 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -308,10 +308,6 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 		else if (d > 0)
+ 			parent = parent->rb_right;
+ 		else {
+-			if (!nft_set_elem_active(&rbe->ext, genmask)) {
+-				parent = parent->rb_left;
+-				continue;
+-			}
+ 			if (nft_rbtree_interval_end(rbe) &&
+ 			    !nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_left;
+@@ -320,6 +316,9 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 				   nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_right;
+ 				continue;
++			} else if (!nft_set_elem_active(&rbe->ext, genmask)) {
++				parent = parent->rb_left;
++				continue;
+ 			}
+ 			nft_rbtree_flush(net, set, rbe);
+ 			return rbe;
 -- 
 2.19.1
 
