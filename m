@@ -2,100 +2,127 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA93EC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBBEC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD84520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17E120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555942083;
+	bh=NxH2GbPXCABQ9ahzYNEtjo/tx6Kmx5oUcsi6PZlIyaM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wy+Ha1Es1U9/KjnVhJdzxhk6ZvqGnKCLNy8WRCU4v8mtQCwxa+5/+tBlePkTbMOQX
+	 12BmLkTMSQbFTslBvWnzKYuUTgpCgxrbjgCUM+uLtsgXuY/af2kefs9iqx6DtxEVmx
+	 6A+hamYsr3iETGfAQA9cT2rvVvLTPgSrqv4LG/N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfDVOFp (ORCPT
+        id S1727549AbfDVOIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 10:05:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39762 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfDVOFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 10:05:44 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4EFA059468;
-        Mon, 22 Apr 2019 14:05:44 +0000 (UTC)
-Received: from haswell-e.nc.xsintricity.com (ovpn-112-9.rdu2.redhat.com [10.10.112.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4B665D9C8;
-        Mon, 22 Apr 2019 14:05:41 +0000 (UTC)
-Message-ID: <32310473e6aef679d00c39028adcfcf4c31f47f7.camel@redhat.com>
-Subject: Re: [PATCH v2 64/79] docs: ioctl-number.txt: convert it to ReST
- format
-From:   Doug Ledford <dledford@redhat.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Date:   Mon, 22 Apr 2019 10:05:39 -0400
-In-Reply-To: <16911408d1ac64c0df5ef3ecdae9cf1cc2df58e4.1555938376.git.mchehab+samsung@kernel.org>
+        Mon, 22 Apr 2019 10:08:01 -0400
+Received: from casper.infradead.org ([85.118.1.10]:60354 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbfDVOIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 10:08:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=rW+1ITQQ2cRfyxA1nnCqjk9QBb4ZXRDOBeynG64FjUQ=; b=OdSRHFJmvpAZP5xtGWteR9B1oK
+        tdNSGqoa0D5/t74ihdTjnMiNf2BAZy7OQNcY1jUJxOQJpM1Uc+4WYZfq4ivUTBXF1okPedKidG4gH
+        0Ywdq3sm/jTLhsG5YCah35Bh3Gk6KsCW4NtS6KvlWuvjlA8YlSP0oiDWc+8P9EHSaJagVJVhkG88w
+        zgOxlKflOaD3TzqGtpd6MHrydi6CemoNUxOyjiXekehQqEauuJt08+Y4Oke48RD7V1T0NDy4gh0wn
+        ViBjqkj89WPHGX0Xbj33EqKQFClQfGl6Eaq184Etq3CZPl5DqBMDfq0r/BGnObu1rksZaMo9Tunwd
+        7nwHzMgQ==;
+Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hIZby-0005Jf-HD; Mon, 22 Apr 2019 14:07:58 +0000
+Date:   Mon, 22 Apr 2019 11:07:54 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Changbin Du <changbin.du@gmail.com>
+Subject: Re: [PATCH v2 25/79] docs: convert docs to ReST and rename to *.rst
+Message-ID: <20190422110754.4d75c5ce@coco.lan>
+In-Reply-To: <CAErSpo4FLuCVPGAZGKeBn=-oyaw6eTrseMnaHJo1TVjxnfCZrw@mail.gmail.com>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-         <16911408d1ac64c0df5ef3ecdae9cf1cc2df58e4.1555938376.git.mchehab+samsung@kernel.org>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-yR/yBqelNUQfoXBNUBEp"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
+        <CAErSpo4FLuCVPGAZGKeBn=-oyaw6eTrseMnaHJo1TVjxnfCZrw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 22 Apr 2019 14:05:44 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, 22 Apr 2019 08:48:10 -0500
+Bjorn Helgaas <bhelgaas@google.com> escreveu:
 
---=-yR/yBqelNUQfoXBNUBEp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> [+cc Changbin, -cc many others]
+> 
+> On Mon, Apr 22, 2019 at 8:28 AM Mauro Carvalho Chehab
+> <mchehab+samsung@kernel.org> wrote:
+> >
+> > Convert the PM documents to ReST, in order to allow them to
+> > build with Sphinx.
+> >
+> > The conversion is actually:
+> >   - add blank lines and identation in order to identify paragraphs;  
+> 
+> s/identation/indentation/
+> 
+> >   - fix tables markups;
+> >   - add some lists markups;
+> >   - mark literal blocks;
+> >   - adjust title markups.
+> >
+> > At its new index.rst, let's add a :orphan: while this is not linked to
+> > the main index.rst file, in order to avoid build warnings.
+> >
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
+> 
+> The PCI part of this is fine with me but may conflict with Changbin's work:
+> 
+> https://lore.kernel.org/lkml/20190409155626.6049-1-changbin.du@gmail.com
 
-On Mon, 2019-04-22 at 10:27 -0300, Mauro Carvalho Chehab wrote:
-> +0x1b  all                                                            Inf=
-iniBand Subsystem
-> +                                                                     <ht=
-tp://infiniband.sourceforge.net/>
+Yes it could generate a conflict, but it is a trivial change:
 
-I did not know this link was in there.  That sourceforge site is 15
-years old and totally obsolete/irrelevant at this point.  This patch
-doesn't have the purpose of fixing this up, but now that it's pointed
-out, we'll make a follow up patch to correct this.
+--- a/Documentation/PCI/pci.txt
++++ b/Documentation/PCI/pci.txt
+@@ -110,7 +110,7 @@ initialization with a pointer to a structure describing the driver
+ 	resume_early	Wake device from low power state.
+ 	resume		Wake device from low power state.
+ 
+-		(Please see Documentation/power/pci.txt for descriptions
++		(Please see Documentation/power/pci.rst for descriptions
+ 		of PCI Power Management and the related functions.)
+ 
+ 	shutdown	Hook into reboot_notifier_list (kernel/sys.c).
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+Looking at Changbin's patch 02/12 v3:
 
---=-yR/yBqelNUQfoXBNUBEp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+	https://lore.kernel.org/lkml/20190409155626.6049-3-changbin.du@gmail.com/
 
------BEGIN PGP SIGNATURE-----
+It doesn't touch the above line, nor the context lines, and it doesn't 
+change more than 50% of the file. So, even if this patch gets merged
+after the PCI changeset, git will very likely recognize it as a
+rename and will apply it anyway.
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAly9yjMACgkQuCajMw5X
-L91FGA/+NGY41lyZo6SF1rcLpmmHRrsycikwey+lW/oicFTSL32BSa+1q9AMkUeL
-s+ZDCw+3lWHma5OnEzNcwKEDGiYTMqQqbPE27bNc6vddzZGQmwJnzR/xvmUZKXMM
-piOgKNM1l52arbE4lRX9L3FOGrv2Im5MR8qVwzFqdy7WadDhHC3+kOArQXdrvbkj
-KGPrEBI22epop7v0XBBSrRnouUdV26QO9FAjSFJwGMvmazP0TI3ASj9DjJGJ/8sS
-Kn+mSqtCejeEu5EpDaE9dJ9I0H2HkAEwcv5Py1w4wkoreaO4gVs+1F3yReWSbPjE
-Ia53GSCainLylOPRPJUD7TFNNEk+P42olzHRLFyfAqBkDPCrWe8lT1JBAUEZWn9r
-tZ4hRzKfcn125ouAi8OLdX8KGzykdSFjX2s57ISwiMQeMECc+/38M4zdrtoH6fEL
-0DH+Q7nFIulP36NBhhWNfnrzjttAVAg942kKB6YQMDC5/WWoJxKB0JCEI2Oh/Nm7
-7iwE7zczzKrwk0f1R5A4jL0C+vqiN3iAYDY7Pd5lA7SbS/6jl+m2bn4uDERB8Hg7
-7/SeY/c/MnG1NybWfiYcnwf0nhZnH9nPPtdw+jRfV7BtZLhFXHeIq1K+/cVxMPlP
-+BPDd6RXt01e+GY9yFbiofT0Kl2DcOp+NCyza/5dQ+g6it2dntU=
-=olyd
------END PGP SIGNATURE-----
+> Since this doesn't look like it's targeting merge via the PCI tree,
+> I'll let you two work out any conflicts.
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
---=-yR/yBqelNUQfoXBNUBEp--
-
+Thanks!
+Mauro
