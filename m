@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0B6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ABBC282E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07875204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB592177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962981;
-	bh=VkDmQWNAQLvrnPrZwEHVviKfUQraHt7Onm1DQtblO1k=;
+	s=default; t=1555962986;
+	bh=i/Hk42MjRmEKOufWAx5j5IUON21NA4y3ONE3MnQ3DZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYkraXobOX7JTAngYMO509zvri0tGrN7F+aCXWmdEIRZcB26iTSMzS8P+KAQQ0obe
-	 JTry/QltmwpooWY0k0T3958LEWWxo3jA8noVacE8ZDjg+1vNwqlZgFMmkr+f6DO2ZB
-	 jbYrL19my+z41LsBQ0788TIfjrKkOmJrYGnz2lLI=
+	b=ZitNnR+BtoK4imqc7ZGpPNYgwi1qSNorbdwA6nAC/LxDFjlZP9dg5ehhHzcbSONhZ
+	 uix7K85VxUl4QFe7InzUHLdZVSK8lO/rgCnZCfIfyOAXI5k2n1njMoS/Fi+lwLHhM4
+	 ApjSj0ZM0D63BAO0CpnIWd+RXk4dPgjmKdz9K0wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbfDVT4O (ORCPT
+        id S1730695AbfDVTs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730697AbfDVTs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 15:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730654AbfDVTsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:48:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89DCE21916;
-        Mon, 22 Apr 2019 19:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0F1821907;
+        Mon, 22 Apr 2019 19:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962537;
-        bh=VkDmQWNAQLvrnPrZwEHVviKfUQraHt7Onm1DQtblO1k=;
+        s=default; t=1555962533;
+        bh=i/Hk42MjRmEKOufWAx5j5IUON21NA4y3ONE3MnQ3DZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PPe3+gMBLsegpsKxGDQxJIxa0rSgZc3Fs2buUhIEiR33cfDLexRP2KBhiMrvTcmat
-         xvT6xOHmFE/zqUm3Up7zYZ23CA/1h+xVGcZV8HTlC7OVSBwu3JIhnFQI/01pIS7c+R
-         ig0ZV/etCS3zIIxxNiFreyxrPGkLq85Mp2V05fPw=
+        b=nM9CwnGsyW5UHyEIj5Bh5u/PZB/lYQkFHc21xFBVfwOJW+kvO+h+bt34Nv1X0Udag
+         85EJROX6RJwlv1wDS2iG/EEVkyYS4Zslf/61nvv5DEONfpKASuTxQ5oTkVH+aXL43T
+         AQaeNUOPVYykfHukJKA8ZPGxLa8y6yIDGQne1x9w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/29] sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
-Date:   Mon, 22 Apr 2019 15:48:25 -0400
-Message-Id: <20190422194848.13049-6-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/29] qlcnic: Avoid potential NULL pointer dereference
+Date:   Mon, 22 Apr 2019 15:48:22 -0400
+Message-Id: <20190422194848.13049-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
 References: <20190422194848.13049-1-sashal@kernel.org>
@@ -58,54 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit ac0cdb3d990108df795b676cd0d0e65ac34b2273 ]
+[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
 
-Add the missing uart_unregister_driver() and i2c_del_driver() before return
-from sc16is7xx_init() in the error handling case.
+netdev_alloc_skb can fail and return a NULL pointer which is
+dereferenced without a check. The patch avoids such a scenario.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/serial/sc16is7xx.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index ea6b62cece88..82451bb6622b 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1482,7 +1482,7 @@ static int __init sc16is7xx_init(void)
- 	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
- 	if (ret < 0) {
- 		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
--		return ret;
-+		goto err_i2c;
- 	}
- #endif
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+index 0a2318cad34d..63ebc491057b 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+@@ -1038,6 +1038,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
  
-@@ -1490,10 +1490,18 @@ static int __init sc16is7xx_init(void)
- 	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
- 	if (ret < 0) {
- 		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
--		return ret;
-+		goto err_spi;
- 	}
- #endif
- 	return ret;
-+
-+err_spi:
-+#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
-+	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
-+#endif
-+err_i2c:
-+	uart_unregister_driver(&sc16is7xx_uart);
-+	return ret;
- }
- module_init(sc16is7xx_init);
- 
+ 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
+ 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
++		if (!skb)
++			break;
+ 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
+ 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
+ 		adapter->ahw->diag_cnt = 0;
 -- 
 2.19.1
 
