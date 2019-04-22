@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49F5C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A42C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D372175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496B921738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962129;
-	bh=t+6ETsTZ0B9We1lnFh7jxVq6+Unsc8KkkIxTkdd/8lk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FrlRxV9soR5cnKNAgMo2Wec7Rt8ZY35PpJkta8kbOMH5nm+vKTBXUOj5Ss/Sr62q3
-	 GTMKaM4OZK2jzdOzAAExx5eFSTaqyKG+7GgSA8WolR4PibnxDIwYCMSpO3gyhh/ruG
-	 vklzlUTZwjgRm/sW6nH+HVHbrK0tIJb4zV0xP2Lg=
+	s=default; t=1555962136;
+	bh=7rYj/+g1YhsbLdyz4Q8xGdqAbHLyEZLrYGWMfOQUH2I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lCQdKu433Lx9RCtebwN0mqAj8je9PBOayhE+d0kI0PRHhcJfuy6kb8LzLNdSvnS5v
+	 CvEWV8gLsEE3VnIMpJWpQ3C326nFiKkd7aoyUndXlJL2lvRUP4SXlHBNHNgnvaz3XD
+	 dCgqhx14ISJOuJpwQqKu7JckWcccD9sfz/mXoX+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfDVTmI (ORCPT
+        id S1728706AbfDVTmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbfDVTmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:08 -0400
+        id S1728292AbfDVTmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DA5A214AE;
-        Mon, 22 Apr 2019 19:42:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA646214AE;
+        Mon, 22 Apr 2019 19:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962127;
-        bh=t+6ETsTZ0B9We1lnFh7jxVq6+Unsc8KkkIxTkdd/8lk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PSgkm9z+XEnlAHD0wZEYARy2wfK7GlD8QR6prYWoOckX6aE7epORP+RoL3DI67xLG
-         vZeIjtv7eBq7VWMfeEMksB/U/AoUMlbfEFh45I2tyhdDYQdshcEUptEUL24+n8rTyQ
-         99P3pY0qWZDXUhvAI+J+t6+WgQDZaqh7sSOe8I/0=
+        s=default; t=1555962132;
+        bh=7rYj/+g1YhsbLdyz4Q8xGdqAbHLyEZLrYGWMfOQUH2I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jq0GmIKuTzehBbOhg4/KAwamMmWe8aaS7ZgTNklOJ+0p4KwtWAhS17ZLYpHn2xdYV
+         eO5THrHbd71Splxdh4HpO+TlPcL6L5jMNAIS6qEFnAqDKQuM5S6X0Ie1bV5G3BvhnH
+         /0u0JMzMGe+z5KWGqz7fD7z8J19kANT+xsSVQueg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 01/98] arm64: dts: renesas: r8a77990: Fix SCIF5 DMA channels
-Date:   Mon, 22 Apr 2019 15:40:28 -0400
-Message-Id: <20190422194205.10404-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 07/98] net: ieee802154: fix a potential NULL pointer dereference
+Date:   Mon, 22 Apr 2019 15:40:34 -0400
+Message-Id: <20190422194205.10404-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,49 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit e20119f7eaaaf6aad5b44f35155ce500429e17f6 ]
+[ Upstream commit 2795e8c251614ac0784c9d41008551109f665716 ]
 
-According to the R-Car Gen3 Hardware Manual Errata for Rev 1.50 of Feb
-12, 2019, the DMA channels for SCIF5 are corrected from 16..47 to 0..15
-on R-Car E3.
+In case alloc_ordered_workqueue fails, the fix releases
+sources and returns -ENOMEM to avoid NULL pointer dereference.
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Fixes: a5ebe5e49a862e21 ("arm64: dts: renesas: r8a77990: Add SCIF-{0,1,3,4,5} device nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77990.dtsi | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ieee802154/adf7242.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index b2f606e286ce..327d12097643 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for the R-Car E3 (R8A77990) SoC
-  *
-- * Copyright (C) 2018 Renesas Electronics Corp.
-+ * Copyright (C) 2018-2019 Renesas Electronics Corp.
-  */
+diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
+index cd1d8faccca5..cd6b95e673a5 100644
+--- a/drivers/net/ieee802154/adf7242.c
++++ b/drivers/net/ieee802154/adf7242.c
+@@ -1268,6 +1268,10 @@ static int adf7242_probe(struct spi_device *spi)
+ 	INIT_DELAYED_WORK(&lp->work, adf7242_rx_cal_work);
+ 	lp->wqueue = alloc_ordered_workqueue(dev_name(&spi->dev),
+ 					     WQ_MEM_RECLAIM);
++	if (unlikely(!lp->wqueue)) {
++		ret = -ENOMEM;
++		goto err_hw_init;
++	}
  
- #include <dt-bindings/clock/r8a77990-cpg-mssr.h>
-@@ -1040,9 +1040,8 @@
- 				 <&cpg CPG_CORE R8A77990_CLK_S3D1C>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
--			dmas = <&dmac1 0x5b>, <&dmac1 0x5a>,
--			       <&dmac2 0x5b>, <&dmac2 0x5a>;
--			dma-names = "tx", "rx", "tx", "rx";
-+			dmas = <&dmac0 0x5b>, <&dmac0 0x5a>;
-+			dma-names = "tx", "rx";
- 			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
- 			resets = <&cpg 202>;
- 			status = "disabled";
+ 	ret = adf7242_hw_init(lp);
+ 	if (ret)
 -- 
 2.19.1
 
