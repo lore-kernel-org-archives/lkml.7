@@ -2,152 +2,76 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C82EC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144AFC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F2C21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="k1SOaDoO"
+	by mail.kernel.org (Postfix) with ESMTP id D4984214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfDVQ2g (ORCPT
+        id S1728156AbfDVQ3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:28:36 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:52692 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfDVQ2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:28:35 -0400
-Received: by mail-it1-f194.google.com with SMTP id x132so18673150itf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0YMZftlMUHZo7PBuxCI1tlSTMOcGrZlt8hFWgHl+L+E=;
-        b=k1SOaDoOUBGXWP4VwKGtXgfEEyuzmixr1cJ1d4C29trp67nQliQ+3pBmPbjJl3Fh28
-         eDGqK+5+XTNMXKQmJnQ16lWq7a3CSAZkHCynXnAzOBK3wzIdjfRVQhP4OOHPgMfMMhOo
-         ZkUiLX6JjP24oBas7VZvzqeGy5FD3gjyF5A7KHbeWlK5mNPAGUJLkJAwNBSoOGXPUris
-         AP5jxRtJksBdcNFWVBuaWJHaX1aq4IIiREnINPy5T3OOj3gWfd7Icfke/dAV8H4kqBti
-         yeVHDEzkubxwwzNsODVDrpub8ixtnxhTkt7Ky3t5fyHpqO+4vCjEHXKYB5wrAJx0d/As
-         cQPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0YMZftlMUHZo7PBuxCI1tlSTMOcGrZlt8hFWgHl+L+E=;
-        b=IlKaiWf6TRokx8x8/qELvAkYbs3sofHgpMUI3nBDMgNGEYpL46HEBAAuAP49cylFeP
-         tUctIt4RD2Y2x4SUmoYSyKAmvcdPOOq0SEBrD5TzeP6hFGlkRKqmXtuFej5D+kQIbewO
-         WgGw3Zmg6OiFtMWC06BP+IayemSV7NmAyeGdn4dn5hBQqCvVnB0dHe81zGvaDEs1RuQI
-         2+N9WulJ3Ir5D6F89+hu3DTuYSUkIOah3G5xwx9CEXSlDkaX1sAt3PE3gLIRzJlDPlbe
-         u2CQM0wfvRNvWKGVbCUX0DybRzLkMwtqhkn3kD3owXLB5MdecMh9R9cv9HZTwPw/ovk2
-         GzCw==
-X-Gm-Message-State: APjAAAUkG+ov8FQjYjNvS5CYFqpOd9FhbsdI1BrRsiKEtBB2GPJN2EJa
-        Zp/G4YyxerV3CTn68DKs8y/QMA==
-X-Google-Smtp-Source: APXvYqziYFRJ2GfHBlcbEvYY7DEfMcp0V612OFcpBV9etEO6L9kaDRuUFLHILfUD/6nKuRL9w4w9DQ==
-X-Received: by 2002:a02:1649:: with SMTP id a70mr14313951jaa.116.1555950514747;
-        Mon, 22 Apr 2019 09:28:34 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id u66sm4500447ioe.74.2019.04.22.09.28.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:28:33 -0700 (PDT)
-Subject: Re: WARNING in percpu_ref_kill_and_confirm
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <00000000000043fe9c058720a5d3@google.com>
- <CAHk-=wgC5mNgPN5excXyTNtFpOyF4+9jk3tLiC+s-VezgGbVTA@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <224b0113-979a-01c3-49a0-6170f075cdae@kernel.dk>
-Date:   Mon, 22 Apr 2019 10:28:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgC5mNgPN5excXyTNtFpOyF4+9jk3tLiC+s-VezgGbVTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 22 Apr 2019 12:29:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:61021 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfDVQ3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:29:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 09:29:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,382,1549958400"; 
+   d="scan'208";a="136382525"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2019 09:29:35 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 22 Apr 2019 09:29:35 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.183]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.68]) with mapi id 14.03.0415.000;
+ Mon, 22 Apr 2019 09:29:35 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+CC:     LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
+Thread-Topic: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
+Thread-Index: AQHU9jKBC6KJVSji90+B+N/k56qJIaZC+16AgAAKogCAAAgoAIAAB+6AgAHqtYCAADq4gIAAmG0AgAAIIQCAAofRkA==
+Date:   Mon, 22 Apr 2019 16:29:35 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7E90A49F@ORSMSX104.amr.corp.intel.com>
+References: <20190418220229.32133-1-tony.luck@intel.com>
+ <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
+ <20190418232910.GR27160@zn.tnic>
+ <CAM_iQpVWvg-U6hzKsCPXdObiwKJhQ=BkGDDeP+p671cCWK7QFA@mail.gmail.com>
+ <20190419002645.GA559@zn.tnic>
+ <CAM_iQpVk564gCu_FBKvYVQjA1hGZ4YXB6ogrSFt=qZwiWen2tw@mail.gmail.com>
+ <20190420091313.GA29704@zn.tnic>
+ <CAM_iQpUaBOS92u7K+hzzRX5hw0Kbrp-0o0DSfLwSGBhenntVjA@mail.gmail.com>
+ <20190420184751.GE29704@zn.tnic>
+In-Reply-To: <20190420184751.GE29704@zn.tnic>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMTJkNWNlZDMtZGVkMS00MGU4LWFlZmYtMTM5MTY3YmY2NTQ4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYVpXNENDYkRDWG9JV3pXOVlSUEpIWnFKUWVDczQxRFRGXC91U0szRGlkXC9xVlVBczlQalN3a2h4azlXRFhHVlFlIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/19 10:23 AM, Linus Torvalds wrote:
-> On Mon, Apr 22, 2019 at 9:06 AM syzbot
-> <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com> wrote:
->>
->>
->> The bug was bisected to:
->>
->> commit 38e7571c07be01f9f19b355a9306a4e3d5cb0f5b
->> Author: Linus Torvalds <torvalds@linux-foundation.org>
->> Date:   Fri Mar 8 22:48:40 2019 +0000
->>
->>      Merge tag 'io_uring-2019-03-06' of git://git.kernel.dk/linux-block
->>
->> percpu_ref_kill_and_confirm called more than once on io_ring_ctx_ref_free!
-> 
-> So I don't see how that happens in the original code (because
-> __io_uring_register() is called with the uring_lock held), but let's
-> see.
-> 
-> HOWEVER.
-> 
-> I do see how it happens now as of the latest kernel as of commit
-> b19062a56726 ("io_uring: fix possible deadlock between
-> io_uring_{enter,register}") where the code explicitly drops the mutex
-> in order to wait for other uring users to finish.
-> 
-> So Jens, I think that commit was buggy. I suspect that
-> io_uring_register() should perhaps do something like
-> 
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2934,7 +2934,10 @@ static int __io_uring_register(struct
-> io_ring_ctx *ctx, unsigned opcode,
->  {
->         int ret;
-> 
-> +       if (!percpu_ref_tryget(&ctx->refs))
-> +               return -EBUSY;
->         percpu_ref_kill(&ctx->refs);
-> +       percpu_ref_put(&ctx->refs);
-> 
->         /*
->          * Drop uring mutex before waiting for references to exit. If another
-> 
-> to guarantee that it's the *only* case of io_uring_register() doing that kill.
-> 
-> Hmm?
-
-Just sent out something as well. I think we can get by with just
-checking if it's dying, or we can go the route of what you did which is
-actually very similar to what the earlier versions did. Both versions
-should fix the issue.
-
-I'll test just to be totally sure.
-
--- 
-Jens Axboe
-
+PiBOb3csIGlmIHlvdSBzdGlsbCB3YW50IHRvIGtub3cgaG93IG1hbnkgZXJyb3JzIGFuZCB3aGVy
+ZSB0aGV5IGhhcHBlbmVkDQo+IGFuZCB3aGVuIHRoZXkgaGFwcGVuZWQgYW5kIHlhZGRhIHlhZGRh
+LCB5b3UgKmRpc2FibGUqIHRoZSBDRUMuDQoNClJlYm9vdGluZyBpc24ndCBwb3B1bGFyIGluIG1h
+bnkgZW5kIHVzZXIgc2l0dWF0aW9ucy4gTWFueSBDU1AgKGNsb3VkDQpzZXJ2aWNlIHByb3ZpZGVy
+cykgdmVoZW1lbnRseSBoYXRlIHRoZSBpZGVhIG9mIHJlYm9vdGluZy4NCg0KLVRvbnkNCg==
