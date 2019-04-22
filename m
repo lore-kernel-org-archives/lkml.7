@@ -2,53 +2,50 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B96C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1156C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB31204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89BE204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963024;
-	bh=oSQ4Zp9KdobFFw84Vu+aM6m8mVNMD0L5SPyOUZ8d4KM=;
+	s=default; t=1555963032;
+	bh=dUt48SvcsNXqMHEdFA9vb3C7DasH3qtdBP2Nq+5dWuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X//yhJoLVwGElddycnO0ERcIrUbRyU2XwVrhp87lj+rR2dy1Qg72Dbqa7Yk2ywQQ5
-	 tZeEKEqFl1cRfYSAIs4gizKOQOOmRWvQU4dmRgZ8YTWOC2BTqTEQKr0oR8QBfYBelt
-	 jahQMNNNyXU+APdBDOTMQxdOM095Blg8QAk9pH/g=
+	b=nmTaQMfxsQ6cCa+veanK6hf/kwDHMNwV5ZGGp4gxq8uSWZMhjIL5FyBFxH0ZnQ0em
+	 1s1P+fPrRoZ9gJQnIqj30ZR97nl9vObrcmd+lE64H24cnnYvz6sazAiVCFwwNYjtN3
+	 UO6NUMt39YbFpKOn3WBjh4jpzSnehwmTW8pFKPZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbfDVT5C (ORCPT
+        id S1731680AbfDVT5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52270 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729835AbfDVTsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:48:47 -0400
+        id S1729769AbfDVTsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:48:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C361D21905;
-        Mon, 22 Apr 2019 19:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11ECD2190B;
+        Mon, 22 Apr 2019 19:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962526;
-        bh=oSQ4Zp9KdobFFw84Vu+aM6m8mVNMD0L5SPyOUZ8d4KM=;
+        s=default; t=1555962522;
+        bh=dUt48SvcsNXqMHEdFA9vb3C7DasH3qtdBP2Nq+5dWuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/zRIbZNsJDFIn1IwjmKJfI7y3ViOPeSYR3IiBj8cttKVVNVpEsAzmDlCHmucXFYL
-         m0f7mP0j1VJKqd1fGIKcBCvvbhsIdYOP1iYQhFDCVe+QDU59jfJgLZWBdEw3laSlAw
-         rxkeLO9yqQVLowU9HcwjPRS17Re3uMa7ojfy8EbY=
+        b=0il28tIjHQkmHSGCSoJQk5FKQIyeHF5IcZr/to/x0mek0U47p9wr8KZevg/mJ8loj
+         PbUuoqJDKMVQa5ZNME1tFJoWo6SxQxtMBtq3JhJsRW8k1pOMSyCQML3og+JDs9HlQo
+         xUJbE3Mp0kpdi1BFA8lzvUgzTeNIf+/VkFL0FfZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Vagin <avagin@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 42/43] ptrace: take into account saved_sigmask in PTRACE{GET,SET}SIGMASK
-Date:   Mon, 22 Apr 2019 15:47:26 -0400
-Message-Id: <20190422194727.12495-42-sashal@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 40/43] kconfig/[mn]conf: handle backspace (^H) key
+Date:   Mon, 22 Apr 2019 15:47:24 -0400
+Message-Id: <20190422194727.12495-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
@@ -61,134 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Vagin <avagin@gmail.com>
+From: Changbin Du <changbin.du@gmail.com>
 
-[ Upstream commit fcfc2aa0185f4a731d05a21e9f359968fdfd02e7 ]
+[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
 
-There are a few system calls (pselect, ppoll, etc) which replace a task
-sigmask while they are running in a kernel-space
+Backspace is not working on some terminal emulators which do not send the
+key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+But currently only '^?' is handled. Let's also handle '^H' for those
+terminals.
 
-When a task calls one of these syscalls, the kernel saves a current
-sigmask in task->saved_sigmask and sets a syscall sigmask.
-
-On syscall-exit-stop, ptrace traps a task before restoring the
-saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
-PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
-saved_sigmask, when the task returns to user-space.
-
-This patch fixes this problem.  PTRACE_GETSIGMASK returns saved_sigmask
-if it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
-
-Link: http://lkml.kernel.org/r/20181120060616.6043-1-avagin@gmail.com
-Fixes: 29000caecbe8 ("ptrace: add ability to get/set signal-blocked mask")
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- include/linux/sched/signal.h | 18 ++++++++++++++++++
- kernel/ptrace.c              | 15 +++++++++++++--
- 2 files changed, 31 insertions(+), 2 deletions(-)
+ scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+ scripts/kconfig/nconf.c             | 2 +-
+ scripts/kconfig/nconf.gui.c         | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index fbf86ecd149d..bcaba7e8ca6e 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -377,10 +377,20 @@ static inline void set_restore_sigmask(void)
- 	set_thread_flag(TIF_RESTORE_SIGMASK);
- 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
- }
-+
-+static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
-+{
-+	clear_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
-+}
-+
- static inline void clear_restore_sigmask(void)
- {
- 	clear_thread_flag(TIF_RESTORE_SIGMASK);
- }
-+static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
-+{
-+	return test_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
-+}
- static inline bool test_restore_sigmask(void)
- {
- 	return test_thread_flag(TIF_RESTORE_SIGMASK);
-@@ -398,6 +408,10 @@ static inline void set_restore_sigmask(void)
- 	current->restore_sigmask = true;
- 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
- }
-+static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
-+{
-+	tsk->restore_sigmask = false;
-+}
- static inline void clear_restore_sigmask(void)
- {
- 	current->restore_sigmask = false;
-@@ -406,6 +420,10 @@ static inline bool test_restore_sigmask(void)
- {
- 	return current->restore_sigmask;
- }
-+static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
-+{
-+	return tsk->restore_sigmask;
-+}
- static inline bool test_and_clear_restore_sigmask(void)
- {
- 	if (!current->restore_sigmask)
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 84b1367935e4..f1c85b6c39ae 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -29,6 +29,7 @@
- #include <linux/hw_breakpoint.h>
- #include <linux/cn_proc.h>
- #include <linux/compat.h>
-+#include <linux/sched/signal.h>
- 
- /*
-  * Access another process' address space via ptrace.
-@@ -925,18 +926,26 @@ int ptrace_request(struct task_struct *child, long request,
- 			ret = ptrace_setsiginfo(child, &siginfo);
- 		break;
- 
--	case PTRACE_GETSIGMASK:
-+	case PTRACE_GETSIGMASK: {
-+		sigset_t *mask;
-+
- 		if (addr != sizeof(sigset_t)) {
- 			ret = -EINVAL;
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index d58de1dc5360..510049a7bd1d 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+ 			case KEY_DOWN:
+ 				break;
+ 			case KEY_BACKSPACE:
+-			case 127:
++			case 8:   /* ^H */
++			case 127: /* ^? */
+ 				if (pos) {
+ 					wattrset(dialog, dlg.inputbox.atr);
+ 					if (input_x == 0) {
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index 003114779815..e8e1944fa09b 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1048,7 +1048,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+ 		state->match_direction = FIND_NEXT_MATCH_UP;
+ 		*ans = get_mext_match(state->pattern,
+ 				state->match_direction);
+-	} else if (key == KEY_BACKSPACE || key == 127) {
++	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+ 		state->pattern[strlen(state->pattern)-1] = '\0';
+ 		adj_match_dir(&state->match_direction);
+ 	} else
+diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+index a64b1c31253e..0b63357f1d33 100644
+--- a/scripts/kconfig/nconf.gui.c
++++ b/scripts/kconfig/nconf.gui.c
+@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
+ 		case KEY_F(F_EXIT):
+ 		case KEY_F(F_BACK):
  			break;
- 		}
- 
--		if (copy_to_user(datavp, &child->blocked, sizeof(sigset_t)))
-+		if (test_tsk_restore_sigmask(child))
-+			mask = &child->saved_sigmask;
-+		else
-+			mask = &child->blocked;
-+
-+		if (copy_to_user(datavp, mask, sizeof(sigset_t)))
- 			ret = -EFAULT;
- 		else
- 			ret = 0;
- 
- 		break;
-+	}
- 
- 	case PTRACE_SETSIGMASK: {
- 		sigset_t new_set;
-@@ -962,6 +971,8 @@ int ptrace_request(struct task_struct *child, long request,
- 		child->blocked = new_set;
- 		spin_unlock_irq(&child->sighand->siglock);
- 
-+		clear_tsk_restore_sigmask(child);
-+
- 		ret = 0;
- 		break;
- 	}
+-		case 127:
++		case 8:   /* ^H */
++		case 127: /* ^? */
+ 		case KEY_BACKSPACE:
+ 			if (cursor_position > 0) {
+ 				memmove(&result[cursor_position-1],
 -- 
 2.19.1
 
