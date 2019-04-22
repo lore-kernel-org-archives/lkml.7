@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BFEC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E47CC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F56204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F480204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962750;
-	bh=RZHhLtnbYR92Tt2A5Oo+4YI0+QJ9PPVF76ew02vkmuQ=;
+	s=default; t=1555962760;
+	bh=wOE5ZcJdp3Nl4hStbVWmI+2I8nUcvwRioQP/iZMcOAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6RZDIsUm4R8xJvIVEOoIvreYm8rKhmOotkU9xNZuCKkyUp/6ENFp/2TeqNuaQc6D
-	 CRqwiV/8qZZ9FmMhijXtGSeNYiPRtFGuirJ/2Y4FAi5oYtgTkHJtmmgUVf5Fte1gh3
-	 rmnGpCrqnt+OjNSsvhT/KUKtQJM046ClxsgJFfDA=
+	b=fInMJwJK3id1/BfzcAI7B7oIcn04YPPtDZA/aSqQhEkVOfAe8g3p34eegMORHBMCF
+	 k5upVcZvLwyRPaDQOtyO9Uws6ldwumuiDsxviS6PZw9EluWMZ28WUbmS3zJJ2gAXtV
+	 rgxgZDYCVvXjtSkEWmswuxbz9N0lV4j4JLwZASSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731316AbfDVTw2 (ORCPT
+        id S1731328AbfDVTwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:52:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731054AbfDVTuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:19 -0400
+        id S1731013AbfDVTuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89EB021928;
-        Mon, 22 Apr 2019 19:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA14218D3;
+        Mon, 22 Apr 2019 19:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962619;
-        bh=RZHhLtnbYR92Tt2A5Oo+4YI0+QJ9PPVF76ew02vkmuQ=;
+        s=default; t=1555962615;
+        bh=wOE5ZcJdp3Nl4hStbVWmI+2I8nUcvwRioQP/iZMcOAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aASy+LBjC5AYsk/+2DqVUlxQEHUbLAHWy81ofreA2RqTsKWJxVBlN3cqIT8WWywOt
-         TtLQKgfP+LzyRSyDXtymkYrNhoM6kyTlOzyDvfaaw0vRYfxEB9dXd23neV77tyGuWg
-         HzUtjm3rKkWuv6mVUIUln3RpDNqx4pnQDUWWecoA=
+        b=taDRIJ+LOO49iswDPFAK2UHtjV5r/Slkriw1wLdQ1pUh2T5vmRkqPjMfGPfvCPTGh
+         iLE1CEBR9Tz6wEbeqA+hk7XPm+WqoUgwnvVf2r5w6ZvjgyKJn8uJsc/ni5q0e0UBOa
+         ct46hn53pBUeTGMKnnpbJnY/N8H/DWtLerxMKmDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     raymond pang <raymondpangxd@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/21] libata: fix using DMA buffers on stack
-Date:   Mon, 22 Apr 2019 15:49:40 -0400
-Message-Id: <20190422194941.13433-20-sashal@kernel.org>
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 17/21] tty: fix NULL pointer issue when tty_port ops is not set
+Date:   Mon, 22 Apr 2019 15:49:37 -0400
+Message-Id: <20190422194941.13433-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
 References: <20190422194941.13433-1-sashal@kernel.org>
@@ -59,87 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: raymond pang <raymondpangxd@gmail.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
+[ Upstream commit f4e68d58cf2b20a581759bbc7228052534652673 ]
 
-When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-a stack virtual address. Stack DMA buffers must be avoided.
+Unlike 'client_ops' which is initialized to 'default_client_ops', the
+port operations 'ops' may be left to NULL.
+Check the 'ops' value before checking the 'ops->x' value.
 
-Signed-off-by: raymond pang <raymondpangxd@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ drivers/tty/tty_port.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 0ad96c647541..7017a81d53cf 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -51,38 +51,52 @@ static int eject_tray(struct ata_device *dev)
- /* Per the spec, only slot type and drawer type ODD can be supported */
- static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+index 482f33f20043..3f0ef1a4f558 100644
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -212,7 +212,7 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
+ 		if (tty && C_HUPCL(tty))
+ 			tty_port_lower_dtr_rts(port);
+ 
+-		if (port->ops->shutdown)
++		if (port->ops && port->ops->shutdown)
+ 			port->ops->shutdown(port);
+ 	}
+ out:
+@@ -292,7 +292,7 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
+ 
+ int tty_port_carrier_raised(struct tty_port *port)
  {
--	char buf[16];
-+	char *buf;
- 	unsigned int ret;
--	struct rm_feature_desc *desc = (void *)(buf + 8);
-+	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
- 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
--			0, sizeof(buf),
-+			0, 16,
- 			0, 0, 0,
- 	};
- 
-+	buf = kzalloc(16, GFP_KERNEL);
-+	if (!buf)
-+		return ODD_MECH_TYPE_UNSUPPORTED;
-+	desc = (void *)(buf + 8);
-+
- 	ata_tf_init(dev, &tf);
- 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
- 	tf.command = ATA_CMD_PACKET;
- 	tf.protocol = ATAPI_PROT_PIO;
--	tf.lbam = sizeof(buf);
-+	tf.lbam = 16;
- 
- 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
--				buf, sizeof(buf), 0);
--	if (ret)
-+				buf, 16, 0);
-+	if (ret) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- 
--	if (be16_to_cpu(desc->feature_code) != 3)
-+	if (be16_to_cpu(desc->feature_code) != 3) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- 
--	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
-+	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_SLOT;
--	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
-+	} else if (desc->mech_type == 1 && desc->load == 0 &&
-+		   desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_DRAWER;
--	else
-+	} else {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
+-	if (port->ops->carrier_raised == NULL)
++	if (!port->ops || !port->ops->carrier_raised)
+ 		return 1;
+ 	return port->ops->carrier_raised(port);
  }
+@@ -309,7 +309,7 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
  
- /* Test if ODD is zero power ready by sense code */
+ void tty_port_raise_dtr_rts(struct tty_port *port)
+ {
+-	if (port->ops->dtr_rts)
++	if (port->ops && port->ops->dtr_rts)
+ 		port->ops->dtr_rts(port, 1);
+ }
+ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+@@ -325,7 +325,7 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+ 
+ void tty_port_lower_dtr_rts(struct tty_port *port)
+ {
+-	if (port->ops->dtr_rts)
++	if (port->ops && port->ops->dtr_rts)
+ 		port->ops->dtr_rts(port, 0);
+ }
+ EXPORT_SYMBOL(tty_port_lower_dtr_rts);
+@@ -584,7 +584,7 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
+ 
+ 	if (!test_bit(ASYNCB_INITIALIZED, &port->flags)) {
+ 		clear_bit(TTY_IO_ERROR, &tty->flags);
+-		if (port->ops->activate) {
++		if (port->ops && port->ops->activate) {
+ 			int retval = port->ops->activate(port, tty);
+ 			if (retval) {
+ 				mutex_unlock(&port->mutex);
 -- 
 2.19.1
 
