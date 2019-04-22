@@ -2,108 +2,183 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629ABC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E0C282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392F920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6298E2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555922565;
+	bh=sAHdfNw0kG5WiL0P2VOR703hyYGefPqpaIWPueRnFhw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gQfF1QQe339QvMnfr0eii3IWBbgTCBKmOA9Dmb5KjtWbjG+Kp8eEXmqzoWMbkVZRC
+	 cpWZOmKN8fK5zG+uSJvrRonKnEUC/V6FpLuXj0ViftRqR6+i4IGCWaRnOth/y9Lk3l
+	 /leXA5KEGJcKDMQzPP/QIk5OxWDI77sB03vMNy2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfDVIeE (ORCPT
+        id S1727026AbfDVImo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 04:34:04 -0400
-Received: from mail.us.es ([193.147.175.20]:40322 "EHLO mail.us.es"
+        Mon, 22 Apr 2019 04:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfDVIeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 04:34:04 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 23FED27F8AA
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:34:02 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 0EEC8DA709
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:34:02 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 0E103DA708; Mon, 22 Apr 2019 10:34:02 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id D7CB7DA705;
-        Mon, 22 Apr 2019 10:33:59 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 22 Apr 2019 10:33:59 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
+        id S1726434AbfDVImo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 04:42:44 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id AD7F44265A31;
-        Mon, 22 Apr 2019 10:33:59 +0200 (CEST)
-Date:   Mon, 22 Apr 2019 10:33:59 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Rundong Ge <rdong.ge@gmail.com>
-Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        davem@davemloft.net, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: fix dangling pointer access of fake_rtable
-Message-ID: <20190422083339.ptkxqb66pombgy5g@salvia>
-References: <20190409065612.32652-1-rdong.ge@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC5820857;
+        Mon, 22 Apr 2019 08:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555922563;
+        bh=sAHdfNw0kG5WiL0P2VOR703hyYGefPqpaIWPueRnFhw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wUokD82fU4qM1c4ce/z1x8LDCQmVJZnFGIUobS5Trpfq4BV43Pnca4fWLS9lvPKt/
+         AT83y9InH+IhA4lHk1hZYsJ9mSis/dwuq/AmP753Eaje4iX2XoVSmmd8CqkrZY6zOR
+         1OF5DOQ6u/JLVD9t27Dm9MmMpOyI/JD47zZX7QdQ=
+Date:   Mon, 22 Apr 2019 09:42:36 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandre <amergnat@baylibre.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, baylibre-upstreaming@groups.io,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: Add PAT9125 optical tracker sensor
+Message-ID: <20190422094236.537e3a01@archlinux>
+In-Reply-To: <f8ffca5b-09a8-cad7-4561-bf1263388228@baylibre.com>
+References: <1554456870-8104-1-git-send-email-amergnat@baylibre.com>
+        <1554456870-8104-4-git-send-email-amergnat@baylibre.com>
+        <20190407112024.6297cbfa@archlinux>
+        <f8ffca5b-09a8-cad7-4561-bf1263388228@baylibre.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409065612.32652-1-rdong.ge@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 06:56:12AM +0000, Rundong Ge wrote:
-[...]
-> diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
-> index 0dcc359..57eb02d 100644
-> --- a/net/netfilter/nfnetlink_queue.c
-> +++ b/net/netfilter/nfnetlink_queue.c
-> @@ -905,13 +905,25 @@ static void free_entry(struct nf_queue_entry *entry)
->  dev_cmp(struct nf_queue_entry *entry, unsigned long ifindex)
->  {
->  #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
-> -	int physinif, physoutif;
-> +	struct net_device *physindev, *physoutdev;
-> +	struct net_bridge_port *port;
->  
-> -	physinif = nf_bridge_get_physinif(entry->skb);
-> -	physoutif = nf_bridge_get_physoutif(entry->skb);
-> -
-> -	if (physinif == ifindex || physoutif == ifindex)
-> -		return 1;
-> +	physindev = nf_bridge_get_physindev(entry->skb);
-> +	physoutdev = nf_bridge_get_physoutdev(entry->skb);
-> +	if (physindev) {
-> +		if (physindev->ifindex == ifindex)
-> +			return 1;
-> +		port = br_port_get_rcu(physindev);
-> +		if (port && port->br->dev->ifindex == ifindex)
-> +			return 1;
-> +	}
-> +	if (physoutdev) {
-> +		if (physoutdev->ifindex == ifindex)
-> +			return 1;
-> +		port = br_port_get_rcu(physoutdev);
-> +		if (port && port->br->dev->ifindex == ifindex)
-> +			return 1;
-> +	}
+On Tue, 16 Apr 2019 14:49:19 +0200
+Alexandre <amergnat@baylibre.com> wrote:
 
-Either entry->state.in and entry->state.out point to the bridge
-device, after this #endif.
-
->  #endif
->  	if (entry->state.in)
->  		if (entry->state.in->ifindex == ifindex)
-> -- 
-> 1.8.3.1
+> Hello Jonathan,
 > 
+> On 4/7/19 12:20, Jonathan Cameron wrote:
+> > Hi Alexandre,
+> >
+> > So I have no problem with this as an IIO driver, but for devices that
+> > are somewhat 'on the edge' I always like to get a clear answer to the
+> > question: Why not input?
+> >
+> > I would also argue that, to actually be 'useful' we would typically need
+> > some representation of the 'mechanicals' that are providing the motion
+> > being measured.  Looking at the datasheet this includes, rotating shafts
+> > (side or end on), disk edges and flat surface tracking (mouse like).
+> >
+> > That's easy enough to do with the iio in kernel consumer interface. These
+> > are similar to when we handle analog electronic front ends.
+> >
+> > I you can, please describe what it is being used for in your application
+> > as that may give us somewhere to start!
+> >
+> > + CC Dmitry and linux-input.  
+> 
+> I developed this driver to detect the board movement which can't be 
+> detected by accelerometer (very slow motion). I admit this use case can 
+> be handled by an input, and I'm agree with you, PAT9125 driver could be 
+> an input. But, like you said, this chip is able to track different kind 
+> of motion, and additionally have an interrupt GPIO, so using it like 
+> input limit the driver potential. This chip is designed to work in 
+> industrial measurement or embedded systems, and the IIO API match with 
+> these environments, so it's the best way to exploit the entire potential 
+> of this chip.
+> 
+> As I understand (from 
+> https://www.kernel.org/doc/html/v4.12/input/event-codes.html#mice ), 
+> mouse driver must report values when the device move. This feature 
+> souldn't be mandatory for an optical tracker driver, specially for cases 
+> where user prefers to use buffer or poll only when he need data.
+> 
+> > If 1 or 2, I would suggest that you provide absolute position to
+> > Linux.  So add the value to a software counter and provide that.
+> > 32 bits should be plenty of resolution for that.  
+> I can't provide absolute position, only relative. Do you mean using 
+> input driver to do that ? If not, how is built the position data?
+
+Sorry, I should have been clearer on this.
+I mean absolute relative to the start point.  So on startup you assume
+absolute position is 0 and go from there.  What I can't work out is
+if the device does internal tracking, or whether each time you read
+it effectively resets it's internal counters to 0 so the next measurement
+is relative to the previous one.
+
+> 
+> > Silly question for you.  What happens if you set the delta values to 0?
+> > Do we get an interrupt which is effectively data ready?
+> > If we do, you might want to think about a scheme where that is an option.
+> > As things currently stand we have a confusing interface where changing this
+> > threshold effects the buffered data output.   That should only be the
+> > case if this interface is for a trigger, not an event.  
+> 
+> I'm not sure to understand your question. Is it possible to read delta_x 
+> and delta_y = 0 in special/corner case because internal value continue 
+> to be updated after toggled motion_detect pin (used for IRQ) until 
+> values registers are read and then motion_detect pin is released:
+> 
+>   * Chip move (i.e. +2 on X axis and 0 on Y axis)
+>   * Motion_detect IRQ trigger and internal reg value is updated (i.e.
+>     delta_x = 2 and delta_y = 0.
+>   * GPIO IRQ handled but read_value isn't executed yet (timing reason)
+>   * Chip move back to it origin point (i.e. -2 on X axis and 0 on Y axis)
+>   * Motion_detect IRQ still low because it hasn't been reset by read
+>     value and internal reg value is updated (i.e. delta_x = 0 and
+>     delta_y = 0)
+>   * Read_value is executed, we get delta values = 0.
+Again, I was unclear.  Is it possible to set the device to interrupt
+every time it evaluates whether motion has occured? Not only when it
+concludes that there has been some motion.  That would allow the interrupt
+to be used as a signal that the device has taken a measurement (data
+ready signal in other sensors).
+
+> 
+> > If it is actually not possible to report the two channels separately
+> > then don't report them at all except via the buffered interface and
+> > set the available scan masks so that both are on.  
+> I found a way to keep the consistency between delta x and delta y 
+> (without losing data). The first part is to reset a value only when user 
+> read it (also when it's buffered). The second part is to add the new 
+> value to the old value. With these two mechanism, X and Y will always be 
+> consistent:
+> 
+>   * as possible during a move.
+>   * perfectly when move is finished.
+Ah. This adding old value to a new value point is what I was getting
+at (I think) with 'absolute' position above.
+
+In industrial control for example you have absolute position by using
+limit switches to set your baseline.  Measurement devices are then
+capable of either reporting relative position, which is the movement
+since the last reading was taken, or 'absolute' position which is
+referenced to some known point.  It was this form of absolute position
+that I was suggesting you use.  If you use such a system without a
+limit switch it is normally called unreference motion.  You can do
+it but then the 0 is where ever your device was at power on.
+For some systems it doesn't actually matter (conveyor belts for
+instance where the positions you care about are between things
+on the belt, not the position of the belt itself).
+
+Thanks,
+
+Jonathan
+
+> 
+> 
+> Regards,
+> 
+> Alexandre
+> 
+
