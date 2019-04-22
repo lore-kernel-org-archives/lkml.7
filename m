@@ -2,98 +2,112 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A09CC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9EC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F8020859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49AAC20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="iJuZ8keP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e+3kQonw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfDVFfo (ORCPT
+        id S1726526AbfDVFjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 01:35:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35024 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfDVFfo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 01:35:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t21so5183250pfh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 22:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=NoJ4b8JitT5LeWb9tL/zyjtUCdy+IfTabaoXqmpGPzk=;
-        b=iJuZ8kePvp9mGRVZ02oCu9e3pCxklxY5fLZ8fbwm+ORjC3i0xANfGVziDrqXBzT3Qv
-         QYIooz3a9BNaGumonSeDzTSSDwz2czkqPhHZ7eojcF3JegiiYNfz7r8K4AepvKF74gUq
-         fmVvr3775aP6rskkr+U+xWac07GDMyxmkkfvWjS1LKyP1VGFAtNqYL25WVXOFcgTuCxl
-         4NoZdu77uQ1dyPZ1BRO83T6isMEA4516tm/PeyLb7hf3Hh15YiEmVQPb7vA4XeTfzprB
-         bfosKznpIhIW60dzM9Ceoa7Rhv7iOEvd4AWbZqQ4NJowgFB5JdZpkh9csLMGMcw3HxNa
-         TNtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NoJ4b8JitT5LeWb9tL/zyjtUCdy+IfTabaoXqmpGPzk=;
-        b=is0xYRtunpie7dYpRpwCasu3DGd2nD747YVLU98cMMEMNRYz1cs5Rih8Wyf8TFmX9R
-         ESqFqhnp7x9eUbVHtLpeMikyiP3RSzW6sqsa2V8pDsWZ3SM6dgens7e2Ygj4/MMeDsEZ
-         utAJHl15SwkhnpyEgdy46fgr/cg99KJ4oU8wvdDoYLEM3lHh2Er/cVcy2g3yRD9Wsdq1
-         OpMNLXcjeYGkjEyGOpXBqiw5p+s79DvyUzvIK6mo8BKVbHfSTob8rwqRJhy3bTpgrMyw
-         8ah5uoLoema2QgjOY+WcxM6C3JtvMOlZCuq1U42BDiDja8qD9tmGBT/h/Ih4iKdL5O8E
-         Tg7g==
-X-Gm-Message-State: APjAAAVvVSt4mNXIz4tS94Ry7WhuQXRPYQj9Tm8k4AzSDRaV8yhE44sT
-        s3fsyabfpgfnCZpOCf9zMB9Hbg==
-X-Google-Smtp-Source: APXvYqwt6oLbSGakaItvv78L8XMuOfNZdVdMaVv9EbYWBlVFXFIBWCJ3Mc5KEjVSVV/1MN++e6hqEQ==
-X-Received: by 2002:a63:e64:: with SMTP id 36mr9332579pgo.127.1555911343126;
-        Sun, 21 Apr 2019 22:35:43 -0700 (PDT)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id x28sm12833390pgl.38.2019.04.21.22.35.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 22:35:42 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Dmitry Osipenko <digetx@gmail.com>, Mark Zhang <markz@nvidia.com>,
-        Venkat Reddy Talla <vreddytalla@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH RESEND] regulator: max77620: Fix regulator info setting for max20024
-Date:   Mon, 22 Apr 2019 13:35:31 +0800
-Message-Id: <20190422053531.23123-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 22 Apr 2019 01:39:55 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47719 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbfDVFjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 01:39:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44nb4l5l7nz9s55;
+        Mon, 22 Apr 2019 15:39:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555911591;
+        bh=5gXmPWSkXyOLYChjl6b8S8muQNAnO0yX3ZyMpGazfSc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=e+3kQonwGrzxDA9M5KI97a7dweLNQYKaWwf8id67/8ag7ImTaEItuapQrghja1FVM
+         qrkNYgh2YQRLlVzonl/hYk+qIFtA+5svb5NQnBACL7wXBmsH8ExXpg6G8kt+H7VmPW
+         usf8HTc5SkoyZO5yuxhpuQV8Wnz39Vq946uhJyuR3xb+qZJGsJAClGIk8/U+O8PD6+
+         lsnR4RhCQC4oRv0L/f8pusi61hPzom5AabOP4GzeJGBu8DjHhPP3Lh4ZXprregqwm9
+         C/aFp0TLsRnQaY2hc/1dfKoTB5YP+ivD5hojWyiDXfNKgcTMT/XHHrNkuZqPlVwLHi
+         IbvW68OeT3ZAQ==
+Date:   Mon, 22 Apr 2019 15:39:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: linux-next: Fixes tag needs some work in the powerpc-fixes tree
+Message-ID: <20190422153950.4488fd7e@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/M8qfRr2dOHX9cZdNwPpP24Q"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code always set pmic->rinfo[id] = &max77620_regs_info[id];
-It should set to either max77620_regs_info or max20024_regs_info
-depends on the chip_id.
+--Sig_/M8qfRr2dOHX9cZdNwPpP24Q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
-This was sent on https://lkml.org/lkml/2019/2/23/482
+Hi all,
 
- drivers/regulator/max77620-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In commit
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index 1607ac673e44..0ad91a7f9cb9 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -803,7 +803,7 @@ static int max77620_regulator_probe(struct platform_device *pdev)
- 			continue;
- 
- 		rdesc = &rinfo[id].desc;
--		pmic->rinfo[id] = &max77620_regs_info[id];
-+		pmic->rinfo[id] = &rinfo[id];
- 		pmic->enable_power_mode[id] = MAX77620_POWER_MODE_NORMAL;
- 		pmic->reg_pdata[id].active_fps_src = -1;
- 		pmic->reg_pdata[id].active_fps_pd_slot = -1;
--- 
-2.17.1
+  7a3a4d763837 ("powerpc/mm_iommu: Allow pinning large regions")
 
+Fixes tag
+
+  Fixes: 678e174c4c16 ("powerpc/mm/iommu: allow migration of cma allocated =
+pages during mm_iommu_do_alloc", 2019-03-05)
+
+has these problem(s):
+
+  - the ", 2019-03-05" is unexpected in a Fixes tag
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+In commit
+
+  eb9d7a62c386 ("powerpc/mm_iommu: Fix potential deadlock")
+
+Fixes tag
+
+  Fixes: c10c21efa4bc ("powerpc/vfio/iommu/kvm: Do not pin device memory", =
+2018-12-19)
+
+has these problem(s):
+
+  - the ", 2018-12-19" is unexpected in a Fixes tag
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/M8qfRr2dOHX9cZdNwPpP24Q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly9U6YACgkQAVBC80lX
+0GzuwQf/Tg5k2+JLzmQv71XXAvomr8zCS4BkJSMEjYmBlJU/n+QbiamyueqJX3Wb
+PHYZQaPROrgZ5zCwuqpNA529ZUXvmRWtNWYVeEMz830VRtJzfapi6IsRlhRUkClU
+jSH0joMAHnasT5Z13IDEBUaFY3UaDrXL8fTBu3OUwrUB8ei730wLg9nJKoeVHrLl
+zWmAodxzHVK4sDKBJcDDSqEedL7lHancj8ATWuspJ2zAOaMRWQ8hJ3lobmahWBV4
+TRVKLMLCrF5FVIUprbdsNARk2r0UPTHrVNIET6faU0rmaHp5nP5xcyY5qN3+1kbB
+7kdAjVR69dc4fcGFwQ/GUaaik/4usg==
+=0q47
+-----END PGP SIGNATURE-----
+
+--Sig_/M8qfRr2dOHX9cZdNwPpP24Q--
