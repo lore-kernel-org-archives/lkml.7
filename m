@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BE2C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A38FC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220D2218D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B38218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962165;
-	bh=p7DLkUNcQj6z2owi6qNZbpu2hBtOYk7Udeu4rvRoUVQ=;
+	s=default; t=1555962167;
+	bh=WheZSx/9NHxKEAHvxiV+bZt54t1TtF1vMJ3j6GpKpN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vceG6+JeK4owm+eZ3s8dyAzY0jD1Q0l2wG5H/mL16+rzsuMpBwVdGJDz0DVQdoBxj
-	 qtpehgi42kJ1eJc+bqtKjPlyXrmMEvFuparPoBhoiOLOHEpgH8XERFRd9SlnXo2kY6
-	 w1c3+CVkvSa3wvmQQIcmC3hAqVN+JViENhfWsVjc=
+	b=M//O/orHUO5ataQ+FowYhvv2SlLgqwqGc5h4hXpnExAUjlJm658d0qr1COZmsj/5u
+	 RsT4XtgKp8WbkISW0j9/z2AokWiFkZ91Xci8ZUEx+bTmQKQJb1FtzQwAOG3+R+q8VH
+	 sMtdeSdaB0SUT3rSRkowz5Z1n4g7aXtsJ4kV6U/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbfDVTmo (ORCPT
+        id S1728977AbfDVTmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43004 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbfDVTmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:37 -0400
+        id S1728879AbfDVTmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDC6218D9;
-        Mon, 22 Apr 2019 19:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2832175B;
+        Mon, 22 Apr 2019 19:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962156;
-        bh=p7DLkUNcQj6z2owi6qNZbpu2hBtOYk7Udeu4rvRoUVQ=;
+        s=default; t=1555962155;
+        bh=WheZSx/9NHxKEAHvxiV+bZt54t1TtF1vMJ3j6GpKpN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lr6uo1Wv5RE+kYemFZwlLqP/4tDzn6IzMlGToCd2jiQS6v+96xBNbnokEF37KJ9lj
-         Z8D9jviwyFCNKN0RGEvbvPKiGpAJWw4fmz+nRDo6awOg5EDsZOhP3q0yhBcsQRiXNn
-         oC3n4b+c/jtSVKiurrSxcC3UzGsiP59jpsKEWCkk=
+        b=MM3RESJmg8wN+Zv4tmNytbsm9Yw2I4HnqHLBiMmhBrRxWHWjVypluc6pCUKCkHEg0
+         bugpLfHrs8v05eupu6FuSFtt4HHFUDpHzoJHbs3O2Fkg0HZxCcJpTG0DrgNRSD+K5o
+         Ju5UY65ojHOVB7y//6P+bT8DW9XvL0rPDV7Dhvq0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+Cc:     Mao Wenan <maowenan@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andrey Batyiev <batyiev@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 24/98] serial: ar933x_uart: Fix build failure with disabled console
-Date:   Mon, 22 Apr 2019 15:40:51 -0400
-Message-Id: <20190422194205.10404-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 23/98] sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
+Date:   Mon, 22 Apr 2019 15:40:50 -0400
+Message-Id: <20190422194205.10404-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,99 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Štetiar <ynezz@true.cz>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
+[ Upstream commit ac0cdb3d990108df795b676cd0d0e65ac34b2273 ]
 
-Andrey has reported on OpenWrt's bug tracking system[1], that he
-currently can't use ar93xx_uart as pure serial UART without console
-(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
-because compilation ends with following error:
+Add the missing uart_unregister_driver() and i2c_del_driver() before return
+from sc16is7xx_init() in the error handling case.
 
- ar933x_uart.c: In function 'ar933x_uart_console_write':
- ar933x_uart.c:550:14: error: 'struct uart_port' has no
-                               member named 'sysrq'
-
-So this patch moves all the code related to console handling behind
-series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
-
-1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Andrey Batyiev <batyiev@gmail.com>
-Reported-by: Andrey Batyiev <batyiev@gmail.com>
-Tested-by: Andrey Batyiev <batyiev@gmail.com>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/tty/serial/sc16is7xx.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index db5df3d54818..3bdd56a1021b 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -49,11 +49,6 @@ struct ar933x_uart_port {
- 	struct clk		*clk;
- };
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 268098681856..114e94f476c6 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -1509,7 +1509,7 @@ static int __init sc16is7xx_init(void)
+ 	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
+ 	if (ret < 0) {
+ 		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
+-		return ret;
++		goto err_i2c;
+ 	}
+ #endif
  
--static inline bool ar933x_uart_console_enabled(void)
--{
--	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
--}
--
- static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
- 					    int offset)
- {
-@@ -508,6 +503,7 @@ static const struct uart_ops ar933x_uart_ops = {
- 	.verify_port	= ar933x_uart_verify_port,
- };
- 
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
- static struct ar933x_uart_port *
- ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
- 
-@@ -604,14 +600,7 @@ static struct console ar933x_uart_console = {
- 	.index		= -1,
- 	.data		= &ar933x_uart_driver,
- };
--
--static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
--{
--	if (!ar933x_uart_console_enabled())
--		return;
--
--	ar933x_console_ports[up->port.line] = up;
--}
-+#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
- 
- static struct uart_driver ar933x_uart_driver = {
- 	.owner		= THIS_MODULE,
-@@ -700,7 +689,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
- 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
- 
--	ar933x_uart_add_console_port(up);
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_console_ports[up->port.line] = up;
+@@ -1517,10 +1517,18 @@ static int __init sc16is7xx_init(void)
+ 	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
+ 	if (ret < 0) {
+ 		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
+-		return ret;
++		goto err_spi;
+ 	}
+ #endif
+ 	return ret;
++
++err_spi:
++#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
++	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
 +#endif
++err_i2c:
++	uart_unregister_driver(&sc16is7xx_uart);
++	return ret;
+ }
+ module_init(sc16is7xx_init);
  
- 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
- 	if (ret)
-@@ -749,8 +740,9 @@ static int __init ar933x_uart_init(void)
- {
- 	int ret;
- 
--	if (ar933x_uart_console_enabled())
--		ar933x_uart_driver.cons = &ar933x_uart_console;
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_uart_driver.cons = &ar933x_uart_console;
-+#endif
- 
- 	ret = uart_register_driver(&ar933x_uart_driver);
- 	if (ret)
 -- 
 2.19.1
 
