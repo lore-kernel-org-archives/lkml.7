@@ -2,336 +2,216 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6425C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F3DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF2F20896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555947920;
-	bh=uj+/QzvTttbkYwOMwn5rElh4LUjLb7E6ZM0UCAxr4iY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TbocxHZiDw+p37B0MRcR/rKhoY9w/gGsEaHfgalkQFZ35BWI2dr/yS27hztJpHKBt
-	 Twr3y6JdWLWfoXyY2Aozbwq+2xDWJBwPYd0GiY9PJe2e0OeZUeF5QSfbwE4E3eeIVb
-	 oUwtIfTuFyW2cZgz5SjFbIu5gODMN5YeAcyY6afY=
+	by mail.kernel.org (Postfix) with ESMTP id 201962077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TISZJWgi";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="TapLu7Ki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfDVPpT (ORCPT
+        id S1727701AbfDVPul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfDVPpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:45:18 -0400
-Received: from localhost.localdomain (unknown [115.206.242.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 22 Apr 2019 11:50:41 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:53762 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727139AbfDVPuk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 11:50:40 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6966A20674;
-        Mon, 22 Apr 2019 15:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555947917;
-        bh=uj+/QzvTttbkYwOMwn5rElh4LUjLb7E6ZM0UCAxr4iY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A24WqcY2ZzklMWh/c4aRZiqg9Qc1WRyGxUs+5niYvqvUAQ8s/pv//fULdt2wxZnee
-         XfqxCvaeNYZf7sksImuYBJJiUe5hNGsn0Tk3bcfAihZFaHA2HYBSpE7WH0mchWpJcS
-         QtObWCvD2TbytTN89n1rJkHBK/w2/A0kT2yhMEvs=
-From:   guoren@kernel.org
-To:     ren_guo@c-sky.com, guoren@kernel.org
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, tech-privileged@lists.riscv.org,
-        Andrew Waterman <andrew@sifive.com>,
-        Anup Patel <anup.patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Greentime Hu <green.hu@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Scott Wood <swood@redhat.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>
-Subject: [PATCH] riscv: Support non-coherency memory model
-Date:   Mon, 22 Apr 2019 23:44:30 +0800
-Message-Id: <1555947870-23014-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DB971C0B50;
+        Mon, 22 Apr 2019 15:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555948239; bh=6kYtyHPsOrO2DEs9Op4OxyIjXyTyAsNEfoeSNkDgzdQ=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=TISZJWgihiqSTVExM5mtJywiVHsWE76oeiKLRhZuB+beIhpTsGrMRoPg6yrFeoTve
+         MVyYoJP9NILwPV2/t6XZJnre+OQXhEj1yUII9/jnVA5r+T4XMU8YUtgMw9AEvgmUt4
+         M9EJqZxkkCd/FQEKwihfu8lpzzWY0/u6zivb/GjLN1dQ/uzq592DBuyxjT91mwRO9g
+         RJJ1DBP0ZYmhFnQcxEy6OAIn1QaIy8XuoaenfOOR3JGtAyyz81Ba7CuXZ+wGWDXo9s
+         LYSSxbvcDvtCIxdKrCDsBJRcO5wfBANlFoVbJtrhfrdShIYdzSrIf6H04R2ERmqKte
+         7YUzUS3cWiJeA==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 00CB5A0065;
+        Mon, 22 Apr 2019 15:50:33 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 22 Apr 2019 08:50:33 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 22 Apr 2019 08:50:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=72GnrM5jTFIYIUDkJA5kUD8sXdKxuo70rHXyO2CnI+I=;
+ b=TapLu7KiWTIQN8kPDIJOJH2sMIeyXO8IjG2TKgLOMsZahMgxar3KaRMz/YBKNdvH5DyF/InHjBRo8ak4QTtWuwzFoY9Q6AiEvSRq0ybq7y7VmubXtTcT+0beXmsS7T5R08I2YVFYF/HEWq1dqtp3QQDpm1kA4GZOlHSYDUQjxnA=
+Received: from SN1PR12MB2431.namprd12.prod.outlook.com (52.132.195.146) by
+ SN1PR12MB2382.namprd12.prod.outlook.com (52.132.194.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Mon, 22 Apr 2019 15:50:29 +0000
+Received: from SN1PR12MB2431.namprd12.prod.outlook.com
+ ([fe80::5ca6:ee5f:1147:df5a]) by SN1PR12MB2431.namprd12.prod.outlook.com
+ ([fe80::5ca6:ee5f:1147:df5a%4]) with mapi id 15.20.1813.017; Mon, 22 Apr 2019
+ 15:50:29 +0000
+From:   Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
+To:     Doug Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "amstan@chromium.org" <amstan@chromium.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        William Wu <william.wu@rock-chips.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Randy Li <ayaka@soulik.info>,
+        "zyw@rock-chips.com" <zyw@rock-chips.com>,
+        "mka@chromium.org" <mka@chromium.org>,
+        "ryandcase@chromium.org" <ryandcase@chromium.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        "jwerner@chromium.org" <jwerner@chromium.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        Jon Flatley <jflat@chromium.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend; enable for
+ rk3288-veyron
+Thread-Topic: [PATCH v2 0/5] USB: dwc2: Allow wakeup from suspend; enable for
+ rk3288-veyron
+Thread-Index: AQHU9XvT28uFwzx7lkKfey+49nOavg==
+Date:   Mon, 22 Apr 2019 15:50:29 +0000
+Message-ID: <SN1PR12MB2431362F11279C1C0E9E7793A7220@SN1PR12MB2431.namprd12.prod.outlook.com>
+References: <20190418001356.124334-1-dianders@chromium.org>
+ <e4b3cd69-1c91-dfbe-bea7-bbca89ca1348@synopsys.com>
+ <CAD=FV=XDLqcdq_BypUYsJHKX+DY0VWvCACYgZiHeG8E3Dbwxcw@mail.gmail.com>
+ <SN1PR12MB2431F918E4731FAA50A373B6A7270@SN1PR12MB2431.namprd12.prod.outlook.com>
+ <SN1PR12MB24319D0BF93E22B6B913E6CAA7270@SN1PR12MB2431.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=arturp@synopsys.com; 
+x-originating-ip: [84.53.141.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9daf9c57-d80d-4c9d-78ba-08d6c73a3ed2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN1PR12MB2382;
+x-ms-traffictypediagnostic: SN1PR12MB2382:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <SN1PR12MB23826D4B1387EFC815505C2AA7220@SN1PR12MB2382.namprd12.prod.outlook.com>
+x-forefront-prvs: 00159D1518
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(346002)(366004)(376002)(136003)(189003)(199004)(66066001)(7696005)(33656002)(14454004)(76176011)(229853002)(64756008)(66446008)(66556008)(66476007)(66946007)(6436002)(6306002)(91956017)(76116006)(73956011)(93886005)(6246003)(99286004)(74316002)(55016002)(8676002)(53936002)(54906003)(110136005)(81166006)(81156014)(86362001)(6506007)(53546011)(8936002)(478600001)(102836004)(486006)(68736007)(446003)(476003)(3846002)(4326008)(97736004)(2906002)(6636002)(52536014)(5660300002)(26005)(25786009)(186003)(71200400001)(7416002)(71190400001)(256004)(7736002)(9686003)(316002)(305945005)(6116002)(6606295002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR12MB2382;H:SN1PR12MB2431.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SoLffuYTRNkS/va6YT8nEqa8/ZYAOsLth4xhvswUM4WbAYgn6toUJ6c3h1GHHRjOrqyazAX8drQ8KK0IGhlqoFhbSzuF3HCpOz8ql1rsJ0djecCgzk+y2UpnocWkMpEiRY4JDtnA+jDSX/ZlB5a2I7ddkKVqW/2Sy1LknFqQO2P+xZEN+keW2yip4S9QhJKoFUcQhETt6UUuZq9gO+JJDURTZkvgaU0ifiZMpKrFTdEBe0rTxNagvqM4hL5OGHL09ErVCv5rnWTwb0GjAgdEFlTK0OWLRM0pKgxD8IoWOezy/IaxGK7WUQvQjn8Eaq98IFAuoyVrCr5tdeTcZ8oEeWYlv8LIWPaEosM3yPgcH8LC5xZwfAiJ0Xw0zRUmucUf2tv9qlRRGdxCR6CcxiiOrUUETFumaMSwgdpydw7rc5M=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9daf9c57-d80d-4c9d-78ba-08d6c73a3ed2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 15:50:29.2623
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2382
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
-
-The current riscv linux implementation requires SOC system to support
-memory coherence between all I/O devices and CPUs. But some SOC systems
-cannot maintain the coherence and they need support cache clean/invalid
-operations to synchronize data.
-
-Current implementation is no problem with SiFive FU540, because FU540
-keeps all IO devices and DMA master devices coherence with CPU. But to a
-traditional SOC vendor, it may already have a stable non-coherency SOC
-system, the need is simply to replace the CPU with RV CPU and rebuild
-the whole system with IO-coherency is very expensive.
-
-So we should make riscv linux also support non-coherency memory model.
-Here are the two points that riscv linux needs to be modified:
-
- - Add _PAGE_COHERENCY bit in current page table entry attributes. The bit
-   designates a coherence for this page mapping. Software set the bit to
-   tell the hardware that the region of the page's memory area must be
-   coherent with IOs devices in SOC system by PMA settings.
-   If IOs and CPU are already coherent in SOC system, CPU just ignore
-   this bit.
-
-   PTE format:
-   | XLEN-1  10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
-         PFN      C  RSW  D   A   G   U   X   W   R   V
-                  ^
-   BIT(9): Coherence attribute bit
-          0: hardware needn't keep the page coherenct and software will
-             maintain the coherence with cache clear/invalid operations.
-          1: hardware must keep the page coherenct and software needn't
-             maintain the coherence.
-   BIT(8): Reserved for software and now it's _PAGE_SPECIAL in linux
-
-   Add a new hardware bit in PTE also need to modify Privileged
-   Architecture Supervisor-Level ISA:
-   https://github.com/riscv/riscv-isa-manual/pull/374
-
- - Add SBI_FENCE_DMA 9 in riscv-sbi.
-   sbi_fence_dma(start, size, dir) could synchronize CPU cache data with
-   DMA device in non-coherency memory model. The third param's definition
-   is the same with linux's in include/linux/dma-direction.h:
-
-   enum dma_data_direction {
-	DMA_BIDIRECTIONAL = 0,
-	DMA_TO_DEVICE = 1,
-	DMA_FROM_DEVICE = 2,
-	DMA_NONE = 3,
-   };
-
-   The first param:start must be physical address which could be handled
-   in M-state.
-
-   Here is a pull request to the riscv-sbi-doc:
-   https://github.com/riscv/riscv-sbi-doc/pull/15
-
-We have tested the patch on our fpga SOC system which network controller
-connected to a non-cache-coherency interconnect in and it couldn't work
-without the patch.
-
-There is no side effect for FU540 whose CPU don't care _PAGE_COHERENCY
-in PTE, but FU540's bbl also need to implement a simple sbi_fence_dma
-by directly return. In fact, if you give a correct configuration for
-dev_is_dma_conherent(), linux dma framework wouldn't call sbi_fence_dma
-any more.
-
-Changelog:
- - Use coherency instead of consistency for all to maintain term
-   consistency. (Xiang Xiaoyan)
- - Add riscv-isa-manual modification pull request link.
- - Correct grammatical errors.
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Waterman <andrew@sifive.com>
-Cc: Anup Patel <anup.patel@wdc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Scott Wood <swood@redhat.com>
-Cc: Vincent Chen <vincentc@andestech.com>
-Cc: Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>
----
- arch/riscv/Kconfig                    |  4 ++++
- arch/riscv/include/asm/pgtable-bits.h |  1 +
- arch/riscv/include/asm/pgtable.h      | 11 +++++++++
- arch/riscv/include/asm/sbi.h          | 10 ++++++++
- arch/riscv/mm/Makefile                |  1 +
- arch/riscv/mm/dma-mapping.c           | 44 +++++++++++++++++++++++++++++++++++
- arch/riscv/mm/ioremap.c               |  2 +-
- 7 files changed, 72 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/mm/dma-mapping.c
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index eb56c82..f0fc503 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -16,9 +16,12 @@ config RISCV
- 	select OF
- 	select OF_EARLY_FLATTREE
- 	select OF_IRQ
-+	select ARCH_HAS_SYNC_DMA_FOR_CPU
-+	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
- 	select ARCH_WANT_FRAME_POINTERS
- 	select CLONE_BACKWARDS
- 	select COMMON_CLK
-+	select DMA_DIRECT_REMAP
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_CPU_DEVICES
- 	select GENERIC_IRQ_SHOW
-@@ -27,6 +30,7 @@ config RISCV
- 	select GENERIC_STRNCPY_FROM_USER
- 	select GENERIC_STRNLEN_USER
- 	select GENERIC_SMP_IDLE_THREAD
-+	select GENERIC_ALLOCATOR
- 	select GENERIC_ATOMIC64 if !64BIT || !RISCV_ISA_A
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_MEMBLOCK_NODE_MAP
-diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-index 470755c..104f8c0 100644
---- a/arch/riscv/include/asm/pgtable-bits.h
-+++ b/arch/riscv/include/asm/pgtable-bits.h
-@@ -31,6 +31,7 @@
- #define _PAGE_ACCESSED  (1 << 6)    /* Set by hardware on any access */
- #define _PAGE_DIRTY     (1 << 7)    /* Set by hardware on any write */
- #define _PAGE_SOFT      (1 << 8)    /* Reserved for software */
-+#define _PAGE_COHERENCY (1 << 9)    /* Coherency */
- 
- #define _PAGE_SPECIAL   _PAGE_SOFT
- #define _PAGE_TABLE     _PAGE_PRESENT
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 1141364..26debb4 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -66,6 +66,7 @@
- 
- #define PAGE_KERNEL		__pgprot(_PAGE_KERNEL)
- #define PAGE_KERNEL_EXEC	__pgprot(_PAGE_KERNEL | _PAGE_EXEC)
-+#define PAGE_KERNEL_COHERENCY	__pgprot(_PAGE_KERNEL | _PAGE_COHERENCY)
- 
- extern pgd_t swapper_pg_dir[];
- 
-@@ -375,6 +376,16 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
- 	return ptep_test_and_clear_young(vma, address, ptep);
- }
- 
-+#define pgprot_noncached pgprot_noncached
-+static inline pgprot_t pgprot_noncached(pgprot_t _prot)
-+{
-+	unsigned long prot = pgprot_val(_prot);
-+
-+	prot |= _PAGE_COHERENCY;
-+
-+	return __pgprot(prot);
-+}
-+
- /*
-  * Encode and decode a swap entry
-  *
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index b6bb10b..b945e50 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -25,6 +25,7 @@
- #define SBI_REMOTE_SFENCE_VMA 6
- #define SBI_REMOTE_SFENCE_VMA_ASID 7
- #define SBI_SHUTDOWN 8
-+#define SBI_FENCE_DMA 9
- 
- #define SBI_CALL(which, arg0, arg1, arg2) ({			\
- 	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
-@@ -42,6 +43,8 @@
- #define SBI_CALL_0(which) SBI_CALL(which, 0, 0, 0)
- #define SBI_CALL_1(which, arg0) SBI_CALL(which, arg0, 0, 0)
- #define SBI_CALL_2(which, arg0, arg1) SBI_CALL(which, arg0, arg1, 0)
-+#define SBI_CALL_3(which, arg0, arg1, arg2) \
-+			SBI_CALL(which, arg0, arg1, arg2)
- 
- static inline void sbi_console_putchar(int ch)
- {
-@@ -82,6 +85,13 @@ static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
- 	SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
- }
- 
-+static inline void sbi_fence_dma(unsigned long start,
-+			       unsigned long size,
-+			       unsigned long dir)
-+{
-+	SBI_CALL_3(SBI_FENCE_DMA, start, size, dir);
-+}
-+
- static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
- 					 unsigned long start,
- 					 unsigned long size)
-diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-index b68aac7..adc563a 100644
---- a/arch/riscv/mm/Makefile
-+++ b/arch/riscv/mm/Makefile
-@@ -9,3 +9,4 @@ obj-y += fault.o
- obj-y += extable.o
- obj-y += ioremap.o
- obj-y += cacheflush.o
-+obj-y += dma-mapping.o
-diff --git a/arch/riscv/mm/dma-mapping.c b/arch/riscv/mm/dma-mapping.c
-new file mode 100644
-index 0000000..5e1d179
---- /dev/null
-+++ b/arch/riscv/mm/dma-mapping.c
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/dma-mapping.h>
-+
-+static int __init atomic_pool_init(void)
-+{
-+	return dma_atomic_pool_init(GFP_KERNEL, pgprot_noncached(PAGE_KERNEL));
-+}
-+postcore_initcall(atomic_pool_init);
-+
-+void arch_dma_prep_coherent(struct page *page, size_t size)
-+{
-+	memset(page_address(page), 0, size);
-+
-+	sbi_fence_dma(page_to_phys(page), size, DMA_BIDIRECTIONAL);
-+}
-+
-+void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
-+			      size_t size, enum dma_data_direction dir)
-+{
-+	switch (dir) {
-+	case DMA_TO_DEVICE:
-+	case DMA_FROM_DEVICE:
-+	case DMA_BIDIRECTIONAL:
-+		sbi_fence_dma(paddr, size, dir);
-+		break;
-+	default:
-+		BUG();
-+	}
-+}
-+
-+void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
-+			   size_t size, enum dma_data_direction dir)
-+{
-+	switch (dir) {
-+	case DMA_TO_DEVICE:
-+	case DMA_FROM_DEVICE:
-+	case DMA_BIDIRECTIONAL:
-+		sbi_fence_dma(paddr, size, dir);
-+		break;
-+	default:
-+		BUG();
-+	}
-+}
-diff --git a/arch/riscv/mm/ioremap.c b/arch/riscv/mm/ioremap.c
-index bd2f2db..f6aaf1e 100644
---- a/arch/riscv/mm/ioremap.c
-+++ b/arch/riscv/mm/ioremap.c
-@@ -73,7 +73,7 @@ static void __iomem *__ioremap_caller(phys_addr_t addr, size_t size,
-  */
- void __iomem *ioremap(phys_addr_t offset, unsigned long size)
- {
--	return __ioremap_caller(offset, size, PAGE_KERNEL,
-+	return __ioremap_caller(offset, size, PAGE_KERNEL_COHERENCY,
- 		__builtin_return_address(0));
- }
- EXPORT_SYMBOL(ioremap);
--- 
-2.7.4
-
+Hi Doug,=0A=
+=0A=
+On 4/19/2019 20:44, Artur Petrosyan wrote:=0A=
+> Hi Doug,=0A=
+> =0A=
+> On 4/19/2019 15:43, Artur Petrosyan wrote:=0A=
+>> Hi,=0A=
+>>=0A=
+>> On 4/18/2019 19:55, Doug Anderson wrote:=0A=
+>>> Hi,=0A=
+>>>=0A=
+>>> On Thu, Apr 18, 2019 at 5:41 AM Minas Harutyunyan=0A=
+>>> <Minas.Harutyunyan@synopsys.com> wrote:=0A=
+>>>> Did you consider/reviewed patch series from Artur Petrosyan "[PATCH=0A=
+>>>> 00/14] usb: dwc2: Fix and improve power saving modes" (submitted on=0A=
+>>>> April 12) which fixing partial power down and hibernation flows for bo=
+th=0A=
+>>>> modes: host and device?=0A=
+>>>> I suspect that this both patch series can be in conflict.=0A=
+>>>=0A=
+>>> No, I wasn't aware of them.  I'd like to try them out, but it looks=0A=
+>>> like it's currently impossible because they're not archived anywhere=0A=
+>>> that I can find.=0A=
+>>>=0A=
+>>> 1. LKML wasn't copied, so I can't find them on lore.kernel.org.  It is=
+=0A=
+>>> suggested to CC LKML on all patches.=0A=
+>>>=0A=
+>>> 2. The Linux USB patchwork only has the cover letter plus the first 6=
+=0A=
+>>> patches.  See <https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__p=
+atchwork.kernel.org_cover_10898333_&d=3DDwIBaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=
+=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D7niMJI&m=3DrJbofHXqjP3sUBgEikaZ89fR=
+WtsquvhFUkhSPguCiWw&s=3D_CrI0uolquXIYC5SuoZ1vBs7BM19VfCceI96qZm9kAY&e=3D>=
+=0A=
+>>>=0A=
+>>> 3. Searching my own archives I only see the cover letter plus the=0A=
+>>> first 6 patches.=0A=
+>>>=0A=
+>>> Maybe you have some other pointer to how I can retrieve them?  I guess=
+=0A=
+>>> I could try the first 6 patches without the later 8 but I'd rather get=
+=0A=
+>>> the whole set...=0A=
+>>>=0A=
+>>>=0A=
+>>> -Doug=0A=
+>>>=0A=
+>>=0A=
+>>=0A=
+>> I have resend the patch set. You can find it with cover letter=0A=
+>> "[PATCH v1 00/14] usb: dwc2: Fix and improve power saving modes."=0A=
+>>=0A=
+>> Let me know if you need any help.=0A=
+>>=0A=
+> =0A=
+> I am so sorry to inform you that the patches have not reached to LKML.=0A=
+> Looks like there is a problem with the kernel mailing list servers or=0A=
+> our local servers.=0A=
+> Will try to fix this as soon as possible and let you know about it.=0A=
+> =0A=
+=0A=
+My patches has reached to LKML. You can find them with the patch set =0A=
+title "[PATCH v1 00/14] usb: dwc2: Fix and improve power saving modes."=0A=
+=0A=
+This is the link to the patch set in marc.info=0A=
+"https://marc.info/?l=3Dlinux-usb&m=3D155570003924638&w=3D2"=0A=
+and a link in patchwork.kernel.org=0A=
+"https://patchwork.kernel.org/project/linux-usb/list/?submitter=3D180003"=
+=0A=
+=0A=
+Sorry for the delay.=0A=
+=0A=
+-- =0A=
+Regards,=0A=
+Artur=0A=
