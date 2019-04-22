@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B79C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F3C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F0D218FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20926218D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962253;
-	bh=/5rFM4ws/Ncm0eZbxq4IxZB2/4HtWhMNvmaLbccqTDc=;
+	s=default; t=1555962258;
+	bh=YVAge1jwdxc8jahHy6wegdv2f2qIzEVhckJcPKeB2t4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7fj/eCj99q7wKdaI9U58Uao1Hv7OfVr1Vwb5QM7Xq3PmK77nly/CK9dKYGSLaETX
-	 2arRbiuBtXCOJnU+HsjZj+jxKxnU+OAAEEizfFdI5EU2KMkEpXhI+pddObdS+EOZsn
-	 q6+zGtzux6HfpcEKqPNDpwUBtfsoKGdhUITenKrw=
+	b=g3M27uzX2SG6gt2lsY8AZztfgS7sQ4XDX+EMBKWqjJyhE/xgqaOQ53LLLLWy9nAKv
+	 hXjfIw7A6uZiRU3VHVRdXauvhY7VvKtzsIQ1hw7fSDpdvvpYTB8ERUGnFUIP6Iwxsp
+	 JNwet+klzRhe1h4BXQSdIsiGCqZUVMoMdH+d8bbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfDVToM (ORCPT
+        id S1729416AbfDVToR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:44:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45114 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbfDVToK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:10 -0400
+        id S1728886AbfDVToP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EF9C21901;
-        Mon, 22 Apr 2019 19:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45940218D9;
+        Mon, 22 Apr 2019 19:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962250;
-        bh=/5rFM4ws/Ncm0eZbxq4IxZB2/4HtWhMNvmaLbccqTDc=;
+        s=default; t=1555962254;
+        bh=YVAge1jwdxc8jahHy6wegdv2f2qIzEVhckJcPKeB2t4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1y1G7GtH0ZSuOHllfi0nDplxGCLuljR/1PeT5xhlOoMMkfarN9z6ijA8GAjH0e+kP
-         9PxYsdiDLJR1JgusCVFG6AOLwigo2GRDwkiKEdgbKYUeE2dUiYO/uAsu9B2/BPKGlt
-         qVW35XCiaTG+WwDWDmmPxY0A3MzjjzC5SGyLSfOI=
+        b=iAmSpuowSJQs/bYsRx/SnSXxRKVHi44cfhmX1h4RKYbegMMh5eG34fabs360Upv8p
+         RnenQxiIazyeZ1E6vOauQfQbcc5YOLhoscsFoK25Yo92QBP47WSgMk2aaiqk38Y1eC
+         hiDpN3MgyPkF2xcA7vpA4pSU28ZVInqglIRj7qmI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 65/98] usb: usb251xb: fix to avoid potential NULL pointer dereference
-Date:   Mon, 22 Apr 2019 15:41:32 -0400
-Message-Id: <20190422194205.10404-65-sashal@kernel.org>
+Cc:     Alakesh Haloi <alakesh.haloi@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 67/98] SUNRPC: fix uninitialized variable warning
+Date:   Mon, 22 Apr 2019 15:41:34 -0400
+Message-Id: <20190422194205.10404-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,34 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Alakesh Haloi <alakesh.haloi@gmail.com>
 
-[ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
+[ Upstream commit 01f2f5b82a2b523ae76af53f2ff43c48dde10a00 ]
 
-of_match_device in usb251xb_probe can fail and returns a NULL pointer.
-The patch avoids a potential NULL pointer dereference in this scenario.
+Avoid following compiler warning on uninitialized variable
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+net/sunrpc/xprtsock.c: In function ‘xs_read_stream_request.constprop’:
+net/sunrpc/xprtsock.c:525:10: warning: ‘read’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   return read;
+          ^~~~
+net/sunrpc/xprtsock.c:529:23: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  return ret < 0 ? ret : read;
+         ~~~~~~~~~~~~~~^~~~~~
+
+Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/misc/usb251xb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtsock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index a6efb9a72939..5f7734c729b1 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -601,7 +601,7 @@ static int usb251xb_probe(struct usb251xb *hub)
- 							   dev);
- 	int err;
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 7754aa3e434f..f88c2bd1335a 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -486,8 +486,8 @@ xs_read_stream_request(struct sock_xprt *transport, struct msghdr *msg,
+ 		int flags, struct rpc_rqst *req)
+ {
+ 	struct xdr_buf *buf = &req->rq_private_buf;
+-	size_t want, read;
+-	ssize_t ret;
++	size_t want, uninitialized_var(read);
++	ssize_t uninitialized_var(ret);
  
--	if (np) {
-+	if (np && of_id) {
- 		err = usb251xb_get_ofdata(hub,
- 					  (struct usb251xb_data *)of_id->data);
- 		if (err) {
+ 	xs_read_header(transport, buf);
+ 
 -- 
 2.19.1
 
