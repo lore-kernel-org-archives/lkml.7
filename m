@@ -2,167 +2,382 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9539CC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026C0C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8DC20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE4420652
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfDVIsL (ORCPT
+        id S1727151AbfDVItg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 04:48:11 -0400
-Received: from mga18.intel.com ([134.134.136.126]:8378 "EHLO mga18.intel.com"
+        Mon, 22 Apr 2019 04:49:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:29712 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfDVIsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 04:48:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726421AbfDVItf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 04:49:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 01:48:09 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 01:49:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,381,1549958400"; 
-   d="scan'208";a="166744259"
-Received: from rzhang-dell-9360.sh.intel.com ([10.239.161.125])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2019 01:43:08 -0700
-Message-ID: <1555922585.26198.19.camel@intel.com>
-Subject: Re: [PATCH 3/7] thermal/drivers/core: Add init section table for
- self-encapsulation
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>
-Date:   Mon, 22 Apr 2019 16:43:05 +0800
-In-Reply-To: <20190402161256.11044-3-daniel.lezcano@linaro.org>
-References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
-         <20190402161256.11044-3-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="asc'?scan'208";a="144635093"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
+  by orsmga003.jf.intel.com with ESMTP; 22 Apr 2019 01:49:24 -0700
+Date:   Mon, 22 Apr 2019 16:37:39 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, cjia@nvidia.com,
+        kvm@vger.kernel.org, aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        kwankhede@nvidia.com, eauger@redhat.com, yi.l.liu@intel.com,
+        eskultet@redhat.com, ziye.yang@intel.com, mlevitsk@redhat.com,
+        pasic@linux.ibm.com, libvir-list@redhat.com,
+        arei.gonglei@huawei.com, felipe@nutanix.com, Ken.Xue@amd.com,
+        kevin.tian@intel.com, dgilbert@redhat.com, zhenyuw@linux.intel.com,
+        alex.williamson@redhat.com, changpeng.liu@intel.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        zhi.a.wang@intel.com, jonathan.davies@nutanix.com,
+        shaopeng.he@intel.com
+Subject: Re: [PATCH 2/2] drm/i915/gvt: export mdev device version to sysfs
+ for Intel vGPU
+Message-ID: <20190422083739.GZ17995@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083559.19725-1-yan.y.zhao@intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HzTfXcfu7EFt5lUB"
+Content-Disposition: inline
+In-Reply-To: <20190419083559.19725-1-yan.y.zhao@intel.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Daniel,
 
-Thanks for the patches, it looks good to me except this one and patch
-4/7.
+--HzTfXcfu7EFt5lUB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First, I don't think this is a cyclic dependency issue as they are in
-the same module.
-Second, I have not read include/asm-generic/vmlinux.lds.h before, it
-seems that it is used for architecture specific stuff. Fix a thermal
-issue in this way seems overkill to me.
-
-IMO, to make the code clean, we can build the governors as separate
-modules just like we do for cpu governors.
-This brings to the old commit 80a26a5c22b9("Thermal: build thermal
-governors into thermal_sys module"), and that was introduced to fix a
-problem when CONFIG_THERMAL is set to 'm'. So I think we can switch
-back to the old way as the problem is gone now.
-
-what do you think?
-
-Patch 1,2,5,6,7 applied first.
-
-thanks,
-rui
-
-On 二, 2019-04-02 at 18:12 +0200, Daniel Lezcano wrote:
-> Currently the governors are declared in their respective files but
-> they
-> export their [un]register functions which in turn call the
-> [un]register
-> the governors core's functions. That implies a cyclic dependency
-> which is
-> not desirable. There is a way to self-encapsulate the governors by
-> letting
-> them to declare themselves in a __init section table.
-> 
-> Define the table in the asm generic linker description like the other
-> tables and provide the specific macros to deal with.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On 2019.04.19 04:35:59 -0400, Yan Zhao wrote:
+> This feature implements the version attribute for Intel's vGPU mdev
+> devices.
+>=20
+> version attribute is rw. It is queried by userspace software like libvirt
+> to check whether two vGPUs are compatible for live migration.
+>=20
+> It consists of two parts: common part and vendor proprietary part.
+> common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+>              identifies device type. e.g., for pci device, it is
+>              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> vendor proprietary part: this part is varied in length. vendor driver can
+>              specify any string to identify a device.
+>=20
+> For Intel vGPU of gen8 and gen9, the vendor proprietary part currently
+> consists of 2 fields: "device id" + "mdev type".
+>=20
+> Reading from a vGPU's version attribute, a string is returned in below
+> format: 00028086-<device id>-<mdev type>. e.g.
+> 00028086-193b-i915-GVTg_V5_2.
+>=20
+> Writing a string to a vGPU's version attribute will trigger GVT to check
+> whether a vGPU identified by the written string is compatible with
+> current vGPU owning this version attribute. errno is returned if the two
+> vGPUs are incompatible. The length of written string is returned in
+> compatible case.
+>=20
+> For other platforms, and for GVT not supporting vGPU live migration
+> feature, errnos are returned when read/write of mdev devices' version
+> attributes.
+>=20
+> For old GVT versions where no version attributes exposed in sysfs, it is
+> regarded as not supporting vGPU live migration.
+>=20
+> For future platforms, besides the current 2 fields in vendor proprietary
+> part, more fields may be added to identify Intel vGPU well for live
+> migration purpose.
+>=20
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> c: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+>=20
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 > ---
->  drivers/thermal/thermal_core.h    | 16 ++++++++++++++++
->  include/asm-generic/vmlinux.lds.h | 11 +++++++++++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/thermal/thermal_core.h
-> b/drivers/thermal/thermal_core.h
-> index 0df190ed82a7..28d18083e969 100644
-> --- a/drivers/thermal/thermal_core.h
-> +++ b/drivers/thermal/thermal_core.h
-> @@ -15,6 +15,22 @@
->  /* Initial state of a cooling device during binding */
->  #define THERMAL_NO_TARGET -1UL
->  
-> +/* Init section thermal table */
-> +extern struct thermal_governor * __governor_thermal_table[];
-> +extern struct thermal_governor * __governor_thermal_table_end[];
+>  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
+>  drivers/gpu/drm/i915/gvt/device_version.c | 94 +++++++++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/gvt.c            | 55 +++++++++++++
+>  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
+>  4 files changed, 156 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt=
+/Makefile
+> index 271fb46d4dd0..54e209a23899 100644
+> --- a/drivers/gpu/drm/i915/gvt/Makefile
+> +++ b/drivers/gpu/drm/i915/gvt/Makefile
+> @@ -3,7 +3,7 @@ GVT_DIR :=3D gvt
+>  GVT_SOURCE :=3D gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o fir=
+mware.o \
+>  	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
+>  	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debug=
+fs.o \
+> -	fb_decoder.o dmabuf.o page_track.o
+> +	fb_decoder.o dmabuf.o page_track.o device_version.o
+> =20
+>  ccflags-y				+=3D -I$(src) -I$(src)/$(GVT_DIR)
+>  i915-y					+=3D $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
+> diff --git a/drivers/gpu/drm/i915/gvt/device_version.c b/drivers/gpu/drm/=
+i915/gvt/device_version.c
+> new file mode 100644
+> index 000000000000..c64010d2bc54
+> --- /dev/null
+> +++ b/drivers/gpu/drm/i915/gvt/device_version.c
+> @@ -0,0 +1,94 @@
+> +/*
+> + * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
+> + *
+> + * Permission is hereby granted, free of charge, to any person obtaining=
+ a
+> + * copy of this software and associated documentation files (the "Softwa=
+re"),
+> + * to deal in the Software without restriction, including without limita=
+tion
+> + * the rights to use, copy, modify, merge, publish, distribute, sublicen=
+se,
+> + * and/or sell copies of the Software, and to permit persons to whom the
+> + * Software is furnished to do so, subject to the following conditions:
+> + *
+> + * The above copyright notice and this permission notice (including the =
+next
+> + * paragraph) shall be included in all copies or substantial portions of=
+ the
+> + * Software.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRE=
+SS OR
+> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILI=
+TY,
+> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SH=
+ALL
+> + * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR =
+OTHER
+> + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISI=
+NG FROM,
+> + * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALING=
+S IN THE
+> + * SOFTWARE.
+> + */
+> +#include <linux/vfio.h>
+> +#include "i915_drv.h"
 > +
-> +#define THERMAL_TABLE_ENTRY(table, name)			\
-> +        static typeof(name) * __thermal_table_entry_##name	\
-> +	__used __section(__##table##_thermal_table)		\
-> +		= &name;
+> +#define GVT_VFIO_DEVICE_VENDOR_ID ((0x8086) |	\
+> +		((VFIO_DEVICE_FLAGS_PCI & 0xff) << 16))
 > +
-> +#define THERMAL_GOVERNOR_DECLARE(name)	THERMAL_TABLE_ENTRY(go
-> vernor, name)
+> +#define GVT_DEVICE_VERSION_COMMON_LEN 0x8
+> +#define GVT_DEVICE_VERSION_DEVICE_ID_LEN 0x4
 > +
-> +#define for_each_governor_table(__governor)		\
-> +	for (__governor = __governor_thermal_table;	\
-> +	     __governor < __governor_thermal_table_end;	\
-> +	     __governor++)
+> +static bool is_compatible(const char *self, const char *remote)
+> +{
+> +	if (strlen(remote) !=3D strlen(self))
+> +		return false;
 > +
->  /*
->   * This structure is used to describe the behavior of
->   * a certain cooling device on a certain trip point
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-
-> generic/vmlinux.lds.h
-> index f8f6f04c4453..9893a3ed242a 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -239,6 +239,16 @@
->  #define ACPI_PROBE_TABLE(name)
->  #endif
->  
-> +#ifdef CONFIG_THERMAL
-> +#define THERMAL_TABLE(name)						
-> \
-> +        . = ALIGN(8);						
-> 	\
-> +        __##name##_thermal_table = .;				
-> 	\
-> +        KEEP(*(__##name##_thermal_table))				
-> \
-> +        __##name##_thermal_table_end = .;
+> +	return (strncmp(self, remote, strlen(self))) ? false : true;
+> +}
+> +
+> +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *d=
+ev_priv)
+> +{
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	return PAGE_SIZE;
+> +}
+> +
+> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_p=
+riv,
+> +		char *buf, const char *mdev_type)
+> +{
+> +	int cnt =3D 0, ret =3D 0;
+> +	const char *str =3D NULL;
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	/* first 32 bit common part specifying vendor id and it's a pci
+> +	 * device
+> +	 */
+> +	cnt =3D snprintf(buf, GVT_DEVICE_VERSION_COMMON_LEN + 1,
+> +			"%08x", GVT_VFIO_DEVICE_VENDOR_ID);
+> +	buf +=3D cnt;
+> +	ret +=3D cnt;
+> +
+> +	/* vendor proprietary part: device id + mdev type */
+> +	/* device id */
+> +	cnt =3D snprintf(buf, GVT_DEVICE_VERSION_DEVICE_ID_LEN + 2,
+> +			"-%04x", INTEL_DEVID(dev_priv));
+> +	buf +=3D cnt;
+> +	ret +=3D cnt;
+> +
+> +	/* mdev type */
+> +	str =3D mdev_type;
+> +	cnt =3D snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
+> +	buf +=3D cnt;
+> +	ret +=3D cnt;
+> +
+> +	return ret;
+> +}
+> +
+> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev=
+_priv,
+> +		const char *self, const char *remote)
+> +{
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	if (!is_compatible(self, remote))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gv=
+t.c
+> index 43f4242062dd..e720465b93d8 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.c
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
+> @@ -105,14 +105,69 @@ static ssize_t description_show(struct kobject *kob=
+j, struct device *dev,
+>  		       type->weight);
+>  }
+> =20
+> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> +		char *buf)
+> +{
+> +#ifdef GVT_MIGRATION_VERSION
+> +	struct drm_i915_private *i915 =3D kdev_to_i915(dev);
+> +	const char *mdev_type =3D kobject_name(kobj);
+> +
+> +	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
 > +#else
-> +#define THERMAL_TABLE(name)
+> +	/* do not support live migration */
+> +	return -EINVAL;
 > +#endif
+> +}
 > +
->  #define KERNEL_DTB()							
-> \
->  	STRUCT_ALIGN();						
-> 	\
->  	__dtb_start = .;						
-> \
-> @@ -609,6 +619,7 @@
->  	IRQCHIP_OF_MATCH_TABLE()					
-> \
->  	ACPI_PROBE_TABLE(irqchip)					
-> \
->  	ACPI_PROBE_TABLE(timer)					
-> 	\
-> +	THERMAL_TABLE(governor)					
-> 	\
->  	EARLYCON_TABLE()						
-> \
->  	LSM_TABLE()
->  
+> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> +		const char *buf, size_t count)
+> +{
+> +#ifdef GVT_MIGRATION_VERSION
+> +	char *remote =3D NULL, *self =3D NULL;
+> +	int len, ret =3D 0;
+> +	struct drm_i915_private *i915 =3D kdev_to_i915(dev);
+> +	const char *mdev_type =3D kobject_name(kobj);
+> +
+> +	len =3D intel_gvt_get_vfio_device_version_len(i915);
+> +	if (len < 0)
+> +		return len;
+> +
+> +	self =3D kmalloc(len, GFP_KERNEL);
+> +	if (!self)
+> +		return -ENOMEM;
+> +
+> +	ret =3D intel_gvt_get_vfio_device_version(i915, self, mdev_type);
+> +	if (ret < 0)
+> +		goto out;
+> +
+
+device version string should be allocated and specified during device insta=
+nce
+setup instead of version attribute r/w time.
+
+> +	remote =3D kstrndup(buf, count, GFP_KERNEL);
+> +	if (!remote) {
+> +		ret =3D -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ret =3D intel_gvt_check_vfio_device_version(i915, self, remote);
+> +
+> +out:
+> +	kfree(self);
+> +	kfree(remote);
+> +	return (ret < 0 ? ret : count);
+> +#else
+> +	/* do not support live migration */
+> +	return -EINVAL;
+> +#endif
+> +}
+> +
+>  static MDEV_TYPE_ATTR_RO(available_instances);
+>  static MDEV_TYPE_ATTR_RO(device_api);
+>  static MDEV_TYPE_ATTR_RO(description);
+> +static MDEV_TYPE_ATTR_RW(version);
+> =20
+>  static struct attribute *gvt_type_attrs[] =3D {
+>  	&mdev_type_attr_available_instances.attr,
+>  	&mdev_type_attr_device_api.attr,
+>  	&mdev_type_attr_description.attr,
+> +	&mdev_type_attr_version.attr,
+>  	NULL,
+>  };
+> =20
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
+t.h
+> index f5a328b5290a..4062f6b26acf 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> @@ -687,6 +687,12 @@ void intel_gvt_debugfs_remove_vgpu(struct intel_vgpu=
+ *vgpu);
+>  int intel_gvt_debugfs_init(struct intel_gvt *gvt);
+>  void intel_gvt_debugfs_clean(struct intel_gvt *gvt);
+> =20
+> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *i915,
+> +		char *buf, const char *mdev_type);
+> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev=
+_priv,
+> +		const char *self, const char *remote);
+> +ssize_t
+> +intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv);
+> =20
+>  #include "trace.h"
+>  #include "mpt.h"
+> --=20
+> 2.17.1
+>=20
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
+
+--=20
+Open Source Technology Center, Intel ltd.
+
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
+
+--HzTfXcfu7EFt5lUB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXL19UwAKCRCxBBozTXgY
+J+toAJ974MbVdoDE7bLmBvDpVxOCFXwyFQCgmFWoFkEzSEB8o9dnMDFuXRTx22U=
+=TtW/
+-----END PGP SIGNATURE-----
+
+--HzTfXcfu7EFt5lUB--
