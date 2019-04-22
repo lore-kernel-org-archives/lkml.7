@@ -2,151 +2,123 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E780C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7A2C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0086E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C339204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555962915;
+	bh=19qmPjkyLSjQvQWSREO99nPbeh3BmjzdC2OKMM8Hxdg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iXhThAUQROqmBALVvJuSG4uRm5vP1cAKkBXIL+38j+1FpOWMaVI71e0MBzvBqUbs0
+	 L236B7b86+UONhJRQU7qYhcVkx61qFhEOyiF6J6Z35FavdxMlXlfngVTlC/SWULdX3
+	 QHjy5OM9BPNGJFzNAyMKTuMmnJUgszItHfBE4VPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbfDVTy5 (ORCPT
+        id S1730841AbfDVTt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:54:57 -0400
-Received: from mout2.freenet.de ([195.4.92.92]:33580 "EHLO mout2.freenet.de"
+        Mon, 22 Apr 2019 15:49:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730892AbfDVTyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:54:54 -0400
-X-Greylist: delayed 1548 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 15:54:53 EDT
-Received: from [195.4.92.164] (helo=mjail1.freenet.de)
-        by mout2.freenet.de with esmtpa (ID andihartmann@freenet.de) (port 25) (Exim 4.90_1 #2)
-        id 1hIecg-0004lg-O2; Mon, 22 Apr 2019 21:29:02 +0200
-Received: from [::1] (port=60450 helo=mjail1.freenet.de)
-        by mjail1.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.90_1 #2)
-        id 1hIecg-0008CA-NH; Mon, 22 Apr 2019 21:29:02 +0200
-Received: from sub3.freenet.de ([195.4.92.122]:34902)
-        by mjail1.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.90_1 #2)
-        id 1hIeai-0007nF-1F; Mon, 22 Apr 2019 21:27:00 +0200
-Received: from p2e5b8614.dip0.t-ipconnect.de ([46.91.134.20]:38444 helo=mail.maya.org)
-        by sub3.freenet.de with esmtpsa (ID andihartmann@freenet.de) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (port 465) (Exim 4.90_1 #2)
-        id 1hIeah-0006JQ-Hs; Mon, 22 Apr 2019 21:27:00 +0200
-Received: internal info suppressed
-To:     Florian Westphal <fw@strlen.de>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        linux-kernel@vger.kernel.org
-References: <20190121134913.924726465@linuxfoundation.org>
- <20190121134914.421023706@linuxfoundation.org>
- <f55ad830-dd61-8ce2-7fa0-d33fb93c0b9c@01019freenet.de>
- <20190422172732.sneybhuwrreb7g2u@breakpoint.cc>
- <c9211352-3da4-6cb6-cd71-be0b9c0248d7@01019freenet.de>
- <20190422185710.3la4ayzxslafxwbn@breakpoint.cc>
-From:   Andreas Hartmann <andihartmann@freenet.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andreas@maya.org; prefer-encrypt=mutual; keydata=
- mQGiBDz/vtQRBAC+OSpes1p57fA8ENLYy3Nl/CpEvtRoDdhy7DPyc1+adE57vpK52naRfaZB
- f0RSMvIZwJYggMio+emiN5Du7kL9y2IEjmHBvp/1x68dEwswHP9X4hJmHmyOJL3IB2WsvEdh
- QF97913bWX34MYCeuOoSJ1OWvBLGfNs0zv70HOTfJwCgricyy8N1itEryLwoeu5HWz0SmDED
- /2IiuDhPZ332i0Ylp40RQb2Wb0xBvpscVeRZDItsYYbJ/Sgmso1sn93sFFWmmrvGUyg3MNCt
- +u+7P8Wg3VXte8cHbNwdzNtXHTfYyTcgZXC4xJN2akZt4pdR531mXyP2kFxmKtAEmW6bNpvV
- oNnkgZVWvoT4BHLloLzA62JUEgFJA/9dHilAVS3Ezv5ECB02Lt2vNNzMvPlyNbxBhWnrb6VC
- mFMCRg9bOK2io1zYb8C4gEpJ33wl8hEBxOWfCOEEKesAUCjViosNvxqGNtGWjk5p1O2QBWE2
- D6u5+itACQRqhmmgNl+dK6Of2yGG9GxOYWozIELEfL9ZB4xQ7A2tDFR0ZrRHQW5kcmVhcyBI
- YXJ0bWFubiAod2VpbCBkZXIgUmVjaG5lciBuZXUgaGVpc3N0KSA8YW5kcmVhc0BkdWFsYy5t
- YXlhLm9yZz6IYAQTEQIAIAUCTMsY3gIbAwYLCQgHAwIEFQIIAwQWAgMBAh4BAheAAAoJEBhU
- mcTgYeNVT1QAoJ4cJ2jl6Jgmi+PmWCXPk4m8lgAGAKCjkxgK/PjE3+cNsLa/xEpReqYwRrkB
- DQQ8/77WEAQAqBBex8oxPC1srpaSFbq8NCM/Gy7SKucKsQPqG/De46WQESbmnMElVft2xCBC
- rOJ7E02k10h/twe0yQnNdXMJDMDM0w0EEyX9ljekIr3SFbXpU2S4wUl3C6CW2hizUgOyLsg0
- chpfGMB9+wiVycyjZahafoc14wuuDj5BqWEOCccAAwcD/14lh1PTPKx4hs7ITtFZh5TI6+5f
- xAWIBBUeQL+GEt+CKwyNc/hWp8YTPJ3SAedmDrEMX+2yPO95KeIfg6bnnIVvI/aTR/vJFsWK
- GKMx+KaKx+IEwuhCpNIMUASpJWRvVlo3lMIvqAMJIBj79uKq/X9fppblcJst29QVO6aWf3Gh
- iEYEGBECAAYFAjz/vtYACgkQGFSZxOBh41VBAgCfZRiPCQ+jNvdT5iR2fEblqTtBrF0An0nb
- M8B1Lpkm44214BbtIQKneVrYiEYEGBECAAYFAjz/vtcACgkQGFSZxOBh41UjjgCgoua1QYf+
- FcHpxrRgoioO3D7ddkUAnAkRf8FH9i94x8f6LfS4npozycQc
-Subject: Re: [PATCH 4.19 13/99] netfilter: nf_conncount: fix argument order to
- find_next_bit
-Message-ID: <47f69e73-8104-aa58-44f2-b0d8fafd9e91@maya.org>
-Date:   Mon, 22 Apr 2019 21:26:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1730804AbfDVTtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC4F72175B;
+        Mon, 22 Apr 2019 19:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962563;
+        bh=19qmPjkyLSjQvQWSREO99nPbeh3BmjzdC2OKMM8Hxdg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=t8mUJzKPLDtKW+jlX8UeGqgr6QkQGP2xITN4JBDv0W0KIr5sWt4CZL3nggR1+Xlvv
+         NQqcnXh2k2NF4YKqMIf6LpgAplHTb650KtHkBU0GspK67Hljmlfyw3zLaObERjjY/+
+         dUgUS/K4qj9kreAscLRzDnyWSX+IFGFOl3VR22lc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.9 16/29] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+Date:   Mon, 22 Apr 2019 15:48:35 -0400
+Message-Id: <20190422194848.13049-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
+References: <20190422194848.13049-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190422185710.3la4ayzxslafxwbn@breakpoint.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Originated-At: 46.91.134.20!38444
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.04.19 at 20:57 Florian Westphal wrote:
-> Andreas Hartmann <andihartmann@01019freenet.de> wrote:
->>> Could you at least tell us how you're using nf_conncount (nf/iptables
->>> rules)?
->>
->> # Generated by iptables-save v1.6.2 on Mon Apr 22 20:19:30 2019
->> *filter
->> :INPUT DROP [0:0]
->> :FORWARD ACCEPT [0:0]
->> :OUTPUT DROP [4423:248703]
->> -A INPUT -s 127.0.0.1/32 -d 239.255.255.250/32 -i lo -p udp -j ACCEPT
->> -A INPUT -p tcp -m tcp --dport 113 -j REJECT --reject-with icmp-port-unreachable
->> -A INPUT -d 255.255.255.255/32 -p udp -j ACCEPT
->> -A INPUT -d 224.0.0.1/32 -j ACCEPT
->> -A INPUT -s 127.0.0.1/32 -d 127.0.0.2/32 -i lo -j ACCEPT
->> -A INPUT -s 127.0.0.1/32 -d 127.0.0.1/32 -i lo -j ACCEPT
->> -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
->> -A INPUT -s 192.168.22.0/24 -j ACCEPT
->> -A INPUT -j LOG --log-prefix "In Input gesperrt: "
->> -A INPUT -s 169.254.2.1/32 -d 169.254.2.2/32 -i br1 -p tcp -m tcp --sport 80 -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 224.0.0.22/32 -o lo -p igmp -j ACCEPT
->> -A OUTPUT -d 192.168.6.173/32 -o br1 -p tcp -m tcp --dport 80 -j ACCEPT
->> -A OUTPUT -s 169.254.2.2/32 -d 239.255.255.250/32 -o br1 -p udp -j DROP
->> -A OUTPUT -s 192.168.22.6/32 -d 224.0.0.251/32 -o br1 -p udp -j ACCEPT
->> -A OUTPUT -s 127.0.0.1/32 -d 239.255.255.250/32 -o lo -p udp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 255.255.255.255/32 -o br1 -p udp -m udp --dport 1900 -j ACCEPT
->> -A OUTPUT -s 127.0.0.1/32 -d 127.255.255.255/32 -o br1 -p udp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 239.0.0.250/32 -o br1 -p igmp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 239.255.255.250/32 -o br1 -p igmp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 239.255.255.250/32 -o br1 -p udp -m udp --dport 1900 -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 239.1.1.1/32 -o br1 -p udp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 239.1.1.1/32 -o br1 -p igmp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -d 224.0.0.251/32 -o br1 -p igmp -j ACCEPT
->> -A OUTPUT -s 192.168.22.6/32 -p tcp -m tcp --dport 1935 -j ACCEPT
->> -A OUTPUT -s 192.168.22.0/24 -d 192.168.3.0/24 -j ACCEPT
->> -A OUTPUT -s 127.0.0.1/32 -d 127.0.0.2/32 -o lo -j ACCEPT
->> -A OUTPUT -s 127.0.0.1/32 -d 127.0.0.1/32 -o lo -j ACCEPT
->> -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
->> -A OUTPUT -s 192.168.22.0/24 -d 192.168.22.0/24 -j ACCEPT
->> -A OUTPUT -j LOG --log-prefix "In Output gesperrt: "
->> -A OUTPUT -s 169.254.2.2/32 -d 169.254.2.1/32 -o br1 -p tcp -m tcp --dport 80 -j ACCEPT
->> COMMIT
-> 
-> I don't see connlimit match is in use.
-> 
-> Could you post output of
-> 
-> lsmod | grep nf_conncount
-> 
-> and
-> 
-> grep CONNCOUNT ~/your_kernel_conf
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-True - it's not in use (it's not even configured) at all. I'm surprised that it seems to fix the problem anyway.
-Ok - I'm testing few weeks more. If it comes up again: this has been a false positive.
-If I can't see it any more - I wouldn't know what to do any further at the moment.
+[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
 
-Regarding git bisect, the only other possible remaining changes would be at the moment
+Colin King reported a bug in read_bbreg_hdl():
 
-tty: Don't hold ldisc lock in tty_reopen() if ldisc present                     Dmitry Safonov
-tty: Simplify tty->count math in tty_reopen()                                   Dmitry Safonov
-tty: Hold tty_ldisc_lock() during tty_reopen()                                  Dmitry Safonov
-tty/ldsem: Wake up readers after timed out down_write()                         Dmitry Safonov
+	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
 
-But I don't know how this change could break video streaming using serviio ... .
+The problem is that "val" is uninitialized.
 
+This code is obviously not useful, but so far as I can tell
+"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
+either.  For now the easiest fix is to just call r8712_free_cmd_obj()
+and return.
 
-Thanks
-Andreas
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
+ drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
+index 9f61583af150..41b667c8385c 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.c
++++ b/drivers/staging/rtl8712/rtl8712_cmd.c
+@@ -158,17 +158,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ 
+ static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ {
+-	u32 val;
+-	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
+ 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
+ 
+-	if (pcmd->rsp && pcmd->rspsz > 0)
+-		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+-	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
+-	if (!pcmd_callback)
+-		r8712_free_cmd_obj(pcmd);
+-	else
+-		pcmd_callback(padapter, pcmd);
++	r8712_free_cmd_obj(pcmd);
+ 	return H2C_SUCCESS;
+ }
+ 
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
+index 67e9e910aef9..d10a59d4a550 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.h
++++ b/drivers/staging/rtl8712/rtl8712_cmd.h
+@@ -152,7 +152,7 @@ enum rtl8712_h2c_cmd {
+ static struct _cmd_callback	cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_Write_MACREG), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_Read_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
+-- 
+2.19.1
+
