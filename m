@@ -2,78 +2,107 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6BBC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86AC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9063120859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCC720859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQxrawuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfDVP7S (ORCPT
+        id S1727585AbfDVQEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:59:18 -0400
-Received: from mga17.intel.com ([192.55.52.151]:5590 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfDVP7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:59:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 08:59:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,382,1549958400"; 
-   d="scan'208";a="136374592"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2019 08:59:17 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 22 Apr 2019 08:59:16 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.183]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.110]) with mapi id 14.03.0415.000;
- Mon, 22 Apr 2019 08:59:16 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Cong Wang <xiyou.wangcong@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
-Thread-Topic: [PATCH] RAS/CEC: Add debugfs switch to disable at run time
-Thread-Index: AQHU9jKBC6KJVSji90+B+N/k56qJIaZC+16AgAAKogD//5VvgIAAe1WAgAB/EwCAAa2HAIADF7EQ
-Date:   Mon, 22 Apr 2019 15:59:16 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7E90A404@ORSMSX104.amr.corp.intel.com>
-References: <20190418220229.32133-1-tony.luck@intel.com>
- <CAM_iQpUAfiP2pitFpc-wSy4f_JQo_Wh3BQDxEsT2wwSHDPERow@mail.gmail.com>
- <20190418232910.GR27160@zn.tnic> <20190419000745.GA12291@agluck-desk>
- <20190419002911.GB559@zn.tnic> <20190419150400.GA12738@agluck-desk>
- <20190420094120.GB29704@zn.tnic>
-In-Reply-To: <20190420094120.GB29704@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjJiMDE1OTctYmZlNi00MjQ4LTgzMzItMzVjOTc4NmZkYTBlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUW9QcFlHSlZTMXpKdWVjUXhEMFdGdmo5UVBvTHZienZjMnVpSnFSaFwvdjZZa00zUXYzSkJCOHZBeldNaEd4V1wvIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 22 Apr 2019 12:04:09 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40155 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfDVQEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:04:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so6018231plr.7;
+        Mon, 22 Apr 2019 09:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kXkiAfTwmCa9p1Avt7HB+P8BjxcnubiRLfnKV0dvTXc=;
+        b=nQxrawuXjuOuIl4OmDuQUizpd21r0JiUnbHOwTggTYT5Tk/XgdSTLpxOeAJnHNbG/4
+         TfRLNxTz+wzw25maA+pZOQd2TQmo5JLU9tV1oG9tIirC25vZoWNqBq1bhmRXyWKYiRBD
+         Xx8J1fl5h4lFelP4Yx+KfY2Qe3PI1/Xb5GwyvspT0L0LREMihWHp6oCO4QEZqrlNFfFB
+         /+xDk0Kj8v5xb3ZrwAj57mCTcUe47t4YienfrIQykRBgeKKo8AyIsyZgH9xBKBpNBJrF
+         Jlf9uR0hg6ZbvZgtHO4qZCfvUbSfLUEjFoKfiIr1YTD78kD1FsCzYK1eyqUcdLOiJk6e
+         5l+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kXkiAfTwmCa9p1Avt7HB+P8BjxcnubiRLfnKV0dvTXc=;
+        b=hn6RWktBVCmZDCX/mCqjPAc/TUrJQ6sTXV9RLN0pHBbRz0rfRBz1hZVgB7EKqmITuX
+         PaDLEGDS7aVIXPvufmH7qYL7hIWXVWkY+xtKF+70csmVZmOV1n3xmLldSbXXINpnPPKt
+         1JGRigPI/6OmQmM+VZUXPulwn83zvQKBKKtDf2qAs5/DQ1NtXUU6naKnF63Lnf8Q/X0H
+         nTPZyxoI707PaV7td6IMnGpppikAvN9Rxhy2GnECZ2IlP8uenq80Rzi9Kyo771Gnh6nM
+         uuNqSbCFTPdoPpTt9XsvdHDsPSCB2LmooMqJfF92dBbJG/zf4QKY3/DyeHjvVvlipVMb
+         uxsw==
+X-Gm-Message-State: APjAAAXCeYaQwKkjo4GXtbyrUbs28i/X3brom9lyglAvvBYmjXgElZeE
+        ICIAKv+XuHlyKRjC84lJX1c=
+X-Google-Smtp-Source: APXvYqyIvt+/4LHNtWu9fpcvG27kHSF6uMg8xZm6ZxepckvAgNBs8SDRiZclgMtKRfFtSvBOLabBSw==
+X-Received: by 2002:a17:902:5a3:: with SMTP id f32mr18303329plf.82.1555949048266;
+        Mon, 22 Apr 2019 09:04:08 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id q128sm19279928pga.60.2019.04.22.09.04.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 09:04:07 -0700 (PDT)
+Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
+To:     David Ahern <dsahern@gmail.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Julian Anastasov <ja@ssi.bg>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
+ <20190421204126.GA19213@ubuntu>
+ <458669e6-3d94-1daf-f80b-3c8d740790fa@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <925fe55a-918e-e899-6f3c-43731712e369@gmail.com>
+Date:   Mon, 22 Apr 2019 09:04:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <458669e6-3d94-1daf-f80b-3c8d740790fa@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBFcnIsIHRoaXMgYWxsIHNvdW5kcyB0byBtZSBsaWtlIHRoZSBzdG9ybSBkZXRlY3Rpb24gY29k
-ZSBzaG91bGQNCj4gKmF1dG9tYXRpY2FsbHkqIGRpc2FibGUgdGhlIENFQyBpbiBzdWNoIGNhc2Vz
-LCBJJ2Qgc2F5Lg0KDQpTb3VuZHMgZ29vZC4gQnV0IHdlIHNob3VsZCBkaXN0aW5ndWlzaCBzdG9y
-bXMgdGhhdCBoYXZlIG1hbnkgZGlmZmVyZW50DQphZGRyZXNzZXMgZnJvbSBzdG9ybXMgdGhhdCBq
-dXN0IHBpbmcgYSBmZXcgYWRkcmVzc2VzLiAgQ0VDIHdpbGwgc2VlIGNvdW50cw0KaGl0IHRoZSB0
-aHJlc2hvbGQgaW4gdGhlIGxhdHRlciBjYXNlLCBidXQgaXQgbWlnaHQgbm90IGJlIGFibGUgdG8g
-dGFrZSB0aGUgcGFnZXMNCm9mZmxpbmUgKGJlY2F1c2UgdGhleSBhcmUgbG9ja2VkLCBvciBpbi11
-c2UgYnkga2VybmVsKS4NCg0KU28gSSB0aGluayB0aGUgY2hhbmdlIG1pZ2h0IGJlIHRvIHRoZSBy
-ZXR1cm4gdmFsdWUgZnJvbSBOT1RJRllfU1RPUCB0byBOT1RJRllfRE9ORQ0KLi4uIGJ1dCBvbmx5
-IGlmIHdlIGFyZSBpbiB0aGUgbWlkZGxlIG9mIGEgc3Rvcm0gQU5EIHRoZSBDRUMgYXJyYXkgaXMg
-ZnVsbC4NCg0KLVRvbnkNCg0K
+
+
+On 04/22/2019 07:58 AM, David Ahern wrote:
+> On 4/21/19 2:41 PM, Stephen Suryaputra wrote:
+>> Hi David,
+>>
+>> I looked at patchwork. This patch hasn't been accepted. Is there a plan
+>> to resubmit? It is very useful. I had to debug refcnt issues multiple
+>> times for my employer.
+> 
+> I think the inlined versions of dev_put and dev_hold are better for
+> performance.
+> 
+> I could submit it with a DEBUG config to enable. It has been invaluable
+> to me over the past 3+ years debugging refcount problems.
+> 
+
+Sounds a good plan to me :)
