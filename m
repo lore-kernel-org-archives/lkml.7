@@ -1,188 +1,162 @@
 Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4AFC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD34C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2AE92087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC6320874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555929288;
-	bh=YNsexiBG78n5sLUZEj12x9nYdJWuV2dQ6xZ01xqKp6w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y150WdP8xEVj6RpvS2UFxx9MSf4QeNIe9T/WubYHXCHUcTXhRrDIGpjuc8W67N2Z6
-	 +m8z+uLaT6Kl613pjz2nDN4jB67q1brS2Io+4rcGpChK+e+/O+96yy1MkiiZIiX9vd
-	 QEPAzMnNm2xalBMuJlc2l5wGULKXOXq+8aUNX4ZM=
+	s=default; t=1555929297;
+	bh=fEe9nS1ln5YRUUrmBJP8AmjoKpvGKmxNFN/J0FRAjx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P7R4tQtHcR0k0BJerCZep8AU7vkawds4n79k3eCFFabEPo/GvwIgEBIoAJbBjXRi8
+	 8yAa8jWfOHEEFCibUaIjLUFWtfsPpW8ehyj1EieiwQ19as+v2hyHdzJrGYHxYPqeFt
+	 rsIwLzxGF5pgNxwXLK4uUE7ehYoc8AGQwAYhgPqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfDVKes (ORCPT
+        id S1727162AbfDVKez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 06:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfDVKer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 06:34:47 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F6572075A;
-        Mon, 22 Apr 2019 10:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555929286;
-        bh=YNsexiBG78n5sLUZEj12x9nYdJWuV2dQ6xZ01xqKp6w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mOJDl9J7ag9QTGedD8fFgIpfdnhdzYHw+KRIAtGcyWsa0ZosXpXs1k8XgIvBiv4UY
-         9Rc1zcBjacLyQz+7srp4R9KQ/qxm71QVAg+bemnVabFHeflMdnteckAbIPND/N33Y9
-         GBT7h7KGEX8weHqucLv83WqrME7XkceSPO0nmZkQ=
-Date:   Mon, 22 Apr 2019 11:34:42 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] iio: imx7d_adc: Add local struct device pointer
- in imx7d_adc_probe()
-Message-ID: <20190422113442.57645818@archlinux>
-In-Reply-To: <20190414183504.23286-2-andrew.smirnov@gmail.com>
-References: <20190414183504.23286-1-andrew.smirnov@gmail.com>
-        <20190414183504.23286-2-andrew.smirnov@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 22 Apr 2019 06:34:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54189 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfDVKez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 06:34:55 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q16so13923710wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 03:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zyMQ+eyBXo2LZ4GuH7kHJyfZneSPy6Q384j2ybq1soc=;
+        b=ZyozIE9FInXiUNKlwZfru+qlaypsIpOnn5VC3ZnDvPY4L6Cpcif1OB0iD2yxX8R74y
+         eQ67n2Oa+lwANYt065QzvtS03Rq7fPxZpZGsI5TudvzDPRlUML5ZQDoYCaVWlzgcadB4
+         xmSRzwjZcoCxJc8e12U1IenRbh+hbL2JLRp3QpYKpaXJ58RCHDxst5jJ7ozbQU5b0XJt
+         9JnvLXePqrA2mLgyPPKlf4Uh+fRfHdtZg8rr3Xk5CGN1TAvlTJvTMaDAOB98911dWe39
+         hldRPNac6jjKMMDx6eOk1DSPcfV7l1bFhLd0Qb2I4nsnVZKEx5ADdpo8PZym4EHR5wic
+         l22A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zyMQ+eyBXo2LZ4GuH7kHJyfZneSPy6Q384j2ybq1soc=;
+        b=YMkM04TuIB1Oh35EAr6aXtwi43GS+vhF+GAYmUztU42dLD2DnLnuKFnxMervgjwak7
+         RE7e2q/WVcUhn3wX+UEOhEEz+BEUYa1mFs8yzVSd3JJurIY5JWBW5SMGDR01njQ87zOQ
+         FBqLaJd3dn7G9Tqy7in463oTS5zvi44oO21xYzMkmTlAgtYEXw0LIbVBn0jP0teYem67
+         oxfYqrFM2UmI+hn4l2Y1lk4vwkhTFSsRlMLdxd2TGFICx3F4GrmGom2ARMIu8lV4uhJL
+         tNhe/QZvqRdtyVyf+UqYTBAz7bIBsr36uRQqPXihWo3EoY0agx1kc0xbNoSOR8rwlPtK
+         KyZg==
+X-Gm-Message-State: APjAAAWya//thYSS/WA3vbhNfua+QJBINKVAJes2pEBv31YNP1qL2SxM
+        7UHNCWzEEeQkjmWfEsN5XoS6Dx1M
+X-Google-Smtp-Source: APXvYqxbE1oA8h7LpdiOTZq2BFjGLGf5uGk0H046sA23WOMVesu7A4Cinrv2GFMay2aPjhFodjYZ/g==
+X-Received: by 2002:a1c:7208:: with SMTP id n8mr12451725wmc.46.1555929293362;
+        Mon, 22 Apr 2019 03:34:53 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id i17sm13060467wrs.44.2019.04.22.03.34.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Apr 2019 03:34:52 -0700 (PDT)
+Date:   Mon, 22 Apr 2019 12:34:49 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] x86_64: uninline TASK_SIZE
+Message-ID: <20190422103449.GA75723@gmail.com>
+References: <20190421160600.GA31092@avx2>
+ <20190421182842.GD35603@gmail.com>
+ <8B42CD57-9343-4234-A96D-80337BFFDF0E@zytor.com>
+ <20190421211007.GA30444@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190421211007.GA30444@avx2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Apr 2019 11:34:59 -0700
-Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
 
-> Use a local "struct device *dev" in imx7d_adc_probe() for brevity. No
-> functional change intended.
+* Alexey Dobriyan <adobriyan@gmail.com> wrote:
+
+> > >> +++ b/arch/x86/kernel/task_size_64.c
+> > >> @@ -0,0 +1,9 @@
+> > >> +#include <linux/export.h>
+> > >> +#include <linux/sched.h>
+> > >> +#include <linux/thread_info.h>
+> > >> +
+> > >> +unsigned long _task_size(void)
+> > >> +{
+> > >> +	return test_thread_flag(TIF_ADDR32) ? IA32_PAGE_OFFSET :
+> > >TASK_SIZE_MAX;
+> > >> +}
+> > >> +EXPORT_SYMBOL(_task_size);
+> > >
+> > >Good idea - but instead of adding yet another compilation unit, why not
+> > >
+> > >stick _task_size() into arch/x86/kernel/process_64.c, which is the 
+> > >canonical place for process management related arch functions?
+> > >
+> > >Thanks,
+> > >
+> > >	Ingo
+> > 
+> > Better yet... since TIF_ADDR32 isn't something that changes randomly, 
+> > perhaps this should be a separate variable?
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-I applied some of these from V1.  Please be sure to only send updates
-of patches that were not applied.
+> Maybe. I only thought about putting every 32-bit related flag under 
+> CONFIG_COMPAT to further eradicate bloat (and force everyone else to 
+> keep an eye on it, ha-ha).
 
-Thanks
+Basically TIF_ADDR32 is only set for a task if set_personality_ia32() is 
+called, which function is called in the following circumstances:
 
-Jonathan
+ - arch/x86/ia32/ia32_aout.c:load_aout_binary()
 
-> ---
->  drivers/iio/adc/imx7d_adc.c | 37 ++++++++++++++++++-------------------
->  1 file changed, 18 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/imx7d_adc.c b/drivers/iio/adc/imx7d_adc.c
-> index ad6764fb2a23..3bbd657409d5 100644
-> --- a/drivers/iio/adc/imx7d_adc.c
-> +++ b/drivers/iio/adc/imx7d_adc.c
-> @@ -438,51 +438,51 @@ static int imx7d_adc_probe(struct platform_device *pdev)
->  	struct imx7d_adc *info;
->  	struct iio_dev *indio_dev;
->  	struct resource *mem;
-> +	struct device *dev = &pdev->dev;
->  	int irq;
->  	int ret;
->  
-> -	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*info));
->  	if (!indio_dev) {
->  		dev_err(&pdev->dev, "Failed allocating iio device\n");
->  		return -ENOMEM;
->  	}
->  
->  	info = iio_priv(indio_dev);
-> -	info->dev = &pdev->dev;
-> +	info->dev = dev;
->  
->  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	info->regs = devm_ioremap_resource(&pdev->dev, mem);
-> +	info->regs = devm_ioremap_resource(dev, mem);
->  	if (IS_ERR(info->regs)) {
->  		ret = PTR_ERR(info->regs);
-> -		dev_err(&pdev->dev,
-> -			"Failed to remap adc memory, err = %d\n", ret);
-> +		dev_err(dev, "Failed to remap adc memory, err = %d\n", ret);
->  		return ret;
->  	}
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> -		dev_err(&pdev->dev, "No irq resource?\n");
-> +		dev_err(dev, "No irq resource?\n");
->  		return irq;
->  	}
->  
-> -	info->clk = devm_clk_get(&pdev->dev, "adc");
-> +	info->clk = devm_clk_get(dev, "adc");
->  	if (IS_ERR(info->clk)) {
->  		ret = PTR_ERR(info->clk);
-> -		dev_err(&pdev->dev, "Failed getting clock, err = %d\n", ret);
-> +		dev_err(dev, "Failed getting clock, err = %d\n", ret);
->  		return ret;
->  	}
->  
-> -	info->vref = devm_regulator_get(&pdev->dev, "vref");
-> +	info->vref = devm_regulator_get(dev, "vref");
->  	if (IS_ERR(info->vref)) {
->  		ret = PTR_ERR(info->vref);
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"Failed getting reference voltage, err = %d\n", ret);
->  		return ret;
->  	}
->  
->  	ret = regulator_enable(info->vref);
->  	if (ret) {
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"Can't enable adc reference top voltage, err = %d\n",
->  			ret);
->  		return ret;
-> @@ -492,8 +492,8 @@ static int imx7d_adc_probe(struct platform_device *pdev)
->  
->  	init_completion(&info->completion);
->  
-> -	indio_dev->name = dev_name(&pdev->dev);
-> -	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->dev.parent = dev;
->  	indio_dev->info = &imx7d_adc_iio_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = imx7d_adc_iio_channels;
-> @@ -501,16 +501,15 @@ static int imx7d_adc_probe(struct platform_device *pdev)
->  
->  	ret = clk_prepare_enable(info->clk);
->  	if (ret) {
-> -		dev_err(&pdev->dev,
-> -			"Could not prepare or enable the clock.\n");
-> +		dev_err(dev, "Could not prepare or enable the clock.\n");
->  		goto error_adc_clk_enable;
->  	}
->  
-> -	ret = devm_request_irq(info->dev, irq,
-> -				imx7d_adc_isr, 0,
-> -				dev_name(&pdev->dev), info);
-> +	ret = devm_request_irq(dev, irq,
-> +			       imx7d_adc_isr, 0,
-> +			       dev_name(dev), info);
->  	if (ret < 0) {
-> -		dev_err(&pdev->dev, "Failed requesting irq, irq = %d\n", irq);
-> +		dev_err(dev, "Failed requesting irq, irq = %d\n", irq);
->  		goto error_iio_device_register;
->  	}
->  
+   This is in exec(), when a new binary is loaded for the current task, 
+   via search_binary_handler() and exec_binprm(). Ordering is 
+   synchronous, AFAICS there can be no race between TASK_SIZE users and 
+   the set_personality_ia32() call which is always for the current task.
 
+ - in COMPAT_SET_PERSONALITY(), which through macro detours ends up being 
+   in SET_PERSONALITY2(), which is used in fs/compat_binfmt_elf.c's 
+   load_elf_binary(), used in a similar fashion in exec() as the AOUT 
+   case above. One particular macro detour of note is that 
+   fs/compat_binfmt_elf.c #includes fs/binfmt_elf.c and re-defines the 
+   personality setting method to map to set_personality_ia32().
+
+When set_personality_ia32() is called then TIF_ADDR32 is set 
+unconditionally, without any Kconfig variations.
+
+TIF_ADDR32 is cleared:
+
+ - In set_personality_64bit(), when a 64-bit binary is loaded via 
+   fs/binfmt_elf.c.
+
+ - It also defaults to clear in the init task, which is inherited by the 
+   initial kernel threads and any user-space task they might end up 
+   executing.
+
+So the conclusion is that IMO we can safely put TASK_SIZE into a new 
+thread_info()->task_size field, and:
+
+ - change ->task_size to the 32-bit address space in 
+   set_personality_ia32()
+
+ - change ->task_size to teh 64-bit address space in the init task and in 
+   set_personality_64bit().
+
+This should cover it I think, unless I missed something.
+
+Thanks,
+
+	Ingo
