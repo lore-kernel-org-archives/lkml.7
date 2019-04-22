@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DB4C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691F8C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CA920874
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2499620881
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939728;
-	bh=X61fYrYX9nuOu0ME5S/93psSBLfHWPzN/D1rPG+Mwg0=;
+	s=default; t=1555939739;
+	bh=+Yy1343SZQL89tbBf37xruxuFuSjHwDgp0zvafx+weM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QbLY8btR1SfvJaaT55web9cBlOWle1IOyaT+UgB0iiZ+4iacMMt7tTBcgFT/DB9i2
-	 lI0/HiBXAl3rpAIdDfAXGTbNjzQRmJ3wGsSHI/7y8thiXfq1lpUeYOfDibJuemgg/U
-	 qdCClC5Q+h9A54DnocYBVnKoy5BPAsCCCDORXSgg=
+	b=Rr7C1ubSLyXKmaEdA78AJTyJ8R2M45e4JQgtI9+ojWtBh9+jVD2qcTuUaXg4E9tad
+	 shDYGJ0oO1KZtv/q3spxgAihElvvS8nW7WNkRiw41D8vMtp66ih+dGkQf7rGMsZUMa
+	 /SrdNS6IQl2vThH48o+xgfXW7uPOi1DpjKY0RqOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfDVN2r (ORCPT
+        id S1727499AbfDVN2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37898 "EHLO
+        Mon, 22 Apr 2019 09:28:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37896 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727574AbfDVN2W (ORCPT
+        with ESMTP id S1727572AbfDVN2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,31 +33,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2sTY6y/pj7j8ZKDgFJ/saI9zL6+USwEQ077cqF8cOAo=; b=QS5q/bF3s/JlcF8bfXrqihbTV5
-        44WuocUYMi4+pS7a8atN/Trkour/6mCtF9jjp/8nK7QM/2bZrIgmozXVWPeeitRLjhCEJPLcNGab8
-        BigWhQEGieadyeA/eLGhqU6CB/PyT2dqcBl3UM0CiutSsfUGObUFxI/VjqYR7jGQ6DmFuhRefP2fy
-        xAvi08nu0MXj2vng3TqK9iGu8+yFNyw3yzeR8pZ4PBXKbOlo6OFtc4F3vLx7At8OXBs4h/RfQEKP8
-        om3gk2f4KQCP7hJWOn+INF7Srz04qkwhH5IQsbvpOJhGD9ZYIa6PC27g+rl/fB2T+kbbBCmlQn6MV
-        62YXUPNQ==;
+        bh=TLOKB8aGQx5AyvOvtJPs4j5AVtQGyPxkL9ioK7FOyhw=; b=hf+xEx7ia1j7IBedYET/h6dlez
+        4cmhEslR/E5ghCMTiXbiunK7dRbsgIm71Hhg2s7x9nB3kaiDXg/w3skyfe7MWOFLmbTJAV1Aq655R
+        DdyrHSjdWDVEiEyBkbXrdK+FIQtxvGSupvX3KKkTDbpUYcSRR9QcF1YGtVA0cZfvVgKNLf3bxi1e6
+        3ytav8ptdHNqIqA1S8Gn03raubPBh+idT2567lcIxdpHpExyaXe2amUkk9Zp2M8RPSUgxHi/veCnm
+        UaiyIaJrLiPH8gJni3PisjsxA+6YnQ2L/1csZCWkbY13uA3QWA7GUSOizELskbOheHtOM091kY2cO
+        KJ3LnoFQ==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzd-0005HT-2T; Mon, 22 Apr 2019 13:28:21 +0000
+        id 1hIYzd-0005HU-2x; Mon, 22 Apr 2019 13:28:21 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005mc-EF; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzT-0005ne-Qf; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 39/79] docs: EDID/HOWTO.txt: convert it and rename to howto.rst
-Date:   Mon, 22 Apr 2019 10:27:28 -0300
-Message-Id: <7f90aab265747729f25ae644a5017a6d73f10f16.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 52/79] docs: bus-devices: ti-gpmc.rst: convert it to ReST
+Date:   Mon, 22 Apr 2019 10:27:41 -0300
+Message-Id: <db6ea553e4faabce72958ef6948805d4f0d51799.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -68,97 +63,218 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx need to know when a paragraph ends. So, do some adjustments
-at the file for it to be properly parsed.
+In order to be able to add this file to a book, it needs
+first to be converted to ReST and renamed.
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
-
-that's said, I believe that this file should be moved to the
-GPU/DRM documentation.
+While this is not part of any book, mark it as :orphan:, in order
+to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/EDID/{HOWTO.txt => howto.rst}   | 31 ++++++++++++-------
- .../admin-guide/kernel-parameters.txt         |  2 +-
- drivers/gpu/drm/Kconfig                       |  2 +-
- 3 files changed, 22 insertions(+), 13 deletions(-)
- rename Documentation/EDID/{HOWTO.txt => howto.rst} (83%)
+ .../bus-devices/{ti-gpmc.txt => ti-gpmc.rst}  | 159 ++++++++++++------
+ 1 file changed, 108 insertions(+), 51 deletions(-)
+ rename Documentation/bus-devices/{ti-gpmc.txt => ti-gpmc.rst} (58%)
 
-diff --git a/Documentation/EDID/HOWTO.txt b/Documentation/EDID/howto.rst
-similarity index 83%
-rename from Documentation/EDID/HOWTO.txt
-rename to Documentation/EDID/howto.rst
-index 539871c3b785..725fd49a88ca 100644
---- a/Documentation/EDID/HOWTO.txt
-+++ b/Documentation/EDID/howto.rst
-@@ -1,3 +1,9 @@
+diff --git a/Documentation/bus-devices/ti-gpmc.txt b/Documentation/bus-devices/ti-gpmc.rst
+similarity index 58%
+rename from Documentation/bus-devices/ti-gpmc.txt
+rename to Documentation/bus-devices/ti-gpmc.rst
+index cc9ce57e0a26..87c366e418be 100644
+--- a/Documentation/bus-devices/ti-gpmc.txt
++++ b/Documentation/bus-devices/ti-gpmc.rst
+@@ -1,8 +1,12 @@
+-GPMC (General Purpose Memory Controller):
+-=========================================
 +:orphan:
 +
-+====
-+EDID
-+====
++========================================
++GPMC (General Purpose Memory Controller)
++========================================
+ 
+ GPMC is an unified memory controller dedicated to interfacing external
+ memory devices like
 +
- In the good old days when graphics parameters were configured explicitly
- in a file called xorg.conf, even broken hardware could be managed.
+  * Asynchronous SRAM like memories and application specific integrated
+    circuit devices.
+  * Asynchronous, synchronous, and page mode burst NOR flash devices
+@@ -48,75 +52,128 @@ most of the datasheets & hardware (to be exact none of those supported
+ in mainline having custom timing routine) and by simulation.
  
-@@ -34,16 +40,19 @@ Makefile. Please note that the EDID data structure expects the timing
- values in a different way as compared to the standard X11 format.
- 
- X11:
--HTimings:  hdisp hsyncstart hsyncend htotal
--VTimings:  vdisp vsyncstart vsyncend vtotal
-+  HTimings:
-+    hdisp hsyncstart hsyncend htotal
-+  VTimings:
-+    vdisp vsyncstart vsyncend vtotal
- 
--EDID:
--#define XPIX hdisp
--#define XBLANK htotal-hdisp
--#define XOFFSET hsyncstart-hdisp
--#define XPULSE hsyncend-hsyncstart
-+EDID::
- 
--#define YPIX vdisp
--#define YBLANK vtotal-vdisp
--#define YOFFSET vsyncstart-vdisp
--#define YPULSE vsyncend-vsyncstart
-+  #define XPIX hdisp
-+  #define XBLANK htotal-hdisp
-+  #define XOFFSET hsyncstart-hdisp
-+  #define XPULSE hsyncend-hsyncstart
+ gpmc timing dependency on peripheral timings:
 +
-+  #define YPIX vdisp
-+  #define YBLANK vtotal-vdisp
-+  #define YOFFSET vsyncstart-vdisp
-+  #define YPULSE vsyncend-vsyncstart
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 5006f876cf0e..4a2260eac131 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -929,7 +929,7 @@
- 			edid/1680x1050.bin, or edid/1920x1080.bin is given
- 			and no file with the same name exists. Details and
- 			instructions how to build your own EDID data are
--			available in Documentation/EDID/HOWTO.txt. An EDID
-+			available in Documentation/EDID/howto.rst. An EDID
- 			data set will only be used for a particular connector,
- 			if its name and a colon are prepended to the EDID
- 			name. Each connector may use a unique EDID data
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 39d5f7562f1c..bc5658d7a84b 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -140,7 +140,7 @@ config DRM_LOAD_EDID_FIRMWARE
- 	  monitor are unable to provide appropriate EDID data. Since this
- 	  feature is provided as a workaround for broken hardware, the
- 	  default case is N. Details and instructions how to build your own
--	  EDID data are given in Documentation/EDID/HOWTO.txt.
-+	  EDID data are given in Documentation/EDID/howto.rst.
+ [<gpmc_timing>: <peripheral timing1>, <peripheral timing2> ...]
  
- config DRM_DP_CEC
- 	bool "Enable DisplayPort CEC-Tunneling-over-AUX HDMI support"
+ 1. common
+-cs_on: t_ceasu
+-adv_on: t_avdasu, t_ceavd
++
++cs_on:
++	t_ceasu
++adv_on:
++	t_avdasu, t_ceavd
+ 
+ 2. sync common
+-sync_clk: clk
+-page_burst_access: t_bacc
+-clk_activation: t_ces, t_avds
++
++sync_clk:
++	clk
++page_burst_access:
++	t_bacc
++clk_activation:
++	t_ces, t_avds
+ 
+ 3. read async muxed
+-adv_rd_off: t_avdp_r
+-oe_on: t_oeasu, t_aavdh
+-access: t_iaa, t_oe, t_ce, t_aa
+-rd_cycle: t_rd_cycle, t_cez_r, t_oez
++
++adv_rd_off:
++	t_avdp_r
++oe_on:
++	t_oeasu, t_aavdh
++access:
++	t_iaa, t_oe, t_ce, t_aa
++rd_cycle:
++	t_rd_cycle, t_cez_r, t_oez
+ 
+ 4. read async non-muxed
+-adv_rd_off: t_avdp_r
+-oe_on: t_oeasu
+-access: t_iaa, t_oe, t_ce, t_aa
+-rd_cycle: t_rd_cycle, t_cez_r, t_oez
++
++adv_rd_off:
++	t_avdp_r
++oe_on:
++	t_oeasu
++access:
++	t_iaa, t_oe, t_ce, t_aa
++rd_cycle:
++	t_rd_cycle, t_cez_r, t_oez
+ 
+ 5. read sync muxed
+-adv_rd_off: t_avdp_r, t_avdh
+-oe_on: t_oeasu, t_ach, cyc_aavdh_oe
+-access: t_iaa, cyc_iaa, cyc_oe
+-rd_cycle: t_cez_r, t_oez, t_ce_rdyz
++
++adv_rd_off:
++	t_avdp_r, t_avdh
++oe_on:
++	t_oeasu, t_ach, cyc_aavdh_oe
++access:
++	t_iaa, cyc_iaa, cyc_oe
++rd_cycle:
++	t_cez_r, t_oez, t_ce_rdyz
+ 
+ 6. read sync non-muxed
+-adv_rd_off: t_avdp_r
+-oe_on: t_oeasu
+-access: t_iaa, cyc_iaa, cyc_oe
+-rd_cycle: t_cez_r, t_oez, t_ce_rdyz
++
++adv_rd_off:
++	t_avdp_r
++oe_on:
++	t_oeasu
++access:
++	t_iaa, cyc_iaa, cyc_oe
++rd_cycle:
++	t_cez_r, t_oez, t_ce_rdyz
+ 
+ 7. write async muxed
+-adv_wr_off: t_avdp_w
+-we_on, wr_data_mux_bus: t_weasu, t_aavdh, cyc_aavhd_we
+-we_off: t_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_wr_cycle
++
++adv_wr_off:
++	t_avdp_w
++we_on, wr_data_mux_bus:
++	t_weasu, t_aavdh, cyc_aavhd_we
++we_off:
++	t_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_wr_cycle
+ 
+ 8. write async non-muxed
+-adv_wr_off: t_avdp_w
+-we_on, wr_data_mux_bus: t_weasu
+-we_off: t_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_wr_cycle
++
++adv_wr_off:
++	t_avdp_w
++we_on, wr_data_mux_bus:
++	t_weasu
++we_off:
++	t_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_wr_cycle
+ 
+ 9. write sync muxed
+-adv_wr_off: t_avdp_w, t_avdh
+-we_on, wr_data_mux_bus: t_weasu, t_rdyo, t_aavdh, cyc_aavhd_we
+-we_off: t_wpl, cyc_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_ce_rdyz
++
++adv_wr_off:
++	t_avdp_w, t_avdh
++we_on, wr_data_mux_bus:
++	t_weasu, t_rdyo, t_aavdh, cyc_aavhd_we
++we_off:
++	t_wpl, cyc_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_ce_rdyz
+ 
+ 10. write sync non-muxed
+-adv_wr_off: t_avdp_w
+-we_on, wr_data_mux_bus: t_weasu, t_rdyo
+-we_off: t_wpl, cyc_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_ce_rdyz
+ 
++adv_wr_off:
++	t_avdp_w
++we_on, wr_data_mux_bus:
++	t_weasu, t_rdyo
++we_off:
++	t_wpl, cyc_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_ce_rdyz
+ 
+-Note: Many of gpmc timings are dependent on other gpmc timings (a few
+-gpmc timings purely dependent on other gpmc timings, a reason that
+-some of the gpmc timings are missing above), and it will result in
+-indirect dependency of peripheral timings to gpmc timings other than
+-mentioned above, refer timing routine for more details. To know what
+-these peripheral timings correspond to, please see explanations in
+-struct gpmc_device_timings definition. And for gpmc timings refer
+-IP details (link above).
++
++Note:
++  Many of gpmc timings are dependent on other gpmc timings (a few
++  gpmc timings purely dependent on other gpmc timings, a reason that
++  some of the gpmc timings are missing above), and it will result in
++  indirect dependency of peripheral timings to gpmc timings other than
++  mentioned above, refer timing routine for more details. To know what
++  these peripheral timings correspond to, please see explanations in
++  struct gpmc_device_timings definition. And for gpmc timings refer
++  IP details (link above).
 -- 
 2.20.1
 
