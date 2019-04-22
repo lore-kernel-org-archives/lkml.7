@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBA6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F23DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6AD214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7497A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfDVRds (ORCPT
+        id S1728225AbfDVRdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 13:33:48 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:33652 "EHLO
+        Mon, 22 Apr 2019 13:33:53 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:33646 "EHLO
         hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVRdr (ORCPT
+        with ESMTP id S1726260AbfDVRds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 13:33:47 -0400
+        Mon, 22 Apr 2019 13:33:48 -0400
 Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id BEED57A0424;
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id AC6477A0421;
         Mon, 22 Apr 2019 19:33:45 +0200 (CEST)
 From:   Ondrej Zary <linux@zary.sk>
 To:     Rik Faith <faith@cs.unc.edu>,
         "David A . Hinds" <dahinds@users.sourceforge.net>
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 3/4] fdomain: Resurrect driver (ISA support)
-Date:   Mon, 22 Apr 2019 19:33:22 +0200
-Message-Id: <20190422173323.15365-4-linux@zary.sk>
+Subject: [RFC PATCH 2/4] fdomain: Resurrect driver (PCI support)
+Date:   Mon, 22 Apr 2019 19:33:21 +0200
+Message-Id: <20190422173323.15365-3-linux@zary.sk>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190422173323.15365-1-linux@zary.sk>
 References: <20190422173323.15365-1-linux@zary.sk>
@@ -40,287 +40,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Future Domain 16xx ISA SCSI support card support.
+Future Domain TMC-3260/AHA-2920A PCI card support.
 
-Currently untested.
+Tested on Adaptec AHA-2920A PCI card.
 
 Signed-off-by: Ondrej Zary <linux@zary.sk>
 ---
- drivers/scsi/Kconfig       |  14 +++
- drivers/scsi/Makefile      |   1 +
- drivers/scsi/fdomain_isa.c | 227 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/scsi/fdomain_isa.c
+ drivers/scsi/Kconfig       | 17 ++++++++++++
+ drivers/scsi/Makefile      |  1 +
+ drivers/scsi/fdomain_pci.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+)
+ create mode 100644 drivers/scsi/fdomain_pci.c
 
 diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index f9d058a07e2a..2ea77dafbc00 100644
+index 3d6b1f47cbb5..f9d058a07e2a 100644
 --- a/drivers/scsi/Kconfig
 +++ b/drivers/scsi/Kconfig
-@@ -684,6 +684,20 @@ config SCSI_FDOMAIN_PCI
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called fdomain_pci.
+@@ -667,6 +667,23 @@ config SCSI_FDOMAIN
+ 	tristate
+ 	depends on SCSI
  
-+config SCSI_FDOMAIN_ISA
-+	tristate "Future Domain 16xx ISA SCSI support"
-+	depends on ISA && SCSI
-+	select CHECK_SIGNATURE
++config SCSI_FDOMAIN_PCI
++	tristate "Future Domain TMC-3260/AHA-2920A PCI SCSI support"
++	depends on PCI && SCSI
 +	select SCSI_FDOMAIN
 +	help
-+	  This is support for Future Domain's 16-bit SCSI host adapters
-+	  (TMC-1660/1680, TMC-1650/1670, TMC-1610M/MER/MEX) and other adapters
-+	  with ISA bus based on the Future Domain chipsets (Quantum ISA-200S,
-+	  ISA-250MG; and at least one IBM board).
++	  This is support for Future Domain's PCI SCSI host adapters (TMC-3260)
++	  and other adapters with PCI bus based on the Future Domain chipsets
++	  (Adaptec AHA-2920A).
++
++	  NOTE: Newer Adaptec AHA-2920C boards use the Adaptec AIC-7850 chip
++	  and should use the aic7xxx driver ("Adaptec AIC7xxx chipset SCSI
++	  controller support"). This Future Domain driver works with the older
++	  Adaptec AHA-2920A boards with a Future Domain chip on them.
 +
 +	  To compile this driver as a module, choose M here: the
-+	  module will be called fdomain_isa.
++	  module will be called fdomain_pci.
 +
  config SCSI_GDTH
  	tristate "Intel/ICP (former GDT SCSI Disk Array) RAID Controller support"
  	depends on PCI && SCSI
 diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
-index f6cc4fbe6957..2e2cffff777d 100644
+index b8fbc6d2de54..f6cc4fbe6957 100644
 --- a/drivers/scsi/Makefile
 +++ b/drivers/scsi/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_SCSI_ISCI)		+= isci/
+@@ -77,6 +77,7 @@ obj-$(CONFIG_SCSI_PM8001)	+= pm8001/
+ obj-$(CONFIG_SCSI_ISCI)		+= isci/
  obj-$(CONFIG_SCSI_IPS)		+= ips.o
  obj-$(CONFIG_SCSI_FDOMAIN)	+= fdomain.o
- obj-$(CONFIG_SCSI_FDOMAIN_PCI)	+= fdomain_pci.o
-+obj-$(CONFIG_SCSI_FDOMAIN_ISA)	+= fdomain_isa.o
++obj-$(CONFIG_SCSI_FDOMAIN_PCI)	+= fdomain_pci.o
  obj-$(CONFIG_SCSI_GENERIC_NCR5380) += g_NCR5380.o
  obj-$(CONFIG_SCSI_QLOGIC_FAS)	+= qlogicfas408.o	qlogicfas.o
  obj-$(CONFIG_PCMCIA_QLOGIC)	+= qlogicfas408.o
-diff --git a/drivers/scsi/fdomain_isa.c b/drivers/scsi/fdomain_isa.c
+diff --git a/drivers/scsi/fdomain_pci.c b/drivers/scsi/fdomain_pci.c
 new file mode 100644
-index 000000000000..9f8bf02f175f
+index 000000000000..381a7157c078
 --- /dev/null
-+++ b/drivers/scsi/fdomain_isa.c
-@@ -0,0 +1,227 @@
++++ b/drivers/scsi/fdomain_pci.c
+@@ -0,0 +1,68 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/isa.h>
-+#include <scsi/scsi_host.h>
++#include <linux/pci.h>
 +#include "fdomain.h"
 +
-+#define MAXBOARDS_PARAM 4
-+static int io[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(io, int, ioport, NULL, 0);
-+MODULE_PARM_DESC(io, "base I/O address of controller (0x140, 0x150, 0x160, 0x170)");
-+
-+static int irq[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(irq, int, irq, NULL, 0);
-+MODULE_PARM_DESC(irq, "IRQ of controller (0=auto [default])");
-+
-+static int scsi_id[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(scsi_id, int, other, NULL, 0);
-+MODULE_PARM_DESC(scsi_id, "SCSI ID of controller (default = 6)");
-+
-+static unsigned long addresses[] = {
-+	0xc8000,
-+	0xca000,
-+	0xce000,
-+	0xde000,
-+};
-+#define ADDRESS_COUNT ARRAY_SIZE(addresses)
-+
-+static unsigned short ports[] = { 0x140, 0x150, 0x160, 0x170 };
-+#define PORT_COUNT ARRAY_SIZE(ports)
-+
-+/* This driver works *ONLY* for Future Domain cards using the TMC-1800,
-+ * TMC-18C50, or TMC-18C30 chip.  This includes models TMC-1650, 1660, 1670,
-+ * and 1680. These are all 16-bit cards.
-+ *
-+ * The following BIOS signature signatures are for boards which do *NOT*
-+ * work with this driver (these TMC-8xx and TMC-9xx boards may work with the
-+ * Seagate driver):
-+ *
-+ * FUTURE DOMAIN CORP. (C) 1986-1988 V4.0I 03/16/88
-+ * FUTURE DOMAIN CORP. (C) 1986-1989 V5.0C2/14/89
-+ * FUTURE DOMAIN CORP. (C) 1986-1989 V6.0A7/28/89
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V6.0105/31/90
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V6.0209/18/90
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V7.009/18/90
-+ * FUTURE DOMAIN CORP. (C) 1992 V8.00.004/02/92
-+ *
-+ * (The cards which do *NOT* work are all 8-bit cards -- although some of
-+ * them have a 16-bit form-factor, the upper 8-bits are used only for IRQs
-+ * and are *NOT* used for data. You can tell the difference by following
-+ * the tracings on the circuit board -- if only the IRQ lines are involved,
-+ * you have a "8-bit" card, and should *NOT* use this driver.)
-+ */
-+
-+static struct signature signatures[] = {
-+/*          1         2         3         4         5         6 */
-+/* 123456789012345678901234567890123456789012345678901234567890 */
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.07/28/89",	 5, 50,  2,  0, 0 },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V1.07/28/89",	 5, 50,  2,  0, 0 },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.07/28/89", 72, 50,  2,  0, 2 },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.0",	73, 43,  2,  0, 3 },
-+{ "FUTURE DOMAIN CORP. (C) 1991 1800-V2.0.",		72, 39,  2,  0, 4 },
-+{ "FUTURE DOMAIN CORP. (C) 1992 V3.00.004/02/92",	 5, 44,  3,  0, 0 },
-+{ "FUTURE DOMAIN TMC-18XX (C) 1993 V3.203/12/93",	 5, 44,  3,  2, 0 },
-+{ "IBM F1 P2 BIOS v1.0104/29/93",			 5, 28,  3, -1, 0 },
-+{ "Future Domain Corp. V1.0008/18/93",			 5, 33,  3,  4, 0 },
-+{ "Future Domain Corp. V1.0008/18/93",			26, 33,  3,  4, 1 },
-+{ "Adaptec AHA-2920 PCI-SCSI Card",			42, 31,  3, -1, 1 },
-+{ "IBM F1 P264/32",					 5, 14,  3, -1, 1 },
-+/* This next signature may not be a 3.5 bios */
-+{ "Future Domain Corp. V2.0108/18/93",			 5, 33,  3,  5, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.5008/18/93",			 5, 34,  3,  5, 0 },
-+{ "FUTURE DOMAIN 18c30/18c50/1800 (C) 1994 V3.5",	 5, 44,  3,  5, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.6008/18/93",			 5, 34,  3,  6, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.6108/18/93",			 5, 34,  3,  6, 0 },
-+{ "FUTURE DOMAIN TMC-18XX",				 5, 22, -1, -1, 0 },
-+/* Note that the last line will match a "generic" 18XX bios.  Because
-+ * Future Domain has changed the host SCSI ID and/or the location of the
-+ * geometry information in the on-board RAM area for each of the first
-+ * three BIOS's, it is still important to enter a fully qualified
-+ * signature in the table for any new BIOS's (after the host SCSI ID and
-+ * geometry location are verified).
-+ */
-+};
-+#define SIGNATURE_COUNT ARRAY_SIZE(signatures)
-+
-+static int fdomain_isa_match(struct device *dev, unsigned int ndev)
++static int fdomain_pci_probe(struct pci_dev *pdev,
++			     const struct pci_device_id *d)
 +{
++	int err;
 +	struct Scsi_Host *sh;
-+	int i, base = 0, irq = 0, bios_base = 0;
-+	struct signature *sig = NULL;
-+	void __iomem *p;
-+	static int saved_bios_base;
-+	static struct signature *saved_sig;
 +
-+	if (ndev < ADDRESS_COUNT) {	/* scan supported ISA BIOS addresses */
-+		p = ioremap(addresses[ndev], FDOMAIN_BIOS_SIZE);
-+		if (!p)
-+			return 0;
-+		for (i = 0; i < SIGNATURE_COUNT; i++)
-+			if (check_signature(p + signatures[i].offset,
-+					    signatures[i].signature,
-+					    signatures[i].length))
-+				break;
-+		if (i == SIGNATURE_COUNT)	/* no signature found */
-+			goto fail_unmap;
-+		if (signatures[i].flag == 1)	/* ignore PCI devices */
-+			goto fail_unmap;
-+		sig = &signatures[i];
-+		bios_base = addresses[ndev];
-+		/* read I/O base from BIOS area */
-+		if (sig->bios_major == 2) {
-+			switch (sig->flag) {
-+			case 2:	/* ISA_200S */
-+			case 3:	/* ISA_250MG */
-+				base = readb(p + 0x1fa2) +
-+				      (readb(p + 0x1fa3) << 8);
-+				break;
-+			case 4:	/* ISA_200S (another one) */
-+				base = readb(p + 0x1fa3) +
-+				      (readb(p + 0x1fa4) << 8);
-+				break;
-+			default:
-+				base = readb(p + 0x1fcc) +
-+				      (readb(p + 0x1fcd) << 8);
-+				break;
-+			}
-+		}
-+		iounmap(p);
-+		if (!base) {	/* no I/O base in BIOS area */
-+			/* save BIOS info for later use in port probing */
-+			saved_bios_base = bios_base;
-+			saved_sig = sig;
-+			return 0;
-+		}
-+	} else	/* scan supported I/O ports */
-+		base = ports[ndev - ADDRESS_COUNT];
++	err = pci_enable_device(pdev);
++	if (err)
++		goto fail;
 +
-+	/* use saved BIOS details if present */
-+	if (!bios_base && saved_bios_base) {
-+		bios_base = saved_bios_base;
-+		sig = saved_sig;
-+	}
++	err = pci_request_regions(pdev, "fdomain_pci");
++	if (err)
++		goto disable_device;
 +
-+	if (!request_region(base, FDOMAIN_REGION_SIZE, "fdomain_isa"))
-+		return 0;
++	err = -ENODEV;
++	if (pci_resource_len(pdev, 0) == 0)
++		goto release_region;
 +
-+	sh = fdomain_create(base, irq, 0, bios_base, sig, dev);
-+	if (!sh) {
-+		release_region(base, FDOMAIN_REGION_SIZE);
-+		return 0;
-+	}
++	sh = fdomain_create(pci_resource_start(pdev, 0), pdev->irq, 7, 0, NULL,
++			    &pdev->dev);
++	if (!sh)
++		goto release_region;
 +
-+	dev_set_drvdata(dev, sh);
-+	return 1;
-+fail_unmap:
-+	iounmap(p);
++	pci_set_drvdata(pdev, sh);
 +	return 0;
++
++release_region:
++	pci_release_regions(pdev);
++disable_device:
++	pci_disable_device(pdev);
++fail:
++	return err;
 +}
 +
-+static int fdomain_isa_param_match(struct device *dev, unsigned int ndev)
++static void fdomain_pci_remove(struct pci_dev *pdev)
 +{
-+	struct Scsi_Host *sh;
-+
-+	if (!io[ndev])
-+		return 0;
-+
-+	if (!request_region(io[ndev], FDOMAIN_REGION_SIZE, "fdomain_isa")) {
-+		dev_err(dev, "base 0x%x already in use", io[ndev]);
-+		return 0;
-+	}
-+
-+	sh = fdomain_create(io[ndev], irq[ndev], scsi_id[ndev], 0, NULL, dev);
-+	if (!sh) {
-+		dev_err(dev, "controller not found at base 0x%x", io[ndev]);
-+		release_region(io[ndev], FDOMAIN_REGION_SIZE);
-+		return 0;
-+	}
-+
-+	dev_set_drvdata(dev, sh);
-+	return 1;
-+}
-+
-+static int fdomain_isa_remove(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh = dev_get_drvdata(dev);
-+	int base = sh->io_port;
++	struct Scsi_Host *sh = pci_get_drvdata(pdev);
 +
 +	fdomain_destroy(sh);
-+	release_region(base, FDOMAIN_REGION_SIZE);
-+	dev_set_drvdata(dev, NULL);
-+	return 0;
++	pci_release_regions(pdev);
++	pci_disable_device(pdev);
 +}
 +
-+static struct isa_driver fdomain_isa_driver = {
-+	.match		= fdomain_isa_match,
-+	.remove		= fdomain_isa_remove,
-+	.driver = {
-+		.name	= "fdomain_isa",
-+		.pm	= FDOMAIN_PM_OPS,
-+	},
++static struct pci_device_id fdomain_pci_table[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_FD, PCI_DEVICE_ID_FD_36C70) },
++	{}
++};
++MODULE_DEVICE_TABLE(pci, fdomain_pci_table);
++
++static struct pci_driver fdomain_pci_driver = {
++	.name		= "fdomain_pci",
++	.id_table	= fdomain_pci_table,
++	.probe		= fdomain_pci_probe,
++	.remove		= fdomain_pci_remove,
++	.driver.pm	= FDOMAIN_PM_OPS,
 +};
 +
-+static int __init fdomain_isa_init(void)
-+{
-+	int isa_probe_count = ADDRESS_COUNT + PORT_COUNT;
-+
-+	if (io[0]) {	/* use module parameters if present */
-+		fdomain_isa_driver.match = fdomain_isa_param_match;
-+		isa_probe_count = MAXBOARDS_PARAM;
-+	}
-+
-+	return isa_register_driver(&fdomain_isa_driver, isa_probe_count);
-+}
-+
-+static void __exit fdomain_isa_exit(void)
-+{
-+	isa_unregister_driver(&fdomain_isa_driver);
-+}
-+
-+module_init(fdomain_isa_init);
-+module_exit(fdomain_isa_exit);
++module_pci_driver(fdomain_pci_driver);
 +
 +MODULE_AUTHOR("Ondrej Zary, Rickard E. Faith");
-+MODULE_DESCRIPTION("Future Domain TMC-16x0 ISA SCSI driver");
++MODULE_DESCRIPTION("Future Domain TMC-3260 PCI SCSI driver");
 +MODULE_LICENSE("GPL");
 -- 
 Ondrej Zary
