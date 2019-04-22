@@ -2,222 +2,125 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4363BC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AE3C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF8721738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C7120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="1VXDcldX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbfDVUgy (ORCPT
+        id S1728881AbfDVUjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:36:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:23805 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbfDVUgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 16:36:54 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B387D369CA;
-        Mon, 22 Apr 2019 20:36:52 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 131C95C1B5;
-        Mon, 22 Apr 2019 20:36:48 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 16:36:47 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 20/31] mm: introduce vma reference counter
-Message-ID: <20190422203647.GK14666@redhat.com>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-21-ldufour@linux.ibm.com>
+        Mon, 22 Apr 2019 16:39:54 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44932 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729564AbfDVUjx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 16:39:53 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y5so7221484qkc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 13:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=12fGXN1MFQ+YN+G4XSb4RzcfVfa/2mWdTJAL++9CrHM=;
+        b=1VXDcldXfMsrHV8Pp0/Sk0toBAD+1gmbJC4HOzA+XvXapT92yh03vjSTDkaYZg9k5C
+         WYSyk+IWPxwyecO4ddcZQr+TK4f4pG90GMSQVKo/5QNaUUk+rY9UnUZAHJ5Y/fHOACOf
+         eDS0UmsjpIBdWwklgUIxbKQRRu4G8GD5eFwCSxBOJlOSPEOSZoO3Rkr9PdsdqPqQjb6N
+         d3Y5BzmH0RNwZTEBcz//RUReSBXVfmzx9UyiNGXpWgugYI3g+JAs0UTVDh44jVVIbHnn
+         NEWyHgCxELfQJdv7fqpKlux/uoRcnZbkHc4K+TUqZFwdNfAZldGJKz75M58t5E/F6I8b
+         F7Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=12fGXN1MFQ+YN+G4XSb4RzcfVfa/2mWdTJAL++9CrHM=;
+        b=tE24Jwp5IWliOtrMAaNaOA5HCxpo6oinKOYaTnU3Adg7RYIsqcRGcjBPenHfmYlgX9
+         IdSeUe04QzevpC+5q7Y/769g6hPIF9qsVwxbDebVeAFCH0BtItDtNfw7ihmndHYRjXba
+         mD3DSLS6knkseyrUK9EunAL5eQ/lVBRtXNSaWEUTiXSLoyv+16Q7A0ZKfBgbzwebsckg
+         NtmVuf+34HEjl9aLw56GR2cM++mwNgzZKGnOJdVPyhNwIcrSQ5fW5ToJ68K1RAbSyChu
+         rRnBtgyj491Hq1/0gALb3Q5ds3MQDIjgtlrwDPRtmB0KdjIHNBCO/KDXG05R4TQv8bv/
+         CawQ==
+X-Gm-Message-State: APjAAAWDvJUUFlThu668M07/7BCWK8XB5dtv3eOs3+QeNO41Wgc4dtTx
+        GhuAf+Yi4IJxsp0Prb8/H34NMQ==
+X-Google-Smtp-Source: APXvYqzLnYo9jgh8YaoFBhDul8IRdTI5NaV7gRqh0pYzHDo9lvz5RB9w1HbMao/ZPjUJfucltdOxWw==
+X-Received: by 2002:a37:69c3:: with SMTP id e186mr16173321qkc.308.1555965592828;
+        Mon, 22 Apr 2019 13:39:52 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 13sm4529282qtm.52.2019.04.22.13.39.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Apr 2019 13:39:52 -0700 (PDT)
+Date:   Mon, 22 Apr 2019 13:39:47 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     crag0715@gmail.com
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hayeswang@realtek.com,
+        mario_limonciello@dell.com, "Crag.Wang" <crag.wang@dell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Glass <sjg@chromium.org>,
+        Grant Grundler <grundler@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        David Chen <david.chen7@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Charles Hyde <charles.hyde@dell.corp-partner.google.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        zhong jiang <zhongjiang@huawei.com>
+Subject: Re: [PATCH v2 1/1] r8152: sync sa_family with the media type of
+ network device
+Message-ID: <20190422133947.0b6aaf82@cakuba.netronome.com>
+In-Reply-To: <20190422050344.24513-1-crag0715@gmail.com>
+References: <20190422050344.24513-1-crag0715@gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190416134522.17540-21-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 22 Apr 2019 20:36:53 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:45:11PM +0200, Laurent Dufour wrote:
-> The final goal is to be able to use a VMA structure without holding the
-> mmap_sem and to be sure that the structure will not be freed in our back.
+On Mon, 22 Apr 2019 13:03:43 +0800, crag0715@gmail.com wrote:
+> From: "Crag.Wang" <crag.wang@dell.com>
 > 
-> The lockless use of the VMA will be done through RCU protection and thus a
-> dedicated freeing service is required to manage it asynchronously.
+> Without this patch the socket address family sporadically gets wrong
+> value ends up the dev_set_mac_address() fails to set the desired MAC
+> address.
 > 
-> As reported in a 2010's thread [1], this may impact file handling when a
-> file is still referenced while the mapping is no more there.  As the final
-> goal is to handle anonymous VMA in a speculative way and not file backed
-> mapping, we could close and free the file pointer in a synchronous way, as
-> soon as we are guaranteed to not use it without holding the mmap_sem. For
-> sanity reason, in a minimal effort, the vm_file file pointer is unset once
-> the file pointer is put.
-> 
-> [1] https://lore.kernel.org/linux-mm/20100104182429.833180340@chello.nl/
-> 
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> Signed-off-by: Crag.Wang <crag.wang@dell.com>
 
-Using kref would have been better from my POV even with RCU freeing
-but anyway:
+Code looks reasonable.  This must have been caused by:
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+Fixes: 25766271e42f ("r8152: Refresh MAC address during USBDEVFS_RESET")
 
-> ---
->  include/linux/mm.h       |  4 ++++
->  include/linux/mm_types.h |  3 +++
->  mm/internal.h            | 27 +++++++++++++++++++++++++++
->  mm/mmap.c                | 13 +++++++++----
->  4 files changed, 43 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index f14b2c9ddfd4..f761a9c65c74 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -529,6 +529,9 @@ static inline void vma_init(struct vm_area_struct *vma, struct mm_struct *mm)
->  	vma->vm_mm = mm;
->  	vma->vm_ops = &dummy_vm_ops;
->  	INIT_LIST_HEAD(&vma->anon_vma_chain);
-> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-> +	atomic_set(&vma->vm_ref_count, 1);
-> +#endif
->  }
+which is still in net-next.  In the future please make sure you read:
+
+https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
+
+In particular:
+
+https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html#q-how-do-i-indicate-which-tree-net-vs-net-next-my-patch-should-be-in
+
+To assure smooth flow of your patches into the tree :)
+
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+
+> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+> index 4c63b40d5e00..41fb39ce69c9 100644
+> --- a/drivers/net/usb/r8152.c
+> +++ b/drivers/net/usb/r8152.c
+> @@ -1225,6 +1225,8 @@ static int determine_ethernet_addr(struct r8152 *tp, struct sockaddr *sa)
+>  	struct net_device *dev = tp->netdev;
+>  	int ret;
 >  
->  static inline void vma_set_anonymous(struct vm_area_struct *vma)
-> @@ -1418,6 +1421,7 @@ static inline void INIT_VMA(struct vm_area_struct *vma)
->  	INIT_LIST_HEAD(&vma->anon_vma_chain);
->  #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
->  	seqcount_init(&vma->vm_sequence);
-> +	atomic_set(&vma->vm_ref_count, 1);
->  #endif
->  }
->  
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 24b3f8ce9e42..6a6159e11a3f 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -285,6 +285,9 @@ struct vm_area_struct {
->  	/* linked list of VM areas per task, sorted by address */
->  	struct vm_area_struct *vm_next, *vm_prev;
->  
-> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-> +	atomic_t vm_ref_count;
-> +#endif
->  	struct rb_node vm_rb;
->  
->  	/*
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 9eeaf2b95166..302382bed406 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -40,6 +40,33 @@ void page_writeback_init(void);
->  
->  vm_fault_t do_swap_page(struct vm_fault *vmf);
->  
+> +	sa->sa_family = dev->type;
 > +
-> +extern void __free_vma(struct vm_area_struct *vma);
-> +
-> +#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-> +static inline void get_vma(struct vm_area_struct *vma)
-> +{
-> +	atomic_inc(&vma->vm_ref_count);
-> +}
-> +
-> +static inline void put_vma(struct vm_area_struct *vma)
-> +{
-> +	if (atomic_dec_and_test(&vma->vm_ref_count))
-> +		__free_vma(vma);
-> +}
-> +
-> +#else
-> +
-> +static inline void get_vma(struct vm_area_struct *vma)
-> +{
-> +}
-> +
-> +static inline void put_vma(struct vm_area_struct *vma)
-> +{
-> +	__free_vma(vma);
-> +}
-> +#endif /* CONFIG_SPECULATIVE_PAGE_FAULT */
-> +
->  void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
->  		unsigned long floor, unsigned long ceiling);
->  
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index f7f6027a7dff..c106440dcae7 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -188,6 +188,12 @@ static inline void mm_write_sequnlock(struct mm_struct *mm)
->  }
->  #endif /* CONFIG_SPECULATIVE_PAGE_FAULT */
->  
-> +void __free_vma(struct vm_area_struct *vma)
-> +{
-> +	mpol_put(vma_policy(vma));
-> +	vm_area_free(vma);
-> +}
-> +
->  /*
->   * Close a vm structure and free it, returning the next.
->   */
-> @@ -200,8 +206,8 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
->  		vma->vm_ops->close(vma);
->  	if (vma->vm_file)
->  		fput(vma->vm_file);
-> -	mpol_put(vma_policy(vma));
-> -	vm_area_free(vma);
-> +	vma->vm_file = NULL;
-> +	put_vma(vma);
->  	return next;
->  }
->  
-> @@ -990,8 +996,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->  		if (next->anon_vma)
->  			anon_vma_merge(vma, next);
->  		mm->map_count--;
-> -		mpol_put(vma_policy(next));
-> -		vm_area_free(next);
-> +		put_vma(next);
->  		/*
->  		 * In mprotect's case 6 (see comments on vma_merge),
->  		 * we must remove another next too. It would clutter
-> -- 
-> 2.21.0
-> 
+>  	if (tp->version == RTL_VER_01) {
+>  		ret = pla_ocp_read(tp, PLA_IDR, 8, sa->sa_data);
+>  	} else {
+
