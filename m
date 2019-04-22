@@ -2,232 +2,167 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB40C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287B5C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE94204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB8A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555963629;
+	bh=4zkFSQB55IgAdZlz0p/B/bZZ2mYz6c4f4DoI8DK36eQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fuFMY3AdT7whfZr8kG462js3WW2CaQkCV0QOMEo8t/iQaKeiFJmcRfgslX5kalAR0
+	 DzakFaqEXTroufho4K7dtkPG9LWwZ+xzQedEyx7C+QUj1HnergoMWso75jf5g8ZDwH
+	 JiL8SDfyRS2vshc+OfvCt6HGeq8Dn7jN7VAKwidA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732376AbfDVUHE (ORCPT
+        id S1732364AbfDVUHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:07:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53456 "EHLO mx1.redhat.com"
+        Mon, 22 Apr 2019 16:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbfDVUHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 16:07:01 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729434AbfDVToX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 153B5307D84D;
-        Mon, 22 Apr 2019 20:07:00 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 05CC860142;
-        Mon, 22 Apr 2019 20:06:55 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 16:06:54 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 13/31] mm: cache some VMA fields in the vm_fault
- structure
-Message-ID: <20190422200654.GD14666@redhat.com>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-14-ldufour@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 13956218FD;
+        Mon, 22 Apr 2019 19:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962262;
+        bh=4zkFSQB55IgAdZlz0p/B/bZZ2mYz6c4f4DoI8DK36eQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gGZHBlha2Hxn7XpVllwpvl0AuhiYf4CwUgQlJ//6KloIsLsi7kRl3w7MEmR7WdWXK
+         ySDgE0LEGFSBd8QDFSeagGdxP3wkax9k4hDZS2GP+nZ8NB/W5cCay+9M5WknZIS80K
+         PiUTlLNJyvhSrZqE+lT3Bc7W4XYFPbTnrb0DhPss=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 72/98] scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
+Date:   Mon, 22 Apr 2019 15:41:39 -0400
+Message-Id: <20190422194205.10404-72-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190416134522.17540-14-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 22 Apr 2019 20:07:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:45:04PM +0200, Laurent Dufour wrote:
-> When handling speculative page fault, the vma->vm_flags and
-> vma->vm_page_prot fields are read once the page table lock is released. So
-> there is no more guarantee that these fields would not change in our back.
-> They will be saved in the vm_fault structure before the VMA is checked for
-> changes.
-> 
-> In the detail, when we deal with a speculative page fault, the mmap_sem is
-> not taken, so parallel VMA's changes can occurred. When a VMA change is
-> done which will impact the page fault processing, we assumed that the VMA
-> sequence counter will be changed.  In the page fault processing, at the
-> time the PTE is locked, we checked the VMA sequence counter to detect
-> changes done in our back. If no change is detected we can continue further.
-> But this doesn't prevent the VMA to not be changed in our back while the
-> PTE is locked. So VMA's fields which are used while the PTE is locked must
-> be saved to ensure that we are using *static* values.  This is important
-> since the PTE changes will be made on regards to these VMA fields and they
-> need to be consistent. This concerns the vma->vm_flags and
-> vma->vm_page_prot VMA fields.
-> 
-> This patch also set the fields in hugetlb_no_page() and
-> __collapse_huge_page_swapin even if it is not need for the callee.
-> 
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-I am unsure about something see below, so you might need to update
-that one but it would not change the structure of the patch thus:
+[ Upstream commit c8206579175c34a2546de8a74262456278a7795a ]
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+If an incoming ELS of type RSCN contains more than one element, zfcp
+suboptimally causes repeated erp trigger NOP trace records for each
+previously failed port. These could be ports that went away.  It loops over
+each RSCN element, and for each of those in an inner loop over all
+zfcp_ports.
 
-> ---
->  include/linux/mm.h | 10 +++++++--
->  mm/huge_memory.c   |  6 +++---
->  mm/hugetlb.c       |  2 ++
->  mm/khugepaged.c    |  2 ++
->  mm/memory.c        | 53 ++++++++++++++++++++++++----------------------
->  mm/migrate.c       |  2 +-
->  6 files changed, 44 insertions(+), 31 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 5d45b7d8718d..f465bb2b049e 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -439,6 +439,12 @@ struct vm_fault {
->  					 * page table to avoid allocation from
->  					 * atomic context.
->  					 */
-> +	/*
-> +	 * These entries are required when handling speculative page fault.
-> +	 * This way the page handling is done using consistent field values.
-> +	 */
-> +	unsigned long vma_flags;
-> +	pgprot_t vma_page_prot;
->  };
->  
->  /* page entry size for vm->huge_fault() */
-> @@ -781,9 +787,9 @@ void free_compound_page(struct page *page);
->   * pte_mkwrite.  But get_user_pages can cause write faults for mappings
->   * that do not have writing enabled, when used by access_process_vm.
->   */
-> -static inline pte_t maybe_mkwrite(pte_t pte, struct vm_area_struct *vma)
-> +static inline pte_t maybe_mkwrite(pte_t pte, unsigned long vma_flags)
->  {
-> -	if (likely(vma->vm_flags & VM_WRITE))
-> +	if (likely(vma_flags & VM_WRITE))
->  		pte = pte_mkwrite(pte);
->  	return pte;
->  }
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 823688414d27..865886a689ee 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1244,8 +1244,8 @@ static vm_fault_t do_huge_pmd_wp_page_fallback(struct vm_fault *vmf,
->  
->  	for (i = 0; i < HPAGE_PMD_NR; i++, haddr += PAGE_SIZE) {
->  		pte_t entry;
-> -		entry = mk_pte(pages[i], vma->vm_page_prot);
-> -		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-> +		entry = mk_pte(pages[i], vmf->vma_page_prot);
-> +		entry = maybe_mkwrite(pte_mkdirty(entry), vmf->vma_flags);
->  		memcg = (void *)page_private(pages[i]);
->  		set_page_private(pages[i], 0);
->  		page_add_new_anon_rmap(pages[i], vmf->vma, haddr, false);
-> @@ -2228,7 +2228,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->  				entry = pte_swp_mksoft_dirty(entry);
->  		} else {
->  			entry = mk_pte(page + i, READ_ONCE(vma->vm_page_prot));
-> -			entry = maybe_mkwrite(entry, vma);
-> +			entry = maybe_mkwrite(entry, vma->vm_flags);
->  			if (!write)
->  				entry = pte_wrprotect(entry);
->  			if (!young)
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 109f5de82910..13246da4bc50 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3812,6 +3812,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
->  				.vma = vma,
->  				.address = haddr,
->  				.flags = flags,
-> +				.vma_flags = vma->vm_flags,
-> +				.vma_page_prot = vma->vm_page_prot,
+The trigger to recover failed ports should be just the reception of some
+RSCN, no matter how many elements it has. So we can loop over failed ports
+separately, and only then loop over each RSCN element to handle the
+non-failed ports.
 
-Shouldn't you use READ_ONCE ? I doubt compiler will do something creative
-with struct initialization but as you are using WRITE_ONCE to update those
-fields maybe pairing read with READ_ONCE where the mmap_sem is not always
-taken might make sense.
+The call chain was:
 
->  				/*
->  				 * Hard to debug if it ends up being
->  				 * used by a callee that assumes
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 6a0cbca3885e..42469037240a 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -888,6 +888,8 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
->  		.flags = FAULT_FLAG_ALLOW_RETRY,
->  		.pmd = pmd,
->  		.pgoff = linear_page_index(vma, address),
-> +		.vma_flags = vma->vm_flags,
-> +		.vma_page_prot = vma->vm_page_prot,
+  zfcp_fc_incoming_rscn
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+          if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"   <===
 
-Same as above.
+In order the reduce the "flooding" of the REC trace area in such cases, we
+factor out handling the failed ports to be outside of the entries loop:
 
-[...]
+  zfcp_fc_incoming_rscn
+    if (no_entries > 1)                                     <===
+      list_for_each_entry(port, &adapter->port_list, list)  <===
+        if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"     <===
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
 
->  	return VM_FAULT_FALLBACK;
-> @@ -3924,6 +3925,8 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
->  		.flags = flags,
->  		.pgoff = linear_page_index(vma, address),
->  		.gfp_mask = __get_fault_gfp_mask(vma),
-> +		.vma_flags = vma->vm_flags,
-> +		.vma_page_prot = vma->vm_page_prot,
+Abbreviated example trace records before this code change:
 
-Same as above
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x02
 
->  	};
->  	unsigned int dirty = flags & FAULT_FLAG_WRITE;
->  	struct mm_struct *mm = vma->vm_mm;
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index f2ecc2855a12..a9138093a8e2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -240,7 +240,7 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
->  		 */
->  		entry = pte_to_swp_entry(*pvmw.pte);
->  		if (is_write_migration_entry(entry))
-> -			pte = maybe_mkwrite(pte, vma);
-> +			pte = maybe_mkwrite(pte, vma->vm_flags);
->  
->  		if (unlikely(is_zone_device_page(new))) {
->  			if (is_device_private_page(new)) {
-> -- 
-> 2.21.0
-> 
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x00                 NOP => superfluous trace record
+
+The last trace entry repeats if there are more than 2 RSCN elements.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ drivers/s390/scsi/zfcp_fc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+index db00b5e3abbe..33eddb02ee30 100644
+--- a/drivers/s390/scsi/zfcp_fc.c
++++ b/drivers/s390/scsi/zfcp_fc.c
+@@ -239,10 +239,6 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ 	list_for_each_entry(port, &adapter->port_list, list) {
+ 		if ((port->d_id & range) == (ntoh24(page->rscn_fid) & range))
+ 			zfcp_fc_test_link(port);
+-		if (!port->d_id)
+-			zfcp_erp_port_reopen(port,
+-					     ZFCP_STATUS_COMMON_ERP_FAILED,
+-					     "fcrscn1");
+ 	}
+ 	read_unlock_irqrestore(&adapter->port_list_lock, flags);
+ }
+@@ -250,6 +246,7 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ {
+ 	struct fsf_status_read_buffer *status_buffer = (void *)fsf_req->data;
++	struct zfcp_adapter *adapter = fsf_req->adapter;
+ 	struct fc_els_rscn *head;
+ 	struct fc_els_rscn_page *page;
+ 	u16 i;
+@@ -263,6 +260,22 @@ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ 	no_entries = be16_to_cpu(head->rscn_plen) /
+ 		sizeof(struct fc_els_rscn_page);
+ 
++	if (no_entries > 1) {
++		/* handle failed ports */
++		unsigned long flags;
++		struct zfcp_port *port;
++
++		read_lock_irqsave(&adapter->port_list_lock, flags);
++		list_for_each_entry(port, &adapter->port_list, list) {
++			if (port->d_id)
++				continue;
++			zfcp_erp_port_reopen(port,
++					     ZFCP_STATUS_COMMON_ERP_FAILED,
++					     "fcrscn1");
++		}
++		read_unlock_irqrestore(&adapter->port_list_lock, flags);
++	}
++
+ 	for (i = 1; i < no_entries; i++) {
+ 		/* skip head and start with 1st element */
+ 		page++;
+-- 
+2.19.1
+
