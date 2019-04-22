@@ -4,58 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89170C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BADC282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43610214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1E12064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939823;
-	bh=rdhwN2QCSAvkx9Nv39FEi2nMlQqoWl1mfsbfQoupEdU=;
+	s=default; t=1555939832;
+	bh=Ry6h0CFznotS4UN+J9DuRQpaDvOJsjo0E5LUKeo9U8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPEO94nusjIBYStSc4dGOXCdEtcCmCnXVcnE+tQooRVgWqNN21HRpx61PKNcqSD/b
-	 b3ZWZhpjHOBE+Z7S+4nSGo+AEHOF1M0mVa+rF2I08fmZ79bl83VtbwxpFXspztbJnR
-	 rmf//H8Cd8KrY+OaE3wBHK1UnVyOc4+XBA/6Y978=
+	b=YG2X49ozWQSVeIkx9fORuJEQv24TbNbJa+cYKqmH0r/Yx+P6/arttrJYN7p5+DeGC
+	 Q5/qiQZPFSP/qXDqNM+Wr3qyfud3RPAFVQMfYrZchGRpDmwmDOrWR8v9VRYm4PcmX4
+	 OGAGRw4o+75snoxUG8HTFiMfmorRU1JYrA0tJRB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfDVN2Y (ORCPT
+        id S1727794AbfDVNaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36896 "EHLO
+        Mon, 22 Apr 2019 09:30:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37872 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfDVN2O (ORCPT
+        with ESMTP id S1727516AbfDVN2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:14 -0400
+        Mon, 22 Apr 2019 09:28:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HYB8QycB6SOcXnUVrWXVnGq0cf9ZQ/chN+ixl9wYt78=; b=ZutF45aTUSzZqAfWj0mD478Yls
-        UEK/3D9Cr/3wTaxBP+q+tGW+g2epcZ5l6jQ4UJC7B8/QerxAvAdXHWH37FWaVe2b5PHEdtr3JLC75
-        ohWlhpOcrT9ewZBFjhB/qAozs2p1OLykEVP945i9hayttHn8iCuuH/AS+AW/oyve7QPkcLo26HwJl
-        Y3u6vDZDhaTSmGMbAkTETS9P0Loz/q/RR4zR1+0C4SekPKk2negAzsdPwlg8ucxEnjL73luvXyRuz
-        vc292dqft5R+hM7KJe0MKph78iri9d7j4piNb6i+fqkIjdugc1lXj6P2UZtz9QfbHy5UjWy8/y0Nu
-        pyf4VEwg==;
+        bh=MIn6fAZkJj4tY/rz/Iznpn2hloyYucGHOktNZfaHWsc=; b=s2yWi/vsPywj0jbd3V444EU5kc
+        WOyWWH8BXz+1NiC0W/a7A8XCzQbQ4bBI94a18Oe569+nfBLaH6jHerDK7DCTtzp2o6GxNCx/DRDk7
+        PakoqGYpihXauOBIOTs5anO6khfdHcXztdBl0Er5LRzZMxEckcZnt5GFyoCnJp86UMfWlr01JWm/a
+        YoTnfOz9OpgAD6jJ1fEiaplqHSyobpp+6GJIIEAIZaAOoSTR3t42dCZ3/S9ob3/H36Bu4iLiKarT6
+        5qezRz1YKEMpGTE08JTLu38jCFCFp4m3kIVt/ZMgTAGCpvE2WaZYiutoplq8pxjJ7w++hBCCCX9Fi
+        Xpn/Vj6A==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzU-0005HZ-Mu; Mon, 22 Apr 2019 13:28:13 +0000
+        id 1hIYza-0005Hz-R6; Mon, 22 Apr 2019 13:28:19 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzS-0005k5-Gv; Mon, 22 Apr 2019 10:28:10 -0300
+        id 1hIYzU-0005pe-PQ; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v2 10/79] docs: cpu-freq: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:26:59 -0300
-Message-Id: <90ab7c100b7fb0120689ebeda5d13447b2cb2af8.1555938375.git.mchehab+samsung@kernel.org>
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Tim Waugh <tim@cyberelk.net>, Jens Axboe <axboe@kernel.dk>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 76/79] docs: blockdev: convert to ReST
+Date:   Mon, 22 Apr 2019 10:28:05 -0300
+Message-Id: <b51cc2ff405d4d2f2149771f5ec5cd51f5592434.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -66,1095 +73,1548 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+Rename the blockdev documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
+
+The drbd sub-directory contains some graphs and data flows.
+Add those too to the documentation.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{amd-powernow.txt => amd-powernow.rst}    |  11 +-
- Documentation/cpu-freq/{core.txt => core.rst} |  66 +++---
- .../{cpu-drivers.txt => cpu-drivers.rst}      | 217 +++++++++---------
- ...pufreq-nforce2.txt => cpufreq-nforce2.rst} |  12 +-
- Documentation/cpu-freq/cpufreq-stats.rst      | 128 +++++++++++
- Documentation/cpu-freq/cpufreq-stats.txt      | 127 ----------
- Documentation/cpu-freq/index.rst              |  52 +++++
- Documentation/cpu-freq/index.txt              |  56 -----
- .../{pcc-cpufreq.txt => pcc-cpufreq.rst}      | 102 ++++----
- drivers/cpufreq/Kconfig.x86                   |   2 +-
- 10 files changed, 391 insertions(+), 382 deletions(-)
- rename Documentation/cpu-freq/{amd-powernow.txt => amd-powernow.rst} (91%)
- rename Documentation/cpu-freq/{core.txt => core.rst} (67%)
- rename Documentation/cpu-freq/{cpu-drivers.txt => cpu-drivers.rst} (57%)
- rename Documentation/cpu-freq/{cpufreq-nforce2.txt => cpufreq-nforce2.rst} (65%)
- create mode 100644 Documentation/cpu-freq/cpufreq-stats.rst
- delete mode 100644 Documentation/cpu-freq/cpufreq-stats.txt
- create mode 100644 Documentation/cpu-freq/index.rst
- delete mode 100644 Documentation/cpu-freq/index.txt
- rename Documentation/cpu-freq/{pcc-cpufreq.txt => pcc-cpufreq.rst} (80%)
+ .../admin-guide/kernel-parameters.txt         |  18 +-
+ ...structure-v9.txt => data-structure-v9.rst} |   6 +-
+ Documentation/blockdev/drbd/figures.rst       |  28 +++
+ .../blockdev/drbd/{README.txt => index.rst}   |  15 +-
+ .../blockdev/{floppy.txt => floppy.rst}       |  88 ++++----
+ Documentation/blockdev/index.rst              |  16 ++
+ Documentation/blockdev/{nbd.txt => nbd.rst}   |   1 +
+ .../blockdev/{paride.txt => paride.rst}       | 144 +++++++------
+ .../blockdev/{ramdisk.txt => ramdisk.rst}     |  55 ++---
+ Documentation/blockdev/{zram.txt => zram.rst} | 195 ++++++++++++------
+ MAINTAINERS                                   |   8 +-
+ drivers/block/Kconfig                         |   8 +-
+ drivers/block/floppy.c                        |   2 +-
+ drivers/block/zram/Kconfig                    |   6 +-
+ tools/testing/selftests/zram/README           |   2 +-
+ 15 files changed, 374 insertions(+), 218 deletions(-)
+ rename Documentation/blockdev/drbd/{data-structure-v9.txt => data-structure-v9.rst} (94%)
+ create mode 100644 Documentation/blockdev/drbd/figures.rst
+ rename Documentation/blockdev/drbd/{README.txt => index.rst} (55%)
+ rename Documentation/blockdev/{floppy.txt => floppy.rst} (81%)
+ create mode 100644 Documentation/blockdev/index.rst
+ rename Documentation/blockdev/{nbd.txt => nbd.rst} (96%)
+ rename Documentation/blockdev/{paride.txt => paride.rst} (85%)
+ rename Documentation/blockdev/{ramdisk.txt => ramdisk.rst} (84%)
+ rename Documentation/blockdev/{zram.txt => zram.rst} (76%)
 
-diff --git a/Documentation/cpu-freq/amd-powernow.txt b/Documentation/cpu-freq/amd-powernow.rst
-similarity index 91%
-rename from Documentation/cpu-freq/amd-powernow.txt
-rename to Documentation/cpu-freq/amd-powernow.rst
-index 254da155fa47..50b2c45c3a2c 100644
---- a/Documentation/cpu-freq/amd-powernow.txt
-+++ b/Documentation/cpu-freq/amd-powernow.rst
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 65d66010b134..a6297aff5598 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1248,7 +1248,7 @@
+ 			See also Documentation/fault-injection/.
+ 
+ 	floppy=		[HW]
+-			See Documentation/blockdev/floppy.txt.
++			See Documentation/blockdev/floppy.rst.
+ 
+ 	force_pal_cache_flush
+ 			[IA-64] Avoid check_sal_cache_flush which may hang on
+@@ -2227,7 +2227,7 @@
+ 	memblock=debug	[KNL] Enable memblock debug messages.
+ 
+ 	load_ramdisk=	[RAM] List of ramdisks to load from floppy
+-			See Documentation/blockdev/ramdisk.txt.
++			See Documentation/blockdev/ramdisk.rst.
+ 
+ 	lockd.nlm_grace_period=P  [NFS] Assign grace period.
+ 			Format: <integer>
+@@ -3197,7 +3197,7 @@
+ 
+ 	pcd.		[PARIDE]
+ 			See header of drivers/block/paride/pcd.c.
+-			See also Documentation/blockdev/paride.txt.
++			See also Documentation/blockdev/paride.rst.
+ 
+ 	pci=option[,option...]	[PCI] various PCI subsystem options.
+ 
+@@ -3439,7 +3439,7 @@
+ 			needed on a platform with proper driver support.
+ 
+ 	pd.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pdcchassis=	[PARISC,HW] Disable/Enable PDC Chassis Status codes at
+ 			boot time.
+@@ -3454,10 +3454,10 @@
+ 			and performance comparison.
+ 
+ 	pf.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pg.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pirq=		[SMP,APIC] Manual mp-table setup
+ 			See Documentation/x86/i386/IO-APIC.txt.
+@@ -3569,7 +3569,7 @@
+ 
+ 	prompt_ramdisk=	[RAM] List of RAM disks to prompt for floppy disk
+ 			before loading.
+-			See Documentation/blockdev/ramdisk.txt.
++			See Documentation/blockdev/ramdisk.rst.
+ 
+ 	psi=		[KNL] Enable or disable pressure stall information
+ 			tracking.
+@@ -3591,7 +3591,7 @@
+ 	pstore.backend=	Specify the name of the pstore backend to use
+ 
+ 	pt.		[PARIDE]
+-			See Documentation/blockdev/paride.txt.
++			See Documentation/blockdev/paride.rst.
+ 
+ 	pti=		[X86_64] Control Page Table Isolation of user and
+ 			kernel address spaces.  Disabling this feature
+@@ -3620,7 +3620,7 @@
+ 			See Documentation/admin-guide/md.rst.
+ 
+ 	ramdisk_size=	[RAM] Sizes of RAM disks in kilobytes
+-			See Documentation/blockdev/ramdisk.txt.
++			See Documentation/blockdev/ramdisk.rst.
+ 
+ 	random.trust_cpu={on,off}
+ 			[KNL] Enable or disable trusting the use of the
+diff --git a/Documentation/blockdev/drbd/data-structure-v9.txt b/Documentation/blockdev/drbd/data-structure-v9.rst
+similarity index 94%
+rename from Documentation/blockdev/drbd/data-structure-v9.txt
+rename to Documentation/blockdev/drbd/data-structure-v9.rst
+index 1e52a0e32624..66036b901644 100644
+--- a/Documentation/blockdev/drbd/data-structure-v9.txt
++++ b/Documentation/blockdev/drbd/data-structure-v9.rst
 @@ -1,3 +1,7 @@
-+=============================
-+AMD powernow driver specifics
-+=============================
++================================
++kernel data structure for DRBD-9
++================================
 +
- 
- PowerNow! and Cool'n'Quiet are AMD names for frequency
- management capabilities in AMD processors. As the hardware
-@@ -23,16 +27,19 @@ not supply these tables.
- 7th Generation: powernow-k7: Athlon, Duron, Geode.
- 
- 8th Generation: powernow-k8: Athlon, Athlon 64, Opteron, Sempron.
-+
- Documentation on this functionality in 8th generation processors
- is available in the "BIOS and Kernel Developer's Guide", publication
--26094, in chapter 9, available for download from www.amd.com. 
-+26094, in chapter 9, available for download from www.amd.com.
- 
- BIOS supplied data, for powernow-k7 and for powernow-k8, may be
- from either the PSB table or from ACPI objects. The ACPI support
- is only available if the kernel config sets CONFIG_ACPI_PROCESSOR.
-+
- The powernow-k8 driver will attempt to use ACPI if so configured,
- and fall back to PST if that fails.
-+
- The powernow-k7 driver will try to use the PSB support first, and
- fall back to ACPI if the PSB support fails. A module parameter,
--acpi_force, is provided to force ACPI support to be used instead 
-+acpi_force, is provided to force ACPI support to be used instead
- of PSB support.
-diff --git a/Documentation/cpu-freq/core.txt b/Documentation/cpu-freq/core.rst
-similarity index 67%
-rename from Documentation/cpu-freq/core.txt
-rename to Documentation/cpu-freq/core.rst
-index 073f128af5a7..c719e3cb700c 100644
---- a/Documentation/cpu-freq/core.txt
-+++ b/Documentation/cpu-freq/core.rst
-@@ -1,31 +1,22 @@
--     CPU frequency and voltage scaling code in the Linux(TM) kernel
-+================================================================
-+General description of the CPUFreq core and of CPUFreq notifiers
-+================================================================
- 
-+Authors:
-+  - Dominik Brodowski  <linux@brodo.de>
-+  - David Kimdon <dwhedon@debian.org>
-+  - Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-+  - Viresh Kumar <viresh.kumar@linaro.org>
- 
--		         L i n u x    C P U F r e q
- 
--			  C P U F r e q    C o r e
-+.. Contents:
- 
--
--		    Dominik Brodowski  <linux@brodo.de>
--		     David Kimdon <dwhedon@debian.org>
--		Rafael J. Wysocki <rafael.j.wysocki@intel.com>
--		   Viresh Kumar <viresh.kumar@linaro.org>
--
--
--
--   Clock scaling allows you to change the clock speed of the CPUs on the
--    fly. This is a nice method to save battery power, because the lower
--            the clock speed, the less power the CPU consumes.
--
--
--Contents:
-----------
--1.  CPUFreq core and interfaces
--2.  CPUFreq notifiers
--3.  CPUFreq Table Generation with Operating Performance Point (OPP)
-+  1.  CPUFreq core and interfaces
-+  2.  CPUFreq notifiers
-+  3.  CPUFreq Table Generation with Operating Performance Point (OPP)
- 
- 1. General Information
--=======================
-+======================
- 
- The CPUFreq core code is located in drivers/cpufreq/cpufreq.c. This
- cpufreq code offers a standardized interface for the CPUFreq
-@@ -60,18 +51,18 @@ transition notifiers.
- These are notified when a new policy is intended to be set. Each
- CPUFreq policy notifier is called twice for a policy transition:
- 
--1.) During CPUFREQ_ADJUST all CPUFreq notifiers may change the limit if
--    they see a need for this - may it be thermal considerations or
--    hardware limitations.
-+1) During CPUFREQ_ADJUST all CPUFreq notifiers may change the limit if
-+   they see a need for this - may it be thermal considerations or
-+   hardware limitations.
- 
--2.) And during CPUFREQ_NOTIFY all notifiers are informed of the new policy
--   - if two hardware drivers failed to agree on a new policy before this
-+2) And during CPUFREQ_NOTIFY all notifiers are informed of the new policy -
-+   if two hardware drivers failed to agree on a new policy before this
-    stage, the incompatible hardware shall be shut down, and the user
-    informed of this.
- 
- The phase is specified in the second argument to the notifier.
- 
--The third argument, a void *pointer, points to a struct cpufreq_policy
-+The third argument, a `void *` pointer, points to a struct cpufreq_policy
- consisting of several values, including min, max (the lower and upper
- frequencies (in kHz) of the new policy).
- 
-@@ -88,23 +79,27 @@ CPUFREQ_POSTCHANGE.
- 
- The third argument is a struct cpufreq_freqs with the following
- values:
--cpu	- number of the affected CPU
--old	- old frequency
--new	- new frequency
--flags	- flags of the cpufreq driver
-+
-+======= ===========================
-+cpu	number of the affected CPU
-+old	old frequency
-+new	new frequency
-+flags	flags of the cpufreq driver
-+======= ===========================
- 
- 3. CPUFreq Table Generation with Operating Performance Point (OPP)
- ==================================================================
- For details about OPP, see Documentation/power/opp.txt
- 
--dev_pm_opp_init_cpufreq_table -
-+dev_pm_opp_init_cpufreq_table
- 	This function provides a ready to use conversion routine to translate
- 	the OPP layer's internal information about the available frequencies
- 	into a format readily providable to cpufreq.
- 
- 	WARNING: Do not use this function in interrupt context.
- 
--	Example:
-+	Example::
-+
- 	 soc_pm_init()
- 	 {
- 		/* Do things */
-@@ -117,4 +112,5 @@ dev_pm_opp_init_cpufreq_table -
- 	NOTE: This function is available only if CONFIG_CPU_FREQ is enabled in
- 	addition to CONFIG_PM_OPP.
- 
--dev_pm_opp_free_cpufreq_table - Free up the table allocated by dev_pm_opp_init_cpufreq_table
-+dev_pm_opp_free_cpufreq_table
-+	Free up the table allocated by dev_pm_opp_init_cpufreq_table
-diff --git a/Documentation/cpu-freq/cpu-drivers.txt b/Documentation/cpu-freq/cpu-drivers.rst
-similarity index 57%
-rename from Documentation/cpu-freq/cpu-drivers.txt
-rename to Documentation/cpu-freq/cpu-drivers.rst
-index 6e353d00cdc6..9cc2559bc34b 100644
---- a/Documentation/cpu-freq/cpu-drivers.txt
-+++ b/Documentation/cpu-freq/cpu-drivers.rst
-@@ -1,35 +1,25 @@
--     CPU frequency and voltage scaling code in the Linux(TM) kernel
--
--
--		         L i n u x    C P U F r e q
--
--			   C P U   D r i v e r s 
--
--		       - information for developers -
--
--
--		    Dominik Brodowski  <linux@brodo.de>
--		Rafael J. Wysocki <rafael.j.wysocki@intel.com>
--		   Viresh Kumar <viresh.kumar@linaro.org>
--
--
--
--   Clock scaling allows you to change the clock speed of the CPUs on the
--    fly. This is a nice method to save battery power, because the lower
--            the clock speed, the less power the CPU consumes.
--
--
--Contents:
-----------
--1.   What To Do?
--1.1  Initialization
--1.2  Per-CPU Initialization
--1.3  verify
--1.4  target/target_index or setpolicy?
--1.5  target/target_index
--1.6  setpolicy
--1.7  get_intermediate and target_intermediate
--2.   Frequency Table Helpers
-+===============================================
-+How to implement a new cpufreq processor driver
-+===============================================
-+
-+.. information for developers
-+
-+Authors:
-+  - Dominik Brodowski  <linux@brodo.de>
-+  - Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-+  - Viresh Kumar <viresh.kumar@linaro.org>
-+
-+.. Contents:
-+
-+   1.   What To Do?
-+   1.1  Initialization
-+   1.2  Per-CPU Initialization
-+   1.3  verify
-+   1.4  target/target_index or setpolicy?
-+   1.5  target/target_index
-+   1.6  setpolicy
-+   1.7  get_intermediate and target_intermediate
-+   2.   Frequency Table Helpers
- 
- 
- 
-@@ -46,59 +36,73 @@ on what is necessary:
- 
- First of all, in an __initcall level 7 (module_init()) or later
- function check whether this kernel runs on the right CPU and the right
--chipset. If so, register a struct cpufreq_driver with the CPUfreq core
--using cpufreq_register_driver()
-+chipset. If so, register a `struct cpufreq_driver` with the CPUfreq core
-+using `cpufreq_register_driver()`
- 
--What shall this struct cpufreq_driver contain? 
-+What shall this `struct cpufreq_driver` contain?
- 
-- .name - The name of this driver.
-+.name
-+  The name of this driver.
- 
-- .init - A pointer to the per-policy initialization function.
-+.init
-+  A pointer to the per-policy initialization function.
- 
-- .verify - A pointer to a "verification" function.
-+.verify
-+  A pointer to a "verification" function.
- 
-- .setpolicy _or_ .fast_switch _or_ .target _or_ .target_index - See
-- below on the differences.
-+.setpolicy **or** .fast_switch **or** .target **or** .target_index
-+  See below on the differences.
- 
- And optionally
- 
-- .flags - Hints for the cpufreq core.
-+.flags
-+  Hints for the cpufreq core.
- 
-- .driver_data - cpufreq driver specific data.
-+.driver_data
-+  cpufreq driver specific data.
- 
-- .resolve_freq - Returns the most appropriate frequency for a target
-- frequency. Doesn't change the frequency though.
-+.resolve_freq
-+  Returns the most appropriate frequency for a target
-+  frequency. Doesn't change the frequency though.
- 
-- .get_intermediate and target_intermediate - Used to switch to stable
-- frequency while changing CPU frequency.
-+.get_intermediate and target_intermediate
-+  Used to switch to stable frequency while changing CPU frequency.
- 
-- .get - Returns current frequency of the CPU.
-+.get
-+  Returns current frequency of the CPU.
- 
-- .bios_limit - Returns HW/BIOS max frequency limitations for the CPU.
-+.bios_limit
-+  Returns HW/BIOS max frequency limitations for the CPU.
- 
-- .exit - A pointer to a per-policy cleanup function called during
-- CPU_POST_DEAD phase of cpu hotplug process.
-+.exit
-+  A pointer to a per-policy cleanup function called during
-+  CPU_POST_DEAD phase of cpu hotplug process.
- 
-- .stop_cpu - A pointer to a per-policy stop function called during
-- CPU_DOWN_PREPARE phase of cpu hotplug process.
-+.stop_cpu
-+  A pointer to a per-policy stop function called during
-+  CPU_DOWN_PREPARE phase of cpu hotplug process.
- 
-- .suspend - A pointer to a per-policy suspend function which is called
-- with interrupts disabled and _after_ the governor is stopped for the
-- policy.
-+.suspend
-+  A pointer to a per-policy suspend function which is called with
-+  interrupts disabled and **after** the governor is stopped for the policy.
- 
-- .resume - A pointer to a per-policy resume function which is called
-- with interrupts disabled and _before_ the governor is started again.
-+.resume
-+  A pointer to a per-policy resume function which is called
-+  with interrupts disabled and **before** the governor is started again.
- 
-- .ready - A pointer to a per-policy ready function which is called after
-- the policy is fully initialized.
-+.ready
-+  A pointer to a per-policy ready function which is called after
-+  the policy is fully initialized.
- 
-- .attr - A pointer to a NULL-terminated list of "struct freq_attr" which
-- allow to export values to sysfs.
-+.attr
-+  A pointer to a NULL-terminated list of `struct freq_attr` which
-+  allow to export values to sysfs.
- 
-- .boost_enabled - If set, boost frequencies are enabled.
-+.boost_enabled
-+  If set, boost frequencies are enabled.
- 
-- .set_boost - A pointer to a per-policy function to enable/disable boost
-- frequencies.
-+.set_boost
-+  A pointer to a per-policy function to enable/disable boost frequencies.
- 
- 
- 1.2 Per-CPU Initialization
-@@ -108,37 +112,42 @@ Whenever a new CPU is registered with the device model, or after the
- cpufreq driver registers itself, the per-policy initialization function
- cpufreq_driver.init is called if no cpufreq policy existed for the CPU.
- Note that the .init() and .exit() routines are called only once for the
--policy and not for each CPU managed by the policy. It takes a struct
--cpufreq_policy *policy as argument. What to do now?
-+policy and not for each CPU managed by the policy. It takes a `struct
-+cpufreq_policy *policy` as argument. What to do now?
- 
- If necessary, activate the CPUfreq support on your CPU.
- 
- Then, the driver must fill in the following values:
- 
--policy->cpuinfo.min_freq _and_
--policy->cpuinfo.max_freq -	the minimum and maximum frequency 
--				(in kHz) which is supported by 
--				this CPU
--policy->cpuinfo.transition_latency   the time it takes on this CPU to
--				switch between two frequencies in
--				nanoseconds (if appropriate, else
--				specify CPUFREQ_ETERNAL)
--
--policy->cur			The current operating frequency of
--				this CPU (if appropriate)
--policy->min, 
--policy->max, 
--policy->policy and, if necessary,
--policy->governor		must contain the "default policy" for
--				this CPU. A few moments later,
--				cpufreq_driver.verify and either
--				cpufreq_driver.setpolicy or
--				cpufreq_driver.target/target_index is called
--				with these values.
--policy->cpus			Update this with the masks of the
--				(online + offline) CPUs that do DVFS
--				along with this CPU (i.e.  that share
--				clock/voltage rails with it).
-++---------------------------------------+--------------------------------------+
-+| policy->cpuinfo.min_freq **and**	|				       |
-+| policy->cpuinfo.max_freq		| the minimum and maximum frequency    |
-+| 					| (in kHz) which is supported by       |
-+| 					| this CPU			       |
-++---------------------------------------+--------------------------------------+
-+| policy->cpuinfo.transition_latency	| the time it takes on this CPU to     |
-+| 					| switch between two frequencies in    |
-+| 					| nanoseconds (if appropriate, else    |
-+| 					| specify CPUFREQ_ETERNAL)	       |
-++---------------------------------------+--------------------------------------+
-+| policy->cur				| The current operating frequency of   |
-+| 					| this CPU (if appropriate)	       |
-++---------------------------------------+--------------------------------------+
-+| policy->min,				|				       |
-+| policy->max,				|				       |
-+| policy->policy and, if necessary,	|				       |
-+| policy->governor			| must contain the "default policy"    |
-+| 					| for this CPU. A few moments later,   |
-+| 					| cpufreq_driver.verify and either     |
-+| 					| cpufreq_driver.setpolicy or	       |
-+| 					| cpufreq_driver.target/target_index   |
-+| 					| is called with these values.	       |
-++---------------------------------------+--------------------------------------+
-+| policy->cpus				| Update this with the masks of the    |
-+| 					| (online + offline) CPUs that do DVFS |
-+| 					| along with this CPU (i.e. that share |
-+| 					| clock/voltage rails with it).	       |
-++---------------------------------------+--------------------------------------+
- 
- For setting some of these values (cpuinfo.min[max]_freq, policy->min[max]), the
- frequency table helpers might be helpful. See the section 2 for more information
-@@ -151,8 +160,8 @@ on them.
- When the user decides a new policy (consisting of
- "policy,governor,min,max") shall be set, this policy must be validated
- so that incompatible values can be corrected. For verifying these
--values cpufreq_verify_within_limits(struct cpufreq_policy *policy,
--unsigned int min_freq, unsigned int max_freq) function might be helpful.
-+values `cpufreq_verify_within_limits(struct cpufreq_policy *policy,
-+unsigned int min_freq, unsigned int max_freq)` function might be helpful.
- See section 2 for details on frequency table helpers.
- 
- You need to make sure that at least one valid frequency (or operating
-@@ -163,7 +172,7 @@ policy->max first, and only if this is no solution, decrease policy->min.
- 1.4 target or target_index or setpolicy or fast_switch?
- -------------------------------------------------------
- 
--Most cpufreq drivers or even most cpu frequency scaling algorithms 
-+Most cpufreq drivers or even most cpu frequency scaling algorithms
- only allow the CPU frequency to be set to predefined fixed values. For
- these, you use the ->target(), ->target_index() or ->fast_switch()
- callbacks.
-@@ -175,8 +184,8 @@ limits on their own. These shall use the ->setpolicy() callback.
- 1.5. target/target_index
- ------------------------
- 
--The target_index call has two arguments: struct cpufreq_policy *policy,
--and unsigned int index (into the exposed frequency table).
-+The target_index call has two arguments: `struct cpufreq_policy *policy`,
-+and `unsigned int index` (into the exposed frequency table).
- 
- The CPUfreq driver must set the new frequency when called here. The
- actual frequency must be determined by freq_table[index].frequency.
-@@ -184,10 +193,10 @@ actual frequency must be determined by freq_table[index].frequency.
- It should always restore to earlier frequency (i.e. policy->restore_freq) in
- case of errors, even if we switched to intermediate frequency earlier.
- 
--Deprecated:
-+Deprecated
- ----------
--The target call has three arguments: struct cpufreq_policy *policy,
--unsigned int target_frequency, unsigned int relation.
-+The target call has three arguments: `struct cpufreq_policy *policy`,
-+`unsigned int target_frequency`, `unsigned int relation`.
- 
- The CPUfreq driver must set the new frequency when called here. The
- actual frequency must be determined using the following rules:
-@@ -210,14 +219,14 @@ Not all drivers are expected to implement it, as sleeping from within
- this callback isn't allowed. This callback must be highly optimized to
- do switching as fast as possible.
- 
--This function has two arguments: struct cpufreq_policy *policy and
--unsigned int target_frequency.
-+This function has two arguments: `struct cpufreq_policy *policy` and
-+`unsigned int target_frequency`.
- 
- 
- 1.7 setpolicy
- -------------
- 
--The setpolicy call only takes a struct cpufreq_policy *policy as
-+The setpolicy call only takes a `struct cpufreq_policy *policy` as
- argument. You need to set the lower limit of the in-processor or
- in-chipset dynamic frequency switching to policy->min, the upper limit
- to policy->max, and -if supported- select a performance-oriented
-@@ -278,10 +287,10 @@ table.
- 
- cpufreq_for_each_valid_entry(pos, table) - iterates over all entries,
- excluding CPUFREQ_ENTRY_INVALID frequencies.
--Use arguments "pos" - a cpufreq_frequency_table * as a loop cursor and
--"table" - the cpufreq_frequency_table * you want to iterate over.
-+Use arguments "pos" - a `cpufreq_frequency_table *` as a loop cursor and
-+"table" - the `cpufreq_frequency_table *` you want to iterate over.
- 
--For example:
-+For example::
- 
- 	struct cpufreq_frequency_table *pos, *driver_freq_table;
- 
-diff --git a/Documentation/cpu-freq/cpufreq-nforce2.txt b/Documentation/cpu-freq/cpufreq-nforce2.rst
-similarity index 65%
-rename from Documentation/cpu-freq/cpufreq-nforce2.txt
-rename to Documentation/cpu-freq/cpufreq-nforce2.rst
-index babce1315026..d40700bd5083 100644
---- a/Documentation/cpu-freq/cpufreq-nforce2.txt
-+++ b/Documentation/cpu-freq/cpufreq-nforce2.rst
-@@ -1,3 +1,6 @@
-+=================================
-+nVidia nForce2 platform specifics
-+=================================
- 
- The cpufreq-nforce2 driver changes the FSB on nVidia nForce2 platforms.
- 
-@@ -6,14 +9,15 @@ can be controlled independently from the PCI/AGP clock.
- 
- The module has two options:
- 
-+        ======== ======================================
- 	fid: 	 multiplier * 10 (for example 8.5 = 85)
- 	min_fsb: minimum FSB
-+        ======== ======================================
- 
- If not set, fid is calculated from the current CPU speed and the FSB.
- min_fsb defaults to FSB at boot time - 50 MHz.
- 
--IMPORTANT: The available range is limited downwards!
--           Also the minimum available FSB can differ, for systems 
-+IMPORTANT:
-+           The available range is limited downwards!
-+           Also the minimum available FSB can differ, for systems
-            booting with 200 MHz, 150 should always work.
--
--
-diff --git a/Documentation/cpu-freq/cpufreq-stats.rst b/Documentation/cpu-freq/cpufreq-stats.rst
+ This describes the in kernel data structure for DRBD-9. Starting with
+ Linux v3.14 we are reorganizing DRBD to use this data structure.
+ 
+@@ -10,7 +14,7 @@ device is represented by a block device locally.
+ 
+ The DRBD objects are interconnected to form a matrix as depicted below; a
+ drbd_peer_device object sits at each intersection between a drbd_device and a
+-drbd_connection:
++drbd_connection::
+ 
+   /--------------+---------------+.....+---------------\
+   |   resource   |    device     |     |    device     |
+diff --git a/Documentation/blockdev/drbd/figures.rst b/Documentation/blockdev/drbd/figures.rst
 new file mode 100644
-index 000000000000..3e33712b496e
+index 000000000000..3e3fd4b8a478
 --- /dev/null
-+++ b/Documentation/cpu-freq/cpufreq-stats.rst
-@@ -0,0 +1,128 @@
++++ b/Documentation/blockdev/drbd/figures.rst
+@@ -0,0 +1,28 @@
++.. The here included files are intended to help understand the implementation
++
++Data flows that Relate some functions, and write packets
++========================================================
++
++.. kernel-figure:: DRBD-8.3-data-packets.svg
++    :alt:   DRBD-8.3-data-packets.svg
++    :align: center
++
++.. kernel-figure:: DRBD-data-packets.svg
++    :alt:   DRBD-data-packets.svg
++    :align: center
++
++
++Sub graphs of DRBD's state transitions
++======================================
++
++.. kernel-figure:: conn-states-8.dot
++    :alt:   conn-states-8.dot
++    :align: center
++
++.. kernel-figure:: disk-states-8.dot
++    :alt:   disk-states-8.dot
++    :align: center
++
++.. kernel-figure:: node-states-8.dot
++    :alt:   node-states-8.dot
++    :align: center
+diff --git a/Documentation/blockdev/drbd/README.txt b/Documentation/blockdev/drbd/index.rst
+similarity index 55%
+rename from Documentation/blockdev/drbd/README.txt
+rename to Documentation/blockdev/drbd/index.rst
+index 627b0a1bf35e..68ecd5c113e9 100644
+--- a/Documentation/blockdev/drbd/README.txt
++++ b/Documentation/blockdev/drbd/index.rst
+@@ -1,4 +1,9 @@
 +==========================================
-+General description of sysfs cpufreq stats
++Distributed Replicated Block Device - DRBD
 +==========================================
 +
-+.. information for users
-+
-+
-+Author: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
-+
-+.. Contents
-+   1. Introduction
-+   2. Statistics Provided (with example)
-+   3. Configuring cpufreq-stats
-+
-+
-+1. Introduction
-+===============
-+
-+cpufreq-stats is a driver that provides CPU frequency statistics for each CPU.
-+These statistics are provided in /sysfs as a bunch of read_only interfaces. This
-+interface (when configured) will appear in a separate directory under cpufreq
-+in /sysfs (<sysfs root>/devices/system/cpu/cpuX/cpufreq/stats/) for each CPU.
-+Various statistics will form read_only files under this directory.
-+
-+This driver is designed to be independent of any particular cpufreq_driver
-+that may be running on your CPU. So, it will work with any cpufreq_driver.
-+
-+
-+2. Statistics Provided (with example)
-+=====================================
-+
-+cpufreq stats provides following statistics (explained in detail below).
-+-  time_in_state
-+-  total_trans
-+-  trans_table
-+
-+All the statistics will be from the time the stats driver has been inserted
-+(or the time the stats were reset) to the time when a read of a particular
-+statistic is done. Obviously, stats driver will not have any information
-+about the frequency transitions before the stats driver insertion.
-+
-+::
-+
-+    <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # ls -l
-+    total 0
-+    drwxr-xr-x  2 root root    0 May 14 16:06 .
-+    drwxr-xr-x  3 root root    0 May 14 15:58 ..
-+    --w-------  1 root root 4096 May 14 16:06 reset
-+    -r--r--r--  1 root root 4096 May 14 16:06 time_in_state
-+    -r--r--r--  1 root root 4096 May 14 16:06 total_trans
-+    -r--r--r--  1 root root 4096 May 14 16:06 trans_table
-+
-+reset
-+  Write-only attribute that can be used to reset the stat counters. This can be
-+  useful for evaluating system behaviour under different governors without the
-+  need for a reboot.
-+
-+time_in_state
-+  This gives the amount of time spent in each of the frequencies supported by
-+  this CPU. The cat output will have "<frequency> <time>" pair in each line,
-+  which will mean this CPU spent <time> usertime units of time at <frequency>.
-+  Output will have one line for each of the supported frequencies. usertime
-+  units here is 10mS (similar to other time exported in /proc).
-+
-+::
-+
-+  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat time_in_state
-+  3600000 2089
-+  3400000 136
-+  3200000 34
-+  3000000 67
-+  2800000 172488
-+
-+
-+total_trans
-+  This gives the total number of frequency transitions on this CPU. The cat
-+  output will have a single count which is the total number of frequency
-+  transitions.
-+
-+::
-+
-+  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat total_trans
-+  20
-+
-+trans_table
-+  This will give a fine grained information about all the CPU frequency
-+  transitions. The cat output here is a two dimensional matrix, where an entry
-+  <i,j> (row i, column j) represents the count of number of transitions from
-+  Freq_i to Freq_j. Freq_i rows and Freq_j columns follow the sorting order in
-+  which the driver has provided the frequency table initially to the cpufreq
-+  core and so can be sorted (ascending or descending) or unsorted.  The output
-+  here also contains the actual freq values for each row and column for better
-+  readability.
-+
-+  If the transition table is bigger than PAGE_SIZE, reading this will
-+  return an -EFBIG error.
-+
-+::
-+
-+  <mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat trans_table
-+     From  :    To
-+           :   3600000   3400000   3200000   3000000   2800000
-+    3600000:         0         5         0         0         0
-+    3400000:         4         0         2         0         0
-+    3200000:         0         1         0         2         0
-+    3000000:         0         0         1         0         3
-+    2800000:         0         0         0         2         0
-+
-+3. Configuring cpufreq-stats
-+============================
-+
-+To configure cpufreq-stats in your kernel::
-+
-+   Config Main Menu
-+	Power management options (ACPI, APM)  --->
-+		CPU Frequency scaling  --->
-+			[*] CPU Frequency scaling
-+			[*]   CPU frequency translation statistics
-+
-+
-+"CPU Frequency scaling" (CONFIG_CPU_FREQ) should be enabled to configure
-+cpufreq-stats.
-+
-+"CPU frequency translation statistics" (CONFIG_CPU_FREQ_STAT) provides the
-+statistics which includes time_in_state, total_trans and trans_table.
-+
-+Once this option is enabled and your CPU supports cpufrequency, you
-+will be able to see the CPU frequency statistics in /sysfs.
-diff --git a/Documentation/cpu-freq/cpufreq-stats.txt b/Documentation/cpu-freq/cpufreq-stats.txt
-deleted file mode 100644
-index 14378cecb172..000000000000
---- a/Documentation/cpu-freq/cpufreq-stats.txt
-+++ /dev/null
-@@ -1,127 +0,0 @@
+ Description
++===========
+ 
+   DRBD is a shared-nothing, synchronously replicated block device. It
+   is designed to serve as a building block for high availability
+@@ -7,10 +12,8 @@ Description
+ 
+   Please visit http://www.drbd.org to find out more.
+ 
+-The here included files are intended to help understand the implementation
++.. toctree::
++   :maxdepth: 1
+ 
+-DRBD-8.3-data-packets.svg, DRBD-data-packets.svg  
+-  relates some functions, and write packets.
 -
--     CPU frequency and voltage scaling statistics in the Linux(TM) kernel
--
--
--             L i n u x    c p u f r e q - s t a t s   d r i v e r
--
--                       - information for users -
--
--
--             Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
--
--Contents
--1. Introduction
--2. Statistics Provided (with example)
--3. Configuring cpufreq-stats
--
--
--1. Introduction
--
--cpufreq-stats is a driver that provides CPU frequency statistics for each CPU.
--These statistics are provided in /sysfs as a bunch of read_only interfaces. This
--interface (when configured) will appear in a separate directory under cpufreq
--in /sysfs (<sysfs root>/devices/system/cpu/cpuX/cpufreq/stats/) for each CPU.
--Various statistics will form read_only files under this directory.
--
--This driver is designed to be independent of any particular cpufreq_driver
--that may be running on your CPU. So, it will work with any cpufreq_driver.
--
--
--2. Statistics Provided (with example)
--
--cpufreq stats provides following statistics (explained in detail below).
---  time_in_state
---  total_trans
---  trans_table
--
--All the statistics will be from the time the stats driver has been inserted
--(or the time the stats were reset) to the time when a read of a particular
--statistic is done. Obviously, stats driver will not have any information
--about the frequency transitions before the stats driver insertion.
--
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # ls -l
--total 0
--drwxr-xr-x  2 root root    0 May 14 16:06 .
--drwxr-xr-x  3 root root    0 May 14 15:58 ..
----w-------  1 root root 4096 May 14 16:06 reset
---r--r--r--  1 root root 4096 May 14 16:06 time_in_state
---r--r--r--  1 root root 4096 May 14 16:06 total_trans
---r--r--r--  1 root root 4096 May 14 16:06 trans_table
----------------------------------------------------------------------------------
--
---  reset
--Write-only attribute that can be used to reset the stat counters. This can be
--useful for evaluating system behaviour under different governors without the
--need for a reboot.
--
---  time_in_state
--This gives the amount of time spent in each of the frequencies supported by
--this CPU. The cat output will have "<frequency> <time>" pair in each line, which
--will mean this CPU spent <time> usertime units of time at <frequency>. Output
--will have one line for each of the supported frequencies. usertime units here 
--is 10mS (similar to other time exported in /proc).
--
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat time_in_state 
--3600000 2089
--3400000 136
--3200000 34
--3000000 67
--2800000 172488
----------------------------------------------------------------------------------
--
--
---  total_trans
--This gives the total number of frequency transitions on this CPU. The cat 
--output will have a single count which is the total number of frequency
--transitions.
--
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat total_trans
--20
----------------------------------------------------------------------------------
--
---  trans_table
--This will give a fine grained information about all the CPU frequency
--transitions. The cat output here is a two dimensional matrix, where an entry
--<i,j> (row i, column j) represents the count of number of transitions from 
--Freq_i to Freq_j. Freq_i rows and Freq_j columns follow the sorting order in
--which the driver has provided the frequency table initially to the cpufreq core
--and so can be sorted (ascending or descending) or unsorted.  The output here
--also contains the actual freq values for each row and column for better
--readability.
--
--If the transition table is bigger than PAGE_SIZE, reading this will
--return an -EFBIG error.
--
----------------------------------------------------------------------------------
--<mysystem>:/sys/devices/system/cpu/cpu0/cpufreq/stats # cat trans_table
--   From  :    To
--         :   3600000   3400000   3200000   3000000   2800000 
--  3600000:         0         5         0         0         0 
--  3400000:         4         0         2         0         0 
--  3200000:         0         1         0         2         0 
--  3000000:         0         0         1         0         3 
--  2800000:         0         0         0         2         0 
----------------------------------------------------------------------------------
--
--
--3. Configuring cpufreq-stats
--
--To configure cpufreq-stats in your kernel
--Config Main Menu
--	Power management options (ACPI, APM)  --->
--		CPU Frequency scaling  --->
--			[*] CPU Frequency scaling
--			[*]   CPU frequency translation statistics
--
--
--"CPU Frequency scaling" (CONFIG_CPU_FREQ) should be enabled to configure
--cpufreq-stats.
--
--"CPU frequency translation statistics" (CONFIG_CPU_FREQ_STAT) provides the
--statistics which includes time_in_state, total_trans and trans_table.
--
--Once this option is enabled and your CPU supports cpufrequency, you
--will be able to see the CPU frequency statistics in /sysfs.
-diff --git a/Documentation/cpu-freq/index.rst b/Documentation/cpu-freq/index.rst
+-conn-states-8.dot, disk-states-8.dot, node-states-8.dot
+-  The sub graphs of DRBD's state transitions
++   data-structure-v9
++   figures
+diff --git a/Documentation/blockdev/floppy.txt b/Documentation/blockdev/floppy.rst
+similarity index 81%
+rename from Documentation/blockdev/floppy.txt
+rename to Documentation/blockdev/floppy.rst
+index e2240f5ab64d..4a8f31cf4139 100644
+--- a/Documentation/blockdev/floppy.txt
++++ b/Documentation/blockdev/floppy.rst
+@@ -1,35 +1,37 @@
+-This file describes the floppy driver.
++=============
++Floppy Driver
++=============
+ 
+ FAQ list:
+ =========
+ 
+- A FAQ list may be found in the fdutils package (see below), and also
++A FAQ list may be found in the fdutils package (see below), and also
+ at <http://fdutils.linux.lu/faq.html>.
+ 
+ 
+ LILO configuration options (Thinkpad users, read this)
+ ======================================================
+ 
+- The floppy driver is configured using the 'floppy=' option in
++The floppy driver is configured using the 'floppy=' option in
+ lilo. This option can be typed at the boot prompt, or entered in the
+ lilo configuration file.
+ 
+- Example: If your kernel is called linux-2.6.9, type the following line
+-at the lilo boot prompt (if you have a thinkpad):
++Example: If your kernel is called linux-2.6.9, type the following line
++at the lilo boot prompt (if you have a thinkpad)::
+ 
+  linux-2.6.9 floppy=thinkpad
+ 
+ You may also enter the following line in /etc/lilo.conf, in the description
+-of linux-2.6.9:
++of linux-2.6.9::
+ 
+  append = "floppy=thinkpad"
+ 
+- Several floppy related options may be given, example:
++Several floppy related options may be given, example::
+ 
+  linux-2.6.9 floppy=daring floppy=two_fdc
+  append = "floppy=daring floppy=two_fdc"
+ 
+- If you give options both in the lilo config file and on the boot
++If you give options both in the lilo config file and on the boot
+ prompt, the option strings of both places are concatenated, the boot
+ prompt options coming last. That's why there are also options to
+ restore the default behavior.
+@@ -38,21 +40,23 @@ restore the default behavior.
+ Module configuration options
+ ============================
+ 
+- If you use the floppy driver as a module, use the following syntax:
+-modprobe floppy floppy="<options>"
++If you use the floppy driver as a module, use the following syntax::
+ 
+-Example:
+- modprobe floppy floppy="omnibook messages"
++	modprobe floppy floppy="<options>"
+ 
+- If you need certain options enabled every time you load the floppy driver,
+-you can put:
++Example::
+ 
+- options floppy floppy="omnibook messages"
++	modprobe floppy floppy="omnibook messages"
++
++If you need certain options enabled every time you load the floppy driver,
++you can put::
++
++	options floppy floppy="omnibook messages"
+ 
+ in a configuration file in /etc/modprobe.d/.
+ 
+ 
+- The floppy driver related options are:
++The floppy driver related options are:
+ 
+  floppy=asus_pci
+ 	Sets the bit mask to allow only units 0 and 1. (default)
+@@ -70,8 +74,7 @@ in a configuration file in /etc/modprobe.d/.
+ 	Tells the floppy driver that you have only one floppy controller.
+ 	(default)
+ 
+- floppy=two_fdc
+- floppy=<address>,two_fdc
++ floppy=two_fdc / floppy=<address>,two_fdc
+ 	Tells the floppy driver that you have two floppy controllers.
+ 	The second floppy controller is assumed to be at <address>.
+ 	This option is not needed if the second controller is at address
+@@ -84,8 +87,7 @@ in a configuration file in /etc/modprobe.d/.
+  floppy=0,thinkpad
+ 	Tells the floppy driver that you don't have a Thinkpad.
+ 
+- floppy=omnibook
+- floppy=nodma
++ floppy=omnibook / floppy=nodma
+ 	Tells the floppy driver not to use Dma for data transfers.
+ 	This is needed on HP Omnibooks, which don't have a workable
+ 	DMA channel for the floppy driver. This option is also useful
+@@ -144,14 +146,16 @@ in a configuration file in /etc/modprobe.d/.
+ 	described in the physical CMOS), or if your BIOS uses
+ 	non-standard CMOS types. The CMOS types are:
+ 
+-		0 - Use the value of the physical CMOS
+-		1 - 5 1/4 DD
+-		2 - 5 1/4 HD
+-		3 - 3 1/2 DD
+-		4 - 3 1/2 HD
+-		5 - 3 1/2 ED
+-		6 - 3 1/2 ED
+-	       16 - unknown or not installed
++	       ==  ==================================
++		0  Use the value of the physical CMOS
++		1  5 1/4 DD
++		2  5 1/4 HD
++		3  3 1/2 DD
++		4  3 1/2 HD
++		5  3 1/2 ED
++		6  3 1/2 ED
++	       16  unknown or not installed
++	       ==  ==================================
+ 
+ 	(Note: there are two valid types for ED drives. This is because 5 was
+ 	initially chosen to represent floppy *tapes*, and 6 for ED drives.
+@@ -162,8 +166,7 @@ in a configuration file in /etc/modprobe.d/.
+ 	Print a warning message when an unexpected interrupt is received.
+ 	(default)
+ 
+- floppy=no_unexpected_interrupts
+- floppy=L40SX
++ floppy=no_unexpected_interrupts / floppy=L40SX
+ 	Don't print a message when an unexpected interrupt is received. This
+ 	is needed on IBM L40SX laptops in certain video modes. (There seems
+ 	to be an interaction between video and floppy. The unexpected
+@@ -199,47 +202,54 @@ in a configuration file in /etc/modprobe.d/.
+ 	Sets the floppy DMA channel to <nr> instead of 2.
+ 
+  floppy=slow
+-	Use PS/2 stepping rate:
+-	 " PS/2 floppies have much slower step rates than regular floppies.
++	Use PS/2 stepping rate::
++
++	   PS/2 floppies have much slower step rates than regular floppies.
+ 	   It's been recommended that take about 1/4 of the default speed
+-	   in some more extreme cases."
++	   in some more extreme cases.
+ 
+ 
+ Supporting utilities and additional documentation:
+ ==================================================
+ 
+- Additional parameters of the floppy driver can be configured at
++Additional parameters of the floppy driver can be configured at
+ runtime. Utilities which do this can be found in the fdutils package.
+ This package also contains a new version of mtools which allows to
+ access high capacity disks (up to 1992K on a high density 3 1/2 disk!).
+ It also contains additional documentation about the floppy driver.
+ 
+ The latest version can be found at fdutils homepage:
++
+  http://fdutils.linux.lu
+ 
+ The fdutils releases can be found at:
++
+  http://fdutils.linux.lu/download.html
++
+  http://www.tux.org/pub/knaff/fdutils/
++
+  ftp://metalab.unc.edu/pub/Linux/utils/disk-management/
+ 
+ Reporting problems about the floppy driver
+ ==========================================
+ 
+- If you have a question or a bug report about the floppy driver, mail
++If you have a question or a bug report about the floppy driver, mail
+ me at Alain.Knaff@poboxes.com . If you post to Usenet, preferably use
+ comp.os.linux.hardware. As the volume in these groups is rather high,
+ be sure to include the word "floppy" (or "FLOPPY") in the subject
+ line.  If the reported problem happens when mounting floppy disks, be
+ sure to mention also the type of the filesystem in the subject line.
+ 
+- Be sure to read the FAQ before mailing/posting any bug reports!
++Be sure to read the FAQ before mailing/posting any bug reports!
+ 
+- Alain
++Alain
+ 
+ Changelog
+ =========
+ 
+-10-30-2004 :	Cleanup, updating, add reference to module configuration.
++10-30-2004 :
++		Cleanup, updating, add reference to module configuration.
+ 		James Nelson <james4765@gmail.com>
+ 
+-6-3-2000 :	Original Document
++6-3-2000 :
++		Original Document
+diff --git a/Documentation/blockdev/index.rst b/Documentation/blockdev/index.rst
 new file mode 100644
-index 000000000000..10e6c05f60f6
+index 000000000000..a9af6ed8b4aa
 --- /dev/null
-+++ b/Documentation/cpu-freq/index.rst
-@@ -0,0 +1,52 @@
++++ b/Documentation/blockdev/index.rst
+@@ -0,0 +1,16 @@
 +:orphan:
 +
-+==============================================================
-+CPU frequency and voltage scaling code in the Linux(TM) kernel
-+==============================================================
-+
-+
-+Author: Dominik Brodowski  <linux@brodo.de>
-+
-+
-+Clock scaling allows you to change the clock speed of the CPUs on the
-+fly. This is a nice method to save battery power, because the lower
-+the clock speed, the less power the CPU consumes.
-+
++===========================
++The Linux RapidIO Subsystem
++===========================
 +
 +.. toctree::
-+    :maxdepth: 1
++   :maxdepth: 1
 +
-+    core
-+    cpufreq-stats
-+    cpu-drivers
++   floppy
++   nbd
++   paride
++   ramdisk
++   zram
 +
-+    amd-powernow
-+    cpufreq-nforce2
-+    pcc-cpufreq
++   drbd/index
+diff --git a/Documentation/blockdev/nbd.txt b/Documentation/blockdev/nbd.rst
+similarity index 96%
+rename from Documentation/blockdev/nbd.txt
+rename to Documentation/blockdev/nbd.rst
+index db242ea2bce8..db0c96e46661 100644
+--- a/Documentation/blockdev/nbd.txt
++++ b/Documentation/blockdev/nbd.rst
+@@ -1,3 +1,4 @@
++==================================
+ Network Block Device (TCP version)
+ ==================================
+ 
+diff --git a/Documentation/blockdev/paride.txt b/Documentation/blockdev/paride.rst
+similarity index 85%
+rename from Documentation/blockdev/paride.txt
+rename to Documentation/blockdev/paride.rst
+index ee6717e3771d..b7fdd77513ab 100644
+--- a/Documentation/blockdev/paride.txt
++++ b/Documentation/blockdev/paride.rst
+@@ -1,9 +1,11 @@
+-
+-		Linux and parallel port IDE devices
++===================================
++Linux and parallel port IDE devices
++===================================
+ 
+ PARIDE v1.03   (c) 1997-8  Grant Guenther <grant@torque.net>
+ 
+ 1. Introduction
++===============
+ 
+ Owing to the simplicity and near universality of the parallel port interface
+ to personal computers, many external devices such as portable hard-disk,
+@@ -35,17 +37,17 @@ devices.  It does not cover parallel port SCSI devices, "ditto" tape
+ drives or scanners.  Many different devices are supported by the 
+ parallel port IDE subsystem, including:
+ 
+-	MicroSolutions backpack CD-ROM
+-	MicroSolutions backpack PD/CD
+-	MicroSolutions backpack hard-drives
+-	MicroSolutions backpack 8000t tape drive
+-	SyQuest EZ-135, EZ-230 & SparQ drives
+-	Avatar Shark
+-	Imation Superdisk LS-120
+-	Maxell Superdisk LS-120
+-	FreeCom Power CD 
+-	Hewlett-Packard 5GB and 8GB tape drives
+-	Hewlett-Packard 7100 and 7200 CD-RW drives
++	- MicroSolutions backpack CD-ROM
++	- MicroSolutions backpack PD/CD
++	- MicroSolutions backpack hard-drives
++	- MicroSolutions backpack 8000t tape drive
++	- SyQuest EZ-135, EZ-230 & SparQ drives
++	- Avatar Shark
++	- Imation Superdisk LS-120
++	- Maxell Superdisk LS-120
++	- FreeCom Power CD
++	- Hewlett-Packard 5GB and 8GB tape drives
++	- Hewlett-Packard 7100 and 7200 CD-RW drives
+ 
+ as well as most of the clone and no-name products on the market.
+ 
+@@ -55,11 +57,13 @@ paride module which provides a registry and some common methods for
+ accessing the parallel ports.  The second component is a set of 
+ high-level drivers for each of the different types of supported devices: 
+ 
++	===	=============
+ 	pd	IDE disk
+ 	pcd	ATAPI CD-ROM
+ 	pf	ATAPI disk
+ 	pt	ATAPI tape
+ 	pg	ATAPI generic
++	===	=============
+ 
+ (Currently, the pg driver is only used with CD-R drives).
+ 
+@@ -69,6 +73,7 @@ for each of the parallel port IDE adapter chips.  Thanks to the interest
+ and encouragement of Linux users from many parts of the world, 
+ support is available for almost all known adapter protocols:
+ 
++	====    ====================================== ====
+         aten    ATEN EH-100                            (HK)
+         bpck    Microsolutions backpack                (US)
+         comm    DataStor (old-type) "commuter" adapter (TW)
+@@ -83,9 +88,11 @@ support is available for almost all known adapter protocols:
+ 	ktti    KT Technology PHd adapter              (SG)
+         on20    OnSpec 90c20                           (US)
+         on26    OnSpec 90c26                           (US)
++	====    ====================================== ====
+ 
+ 
+ 2. Using the PARIDE subsystem
++=============================
+ 
+ While configuring the Linux kernel, you may choose either to build
+ the PARIDE drivers into your kernel, or to build them as modules.
+@@ -105,8 +112,9 @@ subsystem to try them all for you.
+ For the "brand-name" products listed above, here are the protocol
+ and high-level drivers that you would use:
+ 
++	================	============	======	========
+ 	Manufacturer		Model		Driver	Protocol
+-	
++	================	============	======	========
+ 	MicroSolutions		CD-ROM		pcd	bpck
+ 	MicroSolutions		PD drive	pf	bpck
+ 	MicroSolutions		hard-drive	pd	bpck
+@@ -119,8 +127,10 @@ and high-level drivers that you would use:
+ 	Hewlett-Packard		5GB Tape	pt	epat
+ 	Hewlett-Packard		7200e (CD)	pcd	epat
+ 	Hewlett-Packard		7200e (CD-R)	pg	epat
++	================	============	======	========
+ 
+ 2.1  Configuring built-in drivers
++---------------------------------
+ 
+ We recommend that you get to know how the drivers work and how to
+ configure them as loadable modules, before attempting to compile a
+@@ -143,7 +153,7 @@ protocol identification number and, for some devices, the drive's
+ chain ID.  While your system is booting, a number of messages are
+ displayed on the console.  Like all such messages, they can be
+ reviewed with the 'dmesg' command.  Among those messages will be
+-some lines like:
++some lines like::
+ 
+ 	paride: bpck registered as protocol 0
+ 	paride: epat registered as protocol 1
+@@ -161,7 +171,7 @@ As an example, let's assume that you have a MicroSolutions PD/CD drive
+ with unit ID number 36 connected to the parallel port at 0x378, a SyQuest 
+ EZ-135 connected to the chained port on the PD/CD drive and also an 
+ Imation Superdisk connected to port 0x278.  You could give the following 
+-options on your boot command:
++options on your boot command::
+ 
+ 	pd.drive0=0x378,1 pf.drive0=0x278,1 pf.drive1=0x378,0,36
+ 
+@@ -175,18 +185,21 @@ PARPORT parallel port sharing system that is included by the
+ if you want to use chains of devices on the same parallel port.
+ 
+ 2.2  Loading and configuring PARIDE as modules
++----------------------------------------------
+ 
+ It is much faster and simpler to get to understand the PARIDE drivers
+ if you use them as loadable kernel modules.   
+ 
+-Note 1:  using these drivers with the "kerneld" automatic module loading
+-system is not recommended for beginners, and is not documented here.  
++Note 1:
++	using these drivers with the "kerneld" automatic module loading
++	system is not recommended for beginners, and is not documented here.
+ 
+-Note 2:  if you build PARPORT support as a loadable module, PARIDE must
+-also be built as loadable modules, and PARPORT must be loaded before the
+-PARIDE modules.
++Note 2:
++	if you build PARPORT support as a loadable module, PARIDE must
++	also be built as loadable modules, and PARPORT must be loaded before
++	the PARIDE modules.
+ 
+-To use PARIDE, you must begin by 
++To use PARIDE, you must begin by::
+ 
+ 	insmod paride
+ 
+@@ -196,7 +209,7 @@ among other tasks.
+ Then, load as many of the protocol modules as you think you might need.
+ As you load each module, it will register the protocols that it supports,
+ and print a log message to your kernel log file and your console. For 
+-example:
++example::
+ 
+ 	# insmod epat
+ 	paride: epat registered as protocol 0
+@@ -211,7 +224,7 @@ individual co-ordinates when you load the driver.
+ 
+ For example, if you had two no-name CD-ROM drives both using the
+ KingByte KBIC-951A adapter, one on port 0x378 and the other on 0x3bc
+-you could give the following command:
++you could give the following command::
+ 
+ 	# insmod pcd drive0=0x378,1 drive1=0x3bc,1
+ 
+@@ -220,7 +233,7 @@ but check the source files in linux/drivers/block/paride for more
+ information.  (Hopefully someone will write some man pages one day !).
+ 
+ As another example, here's what happens when PARPORT is installed, and
+-a SyQuest EZ-135 is attached to port 0x378:
++a SyQuest EZ-135 is attached to port 0x378::
+ 
+ 	# insmod paride
+ 	paride: version 1.0 installed
+@@ -237,46 +250,47 @@ Note that the last line is the output from the generic partition table
+ scanner - in this case it reports that it has found a disk with one partition.
+ 
+ 2.3  Using a PARIDE device
++--------------------------
+ 
+ Once the drivers have been loaded, you can access PARIDE devices in the
+ same way as their traditional counterparts.  You will probably need to
+ create the device "special files".  Here is a simple script that you can
+-cut to a file and execute:
++cut to a file and execute::
+ 
+-#!/bin/bash
+-#
+-# mkd -- a script to create the device special files for the PARIDE subsystem
+-#
+-function mkdev {
+-  mknod $1 $2 $3 $4 ; chmod 0660 $1 ; chown root:disk $1
+-}
+-#
+-function pd {
+-  D=$( printf \\$( printf "x%03x" $[ $1 + 97 ] ) )
+-  mkdev pd$D b 45 $[ $1 * 16 ]
+-  for P in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+-  do mkdev pd$D$P b 45 $[ $1 * 16 + $P ]
+-  done
+-}
+-#
+-cd /dev
+-#
+-for u in 0 1 2 3 ; do pd $u ; done
+-for u in 0 1 2 3 ; do mkdev pcd$u b 46 $u ; done 
+-for u in 0 1 2 3 ; do mkdev pf$u  b 47 $u ; done 
+-for u in 0 1 2 3 ; do mkdev pt$u  c 96 $u ; done 
+-for u in 0 1 2 3 ; do mkdev npt$u c 96 $[ $u + 128 ] ; done 
+-for u in 0 1 2 3 ; do mkdev pg$u  c 97 $u ; done 
+-#
+-# end of mkd
++  #!/bin/bash
++  #
++  # mkd -- a script to create the device special files for the PARIDE subsystem
++  #
++  function mkdev {
++    mknod $1 $2 $3 $4 ; chmod 0660 $1 ; chown root:disk $1
++  }
++  #
++  function pd {
++    D=$( printf \\$( printf "x%03x" $[ $1 + 97 ] ) )
++    mkdev pd$D b 45 $[ $1 * 16 ]
++    for P in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
++    do mkdev pd$D$P b 45 $[ $1 * 16 + $P ]
++    done
++  }
++  #
++  cd /dev
++  #
++  for u in 0 1 2 3 ; do pd $u ; done
++  for u in 0 1 2 3 ; do mkdev pcd$u b 46 $u ; done
++  for u in 0 1 2 3 ; do mkdev pf$u  b 47 $u ; done
++  for u in 0 1 2 3 ; do mkdev pt$u  c 96 $u ; done
++  for u in 0 1 2 3 ; do mkdev npt$u c 96 $[ $u + 128 ] ; done
++  for u in 0 1 2 3 ; do mkdev pg$u  c 97 $u ; done
++  #
++  # end of mkd
+ 
+ With the device files and drivers in place, you can access PARIDE devices
+-like any other Linux device.   For example, to mount a CD-ROM in pcd0, use:
++like any other Linux device.   For example, to mount a CD-ROM in pcd0, use::
+ 
+ 	mount /dev/pcd0 /cdrom
+ 
+ If you have a fresh Avatar Shark cartridge, and the drive is pda, you
+-might do something like:
++might do something like::
+ 
+ 	fdisk /dev/pda		-- make a new partition table with
+ 				   partition 1 of type 83
+@@ -289,13 +303,14 @@ might do something like:
+ 
+ Devices like the Imation superdisk work in the same way, except that
+ they do not have a partition table.  For example to make a 120MB
+-floppy that you could share with a DOS system:
++floppy that you could share with a DOS system::
+ 
+ 	mkdosfs /dev/pf0
+ 	mount /dev/pf0 /mnt
+ 
+ 
+ 2.4  The pf driver
++------------------
+ 
+ The pf driver is intended for use with parallel port ATAPI disk
+ devices.  The most common devices in this category are PD drives
+@@ -304,6 +319,7 @@ partitioned.  Consequently, the pf driver does not support partitioned
+ media.  This may be changed in a future version of the driver. 
+ 
+ 2.5  Using the pt driver
++------------------------
+ 
+ The pt driver for parallel port ATAPI tape drives is a minimal driver.
+ It does not yet support many of the standard tape ioctl operations. 
+@@ -311,6 +327,7 @@ For best performance, a block size of 32KB should be used.  You will
+ probably want to set the parallel port delay to 0, if you can.
+ 
+ 2.6  Using the pg driver
++------------------------
+ 
+ The pg driver can be used in conjunction with the cdrecord program
+ to create CD-ROMs.  Please get cdrecord version 1.6.1 or later
+@@ -322,8 +339,10 @@ in EPP mode, try to use "bidirectional" or "PS/2" mode and 1x speeds only.
+ 
+ 
+ 3. Troubleshooting
++==================
+ 
+ 3.1  Use EPP mode if you can
++----------------------------
+ 
+ The most common problems that people report with the PARIDE drivers
+ concern the parallel port CMOS settings.  At this time, none of the
+@@ -332,6 +351,7 @@ If you are able to do so, please set your parallel port into EPP mode
+ using your CMOS setup procedure.
+ 
+ 3.2  Check the port delay
++-------------------------
+ 
+ Some parallel ports cannot reliably transfer data at full speed.  To
+ offset the errors, the PARIDE protocol modules introduce a "port
+@@ -347,6 +367,7 @@ read the comments at the beginning of the driver source files in
+ linux/drivers/block/paride.
+ 
+ 3.3  Some drives need a printer reset
++-------------------------------------
+ 
+ There appear to be a number of "noname" external drives on the market
+ that do not always power up correctly.  We have noticed this with some
+@@ -354,7 +375,7 @@ drives based on OnSpec and older Freecom adapters.  In these rare cases,
+ the adapter can often be reinitialised by issuing a "printer reset" on
+ the parallel port.  As the reset operation is potentially disruptive in 
+ multiple device environments, the PARIDE drivers will not do it 
+-automatically.  You can however, force a printer reset by doing:
++automatically.  You can however, force a printer reset by doing::
+ 
+ 	insmod lp reset=1
+ 	rmmod lp
+@@ -364,6 +385,7 @@ your paride drivers as modules, and arrange to do the printer reset
+ before loading the PARIDE drivers. 
+ 
+ 3.4  Use the verbose option and dmesg if you need help
++------------------------------------------------------
+ 
+ While a lot of testing has gone into these drivers to make them work
+ as smoothly as possible, problems will arise.  If you do have problems,
+@@ -373,7 +395,7 @@ clues, then please make sure that only one drive is hooked to your system,
+ and that either (a) PARPORT is enabled or (b) no other device driver
+ is using your parallel port (check in /proc/ioports).  Then, load the
+ appropriate drivers (you can load several protocol modules if you want)
+-as in:
++as in::
+ 
+ 	# insmod paride
+ 	# insmod epat
+@@ -394,12 +416,14 @@ by e-mail to grant@torque.net, or join the linux-parport mailing list
+ and post your report there.
+ 
+ 3.5  For more information or help
++---------------------------------
+ 
+ You can join the linux-parport mailing list by sending a mail message
+-to 
++to:
 +
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-+
-+Mailing List
-+------------
-+There is a CPU frequency changing CVS commit and general list where
-+you can report bugs, problems or submit patches. To post a message,
-+send an email to linux-pm@vger.kernel.org.
-+
-+Links
-+-----
-+the FTP archives:
-+* ftp://ftp.linux.org.uk/pub/linux/cpufreq/
-+
-+how to access the CVS repository:
-+* http://cvs.arm.linux.org.uk/
-+
-+the CPUFreq Mailing list:
-+* http://vger.kernel.org/vger-lists.html#linux-pm
-+
-+Clock and voltage scaling for the SA-1100:
-+* http://www.lartmaker.nl/projects/scaling
-diff --git a/Documentation/cpu-freq/index.txt b/Documentation/cpu-freq/index.txt
-deleted file mode 100644
-index c15e75386a05..000000000000
---- a/Documentation/cpu-freq/index.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--     CPU frequency and voltage scaling code in the Linux(TM) kernel
--
--
--		         L i n u x    C P U F r e q
--
--
--
--
--		    Dominik Brodowski  <linux@brodo.de>
--
--
--
--   Clock scaling allows you to change the clock speed of the CPUs on the
--    fly. This is a nice method to save battery power, because the lower
--            the clock speed, the less power the CPU consumes.
--
--
--
--Documents in this directory:
------------------------------
--
--amd-powernow.txt -	AMD powernow driver specific file.
--
--core.txt	-	General description of the CPUFreq core and
--			of CPUFreq notifiers.
--
--cpu-drivers.txt -	How to implement a new cpufreq processor driver.
--
--cpufreq-nforce2.txt -	nVidia nForce2 platform specific file.
--
--cpufreq-stats.txt -	General description of sysfs cpufreq stats.
--
--index.txt	-	File index, Mailing list and Links (this document)
--
--pcc-cpufreq.txt -	PCC cpufreq driver specific file.
--
--
--Mailing List
--------------
--There is a CPU frequency changing CVS commit and general list where
--you can report bugs, problems or submit patches. To post a message,
--send an email to linux-pm@vger.kernel.org.
--
--Links
-------
--the FTP archives:
--* ftp://ftp.linux.org.uk/pub/linux/cpufreq/
--
--how to access the CVS repository:
--* http://cvs.arm.linux.org.uk/
--
--the CPUFreq Mailing list:
--* http://vger.kernel.org/vger-lists.html#linux-pm
--
--Clock and voltage scaling for the SA-1100:
--* http://www.lartmaker.nl/projects/scaling
-diff --git a/Documentation/cpu-freq/pcc-cpufreq.txt b/Documentation/cpu-freq/pcc-cpufreq.rst
-similarity index 80%
-rename from Documentation/cpu-freq/pcc-cpufreq.txt
-rename to Documentation/cpu-freq/pcc-cpufreq.rst
-index 9e3c3b33514c..d846a36536e4 100644
---- a/Documentation/cpu-freq/pcc-cpufreq.txt
-+++ b/Documentation/cpu-freq/pcc-cpufreq.rst
-@@ -1,45 +1,38 @@
--/*
-- *  pcc-cpufreq.txt - PCC interface documentation
-- *
-- *  Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
-- *  Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
-- *      Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; version 2 of the License.
-- *
-- *  This program is distributed in the hope that it will be useful, but
-- *  WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
-- *  INFRINGEMENT. See the GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- */
--
--
--			Processor Clocking Control Driver
--			---------------------------------
--
+ 		linux-parport-request@torque.net
+ 
+-with the single word 
++with the single word::
+ 
+ 		subscribe
+ 
+@@ -412,6 +436,6 @@ have in your mail headers, when sending mail to the list server.
+ You might also find some useful information on the linux-parport
+ web pages (although they are not always up to date) at
+ 
+-	http://web.archive.org/web/*/http://www.torque.net/parport/
++	http://web.archive.org/web/%2E/http://www.torque.net/parport/
+ 
+ 
+diff --git a/Documentation/blockdev/ramdisk.txt b/Documentation/blockdev/ramdisk.rst
+similarity index 84%
+rename from Documentation/blockdev/ramdisk.txt
+rename to Documentation/blockdev/ramdisk.rst
+index 501e12e0323e..b7c2268f8dec 100644
+--- a/Documentation/blockdev/ramdisk.txt
++++ b/Documentation/blockdev/ramdisk.rst
+@@ -1,7 +1,8 @@
++==========================================
+ Using the RAM disk block device with Linux
+-------------------------------------------
++==========================================
+ 
 -Contents:
-----------
--1.	Introduction
--1.1	PCC interface
--1.1.1   Get Average Frequency
--1.1.2	Set Desired Frequency
--1.2	Platforms affected
--2.	Driver and /sys details
--2.1	scaling_available_frequencies
--2.2	cpuinfo_transition_latency
--2.3	cpuinfo_cur_freq
--2.4	related_cpus
--3.	Caveats
-+==========================================================
-+Processor Clocking Control Driver cpufreq driver specifics
-+==========================================================
-+
-+
-+.. pcc-cpufreq.txt - PCC interface documentation
-+
-+    Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
-+    Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
-+        Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
-+
-+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+    This program is free software; you can redistribute it and/or modify
-+    it under the terms of the GNU General Public License as published by
-+    the Free Software Foundation; version 2 of the License.
-+
-+    This program is distributed in the hope that it will be useful, but
-+    WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
-+    INFRINGEMENT. See the GNU General Public License for more details.
-+
-+
 +.. Contents:
-+   1.	Introduction
-+   1.1	PCC interface
-+   1.1.1  Get Average Frequency
-+   1.1.2  Set Desired Frequency
-+   1.2	Platforms affected
-+   2.	Driver and /sys details
-+   2.1	scaling_available_frequencies
-+   2.2	cpuinfo_transition_latency
-+   2.3	cpuinfo_cur_freq
-+   2.4	related_cpus
-+   3.	Caveats
  
- 1. Introduction:
- ----------------
-@@ -72,6 +65,7 @@ memory region. The shared memory region header contains the "command" and
- doorbell.
+ 	1) Overview
+ 	2) Kernel Command Line Parameters
+@@ -42,7 +43,7 @@ rescue floppy disk.
+ 2a) Kernel Command Line Parameters
  
- The following commands are supported by the PCC interface:
+ 	ramdisk_size=N
+-	==============
++		Size of the ramdisk.
+ 
+ This parameter tells the RAM disk driver to set up RAM disks of N k size.  The
+ default is 4096 (4 MB).
+@@ -50,16 +51,13 @@ default is 4096 (4 MB).
+ 2b) Module parameters
+ 
+ 	rd_nr
+-	=====
+-	/dev/ramX devices created.
++		/dev/ramX devices created.
+ 
+ 	max_part
+-	========
+-	Maximum partition number.
++		Maximum partition number.
+ 
+ 	rd_size
+-	=======
+-	See ramdisk_size.
++		See ramdisk_size.
+ 
+ 3) Using "rdev -r"
+ ------------------
+@@ -71,11 +69,11 @@ to 2 MB (2^11) of where to find the RAM disk (this used to be the size). Bit
+ prompt/wait sequence is to be given before trying to read the RAM disk. Since
+ the RAM disk dynamically grows as data is being written into it, a size field
+ is not required. Bits 11 to 13 are not currently used and may as well be zero.
+-These numbers are no magical secrets, as seen below:
++These numbers are no magical secrets, as seen below::
+ 
+-./arch/x86/kernel/setup.c:#define RAMDISK_IMAGE_START_MASK     0x07FF
+-./arch/x86/kernel/setup.c:#define RAMDISK_PROMPT_FLAG          0x8000
+-./arch/x86/kernel/setup.c:#define RAMDISK_LOAD_FLAG            0x4000
++  ./arch/x86/kernel/setup.c:#define RAMDISK_IMAGE_START_MASK     0x07FF
++  ./arch/x86/kernel/setup.c:#define RAMDISK_PROMPT_FLAG          0x8000
++  ./arch/x86/kernel/setup.c:#define RAMDISK_LOAD_FLAG            0x4000
+ 
+ Consider a typical two floppy disk setup, where you will have the
+ kernel on disk one, and have already put a RAM disk image onto disk #2.
+@@ -92,20 +90,23 @@ sequence so that you have a chance to switch floppy disks.
+ The command line equivalent is: "prompt_ramdisk=1"
+ 
+ Putting that together gives 2^15 + 2^14 + 0 = 49152 for an rdev word.
+-So to create disk one of the set, you would do:
++So to create disk one of the set, you would do::
+ 
+ 	/usr/src/linux# cat arch/x86/boot/zImage > /dev/fd0
+ 	/usr/src/linux# rdev /dev/fd0 /dev/fd0
+ 	/usr/src/linux# rdev -r /dev/fd0 49152
+ 
+-If you make a boot disk that has LILO, then for the above, you would use:
++If you make a boot disk that has LILO, then for the above, you would use::
 +
- * Get Average Frequency
- * Set Desired Frequency
- 
-@@ -140,7 +134,9 @@ Internally, there is no need for the driver to convert the "target" frequency
- to a corresponding P-state.
- 
- The VERSION number for the driver will be of the format v.xy.ab.
--eg: 1.00.02
-+eg::
+ 	append = "ramdisk_start=0 load_ramdisk=1 prompt_ramdisk=1"
+-Since the default start = 0 and the default prompt = 1, you could use:
 +
-+   1.00.02
-    ----- --
-     |    |
-     |    -- this will increase with bug fixes/enhancements to the driver
-@@ -168,21 +164,21 @@ A) Often cpuinfo_cur_freq will show a value different than what is declared
- in the scaling_available_frequencies or scaling_cur_freq, or scaling_max_freq.
- This is due to "turbo boost" available on recent Intel processors. If certain
- conditions are met the BIOS can achieve a slightly higher speed than requested
--by OSPM. An example:
-+by OSPM. An example::
++Since the default start = 0 and the default prompt = 1, you could use::
++
+ 	append = "load_ramdisk=1"
  
--scaling_cur_freq	: 2933000
--cpuinfo_cur_freq	: 3196000
-+	scaling_cur_freq	: 2933000
-+	cpuinfo_cur_freq	: 3196000
  
- B) There is a round-off error associated with the cpuinfo_cur_freq value.
- Since the driver obtains the current frequency as a "percentage" (%) of the
- nominal frequency from the BIOS, sometimes, the values displayed by
--scaling_cur_freq and cpuinfo_cur_freq may not match. An example:
-+scaling_cur_freq and cpuinfo_cur_freq may not match. An example::
+ 4) An Example of Creating a Compressed RAM Disk
+-----------------------------------------------
++-----------------------------------------------
  
--scaling_cur_freq	: 1600000
--cpuinfo_cur_freq	: 1583000
-+	scaling_cur_freq	: 1600000
-+	cpuinfo_cur_freq	: 1583000
+ To create a RAM disk image, you will need a spare block device to
+ construct it on. This can be the RAM disk device itself, or an
+@@ -120,11 +121,11 @@ a) Decide on the RAM disk size that you want. Say 2 MB for this example.
+    Create it by writing to the RAM disk device. (This step is not currently
+    required, but may be in the future.) It is wise to zero out the
+    area (esp. for disks) so that maximal compression is achieved for
+-   the unused blocks of the image that you are about to create.
++   the unused blocks of the image that you are about to create::
  
- In this example, the nominal frequency is 2933 MHz. The driver obtains the
--current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency:
-+current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency::
+ 	dd if=/dev/zero of=/dev/ram0 bs=1k count=2048
  
- 	54% of 2933 MHz = 1583 MHz
+-b) Make a filesystem on it. Say ext2fs for this example.
++b) Make a filesystem on it. Say ext2fs for this example::
  
-@@ -191,10 +187,10 @@ corresponds to the frequency of the P0 P-state.
+ 	mke2fs -vm0 /dev/ram0 2048
  
- 2.4 related_cpus:
- -----------------
--The related_cpus field is identical to affected_cpus.
-+The related_cpus field is identical to affected_cpus:
+@@ -133,11 +134,11 @@ c) Mount it, copy the files you want to it (eg: /etc/* /dev/* ...)
  
--affected_cpus	: 4
--related_cpus	: 4
-+	affected_cpus	: 4
-+	related_cpus	: 4
+ d) Compress the contents of the RAM disk. The level of compression
+    will be approximately 50% of the space used by the files. Unused
+-   space on the RAM disk will compress to almost nothing.
++   space on the RAM disk will compress to almost nothing::
  
- Currently, the PCC driver does not evaluate _PSD. The platforms that support
- PCC do not implement SW_ALL. So OSPM doesn't need to perform any coordination
-diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
-index 35f71825b7f3..c0c61edb8d93 100644
---- a/drivers/cpufreq/Kconfig.x86
-+++ b/drivers/cpufreq/Kconfig.x86
-@@ -24,7 +24,7 @@ config X86_PCC_CPUFREQ
- 	  This driver adds support for the PCC interface.
+ 	dd if=/dev/ram0 bs=1k count=2048 | gzip -v9 > /tmp/ram_image.gz
  
- 	  For details, take a look at:
--	  <file:Documentation/cpu-freq/pcc-cpufreq.txt>.
-+	  <file:Documentation/cpu-freq/pcc-cpufreq.rst>.
+-e) Put the kernel onto the floppy
++e) Put the kernel onto the floppy::
+ 
+ 	dd if=zImage of=/dev/fd0 bs=1k
+ 
+@@ -146,13 +147,13 @@ f) Put the RAM disk image onto the floppy, after the kernel. Use an offset
+    (possibly larger) kernel onto the same floppy later without overlapping
+    the RAM disk image. An offset of 400 kB for kernels about 350 kB in
+    size would be reasonable. Make sure offset+size of ram_image.gz is
+-   not larger than the total space on your floppy (usually 1440 kB).
++   not larger than the total space on your floppy (usually 1440 kB)::
+ 
+ 	dd if=/tmp/ram_image.gz of=/dev/fd0 bs=1k seek=400
+ 
+ g) Use "rdev" to set the boot device, RAM disk offset, prompt flag, etc.
+    For prompt_ramdisk=1, load_ramdisk=1, ramdisk_start=400, one would
+-   have 2^15 + 2^14 + 400 = 49552.
++   have 2^15 + 2^14 + 400 = 49552::
+ 
+ 	rdev /dev/fd0 /dev/fd0
+ 	rdev -r /dev/fd0 49552
+@@ -160,15 +161,17 @@ g) Use "rdev" to set the boot device, RAM disk offset, prompt flag, etc.
+ That is it. You now have your boot/root compressed RAM disk floppy. Some
+ users may wish to combine steps (d) and (f) by using a pipe.
+ 
+---------------------------------------------------------------------------
++
+ 						Paul Gortmaker 12/95
+ 
+ Changelog:
+ ----------
+ 
+-10-22-04 :	Updated to reflect changes in command line options, remove
++10-22-04 :
++		Updated to reflect changes in command line options, remove
+ 		obsolete references, general cleanup.
+ 		James Nelson (james4765@gmail.com)
+ 
+ 
+-12-95 :		Original Document
++12-95 :
++		Original Document
+diff --git a/Documentation/blockdev/zram.txt b/Documentation/blockdev/zram.rst
+similarity index 76%
+rename from Documentation/blockdev/zram.txt
+rename to Documentation/blockdev/zram.rst
+index 4df0ce271085..2111231c9c0f 100644
+--- a/Documentation/blockdev/zram.txt
++++ b/Documentation/blockdev/zram.rst
+@@ -1,7 +1,9 @@
++========================================
+ zram: Compressed RAM based block devices
+-----------------------------------------
++========================================
+ 
+-* Introduction
++Introduction
++============
+ 
+ The zram module creates RAM based block devices named /dev/zram<id>
+ (<id> = 0, 1, ...). Pages written to these disks are compressed and stored
+@@ -12,9 +14,11 @@ use as swap disks, various caches under /var and maybe many more :)
+ Statistics for individual zram devices are exported through sysfs nodes at
+ /sys/block/zram<id>/
+ 
+-* Usage
++Usage
++=====
+ 
+ There are several ways to configure and manage zram device(-s):
++
+ a) using zram and zram_control sysfs attributes
+ b) using zramctl utility, provided by util-linux (util-linux@vger.kernel.org).
+ 
+@@ -22,7 +26,7 @@ In this document we will describe only 'manual' zram configuration steps,
+ IOW, zram and zram_control sysfs attributes.
+ 
+ In order to get a better idea about zramctl please consult util-linux
+-documentation, zramctl man-page or `zramctl --help'. Please be informed
++documentation, zramctl man-page or `zramctl --help`. Please be informed
+ that zram maintainers do not develop/maintain util-linux or zramctl, should
+ you have any questions please contact util-linux@vger.kernel.org
+ 
+@@ -30,19 +34,23 @@ Following shows a typical sequence of steps for using zram.
+ 
+ WARNING
+ =======
++
+ For the sake of simplicity we skip error checking parts in most of the
+ examples below. However, it is your sole responsibility to handle errors.
+ 
+ zram sysfs attributes always return negative values in case of errors.
+ The list of possible return codes:
+--EBUSY	-- an attempt to modify an attribute that cannot be changed once
+-the device has been initialised. Please reset device first;
+--ENOMEM	-- zram was not able to allocate enough memory to fulfil your
+-needs;
+--EINVAL	-- invalid input has been provided.
++
++========  =============================================================
++-EBUSY	  an attempt to modify an attribute that cannot be changed once
++	  the device has been initialised. Please reset device first;
++-ENOMEM	  zram was not able to allocate enough memory to fulfil your
++	  needs;
++-EINVAL	  invalid input has been provided.
++========  =============================================================
+ 
+ If you use 'echo', the returned value that is changed by 'echo' utility,
+-and, in general case, something like:
++and, in general case, something like::
+ 
+ 	echo 3 > /sys/block/zram0/max_comp_streams
+ 	if [ $? -ne 0 ];
+@@ -51,7 +59,11 @@ and, in general case, something like:
+ 
+ should suffice.
+ 
+-1) Load Module:
++1) Load Module
++==============
++
++::
++
+ 	modprobe zram num_devices=4
+ 	This creates 4 devices: /dev/zram{0,1,2,3}
+ 
+@@ -59,6 +71,8 @@ num_devices parameter is optional and tells zram how many devices should be
+ pre-created. Default: 1.
+ 
+ 2) Set max number of compression streams
++========================================
++
+ Regardless the value passed to this attribute, ZRAM will always
+ allocate multiple compression streams - one per online CPUs - thus
+ allowing several concurrent compression operations. The number of
+@@ -66,16 +80,20 @@ allocated compression streams goes down when some of the CPUs
+ become offline. There is no single-compression-stream mode anymore,
+ unless you are running a UP system or has only 1 CPU online.
+ 
+-To find out how many streams are currently available:
++To find out how many streams are currently available::
++
+ 	cat /sys/block/zram0/max_comp_streams
+ 
+ 3) Select compression algorithm
++===============================
++
+ Using comp_algorithm device attribute one can see available and
+ currently selected (shown in square brackets) compression algorithms,
+ change selected compression algorithm (once the device is initialised
+ there is no way to change compression algorithm).
+ 
+-Examples:
++Examples::
++
+ 	#show supported compression algorithms
+ 	cat /sys/block/zram0/comp_algorithm
+ 	lzo [lz4]
+@@ -83,20 +101,23 @@ Examples:
+ 	#select lzo compression algorithm
+ 	echo lzo > /sys/block/zram0/comp_algorithm
+ 
+-For the time being, the `comp_algorithm' content does not necessarily
++For the time being, the `comp_algorithm` content does not necessarily
+ show every compression algorithm supported by the kernel. We keep this
+ list primarily to simplify device configuration and one can configure
+ a new device with a compression algorithm that is not listed in
+-`comp_algorithm'. The thing is that, internally, ZRAM uses Crypto API
++`comp_algorithm`. The thing is that, internally, ZRAM uses Crypto API
+ and, if some of the algorithms were built as modules, it's impossible
+ to list all of them using, for instance, /proc/crypto or any other
+ method. This, however, has an advantage of permitting the usage of
+ custom crypto compression modules (implementing S/W or H/W compression).
+ 
+ 4) Set Disksize
++===============
++
+ Set disk size by writing the value to sysfs node 'disksize'.
+ The value can be either in bytes or you can use mem suffixes.
+-Examples:
++Examples::
++
+ 	# Initialize /dev/zram0 with 50MB disksize
+ 	echo $((50*1024*1024)) > /sys/block/zram0/disksize
+ 
+@@ -111,10 +132,13 @@ since we expect a 2:1 compression ratio. Note that zram uses about 0.1% of the
+ size of the disk when not in use so a huge zram is wasteful.
+ 
+ 5) Set memory limit: Optional
++=============================
++
+ Set memory limit by writing the value to sysfs node 'mem_limit'.
+ The value can be either in bytes or you can use mem suffixes.
+ In addition, you could change the value in runtime.
+-Examples:
++Examples::
++
+ 	# limit /dev/zram0 with 50MB memory
+ 	echo $((50*1024*1024)) > /sys/block/zram0/mem_limit
+ 
+@@ -126,7 +150,11 @@ Examples:
+ 	# To disable memory limit
+ 	echo 0 > /sys/block/zram0/mem_limit
+ 
+-6) Activate:
++6) Activate
++===========
++
++::
++
+ 	mkswap /dev/zram0
+ 	swapon /dev/zram0
+ 
+@@ -134,6 +162,7 @@ Examples:
+ 	mount /dev/zram1 /tmp
+ 
+ 7) Add/remove zram devices
++==========================
+ 
+ zram provides a control interface, which enables dynamic (on-demand) device
+ addition and removal.
+@@ -142,37 +171,44 @@ In order to add a new /dev/zramX device, perform read operation on hot_add
+ attribute. This will return either new device's device id (meaning that you
+ can use /dev/zram<id>) or error code.
+ 
+-Example:
++Example::
++
+ 	cat /sys/class/zram-control/hot_add
+ 	1
+ 
+ To remove the existing /dev/zramX device (where X is a device id)
+-execute
++execute::
++
+ 	echo X > /sys/class/zram-control/hot_remove
+ 
+-8) Stats:
++8) Stats
++========
++
+ Per-device statistics are exported as various nodes under /sys/block/zram<id>/
+ 
+ A brief description of exported device attributes. For more details please
+ read Documentation/ABI/testing/sysfs-block-zram.
+ 
++======================  ======  ===============================================
+ Name            	access            description
+-----            	------            -----------
++======================  ======  ===============================================
+ disksize          	RW	show and set the device's disk size
+ initstate         	RO	shows the initialization state of the device
+ reset             	WO	trigger device reset
+-mem_used_max      	WO	reset the `mem_used_max' counter (see later)
+-mem_limit         	WO	specifies the maximum amount of memory ZRAM can use
+-				to store the compressed data
+-writeback_limit   	WO	specifies the maximum amount of write IO zram can
+-				write out to backing device as 4KB unit
++mem_used_max      	WO	reset the `mem_used_max` counter (see later)
++mem_limit         	WO	specifies the maximum amount of memory ZRAM can
++				use to store the compressed data
++writeback_limit   	WO	specifies the maximum amount of write IO zram
++				can write out to backing device as 4KB unit
+ writeback_limit_enable  RW	show and set writeback_limit feature
+-max_comp_streams  	RW	the number of possible concurrent compress operations
++max_comp_streams  	RW	the number of possible concurrent compress
++				operations
+ comp_algorithm    	RW	show and change the compression algorithm
+ compact           	WO	trigger memory compaction
+ debug_stat        	RO	this file is used for zram debugging purposes
+ backing_dev	  	RW	set up backend storage for zram to write out
+ idle		  	WO	mark allocated slot as idle
++======================  ======  ===============================================
+ 
+ 
+ User space is advised to use the following files to read the device statistics.
+@@ -188,23 +224,31 @@ The stat file represents device's I/O statistics not accounted by block
+ layer and, thus, not available in zram<id>/stat file. It consists of a
+ single line of text and contains the following stats separated by
+ whitespace:
+- failed_reads     the number of failed reads
+- failed_writes    the number of failed writes
+- invalid_io       the number of non-page-size-aligned I/O requests
++
++ =============    =============================================================
++ failed_reads     The number of failed reads
++ failed_writes    The number of failed writes
++ invalid_io       The number of non-page-size-aligned I/O requests
+  notify_free      Depending on device usage scenario it may account
++
+                   a) the number of pages freed because of swap slot free
+-                  notifications or b) the number of pages freed because of
+-                  REQ_OP_DISCARD requests sent by bio. The former ones are
+-                  sent to a swap block device when a swap slot is freed,
+-                  which implies that this disk is being used as a swap disk.
++                     notifications
++                  b) the number of pages freed because of
++                     REQ_OP_DISCARD requests sent by bio. The former ones are
++                     sent to a swap block device when a swap slot is freed,
++                     which implies that this disk is being used as a swap disk.
++
+                   The latter ones are sent by filesystem mounted with
+                   discard option, whenever some data blocks are getting
+                   discarded.
++ =============    =============================================================
+ 
+ File /sys/block/zram<id>/mm_stat
+ 
+ The stat file represents device's mm statistics. It consists of a single
+ line of text and contains the following stats separated by whitespace:
++
++ ================ =============================================================
+  orig_data_size   uncompressed size of data stored in this disk.
+ 		  This excludes same-element-filled pages (same_pages) since
+ 		  no memory is allocated for them.
+@@ -223,58 +267,71 @@ line of text and contains the following stats separated by whitespace:
+                   No memory is allocated for such pages.
+  pages_compacted  the number of pages freed during compaction
+  huge_pages	  the number of incompressible pages
++ ================ =============================================================
+ 
+ File /sys/block/zram<id>/bd_stat
+ 
+ The stat file represents device's backing device statistics. It consists of
+ a single line of text and contains the following stats separated by whitespace:
++
++ ============== =============================================================
+  bd_count	size of data written in backing device.
+ 		Unit: 4K bytes
+  bd_reads	the number of reads from backing device
+ 		Unit: 4K bytes
+  bd_writes	the number of writes to backing device
+ 		Unit: 4K bytes
++ ============== =============================================================
++
++9) Deactivate
++=============
++
++::
+ 
+-9) Deactivate:
+ 	swapoff /dev/zram0
+ 	umount /dev/zram1
+ 
+-10) Reset:
+-	Write any positive value to 'reset' sysfs node
+-	echo 1 > /sys/block/zram0/reset
+-	echo 1 > /sys/block/zram1/reset
++10) Reset
++=========
++
++	Write any positive value to 'reset' sysfs node::
++
++		echo 1 > /sys/block/zram0/reset
++		echo 1 > /sys/block/zram1/reset
+ 
+ 	This frees all the memory allocated for the given device and
+ 	resets the disksize to zero. You must set the disksize again
+ 	before reusing the device.
+ 
+-* Optional Feature
++Optional Feature
++================
+ 
+-= writeback
++writeback
++---------
+ 
+ With CONFIG_ZRAM_WRITEBACK, zram can write idle/incompressible page
+ to backing storage rather than keeping it in memory.
+-To use the feature, admin should set up backing device via
++To use the feature, admin should set up backing device via::
+ 
+-	"echo /dev/sda5 > /sys/block/zramX/backing_dev"
++	echo /dev/sda5 > /sys/block/zramX/backing_dev
+ 
+ before disksize setting. It supports only partition at this moment.
+-If admin want to use incompressible page writeback, they could do via
++If admin want to use incompressible page writeback, they could do via::
+ 
+-	"echo huge > /sys/block/zramX/write"
++	echo huge > /sys/block/zramX/write
+ 
+ To use idle page writeback, first, user need to declare zram pages
+-as idle.
++as idle::
+ 
+-	"echo all > /sys/block/zramX/idle"
++	echo all > /sys/block/zramX/idle
+ 
+ From now on, any pages on zram are idle pages. The idle mark
+ will be removed until someone request access of the block.
+ IOW, unless there is access request, those pages are still idle pages.
+ 
+-Admin can request writeback of those idle pages at right timing via
++Admin can request writeback of those idle pages at right timing via::
+ 
+-	"echo idle > /sys/block/zramX/writeback"
++	echo idle > /sys/block/zramX/writeback
+ 
+ With the command, zram writeback idle pages from memory to the storage.
+ 
+@@ -285,7 +342,7 @@ to guarantee storage health for entire product life.
+ To overcome the concern, zram supports "writeback_limit" feature.
+ The "writeback_limit_enable"'s default value is 0 so that it doesn't limit
+ any writeback. IOW, if admin want to apply writeback budget, he should
+-enable writeback_limit_enable via
++enable writeback_limit_enable via::
+ 
+ 	$ echo 1 > /sys/block/zramX/writeback_limit_enable
+ 
+@@ -296,7 +353,7 @@ until admin set the budget via /sys/block/zramX/writeback_limit.
+ assigned via /sys/block/zramX/writeback_limit is meaninless.)
+ 
+ If admin want to limit writeback as per-day 400M, he could do it
+-like below.
++like below::
+ 
+ 	$ MB_SHIFT=20
+ 	$ 4K_SHIFT=12
+@@ -305,16 +362,16 @@ like below.
+ 	$ echo 1 > /sys/block/zram0/writeback_limit_enable
+ 
+ If admin want to allow further write again once the bugdet is exausted,
+-he could do it like below
++he could do it like below::
+ 
+ 	$ echo $((400<<MB_SHIFT>>4K_SHIFT)) > \
+ 		/sys/block/zram0/writeback_limit
+ 
+-If admin want to see remaining writeback budget since he set,
++If admin want to see remaining writeback budget since he set::
+ 
+ 	$ cat /sys/block/zramX/writeback_limit
+ 
+-If admin want to disable writeback limit, he could do
++If admin want to disable writeback limit, he could do::
+ 
+ 	$ echo 0 > /sys/block/zramX/writeback_limit_enable
+ 
+@@ -326,25 +383,35 @@ budget in next setting is user's job.
+ If admin want to measure writeback count in a certain period, he could
+ know it via /sys/block/zram0/bd_stat's 3rd column.
+ 
+-= memory tracking
++memory tracking
++===============
+ 
+ With CONFIG_ZRAM_MEMORY_TRACKING, user can know information of the
+ zram block. It could be useful to catch cold or incompressible
+ pages of the process with*pagemap.
++
+ If you enable the feature, you could see block state via
+-/sys/kernel/debug/zram/zram0/block_state". The output is as follows,
++/sys/kernel/debug/zram/zram0/block_state". The output is as follows::
+ 
+ 	  300    75.033841 .wh.
+ 	  301    63.806904 s...
+ 	  302    63.806919 ..hi
+ 
+-First column is zram's block index.
+-Second column is access time since the system was booted
+-Third column is state of the block.
+-(s: same page
+-w: written page to backing store
+-h: huge page
+-i: idle page)
++First column
++	zram's block index.
++Second column
++	access time since the system was booted
++Third column
++	state of the block:
++
++	s:
++		same page
++	w:
++		written page to backing store
++	h:
++		huge page
++	i:
++		idle page
+ 
+ First line of above example says 300th block is accessed at 75.033841sec
+ and the block's state is huge so it is written back to the backing
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ca1d09d0c44b..3ed27c0c36d8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10823,7 +10823,7 @@ M:	Josef Bacik <josef@toxicpanda.com>
+ S:	Maintained
+ L:	linux-block@vger.kernel.org
+ L:	nbd@other.debian.org
+-F:	Documentation/blockdev/nbd.txt
++F:	Documentation/blockdev/nbd.rst
+ F:	drivers/block/nbd.c
+ F:	include/uapi/linux/nbd.h
+ 
+@@ -11801,7 +11801,7 @@ PARIDE DRIVERS FOR PARALLEL PORT IDE DEVICES
+ M:	Tim Waugh <tim@cyberelk.net>
+ L:	linux-parport@lists.infradead.org (subscribers-only)
+ S:	Maintained
+-F:	Documentation/blockdev/paride.txt
++F:	Documentation/blockdev/paride.rst
+ F:	drivers/block/paride/
+ 
+ PARISC ARCHITECTURE
+@@ -13077,7 +13077,7 @@ F:	drivers/net/wireless/ralink/rt2x00/
+ RAMDISK RAM BLOCK DEVICE DRIVER
+ M:	Jens Axboe <axboe@kernel.dk>
+ S:	Maintained
+-F:	Documentation/blockdev/ramdisk.txt
++F:	Documentation/blockdev/ramdisk.rst
+ F:	drivers/block/brd.c
+ 
+ RANCHU VIRTUAL BOARD FOR MIPS
+@@ -17360,7 +17360,7 @@ R:	Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ F:	drivers/block/zram/
+-F:	Documentation/blockdev/zram.txt
++F:	Documentation/blockdev/zram.rst
+ 
+ ZS DECSTATION Z85C30 SERIAL DRIVER
+ M:	"Maciej W. Rozycki" <macro@linux-mips.org>
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index 96ec7e0fc1ea..c43690b973d8 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -31,7 +31,7 @@ config BLK_DEV_FD
+ 	  If you want to use the floppy disk drive(s) of your PC under Linux,
+ 	  say Y. Information about this driver, especially important for IBM
+ 	  Thinkpad users, is contained in
+-	  <file:Documentation/blockdev/floppy.txt>.
++	  <file:Documentation/blockdev/floppy.rst>.
+ 	  That file also contains the location of the Floppy driver FAQ as
+ 	  well as location of the fdutils package used to configure additional
+ 	  parameters of the driver at run time.
+@@ -96,7 +96,7 @@ config PARIDE
+ 	  your computer's parallel port. Most of them are actually IDE devices
+ 	  using a parallel port IDE adapter. This option enables the PARIDE
+ 	  subsystem which contains drivers for many of these external drives.
+-	  Read <file:Documentation/blockdev/paride.txt> for more information.
++	  Read <file:Documentation/blockdev/paride.rst> for more information.
+ 
+ 	  If you have said Y to the "Parallel-port support" configuration
+ 	  option, you may share a single port between your printer and other
+@@ -261,7 +261,7 @@ config BLK_DEV_NBD
+ 	  userland (making server and client physically the same computer,
+ 	  communicating using the loopback network device).
+ 
+-	  Read <file:Documentation/blockdev/nbd.txt> for more information,
++	  Read <file:Documentation/blockdev/nbd.rst> for more information,
+ 	  especially about where to find the server code, which runs in user
+ 	  space and does not need special kernel support.
+ 
+@@ -303,7 +303,7 @@ config BLK_DEV_RAM
+ 	  during the initial install of Linux.
+ 
+ 	  Note that the kernel command line option "ramdisk=XX" is now obsolete.
+-	  For details, read <file:Documentation/blockdev/ramdisk.txt>.
++	  For details, read <file:Documentation/blockdev/ramdisk.rst>.
  
  	  To compile this driver as a module, choose M here: the
- 	  module will be called pcc-cpufreq.
+ 	  module will be called brd. An alias "rd" has been defined
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index b8998abd86a5..14701be9f916 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4423,7 +4423,7 @@ static int __init floppy_setup(char *str)
+ 		pr_cont("\n");
+ 	} else
+ 		DPRINT("botched floppy option\n");
+-	DPRINT("Read Documentation/blockdev/floppy.txt\n");
++	DPRINT("Read Documentation/blockdev/floppy.rst\n");
+ 	return 0;
+ }
+ 
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index 1ffc64770643..e06b99d54816 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -12,7 +12,7 @@ config ZRAM
+ 	  It has several use cases, for example: /tmp storage, use as swap
+ 	  disks and maybe many more.
+ 
+-	  See Documentation/blockdev/zram.txt for more information.
++	  See Documentation/blockdev/zram.rst for more information.
+ 
+ config ZRAM_WRITEBACK
+        bool "Write back incompressible or idle page to backing device"
+@@ -26,7 +26,7 @@ config ZRAM_WRITEBACK
+ 	 With /sys/block/zramX/{idle,writeback}, application could ask
+ 	 idle page's writeback to the backing device to save in memory.
+ 
+-	 See Documentation/blockdev/zram.txt for more information.
++	 See Documentation/blockdev/zram.rst for more information.
+ 
+ config ZRAM_MEMORY_TRACKING
+ 	bool "Track zRam block status"
+@@ -36,4 +36,4 @@ config ZRAM_MEMORY_TRACKING
+ 	  of zRAM. Admin could see the information via
+ 	  /sys/kernel/debug/zram/zramX/block_state.
+ 
+-	  See Documentation/blockdev/zram.txt for more information.
++	  See Documentation/blockdev/zram.rst for more information.
+diff --git a/tools/testing/selftests/zram/README b/tools/testing/selftests/zram/README
+index 7972cc512408..5fa378391d3b 100644
+--- a/tools/testing/selftests/zram/README
++++ b/tools/testing/selftests/zram/README
+@@ -37,4 +37,4 @@ Commands required for testing:
+  - mkfs/ mkfs.ext4
+ 
+ For more information please refer:
+-kernel-source-tree/Documentation/blockdev/zram.txt
++kernel-source-tree/Documentation/blockdev/zram.rst
 -- 
 2.20.1
 
