@@ -2,107 +2,112 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86AC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247F6C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCC720859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E911520859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQxrawuX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOfdJFYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfDVQEJ (ORCPT
+        id S1727714AbfDVQF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:04:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40155 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVQEI (ORCPT
+        Mon, 22 Apr 2019 12:05:29 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46549 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfDVQF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:04:08 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so6018231plr.7;
-        Mon, 22 Apr 2019 09:04:08 -0700 (PDT)
+        Mon, 22 Apr 2019 12:05:29 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w26so5858307qto.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:05:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kXkiAfTwmCa9p1Avt7HB+P8BjxcnubiRLfnKV0dvTXc=;
-        b=nQxrawuXjuOuIl4OmDuQUizpd21r0JiUnbHOwTggTYT5Tk/XgdSTLpxOeAJnHNbG/4
-         TfRLNxTz+wzw25maA+pZOQd2TQmo5JLU9tV1oG9tIirC25vZoWNqBq1bhmRXyWKYiRBD
-         Xx8J1fl5h4lFelP4Yx+KfY2Qe3PI1/Xb5GwyvspT0L0LREMihWHp6oCO4QEZqrlNFfFB
-         /+xDk0Kj8v5xb3ZrwAj57mCTcUe47t4YienfrIQykRBgeKKo8AyIsyZgH9xBKBpNBJrF
-         Jlf9uR0hg6ZbvZgtHO4qZCfvUbSfLUEjFoKfiIr1YTD78kD1FsCzYK1eyqUcdLOiJk6e
-         5l+Q==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lqe5T/IHGzM/3+cSrJc7hY3YX15Dn1UASNLwG/n7aNU=;
+        b=HOfdJFYTVowlR4tf9AJysITXeJFAozu9WQhBheF5lRuilQzhC9QlPlVNA12ORJ04H7
+         ZHW8imyjJWNc6woE4cnUd6ohPAVODfaHztUWHBC+xAMRsgRuMYQ3DjCQKeGkRYUb1hYK
+         JdGnUChhS1AJUO6trjkanJBiT+Z5gCQlDwKwZxlT2BOMfmcmGz17nfJ7bjj7HDY1UkY4
+         v6Unyont4OS7r27Z+5oz9dsN7Bu4pLq+E91Xn8vW+LeK0/wWi5h2dIgV3J1PS3813st6
+         iKa0L4jeDd7oK92MfwtzW9sHFVzK3pBnItK3hrWefZyKwh5EAjpYlQsBnE0GYDAloAKb
+         hcBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kXkiAfTwmCa9p1Avt7HB+P8BjxcnubiRLfnKV0dvTXc=;
-        b=hn6RWktBVCmZDCX/mCqjPAc/TUrJQ6sTXV9RLN0pHBbRz0rfRBz1hZVgB7EKqmITuX
-         PaDLEGDS7aVIXPvufmH7qYL7hIWXVWkY+xtKF+70csmVZmOV1n3xmLldSbXXINpnPPKt
-         1JGRigPI/6OmQmM+VZUXPulwn83zvQKBKKtDf2qAs5/DQ1NtXUU6naKnF63Lnf8Q/X0H
-         nTPZyxoI707PaV7td6IMnGpppikAvN9Rxhy2GnECZ2IlP8uenq80Rzi9Kyo771Gnh6nM
-         uuNqSbCFTPdoPpTt9XsvdHDsPSCB2LmooMqJfF92dBbJG/zf4QKY3/DyeHjvVvlipVMb
-         uxsw==
-X-Gm-Message-State: APjAAAXCeYaQwKkjo4GXtbyrUbs28i/X3brom9lyglAvvBYmjXgElZeE
-        ICIAKv+XuHlyKRjC84lJX1c=
-X-Google-Smtp-Source: APXvYqyIvt+/4LHNtWu9fpcvG27kHSF6uMg8xZm6ZxepckvAgNBs8SDRiZclgMtKRfFtSvBOLabBSw==
-X-Received: by 2002:a17:902:5a3:: with SMTP id f32mr18303329plf.82.1555949048266;
-        Mon, 22 Apr 2019 09:04:08 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id q128sm19279928pga.60.2019.04.22.09.04.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 09:04:07 -0700 (PDT)
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-To:     David Ahern <dsahern@gmail.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Julian Anastasov <ja@ssi.bg>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <dc7c06ae-204d-c287-04a4-d48875476d09@gmail.com>
- <20190421204126.GA19213@ubuntu>
- <458669e6-3d94-1daf-f80b-3c8d740790fa@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <925fe55a-918e-e899-6f3c-43731712e369@gmail.com>
-Date:   Mon, 22 Apr 2019 09:04:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lqe5T/IHGzM/3+cSrJc7hY3YX15Dn1UASNLwG/n7aNU=;
+        b=Ukqtm6C3XOeZ9p0x4NM7bT5+b3NlHqIujVtokZbdzhxnHH+OCmE070lldFo5YJI5ju
+         IZY5QNE7rZzj1bHStGrdgZA4sUXQmgtzvSffLFVJTmXSmgvJ8sKugxC9Z3JKuYrUJ/iM
+         eTztTsbq3JIc0s0CmD46PpGxVd8U1dElJfgKFPP5K5oCMCr95p75aaiMA8QbFOytoe1y
+         Ho3qFSg4gOkPDmhaQr6D6px0zvm+RAXdrHgneSXLkPnuOZa4SAlqDSJExzdGSioRyEqb
+         TvIJ6liVBjrtn2ubQTquWFMvG8SHZZ56YFDDC7+EUnbVO5n2xmXe/bTBRCBsWeNlkS9H
+         EdUQ==
+X-Gm-Message-State: APjAAAUJ/tjmTCLLuEGbL0ofHlXY5j07T6on+vfJqs8BBz7QG1EBDGH7
+        7unWaRvedXassK9Qy1cC+iE9xvml
+X-Google-Smtp-Source: APXvYqwpVod+ytk0hi3EOaoqeoO3mu8KX9cQ+0DfnTbLNpG3OrRQ3PT2wH0uiDtZt6a0v/jRNX+2IQ==
+X-Received: by 2002:ac8:1a6d:: with SMTP id q42mr16477686qtk.129.1555949127832;
+        Mon, 22 Apr 2019 09:05:27 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (189-94-129-110.3g.claro.net.br. [189.94.129.110])
+        by smtp.gmail.com with ESMTPSA id h27sm8247415qtc.1.2019.04.22.09.05.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Apr 2019 09:05:26 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 76EE0403EB; Mon, 22 Apr 2019 13:05:23 -0300 (-03)
+Date:   Mon, 22 Apr 2019 13:05:23 -0300
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf bpf: Fix lock/unlock imbalance in
+ perf_env__find_btf() info
+Message-ID: <20190422160523.GC11750@kernel.org>
+References: <20190422151056.GA24665@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <458669e6-3d94-1daf-f80b-3c8d740790fa@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422151056.GA24665@embeddedor>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 04/22/2019 07:58 AM, David Ahern wrote:
-> On 4/21/19 2:41 PM, Stephen Suryaputra wrote:
->> Hi David,
->>
->> I looked at patchwork. This patch hasn't been accepted. Is there a plan
->> to resubmit? It is very useful. I had to debug refcnt issues multiple
->> times for my employer.
+Em Mon, Apr 22, 2019 at 10:10:56AM -0500, Gustavo A. R. Silva escreveu:
+> Fix lock/unlock imbalance by moving the call to up_read() just after
+> the *out* label.
 > 
-> I think the inlined versions of dev_put and dev_hold are better for
-> performance.
+> Addresses-Coverity-ID: 1444762 ("Missing unlock")
+> Fixes: 2db7b1e0bd49 ("perf bpf: Return NULL when RB tree lookup fails in perf_env__find_btf()")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  tools/perf/util/env.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I could submit it with a DEBUG config to enable. It has been invaluable
-> to me over the past 3+ years debugging refcount problems.
-> 
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 9494f9dc61ec..6a3eaf7d9353 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -115,8 +115,8 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+>  	}
+>  	node = NULL;
+>  
+> -	up_read(&env->bpf_progs.lock);
+>  out:
+> +	up_read(&env->bpf_progs.lock);
+>  	return node;
+>  }
 
-Sounds a good plan to me :)
+too late, this was fixed already, also detected by coverity :-)
+
+- Arnaldo
