@@ -2,210 +2,142 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02028C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7180C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D0A20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B745A2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:54:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nVwzGb9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfDVPvz (ORCPT
+        id S1727403AbfDVPx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:51:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37138 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbfDVPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:51:54 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BBD2C307D867;
-        Mon, 22 Apr 2019 15:51:52 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 730DE5D9D4;
-        Mon, 22 Apr 2019 15:51:44 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 11:51:42 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
+        Mon, 22 Apr 2019 11:53:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53752 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfDVPx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 11:53:59 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3MFhvFZ042577;
+        Mon, 22 Apr 2019 15:53:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=p6QQHopwwRKosDP8LgXQQJFuBnjWTvmMyvM3QBAwZPs=;
+ b=nVwzGb9UmyBgLZDHQqi3rPJ23CxEoryF1f8o39v2FRVYKH8i/lwhqUZiwJ1PtDhhj7ub
+ Eooi4WvCj7SOatNLxVBP2Awq2TvG8Wt0ayk6KeBvbY847PF++lNId9Cy+GCcHeObCC7W
+ Kmqu55EGmFw1StvhPdkU8cXaoVu+ZnNckd+ICnlqeO9JPjELISO9c4rG97hhdBRSSzWq
+ Xo+LH1KW8r3UuFbM8Ub+tU8Xe7ITtXVtheWpl0uaz8NddrWP0yTohC9hxq9EWPsv9ILD
+ DV31tzY1UdK4XzjktdnWt4WjP3zDW9DSTPZtqYkTZbEonMmYYyEG242hYrqdTAm+tbLH eA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2rytusq1qn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Apr 2019 15:53:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3MFqLkI007803;
+        Mon, 22 Apr 2019 15:53:33 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2s0f0v0qcj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Apr 2019 15:53:33 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3MFrVJx003002;
+        Mon, 22 Apr 2019 15:53:31 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 22 Apr 2019 08:53:31 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id C19976A00F4; Mon, 22 Apr 2019 11:53:33 -0400 (EDT)
+Date:   Mon, 22 Apr 2019 11:53:33 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 09/31] mm: VMA sequence count
-Message-ID: <20190422155142.GD3450@redhat.com>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-10-ldufour@linux.ibm.com>
- <20190418224857.GI11645@redhat.com>
- <d217e71c-7d55-ce1a-6461-ce1de732fb57@linux.ibm.com>
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Message-ID: <20190422155333.GB32647@char.us.oracle.com>
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d217e71c-7d55-ce1a-6461-ce1de732fb57@linux.ibm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 22 Apr 2019 15:51:53 +0000 (UTC)
+In-Reply-To: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904220119
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904220119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 05:45:57PM +0200, Laurent Dufour wrote:
-> Hi Jerome,
-> 
-> Thanks a lot for reviewing this series.
-> 
-> Le 19/04/2019 à 00:48, Jerome Glisse a écrit :
-> > On Tue, Apr 16, 2019 at 03:45:00PM +0200, Laurent Dufour wrote:
-> > > From: Peter Zijlstra <peterz@infradead.org>
-> > > 
-> > > Wrap the VMA modifications (vma_adjust/unmap_page_range) with sequence
-> > > counts such that we can easily test if a VMA is changed.
-> > > 
-> > > The calls to vm_write_begin/end() in unmap_page_range() are
-> > > used to detect when a VMA is being unmap and thus that new page fault
-> > > should not be satisfied for this VMA. If the seqcount hasn't changed when
-> > > the page table are locked, this means we are safe to satisfy the page
-> > > fault.
-> > > 
-> > > The flip side is that we cannot distinguish between a vma_adjust() and
-> > > the unmap_page_range() -- where with the former we could have
-> > > re-checked the vma bounds against the address.
-> > > 
-> > > The VMA's sequence counter is also used to detect change to various VMA's
-> > > fields used during the page fault handling, such as:
-> > >   - vm_start, vm_end
-> > >   - vm_pgoff
-> > >   - vm_flags, vm_page_prot
-> > >   - vm_policy
-> > 
-> > ^ All above are under mmap write lock ?
-> 
-> Yes, changes are still made under the protection of the mmap_sem.
-> 
-> > 
-> > >   - anon_vma
-> > 
-> > ^ This is either under mmap write lock or under page table lock
-> > 
-> > So my question is do we need the complexity of seqcount_t for this ?
-> 
-> The sequence counter is used to detect write operation done while readers
-> (SPF handler) is running.
-> 
-> The implementation is quite simple (here without the lockdep checks):
-> 
-> static inline void raw_write_seqcount_begin(seqcount_t *s)
-> {
-> 	s->sequence++;
-> 	smp_wmb();
-> }
-> 
-> I can't see why this is too complex here, would you elaborate on this ?
-> 
-> > 
-> > It seems that using regular int as counter and also relying on vm_flags
-> > when vma is unmap should do the trick.
-> 
-> vm_flags is not enough I guess an some operation are not impacting the
-> vm_flags at all (resizing for instance).
-> Am I missing something ?
-> 
-> > 
-> > vma_delete(struct vm_area_struct *vma)
-> > {
-> >      ...
-> >      /*
-> >       * Make sure the vma is mark as invalid ie neither read nor write
-> >       * so that speculative fault back off. A racing speculative fault
-> >       * will either see the flags as 0 or the new seqcount.
-> >       */
-> >      vma->vm_flags = 0;
-> >      smp_wmb();
-> >      vma->seqcount++;
-> >      ...
-> > }
-> 
-> Well I don't think we can safely clear the vm_flags this way when the VMA is
-> unmap, I think it is used later when cleaning is doen.
-> 
-> Later in this series, the VMA deletion is managed when the VMA is unlinked
-> from the RB Tree. That is checked using the vm_rb field's value, and managed
-> using RCU.
-> 
-> > Then:
-> > speculative_fault_begin(struct vm_area_struct *vma,
-> >                          struct spec_vmf *spvmf)
-> > {
-> >      ...
-> >      spvmf->seqcount = vma->seqcount;
-> >      smp_rmb();
-> >      spvmf->vm_flags = vma->vm_flags;
-> >      if (!spvmf->vm_flags) {
-> >          // Back off the vma is dying ...
-> >          ...
-> >      }
-> > }
-> > 
-> > bool speculative_fault_commit(struct vm_area_struct *vma,
-> >                                struct spec_vmf *spvmf)
-> > {
-> >      ...
-> >      seqcount = vma->seqcount;
-> >      smp_rmb();
-> >      vm_flags = vma->vm_flags;
-> > 
-> >      if (spvmf->vm_flags != vm_flags || seqcount != spvmf->seqcount) {
-> >          // Something did change for the vma
-> >          return false;
-> >      }
-> >      return true;
-> > }
-> > 
-> > This would also avoid the lockdep issue described below. But maybe what
-> > i propose is stupid and i will see it after further reviewing thing.
-> 
-> That's true that the lockdep is quite annoying here. But it is still
-> interesting to keep in the loop to avoid 2 subsequent write_seqcount_begin()
-> call being made in the same context (which would lead to an even sequence
-> counter value while write operation is in progress). So I think this is
-> still a good thing to have lockdep available here.
+On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
+> Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
+> host system has multiple software-visible die within each package.
 
-Ok so i had to read everything and i should have read everything before
-asking all of the above. It does look good in fact, what worried my in
-this patch is all the lockdep avoidance as it is usualy a red flags.
+Is there some doc on this?
 
-But after thinking long and hard i do not see how to easily solve that
-one as unmap_page_range() is in so many different path... So what is done
-in this patch is the most sane thing. Sorry for the noise.
+The https://software.intel.com/en-us/articles/intel-64-architecture-processor-topology-enumeration
+has a date of 2012.
 
-So for this patch:
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index fd39516..9fc14f2 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+>  	return xcr0;
+>  }
+>  
+> +/* We need to check if the host cpu has multi-chip packaging technology. */
+> +static bool kvm_supported_intel_mcp(void)
+> +{
+> +	u32 eax, ignored;
+> +
+> +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
+> +
+> +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax != 0);
+> +}
+> +
+>  #define F(x) bit(X86_FEATURE_##x)
+>  
+>  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  	switch (function) {
+>  	case 0:
+>  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
+>  		break;
+>  	case 1:
+>  		entry->edx &= kvm_cpuid_1_edx_x86_features;
+> @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  		entry->edx = edx.full;
+>  		break;
+>  	}
+> +	/* function 0x1f has additional index. */
+> +	case 0x1f:
+>  	/* function 0xb has additional index. */
+>  	case 0xb: {
+>  		int i, level_type;
+> -- 
+> 1.8.3.1
+> 
