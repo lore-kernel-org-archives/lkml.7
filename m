@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7951C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63506C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F324218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D981218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962335;
-	bh=XAzFXlP87E7U02nFKK6K6OOe5SvtJALvL1QYzYr23jo=;
+	s=default; t=1555962340;
+	bh=4M/H2Pqbr35Cyfqi7q5RW+FgCH80FxV6EDYCtkObp/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f7AvEiTeK5MKqB5sPp/6H0Qve4lwRf7cUHDWk4Qb7GFYteJE+4LrWka5X/0ZCpjfM
-	 t4BMHkhicJpN2oAuQQKVJp8Dz2SJESqx/PHLE1Nmc9tAKbcqOEBVUCEA1Y5nl2bTSL
-	 LpN8FNg1H6ocn+fM4HRwKCFbVW+DpdylasgNRXSs=
+	b=lk37vnKsNiMNY45lNYq1aNJqIQ+mDnzbgv+M5qDN1K7GH6kPq1vt4oquzb+tCjm9m
+	 2zLxEOvsvQKuHKBw9HBtwnk/yPzB+fbaHOGb2TD6EgvAXJ92VpD8tBZ7roIbvzIgDV
+	 c1QHP2AwWGg1J6FKO6wTt5Mzr1Gq0sK+H3Vc8urI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfDVTpe (ORCPT
+        id S1729810AbfDVTpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47220 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729732AbfDVTp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:28 -0400
+        id S1729777AbfDVTpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD8BB21904;
-        Mon, 22 Apr 2019 19:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246E9218B0;
+        Mon, 22 Apr 2019 19:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962327;
-        bh=XAzFXlP87E7U02nFKK6K6OOe5SvtJALvL1QYzYr23jo=;
+        s=default; t=1555962335;
+        bh=4M/H2Pqbr35Cyfqi7q5RW+FgCH80FxV6EDYCtkObp/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gPghD89ILPixmHttRQTp8F0PGCCUCByenA8XJUvHVUQ85e2z9qSZIhf2vFm9xvpFj
-         F1Oz3plIXM4IqRHsiQV9+mLRlocsu5tDXgr0poWuIooID7hAwRawmatOCyGJf1uJa4
-         ns4gWnLn6IWgTDDZxhmS3Qmbioe9KQSTzFvvC5+I=
+        b=yknu7F/fJekqXkhZJrjPg9ajDwCHU0/KFMt9zV8UYp/aVSG/ZjvmnzEPpo/6ySrWB
+         ymv+8an2CcHNM5N5IspXhXVvyIZe4l5yExeJpkuwuj2+syNwKzKKeAZLwsjyPVW2PC
+         gkqMMQz9nK7RTT9KvG5ugYEYuCSD4C3IGi8ztSMA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/68] qlcnic: Avoid potential NULL pointer dereference
-Date:   Mon, 22 Apr 2019 15:44:14 -0400
-Message-Id: <20190422194516.11634-6-sashal@kernel.org>
+Cc:     Maxim Zhukov <mussitantesmortem@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 09/68] staging, mt7621-pci: fix build without pci support
+Date:   Mon, 22 Apr 2019 15:44:17 -0400
+Message-Id: <20190422194516.11634-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -58,33 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Maxim Zhukov <mussitantesmortem@gmail.com>
 
-[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
+[ Upstream commit 90cd9bed5adb3e3bd4d3ac4cbcecbc4a8028bbaf ]
 
-netdev_alloc_skb can fail and return a NULL pointer which is
-dereferenced without a check. The patch avoids such a scenario.
+Add depends on PCI for PCI_MT7621
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Maxim Zhukov <mussitantesmortem@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/mt7621-pci/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-index 3b0adda7cc9c..a4cd6f2cfb86 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-@@ -1048,6 +1048,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
- 
- 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
- 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
-+		if (!skb)
-+			break;
- 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
- 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
- 		adapter->ahw->diag_cnt = 0;
+diff --git a/drivers/staging/mt7621-pci/Kconfig b/drivers/staging/mt7621-pci/Kconfig
+index d33533872a16..c8fa17cfa807 100644
+--- a/drivers/staging/mt7621-pci/Kconfig
++++ b/drivers/staging/mt7621-pci/Kconfig
+@@ -1,6 +1,7 @@
+ config PCI_MT7621
+ 	tristate "MediaTek MT7621 PCI Controller"
+ 	depends on RALINK
++	depends on PCI
+ 	select PCI_DRIVERS_GENERIC
+ 	help
+ 	  This selects a driver for the MediaTek MT7621 PCI Controller.
 -- 
 2.19.1
 
