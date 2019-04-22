@@ -2,58 +2,58 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24950C282E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B01C282E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D175F20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C2820896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939716;
-	bh=N8hiwS5o7jJV6+yXQXYdhmTazP6fbtck7h13jAlGb/4=;
+	s=default; t=1555939717;
+	bh=c/UeVniyB+rmzTX5Noi3PdW+QyJk3i2Ivu1jz3TBdgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0EiiIBhSLgooPdeNBDW4WjL4JVjIEoObhvHfIZpUruMRE4m2Y5FlF4Ke+1T4d6jCL
-	 fAzRN9MyhP//yFyk/jHra3IW4KzW3oTQwsFq9H3FYwYo3qI1S73kDBnH5w7cmwdkNR
-	 V8f+AYe6Wupsg2ysuJzEp+L/UpbhaRXlcZtfan2M=
+	b=yeOJP64Wy6a5I6XP+dcQp/yFeMjev0ynUdtTrQiXsIvd9nmZ4/m6HOluWpIfrKEWf
+	 ffckmYP74p8/pn/uQhiJx7wBfo1Etj7iBog0pEoGJQAfWlri39f161Wt/WEiaSiFq/
+	 S5GDbjGcO4N25ui+ucrLtvH8bSk+Oz95lB/5ip7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727748AbfDVN2f (ORCPT
+        id S1727764AbfDVN2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 22 Apr 2019 09:28:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37422 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.133]:37456 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfDVN2R (ORCPT
+        with ESMTP id S1727472AbfDVN2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:17 -0400
+        Mon, 22 Apr 2019 09:28:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cQY43MPArmwZuFfu6bTfT8QQw2Mpx/rEXeT6lNvrai0=; b=LO+7dyr0bwnYLA9482OkNw9vig
-        eCeo5gem0gT/2M6o6Ncqc+bFjKPKeaozjg3agP6gzSXoijW+jpfTHA8f3IDBnDKM1PvVO/kT6Ijjc
-        4UW72OGj+nCbn8sb6mU9tCyusutS88TfzB5bOUOBI1AXnxN7JiOwzs5wWGTTDgeLo6tcononWupx/
-        2rIE4xAc0k2okxJtx7CHKvodMaBXqG6mCwJmfGKFscqpMmuVytjBq9pdiPOv7+xfMGmMZk6LzbyJf
-        j97kw/95AdkYbkTbRzjROTz1z8kbp5Cr1F3jLmJeZ2Wd8wLX8YMGA22Rq5ktHZTYjH2MvuP7dMIcY
-        wjsF5LCg==;
+        bh=OFHNEDIcW9/PVQWEAl3y/PO2Dd2UMGuwLLjbtIjjzPk=; b=ntBzqGLZJVy5o3BxjAwTci32ig
+        yd2BJ0GxHOR93YWnXO0GOH+BlbODlZycS5VvxAz66ZbO5cKNFIJB9hUz25IF73x+Vtr15uiBT0PKN
+        gMXRUv+TTf3FnTGJi6p+/QW6ixOElA2euYY0kGO/szoU+SELR9alf548+mG5yS2fvIPgSE3PcnW20
+        6qApbdwtm2MnAG9g80gjfY7RA2cB6b7cwO+7fepdA2Vhq0HR9kUilI4KthOqkVokmCL8AmnvpOn9B
+        3G2aeztPprjeFji1eKEKImaHPY3TS5VDFa5JidelBXzdR5pEOZfw+blQdO93O/hTkoGxSknKg8R44
+        FVOfhZiQ==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzY-0005HS-Pe; Mon, 22 Apr 2019 13:28:17 +0000
+        id 1hIYzY-0005HU-Pn; Mon, 22 Apr 2019 13:28:17 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005pH-K5; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzU-0005pO-LK; Mon, 22 Apr 2019 10:28:12 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 72/79] docs: mmc: convert to ReST
-Date:   Mon, 22 Apr 2019 10:28:01 -0300
-Message-Id: <18e9ca201cbf4d46ceff57f6bf1179d32bdb014f.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Subject: [PATCH v2 73/79] docs: sparc: convert to ReST
+Date:   Mon, 22 Apr 2019 10:28:02 -0300
+Message-Id: <c3fa91bf9974bf9029c76d0a9adb96c66b3876e4.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -64,305 +64,606 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the mmc documentation files to ReST, add an
+Rename the sparc documentation files to ReST, add an
 index for them and adjust in order to produce a nice html
 output via the Sphinx build system.
+
+There is an except from a document under oradax dir.
+It doesn't seem to make much sense to convert this one
+to ReST, so let's add it as an included document.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/mmc/index.rst                   | 13 +++++
- .../{mmc-async-req.txt => mmc-async-req.rst}  | 53 +++++++++++--------
- .../{mmc-dev-attrs.txt => mmc-dev-attrs.rst}  | 32 +++++++----
- .../{mmc-dev-parts.txt => mmc-dev-parts.rst}  | 13 ++---
- .../mmc/{mmc-tools.txt => mmc-tools.rst}      |  5 +-
- 5 files changed, 79 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/mmc/index.rst
- rename Documentation/mmc/{mmc-async-req.txt => mmc-async-req.rst} (75%)
- rename Documentation/mmc/{mmc-dev-attrs.txt => mmc-dev-attrs.rst} (73%)
- rename Documentation/mmc/{mmc-dev-parts.txt => mmc-dev-parts.rst} (83%)
- rename Documentation/mmc/{mmc-tools.txt => mmc-tools.rst} (92%)
+ Documentation/sparc/{adi.txt => adi.rst}      | 174 +++++++++---------
+ .../sparc/{console.txt => console.rst}        |   4 +-
+ Documentation/sparc/index.rst                 |  13 ++
+ .../oradax/{oracle-dax.txt => oracle-dax.rst} |  58 +++---
+ drivers/sbus/char/oradax.c                    |   2 +-
+ 5 files changed, 144 insertions(+), 107 deletions(-)
+ rename Documentation/sparc/{adi.txt => adi.rst} (70%)
+ rename Documentation/sparc/{console.txt => console.rst} (53%)
+ create mode 100644 Documentation/sparc/index.rst
+ rename Documentation/sparc/oradax/{oracle-dax.txt => oracle-dax.rst} (95%)
 
-diff --git a/Documentation/mmc/index.rst b/Documentation/mmc/index.rst
+diff --git a/Documentation/sparc/adi.txt b/Documentation/sparc/adi.rst
+similarity index 70%
+rename from Documentation/sparc/adi.txt
+rename to Documentation/sparc/adi.rst
+index e1aed155fb89..857ad30f9569 100644
+--- a/Documentation/sparc/adi.txt
++++ b/Documentation/sparc/adi.rst
+@@ -1,3 +1,4 @@
++================================
+ Application Data Integrity (ADI)
+ ================================
+ 
+@@ -44,12 +45,15 @@ provided by the hypervisor to the kernel.  Kernel returns the value of
+ ADI block size to userspace using auxiliary vector along with other ADI
+ info. Following auxiliary vectors are provided by the kernel:
+ 
++	============	===========================================
+ 	AT_ADI_BLKSZ	ADI block size. This is the granularity and
+ 			alignment, in bytes, of ADI versioning.
+ 	AT_ADI_NBITS	Number of ADI version bits in the VA
++	============	===========================================
+ 
+ 
+-IMPORTANT NOTES:
++IMPORTANT NOTES
++===============
+ 
+ - Version tag values of 0x0 and 0xf are reserved. These values match any
+   tag in virtual address and never generate a mismatch exception.
+@@ -86,11 +90,12 @@ IMPORTANT NOTES:
+ 
+ 
+ ADI related traps
+------------------
++=================
+ 
+ With ADI enabled, following new traps may occur:
+ 
+ Disrupting memory corruption
++----------------------------
+ 
+ 	When a store accesses a memory localtion that has TTE.mcd=1,
+ 	the task is running with ADI enabled (PSTATE.mcde=1), and the ADI
+@@ -100,7 +105,7 @@ Disrupting memory corruption
+ 	first. Hypervisor creates a sun4v error report and sends a
+ 	resumable error (TT=0x7e) trap to the kernel. The kernel sends
+ 	a SIGSEGV to the task that resulted in this trap with the following
+-	info:
++	info::
+ 
+ 		siginfo.si_signo = SIGSEGV;
+ 		siginfo.errno = 0;
+@@ -110,6 +115,7 @@ Disrupting memory corruption
+ 
+ 
+ Precise memory corruption
++-------------------------
+ 
+ 	When a store accesses a memory location that has TTE.mcd=1,
+ 	the task is running with ADI enabled (PSTATE.mcde=1), and the ADI
+@@ -118,7 +124,7 @@ Precise memory corruption
+ 	MCD precise exception is enabled (MCDPERR=1), a precise
+ 	exception is sent to the kernel with TT=0x1a. The kernel sends
+ 	a SIGSEGV to the task that resulted in this trap with the following
+-	info:
++	info::
+ 
+ 		siginfo.si_signo = SIGSEGV;
+ 		siginfo.errno = 0;
+@@ -126,17 +132,19 @@ Precise memory corruption
+ 		siginfo.si_addr = addr;	/* address that caused trap */
+ 		siginfo.si_trapno = 0;
+ 
+-	NOTE: ADI tag mismatch on a load always results in precise trap.
++	NOTE:
++		ADI tag mismatch on a load always results in precise trap.
+ 
+ 
+ MCD disabled
++------------
+ 
+ 	When a task has not enabled ADI and attempts to set ADI version
+ 	on a memory address, processor sends an MCD disabled trap. This
+ 	trap is handled by hypervisor first and the hypervisor vectors this
+ 	trap through to the kernel as Data Access Exception trap with
+ 	fault type set to 0xa (invalid ASI). When this occurs, the kernel
+-	sends the task SIGSEGV signal with following info:
++	sends the task SIGSEGV signal with following info::
+ 
+ 		siginfo.si_signo = SIGSEGV;
+ 		siginfo.errno = 0;
+@@ -149,35 +157,35 @@ Sample program to use ADI
+ -------------------------
+ 
+ Following sample program is meant to illustrate how to use the ADI
+-functionality.
++functionality::
+ 
+-#include <unistd.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <elf.h>
+-#include <sys/ipc.h>
+-#include <sys/shm.h>
+-#include <sys/mman.h>
+-#include <asm/asi.h>
++  #include <unistd.h>
++  #include <stdio.h>
++  #include <stdlib.h>
++  #include <elf.h>
++  #include <sys/ipc.h>
++  #include <sys/shm.h>
++  #include <sys/mman.h>
++  #include <asm/asi.h>
+ 
+-#ifndef AT_ADI_BLKSZ
+-#define AT_ADI_BLKSZ	48
+-#endif
+-#ifndef AT_ADI_NBITS
+-#define AT_ADI_NBITS	49
+-#endif
++  #ifndef AT_ADI_BLKSZ
++  #define AT_ADI_BLKSZ	48
++  #endif
++  #ifndef AT_ADI_NBITS
++  #define AT_ADI_NBITS	49
++  #endif
+ 
+-#ifndef PROT_ADI
+-#define PROT_ADI	0x10
+-#endif
++  #ifndef PROT_ADI
++  #define PROT_ADI	0x10
++  #endif
+ 
+-#define BUFFER_SIZE     32*1024*1024UL
++  #define BUFFER_SIZE     32*1024*1024UL
+ 
+-main(int argc, char* argv[], char* envp[])
+-{
+-        unsigned long i, mcde, adi_blksz, adi_nbits;
+-        char *shmaddr, *tmp_addr, *end, *veraddr, *clraddr;
+-        int shmid, version;
++  main(int argc, char* argv[], char* envp[])
++  {
++          unsigned long i, mcde, adi_blksz, adi_nbits;
++          char *shmaddr, *tmp_addr, *end, *veraddr, *clraddr;
++          int shmid, version;
+ 	Elf64_auxv_t *auxv;
+ 
+ 	adi_blksz = 0;
+@@ -202,77 +210,77 @@ main(int argc, char* argv[], char* envp[])
+ 	printf("\tBlock size = %ld\n", adi_blksz);
+ 	printf("\tNumber of bits = %ld\n", adi_nbits);
+ 
+-        if ((shmid = shmget(2, BUFFER_SIZE,
+-                                IPC_CREAT | SHM_R | SHM_W)) < 0) {
+-                perror("shmget failed");
+-                exit(1);
+-        }
++          if ((shmid = shmget(2, BUFFER_SIZE,
++                                  IPC_CREAT | SHM_R | SHM_W)) < 0) {
++                  perror("shmget failed");
++                  exit(1);
++          }
+ 
+-        shmaddr = shmat(shmid, NULL, 0);
+-        if (shmaddr == (char *)-1) {
+-                perror("shm attach failed");
+-                shmctl(shmid, IPC_RMID, NULL);
+-                exit(1);
+-        }
++          shmaddr = shmat(shmid, NULL, 0);
++          if (shmaddr == (char *)-1) {
++                  perror("shm attach failed");
++                  shmctl(shmid, IPC_RMID, NULL);
++                  exit(1);
++          }
+ 
+ 	if (mprotect(shmaddr, BUFFER_SIZE, PROT_READ|PROT_WRITE|PROT_ADI)) {
+ 		perror("mprotect failed");
+ 		goto err_out;
+ 	}
+ 
+-        /* Set the ADI version tag on the shm segment
+-         */
+-        version = 10;
+-        tmp_addr = shmaddr;
+-        end = shmaddr + BUFFER_SIZE;
+-        while (tmp_addr < end) {
+-                asm volatile(
+-                        "stxa %1, [%0]0x90\n\t"
+-                        :
+-                        : "r" (tmp_addr), "r" (version));
+-                tmp_addr += adi_blksz;
+-        }
++          /* Set the ADI version tag on the shm segment
++           */
++          version = 10;
++          tmp_addr = shmaddr;
++          end = shmaddr + BUFFER_SIZE;
++          while (tmp_addr < end) {
++                  asm volatile(
++                          "stxa %1, [%0]0x90\n\t"
++                          :
++                          : "r" (tmp_addr), "r" (version));
++                  tmp_addr += adi_blksz;
++          }
+ 	asm volatile("membar #Sync\n\t");
+ 
+-        /* Create a versioned address from the normal address by placing
++          /* Create a versioned address from the normal address by placing
+ 	 * version tag in the upper adi_nbits bits
+-         */
+-        tmp_addr = (void *) ((unsigned long)shmaddr << adi_nbits);
+-        tmp_addr = (void *) ((unsigned long)tmp_addr >> adi_nbits);
+-        veraddr = (void *) (((unsigned long)version << (64-adi_nbits))
+-                        | (unsigned long)tmp_addr);
++           */
++          tmp_addr = (void *) ((unsigned long)shmaddr << adi_nbits);
++          tmp_addr = (void *) ((unsigned long)tmp_addr >> adi_nbits);
++          veraddr = (void *) (((unsigned long)version << (64-adi_nbits))
++                          | (unsigned long)tmp_addr);
+ 
+-        printf("Starting the writes:\n");
+-        for (i = 0; i < BUFFER_SIZE; i++) {
+-                veraddr[i] = (char)(i);
+-                if (!(i % (1024 * 1024)))
+-                        printf(".");
+-        }
+-        printf("\n");
++          printf("Starting the writes:\n");
++          for (i = 0; i < BUFFER_SIZE; i++) {
++                  veraddr[i] = (char)(i);
++                  if (!(i % (1024 * 1024)))
++                          printf(".");
++          }
++          printf("\n");
+ 
+-        printf("Verifying data...");
++          printf("Verifying data...");
+ 	fflush(stdout);
+-        for (i = 0; i < BUFFER_SIZE; i++)
+-                if (veraddr[i] != (char)i)
+-                        printf("\nIndex %lu mismatched\n", i);
+-        printf("Done.\n");
++          for (i = 0; i < BUFFER_SIZE; i++)
++                  if (veraddr[i] != (char)i)
++                          printf("\nIndex %lu mismatched\n", i);
++          printf("Done.\n");
+ 
+-        /* Disable ADI and clean up
+-         */
++          /* Disable ADI and clean up
++           */
+ 	if (mprotect(shmaddr, BUFFER_SIZE, PROT_READ|PROT_WRITE)) {
+ 		perror("mprotect failed");
+ 		goto err_out;
+ 	}
+ 
+-        if (shmdt((const void *)shmaddr) != 0)
+-                perror("Detach failure");
+-        shmctl(shmid, IPC_RMID, NULL);
++          if (shmdt((const void *)shmaddr) != 0)
++                  perror("Detach failure");
++          shmctl(shmid, IPC_RMID, NULL);
+ 
+-        exit(0);
++          exit(0);
+ 
+-err_out:
+-        if (shmdt((const void *)shmaddr) != 0)
+-                perror("Detach failure");
+-        shmctl(shmid, IPC_RMID, NULL);
+-        exit(1);
+-}
++  err_out:
++          if (shmdt((const void *)shmaddr) != 0)
++                  perror("Detach failure");
++          shmctl(shmid, IPC_RMID, NULL);
++          exit(1);
++  }
+diff --git a/Documentation/sparc/console.txt b/Documentation/sparc/console.rst
+similarity index 53%
+rename from Documentation/sparc/console.txt
+rename to Documentation/sparc/console.rst
+index 5aa735a44e02..73132db83ece 100644
+--- a/Documentation/sparc/console.txt
++++ b/Documentation/sparc/console.rst
+@@ -1,5 +1,5 @@
+-Steps for sending 'break' on sunhv console:
+-===========================================
++Steps for sending 'break' on sunhv console
++==========================================
+ 
+ On Baremetal:
+    1. press   Esc + 'B'
+diff --git a/Documentation/sparc/index.rst b/Documentation/sparc/index.rst
 new file mode 100644
-index 000000000000..3305478ddadb
+index 000000000000..91f7d6643dd5
 --- /dev/null
-+++ b/Documentation/mmc/index.rst
++++ b/Documentation/sparc/index.rst
 @@ -0,0 +1,13 @@
 +:orphan:
 +
-+========================
-+MMC/SD/SDIO card support
-+========================
++==================
++Sparc Architecture
++==================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   mmc-dev-attrs
-+   mmc-dev-parts
-+   mmc-async-req
-+   mmc-tools
-diff --git a/Documentation/mmc/mmc-async-req.txt b/Documentation/mmc/mmc-async-req.rst
-similarity index 75%
-rename from Documentation/mmc/mmc-async-req.txt
-rename to Documentation/mmc/mmc-async-req.rst
-index ae1907b10e4a..0f7197c9c3b5 100644
---- a/Documentation/mmc/mmc-async-req.txt
-+++ b/Documentation/mmc/mmc-async-req.rst
-@@ -1,13 +1,20 @@
-+========================
-+MMC Asynchronous Request
-+========================
++   console
++   adi
 +
- Rationale
- =========
++   oradax/oracle-dax
+diff --git a/Documentation/sparc/oradax/oracle-dax.txt b/Documentation/sparc/oradax/oracle-dax.rst
+similarity index 95%
+rename from Documentation/sparc/oradax/oracle-dax.txt
+rename to Documentation/sparc/oradax/oracle-dax.rst
+index 9d53ac93286f..d1e14d572918 100644
+--- a/Documentation/sparc/oradax/oracle-dax.txt
++++ b/Documentation/sparc/oradax/oracle-dax.rst
+@@ -1,5 +1,6 @@
++=======================================
+ Oracle Data Analytics Accelerator (DAX)
+----------------------------------------
++=======================================
  
- How significant is the cache maintenance overhead?
+ DAX is a coprocessor which resides on the SPARC M7 (DAX1) and M8
+ (DAX2) processor chips, and has direct access to the CPU's L3 caches
+@@ -17,6 +18,7 @@ code sufficient to write user or kernel applications that use DAX
+ functionality.
+ 
+ The user library is open source and available at:
 +
- It depends. Fast eMMC and multiple cache levels with speculative cache
- pre-fetch makes the cache overhead relatively significant. If the DMA
- preparations for the next request are done in parallel with the current
- transfer, the DMA preparation overhead would not affect the MMC performance.
+     https://oss.oracle.com/git/gitweb.cgi?p=libdax.git
+ 
+ The Hypervisor interface to the coprocessor is described in detail in
+@@ -26,7 +28,7 @@ Specification" version 3.0.20+15, dated 2017-09-25.
+ 
+ 
+ High Level Overview
+--------------------
++===================
+ 
+ A coprocessor request is described by a Command Control Block
+ (CCB). The CCB contains an opcode and various parameters. The opcode
+@@ -52,7 +54,7 @@ thread.
+ 
+ 
+ Addressing Memory
+------------------
++=================
+ 
+ The kernel does not have access to physical memory in the Sun4v
+ architecture, as there is an additional level of memory virtualization
+@@ -77,7 +79,7 @@ the request.
+ 
+ 
+ The Driver API
+---------------
++==============
+ 
+ An application makes requests to the driver via the write() system
+ call, and gets results (if any) via read(). The completion areas are
+@@ -108,6 +110,7 @@ equal to the number of bytes given in the call. Otherwise -1 is
+ returned and errno is set.
+ 
+ CCB_DEQUEUE
++-----------
+ 
+ Tells the driver to clean up resources associated with past
+ requests. Since no interrupt is generated upon the completion of a
+@@ -116,12 +119,14 @@ further status information is returned, so the user should not
+ subsequently call read().
+ 
+ CCB_KILL
++--------
+ 
+ Kills a CCB during execution. The CCB is guaranteed to not continue
+ executing once this call returns successfully. On success, read() must
+ be called to retrieve the result of the action.
+ 
+ CCB_INFO
++--------
+ 
+ Retrieves information about a currently executing CCB. Note that some
+ Hypervisors might return 'notfound' when the CCB is in 'inprogress'
+@@ -130,6 +135,7 @@ CCB_KILL must be invoked on that CCB. Upon success, read() must be
+ called to retrieve the details of the action.
+ 
+ Submission of an array of CCBs for execution
++---------------------------------------------
+ 
+ A write() whose length is a multiple of the CCB size is treated as a
+ submit operation. The file offset is treated as the index of the
+@@ -146,6 +152,7 @@ status will reflect the error caused by the first CCB that was not
+ accepted, and status_data will provide additional data in some cases.
+ 
+ MMAP
++----
+ 
+ The mmap() function provides access to the completion area allocated
+ in the driver.  Note that the completion area is not writeable by the
+@@ -153,7 +160,7 @@ user process, and the mmap call must not specify PROT_WRITE.
+ 
+ 
+ Completion of a Request
+------------------------
++=======================
+ 
+ The first byte in each completion area is the command status which is
+ updated by the coprocessor hardware. Software may take advantage of
+@@ -172,7 +179,7 @@ and resumption of execution may be just a few nanoseconds.
+ 
+ 
+ Application Life Cycle of a DAX Submission
+-------------------------------------------
++==========================================
+ 
+  - open dax device
+  - call mmap() to get the completion area address
+@@ -187,7 +194,7 @@ Application Life Cycle of a DAX Submission
+ 
+ 
+ Memory Constraints
+-------------------
++==================
+ 
+ The DAX hardware operates only on physical addresses. Therefore, it is
+ not aware of virtual memory mappings and the discontiguities that may
+@@ -226,7 +233,7 @@ CCB Structure
+ -------------
+ A CCB is an array of 8 64-bit words. Several of these words provide
+ command opcodes, parameters, flags, etc., and the rest are addresses
+-for the completion area, output buffer, and various inputs:
++for the completion area, output buffer, and various inputs::
+ 
+    struct ccb {
+        u64   control;
+@@ -252,7 +259,7 @@ The first word (control) is examined by the driver for the following:
+ 
+ 
+ Example Code
+-------------
++============
+ 
+ The DAX is accessible to both user and kernel code.  The kernel code
+ can make hypercalls directly while the user code must use wrappers
+@@ -265,7 +272,7 @@ arch/sparc/include/uapi/asm/oradax.h must be included.
+ 
+ First, the proper device must be opened. For M7 it will be
+ /dev/oradax1 and for M8 it will be /dev/oradax2. The simplest
+-procedure is to attempt to open both, as only one will succeed:
++procedure is to attempt to open both, as only one will succeed::
+ 
+ 	fd = open("/dev/oradax1", O_RDWR);
+ 	if (fd < 0)
+@@ -273,7 +280,7 @@ procedure is to attempt to open both, as only one will succeed:
+ 	if (fd < 0)
+ 	       /* No DAX found */
+ 
+-Next, the completion area must be mapped:
++Next, the completion area must be mapped::
+ 
+       completion_area = mmap(NULL, DAX_MMAP_LEN, PROT_READ, MAP_SHARED, fd, 0);
+ 
+@@ -295,7 +302,7 @@ is the input bitmap inverted.
+ 
+ For details of all the parameters and bits used in this CCB, please
+ refer to section 36.2.1.3 of the DAX Hypervisor API document, which
+-describes the Scan command in detail.
++describes the Scan command in detail::
+ 
+ 	ccb->control =       /* Table 36.1, CCB Header Format */
+ 		  (2L << 48)     /* command = Scan Value */
+@@ -326,7 +333,7 @@ describes the Scan command in detail.
+ 
+ The CCB submission is a write() or pwrite() system call to the
+ driver. If the call fails, then a read() must be used to retrieve the
+-status:
++status::
+ 
+ 	if (pwrite(fd, ccb, 64, 0) != 64) {
+ 		struct ccb_exec_result status;
+@@ -337,7 +344,7 @@ status:
+ After a successful submission of the CCB, the completion area may be
+ polled to determine when the DAX is finished. Detailed information on
+ the contents of the completion area can be found in section 36.2.2 of
+-the DAX HV API document.
++the DAX HV API document::
+ 
+ 	while (1) {
+ 		/* Monitored Load */
+@@ -355,7 +362,7 @@ the DAX HV API document.
+ A completion area status of 1 indicates successful completion of the
+ CCB and validity of the output bitmap, which may be used immediately.
+ All other non-zero values indicate error conditions which are
+-described in section 36.2.2.
++described in section 36.2.2::
+ 
+ 	if (completion_area[0] != 1) {	/* section 36.2.2, 1 = command ran and succeeded */
+ 		/* completion_area[0] contains the completion status */
+@@ -364,7 +371,7 @@ described in section 36.2.2.
+ 
+ After the completion area has been processed, the driver must be
+ notified that it can release any resources associated with the
+-request. This is done via the dequeue operation:
++request. This is done via the dequeue operation::
+ 
+ 	struct dax_command cmd;
+ 	cmd.command = CCB_DEQUEUE;
+@@ -375,13 +382,14 @@ request. This is done via the dequeue operation:
+ Finally, normal program cleanup should be done, i.e., unmapping
+ completion area, closing the dax device, freeing memory etc.
+ 
+-[Kernel example]
++Kernel example
++--------------
+ 
+ The only difference in using the DAX in kernel code is the treatment
+ of the completion area. Unlike user applications which mmap the
+ completion area allocated by the driver, kernel code must allocate its
+ own memory to use for the completion area, and this address and its
+-type must be given in the CCB:
++type must be given in the CCB::
+ 
+ 	ccb->control |=      /* Table 36.1, CCB Header Format */
+ 	        (3L << 32);     /* completion area address type = primary virtual */
+@@ -389,9 +397,11 @@ type must be given in the CCB:
+ 	ccb->completion = (unsigned long) completion_area;   /* Completion area address */
+ 
+ The dax submit hypercall is made directly. The flags used in the
+-ccb_submit call are documented in the DAX HV API in section 36.3.1.
++ccb_submit call are documented in the DAX HV API in section 36.3.1/
+ 
+-#include <asm/hypervisor.h>
++::
 +
- The intention of non-blocking (asynchronous) MMC requests is to minimize the
- time between when an MMC request ends and another MMC request begins.
++  #include <asm/hypervisor.h>
+ 
+ 	hv_rv = sun4v_ccb_submit((unsigned long)ccb, 64,
+ 				 HV_CCB_QUERY_CMD |
+@@ -405,7 +415,7 @@ ccb_submit call are documented in the DAX HV API in section 36.3.1.
+ 	}
+ 
+ After the submission, the completion area polling code is identical to
+-that in user land:
++that in user land::
+ 
+ 	while (1) {
+ 		/* Monitored Load */
+@@ -427,3 +437,9 @@ that in user land:
+ 
+ The output bitmap is ready for consumption immediately after the
+ completion status indicates success.
 +
- Using mmc_wait_for_req(), the MMC controller is idle while dma_map_sg and
- dma_unmap_sg are processing. Using non-blocking MMC requests makes it
- possible to prepare the caches for next job in parallel with an active
-@@ -17,6 +24,7 @@ MMC block driver
- ================
- 
- The mmc_blk_issue_rw_rq() in the MMC block driver is made non-blocking.
++Excer[t from UltraSPARC Virtual Machine Specification
++=====================================================
 +
- The increase in throughput is proportional to the time it takes to
- prepare (major part of preparations are dma_map_sg() and dma_unmap_sg())
- a request and how fast the memory is. The faster the MMC/SD is the
-@@ -35,6 +43,7 @@ MMC core API extension
- ======================
++ .. include:: dax-hv-api.txt
++    :literal:
+diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
+index 790aa148670d..8090dc9a1514 100644
+--- a/drivers/sbus/char/oradax.c
++++ b/drivers/sbus/char/oradax.c
+@@ -30,7 +30,7 @@
+  * the recommended way for applications to use the coprocessor, and
+  * the driver interface is not intended for general use.
+  *
+- * See Documentation/sparc/oradax/oracle-dax.txt for more details.
++ * See Documentation/sparc/oradax/oracle-dax.rst for more details.
+  */
  
- There is one new public function mmc_start_req().
-+
- It starts a new MMC command request for a host. The function isn't
- truly non-blocking. If there is an ongoing async request it waits
- for completion of that request and starts the new one and returns. It
-@@ -47,6 +56,7 @@ MMC host extensions
- There are two optional members in the mmc_host_ops -- pre_req() and
- post_req() -- that the host driver may implement in order to move work
- to before and after the actual mmc_host_ops.request() function is called.
-+
- In the DMA case pre_req() may do dma_map_sg() and prepare the DMA
- descriptor, and post_req() runs the dma_unmap_sg().
- 
-@@ -55,33 +65,34 @@ Optimize for the first request
- 
- The first request in a series of requests can't be prepared in parallel
- with the previous transfer, since there is no previous request.
-+
- The argument is_first_req in pre_req() indicates that there is no previous
- request. The host driver may optimize for this scenario to minimize
- the performance loss. A way to optimize for this is to split the current
- request in two chunks, prepare the first chunk and start the request,
- and finally prepare the second chunk and start the transfer.
- 
--Pseudocode to handle is_first_req scenario with minimal prepare overhead:
-+Pseudocode to handle is_first_req scenario with minimal prepare overhead::
- 
--if (is_first_req && req->size > threshold)
--   /* start MMC transfer for the complete transfer size */
--   mmc_start_command(MMC_CMD_TRANSFER_FULL_SIZE);
-+  if (is_first_req && req->size > threshold)
-+     /* start MMC transfer for the complete transfer size */
-+     mmc_start_command(MMC_CMD_TRANSFER_FULL_SIZE);
- 
--   /*
--    * Begin to prepare DMA while cmd is being processed by MMC.
--    * The first chunk of the request should take the same time
--    * to prepare as the "MMC process command time".
--    * If prepare time exceeds MMC cmd time
--    * the transfer is delayed, guesstimate max 4k as first chunk size.
--    */
--    prepare_1st_chunk_for_dma(req);
--    /* flush pending desc to the DMAC (dmaengine.h) */
--    dma_issue_pending(req->dma_desc);
-+     /*
-+      * Begin to prepare DMA while cmd is being processed by MMC.
-+      * The first chunk of the request should take the same time
-+      * to prepare as the "MMC process command time".
-+      * If prepare time exceeds MMC cmd time
-+      * the transfer is delayed, guesstimate max 4k as first chunk size.
-+      */
-+      prepare_1st_chunk_for_dma(req);
-+      /* flush pending desc to the DMAC (dmaengine.h) */
-+      dma_issue_pending(req->dma_desc);
- 
--    prepare_2nd_chunk_for_dma(req);
--    /*
--     * The second issue_pending should be called before MMC runs out
--     * of the first chunk. If the MMC runs out of the first data chunk
--     * before this call, the transfer is delayed.
--     */
--    dma_issue_pending(req->dma_desc);
-+      prepare_2nd_chunk_for_dma(req);
-+      /*
-+       * The second issue_pending should be called before MMC runs out
-+       * of the first chunk. If the MMC runs out of the first data chunk
-+       * before this call, the transfer is delayed.
-+       */
-+      dma_issue_pending(req->dma_desc);
-diff --git a/Documentation/mmc/mmc-dev-attrs.txt b/Documentation/mmc/mmc-dev-attrs.rst
-similarity index 73%
-rename from Documentation/mmc/mmc-dev-attrs.txt
-rename to Documentation/mmc/mmc-dev-attrs.rst
-index 4ad0bb17f343..4f44b1b730d6 100644
---- a/Documentation/mmc/mmc-dev-attrs.txt
-+++ b/Documentation/mmc/mmc-dev-attrs.rst
-@@ -1,3 +1,4 @@
-+==================================
- SD and MMC Block Device Attributes
- ==================================
- 
-@@ -6,23 +7,29 @@ SD or MMC device.
- 
- The following attributes are read/write.
- 
--	force_ro		Enforce read-only access even if write protect switch is off.
-+	========		===============================================
-+	force_ro		Enforce read-only access even if write protect 					switch is off.
-+	========		===============================================
- 
- SD and MMC Device Attributes
- ============================
- 
- All attributes are read-only.
- 
-+	======================	===============================================
- 	cid			Card Identification Register
- 	csd			Card Specific Data Register
- 	scr			SD Card Configuration Register (SD only)
- 	date			Manufacturing Date (from CID Register)
--	fwrev			Firmware/Product Revision (from CID Register) (SD and MMCv1 only)
--	hwrev			Hardware/Product Revision (from CID Register) (SD and MMCv1 only)
-+	fwrev			Firmware/Product Revision (from CID Register)
-+				(SD and MMCv1 only)
-+	hwrev			Hardware/Product Revision (from CID Register)
-+				(SD and MMCv1 only)
- 	manfid			Manufacturer ID (from CID Register)
- 	name			Product Name (from CID Register)
- 	oemid			OEM/Application ID (from CID Register)
--	prv			Product Revision (from CID Register) (SD and MMCv4 only)
-+	prv			Product Revision (from CID Register)
-+				(SD and MMCv4 only)
- 	serial			Product Serial Number (from CID Register)
- 	erase_size		Erase group size
- 	preferred_erase_size	Preferred erase size
-@@ -30,7 +37,10 @@ All attributes are read-only.
- 	rel_sectors		Reliable write sector count
- 	ocr 			Operation Conditions Register
- 	dsr			Driver Stage Register
--	cmdq_en			Command Queue enabled: 1 => enabled, 0 => not enabled
-+	cmdq_en			Command Queue enabled:
-+
-+					1 => enabled, 0 => not enabled
-+	======================	===============================================
- 
- Note on Erase Size and Preferred Erase Size:
- 
-@@ -44,14 +54,15 @@ Note on Erase Size and Preferred Erase Size:
- 	SD/MMC cards can erase an arbitrarily large area up to and
- 	including the whole card.  When erasing a large area it may
- 	be desirable to do it in smaller chunks for three reasons:
--		1. A single erase command will make all other I/O on
-+
-+	     1. A single erase command will make all other I/O on
- 		the card wait.  This is not a problem if the whole card
- 		is being erased, but erasing one partition will make
- 		I/O for another partition on the same card wait for the
- 		duration of the erase - which could be a several
- 		minutes.
--		2. To be able to inform the user of erase progress.
--		3. The erase timeout becomes too large to be very
-+	     2. To be able to inform the user of erase progress.
-+	     3. The erase timeout becomes too large to be very
- 		useful.  Because the erase timeout contains a margin
- 		which is multiplied by the size of the erase area,
- 		the value can end up being several minutes for large
-@@ -72,6 +83,9 @@ Note on Erase Size and Preferred Erase Size:
- 	"preferred_erase_size" is in bytes.
- 
- Note on raw_rpmb_size_mult:
-+
- 	"raw_rpmb_size_mult" is a multiple of 128kB block.
-+
- 	RPMB size in byte is calculated by using the following equation:
--	RPMB partition size = 128kB x raw_rpmb_size_mult
-+
-+		RPMB partition size = 128kB x raw_rpmb_size_mult
-diff --git a/Documentation/mmc/mmc-dev-parts.txt b/Documentation/mmc/mmc-dev-parts.rst
-similarity index 83%
-rename from Documentation/mmc/mmc-dev-parts.txt
-rename to Documentation/mmc/mmc-dev-parts.rst
-index f08d078d43cf..995922f1f744 100644
---- a/Documentation/mmc/mmc-dev-parts.txt
-+++ b/Documentation/mmc/mmc-dev-parts.rst
-@@ -1,3 +1,4 @@
-+============================
- SD and MMC Device Partitions
- ============================
- 
-@@ -18,18 +19,18 @@ platform, write access is disabled by default to reduce the chance of
- accidental bricking.
- 
- To enable write access to /dev/mmcblkXbootY, disable the forced read-only
--access with:
-+access with::
- 
--echo 0 > /sys/block/mmcblkXbootY/force_ro
-+	echo 0 > /sys/block/mmcblkXbootY/force_ro
- 
--To re-enable read-only access:
-+To re-enable read-only access::
- 
--echo 1 > /sys/block/mmcblkXbootY/force_ro
-+	echo 1 > /sys/block/mmcblkXbootY/force_ro
- 
- The boot partitions can also be locked read only until the next power on,
--with:
-+with::
- 
--echo 1 > /sys/block/mmcblkXbootY/ro_lock_until_next_power_on
-+	echo 1 > /sys/block/mmcblkXbootY/ro_lock_until_next_power_on
- 
- This is a feature of the card and not of the kernel. If the card does
- not support boot partition locking, the file will not exist. If the
-diff --git a/Documentation/mmc/mmc-tools.txt b/Documentation/mmc/mmc-tools.rst
-similarity index 92%
-rename from Documentation/mmc/mmc-tools.txt
-rename to Documentation/mmc/mmc-tools.rst
-index 735509c165d5..54406093768b 100644
---- a/Documentation/mmc/mmc-tools.txt
-+++ b/Documentation/mmc/mmc-tools.rst
-@@ -1,14 +1,17 @@
-+======================
- MMC tools introduction
- ======================
- 
- There is one MMC test tools called mmc-utils, which is maintained by Chris Ball,
- you can find it at the below public git repository:
--http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git/
-+
-+	http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git/
- 
- Functions
- =========
- 
- The mmc-utils tools can do the following:
-+
-  - Print and parse extcsd data.
-  - Determine the eMMC writeprotect status.
-  - Set the eMMC writeprotect status.
+ #include <linux/uaccess.h>
 -- 
 2.20.1
 
