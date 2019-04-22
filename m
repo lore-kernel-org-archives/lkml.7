@@ -2,332 +2,173 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCD3C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72501C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71FC20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4578820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 14:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfDVOkB (ORCPT
+        id S1727476AbfDVOnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 10:40:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60460 "EHLO mx1.redhat.com"
+        Mon, 22 Apr 2019 10:43:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48764 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfDVOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 10:40:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1726132AbfDVOnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 10:43:45 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7B3C881DEC;
-        Mon, 22 Apr 2019 14:39:58 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33DF21001E97;
-        Mon, 22 Apr 2019 14:39:51 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 08:39:50 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, dgilbert@redhat.com,
-        cohuck@redhat.com, kevin.tian@intel.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, cjia@nvidia.com, kwankhede@nvidia.com
-Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
- for mdev device
-Message-ID: <20190422083950.25eb9e7c@x1.home>
-In-Reply-To: <20190419083505.19654-1-yan.y.zhao@intel.com>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
-        <20190419083505.19654-1-yan.y.zhao@intel.com>
-Organization: Red Hat
+        by mx1.redhat.com (Postfix) with ESMTPS id 0FD6830917EF;
+        Mon, 22 Apr 2019 14:43:44 +0000 (UTC)
+Received: from carbon (ovpn-200-19.brq.redhat.com [10.40.200.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F12161D06;
+        Mon, 22 Apr 2019 14:43:35 +0000 (UTC)
+Date:   Mon, 22 Apr 2019 16:43:33 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc:     brouer@redhat.com, Pekka Enberg <penberg@iki.fi>,
+        "Tobin C. Harding" <me@tobin.cc>, Vlastimil Babka <vbabka@suse.cz>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Tejun Heo <tj@kernel.org>, Qian Cai <cai@lca.pw>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [PATCH 0/1] mm: Remove the SLAB allocator
+Message-ID: <20190422164333.4e838ad6@carbon>
+In-Reply-To: <20190417133852.GL5878@dhcp22.suse.cz>
+References: <20190410024714.26607-1-tobin@kernel.org>
+        <f06aaeae-28c0-9ea4-d795-418ec3362d17@suse.cz>
+        <20190410081618.GA25494@eros.localdomain>
+        <20190411075556.GO10383@dhcp22.suse.cz>
+        <262df687-c934-b3e2-1d5f-548e8a8acb74@iki.fi>
+        <20190417105018.78604ad8@carbon>
+        <20190417133852.GL5878@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 22 Apr 2019 14:39:59 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 22 Apr 2019 14:43:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 04:35:04 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Wed, 17 Apr 2019 15:38:52 +0200
+Michal Hocko <mhocko@kernel.org> wrote:
 
-> device version attribute in mdev sysfs is used by user space software
-> (e.g. libvirt) to query device compatibility for live migration of VFIO
-> mdev devices. This attribute is mandatory if a mdev device supports live
-> migration.
+> On Wed 17-04-19 10:50:18, Jesper Dangaard Brouer wrote:
+> > On Thu, 11 Apr 2019 11:27:26 +0300
+> > Pekka Enberg <penberg@iki.fi> wrote:
+> >   
+> > > Hi,
+> > > 
+> > > On 4/11/19 10:55 AM, Michal Hocko wrote:  
+> > > > Please please have it more rigorous then what happened when SLUB was
+> > > > forced to become a default    
+> > > 
+> > > This is the hard part.
+> > > 
+> > > Even if you are able to show that SLUB is as fast as SLAB for all the 
+> > > benchmarks you run, there's bound to be that one workload where SLUB 
+> > > regresses. You will then have people complaining about that (rightly so) 
+> > > and you're again stuck with two allocators.
+> > > 
+> > > To move forward, I think we should look at possible *pathological* cases 
+> > > where we think SLAB might have an advantage. For example, SLUB had much 
+> > > more difficulties with remote CPU frees than SLAB. Now I don't know if 
+> > > this is the case, but it should be easy to construct a synthetic 
+> > > benchmark to measure this.  
+> > 
+> > I do think SLUB have a number of pathological cases where SLAB is
+> > faster.  If was significantly more difficult to get good bulk-free
+> > performance for SLUB.  SLUB is only fast as long as objects belong to
+> > the same page.  To get good bulk-free performance if objects are
+> > "mixed", I coded this[1] way-too-complex fast-path code to counter
+> > act this (joined work with Alex Duyck).
+> > 
+> > [1] https://github.com/torvalds/linux/blob/v5.1-rc5/mm/slub.c#L3033-L3113  
+> 
+> How often is this a real problem for real workloads?
 
-The Subject: doesn't quite match what's being proposed here.
+First let me point out that I have a benchmark[2] that test this
+worse-case behavior, and micro-benchmark wise it was a big win.  I did
+limit the "lookahead" based on this benchmark balance/bound worse-case
+behavior.
+
+ [2] https://github.com/netoptimizer/prototype-kernel/blob/master/kernel/mm/slab_bulk_test03.c#L4-L8
+
+Second, I do think this happens for real workloads. As production
+systems will have many sockets where SKBs (SLAB objects) can be queued,
+and an unpredictable traffic pattern, that could cause this "mixed"
+SLAB-object from different pages. The skbuff_head_cache size is 256 and
+is using a order-1 page (8192/256=) 32 objects per page.  Netstack bulk
+free mostly happens from (DMA) TX completion which have ring-sizes
+usually between 512 to 1024 packets, although we do limit bulk free to
+64 objects.
+
+
+> > > For example, have a userspace process that does networking, which is 
+> > > often memory allocation intensive, so that we know that SKBs traverse 
+> > > between CPUs. You can do this by making sure that the NIC queues are 
+> > > mapped to CPU N (so that network softirqs have to run on that CPU) but 
+> > > the process is pinned to CPU M.  
+> > 
+> > If someone want to test this with SKBs then be-aware that we netdev-guys
+> > have a number of optimizations where we try to counter act this. (As
+> > minimum disable TSO and GRO).
+> > 
+> > It might also be possible for people to get inspired by and adapt the
+> > micro benchmarking[2] kernel modules that I wrote when developing the
+> > SLUB and SLAB optimizations:
+> > 
+> > [2] https://github.com/netoptimizer/prototype-kernel/tree/master/kernel/mm  
+> 
+> While microbenchmarks are good to see pathological behavior, I would be
+> really interested to see some numbers for real world usecases.
+
+Yes, I would love to see that too, but there is a gap between kernel
+developers with the knowledge to diagnose/make-sense of this, and
+people running production systems...
+
+(Cc Brendan Gregg)
+Maybe we should create some tracepoints that makes it possible to
+measure, e.g. how often SLUB fast-path vs slow-path is hit (or other
+behavior _you_ want to know about), and then create some easy to use
+trace-tools that sysadms can run.  I bet Brendan could write some
+bpftrace[3] script that does this, if someone can describe what we want
+to measure...
+
+[3] https://github.com/iovisor/bpftrace
+
  
-> It consists of two parts: common part and vendor proprietary part.
-> common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
->              identifies device type. e.g., for pci device, it is
->              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > > It's, of course, worth thinking about other pathological cases too. 
+> > > Workloads that cause large allocations is one. Workloads that cause lots 
+> > > of slab cache shrinking is another.  
+> > 
+> > I also worry about long uptimes when SLUB objects/pages gets too
+> > fragmented... as I said SLUB is only efficient when objects are
+> > returned to the same page, while SLAB is not.  
+> 
+> Is this something that has been actually measured in a real deployment?
 
-What purpose does this serve?  If it's intended as some sort of
-namespace feature, shouldn't we first assume that we can only support
-migration to devices of the same type?  Therefore each type would
-already have its own namespace.  Also that would make the trailing bit
-of the version string listed below in the example redundant.  A vendor
-is still welcome to include this in their version string if they wish,
-but I think the string should be entirely vendor defined.
+This is also something that would be interesting to have a tool for,
+that can answer: how fragmented are the SLUB objects in my production
+system(?)
 
-> vendor proprietary part: this part is varied in length. vendor driver can
->              specify any string to identify a device.
-> 
-> When reading this attribute, it should show device version string of the
-> device of type <type-id>. If a device does not support live migration, it
-> should return errno.
-> When writing a string to this attribute, it returns errno for
-> incompatibility or returns written string length in compatibility case.
-> If a device does not support live migration, it always returns errno.
-> 
-> For user space software to use:
-> 1.
-> Before starting live migration, user space software first reads source side
-> mdev device's version. e.g.
-> "#cat \
-> /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
-> 00028086-193b-i915-GVTg_V5_4
-> 
-> 2.
-> Then, user space software writes the source side returned version string
-> to device version attribute in target side, and checks the return value.
-> If a negative errno is returned in the target side, then mdev devices in
-> source and target sides are not compatible;
-> If a positive number is returned and it equals to the length of written
-> string, then the two mdev devices in source and target side are compatible.
-> e.g.
-> (a) compatibility case
-> "# echo 00028086-193b-i915-GVTg_V5_4 >
-> /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-> 
-> (b) incompatibility case
-> "#echo 00028086-193b-i915-GVTg_V5_1 >
-> /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-> -bash: echo: write error: Invalid argument
-> 
-> 3. if two mdev devices are compatible, user space software can start
-> live migration, and vice versa.
-> 
-> Note: if a mdev device does not support live migration, it either does
-> not provide a version attribute, or always returns errno when its version
-> attribute is read/written.
-
-I think it would be cleaner to do the former, not supply the
-attribute.  This seems to do the latter in the sample drivers.  Thanks,
-
-Alex
-
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Erik Skultety <eskultet@redhat.com>
-> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> Cc: Neo Jia <cjia@nvidia.com>
-> Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> 
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
->  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
->  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
->  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
->  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
->  4 files changed, 85 insertions(+)
-> 
-> diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
-> index c3f69bcaf96e..bc28471c0667 100644
-> --- a/Documentation/vfio-mediated-device.txt
-> +++ b/Documentation/vfio-mediated-device.txt
-> @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
->    |     |   |--- available_instances
->    |     |   |--- device_api
->    |     |   |--- description
-> +  |     |   |--- version
->    |     |   |--- [devices]
->    |     |--- [<type-id>]
->    |     |   |--- create
-> @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
->    |     |   |--- available_instances
->    |     |   |--- device_api
->    |     |   |--- description
-> +  |     |   |--- version
->    |     |   |--- [devices]
->    |     |--- [<type-id>]
->    |          |--- create
-> @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
->    |          |--- available_instances
->    |          |--- device_api
->    |          |--- description
-> +  |          |--- version
->    |          |--- [devices]
->  
->  * [mdev_supported_types]
-> @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
->    [<type-id>], device_api, and available_instances are mandatory attributes
->    that should be provided by vendor driver.
->  
-> +  version is a mandatory attribute if a mdev device supports live migration.
-> +
->  * [<type-id>]
->  
->    The [<type-id>] name is created by adding the device driver string as a prefix
-> @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
->    This attribute should show the number of devices of type <type-id> that can be
->    created.
->  
-> +* version
-> +
-> +  This attribute is rw. It is used to check whether two devices are compatible
-> +  for live migration. If this attribute is missing, then the corresponding mdev
-> +  device is regarded as not supporting live migration.
-> +
-> +  It consists of two parts: common part and vendor proprietary part.
-> +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
-> +               device type. e.g., for pci device, it is
-> +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> +  vendor proprietary part: this part is varied in length. vendor driver can
-> +               specify any string to identify a device.
-> +
-> +  When reading this attribute, it should show device version string of the device
-> +  of type <type-id>. If a device does not support live migration, it should
-> +  return errno.
-> +  When writing a string to this attribute, it returns errno for incompatibility
-> +  or returns written string length in compatibility case. If a device does not
-> +  support live migration, it always returns errno.
-> +
-> +  for example.
-> +  # cat \
-> + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
-> +  00028086-193b-i915-GVTg_V5_2
-> +
-> +  #echo 00028086-193b-i915-GVTg_V5_2 > \
-> + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
-> + -bash: echo: write error: Invalid argument
-> +
->  * [device]
->  
->    This directory contains links to the devices of type <type-id> that have been
-> @@ -327,12 +361,14 @@ card.
->          |   |   |-- available_instances
->          |   |   |-- create
->          |   |   |-- device_api
-> +        |   |   |-- version
->          |   |   |-- devices
->          |   |   `-- name
->          |   `-- mtty-2
->          |       |-- available_instances
->          |       |-- create
->          |       |-- device_api
-> +        |       |-- version
->          |       |-- devices
->          |       `-- name
->          |-- mtty_dev
-> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-> index b038aa9f5a70..2f5ba96b91a2 100644
-> --- a/samples/vfio-mdev/mbochs.c
-> +++ b/samples/vfio-mdev/mbochs.c
-> @@ -1391,11 +1391,28 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
->  }
->  MDEV_TYPE_ATTR_RO(device_api);
->  
-> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> +		char *buf)
-> +{
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +}
-> +
-> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> +		const char *buf, size_t count)
-> +{
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +}
-> +
-> +static MDEV_TYPE_ATTR_RW(version);
-> +
->  static struct attribute *mdev_types_attrs[] = {
->  	&mdev_type_attr_name.attr,
->  	&mdev_type_attr_description.attr,
->  	&mdev_type_attr_device_api.attr,
->  	&mdev_type_attr_available_instances.attr,
-> +	&mdev_type_attr_version.attr,
->  	NULL,
->  };
->  
-> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-> index cc86bf6566e4..ff15fdfc7d46 100644
-> --- a/samples/vfio-mdev/mdpy.c
-> +++ b/samples/vfio-mdev/mdpy.c
-> @@ -695,11 +695,27 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
->  }
->  MDEV_TYPE_ATTR_RO(device_api);
->  
-> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> +		char *buf)
-> +{
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +}
-> +
-> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> +		const char *buf, size_t count)
-> +{
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +}
-> +static MDEV_TYPE_ATTR_RW(version);
-> +
->  static struct attribute *mdev_types_attrs[] = {
->  	&mdev_type_attr_name.attr,
->  	&mdev_type_attr_description.attr,
->  	&mdev_type_attr_device_api.attr,
->  	&mdev_type_attr_available_instances.attr,
-> +	&mdev_type_attr_version.attr,
->  	NULL,
->  };
->  
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-> index 1c77c370c92f..4ae3aad3474d 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -1390,10 +1390,26 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
->  
->  MDEV_TYPE_ATTR_RO(device_api);
->  
-> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> +		char *buf)
-> +{
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +}
-> +
-> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> +		const char *buf, size_t count)
-> +{
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +}
-> +
-> +static MDEV_TYPE_ATTR_RW(version);
->  static struct attribute *mdev_types_attrs[] = {
->  	&mdev_type_attr_name.attr,
->  	&mdev_type_attr_device_api.attr,
->  	&mdev_type_attr_available_instances.attr,
-> +	&mdev_type_attr_version.attr,
->  	NULL,
->  };
->  
-
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
