@@ -2,111 +2,61 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3784AC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B174BC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03ECB214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E98F214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XwLkvZ2n"
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="I6cqfNZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfDVR2a (ORCPT
+        id S1728219AbfDVR3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 13:28:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34100 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfDVR2a (ORCPT
+        Mon, 22 Apr 2019 13:29:03 -0400
+Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:42944 "EHLO
+        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbfDVR3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 13:28:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r186so391326wmf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zO+RNWwQbNoca0mKf5ETdBNVWZ7qpW34U6V/nkjkNlw=;
-        b=XwLkvZ2nLSo5ns8GCzbqENm4/Kb7LWbiksFxVifZwFSqDyfrKbEulegHOmvohctDhn
-         kSxdDmGh6y0EtpeQf/Cc9FFHNIHFZcHttLAz4s+Bv/GefAvo9idBmsD/QCpJKa6asrp7
-         cJ/s+Zd+LNtLZ4LQuaT/x41Coo1nStSghXzyu6qWQh6mAlmP4+c7ouyyXIow4lS0OA4/
-         Ht4l+E0yWDJfQuHwygUQ1aQa/PwM8/AlhN6Xa1kxcf0bSY6cG+8vLfFtslF3f+AfUqwO
-         MV3otcOrVvj8WlnPF8Upiu1CivNcb0p7pYVtSDaWwUDmotKrVd5F2IzGo2wKpKILfROG
-         aQig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zO+RNWwQbNoca0mKf5ETdBNVWZ7qpW34U6V/nkjkNlw=;
-        b=E0cIeyh1VcrNAdFj1h7n67nvyiSlTzaq+QL17jYSdIeYGWQL3baywA2Dcrkf4YSLuY
-         iclfda7vPxdZr7ImVGoqA3hk9Npux7FnOzBvL7qp/g9TUPTelbsp09ATHtYiOw/8CRLw
-         dhZ+xjiX5d3NDmlnU2/wBXh+e2V6kDP+CMF54RAD+h39BFH7+l3t/zrkuq9PsOjtvsbi
-         lctWvvBX8rcptzmsrk+K3A68Agdatp7JyTJ8GscK45kUgohfqnCek35pA3/nbBqR7Eyd
-         5Eoj7sJFllWcK+vBJnkZPfhkqp+0J5/lv3KaJyCu4zpMJQOp0x080WFbgyculqFvGD1j
-         trnw==
-X-Gm-Message-State: APjAAAWej+JOFSEMTDo3Bduz7yGVKEcvZJ0fNuorKbiR8DC3Nv+wXyLF
-        vE3QpYMyMyFLuBwdm1ParE1FxA==
-X-Google-Smtp-Source: APXvYqxkHVb897/Z92KZwumXpNYwkHgtCf3ExnvZLNXTM9VhBJpE/B7+TlTIupLTo1vWDBYMAx7ckw==
-X-Received: by 2002:a1c:9c97:: with SMTP id f145mr13421548wme.139.1555954108686;
-        Mon, 22 Apr 2019 10:28:28 -0700 (PDT)
-Received: from localhost.localdomain (200.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.200])
-        by smtp.gmail.com with ESMTPSA id o16sm9033051wrw.10.2019.04.22.10.28.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 22 Apr 2019 10:28:27 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org
-Subject: [PATCH] regulator: core: simplify return value on suported_voltage
-Date:   Mon, 22 Apr 2019 19:28:24 +0200
-Message-Id: <20190422172824.13720-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 22 Apr 2019 13:29:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1555954141;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=uTp82GrKS+FoqOpQPeRfRgfZOledo6xDwlMBf3yfJG4=;
+        b=I6cqfNZUSqdVhRoTlDMauiDjIdqVla6mLkcsOz4ds5wrUQGVqk1rB364uz2Xr/5k
+        jY0gYuBl3eDzKi9pPTYJff5zDwUDgoNt9H2BnsBg91m08fD3FfGS1pF/ANBrG1y+uRL
+        1XaNG8omk+ElH0D5ePFpKxCXKRfGUoJ+V/kdW35o=
+Date:   Mon, 22 Apr 2019 17:29:01 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
+Subject: Re: DISCONTIGMEM is deprecated
+In-Reply-To: <20190419140521.GI7751@bombadil.infradead.org>
+Message-ID: <0100016a461809ed-be5bd8fc-9925-424d-9624-4a325a7a8860-000000@email.amazonses.com>
+References: <20190419094335.GJ18914@techsingularity.net> <20190419140521.GI7751@bombadil.infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.04.22-54.240.9.30
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the current clients of this API  assume that 0 corresponds
-to a failure and non-zero to a pass therefore ignoring the need to
-handle a negative error code.
+On Fri, 19 Apr 2019, Matthew Wilcox wrote:
 
-This commit modifies the API to follow that standard since returning a
-negative (EINVAL) doesn't seem to provide enough value to justify
-the need to handle it.
+> ia64 (looks complicated ...)
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- drivers/regulator/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 186a37675b50..d872dfe75b63 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3002,7 +3002,7 @@ EXPORT_SYMBOL_GPL(regulator_get_linear_step);
-  * @min_uV: Minimum required voltage in uV.
-  * @max_uV: Maximum required voltage in uV.
-  *
-- * Returns a boolean or a negative error code.
-+ * Returns a boolean.
-  */
- int regulator_is_supported_voltage(struct regulator *regulator,
- 				   int min_uV, int max_uV)
-@@ -3026,7 +3026,7 @@ int regulator_is_supported_voltage(struct regulator *regulator,
- 
- 	ret = regulator_count_voltages(regulator);
- 	if (ret < 0)
--		return ret;
-+		return 0;
- 	voltages = ret;
- 
- 	for (i = 0; i < voltages; i++) {
--- 
-2.21.0
-
+Well as far as I can tell it was not even used 12 or so years ago on
+Itanium when I worked on that stuff.
