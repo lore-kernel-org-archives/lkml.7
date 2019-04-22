@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F100C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0DEC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AF32190B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672A52175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962575;
-	bh=4LMSCIR1Th0mz8SSjIH8jn9qHmI65qaQLfDcxCqkh5I=;
+	s=default; t=1555962579;
+	bh=sAT42loiEBT5SpKi7duPEpAEsnnRodxopyhTazZscpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hi0tstbO57wv4kk8tPpOD1FZed0XB/HOtB9ESD4Lx84+xUsbp3q7XyH3v/9doils2
-	 tdCC4MX7qU3hz8Daggwjo+wECPAKEesDLITWhl0JEUKqVl407mZ1SB2FkhMl2I7w2V
-	 rAt0ogT9ctFKdrMz/bjuFJdbfcguTjQugyFhlhJA=
+	b=OS3jByPh5+FkY9MBqYaKL0Ze28QRaEyv5gXyqJewwAURuJOENO55M8AMdxd3rNea0
+	 spYZF3VHdjR8lsn97v4ApuPdblrjj190vfx6q/vi2WwPS1N+K/3bzPAAS0qezMKcu9
+	 wcamTLNTM5F5XuL49dyvadjMRwkgrQFNrJGHXbfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfDVTtd (ORCPT
+        id S1730898AbfDVTti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53228 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730852AbfDVTt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:29 -0400
+        id S1730872AbfDVTte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946302075A;
-        Mon, 22 Apr 2019 19:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABDC621738;
+        Mon, 22 Apr 2019 19:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962568;
-        bh=4LMSCIR1Th0mz8SSjIH8jn9qHmI65qaQLfDcxCqkh5I=;
+        s=default; t=1555962573;
+        bh=sAT42loiEBT5SpKi7duPEpAEsnnRodxopyhTazZscpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6R9LypMqZPLLo/gKrvPfGslvdMGWQwN6lmmHIxZHHfYTmmiQhhwn2zck1aB2kYEO
-         /r5BfA/BTaW7cCAgC5C20yM9DYiE4CdEtkeMHLXCuBasDKqCixTnmsymkUj4860YZE
-         JzKX5g3fjR3pJx8ib94u5//tDmPbWji4MRtuVOn4=
+        b=17XIhOURVqHAJNYKIBLPxjsvvVpXF84FA8BPTVr7EqeME5Ysdp+pJq49m81Ya5Mgj
+         AwhoZ7KseRfh+0dd1eDonv3SLnKwdaTv0KkR9GhN3K6HK//qMgcyaVRIpRPM3Rvrep
+         GU0tW3NA7ds1bo6vDKhSkQbutBUBGsBg8pCePdiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 20/29] net: ethernet: ti: fix possible object reference leak
-Date:   Mon, 22 Apr 2019 15:48:39 -0400
-Message-Id: <20190422194848.13049-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 23/29] tty: fix NULL pointer issue when tty_port ops is not set
+Date:   Mon, 22 Apr 2019 15:48:42 -0400
+Message-Id: <20190422194848.13049-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
 References: <20190422194848.13049-1-sashal@kernel.org>
@@ -60,53 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-[ Upstream commit 75eac7b5f68b0a0671e795ac636457ee27cc11d8 ]
+[ Upstream commit f4e68d58cf2b20a581759bbc7228052534652673 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Unlike 'client_ops' which is initialized to 'default_client_ops', the
+port operations 'ops' may be left to NULL.
+Check the 'ops' value before checking the 'ops->x' value.
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Wingman Kwok <w-kwok2@ti.com>
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/tty/tty_port.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index d543298d6750..ff24524e7f46 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3122,12 +3122,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+index 7f2f20b74d1d..06ba9dbbd610 100644
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -213,7 +213,7 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
+ 		if (tty && C_HUPCL(tty))
+ 			tty_port_lower_dtr_rts(port);
  
- 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
- 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+-		if (port->ops->shutdown)
++		if (port->ops && port->ops->shutdown)
+ 			port->ops->shutdown(port);
+ 	}
+ out:
+@@ -293,7 +293,7 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
  
- 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
--	if (ret)
-+	if (ret) {
-+		of_node_put(interfaces);
- 		return ret;
-+	}
+ int tty_port_carrier_raised(struct tty_port *port)
+ {
+-	if (port->ops->carrier_raised == NULL)
++	if (!port->ops || !port->ops->carrier_raised)
+ 		return 1;
+ 	return port->ops->carrier_raised(port);
+ }
+@@ -310,7 +310,7 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
  
- 	/* Create network interfaces */
- 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
+ void tty_port_raise_dtr_rts(struct tty_port *port)
+ {
+-	if (port->ops->dtr_rts)
++	if (port->ops && port->ops->dtr_rts)
+ 		port->ops->dtr_rts(port, 1);
+ }
+ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+@@ -326,7 +326,7 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+ 
+ void tty_port_lower_dtr_rts(struct tty_port *port)
+ {
+-	if (port->ops->dtr_rts)
++	if (port->ops && port->ops->dtr_rts)
+ 		port->ops->dtr_rts(port, 0);
+ }
+ EXPORT_SYMBOL(tty_port_lower_dtr_rts);
+@@ -582,7 +582,7 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
+ 
+ 	if (!tty_port_initialized(port)) {
+ 		clear_bit(TTY_IO_ERROR, &tty->flags);
+-		if (port->ops->activate) {
++		if (port->ops && port->ops->activate) {
+ 			int retval = port->ops->activate(port, tty);
+ 			if (retval) {
+ 				mutex_unlock(&port->mutex);
 -- 
 2.19.1
 
