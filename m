@@ -2,68 +2,98 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8743AC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96ACC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692CD20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D4320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfDVPFg (ORCPT
+        id S1727999AbfDVPL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:05:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54250 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfDVPFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:05:36 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EBC9DA70E;
-        Mon, 22 Apr 2019 15:05:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AA710600CC;
-        Mon, 22 Apr 2019 15:05:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 22 Apr 2019 17:05:35 +0200 (CEST)
-Date:   Mon, 22 Apr 2019 17:05:32 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Zhenliang Wei <weizhenliang@huawei.com>
-Cc:     ebiederm@xmission.com, colona@arista.com,
-        akpm@linux-foundation.org, christian@brauner.io, arnd@arndb.de,
-        tglx@linutronix.de, deepa.kernel@gmail.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] signal: trace_signal_deliver when signal_group_exit
-Message-ID: <20190422150532.GA20151@redhat.com>
-References: <20190422065623.49364-1-weizhenliang@huawei.com>
+        Mon, 22 Apr 2019 11:11:56 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:39334 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbfDVPL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 11:11:56 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 74D1040163CAF
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:10:58 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id IaawhX3XciQerIaawhETAv; Mon, 22 Apr 2019 10:10:58 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.103] (port=37586 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hIaav-000nEy-Hb; Mon, 22 Apr 2019 10:10:57 -0500
+Date:   Mon, 22 Apr 2019 10:10:56 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] perf bpf: Fix lock/unlock imbalance in perf_env__find_btf()
+ info
+Message-ID: <20190422151056.GA24665@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190422065623.49364-1-weizhenliang@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 22 Apr 2019 15:05:36 +0000 (UTC)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.103
+X-Source-L: No
+X-Exim-ID: 1hIaav-000nEy-Hb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.104.103]:37586
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/22, Zhenliang Wei wrote:
->
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2441,6 +2441,7 @@ bool get_signal(struct ksignal *ksig)
->  	if (signal_group_exit(signal)) {
->  		ksig->info.si_signo = signr = SIGKILL;
->  		sigdelset(&current->pending.signal, SIGKILL);
-> +		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO, SIG_DFL);
->  		recalc_sigpending();
->  		goto fatal;
->  	}
+Fix lock/unlock imbalance by moving the call to up_read() just after
+the *out* label.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Addresses-Coverity-ID: 1444762 ("Missing unlock")
+Fixes: 2db7b1e0bd49 ("perf bpf: Return NULL when RB tree lookup fails in perf_env__find_btf()")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ tools/perf/util/env.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 9494f9dc61ec..6a3eaf7d9353 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -115,8 +115,8 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+ 	}
+ 	node = NULL;
+ 
+-	up_read(&env->bpf_progs.lock);
+ out:
++	up_read(&env->bpf_progs.lock);
+ 	return node;
+ }
+ 
+-- 
+2.21.0
 
