@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D452C282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD70C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34ED2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C6F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962824;
-	bh=mtEoW08PdVbsM8gfHJfdcmJcCJqpqDaT7YjIhoXDTo8=;
+	s=default; t=1555962829;
+	bh=OlE9EGt0JosUy4kibLPDfXLauPOGHRga+rH0DaTHdas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z9FFKI06BfmUEaEuMGj2uWXNYVh6lThZGn3JJsuK5UDiHrh2UwXwYGUbtBPxBZYT3
-	 v1jJ/DJFLD7jk+bP7xa45GiV076wcLCgIxHWVd+uavUtITpzMiZHmEvctnrcwXAHrr
-	 I8I7EdwjSLIkW982qBCjJfPJHEcwcZxXSnls+sYs=
+	b=Vyx83qUJUAj8rKrPt63UDeg4i0xRgSAAnTVlZonEk4ozMOqRrAVUe/Wkaik4iKLsZ
+	 0InSzgJ7GWSm9cz39RO3Mkbtl35wZErE4HFBPFtunCXtdN7+pYGRc9EuhRTKXR4h10
+	 GFxSDGuuh5f5dEL1lBnW2qhfWiKxV59fwKPgVZko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbfDVTxm (ORCPT
+        id S1731423AbfDVTxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:53:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbfDVTt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:56 -0400
+        id S1730956AbfDVTtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D436A2175B;
-        Mon, 22 Apr 2019 19:49:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F6B4204EC;
+        Mon, 22 Apr 2019 19:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962595;
-        bh=mtEoW08PdVbsM8gfHJfdcmJcCJqpqDaT7YjIhoXDTo8=;
+        s=default; t=1555962594;
+        bh=OlE9EGt0JosUy4kibLPDfXLauPOGHRga+rH0DaTHdas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QHAFQzEclRGGaddKwK8wcdj9CsuHyF8Ip5e1iHln8/P/YSlZ9a9AoGQp/l6IuH30G
-         std1ULRQzxey8OTQ8iLbxBxsnt4CRZQpUt8RpMVfEubtPIywznfw247HKDbU6WZwbg
-         eH5MY1vSnL77eH0ssgRt+7gO7fdD+jSVAuCFVWU4=
+        b=K8EA11IFS2YjTNexVX4jcO8SvZMufWOUdZ5qOF7hHNm1gua0KP+KtYHWQMNAiQ5u0
+         MpzEpSAz/VhHSFeToKf0SYFQ+B7h2MBNg6fefHd8yqOEEoRo9YI+Q7z5KkzfLzTRwR
+         NpekPcZHx1kKs8wqsKoorE67wRK2xRC92R+6lu2A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Stefan Christ <s.christ@phytec.de>,
-        Christian Hemp <c.hemp@phytec.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/21] ARM: dts: pfla02: increase phy reset duration
-Date:   Mon, 22 Apr 2019 15:49:27 -0400
-Message-Id: <20190422194941.13433-7-sashal@kernel.org>
+Cc:     Guido Kiener <guido@kiener-muenchen.de>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/21] usb: gadget: net2272: Fix net2272_dequeue()
+Date:   Mon, 22 Apr 2019 15:49:26 -0400
+Message-Id: <20190422194941.13433-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194941.13433-1-sashal@kernel.org>
 References: <20190422194941.13433-1-sashal@kernel.org>
@@ -60,48 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Guido Kiener <guido@kiener-muenchen.de>
 
-[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
+[ Upstream commit 091dacc3cc10979ab0422f0a9f7fcc27eee97e69 ]
 
-Increase the reset duration to ensure correct phy functionality. The
-reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-pfla02: use long enough reset for ethernet phy"):
+Restore the status of ep->stopped in function net2272_dequeue().
 
-  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-  small percentage of modules have 'transmission timeouts' errors like
+When the given request is not found in the endpoint queue
+the function returns -EINVAL without restoring the state of
+ep->stopped. Thus the endpoint keeps blocked and does not transfer
+any data anymore.
 
-  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-  eth0: 1000Mbps full duplex link detected
-  eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
+This fix is only compile-tested, since we do not have a
+corresponding hardware. An analogous fix was tested in the sibling
+driver. See "usb: gadget: net2280: Fix net2280_dequeue()"
 
-Cc: Stefan Christ <s.christ@phytec.de>
-Cc: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
+ drivers/usb/gadget/udc/net2272.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index d6d98d426384..cae04e806036 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -90,6 +90,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
-+	phy-reset-duration = <10>; /* in msecs */
- 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
- 	phy-supply = <&vdd_eth_io_reg>;
- 	status = "disabled";
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 3b6e34fc032b..553922c3be85 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -962,6 +962,7 @@ net2272_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+ 		return -EINVAL;
+ 	}
 -- 
 2.19.1
 
