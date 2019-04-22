@@ -2,61 +2,184 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B174BC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB62C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E98F214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="I6cqfNZU"
+	by mail.kernel.org (Postfix) with ESMTP id 5A6E3214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 17:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfDVR3D (ORCPT
+        id S1727656AbfDVRds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 13:29:03 -0400
-Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:42944 "EHLO
-        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbfDVR3C (ORCPT
+        Mon, 22 Apr 2019 13:33:48 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:33666 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbfDVRdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 13:29:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1555954141;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=uTp82GrKS+FoqOpQPeRfRgfZOledo6xDwlMBf3yfJG4=;
-        b=I6cqfNZUSqdVhRoTlDMauiDjIdqVla6mLkcsOz4ds5wrUQGVqk1rB364uz2Xr/5k
-        jY0gYuBl3eDzKi9pPTYJff5zDwUDgoNt9H2BnsBg91m08fD3FfGS1pF/ANBrG1y+uRL
-        1XaNG8omk+ElH0D5ePFpKxCXKRfGUoJ+V/kdW35o=
-Date:   Mon, 22 Apr 2019 17:29:01 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Matthew Wilcox <willy@infradead.org>
-cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
-Subject: Re: DISCONTIGMEM is deprecated
-In-Reply-To: <20190419140521.GI7751@bombadil.infradead.org>
-Message-ID: <0100016a461809ed-be5bd8fc-9925-424d-9624-4a325a7a8860-000000@email.amazonses.com>
-References: <20190419094335.GJ18914@techsingularity.net> <20190419140521.GI7751@bombadil.infradead.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.04.22-54.240.9.30
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+        Mon, 22 Apr 2019 13:33:47 -0400
+Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id DABD17A04B2;
+        Mon, 22 Apr 2019 19:33:45 +0200 (CEST)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Rik Faith <faith@cs.unc.edu>,
+        "David A . Hinds" <dahinds@users.sourceforge.net>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 4/4] fdomain: Resurrect driver (PCMCIA support)
+Date:   Mon, 22 Apr 2019 19:33:23 +0200
+Message-Id: <20190422173323.15365-5-linux@zary.sk>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190422173323.15365-1-linux@zary.sk>
+References: <20190422173323.15365-1-linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019, Matthew Wilcox wrote:
+Future Domain PCMCIA SCSI support card support.
 
-> ia64 (looks complicated ...)
+Currently untested.
 
-Well as far as I can tell it was not even used 12 or so years ago on
-Itanium when I worked on that stuff.
+Signed-off-by: Ondrej Zary <linux@zary.sk>
+---
+ drivers/scsi/pcmcia/Kconfig      | 10 +++++
+ drivers/scsi/pcmcia/Makefile     |  1 +
+ drivers/scsi/pcmcia/fdomain_cs.c | 89 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
+ create mode 100644 drivers/scsi/pcmcia/fdomain_cs.c
+
+diff --git a/drivers/scsi/pcmcia/Kconfig b/drivers/scsi/pcmcia/Kconfig
+index 2d435f105b16..169d93f90a30 100644
+--- a/drivers/scsi/pcmcia/Kconfig
++++ b/drivers/scsi/pcmcia/Kconfig
+@@ -19,6 +19,16 @@ config PCMCIA_AHA152X
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called aha152x_cs.
+ 
++config PCMCIA_FDOMAIN
++	tristate "Future Domain PCMCIA support"
++	select SCSI_FDOMAIN
++	help
++	  Say Y here if you intend to attach this type of PCMCIA SCSI host
++	  adapter to your computer.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called fdomain_cs.
++
+ config PCMCIA_NINJA_SCSI
+ 	tristate "NinjaSCSI-3 / NinjaSCSI-32Bi (16bit) PCMCIA support"
+ 	depends on !64BIT
+diff --git a/drivers/scsi/pcmcia/Makefile b/drivers/scsi/pcmcia/Makefile
+index a5a24dd44e7e..02f5b44a2685 100644
+--- a/drivers/scsi/pcmcia/Makefile
++++ b/drivers/scsi/pcmcia/Makefile
+@@ -4,6 +4,7 @@ ccflags-y		:= -I $(srctree)/drivers/scsi
+ 
+ # 16-bit client drivers
+ obj-$(CONFIG_PCMCIA_QLOGIC)	+= qlogic_cs.o
++obj-$(CONFIG_PCMCIA_FDOMAIN)	+= fdomain_cs.o
+ obj-$(CONFIG_PCMCIA_AHA152X)	+= aha152x_cs.o
+ obj-$(CONFIG_PCMCIA_NINJA_SCSI)	+= nsp_cs.o
+ obj-$(CONFIG_PCMCIA_SYM53C500)	+= sym53c500_cs.o
+diff --git a/drivers/scsi/pcmcia/fdomain_cs.c b/drivers/scsi/pcmcia/fdomain_cs.c
+new file mode 100644
+index 000000000000..eee1379ad67b
+--- /dev/null
++++ b/drivers/scsi/pcmcia/fdomain_cs.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MPL-1.1)
++/*
++ * Driver for Future Domain-compatible PCMCIA SCSI cards
++ * Copyright 2019 Ondrej Zary
++ *
++ * The initial developer of the original code is David A. Hinds
++ * <dahinds@users.sourceforge.net>.  Portions created by David A. Hinds
++ * are Copyright (C) 1999 David A. Hinds.  All Rights Reserved.
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <scsi/scsi_host.h>
++#include <pcmcia/cistpl.h>
++#include <pcmcia/ds.h>
++#include "fdomain.h"
++
++MODULE_AUTHOR("Ondrej Zary, David Hinds");
++MODULE_DESCRIPTION("Future Domain PCMCIA SCSI driver");
++MODULE_LICENSE("Dual MPL/GPL");
++
++static int fdomain_config_check(struct pcmcia_device *p_dev, void *priv_data)
++{
++	p_dev->io_lines = 10;
++	p_dev->resource[0]->end = 0x10;
++	p_dev->resource[0]->flags &= ~IO_DATA_PATH_WIDTH;
++	p_dev->resource[0]->flags |= IO_DATA_PATH_WIDTH_AUTO;
++	return pcmcia_request_io(p_dev);
++}
++
++static int fdomain_probe(struct pcmcia_device *link)
++{
++	int ret;
++	struct Scsi_Host *sh;
++
++	link->config_flags |= CONF_ENABLE_IRQ | CONF_AUTO_SET_IO;
++	link->config_regs = PRESENT_OPTION;
++
++	ret = pcmcia_loop_config(link, fdomain_config_check, NULL);
++	if (ret)
++		return ret;
++
++	ret = pcmcia_enable_device(link);
++	if (ret)
++		goto fail;
++
++	sh = fdomain_create(link->resource[0]->start, link->irq, 7, 0, NULL,
++			    &link->dev);
++	if (!sh) {
++		dev_err(&link->dev, "Controller initialization failed");
++		ret = -ENODEV;
++		goto fail;
++	}
++
++	link->priv = sh;
++
++	return 0;
++
++fail:
++	pcmcia_disable_device(link);
++	return ret;
++}
++
++static void fdomain_remove(struct pcmcia_device *link)
++{
++	fdomain_destroy(link->priv);
++	pcmcia_disable_device(link);
++}
++
++static const struct pcmcia_device_id fdomain_ids[] = {
++	PCMCIA_DEVICE_PROD_ID12("IBM Corp.", "SCSI PCMCIA Card", 0xe3736c88,
++				0x859cad20),
++	PCMCIA_DEVICE_PROD_ID1("SCSI PCMCIA Adapter Card", 0x8dacb57e),
++	PCMCIA_DEVICE_PROD_ID12(" SIMPLE TECHNOLOGY Corporation",
++				"SCSI PCMCIA Credit Card Controller",
++				0x182bdafe, 0xc80d106f),
++	PCMCIA_DEVICE_NULL,
++};
++MODULE_DEVICE_TABLE(pcmcia, fdomain_ids);
++
++static struct pcmcia_driver fdomain_cs_driver = {
++	.owner		= THIS_MODULE,
++	.name		= "fdomain_cs",
++	.probe		= fdomain_probe,
++	.remove		= fdomain_remove,
++	.id_table       = fdomain_ids,
++};
++
++module_pcmcia_driver(fdomain_cs_driver);
+-- 
+Ondrej Zary
+
