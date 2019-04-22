@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78343C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4387EC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43031204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D606204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963163;
-	bh=dLP6w9/tALpsZnV0WfYXd/WRDaIRYd6Lb5TXRLJA7Co=;
+	s=default; t=1555963174;
+	bh=JAS2I5uqvujmWYbbgn9MzNbQvwXej3P4ad+t9z9LKnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MjzA/HoB8sPwTaZ3PXa++eTgnItjaGPpLq+62MG7khQ6n7kFXqZWPHFeqxlM805JZ
-	 Qd0Jdh4aAZMZ8vUB6mgrC29kEAZTRD4kbMbhE1N9A3oGWHJpOtMqzK7RGF0wA9Hc6L
-	 yg81y1TuBYW7BJ7LNhhO/i6ciKnZk+KuD/kYApF8=
+	b=zqVDdgc7NqX6p4FoXydpU53l1lgiiq+koWVI3NGTiY/V6DFr3E2SDK3A2HsGOctPQ
+	 MbTJlYd7qOy5r7/kzhpbgk+5S9pFQqTmXoJu/MDehaimFiDCliFs2t73vVrQ3XF+Ul
+	 UtZlmXnn+JHmIlW3v+SGyTc+rwNTeigOK+ax9Uow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbfDVT7W (ORCPT
+        id S1731833AbfDVT7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50660 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729869AbfDVTro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:44 -0400
+        id S1730328AbfDVTrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B87321904;
-        Mon, 22 Apr 2019 19:47:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 307E4218FD;
+        Mon, 22 Apr 2019 19:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962463;
-        bh=dLP6w9/tALpsZnV0WfYXd/WRDaIRYd6Lb5TXRLJA7Co=;
+        s=default; t=1555962459;
+        bh=JAS2I5uqvujmWYbbgn9MzNbQvwXej3P4ad+t9z9LKnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fiqr7zl5DPR+Chr6uOYRTDpqbLR3FkVleKeyxhwMZRfP527SQ+U3GsWcpNF28TnTa
-         VOLEh5vi0fauHSvrmOARQmumpBbvGu7PhH65NAieke+xhU7TVa7S5El8Ny1mQJlxaB
-         pA44pYhw+5QwMYMcQHqeme3Fq7cMe1LcpUneByRk=
+        b=q0FlPe4kG+gJROaPovgGXAVSYS3VzVnBd2C4q2jkF+kk2OQt+YbXUJTmGpRv/NzwO
+         X6d1gEzTWUsp9vYFUONyk9uwnyDtYq7yEU4Lqms1KY0A+WPGdpqtbFV3ENr0gFDIvs
+         JTxwbPfigIQaxgGP5S75Jj+aY/b8xoxNhzicUin0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guido Kiener <guido@kiener-muenchen.de>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/43] usb: gadget: net2280: Fix overrun of OUT messages
-Date:   Mon, 22 Apr 2019 15:46:54 -0400
-Message-Id: <20190422194727.12495-10-sashal@kernel.org>
+Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andrey Batyiev <batyiev@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/43] serial: ar933x_uart: Fix build failure with disabled console
+Date:   Mon, 22 Apr 2019 15:46:52 -0400
+Message-Id: <20190422194727.12495-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,62 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Kiener <guido@kiener-muenchen.de>
+From: Petr Štetiar <ynezz@true.cz>
 
-[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
+[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
 
-The OUT endpoint normally blocks (NAK) subsequent packets when a
-short packet was received and returns an incomplete queue entry to
-the gadget driver. Thereby the gadget driver can detect a short packet
-when reading queue entries with a length that is not equal to a
-multiple of packet size.
+Andrey has reported on OpenWrt's bug tracking system[1], that he
+currently can't use ar93xx_uart as pure serial UART without console
+(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
+because compilation ends with following error:
 
-The start_queue() function enables receiving OUT packets regardless of
-the content of the OUT FIFO. This results in a race: With the current
-code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
-& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
-packet will be received, and then start_queue() will call
-stop_out_naking(). That's what we don't want (OUT naking gets turned
-off while there is data in the FIFO) because then the next driver
-request might receive a mixture of old and new packets.
+ ar933x_uart.c: In function 'ar933x_uart_console_write':
+ ar933x_uart.c:550:14: error: 'struct uart_port' has no
+                               member named 'sysrq'
 
-With the patch, this race can't occur because the FIFO's state is
-tested after we know that OUT naking is already turned on, and OUT
-naking is stopped only when both of the conditions are met.  This
-ensures that all received data is delivered to the gadget driver,
-which can detect a short packet now before new packets are appended
-to the last short packet.
+So this patch moves all the code related to console handling behind
+series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Andrey Batyiev <batyiev@gmail.com>
+Reported-by: Andrey Batyiev <batyiev@gmail.com>
+Tested-by: Andrey Batyiev <batyiev@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 9cbb061582a7..a071ab0c163b 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -870,9 +870,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
- 	(void) readl(&ep->dev->pci->pcimstctl);
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index decc7f3c1ab2..ed545a61413c 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -52,11 +52,6 @@ struct ar933x_uart_port {
+ 	struct clk		*clk;
+ };
  
- 	writel(BIT(DMA_START), &dma->dmastat);
+-static inline bool ar933x_uart_console_enabled(void)
+-{
+-	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
+-}
 -
--	if (!ep->is_in)
--		stop_out_naking(ep);
- }
+ static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
+ 					    int offset)
+ {
+@@ -511,6 +506,7 @@ static const struct uart_ops ar933x_uart_ops = {
+ 	.verify_port	= ar933x_uart_verify_port,
+ };
  
- static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
-@@ -911,6 +908,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
- 			writel(BIT(DMA_START), &dma->dmastat);
- 			return;
- 		}
-+		stop_out_naking(ep);
- 	}
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
+ static struct ar933x_uart_port *
+ ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
  
- 	tmp = dmactl_default;
+@@ -607,14 +603,7 @@ static struct console ar933x_uart_console = {
+ 	.index		= -1,
+ 	.data		= &ar933x_uart_driver,
+ };
+-
+-static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
+-{
+-	if (!ar933x_uart_console_enabled())
+-		return;
+-
+-	ar933x_console_ports[up->port.line] = up;
+-}
++#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
+ 
+ static struct uart_driver ar933x_uart_driver = {
+ 	.owner		= THIS_MODULE,
+@@ -703,7 +692,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
+ 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
+ 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
+ 
+-	ar933x_uart_add_console_port(up);
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
++	ar933x_console_ports[up->port.line] = up;
++#endif
+ 
+ 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
+ 	if (ret)
+@@ -752,8 +743,9 @@ static int __init ar933x_uart_init(void)
+ {
+ 	int ret;
+ 
+-	if (ar933x_uart_console_enabled())
+-		ar933x_uart_driver.cons = &ar933x_uart_console;
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
++	ar933x_uart_driver.cons = &ar933x_uart_console;
++#endif
+ 
+ 	ret = uart_register_driver(&ar933x_uart_driver);
+ 	if (ret)
 -- 
 2.19.1
 
