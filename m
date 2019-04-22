@@ -2,157 +2,195 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271CBC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC82C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B4720874
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6818E20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfDVPhP (ORCPT
+        id S1727521AbfDVPjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:37:15 -0400
-Received: from gateway30.websitewelcome.com ([192.185.152.11]:17467 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbfDVPhP (ORCPT
+        Mon, 22 Apr 2019 11:39:07 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:37576 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726260AbfDVPjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:37:15 -0400
-X-Greylist: delayed 1380 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 11:37:13 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id D65343216
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:14:12 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Iae4hKHZhdnCeIae4h66ML; Mon, 22 Apr 2019 10:14:12 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.103] (port=34874 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hIae4-000pH0-Bg; Mon, 22 Apr 2019 10:14:12 -0500
-Subject: Re: [PATCH] perf script: Fix memory leaks in list_scripts()
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190408162748.GA21008@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <567a492a-08fd-7580-24fa-b07a1ebf532e@embeddedor.com>
-Date:   Mon, 22 Apr 2019 10:14:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 11:39:07 -0400
+Received: (qmail 4843 invoked by uid 2102); 22 Apr 2019 11:39:06 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 Apr 2019 11:39:06 -0400
+Date:   Mon, 22 Apr 2019 11:39:06 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <rafael@kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in __dev_printk
+In-Reply-To: <00000000000096874e0586e8b5a6@google.com>
+Message-ID: <Pine.LNX.4.44L0.1904221128560.1384-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20190408162748.GA21008@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.103
-X-Source-L: No
-X-Exim-ID: 1hIae4-000pH0-Bg
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.103]:34874
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, 19 Apr 2019, syzbot wrote:
 
-Friendly ping:
-
-Who can take this?
-
-Thanks
-
-On 4/8/19 11:27 AM, Gustavo A. R. Silva wrote:
-> In case memory resources for *buf* and *paths* were allocated,
-> jump to *out* and release them before return.
+> Hello,
 > 
-> Addresses-Coverity-ID: 1444328 ("Resource leak")
-> Fixes: 6f3da20e151f ("perf report: Support builtin perf script in scripts menu")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  tools/perf/ui/browsers/scripts.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> INFO: rcu detected stall in dummy_timer
 > 
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index 27cf3ab88d13..f4edb18f67ec 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -131,8 +131,10 @@ static int list_scripts(char *script_name, bool *custom,
->  		int key = ui_browser__input_window("perf script command",
->  				"Enter perf script command line (without perf script prefix)",
->  				script_args, "", 0);
-> -		if (key != K_ENTER)
-> -			return -1;
-> +		if (key != K_ENTER) {
-> +			ret = -1;
-> +			goto out;
-> +		}
->  		sprintf(script_name, "%s script %s", perf, script_args);
->  	} else if (choice < num + max_std) {
->  		strcpy(script_name, paths[choice]);
-> 
+> yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 2-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 6-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 5-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 3-1:0.150: yurex_interrupt - unknown status received: -71
+> rcu: INFO: rcu_sched self-detected stall on CPU
+> rcu: 	0-....: (9525 ticks this GP) idle=b9e/1/0x4000000000000002  
+> softirq=12303/12303 fqs=3519
+> yurex 5-1:0.150: yurex_interrupt - unknown status received: -71
+> rcu: 	 (t=10501 jiffies g=8933 q=1449)
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 5568 Comm: kworker/0:4 Not tainted 5.1.0-rc5-gd34f951-dirty #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   <IRQ>
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+>   nmi_cpu_backtrace.cold+0x48/0x87 lib/nmi_backtrace.c:101
+>   nmi_trigger_cpumask_backtrace+0x1a6/0x1bd lib/nmi_backtrace.c:62
+>   trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+>   rcu_dump_cpu_stacks+0x16e/0x1b8 kernel/rcu/tree.c:1223
+>   print_cpu_stall kernel/rcu/tree.c:1360 [inline]
+>   check_cpu_stall kernel/rcu/tree.c:1434 [inline]
+>   rcu_pending kernel/rcu/tree.c:3103 [inline]
+>   rcu_sched_clock_irq.cold+0x4cf/0x7d0 kernel/rcu/tree.c:2544
+>   update_process_times+0x2f/0x70 kernel/time/timer.c:1635
+>   tick_sched_handle+0xa0/0x180 kernel/time/tick-sched.c:161
+>   tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1271
+>   __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+>   __hrtimer_run_queues+0x2d7/0xbd0 kernel/time/hrtimer.c:1451
+>   hrtimer_interrupt+0x2ed/0x740 kernel/time/hrtimer.c:1509
+>   local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1035 [inline]
+>   smp_apic_timer_interrupt+0xdd/0x4a0 arch/x86/kernel/apic/apic.c:1060
+>   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+> RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:767  
+> [inline]
+> RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
+> [inline]
+> RIP: 0010:_raw_spin_unlock_irqrestore+0x50/0x60  
+> kernel/locking/spinlock.c:184
+> Code: 52 f3 f6 c7 02 75 19 48 89 df 57 9d 0f 1f 44 00 00 e8 04 d0 72 f3 65  
+> ff 0d 3d f9 fb 71 5b 5d c3 e8 35 ce 72 f3 48 89 df 57 9d <0f> 1f 44 00 00  
+> eb e5 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55
+> RSP: 0018:ffff8880ad007b60 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+> RAX: 0000000000000007 RBX: 0000000000000206 RCX: 1ffff110130a543a
+> RDX: 0000000000000000 RSI: ffff88809852a1b0 RDI: 0000000000000206
+> RBP: ffff8882165f2100 R08: ffff888098529880 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffff88809faa1a38
+> R13: dffffc0000000000 R14: 0000000000000000 R15: ffff8880a60f5f00
+>   spin_unlock_irqrestore include/linux/spinlock.h:384 [inline]
+>   dummy_timer+0x146e/0x32c0 drivers/usb/gadget/udc/dummy_hcd.c:1982
+>   call_timer_fn+0x161/0x5f0 kernel/time/timer.c:1325
+>   expire_timers kernel/time/timer.c:1362 [inline]
+>   __run_timers kernel/time/timer.c:1681 [inline]
+>   __run_timers kernel/time/timer.c:1649 [inline]
+>   run_timer_softirq+0x58b/0x1400 kernel/time/timer.c:1694
+>   __do_softirq+0x22a/0x8cd kernel/softirq.c:293
+>   do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1027
+>   </IRQ>
+>   do_softirq.part.0+0x60/0x70 kernel/softirq.c:338
+>   do_softirq kernel/softirq.c:330 [inline]
+>   __local_bh_enable_ip+0x183/0x1b0 kernel/softirq.c:190
+>   spin_unlock_bh include/linux/spinlock.h:374 [inline]
+>   peernet2id+0x94/0xc0 net/core/net_namespace.c:266
+>   do_one_broadcast net/netlink/af_netlink.c:1471 [inline]
+>   netlink_broadcast_filtered+0x51b/0xb70 net/netlink/af_netlink.c:1518
+>   netlink_broadcast+0x3a/0x50 net/netlink/af_netlink.c:1542
+>   uevent_net_broadcast_untagged lib/kobject_uevent.c:330 [inline]
+>   kobject_uevent_net_broadcast lib/kobject_uevent.c:408 [inline]
+>   kobject_uevent_env+0x82c/0x13d0 lib/kobject_uevent.c:589
+>   driver_bound+0x1b9/0x320 drivers/base/dd.c:355
+>   really_probe+0x373/0xb10 drivers/base/dd.c:542
+>   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+>   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+>   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+>   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+>   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0x1398/0x3b00 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+>   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+>   kthread+0x313/0x420 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 5-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 6-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 2-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 3-1:0.150: yurex_interrupt - unknown status received: -71
+> yurex 5-1:0.150: yurex_interrupt - unknown status received: -71
+
+Well, at least it's a different kind of crash from before.  Now the 
+question is why isn't yurex_disconnect() doing its job.  More debugging 
+is needed.
+
+Alan Stern
+
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -178,6 +178,10 @@ static void yurex_interrupt(struct urb *
+ 	}
+ 
+ exit:
++	if (!usb_get_intfdata(dev->interface)) {
++		dev_info(&dev->interface->dev "%s unbound\n", __func__);
++		return;
++	}
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
+@@ -309,11 +313,15 @@ static void yurex_disconnect(struct usb_
+ 
+ 	dev = usb_get_intfdata(interface);
+ 	usb_set_intfdata(interface, NULL);
++	dev_info(&interface->dev, "%s\n", __func__);
+ 
+ 	/* give back our minor */
+ 	usb_deregister_dev(interface, &yurex_class);
+ 
+ 	/* prevent more I/O from starting */
++	dev_info(&interface->dev, "Before poison\n");
++	usb_poison_urb(dev->urb);
++	dev_info(&interface->dev, "After poison\n");
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
+
+
