@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7939C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF33C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AD7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337D2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963587;
-	bh=i+JjBN1jzFpFdQR8509H4Spqc+UizChTcAJ1UAAzVoM=;
+	s=default; t=1555963591;
+	bh=odWBMkjyPNnuRw+4KE3xweDXxMT1ig2KF9W94YGphSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GGSTC3Bo6yfF8Wt7TTvNzt5Eo+LPLVn9MfUtiq4WM0diZpBvuYImqprB1zTeCCwBD
-	 deKUB8yx86p4TCfgPxtw9hVrKCkvJmM6YypB/N+6P3S0fRuX/WqjjSWJJUZkQH8zMi
-	 K3PSRWV7Hpiil13iYQCM/8GizQ+TwNhxM0BBoA5M=
+	b=2AbwrpEqo79URevvwy9jIbnGZMapHOjJAz78LYVy+kgjlyKaP4uEyXdlknltiCghr
+	 UTKn3Ezm4V+pl1Y/3QYaRhpozVJEG18HB89pZVGZzCvCnaVXc6nux/cr9ZHRrHpbxi
+	 dyHZPRh2iga4iBhGmhFewP+9vOPwPfguH5W6Hghw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfDVTob (ORCPT
+        id S1732309AbfDVUG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45570 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729461AbfDVTo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:27 -0400
+        id S1729478AbfDVTob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB67217D4;
-        Mon, 22 Apr 2019 19:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49529217D4;
+        Mon, 22 Apr 2019 19:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962267;
-        bh=i+JjBN1jzFpFdQR8509H4Spqc+UizChTcAJ1UAAzVoM=;
+        s=default; t=1555962271;
+        bh=odWBMkjyPNnuRw+4KE3xweDXxMT1ig2KF9W94YGphSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFG8Fq5sZNaLiaCqsScOp+irf/p0owdkX8gNjXG959HE+7BlM07es5hoOm4NQRvl+
-         U++vRMcXXyDYPDPf+ThIO66b/YqZODzwYV4EIUcE6T4kP5mHQjyT/CHqmhzHjQFZis
-         3xyaOhnPyaJmN5iTRyeIPprxl7+HKef87GD2G9TQ=
+        b=IFhs0KMtCgAWzzdTTG/G5HR70YcFpaSUsUVpjJmiZ/8q0weuZVDACrn0TM5eMiD/S
+         +kz3xNTtVeVSO6XJIThdWNsRd0s6ez6Im1egqfjo3VtCDMTlhL8BAERuf6oW6YOrzq
+         E9LkRZG1w4GoIZ4o3Aj8b1iowG68DWl6QPrHsc+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 75/98] kbuild: skip parsing pre sub-make code for recursion
-Date:   Mon, 22 Apr 2019 15:41:42 -0400
-Message-Id: <20190422194205.10404-75-sashal@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chris Healy <cphealy@gmail.com>, linux-gpio@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 78/98] gpio: of: Check for "spi-cs-high" in child instead of parent node
+Date:   Mon, 22 Apr 2019 15:41:45 -0400
+Message-Id: <20190422194205.10404-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -58,68 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 221cc2d27ddc49b3e06d4637db02bf78e70c573c ]
+[ Upstream commit 7ce40277bf848391705011ba37eac2e377cbd9e6 ]
 
-When Make recurses to the top Makefile with sub-make-done unset,
-the code block surrounded by 'ifneq ($(sub-make-done),1) ... endif'
-is parsed multiple times. This happens for in-tree building of
-include/config/auto.conf, *-pkg, etc. with GNU Make 4.x.
+"spi-cs-high" is going to be specified in child node of an SPI
+controller's representing attached SPI device, so change the code to
+look for it there, instead of checking parent node.
 
-This is a slight regression by commit 688931a5ad4e ("kbuild: skip
-sub-make for in-tree build with GNU Make 4.x") in terms of performance
-since that code block contains one $(shell ...) invocation.
-
-Fix it by exporting the variable irrespective of sub-make being run.
-I renamed it because GNU Make cannot properly export variables
-containing hyphens. This is probably a bug of GNU Make, and the issue
-in Kbuild had already been reported by commit 2bfbe7881ee0 ("kbuild:
-Do not use hyphen in exported variable name").
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- Makefile | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib-of.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index ef192ca04330..ed3ad29d2db7 100644
---- a/Makefile
-+++ b/Makefile
-@@ -31,7 +31,7 @@ _all:
- # descending is started. They are now explicitly listed as the
- # prepare rule.
- 
--ifneq ($(sub-make-done),1)
-+ifneq ($(sub_make_done),1)
- 
- # Do not use make's built-in rules and variables
- # (this increases performance and avoids hard-to-debug behaviour)
-@@ -159,6 +159,8 @@ need-sub-make := 1
- $(lastword $(MAKEFILE_LIST)): ;
- endif
- 
-+export sub_make_done := 1
-+
- ifeq ($(need-sub-make),1)
- 
- PHONY += $(MAKECMDGOALS) sub-make
-@@ -168,12 +170,12 @@ $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
- 
- # Invoke a second make in the output directory, passing relevant variables
- sub-make:
--	$(Q)$(MAKE) sub-make-done=1 \
-+	$(Q)$(MAKE) \
- 	$(if $(KBUILD_OUTPUT),-C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR)) \
- 	-f $(CURDIR)/Makefile $(filter-out _all sub-make,$(MAKECMDGOALS))
- 
- endif # need-sub-make
--endif # sub-make-done
-+endif # sub_make_done
- 
- # We process the rest of the Makefile if this is the final invocation of make
- ifeq ($(need-sub-make),)
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 9470563f2506..f1ae28289a67 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -142,16 +142,16 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 				 * conflict and the "spi-cs-high" flag will
+ 				 * take precedence.
+ 				 */
+-				if (of_property_read_bool(np, "spi-cs-high")) {
++				if (of_property_read_bool(child, "spi-cs-high")) {
+ 					if (*flags & OF_GPIO_ACTIVE_LOW) {
+ 						pr_warn("%s GPIO handle specifies active low - ignored\n",
+-							of_node_full_name(np));
++							of_node_full_name(child));
+ 						*flags &= ~OF_GPIO_ACTIVE_LOW;
+ 					}
+ 				} else {
+ 					if (!(*flags & OF_GPIO_ACTIVE_LOW))
+ 						pr_info("%s enforce active low on chipselect handle\n",
+-							of_node_full_name(np));
++							of_node_full_name(child));
+ 					*flags |= OF_GPIO_ACTIVE_LOW;
+ 				}
+ 				break;
 -- 
 2.19.1
 
