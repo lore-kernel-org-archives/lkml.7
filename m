@@ -2,116 +2,123 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3BCC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED66C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E752075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAD32075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Kf88BwfH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pEpJ7+By"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfDVJr5 (ORCPT
+        id S1727029AbfDVJvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:47:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42181 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfDVJr4 (ORCPT
+        Mon, 22 Apr 2019 05:51:41 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34119 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfDVJvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:47:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3M9l6Be1583137
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 22 Apr 2019 02:47:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3M9l6Be1583137
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555926426;
-        bh=eNIsBiO73sq+41Uwvb49OR9RHQ+uVef++R88ebPPZw8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Kf88BwfHkfi0PQ0fz2fy2w4tR8ILhKYkRm5nZYZqUfXZnFRYdvD84tyRfhH5cX26c
-         ignghodrk6Vel4Kc18ketNO0zigSFJGim/zctJNzw+ddFDWZYGG+wm6PU0imZa8IDZ
-         o+uzKKEdwdGZDWpQOda0CqUKztpZX0AjdzgPIfkazxz/sNS6rP466Zl6COAD2X9Yza
-         bBX8eS6lgelCmXxIib1uhPCKMlCwljhq1/YuqeuPp0rgCc9jbX4HF2bmmVom+refyH
-         /QL2y7ptFveIIRMasNxp6JyK1ATKff/otIsUNFRXoL+OsdAPYeSLpaWlbGRCxgZWnw
-         AJ1OUQaU/VELQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3M9l1091583133;
-        Mon, 22 Apr 2019 02:47:01 -0700
-Date:   Mon, 22 Apr 2019 02:47:01 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiang Biao <tipbot@zytor.com>
-Message-ID: <tip-2c4645439e8f2f6e7c37f158feae6f6a82baa910@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, benbjiang@tencent.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, mingo@kernel.org
-Reply-To: benbjiang@tencent.com, peterz@infradead.org, tglx@linutronix.de,
-          mingo@kernel.org, torvalds@linux-foundation.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <20190422024943.71918-1-benbjiang@tencent.com>
-References: <20190422024943.71918-1-benbjiang@tencent.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/irq: Fix outdated comments
-Git-Commit-ID: 2c4645439e8f2f6e7c37f158feae6f6a82baa910
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 22 Apr 2019 05:51:40 -0400
+Received: by mail-vs1-f66.google.com with SMTP id t78so5931293vsc.1;
+        Mon, 22 Apr 2019 02:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/8Ia0lr8SyGRhLNV/rp9b91j7HYQOCib8nOzsqqsR1w=;
+        b=pEpJ7+BypWkwhgcSpVHj0qLYBolMmeAMuAtX5eJAEm2Wn3Qf381fMH5Troh49WspWb
+         6kbK20Ha6eJQWH05TBiZbumKsJBsls3sfA9mKJXaabWvAvAUG+6nvSfhRCJjURjgvwoh
+         Kv+RNVhctOqkmrruS5cPLg7QiLwzk9eKz5ghmtZO68/b9qOqkasAzJXWLK5jqzr6Qbiq
+         cVrDkEhDtu+vMXDWOCiLvC44J4A7cQyqOZM5Be+wyDpXldYIm2KSg/JjKNqRHpxNgcMf
+         YjH1DS8BM8yELgO98GJE7ocPDrQhUPElc2CId+orI+69tOS8/PtiOii03XR0OzEDNCeN
+         DcIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/8Ia0lr8SyGRhLNV/rp9b91j7HYQOCib8nOzsqqsR1w=;
+        b=tA0arxJxjj44vHVgKf4mW6PvmLtvLtWBe7gbsAOtJAC5sVzZAvrRuzmAEJjlzw+0bE
+         d4O9PjcX1Nucb6gShu1+2zDajiyr+mgtuuR294RIgLJGQrc+xWv4Veg2IBdzJCMqIIF7
+         fXAY1sZnz3WRjq8ISF74miH5YZhDNLKNYtFvgekv4f+1eIFtjFrAz5zvWOv1+IBMU1TY
+         gjmM5LTUpumJiYZBlVr+/w19YMQxyf2XRhr2onb1dCG8qACRJTsBPwZy3coFqWlR89wX
+         y8yYU8MssM54zU/NyiExZ2nT2jaAleooqes5/c/dkiNAbCX3C22Ypmgzr7YpkENkHZMW
+         Swvg==
+X-Gm-Message-State: APjAAAUKqvqHYobo0nOKXa0M8uzth8On/mZeRlxPbQsdLJHzWLxMYnSq
+        piAO+JgTznSn92lfYfylHbDiDb0I7hu5kjYXEQ==
+X-Google-Smtp-Source: APXvYqyYHHYWIkx3qkizLK5MKUvD4HclK5p6vLE9Frv//DrrPdtcawUUnjDjV8gOf0uk7v5NEN9SZJ5P5w6X779nLQ8=
+X-Received: by 2002:a67:e881:: with SMTP id x1mr9854243vsn.48.1555926699737;
+ Mon, 22 Apr 2019 02:51:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190409065612.32652-1-rdong.ge@gmail.com> <20190422083339.ptkxqb66pombgy5g@salvia>
+ <CAN1Lvyo1CVopsB7iV=e-dAN9JDFg-SmQ8g6H6RrgD7qACAd4hQ@mail.gmail.com> <20190422093502.36da6z3qf7zxpwny@breakpoint.cc>
+In-Reply-To: <20190422093502.36da6z3qf7zxpwny@breakpoint.cc>
+From:   Rundong Ge <rdong.ge@gmail.com>
+Date:   Mon, 22 Apr 2019 17:51:28 +0800
+Message-ID: <CAN1LvyrSWPbNSvzLquQAeK9kYK=YyqyJEm7zodd3O-QWAVTC4Q@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: fix dangling pointer access of fake_rtable
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, kadlec@blackhole.kfki.hu,
+        Roopa Prabhu <roopa@cumulusnetworks.com>, davem@davemloft.net,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2c4645439e8f2f6e7c37f158feae6f6a82baa910
-Gitweb:     https://git.kernel.org/tip/2c4645439e8f2f6e7c37f158feae6f6a82baa910
-Author:     Jiang Biao <benbjiang@tencent.com>
-AuthorDate: Mon, 22 Apr 2019 10:49:43 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 22 Apr 2019 11:42:59 +0200
+skb->dev is munged in setup_prerouting() to be bridge or vlan device on
+top of bridge.
+--Yes, but  br_nf_pre_routing_finish will set the skb->dev back to the phyi=
+ndev.
 
-x86/irq: Fix outdated comments
-
-INVALIDATE_TLB_VECTOR_START has been removed by:
-
-  52aec3308db8("x86/tlb: replace INVALIDATE_TLB_VECTOR by CALL_FUNCTION_VECTOR")
-
-while VSYSCALL_EMU_VECTO(204) has also been removed, by:
-
-  3ae36655b97a("x86-64: Rework vsyscall emulation and add vsyscall= parameter")
-
-so update the comments in <asm/irq_vectors.h> accordingly.
-
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Link: http://lkml.kernel.org/r/20190422024943.71918-1-benbjiang@tencent.com
-[ Improved the changelog. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/irq_vectors.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-index 548d90bbf919..889f8b1b5b7f 100644
---- a/arch/x86/include/asm/irq_vectors.h
-+++ b/arch/x86/include/asm/irq_vectors.h
-@@ -18,8 +18,8 @@
-  *  Vectors   0 ...  31 : system traps and exceptions - hardcoded events
-  *  Vectors  32 ... 127 : device interrupts
-  *  Vector  128         : legacy int80 syscall interface
-- *  Vectors 129 ... INVALIDATE_TLB_VECTOR_START-1 except 204 : device interrupts
-- *  Vectors INVALIDATE_TLB_VECTOR_START ... 255 : special interrupts
-+ *  Vectors 129 ... LOCAL_TIMER_VECTOR-1
-+ *  Vectors LOCAL_TIMER_VECTOR ... 255 : special interrupts
-  *
-  * 64-bit x86 has per CPU IDT tables, 32-bit has one shared IDT table.
-  *
+Florian Westphal <fw@strlen.de> =E4=BA=8E2019=E5=B9=B44=E6=9C=8822=E6=97=A5=
+=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=885:35=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Rundong Ge <rdong.ge@gmail.com> wrote:
+> > br_nf_pre_routing will call the NF_INET_PRE_ROUTING hooks, at this
+> > time both entry->state.in and entry->state.out are not bridge device.
+> >
+> > NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
+> > skb->dev, NULL,
+> > br_nf_pre_routing_finish);
+>
+> skb->dev is munged in setup_prerouting() to be bridge or vlan device on
+> top of bridge.
+>
+> That being said, I think we need this fix at least:
+>
+> diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+> --- a/net/netfilter/nf_queue.c
+> +++ b/net/netfilter/nf_queue.c
+> @@ -197,8 +197,15 @@ static int __nf_queue(struct sk_buff *skb, const str=
+uct nf_hook_state *state,
+>                 .size   =3D sizeof(*entry) + route_key_size,
+>         };
+>
+> +       if (skb_dst(skb)) {
+> +               skb_dst_force(skb);
+> +               if (!skb_dst(skb)) {
+> +                       status =3D -EHOSTUNREACH;
+> +                       goto err;
+> +               }
+> +       }
+> +
+>         nf_queue_entry_get_refs(entry);
+> -       skb_dst_force(skb);
+>
+>         switch (entry->state.pf) {
+>         case AF_INET:
+>
+>
+> Then, why not add, in dev_cmp:
+>
+>         dst =3D skb_dst(skb);
+>         if (dst && dst->dev->index =3D=3D index ...
+>
+> ?
