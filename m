@@ -2,152 +2,129 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B53C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59CBC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A51F20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E3920859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfDVQGG (ORCPT
+        id S1727815AbfDVQHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:06:06 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:56500 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVQGF (ORCPT
+        Mon, 22 Apr 2019 12:07:20 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47944 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfDVQHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:06:05 -0400
-Received: by mail-it1-f197.google.com with SMTP id s21so12888286ite.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:06:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=7f2B0qDJ0NGKdfmC5nRFEVu9THrNzuuLQq94MmJHVqQ=;
-        b=sw10Ut5WoF8+b225mwEnMZGtwdkctAmePrcyoIKnr/Ee32/rFHNIMcDWoi4nmhpB6+
-         ex45Yq5eE4ayYO3W/+nvdT/UqzpNJkfbvj81KdYrKzL88X1VFhiYhm0YuFqNB61bhiP1
-         hDW8yF9PK1T70QATOj5kiniM6kvLoYvqqj3Su6b2S9dCsLe/noOzYYjAHc0GSd2Mv/Ot
-         KEpeh0jhmUu90okeAH7RtUmIp1rC9rMqjb022R3VmxALwCPdCcaaecSn5pKhr4jbh4IS
-         GnkJZhTzpeljGtJTZjvchwi80b0eGQDWwWf3MV4nlnUPpIycr55iBfeZ58OINN1v3I9N
-         zLjw==
-X-Gm-Message-State: APjAAAU3HBwtlHGxP8aI/O7BeUw4ka/CjP3sUuwHgfT7EJXCWiUZe2+B
-        beOf8nngF3iqMboKU8Pbov0PV0HE+FKyd90n1xoCfduMKNvS
-X-Google-Smtp-Source: APXvYqyiIeoejZHRLVRlzClbMGkAsacRLzUQppmw76boahG2dDk+oC18efBUJJNOKiFhJBEwHtznRpbtZ4fOUGfVJRgHUYp5P7ni
+        Mon, 22 Apr 2019 12:07:20 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6F132280AE6;
+        Mon, 22 Apr 2019 17:07:18 +0100 (BST)
+Date:   Mon, 22 Apr 2019 18:07:15 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "joao.pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] i3c: fix i2c and i3c scl rate by bus mode
+Message-ID: <20190422180715.40abe1b9@collabora.com>
+In-Reply-To: <13D59CF9CEBAF94592A12E8AE55501350A61B3B4@DE02WEMBXB.internal.synopsys.com>
+References: <cover.1555350118.git.vitor.soares@synopsys.com>
+        <05fdeea79db83970e9ecb0d7045b4dd98f206f06.1555350118.git.vitor.soares@synopsys.com>
+        <20190416075041.22f8e849@collabora.com>
+        <13D59CF9CEBAF94592A12E8AE55501350A61596D@DE02WEMBXB.internal.synopsys.com>
+        <20190416165250.0606e5a2@collabora.com>
+        <13D59CF9CEBAF94592A12E8AE55501350A61B3B4@DE02WEMBXB.internal.synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2109:: with SMTP id x9mr6515182iox.94.1555949164951;
- Mon, 22 Apr 2019 09:06:04 -0700 (PDT)
-Date:   Mon, 22 Apr 2019 09:06:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000043fe9c058720a5d3@google.com>
-Subject: WARNING in percpu_ref_kill_and_confirm
-From:   syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, axboe@kernel.dk, bp@alien8.de,
-        darrick.wong@oracle.com, gregkh@linuxfoundation.org, hpa@zytor.com,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org,
-        mathieu.desnoyers@efficios.com, mingo@redhat.com,
-        mpe@ellerman.id.au, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    9e5de623 Merge tag 'nfs-for-5.1-5' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15624257200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
-dashboard link: https://syzkaller.appspot.com/bug?extid=10d25e23199614b7721f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ff39f3200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15758647200000
-
-The bug was bisected to:
-
-commit 38e7571c07be01f9f19b355a9306a4e3d5cb0f5b
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri Mar 8 22:48:40 2019 +0000
-
-     Merge tag 'io_uring-2019-03-06' of git://git.kernel.dk/linux-block
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1736bc57200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14b6bc57200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b6bc57200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com
-Fixes: 38e7571c07be ("Merge tag 'io_uring-2019-03-06' of  
-git://git.kernel.dk/linux-block")
-
-------------[ cut here ]------------
-percpu_ref_kill_and_confirm called more than once on io_ring_ctx_ref_free!
-WARNING: CPU: 1 PID: 7815 at lib/percpu-refcount.c:335  
-percpu_ref_kill_and_confirm+0x341/0x3b0 lib/percpu-refcount.c:335
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 7815 Comm: syz-executor269 Not tainted 5.1.0-rc5+ #77
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:percpu_ref_kill_and_confirm+0x341/0x3b0 lib/percpu-refcount.c:335
-Code: 42 e0 2a 06 01 48 89 fa 48 c1 ea 03 80 3c 02 00 75 76 49 8b 54 24 10  
-48 c7 c6 a0 71 a1 87 48 c7 c7 40 71 a1 87 e8 ad 92 13 fe <0f> 0b 48 b8 00  
-00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 80 3c 02
-RSP: 0018:ffff8880a96cfce0 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000607f5142e35b RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815afcf6 RDI: ffffed10152d9f8e
-RBP: ffff8880a96cfd10 R08: ffff8880a85c40c0 R09: fffffbfff1133639
-R10: fffffbfff1133638 R11: ffffffff8899b1c3 R12: ffff88809ee571c0
-R13: ffff88809ee571c8 R14: 0000000000000286 R15: 0000000000000000
-  percpu_ref_kill include/linux/percpu-refcount.h:128 [inline]
-  __io_uring_register+0xa7/0x1fe0 fs/io_uring.c:2937
-  __do_sys_io_uring_register fs/io_uring.c:2998 [inline]
-  __se_sys_io_uring_register fs/io_uring.c:2980 [inline]
-  __ia32_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2980
-  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
-  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f16869
-Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90  
-90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
-90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f7ef11ec EFLAGS: 00000296 ORIG_RAX: 00000000000001ab
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+On Mon, 22 Apr 2019 15:54:33 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > > >     
+> > > > >  {
+> > > > >  	i3cbus->mode = mode;
+> > > > >  
+> > > > > -	if (!i3cbus->scl_rate.i3c)
+> > > > > -		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > > > > -
+> > > > > -	if (!i3cbus->scl_rate.i2c) {
+> > > > > -		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
+> > > > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
+> > > > > -		else
+> > > > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
+> > > > > +	switch (i3cbus->mode) {
+> > > > > +	case I3C_BUS_MODE_PURE:
+> > > > > +		if (!i3cbus->scl_rate.i3c)
+> > > > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > > > > +		break;
+> > > > > +	case I3C_BUS_MODE_MIXED_FAST:
+> > > > > +		if (!i3cbus->scl_rate.i3c)
+> > > > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > > > > +		if (!i3cbus->scl_rate.i2c)
+> > > > > +			i3cbus->scl_rate.i2c = i2c_scl_rate;
+> > > > > +		break;
+> > > > > +	case I3C_BUS_MODE_MIXED_SLOW:
+> > > > > +		if (!i3cbus->scl_rate.i2c)
+> > > > > +			i3cbus->scl_rate.i2c = i2c_scl_rate;
+> > > > > +		i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;    
+> > > > 
+> > > > Maybe we should do
+> > > > 
+> > > > 		if (!i3cbus->scl_rate.i3c ||
+> > > > 		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
+> > > > 			i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;
+> > > > 					   
+> > > > Just in case the I3C rate forced by the user is lower than the max I2C
+> > > > rate.    
+> > > 
+> > > That was something that I considered but TBH it isn't a real use case.  
+> > 
+> > Add a WARN_ON() to at least catch such inconsistencies. And maybe we
+> > should add a dev_warn() when the user-defined rates do not match
+> > the mode/LVR constraints. It's easy to do a mistake when writing a dts.  
+> 
+> I think the WARN_ON() is too evasive on the screen and won't provide the 
+> information we want.
+> The dev_warn() should work perfectly here.
+> 
+> 		if (i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c)
+> 			dev_warn(&i3cbus->cur_master->dev->dev,
+> 				     "%s: i3c-scl-hz lower then i2c-scl-hz\n",  __func__);
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Using dev_warn() sounds good, though I don't think you need the
+__func__ here. Also, please print the i2c/i3c rates in the message, and
+align the second line on the open parens.
+
+> 		if (i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_SCL_RATE ||
+> 		    i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_PLUS_SCL_RATE)
+> 			dev_warn(&i3cbus->cur_master->dev->dev,
+> 				     "%s: i2c-scl-hz not defined according MIPI I3C spec\n", 
+> 				     __func__);
+
+Is that really a problem? Having an i2c rate that is less than FM speed
+sounds like a valid case to me.
+
+> 
+> Maybe it make more sense to do this check on of_populate_i3c_bus(), what 
+> do you think?
+> 
+
+No, we really want to have this check here, because we might support
+other HW description formats at some point (board-files, ACPI, ...).
