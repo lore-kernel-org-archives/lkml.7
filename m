@@ -6,49 +6,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69FDC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4793C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85596204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4F3204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963537;
-	bh=FcBVi5etLftjLI+XPqWTppR/Qu7dpfJ50tAQv9jIIpY=;
+	s=default; t=1555963564;
+	bh=8P5NYuag8dkMcjMoSzPUQkd5WOIKhdU1lklgLEmKxFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZBKXQmk+yd1HwtwcQdCzL77wtLPH0KvO4yuWtJG7M3NTu6GGPkOkLSoIa+bkNMHO
-	 lATv8ahZZfBaLt+inIbynAyUsbFjcJJXoG5S/k30o3JRTABdqwEJe+tjdttTB8+IWD
-	 AgqSmRBrAqr+QRsUK6ZO/VfBmkGLiAjOpYuG2cR0=
+	b=gyw4r6larHoY+/viGK9uXEom4f8m58MSZ2/Cf6yXAAzNv2SL9nxhq14to+7AeW5UP
+	 nRjAY2zK75NWK+A+9vH+/oIZUlA/10xVJxBOSED6FWLaQzqZnQVnYGgU4BvTZRjuXc
+	 5GCuse+IsdQ+GH8znicV+eD0K/+rNvQGgvFuD23o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbfDVUFg (ORCPT
+        id S1732278AbfDVUGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729617AbfDVTo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:57 -0400
+        id S1729488AbfDVTof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0247921900;
-        Mon, 22 Apr 2019 19:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C588C217D4;
+        Mon, 22 Apr 2019 19:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962296;
-        bh=FcBVi5etLftjLI+XPqWTppR/Qu7dpfJ50tAQv9jIIpY=;
+        s=default; t=1555962274;
+        bh=8P5NYuag8dkMcjMoSzPUQkd5WOIKhdU1lklgLEmKxFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rf/jeX7wJuA7ex/41MhJPlX/0b8aWyZcl68VD9NaWo/JllXMgEkaQH7O6H6FtKLun
-         E/n89TwNz0Cu5yKs9gCmZ2pBU3ncORVI8jxobITZzwe/1NDTQ3J4M/S4dR/tm5xYVB
-         eiwxeYCM3HcD0NGSFbuZy+Z8bqvGBalwBbNXcDlI=
+        b=vivficklkGLgjFe3GSAy+R7HR6XJP4QOZQjOYO2TNjMhGQjUKREfm/CZjJ4RFQB2G
+         6NizNvyOSmBQDfhPxAoUtFC+G8W3QiXObUsIiMn6YrVy/u3O523qSKajDiw4G5c0sU
+         s7n+nLVzAwh/xbhr0ynyn9+MO6unBQtyHQAlQ2e8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 89/98] nvmet: fix building bvec from sg list
-Date:   Mon, 22 Apr 2019 15:41:56 -0400
-Message-Id: <20190422194205.10404-89-sashal@kernel.org>
+Cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        Jim Mattson <jmattson@google.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>, Joerg Roedel <joro@8bytes.org>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 80/98] KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)
+Date:   Mon, 22 Apr 2019 15:41:47 -0400
+Message-Id: <20190422194205.10404-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,90 +63,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: "Singh, Brijesh" <brijesh.singh@amd.com>
 
-[ Upstream commit 02db99548d3608a625cf481cff2bb7b626829b3f ]
+[ Upstream commit 05d5a48635259e621ea26d01e8316c6feeb34190 ]
 
-There are two mistakes for building bvec from sg list for file
-backed ns:
+Errata#1096:
 
-- use request data length to compute number of io vector, this way
-doesn't consider sg->offset, and the result may be smaller than required
-io vectors
+On a nested data page fault when CR.SMAP=1 and the guest data read
+generates a SMAP violation, GuestInstrBytes field of the VMCB on a
+VMEXIT will incorrectly return 0h instead the correct guest
+instruction bytes .
 
-- bvec->bv_len isn't capped by sg->length
+Recommend Workaround:
 
-This patch fixes this issue by building bvec from sg directly, given
-the whole IO stack is ready for multi-page bvec.
+To determine what instruction the guest was executing the hypervisor
+will have to decode the instruction at the instruction pointer.
 
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Fixes: 3a85a5de29ea ("nvme-loop: add a NVMe loopback host driver")
+The recommended workaround can not be implemented for the SEV
+guest because guest memory is encrypted with the guest specific key,
+and instruction decoder will not be able to decode the instruction
+bytes. If we hit this errata in the SEV guest then log the message
+and request a guest shutdown.
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reported-by: Venkatesh Srinivas <venkateshs@google.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/nvme/target/io-cmd-file.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 ++
+ arch/x86/kvm/mmu.c              |  8 +++++---
+ arch/x86/kvm/svm.c              | 32 ++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c          |  6 ++++++
+ 4 files changed, 45 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
-index 517522305e5c..9a0fa3943ca7 100644
---- a/drivers/nvme/target/io-cmd-file.c
-+++ b/drivers/nvme/target/io-cmd-file.c
-@@ -75,11 +75,11 @@ err:
- 	return ret;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 71d763ad2637..9f2d890733a9 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1198,6 +1198,8 @@ struct kvm_x86_ops {
+ 	int (*nested_enable_evmcs)(struct kvm_vcpu *vcpu,
+ 				   uint16_t *vmcs_version);
+ 	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
++
++	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
+ };
+ 
+ struct kvm_arch_async_pf {
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index acab95dcffb6..77dbb57412cc 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -5395,10 +5395,12 @@ emulate:
+ 	 * This can happen if a guest gets a page-fault on data access but the HW
+ 	 * table walker is not able to read the instruction page (e.g instruction
+ 	 * page is not present in memory). In those cases we simply restart the
+-	 * guest.
++	 * guest, with the exception of AMD Erratum 1096 which is unrecoverable.
+ 	 */
+-	if (unlikely(insn && !insn_len))
+-		return 1;
++	if (unlikely(insn && !insn_len)) {
++		if (!kvm_x86_ops->need_emulation_on_page_fault(vcpu))
++			return 1;
++	}
+ 
+ 	er = x86_emulate_instruction(vcpu, cr2, emulation_type, insn, insn_len);
+ 
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index a9b8e38d78ad..3605c5cd5f1d 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7098,6 +7098,36 @@ static int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+ 	return -ENODEV;
  }
  
--static void nvmet_file_init_bvec(struct bio_vec *bv, struct sg_page_iter *iter)
-+static void nvmet_file_init_bvec(struct bio_vec *bv, struct scatterlist *sg)
- {
--	bv->bv_page = sg_page_iter_page(iter);
--	bv->bv_offset = iter->sg->offset;
--	bv->bv_len = PAGE_SIZE - iter->sg->offset;
-+	bv->bv_page = sg_page(sg);
-+	bv->bv_offset = sg->offset;
-+	bv->bv_len = sg->length;
++static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
++{
++	bool is_user, smap;
++
++	is_user = svm_get_cpl(vcpu) == 3;
++	smap = !kvm_read_cr4_bits(vcpu, X86_CR4_SMAP);
++
++	/*
++	 * Detect and workaround Errata 1096 Fam_17h_00_0Fh
++	 *
++	 * In non SEV guest, hypervisor will be able to read the guest
++	 * memory to decode the instruction pointer when insn_len is zero
++	 * so we return true to indicate that decoding is possible.
++	 *
++	 * But in the SEV guest, the guest memory is encrypted with the
++	 * guest specific key and hypervisor will not be able to decode the
++	 * instruction pointer so we will not able to workaround it. Lets
++	 * print the error and request to kill the guest.
++	 */
++	if (is_user && smap) {
++		if (!sev_guest(vcpu->kvm))
++			return true;
++
++		pr_err_ratelimited("KVM: Guest triggered AMD Erratum 1096\n");
++		kvm_make_request(KVM_REQ_TRIPLE_FAULT, vcpu);
++	}
++
++	return false;
++}
++
+ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 	.cpu_has_kvm_support = has_svm,
+ 	.disabled_by_bios = is_disabled,
+@@ -7231,6 +7261,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+ 
+ 	.nested_enable_evmcs = nested_enable_evmcs,
+ 	.nested_get_evmcs_version = nested_get_evmcs_version,
++
++	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+ };
+ 
+ static int __init svm_init(void)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index a0a770816429..7794c41a73bf 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7522,6 +7522,11 @@ static int enable_smi_window(struct kvm_vcpu *vcpu)
+ 	return 0;
  }
  
- static ssize_t nvmet_file_submit_bvec(struct nvmet_req *req, loff_t pos,
-@@ -128,14 +128,14 @@ static void nvmet_file_io_done(struct kiocb *iocb, long ret, long ret2)
- 
- static bool nvmet_file_execute_io(struct nvmet_req *req, int ki_flags)
++static bool vmx_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
++{
++	return 0;
++}
++
+ static __init int hardware_setup(void)
  {
--	ssize_t nr_bvec = DIV_ROUND_UP(req->data_len, PAGE_SIZE);
--	struct sg_page_iter sg_pg_iter;
-+	ssize_t nr_bvec = req->sg_cnt;
- 	unsigned long bv_cnt = 0;
- 	bool is_sync = false;
- 	size_t len = 0, total_len = 0;
- 	ssize_t ret = 0;
- 	loff_t pos;
--
-+	int i;
-+	struct scatterlist *sg;
+ 	unsigned long host_bndcfgs;
+@@ -7824,6 +7829,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+ 	.set_nested_state = NULL,
+ 	.get_vmcs12_pages = NULL,
+ 	.nested_enable_evmcs = NULL,
++	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+ };
  
- 	if (req->f.mpool_alloc && nr_bvec > NVMET_MAX_MPOOL_BVEC)
- 		is_sync = true;
-@@ -147,8 +147,8 @@ static bool nvmet_file_execute_io(struct nvmet_req *req, int ki_flags)
- 	}
- 
- 	memset(&req->f.iocb, 0, sizeof(struct kiocb));
--	for_each_sg_page(req->sg, &sg_pg_iter, req->sg_cnt, 0) {
--		nvmet_file_init_bvec(&req->f.bvec[bv_cnt], &sg_pg_iter);
-+	for_each_sg(req->sg, sg, req->sg_cnt, i) {
-+		nvmet_file_init_bvec(&req->f.bvec[bv_cnt], sg);
- 		len += req->f.bvec[bv_cnt].bv_len;
- 		total_len += req->f.bvec[bv_cnt].bv_len;
- 		bv_cnt++;
-@@ -225,7 +225,7 @@ static void nvmet_file_submit_buffered_io(struct nvmet_req *req)
- 
- static void nvmet_file_execute_rw(struct nvmet_req *req)
- {
--	ssize_t nr_bvec = DIV_ROUND_UP(req->data_len, PAGE_SIZE);
-+	ssize_t nr_bvec = req->sg_cnt;
- 
- 	if (!req->sg_cnt || !nr_bvec) {
- 		nvmet_req_complete(req, 0);
+ static void vmx_cleanup_l1d_flush(void)
 -- 
 2.19.1
 
