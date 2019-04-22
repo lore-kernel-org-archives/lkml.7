@@ -2,106 +2,109 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DF8C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86753C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C706420685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F3620685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0ws2KqE"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="KaqBsNHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfDVNs0 (ORCPT
+        id S1727947AbfDVNtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:48:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35355 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727721AbfDVNsY (ORCPT
+        Mon, 22 Apr 2019 09:49:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33137 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727343AbfDVNtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:48:24 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o12so12567138wrn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 06:48:23 -0700 (PDT)
+        Mon, 22 Apr 2019 09:49:18 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f23so10390204ljc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 06:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q+H0yAQfSt/OuW9uTJYdZOd3c9n6fn413lTwwjlVogI=;
-        b=M0ws2KqEWS+0fQsGT2foyKEHS7JVwHRIl5yLR/aV9JQziJBu0sE/3Jm9jNQxFtjbWo
-         gv1Ev/fJMu5Wz1D0OnsYeAJ6ZlDXBmKVqydR5dRec8JUvKiCuBCewGxZm9VI94ZIDVBy
-         DBlT/+vhXmzyfryOGkQtd0Bzk4lHHcX4t2S2HPqXymb1kNNKeRI7q0pYnHJevLMV8dZh
-         aO7ze+VRBqGEm6urA3p3+34RMHuxt+RyDD4IlESBxCxNxPjqh5YRgN17ixc60I8/QsH6
-         Ouq8UTxgu3MkQMWanUcVvFjTXMaQPD8fLlD1vpajBq2Sv/J80SqTx126dMb3GdDO1JDq
-         KnNw==
+        bh=XQFBYGnZg0XEWFn8CSrqp3+QoiwOdJuLikT3CHYKNBo=;
+        b=KaqBsNHaf1fLNIyoAV4UgByrrjlXmfDPNTDRqyyDHApsk39c4Ef08efn45bhHmFu9w
+         mjeWWOudfEkVDN0jASnuSyqIw/9MeuiHuyRjKBwlZIxLQzFhcx0NFauB8xotuVmWuk7R
+         nTrSwvPjCOQO3+NbZRort0YJMNjpfI8pbhw6hlx4qTn5Et+KND0LKW8AJtWXkAqIQli3
+         WO5hC25IT8a1/CpuodGQvHLeNEdGWGGJDOmAJO6ZY7mJ6p317EJT5L+c/RPyeEg7C6G8
+         qStUSsUtRkQ0NtXQRmyUwTEmdceNtmJBWLevhuk7rbUTz5aLq6duXWiDfFemQzyYlvsF
+         jtwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q+H0yAQfSt/OuW9uTJYdZOd3c9n6fn413lTwwjlVogI=;
-        b=RBhtnhv36CEvn+wtrtViFVMGWo3c6pO6upa7pSDuE9De8Hq6VJJCNFolCrBrwOz6Q2
-         VuAnUHldJXnpzJhTTT+SLBD3mHcIWOaLds7es4eVCvSFcXx6oWRQKojl53Gcj23Kzbyi
-         2XRFWinvgBWzIAVOY3IfRfRXL3Y/iKSBBn3BsbBX39NhhTmzckM2Pk7V2T/wF33NtLPM
-         LYFyvehZI1K3UAVZUDwrKTZoLmXfD0TK/pUeBhAcya7RRiuhax9vrrsl0LZewavGBqg2
-         Wz6eVb5cgn9J+HO5X8O/Xk8aNDRFlFciIW/laUDLEX2d3pfShmujyzfwixLczF/v2CMf
-         m6kQ==
-X-Gm-Message-State: APjAAAUXjcPa9AX8yczqnDAqBAgUijt6SBd1qaQV3fBFCz71ALqXDGm0
-        ++2mS5iXUgrclM/sPpQ4aDJh4Yqjlk7QtAKgn5vp
-X-Google-Smtp-Source: APXvYqxFApL6Oa7QKT50fOYQKKfwDKU/AIYzkpZnb1XA/rXyh5XsOG/2YYJa+msOaVpC8SneO5b5XrHaM3YQAilmgzY=
-X-Received: by 2002:a5d:4d42:: with SMTP id a2mr14110700wru.130.1555940902197;
- Mon, 22 Apr 2019 06:48:22 -0700 (PDT)
+        bh=XQFBYGnZg0XEWFn8CSrqp3+QoiwOdJuLikT3CHYKNBo=;
+        b=TuikLUbfB7iwwtZ2mxZ+nl6OZznFL6tRzOPOTFQ2+woh8Fu5BEntD5OReaqSI9hWWZ
+         IGPA9J7cfp3ri0lR5gkko64/ILbH5rGuxn5du2pIGWQht/+v/f+6v1IYVp+vrXcwJ7XA
+         eQ72ooJV3Qqx1fnBZT8H2TYduA+hppKyKW8zLqLxmhtrsyT+2R01HgnJVdmDPsozgrwt
+         InqUzrmPgW6t3/kJCP5JjoRCeiJ17MHSHLTakIE9QshEvzJX8y+gcxIKWhtpQq5Stcs0
+         YYP87CYzbl3dsqMCmI1ncWurzbs87Zxuspil9dXgpSvlU7E1AaUApcXx9TsU3gTVV2VA
+         nFTw==
+X-Gm-Message-State: APjAAAWQ4p3TAKK8UqKfnNmpCb06GQZ9tPKh5ABDCf9M+mtPLkR8bybx
+        gIXrTRf/+zb7LGv8O10O7JKzQB3TF6LtJFJ5/GWC
+X-Google-Smtp-Source: APXvYqxqtfV+UJ/PwH6ynGSFzEbVXb/DDeEsctmCUNCswoOTK4fexb41Lr6AXRYbkTAn9Kx31EzBIaykN/Mp+ImlEBw=
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr10242632ljk.5.1555940956344;
+ Mon, 22 Apr 2019 06:49:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1555938375.git.mchehab+samsung@kernel.org> <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
-In-Reply-To: <7adf9035ae06ecc6c7e46b51cb677f0a8f61d19a.1555938376.git.mchehab+samsung@kernel.org>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Mon, 22 Apr 2019 08:48:10 -0500
-Message-ID: <CAErSpo4FLuCVPGAZGKeBn=-oyaw6eTrseMnaHJo1TVjxnfCZrw@mail.gmail.com>
-Subject: Re: [PATCH v2 25/79] docs: convert docs to ReST and rename to *.rst
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Changbin Du <changbin.du@gmail.com>
+References: <cover.1554732921.git.rgb@redhat.com> <20190422113810.GA27747@hmswarspite.think-freely.org>
+In-Reply-To: <20190422113810.GA27747@hmswarspite.think-freely.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 22 Apr 2019 09:49:05 -0400
+Message-ID: <CAHC9VhQYPF2ma_W+hySbQtfTztf=K1LTFnxnyVK0y9VYxj-K=w@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Changbin, -cc many others]
-
-On Mon, Apr 22, 2019 at 8:28 AM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
+On Mon, Apr 22, 2019 at 7:38 AM Neil Horman <nhorman@tuxdriver.com> wrote:
+> On Mon, Apr 08, 2019 at 11:39:07PM -0400, Richard Guy Briggs wrote:
+> > Implement kernel audit container identifier.
 >
-> Convert the PM documents to ReST, in order to allow them to
-> build with Sphinx.
->
-> The conversion is actually:
->   - add blank lines and identation in order to identify paragraphs;
+> I'm sorry, I've lost track of this, where have we landed on it? Are we good for
+> inclusion?
 
-s/identation/indentation/
+I haven't finished going through this latest revision, but unless
+Richard made any significant changes outside of the feedback from the
+v5 patchset I'm guessing we are "close".
 
->   - fix tables markups;
->   - add some lists markups;
->   - mark literal blocks;
->   - adjust title markups.
->
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Based on discussions Richard and I had some time ago, I have always
+envisioned the plan as being get the kernel patchset, tests, docs
+ready (which Richard has been doing) and then run the actual
+implemented API by the userland container folks, e.g. cri-o/lxc/etc.,
+to make sure the actual implementation is sane from their perspective.
+They've already seen the design, so I'm not expecting any real
+surprises here, but sometimes opinions change when they have actual
+code in front of them to play with and review.
 
-The PCI part of this is fine with me but may conflict with Changbin's work:
+Beyond that, while the cri-o/lxc/etc. folks are looking it over,
+whatever additional testing we can do would be a big win.  I'm
+thinking I'll pull it into a separate branch in the audit tree
+(audit/working-container ?) and include that in my secnext kernels
+that I build/test on a regular basis; this is also a handy way to keep
+it based against the current audit/next branch.  If any changes are
+needed Richard can either chose to base those changes on audit/next or
+the separate audit container ID branch; that's up to him.  I've done
+this with other big changes in other trees, e.g. SELinux, and it has
+worked well to get some extra testing in and keep the patchset "merge
+ready" while others outside the subsystem look things over.
 
-https://lore.kernel.org/lkml/20190409155626.6049-1-changbin.du@gmail.com
-
-Since this doesn't look like it's targeting merge via the PCI tree,
-I'll let you two work out any conflicts.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Bjorn
+-- 
+paul moore
+www.paul-moore.com
