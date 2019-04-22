@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299D0C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB4C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8B020643
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F9C20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963055;
-	bh=pabYGA2s+3SdCIum82xSREEsB6rQ3V/8f91OeRwbWW0=;
+	s=default; t=1555963063;
+	bh=azYERHCaAyVufSnqspnHrm/rJgwTgQk+MG/l7LNyMSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRUbS0elHfM0z3Fbxo0ZoQZ3DmKtkgnfZ2SX0l9p+LIkf2z8iPApPwQ9B9kp0LL2F
-	 R1jZWphKP9XO0DTdY6kyKx5n5a00izta6GRV9YG/psKGot9MmJF3xa/DPJi3iQVVwq
-	 hP3vtVM+93xNHBOHkCxqFk8wdg3ZDh6MYvYQr/I0=
+	b=OHOggBzQeZXlYwkCGOFM5ldmZPNxiEOIlQu/htAhgMi/JuS0LVDrTB5NdTOSCPJK2
+	 8FGGZlWfw+6Ph+GHyNvyK7ub4SJCylhvvLkR2pKrTF6q/KKh03N9O3FoM+UyFFgPtf
+	 bxk84GduJzQX6Sadu2U6IoOi8WCtB1hnxHVOR7r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731715AbfDVT5d (ORCPT
+        id S1731724AbfDVT5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52014 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730585AbfDVTsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:48:37 -0400
+        id S1730577AbfDVTsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:48:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 728E221905;
-        Mon, 22 Apr 2019 19:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EAA621907;
+        Mon, 22 Apr 2019 19:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962517;
-        bh=pabYGA2s+3SdCIum82xSREEsB6rQ3V/8f91OeRwbWW0=;
+        s=default; t=1555962516;
+        bh=azYERHCaAyVufSnqspnHrm/rJgwTgQk+MG/l7LNyMSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AndUavthO0WOUG8GKPqeV7nTxiEGDQrxYdRTrpDrhGjBrARfhgeFXaf4vjUXt9Tj3
-         SbId9WbvEIGwUkjyu6hdP2O2WMLy8YyOj4kxs4dhc0gAWaCL0gXLbJvoX2vlrumiSs
-         osWCzVzRJnP9EoEWvpqWxFlxUCDgf/CaoTeUAKRA=
+        b=BYLcG8R0Z+m4u2I2vKYPBGhU+MwM0jRNg94m4ca7wM4/wK6THxzs/2+C+I+DzI4Yj
+         HJjk0xs4sOdAhol5TS5XjPVP/fw+0UQkN6KupvkVFQHKzwKpY2bWw90xASP/U8g392
+         SwJ2sHxdP6m75fwOzIOoh/UQk/zNuvd1mdKnHGvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 36/43] ceph: fix use-after-free on symlink traversal
-Date:   Mon, 22 Apr 2019 15:47:20 -0400
-Message-Id: <20190422194727.12495-36-sashal@kernel.org>
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 35/43] tty: fix NULL pointer issue when tty_port ops is not set
+Date:   Mon, 22 Apr 2019 15:47:19 -0400
+Message-Id: <20190422194727.12495-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
@@ -58,42 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-[ Upstream commit daf5cc27eed99afdea8d96e71b89ba41f5406ef6 ]
+[ Upstream commit f4e68d58cf2b20a581759bbc7228052534652673 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+Unlike 'client_ops' which is initialized to 'default_client_ops', the
+port operations 'ops' may be left to NULL.
+Check the 'ops' value before checking the 'ops->x' value.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/ceph/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/tty_port.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index a1492bdc6d03..f2b722f0df5d 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -520,6 +520,7 @@ static void ceph_i_callback(struct rcu_head *head)
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	struct ceph_inode_info *ci = ceph_inode(inode);
+diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+index c93a33701d32..17743175c633 100644
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -326,7 +326,7 @@ static void tty_port_shutdown(struct tty_port *port, struct tty_struct *tty)
+ 		if (tty && C_HUPCL(tty))
+ 			tty_port_lower_dtr_rts(port);
  
-+	kfree(ci->i_symlink);
- 	kmem_cache_free(ceph_inode_cachep, ci);
- }
- 
-@@ -551,7 +552,6 @@ void ceph_destroy_inode(struct inode *inode)
- 		ceph_put_snap_realm(mdsc, realm);
+-		if (port->ops->shutdown)
++		if (port->ops && port->ops->shutdown)
+ 			port->ops->shutdown(port);
  	}
+ out:
+@@ -401,7 +401,7 @@ EXPORT_SYMBOL_GPL(tty_port_tty_wakeup);
  
--	kfree(ci->i_symlink);
- 	while ((n = rb_first(&ci->i_fragtree)) != NULL) {
- 		frag = rb_entry(n, struct ceph_inode_frag, node);
- 		rb_erase(n, &ci->i_fragtree);
+ int tty_port_carrier_raised(struct tty_port *port)
+ {
+-	if (port->ops->carrier_raised == NULL)
++	if (!port->ops || !port->ops->carrier_raised)
+ 		return 1;
+ 	return port->ops->carrier_raised(port);
+ }
+@@ -418,7 +418,7 @@ EXPORT_SYMBOL(tty_port_carrier_raised);
+ 
+ void tty_port_raise_dtr_rts(struct tty_port *port)
+ {
+-	if (port->ops->dtr_rts)
++	if (port->ops && port->ops->dtr_rts)
+ 		port->ops->dtr_rts(port, 1);
+ }
+ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+@@ -434,7 +434,7 @@ EXPORT_SYMBOL(tty_port_raise_dtr_rts);
+ 
+ void tty_port_lower_dtr_rts(struct tty_port *port)
+ {
+-	if (port->ops->dtr_rts)
++	if (port->ops && port->ops->dtr_rts)
+ 		port->ops->dtr_rts(port, 0);
+ }
+ EXPORT_SYMBOL(tty_port_lower_dtr_rts);
+@@ -690,7 +690,7 @@ int tty_port_open(struct tty_port *port, struct tty_struct *tty,
+ 
+ 	if (!tty_port_initialized(port)) {
+ 		clear_bit(TTY_IO_ERROR, &tty->flags);
+-		if (port->ops->activate) {
++		if (port->ops && port->ops->activate) {
+ 			int retval = port->ops->activate(port, tty);
+ 			if (retval) {
+ 				mutex_unlock(&port->mutex);
 -- 
 2.19.1
 
