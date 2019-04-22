@@ -2,140 +2,368 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A582CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA1F20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555956448;
-	bh=xDMrJudM/8E8/MqVWSOMMEKSIAJOcYcvK7lhk4bh/4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wtFfG/u8ONRdEny1PhVoWBGFG7qpgsswxaqbvsdAy6v4VNHXHoU+W4okMa40uFnDd
-	 sCT8vQlsXLAxN0eRcHUDtLGRjixCt2sFztGc5qfpyckTb8xfZM8dYLjB06SIvZwAW/
-	 O+PNhLov8KW67MfUYzSPqh0qqK7IjJxVZ3nWZmCw=
+	by mail.kernel.org (Postfix) with ESMTP id 63CBC20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L7rJPOMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfDVSH1 (ORCPT
+        id S1728520AbfDVSIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 14:07:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37252 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727279AbfDVSH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 14:07:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B462AAEFD;
-        Mon, 22 Apr 2019 18:07:24 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 20:07:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Luca Coelho <luca@coelho.fi>
-Cc:     kvalo@codeaurora.org, johannes@sipsolutions.net,
-        emmanuel.grumbach@intel.com, linuxwifi@intel.com,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: Re: [PATCH] iwlwifi: don't panic in error path on non-msix systems
-Message-ID: <20190422180723.GA20259@dhcp22.suse.cz>
-References: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
- <20190417073516.24250-1-luca@coelho.fi>
+        Mon, 22 Apr 2019 14:08:00 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53308 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbfDVSIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 14:08:00 -0400
+Received: by mail-it1-f195.google.com with SMTP id y204so19153377itf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 11:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/7acEngVyzMAcI3b1epGzMSArw4YgxKtsZWlpTqW5/U=;
+        b=L7rJPOMi/YKBKs+FdagacABSg3oqxxq/pCz80d4ObwaTt/vOKpfwFDeK18GaYj/Qld
+         R2KXSqgBokFucxPqGnBppZdk3KCZLGMqqcyGVMgueafvzSehuEH2EHkxzONYXUoAYpvz
+         PndeRy56nVTv9wxdlB/vWlc9itOcKmK2WMoho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/7acEngVyzMAcI3b1epGzMSArw4YgxKtsZWlpTqW5/U=;
+        b=RKts5Hq/MS+LJ/O6ZoAVfKuHSkcmBWvxlfywYHbdBImnV5kk82ExLEA9bBtQsQArUx
+         HTicxfSxacamj4DmXOuUXu/1GOh34k+ffu2a9ubu9wV0MWuDICPMkEiql7lSjSalFDhc
+         XGTHd00Ngg6JAQQF6/9q+RrkPS0LP4W34c3wBNdooqrNnl+IouVq9m2Uld9Lhofa0/pB
+         UIcNLppFbBc/OwbNlybxUsOCKfIB0vZRdFi3IbVh2d27vfzcq5BLltoAJ6Plca43xBfs
+         kREeuq9X3Nacnz0r2+vKzHH0OxJygFAAbFhLHcF0h0WxH0kJ0OwHofbG91mbaQP16r7U
+         Mm2A==
+X-Gm-Message-State: APjAAAWmFqOSTfZNm95HCeL7a5glCcwTTLEe9lVSEnokL1Wu3InlOIjx
+        P7dj29RILR6yAkEFNMQALffysw==
+X-Google-Smtp-Source: APXvYqyaGhXn3kAOYktLCA+JJLT+Mt2sf8XVMyjoAiFPpWDQCLOijuWR0fyJspspcjb4xDpyszapXA==
+X-Received: by 2002:a24:9a86:: with SMTP id l128mr14450886ite.126.1555956478783;
+        Mon, 22 Apr 2019 11:07:58 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id 140sm289659itv.44.2019.04.22.11.07.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 22 Apr 2019 11:07:58 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org, sre@kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        lamzin@google.com, bartfab@google.com, derat@google.com,
+        dtor@google.com, sjg@chromium.org, jchwong@chromium.org,
+        Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v7 1/2] platform/chrome: wilco_ec: Add property helper library
+Date:   Mon, 22 Apr 2019 12:07:53 -0600
+Message-Id: <20190422180754.99383-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417073516.24250-1-luca@coelho.fi>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-04-19 10:35:16, Luca Coelho wrote:
-> From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-> 
-> The driver uses msix causes-register to handle both msix and non msix
-> interrupts when performing sync nmi.  On devices that do not support
-> msix this register is unmapped and accessing it causes a kernel panic.
-> 
-> Solve this by differentiating the two cases and accessing the proper
-> causes-register in each case.
-> 
-> Reported-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-> Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+A Property is typically a data item that is stored to NVRAM
+by the EC. Each of these data items has an index associated
+with it, known as the Property ID (PID). Properties may have
+variable lengths, up to a max of WILCO_EC_PROPERTY_MAX_SIZE
+bytes. Properties can be simple integers, or they may be more
+complex binary data.
 
-$ dmesg | grep "Error sending SCAN_CFG_CMD:"
-[49786.288548] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
-[53457.166877] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
+This patch adds support for getting and setting properties.
+This will be useful for setting the charge algorithm and charge
+schedules, which all use properties.
 
-without the oops and with the iwlwifi internal dump IIUC which is the
-previous behavior.
-[53457.166877] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
-[53457.166882] iwlwifi 0000:01:00.0: Current CMD queue read_ptr 224 write_ptr 225
-[53457.414973] iwlwifi 0000:01:00.0: HW error, resetting before reading
-[53457.421339] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
-[53457.421345] iwlwifi 0000:01:00.0: Status: 0x00000100, count: 1269232956
-[53457.421347] iwlwifi 0000:01:00.0: Loaded firmware version: 36.9f0a2d68.0
-[53457.421350] iwlwifi 0000:01:00.0: 0x45E91306 | ADVANCED_SYSASSERT          
-[53457.421352] iwlwifi 0000:01:00.0: 0x2F58D384 | trm_hw_status0
-[53457.421353] iwlwifi 0000:01:00.0: 0x7F1A8CFD | trm_hw_status1
-[53457.421355] iwlwifi 0000:01:00.0: 0x07E787FD | branchlink2
-[53457.421357] iwlwifi 0000:01:00.0: 0xE9E54368 | interruptlink1
-[53457.421359] iwlwifi 0000:01:00.0: 0x470D9BBF | interruptlink2
-[53457.421361] iwlwifi 0000:01:00.0: 0xAF040E7E | data1
-[53457.421362] iwlwifi 0000:01:00.0: 0xE7FBCA48 | data2
-[53457.421364] iwlwifi 0000:01:00.0: 0x4E4A8288 | data3
-[53457.421366] iwlwifi 0000:01:00.0: 0x861DEA98 | beacon time
-[53457.421368] iwlwifi 0000:01:00.0: 0xE8F23466 | tsf low
-[53457.421369] iwlwifi 0000:01:00.0: 0xD7B19307 | tsf hi
-[53457.421371] iwlwifi 0000:01:00.0: 0xE58934E3 | time gp1
-[53457.421373] iwlwifi 0000:01:00.0: 0xB013FEBE | time gp2
-[53457.421375] iwlwifi 0000:01:00.0: 0x962DCC75 | uCode revision type
-[53457.421376] iwlwifi 0000:01:00.0: 0xFF8FB30F | uCode version major
-[53457.421378] iwlwifi 0000:01:00.0: 0x0DD08E17 | uCode version minor
-[53457.421380] iwlwifi 0000:01:00.0: 0x87FD70DE | hw version
-[53457.421382] iwlwifi 0000:01:00.0: 0x853F6851 | board version
-[53457.421384] iwlwifi 0000:01:00.0: 0x08D7F330 | hcmd
-[53457.421385] iwlwifi 0000:01:00.0: 0x6B7E5FEE | isr0
-[53457.421387] iwlwifi 0000:01:00.0: 0x2B1E7CD4 | isr1
-[53457.421389] iwlwifi 0000:01:00.0: 0x3F133B16 | isr2
-[53457.421391] iwlwifi 0000:01:00.0: 0x5D480C5A | isr3
-[53457.421392] iwlwifi 0000:01:00.0: 0x34E93EBA | isr4
-[53457.421394] iwlwifi 0000:01:00.0: 0x42AD8E83 | last cmd Id
-[53457.421396] iwlwifi 0000:01:00.0: 0x1F5BBCFF | wait_event
-[53457.421398] iwlwifi 0000:01:00.0: 0x6808B2C1 | l2p_control
-[53457.421399] iwlwifi 0000:01:00.0: 0x0D5B1F33 | l2p_duration
-[53457.421401] iwlwifi 0000:01:00.0: 0xF4C94535 | l2p_mhvalid
-[53457.421403] iwlwifi 0000:01:00.0: 0x3DCE6EBB | l2p_addr_match
-[53457.421405] iwlwifi 0000:01:00.0: 0xFDDC41FE | lmpm_pmg_sel
-[53457.421406] iwlwifi 0000:01:00.0: 0xB53A17F5 | timestamp
-[53457.421408] iwlwifi 0000:01:00.0: 0x5A6A4113 | flow_handler
-[53457.421474] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
-[53457.421477] iwlwifi 0000:01:00.0: Status: 0x00000100, count: 1182976748
-[53457.421478] iwlwifi 0000:01:00.0: 0x62D2BDB3 | ADVANCED_SYSASSERT
-[53457.421480] iwlwifi 0000:01:00.0: 0x4D9E5019 | umac branchlink1
-[53457.421482] iwlwifi 0000:01:00.0: 0x8CB69F6E | umac branchlink2
-[53457.421484] iwlwifi 0000:01:00.0: 0x9868662D | umac interruptlink1
-[53457.421486] iwlwifi 0000:01:00.0: 0x9800F8F7 | umac interruptlink2
-[53457.421488] iwlwifi 0000:01:00.0: 0xC71449B8 | umac data1
-[53457.421489] iwlwifi 0000:01:00.0: 0xAB0AB17F | umac data2
-[53457.421491] iwlwifi 0000:01:00.0: 0x6C6F9753 | umac data3
-[53457.421493] iwlwifi 0000:01:00.0: 0xFC49D724 | umac major
-[53457.421495] iwlwifi 0000:01:00.0: 0xA61CC627 | umac minor
-[53457.421496] iwlwifi 0000:01:00.0: 0x45BAA0B8 | frame pointer
-[53457.421498] iwlwifi 0000:01:00.0: 0x319D112B | stack pointer
-[53457.421500] iwlwifi 0000:01:00.0: 0xEFD9E2E9 | last host cmd
-[53457.421502] iwlwifi 0000:01:00.0: 0x82640FF7 | isr status reg
-[53457.421506] ieee80211 phy0: Hardware restart was requested
-[53457.941685] iwlwifi 0000:01:00.0: Queue 0 is inactive on fifo 0 and stuck for 2500 ms. SW [224, 225] HW [0, 0] FH TRB=0x02b759ca1
+Signed-off-by: Nick Crews <ncrews@chromium.org>
+---
+v7 changes:
+-Remove bogus gerrit FROMLIST tag in commit title
+v6 changes:
+-Add EC_* prefix to enum property_ops so they are more unique.
+-Split up the commit so properties are added in a first commit
+v5 changes:
+-Remove OP_SYNC, it has no immediate use case.
+-Merge properties.h into wilco-ec.h
+-Remove enum get_set_sync_op from the public interface,
+ since without OP_SYNC they are irrelevant.
+-Fix Kconfigs and Makefiles so they actually work
+ with the v4 changes
+-Tweak some formatting, spacing, and comments
+-Fix validation of charge_type so illegal values
+ can't be set. Before negative error codes were
+ accidentally getting casted to positive numbers
+-Remove more unneeded parentheses.
+v4 changes:
+-Use put_unaligned_le32() to store PID in request.
+-Move implementation from
+ drivers/platform/chrome/wilco_ec/charge_config.c to
+ drivers/power/supply/wilco_charger.c
+-Move drivers/platform/chrome/wilco_ec/properties.h to
+ include/linux/platform_data/wilco-ec-properties.h
+-Remove parentheses in switch statement in psp_val_to_charge_mode()
+-Check for any negatvie return code from psp_val_to_charge_mode()
+ instead of just -EINVAL so its less brittle
+-Tweak comments in wilco-ec-properties.h
+v3 changes:
+-Add this changelog
+-Fix commit message tags
+v2 changes:
+-Update Documentation to say KernelVersion 5.2
+-Update Documentation to explain Trickle mode better.
+-rename things from using *PCC* to *CHARGE*
+-Split up conversions between POWER_SUPPLY_PROP_CHARGE_TYPE values
+and Wilco EC codes
+-Use devm_ flavor of power_supply_register(), which simplifies things
+-Add extra error checking on property messages received from the EC
+-Fix bug in memcpy() calls in properties.c
+-Refactor fill_property_id()
+-Add valid input checks to charge_type
+-Properly convert charge_type when get()ting
 
-Feel free to add
-Tested-by: Michal Hocko <mhocko@suse.com>
+ drivers/platform/chrome/wilco_ec/Makefile     |   2 +-
+ drivers/platform/chrome/wilco_ec/properties.c | 132 ++++++++++++++++++
+ include/linux/platform_data/wilco-ec.h        |  71 ++++++++++
+ 3 files changed, 204 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/platform/chrome/wilco_ec/properties.c
 
-Thanks for your quick patch and sorry it took so long from my side.
-
+diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
+index 063e7fb4ea17..29b734137786 100644
+--- a/drivers/platform/chrome/wilco_ec/Makefile
++++ b/drivers/platform/chrome/wilco_ec/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-wilco_ec-objs				:= core.o mailbox.o
++wilco_ec-objs				:= core.o mailbox.o properties.o
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
+ wilco_ec_debugfs-objs			:= debugfs.o
+ obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
+diff --git a/drivers/platform/chrome/wilco_ec/properties.c b/drivers/platform/chrome/wilco_ec/properties.c
+new file mode 100644
+index 000000000000..e69682c95ea2
+--- /dev/null
++++ b/drivers/platform/chrome/wilco_ec/properties.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Google LLC
++ */
++
++#include <linux/platform_data/wilco-ec.h>
++#include <linux/string.h>
++#include <linux/unaligned/le_memmove.h>
++
++/* Operation code; what the EC should do with the property */
++enum ec_property_op {
++	EC_OP_GET = 0,
++	EC_OP_SET = 1,
++};
++
++struct ec_property_request {
++	u8 op; /* One of enum ec_property_op */
++	u8 property_id[4]; /* The 32 bit PID is stored Little Endian */
++	u8 length;
++	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
++} __packed;
++
++struct ec_property_response {
++	u8 reserved[2];
++	u8 op; /* One of enum ec_property_op */
++	u8 property_id[4]; /* The 32 bit PID is stored Little Endian */
++	u8 length;
++	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
++} __packed;
++
++static int send_property_msg(struct wilco_ec_device *ec,
++			     struct ec_property_request *rq,
++			     struct ec_property_response *rs)
++{
++	struct wilco_ec_message ec_msg;
++	int ret;
++
++	memset(&ec_msg, 0, sizeof(ec_msg));
++	ec_msg.type = WILCO_EC_MSG_PROPERTY;
++	ec_msg.request_data = rq;
++	ec_msg.request_size = sizeof(*rq);
++	ec_msg.response_data = rs;
++	ec_msg.response_size = sizeof(*rs);
++
++	ret = wilco_ec_mailbox(ec, &ec_msg);
++	if (ret < 0)
++		return ret;
++	if (rs->op != rq->op)
++		return -EBADMSG;
++	if (memcmp(rq->property_id, rs->property_id, sizeof(rs->property_id)))
++		return -EBADMSG;
++
++	return 0;
++}
++
++int wilco_ec_get_property(struct wilco_ec_device *ec,
++			  struct wilco_ec_property_msg *prop_msg)
++{
++	struct ec_property_request rq;
++	struct ec_property_response rs;
++	int ret;
++
++	memset(&rq, 0, sizeof(rq));
++	rq.op = EC_OP_GET;
++	put_unaligned_le32(prop_msg->property_id, rq.property_id);
++
++	ret = send_property_msg(ec, &rq, &rs);
++	if (ret < 0)
++		return ret;
++
++	prop_msg->length = rs.length;
++	memcpy(prop_msg->data, rs.data, rs.length);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(wilco_ec_get_property);
++
++int wilco_ec_set_property(struct wilco_ec_device *ec,
++			  struct wilco_ec_property_msg *prop_msg)
++{
++	struct ec_property_request rq;
++	struct ec_property_response rs;
++	int ret;
++
++	memset(&rq, 0, sizeof(rq));
++	rq.op = EC_OP_SET;
++	put_unaligned_le32(prop_msg->property_id, rq.property_id);
++	rq.length = prop_msg->length;
++	memcpy(rq.data, prop_msg->data, prop_msg->length);
++
++	ret = send_property_msg(ec, &rq, &rs);
++	if (ret < 0)
++		return ret;
++	if (rs.length != prop_msg->length)
++		return -EBADMSG;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(wilco_ec_set_property);
++
++int wilco_ec_get_byte_property(struct wilco_ec_device *ec, u32 property_id,
++			       u8 *val)
++{
++	struct wilco_ec_property_msg msg;
++	int ret;
++
++	msg.property_id = property_id;
++
++	ret = wilco_ec_get_property(ec, &msg);
++	if (ret < 0)
++		return ret;
++	if (msg.length != 1)
++		return -EBADMSG;
++
++	*val = msg.data[0];
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(wilco_ec_get_byte_property);
++
++int wilco_ec_set_byte_property(struct wilco_ec_device *ec, u32 property_id,
++			       u8 val)
++{
++	struct wilco_ec_property_msg msg;
++
++	msg.property_id = property_id;
++	msg.data[0] = val;
++	msg.length = 1;
++
++	return wilco_ec_set_property(ec, &msg);
++}
++EXPORT_SYMBOL_GPL(wilco_ec_set_byte_property);
+diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+index 1ff224793c99..50a21bd5fd44 100644
+--- a/include/linux/platform_data/wilco-ec.h
++++ b/include/linux/platform_data/wilco-ec.h
+@@ -123,4 +123,75 @@ struct wilco_ec_message {
+  */
+ int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg);
+ 
++/*
++ * A Property is typically a data item that is stored to NVRAM
++ * by the EC. Each of these data items has an index associated
++ * with it, known as the Property ID (PID). Properties may have
++ * variable lengths, up to a max of WILCO_EC_PROPERTY_MAX_SIZE
++ * bytes. Properties can be simple integers, or they may be more
++ * complex binary data.
++ */
++
++#define WILCO_EC_PROPERTY_MAX_SIZE	4
++
++/**
++ * struct ec_property_set_msg - Message to get or set a property.
++ * @property_id: Which property to get or set.
++ * @length: Number of bytes of |data| that are used.
++ * @data: Actual property data.
++ */
++struct wilco_ec_property_msg {
++	u32 property_id;
++	int length;
++	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
++};
++
++/**
++ * wilco_ec_get_property() - Retrieve a property from the EC.
++ * @ec: Embedded Controller device.
++ * @prop_msg: Message for request and response.
++ *
++ * The property_id field of |prop_msg| should be filled before calling this
++ * function. The result will be stored in the data and length fields.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int wilco_ec_get_property(struct wilco_ec_device *ec,
++			  struct wilco_ec_property_msg *prop_msg);
++
++/**
++ * wilco_ec_set_property() - Store a property on the EC.
++ * @ec: Embedded Controller device.
++ * @prop_msg: Message for request and response.
++ *
++ * The property_id, length, and data fields of |prop_msg| should be
++ * filled before calling this function.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int wilco_ec_set_property(struct wilco_ec_device *ec,
++			  struct wilco_ec_property_msg *prop_msg);
++
++/**
++ * wilco_ec_get_byte_property() - Retrieve a byte-size property from the EC.
++ * @ec: Embedded Controller device.
++ * @property_id: Which property to retrieve.
++ * @val: The result value, will be filled by this function.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int wilco_ec_get_byte_property(struct wilco_ec_device *ec, u32 property_id,
++			       u8 *val);
++
++/**
++ * wilco_ec_get_byte_property() - Store a byte-size property on the EC.
++ * @ec: Embedded Controller device.
++ * @property_id: Which property to store.
++ * @val: Value to store.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int wilco_ec_set_byte_property(struct wilco_ec_device *ec, u32 property_id,
++			       u8 val);
++
+ #endif /* WILCO_EC_H */
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
