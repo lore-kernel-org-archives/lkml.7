@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384A6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2699C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F108E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B887F20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963350;
-	bh=xfNqrguB6GXBrK5MUUyIFj8Yp9Dc8/qkxB2w907HwFQ=;
+	s=default; t=1555963360;
+	bh=g5iThoKCvxBizMvbDxJKljny9/OeEm0wTEKPRcs8Aeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZsqlvs+eEYeifJx93H1rTfKLB/g0Fufm+iIKXnZtDNgCSq4pGP9f7B8ZwyGSGAAG
-	 seIOAvTvQkkdWQYbIge+ul+m+hiNZ5Ujb0mmvISQeveggQL4/2y3n4Xb3cIK9DgpjI
-	 8Ucvj+95h060tOZ0GlXAkM10KPt3DOUb80tDLUT0=
+	b=cX7GCmxeYWfiIRUXUj3GDLG+BmYVgMZXlMfjGxEftBavYqleIFBRzXk3kOpFBdmFS
+	 v41SsmyQqb4xjf6pqjd7LxycKqbOisdl055GdMOd3ECKOPf6dkwJqzvhdrGePbf9bQ
+	 1k9B8gNYPizMABq915GXiB8uzjd/uboU4aYJPJ28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732061AbfDVUC2 (ORCPT
+        id S1730007AbfDVTqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:02:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48990 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730029AbfDVTql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:46:41 -0400
+        id S1729578AbfDVTqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:46:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA40218B0;
-        Mon, 22 Apr 2019 19:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 040E8218B0;
+        Mon, 22 Apr 2019 19:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962400;
-        bh=xfNqrguB6GXBrK5MUUyIFj8Yp9Dc8/qkxB2w907HwFQ=;
+        s=default; t=1555962393;
+        bh=g5iThoKCvxBizMvbDxJKljny9/OeEm0wTEKPRcs8Aeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m6Cse7DiwNPtc37kvRzLTp/Nt0terCqTiQRbD8OgcSy8Bc3s2DJO0QLKMCbIhDdK1
-         jTCneDnnrkqa3CVCtGGlmrYUz+n6PNnEtzcr+Y7/npxd+X+2UeATGUTyexdxSvw8Qw
-         NLrZx2uuYj1UwldJJ5EO7SuHQR+p9CWPBoXBXesQ=
+        b=HvI5ULe+QtaPZIdHf8loOIFi4HxBlA6xcYnvD2vmop6jFCGMSYw5ZPnu74qDLByNq
+         sHrvjIO12jBsn71JKMrJYyieouVFMBPS4XFFf84sCjSw694Em2hY18Obdcz6JmglcX
+         TJ6q7CsM0xXkkl0FiNRI8Bjc07cHjL865KEbdtXE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 38/68] drm/tegra: hub: Fix dereference before check
-Date:   Mon, 22 Apr 2019 15:44:46 -0400
-Message-Id: <20190422194516.11634-38-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 33/68] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+Date:   Mon, 22 Apr 2019 15:44:41 -0400
+Message-Id: <20190422194516.11634-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -58,39 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7cf77b273a8fc51e7de622fa6691abd4436a9a6b ]
+[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Colin King reported a bug in read_bbreg_hdl():
+
+	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+
+The problem is that "val" is uninitialized.
+
+This code is obviously not useful, but so far as I can tell
+"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
+either.  For now the easiest fix is to just call r8712_free_cmd_obj()
+and return.
+
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/hub.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
+ drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
-index 8f4fcbb515fb..bb97cad1eb69 100644
---- a/drivers/gpu/drm/tegra/hub.c
-+++ b/drivers/gpu/drm/tegra/hub.c
-@@ -378,14 +378,16 @@ static int tegra_shared_plane_atomic_check(struct drm_plane *plane,
- static void tegra_shared_plane_atomic_disable(struct drm_plane *plane,
- 					      struct drm_plane_state *old_state)
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
+index b1dfe9f46619..63bc811681d9 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.c
++++ b/drivers/staging/rtl8712/rtl8712_cmd.c
+@@ -159,17 +159,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ 
+ static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
  {
--	struct tegra_dc *dc = to_tegra_dc(old_state->crtc);
- 	struct tegra_plane *p = to_tegra_plane(plane);
-+	struct tegra_dc *dc;
- 	u32 value;
+-	u32 val;
+-	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
+ 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
  
- 	/* rien ne va plus */
- 	if (!old_state || !old_state->crtc)
- 		return;
+-	if (pcmd->rsp && pcmd->rspsz > 0)
+-		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+-	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
+-	if (!pcmd_callback)
+-		r8712_free_cmd_obj(pcmd);
+-	else
+-		pcmd_callback(padapter, pcmd);
++	r8712_free_cmd_obj(pcmd);
+ 	return H2C_SUCCESS;
+ }
  
-+	dc = to_tegra_dc(old_state->crtc);
-+
- 	/*
- 	 * XXX Legacy helpers seem to sometimes call ->atomic_disable() even
- 	 * on planes that are already disabled. Make sure we fallback to the
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
+index 9181bb6b04c3..a101a0a50955 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.h
++++ b/drivers/staging/rtl8712/rtl8712_cmd.h
+@@ -152,7 +152,7 @@ enum rtl8712_h2c_cmd {
+ static struct _cmd_callback	cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_Write_MACREG), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_Read_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
 -- 
 2.19.1
 
