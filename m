@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834ABC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17BBC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6CC20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF0E2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940161;
-	bh=2gDd//IF0eliFNzcJnow+2+FHww6fPAoXjM+0WO1nD4=;
+	s=default; t=1555940165;
+	bh=nwHEBbjkgSjNwQcEdispKvxd0NvhieKw1G88a6watjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M1P4z0ZT7FEn9U3C76e8ftpF7L18m0vnR+tO++EmBcrb/bpGfu85l6Lo1sr9PTfqH
-	 QrdQOPQSrw5P2uYgaMKiLIy8TkngdvV9Z0WwYjMXyoXELA2PcIUcutE2U11Oz9dxj3
-	 O9uen5evKsqMmY3JNqWBpYKRlnrTFcbjgwyYudf4=
+	b=OL+4pyaKGHoJQOq2tMUFY6tYw0xx8OVyij4RbpvWnEYJrxSr0uRkPRRWSe2JMi2po
+	 htktb5A7svQJoDklBe4tr5dzx30ekj1g+W8x/U6/hzApA5HD58ECE/KCldlQ+TyvKk
+	 k+/SQCKP5aF338KbKGO6nU2c7NFnBe2U4vaze3Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfDVNf7 (ORCPT
+        id S1727900AbfDVNf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:35:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36940 "EHLO
+        Mon, 22 Apr 2019 09:35:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36948 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727410AbfDVN2P (ORCPT
+        with ESMTP id S1727413AbfDVN2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,29 +33,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ouxzGDyR2cOLtgx6lDXkFDM9khcYdFpKWyQGUCf0esc=; b=uohG4DPtD9sixp/i/E5WkSGJKL
-        SNYSuFMGiBKlzc4ZysQVLnRNwHR9y9v7sqlaveHehC9/ZRpe6McTz9eIPg8WMTI6QMX7STpX+fn3+
-        1sWxyHTDKO6Aaj5dnlBXi4fr/+B5vm0LUc3hLqJv3xGAb9T8z3bEHCvKBLXGGg2cNxiNMIXAFkVDH
-        xR0Q5AGSjt2JMp4qc4nssVx7ssE/Vg9efH1Ys6xy6hZDI7VdUGOEhnZd8RTq4wsEsNhRuf//3J35i
-        abMsPQNfEsStyAvZUarfviP/oweSEVzetbHQyIDpllEoV3pyR7OOr0/ZrzGBO0pbkOdnUMZSBmdXR
-        i28jI7eg==;
+        bh=a8nLcu/zZTKTER+WUSzF7g2y4D2542p7gAIbYXtxEvY=; b=Trz++NVtPIw7J3Is9tJ9Fh3h/7
+        mQ9goZQHPfeflyPMOF3tB7iRGeFAxOZ6hZ0IZEvaO+nMNw1MBbkdLJKC/3QPnzvw0mKO5yRG9qAV2
+        n+6fpw15oFPbdLAxRZZX3LHcuNjF0dQm0wQ6d1h0IMT5DlMqTV1YOJ0j/wRG0TL7h8Qs/+byAXbYs
+        CL7xocYpna2U3K1qfWz6mCxeMEe3rx6QBLXRg55u109KpWGdWaZ8YemyT7JjuJkgeudUQ7EUZBlnd
+        3neOLDc4ju5bYmydlKWnpXnQo1YbZdo4ULy/jzp62c7daiPgLoiuoyMHEV8H9DfxIVd5fnZ4kW4bZ
+        kStvVZNg==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzV-0005Hz-JH; Mon, 22 Apr 2019 13:28:14 +0000
+        id 1hIYzV-0005I1-M6; Mon, 22 Apr 2019 13:28:14 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005m2-7G; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzT-0005mD-9b; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v2 32/79] s390: include/asm/debug.h add kerneldoc markups
-Date:   Mon, 22 Apr 2019 10:27:21 -0300
-Message-Id: <72c962ac804048c90b123af5cab9e463b63129b5.1555938376.git.mchehab+samsung@kernel.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
+Subject: [PATCH v2 34/79] docs: target: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:23 -0300
+Message-Id: <a65eed34f499e78565d444c7b2f5a43147799e3b.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -66,1155 +65,810 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of keeping the documentation inside s390dbf.rst,
-move them to arch/s390/include/asm/debug.h, using standard
-kernel-doc markups.
+Convert the TCM docs to ReST format and add them to the
+bookset.
 
-Keeping the documentation close to the code helps to keep it
-updated. It also makes easier to document other stuff inside
-debug.h, as all it needs is to add kernel-doc markups inside
-it, as the file will be already be included at the produced
-documentation.
+This has a mix of userspace-faced and Kernelspace faced
+docs. Still, it sounds a better candidate to be added at
+the kernel API set of docs.
 
--
+The conversion is actually:
+  - add blank lines and identation in order to identify paragraphs;
+  - fix tables markups;
+  - add some lists markups;
+  - mark literal blocks;
+  - adjust title markups.
 
-Those were converted to kerneldoc using this script specially
-designed to parse ths file, and manually editted:
-
-<script>
-use strict;
-
-my $mode = "";
-my $parameter = "";
-my $ret = "";
-my $descr = "";
-
-sub add_var($)
-{
-	my $ln = shift;
-
-	$ln =~ s/^\s+//;
-	$ln =~ s/\s+$//;
-
-	return if ($ln eq "");
-
-	$ln =~ s/^(\S+)\s+/$1\t/;
-
-	print " * \@$ln\n";
-}
-
-sub add_return($)
-{
-	my $ln = shift;
-
-	print " *\n * Return:\n" if ($mode ne "Return Value:");
-
-	$ln =~ s/^\s+//;
-	$ln =~ s/\s+$//;
-
-	return if ($ln eq "");
-
-	print " * -   $ln\n";
-}
-
-sub add_description($)
-{
-	my $ln = shift;
-
-	print " *\n * \n" if ($mode ne "Description:");
-
-	$ln =~ s/^\s+//;
-	$ln =~ s/\s+$//;
-
-	return if ($ln eq "");
-
-	print " * $ln\n";
-}
-
-sub flush_results()
-{
-	print " */\n\n";
-}
-
-while (<>) {
-	if (m/^[\-]+$/) {
-		flush_results();
-		$mode = "";
-		$parameter = "";
-		$ret = "";
-		$descr = "";
-		next;
-	}
-	if (m/(Parameter:)(.*)/) {
-		print " *\n" if ($mode eq "func");
-		add_var($2);
-		$mode = $1;
-		next;
-	}
-	if (m/(Return Value:)(.*)/) {
-		add_return($2);
-		$mode = $1;
-		next;
-	}
-	if (m/(Description:)(.*)/) {
-		add_description($2);
-		$mode = $1;
-		next;
-	}
-	if ($mode eq "Parameter:") {
-		add_var($_);
-		next;
-	}
-	if ($mode eq "Return Value:") {
-		add_return($_);
-		next;
-	}
-	if ($mode eq "Description:") {
-		add_description($_);
-		next;
-	}
-	next if (m/^\s*$/);
-
-	if (m/^\S+.*\s\*?(\S+)\s*\(/) {
-		if ($mode eq "") {
-			print "/**\n * $1()\n";
-		} else {
-			print " * $1()\n";
-		}
-		$mode="func";
-	}
-}
-flush_results();
-</script>
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/s390/s390dbf.rst | 672 +--------------------------------
- arch/s390/include/asm/debug.h  | 231 ++++++++++++
- 2 files changed, 232 insertions(+), 671 deletions(-)
+ Documentation/target/index.rst                |  19 ++
+ Documentation/target/scripts.rst              |  11 +
+ Documentation/target/tcm_mod_builder.rst      | 149 ++++++++++
+ Documentation/target/tcm_mod_builder.txt      | 145 ----------
+ .../{tcmu-design.txt => tcmu-design.rst}      | 268 ++++++++++--------
+ scripts/documentation-file-ref-check          |   2 +-
+ 6 files changed, 326 insertions(+), 268 deletions(-)
+ create mode 100644 Documentation/target/index.rst
+ create mode 100644 Documentation/target/scripts.rst
+ create mode 100644 Documentation/target/tcm_mod_builder.rst
+ delete mode 100644 Documentation/target/tcm_mod_builder.txt
+ rename Documentation/target/{tcmu-design.txt => tcmu-design.rst} (69%)
 
-diff --git a/Documentation/s390/s390dbf.rst b/Documentation/s390/s390dbf.rst
-index ec2a1faa414b..d2595b548879 100644
---- a/Documentation/s390/s390dbf.rst
-+++ b/Documentation/s390/s390dbf.rst
-@@ -104,684 +104,14 @@ the "debug_stoppable" sysctl. If you set "debug_stoppable" to 0 the debug
- feature cannot be stopped. If the debug feature is already stopped, it
- will stay deactivated.
+diff --git a/Documentation/target/index.rst b/Documentation/target/index.rst
+new file mode 100644
+index 000000000000..b68f48982392
+--- /dev/null
++++ b/Documentation/target/index.rst
+@@ -0,0 +1,19 @@
++:orphan:
++
++==================
++TCM Virtual Device
++==================
++
++.. toctree::
++    :maxdepth: 1
++
++    tcmu-design
++    tcm_mod_builder
++    scripts
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/target/scripts.rst b/Documentation/target/scripts.rst
+new file mode 100644
+index 000000000000..172d42b522e4
+--- /dev/null
++++ b/Documentation/target/scripts.rst
+@@ -0,0 +1,11 @@
++TCM mod builder script
++----------------------
++
++.. literalinclude:: tcm_mod_builder.py
++    :language: perl
++
++Target export device script
++---------------------------
++
++.. literalinclude:: target-export-device
++    :language: shell
+diff --git a/Documentation/target/tcm_mod_builder.rst b/Documentation/target/tcm_mod_builder.rst
+new file mode 100644
+index 000000000000..9bfc9822e2bd
+--- /dev/null
++++ b/Documentation/target/tcm_mod_builder.rst
+@@ -0,0 +1,149 @@
++=========================================
++The TCM v4 fabric module script generator
++=========================================
++
++Greetings all,
++
++This document is intended to be a mini-HOWTO for using the tcm_mod_builder.py
++script to generate a brand new functional TCM v4 fabric .ko module of your very own,
++that once built can be immediately be loaded to start access the new TCM/ConfigFS
++fabric skeleton, by simply using::
++
++	modprobe $TCM_NEW_MOD
++	mkdir -p /sys/kernel/config/target/$TCM_NEW_MOD
++
++This script will create a new drivers/target/$TCM_NEW_MOD/, and will do the following
++
++	1) Generate new API callers for drivers/target/target_core_fabric_configs.c logic
++	   ->make_tpg(), ->drop_tpg(), ->make_wwn(), ->drop_wwn().  These are created
++	   into $TCM_NEW_MOD/$TCM_NEW_MOD_configfs.c
++	2) Generate basic infrastructure for loading/unloading LKMs and TCM/ConfigFS fabric module
++	   using a skeleton struct target_core_fabric_ops API template.
++	3) Based on user defined T10 Proto_Ident for the new fabric module being built,
++	   the TransportID / Initiator and Target WWPN related handlers for
++	   SPC-3 persistent reservation are automatically generated in $TCM_NEW_MOD/$TCM_NEW_MOD_fabric.c
++	   using drivers/target/target_core_fabric_lib.c logic.
++	4) NOP API calls for all other Data I/O path and fabric dependent attribute logic
++	   in $TCM_NEW_MOD/$TCM_NEW_MOD_fabric.c
++
++tcm_mod_builder.py depends upon the mandatory '-p $PROTO_IDENT' and '-m
++$FABRIC_MOD_name' parameters, and actually running the script looks like::
++
++  target:/mnt/sdb/lio-core-2.6.git/Documentation/target# python tcm_mod_builder.py -p iSCSI -m tcm_nab5000
++  tcm_dir: /mnt/sdb/lio-core-2.6.git/Documentation/target/../../
++  Set fabric_mod_name: tcm_nab5000
++  Set fabric_mod_dir:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
++  Using proto_ident: iSCSI
++  Creating fabric_mod_dir:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_base.h
++  Using tcm_mod_scan_fabric_ops:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../include/target/target_core_fabric_ops.h
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.c
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.h
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_configfs.c
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kbuild
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kconfig
++  Would you like to add tcm_nab5000to drivers/target/Kbuild..? [yes,no]: yes
++  Would you like to add tcm_nab5000to drivers/target/Kconfig..? [yes,no]: yes
++
++At the end of tcm_mod_builder.py. the script will ask to add the following
++line to drivers/target/Kbuild::
++
++	obj-$(CONFIG_TCM_NAB5000)       += tcm_nab5000/
++
++and the same for drivers/target/Kconfig::
++
++	source "drivers/target/tcm_nab5000/Kconfig"
++
++#) Run 'make menuconfig' and select the new CONFIG_TCM_NAB5000 item::
++
++	<M>   TCM_NAB5000 fabric module
++
++#) Build using 'make modules', once completed you will have::
++
++    target:/mnt/sdb/lio-core-2.6.git# ls -la drivers/target/tcm_nab5000/
++    total 1348
++    drwxr-xr-x 2 root root   4096 2010-10-05 03:23 .
++    drwxr-xr-x 9 root root   4096 2010-10-05 03:22 ..
++    -rw-r--r-- 1 root root    282 2010-10-05 03:22 Kbuild
++    -rw-r--r-- 1 root root    171 2010-10-05 03:22 Kconfig
++    -rw-r--r-- 1 root root     49 2010-10-05 03:23 modules.order
++    -rw-r--r-- 1 root root    738 2010-10-05 03:22 tcm_nab5000_base.h
++    -rw-r--r-- 1 root root   9096 2010-10-05 03:22 tcm_nab5000_configfs.c
++    -rw-r--r-- 1 root root 191200 2010-10-05 03:23 tcm_nab5000_configfs.o
++    -rw-r--r-- 1 root root  40504 2010-10-05 03:23 .tcm_nab5000_configfs.o.cmd
++    -rw-r--r-- 1 root root   5414 2010-10-05 03:22 tcm_nab5000_fabric.c
++    -rw-r--r-- 1 root root   2016 2010-10-05 03:22 tcm_nab5000_fabric.h
++    -rw-r--r-- 1 root root 190932 2010-10-05 03:23 tcm_nab5000_fabric.o
++    -rw-r--r-- 1 root root  40713 2010-10-05 03:23 .tcm_nab5000_fabric.o.cmd
++    -rw-r--r-- 1 root root 401861 2010-10-05 03:23 tcm_nab5000.ko
++    -rw-r--r-- 1 root root    265 2010-10-05 03:23 .tcm_nab5000.ko.cmd
++    -rw-r--r-- 1 root root    459 2010-10-05 03:23 tcm_nab5000.mod.c
++    -rw-r--r-- 1 root root  23896 2010-10-05 03:23 tcm_nab5000.mod.o
++    -rw-r--r-- 1 root root  22655 2010-10-05 03:23 .tcm_nab5000.mod.o.cmd
++    -rw-r--r-- 1 root root 379022 2010-10-05 03:23 tcm_nab5000.o
++    -rw-r--r-- 1 root root    211 2010-10-05 03:23 .tcm_nab5000.o.cmd
++
++#) Load the new module, create a lun_0 configfs group, and add new TCM Core
++   IBLOCK backstore symlink to port::
++
++    target:/mnt/sdb/lio-core-2.6.git# insmod drivers/target/tcm_nab5000.ko
++    target:/mnt/sdb/lio-core-2.6.git# mkdir -p /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0
++    target:/mnt/sdb/lio-core-2.6.git# cd /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0/
++    target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# ln -s /sys/kernel/config/target/core/iblock_0/lvm_test0 nab5000_port
++
++    target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# cd -
++    target:/mnt/sdb/lio-core-2.6.git# tree /sys/kernel/config/target/nab5000/
++    /sys/kernel/config/target/nab5000/
++    |-- discovery_auth
++    |-- iqn.foo
++    |   `-- tpgt_1
++    |       |-- acls
++    |       |-- attrib
++    |       |-- lun
++    |       |   `-- lun_0
++    |       |       |-- alua_tg_pt_gp
++    |       |       |-- alua_tg_pt_offline
++    |       |       |-- alua_tg_pt_status
++    |       |       |-- alua_tg_pt_write_md
++    |	|	`-- nab5000_port -> ../../../../../../target/core/iblock_0/lvm_test0
++    |       |-- np
++    |       `-- param
++    `-- version
++
++    target:/mnt/sdb/lio-core-2.6.git# lsmod
++    Module                  Size  Used by
++    tcm_nab5000             3935  4
++    iscsi_target_mod      193211  0
++    target_core_stgt        8090  0
++    target_core_pscsi      11122  1
++    target_core_file        9172  2
++    target_core_iblock      9280  1
++    target_core_mod       228575  31
++    tcm_nab5000,iscsi_target_mod,target_core_stgt,target_core_pscsi,target_core_file,target_core_iblock
++    libfc                  73681  0
++    scsi_debug             56265  0
++    scsi_tgt                8666  1 target_core_stgt
++    configfs               20644  2 target_core_mod
++
++----------------------------------------------------------------------
++
++Future TODO items
++=================
++
++	1) Add more T10 proto_idents
++	2) Make tcm_mod_dump_fabric_ops() smarter and generate function pointer
++	   defs directly from include/target/target_core_fabric_ops.h:struct target_core_fabric_ops
++	   structure members.
++
++October 5th, 2010
++
++Nicholas A. Bellinger <nab@linux-iscsi.org>
+diff --git a/Documentation/target/tcm_mod_builder.txt b/Documentation/target/tcm_mod_builder.txt
+deleted file mode 100644
+index ae22f7005540..000000000000
+--- a/Documentation/target/tcm_mod_builder.txt
++++ /dev/null
+@@ -1,145 +0,0 @@
+->>>>>>>>>> The TCM v4 fabric module script generator <<<<<<<<<<
+-
+-Greetings all,
+-
+-This document is intended to be a mini-HOWTO for using the tcm_mod_builder.py
+-script to generate a brand new functional TCM v4 fabric .ko module of your very own,
+-that once built can be immediately be loaded to start access the new TCM/ConfigFS
+-fabric skeleton, by simply using:
+-
+-	modprobe $TCM_NEW_MOD
+-	mkdir -p /sys/kernel/config/target/$TCM_NEW_MOD
+-
+-This script will create a new drivers/target/$TCM_NEW_MOD/, and will do the following
+-
+-	*) Generate new API callers for drivers/target/target_core_fabric_configs.c logic
+-	   ->make_tpg(), ->drop_tpg(), ->make_wwn(), ->drop_wwn().  These are created
+-	   into $TCM_NEW_MOD/$TCM_NEW_MOD_configfs.c
+-	*) Generate basic infrastructure for loading/unloading LKMs and TCM/ConfigFS fabric module
+-	   using a skeleton struct target_core_fabric_ops API template.
+-	*) Based on user defined T10 Proto_Ident for the new fabric module being built,
+-	   the TransportID / Initiator and Target WWPN related handlers for
+-	   SPC-3 persistent reservation are automatically generated in $TCM_NEW_MOD/$TCM_NEW_MOD_fabric.c
+-	   using drivers/target/target_core_fabric_lib.c logic.
+-	*) NOP API calls for all other Data I/O path and fabric dependent attribute logic
+-	   in $TCM_NEW_MOD/$TCM_NEW_MOD_fabric.c
+-
+-tcm_mod_builder.py depends upon the mandatory '-p $PROTO_IDENT' and '-m
+-$FABRIC_MOD_name' parameters, and actually running the script looks like:
+-
+-target:/mnt/sdb/lio-core-2.6.git/Documentation/target# python tcm_mod_builder.py -p iSCSI -m tcm_nab5000
+-tcm_dir: /mnt/sdb/lio-core-2.6.git/Documentation/target/../../
+-Set fabric_mod_name: tcm_nab5000
+-Set fabric_mod_dir:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
+-Using proto_ident: iSCSI
+-Creating fabric_mod_dir:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_base.h
+-Using tcm_mod_scan_fabric_ops:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../include/target/target_core_fabric_ops.h
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.c
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.h
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_configfs.c
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kbuild
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kconfig
+-Would you like to add tcm_nab5000to drivers/target/Kbuild..? [yes,no]: yes
+-Would you like to add tcm_nab5000to drivers/target/Kconfig..? [yes,no]: yes
+-
+-At the end of tcm_mod_builder.py. the script will ask to add the following
+-line to drivers/target/Kbuild:
+-
+-	obj-$(CONFIG_TCM_NAB5000)       += tcm_nab5000/
+-
+-and the same for drivers/target/Kconfig:
+-
+-	source "drivers/target/tcm_nab5000/Kconfig"
+-
+-*) Run 'make menuconfig' and select the new CONFIG_TCM_NAB5000 item:
+-
+-	<M>   TCM_NAB5000 fabric module
+-
+-*) Build using 'make modules', once completed you will have:
+-
+-target:/mnt/sdb/lio-core-2.6.git# ls -la drivers/target/tcm_nab5000/
+-total 1348
+-drwxr-xr-x 2 root root   4096 2010-10-05 03:23 .
+-drwxr-xr-x 9 root root   4096 2010-10-05 03:22 ..
+--rw-r--r-- 1 root root    282 2010-10-05 03:22 Kbuild
+--rw-r--r-- 1 root root    171 2010-10-05 03:22 Kconfig
+--rw-r--r-- 1 root root     49 2010-10-05 03:23 modules.order
+--rw-r--r-- 1 root root    738 2010-10-05 03:22 tcm_nab5000_base.h
+--rw-r--r-- 1 root root   9096 2010-10-05 03:22 tcm_nab5000_configfs.c
+--rw-r--r-- 1 root root 191200 2010-10-05 03:23 tcm_nab5000_configfs.o
+--rw-r--r-- 1 root root  40504 2010-10-05 03:23 .tcm_nab5000_configfs.o.cmd
+--rw-r--r-- 1 root root   5414 2010-10-05 03:22 tcm_nab5000_fabric.c
+--rw-r--r-- 1 root root   2016 2010-10-05 03:22 tcm_nab5000_fabric.h
+--rw-r--r-- 1 root root 190932 2010-10-05 03:23 tcm_nab5000_fabric.o
+--rw-r--r-- 1 root root  40713 2010-10-05 03:23 .tcm_nab5000_fabric.o.cmd
+--rw-r--r-- 1 root root 401861 2010-10-05 03:23 tcm_nab5000.ko
+--rw-r--r-- 1 root root    265 2010-10-05 03:23 .tcm_nab5000.ko.cmd
+--rw-r--r-- 1 root root    459 2010-10-05 03:23 tcm_nab5000.mod.c
+--rw-r--r-- 1 root root  23896 2010-10-05 03:23 tcm_nab5000.mod.o
+--rw-r--r-- 1 root root  22655 2010-10-05 03:23 .tcm_nab5000.mod.o.cmd
+--rw-r--r-- 1 root root 379022 2010-10-05 03:23 tcm_nab5000.o
+--rw-r--r-- 1 root root    211 2010-10-05 03:23 .tcm_nab5000.o.cmd
+-
+-*) Load the new module, create a lun_0 configfs group, and add new TCM Core
+-   IBLOCK backstore symlink to port:
+-
+-target:/mnt/sdb/lio-core-2.6.git# insmod drivers/target/tcm_nab5000.ko
+-target:/mnt/sdb/lio-core-2.6.git# mkdir -p /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0
+-target:/mnt/sdb/lio-core-2.6.git# cd /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0/
+-target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# ln -s /sys/kernel/config/target/core/iblock_0/lvm_test0 nab5000_port
+-
+-target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# cd -
+-target:/mnt/sdb/lio-core-2.6.git# tree /sys/kernel/config/target/nab5000/
+-/sys/kernel/config/target/nab5000/
+-|-- discovery_auth
+-|-- iqn.foo
+-|   `-- tpgt_1
+-|       |-- acls
+-|       |-- attrib
+-|       |-- lun
+-|       |   `-- lun_0
+-|       |       |-- alua_tg_pt_gp
+-|       |       |-- alua_tg_pt_offline
+-|       |       |-- alua_tg_pt_status
+-|       |       |-- alua_tg_pt_write_md
+-|	|	`-- nab5000_port -> ../../../../../../target/core/iblock_0/lvm_test0
+-|       |-- np
+-|       `-- param
+-`-- version
+-
+-target:/mnt/sdb/lio-core-2.6.git# lsmod
+-Module                  Size  Used by
+-tcm_nab5000             3935  4
+-iscsi_target_mod      193211  0
+-target_core_stgt        8090  0
+-target_core_pscsi      11122  1
+-target_core_file        9172  2
+-target_core_iblock      9280  1
+-target_core_mod       228575  31
+-tcm_nab5000,iscsi_target_mod,target_core_stgt,target_core_pscsi,target_core_file,target_core_iblock
+-libfc                  73681  0
+-scsi_debug             56265  0
+-scsi_tgt                8666  1 target_core_stgt
+-configfs               20644  2 target_core_mod
+-
+-----------------------------------------------------------------------
+-
+-Future TODO items:
+-
+-	*) Add more T10 proto_idents
+-	*) Make tcm_mod_dump_fabric_ops() smarter and generate function pointer
+-	   defs directly from include/target/target_core_fabric_ops.h:struct target_core_fabric_ops
+-	   structure members.
+-
+-October 5th, 2010
+-Nicholas A. Bellinger <nab@linux-iscsi.org>
+diff --git a/Documentation/target/tcmu-design.txt b/Documentation/target/tcmu-design.rst
+similarity index 69%
+rename from Documentation/target/tcmu-design.txt
+rename to Documentation/target/tcmu-design.rst
+index 4cebc1ebf99a..a7b426707bf6 100644
+--- a/Documentation/target/tcmu-design.txt
++++ b/Documentation/target/tcmu-design.rst
+@@ -1,25 +1,30 @@
+-Contents:
++====================
++TCM Userspace Design
++====================
++
++
++.. Contents:
  
------------------------------------------------------------------------------
--
- Kernel Interfaces:
- ------------------
+-1) TCM Userspace Design
+-  a) Background
+-  b) Benefits
+-  c) Design constraints
+-  d) Implementation overview
+-     i. Mailbox
+-     ii. Command ring
+-     iii. Data Area
+-  e) Device discovery
+-  f) Device events
+-  g) Other contingencies
+-2) Writing a user pass-through handler
+-  a) Discovering and configuring TCMU uio devices
+-  b) Waiting for events on the device(s)
+-  c) Managing the command ring
+-3) A final note
++   1) TCM Userspace Design
++     a) Background
++     b) Benefits
++     c) Design constraints
++     d) Implementation overview
++        i. Mailbox
++        ii. Command ring
++        iii. Data Area
++     e) Device discovery
++     f) Device events
++     g) Other contingencies
++   2) Writing a user pass-through handler
++     a) Discovering and configuring TCMU uio devices
++     b) Waiting for events on the device(s)
++     c) Managing the command ring
++   3) A final note
  
--::
--
--  debug_info_t *debug_register(char *name, int pages, int nr_areas,
--			       int buf_size);
--
--Parameter:
--	      name:
--			   Name of debug log (e.g. used for debugfs entry)
--	      pages:
--			   Number of pages, which will be allocated per area
--	      nr_areas:
--			   Number of debug areas
--	      buf_size:
--			   Size of data area in each debug entry
--
--Return Value:
--	Handle for generated debug area
--
--	  NULL if register failed
--
--Description:  Allocates memory for a debug log
--	      Must not be called within an interrupt handler
--
------------------------------------------------------------------------------
--
--::
--
--  debug_info_t *debug_register_mode(char *name, int pages, int nr_areas,
--				    int buf_size, mode_t mode, uid_t uid,
--				    gid_t gid);
--
--Parameter:
--	      name:
--			   Name of debug log (e.g. used for debugfs entry)
--	      pages:
--			   Number of pages, which will be allocated per area
--	      nr_areas:
--			   Number of debug areas
--	      buf_size:
--			   Size of data area in each debug entry
--	      mode:
--			   File mode for debugfs files. E.g. S_IRWXUGO
--	      uid:
--			   User ID for debugfs files. Currently only 0 is
--			   supported.
--	      gid:
--			   Group ID for debugfs files. Currently only 0 is
--			   supported.
--
--Return Value:
--	      Handle for generated debug area
--
--		NULL if register failed
--
--Description:
--	      Allocates memory for a debug log
--	      Must not be called within an interrupt handler
--
-----------------------------------------------------------------------------
--
--::
--
--  void debug_unregister (debug_info_t * id);
--
--Parameter:
--	       id:
--		    handle for debug log
--
--Return Value:
--	       none
--
--Description:
--	       frees memory for a debug log and removes all registered debug
--	       views.
--
--	       Must not be called within an interrupt handler
--
-----------------------------------------------------------------------------
--
--::
--
--  void debug_set_level (debug_info_t * id, int new_level);
--
--Parameter:     id:        handle for debug log
--	       new_level: new debug level
--
--Return Value:
--	       none
--
--Description:
--	       Sets new actual debug level if new_level is valid.
--
-----------------------------------------------------------------------------
--
--::
--
--  bool debug_level_enabled (debug_info_t * id, int level);
--
--Parameter:
--	      id:
--			  handle for debug log
--	      level:
--			  debug level
--
--Return Value:
--	      True if level is less or equal to the current debug level.
--
--Description:
--	      Returns true if debug events for the specified level would be
--	      logged. Otherwise returns false.
--
-----------------------------------------------------------------------------
--
--::
--
--  void debug_stop_all(void);
--
--Parameter:
--	       none
--
--Return Value:
--	       none
--
--Description:
--	       stops the debug feature if stopping is allowed. Currently
--	       used in case of a kernel oops.
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_event (debug_info_t* id, int level, void* data,
--			      int length);
--
--Parameter:
--	       id:
--		       handle for debug log
--	       level:
--		       debug level
--	       data:
--		       pointer to data for debug entry
--	       length:
--		       length of data in bytes
--
--Return Value:
--	       Address of written debug entry
--
--Description:
--	       writes debug entry to active debug area (if level <= actual
--	       debug level)
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_int_event (debug_info_t * id, int level,
--				  unsigned int data);
--  debug_entry_t* debug_long_event(debug_info_t * id, int level,
--				  unsigned long data);
--
--Parameter:
--	       id:
--		       handle for debug log
--	       level:
--		       debug level
--	       data:
--		       integer value for debug entry
--
--Return Value:
--	       Address of written debug entry
--
--Description:
--	       writes debug entry to active debug area (if level <= actual
--	       debug level)
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_text_event (debug_info_t * id, int level,
--				   const char* data);
--
--Parameter:
--	       id:
--		       handle for debug log
--	       level:
--		       debug level
--	       data:
--		       string for debug entry
--
--Return Value:
--	       Address of written debug entry
--
--Description:
--	       writes debug entry in ascii format to active debug area
--	       (if level <= actual debug level)
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_sprintf_event (debug_info_t * id, int level,
--				      char* string,...);
--
--Parameter:
--	       id:
--		      handle for debug log
--	       level:
--		      debug level
--	       string:
--		      format string for debug entry
--	       ...:
--		      varargs used as in sprintf()
--
--Return Value:  Address of written debug entry
--
--Description:
--	       writes debug entry with format string and varargs (longs) to
--	       active debug area (if level $<=$ actual debug level).
--	       floats and long long datatypes cannot be used as varargs.
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_exception (debug_info_t* id, int level, void* data,
--				  int length);
--
--Parameter:
--	       id:
--		       handle for debug log
--	       level:
--		       debug level
--	       data:
--		       pointer to data for debug entry
--	       length:
--		       length of data in bytes
--
--Return Value:
--	       Address of written debug entry
--
--Description:
--	       writes debug entry to active debug area (if level <= actual
--	       debug level) and switches to next debug area
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_int_exception (debug_info_t * id, int level,
--				      unsigned int data);
--  debug_entry_t* debug_long_exception(debug_info_t * id, int level,
--				      unsigned long data);
--
--Parameter:     id:     handle for debug log
--	       level:  debug level
--	       data:   integer value for debug entry
--
--Return Value:  Address of written debug entry
--
--Description:   writes debug entry to active debug area (if level <= actual
--	       debug level) and switches to next debug area
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_text_exception (debug_info_t * id, int level,
--				       const char* data);
--
--Parameter:     id:     handle for debug log
--	       level:  debug level
--	       data:   string for debug entry
--
--Return Value:  Address of written debug entry
--
--Description:   writes debug entry in ascii format to active debug area
--	       (if level <= actual debug level) and switches to next debug
--	       area
--
-----------------------------------------------------------------------------
--
--::
--
--  debug_entry_t* debug_sprintf_exception (debug_info_t * id, int level,
--					  char* string,...);
--
--Parameter:     id:    handle for debug log
--	       level: debug level
--	       string: format string for debug entry
--	       ...: varargs used as in sprintf()
--
--Return Value:  Address of written debug entry
--
--Description:   writes debug entry with format string and varargs (longs) to
--	       active debug area (if level $<=$ actual debug level) and
--	       switches to next debug area.
--	       floats and long long datatypes cannot be used as varargs.
--
-----------------------------------------------------------------------------
--
--::
--
--  int debug_register_view (debug_info_t * id, struct debug_view *view);
--
--Parameter:     id:    handle for debug log
--	       view:  pointer to debug view struct
--
--Return Value:  0  : ok
--	       < 0: Error
--
--Description:   registers new debug view and creates debugfs dir entry
--
-----------------------------------------------------------------------------
--
--::
--
--  int debug_unregister_view (debug_info_t * id, struct debug_view *view);
--
--Parameter:     id:    handle for debug log
--	       view:  pointer to debug view struct
--
--Return Value:  0  : ok
--	       < 0: Error
--
--Description:   unregisters debug view and removes debugfs dir entry
--
--
-+.. kernel-doc:: arch/s390/include/asm/debug.h
  
- Predefined views:
- -----------------
- 
--extern struct debug_view debug_hex_ascii_view;
--
--extern struct debug_view debug_raw_view;
--
--extern struct debug_view debug_sprintf_view;
--
--Examples
----------
--
--::
--
--  /*
--   * hex_ascii- + raw-view Example
--   */
--
--  #include <linux/init.h>
--  #include <asm/debug.h>
--
--  static debug_info_t* debug_info;
--
--  static int init(void)
--  {
--      /* register 4 debug areas with one page each and 4 byte data field */
--
--      debug_info = debug_register ("test", 1, 4, 4 );
--      debug_register_view(debug_info,&debug_hex_ascii_view);
--      debug_register_view(debug_info,&debug_raw_view);
--
--      debug_text_event(debug_info, 4 , "one ");
--      debug_int_exception(debug_info, 4, 4711);
--      debug_event(debug_info, 3, &debug_info, 4);
--
--      return 0;
--  }
--
--  static void cleanup(void)
--  {
--      debug_unregister (debug_info);
--  }
--
--  module_init(init);
--  module_exit(cleanup);
--
-----------------------------------------------------------------------------
--
--::
--
--  /*
--   * sprintf-view Example
--   */
--
--  #include <linux/init.h>
--  #include <asm/debug.h>
--
--  static debug_info_t* debug_info;
--
--  static int init(void)
--  {
--      /* register 4 debug areas with one page each and data field for */
--      /* format string pointer + 2 varargs (= 3 * sizeof(long))       */
--
--      debug_info = debug_register ("test", 1, 4, sizeof(long) * 3);
--      debug_register_view(debug_info,&debug_sprintf_view);
--
--      debug_sprintf_event(debug_info, 2 , "first event in %s:%i\n",__FILE__,__LINE__);
--      debug_sprintf_exception(debug_info, 1, "pointer to debug info: %p\n",&debug_info);
--
--      return 0;
--  }
--
--  static void cleanup(void)
--  {
--      debug_unregister (debug_info);
--  }
--
--  module_init(init);
--  module_exit(cleanup);
--
--Debugfs Interface
-------------------
--Views to the debug logs can be investigated through reading the corresponding
--debugfs-files:
--
--Example::
--
--  > ls /sys/kernel/debug/s390dbf/dasd
--  flush  hex_ascii  level pages raw
--  > cat /sys/kernel/debug/s390dbf/dasd/hex_ascii | sort -k2,2 -s
--  00 00974733272:680099 2 - 02 0006ad7e  07 ea 4a 90 | ....
--  00 00974733272:682210 2 - 02 0006ade6  46 52 45 45 | FREE
--  00 00974733272:682213 2 - 02 0006adf6  07 ea 4a 90 | ....
--  00 00974733272:682281 1 * 02 0006ab08  41 4c 4c 43 | EXCP
--  01 00974733272:682284 2 - 02 0006ab16  45 43 4b 44 | ECKD
--  01 00974733272:682287 2 - 02 0006ab28  00 00 00 04 | ....
--  01 00974733272:682289 2 - 02 0006ab3e  00 00 00 20 | ...
--  01 00974733272:682297 2 - 02 0006ad7e  07 ea 4a 90 | ....
--  01 00974733272:684384 2 - 00 0006ade6  46 52 45 45 | FREE
--  01 00974733272:684388 2 - 00 0006adf6  07 ea 4a 90 | ....
--
--See section about predefined views for explanation of the above output!
--
--Changing the debug level
--------------------------
--
--Example::
--
--
--  > cat /sys/kernel/debug/s390dbf/dasd/level
--  3
--  > echo "5" > /sys/kernel/debug/s390dbf/dasd/level
--  > cat /sys/kernel/debug/s390dbf/dasd/level
--  5
--
--Flushing debug areas
+ TCM Userspace Design
 ---------------------
--Debug areas can be flushed with piping the number of the desired
--area (0...n) to the debugfs file "flush". When using "-" all debug areas
--are flushed.
++====================
+ 
+ TCM is another name for LIO, an in-kernel iSCSI target (server).
+ Existing TCM targets run in the kernel.  TCMU (TCM in Userspace)
+@@ -32,7 +37,8 @@ modules for file, block device, RAM or using another SCSI device as
+ storage.  These are called "backstores" or "storage engines".  These
+ built-in modules are implemented entirely as kernel code.
+ 
+-Background:
++Background
++----------
+ 
+ In addition to modularizing the transport protocol used for carrying
+ SCSI commands ("fabrics"), the Linux kernel target, LIO, also modularizes
+@@ -60,7 +66,8 @@ kernel, another approach is to create a userspace pass-through
+ backstore for LIO, "TCMU".
+ 
+ 
+-Benefits:
++Benefits
++--------
+ 
+ In addition to allowing relatively easy support for RBD and GLFS, TCMU
+ will also allow easier development of new backstores. TCMU combines
+@@ -72,21 +79,25 @@ The disadvantage is there are more distinct components to configure, and
+ potentially to malfunction. This is unavoidable, but hopefully not
+ fatal if we're careful to keep things as simple as possible.
+ 
+-Design constraints:
++Design constraints
++------------------
+ 
+ - Good performance: high throughput, low latency
+ - Cleanly handle if userspace:
++
+    1) never attaches
+    2) hangs
+    3) dies
+    4) misbehaves
++
+ - Allow future flexibility in user & kernel implementations
+ - Be reasonably memory-efficient
+ - Simple to configure & run
+ - Simple to write a userspace backend
+ 
+ 
+-Implementation overview:
++Implementation overview
++-----------------------
+ 
+ The core of the TCMU interface is a memory region that is shared
+ between kernel and userspace. Within this region is: a control area
+@@ -108,7 +119,8 @@ the region mapped at a different virtual address.
+ 
+ See target_core_user.h for the struct definitions.
+ 
+-The Mailbox:
++The Mailbox
++-----------
+ 
+ The mailbox is always at the start of the shared memory region, and
+ contains a version, details about the starting offset and size of the
+@@ -117,19 +129,27 @@ userspace (respectively) to put commands on the ring, and indicate
+ when the commands are completed.
+ 
+ version - 1 (userspace should abort if otherwise)
++
+ flags:
+-- TCMU_MAILBOX_FLAG_CAP_OOOC: indicates out-of-order completion is
+-  supported.  See "The Command Ring" for details.
+-cmdr_off - The offset of the start of the command ring from the start
+-of the memory region, to account for the mailbox size.
+-cmdr_size - The size of the command ring. This does *not* need to be a
+-power of two.
+-cmd_head - Modified by the kernel to indicate when a command has been
+-placed on the ring.
+-cmd_tail - Modified by userspace to indicate when it has completed
+-processing of a command.
++    - TCMU_MAILBOX_FLAG_CAP_OOOC:
++	indicates out-of-order completion is supported.
++	See "The Command Ring" for details.
+ 
+-The Command Ring:
++cmdr_off
++	The offset of the start of the command ring from the start
++	of the memory region, to account for the mailbox size.
++cmdr_size
++	The size of the command ring. This does *not* need to be a
++	power of two.
++cmd_head
++	Modified by the kernel to indicate when a command has been
++	placed on the ring.
++cmd_tail
++	Modified by userspace to indicate when it has completed
++	processing of a command.
++
++The Command Ring
++----------------
+ 
+ Commands are placed on the ring by the kernel incrementing
+ mailbox.cmd_head by the size of the command, modulo cmdr_size, and
+@@ -180,29 +200,31 @@ opcode it does not handle, it must set UNKNOWN_OP bit (bit 0) in
+ hdr.uflags, update cmd_tail, and proceed with processing additional
+ commands, if any.
+ 
+-The Data Area:
++The Data Area
++-------------
+ 
+ This is shared-memory space after the command ring. The organization
+ of this area is not defined in the TCMU interface, and userspace
+ should access only the parts referenced by pending iovs.
+ 
+ 
+-Device Discovery:
++Device Discovery
++----------------
+ 
+ Other devices may be using UIO besides TCMU. Unrelated user processes
+ may also be handling different sets of TCMU devices. TCMU userspace
+ processes must find their devices by scanning sysfs
+ class/uio/uio*/name. For TCMU devices, these names will be of the
+-format:
++format::
+ 
+-tcm-user/<hba_num>/<device_name>/<subtype>/<path>
++	tcm-user/<hba_num>/<device_name>/<subtype>/<path>
+ 
+ where "tcm-user" is common for all TCMU-backed UIO devices. <hba_num>
+ and <device_name> allow userspace to find the device's path in the
+ kernel target's configfs tree. Assuming the usual mount point, it is
+-found at:
++found at::
+ 
+-/sys/kernel/config/target/core/user_<hba_num>/<device_name>
++	/sys/kernel/config/target/core/user_<hba_num>/<device_name>
+ 
+ This location contains attributes such as "hw_block_size", that
+ userspace needs to know for correct operation.
+@@ -214,15 +236,16 @@ configure the device, if needed. The name cannot contain ':', due to
+ LIO limitations.
+ 
+ For all devices so discovered, the user handler opens /dev/uioX and
+-calls mmap():
++calls mmap()::
+ 
+-mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)
++	mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)
+ 
+ where size must be equal to the value read from
+ /sys/class/uio/uioX/maps/map0/size.
+ 
+ 
+-Device Events:
++Device Events
++-------------
+ 
+ If a new device is added or removed, a notification will be broadcast
+ over netlink, using a generic netlink family name of "TCM-USER" and a
+@@ -233,7 +256,8 @@ the LIO device, so that after determining the device is supported
+ (based on subtype) it can take the appropriate action.
+ 
+ 
+-Other contingencies:
++Other contingencies
++-------------------
+ 
+ Userspace handler process never attaches:
+ 
+@@ -258,7 +282,7 @@ Userspace handler process is malicious:
+ 
+ 
+ Writing a user pass-through handler (with example code)
+--------------------------------------------------------
++=======================================================
+ 
+ A user process handing a TCMU device must support the following:
+ 
+@@ -277,103 +301,103 @@ TCMU is designed so that multiple unrelated processes can manage TCMU
+ devices separately. All handlers should make sure to only open their
+ devices, based opon a known subtype string.
+ 
+-a) Discovering and configuring TCMU UIO devices:
++a) Discovering and configuring TCMU UIO devices::
+ 
+-(error checking omitted for brevity)
++      /* error checking omitted for brevity */
+ 
+-int fd, dev_fd;
+-char buf[256];
+-unsigned long long map_len;
+-void *map;
++      int fd, dev_fd;
++      char buf[256];
++      unsigned long long map_len;
++      void *map;
+ 
+-fd = open("/sys/class/uio/uio0/name", O_RDONLY);
+-ret = read(fd, buf, sizeof(buf));
+-close(fd);
+-buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
++      fd = open("/sys/class/uio/uio0/name", O_RDONLY);
++      ret = read(fd, buf, sizeof(buf));
++      close(fd);
++      buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
+ 
+-/* we only want uio devices whose name is a format we expect */
+-if (strncmp(buf, "tcm-user", 8))
++      /* we only want uio devices whose name is a format we expect */
++      if (strncmp(buf, "tcm-user", 8))
+ 	exit(-1);
+ 
+-/* Further checking for subtype also needed here */
++      /* Further checking for subtype also needed here */
+ 
+-fd = open(/sys/class/uio/%s/maps/map0/size, O_RDONLY);
+-ret = read(fd, buf, sizeof(buf));
+-close(fd);
+-str_buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
++      fd = open(/sys/class/uio/%s/maps/map0/size, O_RDONLY);
++      ret = read(fd, buf, sizeof(buf));
++      close(fd);
++      str_buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
+ 
+-map_len = strtoull(buf, NULL, 0);
++      map_len = strtoull(buf, NULL, 0);
+ 
+-dev_fd = open("/dev/uio0", O_RDWR);
+-map = mmap(NULL, map_len, PROT_READ|PROT_WRITE, MAP_SHARED, dev_fd, 0);
++      dev_fd = open("/dev/uio0", O_RDWR);
++      map = mmap(NULL, map_len, PROT_READ|PROT_WRITE, MAP_SHARED, dev_fd, 0);
+ 
+ 
+-b) Waiting for events on the device(s)
++      b) Waiting for events on the device(s)
+ 
+-while (1) {
+-  char buf[4];
++      while (1) {
++        char buf[4];
+ 
+-  int ret = read(dev_fd, buf, 4); /* will block */
++        int ret = read(dev_fd, buf, 4); /* will block */
+ 
+-  handle_device_events(dev_fd, map);
+-}
 -
--Examples:
 -
--1. Flush debug area 0::
+-c) Managing the command ring
 -
--     > echo "0" > /sys/kernel/debug/s390dbf/dasd/flush
+-#include <linux/target_core_user.h>
 -
--2. Flush all debug areas::
+-int handle_device_events(int fd, void *map)
+-{
+-  struct tcmu_mailbox *mb = map;
+-  struct tcmu_cmd_entry *ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
+-  int did_some_work = 0;
 -
--     > echo "-" > /sys/kernel/debug/s390dbf/dasd/flush
+-  /* Process events from cmd ring until we catch up with cmd_head */
+-  while (ent != (void *)mb + mb->cmdr_off + mb->cmd_head) {
 -
--Changing the size of debug areas
--------------------------------------
--It is possible the change the size of debug areas through piping
--the number of pages to the debugfs file "pages". The resize request will
--also flush the debug areas.
--
--Example:
--
--Define 4 pages for the debug areas of debug feature "dasd"::
--
--  > echo "4" > /sys/kernel/debug/s390dbf/dasd/pages
--
--Stooping the debug feature
----------------------------
--Example:
--
--1. Check if stopping is allowed::
--
--     > cat /proc/sys/s390dbf/debug_stoppable
--
--2. Stop debug feature::
--
--     > echo 0 > /proc/sys/s390dbf/debug_active
--
--lcrash Interface
------------------
--It is planned that the dump analysis tool lcrash gets an additional command
--'s390dbf' to display all the debug logs. With this tool it will be possible
--to investigate the debug logs on a live system and with a memory dump after
--a system crash.
--
--Investigating raw memory
--------------------------
--One last possibility to investigate the debug logs at a live
--system and after a system crash is to look at the raw memory
--under VM or at the Service Element.
--It is possible to find the anker of the debug-logs through
--the 'debug_area_first' symbol in the System map. Then one has
--to follow the correct pointers of the data-structures defined
--in debug.h and find the debug-areas in memory.
--Normally modules which use the debug feature will also have
--a global variable with the pointer to the debug-logs. Following
--this pointer it will also be possible to find the debug logs in
--memory.
--
--For this method it is recommended to use '16 * x + 4' byte (x = 0..n)
--for the length of the data field in debug_register() in
--order to see the debug entries well formatted.
--
--
--Predefined Views
------------------
--
--There are three predefined views: hex_ascii, raw and sprintf.
--The hex_ascii view shows the data field in hex and ascii representation
--(e.g. '45 43 4b 44 | ECKD').
--The raw view returns a bytestream as the debug areas are stored in memory.
--
--The sprintf view formats the debug entries in the same way as the sprintf
--function would do. The sprintf event/exception functions write to the
--debug entry a pointer to the format string (size = sizeof(long))
--and for each vararg a long value. So e.g. for a debug entry with a format
--string plus two varargs one would need to allocate a (3 * sizeof(long))
--byte data area in the debug_register() function.
--
--IMPORTANT:
--  Using "%s" in sprintf event functions is dangerous. You can only
--  use "%s" in the sprintf event functions, if the memory for the passed string
--  is available as long as the debug feature exists. The reason behind this is
--  that due to performance considerations only a pointer to the string is stored
--  in  the debug feature. If you log a string that is freed afterwards, you will
--  get an OOPS when inspecting the debug feature, because then the debug feature
--  will access the already freed memory.
--
--NOTE:
--  If using the sprintf view do NOT use other event/exception functions
--  than the sprintf-event and -exception functions.
--
--The format of the hex_ascii and sprintf view is as follows:
--
--- Number of area
--- Timestamp (formatted as seconds and microseconds since 00:00:00 Coordinated
--  Universal Time (UTC), January 1, 1970)
--- level of debug entry
--- Exception flag (* = Exception)
--- Cpu-Number of calling task
--- Return Address to caller
--- data field
--
--The format of the raw view is:
--
--- Header as described in debug.h
--- datafield
--
--A typical line of the hex_ascii view will look like the following (first line
--is only for explanation and will not be displayed when 'cating' the view):
--
--area  time           level exception cpu caller    data (hex + ascii)
----------------------------------------------------------------------------
--00    00964419409:440690 1 -         00  88023fe
--
--
--Defining views
----------------
--
--Views are specified with the 'debug_view' structure. There are defined
--callback functions which are used for reading and writing the debugfs files::
--
--  struct debug_view {
--	char name[DEBUG_MAX_PROCF_LEN];
--	debug_prolog_proc_t* prolog_proc;
--	debug_header_proc_t* header_proc;
--	debug_format_proc_t* format_proc;
--	debug_input_proc_t*  input_proc;
--	void*                private_data;
--  };
--
--where::
--
--  typedef int (debug_header_proc_t) (debug_info_t* id,
--				     struct debug_view* view,
--				     int area,
--				     debug_entry_t* entry,
--				     char* out_buf);
--
--  typedef int (debug_format_proc_t) (debug_info_t* id,
--				     struct debug_view* view, char* out_buf,
--				     const char* in_buf);
--  typedef int (debug_prolog_proc_t) (debug_info_t* id,
--				     struct debug_view* view,
--				     char* out_buf);
--  typedef int (debug_input_proc_t) (debug_info_t* id,
--				    struct debug_view* view,
--				    struct file* file, const char* user_buf,
--				    size_t in_buf_size, loff_t* offset);
--
--
--The "private_data" member can be used as pointer to view specific data.
--It is not used by the debug feature itself.
--
--The output when reading a debugfs file is structured like this::
--
--  "prolog_proc output"
--
--  "header_proc output 1"  "format_proc output 1"
--  "header_proc output 2"  "format_proc output 2"
--  "header_proc output 3"  "format_proc output 3"
--  ...
--
--When a view is read from the debugfs, the Debug Feature calls the
--'prolog_proc' once for writing the prolog.
--Then 'header_proc' and 'format_proc' are called for each
--existing debug entry.
--
--The input_proc can be used to implement functionality when it is written to
--the view (e.g. like with 'echo "0" > /sys/kernel/debug/s390dbf/dasd/level).
--
--For header_proc there can be used the default function
--debug_dflt_header_fn() which is defined in debug.h.
--and which produces the same header output as the predefined views.
--E.g::
--
--  00 00964419409:440761 2 - 00 88023ec
--
--In order to see how to use the callback functions check the implementation
--of the default views!
--
--Example::
--
--  #include <asm/debug.h>
--
--  #define UNKNOWNSTR "data: %08x"
--
--  const char* messages[] =
--  {"This error...........\n",
--   "That error...........\n",
--   "Problem..............\n",
--   "Something went wrong.\n",
--   "Everything ok........\n",
--   NULL
--  };
--
--  static int debug_test_format_fn(
--     debug_info_t * id, struct debug_view *view,
--     char *out_buf, const char *in_buf
--  )
--  {
--    int i, rc = 0;
--
--    if(id->buf_size >= 4) {
--       int msg_nr = *((int*)in_buf);
--       if(msg_nr < sizeof(messages)/sizeof(char*) - 1)
--	  rc += sprintf(out_buf, "%s", messages[msg_nr]);
--       else
--	  rc += sprintf(out_buf, UNKNOWNSTR, msg_nr);
+-    if (tcmu_hdr_get_op(ent->hdr.len_op) == TCMU_OP_CMD) {
+-      uint8_t *cdb = (void *)mb + ent->req.cdb_off;
+-      bool success = true;
++        handle_device_events(dev_fd, map);
++      }
+ 
+-      /* Handle command here. */
+-      printf("SCSI opcode: 0x%x\n", cdb[0]);
+ 
+-      /* Set response fields */
+-      if (success)
+-        ent->rsp.scsi_status = SCSI_NO_SENSE;
+-      else {
+-        /* Also fill in rsp->sense_buffer here */
+-        ent->rsp.scsi_status = SCSI_CHECK_CONDITION;
++c) Managing the command ring::
++
++      #include <linux/target_core_user.h>
++
++      int handle_device_events(int fd, void *map)
++      {
++        struct tcmu_mailbox *mb = map;
++        struct tcmu_cmd_entry *ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
++        int did_some_work = 0;
++
++        /* Process events from cmd ring until we catch up with cmd_head */
++        while (ent != (void *)mb + mb->cmdr_off + mb->cmd_head) {
++
++          if (tcmu_hdr_get_op(ent->hdr.len_op) == TCMU_OP_CMD) {
++            uint8_t *cdb = (void *)mb + ent->req.cdb_off;
++            bool success = true;
++
++            /* Handle command here. */
++            printf("SCSI opcode: 0x%x\n", cdb[0]);
++
++            /* Set response fields */
++            if (success)
++              ent->rsp.scsi_status = SCSI_NO_SENSE;
++            else {
++              /* Also fill in rsp->sense_buffer here */
++              ent->rsp.scsi_status = SCSI_CHECK_CONDITION;
++            }
++          }
++          else if (tcmu_hdr_get_op(ent->hdr.len_op) != TCMU_OP_PAD) {
++            /* Tell the kernel we didn't handle unknown opcodes */
++            ent->hdr.uflags |= TCMU_UFLAG_UNKNOWN_OP;
++          }
++          else {
++            /* Do nothing for PAD entries except update cmd_tail */
++          }
++
++          /* update cmd_tail */
++          mb->cmd_tail = (mb->cmd_tail + tcmu_hdr_get_len(&ent->hdr)) % mb->cmdr_size;
++          ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
++          did_some_work = 1;
++        }
++
++        /* Notify the kernel that work has been finished */
++        if (did_some_work) {
++          uint32_t buf = 0;
++
++          write(fd, &buf, 4);
++        }
++
++        return 0;
+       }
 -    }
--   out:
--     return rc;
+-    else if (tcmu_hdr_get_op(ent->hdr.len_op) != TCMU_OP_PAD) {
+-      /* Tell the kernel we didn't handle unknown opcodes */
+-      ent->hdr.uflags |= TCMU_UFLAG_UNKNOWN_OP;
+-    }
+-    else {
+-      /* Do nothing for PAD entries except update cmd_tail */
+-    }
+-
+-    /* update cmd_tail */
+-    mb->cmd_tail = (mb->cmd_tail + tcmu_hdr_get_len(&ent->hdr)) % mb->cmdr_size;
+-    ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
+-    did_some_work = 1;
 -  }
 -
--  struct debug_view debug_test_view = {
--    "myview",                 /* name of view */
--    NULL,                     /* no prolog */
--    &debug_dflt_header_fn,    /* default header for each entry */
--    &debug_test_format_fn,    /* our own format function */
--    NULL,                     /* no input function */
--    NULL                      /* no private data */
--  };
+-  /* Notify the kernel that work has been finished */
+-  if (did_some_work) {
+-    uint32_t buf = 0;
 -
--test:
--=====
+-    write(fd, &buf, 4);
+-  }
 -
- ::
+-  return 0;
+-}
  
-   debug_info_t *debug_info;
-diff --git a/arch/s390/include/asm/debug.h b/arch/s390/include/asm/debug.h
-index b94783f71322..b55486f70deb 100644
---- a/arch/s390/include/asm/debug.h
-+++ b/arch/s390/include/asm/debug.h
-@@ -95,25 +95,106 @@ debug_entry_t *debug_exception_common(debug_info_t *id, int level,
  
- /* Debug Feature API: */
+ A final note
+-------------
++============
  
-+/**
-+ * debug_register() - allocates memory for a debug log.
-+ *
-+ * @name:        Name of debug log (e.g. used for debugfs entry)
-+ * @pages:       Number of pages, which will be allocated per area
-+ * @nr_areas:    Number of debug areas
-+ * @buf_size:    Size of data area in each debug entry
-+ *
-+ * Return:
-+ * - Handler for generated debug area
-+ * - %NULL if register failed
-+ *
-+ * Must not be called within an interrupt handler.
-+ */
- debug_info_t *debug_register(const char *name, int pages, int nr_areas,
- 			     int buf_size);
+ Please be careful to return codes as defined by the SCSI
+ specifications. These are different than some values defined in the
+diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
+index bd7d9ab63941..f47ef26754fa 100755
+--- a/scripts/documentation-file-ref-check
++++ b/scripts/documentation-file-ref-check
+@@ -81,7 +81,7 @@ while (<IN>) {
+ 		# Remove sched-pelt false-positive
+ 		next if ($fulref =~ m,^Documentation/scheduler/sched-pelt$,);
  
-+/**
-+ * debug_register_mode() - allocates memory for a debug log.
-+ *
-+ * @name:	Name of debug log (e.g. used for debugfs entry)
-+ * @pages:	Number of pages, which will be allocated per area
-+ * @nr_areas:	Number of debug areas
-+ * @buf_size:	Size of data area in each debug entry
-+ * @mode:	File mode for debugfs files. E.g. S_IRWXUGO
-+ * @uid:	User ID for debugfs files. Currently only 0 is supported.
-+ * @gid:	Group ID for debugfs files. Currently only 0 is supported.
-+ *
-+ * Return:
-+ * - Handler for generated debug area
-+ * - %NULL if register failed
-+ *
-+ * Must not be called within an interrupt handler
-+ */
- debug_info_t *debug_register_mode(const char *name, int pages, int nr_areas,
- 				  int buf_size, umode_t mode, uid_t uid,
- 				  gid_t gid);
+-		# Discard some build examples from Documentation/target/tcm_mod_builder.txt
++		# Discard some build examples from Documentation/target/tcm_mod_builder.rst
+ 		next if ($fulref =~ m,mnt/sdb/lio-core-2.6.git/Documentation/target,);
  
-+/**
-+ * debug_unregister() - frees memory for a debug log and removes all
-+ *			registered debug
-+ * views.
-+ *
-+ * @id:		handle for debug log
-+ *
-+ * Return:
-+ *    none
-+ *
-+ * Must not be called within an interrupt handler
-+ */
- void debug_unregister(debug_info_t *id);
- 
-+/**
-+ * debug_set_level() -  Sets new actual debug level if new_level is valid.
-+ *
-+ * @id:		handle for debug log
-+ * @new_level:	new debug level
-+ *
-+ * Return:
-+ *    none
-+ */
- void debug_set_level(debug_info_t *id, int new_level);
- 
- void debug_set_critical(void);
-+
-+/**
-+ * debug_stop_all() - stops the debug feature if stopping is allowed.
-+ *
-+ * Return:
-+ * -   none
-+ */
- void debug_stop_all(void);
- 
-+/**
-+ * debug_level_enabled() - Returns true if debug events for the specified
-+ *			   level would be logged. Otherwise returns false.
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ *
-+ * Return:
-+ * - %true if level is less or equal to the current debug level.
-+ */
- static inline bool debug_level_enabled(debug_info_t *id, int level)
- {
- 	return level <= id->level;
- }
- 
-+/**
-+ * debug_event() - writes debug entry to active debug area
-+ *		   (if level <= actual debug level)
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @data:	pointer to data for debug entry
-+ * @length:	length of data in bytes
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ */
- static inline debug_entry_t *debug_event(debug_info_t *id, int level,
- 					 void *data, int length)
- {
-@@ -122,6 +203,18 @@ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
- 	return debug_event_common(id, level, data, length);
- }
- 
-+/**
-+ * debug_int_event() - writes debug entry to active debug area
-+ * 		       (if level <= actual debug level)
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @tag:	integer value for debug entry
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
- 					     unsigned int tag)
- {
-@@ -132,6 +225,18 @@ static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
- 	return debug_event_common(id, level, &t, sizeof(unsigned int));
- }
- 
-+/**
-+ * debug_long_event() - writes debug entry to active debug area
-+ * 		       (if level <= actual debug level)
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @tag:	integer value for debug entry
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
- 					      unsigned long tag)
- {
-@@ -142,6 +247,18 @@ static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
- 	return debug_event_common(id, level, &t, sizeof(unsigned long));
- }
- 
-+/**
-+ * debug_text_event() - writes debug entry in ascii format to active
-+ *			debug area (if level <= actual debug level)
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @txt:	string for debug entry
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_text_event(debug_info_t *id, int level,
- 					      const char *txt)
- {
-@@ -158,6 +275,22 @@ extern debug_entry_t *
- __debug_sprintf_event(debug_info_t *id, int level, char *string, ...)
- 	__attribute__ ((format(printf, 3, 4)));
- 
-+/**
-+ * debug_sprintf_event() - writes debug entry with format string
-+ *			   and varargs (longs) to active debug area
-+ *			   (if level $<=$ actual debug level).
-+ *
-+ * @_id:	handle for debug log
-+ * @_level:	debug level
-+ * @_fmt:	format string for debug entry
-+ * @...:	varargs used as in sprintf()
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ *
-+ * floats and long long datatypes cannot be used as varargs.
-+ */
- #define debug_sprintf_event(_id, _level, _fmt, ...)			\
- ({									\
- 	debug_entry_t *__ret;						\
-@@ -172,6 +305,20 @@ __debug_sprintf_event(debug_info_t *id, int level, char *string, ...)
- 	__ret;								\
- })
- 
-+/**
-+ * debug_exception() - writes debug entry to active debug area
-+ *		       (if level <= actual debug level) and switches
-+ *		       to next debug area
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @data:	pointer to data for debug entry
-+ * @length:	length of data in bytes
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
- 					     void *data, int length)
- {
-@@ -180,6 +327,19 @@ static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
- 	return debug_exception_common(id, level, data, length);
- }
- 
-+/**
-+ * debug_int_exception() - writes debug entry to active debug area
-+ *			   (if level <= actual debug level)
-+ *			   and switches to next debug area
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @tag:	integer value for debug entry
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
- 						 unsigned int tag)
- {
-@@ -190,6 +350,19 @@ static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
- 	return debug_exception_common(id, level, &t, sizeof(unsigned int));
- }
- 
-+/**
-+ * debug_long_exception() - writes debug entry to active debug area
-+ *			   (if level <= actual debug level)
-+ *			   and switches to next debug area
-+ *
-+ * @id:		handle for debug log
-+ * @level:	debug level
-+ * @tag:	integer value for debug entry
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
- 						   unsigned long tag)
- {
-@@ -200,6 +373,20 @@ static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
- 	return debug_exception_common(id, level, &t, sizeof(unsigned long));
- }
- 
-+/**
-+ * debug_text_exception() - writes debug entry in ascii format to active
-+ *			    debug area (if level <= actual debug level)
-+ *			    and switches to next debug
-+ * area
-+ *
-+ * @id:	handle for debug log
-+ * @level:	debug level
-+ * @txt:	string for debug entry
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ */
- static inline debug_entry_t *debug_text_exception(debug_info_t *id, int level,
- 						  const char *txt)
- {
-@@ -216,6 +403,24 @@ extern debug_entry_t *
- __debug_sprintf_exception(debug_info_t *id, int level, char *string, ...)
- 	__attribute__ ((format(printf, 3, 4)));
- 
-+
-+/**
-+ * debug_sprintf_exception() - writes debug entry with format string and
-+ *			       varargs (longs) to active debug area
-+ * 			       (if level $<=$ actual debug level)
-+ *			       and switches to next debug area.
-+ *
-+ * @_id:	handle for debug log
-+ * @_level:	debug level
-+ * @_fmt:	format string for debug entry
-+ * @...:	varargs used as in sprintf()
-+ *
-+ * Return:
-+ * - Address of written debug entry
-+ * - %NULL if error
-+ *
-+ * floats and long long datatypes cannot be used as varargs.
-+ */
- #define debug_sprintf_exception(_id, _level, _fmt, ...)			\
- ({									\
- 	debug_entry_t *__ret;						\
-@@ -230,7 +435,33 @@ __debug_sprintf_exception(debug_info_t *id, int level, char *string, ...)
- 	__ret;								\
- })
- 
-+/**
-+ * debug_register_view() - registers new debug view and creates debugfs
-+ *			   dir entry
-+ *
-+ * @id:	handle for debug log
-+ * @view:	pointer to debug view struct
-+ *
-+ * Return:
-+ * -   0  : ok
-+ * -   < 0: Error
-+ */
- int debug_register_view(debug_info_t *id, struct debug_view *view);
-+
-+/**
-+ * debug_unregister_view()
-+ *
-+ * @id:	handle for debug log
-+ * @view:	pointer to debug view struct
-+ *
-+ * Return:
-+ * -   0  : ok
-+ * -   < 0: Error
-+ *
-+ *
-+ * unregisters debug view and removes debugfs dir entry
-+ */
-+
- int debug_unregister_view(debug_info_t *id, struct debug_view *view);
- 
- /*
+ 		# Check if exists, evaluating wildcards
 -- 
 2.20.1
 
