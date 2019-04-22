@@ -2,90 +2,116 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F7DC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC22C282E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D132206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A764120857
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="k0h0G2Te"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfDVJge (ORCPT
+        id S1727281AbfDVJiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:36:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44896 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfDVJge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:36:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB5B4C00735C;
-        Mon, 22 Apr 2019 09:36:33 +0000 (UTC)
-Received: from krava (ovpn-204-20.brq.redhat.com [10.40.204.20])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B7C3160139;
-        Mon, 22 Apr 2019 09:36:30 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 11:36:29 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Bo YU <tsu.yubo@gmail.com>
-Cc:     peterz@infradead.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] perf bpf: return value with unlocking in
- perf_env__find_btf()
-Message-ID: <20190422093629.GA1730@krava>
-References: <20190422080138.10088-1-tsu.yubo@gmail.com>
+        Mon, 22 Apr 2019 05:38:03 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36190 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfDVJiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 05:38:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1555925880; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SSHuRpEPChVNkw5VL/LwuRqDA8mgCfxQAZUZ16LP9Fk=;
+        b=k0h0G2TeRjCZW8ZxVh6aj3SICLlCrw6SpW4qpjOUp5FVzfdwfOXKT4gurngTRtzOCgXeYw
+        lEmaw/lJ2D54DiBhvTydQ2Xp0Q1gXRfCW/6PgpqANPqSx4ZduHGHYi8+t0FpWU3MivZuz2
+        u2mjzWl4c/5zI/M2w0R/YbJqvlCAx40=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Hans Verkuil <hansverk@cisco.com>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v3 3/3] drm/panel: simple: Add GiantPlus GPM940B0 panel support
+Date:   Mon, 22 Apr 2019 11:37:22 +0200
+Message-Id: <20190422093722.4344-3-paul@crapouillou.net>
+In-Reply-To: <20190422093722.4344-1-paul@crapouillou.net>
+References: <20190422093722.4344-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422080138.10088-1-tsu.yubo@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 22 Apr 2019 09:36:34 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 04:01:38AM -0400, Bo YU wrote:
-> In perf_env__find_btf(), returning without unlocking
-> "env->bpf_progs.lock". There may be cause lockdep issue.
-> 
-> DEtected by CoversityScan, CID# 1444762:(program hangs(LOCK))
-> 
-> Fixes: 2db7b1e0bd49d: (perf bpf: Return NULL when RB tree lookup fails in perf_env__find_btf())
+The GiantPlus GPM940B0 is a simple 3.0" 320x240 24-bit TFT panel.
 
-ugh, sry about that
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+---
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Notes:
+    v2: Change bus format to MEDIA_BUS_FMT_RGB888_3X8_BE
+    
+    v3: No change
 
-thanks,
-jirka
+ drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-> ---
->  tools/perf/util/env.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 9494f9dc61ec..6a3eaf7d9353 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -115,8 +115,8 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
->  	}
->  	node = NULL;
->  
-> -	up_read(&env->bpf_progs.lock);
->  out:
-> +	up_read(&env->bpf_progs.lock);
->  	return node;
->  }
->  
-> -- 
-> 2.11.0
-> 
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 569be4efd8d1..a81b35269a78 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1208,6 +1208,31 @@ static const struct panel_desc giantplus_gpg482739qs5 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+ };
+ 
++static const struct display_timing giantplus_gpm940b0_timing = {
++	.pixelclock = { 13500000, 27000000, 27500000 },
++	.hactive = { 320, 320, 320 },
++	.hfront_porch = { 14, 686, 718 },
++	.hback_porch = { 50, 70, 255 },
++	.hsync_len = { 1, 1, 1 },
++	.vactive = { 240, 240, 240 },
++	.vfront_porch = { 1, 1, 179 },
++	.vback_porch = { 1, 21, 31 },
++	.vsync_len = { 1, 1, 6 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
++};
++
++static const struct panel_desc giantplus_gpm940b0 = {
++	.timings = &giantplus_gpm940b0_timing,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 60,
++		.height = 45,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_3X8_BE,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
++};
++
+ static const struct display_timing hannstar_hsd070pww1_timing = {
+ 	.pixelclock = { 64300000, 71100000, 82000000 },
+ 	.hactive = { 1280, 1280, 1280 },
+@@ -2666,6 +2691,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "giantplus,gpg482739qs5",
+ 		.data = &giantplus_gpg482739qs5
++	}, {
++		.compatible = "giantplus,gpm940b0",
++		.data = &giantplus_gpm940b0,
+ 	}, {
+ 		.compatible = "hannstar,hsd070pww1",
+ 		.data = &hannstar_hsd070pww1,
+-- 
+2.21.0.593.g511ec345e18
+
