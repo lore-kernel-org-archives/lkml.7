@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D78C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93228C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E289204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0D6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963609;
-	bh=UiE1/qz1leytIa5uK7KJExFF85Vy3sYKYepZmd343vA=;
+	s=default; t=1555963612;
+	bh=PZ7if4JgjNIy4CiddinObM/lzLXVDEkNB7Cd19rk6W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mtvM61vGPTEjR5QBk8dAU4WLuBxCWWyMe+u6rkhj8/C30XYr5RentqroFGxG967Lg
-	 nQOH+f/AShOfwykqoYSJihpL99L7lVG4FcxcTlG5UXf8rm6fV+umEYZ09DK+pscsmt
-	 V4/JJjn6HOWFRedNKSNh5VtmFNQ2TT3QHHmc9Hhw=
+	b=s6B2yBz8ghXMq+PpBYUND/K+QpKITzpDwDOWsB+6kdb8A7BP3isqxFZpcAqQ7usvD
+	 hYfaisVbA3SfPNdFojklcJtrJteRkaBiNQudEckbmO0sNuZSv2d6uhh5pJHjb/9wyd
+	 /vQtG0n/M3mw5Z79j6a3hwORRDt6seYzKMIKHoWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732341AbfDVUGr (ORCPT
+        id S1732330AbfDVUGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:06:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbfDVTo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:27 -0400
+        id S1728922AbfDVTo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 782BC204EC;
-        Mon, 22 Apr 2019 19:44:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD196218DA;
+        Mon, 22 Apr 2019 19:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962266;
-        bh=UiE1/qz1leytIa5uK7KJExFF85Vy3sYKYepZmd343vA=;
+        s=default; t=1555962268;
+        bh=PZ7if4JgjNIy4CiddinObM/lzLXVDEkNB7Cd19rk6W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USF8MpcX3Z9ePLmHz8w9DA9VWnqIMxYWTfvhdO3Hiq0Vj986FdPa+TTMrL4geoA76
-         VpTizPM5dUle41OV6m8UdIp8xKUhonkqNxjhO9EksqdX5q78J/6GEWq8Ya6WJLF3Q+
-         jziyNUxc5a2UXhVQ/dTtEu8GphhpA22lVFRljFhE=
+        b=Ckw6qB7if7MU4ygDWXLOHH5vBdcRqI4dB3TSAe+dBdEXtMpJak1I8ilCMcLD0ODLY
+         xsCOPEzwxjv0mRdkP/vGo2LJDISF0STIMF/2nfCvhu+WjjKi47RBhB8bdiHyxdNb22
+         8YAhwDxo78099hkhq3kPfYkkFRfKjhNl2dxsi0OY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     raymond pang <raymondpangxd@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 74/98] libata: fix using DMA buffers on stack
-Date:   Mon, 22 Apr 2019 15:41:41 -0400
-Message-Id: <20190422194205.10404-74-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 76/98] afs: Fix StoreData op marshalling
+Date:   Mon, 22 Apr 2019 15:41:43 -0400
+Message-Id: <20190422194205.10404-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -58,87 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: raymond pang <raymondpangxd@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
+[ Upstream commit 8c7ae38d1ce12a0eaeba655df8562552b3596c7f ]
 
-When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-a stack virtual address. Stack DMA buffers must be avoided.
+The marshalling of AFS.StoreData, AFS.StoreData64 and YFS.StoreData64 calls
+generated by ->setattr() ops for the purpose of expanding a file is
+incorrect due to older documentation incorrectly describing the way the RPC
+'FileLength' parameter is meant to work.
 
-Signed-off-by: raymond pang <raymondpangxd@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The older documentation says that this is the length the file is meant to
+end up at the end of the operation; however, it was never implemented this
+way in any of the servers, but rather the file is truncated down to this
+before the write operation is effected, and never expanded to it (and,
+indeed, it was renamed to 'TruncPos' in 2014).
+
+Fix this by setting the position parameter to the new file length and doing
+a zero-lengh write there.
+
+The bug causes Xwayland to SIGBUS due to unexpected non-expansion of a file
+it then mmaps.  This can be tested by giving the following test program a
+filename in an AFS directory:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <fcntl.h>
+	#include <sys/mman.h>
+	int main(int argc, char *argv[])
+	{
+		char *p;
+		int fd;
+		if (argc != 2) {
+			fprintf(stderr,
+				"Format: test-trunc-mmap <file>\n");
+			exit(2);
+		}
+		fd = open(argv[1], O_RDWR | O_CREAT | O_TRUNC);
+		if (fd < 0) {
+			perror(argv[1]);
+			exit(1);
+		}
+		if (ftruncate(fd, 0x140008) == -1) {
+			perror("ftruncate");
+			exit(1);
+		}
+		p = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
+			 MAP_SHARED, fd, 0);
+		if (p == MAP_FAILED) {
+			perror("mmap");
+			exit(1);
+		}
+		p[0] = 'a';
+		if (munmap(p, 4096) < 0) {
+			perror("munmap");
+			exit(1);
+		}
+		if (close(fd) < 0) {
+			perror("close");
+			exit(1);
+		}
+		exit(0);
+	}
+
+Fixes: 31143d5d515e ("AFS: implement basic file write support")
+Reported-by: Jonathan Billings <jsbillin@umich.edu>
+Tested-by: Jonathan Billings <jsbillin@umich.edu>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ fs/afs/fsclient.c  | 6 +++---
+ fs/afs/yfsclient.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index b3ed8f9953a8..173e6f2dd9af 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -52,38 +52,52 @@ static int eject_tray(struct ata_device *dev)
- /* Per the spec, only slot type and drawer type ODD can be supported */
- static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- {
--	char buf[16];
-+	char *buf;
- 	unsigned int ret;
--	struct rm_feature_desc *desc = (void *)(buf + 8);
-+	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
- 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
--			0, sizeof(buf),
-+			0, 16,
- 			0, 0, 0,
- 	};
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index ca08c83168f5..0b37867b5c20 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -1515,8 +1515,8 @@ static int afs_fs_setattr_size64(struct afs_fs_cursor *fc, struct iattr *attr)
  
-+	buf = kzalloc(16, GFP_KERNEL);
-+	if (!buf)
-+		return ODD_MECH_TYPE_UNSUPPORTED;
-+	desc = (void *)(buf + 8);
-+
- 	ata_tf_init(dev, &tf);
- 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
- 	tf.command = ATA_CMD_PACKET;
- 	tf.protocol = ATAPI_PROT_PIO;
--	tf.lbam = sizeof(buf);
-+	tf.lbam = 16;
+ 	xdr_encode_AFS_StoreStatus(&bp, attr);
  
- 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
--				buf, sizeof(buf), 0);
--	if (ret)
-+				buf, 16, 0);
-+	if (ret) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
+-	*bp++ = 0;				/* position of start of write */
+-	*bp++ = 0;
++	*bp++ = htonl(attr->ia_size >> 32);	/* position of start of write */
++	*bp++ = htonl((u32) attr->ia_size);
+ 	*bp++ = 0;				/* size of write */
+ 	*bp++ = 0;
+ 	*bp++ = htonl(attr->ia_size >> 32);	/* new file length */
+@@ -1564,7 +1564,7 @@ static int afs_fs_setattr_size(struct afs_fs_cursor *fc, struct iattr *attr)
  
--	if (be16_to_cpu(desc->feature_code) != 3)
-+	if (be16_to_cpu(desc->feature_code) != 3) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
+ 	xdr_encode_AFS_StoreStatus(&bp, attr);
  
--	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
-+	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_SLOT;
--	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
-+	} else if (desc->mech_type == 1 && desc->load == 0 &&
-+		   desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_DRAWER;
--	else
-+	} else {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- }
+-	*bp++ = 0;				/* position of start of write */
++	*bp++ = htonl(attr->ia_size);		/* position of start of write */
+ 	*bp++ = 0;				/* size of write */
+ 	*bp++ = htonl(attr->ia_size);		/* new file length */
  
- /* Test if ODD is zero power ready by sense code */
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 5aa57929e8c2..6e97a42d24d1 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -1514,7 +1514,7 @@ static int yfs_fs_setattr_size(struct afs_fs_cursor *fc, struct iattr *attr)
+ 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
+ 	bp = xdr_encode_YFSFid(bp, &vnode->fid);
+ 	bp = xdr_encode_YFS_StoreStatus(bp, attr);
+-	bp = xdr_encode_u64(bp, 0);		/* position of start of write */
++	bp = xdr_encode_u64(bp, attr->ia_size);	/* position of start of write */
+ 	bp = xdr_encode_u64(bp, 0);		/* size of write */
+ 	bp = xdr_encode_u64(bp, attr->ia_size);	/* new file length */
+ 	yfs_check_req(call, bp);
 -- 
 2.19.1
 
