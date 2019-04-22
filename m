@@ -2,164 +2,136 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5F7C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ACAC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D53920859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A592E20859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 15:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfDVPQC (ORCPT
+        id S1728071AbfDVPQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 11:16:02 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.38]:44577 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726132AbfDVPQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 11:16:01 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id C473E45608
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 10:15:59 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Iafnh1cRQ90onIafnhBiTi; Mon, 22 Apr 2019 10:15:59 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.103] (port=34920 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hIafn-000qQe-EE; Mon, 22 Apr 2019 10:15:59 -0500
-Subject: Re: [PATCH] tools/power turbostat: fix file descriptor leaks
-To:     Prarit Bhargava <prarit@redhat.com>, Len Brown <lenb@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190408161240.GA30623@embeddedor>
- <16370c2e-c5f9-a4cf-02fc-6b5b4ab65e1c@redhat.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        Mon, 22 Apr 2019 11:16:58 -0400
+Received: from mout1.freenet.de ([195.4.92.91]:47266 "EHLO mout1.freenet.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727483AbfDVPQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 11:16:58 -0400
+X-Greylist: delayed 1972 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 11:16:56 EDT
+Received: from [195.4.92.164] (helo=mjail1.freenet.de)
+        by mout1.freenet.de with esmtpa (ID andihartmann@freenet.de) (port 25) (Exim 4.90_1 #2)
+        id 1hIaAs-0004YC-F3; Mon, 22 Apr 2019 16:44:02 +0200
+Received: from [::1] (port=57776 helo=mjail1.freenet.de)
+        by mjail1.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.90_1 #2)
+        id 1hIaAs-00008P-EJ; Mon, 22 Apr 2019 16:44:02 +0200
+Received: from sub5.freenet.de ([195.4.92.124]:50614)
+        by mjail1.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.90_1 #2)
+        id 1hIa8u-0007Vf-S0; Mon, 22 Apr 2019 16:42:00 +0200
+Received: from p2e5b8614.dip0.t-ipconnect.de ([46.91.134.20]:35588 helo=mail.maya.org)
+        by sub5.freenet.de with esmtpsa (ID andihartmann@freenet.de) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (port 465) (Exim 4.90_1 #2)
+        id 1hIa8u-0007mu-LW; Mon, 22 Apr 2019 16:42:00 +0200
+Received: internal info suppressed
+From:   Andreas Hartmann <andihartmann@01019freenet.de>
+To:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        linux-kernel@vger.kernel.org
+References: <20190121134913.924726465@linuxfoundation.org>
+ <20190121134914.421023706@linuxfoundation.org>
 Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <1c208944-9162-0245-c3bd-016f4274511f@embeddedor.com>
-Date:   Mon, 22 Apr 2019 10:15:58 -0500
+Autocrypt: addr=andihartmann@01019freenet.de; keydata=
+ mQGiBDz/vtQRBAC+OSpes1p57fA8ENLYy3Nl/CpEvtRoDdhy7DPyc1+adE57vpK52naRfaZB
+ f0RSMvIZwJYggMio+emiN5Du7kL9y2IEjmHBvp/1x68dEwswHP9X4hJmHmyOJL3IB2WsvEdh
+ QF97913bWX34MYCeuOoSJ1OWvBLGfNs0zv70HOTfJwCgricyy8N1itEryLwoeu5HWz0SmDED
+ /2IiuDhPZ332i0Ylp40RQb2Wb0xBvpscVeRZDItsYYbJ/Sgmso1sn93sFFWmmrvGUyg3MNCt
+ +u+7P8Wg3VXte8cHbNwdzNtXHTfYyTcgZXC4xJN2akZt4pdR531mXyP2kFxmKtAEmW6bNpvV
+ oNnkgZVWvoT4BHLloLzA62JUEgFJA/9dHilAVS3Ezv5ECB02Lt2vNNzMvPlyNbxBhWnrb6VC
+ mFMCRg9bOK2io1zYb8C4gEpJ33wl8hEBxOWfCOEEKesAUCjViosNvxqGNtGWjk5p1O2QBWE2
+ D6u5+itACQRqhmmgNl+dK6Of2yGG9GxOYWozIELEfL9ZB4xQ7A2tDFR0ZrRHQW5kcmVhcyBI
+ YXJ0bWFubiAod2VpbCBkZXIgUmVjaG5lciBuZXUgaGVpc3N0KSA8YW5kcmVhc0BkdWFsYy5t
+ YXlhLm9yZz6IYAQTEQIAIAUCTMsY3gIbAwYLCQgHAwIEFQIIAwQWAgMBAh4BAheAAAoJEBhU
+ mcTgYeNVT1QAoJ4cJ2jl6Jgmi+PmWCXPk4m8lgAGAKCjkxgK/PjE3+cNsLa/xEpReqYwRrkB
+ DQQ8/77WEAQAqBBex8oxPC1srpaSFbq8NCM/Gy7SKucKsQPqG/De46WQESbmnMElVft2xCBC
+ rOJ7E02k10h/twe0yQnNdXMJDMDM0w0EEyX9ljekIr3SFbXpU2S4wUl3C6CW2hizUgOyLsg0
+ chpfGMB9+wiVycyjZahafoc14wuuDj5BqWEOCccAAwcD/14lh1PTPKx4hs7ITtFZh5TI6+5f
+ xAWIBBUeQL+GEt+CKwyNc/hWp8YTPJ3SAedmDrEMX+2yPO95KeIfg6bnnIVvI/aTR/vJFsWK
+ GKMx+KaKx+IEwuhCpNIMUASpJWRvVlo3lMIvqAMJIBj79uKq/X9fppblcJst29QVO6aWf3Gh
+ iEYEGBECAAYFAjz/vtYACgkQGFSZxOBh41VBAgCfZRiPCQ+jNvdT5iR2fEblqTtBrF0An0nb
+ M8B1Lpkm44214BbtIQKneVrYiEYEGBECAAYFAjz/vtcACgkQGFSZxOBh41UjjgCgoua1QYf+
+ FcHpxrRgoioO3D7ddkUAnAkRf8FH9i94x8f6LfS4npozycQc
+Subject: Re: [PATCH 4.19 13/99] netfilter: nf_conncount: fix argument order to
+ find_next_bit
+Message-ID: <f55ad830-dd61-8ce2-7fa0-d33fb93c0b9c@01019freenet.de>
+Date:   Mon, 22 Apr 2019 16:41:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <16370c2e-c5f9-a4cf-02fc-6b5b4ab65e1c@redhat.com>
+In-Reply-To: <20190121134914.421023706@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.103
-X-Source-L: No
-X-Exim-ID: 1hIafn-000qQe-EE
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.103]:34920
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 19
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+X-Originated-At: 46.91.134.20!35588
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hello!
 
-Friendly ping:
+Since 4.19.17, I'm facing problems during streaming of videos I've never seen before. This means:
 
-Who can take this?
+- video from internet stutters although enough data flow can be seen in bmon.
+- gpu is locked:
+  radeon 0000:0a:00.0: ring 0 stalled for more than 14084msec
+  radeon 0000:0a:00.0: GPU lockup (current fence id 0x0000000000053ed7 last fence id 0x0000000000053f0f on ring 0)
+- The connection of videos streamed locally by the machine for a TV suddenly breaks (upnp - serviio as server).
+
+After very long time of testing, I detected, that removing the complete patch series for 4.19.17 regarding netfilter: nf_conncount makes the problem disappear.
+
+Please remove / fix this patchset!
+
 
 Thanks
---
-Gustavo
+Andreas Hartmann
 
-On 4/8/19 12:04 PM, Prarit Bhargava wrote:
+
+On 21.01.19 at 14:48 Greg Kroah-Hartman wrote:
+> 4.19-stable review patch.  If anyone has any objections, please let me know.
+> 
+> ------------------
+> 
+> From: Florian Westphal <fw@strlen.de>
+> 
+> commit a007232066f6839d6f256bab21e825d968f1a163 upstream.
+> 
+> Size and 'next bit' were swapped, this bug could cause worker to
+> reschedule itself even if system was idle.
+> 
+> Fixes: 5c789e131cbb9 ("netfilter: nf_conncount: Add list lock and gc worker, and RCU for init tree search")
+> Reviewed-by: Shawn Bohrer <sbohrer@cloudflare.com>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  net/netfilter/nf_conncount.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/net/netfilter/nf_conncount.c
+> +++ b/net/netfilter/nf_conncount.c
+> @@ -488,7 +488,7 @@ next:
+>  	clear_bit(tree, data->pending_trees);
+>  
+>  	next_tree = (tree + 1) % CONNCOUNT_SLOTS;
+> -	next_tree = find_next_bit(data->pending_trees, next_tree, CONNCOUNT_SLOTS);
+> +	next_tree = find_next_bit(data->pending_trees, CONNCOUNT_SLOTS, next_tree);
+>  
+>  	if (next_tree < CONNCOUNT_SLOTS) {
+>  		data->gc_tree = next_tree;
 > 
 > 
-> On 4/8/19 12:12 PM, Gustavo A. R. Silva wrote:
->> Fix file descriptor leaks by closing fp before return.
->>
->> Addresses-Coverity-ID: 1444591 ("Resource leak")
->> Addresses-Coverity-ID: 1444592 ("Resource leak")
->> Fixes: 5ea7647b333f ("tools/power turbostat: Warn on bad ACPI LPIT data")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > 
-> Reviewed-by: Prarit Bhargava <prarit@redhat.com>
-> 
-> P.
-> 
->> ---
->>  tools/power/x86/turbostat/turbostat.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
->> index c7727be9719f..78d9acba8e9b 100644
->> --- a/tools/power/x86/turbostat/turbostat.c
->> +++ b/tools/power/x86/turbostat/turbostat.c
->> @@ -2924,6 +2924,7 @@ int snapshot_cpu_lpi_us(void)
->>  	if (retval != 1) {
->>  		fprintf(stderr, "Disabling Low Power Idle CPU output\n");
->>  		BIC_NOT_PRESENT(BIC_CPU_LPI);
->> +		fclose(fp);
->>  		return -1;
->>  	}
->>  
->> @@ -2950,6 +2951,7 @@ int snapshot_sys_lpi_us(void)
->>  	if (retval != 1) {
->>  		fprintf(stderr, "Disabling Low Power Idle System output\n");
->>  		BIC_NOT_PRESENT(BIC_SYS_LPI);
->> +		fclose(fp);
->>  		return -1;
->>  	}
->>  	fclose(fp);
->>
+
+
+
